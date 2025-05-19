@@ -25,6 +25,7 @@ class TimelineImagesOptionPlugin extends Plugin {
             selector: ".s_timeline_images_row",
             dropNear: ".s_timeline_images_row",
         },
+        is_movable_selector: { selector: ".s_timeline_images_row", direction: "vertical" },
     };
 }
 

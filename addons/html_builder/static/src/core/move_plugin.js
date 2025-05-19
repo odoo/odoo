@@ -6,40 +6,8 @@ import {
     fillRemovedItemGap,
     removeMobileOrders,
 } from "@html_builder/utils/column_layout_utils";
-import { isMobileView } from "@html_builder/utils/utils";
-
-const moveUpOrDown = {
-    selector: [
-        "section",
-        ".s_accordion .accordion-item",
-        ".s_showcase .row .row:not(.s_col_no_resize) > div",
-        ".s_hr",
-        // In snippets files
-        ".s_pricelist_boxed_item",
-        ".s_pricelist_cafe_item",
-        ".s_product_catalog_dish",
-        ".s_timeline_list_row",
-        ".s_timeline_row",
-        ".s_timeline_images_row",
-    ].join(", "),
-};
-
-const moveLeftOrRight = {
-    selector: [".row:not(.s_col_no_resize) > div"].join(", "),
-    exclude: ".s_showcase .row .row > div",
-};
-
-export function isMovable(el) {
-    const canMoveUpOrDown = el.matches(moveUpOrDown.selector);
-    const canMoveLeftOrRight =
-        el.matches(moveLeftOrRight.selector) && !el.matches(moveLeftOrRight.exclude);
-    return canMoveUpOrDown || canMoveLeftOrRight;
-}
-
-function getMoveDirection(el) {
-    const canMoveVertically = el.matches(moveUpOrDown.selector);
-    return canMoveVertically ? "vertical" : "horizontal";
-}
+import { isElementInViewport, isMobileView } from "@html_builder/utils/utils";
+import { scrollTo } from "@html_builder/utils/scrolling";
 
 export function getVisibleSibling(target, direction) {
     const siblingEls = [...target.parentNode.children];
@@ -63,19 +31,60 @@ export function getVisibleSibling(target, direction) {
 export class MovePlugin extends Plugin {
     static id = "move";
     resources = {
-        has_overlay_options: { hasOption: (el) => isMovable(el) },
+        has_overlay_options: { hasOption: (el) => this.isMovable(el) },
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         on_cloned_handlers: this.onCloned.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
         on_element_dropped_handlers: this.onElementDropped.bind(this),
+        is_movable_selector: [
+            {
+                selector: "section, .s_showcase .row .row:not(.s_col_no_resize) > div",
+                direction: "vertical",
+            },
+            {
+                selector: ".row:not(.s_col_no_resize) > div",
+                exclude: ".s_showcase .row .row > div",
+                direction: "horizontal",
+            },
+        ],
     };
 
     setup() {
         this.overlayTarget = null;
-        this.isMobileView = false;
-        this.isGridItem = false;
+        this.noScroll = false;
+
+        // Compute the selectors.
+        const verticalSelector = [];
+        const verticalExclude = [];
+        const horizontalSelector = [];
+        const horizontalExclude = [];
+        const noScrollSelector = [];
+        for (const movableSelector of this.getResource("is_movable_selector")) {
+            const { selector, exclude, direction, noScroll } = movableSelector;
+            if (selector) {
+                const selectors = direction === "vertical" ? verticalSelector : horizontalSelector;
+                selectors.push(selector);
+            }
+            if (exclude) {
+                const excludes = direction === "vertical" ? verticalExclude : horizontalExclude;
+                excludes.push(exclude);
+            }
+            if (noScroll) {
+                noScrollSelector.push(selector);
+            }
+        }
+
+        this.verticalMove = {
+            selector: verticalSelector.join(", "),
+            exclude: verticalExclude.length > 0 ? verticalExclude.join(", ") : false,
+        };
+        this.horizontalMove = {
+            selector: horizontalSelector.join(", "),
+            exclude: horizontalExclude.length > 0 ? horizontalExclude.join(", ") : false,
+        };
+        this.noScrollSelector = noScrollSelector.length > 0 ? noScrollSelector.join(", ") : false;
 
         // Needed for compatibility (with already dropped snippets).
         // For each row, check if all its columns are either mobile ordered or
@@ -91,19 +100,32 @@ export class MovePlugin extends Plugin {
         }
     }
 
+    isMovable(el) {
+        return (
+            (el.matches(this.verticalMove.selector) && !el.matches(this.verticalMove.exclude)) ||
+            (el.matches(this.horizontalMove.selector) && !el.matches(this.horizontalMove.exclude))
+        );
+    }
+
     getActiveOverlayButtons(target) {
-        if (!isMovable(target)) {
+        if (!this.isMovable(target)) {
             this.overlayTarget = null;
             return [];
         }
 
         const buttons = [];
         this.overlayTarget = target;
-        this.refreshState();
-        if (this.areArrowsDisplayed()) {
-            if (this.hasPreviousSibling()) {
-                const direction =
-                    getMoveDirection(this.overlayTarget) === "vertical" ? "up" : "left";
+        this.noScroll = this.overlayTarget.matches(this.noScrollSelector);
+
+        if (!this.areArrowsHidden()) {
+            const isVertical =
+                this.overlayTarget.matches(this.verticalMove.selector) &&
+                !this.overlayTarget.matches(this.verticalMove.exclude);
+            const previousSiblingEl = getVisibleSibling(this.overlayTarget, "prev");
+            const nextSiblingEl = getVisibleSibling(this.overlayTarget, "next");
+
+            if (previousSiblingEl) {
+                const direction = isVertical ? "up" : "left";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
                     title: _t("Move %s", direction),
@@ -111,9 +133,9 @@ export class MovePlugin extends Plugin {
                 };
                 buttons.push(button);
             }
-            if (this.hasNextSibling()) {
-                const direction =
-                    getMoveDirection(this.overlayTarget) === "vertical" ? "down" : "right";
+
+            if (nextSiblingEl) {
+                const direction = isVertical ? "down" : "right";
                 const button = {
                     class: `fa fa-fw fa-angle-${direction}`,
                     title: _t("Move %s", direction),
@@ -126,7 +148,7 @@ export class MovePlugin extends Plugin {
     }
 
     onCloned({ cloneEl, originalEl }) {
-        if (!isMovable(originalEl)) {
+        if (!this.isMovable(originalEl)) {
             return;
         }
         // If there is a mobile order, the clone must have an order different
@@ -140,7 +162,7 @@ export class MovePlugin extends Plugin {
     }
 
     onRemove(toRemoveEl) {
-        if (!isMovable(toRemoveEl)) {
+        if (!this.isMovable(toRemoveEl)) {
             return;
         }
         // If there is a mobile order, the gap created by the removed element
@@ -152,7 +174,7 @@ export class MovePlugin extends Plugin {
     }
 
     onElementDropped({ droppedEl, dragState }) {
-        if (!isMovable(droppedEl)) {
+        if (!this.isMovable(droppedEl)) {
             return;
         }
         const parentEl = droppedEl.parentElement;
@@ -169,48 +191,39 @@ export class MovePlugin extends Plugin {
         removeMobileOrders(parentEl.children);
     }
 
-    refreshState() {
-        this.isMobileView = isMobileView(this.overlayTarget);
-        this.isGridItem = this.overlayTarget.classList.contains("o_grid_item");
-    }
-
-    areArrowsDisplayed() {
+    areArrowsHidden() {
+        const isMobile = isMobileView(this.overlayTarget);
+        const isGridItem = this.overlayTarget.classList.contains("o_grid_item");
         const siblingsEl = [...this.overlayTarget.parentNode.children];
         const visibleSiblingEl = siblingsEl.find(
             (el) => el !== this.overlayTarget && window.getComputedStyle(el).display !== "none"
         );
         // The arrows are not displayed if:
-        // - the target is a grid item and not in mobile view
         // - the target has no visible siblings
-        return !!visibleSiblingEl && !(this.isGridItem && !this.isMobileView);
-    }
-
-    hasPreviousSibling() {
-        return !!getVisibleSibling(this.overlayTarget, "prev");
-    }
-
-    hasNextSibling() {
-        return !!getVisibleSibling(this.overlayTarget, "next");
+        // - the target is a grid item and is not in mobile view
+        return !visibleSiblingEl || (isGridItem && !isMobile);
     }
 
     /**
-     * Move the element in the given direction
+     * Moves the element in the given direction
      *
      * @param {String} direction "prev" or "next"
      */
     onMoveClick(direction) {
+        const isMobile = isMobileView(this.overlayTarget);
         let hasMobileOrder = !!this.overlayTarget.style.order;
-        const siblingEls = this.overlayTarget.parentNode.children;
+        const parentEl = this.overlayTarget.parentNode;
+        const siblingEls = parentEl.children;
 
         // If the target is a column, the ordering in mobile view is independent
         // from the desktop view. If we are in mobile view, we first add the
         // mobile order if there is none yet. In the case where we are not in
         // mobile view, the mobile order is reset.
-        const parentEl = this.overlayTarget.parentNode;
-        if (this.isMobileView && parentEl.classList.contains("row") && !hasMobileOrder) {
+        const isColumn = parentEl.classList.contains("row");
+        if (isMobile && isColumn && !hasMobileOrder) {
             addMobileOrders(siblingEls);
             hasMobileOrder = true;
-        } else if (!this.isMobileView && hasMobileOrder) {
+        } else if (!isMobile && hasMobileOrder) {
             removeMobileOrders(siblingEls);
             hasMobileOrder = false;
         }
@@ -229,7 +242,17 @@ export class MovePlugin extends Plugin {
             );
         }
 
-        // TODO scroll (data-no-scroll)
-        // TODO update invisible dom
+        // Scroll to the element.
+        if (!this.noScroll && !isElementInViewport(this.overlayTarget)) {
+            const { top, height } = this.overlayTarget.getBoundingClientRect();
+            const viewportHeight = this.document.defaultView.innerHeight;
+            const heightDiff = viewportHeight - height;
+            const isBottomHidden = heightDiff < top;
+            scrollTo(this.overlayTarget, {
+                extraOffset: 50,
+                forcedOffset: isBottomHidden ? heightDiff - 50 : undefined,
+                duration: 500,
+            });
+        }
     }
 }

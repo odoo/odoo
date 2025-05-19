@@ -34,6 +34,7 @@ class PriceListBoxedOptionPlugin extends Plugin {
             selector: ".s_pricelist_boxed_item",
             dropNear: ".s_pricelist_boxed_item",
         },
+        is_movable_selector: { selector: ".s_pricelist_boxed_item", direction: "vertical" },
     };
 }
 
