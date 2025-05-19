@@ -53,7 +53,7 @@
                     <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="remaining_days"/>
                     <field t-if="record.displayed_image_id.value" groups="base.group_user" name="displayed_image_id" widget="attachment_image"/>
                     <footer t-if="!selection_mode">
-                        <field name="priority" class="me-2" widget="priority"/>
+                        <field name="priority" class="pt-1" widget="priority"/>
                         <div class="d-flex ms-auto text-truncate">
                             <span t-if="record.portal_user_names.raw_value.length > 0" class="pe-2 text-truncate" t-att-title="record.portal_user_names.raw_value">
                                 <t t-set="user_count" t-value="record.portal_user_names.raw_value.split(',').length"/>
@@ -209,7 +209,6 @@
                                     <field name="display_in_project" column_invisible="True"/>
                                     <field name="state" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px"/>
                                     <field name="subtask_count" column_invisible="1"/>
                                     <field name="closed_subtask_count" column_invisible="1"/>
@@ -226,6 +225,7 @@
                                     <field name="user_ids" column_invisible="True" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" domain="[('user_id', '=', False), ('project_ids', 'in', [project_id])]"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
@@ -245,7 +245,6 @@
                                 <list editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="project_id" column_invisible="True"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="1"/>
                                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" readonly="1"/>
                                     <field name="subtask_count" column_invisible="1"/>
                                     <field name="closed_subtask_count" column_invisible="1"/>
@@ -261,6 +260,7 @@
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" invisible="not project_id"/>
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
                                     <field name="date_deadline" decoration-danger="date_deadline &lt; current_date and state not in ['1_done', '1_canceled']" optional="show"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" width="20px" readonly="1"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
