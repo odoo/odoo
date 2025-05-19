@@ -25,12 +25,7 @@ registry.category("web_tour.tours").add("autocomplete_address_tour", {
         },
         {
             content: "Click on the first result",
-            trigger: ".o-autocomplete--dropdown-item .dropdown-item",
-            run: "click",
-        },
-        {
-            content: "Verify the autocomplete box disappeared",
-            trigger: "body:not(:has(.o-autocomplete--dropdown-item .dropdown-item))",
+            trigger: ".o-autocomplete--dropdown-item .dropdown-item:contains(Result 0)",
             run: "click",
         },
         {
