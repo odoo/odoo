@@ -31,6 +31,7 @@ export class FilterValue extends Component {
         filter: Object,
         model: Object,
         showTitle: { type: Boolean, optional: true },
+        showClear: { type: Boolean, optional: true },
     };
 
     setup() {
