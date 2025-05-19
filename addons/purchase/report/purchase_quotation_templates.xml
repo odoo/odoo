@@ -10,7 +10,7 @@
         </t>
         <t t-if="o.dest_address_id">
             <t t-set="information_block">
-                <strong>Shipping address:</strong>
+                <strong class="d-block mt-3">Shipping address:</strong>
                 <div t-field="o.dest_address_id"
                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}' name="purchase_shipping_address"/>
             </t>
