@@ -59,6 +59,10 @@ migrationStepRegistry.add("18.4.10", {
             if (globalFilter.type === "text" && typeof globalFilter.defaultValue == "string") {
                 globalFilter.defaultValue = [globalFilter.defaultValue];
             }
+            if (globalFilter.type === "text" && globalFilter.rangeOfAllowedValues) {
+                globalFilter.rangesOfAllowedValues = [globalFilter.rangeOfAllowedValues];
+                delete globalFilter.rangeOfAllowedValues;
+            }
         }
         return data;
     },
