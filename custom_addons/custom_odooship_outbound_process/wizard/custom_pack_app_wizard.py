@@ -879,6 +879,29 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         sale = picking.sale_id
         partner = picking.partner_id
 
+        if sale and sale.service_type and sale.service_type.strip().upper() == "MANUAL WB":
+            _logger.info("[MANUAL WB] Detected Manual WB order – skipping label generation.")
+
+            sale.write({
+                'consignment_number': "Manual WB",
+                'pick_status': 'packed',
+                'delivery_status': 'partial',
+            })
+            picking.write({'current_state': 'pack'})
+            picking.button_validate()
+
+            self.send_tracking_update_to_ot_orders(
+                so_number=sale.name,
+                con_id="Manual WB",
+                carrier="Manual",
+                origin=sale.origin or picking.origin or "N/A",
+                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+            )
+
+            return {
+                "message": "Manual WB order processed successfully – no label generated.",
+                "manual_wb": True
+            }
         if not partner or not partner.email:
             raise ValidationError("Missing or invalid customer email.")
 
@@ -968,23 +991,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
         }
 
-        # if country_code.upper() != "AU":
-        #     payload["shipment"]["international"] = {
-        #         "incoterms": "DAP",
-        #         "customs_declaration": {
-        #             "description": "Apparell",
-        #             "total_value": round(declared_value, 2),
-        #             "currency": "AUD",
-        #             "duty_paid_by": "receiver",
-        #             "export_declaration_number": ""
-        #         }
-        #     }
-        is_international = (
-                (country_code.upper() != "AU")
-                or (sale.post_category or "").strip().lower() == "international"
-        )
-
-        if is_international:
+        if country_code.upper() != "AU":
             payload["shipment"]["international"] = {
                 "incoterms": "DAP",
                 "customs_declaration": {
@@ -995,22 +1002,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "export_declaration_number": ""
                 }
             }
-            _logger.warning("[INTERNATIONAL] Skipping label print for international order.")
-            sale.write({
-                'consignment_number': "Manual WB",
-                'pick_status': "packed",
-                'tracking_url': "MANUAL",
-            })
-            picking.write({'current_state': "pack"})
-            picking.button_validate()
-            self.send_tracking_update_to_ot_orders(
-                so_number=sale.name,
-                con_id="INTL",
-                carrier=carrier,
-                origin=sale.origin or picking.origin or "N/A",
-                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
-            )
-            return payload
 
         _logger.info(f"[ONETRAKER][SINGLE PICK PAYLOAD] Sending payload:\n{json.dumps(payload, indent=4)}")
 
@@ -1263,7 +1254,26 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         partner = picking.partner_id
         sale = picking.sale_id
+        if sale and sale.service_type and sale.service_type.strip().upper() == "MANUAL WB":
+            _logger.info("[MANUAL WB] Skipping label creation for Manual WB multi-pick.")
 
+            picking.write({'current_state': 'pack'})
+            sale.write({
+                'consignment_number': "Manual WB",
+                'pick_status': 'packed',
+                'delivery_status': 'partial',
+            })
+            picking.button_validate()
+
+            self.send_tracking_update_to_ot_orders(
+                so_number=sale.name,
+                con_id="Manual WB",
+                carrier="Manual",
+                origin=sale.origin or "N/A",
+                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+            )
+
+            return True
         if not partner or not partner.email:
             raise ValidationError("Missing or invalid customer email.")
 
@@ -1348,22 +1358,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
         }
 
-        # if country_code.upper() != "AU":
-        #     payload["shipment"]["international"] = {
-        #         "incoterms": "DAP",
-        #         "customs_declaration": {
-        #             "description": "Apparell",
-        #             "total_value": round(declared_value, 2),
-        #             "currency": "AUD",
-        #             "duty_paid_by": "receiver",
-        #             "export_declaration_number": ""
-        #         }
-        #     }
-        is_international = (
-                (country_code.upper() != "AU")
-                or (sale.post_category or "").strip().lower() == "international"
-        )
-        if is_international:
+        if country_code.upper() != "AU":
             payload["shipment"]["international"] = {
                 "incoterms": "DAP",
                 "customs_declaration": {
@@ -1374,22 +1369,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "export_declaration_number": ""
                 }
             }
-            _logger.warning("[INTERNATIONAL] Skipping label print for international order.")
-            sale.write({
-                'consignment_number': "Manual WB",
-                'pick_status': "packed",
-                'tracking_url': "MANUAL",
-            })
-            picking.write({'current_state': "pack"})
-            picking.button_validate()
-            self.send_tracking_update_to_ot_orders(
-                so_number=sale.name,
-                con_id="INTL",
-                carrier=carrier,
-                origin=sale.origin or picking.origin or "N/A",
-                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
-            )
-            return payload
 
         headers = {
             'Content-Type': 'application/json',
