@@ -2,12 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 
-from datetime import date
+from datetime import date, timedelta
 from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.fields import Datetime as FieldDatetime
 from odoo.exceptions import UserError
 from odoo.tests import users, warmup, tagged, Form
 from odoo.tools import formataddr, mute_logger
@@ -512,12 +513,13 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'mail_template')
-class TestAccountMoveSend(TestAccountMoveSendCommon):
+class TestAccountMoveSend(TestAccountMoveSendCommon, MailCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.company_data_2 = cls.setup_other_company()
+        cls.reference_now = FieldDatetime.from_string('2025-05-21 12:00:00')
         (cls.partner_a.with_company(cls.company_data['company'].id) + cls.partner_b.with_company(cls.company_data['company'].id)).write({
             'invoice_sending_method': 'email',
             'email': "turlututu@tsointsoin",
@@ -681,6 +683,173 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(move_send_batch_wizard.move_ids.ids, invoices.ids)
         self.assertEqual(move_send_batch_wizard.summary_data, {'email': {'count': len(invoices), 'label': 'by Email'}})
         self.assertFalse(move_send_batch_wizard.alerts)
+
+    def test_invoice_single_scheduling(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice, sending_methods=['email'])
+        self.assertRecordValues(wizard, [{
+            'move_id': invoice.id,
+            'sending_methods': ['email'],
+            'extra_edis': False,
+            'extra_edi_checkboxes': False,
+            'scheduled_date': False,
+            'pdf_report_id': wizard._get_default_pdf_report_id(invoice).id,
+            'display_pdf_report_id': False,
+            'template_id': wizard._get_default_mail_template_id(invoice).id,
+            'lang': 'en_US',
+            'mail_partner_ids': wizard.move_id.partner_id.ids,
+        }])
+        self.assertFalse(wizard.alerts)
+        self.assertTrue(wizard.subject)
+        self.assertTrue(wizard.body)
+        self._assert_mail_attachments_widget(wizard, [{
+            'mimetype': 'application/pdf',
+            'name': invoice._get_invoice_report_filename(),
+            'placeholder': True,
+        }])
+
+        # Cannot schedule a message without a scheduled date
+        with self.assertRaises(UserError):
+            wizard.action_schedule_message()
+
+        wizard.write({'scheduled_date': FieldDatetime.to_string(self.reference_now + timedelta(days=1))})
+
+        # Process.
+        with self.mock_datetime_and_now(self.reference_now):
+            wizard.action_schedule_message()
+        self.assertFalse(invoice.sending_data)
+        scheduled_message = self.env['mail.scheduled.message'].search([
+            ['model', '=', invoice._name],
+            ['res_id', '=', invoice.id],
+        ])
+        self.assertEqual(scheduled_message.scheduled_date, self.reference_now + timedelta(days=1))
+        self.assertEqual(scheduled_message.model, invoice._name)
+        self.assertEqual(scheduled_message.res_id, invoice.id)
+        self.assertFalse(scheduled_message.is_note)
+
+        # Sending invoice now
+        scheduled_message._post_message()
+
+        # The PDF has been successfully generated.
+        pdf_report = invoice.invoice_pdf_report_id
+        self.assertTrue(pdf_report)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+        self.assertTrue(self._get_mail_message(invoice))
+
+        # Send it again. The PDF must not be created again.
+        wizard = self.create_send_and_print(invoice, sending_methods=['email', 'manual'])
+        wizard.write({'scheduled_date': FieldDatetime.to_string(self.reference_now + timedelta(days=1))})
+        with patch('odoo.addons.account.models.account_move_send.AccountMoveSend._hook_invoice_document_after_pdf_report_render') as mocked_method:
+            with self.mock_datetime_and_now(self.reference_now):
+                wizard.action_schedule_message()
+            mocked_method.assert_not_called()
+        self.assertFalse(invoice.sending_data)
+
+        scheduled_message = self.env['mail.scheduled.message'].search([
+            ['model', '=', invoice._name],
+            ['res_id', '=', invoice.id],
+        ])
+        scheduled_message._post_message()
+
+        self.assertRecordValues(invoice, [{'invoice_pdf_report_id': pdf_report.id}])
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(invoice_attachments), 1)
+        self.assertTrue(self._get_mail_message(invoice))
+
+        # Only one PDF linked to the invoice.
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('name', '=', pdf_report.name),
+            ('res_model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('res_field', '=', False),
+        ])
+        self.assertFalse(invoice_attachments)
+
+    def test_invoice_scheduled_messages(self):
+        partner_vals = {
+            'name': "Partner with address",
+            'phone': "+91 0123456789",
+            'email': "info@odoo.example.com",
+            'street': "Tower-3, Infocity",
+            'zip': "382010",
+            'city': "Gandhinagar",
+            'country_id': self.env.ref('base.in').id,
+        }
+        partner_with_address = self.env['res.partner'].create(partner_vals)
+        invoice = self.init_invoice("out_invoice", partner=partner_with_address, amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice, sending_methods=['snailmail'])
+        wizard.write({'scheduled_date': FieldDatetime.to_string(self.reference_now + timedelta(days=1))})
+        self.assertRecordValues(wizard, [{
+            'move_id': invoice.id,
+            'sending_methods': ['snailmail'],
+            'extra_edis': False,
+            'extra_edi_checkboxes': False,
+            'scheduled_date': FieldDatetime.to_string(self.reference_now + timedelta(days=1)),
+            'lang': 'en_US',
+            'mail_partner_ids': wizard.move_id.partner_id.ids,
+        }])
+        self.assertFalse(wizard.alerts)
+
+        with self.mock_datetime_and_now(self.reference_now):
+            wizard.action_schedule_message()
+
+        self.assertFalse(invoice.sending_data)
+        scheduled_message = self.env['mail.scheduled.message'].search([
+            ['model', '=', invoice._name],
+            ['res_id', '=', invoice.id],
+        ])
+        self.assertEqual(scheduled_message.scheduled_date, self.reference_now + timedelta(days=1))
+        self.assertEqual(scheduled_message.model, invoice._name)
+        self.assertEqual(scheduled_message.res_id, invoice.id)
+        self.assertTrue(scheduled_message.is_note)
+
+        wizard = self.create_send_and_print(invoice, sending_methods=['snailmail'])
+        wizard.write({'scheduled_date': FieldDatetime.to_string(self.reference_now + timedelta(days=1))})
+
+        # scheduling again should raise UserError as 'snailmail' method is already scheduled before
+        with self.assertRaises(UserError):
+            wizard.action_schedule_message()
+
+        # regular send should raise UserError also as 'snailmail' method is already scheduled before
+        with self.assertRaises(UserError):
+            wizard.action_send_and_print()
+
+        scheduled_message.unlink()
+        log_messages = self.env['mail.message'].search([
+            ['model', '=', invoice._name],
+            ['res_id', '=', invoice.id],
+        ])
+        for log_message in log_messages:
+            self.assertEqual(log_message.model, invoice._name)
+            self.assertEqual(log_message.res_id, invoice.id)
+            self.assertEqual(log_message.subtype_id.id, self.ref('mail.mt_note'))
+
+        # after cancelling the scheduled message, it now possible to schedule the message again
+        with self.mock_datetime_and_now(self.reference_now):
+            wizard.action_schedule_message()
+        scheduled_message = self.env['mail.scheduled.message'].search([
+            ['model', '=', invoice._name],
+            ['res_id', '=', invoice.id],
+        ])
+        scheduled_message._post_message()
+
+        log_messages = self.env['mail.message'].search([
+            ['model', '=', invoice._name],
+            ['res_id', '=', invoice.id],
+        ])
+        for log_message in log_messages:
+            self.assertEqual(log_message.model, invoice._name)
+            self.assertEqual(log_message.res_id, invoice.id)
+            self.assertEqual(log_message.subtype_id.id, self.ref('mail.mt_note'))
 
     def test_invoice_multi_email_missing(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)

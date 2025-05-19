@@ -1,6 +1,9 @@
+import json
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, clean_context
 from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.addons.mail.wizard.mail_compose_message import _reopen
 
@@ -75,6 +78,13 @@ class AccountMoveSendWizard(models.TransientModel):
         compute='_compute_mail_attachments_widget',
         store=True,
         readonly=False,
+    )
+    scheduled_date = fields.Char(
+        string="Scheduled Date",
+        compute='_compute_scheduled_date',
+        readonly=False,
+        store=True,
+        compute_sudo=False
     )
 
     model = fields.Char('Related Document Model', compute='_compute_model', readonly=False, store=True)
@@ -237,6 +247,16 @@ class AccountMoveSendWizard(models.TransientModel):
             )
 
     # Similar of mail.compose.message
+    @api.depends('res_ids', 'template_id', 'sending_methods', 'extra_edis')
+    def _compute_scheduled_date(self):
+        for wizard in self:
+            if wizard.sending_methods and wizard.template_id and wizard.extra_edis:
+                wizard.scheduled_date = self._get_mail_default_field_value_from_template(
+                    wizard.template_id, wizard.lang, wizard.move_id, 'scheduled_date') or wizard.scheduled_date
+            else:
+                wizard.scheduled_date = False
+
+    # Similar of mail.compose.message
     @api.depends('template_id')
     def _compute_res_ids(self):
         for wizard in self:
@@ -360,6 +380,152 @@ class AccountMoveSendWizard(models.TransientModel):
         if not self.move_id.partner_id.invoice_template_pdf_report_id and self.pdf_report_id != self._get_default_pdf_report_id(self.move_id):
             self.move_id.partner_id.sudo().invoice_template_pdf_report_id = self.pdf_report_id
 
+    def _prepare_scheduled_message_payload(self, sending_settings, invoices_data, allow_fallback_pdf=False):
+        """
+        Prepare the payloads for scheduling the sending of invoices.
+
+        :param dict sending_settings:    The settings for sending invoice.
+        :param dict invoices_data:   The collected data for invoices so far.
+        :param bool allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
+                                         proforma PDF report instead.
+        :returns: list of dicts, each with:
+            - mail_values: dict of values for scheduling the mail message.
+            - move_data_payload: dict of move data to pass to the scheduled_message for document generation and sending.
+        """
+        scheduled_messages_values = []
+
+        move_data_payload = {
+            **sending_settings,
+            'pdf_report': self.pdf_report_id.id,
+            'mail_template': self.template_id.id,
+            'allow_fallback_pdf': allow_fallback_pdf,
+        }
+
+        if self.sending_methods and 'email' in self.sending_methods:
+            attachment_to_create = [
+                invoice_data['pdf_attachment_values']
+                for invoice_data in invoices_data.values()
+                if invoice_data.get('pdf_attachment_values')
+            ]
+
+            mail_attachment_ids = self.env['ir.attachment'].create(
+                attachment_to_create
+            ).ids if attachment_to_create else []
+
+            for mail_attachment in (self.mail_attachments_widget or []):
+                if mail_attachment.get('manual'):
+                    mail_attachment_ids.append(mail_attachment['id'])
+
+            mail_template = sending_settings['mail_template'] or self.template_id
+            mail_values = {
+                'attachment_ids': mail_attachment_ids,
+                'author_id': sending_settings['author_partner_id'],
+                'body': sending_settings['mail_body'],
+                'partner_ids': sending_settings['mail_partner_ids'],
+                'subject': sending_settings['mail_subject'],
+                'scheduled_date': self.scheduled_date,
+                'email_layout_xmlid': self._get_mail_layout(),
+                'email_add_signature': not bool(mail_template),
+                'mail_auto_delete': False,
+                'mail_server_id': mail_template.mail_server_id.id if mail_template else False,
+                'reply_to_force_new': False,
+            }
+            email_move_data_payload = {
+                **move_data_payload,
+                'sending_methods': ['email'],
+                'extra_edis': [],
+            }
+            scheduled_messages_values.append({
+                'mail_values': mail_values,
+                'move_data_payload': email_move_data_payload,
+            })
+
+        if self.extra_edis:
+            all_extra_edis = self._get_all_extra_edis()
+            edi_labels = ", ".join(
+                all_extra_edis.get(extra_edi, {}).get('label')
+                for extra_edi in self.extra_edis
+                if extra_edi in all_extra_edis and 'label' in all_extra_edis[extra_edi]
+            )
+            edi_body = Markup("<p>%s</p>") % (
+                _(
+                    'The request for %s is scheduled to send.',
+                    Markup("<strong>{}</strong>").format(edi_labels),
+                )
+            )
+            edi_mail_values = {
+                'author_id': sending_settings['author_partner_id'],
+                'body': edi_body,
+                'scheduled_date': self.scheduled_date,
+                'subject': self.move_id.name,
+            }
+            edi_move_data_payload = {
+                **move_data_payload,
+                'sending_methods': [],
+            }
+            scheduled_messages_values.append({
+                'mail_values': edi_mail_values,
+                'move_data_payload': edi_move_data_payload,
+            })
+
+        ohter_sending_methods = [method for method in self.sending_methods if method not in ['email']] if self.sending_methods else []
+        if ohter_sending_methods:
+            methods = dict(self.env['ir.model.fields'].get_field_selection('res.partner', 'invoice_sending_method'))
+            methods_labels = ", ".join(
+                methods.get(sending_method, '')
+                for sending_method in ohter_sending_methods
+                if sending_method in methods
+            )
+            other_body = Markup("<p>%s</p>") % (
+                _(
+                    'The %s method is scheduled to send.',
+                    Markup("<strong>{}</strong>").format(methods_labels),
+                )
+            )
+            other_mail_values = {
+                'author_id': sending_settings['author_partner_id'],
+                'body': other_body,
+                'scheduled_date': self.scheduled_date,
+                'subject': self.move_id.name,
+            }
+            other_move_data_payload = {
+                **move_data_payload,
+                'sending_methods': ohter_sending_methods,
+                'extra_edis': [],
+            }
+            scheduled_messages_values.append({
+                'mail_values': other_mail_values,
+                'move_data_payload': other_move_data_payload,
+            })
+
+        return scheduled_messages_values
+
+    def check_for_scheduled_messages(self):
+        scheduled_messages = self.env['mail.scheduled.message'].search([
+            ('from_move_send_wizard', '=', True),
+            ('res_id', '=', self.move_id.id)
+        ])
+        methods_data = scheduled_messages.get_sending_method_and_edi_data()
+        if methods_data:
+            methods = dict(self.env['ir.model.fields'].get_field_selection('res.partner', 'invoice_sending_method'))
+            all_extra_edis = self._get_all_extra_edis()
+            scheduled_methods = set(methods_data.get('sending_methods', []))
+            scheduled_edis = set(methods_data.get('extra_edis', []))
+            conflict_labels = []
+            for key in scheduled_methods.intersection(self.sending_methods or []):
+                label = methods.get(key, '')
+                if label:
+                    conflict_labels.append(label)
+            for key in scheduled_edis.intersection(self.extra_edis or []):
+                label = (all_extra_edis.get(key, {}).get('label'))
+                if label:
+                    conflict_labels.append(label)
+            if conflict_labels:
+                raise UserError(_(
+                    'The "%(methods)s" methods are already scheduled to send!',
+                    methods=', '.join(conflict_labels),
+                ))
+
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -376,6 +542,8 @@ class AccountMoveSendWizard(models.TransientModel):
     def action_send_and_print(self, allow_fallback_pdf=False):
         """ Create invoice documents and send them."""
         self.ensure_one()
+
+        self.check_for_scheduled_messages()
         if self.alerts:
             self._raise_danger_alerts(self.alerts)
         self._update_preferred_settings()
@@ -388,3 +556,64 @@ class AccountMoveSendWizard(models.TransientModel):
             return self._action_download(attachments)
         else:
             return {'type': 'ir.actions.act_window_close'}
+
+    # Similar of mail.compose.message
+    def action_schedule_message(self):
+        self._action_schedule_message()
+        return {'type': 'ir.actions.act_window_close'}
+
+    def _action_schedule_message(self, allow_fallback_pdf=False):
+        """ Create a 'scheduled message' to be posted automatically later. """
+        self.ensure_one()
+        if not self.scheduled_date:
+            raise UserError(_("A scheduled date is needed to schedule a message"))
+        self.check_for_scheduled_messages()
+
+        if self.alerts:
+            self._raise_danger_alerts(self.alerts)
+        self._update_preferred_settings()
+
+        create_values = []
+        cleaned_ctx = clean_context(self.env.context)
+        sending_settings = self._get_sending_settings()
+        move_data = {
+            self.move_id.sudo(): {
+                **self._get_default_sending_settings(self.move_id, **sending_settings, allow_fallback_pdf=allow_fallback_pdf),
+            }
+        }
+        # generating invoice pdf to show in the scheduled message.
+        if self.sending_methods and 'email' in self.sending_methods:
+            self._prepare_invoice_pdf_report(move_data)
+        scheduled_messages_values = self._prepare_scheduled_message_payload(sending_settings, move_data, allow_fallback_pdf)
+        for scheduled_message_values in scheduled_messages_values:
+            mail_values = scheduled_message_values['mail_values']
+            move_data_payload = scheduled_message_values['move_data_payload']
+            if 'email' in move_data_payload.get('sending_methods', []):
+                create_values.append({
+                    'attachment_ids': mail_values.pop('attachment_ids') or None,
+                    'author_id': mail_values.pop('author_id') or None,
+                    'model': self.env.context.get('active_model'),
+                    'partner_ids': mail_values.pop('partner_ids') or None,
+                    'res_id': self.move_id.id,
+                    'from_move_send_wizard': True,
+                    'scheduled_date': mail_values.pop('scheduled_date'),
+                    'body': mail_values.pop('body') or None,
+                    'send_context': cleaned_ctx,
+                    'subject': mail_values.pop('subject') or None,
+                    'scheduled_send_payload': move_data_payload,
+                    'notification_parameters': json.dumps(mail_values),  # last to not include popped mail_values
+                })
+            else:
+                create_values.append({
+                    'author_id': mail_values.pop('author_id') or None,
+                    'model': self.env.context.get('active_model'),
+                    'res_id': self.move_id.id,
+                    'is_note': True,
+                    'from_move_send_wizard': True,
+                    'scheduled_date': mail_values.pop('scheduled_date'),
+                    'body': mail_values.pop('body') or None,
+                    'send_context': cleaned_ctx,
+                    'subject': mail_values.pop('subject') or None,
+                    'scheduled_send_payload': move_data_payload,
+                })
+        return self.env['mail.scheduled.message'].create(create_values)
