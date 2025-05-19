@@ -5,9 +5,11 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
+    static components = { PriceFormatter };
     static props = {
         paymentLines: { type: Array, optional: true },
         deleteLine: Function,
