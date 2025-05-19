@@ -148,7 +148,7 @@ class StockPickingType(models.Model):
     )
     kanban_dashboard_graph = fields.Text(compute='_compute_kanban_dashboard_graph')
     move_type = fields.Selection([
-        ('direct', 'As soon as possible'), ('one', 'When all products are ready')],
+        ('direct', 'As soon as possible, with back orders'), ('one', 'When all products are ready')],
         'Shipping Policy', default='direct', required=True,
         help="It specifies goods to be transferred partially or all at once")
 
@@ -553,6 +553,9 @@ class StockPicking(models.Model):
             ])
             return picking_types[:1].id
 
+    def _default_move_type(self):
+        return self.env['ir.config_parameter'].sudo().get_param('sale_stock.picking_policy', 'direct')
+
     name = fields.Char(
         'Reference', default='/',
         copy=False, index='trigram', readonly=True)
@@ -572,8 +575,8 @@ class StockPicking(models.Model):
     return_count = fields.Integer('# Returns', compute='_compute_return_count', compute_sudo=False)
 
     move_type = fields.Selection([
-        ('direct', 'As soon as possible'), ('one', 'When all products are ready')], 'Shipping Policy',
-        compute='_compute_move_type', store=True, required=True, readonly=False, precompute=True,
+        ('direct', 'As soon as possible, with back orders'), ('one', 'When all products are ready')], 'Shipping Policy',
+        compute='_compute_move_type', store=True, required=True, readonly=False, default=_default_move_type,
         help="It specifies goods to be deliver partially or all at once")
     state = fields.Selection([
         ('draft', 'Draft'),
