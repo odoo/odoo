@@ -232,7 +232,7 @@ registry.category("web_tour.tours").add("PosLoyaltyTour6", {
             ProductScreen.clickDisplayedProduct("Test Product A"),
             PosLoyalty.checkAddedLoyaltyPoints("26.5"),
             ProductScreen.clickControlButton("Reward"),
-            SelectionPopup.has("$ 1 per point on your order", { run: "click" }),
+            SelectionPopup.has("$ 1.00 per point on your order", { run: "click" }),
             ProductScreen.totalAmountIs("165.00"),
         ].flat(),
 });
@@ -448,8 +448,8 @@ registry.category("web_tour.tours").add("ChangeRewardValueWithLanguage", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Partner Test 1"),
             PosLoyalty.isRewardButtonHighlighted(true, true),
-            PosLoyalty.claimReward("$ 2 on your order"),
-            PosLoyalty.hasRewardLine("$ 2 on your order", "-2.00"),
+            PosLoyalty.claimReward("$ 2.00 on your order"),
+            PosLoyalty.hasRewardLine("$ 2.00 on your order", "-2.00"),
             PosLoyalty.orderTotalIs("3.10"),
         ].flat(),
 });
@@ -525,10 +525,10 @@ registry.category("web_tour.tours").add("PosLoyaltySpecificProductDiscountWithGl
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Product A", "1"),
-            PosLoyalty.hasRewardLine("$ 40 on Product A", "-40.00"),
+            PosLoyalty.hasRewardLine("$ 40.00 on Product A", "-40.00"),
             PosLoyalty.clickDiscountButton(),
             Dialog.confirm(),
-            PosLoyalty.hasRewardLine("$ 40 on Product A", "-40.00"),
+            PosLoyalty.hasRewardLine("$ 40.00 on Product A", "-40.00"),
             PosLoyalty.orderTotalIs("20.00"),
         ].flat(),
 });
