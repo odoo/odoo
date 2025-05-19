@@ -193,8 +193,9 @@ export class HistoryPlugin extends Plugin {
             id: this.generateId(),
             previousStepId: undefined,
         });
-        /** @type { Map<string, "consumed"|"undo"|"redo"> } */
-        this.stepsStates = new Map();
+        /** @type { Map<string, "undo"|"redo"> } */
+        this.stepsKinds = new Map();
+        this.consumedSteps = new Set();
         this.nodeToIdMap = new WeakMap();
         this.idToNodeMap = new Map();
         this.setNodeId(this.editable);
@@ -584,9 +585,10 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * @param { Object } [params]
-     * @param { "consumed"|"undo"|"redo" } [params.stepState]
+     * @param { "undo"|"redo" } [params.stepKind]
+     * @param { boolean } [params.consumed]
      */
-    addStep({ stepState } = {}) {
+    addStep({ stepKind, consumed } = {}) {
         // @todo @phoenix should we allow to pause the making of a step?
         // if (!this.stepsActive) {
         //     return;
@@ -628,8 +630,11 @@ export class HistoryPlugin extends Plugin {
         // That way, the state of undo and redo is truly accessible
         // when executing the onChange callback.
         // It is useful for external components if they execute shared.can[Undo|Redo]
-        if (stepState) {
-            this.stepsStates.set(currentStep.id, stepState);
+        if (stepKind) {
+            this.stepsKinds.set(currentStep.id, stepKind);
+        }
+        if (consumed) {
+            this.consumedSteps.add(currentStep.id);
         }
         this.stageSelection();
         this.dispatchTo("step_added_handlers", { step: currentStep, stepCommonAncestor });
@@ -660,10 +665,10 @@ export class HistoryPlugin extends Plugin {
         const pos = this.getNextUndoIndex();
         if (pos > 0) {
             // Consider the position consumed.
-            this.stepsStates.set(this.steps[pos].id, "consumed");
+            this.consumedSteps.add(this.steps[pos].id);
             this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
             this.setSerializedSelection(this.steps[pos].selection);
-            this.addStep({ stepState: "undo" });
+            this.addStep({ stepKind: "undo" });
             // Consider the last position of the history as an undo.
         }
         this.dispatchTo("post_undo_handlers");
@@ -681,10 +686,10 @@ export class HistoryPlugin extends Plugin {
 
         const pos = this.getNextRedoIndex();
         if (pos > 0) {
-            this.stepsStates.set(this.steps[pos].id, "consumed");
+            this.consumedSteps.add(this.steps[pos].id);
             this.revertMutations(this.steps[pos].mutations, { forNewStep: true });
             this.setSerializedSelection(this.steps[pos].selection);
-            this.addStep({ stepState: "redo" });
+            this.addStep({ stepKind: "redo" });
         }
         this.dispatchTo("post_redo_handlers");
     }
@@ -721,8 +726,9 @@ export class HistoryPlugin extends Plugin {
         // Go back to first step that can be undone ("redo" or undefined).
         for (let index = this.steps.length - 1; index >= 0; index--) {
             if (this.isReversibleStep(index)) {
-                const state = this.stepsStates.get(this.steps[index].id);
-                if (state === "redo" || !state) {
+                const kind = this.stepsKinds.get(this.steps[index].id);
+                const consumed = this.consumedSteps.has(this.steps[index].id);
+                if (kind !== "undo" && !consumed) {
                     return index;
                 }
             }
@@ -750,24 +756,16 @@ export class HistoryPlugin extends Plugin {
      * Return -1 if no redo index can be found.
      */
     getNextRedoIndex() {
-        // We cannot redo more than what is consumed.
-        // Check if we have no more "consumed" than "redo" until we get to an
-        // "undo"
-        let totalConsumed = 0;
         for (let index = this.steps.length - 1; index >= 0; index--) {
             if (this.isReversibleStep(index)) {
-                const state = this.stepsStates.get(this.steps[index].id);
-                switch (state) {
-                    case "undo":
-                        return totalConsumed <= 0 ? index : -1;
-                    case "redo":
-                        totalConsumed -= 1;
-                        break;
-                    case "consumed":
-                        totalConsumed += 1;
-                        break;
-                    default:
-                        return -1;
+                const kind = this.stepsKinds.get(this.steps[index].id);
+                const consumed = this.consumedSteps.has(this.steps[index].id);
+
+                if (!kind) {
+                    return -1;
+                }
+                if (kind === "undo" && !consumed) {
+                    return index;
                 }
             }
         }
@@ -1047,7 +1045,7 @@ export class HistoryPlugin extends Plugin {
             // DOM after all steps were reverted then applied again.
             this.processNewRecords(this.observer.takeRecords());
             if (this.isReversibleStep(i)) {
-                this.stepsStates.set(currentStep.id, "consumed");
+                this.consumedSteps.add(currentStep.id);
                 lastRevertedStep = currentStep;
             }
         }
@@ -1064,7 +1062,7 @@ export class HistoryPlugin extends Plugin {
         this.setSerializedSelection(lastRevertedStep.selection);
         // Register resulting mutations as a new consumed step (prevent undo).
         this.dispatchContentUpdated();
-        this.addStep({ stepState: "consumed" });
+        this.addStep({ consumed: true });
     }
 
     /**
