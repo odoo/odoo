@@ -3,12 +3,12 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
 import { isRemovable } from "./remove_plugin";
-import { isMovable } from "./move_plugin";
 
 const clonableSelector = "a.btn:not(.oe_unremovable)";
 
 export function isClonable(el) {
-    return el.matches(clonableSelector) || (isRemovable(el) && isMovable(el));
+    // TODO and isDraggable
+    return el.matches(clonableSelector) || isRemovable(el);
 }
 
 export class ClonePlugin extends Plugin {
