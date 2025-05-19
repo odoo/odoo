@@ -468,11 +468,6 @@ class IrModuleModule(models.Model):
         return self._button_immediate_function(self.env.registry[self._name].button_install)
 
     @assert_log_admin_access
-    def button_install_cancel(self):
-        self.filtered(lambda m: m.state == 'to install').write({'state': 'uninstalled', 'demo': False})
-        return True
-
-    @assert_log_admin_access
     def module_uninstall(self):
         """ Perform the various steps required to uninstall a module completely
         including the deletion of all database structures created by the module:
@@ -656,10 +651,6 @@ class IrModuleModule(models.Model):
             'context': {'default_module_ids': self.ids},
         }
 
-    def button_uninstall_cancel(self):
-        self.filtered(lambda m: m.state == 'to remove').write({'state': 'installed'})
-        return True
-
     @assert_log_admin_access
     def button_immediate_upgrade(self):
         """
@@ -716,11 +707,6 @@ class IrModuleModule(models.Model):
 
         self.browse(to_install).button_install()
         return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
-
-    @assert_log_admin_access
-    def button_upgrade_cancel(self):
-        self.write({'state': 'installed'})
-        return True
 
     @staticmethod
     def get_values_from_terp(terp):
