@@ -10,6 +10,9 @@ import time
 import datetime
 import re
 import threading
+import asyncio
+from odoo.tools.safe_eval import safe_eval
+
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -965,7 +968,23 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
         }
 
-        if country_code.upper() != "AU":
+        # if country_code.upper() != "AU":
+        #     payload["shipment"]["international"] = {
+        #         "incoterms": "DAP",
+        #         "customs_declaration": {
+        #             "description": "Apparell",
+        #             "total_value": round(declared_value, 2),
+        #             "currency": "AUD",
+        #             "duty_paid_by": "receiver",
+        #             "export_declaration_number": ""
+        #         }
+        #     }
+        is_international = (
+                (country_code.upper() != "AU")
+                or (sale.post_category or "").strip().lower() == "international"
+        )
+
+        if is_international:
             payload["shipment"]["international"] = {
                 "incoterms": "DAP",
                 "customs_declaration": {
@@ -976,6 +995,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "export_declaration_number": ""
                 }
             }
+            _logger.warning("[INTERNATIONAL] Skipping label print for international order.")
+            self.handle_manual_wb_update(order_number=sale.name, pick_number=picking.name)
+            return True
 
         _logger.info(f"[ONETRAKER][SINGLE PICK PAYLOAD] Sending payload:\n{json.dumps(payload, indent=4)}")
 
@@ -1313,7 +1335,22 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             }
         }
 
-        if country_code.upper() != "AU":
+        # if country_code.upper() != "AU":
+        #     payload["shipment"]["international"] = {
+        #         "incoterms": "DAP",
+        #         "customs_declaration": {
+        #             "description": "Apparell",
+        #             "total_value": round(declared_value, 2),
+        #             "currency": "AUD",
+        #             "duty_paid_by": "receiver",
+        #             "export_declaration_number": ""
+        #         }
+        #     }
+        is_international = (
+                (country_code.upper() != "AU")
+                or (sale.post_category or "").strip().lower() == "international"
+        )
+        if is_international:
             payload["shipment"]["international"] = {
                 "incoterms": "DAP",
                 "customs_declaration": {
@@ -1324,6 +1361,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     "export_declaration_number": ""
                 }
             }
+            _logger.warning("[INTERNATIONAL] Skipping label print for international order.")
+            self.handle_manual_wb_update(order_number=sale.name, pick_number=picking.name)
+            return payload
 
         headers = {
             'Content-Type': 'application/json',
