@@ -1783,7 +1783,7 @@ class BaseModel(metaclass=MetaModel):
                     continue
                 try:
                     domains.append([(field_name, operator, field.convert_to_write(name, self))])
-                except ValueError:
+                except (ValueError, TypeError):
                     pass  # ignore that case if the value doesn't match the field type
             domain += aggregator(domains)
 
