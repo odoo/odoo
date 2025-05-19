@@ -989,6 +989,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             'pick_status': 'packed',
             'delivery_status': 'partial',
             'consignment_number': con_id,
+            'status': label_url,
             'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
         })
 
