@@ -370,6 +370,7 @@ class AccountMoveSend(models.AbstractModel):
 
         company_id = next(iter(invoices_data)).company_id
         grouped_invoices_by_report = defaultdict(dict)
+        is_send_wizard = self._name == 'account.move.send.wizard'
         for invoice, invoice_data in invoices_data.items():
             grouped_invoices_by_report[invoice_data['pdf_report']][invoice] = invoice_data
 
@@ -386,8 +387,8 @@ class AccountMoveSend(models.AbstractModel):
                     'name': invoice._get_invoice_report_filename(),
                     'raw': content_by_id[invoice.id],
                     'mimetype': 'application/pdf',
-                    'res_model': invoice._name,
-                    'res_id': invoice.id,
+                    'res_model': 'mail.compose.message' if is_send_wizard and self.scheduled_date else invoice._name,
+                    'res_id': 0 if is_send_wizard and self.scheduled_date else invoice.id,
                     'res_field': 'invoice_pdf_report_file',  # Binary field
                 }
 
