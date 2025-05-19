@@ -3734,14 +3734,14 @@ test(`form_view_id attribute works (for creating events)`, async () => {
         },
     });
 
-    onRpc("create", () => {
+    onRpc("create", () =>
         // we simulate here the case where a create call with just
         // the field name fails.  This is a normal flow, the server
         // reject the create rpc (quick create), then the web client
         // fall back to a form view. This happens typically when a
         // model has required fields
-        return Promise.reject("None shall pass!");
-    });
+        Promise.reject("None shall pass!")
+    );
 
     await mountView({
         resModel: "event",
@@ -3798,14 +3798,14 @@ test(`calendar fallback to form view id in action if necessary`, async () => {
         },
     });
 
-    onRpc("create", () => {
+    onRpc("create", () =>
         // we simulate here the case where a create call with just
         // the field name fails.  This is a normal flow, the server
         // reject the create rpc (quick create), then the web client
         // fall back to a form view. This happens typically when a
         // model has required fields
-        return Promise.reject("None shall pass!");
-    });
+        Promise.reject("None shall pass!")
+    );
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -5471,4 +5471,47 @@ test("calendar: check context is correclty sent to fetch data", async () => {
             </calendar>`,
         context: { active_test: true },
     });
+});
+
+test("race condition involving user.hasAccess", async () => {
+    const def = new Deferred();
+    const defTriggerDoAction = new Deferred();
+    onRpc("has_access", () => {
+        expect.step("has_access");
+        defTriggerDoAction.resolve();
+        return def;
+    });
+
+    Event._views = {
+        "calendar,1": `<calendar date_start="start" date_stop="stop" mode="day"/>`,
+        "list,2": `<list><field name="name" /></list>`,
+        search: `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "context initial date",
+            res_model: "event",
+            views: [[1, "calendar"]],
+            context: { initial_date: "2016-01-30 08:00:00" }, // 30th of january
+        },
+        {
+            id: 2,
+            name: "context initial date",
+            res_model: "event",
+            views: [[2, "list"]],
+            context: {},
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    getService("action").doAction(1);
+
+    await defTriggerDoAction;
+    await getService("action").doAction(2);
+    expect.verifySteps(["has_access"]);
+    def.resolve(true);
+    await def;
+    expect(".o_list_view").toHaveCount(1);
 });

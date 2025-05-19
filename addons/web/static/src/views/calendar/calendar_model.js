@@ -320,8 +320,13 @@ export class CalendarModel extends Model {
      * @protected
      */
     async updateData(data) {
+        const auxiliaryProms = [];
         if (data.hasCreateRight === null) {
-            data.hasCreateRight = await user.checkAccessRight(this.meta.resModel, "create");
+            auxiliaryProms.push(
+                user.checkAccessRight(this.meta.resModel, "create").then((hasCreateRight) => {
+                    data.hasCreateRight = hasCreateRight;
+                })
+            );
         }
         data.range = this.computeRange();
         if (this.meta.showUnusualDays) {
@@ -350,6 +355,7 @@ export class CalendarModel extends Model {
                 }
             }
         }
+        await Promise.all(auxiliaryProms);
     }
 
     //--------------------------------------------------------------------------
@@ -486,9 +492,12 @@ export class CalendarModel extends Model {
      */
     fetchRecords(data) {
         const { context, fieldNames, resModel } = this.meta;
-        return this.orm.searchRead(resModel, this.computeDomain(data), [
-            ...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)]),
-        ], { context });
+        return this.orm.searchRead(
+            resModel,
+            this.computeDomain(data),
+            [...new Set([...fieldNames, ...Object.keys(this.meta.activeFields)])],
+            { context }
+        );
     }
     /**
      * @protected
