@@ -97,8 +97,8 @@
                         <t t-if="widget.deletable">
                             <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         </t>
-                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="action_archive" type="object" t-if="record.active.raw_value">>Archive</a>
-                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="action_unarchive" type="object" t-if="!record.active.raw_value">>Restore</a>
+                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="action_archive" type="object" t-if="record.active.raw_value">Archive</a>
+                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="action_unarchive" type="object" t-if="!record.active.raw_value">Restore</a>
                         <div role="separator" class="dropdown-divider"/>
                         <field name="color" widget="kanban_color_picker"/>
                     </t>
