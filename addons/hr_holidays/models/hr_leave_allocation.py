@@ -874,8 +874,6 @@ class HrLeaveAllocation(models.Model):
         if self.env.is_superuser():
             return True
         current_employee = self.env.user.employee_id
-        if not current_employee:
-            return True
         is_administrator = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
         for allocation in self:
             is_time_off_manager = allocation.employee_id.leave_manager_id == self.env.user
