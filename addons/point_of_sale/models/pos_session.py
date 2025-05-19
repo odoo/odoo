@@ -201,6 +201,13 @@ class PosSession(models.Model):
 
         return response
 
+    def filter_local_data(self, models_to_filter):
+        response = {}
+        for model, ids in models_to_filter.items():
+            response[model] = self.env[model].browse(ids)._unrelevant_records()
+
+        return response
+
     def delete_opening_control_session(self):
         self.ensure_one()
         if not self.exists():
