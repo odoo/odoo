@@ -952,7 +952,19 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         })
 
         #  Finally, validate the picking
+        # picking.button_validate()
+        # Ensure move lines are correctly updated before validation
+        picking.action_assign()
+        for move in picking.move_lines:
+            for line in move.move_line_ids:
+                _logger.info(
+                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+                if line.qty_done == 0:
+                    line.qty_done = line.product_uom_qty or 1.0
+
+        # Validate the picking after setting qty_done
         picking.button_validate()
+
         self.send_tracking_update_to_ot_orders(
             so_number=sale.name,
             con_id=con_id,
@@ -1576,6 +1588,27 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
             'delivery_status': "partial",
         })
         picking.write({'current_state': "pack"})
+        # Ensure move lines are correctly updated before validation
+        picking.action_assign()
+        for move in picking.move_lines:
+            for line in move.move_line_ids:
+                _logger.info(
+                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+                if line.qty_done == 0:
+                    line.qty_done = line.product_uom_qty or 1.0
+
+        # Validate the picking after setting qty_done
+        # picking.button_validate()
+        # Ensure move lines are correctly updated before validation
+        picking.action_assign()
+        for move in picking.move_lines:
+            for line in move.move_line_ids:
+                _logger.info(
+                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+                if line.qty_done == 0:
+                    line.qty_done = line.product_uom_qty or 1.0
+
+        # Validate the picking after setting qty_done
         picking.button_validate()
         self.send_tracking_update_to_ot_orders(
             so_number=sale_order.name,
@@ -1605,7 +1638,19 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
             'pick_status': "packed",
         })
         picking.write({'current_state': "pack"})
+        # picking.button_validate()
+        # Ensure move lines are correctly updated before validation
+        picking.action_assign()
+        for move in picking.move_lines:
+            for line in move.move_line_ids:
+                _logger.info(
+                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+                if line.qty_done == 0:
+                    line.qty_done = line.product_uom_qty or 1.0
+
+        # Validate the picking after setting qty_done
         picking.button_validate()
+
         self.send_tracking_update_to_ot_orders(
             so_number=sale_order.name,
             con_id="Manual WB",
