@@ -954,13 +954,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         #  Finally, validate the picking
         # picking.button_validate()
         # Ensure move lines are correctly updated before validation
-        picking.action_assign()
-        for move in picking.move_ids:
-            for line in move.move_line_ids:
-                _logger.info(
-                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
-                if line.qty_done == 0:
-                    line.qty_done = line.product_uom_qty or 1.0
+        # picking.action_assign()
+        # for move in picking.move_ids:
+        #     for line in move.move_line_ids:
+        #         _logger.info(
+        #             f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+        #         if line.qty_done == 0:
+        #             line.qty_done = line.product_uom_qty or 1.0
 
         # Validate the picking after setting qty_done
         picking.button_validate()
@@ -1589,24 +1589,24 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         })
         picking.write({'current_state': "pack"})
         # Ensure move lines are correctly updated before validation
-        picking.action_assign()
-        for move in picking.move_ids:
-            for line in move.move_line_ids:
-                _logger.info(
-                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
-                if line.qty_done == 0:
-                    line.qty_done = line.product_uom_qty or 1.0
+        # picking.action_assign()
+        # for move in picking.move_ids:
+        #     for line in move.move_line_ids:
+        #         _logger.info(
+        #             f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+        #         if line.qty_done == 0:
+        #             line.qty_done = line.product_uom_qty or 1.0
 
         # Validate the picking after setting qty_done
         # picking.button_validate()
         # Ensure move lines are correctly updated before validation
-        picking.action_assign()
-        for move in picking.move_ids:
-            for line in move.move_line_ids:
-                _logger.info(
-                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
-                if line.qty_done == 0:
-                    line.qty_done = line.product_uom_qty or 1.0
+        # picking.action_assign()
+        # for move in picking.move_ids:
+        #     for line in move.move_line_ids:
+        #         _logger.info(
+        #             f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+        #         if line.qty_done == 0:
+        #             line.qty_done = line.product_uom_qty or 1.0
 
         # Validate the picking after setting qty_done
         picking.button_validate()
@@ -1640,13 +1640,13 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
         picking.write({'current_state': "pack"})
         # picking.button_validate()
         # Ensure move lines are correctly updated before validation
-        picking.action_assign()
-        for move in picking.move_ids:
-            for line in move.move_line_ids:
-                _logger.info(
-                    f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
-                if line.qty_done == 0:
-                    line.qty_done = line.product_uom_qty or 1.0
+        # picking.action_assign()
+        # for move in picking.move_ids:
+        #     for line in move.move_line_ids:
+        #         _logger.info(
+        #             f"[VALIDATION DEBUG] MoveLine: {line.id}, qty_done: {line.qty_done}, reserved: {line.reserved_uom_qty}")
+        #         if line.qty_done == 0:
+        #             line.qty_done = line.product_uom_qty or 1.0
 
         # Validate the picking after setting qty_done
         picking.button_validate()
