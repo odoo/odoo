@@ -25,10 +25,7 @@ const moveUpOrDown = {
 };
 
 const moveLeftOrRight = {
-    selector: [
-        ".row:not(.s_col_no_resize) > div",
-        ".nav-item", // TODO specific plugin
-    ].join(", "),
+    selector: [".row:not(.s_col_no_resize) > div"].join(", "),
     exclude: ".s_showcase .row .row > div",
 };
 
@@ -202,8 +199,6 @@ export class MovePlugin extends Plugin {
      * @param {String} direction "prev" or "next"
      */
     onMoveClick(direction) {
-        // TODO nav-item ? (=> specific plugin)
-        // const isNavItem = this.overlayTarget.classList.contains("nav-item");
         let hasMobileOrder = !!this.overlayTarget.style.order;
         const siblingEls = this.overlayTarget.parentNode.children;
 
