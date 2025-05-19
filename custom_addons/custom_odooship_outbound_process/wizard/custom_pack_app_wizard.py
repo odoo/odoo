@@ -101,6 +101,45 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise ValidationError(_("No active Pack App record found. Please open this wizard from the Pack App."))
         return res
 
+    # def update_remaining_packed_qty(self):
+    #     """Update remaining_packed_qty on stock moves based on packed wizard lines."""
+    #     self.ensure_one()
+    #     for line in self.line_ids.filtered(lambda l: l.scanned and l.picking_id and l.product_id):
+    #         move = self.env['stock.move'].search([
+    #             ('picking_id', '=', line.picking_id.id),
+    #             ('product_id', '=', line.product_id.id),
+    #         ], limit=1)
+    #         if move:
+    #             move.remaining_packed_qty = max(0.0, move.remaining_packed_qty - line.quantity)
+
+    # def update_remaining_packed_qty(self):
+    #     """Update remaining_packed_qty on stock moves and qty_delivered on sale lines."""
+    #     self.ensure_one()
+    #
+    #     # Group by picking+product to prevent duplicate updates
+    #     grouped = {}
+    #     for line in self.line_ids.filtered(lambda l: l.scanned and l.picking_id and l.product_id):
+    #         key = (line.picking_id.id, line.product_id.id)
+    #         grouped.setdefault(key, []).append(line)
+    #
+    #     for (picking_id, product_id), lines in grouped.items():
+    #         total_qty = sum(line.quantity for line in lines)
+    #
+    #         # Update stock move
+    #         move = self.env['stock.move'].search([
+    #             ('picking_id', '=', picking_id),
+    #             ('product_id', '=', product_id),
+    #         ], limit=1)
+    #         if move:
+    #             move.remaining_packed_qty = max(0.0, move.remaining_packed_qty - total_qty)
+    #
+    #         # Update sale.order.line
+    #         sale_order = lines[0].sale_order_id
+    #         if sale_order:
+    #             sol = sale_order.order_line.filtered(lambda l: l.product_id.id == product_id)
+    #             if sol:
+    #                 sol[0].qty_delivered += total_qty
+
     @api.depends('line_ids')
     def _compute_total_line_items(self):
         for wizard in self:
@@ -385,7 +424,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     api_url = (
                         "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
                         if is_prod else
-                        "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+                        "https://int-shiperooconnect-dev.automation.shiperoo.com/api/orders"
                     )
                     self.send_payload_to_api(api_url, payload)
 
@@ -806,8 +845,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             self.write({'single_pick_payload_sent': True})
             self.env.cr.flush()
             _logger.info(f"[PRE-FLAG] Wizard {self.id} marked as payload sent before API call.")
+            # self.update_remaining_packed_qty()
 
         # Release container(s)
+        # self.update_remaining_packed_qty()
         self.release_container()
 
         return {'type': 'ir.actions.act_window_close'}
@@ -1009,7 +1050,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         def _release_async(url, payload, code):
             try:
-                requests.post(url, headers={'Content-Type': 'application/json'}, data=json.dumps(payload), timeout=0.5)
+                requests.post(url, headers={'Content-Type': 'application/json'}, data=json.dumps(payload), timeout=15)
                 _logger.info(f"[RELEASE] Sent async release for {code}")
             except Exception as e:
                 _logger.warning(f"[RELEASE] failed for {code}: {str(e)}")
@@ -1080,7 +1121,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         try:
             t_start = time.perf_counter()
-            response = requests.post(api_url, headers=headers, json=payload, timeout=30)
+            response = requests.post(api_url, headers=headers, json=payload, timeout=50)
             response.raise_for_status()
 
             response_json = response.json()
@@ -1108,7 +1149,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 raise UserError(_("Label URL not found in OneTraker response."))
 
             t_label_start = time.perf_counter()
-            label_resp = requests.get(label_url, stream=True, timeout=30)
+            label_resp = requests.get(label_url, stream=True, timeout=50)
             label_resp.raise_for_status()
 
             zpl_data = ""
@@ -1121,7 +1162,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 raise UserError(_("Downloaded label is empty."))
 
             t_print_start = time.perf_counter()
-            with socket.create_connection((bench_ip, 9100), timeout=20) as sock:
+            with socket.create_connection((bench_ip, 9100), timeout=40) as sock:
                 sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
                 sock.sendall(zpl_data.encode('utf-8'))
 
@@ -1322,6 +1363,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 'status': label_url,
                 'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
             })
+            picking.button_validate()
             self.send_tracking_update_to_ot_orders(
                 so_number=sale.name,
                 con_id=con_id,
@@ -1346,7 +1388,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             ot_orders_url = (
                 "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/ot_orders"
                 if is_production else
-                "https://shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
+                "https://int-shiperooconnect-dev.automation.shiperoo.com/api/ot_orders"
             )
 
             payload = {
@@ -1367,7 +1409,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     url=ot_orders_url,
                     headers=headers,
                     json=payload,
-                    timeout=3
+                    timeout=15
                 )
             except requests.exceptions.RequestException as e:
                 _logger.warning(f"[OT_ORDERS] Tracking update skipped due to network issue: {str(e)}")
@@ -1495,7 +1537,7 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
                     api_url = (
                         "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
                         if is_production else
-                        "https://shiperooconnect-dev.automation.shiperoo.com/api/orders"
+                        "https://int-shiperooconnect-dev.automation.shiperoo.com/api/orders"
                     )
                     wizard.send_payload_to_api(api_url, payload)
                     _logger.info("[SUCCESS] Legacy multi-pick payload sent successfully to: %s", api_url)
