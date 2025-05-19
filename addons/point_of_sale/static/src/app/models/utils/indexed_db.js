@@ -43,6 +43,60 @@ export default class IndexedDB {
     }
 
     async promises(storeName, arrData, method) {
+<<<<<<< 0854e7ad1866a2794a0999b05ab1e7964bdf25a3
+||||||| f77b40bba0c92a9a225eb7ade694e79cb804f7bf
+        if (method !== "delete") {
+            const data = await this.readAll([storeName]);
+            const storeData = data[storeName];
+            if (storeData?.length > 0) {
+                for (const idx in arrData) {
+                    const data = { ...arrData[idx] };
+                    delete data.JSONuiState;
+                    delete data.date_order;
+                    delete data.write_date;
+
+                    let alreadyExists = storeData.find((item) => item.uuid === data.uuid);
+                    if (alreadyExists) {
+                        alreadyExists = { ...alreadyExists };
+                        delete alreadyExists.JSONuiState;
+                        delete alreadyExists.date_order;
+                        delete alreadyExists.write_date;
+                    }
+
+                    if (alreadyExists && JSON.stringify(alreadyExists) !== JSON.stringify(data)) {
+                        delete arrData[idx];
+                    }
+                }
+            }
+        }
+
+=======
+        if (method !== "delete") {
+            const data = await this.readAll([storeName]);
+            const storeData = data[storeName];
+            if (storeData?.length > 0) {
+                for (const idx in arrData) {
+                    const data = { ...arrData[idx] };
+                    delete data.JSONuiState;
+                    delete data.date_order;
+                    delete data.write_date;
+
+                    let alreadyExists = storeData.find((item) => item.uuid === data.uuid);
+                    if (alreadyExists) {
+                        alreadyExists = { ...alreadyExists };
+                        delete alreadyExists.JSONuiState;
+                        delete alreadyExists.date_order;
+                        delete alreadyExists.write_date;
+                    }
+
+                    if (alreadyExists && JSON.stringify(alreadyExists) === JSON.stringify(data)) {
+                        delete arrData[idx];
+                    }
+                }
+            }
+        }
+
+>>>>>>> 41cfc3f9b0ccb43f60dad7506d4174bea9b67206
         const transaction = this.getNewTransaction([storeName], "readwrite");
         if (!transaction) {
             return false;
