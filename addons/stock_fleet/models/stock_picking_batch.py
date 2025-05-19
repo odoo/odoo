@@ -91,3 +91,12 @@ class StockPickingBatch(models.Model):
                 batch.picking_ids.move_ids.write({'location_dest_id': batch.dock_id.id})
             else:
                 batch.picking_ids.move_ids.write({'location_id': batch.dock_id.id})
+
+    def _get_merged_batch_vals(self):
+        self.ensure_one()
+        vals = super()._get_merged_batch_vals()
+        vals.update({
+            'vehicle_id': self.vehicle_id.id,
+            'dock_id': self.dock_id.id,
+        })
+        return vals

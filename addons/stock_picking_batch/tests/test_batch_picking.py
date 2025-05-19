@@ -3,7 +3,7 @@
 
 from datetime import datetime, timedelta
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tools import float_round
 
 from odoo.exceptions import UserError
@@ -674,6 +674,33 @@ class TestBatchPicking(TransactionCase):
         })
         receipt03.action_confirm()
         self.assertEqual(batch.picking_ids, backorder | receipt02 | receipt03)
+
+    def test_batch_merge(self):
+        batch_1 = self.env['stock.picking.batch'].create({
+            'name': 'Batch 1',
+            'company_id': self.env.company.id,
+            'picking_ids': [Command.link(self.picking_client_1.id)],
+            'description': 'Great batch',
+            'user_id': self.env.user.id,
+        })
+        batch_2 = self.env['stock.picking.batch'].create({
+            'name': 'Batch 2',
+            'company_id': self.env.company.id,
+            'picking_ids': [Command.link(self.picking_client_2.id)],
+            'description': 'Amazing batch',
+            'user_id': self.env.user.id,
+        })
+        batch_1.action_confirm()
+        with self.assertRaises(UserError):
+            (batch_1 | batch_2).action_merge()
+        batch_2.action_confirm()
+        early_date = fields.Datetime.now() - timedelta(days=1)
+        batch_2.scheduled_date = early_date
+        (batch_1 | batch_2).action_merge()
+        self.assertEqual(batch_1.picking_ids, self.picking_client_1 | self.picking_client_2)
+        self.assertEqual(batch_1.description, 'Amazing batch', 'The description should be the one of the earliest batch')
+        self.assertEqual(batch_1.scheduled_date, early_date)
+
 
 @tagged('-at_install', 'post_install')
 class TestBatchPicking02(TransactionCase):
