@@ -12,6 +12,14 @@
                 <field name="reward_product_ids" invisible="1"/>
                 <field name="all_discount_product_ids" invisible="1"/>
                 <sheet>
+                    <div
+                        role="alert"
+                        class="alert alert-info mb-2"
+                        invisible="reward_type != 'fixed'"
+                    >
+                        Fixed price rewards cannot be combined with discount rewards, unless the
+                        discount applies to the entire order.
+                    </div>
                     <group>
                         <group string="Reward" name="reward_type_group" invisible="program_type in ('ewallet','gift_card')">
                             <field name="reward_type" widget="selection" force_save="1" readonly="program_type == 'buy_x_get_y'"/>
@@ -27,6 +35,7 @@
                             </div>
                             <label for="discount_applicability" string="" invisible="reward_type != 'discount'"/>
                             <field name="discount_applicability" nolabel="1" widget="radio" invisible="reward_type != 'discount'"/>
+                            <field name="fixed_amount_per_unit" class="oe_inline me-1" invisible="reward_type != 'fixed'"/>
                             <label
                                 for="repeater"
                                 string=""
@@ -54,6 +63,13 @@
                             <field name="discount_product_ids" widget="many2many_tags" invisible="discount_applicability == 'order'"/>
                             <field name="discount_product_category_id" invisible="discount_applicability == 'order'"/>
                             <field name="discount_product_tag_id" invisible="discount_applicability == 'order'"/>
+                        </group>
+
+                        <group string="Among" invisible="reward_type != 'fixed'">
+                            <field name="discount_product_domain" string="Products Domain" groups="base.group_no_one" widget="domain" options="{'model': 'product.product', 'in_dialog': true}"/>
+                            <field name="discount_product_ids" string="Products" widget="many2many_tags"/>
+                            <field name="discount_product_category_id" string="Products Categories"/>
+                            <field name="discount_product_tag_id" string="Products Tags"/>
                         </group>
                     </group>
                     <group string="Points" invisible="not user_has_debug and program_type not in ('loyalty', 'buy_x_get_y')">
@@ -104,26 +120,7 @@
                                     <field name="discount"/><field name="discount_mode"/> discount <t t-if="record.discount_max_amount.raw_value > 0">( Max <field name="discount_max_amount"/> )</t>
                                 </t>
 
-<<<<<<< HEAD
-                                <t t-if="record.discount_applicability.raw_value === 'specific'">
-
-                                    <div class="fw-bold text-decoration-underline mt-3">Applied to:</div>
-
-                                    <div t-if="record.discount_product_ids.raw_value.length > 0" class="d-flex">
-                                        <i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags"/>
-                                    </div>
-                                    <div t-if="record.discount_product_category_id.raw_value" class="d-flex">
-                                        <i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="discount_product_category_id"/>
-                                    </div>
-                                    <div t-if="record.discount_product_tag_id.raw_value" class="d-flex">
-                                        <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id"/>
-                                    </div>
-                                    <div t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one" class="d-flex">
-                                        <i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain"/>
-                                    </div>
-                                </t>
-
-                                <t t-elif="record.discount_applicability.raw_value === 'cheapest'">
+                                <t t-if="record.discount_applicability.raw_value === 'cheapest'">
                                     on the cheapest product out of <field name="repeater"/>
                                 </t>
 
@@ -139,6 +136,32 @@
                                 </div>
                                 <div t-if="record.reward_product_tag_id.raw_value" class="d-flex">
                                     <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="reward_product_tag_id"/>
+                                </div>
+                            </t>
+
+                            <t t-elif="record.reward_type.raw_value === 'fixed'">
+                                <field name="fixed_amount_per_unit" widget="monetary"/> per unit
+
+                            </t>
+                            <t t-if="
+                                record.discount_product_ids.raw_value.length > 0
+                                or record.discount_product_category_id.raw_value
+                                or record.discount_product_tag_id.raw_value
+                                or record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'
+                            ">
+                                <div class="fw-bold text-decoration-underline mt-3">Applied to:</div>
+
+                                <div t-if="record.discount_product_ids.raw_value.length > 0" class="d-flex">
+                                    <i class="fa fa-cube fa-fw" title="Products"/> <field name="discount_product_ids" widget="many2many_tags"/>
+                                </div>
+                                <div t-if="record.discount_product_category_id.raw_value" class="d-flex">
+                                    <i class="fa fa-cubes fa-fw" title="Product Categories"/> <field name="discount_product_category_id"/>
+                                </div>
+                                <div t-if="record.discount_product_tag_id.raw_value" class="d-flex">
+                                    <i class="fa fa-tags fa-fw" title="Product Tags"/> <field name="discount_product_tag_id"/>
+                                </div>
+                                <div t-if="record.discount_product_domain.raw_value &amp;&amp; record.discount_product_domain.raw_value !== '[]'" groups="base.group_no_one" class="d-flex">
+                                    <i class="fa fa-search fa-fw" title="Product Domain"/> <field name="discount_product_domain"/>
                                 </div>
                             </t>
                         </div>

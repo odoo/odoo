@@ -337,7 +337,8 @@ class SaleOrder(models.Model):
             lines -= self._get_no_effect_on_threshold_lines()
 
         discountable = 0
-        discountable_per_tax = defaultdict(float)
+        SaleOrderLine = self.env['sale.order.line']
+        discountable_per_tax = defaultdict(lambda: {'discount': 0, 'lines': SaleOrderLine})
 
         AccountTax = self.env['account.tax']
         base_lines = []
@@ -372,7 +373,7 @@ class SaleOrder(models.Model):
 
             taxes = grouping_key['taxes'] if grouping_key else self.env['account.tax']
             discountable += values['raw_base_amount_currency'] + values['raw_tax_amount_currency']
-            discountable_per_tax[taxes] += (
+            discountable_per_tax[taxes]['discount'] += (
                 values['raw_base_amount_currency']
                 + sum(
                     tax_data['raw_tax_amount_currency']
@@ -385,8 +386,19 @@ class SaleOrder(models.Model):
 
     def _cheapest_lines_info(self, reward):
         self.ensure_one()
-        product_domain = reward._get_discount_product_domain()
-        discountable_products = self.order_line.product_id.filtered_domain(product_domain)
+
+        fixed_rewards = self.order_line.reward_id.filtered(lambda r: r.reward_type == 'fixed')
+        fixed_domain = []
+        for fixed_r in fixed_rewards:
+            fixed_domain = expression.OR([fixed_domain, fixed_r._get_discount_product_domain()])
+        fixed_rewarded_products = self.env['product.product']
+        if fixed_rewards:
+            fixed_rewarded_products = self.order_line.product_id.filtered_domain(fixed_domain)
+
+        discountable_products = (
+            self.order_line.product_id.filtered_domain(reward._get_discount_product_domain())
+            - fixed_rewarded_products
+        )
         valid_lines = (self.order_line - self._get_no_effect_on_threshold_lines()).filtered(
             lambda l: not l.reward_id
                       and l.product_uom_qty
@@ -420,11 +432,15 @@ class SaleOrder(models.Model):
             return False, False
 
         discountable = 0
-        discountable_per_tax = defaultdict(int)
+        SaleOrderLine = self.env['sale.order.line']
+        discountable_per_tax = defaultdict(lambda: {'discount': 0, 'lines': SaleOrderLine})
         for line, qty in cheapest_lines_info.items():
             discountable += line.price_total
+            line_discountable = line.price_unit * (1 - (line.discount or 0) / 100) * qty
+            # TODO edm: here we don't consider specific discounts that might already be there
             taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
-            discountable_per_tax[taxes] += line.price_unit * (1 - (line.discount or 0) / 100) * qty
+            discountable_per_tax[taxes]['discount'] += line_discountable
+            discountable_per_tax[taxes]['lines'] += line
 
         return discountable, discountable_per_tax
 
@@ -433,7 +449,7 @@ class SaleOrder(models.Model):
         Returns all lines to which `reward` can apply
         """
         self.ensure_one()
-        assert reward.discount_applicability == 'specific'
+        assert reward.discount_applicability == 'specific' or reward.reward_type == 'fixed'
 
         discountable_lines = self.env['sale.order.line']
         for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
@@ -449,16 +465,27 @@ class SaleOrder(models.Model):
     def _discountable_specific(self, reward):
         """
         Special function to compute the discountable for 'specific' types of discount.
-        The goal of this function is to make sure that applying a 5$ discount on an order with a
-         5$ product and a 5% discount does not make the order go below 0.
 
-        Returns the discountable and discountable_per_tax for a discount that only applies to specific products.
+        The goal of this method is to ensure that a same line with multiples discounts on it does
+        compute these discounts in a coherent way, to not be able to discount a part of the price
+        that was already discounted.
+
+        eg: 10 blue chairs at $10:
+            - add a 90% discount on the cheapest out of 2. ==> $45 discount ($55 still discountable)
+            - add a 50% discount on all the chairs. ==> $27.5 discount ($27.5 still discountable)
+            - add another 25% discount on all blue products ==> $6.87 discount ($20.63 left)
+            => This method would send the amount not yet discounted ( == discountable), here $20.63.
+
+        Returns the discountable and discountable_per_tax for a discount that only applies to
+        specific products.
         """
         self.ensure_one()
         assert reward.discount_applicability == 'specific'
 
         lines_to_discount = self._get_specific_discountable_lines(reward).filtered(
-            lambda line: bool(line.product_uom_qty and line.price_total)
+            lambda line: line.product_uom_qty
+                         and line.price_total
+                         and all(r.reward_type != 'fixed' for r in line.discount_line_ids.reward_id)
         )
         discount_lines = defaultdict(lambda: self.env['sale.order.line'])
         order_lines = self.order_line - self._get_no_effect_on_threshold_lines()
@@ -518,17 +545,69 @@ class SaleOrder(models.Model):
                     remaining_amount_per_line[line] -= consumed
 
         discountable = 0
-        discountable_per_tax = defaultdict(int)
+        SaleOrderLine = self.env['sale.order.line']
+        discountable_per_tax = defaultdict(lambda: {'discount': 0, 'lines': SaleOrderLine})
         for line in lines_to_discount:
             discountable += remaining_amount_per_line[line]
-            line_discountable = line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
-            # line_discountable is the same as in a 'order' discount
+            # line_discountable is the same as in an 'order' discount
             #  but first multiplied by a factor for the taxes to apply
             #  and then multiplied by another factor coming from the discountable
+            # TODO EDM: this is uselessly complicated to ensure the sale discount on the line is accounted for.
+            #  Next commit when refactoring, start with that. (and fixup to get rid of this comment)
+            line_discountable = (
+                line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            ) * remaining_amount_per_line[line] / line.price_total
             taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
-            discountable_per_tax[taxes] += line_discountable *\
-                (remaining_amount_per_line[line] / line.price_total)
+            discountable_per_tax[taxes]['discount'] += line_discountable
+            discountable_per_tax[taxes]['lines'] += line
         return discountable, discountable_per_tax
+
+    def _discounting_fixed_price(self, reward):
+        """
+        TODO EDM
+        """
+        self.ensure_one()
+        assert reward.reward_type == 'fixed'
+
+        lines_to_discount = self._get_specific_discountable_lines(reward).filtered(
+            lambda line: bool(line.product_uom_qty and line.price_total)
+        )
+        remaining_amount_per_line = defaultdict(int)
+        for line in lines_to_discount:
+            if line.discount_line_ids:
+                claimed_rewards = line.discount_line_ids.reward_id
+                if any(r.reward_type == 'fixed' and r != reward for r in claimed_rewards):
+                    raise UserError(_(
+                        "Another fixed reward already rewarded one of these lines. Please remove it"
+                        " to apply this one."
+                    ))
+                if any(r.discount_applicability != 'order' for r in claimed_rewards):
+                    remaining_amount_per_line[line] = 0
+                    # TODO EDM: Raise?
+                    continue
+
+            remaining_amount_per_line[line] = (
+                line.price_unit * line.product_uom_qty * (1 - (line.discount or 0.0) / 100.0)
+            )
+
+        discounting = 0
+        SaleOrderLine = self.env['sale.order.line']
+        discounting_per_tax = defaultdict(lambda: {'discount': 0, 'lines': SaleOrderLine})
+
+        for line in lines_to_discount:
+            fixed_price_subtotal = reward.currency_id._convert(
+                reward.fixed_amount_per_unit, self.currency_id, self.company_id, fields.Date.today()
+            ) * line.product_uom_qty
+            if remaining_amount_per_line[line] <= fixed_price_subtotal:
+                continue
+
+            fixed_price_discount = remaining_amount_per_line[line] - fixed_price_subtotal
+            discounting += fixed_price_discount
+            taxes = line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')
+            discounting_per_tax[taxes]['discount'] += fixed_price_discount
+            discounting_per_tax[taxes]['lines'] += line
+
+        return discounting, discounting_per_tax
 
     def _get_reward_values_discount(self, reward, coupon, **kwargs):
         self.ensure_one()
@@ -632,8 +711,8 @@ class SaleOrder(models.Model):
 
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
         reward_dict = {}
-        for tax, price in discountable_per_tax.items():
-            if not price:
+        for tax, discountable_info in discountable_per_tax.items():
+            if not discountable_info['discount']:
                 continue
             mapped_taxes = self.fiscal_position_id.map_tax(tax)
             tax_desc = ''
@@ -649,12 +728,76 @@ class SaleOrder(models.Model):
                     desc=reward.description,
                     tax_str=tax_desc,
                 ) if mapped_taxes else reward.description,
-                'price_unit': -(price * discount_factor),
+                'price_unit': -(discountable_info['discount'] * discount_factor),
                 'points_cost': 0,
-                'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes]
+                'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes],
+                'discounted_line_ids': discountable_info['lines'],
             }
         # We only assign the point cost to one line to avoid counting the cost multiple times
         if reward_dict:
+            reward_dict[next(iter(reward_dict))]['points_cost'] = point_cost
+        # Returning .values() directly does not return a subscribable list
+        return list(reward_dict.values())
+
+    def _get_reward_values_fixed_price(self, reward, coupon, **kwargs):
+        self.ensure_one()
+        assert reward.reward_type == 'fixed'
+
+        sequence = max(
+            self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'),
+            default=10
+        ) + 1
+        base_reward_line_values = {
+            'product_id': reward.discount_line_product_id.id,
+            'product_uom_qty': 1.0,
+            'tax_ids': [Command.clear()],
+            'name': reward.description,
+            'reward_id': reward.id,
+            'coupon_id': coupon.id,
+            'sequence': sequence,
+            'reward_identifier_code': _generate_random_reward_code(),
+        }
+
+        discounting, discounting_per_tax = self._discounting_fixed_price(reward)
+
+        if not discounting:
+            raise UserError(_("There is nothing to discount"))
+
+        max_discount = reward.currency_id._convert(
+            reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()
+        ) or float('inf')
+        # discount should never surpass the order's current total amount, nor the reward max amount
+        max_discount = min(discounting, self.amount_total, max_discount)
+
+        # Discount per taxes
+        discount_factor = min(1, (max_discount / discounting)) if discounting else 1
+        reward_dict = {}
+        for tax, discounting_info in discounting_per_tax.items():
+            if not discounting_info:
+                continue
+            mapped_taxes = self.fiscal_position_id.map_tax(tax)
+            tax_desc = ''
+            if len(discounting_per_tax) > 1 and any(t.name for t in mapped_taxes):
+                tax_desc = _(
+                    " - On products with the following taxes: %(taxes)s",
+                    taxes=", ".join(mapped_taxes.mapped('name')),
+                )
+            reward_dict[tax] = {
+                **base_reward_line_values,
+                'name': _(
+                    "Discount %(desc)s%(tax_str)s",
+                    desc=reward.description,
+                    tax_str=tax_desc,
+                ) if mapped_taxes else reward.description,
+                'price_unit': -(discounting_info['discount'] * discount_factor),
+                'points_cost': 0,
+                'tax_ids': [Command.clear()] + [Command.link(tax.id) for tax in mapped_taxes],
+                'discounted_line_ids': discounting_info['lines'],
+            }
+        # We only assign the point cost to one line to avoid counting the cost multiple times
+        if reward_dict:
+            # TODO edm: see if necessary
+            point_cost = reward.required_points if not reward.clear_wallet else self._get_real_points_for_coupon(coupon)
             reward_dict[next(iter(reward_dict))]['points_cost'] = point_cost
         # Returning .values() directly does not return a subscribable list
         return list(reward_dict.values())
@@ -807,6 +950,8 @@ class SaleOrder(models.Model):
         reward = reward.with_context(lang=self._get_lang())
         if reward.reward_type == 'discount':
             return self._get_reward_values_discount(reward, coupon, **kwargs)
+        elif reward.reward_type == 'fixed':
+            return self._get_reward_values_fixed_price(reward, coupon, **kwargs)
         elif reward.reward_type == 'product':
             return self._get_reward_values_product(reward, coupon, **kwargs)
 

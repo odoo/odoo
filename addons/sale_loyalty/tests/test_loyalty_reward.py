@@ -139,6 +139,7 @@ class TestLoyaltyRewards(TestSaleCouponCommon):
         self.assertEqual(rewards, product_reward, msg)
 
     # === DISCOUNT REWARDS (ON ORDER) TESTS === #
+    # TODO edm: add test for no linked discount lines
 
     def test_reward_100_percent_discount_on_order(self):
         """
@@ -183,6 +184,7 @@ class TestLoyaltyRewards(TestSaleCouponCommon):
         self.assertEqual(order.amount_total, 0, msg=msg)
 
     # === DISCOUNT REWARDS (ON CHEAPEST) TESTS === #
+    # TODO edm: add test and code for linked discount lines
 
     def test_reward_cheapest_product_applied_multiple_times(self):
         """ Check the application of a reward on the cheapest product. """
@@ -360,6 +362,7 @@ class TestLoyaltyRewards(TestSaleCouponCommon):
         self.assertEqual(order.order_line[3].price_total, -5.0, msg)
 
     # === DISCOUNT REWARDS (ON SPECIFIC) TESTS === #
+    # TODO edm: add test and code for linked discount lines
 
     def test_discount_max_amount_on_specific_product(self):
         self.product_A.write({'taxes_id': [Command.set(self.tax_20pc_excl.ids)]})
@@ -508,6 +511,175 @@ class TestLoyaltyRewards(TestSaleCouponCommon):
         self._claim_reward(order, promotion_program)
         self.assertEqual(order.amount_total, 103.5)  # 115*.9
 
+    # === FIXED PRICE REWARDS TESTS === #
+
+    def test_reward_fixed_price_applies_on_selected_products_only(self):
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "all at 2 among selection",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed',
+                'fixed_amount_per_unit': 2,
+                'required_points': 3,
+                'discount_product_ids': [self.product_A.id, self.product_C.id,],
+            })],
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product_A.id}),  # 100 + 15% tax
+                Command.create({'product_id': self.product_B.id}),  # 5 + 15% tax
+                Command.create({'product_id': self.product_C.id}),  # 100 no tax
+            ]
+        })
+
+        self.assertAlmostEqual(order.amount_total, 220.75)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, promotion_program)
+
+        discount_lines = order.order_line.filtered(lambda l: l.is_reward_line)
+        discounted_lines = order.order_line.filtered(lambda l: l.discount_line_ids)
+        self.assertEqual(len(discount_lines), 2, "2 discount lines should have been created.")
+        self.assertEqual(len(discounted_lines), 2, "2 order lines should have been discounted.")
+        msg = ("2 products with different taxes must lead to 2 discount lines, one per tax, each"
+               " linked to the order line they were computed from.")
+        self.assertTrue(all(dl in discounted_lines.discount_line_ids for dl in discount_lines), msg)
+        self.assertEqual(len(discount_lines[0].discounted_line_ids), 1, msg=msg)
+        self.assertEqual(len(discount_lines[1].discounted_line_ids), 1, msg=msg)
+        self.assertTrue(
+            discount_lines[0].discounted_line_ids != discount_lines[1].discounted_line_ids, msg=msg
+        )
+        for dl in discount_lines:
+            self.assertEqual(dl.tax_ids, dl.discounted_line_ids.tax_ids, msg=msg)
+            self.assertAlmostEqual(abs(dl.price_subtotal), dl.discounted_line_ids.price_subtotal - 2)
+        self.assertFalse(
+            order.order_line[1].discount_line_ids,
+            "Only the products covered by the reward should have been discounted."
+        )
+        self.assertAlmostEqual(order.amount_total, 10.05)  # 2*1.15 (discounted) + 5*1.15 + 2 (discounted)
+
+    def test_reward_fixed_price_applies_on_more_than_minimum_quantity_products(self):
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "all at 5 among selection",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed',
+                'fixed_amount_per_unit': 5,
+                'required_points': 3,
+            })],
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': self.product_A.id, 'product_uom_qty': 4  # 100 + 15% tax
+            })],
+        })
+
+        self.assertAlmostEqual(order.amount_total, 460)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, promotion_program)
+
+        discount_line = order.order_line.filtered(lambda l: l.is_reward_line)
+        expected_discount = -(discount_line.discounted_line_ids.price_subtotal - 20)
+        msg = "All products should have been discounted."
+        self.assertAlmostEqual(discount_line.price_subtotal, expected_discount, msg=msg)
+        self.assertAlmostEqual(order.amount_total, 23, msg=msg)
+
+    def test_reward_fixed_price_ignores_cheaper_than_promo_product(self):
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "all at 50",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed', 'fixed_amount_per_unit': 50, 'required_points': 3
+            })],
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({'product_id': self.product_A.id}),  # 100 + 15% tax
+                Command.create({'product_id': self.product_B.id}),  # 5 + 15% tax
+                Command.create({'product_id': self.product_C.id}),  # 100 no tax
+            ]
+        })
+
+        self.assertAlmostEqual(order.amount_total, 220.75)
+        self.assertTrue(order.order_line[0].tax_ids)
+        self.assertTrue(order.order_line[1].tax_ids)
+        self.assertFalse(order.order_line[2].tax_ids)
+
+        order._update_programs_and_rewards()
+        self._claim_reward(order, promotion_program)
+
+        discount_lines = order.order_line.filtered(lambda l: l.is_reward_line)
+        msg = "2 discount lines should have been created, one for the 15% tax, and one without tax."
+        self.assertEqual(len(discount_lines), 2, msg=msg)
+        self.assertTrue(discount_lines[0].tax_ids != discount_lines[1].tax_ids, msg=msg)
+        msg = ("Each discount lines should cover a single order line, the last one being under"
+                 " the minimal amount to be discounted.")
+        self.assertEqual(len(discount_lines.discounted_line_ids), 2, msg=msg)
+        for dl in discount_lines:
+            discounted_line = dl.discounted_line_ids
+            self.assertEqual(len(discounted_line), 1, msg=msg)
+            self.assertTrue(discounted_line in (order.order_line[0], order.order_line[2]), msg=msg)
+            self.assertEqual(dl.tax_ids, dl.discounted_line_ids.tax_ids, msg=msg)
+
+    def test_reward_fixed_price_applies_only_once_for_same_product(self):
+        # TODO EDM
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "3 for 15",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed', 'fixed_amount_per_unit': 5, 'required_points': 3
+            })],
+        })
+
+    def test_multiple_rewards_fixed_price_applies_on_different_products(self):
+        # TODO EDM
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "3 for 15",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed', 'fixed_amount_per_unit': 5, 'required_points': 3
+            })],
+        })
+
+    def test_reward_fixed_price_do_not_discount_fixed_tax(self):
+        # TODO EDM
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "3 for 15",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed', 'fixed_amount_per_unit': 5, 'required_points': 3
+            })],
+        })
+
     # === MIXED REWARDS TESTS === #
 
     def test_reward_specific_product_with_prorata_when_cheapest_already_applied(self):
@@ -577,3 +749,45 @@ class TestLoyaltyRewards(TestSaleCouponCommon):
             f" and not {order.amount_total}. One of the 3 products already has a 50% discount."
         )
         self.assertEqual(float_compare(order.amount_total, 824, precision_rounding=3), 0, msg)
+
+    def test_rewards_fixed_price_compatible_with_discount_on_order(self):
+        # TODO EDM
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "3 for 15",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed', 'fixed_amount_per_unit': 5, 'required_points': 3
+            })],
+        })
+
+    def test_rewards_fixed_price_incompatible_with_discount_on_same_line(self):
+        # TODO EDM
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "3 for 15",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed', 'fixed_amount_per_unit': 5, 'required_points': 3
+            })],
+        })
+
+    def test_any_line_discount_incompatible_with_fixed_price_discount_on_same_line(self):
+        # TODO EDM even in the code ==> assert raise
+        self.env['loyalty.program'].search([]).action_archive()
+
+        promotion_program = self.env['loyalty.program'].create({
+            'name': "3 for 15",
+            'program_type': 'promotion',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'reward_point_amount': '1', 'reward_point_mode': 'unit'})],
+            'reward_ids': [Command.create({
+                'reward_type': 'fixed', 'fixed_amount_per_unit': 5, 'required_points': 3
+            })],
+        })

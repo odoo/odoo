@@ -99,4 +99,34 @@
         >[('name', 'ilike', 'Chair'), ('name', 'not ilike', 'protection')]</field>
         <field name="program_id" ref="loyalty.second_product_50_percent"/>
     </record>
+    <!-- 2 for a fixed price -->
+    <record id="two_for_15" model="loyalty.program">
+        <field name="name">Buy 2 for 15, or 3 for 20</field>
+        <field name="program_type">promotion</field>
+        <field name="applies_on">current</field>
+        <field name="trigger">auto</field>
+        <field name="portal_visible">False</field>
+        <field name="portal_point_name">Promo points</field>
+    </record>
+
+    <record id="two_for_15_rule" model="loyalty.rule">
+        <field name="minimum_qty">2</field>
+        <field name="reward_point_mode">unit</field>
+        <field name="reward_point_amount">1</field>
+        <field name="program_id" ref="loyalty.two_for_15"/>
+    </record>
+
+    <record id="two_for_15_reward" model="loyalty.reward">
+        <field name="reward_type">fixed</field>
+        <field name="fixed_amount_per_unit">7.5</field>
+        <field name="required_points">2</field>
+        <field name="program_id" ref="loyalty.two_for_15"/>
+    </record>
+
+    <record id="three_for_20_reward" model="loyalty.reward">
+        <field name="reward_type">fixed</field>
+        <field name="fixed_amount_per_unit">6.67</field>
+        <field name="required_points">3</field>
+        <field name="program_id" ref="loyalty.two_for_15"/>
+    </record>
 </odoo>

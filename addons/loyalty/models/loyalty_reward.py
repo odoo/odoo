@@ -65,6 +65,7 @@ class LoyaltyReward(models.Model):
         selection=[
             ('product', "Free Product"),
             ('discount', "Discount"),
+            ('fixed', "Fixed Price"),
         ],
         required=True,
         default='discount',
@@ -128,6 +129,9 @@ class LoyaltyReward(models.Model):
     reward_product_uom_id = fields.Many2one(
         comodel_name='uom.uom', compute='_compute_reward_product_uom_id'
     )
+
+    # Fixed amount rewards
+    fixed_amount_per_unit = fields.Monetary(string="Fixed Amount Per Unit")
 
     repeater = fields.Integer(string="Repeater", default=2)
     required_points = fields.Float(string="Points needed", default=1)
@@ -233,7 +237,8 @@ class LoyaltyReward(models.Model):
 
     @api.depends(
         'currency_id', 'reward_type', 'discount', 'discount_mode', 'discount_applicability',
-        'all_discount_product_ids', 'discount_max_amount', 'reward_product_ids', 'repeater',
+        'all_discount_product_ids', 'discount_max_amount', 'reward_product_ids',
+        'fixed_amount_per_unit', 'repeater',
     )
     def _compute_description(self):
         for reward in self:
@@ -293,6 +298,14 @@ class LoyaltyReward(models.Model):
                     discount_string=discount_string,
                     reward_target=reward_target,
                     max_amount_details=max_amount_details,
+                )
+            elif reward.reward_type == 'fixed':
+                bundled_amount = reward.fixed_amount_per_unit * reward.required_points
+                formatted_bundled_amount = format_amount(self.env, bundled_amount, currency)
+                reward_string = self.env._(
+                    "%(number_of_product)s for %(amount)s",
+                    number_of_product=reward.required_points,
+                    amount=formatted_bundled_amount,
                 )
             reward.description = reward_string
 
