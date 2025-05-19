@@ -59,7 +59,7 @@ export default class IndexedDB {
                         delete alreadyExists.write_date;
                     }
 
-                    if (alreadyExists && JSON.stringify(alreadyExists) !== JSON.stringify(data)) {
+                    if (alreadyExists && JSON.stringify(alreadyExists) === JSON.stringify(data)) {
                         delete arrData[idx];
                     }
                 }
