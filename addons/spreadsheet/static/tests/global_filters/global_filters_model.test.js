@@ -649,7 +649,7 @@ test("restrict text filter to a range of values", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A2")],
     });
 
     expect(model.getters.getTextFilterOptions("42")).toEqual([
@@ -667,7 +667,7 @@ test("duplicated values appear once in text filter with range", async function (
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A2")],
     });
 
     expect(model.getters.getTextFilterOptions("42")).toEqual([{ value: "3", formattedValue: "3" }]);
@@ -684,7 +684,7 @@ test("numbers and dates are formatted in text filter with range", async function
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A2")],
     });
 
     expect(model.getters.getTextFilterOptions("42")).toEqual([
@@ -703,7 +703,7 @@ test("falsy values appears (but not empty string) in text filter with range", as
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A3"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A3")],
     });
 
     expect(model.getters.getTextFilterOptions("42")).toEqual([
@@ -720,7 +720,7 @@ test("default value appears in text filter with range", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1")],
         defaultValue: ["World"],
     });
 
@@ -739,7 +739,7 @@ test("current value appears in text filter with range", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A2")],
     });
     await setGlobalFilterValue(model, {
         id: "42",
@@ -762,7 +762,7 @@ test("default value appears once if the same value is in the text filter range",
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1")],
         defaultValue: ["Hello"], // same value as in A1
     });
     expect(model.getters.getTextFilterOptions("42")).toEqual([
@@ -779,7 +779,7 @@ test("formatted default value appears once if the same value is in the text filt
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1")],
         defaultValue: ["0.3"],
     });
     await setGlobalFilterValue(model, {
@@ -801,7 +801,7 @@ test("errors and empty cells if the same value is in the text filter range", asy
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A3"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A3")],
         defaultValue: ["Hello"], // same value as in A1
     });
     expect(model.getters.getTextFilterOptions("42")).toEqual([
@@ -816,11 +816,13 @@ test("add column before a text filter range", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A2")],
     });
     addColumns(model, "before", "A", 1);
 
-    expect(model.getters.getGlobalFilter("42").rangeOfAllowedValues.zone).toEqual(toZone("B1:B2"));
+    expect(model.getters.getGlobalFilter("42").rangesOfAllowedValues[0].zone).toEqual(
+        toZone("B1:B2")
+    );
 });
 
 test("delete a text filter range", async function () {
@@ -830,11 +832,11 @@ test("delete a text filter range", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A2")],
     });
     deleteColumns(model, ["A"]);
 
-    expect(model.getters.getGlobalFilter("42").rangeOfAllowedValues).toBe(undefined);
+    expect(model.getters.getGlobalFilter("42").rangesOfAllowedValues).toBe(undefined);
 });
 
 test("import/export a text filter range", async function () {
@@ -844,16 +846,17 @@ test("import/export a text filter range", async function () {
         id: "42",
         type: "text",
         label: "Text Filter",
-        rangeOfAllowedValues: toRangeData(sheetId, "A1:A2"),
+        rangesOfAllowedValues: [toRangeData(sheetId, "A1:A2")],
     });
     // export
     const data = model.exportData();
-    expect(data.globalFilters[0].rangeOfAllowedValues).toBe("Sheet1!A1:A2");
+    expect(data.globalFilters[0].rangesOfAllowedValues).toEqual(["Sheet1!A1:A2"]);
     // import
     const newModel = new Model(data);
-    const range = newModel.getters.getGlobalFilter("42").rangeOfAllowedValues;
-    expect(range.zone).toEqual(toZone("A1:A2"));
-    expect(range.sheetId).toBe(sheetId);
+    const ranges = newModel.getters.getGlobalFilter("42").rangesOfAllowedValues;
+    expect(ranges.length).toBe(1);
+    expect(ranges[0].zone).toEqual(toZone("A1:A2"));
+    expect(ranges[0].sheetId).toBe(sheetId);
 });
 
 test("Get active filters with relation filter enabled", async function () {

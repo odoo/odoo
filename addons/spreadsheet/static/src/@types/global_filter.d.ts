@@ -24,12 +24,12 @@ declare module "@spreadsheet" {
         type: "text";
         id: string;
         label: string;
-        rangeOfAllowedValues?: Range;
+        rangesOfAllowedValues?: Range[];
         defaultValue?: string[];
     }
 
     export interface CmdTextGlobalFilter extends TextGlobalFilter {
-        rangeOfAllowedValues?: RangeData;
+        rangesOfAllowedValues?: RangeData[];
     }
 
     export interface DateGlobalFilterCommon {
