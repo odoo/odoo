@@ -85,6 +85,10 @@ export class DataServiceOptions {
         return ["pos.session", "res.users", "res.company"];
     }
 
+    get cleanupModels() {
+        return ["product.template"];
+    }
+
     get prohibitedAutoLoadedFields() {
         return {
             "res.partner": ["property_product_pricelist"],
