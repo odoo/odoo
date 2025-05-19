@@ -10,13 +10,13 @@
                 <div t-if="this.props.order.hasRemainingAmount()" class="payment-status-remaining d-flex justify-content-between flex-grow-1">
                     <span class="label pe-2">Remaining</span>
                     <span class="amount align-self-end me-5 pe-5" t-att-class="{ 'highlight text-danger fw-bolder': props.order.getDue() > 0 }">
-                        <t t-esc="remainingText" />
+                        <PriceFormatter price="remainingText" />
                     </span>
                 </div>
                 <div t-else="" class="payment-status-change d-flex justify-content-between flex-grow-1">
                     <span class="label pe-2">Change</span>
                     <span class="amount align-self-end me-5 pe-5" t-att-class="{ 'highlight text-success fw-bolder': props.order.getChange() > 0 }">
-                        <t t-esc="changeText" />
+                        <PriceFormatter price="changeText" />
                     </span>
                 </div>
             </div>

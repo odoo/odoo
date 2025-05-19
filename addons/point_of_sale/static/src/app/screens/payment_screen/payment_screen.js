@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 
 import { AlertDialog, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
+import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { DatePickerPopup } from "@point_of_sale/app/components/popups/date_picker_popup/date_picker_popup";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 
@@ -26,6 +27,7 @@ export class PaymentScreen extends Component {
         Numpad,
         PaymentScreenPaymentLines,
         PaymentScreenStatus,
+        PriceFormatter,
     };
     static props = {
         orderUuid: String,
@@ -122,6 +124,10 @@ export class PaymentScreen extends Component {
     get selectedPaymentLine() {
         return this.currentOrder.getSelectedPaymentline();
     }
+    makeAnimation() {
+        this.pos.addAnimation = true;
+        setTimeout(() => (this.pos.addAnimation = false), 1000);
+    }
     async addNewPaymentLine(paymentMethod) {
         if (
             paymentMethod.type === "pay_later" &&
@@ -144,6 +150,9 @@ export class PaymentScreen extends Component {
             return;
         }
 
+        if (this.paymentLines.length === 0) {
+            this.makeAnimation();
+        }
         // original function: click_paymentmethods
         const result = this.currentOrder.addPaymentline(paymentMethod);
         if (!this.checkCashRoundingHasBeenWellApplied()) {

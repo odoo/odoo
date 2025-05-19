@@ -29,22 +29,23 @@
         <t t-else="">
             <div class="payment-screen screen d-flex flex-column h-100 ">
                 <div class="main-content d-flex gap-2 h-100 bg-100 overflow-auto">
-                    <div class="left-content d-flex flex-column col-md-4 p-2 h-100 overflow-hidden gap-2">
+                    <div class="left-content d-flex flex-column col-md-4 p-1 h-100 overflow-hidden gap-1">
                         <div class="flex-grow-1 overflow-auto">
                             <t t-call="point_of_sale.PaymentScreenMethods" />
                         </div>
                         <div class="w-100 flex-shrink-0">
                             <t t-call="point_of_sale.PaymentScreenButtons" />
-                            <Numpad class="'my-2'"  buttons="getNumpadButtons()"/>
+                            <Numpad class="'mt-2'"  buttons="getNumpadButtons()"/>
                         </div>
-                        <div t-attf-class="d-flex flex-row gap-2">
+                        <div t-attf-class="d-flex flex-row gap-1">
                             <t t-call="point_of_sale.PaymentScreenBack" />
                             <t t-call="point_of_sale.PaymentScreenValidate" />
                         </div>
                     </div>
-                    <div class="center-content d-flex flex-column flex-grow-1 gap-2 py-2 pe-2">
+                    <div class="center-content d-flex flex-column flex-grow-1 gap-2 py-2 pe-2"
+                        t-attf-class="{{ !paymentLines.length ? 'justify-content-center align-items-center' : '' }}">
                         <t t-call="point_of_sale.PaymentScreenDue" />
-                        <div class="payment-summary d-flex flex-grow-1 flex-column gap-2 overflow-y-auto py-3">
+                        <div t-if="paymentLines.length" class="payment-summary d-flex flex-grow-1 flex-column gap-1 overflow-y-auto py-3">
                             <PaymentScreenPaymentLines
                                 paymentLines="paymentLines"
                                 deleteLine.bind="deletePaymentLine"
@@ -64,10 +65,14 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenDue">
-        <section class="paymentlines-container"
-            t-att-class="{'paymentlines-empty': paymentLines.length === 0 }">
-            <div class="total text-center text-success">
-                <t t-esc="this.env.utils.formatCurrency(currentOrder.getTotalDue())" />
+        <section class="paymentlines-container fw-bold"
+            t-att-class="{
+                'paymentlines-empty': paymentLines.length === 0,
+                'fade-effect': this.pos.addAnimation and !ui.isSmall,
+            }">
+            <div class="total text-center text-dark"
+                t-att-style="!ui.isSmall? 'font-size: 125px;' : ''" >
+                <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.getTotalDue())" />
             </div>
         </section>
     </t>
@@ -105,8 +110,8 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenButtons">
-        <div class="payment-buttons d-flex flex-column gap-2">
-            <div class="d-flex flex-column flex-sm-row gap-2 w-100">
+        <div class="payment-buttons d-flex flex-column gap-1">
+            <div class="d-flex flex-column flex-sm-row gap-1 w-100">
                 <t t-set="hasOptionalButtons" t-value="pos.config.iface_tipproduct and pos.config.tip_product_id or pos.config.iface_cashdrawer or pos.config.ship_later" />
                 <button class="button partner-button btn btn-secondary btn-lg w-100 w-md-50 lh-lg text-truncate"
                     t-att-class="{ 'highlight text-action': currentOrder.getPartner() }"
@@ -123,7 +128,7 @@
                     <i class="fa me-2" t-attf-class="{{ currentOrder.isToInvoice() ? 'fa-check-square text-action' : 'fa-square-o' }}" /> 
                 </button>
             </div>
-            <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-2 w-100">
+            <div t-if="(pos.config.iface_tipproduct and pos.config.tip_product_id) or pos.config.iface_cashdrawer or pos.config.ship_later" class="d-flex flex-column gap-1 w-100">
                 <button t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button btn btn-secondary btn-lg d-flex justify-content-between align-items-baseline w-100 lh-lg" t-att-class="{ 'highlight active text-action': currentOrder.getTip() }"
                     t-on-click="addTip">
                     <span t-attf-class="{{currentOrder.getTip() ? 'me-auto' : 'mx-auto' }}"><i class="fa fa-heart me-2" />Tip</span>

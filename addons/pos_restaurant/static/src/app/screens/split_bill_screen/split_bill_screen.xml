@@ -13,8 +13,8 @@
                     </div>
                 </div>
 
-                <div class="main d-flex flex-column flex-lg-row flex-grow-1 gap-2 overflow-hidden">
-                    <div class="flex-grow-1 w-100 w-lg-50 me-0 me-lg-2 border-end border-bottom bg-view overflow-auto">
+                <div class="main d-flex flex-column flex-lg-row flex-grow-1 overflow-hidden">
+                    <div class="flex-grow-1 w-100 w-lg-50 border-end border-bottom bg-view overflow-auto">
                         <OrderDisplay mode="'receipt'" order="currentOrder" t-slot-scope="scope">
                             <t t-set="line" t-value="scope.line" />
                              <Orderline line="line"
@@ -23,34 +23,41 @@
                                 class="{'selected active': qtyTracker[line.uuid] and qtyTracker[line.uuid] !== 0}" />
                         </OrderDisplay>
                     </div>
-                    <div class="controls flex-column flex-nowrap w-100 w-lg-50 pe-lg-3">
-                        <div class="order-info mb-2 mt-2 mt-lg-0 py-3 py-lg-4 rounded-3 text-center">
-                            <div class="d-flex flex-row justify-content-center align-items-baseline fs-1">
-                                <span class="subtotal text-success">
-                                    <t t-esc="env.utils.formatCurrency(newOrderPrice)" />
+                    <div class="controls d-flex flex-column flex-nowrap w-100 w-lg-50 p-1">
+                        <div class="order-info m-auto py-3 py-lg-4 rounded-3 text-center">
+                            <div class="d-flex flex-row justify-content-center align-items-baseline">
+                                <t t-set="price" t-value="env.utils.formatCurrency(newOrderPrice)" />
+                                <span class="subtotal text-dark fw-bold"
+                                    t-att-style="'font-size:' + adjustFontSize(price)"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-1' : '' }}">
+                                    <PriceFormatter price="price" />
                                 </span>
-                                <span class="fs-4 text-start ms-2">
-                                    / <t t-esc="env.utils.formatCurrency(currentOrder.getTotalWithTax())" />
+                                <span class="text-dark text-start ms-2"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
+                                    / <PriceFormatter price="env.utils.formatCurrency(currentOrder.getTotalWithTax())" />
                                 </span>
                             </div>
-                            <div class="fs-4">
+                            <div class="text-dark"
+                                t-attf-class="{{ this.ui.isSmall ? 'fs-6' : 'fs-2' }}">
                                 <t t-esc="this.getNumberOfProducts()" /> product(s) selected
                             </div>
                         </div>
 
-                        <div class="pay-button" t-att-class="{'d-flex flex-row bg-view p-2 gap-2 rounded-3':this.ui.isSmall}">
-                            <button class="button btn btn-lg btn-primary py-3 py-lg-5"
-                                t-att-class="(this.ui.isSmall ? 'w-50' : 'w-100')"
-                                t-att-disabled="!this.getNumberOfProducts()"
-                                t-on-click="createSplittedOrder">
-                                Split Order
+                        <div class="pay-button w-100 w-lg-100 mt-2">
+                            <button class="btn btn-lg btn-primary w-100"
+                                t-attf-class="{{ this.ui.isSmall ? 'fs-4 py-2' : 'fs-1 py-4' }}"
+                                t-on-click="paySplittedOrder">
+                                Payment
                             </button>
-                            <div class="d-flex gap-2 w-100">
-                                <button class="btn btn-lg btn-secondary py-3 py-lg-5 w-100" t-att-class="(this.ui.isSmall ? '' : 'mt-2')"
-                                    t-on-click="paySplittedOrder">
-                                    Pay
+                            <div class="d-flex gap-2 w-100 mt-2">
+                                <button class="btn btn-lg btn-secondary w-100"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-5 py-2' : 'fs-1 py-4' }}"
+                                    t-att-disabled="!this.getNumberOfProducts()"
+                                    t-on-click="createSplittedOrder">
+                                    Split Order
                                 </button>
-                                <button class="btn btn-lg btn-secondary py-3 py-lg-5 w-100" t-att-class="(this.ui.isSmall ? '' : 'mt-2')"
+                                <button class="btn btn-lg btn-secondary w-100"
+                                    t-attf-class="{{ this.ui.isSmall ? 'fs-5 py-2' : 'fs-1 py-4' }}"
                                     t-on-click="transferSplittedOrder">
                                     Transfer
                                 </button>
