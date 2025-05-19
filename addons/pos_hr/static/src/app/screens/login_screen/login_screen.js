@@ -68,4 +68,13 @@ patch(LoginScreen.prototype, {
     get backBtnName() {
         return this.pos.login && this.pos.config.module_pos_hr ? _t("Discard") : super.backBtnName;
     },
+    maskedInput(ev) {
+        ev.preventDefault();
+        const input = ev.target;
+        const pin = this.state.pin || "";
+        const maskedLen = input.value.length;
+        this.state.pin = maskedLen < pin.length ? pin.slice(0, maskedLen) : pin + (ev.data || "");
+
+        input.value = "•".repeat(this.state.pin.length);
+    },
 });
