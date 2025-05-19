@@ -26,7 +26,6 @@ test("Thread name unchanged when inviting new users", async () => {
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
@@ -52,7 +51,6 @@ test("Can set a custom name to livechat conversation", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
@@ -77,7 +75,6 @@ test("Display livechat custom username if defined", async () => {
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #20" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
@@ -101,7 +98,6 @@ test("Display livechat custom name in typing status", async () => {
         user_livechat_username: "livechat custom username",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: partnerId, livechat_member_type: "agent" }),
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "visitor" }),

@@ -62,7 +62,6 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         super._to_store(...arguments);
         for (const channel of this) {
             const channelInfo = {};
-            channelInfo["anonymous_name"] = channel.anonymous_name;
             const [country] = ResCountry.browse(channel.country_id);
             channelInfo["country_id"] = country
                 ? {

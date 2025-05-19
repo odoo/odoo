@@ -28,7 +28,6 @@ test("add livechat in the sidebar on visitor sending first message", async () =>
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor (Belgium)",
         channel_member_ids: [
             Command.create({
                 unpin_dt: "2021-01-01 12:00:00",
@@ -70,7 +69,6 @@ test("invite button should be present on livechat", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
@@ -90,7 +88,6 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
     pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2021-01-01 10:00:00",
@@ -103,7 +100,6 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
             livechat_operator_id: serverState.partnerId,
         },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     last_interest_dt: "2021-02-01 10:00:00",
@@ -137,7 +133,6 @@ test("sidebar search finds livechats", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),

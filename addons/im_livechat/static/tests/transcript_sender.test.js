@@ -15,7 +15,6 @@ test("agent can send conversation after livechat ends", async () => {
         email: "awesome@example.com",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Awesome Partner",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ partner_id: demoPartnerId, livechat_member_type: "visitor" }),

@@ -94,7 +94,6 @@ test("Focus should not be stolen when a new livechat open", async () => {
     const channelIds = pyEnv["discuss.channel"].create([
         { name: "general" },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
@@ -155,7 +154,6 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const [livechatId, channelId] = pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId }),
