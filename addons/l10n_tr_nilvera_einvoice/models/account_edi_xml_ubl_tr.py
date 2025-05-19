@@ -20,7 +20,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             # To send an invoice to Nlvera, the format needs to follow ABC2009123456789.
             parts = invoice.name.split('/')
             prefix, year, number = parts[0], parts[1], parts[2].zfill(9)
-            return f"{prefix}{year}{number}"
+            return f"{prefix.upper()}{year}{number}"
 
         # EXTENDS account.edi.xml.ubl_21
         vals = super()._export_invoice_vals(invoice)
@@ -39,6 +39,8 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             'due_date': False,
             'line_count_numeric': len(invoice.line_ids),
             'order_issue_date': invoice.invoice_date,
+            'pricing_currency_code': invoice.currency_id.name.upper() if invoice.currency_id != invoice.company_id.currency_id else False,
+            'currency_dp': 2,
         })
         return vals
 
@@ -129,7 +131,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         tax_totals_vals = super()._get_invoice_tax_totals_vals_list(invoice, taxes_vals)
 
         for vals in tax_totals_vals:
+            vals['currency_dp'] = 2
             for subtotal_vals in vals.get('tax_subtotal_vals', []):
+                subtotal_vals['currency_dp'] = 2
                 subtotal_vals.get('tax_category_vals', {})['id'] = False
                 subtotal_vals.get('tax_category_vals', {})['percent'] = False
 
@@ -142,6 +146,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         vals['allowance_total_amount'] = allowance_total_amount
         if invoice.currency_id.is_zero(vals.get('prepaid_amount', 1)):
             del vals['prepaid_amount']
+        vals['currency_dp'] = 2
         return vals
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
@@ -161,16 +166,37 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             })
         return additional_document_reference_list
 
+    def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
+        # EXTENDS account.edi.xml.ubl_20
+        vals_list = super()._get_invoice_line_allowance_vals_list(line, tax_values_list)
+        for vals in vals_list:
+            vals.pop('allowance_charge_reason_code', None)
+            vals['currency_dp'] = 2
+        return vals_list
+
     def _get_invoice_line_price_vals(self, line):
         # EXTEND 'account.edi.common'
         invoice_line_price_vals = super()._get_invoice_line_price_vals(line)
         invoice_line_price_vals['base_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
+        invoice_line_price_vals['currency_dp'] = 2
         return invoice_line_price_vals
 
     def _get_invoice_line_vals(self, line, line_id, taxes_vals):
         invoice_line_vals = super()._get_invoice_line_vals(line, line_id, taxes_vals)
         invoice_line_vals['line_quantity_attrs'] = {'unitCode': line.product_uom_id._get_unece_code()}
+        invoice_line_vals['currency_dp'] = 2
         return invoice_line_vals
+
+    def _get_pricing_exchange_rate_vals_list(self, invoice):
+        # EXTENDS 'account.edi.xml.ubl_20'
+        if invoice.currency_id != invoice.company_id.currency_id:
+            return [{
+                'source_currency_code': invoice.currency_id.name.upper(),
+                'target_currency_code': invoice.company_id.currency_id.name.upper(),
+                'calculation_rate': round(invoice.currency_id._get_conversion_rate(invoice.currency_id, invoice.company_id.currency_id, invoice.company_id, invoice.invoice_date), 6),
+                'date': invoice.invoice_date,
+            }]
+        return []
 
     # -------------------------------------------------------------------------
     # IMPORT

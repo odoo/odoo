@@ -232,6 +232,7 @@ class AccountPayment(models.Model):
             'date': format_date(self.env, self.date),
             'partner_id': self.partner_id,
             'partner_name': self.partner_id.name,
+            'company': self.company_id.name,
             'currency': self.currency_id,
             'state': self.state,
             'amount': formatLang(self.env, self.amount, currency_obj=self.currency_id) if i == 0 else 'VOID',

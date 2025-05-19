@@ -290,6 +290,15 @@
         </t>
     </template>
 
+    <template id="ubl_20_ExchangeRateType">
+        <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:SourceCurrencyCode t-out="vals['source_currency_code']"/>
+            <cbc:TargetCurrencyCode t-out="vals['target_currency_code']"/>
+            <cbc:CalculationRate t-out="vals.get('calculation_rate')"/>
+            <cbc:Date t-out="vals.get('date')"/>
+        </t>
+    </template>
+
     <template id="ubl_20_CommonLineType">
         <t xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
@@ -422,6 +431,9 @@
             <cbc:DocumentCurrencyCode
                 t-att="vals.get('document_currency_code_attrs', {})"
                 t-out="invoice.currency_id.name.upper()"/>
+            <cbc:PricingCurrencyCode
+                t-att="vals.get('pricing_currency_code_attrs', {})"
+                t-out="vals.get('pricing_currency_code')"/>
             <cbc:TaxCurrencyCode
                 t-att="vals.get('tax_currency_code_attrs', {})"
                 t-out="vals.get('tax_currency_code')"/>
@@ -476,6 +488,11 @@
                     </t>
                 </cac:Party>
             </cac:AccountingCustomerParty>
+            <cac:PricingExchangeRate t-foreach="vals.get('pricing_exchange_rate_vals_list', [])" t-as="foreach_vals">
+                <t t-call="{{ExchangeRateType_template}}">
+                    <t t-set="vals" t-value="foreach_vals"/>
+                </t>
+            </cac:PricingExchangeRate>
             <cac:TaxTotal t-foreach="vals.get('tax_total_vals', [])" t-as="foreach_vals">
                 <t t-call="{{TaxTotalType_template}}">
                     <t t-set="vals" t-value="foreach_vals"/>
