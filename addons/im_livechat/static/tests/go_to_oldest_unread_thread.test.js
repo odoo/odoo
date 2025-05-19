@@ -28,7 +28,6 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
     const guestId_3 = pyEnv["mail.guest"].create({ name: "Visitor 13" });
     const channelIds = pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
@@ -39,7 +38,6 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
             name: "Livechat 1",
         },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
@@ -54,7 +52,6 @@ test("tab on discuss composer goes to oldest unread livechat", async () => {
             name: "Livechat 2",
         },
         {
-            anonymous_name: "Visitor 13",
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
@@ -242,7 +239,6 @@ test("switching to folded chat window unfolds it", async () => {
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
     const channelIds = pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
@@ -253,7 +249,6 @@ test("switching to folded chat window unfolds it", async () => {
             name: "Livechat 1",
         },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
@@ -295,7 +290,6 @@ test("switching to hidden chat window unhides it", async () => {
     ]);
     const channelIds = pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
@@ -306,7 +300,6 @@ test("switching to hidden chat window unhides it", async () => {
             name: "Livechat 1",
         },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
@@ -350,7 +343,6 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
     const channelIds = pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
@@ -361,7 +353,6 @@ test("tab on composer doesn't switch thread if user is typing", async () => {
             name: "Livechat 1",
         },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,
@@ -389,7 +380,6 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
     const channelIds = pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor 11",
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_1 }),
@@ -400,7 +390,6 @@ test("tab on composer doesn't switch thread if no unread thread", async () => {
             name: "Livechat 1",
         },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({ partner_id: serverState.partnerId }),
                 Command.create({ guest_id: guestId_2 }),

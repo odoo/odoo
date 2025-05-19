@@ -47,8 +47,6 @@ class TestLivechatHrHolidays(MailCommon):
                 "user_ids": [Command.link(self.user_employee.id)],
             }
         )
-        self.env["discuss.channel"].create(
-            livechat_channel._get_livechat_discuss_channel_vals(anonymous_name="Visitor")
-        )
+        self.env["discuss.channel"].create(livechat_channel._get_livechat_discuss_channel_vals())
         self.assertEqual(self.user_employee.im_status, "leave_online")
         self.assertFalse(livechat_channel.available_operator_ids)

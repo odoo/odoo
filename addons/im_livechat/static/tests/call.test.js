@@ -26,7 +26,6 @@ test("should display started a call message with operator livechat username", as
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),

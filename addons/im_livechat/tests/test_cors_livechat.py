@@ -24,7 +24,6 @@ class TestCorsLivechat(HttpCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/cors/get_session",
             {
-                "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },
@@ -39,7 +38,6 @@ class TestCorsLivechat(HttpCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/cors/get_session",
             {
-                "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },
@@ -53,7 +51,6 @@ class TestCorsLivechat(HttpCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/cors/get_session",
             {
-                "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },
@@ -71,7 +68,6 @@ class TestCorsLivechat(HttpCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/cors/get_session",
             {
-                "anonymous_name": "Visitor",
                 "channel_id": self.livechat_channel.id,
                 "persisted": True,
             },

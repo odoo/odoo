@@ -33,7 +33,6 @@ test("Rendering of visitor banner", async () => {
     });
     const guestId = pyEnv["mail.guest"].create({ name: `Visitor #${visitorId}` });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: `Visitor #${visitorId}`,
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -76,7 +75,6 @@ test("Livechat with non-logged visitor should show visitor banner", async () => 
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #11" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -124,7 +122,6 @@ test("Livechat without visitor should not show visitor banner", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),
@@ -154,7 +151,6 @@ test("Can create a new record as livechat operator with a custom livechat userna
         user_livechat_username: "MitchellOp",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ partner_id: partnerId }),

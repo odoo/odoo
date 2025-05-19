@@ -18,7 +18,6 @@ test("Can open lead from internal link", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
