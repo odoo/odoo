@@ -1146,8 +1146,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             #     raise UserError(_("Label URL not found in OneTraker response."))
             con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
 
-            if not label_url:
-                raise UserError(_("Label URL not found in OneTraker response."))
+            # if not label_url:
+            #     raise UserError(_("Label URL not found in OneTraker response."))
 
             t_label_start = time.perf_counter()
             label_resp = requests.get(label_url, stream=True, timeout=50)
@@ -1342,6 +1342,10 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             resp_data = response.json()
 
             _logger.info(f"[ONETRAKER][FULL RESPONSE] for {order_number}:\n{json.dumps(resp_data, indent=4)}")
+            if resp_data.get("genericResponse", {}).get("apiSuccessStatus") != "True":
+                error_msg = resp_data.get("genericResponse", {}).get("apiStatusMessage",
+                                                                     "Unknown error from OneTraker.")
+                raise ValidationError(_(error_msg))
 
             label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                 {}).get("url")
