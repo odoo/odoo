@@ -20,7 +20,7 @@ class AccountMove(models.Model):
     )
     l10n_tr_nilvera_send_status = fields.Selection(
         selection=[
-            ('error', "Error (check chatter)"),
+            ('error', "Error"),
             ('not_sent', "Not sent"),
             ('sent', "Sent and waiting response"),
             ('succeed', "Successful"),
@@ -48,7 +48,11 @@ class AccountMove(models.Model):
     def button_draft(self):
         # EXTENDS account
         for move in self:
-            if move.l10n_tr_nilvera_uuid and move.l10n_tr_nilvera_send_status != 'not_sent':
+            if (
+                not move.company_id.l10n_tr_nilvera_use_test_env
+                and move.l10n_tr_nilvera_uuid
+                and move.l10n_tr_nilvera_send_status != 'not_sent'
+            ):
                 raise UserError(_("You cannot reset to draft an entry that has been sent to Nilvera."))
         super().button_draft()
 
