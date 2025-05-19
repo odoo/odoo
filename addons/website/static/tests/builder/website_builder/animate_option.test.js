@@ -1,7 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, queryFirst } from "@odoo/hoot-dom";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import { ImageSizeTag } from "@website/builder/plugins/image/image_size_tag";
 
 defineWebsiteModels();
 
@@ -230,6 +231,9 @@ test("animation=onHover should not be visible when the image has a wrong mimetyp
     expect(".o-dropdown--menu [data-action-value='onHover']").not.toHaveCount();
 });
 test("animation=onHover should not be visible when the image has a cors protected image", async () => {
+    patchWithCleanup(ImageSizeTag.prototype, {
+        updateImageSize() {},
+    });
     await setupWebsiteBuilder(`
         <div class="test-options-target">
             <img data-original-id="1" src='/web/image/0-redirect/foo.jpg'>

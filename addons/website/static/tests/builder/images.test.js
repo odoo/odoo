@@ -7,6 +7,8 @@ import {
     queryAll,
     queryFirst,
     waitFor,
+    queryAllTexts,
+    waitUntil,
 } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
@@ -59,6 +61,21 @@ test("image should not be draggable", async () => {
     });
 
     expect(events.get("dragstart").defaultPrevented).toBe(true);
+});
+
+test("click on Image should show image size tag in sidebar", async () => {
+    await setupWebsiteBuilder(`
+        <div class="test-options-target">
+            ${testImg}
+        </div>
+    `);
+    await contains(":iframe .test-options-target img").click();
+    await waitUntil(
+        () =>
+            queryAllTexts(".options-container span.badge.text-bg-dark[title='Size']")[0] ===
+            "42.9 KB",
+        { timeout: 2000 }
+    );
 });
 
 describe("Image format/optimize", () => {
