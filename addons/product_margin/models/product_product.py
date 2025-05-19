@@ -89,6 +89,8 @@ class ProductProduct(models.Model):
         return res
 
     def _compute_product_margin_fields_values(self, field_names=None):
+        if not self.ids:
+            return self.browse()
         if field_names is None:
             field_names = []
         date_from = self.env.context.get('date_from', time.strftime('%Y-01-01'))
