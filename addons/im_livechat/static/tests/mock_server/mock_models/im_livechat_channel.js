@@ -83,7 +83,6 @@ export class LivechatChannel extends models.ServerModel {
             livechat_operator_id: agent.partner_id,
             livechat_channel_id: id,
             livechat_status: "in_progress",
-            anonymous_name: visitorUser ? visitorUser.display_name : guest.name,
             channel_type: "livechat",
             name: membersName.join(" "),
         };

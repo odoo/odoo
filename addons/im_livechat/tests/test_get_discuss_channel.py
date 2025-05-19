@@ -40,7 +40,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
             )["store_data"]
         channel_info = data["discuss.channel"][0]
-        self.assertEqual(channel_info['anonymous_name'], "Visitor")
+        self.assertEqual(channel_info["name"], "Visitor Michel Operator")
         self.assertEqual(channel_info["country_id"], belgium.id)
         self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
 
@@ -102,7 +102,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             'channel_id': self.livechat_channel.id,
         })["store_data"]
         channel_info = data["discuss.channel"][0]
-        self.assertEqual(channel_info['anonymous_name'], "Roger")
+        self.assertEqual(channel_info["name"], "Roger Michel Operator")
         self.assertEqual(channel_info["country_id"], belgium.id)
         self.assertEqual(data["res.country"], [{"code": "BE", "id": belgium.id, "name": "Belgium"}])
         operator_member_domain = [
@@ -218,7 +218,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         ]
         operator_member = self.env['discuss.channel.member'].search(operator_member_domain)
         self.assertEqual(channel_info['livechat_operator_id'], operator.partner_id.id)
-        self.assertEqual(channel_info['anonymous_name'], "Michel")
+        self.assertEqual(channel_info["name"], "Michel Michel Operator")
         self.assertEqual(channel_info['country_id'], False)
         self.assertEqual(
             data["res.partner"],

@@ -78,9 +78,6 @@ patch(Thread.prototype, {
         if (this.channel_type === "livechat" && persona.user_livechat_username) {
             return persona.user_livechat_username;
         }
-        if (persona.is_public && this.anonymous_name) {
-            return this.anonymous_name;
-        }
         return super.getPersonaName(persona);
     },
 });

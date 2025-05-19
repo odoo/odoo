@@ -25,7 +25,6 @@ class DiscussChannel(models.Model):
     _name = 'discuss.channel'
     _inherit = ['rating.mixin', 'discuss.channel']
 
-    anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
     livechat_lang_id = fields.Many2one("res.lang", string="Language", help="Lang of the visitor of the channel.")
@@ -332,7 +331,6 @@ class DiscussChannel(models.Model):
 
     def _to_store_defaults(self, target: Store.Target):
         fields = [
-            Store.Attr("anonymous_name", predicate=is_livechat_channel),
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"], predicate=is_livechat_channel),
             Store.Attr("livechat_end_dt", predicate=is_livechat_channel),

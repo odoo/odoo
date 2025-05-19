@@ -64,7 +64,7 @@ class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(len(channel), 1)
         self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Michel Operator should be the operator of this channel.")
         self.assertEqual(len(channel.message_ids), 0)
-        self.assertEqual(channel.anonymous_name, f"Visitor #{self.visitor.id} ({self.visitor.country_id.name})")
+        self.assertEqual(channel.name, f"Visitor #{self.visitor.id} ({self.visitor.country_id.name}), {self.operator.livechat_username}")
 
         # Operator Sends message
         self._send_message(channel, self.operator.email, "Hello Again !", author_id=self.operator.partner_id.id)

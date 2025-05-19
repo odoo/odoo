@@ -10,7 +10,6 @@
             <field name="livechat_failure">no_failure</field>
             <field name="create_date" eval="datetime.now() - timedelta(days=1)"/>
             <field name="channel_type">livechat</field>
-            <field name="anonymous_name">Visitor</field>
         </record>
         <record id="im_livechat.livechat_channel_session_9_history_member_admin" model="im_livechat.channel.member.history">
             <field name="channel_id" ref="livechat_channel_session_9"/>

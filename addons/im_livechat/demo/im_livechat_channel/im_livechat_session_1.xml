@@ -8,7 +8,6 @@
             <field name="livechat_end_dt" eval="DateTime.today() + relativedelta(months=-1, days=-0, minutes=5, seconds=25)"/>
             <field name="livechat_operator_id" ref="base.partner_admin"/>
             <field name="name">Visitor #234, Mitchell Admin</field>
-            <field name="anonymous_name">Visitor #234</field>
             <field name="create_date" eval="DateTime.today() + relativedelta(months=-1)"/>
         </record>
         <record id="livechat_channel_session_1_history_member_admin" model="im_livechat.channel.member.history">

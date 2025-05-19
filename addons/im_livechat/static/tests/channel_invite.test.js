@@ -32,7 +32,6 @@ test("Can invite a partner to a livechat channel", async () => {
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 20",
         name: "Visitor 20",
         channel_member_ids: [
             Command.create({
@@ -84,7 +83,6 @@ test("Available operators come first", async () => {
     });
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor #1" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #1",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
@@ -114,7 +112,6 @@ test("Partners invited most frequently by the current user come first", async ()
     });
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor #1" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #1",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({
@@ -132,7 +129,6 @@ test("Partners invited most frequently by the current user come first", async ()
     });
     const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor #2" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #2",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({
@@ -211,7 +207,6 @@ test("Operator invite shows livechat_username", async () => {
     });
     const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor #1" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #1",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({

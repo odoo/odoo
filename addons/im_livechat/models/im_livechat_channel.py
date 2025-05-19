@@ -314,7 +314,6 @@ class Im_LivechatChannel(models.Model):
             "livechat_failure": "no_answer" if agent else "no_failure",
             "livechat_status": "in_progress",
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id if chatbot_script else False,
-            "anonymous_name": visitor_user.display_name or guest.name,
             'channel_type': 'livechat',
             'name': name,
         }

@@ -21,17 +21,20 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
 
         const visitors = this.browse(ids);
         for (const visitor of visitors) {
+            const operator = this.env.user;
             const country = visitor.country_id ? ResCountry.browse(visitor.country_id) : undefined;
-            const visitor_name = `${visitor.display_name}${country ? `(${country.name})` : ""}`;
+            const visitor_name = `Visitor #${visitor.id}${country ? ` (${country.name})` : ""}`;
             const membersToAdd = [Command.create({ partner_id: serverState.partnerId })];
             if (visitor.partner_id) {
                 membersToAdd.push(Command.create({ partner_id: visitor.partner_id }));
             }
             const livechatId = DiscussChannel.create({
-                anonymous_name: visitor_name,
                 channel_member_ids: membersToAdd,
                 channel_type: "livechat",
                 livechat_operator_id: serverState.partnerId,
+                name: `${visitor_name}, ${
+                    operator.livechat_username ? operator.livechat_username : operator.name
+                }`,
             });
             if (!visitor.partner_id) {
                 const guestId = MailGuest.create({ name: `Visitor #${visitor.id}` });

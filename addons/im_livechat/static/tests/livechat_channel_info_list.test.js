@@ -25,7 +25,6 @@ test("livechat note is loaded when opening the channel info list", async () => {
         name: "Visitor #20",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
@@ -52,7 +51,6 @@ test("editing livechat note is synced between tabs", async () => {
         name: "Visitor #20",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
@@ -100,7 +98,6 @@ test("shows live chat status in discuss sidebar", async () => {
         name: "Visitor #20",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -131,7 +128,6 @@ test("editing livechat status is synced between tabs", async () => {
         name: "Visitor #20",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -183,7 +179,6 @@ test("Shows expertise", async () => {
         { name: "events" },
     ]);
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor #20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),

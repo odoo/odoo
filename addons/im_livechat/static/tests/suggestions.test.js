@@ -19,7 +19,6 @@ test("Suggestions are shown after delimiter was used in text (::)", async () => 
         substitution: "Hello dear customer, how may I help you?",
     });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor",
         channel_type: "livechat",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
@@ -43,7 +42,6 @@ test("Cannot mention other channels in a livechat", async () => {
     const pyEnv = await startServer();
     const [channelId] = pyEnv["discuss.channel"].create([
         {
-            anonymous_name: "Visitor",
             channel_type: "livechat",
             channel_member_ids: [
                 Command.create({
