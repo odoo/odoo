@@ -10,6 +10,9 @@ import time
 import datetime
 import re
 import threading
+import asyncio
+from odoo.tools.safe_eval import safe_eval
+
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
@@ -876,6 +879,29 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         sale = picking.sale_id
         partner = picking.partner_id
 
+        if sale and sale.service_type and sale.service_type.strip().upper() == "MANUAL WB":
+            _logger.info("[MANUAL WB] Detected Manual WB order – skipping label generation.")
+
+            sale.write({
+                'consignment_number': "Manual WB",
+                'pick_status': 'packed',
+                'delivery_status': 'partial',
+            })
+            picking.write({'current_state': 'pack'})
+            picking.button_validate()
+
+            self.send_tracking_update_to_ot_orders(
+                so_number=sale.name,
+                con_id="Manual WB",
+                carrier="Manual",
+                origin=sale.origin or picking.origin or "N/A",
+                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+            )
+
+            return {
+                "message": "Manual WB order processed successfully – no label generated.",
+                "manual_wb": True
+            }
         if not partner or not partner.email:
             raise ValidationError("Missing or invalid customer email.")
 
@@ -1228,7 +1254,26 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         partner = picking.partner_id
         sale = picking.sale_id
+        if sale and sale.service_type and sale.service_type.strip().upper() == "MANUAL WB":
+            _logger.info("[MANUAL WB] Skipping label creation for Manual WB multi-pick.")
 
+            picking.write({'current_state': 'pack'})
+            sale.write({
+                'consignment_number': "Manual WB",
+                'pick_status': 'packed',
+                'delivery_status': 'partial',
+            })
+            picking.button_validate()
+
+            self.send_tracking_update_to_ot_orders(
+                so_number=sale.name,
+                con_id="Manual WB",
+                carrier="Manual",
+                origin=sale.origin or "N/A",
+                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+            )
+
+            return True
         if not partner or not partner.email:
             raise ValidationError("Missing or invalid customer email.")
 
