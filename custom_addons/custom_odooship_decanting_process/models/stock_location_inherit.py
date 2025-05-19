@@ -11,3 +11,4 @@ class StockPicking(models.Model):
     site_code_id = fields.Many2one('site.code.configuration', string='Site Code')
     filled = fields.Boolean(string="Is Filled", default=False, help="Indicates if the location is occupied")
     automation_manual = fields.Char(string='Automation/Manual Location Type')
+    pending_putaway = fields.Boolean(string='Pending Putaway')
