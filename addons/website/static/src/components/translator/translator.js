@@ -281,7 +281,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             });
         };
         for (const translationEl of $editable) {
-            if (translationEl.closest('.o_not_editable')) {
+            if (translationEl.closest(".o_not_editable:not([data-bs-slide])")) {
                 translationEl.addEventListener('click', (ev) => {
                     ev.stopPropagation();
                     ev.preventDefault();
