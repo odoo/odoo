@@ -477,7 +477,7 @@
                             <field name="move_byproduct_ids"
                                 context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_warehouse_id': warehouse_id, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
                                 readonly="state == 'cancel' or (state == 'done' and is_locked)" options="{'delete': [('state', '=', 'draft')]}">
-                                <list default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
+                                <list default_order="sequence, id" decoration-muted="is_done" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
                                         <button name="action_add_from_catalog_byproduct" string="Catalog" type="object" class="px-4 btn-link" context="{'order_id': parent.id}"/>
