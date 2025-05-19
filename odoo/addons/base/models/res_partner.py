@@ -993,8 +993,6 @@ class ResPartner(models.Model):
 
                 if partner._context.get('show_email') and partner.email:
                     name = f"{name} \t --{partner.email}--"
-                elif partner._context.get('show_vat') and partner.vat:
-                    name = f"{name} \t --{partner.vat}--"
                 elif partner._context.get('partner_show_db_id'):
                     name = f"{name} \t --{partner.id}--"
 
