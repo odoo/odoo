@@ -16,6 +16,7 @@ class SeparatorOptionPlugin extends Plugin {
             dropNear: "p, h1, h2, h3, blockquote, .s_hr",
         },
         so_content_addition_selector: [".s_hr"],
+        is_movable_selector: { selector: ".s_hr", direction: "vertical" },
     };
 }
 registry.category("website-plugins").add(SeparatorOptionPlugin.id, SeparatorOptionPlugin);

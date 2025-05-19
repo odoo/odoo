@@ -39,6 +39,7 @@ class TimelineOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
+        is_movable_selector: { selector: ".s_timeline_row", direction: "vertical" },
     };
 
     getActiveOverlayButtons(target) {

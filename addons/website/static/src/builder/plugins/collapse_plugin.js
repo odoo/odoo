@@ -13,6 +13,7 @@ export class CollapsePlugin extends Plugin {
                 dropLockWithin: ".accordion",
             },
         ],
+        is_movable_selector: { selector: ".s_accordion .accordion-item", direction: "vertical", noScroll: true },
     };
 
     setup() {

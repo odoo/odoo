@@ -40,6 +40,7 @@ class PriceListCafePlugin extends Plugin {
             selector: ".s_pricelist_cafe_item",
             dropNear: ".s_pricelist_cafe_item",
         },
+        is_movable_selector: { selector: ".s_pricelist_cafe_item", direction: "vertical" },
     };
 }
 
