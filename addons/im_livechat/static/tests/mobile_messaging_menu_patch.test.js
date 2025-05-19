@@ -25,7 +25,6 @@ test("Livechat button is present when there is at least one livechat thread", as
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
             Command.create({

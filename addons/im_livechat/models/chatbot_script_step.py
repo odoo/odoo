@@ -402,7 +402,7 @@ class ChatbotScriptStep(models.Model):
                         [
                             self.env.user.display_name
                             if not self.env.user._is_public()
-                            else discuss_channel.anonymous_name,
+                            else channel_sudo.self_member_id.guest_id.name,
                             human_operator.livechat_username
                             if human_operator.livechat_username
                             else human_operator.name,

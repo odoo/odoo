@@ -194,7 +194,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             {
                 "discuss.channel": [
                     {
-                        "anonymous_name": f"Visitor #{self.visitor.id}",
                         "channel_type": "livechat",
                         "country_id": False,
                         "create_uid": self.user_public.id,
@@ -310,7 +309,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             ).get_result()["discuss.channel"],
             [
                 {
-                    "anonymous_name": f"Visitor #{self.visitor.id}",
                     "channel_type": "livechat",
                     "country_id": False,
                     "create_uid": self.user_public.id,
