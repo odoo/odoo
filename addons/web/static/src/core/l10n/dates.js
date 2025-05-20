@@ -320,7 +320,7 @@ const condensedFormats = {};
  * @param {string} format
  * @returns string
  */
-function getCondensedFormat(format) {
+export function getCondensedFormat(format) {
     const originalFormat = format;
     if (!condensedFormats[originalFormat]) {
         format = format.replace(/(^|[^M])M{2}([^M]|$)/, "$1M$2");
