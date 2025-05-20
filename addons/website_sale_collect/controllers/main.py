@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import json
 
 from odoo import _
 from odoo.http import request
@@ -39,7 +38,8 @@ class WebsiteSaleCollect(WebsiteSale):
                     or selected_location_data.get('country_code')
                     or request.geoip.country_code
                     or ''
-                )
+                ),
+                'carrier_id': in_store_dm_sudo.id,
             })
         return res
 

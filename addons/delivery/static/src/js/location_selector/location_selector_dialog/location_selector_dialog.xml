@@ -39,6 +39,11 @@
                     />
                     <t t-else="">
                         <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
+                        <p
+                            t-elif="!this.state.zipcode"
+                            class="p-3 fw-bold"
+                            t-out="missingZipcodeMessage"
+                        />
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden" t-out="loadingMessage"/>
@@ -72,6 +77,11 @@
                     />
                     <t t-else="">
                         <p t-if="this.state.error" class="p-3 fw-bold" t-out="errorMessage"/>
+                        <p
+                            t-elif="!this.state.zipcode"
+                            class="p-3 fw-bold"
+                            t-out="missingZipcodeMessage"
+                        />
                         <div t-else="" class="position-absolute start-50 top-50 translate-middle">
                             <div class="spinner-border" role="status">
                                 <span class="visually-hidden" t-out="loadingMessage"/>
