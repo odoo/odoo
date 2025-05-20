@@ -13,9 +13,6 @@ class AccountMoveSendWizard(models.TransientModel):
         """ EXTENDS 'account'
         If Customer is not valid on Peppol, we disable the checkbox. Also add the proxy mode if not in prod.
         """
-        for wizard in self:
-            peppol_partner = wizard.move_id.partner_id.commercial_partner_id.with_company(wizard.company_id)
-            peppol_partner.button_account_peppol_check_partner_endpoint(company=wizard.company_id)
         super()._compute_sending_method_checkboxes()
         for wizard in self:
             if peppol_checkbox := wizard.sending_method_checkboxes.get('peppol'):
