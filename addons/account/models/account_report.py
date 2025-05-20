@@ -641,17 +641,22 @@ class AccountReportExpression(models.Model):
 
         self._strip_formula(vals)
 
+        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
+
         if vals.get('engine') == 'tax_tags':
-            tag_name = vals.get('formula') or self.formula
-            country = self.report_line_id.report_id.country_id
-            self._create_tax_tags(tag_name, country)
-            return super().write(vals)
+            # We already generate the tags for the expressions receiving a new engine, but keeping the same formula
+            tags_create_vals = []
+            for expression_with_new_engine in self - tax_tags_expressions:
+                tags_create_vals += self.env['account.report.expression']._get_tags_create_vals(
+                    vals.get('formula') or expression_with_new_engine.formula,
+                    expression_with_new_engine.report_line_id.report_id.country_id.id,
+                )
+            self.env['account.account.tag'].create(tags_create_vals)
 
         # In case the engine is changed we don't propagate any change to the tags themselves
         if 'formula' not in vals or (vals.get('engine') and vals['engine'] != 'tax_tags'):
             return super().write(vals)
 
-        tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
         for expr in tax_tags_expressions:
             former_formulas_by_country[expr.report_line_id.report_id.country_id].append(expr.formula)
