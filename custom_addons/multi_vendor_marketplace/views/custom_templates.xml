@@ -335,7 +335,7 @@
         </xpath>
         
         <xpath expr="//div[hasclass('products_header')]" position="inside">
-            <div class="desktop-nav-icons ms-3" style="display: flex; align-items: center; gap: 15px; margin-left: auto;">
+            <div class="desktop-nav-icons ms-3 d-none d-md-flex mobile-hidden-force" style="align-items: center; gap: 15px; margin-left: auto;">
                 <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
                     <i class="fa fa-home"></i>
                 </a>
@@ -548,7 +548,7 @@
         <xpath expr="//main" position="before">
             <t t-if="request.httprequest.path == '/videos'">
                 <div class="container py-3">
-                    <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                    <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
                         <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
                             <i class="fa fa-home"></i>
                         </a>
@@ -571,7 +571,7 @@
     <template id="cart_nav_icons" inherit_id="website_sale.cart">
         <xpath expr="//div[hasclass('container')]" position="before">
             <div class="container py-3">
-                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
                     <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
                         <i class="fa fa-home"></i>
                     </a>
@@ -593,7 +593,7 @@
     <template id="checkout_nav_icons" inherit_id="website_sale.checkout">
         <xpath expr="//div[hasclass('container')]" position="before">
             <div class="container py-3">
-                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
                     <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
                         <i class="fa fa-home"></i>
                     </a>
@@ -615,7 +615,7 @@
     <template id="profile_nav_icons" inherit_id="multi_vendor_marketplace.custom_user_profile">
         <xpath expr="//div[hasclass('container')]" position="before">
             <div class="container py-3">
-                <div class="desktop-nav-icons d-none d-md-flex mx-auto" style="display: flex !important; max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
                     <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
                         <i class="fa fa-home"></i>
                     </a>
@@ -854,6 +854,91 @@
                     }
                 });
             </script>
+        </xpath>
+    </template>
+
+    <!-- Fix product detail mobile template by targeting a more reliable element -->
+    <template id="product_detail_mobile_fixes" inherit_id="website_sale.product">
+        <xpath expr="//div[@id='wrap']" position="inside">
+            <style>
+                /* Mobile fixes for product details page */
+                @media (max-width: 767.98px) {
+                    /* Constrain all product page elements to viewport */
+                    .oe_website_sale, #product_detail, .o_wsale_product_page {
+                        max-width: 100vw !important;
+                        overflow-x: hidden !important;
+                    }
+                    
+                    /* Ensure images are responsive */
+                    .product_detail_img img,
+                    .o_wsale_product_images img,
+                    .carousel img,
+                    img.img-fluid {
+                        max-width: 100% !important;
+                        height: auto !important;
+                        object-fit: contain !important;
+                    }
+                    
+                    /* Make all columns take full width on mobile */
+                    .col-lg-6,
+                    .col-md-6,
+                    .col-sm-6,
+                    [class*="col-"] {
+                        flex: 0 0 100% !important;
+                        max-width: 100% !important;
+                        padding-left: 10px !important;
+                        padding-right: 10px !important;
+                    }
+                    
+                    /* Remove horizontal padding */
+                    .container {
+                        padding-left: 10px !important;
+                        padding-right: 10px !important;
+                        width: 100% !important;
+                        max-width: 100% !important;
+                    }
+                    
+                    /* Fix buttons on mobile to be full width */
+                    .js_add_cart_variants + .btn,
+                    #add_to_cart,
+                    .product-add-to-cart .btn {
+                        width: 100% !important;
+                        margin-bottom: 10px !important;
+                    }
+                    
+                    /* Make sure horizontal margins are controlled */
+                    .row {
+                        margin-left: -10px !important;
+                        margin-right: -10px !important;
+                    }
+                    
+                    /* Ensure content doesn't overflow horizontally */
+                    body {
+                        overflow-x: hidden !important;
+                        width: 100% !important;
+                    }
+
+                    /* Product variant selection area */
+                    .js_add_cart_variants {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                    }
+
+                    /* Fix action buttons and quantity area */
+                    .css_quantity, 
+                    .product-add-to-cart {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                    }
+
+                    /* Fix product images carousel/gallery */
+                    .carousel-inner, 
+                    .carousel-item {
+                        max-width: 100vw !important;
+                        width: 100% !important;
+                    }
+                }
+            </style>
         </xpath>
     </template>
 </odoo>
