@@ -2,7 +2,11 @@ import { describe, expect, test } from "@odoo/hoot";
 import { hover } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
-import { addBuilderAction, addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
+import {
+    addBuilderAction,
+    addBuilderOption,
+    setupHTMLBuilder,
+} from "@html_builder/../tests/helpers";
 
 describe.current.tags("desktop");
 

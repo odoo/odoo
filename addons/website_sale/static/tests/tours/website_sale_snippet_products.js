@@ -1,7 +1,5 @@
-
 import { queryFirst } from '@odoo/hoot-dom';
 import {
-    changeOption,
     changeOptionInPopover,
     clickOnSave,
     clickOnSnippet,
@@ -10,7 +8,6 @@ import {
 } from '@website/js/tours/tour_utils';
 import { goToCart } from '@website_sale/js/tours/tour_utils';
 
-const optionBlock = 'dynamic_snippet_products';
 const productsSnippet = {id: "s_dynamic_snippet_products", name: "Products", groupName: "Products"};
 const templates = [
     "dynamic_filter_template_product_product_add_to_cart",

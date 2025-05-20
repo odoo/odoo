@@ -5,7 +5,6 @@ import { cookie } from "@web/core/browser/cookie";
 import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
 import { waitForStable } from "@web/core/macro";
-import { delay } from "@odoo/hoot-dom";
 
 export function addMedia(position = "right") {
     return {

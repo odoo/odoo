@@ -4,7 +4,6 @@ import re
 from . import lint_case
 
 from odoo import tools
-import unittest
 
 _logger = logging.getLogger(__name__)
 
@@ -108,8 +107,6 @@ class TestI18n(lint_case.LintCase):
                 error_count += 1
         self.assertEqual(error_count, 0)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_user_content_as_prop_is_translatable(self):
         """
         Checks if there are any props that does not use `.translate` and reports it.

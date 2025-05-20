@@ -925,6 +925,8 @@ export function convertParamToObject(param) {
 }
 export class BaseOptionComponent extends Component {
     static components = {};
+    static props = {};
+    static template = "";
 
     setup() {
         this.isActiveItem = useIsActiveItem();

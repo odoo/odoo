@@ -23,6 +23,8 @@ export class StackingComponent extends Component {
             </div>
         </t>
     `;
+    static props = "*";
+
     setup() {
         this.stack = useState(this.props.stackState.stack);
     }

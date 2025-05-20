@@ -21,8 +21,6 @@ except IOError:
     eslint = None
 
 
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @skipIf(eslint is None, "eslint tool not found on this system")
 @tagged("test_themes")
 class TestESLint(lint_case.LintCase):

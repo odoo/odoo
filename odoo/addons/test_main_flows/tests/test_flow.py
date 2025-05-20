@@ -191,9 +191,6 @@ class TestUi(BaseTestUi):
         with mute_logger("odoo.http"):
             self.start_tour(f"/odoo/action-{act_window.id}?debug=assets", "test_company_switch_access_error", login="admin", cookies={"cids": current_companies})
 
-
-# TODO master-mysterious-egg fix error
-@unittest.skip("prepare mysterious-egg for merging")
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUiMobile(BaseTestUi):
 

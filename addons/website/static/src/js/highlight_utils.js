@@ -440,6 +440,6 @@ function getTextnodeRects(el) {
     return [...range.getClientRects()];
 }
 // todo: handle RTL
-function isRTL(el) {
-    return window.getComputedStyle(el).direction === "rtl";
-}
+// function isRTL(el) {
+//     return window.getComputedStyle(el).direction === "rtl";
+// }

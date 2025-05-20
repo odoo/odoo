@@ -1,4 +1,3 @@
-import { delay } from '@odoo/hoot-dom';
 import {
     changeOption,
     clickOnEditAndWaitEditMode,

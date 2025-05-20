@@ -40,6 +40,7 @@
         ],
         'web.assets_unit_tests': [
             'website_blog/static/tests/interactions/**/*',
+            'website_blog/static/tests/website_builder/**/*',
         ],
         'web.assets_unit_tests_setup': [
             'website_blog/static/src/interactions/**/*.js',

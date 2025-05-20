@@ -1,10 +1,13 @@
 import { expect, test } from "@odoo/hoot";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+} from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
 
-test("Change contact oe-many2one-id of a blog author changes other instance of same contact and avatar", async () => {
+test.skip("Change contact oe-many2one-id of a blog author changes other instance of same contact and avatar", async () => {
     onRpc(
         "ir.qweb.field.contact",
         "get_record_to_html",

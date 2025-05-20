@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 /* eslint-disable no-async-promise-executor */
 
 import { loadJS } from "@web/core/assets";
@@ -10,7 +9,7 @@ import { markup } from "@odoo/owl";
 import { escape } from "@web/core/utils/strings";
 
 registry.category("services").add("google_maps", {
-    dependencies: [ "notification" ],
+    dependencies: ["notification"],
     start(env, deps) {
         const notification = deps["notification"];
         let gMapsAPIKeyProm;
