@@ -96,9 +96,9 @@ export function isNotAllowedContent(node) {
 }
 
 /**
- * @returns edges nodes if they do not have content selected
+ * @returns edge text nodes if they do not have content selected
  */
-function getUnselectedEdgeNodes(selection) {
+function getUnselectedEdgeTextNodes(selection) {
     const startEdgeNodes = (node, offset) =>
         node === selection.commonAncestorContainer || offset < nodeSize(node)
             ? []
@@ -107,10 +107,12 @@ function getUnselectedEdgeNodes(selection) {
         node === selection.commonAncestorContainer || offset > 0
             ? []
             : [node, ...endEdgeNodes(...leftPos(node))];
-    return new Set([
-        ...startEdgeNodes(selection.startContainer, selection.startOffset),
-        ...endEdgeNodes(selection.endContainer, selection.endOffset),
-    ]);
+    return new Set(
+        [
+            ...startEdgeNodes(selection.startContainer, selection.startOffset),
+            ...endEdgeNodes(selection.endContainer, selection.endOffset),
+        ].filter((node) => node.nodeType === Node.TEXT_NODE)
+    );
 }
 
 /**
@@ -682,44 +684,56 @@ export class SelectionPlugin extends Plugin {
      * Returns the nodes targeted by the current selection, from top to bottom
      * and left to right.
      * This includes nodes intersected by the selection, as well as the deepest
-     * anchor and offset nodes.
+     * anchor and offset nodes that are at least partly contained in the
+     * selection.
      * An element is considered intersected by the selection when reading the
      * normalized selection's HTML contents would involve reading the opening or
      * closing tags of the element.
+     * A collapsed selection returns the node in which it is collapsed.
      *
      * @example
      * <p>a[]b</p> -> ["ab"]
      * @example
      * <p>a[b</p><h1>c]d</h1> -> [P, "ab", H1, "cd"]
      * @example
+     * <p>a[b</p><h1>]cd</h1> -> [P, "ab", H1]
+     * @example
      * <div><p>a[b</p><h1>cd</h1></div><h2>e]f</h2> -> [DIV, P, "ab", H1, "cd", H2, "ef"]
      *
      * @returns {Node[]}
      */
     getTargetedNodes() {
-        const selection = this.getSelectionData().deepEditableSelection;
-        const { commonAncestorContainer: root } = selection;
+        const selectionData = this.getSelectionData();
+        const selection = selectionData.deepEditableSelection;
+        const { commonAncestorContainer: root } = selectionData.editableSelection;
 
-        let targetedNodes;
-        if (selection.isCollapsed || root.nodeType === Node.TEXT_NODE) {
+        let targetedNodes = [];
+        if (selection.isCollapsed && selection.anchorNode.nodeType !== Node.TEXT_NODE) {
             targetedNodes = [root];
-        } else {
-            targetedNodes = descendants(root);
         }
+        targetedNodes.push(...descendants(root));
+        if (!targetedNodes.length) {
+            targetedNodes = [root];
+        }
+
         targetedNodes = targetedNodes.filter(
             (node) =>
-                selection.intersectsNode(node) ||
-                (node === selection.anchorNode && node.nodeType === Node.TEXT_NODE) ||
-                (node === selection.focusNode && node.nodeType === Node.TEXT_NODE)
+                selectionData.editableSelection.intersectsNode(node) ||
+                (node.nodeType === Node.TEXT_NODE &&
+                    (node === selection.anchorNode || node === selection.focusNode))
         );
 
         const modifiers = [
             // Remove the editable from the list
             (nodes) => (nodes[0] === this.editable ? nodes.slice(1) : nodes),
-            // Filter out nodes that have no content selected
+            // Filter out text nodes that have no content selected
             (nodes) => {
-                const edgeNodes = getUnselectedEdgeNodes(selection);
-                return nodes.filter((node) => !edgeNodes.has(node));
+                if (selection.isCollapsed) {
+                    return nodes;
+                } else {
+                    const edgeTextNodes = getUnselectedEdgeTextNodes(selection);
+                    return nodes.filter((node) => !edgeTextNodes.has(node));
+                }
             },
             // Custom modifiers
             ...this.getResource("targeted_nodes_processors"),
