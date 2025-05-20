@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     BG_CLASSES_REGEX,
+    COLOR_COMBINATION_CLASSES_REGEX,
     hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
@@ -17,13 +18,7 @@ import {
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import {
-    isColorGradient,
-    isCSSColor,
-    RGBA_REGEX,
-    rgbaToHex,
-    COLOR_COMBINATION_CLASSES_REGEX,
-} from "@web/core/utils/colors";
+import { isColorGradient, isCSSColor, RGBA_REGEX, rgbaToHex } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 

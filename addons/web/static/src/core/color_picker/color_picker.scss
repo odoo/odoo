@@ -60,9 +60,12 @@
     margin-left: 2px;
 }
 
-.o_font_color_selector .o_color_button.selected {
+.o_font_color_selector {
     // todo: check web_editor
-    border: 3px solid $o-enterprise-action-color;
+    .o_color_button.selected,
+    .o_custom_gradient_button.selected {
+        border: 3px solid $o-enterprise-action-color !important;
+    }
 }
 // custom gradients
 .custom-gradient-configurator {
