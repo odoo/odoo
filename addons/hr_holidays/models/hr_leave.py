@@ -211,6 +211,8 @@ class HrLeave(models.Model):
     # Interface fields used when using hour-based computation
     request_hour_from = fields.Float(string='Hour from')
     request_hour_to = fields.Float(string='Hour to')
+    request_datetime_from = fields.Datetime(compute="_compute_datetime_from_to")
+    request_datetime_to = fields.Datetime(compute="_compute_datetime_from_to")
     # used only when the leave is taken in half days
     request_date_from_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
@@ -621,6 +623,22 @@ class HrLeave(models.Model):
                 virtual_remaining_leaves += allocation_dict['virtual_remaining_leaves']
             leave.virtual_remaining_leaves = virtual_remaining_leaves
             leave.max_leaves = max_leaves
+
+    @api.depends('tz_mismatch', 'request_date_from', 'request_date_to', 'request_hour_from', 'request_hour_to')
+    def _compute_datetime_from_to(self):
+        def _construct_datetime(date, hour_float, tz):
+            hr, min = divmod(hour_float * 60, 60)
+            dt = datetime.combine(date, datetime.min.time()) + timedelta(hours=int(hr), minutes=int(min))
+            return tz.localize(dt).astimezone(pytz.utc).replace(tzinfo=None)
+
+        for holiday in self:
+            if holiday.tz_mismatch and holiday.request_unit_hours and holiday.request_date_from and holiday.request_date_to:
+                tz = pytz.timezone(holiday.tz)
+                holiday.request_datetime_from = _construct_datetime(holiday.request_date_from, holiday.request_hour_from, tz)
+                holiday.request_datetime_to = _construct_datetime(holiday.request_date_to, holiday.request_hour_to, tz)
+            else:
+                holiday.request_datetime_from = False
+                holiday.request_datetime_to = False
 
     def _inverse_supported_attachment_ids(self):
         for holiday in self:
