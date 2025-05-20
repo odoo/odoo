@@ -316,7 +316,7 @@
                                     readonly="state != 'draft'"/>
                                 <button name="action_generate_bom" type="object" icon="fa-plus"
                                     title="Generate a new BoM from this Manufacturing Order" groups="mrp.group_mrp_manager"
-                                    invisible="bom_id or not product_id or not move_raw_ids">
+                                    invisible="bom_id or not product_id or (not move_raw_ids and not workorder_ids)">
                                     <span>Generate BOM</span>
                                 </button>
                                 <button name="action_update_bom" string="Update BoM" type="object"
