@@ -368,11 +368,24 @@ export class LinkPlugin extends Plugin {
     }
 
     isLinkAllowedOnSelection() {
+        if (this.getResource("link_compatible_selection_predicates").some((p) => p())) {
+            return true;
+        }
         const linksInSelection = this.dependencies.selection
             .getTargetedNodes()
             .filter((n) => n.tagName === "A");
+        const targetedNodes = this.dependencies.selection.getTargetedNodes();
         return (
-            linksInSelection.length < 2 && this.dependencies.selection.getTargetedBlocks().size < 2
+            linksInSelection.length < 2 &&
+            // Prevent a link across sibling blocks:
+            !targetedNodes.some((node) => {
+                const next = node.nextSibling;
+                const previous = node.previousSibling;
+                return (
+                    (next && targetedNodes.includes(next) && isBlock(next)) ||
+                    (previous && targetedNodes.includes(previous) && isBlock(previous))
+                );
+            })
         );
     }
 
