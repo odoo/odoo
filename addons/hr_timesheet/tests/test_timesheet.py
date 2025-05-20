@@ -4,7 +4,7 @@
 from lxml import etree
 
 from odoo.fields import Command
-from odoo.tests import Form, TransactionCase
+from odoo.tests import Form, TransactionCase, new_test_user
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 
 
@@ -93,6 +93,24 @@ class TestCommonTimesheet(TransactionCase):
             'user_id': cls.user_manager.id,
             'employee_type': 'freelance',
         })
+        cls.project = cls.env['project.project'].create({
+            'name': 'Test Project',
+            'privacy_visibility': 'followers',
+            'task_ids': [Command.create({
+                'name': 'Test Task',
+            })],
+        })
+        cls.timesheet = cls.env['account.analytic.line'].create({
+            'name': 'Test Timesheet',
+            'project_id': cls.project.id,
+            'task_id': cls.project.task_ids[0].id,
+            'employee_id':   cls.empl_employee.id,
+        })
+        cls.timesheet_manager_no_project_user = new_test_user(
+            cls.env,
+            login='no_project_user',
+            groups='hr_timesheet.group_timesheet_manager'
+        )
 
 
 class TestTimesheet(TestCommonTimesheet):
@@ -389,6 +407,14 @@ class TestTimesheet(TestCommonTimesheet):
         })
 
         self.assertEqual(timesheet.project_id, second_project, 'The project_id of non-validated timesheet should have changed')
+
+    def test_compute_display_name(self):
+        self.timesheet.with_user(self.timesheet_manager_no_project_user)._compute_display_name()
+        self.assertEqual(
+            self.timesheet.display_name,
+            "Test Project - Test Task",
+            "Display name should be correctly computed without raising AccessError."
+        )
 
     def test_create_timesheet_employee_not_in_company(self):
         ''' ts.employee_id only if the user has an employee in the company or one employee for all companies.
