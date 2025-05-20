@@ -23,7 +23,6 @@ import {
     normalizeDeepCursorPosition,
     normalizeFakeBR,
 } from "../utils/selection";
-import { isElement } from "../utils/dom_info";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 
 /**
@@ -124,22 +123,10 @@ function scrollToSelection(selection) {
         return;
     }
     let rect = range.getBoundingClientRect();
-    // If the range is invisible (0 width & height) and selection is collapsed,
-    // it's likely inside an empty paragraph.
-    // In that case, we try to get the bounding rect from a nearby child element
-    // within the anchorNode to better get position the selection.
-    if (
-        rect.width === 0 &&
-        rect.height === 0 &&
-        selection.isCollapsed &&
-        selection.anchorNode.hasChildNodes()
-    ) {
-        const target =
-            selection.anchorNode.childNodes[selection.anchorOffset] ||
-            selection.anchorNode.childNodes[selection.anchorOffset - 1];
-        if (isElement(target)) {
-            rect = target.getBoundingClientRect();
-        }
+    // If the range is invisible (0 width & height),
+    // We call `getBoundingClientRect` on closest element.
+    if (rect.width === 0 && rect.height === 0 && selection.isCollapsed) {
+        rect = closestElement(selection.anchorNode).getBoundingClientRect();
     }
 
     const containerRect = container.getBoundingClientRect();

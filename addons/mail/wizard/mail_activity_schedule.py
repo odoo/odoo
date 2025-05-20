@@ -242,14 +242,7 @@ class MailActivitySchedule(models.TransientModel):
             record.message_post(body=body)
 
         if len(applied_on) == 1:
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': self.res_model,
-                'res_id': applied_on.id,
-                'name': applied_on.display_name,
-                'view_mode': 'form',
-                'views': [(False, "form")],
-            }
+            return {'type': 'ir.actions.client', 'tag': 'soft_reload'}
 
         return {
             'type': 'ir.actions.act_window',

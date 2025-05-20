@@ -3,6 +3,7 @@ import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, useState, xml } from "@odoo/owl";
 import {
+    contains,
     editAce,
     mountWithCleanup,
     patchWithCleanup,
@@ -298,4 +299,56 @@ test("initial value cannot be undone", async () => {
     await animationFrame();
     expect(".ace_editor .ace_content").toHaveText("some value");
     expect.verifySteps(["ace undo"]);
+});
+
+test("code editor can take an initial cursor position", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`<CodeEditor maxLines="2" value="value" initialCursorPosition="initialPosition" onChange="onChange"/>`;
+        static props = ["*"];
+
+        setup() {
+            this.value = `
+            1
+            2
+            3
+            4aa
+            5
+            `.replace(/^\s*/gm, ""); // simple dedent
+
+            this.initialPosition = { row: 3, column: 2 };
+        }
+
+        onChange(value, startPosition) {
+            expect.step({ value, startPosition });
+        }
+    }
+    await mountWithCleanup(Parent);
+    await animationFrame();
+
+    const editor = window.ace.edit(queryOne(".ace_editor"));
+    expect(document.activeElement).toBe(editor.textInput.getElement());
+    expect(editor.getCursorPosition()).toEqual({ row: 3, column: 2 });
+
+    expect([...queryAll(".ace_gutter-cell")].map((el) => el.textContent)).toEqual(["3", "4", "5"]);
+    expect.verifySteps([]);
+    await contains(".ace_editor textarea", { displayed: true, visible: false }).edit("new\nvalue", {
+        instantly: true,
+    });
+    expect.verifySteps([
+        {
+            startPosition: {
+                column: 0,
+                row: 0,
+            },
+            value: "",
+        },
+        {
+            startPosition: {
+                column: 0,
+                row: 0,
+            },
+            value: "new\nvalue",
+        },
+    ]);
 });

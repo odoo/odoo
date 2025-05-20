@@ -5,7 +5,7 @@
         <xpath expr="//t[@t-if='o.dest_address_id']" position="after">
             <t t-else="">
                 <t t-set="information_block">
-                    <strong>Shipping address:</strong>
+                    <strong class="d-block mt-3">Shipping address:</strong>
                     <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
                         <span t-field="o.picking_type_id.warehouse_id.name"/>
                         <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
@@ -29,7 +29,7 @@
         <xpath expr="//t[@t-if='o.dest_address_id']" position="after">
             <t t-else="">
                 <t t-set="information_block">
-                    <strong>Shipping address:</strong>
+                    <strong class="d-block mt-3">Shipping address</strong>
                     <div t-if="o.picking_type_id and o.picking_type_id.warehouse_id">
                         <span t-field="o.picking_type_id.warehouse_id.name"/>
                         <div t-field="o.picking_type_id.warehouse_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>

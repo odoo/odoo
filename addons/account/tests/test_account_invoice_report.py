@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo import fields
+from odoo import Command, fields
 
 
 @tagged('post_install', '-at_install')
@@ -224,3 +224,39 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
         _apply_combination_on_report_pivot(['price_average:avg', 'price_subtotal:sum'])
         _apply_combination_on_report_pivot(['price_average:avg', 'quantity:sum'])
+
+    def test_inventory_margin_currency(self):
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 750,
+                }),
+            ],
+        })
+        egy_company = self.env['res.company'].create({
+            'name': 'Egyptian Company',
+            'currency_id': self.env.ref('base.EGP').id,
+            'user_ids': [Command.set(self.env.user.ids)],
+        })
+        orig_company = self.env.company
+        report = self.env['account.invoice.report'].search(
+            [('move_id', '=', invoice.id)],
+        )
+        self.assertEqual(report.inventory_value, -800)
+        self.assertEqual(report.price_margin, -50)
+        self.env.user.company_id = egy_company
+        self.env['res.currency.rate'].create({
+            'name': '2017-11-03',
+            'rate': 0.5,
+            'currency_id': orig_company.currency_id.id,
+        })
+        self.env.flush_all()
+        self.env['account.invoice.report'].invalidate_model()
+        report = self.env['account.invoice.report'].search(
+            [('move_id', '=', invoice.id)],
+        )
+        self.assertEqual(report.inventory_value, -1600)
+        self.assertEqual(report.price_margin, -100)

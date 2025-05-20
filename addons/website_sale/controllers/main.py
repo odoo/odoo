@@ -1586,6 +1586,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The route to redirect the customer to.
         :rtype: str
         """
+        # TODO: remove me in master with call site, not used in standard codebase anymore.
         return ''
 
     def _handle_extra_form_data(self, extra_form_data, address_values):
