@@ -7,7 +7,7 @@
         'views/product_template_extension.xml',
         'views/product_template_hide_fields.xml',
         'views/res_partner_form_extension.xml',
-        'views/res_partner_form_hide_fields.xml'
+        'views/res_partner_form_hide_fields.xml',
         'views/sale_order_form_file_manager.xml',
         'views/res_partner_form_inherit.xml'
     ],
