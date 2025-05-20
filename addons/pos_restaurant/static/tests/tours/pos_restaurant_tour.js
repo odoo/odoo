@@ -1,5 +1,3 @@
-/* global posmodel */
-
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
@@ -15,9 +13,9 @@ import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
-import { renderToElement } from "@web/core/utils/render";
 import { delay } from "@odoo/hoot-dom";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
+import { generatePreparationReceiptElement } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -403,27 +401,7 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                 content: "Check if order preparation contains always Variant",
                 trigger: "body",
                 run: async () => {
-                    const order = posmodel.getOrder();
-                    const orderChange = posmodel.changesToOrder(
-                        order,
-                        posmodel.config.preparationCategories,
-                        false
-                    );
-                    const { orderData, changes } = posmodel.generateOrderChange(
-                        order,
-                        orderChange,
-                        Array.from(posmodel.config.preparationCategories),
-                        false
-                    );
-
-                    orderData.changes = {
-                        title: "new",
-                        data: changes.new,
-                    };
-
-                    const rendered = renderToElement("point_of_sale.OrderChangeReceipt", {
-                        data: orderData,
-                    });
+                    const rendered = generatePreparationReceiptElement();
 
                     if (!rendered.innerHTML.includes("Value 1")) {
                         throw new Error("Value 1 not found in printed receipt");
@@ -459,27 +437,7 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt", {
                 content: "Check if order preparation has product correctly ordered",
                 trigger: "body",
                 run: async () => {
-                    const order = posmodel.getOrder();
-                    const orderChange = posmodel.changesToOrder(
-                        order,
-                        posmodel.config.preparationCategories,
-                        false
-                    );
-                    const { orderData, changes } = posmodel.generateOrderChange(
-                        order,
-                        orderChange,
-                        Array.from(posmodel.config.preparationCategories),
-                        false
-                    );
-
-                    orderData.changes = {
-                        title: "new",
-                        data: changes.new,
-                    };
-
-                    const rendered = renderToElement("point_of_sale.OrderChangeReceipt", {
-                        data: orderData,
-                    });
+                    const rendered = generatePreparationReceiptElement();
                     const orderLines = [...rendered.querySelectorAll(".orderline")];
                     const orderLinesInnerText = orderLines.map((orderLine) => orderLine.innerText);
                     const expectedOrderLines = [
@@ -613,28 +571,9 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout",
             {
                 trigger: "body",
                 run: async () => {
-                    const order = posmodel.getOrder();
-                    const orderChange = posmodel.changesToOrder(
-                        order,
-                        posmodel.config.preparationCategories,
-                        false
-                    );
-                    const { orderData, changes } = posmodel.generateOrderChange(
-                        order,
-                        orderChange,
-                        Array.from(posmodel.config.preparationCategories),
-                        false
-                    );
+                    const rendered = generatePreparationReceiptElement();
 
-                    orderData.changes = {
-                        title: "new",
-                        data: changes.new,
-                    };
-
-                    const printed = renderToElement("point_of_sale.OrderChangeReceipt", {
-                        data: orderData,
-                    });
-                    const comboItemLines = [...printed.querySelectorAll(".orderline.ms-5")].map(
+                    const comboItemLines = [...rendered.querySelectorAll(".orderline.ms-5")].map(
                         (el) => el.innerText
                     );
                     const expectedComboItemLines = [
