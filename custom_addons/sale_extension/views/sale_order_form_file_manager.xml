@@ -21,16 +21,21 @@
 
         <field name="quotation_status" invisible="1"/>
       </xpath>
-      <xpath expr="//button[@name='action_confirm']" position="attributes">
+      <xpath expr="//button[@name='action_confirm' and @id='action_confirm']" position="attributes">
         <attribute name="string">Generar orden de venta</attribute>
         <attribute name="class">btn-primary</attribute>
         <attribute name="invisible">quotation_status == 'draft' or state == 'sale'</attribute>
       </xpath>
+      <xpath expr="//button[@name='action_confirm' and not(@id)]" position="attributes">
+        <attribute name="string">Generar orden de venta</attribute>
+        <attribute name="class">btn-primary</attribute>
+        <attribute name="invisible">1</attribute>
+      </xpath>
       <xpath expr="//button[@name='action_quotation_send']" position="attributes">
         <attribute name="class">btn-primary</attribute>
       </xpath>
-      <xpath expr="//button[@name='327']" position="attributes">
-        <!--<attribute name="class">btn-primary</attribute>-->
+      <xpath expr="//button[@id='create_invoice_percentage']" position="attributes">
+        <attribute name="class">btn-primary</attribute>
       </xpath>
     </field>
   </record>

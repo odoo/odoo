@@ -1,13 +1,17 @@
 from odoo import models, fields
+from odoo.tools import config
 import os
 import logging
 import base64
 
+
 _logger = logging.getLogger(__name__)
+
 
 class FileManager(models.Model):
     _inherit = "sale.order"
-    
+
+
     quotation_status = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed')
@@ -19,7 +23,15 @@ class FileManager(models.Model):
             order.sale_file_manager("quotation")
         return True
     
+    def action_confirm(self):
+        res = super().action_confirm()
+        for order in self:
+            order.sale_file_manager("sale_order")
+        return res
+
     def sale_file_manager(self, status):
+        files_folder = config.get('sales_folder')
+
         for order in self:
             try:
                 ctx = dict(self.env.context)
@@ -33,20 +45,20 @@ class FileManager(models.Model):
 
 
                 if(status == "quotation"):
-                    output_dir = '/home/demian/archivos_odoo/presupuestos'
+                    output_dir = f'{files_folder}/presupuestos'
                 else:
-                    output_dir = '/home/demian/archivos_odoo/ordenes'
+                    output_dir = f'{files_folder}/ordenes'
 
 
                 os.makedirs(output_dir, exist_ok=True)
-                filename = f'Presupuesto_{order.name}.pdf'
+                filename = f'Presupuesto_{order.name}.pdf' if status == 'quotation' else f'Orden_de_venta_{order.name}.pdf'
                 full_path = os.path.join(output_dir, filename)
 
 
                 with open(full_path, 'wb') as f:
                     f.write(pdf_content)
 
-
+                print(f"Archivo guardado en {full_path}")
                 _logger.info(f"Presupuesto guardado: {full_path}")
 
                 # Adjuntar
