@@ -1360,7 +1360,6 @@ class TestReports(TestReportsCommon):
         stock_location = self.env.ref('stock.warehouse0').lot_stock_id
         sublocation = self.env['stock.location'].create({
             'name': 'Warehouse0 / Sublocation',
-            'posx': 0,
             'barcode': 'TEST_BARCODE_LOCATION',
             'location_id': stock_location.id
         })
