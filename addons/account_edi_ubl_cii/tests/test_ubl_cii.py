@@ -30,6 +30,12 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'standard_price': 80.0,
         })
 
+    def import_attachment(self, attachment, journal=None):
+        journal = journal or self.company_data["default_journal_purchase"]
+        return self.env['account.journal'] \
+            .with_context(default_journal_id=journal.id) \
+            ._create_document_from_attachment(attachment.id)
+
     def test_import_product(self):
         line_vals = [
            {'product_id': self.place_prdct.id, 'product_uom_id': self.uom_units.id},
@@ -188,3 +194,29 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
             'quantity': 1.0,
             'tax_ids': self.env['account.tax'],
         }])
+
+    def test_import_discount(self):
+        invoice = self.env['account.move'].create({
+            'partner_id': self.partner_a.id,
+            'move_type': 'out_invoice',
+            'invoice_line_ids': [
+                Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 3,
+                'price_unit': 11.34,
+                }),
+                Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1.65,
+                'price_unit': 29.9,
+                }),
+            ],
+        })
+        xml_attachment = self.env['ir.attachment'].create({
+            'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
+            'name': 'test_invoice.xml',
+        })
+        imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
+        # if slight rounding error won't be falsy
+        for line in imported_invoice.invoice_line_ids:
+            self.assertFalse(line.discount, "Discount should be falsy for all imported invoice lines")
