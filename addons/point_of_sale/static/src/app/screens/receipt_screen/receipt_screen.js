@@ -24,7 +24,7 @@ export class ReceiptScreen extends Component {
         const email = partner?.invoice_emails || partner?.email || "";
         this.state = useState({
             email: email,
-            phone: partner?.mobile || "",
+            phone: partner?.phone || "",
         });
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
