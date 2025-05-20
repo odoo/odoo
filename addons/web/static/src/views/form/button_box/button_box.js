@@ -17,7 +17,7 @@ export class ButtonBox extends Component {
     setup() {
         const ui = useService("ui");
         onWillRender(() => {
-            const maxVisibleButtons = [0, 0, 0, 7, 4, 5, 8][ui.size] ?? 8;
+            const maxVisibleButtons = [0, 0, 7, 4, 5, 8][ui.size] ?? 8;
             const allVisibleButtons = Object.entries(this.props.slots)
                 .filter(([_, slot]) => this.isSlotVisible(slot))
                 .map(([slotName]) => slotName);

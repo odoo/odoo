@@ -7852,7 +7852,6 @@ test(`correct amount of buttons`, async () => {
     };
 
     await assertFormContainsNButtonsWithSizeClass(SIZES.XS, 0);
-    await assertFormContainsNButtonsWithSizeClass(SIZES.VSM, 0);
     await assertFormContainsNButtonsWithSizeClass(SIZES.SM, 0);
     await assertFormContainsNButtonsWithSizeClass(SIZES.MD, 7);
     await assertFormContainsNButtonsWithSizeClass(SIZES.LG, 3);

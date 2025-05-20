@@ -54,7 +54,7 @@ export class NumpadDropdown extends Component {
     }
 
     get isSmall() {
-        return utils.getSize() <= SIZES.VSM;
+        return utils.getSize() <= SIZES.SM;
     }
 
     checkIsValid(buffer) {
