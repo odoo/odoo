@@ -30,11 +30,9 @@ class AccountMoveSend(models.AbstractModel):
             return moves.partner_id.commercial_partner_id
 
         def filter_peppol_state(moves, states):
-            return peppol_partner(moves.filtered(
-                lambda m: self.env['res.partner']._get_peppol_verification_state(
-                    peppol_partner(m).peppol_endpoint,
-                    peppol_partner(m).peppol_eas,
-                    moves_data[m]['invoice_edi_format']) in states))
+            return peppol_partner(
+                moves.filtered(lambda m: peppol_partner(m).peppol_verification_state in states)
+            )
 
         alerts = super()._get_alerts(moves, moves_data)
         # Check for invalid peppol partners.
@@ -125,7 +123,7 @@ class AccountMoveSend(models.AbstractModel):
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
             return all([
                 self._is_applicable_to_company(method, move.company_id),
-                self.env['res.partner']._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_edi_format) == 'valid',
+                partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
                 move._need_ubl_cii_xml(invoice_edi_format)
                 or move.ubl_cii_xml_id and move.peppol_move_state not in ('processing', 'done'),
@@ -240,4 +238,16 @@ class AccountMoveSend(models.AbstractModel):
             }
             return action
         else:
-            return moves.action_send_and_print()
+            # go back to previous (send and print) action
+            # to avoid doing participant SML lookup again, we don't go through action_send_and_print
+            return {
+                'name': _("Send"),
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'res_model': 'account.move.send.wizard' if len(moves) == 1 else 'account.move.send.batch.wizard',
+                'target': 'new',
+                'context': {
+                    'active_model': 'account.move',
+                    'active_ids': moves.ids
+                },
+            }

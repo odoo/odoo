@@ -512,15 +512,13 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
             )
 
     def create_send_and_print(self, invoices, default=False, **kwargs):
-        wizard_model = 'account.move.send.wizard' if len(invoices) == 1 else 'account.move.send.batch.wizard'
-        if wizard_model == 'account.move.send.wizard' and not default and not kwargs.get('sending_methods'):
+        action_send_and_print = invoices.action_send_and_print()
+        if action_send_and_print['res_model'] == 'account.move.send.wizard' and not default and not kwargs.get('sending_methods'):
             # In most cases, for testing purpose you only want to try to generate the document, no need to send it.
             # Therefore by default we deactivate sending methods, unless default parameter is set to True,
             # or they are explicitly given.
             kwargs['sending_methods'] = []
-        return self.env[wizard_model]\
-            .with_context(active_model='account.move', active_ids=invoices.ids)\
-            .create(kwargs)
+        return self.env[action_send_and_print['res_model']].with_context(action_send_and_print['context']).create(kwargs)
 
     def _get_mail_message(self, move, limit=1):
         return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=limit)
