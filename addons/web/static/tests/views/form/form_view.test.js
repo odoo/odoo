@@ -6012,6 +6012,12 @@ test("empty required fields in an existing record are highlighted", async () => 
                 <group>
                     <field name="foo"/>
                     <field name="int_field"/>
+                    <field name="child_ids">
+                        <list>
+                            <field name="name"/>
+                            <field name="foo" column_invisible="parent.int_field &lt; 20"/>
+                        </list>
+                    </field>
                 </group>
             </form>
         `,
@@ -6020,6 +6026,7 @@ test("empty required fields in an existing record are highlighted", async () => 
 
     expect(".o_field_widget[name=foo]").toHaveClass("o_field_invalid");
     expect(".o_form_status_indicator_buttons").toHaveClass("invisible");
+    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["Name"]);
 
     await contains(".o_field_widget[name=int_field] input").edit("25", { confirm: false });
     expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
@@ -6030,6 +6037,7 @@ test("empty required fields in an existing record are highlighted", async () => 
     expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
     expect(".o_form_status_indicator_buttons .o_form_button_save").toHaveAttribute("disabled");
     expect(".o_form_status_indicator span.text-danger").toHaveCount(1);
+    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["Name", "Foo"]);
 
     await contains(".o_form_button_cancel").click();
     expect(".o_field_widget[name=foo]").toHaveClass("o_field_invalid");
@@ -6038,6 +6046,7 @@ test("empty required fields in an existing record are highlighted", async () => 
     await contains(".o_form_button_create").click();
     expect(".o_field_widget[name=foo]").not.toHaveClass("o_field_invalid");
     expect(".o_form_status_indicator_buttons").not.toHaveClass("invisible");
+    expect(queryAllTexts`.o_column_sortable div span`).toEqual(["Name"]);
 });
 
 test(`display a dialog if onchange result is a warning`, async () => {
