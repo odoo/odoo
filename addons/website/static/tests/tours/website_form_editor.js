@@ -6,6 +6,7 @@ import {
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 // Visibility possible values:
 const VISIBLE = 'Always Visible';
@@ -55,7 +56,7 @@ const selectButtonByText = function (text) {
         {
             content: "Open the select",
             trigger:
-                "div[data-container-title='Field'] div[data-label='Visibility'] button.btn-primary",
+                "div[data-container-title='Field'] div[data-label='Visibility'] button.btn-secondary",
             run: "click",
         },
         {
@@ -69,7 +70,7 @@ const selectButtonByData = function (data) {
     return [
         {
             content: "Open the select",
-            trigger: "div[data-label='Type'] button.btn-primary",
+            trigger: "div[data-label='Type'] button.btn-secondary",
             run: "click",
         },
         {
@@ -1114,6 +1115,7 @@ registerWebsitePreviewTour(
         ...addCustomField("char", "text", `Test1"'`, false),
         ...addCustomField("char", "text", 'Test2`\\', false),
         ...clickOnSave(),
+        stepUtils.waitIframeIsReady(),
         ...essentialFieldsForDefaultFormFillInSteps,
         {
             content: "Complete 'Your Question' field",

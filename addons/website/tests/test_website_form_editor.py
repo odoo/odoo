@@ -61,8 +61,6 @@ class TestWebsiteFormEditor(HttpCaseWithUserPortal):
     def test_website_form_editable_content(self):
         self.start_tour('/', 'website_form_editable_content', login="admin")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_form_special_characters(self):
         self.start_tour('/', 'website_form_special_characters', login='admin')
         mail = self.env['mail.mail'].search([], order='id desc', limit=1)
