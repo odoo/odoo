@@ -275,7 +275,7 @@ export class LinkPlugin extends Plugin {
         });
         // link creation is added to the command service because of a shortcut conflict,
         // as ctrl+k is used for invoking the command palette
-        this.unregisterLinkCommandCallback = this.services.command.add(
+        this.unregisterLinkCommandCallback = this.services.command?.add(
             "Create link",
             () => {
                 this.dependencies.selection.focusEditable();
@@ -305,7 +305,7 @@ export class LinkPlugin extends Plugin {
     }
 
     destroy() {
-        this.unregisterLinkCommandCallback();
+        this.unregisterLinkCommandCallback?.();
     }
 
     // -------------------------------------------------------------------------
