@@ -1613,82 +1613,6 @@ test(`save a record with an invisible required field`, async () => {
 });
 
 test.tags("desktop");
-test("multi_edit: edit a required field with invalid value and click 'Ok' of alert dialog", async () => {
-    Foo._fields.foo.required = true;
-
-    stepAllNetworkCalls();
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list multi_edit="1">
-                <field name="foo"/>
-                <field name="int_field"/>
-            </list>
-        `,
-    });
-
-    expect(`.o_data_row`).toHaveCount(4);
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "get_views",
-        "web_search_read",
-        "has_group",
-    ]);
-
-    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-    await contains(`.o_data_row:eq(0) .o_data_cell[name='foo']`).click();
-    await contains(`.o_field_widget[name=foo] input`).clear();
-
-    await contains(`.modal .btn:contains(Ok)`).click();
-
-    expect(".modal").not.toHaveCount();
-    expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
-    expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
-    expect.verifySteps([]);
-});
-
-test.tags("desktop");
-test(`multi_edit: edit a required field with invalid value and dismiss alert dialog`, async () => {
-    Foo._fields.foo = fields.Char({ required: true });
-
-    stepAllNetworkCalls();
-
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `
-            <list multi_edit="1">
-                <field name="foo"/>
-                <field name="int_field"/>
-            </list>
-        `,
-    });
-    expect(`.o_data_row`).toHaveCount(4);
-    expect.verifySteps([
-        "/web/webclient/translations",
-        "/web/webclient/load_menus",
-        "get_views",
-        "web_search_read",
-        "has_group",
-    ]);
-
-    await contains(`.o_data_row:first .o_list_record_selector input`).click();
-    await contains(`.o_data_row:first .o_data_cell[name='foo']`).click();
-    await contains(`.o_field_widget[name=foo] input`).clear();
-
-    expect(".modal").toHaveCount(1);
-
-    await contains(`.modal .btn-close`).click();
-
-    expect(`.o_data_row:first .o_data_cell[name='foo']`).toHaveText("yop");
-    expect(`.o_data_row:first`).toHaveClass("o_data_row_selected");
-    expect.verifySteps([]);
-});
-
-test.tags("desktop");
 test(`multi_edit: clicking on a readonly field switches the focus to the next editable field`, async () => {
     await mountView({
         resModel: "foo",
@@ -11029,9 +10953,9 @@ test(`editable list view: multi edition error and cancellation handling`, async 
     expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 
     await contains(`.o_selected_row [name=int_field] input`).edit("hahaha", { confirm: "blur" });
-    expect(`.modal`).toHaveCount(1);
+    await waitFor(".o_notification");
 
-    await contains(`.modal .btn-primary`).click();
+    await contains(`.o_list_button_discard`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
         message: "changes should be discarded",
     });
@@ -11043,9 +10967,9 @@ test(`editable list view: multi edition error and cancellation handling`, async 
 
     await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
     await contains(`.o_control_panel`).click();
-    expect(`.modal`).toHaveCount(1);
+    await waitFor(".o_notification");
 
-    await contains(`.modal .btn-primary`).click();
+    await contains(`.o_list_button_discard`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
         message: "changes should be discarded",
     });
@@ -11113,6 +11037,78 @@ test(`multi edition: many2many field in grouped list`, async () => {
     expect(`.o_data_row:eq(2) .o_data_cell:eq(1)`).toHaveText("Value 1\nValue 2\nValue 3", {
         message: "should have same value in many2many field on all other records with same res_id",
     });
+});
+
+test.tags("desktop");
+test(`multi edition: focus on invalid cell`, async () => {
+    for (let i = 0; i < 4; i++) {
+        Foo._records[i]["text"] = `Text ${i}`;
+    }
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo" required="1"/>
+                <field name="text" required="1"/>
+            </list>
+        `,
+    });
+    expect(`.o_data_row`).toHaveCount(4);
+    await contains(`.o_data_row .o_list_record_selector`).click();
+    expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("Text 0");
+
+    // Empty the required field
+    await contains(`.o_data_row .o_data_cell:eq(1)`).click();
+    await contains(`.o_data_row [name=text] textarea`).edit("");
+
+    // Expect a notification to appear
+    await waitFor(".o_notification");
+    expect(queryFirst(".o_notification_title")).toHaveText("Invalid fields:");
+    expect(queryFirst(".o_notification_content")).toHaveText("Text");
+    expect(`.o_data_row .o_data_cell:eq(1):focus-within`).toHaveCount(1);
+    await contains(`.o_list_button_discard`).click();
+
+    // The focus should shift to the first invalid cell of the selected row
+    // when more than one required cells are empty.
+    await contains(`.o_data_row .o_data_cell:eq(1)`).click();
+    await contains(`.o_data_row [name=text] textarea`).edit("");
+    await contains(`.o_data_row [name=foo] input`).edit("");
+    await waitFor(".o_notification");
+    expect(queryFirst(".o_notification_title")).toHaveText("Invalid fields:");
+    expect(queryAll(".o_notification_content")[1]).toHaveText("Foo\nText");
+    expect(`.o_data_row .o_data_cell:eq(0):focus-within`).toHaveCount(1);
+});
+
+test.tags("desktop");
+test(`multi edition: many2many field is required in list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list multi_edit="1">
+                <field name="foo" required="1"/>
+                <field name="m2m" required="1" widget="many2many_tags"/>
+            </list>
+        `,
+    });
+    expect(`.o_data_row`).toHaveCount(4);
+    await contains(`.o_data_row:eq(3) .o_list_record_selector`).click();
+    expect(`.o_data_row:eq(3) .o_data_cell.o_many2many_tags_cell:eq(0)`).toHaveText("Value 1");
+
+    // remove a many2many tag
+    await contains(`.o_data_row:eq(3) .o_data_cell:eq(1)`).click();
+    await contains(`span .o_delete`).click();
+
+    // Expect a notification to appear
+    await waitFor(".o_notification");
+    expect(queryFirst(".o_notification_content")).toHaveText("M2m");
+    expect(queryFirst(".o_notification_title")).toHaveText("Invalid fields:");
+
+    // click on "Discard" after recieving notification
+    await contains(`.o_list_button_discard`).click();
+    expect(`.o_data_row:eq(3) .o_data_cell.o_many2many_tags_cell:eq(0)`).toHaveText("Value 1");
 });
 
 test.tags("desktop");
@@ -11297,7 +11293,6 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
 
     // mousedown on Discard and then mouseup also on Discard
     await contains(`.o_list_button_discard`).click();
-    expect(`.o_dialog`).toHaveCount(0);
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("10");
 
     // edit again with an invalid value
@@ -11307,7 +11302,6 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
     // mousedown on Discard (simulate a mousemove) and mouseup somewhere else
     await pointerDown(".o_list_button_discard");
     await animationFrame();
-    expect(`.o_dialog`).toHaveCount(0);
 
     // FIXME: Hoot incorrectly triggers"change" events *after* the blur instead of
     // *before*, causing the internals of the list controller/renderer to dispatch
@@ -11318,9 +11312,9 @@ test(`multi edit list view: mousedown on "Discard" with invalid field`, async ()
     });
     await pointerUp(".o_control_panel");
     await animationFrame();
-    expect(`.o_dialog`).toHaveCount(1);
+    await waitFor(".o_notification");
 
-    await contains(`.o_dialog .modal-footer .btn-primary`).click(); // click OK
+    await contains(`.o_list_button_discard`).click(); // click Discard
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("10");
 });
 
@@ -11357,7 +11351,7 @@ test(`multi edit: invalid field and urgent save`, async () => {
     // edit first record and unset foo
     await contains(`.o_data_row:eq(0) .o_data_cell`).click();
     await contains(`.o_data_row:eq(0) .o_data_cell input`).edit("");
-    expect(`.o_dialog`).toHaveCount(1);
+    await waitFor(".o_notification");
 
     // provoke an urgent save
     await unload();
@@ -11742,13 +11736,14 @@ test(`editable readonly list view: single edition does not behave like a multi-e
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await clear({ confirm: "blur" });
     await animationFrame();
-    expect(`.modal`).toHaveCount(1, { message: "should have a modal (invalid fields)" });
 
-    await contains(`.modal button.btn`).click();
+    // click on "Discard" after recieving notification
+    await waitFor(".o_notification");
+    await contains(`.o_list_button_discard`).click();
+
     // edit a field
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_data_row [name=foo] input`).edit("bar");
-    expect(`.modal`).toHaveCount(0, { message: "should not have a modal" });
     expect(`.o_data_row:eq(0) .o_data_cell`).toHaveText("bar", {
         message: "the first row should be updated",
     });

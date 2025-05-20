@@ -254,6 +254,11 @@ export class ListRenderer extends Component {
                     const column = this.cellToFocus.column;
                     const forward = this.cellToFocus.forward;
                     this.focusCell(column, forward);
+                } else if (this.editedRecord._invalidFields.size) {
+                    const columnIndex = this.columns.findIndex(
+                        (col) => col.name === [...this.editedRecord._invalidFields][0]
+                    );
+                    this.focusCell(this.columns[columnIndex]);
                 } else if (this.lastEditedCell) {
                     this.focusCell(this.lastEditedCell.column, true);
                 } else {
