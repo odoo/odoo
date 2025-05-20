@@ -19,11 +19,12 @@ describe.current.tags("desktop");
 class ReportProjectTaskUser extends models.Model {
     _name = "report.project.task.user";
     project_id = fields.Many2one({ relation: "project.project" });
+    display_in_project = fields.Boolean();
 
     _records = [
-        { id: 4, project_id: 1 },
-        { id: 6, project_id: 1 },
-        { id: 9, project_id: 2 },
+        { id: 4, project_id: 1, display_in_project: true },
+        { id: 6, project_id: 1, display_in_project: true },
+        { id: 9, project_id: 2, display_in_project: true },
     ];
     _views = {
         graph: /* xml */ `

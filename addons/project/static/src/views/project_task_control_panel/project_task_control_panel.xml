@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectTaskControlPanel" t-inherit="web.ControlPanel">
+        <xpath expr="//button[@name='embedded_actions']" position="replace">
+            <t t-if="showTaskOptions">
+                <Dropdown>
+                    <button class="btn btn-secondary" t-att-title="taskOptionsTitle">
+                        <i class="fa fa-sliders"/>
+                    </button>
+                    <t t-set-slot="content">
+                        <DropdownItem onSelected="() => this.onClickShowSubtasks()" class="state.showSubtasks ? 'selected' : ''">
+                            Show Sub-Tasks
+                        </DropdownItem>
+                        <DropdownItem t-if="state.embeddedInfos.embeddedActions?.length and !env.isSmall"
+                            class="state.embeddedInfos.showEmbedded ? 'selected' : ''"
+                            onSelected="() => this.onClickShowEmbedded()"
+                        >
+                            Top Menu
+                        </DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

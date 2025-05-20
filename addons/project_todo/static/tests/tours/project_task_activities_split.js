@@ -15,6 +15,14 @@ registry.category("web_tour.tours").add('project_task_activities_split', {
             content: 'Task "New Task!" is listed in the activity view',
             trigger: 'td.o_data_cell:contains("New Task!")',
         }, {
+            trigger: ".o_control_panel_navigation button i.fa-sliders",
+            content: "Open embedded actions dropdown",
+            run: "click",
+        }, {
+            content: 'Click on `Show Sub-Tasks` button to see sub-tasks in the main view',
+            trigger: "span.o-dropdown-item:contains('Show Sub-Tasks')",
+            run: 'click',
+        }, {
             content: 'Task "New Sub-Task!" is listed in the activity view',
             trigger: 'td.o_data_cell:contains("New Sub-Task!")',
             run: () => {
