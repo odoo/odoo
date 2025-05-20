@@ -155,6 +155,7 @@ msgstr "\"%s\" için %s müşteri (ler) bulundu."
 msgid ""
 "%s has a total amount of %s, are you sure you want to delete this order?"
 msgstr ""
+"%s toplam%s tutarına sahip, bu siparişi silmek istediğinizden emin misiniz?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -233,7 +234,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "2-03-2000 9:00 AM"
-msgstr ""
+msgstr "03-02-2000, 09:00"
 
 #. module: point_of_sale
 #: model:product.attribute.value,name:point_of_sale.product_attribute_value_39
@@ -270,6 +271,8 @@ msgstr "45"
 msgid ""
 "5 digits alphanumeric code to be used by portal user to request an invoice"
 msgstr ""
+"Portal kullanıcısının fatura talep etmek için kullanacağı 5 haneli "
+"alfanümerik kod"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.blue_denim_jeans_template
@@ -370,6 +373,8 @@ msgid ""
 "             %(pos_name)s amounting in %(amount)s from %(company_name)s. "
 "</p>"
 msgstr ""
+"<p>Sayın %(client_name)s,<br/>işte %(pos_name)s için %(amount)s tutarındaki "
+"fişiniz %(is_invoiced)s - %(company_name)s tarafından düzenlenmiştir. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -388,12 +393,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Cash Register</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Yazar Kasa</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "<span class=\"o_stat_text\">Journal Items</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Yevmiye Kayıtları</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -439,7 +444,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Amount of discounts</strong>:"
-msgstr ""
+msgstr "<strong>İndirim tutarı:</strong>:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -459,7 +464,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "<strong>Number of discounts</strong>:"
-msgstr ""
+msgstr "<strong>İndirim sayısı:</strong>:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -846,6 +851,9 @@ msgid ""
 "the Sales Journal set on this point of sale if you use the Accounting "
 "application."
 msgstr ""
+"Mevcut tüm fiyat listeleri, şirketin para biriminde ya da bu satış "
+"noktasında tanımlı Satış Günlüğü’nün para biriminde olmalıdır (Muhasebe "
+"uygulamasını kullanıyorsanız)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1132,7 +1140,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_avatax
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_avatax
 msgid "AvaTax PoS Integration"
-msgstr ""
+msgstr "AvaTax POS Entegrasyonu"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -1142,7 +1150,7 @@ msgstr "Uygun"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__available_payment_method_ids
 msgid "Available Payment Methods"
-msgstr ""
+msgstr "Kullanılabilir Ödeme Yöntemleri"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
@@ -1192,7 +1200,7 @@ msgstr "Arkaplan Resmi"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__customer_display_bg_img_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_customer_display_bg_img_name
 msgid "Background Image Name"
-msgstr ""
+msgstr "Arka Plan Görseli Adı"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
@@ -1328,7 +1336,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__card_brand
 msgid "Brand of card"
-msgstr ""
+msgstr "Kart markası"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_breads
@@ -1460,7 +1468,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 msgid "Card Owner name"
-msgstr ""
+msgstr "Kart Sahibinin Adı"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_form
@@ -1501,7 +1509,7 @@ msgstr "Nakit %(session_name)s"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Cash Bakery"
-msgstr ""
+msgstr "Nakit Fırın"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1553,7 +1561,7 @@ msgstr "Nakit Satırları"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Move 1"
-msgstr ""
+msgstr "Nakit Hareketi 1"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1811,7 +1819,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.xml:0
 msgid "Choose your store"
-msgstr ""
+msgstr "Mağazanızı seçin"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_cinnamon_roll_product_template
@@ -2306,7 +2314,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
 msgid "Create new product"
-msgstr ""
+msgstr "Yeni ürün oluşturun"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__create_uid
@@ -2836,6 +2844,8 @@ msgid ""
 "Display the breakdown of sales lines by product in the automatically "
 "generated closing entry."
 msgstr ""
+"Otomatik oluşturulan kapanış kaydında satış kalemlerinin ürün bazında "
+"dökümünü görüntüleyin."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_pricer
@@ -2942,7 +2952,7 @@ msgstr "E-posta yazma sihirbazı"
 #. odoo-python
 #: code:addons/point_of_sale/models/mail_compose_message.py:0
 msgid "Email triggered successfully!"
-msgstr ""
+msgstr "E-posta başarıyla tetiklendi!"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__user_id
@@ -2963,6 +2973,9 @@ msgid ""
 "These credentials are configurable in the *HR Settings* tab of the employee "
 "form."
 msgstr ""
+"Çalışanlar, bir satış noktası oturumuna giriş yapmak için kartlarını "
+"tarayabilir ya da bir PIN girebilir. Bu giriş bilgileri, çalışan formundaki "
+"İK Ayarları sekmesinden yapılandırılabilir."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3001,6 +3014,8 @@ msgid ""
 "Ensure that there is an existing bank journal. Check if chart of accounts is"
 " installed in your company."
 msgstr ""
+"Bir banka günlüğünün mevcut olduğundan emin olun. Şirketinizde hesap "
+"planının kurulu olup olmadığını kontrol edin."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3161,7 +3176,7 @@ msgstr "Alt Bilgi"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__for_all_config
 msgid "For All PoS"
-msgstr ""
+msgstr "Tüm POS’lar İçin"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -3371,7 +3386,7 @@ msgstr "Nakit Kontrolü Var"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_deleted_line
 msgid "Has Deleted Line"
-msgstr ""
+msgstr "Silinmiş Satır Var"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__has_image
@@ -3772,7 +3787,7 @@ msgstr "İade ve satışların karıştırılmasına izin verilmez"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/printer/pos_printer_service.js:0
 msgid "It is possible to print your tickets by making use of an IoT Box."
-msgstr ""
+msgstr "Biletlerinizi bir IoT Kutusu kullanarak yazdırmanız mümkündür."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3781,6 +3796,8 @@ msgid ""
 "It seems like you don't have enough rights to create point of sale "
 "configurations."
 msgstr ""
+"Satış noktası yapılandırmaları oluşturmak için yeterli yetkilere sahip "
+"olmadığınız görünüyor."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jean_jacket_product_template
@@ -3847,7 +3864,7 @@ msgstr "Dizüstü bilgisayar"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Laptop model x"
-msgstr ""
+msgstr "Dizüstü bilgisayar modeli x"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_big_scrollbars
@@ -3906,7 +3923,7 @@ msgstr "Son Güncelleme"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__last_order_preparation_change
 msgid "Last preparation change"
-msgstr ""
+msgstr "Son hazırlık değişikliği"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__last_order_preparation_change
@@ -4063,6 +4080,10 @@ msgid ""
 "be valid, this pricelist must be listed here as an available pricelist. "
 "Otherwise the default pricelist will apply."
 msgstr ""
+"Satış Noktası’nda birden fazla fiyat listesi sunulabilir. Ayrıca, belirli "
+"müşterilere özel bir fiyat listesi, iletişim formundaki Satış sekmesinden "
+"atanabilir. Geçerli olabilmesi için bu fiyat listesinin burada listelenmiş "
+"olması gerekir. Aksi halde varsayılan fiyat listesi uygulanır."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4552,7 +4573,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Number of transactions:"
-msgstr ""
+msgstr "İşlem sayısı:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4720,7 +4741,7 @@ msgstr "Açılış nakit"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening control message: "
-msgstr ""
+msgstr "Açılış kontrol mesajı:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5052,7 +5073,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_paytm
 msgid "PayTM Payment Terminal"
-msgstr ""
+msgstr "PayTM Ödeme Terminali"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6455,7 +6476,7 @@ msgstr "İstek gönderildi"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "Rescue Sessions"
-msgstr ""
+msgstr "Kurtarma Oturumları"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_user_id
@@ -6559,7 +6580,7 @@ msgstr "İnceleme"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/closing_popup/closing_popup.js:0
 msgid "Review Orders"
-msgstr ""
+msgstr "Siparişleri Gözden Geçirin"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.product_pain_au_chocolat_product_template
@@ -7147,6 +7168,9 @@ msgid ""
 "errors. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Bazı siparişler yapılandırma hataları nedeniyle sunucuya gönderilemedi. "
+"Satış Noktası'ndan çıkabilirsiniz, ancak sorun çözülmeden oturumu "
+"kapatmayın."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7156,6 +7180,9 @@ msgid ""
 "issues. You can exit the Point of Sale, but do not close the session before "
 "the issue has been resolved."
 msgstr ""
+"Bazı siparişler internet bağlantı sorunları nedeniyle sunucuya "
+"gönderilemedi. Satış Noktası'ndan çıkabilirsiniz, ancak sorun çözülmeden "
+"oturumu kapatmayın."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7494,12 +7521,12 @@ msgstr "Vergiler:"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Technical Stuff"
-msgstr ""
+msgstr "Teknik Konular"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Technical Stuffs"
-msgstr ""
+msgstr "Teknik Konular"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7623,6 +7650,8 @@ msgid ""
 "The existing serial/lot numbers could not be retrieved. \n"
 "Continue without checking the validity of serial/lot numbers ?"
 msgstr ""
+"Mevcut seri/lot numaraları alınamadı. \n"
+"Seri/lot numaralarının geçerliliğini kontrol etmeden devam edilsin mi ?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7872,6 +7901,8 @@ msgid ""
 "The transactions are processed by Mercado Pago. Set your Mercado Pago "
 "credentials on the related payment method."
 msgstr ""
+"İşlemler Mercado Pago tarafından işlenir. İlgili ödeme yöntemine Mercado "
+"Pago kimlik bilgilerinizi tanımlayın."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__module_pos_paytm
@@ -8045,6 +8076,10 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
+"Bu alan, oturum kapanışında POS yöneticisi olmayanlar için, kapanış bakiyesi"
+" ile teorik kasa arasındaki izin verilen maksimum farkı gösterir. Bu "
+"maksimum değere ulaşılırsa, kullanıcı oturumunu kapatırken yöneticisiyle "
+"iletişime geçmesi gerektiğini belirten bir hata mesajı alır."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id
@@ -8579,7 +8614,7 @@ msgstr "Update quantities in stock"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pos_category_upper
 msgid "Upper body"
-msgstr ""
+msgstr "Üst Vücut"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__use_payment_terminal
@@ -8770,6 +8805,8 @@ msgid ""
 "When active, orderlines will be sorted based on product category and "
 "sequence in the product screen's order cart."
 msgstr ""
+"Etkinleştirildiğinde, sipariş satırları ürün ekranındaki sipariş sepetinde "
+"ürün kategorisine ve sıralamasına göre sıralanacaktır."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__picking_policy__one
@@ -8875,6 +8912,8 @@ msgid ""
 "You can only cancel a session that is in opening control state and has no "
 "orders."
 msgstr ""
+"Yalnızca açılış kontrol durumundaki ve henüz siparişi olmayan oturumları "
+"iptal edebilirsiniz."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8889,6 +8928,8 @@ msgid ""
 "You can only unlink PoS order lines that are related to orders in new or "
 "cancelled state."
 msgstr ""
+"Yalnızca yeni ya da iptal edilmiş durumdaki siparişlere ait satış noktası "
+"satırlarını bağlantıdan ayırabilirsiniz."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8898,6 +8939,10 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"Şunları yapamazsınız: arka uç arayüzünden bir satış noktası siparişi "
+"oluşturamazsınız, fiyat listesini kaldıramazsınız, Form aracıyla bir Python "
+"testinde pos.order oluşturamazsınız veya hiç satış noktası siparişi yoksa "
+"Studio'da form görünümünü düzenleyemezsiniz."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8969,12 +9014,14 @@ msgid ""
 "You cannot share open orders with configuration that does not use the same "
 "currency."
 msgstr ""
+"Aynı para birimini kullanmayan bir yapılandırma ile açık siparişleri "
+"paylaşamazsınız."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 msgid "You cannot use the same journal on multiples cash payment methods."
-msgstr ""
+msgstr "Aynı yevmiyeyi birden fazla nakit ödeme yönteminde kullanamazsınız."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8983,6 +9030,8 @@ msgid ""
 "You do not have permission to open a POS session. Please try opening a "
 "session with a different user"
 msgstr ""
+"Bir Satış Noktası oturumu başlatma izniniz yok. Lütfen farklı bir kullanıcı "
+"ile oturum açmayı deneyin."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9269,13 +9318,13 @@ msgstr "iade"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "the invoice"
-msgstr ""
+msgstr "fatura"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/pos_order.js:0
 msgid "the receipt"
-msgstr ""
+msgstr "fiş"
 
 #. module: point_of_sale
 #. odoo-javascript
