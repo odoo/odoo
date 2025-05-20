@@ -1369,21 +1369,17 @@ class AccountMove(models.Model):
     @api.depends('move_type', 'partner_id', 'company_id')
     def _compute_narration(self):
         use_invoice_terms = self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms')
-        for move in self:
-            if not move.is_sale_document(include_receipts=True):
-                continue
-            if not use_invoice_terms:
-                move.narration = False
+        invoice_to_update_terms = self.filtered(lambda m: use_invoice_terms and m.is_sale_document(include_receipts=True))
+        for move in invoice_to_update_terms:
+            lang = move.partner_id.lang or self.env.user.lang
+            if move.company_id.terms_type != 'html':
+                narration = move.company_id.with_context(lang=lang).invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
             else:
-                lang = move.partner_id.lang or self.env.user.lang
-                if not move.company_id.terms_type == 'html':
-                    narration = move.company_id.with_context(lang=lang).invoice_terms if not is_html_empty(move.company_id.invoice_terms) else ''
-                else:
-                    baseurl = self.env.company.get_base_url() + '/terms'
-                    context = {'lang': lang}
-                    narration = _('Terms & Conditions: %s', baseurl)
-                    del context
-                move.narration = narration or False
+                baseurl = self.env.company.get_base_url() + '/terms'
+                context = {'lang': lang}
+                narration = _('Terms & Conditions: %s', baseurl)
+                del context
+            move.narration = narration or False
 
     @api.depends('company_id', 'partner_id', 'tax_totals', 'currency_id')
     def _compute_partner_credit_warning(self):
