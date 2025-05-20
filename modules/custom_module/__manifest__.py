@@ -34,6 +34,8 @@
                 'custom_module/static/src/xml/custom_button.xml',
                 'custom_module/static/src/js/custom_button.js',
                 'custom_module/static/src/js/synchronize_dialog.js',
+                'custom_module/static/src/js/synchronize_by_range.js',
+                'custom_module/static/src/xml/synchronize_by_range.xml',
                 'custom_module/static/src/scss/styles.scss',
                 'custom_module/static/src/img/favicon.ico',
                 'custom_module/static/src/scss/custom_pwa.scss',
