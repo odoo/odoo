@@ -42,23 +42,21 @@ export class SynchronizeMenu extends Component {
         }
     }
 }
-function parseBoolean(value) {
-    if (typeof value === "boolean") return value;
-    if (typeof value === "string") {
-        return ["1", "true", "True", "TRUE"].includes(value);
-    }
-    return false;
-    }
+function archParseBoolean(str, trueIfEmpty = false) {
+    return str ? !/^false|0$/i.test(str) : trueIfEmpty;
+}
+// To make it displayed in the interface
 export const synchroniseMenuItem = {
-
     Component: SynchronizeMenu,
     groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
     isDisplayed: ({ config, isSmall }) =>
         !isSmall &&
         config.actionType === "ir.actions.act_window" &&
         ["kanban", "list"].includes(config.viewType) &&
-        parseBoolean(config.viewArch.getAttribute("synchronize") || "true") &&
-        parseBoolean(config.viewArch.getAttribute("create") || "true"),
+        archParseBoolean(config.viewArch.getAttribute("synchronize"), true) &&
+        archParseBoolean(config.viewArch.getAttribute("create"), true),
+
+        // && (config.viewId === "product.product_template_kanban_view" || config.model === "product.template"),
 };
 
 cogMenuRegistry.add("synchronize-menu", synchroniseMenuItem, { sequence: 2 });
