@@ -1756,6 +1756,101 @@ describe("Disable table merge options", () => {
 
         expect("div[name='merge_cell']").toHaveClass("disabled");
     });
+
+    test("disables merge row option when selection includes cells with rowspan", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td rowspan="2"><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a">[<p><br></p></td>
+                            <td><p><br></p>]</td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td rowspan="2" class="o_selected_td"><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td class="a o_selected_td">[<p><br></p></td>
+                            <td class="o_selected_td"><p><br></p>]</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='row'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='row'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+
+        expect("div[name='merge_cell']").toHaveClass("disabled");
+    });
+    test("disables merge column option when selection includes cells with colspan", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td class="a"><p>[<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><p>]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>`)
+        );
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="a o_selected_td"><p>[<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="o_selected_td"><p>]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+        );
+
+        await expectElementCount(".o-we-table-menu", 0);
+
+        // hover on td to show col ui
+        await hover(el.querySelector("td.a"));
+        await waitFor("[data-type='column'].o-we-table-menu");
+
+        // click on it to open dropdown
+        await click("[data-type='column'].o-we-table-menu");
+        await waitFor("div[name='merge_cell']");
+
+        expect("div[name='merge_cell']").toHaveClass("disabled");
+    });
 });
 
 describe("Merge column cells", () => {
