@@ -276,6 +276,7 @@
         'website.assets_edit_frontend': [
             'website/static/src/**/*.edit.js',
             'website/static/src/**/*.edit.scss',
+            'website/static/src/**/*.edit.xml',
             'website/static/src/core/website_edit_service.js',
         ],
         'website.inside_builder_style': [
@@ -363,6 +364,9 @@
             ('remove', 'website/static/src/snippets/**/options.js'),
             'website/static/src/snippets/**/*.xml',
             'website/static/src/xml/**/*.xml',
+            ## TODO: remove the following line when cleaning up residuals files
+            ## from the old editor
+            ('remove', 'website/static/src/snippets/s_floating_blocks/options.xml'),
             ('remove', 'website/static/src/xml/website.editor.xml'),
             ('remove', 'website/static/src/xml/web_editor.xml'),
             'website/static/src/snippets/s_table_of_content/000.scss',

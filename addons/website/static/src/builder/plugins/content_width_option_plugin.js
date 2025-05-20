@@ -13,7 +13,7 @@ class ContentWidthOptionPlugin extends Plugin {
                 template: "website.ContentWidthOption",
                 selector: "section, .s_carousel .carousel-item, .s_carousel_intro_item",
                 exclude:
-                    "[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *, .s_bento_banner section[data-name='Card']",
+                    "[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *, .s_bento_banner section[data-name='Card'],.s_floating_blocks .s_floating_blocks_block",
                 applyTo:
                     ":scope > .container, :scope > .container-fluid, :scope > .o_container_small",
             }),
