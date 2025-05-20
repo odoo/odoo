@@ -15,6 +15,8 @@ import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_ut
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
+import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
+import { generatePreparationReceiptElement } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
 
 registry.category("web_tour.tours").add("ProductScreenTour", {
     steps: () =>
@@ -292,6 +294,34 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
             ProductScreen.selectedOrderlineHas("Test Product 1", "2", "160.0"),
 
             scan_barcode("0100300"),
+            Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_restricted_categories_combo_product", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.productIsDisplayed("Office Combo"),
+            ProductScreen.productIsDisplayed("Combo Product 4"),
+            ProductScreen.productIsDisplayed("Combo Product 5").map(negateStep),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 5"),
+            Dialog.confirm(),
+            {
+                content: "Check if order preparation has product correctly ordered",
+                trigger: "body",
+                run: async () => {
+                    const rendered = generatePreparationReceiptElement();
+                    if (!rendered.innerHTML.includes("Office Combo")) {
+                        throw new Error("Office Combo not found in preparation receipt");
+                    }
+                    if (!rendered.innerHTML.includes("Combo Product 5")) {
+                        throw new Error("Combo Product 5 not found in preparation receipt");
+                    }
+                },
+            },
             Chrome.endTour(),
         ].flat(),
 });

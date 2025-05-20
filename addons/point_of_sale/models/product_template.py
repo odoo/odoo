@@ -99,11 +99,12 @@ class ProductTemplate(models.Model):
             )
             product_tmpl_ids = [r[0] for r in self.env.execute_query(sql)]
             products = self._load_product_with_domain([('id', 'in', product_tmpl_ids)])
-            product_combo = products.filtered(lambda p: p['type'] == 'combo')
-            products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
         else:
             domain = self._load_pos_data_domain(data)
             products = self._load_product_with_domain(domain)
+
+        product_combo = products.filtered(lambda p: p['type'] == 'combo')
+        products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
 
         data['pos.config'][0]['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
