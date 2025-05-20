@@ -106,6 +106,9 @@ registry.category("web_tour.tours").add('project_update_tour', {
     content: 'Open embedded actions',
     run: "click",
 }, {
+    trigger: "span.o-dropdown-item:contains('Top Menu')",
+    run: "click",
+}, {
     trigger: ".o_embedded_actions button i.fa-sliders",
     content: "Open embedded actions dropdown",
     run: "click",

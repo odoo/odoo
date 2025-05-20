@@ -353,7 +353,7 @@ class ProjectTask(models.Model):
     @api.depends('project_id', 'parent_id')
     def _compute_display_in_project(self):
         for record in self:
-            record.display_in_project = record.project_id and (
+            record.display_in_project = not record.project_id or (
                 not record.parent_id or record.project_id != record.parent_id.project_id
             )
 

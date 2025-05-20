@@ -28,8 +28,6 @@
                         <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=30), datetime.time(23, 59, 59)).to_utc())]"/>
                         <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;', datetime.datetime.combine(context_today() - relativedelta(days=365), datetime.time(23, 59, 59)).to_utc())]"/>
                     </filter>
-                    <separator/>
-                    <filter string="Hide Sub-tasks" name="hide_subtasks" domain="[('display_in_project', '=', True)]"/>
                     <group expand="0" string="Group By">
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
@@ -113,7 +111,7 @@
                 <filter name="my_tasks" position="before">
                     <field string="Properties" name="task_properties"/>
                 </filter>
-                <filter name="hide_subtasks" position="after">
+                <filter name="closed_on" position="after">
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator invisible="1"/>
@@ -138,7 +136,7 @@
             <field name="name">project.task.graph</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <graph string="Tasks" sample="1">
+                <graph string="Tasks" sample="1" js_class="project_task_graph">
                     <field name="project_id" invisible="context.get('default_project_id', False)"/>
                     <field name="stage_id"/>
                     <field name="working_hours_open" widget="float_time"/>
@@ -171,7 +169,7 @@
             <field name="name">project.task.pivot</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <pivot string="Tasks" sample="1">
+                <pivot string="Tasks" sample="1" js_class="project_task_pivot">
                     <field name="project_id" type="row"/>
                     <field name="color" invisible="1"/>
                     <field name="sequence" invisible="1"/>
@@ -846,7 +844,7 @@
             <field name="name">project.task.activity</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <activity string="Project Tasks">
+                <activity string="Project Tasks" js_class="project_task_activity">
                     <field name="user_ids"/>
                     <field name="project_id"/>
                     <templates>

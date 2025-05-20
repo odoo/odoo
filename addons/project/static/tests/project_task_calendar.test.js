@@ -1,6 +1,6 @@
 import { expect, test, beforeEach, describe } from "@odoo/hoot";
 import { mockDate, animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { click, queryAllTexts, queryFirst, queryOne } from "@odoo/hoot-dom";
+import { click, queryAllTexts, queryFirst, queryOne, waitFor } from "@odoo/hoot-dom";
 
 import { contains, mountView, onRpc } from "@web/../tests/web_test_helpers";
 
@@ -278,4 +278,36 @@ test("test drag and drop a task to schedule in calendar view in month scale", as
     expect.verifySteps(["search_read", "fetch tasks to schedule", "plan task", "search_read"]);
     expect(".o_task_to_plan_draggable").toHaveCount(1);
     expect(".o_task_to_plan_draggable").toHaveText("Task-11");
+});
+
+test("project.task (calendar): toggle sub-tasks", async () => {
+    ProjectTask._records = [
+        {
+            id: 1,
+            project_id: 1,
+            name: "Task 1",
+            stage_id:  1,
+            display_in_project: true,
+            date_deadline: "2024-01-09 07:00:00",
+            create_date: "2024-01-03 12:00:00",
+        },
+        {
+            id: 2,
+            project_id: 1,
+            name: "Task 2",
+            stage_id:  1,
+            display_in_project: false,
+            date_deadline: "2024-01-09 07:00:00",
+            create_date: "2024-01-03 12:00:00",
+        }
+    ];
+    await mountView(calendarMountParams);
+    expect(".o_event").toHaveCount(1);
+    expect(".o_control_panel_navigation button i.fa-sliders").toHaveCount(1);
+    await click(".o_control_panel_navigation button i.fa-sliders");
+    await waitFor("span.o-dropdown-item");
+    expect("span.o-dropdown-item").toHaveText("Show Sub-Tasks");
+    await click("span.o-dropdown-item");
+    await animationFrame();
+    expect(".o_event").toHaveCount(2);
 });
