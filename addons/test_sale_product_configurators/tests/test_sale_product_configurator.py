@@ -252,6 +252,10 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
                 }),
             ],
         })
+        self.env['res.partner'].create({
+            'name': "Azure",
+            'email': "azure@example.com",
+        })
 
         self.start_tour("/odoo", 'product_attribute_multi_type', login="salesman")
 
