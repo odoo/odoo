@@ -51,5 +51,14 @@ registry.category("web_tour.tours").add("course_reviews", {
         {
             trigger: "div.o_portal_chatter_composer_body textarea:value(Great course!)",
         },
+        {
+            trigger: ".modal button",
+            run() {
+                const composerButton = document.querySelector(".o_portal_chatter_composer_btn");
+                if (composerButton.textContent !== "Update review") {
+                    throw Error("Button text should be 'Update review'.")
+                }
+            },
+        },
     ],
 });
