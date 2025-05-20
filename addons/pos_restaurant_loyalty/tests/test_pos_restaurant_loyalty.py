@@ -34,3 +34,5 @@ class TestPoSRestaurantLoyalty(TestFrontend):
             "PosRestaurantRewardStay",
             login="pos_admin",
         )
+        order = self.env['pos.order'].search([])
+        self.assertEqual(order.currency_id.round(order.amount_total), 1.98)
