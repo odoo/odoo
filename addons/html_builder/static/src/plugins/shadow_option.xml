@@ -11,7 +11,7 @@
     </BuilderRow>
     <BuilderContext t-if="!this.isActiveItem('no_shadow')" action="props.setShadowAction">
         <BuilderRow label.translate="Color" level="1">
-            <BuilderColorPicker actionParam="'color'"/>
+            <BuilderColorPicker actionParam="'color'"  enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Offset (X, Y)" level="1">
