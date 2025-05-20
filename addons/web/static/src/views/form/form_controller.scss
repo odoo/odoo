@@ -1,13 +1,13 @@
 // Define left and right padding according to screen resolution
 @mixin o-form-sheet-inner-left-padding {
     padding-left: $o-horizontal-padding;
-    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg) {
         padding-left: $o-horizontal-padding*2;
     }
 }
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
-    @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
+    @include media-breakpoint-up(lg) {
         padding-right: $o-horizontal-padding*2;
     }
 }
@@ -275,7 +275,7 @@
             --formView-sheet-padding-x: var(--formView-sheet-padding-x-lg, #{map-get($spacers, 4)});
         }
 
-        @include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
+        @include media-breakpoint-up(xxl) {
             --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 3)});
             --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 3)});
         }
@@ -408,7 +408,7 @@
             }
         }
 
-        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+        @include media-breakpoint-up(sm) {
             .o_field_widget {
                 &.o_text_overflow {
                     width: 1px!important; // hack to make the table layout believe it is a small element (so that the table does not grow too much) ...
@@ -684,7 +684,7 @@
     // Text field with oe_inline class
     .o_field_text.oe_inline {
         width: 100%!important;
-        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
+        @include media-breakpoint-up(sm) {
             width: 45%!important;
         }
     }

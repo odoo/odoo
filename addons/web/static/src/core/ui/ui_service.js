@@ -8,7 +8,7 @@ import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
 import { EventBus, reactive, useEffect, useRef } from "@odoo/owl";
 
-export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
+export const SIZES = { XS: 0, SM: 1, MD: 2, LG: 3, XL: 4, XXL: 5 };
 
 function getFirstAndLastTabableElements(el) {
     const tabableEls = getTabableElements(el);
@@ -106,13 +106,12 @@ export function useActiveElement(refName) {
 
 // window size handling
 export const MEDIAS_BREAKPOINTS = [
-    { maxWidth: 474 },
-    { minWidth: 475, maxWidth: 575 },
+    { maxWidth: 575 },
     { minWidth: 576, maxWidth: 767 },
     { minWidth: 768, maxWidth: 991 },
     { minWidth: 992, maxWidth: 1199 },
-    { minWidth: 1200, maxWidth: 1533 },
-    { minWidth: 1534 },
+    { minWidth: 1200, maxWidth: 1399 },
+    { minWidth: 1400 },
 ];
 
 /**
