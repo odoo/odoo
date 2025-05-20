@@ -1650,25 +1650,22 @@ class ReadonlyDict(Mapping[K, T], typing.Generic[K, T]):
           data.update({'baz', 'xyz'}) # raises exception
           dict.update(data, {'baz': 'xyz'}) # raises exception
     """
+    __slots__ = ('_data__',)
+
     def __init__(self, data):
-        self.__data = dict(data)
+        self._data__ = dict(data)
 
     def __contains__(self, key: K):
-        return key in self.__data
+        return key in self._data__
 
     def __getitem__(self, key: K) -> T:
-        try:
-            return self.__data[key]
-        except KeyError:
-            if hasattr(type(self), "__missing__"):
-                return self.__missing__(key)
-            raise
+        return self._data__[key]
 
     def __len__(self):
-        return len(self.__data)
+        return len(self._data__)
 
     def __iter__(self):
-        return iter(self.__data)
+        return iter(self._data__)
 
 
 class DotDict(dict):
