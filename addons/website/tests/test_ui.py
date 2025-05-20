@@ -439,8 +439,6 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_4', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'conditional_visibility_5', login='admin')
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_11_website_snippet_background_edition(self):
         self.env['ir.attachment'].create({
             'public': True,

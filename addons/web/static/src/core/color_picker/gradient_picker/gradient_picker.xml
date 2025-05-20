@@ -91,6 +91,7 @@
                 <div class="gradient-colors">
                     <div t-foreach="this.colors" t-as="color" t-key="color_index">
                         <input type="range" min="0" max="100" t-att-value="color.percentage"
+                               t-att-class="{'active': this.state.currentColorIndex === color_index}"
                                t-attf-name="custom gradient percentage color #{color_index+1}"
                                t-on-click="() => this.state.currentColorIndex = color_index"
                                t-on-change="(ev) => this.onColorPercentageChange(color_index, ev)" />

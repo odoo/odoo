@@ -113,14 +113,15 @@
             </div>
         </t>
         <t t-if="state.activeTab==='gradient'">
+            <t t-set="currentGradient" t-value="getCurrentGradientColor()" />
             <div class="o_colorpicker_sections p-2" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
                 <t t-foreach="this.DEFAULT_GRADIENT_COLORS" t-as="gradient" t-key="gradient">
-                    <button class="w-50 m-0 o_color_button o_gradient_color_button btn" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
+                    <button class="w-50 m-0 o_color_button o_gradient_color_button btn" t-att-class="{'selected': currentGradient?.includes(gradient)}" t-attf-style="background-image: #{gradient};" t-att-data-color="gradient"/>
                 </t>
             </div>
             <div class="px-2">
-                <button t-attf-style="background-image: {{ getCurrentGradientColor() }};" class="w-50 border btn mb-2 o_custom_gradient_button" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">Custom</button>
-                <GradientPicker t-if="state.showGradientPicker" onGradientChange.bind="applyColor" selectedGradient="getCurrentGradientColor()"/>
+                <button t-attf-style="background-image: {{ currentGradient }};" class="w-50 border btn mb-2 o_custom_gradient_button" t-att-class="{'selected': currentGradient and !this.DEFAULT_GRADIENT_COLORS.includes(currentGradient)}" t-att-data-color="currentGradient" t-on-click="this.toggleGradientPicker" title="Define a custom gradient">Custom</button>
+                <GradientPicker t-if="state.showGradientPicker" onGradientChange.bind="applyColor" selectedGradient="currentGradient"/>
             </div>
         </t>
     </div>
