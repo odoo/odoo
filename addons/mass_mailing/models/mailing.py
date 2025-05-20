@@ -51,6 +51,8 @@ class MailingMailing(models.Model):
     _rec_name = "subject"
     _systray_view = 'list'
 
+    _unrestricted_rendering = True
+
     @api.model
     def default_get(self, fields_list):
         vals = super().default_get(fields_list)
