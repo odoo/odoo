@@ -752,6 +752,48 @@ test("should remove font size and color styles", async () => {
     });
 });
 
+test("should remove backgroundColor from selected cells using removeFormat", async () => {
+    const defaultTextColor = "color: rgb(1, 10, 100);";
+    const styleContent = `* {${defaultTextColor}}`;
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>[ab</p></td></tr>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>cd]</p></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td><p>[ab</p></td></tr>
+                <tr><td><p>cd]</p></td></tr>
+            </tbody></table>
+        `),
+        styleContent,
+    });
+});
+
+test("should remove backgroundColor from selected cells using removeFormat (2)", async () => {
+    const defaultTextColor = "color: rgb(1, 10, 100);";
+    const styleContent = `* {${defaultTextColor}}`;
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>[<br></p></td></tr>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>]<br></p></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td><p>[\u200b</p></td></tr>
+                <tr><td><p>]\u200b</p></td></tr>
+            </tbody></table>
+        `),
+        styleContent,
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await expandToolbar();
