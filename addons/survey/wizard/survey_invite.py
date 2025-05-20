@@ -187,6 +187,7 @@ class SurveyInvite(models.TransientModel):
 
     def _prepare_answers(self, partners, emails):
         existing_answers = self.env['survey.user_input'].search([
+            '&', ('deadline', '>', fields.Datetime.now()),
             '&', ('survey_id', '=', self.survey_id.id),
             '|',
             ('partner_id', 'in', partners.ids),
