@@ -16,11 +16,10 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency('EUR')
 
-        bank_journal = cls.company_data['default_journal_bank']
+        cls.bank_journal = cls.company_data['default_journal_bank']
+        cls.bank_journal.outstanding_payment_account_id = cls.outstanding_payment_account
 
-        cls.payment_method_line_check = bank_journal.outbound_payment_method_line_ids\
-            .filtered(lambda l: l.code == 'check_printing')
-        cls.payment_method_line_check.payment_account_id = cls.inbound_payment_method_line.payment_account_id
+        cls.payment_method_check = cls.get_payment_methods('check_printing', cls.env.company)
 
     def test_in_invoice_check_manual_sequencing(self):
         ''' Test the check generation for vendor bills. '''
@@ -48,12 +47,13 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         # Create a single payment.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoices.ids).create({
             'group_payment': True,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
+            'journal_id': self.bank_journal.id,
         })._create_payments()
 
         # Check created payment.
         self.assertRecordValues(payment, [{
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
             'check_amount_in_words': payment.currency_id.amount_to_text(100.0 * nb_invoices_to_test),
             'check_number': '00042',
         }])
@@ -93,12 +93,13 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         # Create a single payment.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=out_refunds.ids).create({
             'group_payment': True,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
+            'journal_id': self.bank_journal.id,
         })._create_payments()
 
         # Check created payment.
         self.assertRecordValues(payment, [{
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
             'check_amount_in_words': payment.currency_id.amount_to_text(100.0 * nb_invoices_to_test),
             'check_number': '00042',
         }])
@@ -129,10 +130,11 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         # Partial payment in foreign currency.
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
             'currency_id': self.other_currency.id,
             'amount': 150.0,
             'payment_date': '2017-01-01',
+            'journal_id': self.bank_journal.id,
         })._create_payments()
 
         stub_pages = payment._check_make_stub_pages()
@@ -172,7 +174,8 @@ class TestPrintCheck(AccountTestInvoicingCommon):
 
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoices.ids).create({
             'group_payment': False,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
+            'journal_id': self.bank_journal.id,
         })._create_payments()
 
         self.assertEqual(set(payments.mapped('check_number')), {str(x) for x in range(11111, 11111 + nb_invoices_to_test)})
@@ -184,7 +187,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_type': 'supplier',
             'amount': 100.0,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
         })
         payment.action_post()
 
@@ -201,7 +204,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'partner_type': 'supplier',
             'amount': 100.0,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
         }
         payment = self.env['account.payment'].create(vals)
         payment.action_post()
@@ -224,13 +227,15 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         })
         self.cr.precommit.run()  # load the CoA
         self.env.user.write({'company_id': company.id, 'company_ids': [Command.set(company.ids)]})
+        # this stops the payment from generating journal entries which would not be allowed for the branch user
+        self.company_data['default_journal_bank'].outstanding_payment_account_id = None
 
         vals = {
             'payment_type': 'outbound',
             'partner_type': 'supplier',
             'amount': 100.0,
             'journal_id': self.company_data['default_journal_bank'].id,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
         }
         payment = self.env['account.payment'].create(vals)
         payment.action_post()
@@ -256,7 +261,7 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'check_manual_sequencing': True,
             'check_next_number': '00042',
         })
-        self.payment_method_line_check.payment_account_id = None  # Needed to trigger the error
+        self.company_data['default_journal_bank'].outstanding_payment_account_id = None  # Needed to trigger the error
 
         in_invoices = self.env['account.move'].create([{
             'move_type': 'in_invoice',
@@ -271,10 +276,11 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         } for _ in range(nb_invoices_to_test)])
         payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoices.ids).create({
             'group_payment': True,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
+            'journal_id': self.company_data['default_journal_bank'].id,
         })._create_payments()
         self.assertRecordValues(payment, [{
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
             'check_amount_in_words': payment.currency_id.amount_to_text(100.0 * nb_invoices_to_test),
             'check_number': '00042',
         }])
@@ -336,7 +342,8 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             active_ids=in_invoices.ids
         ).create({
             'group_payment': True,
-            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_method_id': self.payment_method_check.id,
+            'journal_id': self.bank_journal.id,
         })._create_payments()
 
         # Check that the payments have different check numbers
