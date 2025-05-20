@@ -321,7 +321,7 @@
             </li>
             <li class="nav-item" role="presentation">
                 <a href="#discuss" aria-controls="discuss" t-att-class="'nav-link active' if comments else 'nav-link'" role="tab" data-bs-toggle="tab">
-                    <i class="fa fa-comments"></i> Comments (<span t-out="slide.comments_count"/>)
+                    <i class="fa fa-comments"></i> Comments <t t-if="slide.channel_id.allow_comment">(<span t-out="slide.comments_count"/>)</t>
                 </a>
             </li>
             <li class="nav-item" role="presentation" groups="base.group_user">
@@ -351,7 +351,7 @@
             </div>
             <div role="tabpanel" t-att-class="comments and 'tab-pane fade in show active' or 'tab-pane fade'" id="discuss">
                 <t t-set="enable_slide_comments" t-value="0"/>
-                <p t-if="not (slide.channel_id.allow_comment and slide.channel_id.channel_type == 'training')">
+                <p t-if="not slide.channel_id.allow_comment">
                     Commenting is not enabled on this course.
                 </p>
                 <t t-elif="not slide.comments_count">
