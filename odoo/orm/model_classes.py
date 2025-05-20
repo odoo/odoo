@@ -360,7 +360,7 @@ def _setup(model: BaseModel):
     # avoid clashes with inheritance between different models
     for name in model_cls._fields:
         discardattr(model_cls, name)
-    model_cls._fields = ReadonlyDict({})
+    model_cls._fields._data__.clear()
 
     # collect the definitions of each field (base definition + overrides)
     definitions = defaultdict(list)
@@ -585,15 +585,13 @@ def add_field(model: BaseModel, name: str, field: Field):
     field._toplevel = True
     field.__set_name__(model_cls, name)
     # add field as an attribute and in model_cls._fields (for reflection)
-    model_cls._fields = ReadonlyDict({**model_cls._fields, name: field})
+    model_cls._fields._data__[name] = field
 
 
 def pop_field(model: BaseModel, name: str) -> Field | None:
     """ Remove the field with the given ``name`` from the model class of ``model``. """
     model_cls = model.env.registry[model._name]
-    fields_dict = dict(model_cls._fields)
-    field = fields_dict.pop(name, None)
-    model_cls._fields = ReadonlyDict(fields_dict)
+    field = model_cls._fields._data__.pop(name, None)
     discardattr(model_cls, name)
     if model_cls._rec_name == name:
         # fixup _rec_name and display_name's dependencies
