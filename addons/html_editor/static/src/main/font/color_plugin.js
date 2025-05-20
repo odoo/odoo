@@ -217,7 +217,12 @@ export class ColorPlugin extends Plugin {
                 const hasAnySelectedNodeColor = (mode) => {
                     const nodes = this.dependencies.selection
                         .getTargetedNodes()
-                        .filter((n) => isTextNode(n) || n.classList.contains("o_selected_td"));
+                        .filter(
+                            (n) =>
+                                isTextNode(n) ||
+                                (mode === "backgroundColor" &&
+                                    n.classList.contains("o_selected_td"))
+                        );
                     return hasAnyNodesColor(nodes, mode);
                 };
                 while (hasAnySelectedNodeColor(mode) && max > 0) {
