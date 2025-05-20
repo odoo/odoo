@@ -376,6 +376,71 @@ class TestLoyalty(TestSaleCouponCommon):
         order.action_confirm()
         self.assertEqual(loyalty_card.points, 90)
 
+    def test_multiple_rewards_after_confirm(self):
+        product_a, product_b = self.env['product.product'].create([
+            {'name': 'Product A', 'list_price': 10.0, 'sale_ok': True},
+            {'name': 'Product B', 'list_price': 15.0, 'sale_ok': True}
+        ])
+
+        self.env['loyalty.program'].search([]).write({'active': False})
+        promo_program = self.env['loyalty.program'].create({
+            'name': 'Discount Products',
+            'program_type': 'promotion',
+            'applies_on': 'current',
+            'trigger': 'auto',
+            'rule_ids': [Command.create({'minimum_qty': 1,
+                'minimum_amount': 0.00,
+                'reward_point_amount': 2,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'reward_product_qty': 1,
+                'required_points': 1,
+                'discount': 10,
+                'discount_applicability': 'specific',
+                'discount_product_ids': [product_a.id],
+                'discount_mode': 'percent',
+            }),
+            Command.create({
+                'reward_type': 'discount',
+                'reward_product_qty': 1,
+                'required_points': 1,
+                'discount': 15,
+                'discount_applicability': 'specific',
+                'discount_product_ids': [product_b.id],
+                'discount_mode': 'percent',
+            })]
+        })
+
+        order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({'product_id': product_a.id, 'product_uom_qty': 1}),
+                Command.create({'product_id': product_b.id, 'product_uom_qty': 1})
+            ],
+        })
+        order.action_confirm()
+
+        # Simulates the real flow triggering actions via the UI
+        order.action_open_reward_wizard()
+        claimable_rewards = order._get_claimable_rewards()
+        for coupon, rewards in claimable_rewards.items():
+            promo_rewards = [r for r in rewards if r.program_id == promo_program]
+            if promo_rewards:
+                order._apply_program_reward(promo_rewards[0], coupon, product=product_a)
+                break
+        # Automatically creates a reward line for product B as it is the last available reward
+        order.action_open_reward_wizard()
+
+        self.assertEqual(coupon.points, 0)
+        self.assertEqual(order.order_line.mapped('points_cost'), [0, 0, 1, 1])
+        self.assertEqual(len(order.order_line), 4, "Expected 4 lines (2 products + 2 rewards)")
+        reward_lines = order.order_line.filtered(lambda line: line.is_reward_line)
+        self.assertCountEqual(
+            reward_lines.mapped('product_id').mapped('display_name'),
+            promo_program.reward_ids.mapped('description')
+        )
+
     def test_points_awarded_discount_code_no_domain_program(self):
         """
         Check the calculation for points awarded when there is a discount coupon applied and the
