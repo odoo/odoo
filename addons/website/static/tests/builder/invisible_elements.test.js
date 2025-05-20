@@ -151,8 +151,10 @@ test("keep the option container of a visible snippet even if there are hidden sn
 
 test("invisible elements efficiency", async () => {
     patchWithCleanup(InvisibleElementsPanel.prototype, {
-        updateInvisibleElementsPanel() {
-            expect.step("update invisible panel");
+        updateInvisibleElementsPanel(invisibleEls) {
+            if (invisibleEls.length) {
+                expect.step("update invisible panel");
+            }
             return super.updateInvisibleElementsPanel(...arguments);
         },
     });
