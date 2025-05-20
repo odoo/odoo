@@ -28,6 +28,7 @@
     ],
 
 
+
     'assets': {
             'web.assets_backend': [
                 'custom_module/static/src/xml/custom_button.xml',
