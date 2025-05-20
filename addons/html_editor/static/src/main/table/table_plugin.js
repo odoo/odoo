@@ -121,6 +121,8 @@ export class TablePlugin extends Plugin {
         fully_selected_node_predicates: (node) => !!closestElement(node, ".o_selected_td"),
         targeted_nodes_processors: this.adjustTargetedNodes.bind(this),
         move_node_whitelist_selectors: "table",
+        post_undo_handlers: this.update.bind(this),
+        post_redo_handlers: this.update.bind(this),
     };
 
     setup() {
@@ -582,6 +584,7 @@ export class TablePlugin extends Plugin {
             focusNode: firstTd,
             focusOffset: firstTd.childNodes.length,
         });
+        delete this.currentGridTable;
     }
 
     /**
@@ -619,6 +622,7 @@ export class TablePlugin extends Plugin {
                     tr = nextTr;
                 }
             }
+            delete this.currentGridTable;
             // If the <td> has a colspan attribute
         } else if (td.hasAttribute("colspan")) {
             for (let i = 1; i < td.colSpan; i++) {
@@ -627,6 +631,7 @@ export class TablePlugin extends Plugin {
                 tr.appendChild(newTd);
             }
             td.removeAttribute("colspan");
+            delete this.currentGridTable;
         }
     }
 
@@ -1012,6 +1017,9 @@ export class TablePlugin extends Plugin {
         this.deselectTable();
         const isPointerInsideCell = this.isPointerInsideCell(ev);
         const td = closestElement(ev.target, "td");
+        if (!td) {
+            return;
+        }
         if (
             isPointerInsideCell &&
             !isProtected(td) &&
@@ -1172,7 +1180,8 @@ export class TablePlugin extends Plugin {
             return;
         }
         table.classList.toggle("o_selected_table", true);
-        const columns = getTableCells(table);
+        this.buildTableGrid(table);
+        const columns = this.tableGrid.flat();
         const startCol =
             [selection.startContainer, ...ancestors(selection.startContainer, this.editable)].find(
                 (node) => node.nodeName === "TD" && closestElement(node, "table") === table
@@ -1181,9 +1190,18 @@ export class TablePlugin extends Plugin {
             [selection.endContainer, ...ancestors(selection.endContainer, this.editable)].find(
                 (node) => node.nodeName === "TD" && closestElement(node, "table") === table
             ) || columns[columns.length - 1];
+        const findCellPosition = (rowIndex, cell, grid) => {
+            for (let colIndex = 0; colIndex < grid[rowIndex].length; colIndex++) {
+                if (grid[rowIndex][colIndex] === cell) {
+                    return colIndex;
+                }
+            }
+            return -1;
+        };
         const [startRow, endRow] = [closestElement(startCol, "tr"), closestElement(endCol, "tr")];
-        const [startColIndex, endColIndex] = [getColumnIndex(startCol), getColumnIndex(endCol)];
         const [startRowIndex, endRowIndex] = [getRowIndex(startRow), getRowIndex(endRow)];
+        const startColIndex = findCellPosition(startRowIndex, startCol, this.tableGrid);
+        const endColIndex = findCellPosition(endRowIndex, endCol, this.tableGrid);
         const [minRowIndex, maxRowIndex] = [
             Math.min(startRowIndex, endRowIndex),
             Math.max(startRowIndex, endRowIndex),
@@ -1192,17 +1210,16 @@ export class TablePlugin extends Plugin {
             Math.min(startColIndex, endColIndex),
             Math.max(startColIndex, endColIndex),
         ];
-        // Create an array of arrays of tds (each of which is a row).
-        const grid = [...table.querySelectorAll("tr")]
-            .filter((tr) => closestElement(tr, "table") === table)
-            .map((tr) => [...tr.children].filter((child) => child.nodeName === "TD"));
-        for (const tds of grid.filter((_, index) => index >= minRowIndex && index <= maxRowIndex)) {
-            for (const td of tds.filter(
-                (_, index) => index >= minColIndex && index <= maxColIndex
-            )) {
-                td.classList.toggle("o_selected_td", true);
-                this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
-            }
+
+        const tdsToSelect = new Set(
+            this.tableGrid
+                .slice(minRowIndex, maxRowIndex + 1)
+                .flatMap((row) => row.slice(minColIndex, maxColIndex + 1))
+        );
+
+        for (const td of tdsToSelect) {
+            td.classList.toggle("o_selected_td", true);
+            this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
         }
     }
 
@@ -1332,5 +1349,59 @@ export class TablePlugin extends Plugin {
         }
         this.deselectTable(clonedContents);
         return clonedContents;
+    }
+
+    /**
+     * Builds and returns a 2D grid representing the structure of the given table.
+     * Each cell in the grid corresponds to a <td> or <th> element, taking into
+     * account their rowspan and colspan.
+     *
+     * @param {HTMLTableElement} table - The table element to process.
+     * @returns {undefined}
+     */
+    buildTableGrid(table) {
+        if (!table || this.currentGridTable === table) {
+            return;
+        }
+        const grid = [];
+        const rows = [...table.querySelectorAll("tr")].filter(
+            (tr) => closestElement(tr, "table") === table
+        );
+
+        for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            const row = rows[rowIndex];
+            grid[rowIndex] = grid[rowIndex] || [];
+            let colIndex = 0;
+
+            for (const cell of [...row.children].filter(
+                (el) => el.nodeName === "TD" || el.nodeName === "TH"
+            )) {
+                // Find the next empty column slot
+                while (grid[rowIndex][colIndex]) {
+                    colIndex++;
+                }
+
+                const rowspan = cell.rowSpan || 1;
+                const colspan = cell.colSpan || 1;
+
+                for (let r = 0; r < rowspan; r++) {
+                    for (let c = 0; c < colspan; c++) {
+                        const targetRow = rowIndex + r;
+                        const targetCol = colIndex + c;
+                        grid[targetRow] = grid[targetRow] || [];
+                        grid[targetRow][targetCol] = cell;
+                    }
+                }
+
+                colIndex += colspan;
+            }
+        }
+        this.currentGridTable = table;
+        this.tableGrid = grid;
+    }
+
+    update() {
+        delete this.currentGridTable;
+        delete this.tableGrid;
     }
 }
