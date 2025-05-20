@@ -53,6 +53,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'city': 'Main city',
             'phone': '+60123456786',
             'l10n_my_edi_industrial_classification': cls.env['l10n_my_edi.industry_classification'].search([('code', '=', '01111')]).id,
+            'ref': "MY-REF",
         })
         cls.partner_b.write({
             'vat': 'EI00000000020',
