@@ -253,7 +253,7 @@ class AccountTax(models.Model):
     @api.model
     @api.readonly
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
-        domain = Domain(domain)
+        domain = Domain(domain or Domain.TRUE)
         if 'search_default_domestictax' in self.env.context:
             domain &= Domain('fiscal_position_ids', '=', False) | Domain('fiscal_position_ids.is_domestic', '=', True)
         if fp_id := self.env.context.get('dynamic_fiscal_position_id'):
