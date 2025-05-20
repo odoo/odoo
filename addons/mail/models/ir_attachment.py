@@ -37,6 +37,45 @@ class IrAttachment(models.Model):
         """
         super()._post_add_create(**kwargs)
         self.register_as_main_attachment(force=False)
+        self._notify_thread_attachment(unlink=False)
+
+    def _notify_thread_attachment(self, unlink=True, message=None):
+        supported_records = self.filtered(lambda a: a.res_model and a.res_id)
+        if not supported_records:
+            return
+        if message:
+            store = Store(
+                message,
+                {
+                    "attachment_ids": Store.Many(
+                        self,
+                        mode="DELETE" if unlink else "ADD",
+                    ),
+                }
+            )
+            store.delete(self)
+            if hasattr(message._bus_channel(), "_get_message_sub_channel"):
+                message._bus_send_store(store, subchannel=message._bus_channel()._get_message_sub_channel(message))
+            else:
+                message._bus_send_store(store, subchannel=message._get_thread_bus_subchannel())
+        else:
+            for model, attachments in supported_records.grouped("res_model").items():
+                threads = self.env[model].search([("id", "in", attachments.mapped("res_id"))])
+                if not threads:
+                    continue
+                for thread in threads:
+                    store = Store(
+                        thread,
+                        {
+                            "attachments": Store.Many(
+                                attachments.filtered(lambda a: a.res_id == thread.id),
+                                mode="DELETE" if unlink else "ADD",
+                            )
+                        },
+                        as_thread=True,
+                    )
+                    store.delete(attachments)
+                    thread._bus_send_store(store, subchannel="thread")
 
     def register_as_main_attachment(self, force=True):
         """ Registers this attachment as the main one of the model it is
@@ -74,6 +113,7 @@ class IrAttachment(models.Model):
                     ),
                 },
             )
+        self._notify_thread_attachment(unlink=True, message=message)
         self.unlink()
 
     def _to_store_defaults(self):

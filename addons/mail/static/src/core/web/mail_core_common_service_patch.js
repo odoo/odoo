@@ -2,6 +2,11 @@ import { patch } from "@web/core/utils/patch";
 import { MailCoreCommon } from "@mail/core/common/mail_core_common_service";
 
 patch(MailCoreCommon.prototype, {
+    async _handleNotificationNewMessage(...args) {
+        // initChannelsUnreadCounter becomes unreliable
+        await this.store.channels.fetch();
+        return super._handleNotificationNewMessage(...args);
+    },
     _handleNotificationToggleStar(payload, metadata) {
         super._handleNotificationToggleStar(payload, metadata);
         const { id: notifId } = metadata;

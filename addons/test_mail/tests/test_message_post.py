@@ -962,8 +962,8 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 partner_ids=[self.partner_employee_2.id],
             )
 
-        self.assertEqual(mock_compute_subject.call_count, 1,
-                         'Should call model-based subject computation for outgoing emails')
+        self.assertEqual(mock_compute_subject.call_count, 2,
+                         'Should call model-based subject computation for outgoing emails and bus notifications')
         self.assertEqual(mock_notify_headers.call_count, 1,
                          'Should call model-based headers computation for outgoing emails')
         self.assertEqual(mock_notify_mailvals.call_count, 1,

@@ -1350,6 +1350,15 @@ class MailCase(common.TransactionCase, MockEmail):
             )
 
     @contextmanager
+    def assertNotInBus(self, channels=None):
+        """ Check that no bus notification was sent. """
+        try:
+            with self.mock_bus():
+                yield
+        finally:
+            self.assertNoBusNotification(channels)
+
+    @contextmanager
     def assertMsgWithoutNotifications(self, mail_unlink_sent=False):
         try:
             with self.mock_mail_gateway(mail_unlink_sent=mail_unlink_sent), self.mock_bus(), self.mock_mail_app():
@@ -1667,6 +1676,13 @@ class MailCase(common.TransactionCase, MockEmail):
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
         return bus_notifs
+
+    def assertNoBusNotification(self, channels=None):
+        """ Assert no bus notifications were sent on the given channels."""
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        domain = [('channel', 'in', [json_dump(channel) for channel in channels])] if channels else []
+        bus_notifs = self.env['bus.bus'].sudo().search(domain)
+        self.assertEqual(len(bus_notifs), 0, f"Bus: unexpected bus notifications found:\n{bus_notifs.mapped('channel')}")
 
     @contextmanager
     def assertBusNotificationType(self, expected_pairs):

@@ -481,6 +481,7 @@ GROUP BY fol.id%s%s""" % (
             ])
         for fol_id, values in upd.items():
             sudo_self.browse(fol_id).write(values)
+        return new
 
     def _add_default_followers(self, res_model, res_ids, partner_ids, customer_ids=None,
                                check_existing=True, existing_policy='skip'):

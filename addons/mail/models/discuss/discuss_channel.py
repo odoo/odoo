@@ -31,7 +31,7 @@ class DiscussChannel(models.Model):
     _description = 'Discussion Channel'
     _mail_flat_thread = False
     _mail_post_access = 'read'
-    _inherit = ["mail.thread", "bus.listener.mixin"]
+    _inherit = ["mail.thread"]
 
     MAX_BOUNCE_LIMIT = 10
 
@@ -751,17 +751,15 @@ class DiscussChannel(models.Model):
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {"silent"}
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
-        # link message to channel
-        rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
-        payload = {"data": Store(message).get_result(), "id": self.id}
-        if temporary_id := self.env.context.get("temporary_id"):
-            payload["temporary_id"] = temporary_id
-        if kwargs.get("silent"):
-            payload["silent"] = True
+    def _get_new_message_type(self):
+        return "discuss.channel/new_message"
+
+    def _get_message_sub_channel(self, message):
+        return None
+
+    def _send_notification_by_bus(self, message, payload):
         self._bus_send_store(self, {"is_pinned": True}, subchannel="members")
-        self._bus_send("discuss.channel/new_message", payload)
-        return rdata
+        super()._send_notification_by_bus(message, payload)
 
     def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
         payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)

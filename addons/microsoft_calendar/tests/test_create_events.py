@@ -368,7 +368,7 @@ class TestCreateEvents(TestCommon):
             self.organizer_user.with_user(self.organizer_user).sudo().restart_microsoft_synchronization()
             # Sync microsoft calendar, considering that ten minutes were passed after the event creation.
             self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
-            self.call_post_commit_hooks()
+            self.call_post_commit_hooks(skip_notify=True)
             event.invalidate_recordset()
 
             # Assert that insert function was not called and check last_sync_date variable value.
@@ -389,7 +389,7 @@ class TestCreateEvents(TestCommon):
         event.write({
             "name": "New event name"
         })
-        self.call_post_commit_hooks()
+        self.call_post_commit_hooks(skip_notify=True)
 
         # Prepare mock for new synchronization.
         event_id = "123"
@@ -399,7 +399,7 @@ class TestCreateEvents(TestCommon):
 
         # Synchronize local event with Outlook after updating it locally.
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
-        self.call_post_commit_hooks()
+        self.call_post_commit_hooks(skip_notify=True)
         event.invalidate_recordset()
 
         # Assert that the event got synchronized with Microsoft (through mock).

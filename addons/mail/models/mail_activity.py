@@ -332,12 +332,14 @@ class MailActivity(models.Model):
                     "mail.activity/updated", {"activity_created": True}
                 )
                 pre_responsibles._bus_send("mail.activity/updated", {"activity_deleted": True})
+        self._notify_activity_thread(unlink=False)
         return res
 
     def unlink(self):
         todo_activities = self.filtered(lambda act: act.date_deadline <= fields.Date.today())
         if todo_activities:
             todo_activities.user_id._bus_send("mail.activity/updated", {"activity_deleted": True})
+        self._notify_activity_thread()
         return super().unlink()
 
     @api.model
@@ -387,6 +389,33 @@ class MailActivity(models.Model):
         for record in self:
             name = record.summary or record.activity_type_id.display_name
             record.display_name = name
+
+    # ------------------------------------------------------
+    # Notifications
+    # ------------------------------------------------------
+
+    def _notify_activity_thread(self, unlink=True):
+        groups = self.grouped('res_model')
+        for model, activities in groups.items():
+            if model not in self.env:
+                continue
+            # sudo: should have access to the model to send the notification
+            activities = activities.sudo()
+            # sudo: user is able to send the activity notification even if no access to the parent record
+            threads = self.env[model].sudo().search([('id', 'in', activities.mapped('res_id'))])
+            if not threads:
+                continue
+            for thread in threads:
+                activities_for_thread = activities.filtered(lambda activity: activity.res_id == thread.id)
+                store = Store(thread, {
+                    "activities": Store.Many(
+                        activities_for_thread,
+                        mode="DELETE" if unlink else "ADD",
+                    )
+                }, as_thread=True)
+                if unlink:
+                    store.delete(activities_for_thread)
+                thread._bus_send_store(store, subchannel="thread-internal")
 
     # ------------------------------------------------------
     # Business Methods

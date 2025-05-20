@@ -82,4 +82,7 @@ patch(Thread.prototype, {
         }
         return super.getPersonaName(persona);
     },
+    get subscribeToBusOnDisplay() {
+        return this.channel_type !== "livechat" && super.subscribeToBusOnDisplay;
+    },
 });

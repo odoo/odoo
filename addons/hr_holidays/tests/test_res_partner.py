@@ -59,6 +59,7 @@ class TestPartner(TransactionCase):
     @freeze_time('2024-06-04')
     def test_res_partner_to_store(self):
         self.leaves.write({'state': 'validate'})
+        self.env.invalidate_all()  # No dependencies on hr.leave in res.partner, so we need to invalidate the cache manually
         self.assertEqual(
             Store(self.partner).get_result()["res.partner"][0]["leave_date_to"],
             fields.Date.to_string(self.today + relativedelta(days=2)),

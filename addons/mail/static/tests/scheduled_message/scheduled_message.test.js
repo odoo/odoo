@@ -2,7 +2,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openFormView,
     start,
     startServer,
@@ -282,29 +281,6 @@ test("Scheduling a message", async () => {
     await click(".o-mail-Composer button[title='Open Full Composer']");
     await contains(".o-mail-Scheduled-Message");
     await contains(".o-mail-Message-body", { text: "New scheduled message" });
-});
-
-test("New scheduled message is loaded when sending a message", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv.user.partner_id;
-    await start();
-    await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Chatter");
-    await contains(".o-mail-ScheduledMessagesList", { count: 0 });
-    pyEnv["mail.scheduled.message"].create({
-        author_id: pyEnv["res.partner"].create({ name: "Julien Dragoul" }),
-        body: "Hello",
-        model: "res.partner",
-        res_id: partnerId,
-        scheduled_date: "2024-10-20 12:00:00",
-    });
-    await click(".o-mail-Chatter-logNote");
-    await contains(".o-mail-Composer");
-    await insertText(".o-mail-Composer-input", "Bloups");
-    await click(".o-mail-Composer button", { text: "Log" });
-    await contains(".o-mail-ScheduledMessagesList");
-    await contains(".o-mail-Message-author", { text: "Julien Dragoul" });
-    await contains(".o-mail-Message-body", { text: "Hello" });
 });
 
 test("Scheduled messages are updated when switching records", async () => {

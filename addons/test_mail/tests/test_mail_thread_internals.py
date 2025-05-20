@@ -1132,6 +1132,30 @@ class TestChatterTweaks(ThreadRecipients):
 
 
 @tagged('mail_thread')
+class TestChatterBus(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_portal = cls._create_portal_user()
+        cls.test_record = cls.env['mail.test.simple'].with_context(cls._test_context).create({'name': 'Test', 'email_from': 'ignasse@example.com'})
+
+    def test_sync_chatter_receive_message_by_bus(self):
+        with self.assertBus([(self.cr.dbname, "mail.test.simple", self.test_record.id, "thread")]):
+            self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_comment')
+
+    def test_sync_chatter_note_no_external_notification(self):
+        with self.assertNotInBus([(self.cr.dbname, "mail.test.simple", self.test_record.id, "thread")]):
+            self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_note')
+
+    def test_sync_chatter_receive_note_by_bus(self):
+        with self.assertBus(
+            [(self.cr.dbname, "mail.test.simple", self.test_record.id, "thread-internal")],
+        ):
+            self.test_record.message_post(body='Test', message_type='comment', subtype_xmlid='mail.mt_note')
+
+
+@tagged('mail_thread')
 class TestDiscuss(MailCommon, TestRecipients):
 
     @classmethod

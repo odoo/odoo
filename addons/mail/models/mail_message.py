@@ -693,7 +693,6 @@ class MailMessage(models.Model):
 
             if message._is_thread_message_visible(vals=values):
                 message._invalidate_documents(values.get('model'), values.get('res_id'))
-
         return messages
 
     def read(self, fields=None, load='_classic_read'):
@@ -1182,7 +1181,16 @@ class MailMessage(models.Model):
             partner._bus_send_store(store)
 
     def _bus_channel(self):
-        return self.env.user._bus_channel()
+        return self.env[self.model].browse(self.res_id)._bus_channel() if self.model in self.env else self.env.user._bus_channel()
+
+    def _get_thread_bus_subchannel(self):
+        self.ensure_one()
+        if self.message_type == "comment":
+            if self.subtype_id.id == self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note") and self.model in self.env:
+                return "thread-internal"
+            if self.model in self.env:
+                return "thread"
+        return None
 
     # ------------------------------------------------------
     # TOOLS

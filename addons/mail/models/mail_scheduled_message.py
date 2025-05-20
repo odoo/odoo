@@ -29,6 +29,7 @@ class MailScheduledMessage(models.Model):
     such as 'email_from' and 'force_email_lang'.
     """
     _name = 'mail.scheduled.message'
+    _inherit = ['bus.listener.mixin']
     _description = 'Scheduled Message'
 
     # content
@@ -87,6 +88,11 @@ class MailScheduledMessage(models.Model):
                     'res_model': scheduled_message._name,
                     'res_id': scheduled_message.id,
                 })
+            store = Store()
+            thread = self.env[scheduled_message.model].browse(scheduled_message.res_id)
+            store.add(thread, request_list=["scheduledMessages"], as_thread=True)
+            store.add(scheduled_message)
+            thread._bus_send_store(store, subchannel=thread._get_message_sub_channel(scheduled_message))
         # schedule cron trigger
         if scheduled_messages:
             self.env.ref('mail.ir_cron_post_scheduled_message')._trigger_list(
@@ -131,6 +137,8 @@ class MailScheduledMessage(models.Model):
 
     def unlink(self):
         self._check()
+        for scheduled_message in self:
+            scheduled_message._bus_send_store(Store().delete(scheduled_message))
         return super().unlink()
 
     def write(self, vals):
@@ -142,6 +150,8 @@ class MailScheduledMessage(models.Model):
         res = super().write(vals)
         if new_scheduled_date := vals.get('scheduled_date'):
             self.env.ref('mail.ir_cron_post_scheduled_message')._trigger(fields.Datetime.to_datetime(new_scheduled_date))
+        for scheduled_message in self:
+            scheduled_message._bus_send_store(scheduled_message)
         return res
 
     # ------------------------------------------------------
@@ -221,6 +231,18 @@ class MailScheduledMessage(models.Model):
                     if auto_commit:
                         self.env.cr.rollback()
         self.unlink()
+
+    # ------------------------------------------------------
+    # Notification helpers
+    # ------------------------------------------------------
+    def _bus_channel(self):
+        return self.env[self.model].browse(self.res_id)._bus_channel()
+
+    def _get_thread_bus_subchannel(self):
+        self.ensure_one()
+        if self.is_note:
+            return "thread-internal"
+        return "thread"
 
     # ------------------------------------------------------
     # Business Methods

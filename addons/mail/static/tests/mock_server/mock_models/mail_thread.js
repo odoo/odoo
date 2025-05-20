@@ -474,6 +474,22 @@ export class MailThread extends models.ServerModel {
                     );
                 }
             }
+        } else {
+            // chatter notification
+            const threads = this.env[this._name].browse(message.res_id);
+            for (const thread of threads) {
+                notifications.push([
+                    thread,
+                    "mail.message/new",
+                    {
+                        data: new mailDataHelpers.Store(
+                            MailMessage.browse(message_id)
+                        ).get_result(),
+                        id: thread.id,
+                        temporary_id,
+                    },
+                ]);
+            }
         }
         if (message.partner_ids) {
             for (const partner_id of message.partner_ids) {

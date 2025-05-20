@@ -27,6 +27,20 @@ export class IrWebSocket extends models.ServerModel {
         if (authenticatedPartner) {
             channels.push(authenticatedPartner);
         }
-        return channels;
+        return channels.map((c) => {
+            if (typeof c !== "string") {
+                return c;
+            }
+            const match = c.match(/^model-([-_\w.]+)_(\d+)$/);
+            if (!match) {
+                return c;
+            }
+            const [, modelName, id] = match;
+            const model = this.env[modelName];
+            if (!model) {
+                console.error(`Model ${modelName} not found`);
+            }
+            return model.search_read([["id", "=", Number(id)]])[0];
+        });
     }
 }

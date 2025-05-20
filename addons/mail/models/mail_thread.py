@@ -126,6 +126,7 @@ class MailThread(models.AbstractModel):
     _CUSTOMER_HEADERS_LIMIT_COUNT = 50
 
     _Attachment = namedtuple('Attachment', ('fname', 'content', 'info'))
+    _inherit = 'bus.listener.mixin'
 
     message_is_follower = fields.Boolean(
         'Is Follower', compute='_compute_message_is_follower', search='_search_message_is_follower')
@@ -3239,9 +3240,9 @@ class MailThread(models.AbstractModel):
             set(kwargs.keys()),
             restricting_names=self._get_notify_valid_parameters()
         )
-
         recipients_data = self._notify_get_recipients(message, msg_vals=msg_vals, **kwargs)
         if not recipients_data:
+            self._notify_thread_by_bus(message, recipients_data, msg_vals=msg_vals, **kwargs)
             return recipients_data
         # cache data fetched by manual query to avoid extra queries when reading user.partner_id
         uid2pid = {r['uid']: r['id'] for r in recipients_data if r['uid']}
@@ -3259,11 +3260,31 @@ class MailThread(models.AbstractModel):
         else:
             # generate immediately the <mail.notification>
             # and send the <mail.mail>, <mail.push> and the <bus.bus> notifications
+
+            self._notify_thread_by_bus(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
             self._notify_thread_by_web_push(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
         return recipients_data
+
+    def _get_new_message_type(self):
+        return "mail.message/new"
+
+    def _get_message_sub_channel(self, message):
+        message.ensure_one()
+        return message._get_thread_bus_subchannel()
+
+    def _send_notification_by_bus(self, message, payload):
+        self._bus_send(self._get_new_message_type(), payload, subchannel=self._get_message_sub_channel(message))
+
+    def _notify_thread_by_bus(self, message, recipients_data, msg_vals, **kwargs):
+        payload = {"data": Store(message).get_result(), "id": self.id}
+        if temporary_id := self.env.context.get("temporary_id"):
+            payload["temporary_id"] = temporary_id
+        if kwargs.get("silent"):
+            payload["silent"] = True
+        self._send_notification_by_bus(message, payload)
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):
         """ Notify recipients inbox of a message. It is done in two main steps
@@ -4374,6 +4395,23 @@ class MailThread(models.AbstractModel):
     # FOLLOWERS API
     # ------------------------------------------------------
 
+    def _notify_message_subscriber_update(self, partner_ids, unlink=False):
+        store = Store()
+        for thread in self:
+            # sudo: allowed to get followers of the current thread
+            followers = self.env["mail.followers"].sudo().search(["&", ("res_id", "=", thread.id), ("res_model", "=", thread._name)])
+            followers_in_partner = followers.filtered_domain([("partner_id", "in", partner_ids)])
+            if followers_in_partner:
+                store.add(thread, {
+                    "followers": Store.Many(followers_in_partner, mode="DELETE" if unlink else "ADD"),
+                    "followersCount": len(followers - followers_in_partner) if unlink else len(followers),
+                }, as_thread=True)
+        if store.data:
+            self._bus_send("mail.record/insert", {
+                **store.get_result(),
+                "ignore_user_ids": [self.env.user.id],
+            }, subchannel="thread-internal" if self._name != "discuss.channel" else "thread")
+
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """ Main public API to add followers to a record set. Its main purpose is
         to perform access rights checks before calling ``_message_subscribe``. """
@@ -4415,16 +4453,18 @@ class MailThread(models.AbstractModel):
             return True
 
         if not subtype_ids:
-            self.env['mail.followers']._insert_followers(
+            new = self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
                 partner_ids, subtypes=None,
                 customer_ids=customer_ids, check_existing=True, existing_policy='skip')
         else:
-            self.env['mail.followers']._insert_followers(
+            new = self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
                 partner_ids, subtypes=dict((pid, subtype_ids) for pid in partner_ids),
                 customer_ids=customer_ids, check_existing=True, existing_policy='replace')
 
+        if new:
+            self._notify_message_subscriber_update(partner_ids, unlink=False)
         return True
 
     def message_unsubscribe(self, partner_ids=None):
@@ -4439,6 +4479,7 @@ class MailThread(models.AbstractModel):
             self.check_access('write')
         elif not self.env.user._is_internal():
             self.check_access('read')
+        self._notify_message_subscriber_update(partner_ids, unlink=True)
         self.env['mail.followers'].sudo().search([
             ('res_model', '=', self._name),
             ('res_id', 'in', self.ids),
@@ -4735,7 +4776,7 @@ class MailThread(models.AbstractModel):
             # sudo: mail.message.translation - discarding translations of message after editing it
             self.env["mail.message.translation"].sudo().search([("message_id", "=", message.id)]).unlink()
             res.append({"translationValue": False})
-        message._bus_send_store(message, res)
+        message._bus_send_store(message, res, subchannel=self._get_message_sub_channel(message))
 
     # ------------------------------------------------------
     # STORE

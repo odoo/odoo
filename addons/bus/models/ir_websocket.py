@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+import re
 
 from odoo import models
 from odoo.http import request, SessionExpiredException
@@ -6,6 +8,8 @@ from odoo.tools.misc import OrderedSet
 from odoo.service import security
 from ..models.bus import dispatch
 from ..websocket import wsrequest
+
+_logger = logging.getLogger(__name__)
 
 
 class IrWebsocket(models.AbstractModel):
@@ -25,6 +29,20 @@ class IrWebsocket(models.AbstractModel):
         channels.extend(self.env.user.group_ids)
         if req.session.uid:
             channels.append(self.env.user.partner_id)
+
+        model_channels = {}
+        regex = re.compile(r"^model-([-_\w\.]*)_(\d+)$")
+        for channel in channels:
+            if isinstance(channel, str):
+                if match := re.match(regex, channel):
+                    model, id = match.groups()
+                    if model not in self.env:
+                        _logger.warning("Trying to build invalid model %s (%s) for bus channel list", model, channel)
+                        continue
+                    channels.remove(channel)
+                    model_channels.setdefault(model, set()).add(int(id))
+        for model_name, ids in model_channels.items():
+            channels.extend(self.env[model_name].search([("id", "in", list(ids))]))
         return channels
 
     def _serve_ir_websocket(self, event_name, data):
