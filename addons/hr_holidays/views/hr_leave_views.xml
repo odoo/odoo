@@ -298,11 +298,6 @@
             <sheet>
                 <field name="dashboard_warning_message" class="alert alert-danger d-flex mt-2" role="alert" style="white-space: pre-wrap;" invisible="not dashboard_warning_message"/>
                 <field name="leave_type_increases_duration" class="alert alert-info d-flex" role="alert" style="white-space: pre-wrap;" invisible="not leave_type_increases_duration"/>
-
-                <div class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch or dashboard_warning_message">
-                    <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone</span>
-                    (<field name="tz"/>).
-                </div>
                 <div class="o_hr_leave_content row">
                     <div class="o_hr_leave_column col_left col-md-6 col-12">
                         <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancel'"/>
@@ -355,12 +350,24 @@
                                 <field name="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" readonly="state != 'confirm'" class="ms-5" />
                                 <label for="request_unit_hours" invisible="leave_type_request_unit != 'hour' or (not request_unit_hours and state != 'confirm')" />
                             </div>
-                            <label for="request_hour_from" string="" invisible="not request_unit_hours"/>
+                            <label for="request_hour_from" string="Requestor Timezone" invisible="not request_unit_hours"/>
                             <div class="o_row o_row_readonly" invisible="not request_unit_hours">
                                 <label for="request_hour_from" string="From" />
                                 <field name="request_hour_from" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection" placeholder="00:00"/>
                                 <label for="request_hour_to" string="To" />
                                 <field name="request_hour_to" invisible="not request_unit_hours" readonly="state == 'validate'" required="request_unit_hours" widget="float_time_selection"/>
+                            </div>
+                            <div colspan="2" class="alert alert-info" role="alert" invisible="not request_unit_hours or not tz_mismatch or dashboard_warning_message">
+                                <span>The employee has a different timezone than yours! Here dates and times are displayed in the employee's work timezone</span>
+                                (<field name="tz" class="oe_inline fw-bold"/>).
+                                <div>For your reference, the equivalent times in your timezone are displayed below.</div>
+                            </div>
+                            <label for="date_from" string="Your Timezone" invisible="not request_unit_hours or not tz_mismatch"/>
+                            <div class="o_row o_row_readonly" invisible="not request_unit_hours or not tz_mismatch">
+                                <label for="date_from" string="From" />
+                                <field name="date_from" readonly="1" widget="datetime"/>
+                                <label for="date_to" string="To" />
+                                <field name="date_to" readonly="1"/>
                             </div>
                             <field name="name" readonly="state != 'confirm'" widget="text" nolabel="1" colspan="2" placeholder="No description provided" />
                         </group>
