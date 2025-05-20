@@ -831,25 +831,20 @@ export class TablePlugin extends Plugin {
      * @param {KeyboardEvent} ev
      */
     updateTableKeyboardSelection(ev) {
-        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
-        const startTable = closestElement(selection.anchorNode, "table");
-        const endTable = closestElement(selection.focusNode, "table");
+        const { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
+            this.dependencies.selection.getSelectionData().deepEditableSelection;
+        const startTable = closestElement(anchorNode, "table");
+        const endTable = closestElement(focusNode, "table");
         if (!(startTable || endTable)) {
             return;
         }
-        const [startTd, endTd] = [
-            closestElement(selection.anchorNode, "td"),
-            closestElement(selection.focusNode, "td"),
-        ];
         if (startTable !== endTable) {
             // Deselect the table if it was fully selected.
             if (endTable) {
                 const deselectingBackward =
-                    ["ArrowLeft", "ArrowUp"].includes(ev.key) &&
-                    selection.direction === DIRECTIONS.RIGHT;
+                    ["ArrowLeft", "ArrowUp"].includes(ev.key) && direction === DIRECTIONS.RIGHT;
                 const deselectingForward =
-                    ["ArrowRight", "ArrowDown"].includes(ev.key) &&
-                    selection.direction === DIRECTIONS.LEFT;
+                    ["ArrowRight", "ArrowDown"].includes(ev.key) && direction === DIRECTIONS.LEFT;
                 let targetNode;
                 if (deselectingBackward) {
                     targetNode = endTable.previousElementSibling;
@@ -859,8 +854,8 @@ export class TablePlugin extends Plugin {
                 if (targetNode) {
                     ev.preventDefault();
                     this.dependencies.selection.setSelection({
-                        anchorNode: selection.anchorNode,
-                        anchorOffset: selection.anchorOffset,
+                        anchorNode,
+                        anchorOffset,
                         focusNode: targetNode,
                         focusOffset: deselectingBackward ? nodeSize(targetNode) : 0,
                     });
@@ -868,9 +863,13 @@ export class TablePlugin extends Plugin {
             }
             return;
         }
+
+        const [startTd, endTd] = [
+            closestElement(anchorNode, "td"),
+            closestElement(focusNode, "td"),
+        ];
         // Handle selection for the single cell.
         if (startTd === endTd && !startTd.classList.contains("o_selected_td")) {
-            const { focusNode, focusOffset } = selection;
             // Do not prevent default when there is a text in cell.
             if (focusNode.nodeType === Node.TEXT_NODE) {
                 const textNodes = descendants(startTd).filter(isTextNode);
@@ -892,44 +891,61 @@ export class TablePlugin extends Plugin {
             }
             return;
         }
-        // Select cells symmetrically.
-        const endCellPosition = { x: getRowIndex(endTd), y: getColumnIndex(endTd) };
-        const tds = [...startTable.rows].map((row) => [...row.cells]);
+
+        this.buildTableGrid(startTable);
+        const endRowIndex = getRowIndex(endTd);
+        const endColIndex = this.tableGrid[endRowIndex].findIndex((c) => c === endTd);
+        if (endColIndex < 0) {
+            return;
+        }
+        // Multi-cell navigation
         let targetTd, targetNode;
         switch (ev.key) {
             case "ArrowUp": {
-                if (endCellPosition.x > 0) {
-                    targetTd = tds[endCellPosition.x - 1][endCellPosition.y];
+                if (endRowIndex > 0) {
+                    targetTd = this.tableGrid[endRowIndex - 1][endColIndex];
+                    if (targetTd?.rowSpan > 1) {
+                        targetTd = this.tableGrid[endRowIndex - targetTd.rowSpan]?.[endColIndex];
+                    }
                 } else {
                     targetNode = previousLeaf(startTable, this.editable);
                 }
                 break;
             }
             case "ArrowDown": {
-                if (endCellPosition.x < tds.length - 1) {
-                    targetTd = tds[endCellPosition.x + 1][endCellPosition.y];
+                if (endRowIndex < this.tableGrid.length - 1) {
+                    targetTd = this.tableGrid[endRowIndex + 1][endColIndex];
+                    if (targetTd?.rowSpan > 1) {
+                        targetTd = this.tableGrid[endRowIndex + targetTd.rowSpan]?.[endColIndex];
+                    }
                 } else {
                     targetNode = nextLeaf(startTable, this.editable);
                 }
                 break;
             }
             case "ArrowRight": {
-                if (endCellPosition.y < tds[0].length - 1) {
-                    targetTd = tds[endCellPosition.x][endCellPosition.y + 1];
+                if (endColIndex < this.tableGrid[0]?.length - 1) {
+                    targetTd = this.tableGrid[endRowIndex][endColIndex + 1];
+                    if (targetTd?.colSpan > 1) {
+                        targetTd = this.tableGrid[endRowIndex][endColIndex + targetTd.colSpan];
+                    }
                 }
                 break;
             }
             case "ArrowLeft": {
-                if (endCellPosition.y > 0) {
-                    targetTd = tds[endCellPosition.x][endCellPosition.y - 1];
+                if (endColIndex > 0) {
+                    targetTd = this.tableGrid[endRowIndex][endColIndex - 1];
+                    if (targetTd?.colSpan > 1) {
+                        targetTd = this.tableGrid[endRowIndex][endColIndex - targetTd.colSpan];
+                    }
                 }
                 break;
             }
         }
         if (targetTd || targetNode) {
             this.dependencies.selection.setSelection({
-                anchorNode: selection.anchorNode,
-                anchorOffset: selection.anchorOffset,
+                anchorNode,
+                anchorOffset,
                 focusNode: targetTd || targetNode,
                 focusOffset: 0,
             });
