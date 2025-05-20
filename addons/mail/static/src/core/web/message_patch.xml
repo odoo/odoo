@@ -10,7 +10,7 @@
                         </p>
                     </t>
                     <t t-if="message.trackingValues.length">
-                        <ul class="mb-0 ps-4">
+                        <ul t-attf-class="mb-0 {{ (message.trackingValues.length > 1) ? 'ps-4' : 'list-unstyled' }}">
                             <t name="trackingValues" t-foreach="message.trackingValues" t-as="trackingValue" t-key="trackingValue.id">
                                 <li class="o-mail-Message-tracking mb-1" role="group">
                                     <span class="o-mail-Message-trackingOld me-1 px-1 text-muted fw-bold" t-esc="formatTrackingOrNone(trackingValue.fieldType, trackingValue.oldValue)"/>
