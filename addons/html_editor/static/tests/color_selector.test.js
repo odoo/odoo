@@ -86,7 +86,7 @@ test("should add opacity to custom background colors but not to theme colors", a
     expect(getContent(el)).toBe(`<p><font style="" class="bg-o-color-1">[test]</font></p>`);
     // Verify computed background color has no opacity.
     const backgroundColor = getComputedStyle(el.querySelector("p font")).backgroundColor;
-    expect(backgroundColor).toBe("rgb(113, 75, 103)");
+    expect(backgroundColor).toBe("rgb(190, 31, 116)");
 });
 
 test("can render and apply color theme", async () => {
