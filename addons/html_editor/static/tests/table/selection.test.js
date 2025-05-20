@@ -1783,6 +1783,312 @@ describe("symmetrical selection", () => {
         );
     });
 
+    test("Shift + arrow key navigation selects cells symmetrically across colspan", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td colspan="2"><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td colspan="2"><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td colspan="2"><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowDown"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td">]<br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowDown"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td colspan="2" class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td colspan="2"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowUp"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td">]<br></td><td colspan="2"><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
+    test("Shift + arrow key selection with rowspan (start from first row first td)", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td rowspan="2"><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td rowspan="2"><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                    <tr><td><br></td><td rowspan="2"><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowDown"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td">]<br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowRight"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
+                    <tr><td><br></td><td><br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowDown"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
+                    <tr><td><br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowDown"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td rowspan="2" class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+
+        press(["Shift", "ArrowLeft"]);
+        await animationFrame();
+        expectContentToBe(
+            el,
+            `<p data-selection-placeholder=""><br></p>
+            <table class="table table-bordered o_table o_selected_table">
+                <tbody>
+                    <tr><td class="o_selected_td">[<br></td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td rowspan="2"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td">]<br></td><td><br></td><td><br></td></tr>
+                </tbody>
+            </table>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        );
+    });
+
     test("select single cell containing text when pressing shift + arrow key", async () => {
         const { el, editor } = await setupEditor(
             unformat(
@@ -2667,7 +2973,7 @@ describe("keyboard navigation with multiline", () => {
                     <p data-selection-placeholder=""><br></p>
                     <table class="o_selected_table"><tbody>
                     <tr><td>A1</td><td>B1</td><td>C1</td><td>D1</td><td>E1</td></tr>
-                    <tr><td>A2</td><td>B2</td><td class="o_selected_td">]C2</td><td>D2</td><td>E2</td></tr>
+                    <tr><td>A2</td><td>B2</td><td class="o_selected_td">C2]</td><td>D2</td><td>E2</td></tr>
                     <tr><td>A3</td><td>B3</td><td class="o_selected_td">
                         <div class="o-paragraph">P1[L1<br>P1L2</div><div class="o-paragraph">P2L1<br>P2L2</div>
                     </td><td>D3</td><td>E3</td></tr>
