@@ -40,6 +40,7 @@ export class FloatingBlocksRoundnessAction extends BuilderAction {
     }
 }
 export class AddCardAction extends BuilderAction {
+    static id = "addCard";
     apply({ editingElement: el }) {
         const newCardEl = renderToElement("website.s_floating_blocks.new_card");
         const wrapperEl = el.querySelector(".s_floating_blocks_wrapper");
