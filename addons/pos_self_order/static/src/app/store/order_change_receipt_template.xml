@@ -23,8 +23,8 @@
             </div>
             <br />
             <t t-foreach="changes.new" t-as="change" t-key="change_index">
-                <div class="product-details d-flex">
-                    <span class="product-quantity me-5 mb-1" t-esc="change.qty"/>
+                <div class="product-details d-flex" t-att-class="{'ms-5': change.combo_parent_id}">
+                    <span class="product-quantity me-3 mb-1" t-esc="change.qty"/>
                     <span class="product-name" t-esc="change.full_product_name"/>
                 </div>
                 <t t-if="change.customer_note">
