@@ -534,7 +534,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
      * @param {import("@web/core/utils/hooks").Ref} ref
      */
     function add(ref, onSelect, { show = false } = {}) {
-        const toggler = () => toggle(ref, onSelect);
+        const toggler = () => toggle(isMobileOS() ? undefined : ref, onSelect);
         targets.push([ref, toggler]);
         if (!ref.el) {
             return;
@@ -559,7 +559,7 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
                     return res;
                 },
             };
-            if (ref.el) {
+            if (ref?.el) {
                 pickerMobileProps.close = () => remove();
                 const app = new App(PickerMobile, {
                     name: "Popout",
