@@ -52,7 +52,7 @@
         }
         &:has(> .o_kanban_record:nth-child(12)) {
             // 3 cards per row for large screens if there are more than 5 cards (+ 6 ghost cards)
-            @include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
+            @include media-breakpoint-up(xxl) {
                 --KanbanRecord-width: 31vw;
             }
         }

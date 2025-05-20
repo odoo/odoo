@@ -22,11 +22,11 @@
                 background-color: $border-color;
                 content: "";
 
-                @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
+                @include media-breakpoint-up(lg) {
                     left: ($o-hrs-timeline-dot-size * .5 + o-to-rem(map-get($spacers, 4))  - o-to-rem($border-width))
                 }
 
-                @include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
+                @include media-breakpoint-up(xxl) {
                     left: ($o-hrs-timeline-dot-size * .5 + o-to-rem($o-horizontal-padding)  - o-to-rem($border-width))
                 }
             }
