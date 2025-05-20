@@ -26,7 +26,7 @@ import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class Builder extends Component {
     static template = "html_builder.Builder";
-    static components = { BlockTab, CustomizeTab, InvisibleElementsPanel };
+    static components = { BlockTab, CustomizeTab };
     static props = {
         closeEditor: { type: Function },
         reloadEditor: { type: Function, optional: true },
@@ -55,7 +55,10 @@ export class Builder extends Component {
             canRedo: false,
             activeTab: this.props.config.initialTab || "blocks",
             currentOptionsContainers: undefined,
+        });
+        this.invisibleElementsPanelState = useState({
             invisibleEls: [],
+            invisibleSelector: this.getInvisibleSelector(),
         });
         useHotkey("control+z", () => this.undo());
         useHotkey("control+y", () => this.redo());
@@ -130,6 +133,10 @@ export class Builder extends Component {
                         }
                         this.setTab("customize");
                     },
+                    lower_panel_entries: withSequence(20, {
+                        Component: InvisibleElementsPanel,
+                        props: this.invisibleElementsPanelState,
+                    }),
                     unsplittable_node_predicates: (/** @type {Node} */ node) =>
                         node.querySelector?.("[data-oe-translation-source-sha]"),
                     can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
@@ -208,6 +215,9 @@ export class Builder extends Component {
         onWillUpdateProps((nextProps) => {
             if (nextProps.isMobile !== this.props.isMobile) {
                 this.updateInvisibleEls(nextProps.isMobile);
+                this.invisibleElementsPanelState.invisibleSelector = this.getInvisibleSelector(
+                    nextProps.isMobile
+                );
             }
         });
         // Fallback tab when no option is active.
@@ -318,8 +328,12 @@ export class Builder extends Component {
     }
 
     updateInvisibleEls(isMobile = this.props.isMobile) {
-        this.state.invisibleEls = [
+        this.invisibleElementsPanelState.invisibleEls = [
             ...this.editor.editable.querySelectorAll(this.getInvisibleSelector(isMobile)),
         ];
+    }
+
+    lowerPanelEntries() {
+        return this.editor.resources["lower_panel_entries"] ?? [];
     }
 }

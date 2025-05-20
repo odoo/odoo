@@ -261,7 +261,7 @@ registerWebsitePreviewTour("conditional_visibility_5", {
     },
     {
         content: "Check that the 'Image - Text' has been removed from the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel:not(:has(.o_we_invisible_entry:contains('Image - Text')))",
+        trigger: ".o_we_invisible_el_panel:not(:visible):not(:has(.o_we_invisible_entry:contains('Image - Text')))",
     },
     {
         content: "Click on the 'Column' entry on the 'Invisible Elements' panel",
@@ -279,11 +279,11 @@ registerWebsitePreviewTour("conditional_visibility_5", {
     },
     {
         content: "Check that the column has been removed from the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel:not(:has(.o_we_invisible_entry:contains('Column')))",
+        trigger: ".o_we_invisible_el_panel:not(:visible):not(:has(.o_we_invisible_entry:contains('Column')))",
     },
     {
         content: "Check that the 'Image - Text' entry has been removed from the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel:not(:has(.o_we_invisible_entry:contains('Image - Text')))",
+        trigger: ".o_we_invisible_el_panel:not(:visible):not(:has(.o_we_invisible_entry:contains('Image - Text')))",
     },
     {
         content: "Activate mobile preview",
