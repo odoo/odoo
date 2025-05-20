@@ -5620,6 +5620,8 @@ msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
 msgstr ""
+"Jóváhagyott kiadások, beszállítói számlák vagy költségkövetéses "
+"készletkiszedések kiszámlázhatók a vevőnek költség vagy eladási ár alapján."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__validity_date
@@ -5627,6 +5629,8 @@ msgid ""
 "Validity of the order, after that you will not able to sign & pay the "
 "quotation."
 msgstr ""
+"A rendelés érvényessége, ezen dátum után nem lehet aláírni és kifizetni az "
+"ajánlatot."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5716,7 +5720,7 @@ msgstr "Weboldal kommunikációs előzmények"
 #. odoo-python
 #: code:addons/sale/models/product_template.py:0
 msgid "You can invoice goods before they are delivered."
-msgstr ""
+msgstr "Nem lehet termékeket számlázni kiszállítás előtt."
 
 #. module: sale
 #. odoo-python
@@ -5734,6 +5738,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "            or check every order and invoice them one by one."
 msgstr ""
+"Kiválaszthatja az összes rendelést és számlázhatja őket egyszerre,<br>\n"
+"            vagy ellenőrizze és számlázza a rendeléseket egyenként."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_provider__so_reference_type
@@ -5742,6 +5748,9 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr ""
+"Megadhatja a vevői rendeléseken megjelenő kommunikáció típusát. A "
+"kommunikáció akkor jelenik meg a vevőnek, amikor kiválasztja a fizetési "
+"módot."
 
 #. module: sale
 #. odoo-python
@@ -5789,6 +5798,9 @@ msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
 msgstr ""
+"Nem adhat meg negatív számot az ajánlatok alapértelmezett érvényességéhez. "
+"Hagyja üresen (vagy 0-án) ha nem szeretné, hogy az ajánlatok automatikusan "
+"lejárjanak."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -5796,6 +5808,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Minden értékesítéshez és beszerzéshez szükséges megadni egy terméket,\n"
+"                ami lehet készletezett termék, fogyóeszköz vagy szolgáltatás."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
@@ -5931,6 +5945,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') and 'Függő rendelés' or 'Rendelés' }} (hivatkozás: {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -5939,6 +5956,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Ajánlat') or 'Rendelés' }} "
+"(hivatkozás: {{ object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -5946,3 +5966,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} visszavonva (hivatkozás:"
+" {{ object.name or 'n/a' }})"
