@@ -30,7 +30,7 @@ test("click on 'Show/hide on desktop'", async () => {
 
     await contains(".o_we_invisible_el_panel .o_we_invisible_entry").click();
     await contains("button[data-action-id='toggleDeviceVisibility']").click();
-    expect(".o_we_invisible_el_panel").not.toBeDisplayed();
+    expect(".o_we_invisible_el_panel").not.toBeEmpty();
 });
 
 test("show/hide a section", async () => {
@@ -143,7 +143,7 @@ test("hide on mobile and toggle mobile view", async () => {
     );
 
     await contains("button[data-action='mobile']").click();
-    expect(".o_we_invisible_el_panel").not.toBeDisplayed();
+    expect(".o_we_invisible_el_panel").not.toBeEmpty();
 });
 
 test("Hide element conditionally", async () => {

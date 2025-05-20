@@ -66,5 +66,5 @@ registerWebsitePreviewTour('snippet_popup_add_remove', {
     trigger: ':iframe #wrap.o_editable:not(:has([data-snippet="s_popup"]))',
 }, {
     content: "The invisible elements panel should also be removed.",
-    trigger: ".o-snippets-menu:not(:has(.o_we_invisible_el_panel)",
+    trigger: ".o-snippets-menu:not(:has(.o_we_invisible_el_panel *)",
 }]);
