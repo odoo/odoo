@@ -5,6 +5,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
+import { findInSelection } from "@html_editor/utils/selection";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
@@ -43,6 +44,7 @@ export class CaptionPlugin extends Plugin {
             (node) => ["FIGURE", "FIGCAPTION"].includes(node.nodeName), // avoid merge
         ],
         image_name_predicates: [this.getImageName.bind(this)],
+        link_compatible_selection_predicates: [this.isLinkAllowedOnSelection.bind(this)],
     };
 
     setup() {
@@ -220,6 +222,21 @@ export class CaptionPlugin extends Plugin {
     getImageName(image) {
         if (closestElement(image, "figure")) {
             return image.getAttribute("data-caption");
+        }
+    }
+
+    isLinkAllowedOnSelection() {
+        const figure = findInSelection(
+            this.dependencies.selection.getEditableSelection(),
+            "figure"
+        );
+        if (
+            figure &&
+            this.dependencies.selection
+                .getTargetedNodes()
+                .every((node) => closestElement(node, "figure") === figure)
+        ) {
+            return true;
         }
     }
 
