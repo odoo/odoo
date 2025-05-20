@@ -960,6 +960,47 @@ foo3,US,0,persons\n""",
 
                 self.assertFalse(response.get('messages'))
 
+    @unittest.skipUnless(can_import('xlwt') and can_import('openpyxl'), "xlwt/openpyxl not available")
+    def test_xlsx_datetime_values_assigned_to_wrong_field(self):
+        """Test that importing datetime values into any field that is not DateTime triggers an error."""
+
+        file_content = generate_xlsx({
+            'Some Value': [1, datetime.date(2025, 7, 1)],  # Invalid Datetime object in an integer field
+            'Name': ['foo', datetime.date(2025, 7, 1)]     # Invalid Datetime object in an char field
+        })
+
+        file_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+        import_wizard = self.env['base_import.import'].create({
+            'res_model': 'import.preview',
+            'file': file_content,
+            'file_type': file_type,
+        })
+
+        result = import_wizard.parse_preview({'has_headers': True})
+
+        options = result.get('options', {})
+
+        response = import_wizard.execute_import(
+            ['somevalue', 'name'],
+            ['Some Value', 'Name'],
+            {
+                'has_headers': True,
+                'quoting': '"',
+                'separator': ',',
+                'date_format': options.get('date_format'),
+                'datetime_format': options.get('datetime_format'),
+            }
+        )
+        self.assertTrue(response.get('messages'), "Expected error messages due to date/time values in non-date fields")
+        self.assertEqual(len(response['messages']), 2)
+
+        self.assertEqual(response['messages'][0]['type'], 'error')
+        self.assertIn("Field 'somevalue' does not accept date/time values.", response['messages'][0]['message'])
+
+        self.assertEqual(response['messages'][1]['type'], 'error')
+        self.assertIn("Field 'name' does not accept date/time values.", response['messages'][1]['message'])
+
 
 class TestBatching(TransactionCase):
     def _makefile(self, rows):
