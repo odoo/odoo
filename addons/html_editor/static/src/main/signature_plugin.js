@@ -30,9 +30,12 @@ export class SignaturePlugin extends Plugin {
                 commandId: "insertSignature",
             },
         ],
+
+        /**Predicates */
         is_empty_predicates: this.isEmpty.bind(this),
         unsplittable_node_predicates: (host) =>
             host.nodeType === Node.ELEMENT_NODE && host.matches(`.${SIGNATURE_CLASS}`),
+        empty_base_container_candidates_predicates: (node) => node.matches(`.${SIGNATURE_CLASS}`),
     };
 
     cleanSignatures({ rootClone }) {

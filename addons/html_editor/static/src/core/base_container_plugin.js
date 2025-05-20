@@ -14,9 +14,12 @@ import {
 } from "../utils/base_container";
 import { withSequence } from "@html_editor/utils/resource";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { closestBlock } from "../utils/blocks";
+import { isEmptyBlock } from "../utils/dom_info";
 
 export class BaseContainerPlugin extends Plugin {
     static id = "baseContainer";
+    static dependencies = ["selection"];
     static shared = ["createBaseContainer", "getDefaultNodeName", "isCandidateForBaseContainer"];
     /**
      * Register one of the predicates for `invalid_for_base_container_predicates`
@@ -57,6 +60,10 @@ export class BaseContainerPlugin extends Plugin {
             this.hasNonPhrasingContentPredicate,
         ],
         system_classes: [BASE_CONTAINER_CLASS],
+
+        /**Overrides */
+        delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
+        delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
     };
 
     createBaseContainer(nodeName = this.getDefaultNodeName()) {
@@ -166,5 +173,42 @@ export class BaseContainerPlugin extends Plugin {
                 fillEmpty(div);
             }
         }
+    }
+
+    // Check if the node is not transformable to base container.
+    isNotCandidateForBaseContainer(node) {
+        return (
+            node?.nodeType !== Node.ELEMENT_NODE ||
+            isProtected(node) ||
+            isProtecting(node) ||
+            !node.isContentEditable ||
+            node.classList.contains("oe_unbreakable") ||
+            !this.getResource("empty_base_container_candidates_predicates").some((p) => p(node)) ||
+            this.getResource("unremovable_node_predicates").some((p) => p(node))
+        );
+    }
+
+    /**
+     * Transform empty blocks (defined in "empty_base_container_candidates_predicates")
+     * into a base container.
+     */
+    handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
+        // Detect if cursor is at the start of the editable (collapsed range).
+        const rangeIsCollapsed = startContainer === endContainer && startOffset === endOffset;
+        if (!rangeIsCollapsed) {
+            return;
+        }
+        const block = closestBlock(endContainer);
+        // Check if the block is non-empty or not a valid base container candidate.
+        if (!isEmptyBlock(block) || this.isNotCandidateForBaseContainer(block)) {
+            return;
+        }
+
+        const baseContainer = this.createBaseContainer();
+        fillEmpty(baseContainer);
+        block.after(baseContainer);
+        block.remove();
+        this.dependencies.selection.setCursorStart(baseContainer);
+        return true;
     }
 }
