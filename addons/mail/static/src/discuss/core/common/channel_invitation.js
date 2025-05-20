@@ -25,7 +25,6 @@ export class ChannelInvitation extends Component {
         super.setup();
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
@@ -37,7 +36,10 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
         });
-        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
+        this.debouncedFetchPartnersToInvite = useDebounced(
+            this.fetchPartnersToInvite.bind(this),
+            250
+        );
         onWillStart(() => {
             if (this.store.self.type === "partner") {
                 this.fetchPartnersToInvite();
@@ -56,6 +58,10 @@ export class ChannelInvitation extends Component {
             },
             () => [this.props.autofocus]
         );
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get selectablePartners() {

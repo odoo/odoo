@@ -11,8 +11,12 @@ const StorePatch = {
         this.channels = this.makeCachedFetchData("channels_as_member");
         this.fetchSsearchConversationsSequential = useSequential();
     },
+    async onReset() {
+        this.channels.status = "not_fetched";
+        await super.onReset();
+    },
     getDiscussSidebarCategoryCounter(categoryId) {
-        return this.DiscussAppCategory.get({ id: categoryId }).threads.reduce((acc, channel) => {
+        return this.DiscussAppCategory.get({ id: categoryId })?.threads.reduce((acc, channel) => {
             if (categoryId === "channels") {
                 return channel.message_needaction_counter > 0 ? acc + 1 : acc;
             } else {

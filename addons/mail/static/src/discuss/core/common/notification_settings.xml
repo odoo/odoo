@@ -2,6 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.NotificationSettings">
+        <t t-if="store?.exists()" t-call="discuss.NotificationSettings.main"/>
+    </t>
+
+    <t t-name="discuss.NotificationSettings.main">
         <ActionPanel title.translate="Notification Settings" resizable="false" icon="'fa fa-bell'">
             <div class="o-discuss-NotificationSettings">
                 <div t-if="store.settings.mute_until_dt" class="d-flex flex-column alert alert-warning">

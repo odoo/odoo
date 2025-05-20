@@ -1,9 +1,8 @@
 import { WEBSOCKET_CLOSE_CODES } from "@bus/workers/websocket_worker";
-import { describe, expect, test } from "@odoo/hoot";
-import { runAllTimers, waitFor } from "@odoo/hoot-dom";
+import { describe, test } from "@odoo/hoot";
+import { runAllTimers } from "@odoo/hoot-dom";
 import {
     asyncStep,
-    contains,
     getService,
     MockServer,
     mountWithCleanup,
@@ -17,7 +16,7 @@ import { addBusServiceListeners, defineBusModels, startBusService } from "./bus_
 defineBusModels();
 describe.current.tags("desktop");
 
-test("disconnect during vacuum should ask for reload", async () => {
+test("notify subscribers when bus disconnect during vacuum", async () => {
     browser.location.addEventListener("reload", () => asyncStep("reload"));
     addBusServiceListeners(
         ["connect", () => asyncStep("connect")],
@@ -26,21 +25,19 @@ test("disconnect during vacuum should ask for reload", async () => {
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
     getService("multi_tab").setSharedValue("last_notification_id", 1);
+    getService("bus.outdated_page_watcher").subscribe(() => asyncStep("outdated_page"));
     startBusService();
     await runAllTimers();
     await waitForSteps(["connect"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
     await waitForSteps(["disconnect"]);
     await runAllTimers();
-    await waitFor(".o_notification");
-    expect(".o_notification_content:first").toHaveText(
-        "Save your work and refresh to get the latest updates and avoid potential issues."
-    );
-    await contains(".o_notification button:contains(Refresh)").click();
-    await waitForSteps(["reload"]);
+    // Two events during tests because local storage event is triggered for the page
+    // that sets it while it's not the case in real-life.
+    await waitForSteps(["outdated_page", "outdated_page"]);
 });
 
-test("reconnect after going offline after bus gc should ask for reload", async () => {
+test("notify subscribers when bus reconnects post-vacuum after going offline", async () => {
     addBusServiceListeners(
         ["connect", () => asyncStep("connect")],
         ["disconnect", () => asyncStep("disconnect")]
@@ -48,6 +45,7 @@ test("reconnect after going offline after bus gc should ask for reload", async (
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
     getService("multi_tab").setSharedValue("last_notification_id", 1);
+    getService("bus.outdated_page_watcher").subscribe(() => asyncStep("outdated_page"));
     startBusService();
     await runAllTimers();
     await waitForSteps(["connect"]);
@@ -56,8 +54,7 @@ test("reconnect after going offline after bus gc should ask for reload", async (
     browser.dispatchEvent(new Event("online"));
     await runAllTimers();
     await waitForSteps(["connect"]);
-    await waitFor(".o_notification");
-    expect(".o_notification_content:first").toHaveText(
-        "Save your work and refresh to get the latest updates and avoid potential issues."
-    );
+    // Two events during tests because local storage event is triggered for the page
+    // that sets it while it's not the case in real-life.
+    await waitForSteps(["outdated_page", "outdated_page"]);
 });

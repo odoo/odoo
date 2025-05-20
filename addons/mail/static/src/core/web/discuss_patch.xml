@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+    <t t-inherit="mail.Discuss.main" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='content']" position="before">
-            <div t-if="ui.isSmall and store.discuss.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
+            <div t-if="ui.isSmall and store.discuss?.activeTab === 'main'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         </xpath>
         <xpath expr="//*[@t-ref='root']" position="replace">
             <div class="h-100 d-flex flex-column">
@@ -22,13 +22,13 @@
     </t>
     <t t-name="mail.Discuss.mobileTopbar">
         <div class="btn-group d-flex w-100 p-1">
-            <t t-call="mail.MobileMailbox" >
+            <t t-if="store.inbox" t-call="mail.MobileMailbox" >
                 <t t-set="mailbox" t-value="store.inbox"/>
             </t>
-            <t t-call="mail.MobileMailbox">
+            <t t-if="store.starred" t-call="mail.MobileMailbox">
                 <t t-set="mailbox" t-value="store.starred"/>
             </t>
-            <t t-call="mail.MobileMailbox">
+            <t t-if="store.history" t-call="mail.MobileMailbox">
                 <t t-set="mailbox" t-value="store.history"/>
             </t>
         </div>

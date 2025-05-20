@@ -21,7 +21,6 @@ export class DiscussSidebarCallParticipants extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
         this.hover = useHover(["root", "floating*"], {
             onHover: () => (this.floating.isOpen = true),
             onAway: () => (this.floating.isOpen = false),
@@ -41,6 +40,10 @@ export class DiscussSidebarCallParticipants extends Component {
         );
     }
 
+    get rtc() {
+        return this.store.rtc;
+    }
+
     get callActionsRegistry() {
         return callActionsRegistry;
     }
@@ -49,7 +52,7 @@ export class DiscussSidebarCallParticipants extends Component {
         if (typeof this.props.compact === "boolean") {
             return this.props.compact;
         }
-        return this.store.discuss.isSidebarCompact;
+        return this.store.discuss?.isSidebarCompact;
     }
 
     get lastActiveSession() {

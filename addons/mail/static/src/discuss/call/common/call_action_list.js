@@ -15,8 +15,11 @@ export class CallActionList extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
         this.callActions = useCallActions();
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get MORE() {

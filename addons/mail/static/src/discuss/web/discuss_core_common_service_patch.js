@@ -14,19 +14,21 @@ patch(DiscussCoreCommon.prototype, {
             }
         }
         this.store.starred.messages = filteredStarredMessages;
-        if (notifId > this.store.starred.counter_bus_id) {
+        if (this.store.starred && notifId > this.store.starred.counter_bus_id) {
             this.store.starred.counter -= starredCounter;
         }
         this.store.inbox.messages = this.store.inbox.messages.filter(
             (msg) => !msg.thread?.eq(thread)
         );
-        if (notifId > this.store.inbox.counter_bus_id) {
+        if (this.store.inbox && notifId > this.store.inbox.counter_bus_id) {
             this.store.inbox.counter -= thread.message_needaction_counter;
         }
-        this.store.history.messages = this.store.history.messages.filter(
-            (msg) => !msg.thread?.eq(thread)
-        );
-        if (thread.eq(this.store.discuss.thread)) {
+        if (this.store.history) {
+            this.store.history.messages = this.store.history.messages.filter(
+                (msg) => !msg.thread?.eq(thread)
+            );
+        }
+        if (thread.eq(this.store.discuss?.thread)) {
             this.store.inbox.setAsDiscussThread();
         }
         super._handleNotificationChannelDelete(thread, metadata);

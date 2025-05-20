@@ -25,8 +25,8 @@ patch(Discuss.prototype, {
             () => {
                 if (
                     this.thread?.id === "inbox" &&
-                    this.prevInboxCounter !== this.store.inbox.counter &&
-                    this.store.inbox.counter === 0
+                    this.prevInboxCounter !== this.store.inbox?.counter &&
+                    (this.store.inbox?.counter ?? 0) === 0
                 ) {
                     this.effect.add({
                         message: _t("Congratulations, your inbox is empty!"),
@@ -34,9 +34,9 @@ patch(Discuss.prototype, {
                         fadeout: "fast",
                     });
                 }
-                this.prevInboxCounter = this.store.inbox.counter;
+                this.prevInboxCounter = this.store.inbox?.counter;
             },
-            () => [this.store.inbox.counter]
+            () => [this.store.inbox?.counter]
         );
     },
 });

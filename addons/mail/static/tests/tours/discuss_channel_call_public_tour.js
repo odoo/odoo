@@ -7,7 +7,7 @@ registry.category("web_tour.tours").add("discuss_channel_call_public_tour.js", {
             trigger: ".o-mail-WelcomePage",
             async run() {
                 await new Promise((r) => setTimeout(r, 250));
-                const rtcService = odoo.__WOWL_DEBUG__.root.env.services["discuss.rtc"];
+                const rtcService = odoo.__WOWL_DEBUG__.root.env.services["mail.store"].rtc;
                 if (rtcService?.selfSession || rtcService?.state.hasPendingRequest) {
                     console.error("The call should not have started.");
                 }

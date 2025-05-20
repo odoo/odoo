@@ -3,7 +3,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { NotificationItem } from "@mail/core/public_web/notification_item";
 import { useDiscussSystray } from "@mail/utils/common/hooks";
 
-import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 
 import { hasTouch, isDisplayStandalone, isIOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -31,7 +31,14 @@ export class MessagingMenu extends Component {
         });
         this.dropdown = useDropdownState();
         this.notificationList = useRef("notification-list");
-
+        useEffect(
+            () => {
+                if (this.dropdown.isOpen && this.store.channels?.status === "not_fetched") {
+                    this.store.channels.fetch();
+                }
+            },
+            () => [this.store.resetCount]
+        );
         useExternalListener(window, "keydown", this.onKeydown, true);
     }
 
@@ -125,15 +132,15 @@ export class MessagingMenu extends Component {
     get tabs() {
         return [
             {
-                counter: this.store.getDiscussSidebarCategoryCounter(this.store.discuss.chats.id),
+                counter: this.store.getDiscussSidebarCategoryCounter(this.store.discuss?.chats.id),
                 icon: "fa fa-user",
                 id: "chat",
                 label: _t("Chat"),
             },
             {
-                channelHasUnread: Boolean(this.store.discuss.unreadChannels.length),
+                channelHasUnread: Boolean(this.store.discuss?.unreadChannels.length),
                 counter: this.store.getDiscussSidebarCategoryCounter(
-                    this.store.discuss.channels.id
+                    this.store.discuss?.channels.id
                 ),
                 icon: "fa fa-users",
                 id: "channel",

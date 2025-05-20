@@ -36,7 +36,7 @@ export class ChatHub extends Component {
         this.onResize();
         useExternalListener(browser, "resize", this.onResize);
         useEffect(() => {
-            if (this.chatHub.folded.length && this.store.channels?.status === "not_fetched") {
+            if (this.chatHub?.folded.length && this.store.channels?.status === "not_fetched") {
                 this.store.channels.fetch();
             }
         });

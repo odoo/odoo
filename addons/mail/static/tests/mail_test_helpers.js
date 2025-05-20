@@ -346,6 +346,7 @@ export async function start(options) {
     env.testEnv = true;
     await mountWithCleanup(WebClient, { env, target });
     await loadEmoji();
+    after(() => env.services["mail.store"].destroy());
     return Object.assign(env, { ...options?.env, target });
 }
 

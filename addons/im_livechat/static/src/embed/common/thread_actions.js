@@ -26,12 +26,11 @@ patch(callSettingsAction, {
         if (component.thread?.channel_type !== "livechat") {
             return super.condition(...arguments);
         }
-        return component.rtcService.state.channel?.eq(component.thread);
+        return component.store.rtc.state.channel?.eq(component.thread);
     },
     setup() {
         super.setup(...arguments);
         const component = useComponent();
         component.livechatService = useService("im_livechat.livechat");
-        component.rtcService = useService("discuss.rtc");
     },
 });

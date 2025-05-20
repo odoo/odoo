@@ -79,27 +79,27 @@ export class DiscussSidebarChannel extends Component {
 
     get attClass() {
         return {
-            "bg-inherit": this.thread.notEq(this.store.discuss.thread),
-            "o-active": this.thread.eq(this.store.discuss.thread),
+            "bg-inherit": this.thread.notEq(this.store.discuss?.thread),
+            "o-active": this.thread.eq(this.store.discuss?.thread),
             "o-unread": this.thread.selfMember?.message_unread_counter > 0 && !this.thread.isMuted,
             "border-bottom-0 rounded-bottom-0": this.bordered,
             "opacity-50": this.thread.isMuted,
             "position-relative justify-content-center o-compact mt-0 p-1":
-                this.store.discuss.isSidebarCompact,
-            "px-0": !this.store.discuss.isSidebarCompact,
+                this.store.discuss?.isSidebarCompact,
+            "px-0": !this.store.discuss?.isSidebarCompact,
         };
     }
 
     get attClassContainer() {
         return {
             "border border-dark rounded-3 o-bordered": this.bordered,
-            "o-compact": this.store.discuss.isSidebarCompact,
+            "o-compact": this.store.discuss?.isSidebarCompact,
         };
     }
 
     get bordered() {
         return (
-            this.store.discuss.isSidebarCompact &&
+            this.store.discuss?.isSidebarCompact &&
             Boolean(this.env.filteredThreads?.(this.thread.sub_channel_ids)?.length)
         );
     }

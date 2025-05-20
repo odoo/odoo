@@ -9,14 +9,19 @@ export class CallMenu extends Component {
     static template = "discuss.CallMenu";
     setup() {
         super.setup();
-        this.rtc = useService("discuss.rtc");
+        this.store = useService("mail.store");
         this.callActions = useCallActions();
         this.isEnterprise = odoo.info && odoo.info.isEnterprise;
     }
 
+    get rtc() {
+        return this.store.rtc;
+    }
+
     get icon() {
         return (
-            callActionsRegistry.get(this.rtc.lastSelfCallAction, undefined)?.icon ?? "fa-microphone"
+            callActionsRegistry.get(this.rtc?.lastSelfCallAction, undefined)?.icon ??
+            "fa-microphone"
         );
     }
 }

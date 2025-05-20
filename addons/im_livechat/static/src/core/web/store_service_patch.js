@@ -19,6 +19,10 @@ const storePatch = {
             this.livechatChannels.fetch();
         }
     },
+    async onReset() {
+        this.livechatChannels.status = "not_fetched";
+        await super.onReset();
+    },
     /** @returns {boolean} Whether the livechat thread changed. */
     goToOldestUnreadLivechatThread() {
         const [oldestUnreadThread] = this.discuss.livechats

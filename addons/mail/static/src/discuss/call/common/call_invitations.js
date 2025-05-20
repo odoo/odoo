@@ -12,8 +12,11 @@ export class CallInvitations extends Component {
 
     setup() {
         super.setup();
-        this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 }
 

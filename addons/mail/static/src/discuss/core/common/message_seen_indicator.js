@@ -12,6 +12,7 @@ class MessageSeenIndicatorDialog extends Component {
     setup() {
         super.setup();
         this.contentRef = useRef("content");
+        this.store = useService("mail.store");
         useExternalListener(
             browser,
             "click",
@@ -37,6 +38,7 @@ export class MessageSeenIndicator extends Component {
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
         this.dialog = useService("dialog");
     }
 

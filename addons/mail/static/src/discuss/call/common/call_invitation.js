@@ -8,7 +8,7 @@ export class CallInvitation extends Component {
 
     setup() {
         super.setup();
-        this.rtc = useService("discuss.rtc");
+        this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({ videoStream: null });
         this.videoRef = useRef("video");
@@ -18,6 +18,10 @@ export class CallInvitation extends Component {
             }
             this.stopTracksOnMediaStream(this.state.videoStream);
         });
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     async onClickAccept(ev, { camera = false } = {}) {

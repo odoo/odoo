@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
-        <xpath expr="//*[@t-name='mail.MessagingMenu']" position="inside">
+    <t t-inherit="mail.MessagingMenu.main" t-inherit-mode="extension">
+        <xpath expr="//*[@t-name='mail.MessagingMenu.main']" position="inside">
             <div t-if="!env.inDiscussApp" t-att-class="discussSystray.class">
                 <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="discussSystray.menuClass">
                     <button>
                         <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
-                        <span t-if="!store.settings.mute_until_dt and counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
+                        <span t-if="!store.settings?.mute_until_dt and counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
                     </button>
                     <t t-set-slot="content">
                         <t t-call="mail.MessagingMenu.content"/>
@@ -22,9 +22,9 @@
                 <t t-if="!ui.isSmall">
                     <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
                     <t t-else="">
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss?.activeTab === 'main' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'main'">All</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss?.activeTab === 'chat' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                        <button class="o-mail-MessagingMenu-headerFilter btn btn-link px-2 py-1 m-1 lh-1" t-att-class="store.discuss?.activeTab === 'channel' ? 'fw-bold o-active' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
                         <button t-if="threads.length >= 20 and store.channels.status !== 'fetching'" class="btn btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="toggleSearch"><i class="fa fa-fw fa-search"/></button>
                         <button t-if="store.channels.status === 'fetching'" class="btn btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                     </t>
@@ -35,11 +35,11 @@
             <div t-if="store.channels.status !== 'fetching' and !hasPreviews" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No conversation yet...
             </div>
-            <div t-if="store.discuss.searchTerm and !threads.length" class="d-flex justify-content-center py-4 px-2 text-muted">
+            <div t-if="store.discuss?.searchTerm and !threads.length" class="d-flex justify-content-center py-4 px-2 text-muted">
                 No thread found.
             </div>
             <t t-set="itemIndex" t-value="0"/>
-            <t t-if="installationRequest.isShown and !store.discuss.searchTerm">
+            <t t-if="installationRequest.isShown and !store.discuss?.searchTerm">
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
                     iconSrc="installationRequest.iconSrc"
@@ -61,7 +61,7 @@
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
-            <t t-if="notificationRequest.isShown and !store.discuss.searchTerm">
+            <t t-if="notificationRequest.isShown and !store.discuss?.searchTerm">
                 <NotificationItem
                     isActive="state.activeIndex === itemIndex"
                     iconSrc="notificationRequest.iconSrc"
@@ -82,7 +82,7 @@
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
-            <t t-if="store.discuss.activeTab === 'main' and !env.inDiscussApp and !store.discuss.searchTerm">
+            <t t-if="store.discuss?.activeTab === 'main' and !env.inDiscussApp and !store.discuss?.searchTerm">
                 <t t-foreach="store.failures" t-as="failure" t-key="failure.id">
                     <NotificationItem
                         isActive="state.activeIndex === itemIndex"
