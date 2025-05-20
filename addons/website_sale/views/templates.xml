@@ -2977,7 +2977,7 @@
                     </div>
                 </t>
             </div>
-            <div class="oe_structure clearfix mb-3" id="oe_structure_website_sale_payment_1"/>
+            <div class="oe_structure clearfix mb-0" id="oe_structure_website_sale_payment_1"/>
 
             <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
                 <div id="payment_method" class="o_not_editable mb-3">
@@ -3031,11 +3031,9 @@
             <t t-set="expand_order_summary" t-value="not show_navigation_button"/>
             <t t-set="show_wizard_checkout" t-value="True if show_wizard_checkout is None else show_wizard_checkout"/>
             <div id="wrap">
-                <div class="oe_website_sale o_website_sale_checkout container py-2">
+                <div class="oe_website_sale o_website_sale_checkout container">
                     <div t-attf-class="row #{show_navigation_button and 'position-relative'} #{not show_wizard_checkout and 'mt32'} mb32">
-                        <div t-if="show_wizard_checkout" class="col-12">
-                            <t t-call="website_sale.wizard_checkout"/>
-                        </div>
+                        <t t-if="show_wizard_checkout" class="col-12" t-call="website_sale.wizard_checkout"/>
                         <div t-if="show_shorter_cart_summary"
                              class="offset-xl-1 col-lg-5 col-xl-4 order-2"
                              id="o_cart_summary">
