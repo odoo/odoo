@@ -438,6 +438,117 @@ describe("row", () => {
                 contentAfter: "<p>[]<br></p>",
             });
         });
+        test("should remove column intersecting rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="3"><p><br></p></td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>d</td><td>e</td>
+                            </tr>
+                            <tr>
+                                <td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="2"><p><br></p></td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>[]f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove column intersecting muliple rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">[]5</td>
+                                <td rowspan="3">6</td>
+                                <td>7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2"><p>[]<br></p></td>
+                                <td rowspan="2"><p><br></p></td>
+                                <td rowspan="2">9</td>
+                                <td>10</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the entire table when removing a row from a table where all cells have rowspan", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td rowspan="3">a</td><td rowspan="3">b</td><td rowspan="3">c</td>
+                            </tr>
+                            <tr></tr>
+                            <tr></tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const row = editor.editable.querySelectorAll("tr")[0];
+                    removeRow(row)(editor);
+                },
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
     });
 });
 
@@ -847,6 +958,114 @@ describe("column", () => {
                 ),
                 stepFunction: removeColumn(),
                 contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove column intersecting colspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td>b</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">d</td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second cell
+                    const cell = editor.editable.querySelectorAll("td")[1];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]a</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should remove the entire table when removing a column from a table where all rows have only colspan cells", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="3">a</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">b</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">c</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const cell = editor.editable.querySelectorAll("td")[0];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove row intersecting colspan and rowspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>2</td>
+                                <td rowspan="3">3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">5</td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    const row = editor.editable.querySelectorAll("tr")[0];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">[]5</td>
+                                <td rowspan="2"><p><br></p></td>
+                                <td>6</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
             });
         });
     });

@@ -391,28 +391,79 @@ export class TablePlugin extends Plugin {
      */
     removeColumn(cell) {
         const table = closestElement(cell, "table");
+        const tableGrid = this.buildTableGrid(table);
+        const rowIndex = getRowIndex(cell);
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
-        const index = cells.findIndex((td) => td === cell);
-        const siblingCell = cells[index - 1] || cells[index + 1];
-        table
-            .querySelectorAll(`tr :is(td, th):nth-of-type(${index + 1})`)
-            .forEach((td) => td.remove());
+        const gridCellIndex = tableGrid[rowIndex].indexOf(cell);
+        const cellIndex = cells.indexOf(cell);
+        const siblingCell = cells[cellIndex - 1] || cells[cellIndex + 1];
+        const spanningCells = tableGrid
+            .map((row) => row[gridCellIndex])
+            .filter((cell) => cell?.colSpan > 1);
+        const minColSpanToRemove =
+            spanningCells.length === tableGrid.length
+                ? Math.min(...spanningCells.map((cell) => cell.colSpan))
+                : 1;
+        tableGrid.forEach((row) => {
+            const td = row[gridCellIndex];
+            if (td && td.colSpan > minColSpanToRemove) {
+                td.colSpan -= minColSpanToRemove;
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                baseContainer.appendChild(this.document.createElement("br"));
+                td.replaceChildren(baseContainer);
+            } else if (td) {
+                td.remove();
+            }
+        });
         // not sure we should move the cursor?
         siblingCell
             ? this.dependencies.selection.setCursorStart(siblingCell)
             : this.deleteTable(table);
+        delete this.tableGridMap.delete(table);
     }
     /**
      * @param {HTMLTableRowElement} row
      */
     removeRow(row) {
         const table = closestElement(row, "table");
-        const siblingRow = row.previousElementSibling || row.nextElementSibling;
-        row.remove();
+        const tableGrid = this.buildTableGrid(table);
+        const rows = Array.from(table.rows);
+        const rowIndex = rows.indexOf(row);
+        const spanningCells = tableGrid[rowIndex].filter((node) => node.rowSpan > 1);
+        const minRowSpanToRemove =
+            spanningCells.length === tableGrid[rowIndex].length
+                ? Math.min(...spanningCells.map((cell) => cell.rowSpan))
+                : 1;
+        const siblingRow =
+            rows[rowIndex + minRowSpanToRemove] || rows[rowIndex - minRowSpanToRemove];
+        spanningCells.forEach((cell) => {
+            cell.rowSpan -= minRowSpanToRemove;
+            const cellRow = cell.parentElement;
+            if (cellRow === row && cell.rowSpan > 0) {
+                const cellIndex = tableGrid[rows.indexOf(cellRow)].indexOf(cell);
+                // In the sibling row, find the first cell after the current
+                // cell index in the grid that actually exists in the DOM.
+                const siblingRowCell = tableGrid[rows.indexOf(siblingRow)]
+                    .slice(cellIndex + 1)
+                    .find((candidate) => candidate && siblingRow.contains(candidate));
+                siblingRow.insertBefore(cell, siblingRowCell);
+            }
+
+            if (cell.rowSpan <= 1) {
+                cell.removeAttribute("rowspan");
+            }
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.appendChild(this.document.createElement("br"));
+            cell.replaceChildren(baseContainer);
+        });
+        for (let i = 0; i < minRowSpanToRemove; i++) {
+            rows[rowIndex + i].remove();
+        }
         // not sure we should move the cursor?
         siblingRow
-            ? this.dependencies.selection.setCursorStart(siblingRow.querySelector("td, th"))
+            ? this.dependencies.selection.setCursorStart(firstLeaf(siblingRow))
             : this.deleteTable(table);
+        delete this.tableGridMap.delete(table);
     }
     /**
      * @param {number} targetIndex - index to which the column should be moved
@@ -766,33 +817,44 @@ export class TablePlugin extends Plugin {
      * NodeList of selected table cells.
      */
     deleteTableCells(selectedTds) {
-        const rows = [...closestElement(selectedTds[0], "tr").parentElement.children].filter(
+        const firstCell = selectedTds[0];
+        const lastCell = selectedTds[selectedTds.length - 1];
+        const rows = [...closestElement(firstCell, "tr").parentElement.children].filter(
             (child) => child.nodeName === "TR"
         );
-        const firstRowCells = [...rows[0].children].filter(
-            (child) => child.nodeName === "TD" || child.nodeName === "TH"
+        const table = closestElement(firstCell, "table");
+        const tableGrid = this.tableGridMap.get(table);
+        const firstCellRowIndex = getRowIndex(firstCell);
+        const firstCellColumnIndex = tableGrid[firstCellRowIndex].indexOf(firstCell);
+        const lastCellRowIndex = getRowIndex(lastCell);
+        const lastCellColumnIndex = tableGrid[lastCellRowIndex].findLastIndex(
+            (td) => td === lastCell
         );
-        const firstCellRowIndex = getRowIndex(selectedTds[0]);
-        const firstCellColumnIndex = getColumnIndex(selectedTds[0]);
-        const lastCellRowIndex = getRowIndex(selectedTds[selectedTds.length - 1]);
-        const lastCellColumnIndex = getColumnIndex(selectedTds[selectedTds.length - 1]);
-
-        const areFullColumnsSelected =
-            firstCellRowIndex === 0 && lastCellRowIndex === rows.length - 1;
-        const areFullRowsSelected =
-            firstCellColumnIndex === 0 && lastCellColumnIndex === firstRowCells.length - 1;
-
-        if (areFullColumnsSelected) {
-            for (let index = firstCellColumnIndex; index <= lastCellColumnIndex; index++) {
-                this.removeColumn(firstRowCells[index]);
+        const selectedSet = new Set(selectedTds);
+        // Removes all rows that are fully selected.
+        const removeFullySelectedRows = () => {
+            let removed = false;
+            for (let i = lastCellRowIndex; i >= firstCellRowIndex; i--) {
+                if (tableGrid[i].every((td) => selectedSet.has(td))) {
+                    this.removeRow(rows[i]);
+                    removed = true;
+                }
             }
-            return;
-        }
-
-        if (areFullRowsSelected) {
-            for (let index = firstCellRowIndex; index <= lastCellRowIndex; index++) {
-                this.removeRow(rows[index]);
+            return removed;
+        };
+        // Removes all columns that are fully selected.
+        const removeFullySelectedColumns = () => {
+            let removed = false;
+            for (let i = lastCellColumnIndex; i >= firstCellColumnIndex; i--) {
+                if (tableGrid.every((row) => selectedSet.has(row[i]))) {
+                    this.removeColumn(tableGrid[0][i]);
+                    removed = true;
+                }
             }
+            return removed;
+        };
+        // remove rows and columns, return early if anything removed
+        if (removeFullySelectedRows() || removeFullySelectedColumns()) {
             return;
         }
 
@@ -801,7 +863,7 @@ export class TablePlugin extends Plugin {
             baseContainer.appendChild(this.document.createElement("br"));
             td.replaceChildren(baseContainer);
         }
-        this.dependencies.selection.setCursorStart(selectedTds[0].firstChild);
+        this.dependencies.selection.setCursorStart(firstCell.firstChild);
     }
 
     /**
