@@ -1404,6 +1404,34 @@ class Base_ImportImport(models.TransientModel):
                 'error': e
             })
 
+    def _build_import_error_msg(self, message, record, row_index, field=None):
+        return {
+            'type': 'error',
+            'message': message,
+            'record': record if record else False,
+            'field': field,
+            'rows': {'from': row_index + 1, 'to': row_index + 1},
+        }
+
+    def _parse_datetime_data(self, import_fields, input_file_data):
+        errors = []
+        field_types = self.env[self.res_model].fields_get(import_fields, ['type'])
+        allowed_date_fields = {
+            name for name, info in field_types.items() if info.get('type') in ('date', 'datetime')
+        }
+
+        for row_index, row in enumerate(input_file_data):
+            for field_name, value in zip(import_fields, row):
+                if not isinstance(value, (datetime.date, datetime.datetime)):
+                    continue
+
+                if field_name not in allowed_date_fields:
+                    message = self.env._("Field '%(field)s' does not accept date/time values.", field=field_name)
+                    errors.append(
+                        self._build_import_error_msg(message, row, row_index, field=field_name)
+                    )
+        return errors
+
     def execute_import(self, fields, columns, options, dryrun=False):
         """ Actual execution of the import
 
@@ -1435,6 +1463,8 @@ class Base_ImportImport(models.TransientModel):
 
         try:
             input_file_data, import_fields = self._convert_import_data(fields, options)
+            if errors := self._parse_datetime_data(import_fields, input_file_data):
+                return {'messages': errors}
             # Parse date and float field
             input_file_data = self._parse_import_data(input_file_data, import_fields, options)
         except ImportValidationError as error:
