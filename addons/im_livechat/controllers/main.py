@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from markupsafe import Markup
-import re
 from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
 
@@ -9,6 +8,7 @@ from odoo import http, _
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools import replace_exceptions
+from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 
@@ -180,7 +180,6 @@ class LivechatController(http.Controller):
         }
 
     def _post_feedback_message(self, channel, rating, reason):
-        reason = Markup("<br>" + re.sub(r'\r\n|\r|\n', "<br>", reason) if reason else "")
         body = Markup(
             """<div class="o_mail_notification o_hide_author">"""
             """%(rating)s: <img class="o_livechat_emoji_rating" src="%(rating_url)s" alt="rating"/>%(reason)s"""
@@ -188,7 +187,7 @@ class LivechatController(http.Controller):
         ) % {
             "rating": _("Rating"),
             "rating_url": rating.rating_image_url,
-            "reason": reason,
+            "reason": nl2br("\n" + reason) if reason else "",
         }
         # sudo: discuss.channel - not necessary for posting, but necessary to update related rating
         channel.sudo().message_post(
