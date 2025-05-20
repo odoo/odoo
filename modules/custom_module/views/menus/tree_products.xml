@@ -1,0 +1,17 @@
+<odoo>
+    <data>
+        <record id="view_product_template_tree_inherited" model="ir.ui.view">
+            <field name="name">product.template.tree.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']" position="after">
+                    <field name="margin" string="Marge (%)" widget="percentage" optional="show"
+                        decoration-success="margin &gt; 0"
+                        decoration-danger="margin &lt; 0"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

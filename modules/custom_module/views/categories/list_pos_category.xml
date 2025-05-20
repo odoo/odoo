@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <!-- Extend the existing tree view -->
+        <record id="view_pos_category_tree_inherit" model="ir.ui.view">
+            <field name="name">pos.category.tree.inherit</field>
+            <field name="model">pos.category</field>
+            <field name="inherit_id" ref="point_of_sale.product_pos_category_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='display_name']" position="before">
+                    <field name="name"/>
+                </xpath>
+
+                <!-- FIXME: the header still visible -->
+                <!--
+                <xpath expr="//field[@name='display_name']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                -->
+
+                 <xpath expr="//field[@name='display_name']" position="after">
+                    <field name="type_name"/>
+                </xpath>
+
+                <!-- Display only the existing category pictures -->
+                <xpath expr="//field[@name='type_name']" position="after">
+                    <field name="image_128" widget="image" options="{'preview_image': 'image_128'}" invisible="image_128 in [False]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,15 @@
+.o_navbar {
+    background-color: #a31219 !important;
+}
+
+// This targets the specific header in PWA mode
+@media (display-mode: standalone) {
+    header.o_navbar, 
+    .o_navbar .o_menu_brand, 
+    .o_navbar .o_menu_sections,
+    .o_navbar .o_menu_sections .dropdown-toggle,
+    .o_navbar .dropdown-toggle {
+        background-color: #a31219 !important;
+        color: white !important;
+    }
+}
