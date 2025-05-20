@@ -24,7 +24,7 @@ class AccountChartTemplate(models.AbstractModel):
             'RK': 'uae_sale_tax_5_ras_al_khaima',
             'SH': 'uae_sale_tax_5_sharjah',
             'UQ': 'uae_sale_tax_5_umm_al_quwain',
-        }.get(self.env.company.state_id.code, 'uae_sale_tax_5_abu_dhabi')
+        }.get(self.env.company.state_id.code, 'uae_sale_tax_5_dubai')
         return {
             self.env.company.id: {
                 'account_fiscal_country_id': 'base.ae',
