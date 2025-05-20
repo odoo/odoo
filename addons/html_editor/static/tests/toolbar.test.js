@@ -815,7 +815,7 @@ test("toolbar buttons should have title attribute with translated text", async (
 });
 
 test.tags("desktop");
-test("close the toolbar if the selection contains any nodes (traverseNode = [])", async () => {
+test("keep the toolbar if the selection crosses two blocks, even if their contents aren't selected", async () => {
     const { el } = await setupEditor("<p>a</p><p>b</p>");
     await expectElementCount(".o-we-toolbar", 0);
 
@@ -828,11 +828,11 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [])"
     setContent(el, "<p>a[</p><p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 0);
+    await expectElementCount(".o-we-toolbar", 1);
 });
 
 test.tags("desktop");
-test("close the toolbar if the selection contains any nodes (traverseNode = [], ignore whitespace)", async () => {
+test("keep the toolbar if the selection crosses two blocks, even if their contents aren't selected (ignore whitespace)", async () => {
     const { el } = await setupEditor("<p>a</p>\n<p>b</p>");
     await expectElementCount(".o-we-toolbar", 0);
 
@@ -845,7 +845,7 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
     setContent(el, "<p>a[</p>\n<p>]b</p>");
     await tick(); // selectionChange
     await animationFrame();
-    await expectElementCount(".o-we-toolbar", 0);
+    await expectElementCount(".o-we-toolbar", 1);
 });
 
 test.tags("desktop");

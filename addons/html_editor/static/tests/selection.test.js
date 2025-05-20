@@ -677,6 +677,7 @@ describe("getTargetedNodes", () => {
         describe("across inline elements", () => {
             test("should include a selected inline element (from its left outer edge)", async () => {
                 const { editor } = await setupEditor("<p>ab[<span>cd</span>ef]</p>");
+                // "ab" isn't included because no part of it is selected.
                 expect(nameNodes(editor.shared.selection.getTargetedNodes())).toEqual([
                     "SPAN",
                     "cd",
@@ -695,6 +696,7 @@ describe("getTargetedNodes", () => {
 
             test("should include a selected inline element (until its right outer edge)", async () => {
                 const { editor } = await setupEditor("<p>[ab<span>cd</span>]ef</p>");
+                // "ef" isn't included because no part of it is selected.
                 expect(nameNodes(editor.shared.selection.getTargetedNodes())).toEqual([
                     "ab",
                     "SPAN",
@@ -780,9 +782,9 @@ describe("getTargetedNodes", () => {
                 const { el: editable, editor } = await setupEditor(
                     `<p><span class="a">ab[</span>cd</p><div><p><span class="b"><b>e</b><i>f]g</i>h</span></p></div>`
                 );
-                // The first span is not included because the selection appears
-                // to the user to just be before the letter "c".
                 const p1 = editable.firstChild; // The selection crossed `</p>` -> include it.
+                const span1 = p1.firstChild; // The selection crossed `</span>` -> include it.
+                // "ab" isn't included because no part of it is selected.
                 const cd = p1.lastChild;
                 const div = editable.lastChild;
                 const p2 = div.firstChild;
@@ -792,16 +794,17 @@ describe("getTargetedNodes", () => {
                 const i = b.nextSibling; // The selection crossed `<i>` -> include it.
                 const fg = i.firstChild;
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([p1, cd, div, p2, span2, b, e, i, fg]);
+                expect(result).toEqual([p1, span1, cd, div, p2, span2, b, e, i, fg]);
             });
         });
         describe("outwardly selected block", () => {
             test.tags("fails -> to investigate");
-            test.tags("dubious");
-            test.skip("should return a fully selected block (from its outer edges) and its contents", async () => {
-                // DUBIOUS: It seems right but [<p> has been treated differently
-                // elsewhere. Here it fails in the way I expect other tests to
-                // pass.
+            test("should return a fully selected block (from its outer edges) and its contents", async () => {
+                const { editor } = await setupEditor("<div>[<p>abc</p>]</div>");
+                expect(nameNodes(editor.shared.selection.getTargetedNodes())).toEqual(["P", "abc"]);
+            });
+
+            test("should return a fully selected empty block (from its outer edges)", async () => {
                 const { editor } = await setupEditor("<div>[<p><br></p>]</div>");
                 expect(nameNodes(editor.shared.selection.getTargetedNodes())).toEqual(["P", "BR"]);
             });
@@ -843,81 +846,82 @@ describe("getTargetedNodes", () => {
         });
 
         describe("edges and brs", () => {
-            test.tags("dubious");
             test("should include intersected blocks, including an empty one (selection across two blocks, from/to inner right edge)", async () => {
                 const { el: editable, editor } = await setupEditor("<p>ab[</p><p>cd]</p>");
-                // The selection is seen as `<p>abc</p><p>[def]</p>` by the user
-                // -> the first P and its contents are not intersected by the
-                // selection.
-                // THIS IS DUBIOUS BECAUSE WHILE SEEN THAT WAY (always?) IF THE USER
-                // TYPES IT WILL REMOVE THE NEWLINE.
-                const p2 = editable.childNodes[1]; // The selection crossed `<p>` -> include it.
+                const p1 = editable.childNodes[0]; // The selection crossed `</p>` -> include it.
+                // "ab" isn't included because no part of it is selected.
+                const p2 = p1.nextSibling; // The selection crossed `<p>` -> include it.
                 const cd = p2.firstChild;
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([p2, cd]);
+                expect(result).toEqual([p1, p2, cd]);
             });
 
-            test.tags("dubious");
             test("<p>ab[</p><p>cd</p>]", async () => {
-                // The selection is seen as `<p>ab</p><p>[cd</p>]` by the user
-                // -> the first P and its contents are not intersected by the
-                // selection.
-                // THIS IS DUBIOUS BECAUSE WHILE SEEN THAT WAY (always?) IF THE USER
-                // TYPES IT WILL REMOVE THE NEWLINE.
                 const { el: editable, editor } = await setupEditor("<p>ab[</p><p>cd</p>]");
-                const p2 = editable.lastChild;
+                const p1 = editable.childNodes[0]; // The selection crossed `</p>` -> include it.
+                // "ab" isn't included because no part of it is selected.
+                const p2 = p1.nextSibling; // The selection crossed `<p>` -> include it.
                 const cd = p2.firstChild;
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([p2, cd]);
+                expect(result).toEqual([p1, p2, cd]);
             });
 
-            test.tags("dubious");
+            test.tags("former triple-click");
             test("should include intersected blocks, including an empty one (selection across two blocks, from inner right to inner left edge)", async () => {
-                const { editor } = await setupEditor("<p>abcd[</p><p>]<br></p>");
-                // The selection is seen as `<p>abc</p><p>[]<br></p>` by the user
-                // -> the first P and its contents are not intersected by the selection.
-                // THIS IS DUBIOUS BECAUSE WHILE SEEN THAT WAY (always?) IF THE USER
-                // TYPES IT WILL REMOVE THE NEWLINE.
+                const { el: editable, editor } = await setupEditor("<p>abcd[</p><p>]<br></p>");
+                const p1 = editable.childNodes[0]; // The selection crossed `</p>` -> include it.
+                // "ab" isn't included because no part of it is selected.
+                const p2 = p1.nextSibling; // The selection crossed `<p>` -> include it.
+                // The BR is not included because the selection ended at (p2,
+                // 0), not in the BR.
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([]);
+                expect(result).toEqual([p1, p2]);
             });
 
-            test.tags("fails -> to investigate");
-            test.skip("should ignore a triple click block crossing", async () => {
-                const { editor } = await setupEditor("<p>ab[cd</p><p>]efgh</p>");
-                // The selection is seen as `<p>ab[cd]</p><p>efgh</p>` by the user
-                // -> the second P is not intersected by the selection.
-                expect(nameNodes(editor.shared.selection.getTargetedNodes())).toEqual(["abcd"]);
+            test.tags("former triple-click");
+            test("should include the targeted nodes until the beginning of a new block", async () => {
+                const { editor } = await setupEditor("<p>ab[cd</p><h1>]efgh</h1>");
+                // "efgh" isn't included because no part of it is selected.
+                expect(nameNodes(editor.shared.selection.getTargetedNodes())).toEqual([
+                    "P",
+                    "abcd",
+                    "H1",
+                ]);
             });
 
-            test("should ignore a triple click block crossing but include an outwardly selected block (1)", async () => {
+            test.tags("former triple-click");
+            test("should include the targeted nodes until the beginning of a new block, and an outwardly selected block (1)", async () => {
                 const { el: editable, editor } = await setupEditor("[<p>ab</p><p>]cd</p>");
-                // The selection is seen as `[<p>ab]</p><p>cd</p>` by the user
-                // -> the second P is not intersected by the selection.
                 const p1 = editable.firstChild;
                 const ab = p1.firstChild;
+                const p2 = p1.nextSibling; // The selection crossed `<p>` -> include it.
+                // "cd" isn't included because no part of it is selected.
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([p1, ab]);
+                expect(result).toEqual([p1, ab, p2]);
             });
 
-            test("should ignore a triple click block crossing but include an outwardly selected block (2)", async () => {
+            test.tags("former triple-click");
+            test("should include the targeted nodes until the beginning of a new block, and an outwardly selected block (2)", async () => {
                 const { el: editable, editor } = await setupEditor("[<p>ab</p><p>]<br>cd<br></p>");
-                // The selection is seen as `[<p>ab]</p><p><br>cd<br></p>` by the user
-                // -> the second P is not intersected by the selection.
                 const p1 = editable.firstChild;
                 const ab = p1.firstChild;
+                const p2 = p1.nextSibling; // The selection crossed `<p>` -> include it.
+                // The BR is not included because the selection ended at (p2,
+                // 0), not in the BR.
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([p1, ab]);
+                expect(result).toEqual([p1, ab, p2]);
             });
 
-            test("should ignore a triple click block crossing but include an outwardly selected block (3)", async () => {
+            test.tags("former triple-click");
+            test("should include the targeted nodes until the beginning of a new block, and an outwardly selected block (3)", async () => {
                 const { el: editable, editor } = await setupEditor("[<p>ab</p><p>]<br></p>");
-                // The selection is seen as `[<p>ab]</p><p><br></p>` by the user
-                // -> the second P is not intersected by the selection.
                 const p1 = editable.firstChild;
                 const ab = p1.firstChild;
+                const p2 = p1.nextSibling; // The selection crossed `<p>` -> include it.
+                // The BR is not included because the selection ended at (p2,
+                // 0), not in the BR.
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([p1, ab]);
+                expect(result).toEqual([p1, ab, p2]);
             });
 
             test("should not include a non-selected BR just after selection", async () => {
@@ -945,17 +949,13 @@ describe("getTargetedNodes", () => {
                 expect(result).toEqual([p1, cd, p2, ef]);
             });
 
-            test.tags("dubious");
             test("should not include a non-selected BR just before selection (from outer right edge)", async () => {
                 const { el: editable, editor } = await setupEditor("<p>ab<br>[</p><p>cd</p>]");
-                // The selection is seen as `<p>ab<br></p><p>[cd</p>]` by the user
-                // -> the first P is not intersected by the selection.
-                // THIS IS DUBIOUS BECAUSE WHILE SEEN THAT WAY (always?) IF THE USER
-                // TYPES IT WILL REMOVE THE NEWLINE.
+                const p1 = editable.firstChild;
                 const p2 = editable.lastChild;
                 const cd = p2.firstChild;
                 const result = editor.shared.selection.getTargetedNodes();
-                expect(result).toEqual([p2, cd]);
+                expect(result).toEqual([p1, p2, cd]);
             });
 
             test("should include a selected BR just at the end of selection", async () => {
@@ -968,6 +968,7 @@ describe("getTargetedNodes", () => {
                 const br1 = p2.firstChild;
                 const cd = br1.nextSibling;
                 const br2 = cd.nextSibling;
+                // "ef" isn't included because no part of it is selected.
                 const result = editor.shared.selection.getTargetedNodes();
                 expect(result).toEqual([p1, ab, p2, br1, cd, br2]);
             });
@@ -975,8 +976,8 @@ describe("getTargetedNodes", () => {
             test("should include a selected BR just at the beginning of selection", async () => {
                 const { el: editable, editor } = await setupEditor("<p>ab[<br>cd</p><p>ef</p>]");
                 const p1 = editable.firstChild; // The selection crossed `</p>` -> include it.
-                const ab = p1.firstChild;
-                const br = ab.nextSibling;
+                // "ab" isn't included because no part of it is selected.
+                const br = p1.childNodes[1];
                 const cd = br.nextSibling;
                 const p2 = editable.lastChild;
                 const ef = p2.firstChild;
