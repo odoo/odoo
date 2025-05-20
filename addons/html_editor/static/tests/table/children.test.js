@@ -230,6 +230,42 @@ describe("row", () => {
                 contentAfter: "<p>[]<br></p>",
             });
         });
+        test("should remove column intersecting colspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="3">b</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>d</td><td>e</td>
+                            </tr>
+                            <tr>
+                                <td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second row
+                    const row = editor.editable.querySelectorAll("tr")[1];
+                    removeRow(row)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td rowspan="2">b</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td>[]f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
     });
 });
 
@@ -517,6 +553,45 @@ describe("column", () => {
                 `),
                 stepFunction: removeColumn(),
                 contentAfter: "<p>[]<br></p>",
+            });
+        });
+        test("should remove column intersecting colspan without breaking table", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>a</td><td>b</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">d</td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>f</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: (editor) => {
+                    // Select the second cell
+                    const cell = editor.editable.querySelectorAll("td")[1];
+                    removeColumn(cell)(editor);
+                },
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td>[]a</td><td>c</td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">d</td>
+                            </tr>
+                            <tr>
+                                <td>e</td><td>g</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
             });
         });
     });

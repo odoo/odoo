@@ -312,10 +312,18 @@ export class TablePlugin extends Plugin {
      */
     removeColumn(cell) {
         const table = closestElement(cell, "table");
+        this.buildTableGrid(table);
         const cells = [...closestElement(cell, "tr").querySelectorAll("th, td")];
         const index = cells.findIndex((td) => td === cell);
         const siblingCell = cells[index - 1] || cells[index + 1];
-        table.querySelectorAll(`tr td:nth-of-type(${index + 1})`).forEach((td) => td.remove());
+        this.tableGrid.forEach((row) => {
+            const td = row[index];
+            if (td && td.colSpan > 1) {
+                td.colSpan = td.colSpan - 1;
+            } else if (td) {
+                td.remove();
+            }
+        });
         // not sure we should move the cursor?
         siblingCell
             ? this.dependencies.selection.setCursorStart(siblingCell)
@@ -326,7 +334,33 @@ export class TablePlugin extends Plugin {
      */
     removeRow(row) {
         const table = closestElement(row, "table");
-        const siblingRow = row.previousElementSibling || row.nextElementSibling;
+        this.buildTableGrid(table);
+        const rows = Array.from(table.rows);
+        const rowIndex = rows.indexOf(row);
+        const spanningCells = this.tableGrid[rowIndex].filter((node) => node.rowSpan > 1);
+        const siblingRow = row.nextElementSibling || row.previousElementSibling;
+        spanningCells.forEach((cell) => {
+            const cellRow = cell.parentElement;
+            if (cellRow === row) {
+                cell.rowSpan = cell.rowSpan - 1;
+                const clone = cell.cloneNode(false);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                fillEmpty(baseContainer);
+                clone.appendChild(baseContainer);
+                const cellIndex = getColumnIndex(cell);
+                siblingRow.insertBefore(clone, siblingRow.children[cellIndex]);
+            } else {
+                const rowspan = parseInt(cell.getAttribute("rowspan"));
+                const cellRowIndex = rows.indexOf(cellRow);
+
+                if (rowIndex > cellRowIndex && rowIndex < cellRowIndex + rowspan) {
+                    cell.setAttribute("rowspan", rowspan - 1);
+                }
+            }
+            if (cell.rowspan > 1) {
+                cell.removeAttribute("rowspan");
+            }
+        });
         row.remove();
         // not sure we should move the cursor?
         siblingRow
@@ -654,33 +688,38 @@ export class TablePlugin extends Plugin {
         const rows = [...closestElement(selectedTds[0], "tr").parentElement.children].filter(
             (child) => child.nodeName === "TR"
         );
-        const firstRowCells = [...rows[0].children].filter(
-            (child) => child.nodeName === "TD" || child.nodeName === "TH"
-        );
         const firstCellRowIndex = getRowIndex(selectedTds[0]);
         const firstCellColumnIndex = getColumnIndex(selectedTds[0]);
         const lastCellRowIndex = getRowIndex(selectedTds[selectedTds.length - 1]);
         const lastCellColumnIndex = getColumnIndex(selectedTds[selectedTds.length - 1]);
 
-        const areFullColumnsSelected =
-            firstCellRowIndex === 0 && lastCellRowIndex === rows.length - 1;
-        const areFullRowsSelected =
-            firstCellColumnIndex === 0 && lastCellColumnIndex === firstRowCells.length - 1;
-
-        if (areFullColumnsSelected) {
-            for (let index = firstCellColumnIndex; index <= lastCellColumnIndex; index++) {
-                this.removeColumn(firstRowCells[index]);
+        const fullySelectedRowSet = new Set();
+        const fullySelectedColSet = new Set();
+        const selectedSet = new Set(selectedTds);
+        for (let i = firstCellRowIndex; i <= lastCellRowIndex; i++) {
+            const row = this.tableGrid[i];
+            if (row.every((td) => selectedSet.has(td))) {
+                fullySelectedRowSet.add(i);
             }
-            return;
         }
 
-        if (areFullRowsSelected) {
-            for (let index = firstCellRowIndex; index <= lastCellRowIndex; index++) {
-                this.removeRow(rows[index]);
+        for (let index = firstCellColumnIndex; index <= lastCellColumnIndex; index++) {
+            const isFullColumn = this.tableGrid.every((row) => selectedSet.has(row[index]));
+            if (!isFullColumn) {
+                fullySelectedColSet.clear();
+                break;
             }
-            return;
+            fullySelectedColSet.add(index);
         }
-
+        for (const index of [...fullySelectedRowSet].reverse()) {
+            this.removeRow(rows[index]);
+        }
+        for (const index of [...fullySelectedColSet].reverse()) {
+            this.removeColumn(this.tableGrid[0][index]);
+        }
+        if (fullySelectedRowSet.size || fullySelectedColSet.size) {
+            delete this.currentGridTable;
+        }
         for (const td of selectedTds) {
             // @todo @phoenix this replaces paragraphs by inline content. Is this intended?
             td.replaceChildren(this.document.createElement("br"));
