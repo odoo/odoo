@@ -430,7 +430,7 @@ class MailComposer(models.TransientModel):
                     mail_values['reply_to'] = mail_values['email_from']
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')
-                mail_values['recipient_ids'] = [Command.link(id) for id in mail_values.pop('partner_ids', [])]
+                mail_values['recipient_ids'] = [Command.link(id) for id in mail_values.get('partner_ids', [])]
 
                 # process attachments: should not be encoded before being processed by message_post / mail_mail create
                 mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]

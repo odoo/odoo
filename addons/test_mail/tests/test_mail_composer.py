@@ -1755,7 +1755,8 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertEqual(message.author_id, self.user_employee.partner_id)
             # post-related fields are void
             self.assertFalse(message.subtype_id)
-            self.assertFalse(message.partner_ids)
+            # recipients should be added to the mail messages
+            self.assertEqual(message.partner_ids, record.customer_id)
 
     @users('employee')
     @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
