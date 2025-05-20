@@ -191,7 +191,7 @@ class PaymentTransaction(models.Model):
         self.payment_id = payment
 
         # Reconcile the payment with the source transaction's invoices in case of a partial capture.
-        if self.operation == self.source_transaction_id.operation:
+        if self.source_transaction_id and self.operation == self.source_transaction_id.operation:
             invoices = self.source_transaction_id.invoice_ids
         else:
             invoices = self.invoice_ids
