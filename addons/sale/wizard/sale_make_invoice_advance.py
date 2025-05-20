@@ -3,6 +3,7 @@
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.tools import formatLang
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -225,7 +226,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         self = self.with_context(lang=order._get_lang())
 
         if self.advance_payment_method == 'percentage':
-            name = self.env._("Down payment of %s%%", self.amount)
+            name = self.env._("Down payment of %s%%", formatLang(self.env, self.amount))
         else:
             name = self.env._("Down Payment")
 
