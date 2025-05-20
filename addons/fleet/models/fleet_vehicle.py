@@ -337,10 +337,14 @@ class FleetVehicle(models.Model):
             states = self.mapped('state_id').ids if 'state_id' not in vals else [vals['state_id']]
             if not state_waiting_list or state_waiting_list.id not in states:
                 future_driver = self.env['res.partner'].browse(vals['future_driver_id'])
-                if self.vehicle_type == 'bike':
-                    future_driver.sudo().write({'plan_to_change_bike': True})
-                if self.vehicle_type == 'car':
-                    future_driver.sudo().write({'plan_to_change_car': True})
+                future_driver_vals = {}
+                for vehicle in self:
+                    if vehicle.vehicle_type == 'bike':
+                        future_driver_vals['plan_to_change_bike'] = True
+                    elif vehicle.vehicle_type == 'car':
+                        future_driver_vals['plan_to_change_car'] = True
+                if future_driver_vals:
+                    future_driver.sudo().write(future_driver_vals)
 
         if 'active' in vals and not vals['active']:
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
