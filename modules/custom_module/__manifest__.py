@@ -7,21 +7,27 @@
         #'security/ir.model.access.csv',
 
         'views/login_layout.xml',
+        #'views/pos_assets_index_inherit.xml',
         # Category module
         'views/categories/list_pos_category.xml',
+        #'views/categories/list_pos_category.xml',
         #'views/categories/upsert_pos_category.xml',
         # Menus module
         'views/menus/list_menu.xml',
+        #'views/menus/list_menu.xml',
         #'views/menus/upsert_menu.xml',
         'views/menus/tree_products.xml',
+        #'views/menus/tree_products.xml',
         # Restaurants module
         #'views/restaurants/list_res_company.xml',
         #'views/restaurants/upsert_res_company.xml',
+        #Table Tags
+        'views/restaurant_floor.xml',
+        'views/table_tags.xml',
 
     ],
-'qweb': [
-    'static/src/xml/your_template_file.xml',
-],
+
+
 
     'assets': {
             'web.assets_backend': [
@@ -37,9 +43,6 @@
                 'custom_module/static/src/scss/login.scss',
                 'custom_module/static/src/scss/login_screen.scss',
 
-            ],
-            'point_of_sale.assets': [
-                    'custom_module/views/pos_templates.xml',
                 ],
             'point_of_sale._assets_pos': [
                 'custom_module/static/src/scss/pos.scss',
