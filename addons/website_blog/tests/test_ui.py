@@ -78,7 +78,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         Post.create({
             'name': 'First Blog Post',
             'blog_id': Blog1.id,
-            'author_id': self.user_public.id,
+            'author_id': self.env.user.id,
             'is_published': True,
             'published_date': datetime(2025, 2, 10, 12, 0, 0),
         })
@@ -87,7 +87,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         Post.create({
             'name': 'Second Blog Post',
             'blog_id': Blog2.id,
-            'author_id': self.user_public.id,
+            'author_id': self.env.user.id,
             'is_published': True,
             'published_date': datetime(2025, 1, 15, 14, 30, 0),
         })
