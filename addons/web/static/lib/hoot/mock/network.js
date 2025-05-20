@@ -49,7 +49,7 @@ const {
  * @param {EventTarget} target
  * @param {CloseEventInit} eventInit
  */
-const dispatchClose = (target, eventInit) => {
+function dispatchClose(target, eventInit) {
     if (!isOpen(target)) {
         return;
     }
@@ -57,14 +57,14 @@ const dispatchClose = (target, eventInit) => {
     eventInit.code ??= 1000;
     eventInit.wasClean ??= eventInit.code === 1000;
     target.dispatchEvent(new CloseEvent("close", eventInit));
-};
+}
 
 /**
  * @param {EventTarget} target
  * @param {any} data
  * @param {Transferable[] | StructuredSerializeOptions} [transfer]
  */
-const dispatchMessage = async (target, data, transfer) => {
+async function dispatchMessage(target, data, transfer) {
     const targets = [];
     if (transfer) {
         targets.push(...(transfer?.transfer || transfer));
@@ -83,36 +83,38 @@ const dispatchMessage = async (target, data, transfer) => {
     if (dispatched) {
         await tick();
     }
-};
+}
 
 /**
  * @param {...NetworkInstance} instances
  */
-const isOpen = (...instances) => instances.every((i) => openNetworkInstances.has(i));
+function isOpen(...instances) {
+    return instances.every((i) => openNetworkInstances.has(i));
+}
 
 /**
  * @param {...NetworkInstance} instances
  */
-const markClosed = (...instances) => {
+function markClosed(...instances) {
     for (const instance of instances) {
         openNetworkInstances.delete(instance);
     }
-};
+}
 
 /**
  * @param {NetworkInstance} instance
  * @param {Promise<any> | null} [promise]
  */
-const markOpen = (instance) => {
+function markOpen(instance) {
     openNetworkInstances.add(instance);
     return instance;
-};
+}
 
 /**
  * @param {number} min
  * @param {number} [max]
  */
-const parseNetworkDelay = (min, max) => {
+function parseNetworkDelay(min, max) {
     if (min <= 0) {
         return null;
     }
@@ -125,7 +127,7 @@ const parseNetworkDelay = (min, max) => {
     } else {
         return () => delay(min);
     }
-};
+}
 
 const DEFAULT_URL = "https://www.hoot.test/";
 const ENDLESS_PROMISE = new Promise(() => {});

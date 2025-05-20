@@ -3,8 +3,8 @@ import { config as transitionConfig } from "@web/core/transition";
 import { TourStepAutomatic } from "./tour_step_automatic";
 import { Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
-import { setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
-import * as hoot from "@odoo/hoot-dom";
+import { enableEventLogs, setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
+import * as hootDom from "@odoo/hoot-dom";
 
 export class TourAutomatic {
     mode = "auto";
@@ -28,6 +28,7 @@ export class TourAutomatic {
 
     start() {
         setupEventActions(document.createElement("div"), { allowSubmit: true });
+        enableEventLogs(this.debugMode);
         const { delayToCheckUndeterminisms, stepDelay } = this.config;
         const macroSteps = this.steps
             .filter((step) => step.index >= this.currentIndex)
@@ -48,7 +49,7 @@ export class TourAutomatic {
                         // IMPROVEMENT: Find a way to remove this delay.
                         await new Promise((resolve) => requestAnimationFrame(resolve));
                         if (stepDelay > 0) {
-                            await hoot.delay(stepDelay);
+                            await hootDom.delay(stepDelay);
                         }
                     },
                 },
@@ -82,7 +83,7 @@ export class TourAutomatic {
             ]);
 
         const end = () => {
-            delete window.hoot;
+            delete window[hootNameSpace];
             transitionConfig.disabled = false;
             tourState.clear();
             //No need to catch error yet.
@@ -132,7 +133,8 @@ export class TourAutomatic {
             debugger;
         }
         transitionConfig.disabled = true;
-        window.hoot = hoot;
+        const hootNameSpace = hootDom.exposeHelpers(hootDom);
+        console.debug(`Hoot DOM helpers available from \`window.${hootNameSpace}\``);
         this.macro.start();
     }
 
