@@ -29,7 +29,7 @@ class TestMergePartner(AccountTestInvoicingCommon):
             'partner_bank_id': cls.bank1.id,
             'amount': 100,
             'payment_type': 'outbound',
-            'payment_method_id': cls.env.ref('account.account_payment_method_manual_out').id,
+            'payment_method_id': cls.outbound_payment_method.id,
             'journal_id': cls.company_data['default_journal_bank'].id,
         })
         cls.payment2 = cls.Payment.create({
@@ -37,7 +37,7 @@ class TestMergePartner(AccountTestInvoicingCommon):
             'partner_bank_id': cls.bank2.id,
             'amount': 200,
             'payment_type': 'outbound',
-            'payment_method_id': cls.env.ref('account.account_payment_method_manual_out').id,
+            'payment_method_id': cls.outbound_payment_method.id,
             'journal_id': cls.company_data['default_journal_bank'].id,
         })
         cls.payment3 = cls.Payment.create({
@@ -45,7 +45,7 @@ class TestMergePartner(AccountTestInvoicingCommon):
             'partner_bank_id': cls.bank3.id,
             'amount': 200,
             'payment_type': 'outbound',
-            'payment_method_id': cls.env.ref('account.account_payment_method_manual_out').id,
+            'payment_method_id': cls.outbound_payment_method.id,
             'journal_id': cls.company_data['default_journal_bank'].id,
         })
 

@@ -117,7 +117,7 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
         payment_out_1 = self.payment_out
         # Create a different journals with a different outstanding account
         bank_journal_B = self.bank_journal.copy()
-        bank_journal_B.inbound_payment_method_line_ids.payment_account_id = self.env['account.account'].create({
+        bank_journal_B.outstanding_payment_account_id = self.env['account.account'].create({
             'name': 'Outstanding Payment Account B',
             'code': 'OPAB',
             'account_type': 'asset_current',
@@ -158,7 +158,7 @@ class TestAccountPaymentDuplicateMoves(AccountTestInvoicingCommon):
             'amount': 50.0,  # amount can be changed manually
             'group_payment': True,
             'payment_difference_handling': 'open',
-            'payment_method_line_id': self.inbound_payment_method_line.id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
         existing_payment = self.payment_in
 

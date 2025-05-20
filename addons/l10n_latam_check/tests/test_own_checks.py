@@ -14,8 +14,7 @@ class TestOwnChecks(L10nLatamCheckTest):
         with Form(self.env['account.payment'].with_context(default_payment_type='outbound')) as payment_form:
             payment_form.partner_id = self.partner_a
             payment_form.journal_id = self.bank_journal
-            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
-                'outbound').filtered(lambda x: x.code == 'own_checks')[0]
+            payment_form.payment_method_id = self.own_check_payment_method
             payment_form.memo = 'Deferred check'
             with payment_form.l10n_latam_new_check_ids.new() as check1:
                 check1.name = '00000001'
@@ -46,8 +45,7 @@ class TestOwnChecks(L10nLatamCheckTest):
         with Form(self.env['account.payment'].with_context(default_payment_type='outbound')) as payment_form:
             payment_form.partner_id = self.partner_a
             payment_form.journal_id = self.bank_journal
-            payment_form.payment_method_line_id = self.bank_journal._get_available_payment_method_lines(
-                'outbound').filtered(lambda x: x.code == 'own_checks')[0]
+            payment_form.payment_method_id = self.own_check_payment_method
 
             payment_form.memo = 'Deferred check'
             with payment_form.l10n_latam_new_check_ids.new() as check1:

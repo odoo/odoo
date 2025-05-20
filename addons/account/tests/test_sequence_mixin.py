@@ -706,7 +706,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
 
         payments = self.env['account.payment'].create([{
             'payment_type': 'inbound',
-            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'payment_method_id': self.inbound_payment_method.id,
             'partner_type': 'customer',
             'partner_id': self.partner_a.id,
             'amount': 500,

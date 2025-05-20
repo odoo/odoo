@@ -43,6 +43,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
+            'journal_id': self.bank_journal_for_payment.id,
             **kwargs,
             'date': date,
         })

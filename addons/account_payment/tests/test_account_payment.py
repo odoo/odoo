@@ -1,9 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest.mock import patch
-
 from odoo import Command
-from odoo.exceptions import UserError, ValidationError
 from odoo.addons.account_payment.tests.common import AccountPaymentCommon
 from odoo.tests import tagged
 
@@ -128,30 +125,6 @@ class TestAccountPayment(AccountPaymentCommon):
             msg="The refunds count should only consider transactions with operation 'refund'."
         )
 
-    def test_action_post_calls_send_payment_request_only_once(self):
-        payment_token = self._create_token()
-        payment_without_token = self.env['account.payment'].create({
-            'payment_type': 'inbound',
-            'partner_type': 'customer',
-            'amount': 2000.0,
-            'date': '2019-01-01',
-            'currency_id': self.currency.id,
-            'partner_id': self.partner.id,
-            'journal_id': self.provider.journal_id.id,
-            'payment_method_line_id': self.inbound_payment_method_line.id,
-        })
-        payment_with_token = payment_without_token.copy()
-        payment_with_token.payment_token_id = payment_token.id
-
-        with patch(
-            'odoo.addons.payment.models.payment_transaction.PaymentTransaction'
-            '._charge_with_token'
-        ) as patched:
-            payment_without_token.action_post()
-            patched.assert_not_called()
-            payment_with_token.action_post()
-            patched.assert_called_once()
-
     def test_no_payment_for_validations(self):
         tx = self._create_transaction(flow='dummy', operation='validation')  # Overwrite the flow
         tx._post_process()
@@ -187,18 +160,8 @@ class TestAccountPayment(AccountPaymentCommon):
             msg="source transactions with done or cancel children should not create payments.",
         )
 
-    def test_prevent_unlink_apml_with_active_provider(self):
-        """ Deleting an account.payment.method.line that is related to a provider in 'test' or 'enabled' state
-        should raise an error.
-        """
-        self.assertEqual(self.dummy_provider.state, 'test')
-        with self.assertRaises(UserError):
-            self.dummy_provider.journal_id.inbound_payment_method_line_ids.unlink()
-
     def test_provider_journal_assignation(self):
         """ Test the computation of the 'journal_id' field and so, the link with the accounting side. """
-        def get_payment_method_line(provider):
-            return self.env['account.payment.method.line'].search([('payment_provider_id', '=', provider.id)])
 
         with self.mocked_get_payment_method_information():
             journal = self.company_data['default_journal_bank']
@@ -207,35 +170,13 @@ class TestAccountPayment(AccountPaymentCommon):
 
             # Test changing the journal.
             copy_journal = journal.copy()
-            payment_method_line = get_payment_method_line(provider)
             provider.journal_id = copy_journal
             self.assertRecordValues(provider, [{'journal_id': copy_journal.id}])
-            self.assertRecordValues(payment_method_line, [{'journal_id': copy_journal.id}])
 
             # Test duplication of the provider.
-            payment_method_line.payment_account_id = self.inbound_payment_method_line.payment_account_id
             copy_provider = self.provider.copy()
-            self.assertRecordValues(copy_provider, [{'journal_id': False}])
             copy_provider.state = 'test'
             self.assertRecordValues(copy_provider, [{'journal_id': journal.id}])
-            self.assertRecordValues(get_payment_method_line(copy_provider), [{
-                'journal_id': journal.id,
-                'payment_account_id': payment_method_line.payment_account_id.id,
-            }])
-
-            # We are able to have both on the same journal...
-            with self.assertRaises(ValidationError):
-                # ...but not having both with the same name.
-                provider.journal_id = journal
-
-            method_line = get_payment_method_line(copy_provider)
-            method_line.name = "dummy (copy)"
-            provider.journal_id = journal
-
-            # You can't have twice the same acquirer on the same journal.
-            copy_provider_pml = get_payment_method_line(copy_provider)
-            with self.assertRaises(ValidationError):
-                journal.inbound_payment_method_line_ids = [Command.update(copy_provider_pml.id, {'payment_provider_id': provider.id})]
 
     def test_generate_payment_link_with_no_invoice_line(self):
         invoice = self.invoice
@@ -310,7 +251,7 @@ class TestAccountPayment(AccountPaymentCommon):
             'payment_type': 'outbound',
             'amount': 10,
             'journal_id': journal.id,
-            'payment_method_line_id': journal.inbound_payment_method_line_ids[0].id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
         payment.action_post()
 
@@ -322,7 +263,7 @@ class TestAccountPayment(AccountPaymentCommon):
             'payment_type': 'outbound',
             'amount': 20,
             'journal_id': journal.id,
-            'payment_method_line_id': journal.inbound_payment_method_line_ids[0].id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
 
         payment2.action_post()
@@ -341,11 +282,9 @@ class TestAccountPayment(AccountPaymentCommon):
         # Now try to change the journal, and check if the name is now updated
         payment.move_id.button_draft()
         new_journal = journal.copy()
-        new_payment_method_line = new_journal.inbound_payment_method_line_ids[0]
-        new_payment_method_line.write({'payment_account_id': self.company_data['default_account_receivable'].id})
         payment.write({
             'journal_id': new_journal.id,
-            'payment_method_line_id': new_payment_method_line.id,
+            'payment_method_id': self.inbound_payment_method.id,
         })
         payment.move_id.action_post()
         self.assertNotEqual(
