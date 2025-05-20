@@ -57,7 +57,8 @@ class SurveyUser_Input(models.Model):
     # live sessions
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
-
+    # status
+    expired = fields.Boolean()
     _unique_token = models.Constraint(
         'UNIQUE (access_token)',
         'An access token must be unique!',
