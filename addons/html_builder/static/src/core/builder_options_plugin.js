@@ -53,20 +53,17 @@ export class BuilderOptionsPlugin extends Plugin {
     };
 
     setup() {
-        this.builderOptions = this.getResource("builder_options").map((option) => ({
-            ...option,
-            id: uniqueId(),
-        }));
+        this.builderOptions = withIds(this.getResource("builder_options"));
+        this.elementsToOptionsTitleComponents = withIds(
+            this.getResource("elements_to_options_title_components")
+        );
         this.getResource("patch_builder_options").forEach((option) => {
             this.patchBuilderOptions(option);
         });
-        this.builderHeaderMiddleButtons = this.getResource("builder_header_middle_buttons").map(
-            (headerMiddleButton) => ({ ...headerMiddleButton, id: uniqueId() })
+        this.builderHeaderMiddleButtons = withIds(
+            this.getResource("builder_header_middle_buttons")
         );
-        this.builderContainerTitle = this.getResource("container_title").map((containerTitle) => ({
-            ...containerTitle,
-            id: uniqueId(),
-        }));
+        this.builderContainerTitle = withIds(this.getResource("container_title"));
         // doing this manually instead of using addDomListener. This is because
         // addDomListener will ignore all events from protected targets. But in
         // our case, we still want to update the containers.
@@ -209,6 +206,9 @@ export class BuilderOptionsPlugin extends Plugin {
         const elementToOptions = mapElementsToOptions(this.builderOptions);
         const elementToHeaderMiddleButtons = mapElementsToOptions(this.builderHeaderMiddleButtons);
         const elementToContainerTitle = mapElementsToOptions(this.builderContainerTitle);
+        const elementToOptionTitleComponents = mapElementsToOptions(
+            this.elementsToOptionsTitleComponents
+        );
 
         // Find the closest element with no options that should still have the
         // overlay buttons.
@@ -228,6 +228,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 id: previousElementToIdMap.get(element) || uniqueId(),
                 element,
                 options,
+                optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
                 headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
                 containerTitle: elementToContainerTitle.get(element)
                     ? elementToContainerTitle.get(element)[0]
@@ -423,4 +424,8 @@ export function checkElement(el, { editableOnly = true, exclude = "" }) {
         return shouldEditableMediaBeEditable(el);
     }
     return !el.matches('.o_not_editable:not(.s_social_media) :not([contenteditable="true"])');
+}
+
+function withIds(arr) {
+    return arr.map((el) => ({ ...el, id: uniqueId() }));
 }

@@ -96,6 +96,13 @@ export function getImageSrc(el) {
     if (el.tagName === "IMG") {
         return el.getAttribute("src");
     }
+    // TODO: Parallax handling is incorrectly coupled with background image source.
+    // The plugin transfer the `src` on a `span`, but parallax can be achieved via other means.
+    // example: CSS variables without this DOM manipulation.
+    // Decouple.
+    if (el.querySelector(".s_parallax_bg")) {
+        el = el.querySelector(".s_parallax_bg");
+    }
     const url = backgroundImageCssToParts(el.style.backgroundImage).url;
     return url && getBgImageURLFromURL(url);
 }

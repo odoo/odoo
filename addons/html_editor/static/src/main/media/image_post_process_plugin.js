@@ -16,7 +16,7 @@ export const DEFAULT_IMAGE_QUALITY = "75";
 export class ImagePostProcessPlugin extends Plugin {
     static id = "imagePostProcess";
     static dependencies = ["style"];
-    static shared = ["processImage"];
+    static shared = ["processImage", "getProcessedImageSize"];
 
     /**
      * Applies data-attributes modifications to an img tag and returns a dataURL
@@ -29,14 +29,14 @@ export class ImagePostProcessPlugin extends Plugin {
      * @returns {Function} callback that sets dataURL of the image with the
      * applied modifications to `img` element
      */
-    async processImage({ img, newDataset = {}, onImageInfoLoaded }) {
+    async _processImage({ img, newDataset = {}, onImageInfoLoaded }) {
         const processContext = {};
         if (!newDataset.originalSrc || !newDataset.mimetypeBeforeConversion) {
             Object.assign(newDataset, await loadImageInfo(img));
         }
         if (onImageInfoLoaded) {
             if (await onImageInfoLoaded(newDataset)) {
-                return () => {};
+                return;
             }
         }
         for (const cb of this.getResource("process_image_warmup_handlers")) {
@@ -221,7 +221,18 @@ export class ImagePostProcessPlugin extends Plugin {
         let url =
             isChanged || originalSize >= newSize ? dataURL : await loadImageDataURL(originalSrc);
         [url, newDataset] = await this.postProcessImage(url, newDataset, processContext);
-        return () => this.updateImageAttributes(img, url, newDataset);
+        return { url, newDataset };
+    }
+    async processImage(params) {
+        const processed = await this._processImage(params);
+        if (!processed) {
+            return () => {};
+        }
+        return () => this.updateImageAttributes(params.img, processed.url, processed.newDataset);
+    }
+    async getProcessedImageSize(img) {
+        const processed = await this._processImage({ img });
+        return getDataURLBinarySize(processed.url);
     }
     async postProcessImage(url, newDataset, processContext) {
         for (const cb of this.getResource("process_image_post_handlers")) {

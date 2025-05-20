@@ -8,7 +8,7 @@
         <div class="options-container-header d-flex align-items-center justify-content-between">
             <t t-set="isActionable" t-value="Object.keys(props.snippetModel).length > 0"></t>
             <span
-                class="options-container-label flex-grow-1 ps-2 py-2"
+                class="options-container-label ps-2 py-2"
                 t-att-class="{
                     'options-container-label-actionable cursor-pointer': isActionable,
                 }"
@@ -16,6 +16,10 @@
                 t-att-role="isActionable ? 'button' : 'heading'"
                 t-on-click="selectElement"
             />
+            <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
+                <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
+            </t>
+            <span class="flex-grow-1" />
 
             <div class="d-flex align-items-center gap-1 p-2">
                 <div t-if="props.headerMiddleButtons">
