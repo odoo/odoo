@@ -493,6 +493,10 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         run: "click",
     },
     {
+        content: "make sure Extra info page is properly loaded",
+        trigger: 'input[name="client_order_ref"]',
+    },
+    {
         content: "Click on 'Continue checkout' button",
         trigger: '.oe_cart .btn:contains("Continue checkout")',
         run: "click",
