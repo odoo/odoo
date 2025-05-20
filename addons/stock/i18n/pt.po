@@ -5,8 +5,8 @@
 # Translators:
 # Marta Marouço, 2025
 # NumerSpiral HBG, 2025
-# Maitê Dietze, 2025
 # Manuela Silva <mmsrs@sky.com>, 2025
+# Maitê Dietze, 2025
 # Rita Bastos, 2025
 # Wil Odoo, 2025
 # Nuno Silva <nuno.silva@arxi.pt>, 2025
@@ -697,12 +697,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Customer Address</strong>"
-msgstr ""
+msgstr "<strong>Endereço do cliente</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery address</strong>"
-msgstr ""
+msgstr "<strong>Endereço de entrega</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -768,7 +768,7 @@ msgstr "<strong>Quantidade</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Recipient address</strong>"
-msgstr ""
+msgstr "<strong>Endereço do destinatário</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -809,18 +809,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Vendor Address</strong>"
-msgstr ""
+msgstr "<strong>Endereço do Fornecedor</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse Address</strong>"
-msgstr ""
+msgstr "<strong>Endereço do Armazém</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Warehouse address</strong>"
-msgstr ""
+msgstr "<strong>Endereço do Armazém</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -916,7 +916,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Add a Product"
-msgstr "Adicionar um Produto"
+msgstr "Adicionar um Artigo"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_production_lot_form
@@ -952,8 +952,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Adicione e personalize operações de rota para processar movimentos de produto nos seus armazéns: Ex.: descarregar > controlo de qualidade > stock dos produtos de entrada > pick > embalar > expedir para produtos de saída. \n"
-"Pode também definir estratégias de putaway em localizações de armazéns de modo a enviar produtos de entrada para localizações secundárias de imediato (Ex.: contentores específicos, estantes)."
+"Adicione e personalize operações de rota para processar movimentos de artigo nos seus armazéns: Ex.: descarregar > controlo de qualidade > stock dos artigos de entrada > pick > embalar > expedir para artigos de saída. \n"
+"Pode também definir estratégias de putaway em localizações de armazéns de modo a enviar artigos de entrada para localizações secundárias de imediato (Ex.: contentores específicos, estantes)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -964,12 +964,12 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Adicione e personalize operações de rota para processar movimentos de "
-"produto nos seus armazéns: Ex.: descarregar > controlo de qualidade > stock "
-"dos produtos de entrada > pick > embalar > expedir para produtos de saída. "
-"Pode também definir estratégias de putaway em localizações de armazéns de "
-"modo a enviar produtos de entrada para localizações secundárias de imediato "
-"(Ex.: contentores específicos, estantes)."
+"Adicione e personalize operações de rota para processar movimentos de artigo"
+" nos seus armazéns: Ex.: descarregar > controlo de qualidade > stock dos "
+"artigos de entrada > pick > embalar > expedir para artigos de saída. Pode "
+"também definir estratégias de putaway em localizações de armazéns de modo a "
+"enviar artigos de entrada para localizações secundárias de imediato (Ex.: "
+"contentores específicos, estantes)."
 
 #. module: stock
 #. odoo-javascript
@@ -1052,7 +1052,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "All Products"
-msgstr "Todos os Produtos"
+msgstr "Todos os Artigos"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_action_picking_type
@@ -1525,9 +1525,9 @@ msgid ""
 msgstr ""
 "Por defeito, o sistema vai tirar do stock na localização de origem e esperar"
 " passivamente pela disponibilidade. A outra possibilidade permite-lhe criar "
-"directamente as aquisições na localização de origem (e ignorar o stock "
-"currente) para angariar os produtos. Se nós quiser-mos encadear movimentos e"
-" esperar por movimentos antigos, esta opção deve ser escolhida."
+"diretamente as aquisições na localização de origem (e ignorar o stock "
+"corrente) para angariar os artigos. Se nós quiser-mos encadear movimentos e "
+"esperar por movimentos antigos, esta opção deve ser escolhida."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__active
@@ -2286,9 +2286,9 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "Quantidade atual dos artigos.\n"
-"Num contexto de uma única Localização de Stock, inclui produtos armazenados nesta localização, ou numa das suas descendentes.\n"
-"Num contexto com um único Armazém, inclui os produtos armazenados na localização de stock deste Armazém, ou numa das suas descendentes.\n"
-"Num contexto com Loja, inclui os produtos armazenados na localização de stock do Armazém desta Loja, ou numa das suas descendentes.\n"
+"Num contexto de uma única Localização de Stock, inclui artigos armazenados nesta localização, ou numa das suas descendentes.\n"
+"Num contexto com um único Armazém, inclui os artigos armazenados na localização de stock deste Armazém, ou numa das suas descendentes.\n"
+"Num contexto com Loja, inclui os artigos armazenados na localização de stock do Armazém desta Loja, ou numa das suas descendentes.\n"
 "Caso contrário, inclui mercadorias armazenadas na localização de stock do tipo 'interno'."
 
 #. module: stock
@@ -3174,7 +3174,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_track_line__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
 msgstr ""
-"Certifique-se da rastreabilidade de um produto armazenável no seu armazém."
+"Certifique-se da rastreabilidade de um artigo armazenável no seu armazém."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -6660,7 +6660,7 @@ msgstr ""
 #: code:addons/stock/static/src/stock_forecasted/forecasted_buttons.js:0
 #: model:ir.model,name:stock.model_product_replenish
 msgid "Product Replenish"
-msgstr "Reabastecimento de Produto"
+msgstr "Reabastecimento de Artigos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replenish_mixin
@@ -6685,7 +6685,7 @@ msgstr "Modelo de Artigo"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__product_tmpl_id
 msgid "Product Tmpl"
-msgstr "Modl de Artigo"
+msgstr "Mod. Artigo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
@@ -7090,7 +7090,7 @@ msgid ""
 "product"
 msgstr ""
 "Quantidades dos artigos neste quant, na unidade de medida predefinida no "
-"produto"
+"artigo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__reserved_quantity
@@ -7099,7 +7099,7 @@ msgid ""
 "of the product"
 msgstr ""
 "Quantidade de artigos reservados deste quant, na unidade de medida "
-"predefinida do produto"
+"predefinida do artigo"
 
 #. module: stock
 #. odoo-python
@@ -9247,7 +9247,7 @@ msgid ""
 "product in the warehouse)."
 msgstr ""
 "Esta nota é adicionada a ordens de transferência interna (ex: onde separar o"
-" produto no armazém)."
+" artigo no armazém)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -9777,7 +9777,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/stock/static/src/components/reception_report_line/stock_reception_report_line.xml:0
 msgid "Unassign"
-msgstr ""
+msgstr "Remover atribuição"
 
 #. module: stock
 #. odoo-python
@@ -10335,7 +10335,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__barcode_rule__type__weight
 msgid "Weighted Product"
-msgstr "Artigo pesado"
+msgstr "Artigo a Peso"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__wh_replenishment_option_ids
@@ -10353,7 +10353,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__move_type__one
 msgid "When all products are ready"
-msgstr "Quando estiverem prontos todos os produtos"
+msgstr "Quando todos os artigos estiverem prontos"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_selectable
@@ -10376,7 +10376,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "When product arrives in"
-msgstr "Quando o produto chegar em"
+msgstr "Quando o artigo chegar em"
 
 #. module: stock
 #. odoo-python

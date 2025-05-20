@@ -1551,7 +1551,7 @@ msgstr "Otomatik abonelik"
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__auto_comment
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__auto_comment
 msgid "Automated Targeted Notification"
-msgstr ""
+msgstr "Otomatik Hedefli Bildirim"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
@@ -2154,7 +2154,7 @@ msgstr "Sohbetler"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Check Exclusion List"
-msgstr ""
+msgstr "Hariç Tutma Listesini Kontrol Edin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -5201,7 +5201,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_is_log
 msgid "Is a log"
-msgstr ""
+msgstr "Bir kayıt"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__is_note
@@ -5308,7 +5308,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
 msgid "Keep Message Copy"
-msgstr ""
+msgstr "Mesaj Kopyasını Saklayın"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__original
@@ -5320,6 +5320,8 @@ msgstr "Orijinali Sakla"
 msgid ""
 "Keep a copy of the email content if emails are removed (mass mailing only)"
 msgstr ""
+"E-postalar silinirse içeriklerinin bir kopyasını saklayın (yalnızca toplu "
+"e-postalar için)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__keep_done
@@ -5796,6 +5798,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
+"Yorum modundaki e-posta düzenleyici en az bir kayıt üzerinde çalışmalıdır. "
+"Hiçbir kayıt bulunamadı (model %(model_name)s)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -6012,19 +6016,19 @@ msgstr "Mesaj"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message \"%(subChannelName)s\""
-msgstr ""
+msgstr "Mesaj \"%(subChannelName)s\""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message #%(threadName)s…"
-msgstr ""
+msgstr "Mesaj #%(threadName)s…"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Message %(thread name)s…"
-msgstr ""
+msgstr "Mesaj %(thread name)s…"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_has_error
@@ -6613,7 +6617,7 @@ msgstr "Sonuç bulunamadı"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
 msgid "No saved templates"
-msgstr ""
+msgstr "Kayıtlı şablon yok"
 
 #. module: mail
 #. odoo-javascript
@@ -7144,6 +7148,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"E-posta gönderilirken kullanılacak isteğe bağlı çeviri dili (ISO kodu). "
+"Ayarlanmazsa İngilizce sürüm kullanılacaktır. Bu genellikle uygun dili "
+"sağlayan bir yer tutucu ifade olmalıdır, örneğin: {{ object.partner_id.lang "
+"}}"
 
 #. module: mail
 #. odoo-javascript
@@ -7158,6 +7166,8 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"Orijinal Tartışma: Yanıtlar, orijinal belge tartışma dizisinde yer alır.\n"
+"Farklı Bir E-posta Adresi: Yanıtlar, orijinal belge tartışma dizisi yerine, izleme mesaj kimliğinde belirtilen e-posta adresine gönderilir. Bu, oluşturulan mesaj kimliği üzerinde etkili olur."
 
 #. module: mail
 #. odoo-javascript
@@ -8067,7 +8077,7 @@ msgstr "İlgili Döküman ID"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_ids
 msgid "Related Document IDs"
-msgstr ""
+msgstr "İlgili Belge Kimlikleri"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__res_id
@@ -8752,7 +8762,7 @@ msgstr "E-posta Gönder"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send Email As"
-msgstr ""
+msgstr "E-posta Gönderici Adı"
 
 #. module: mail
 #. odoo-javascript
@@ -9327,7 +9337,7 @@ msgstr "Sistem bildirimi"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "Tab to select"
-msgstr ""
+msgstr "Seçmek için sekmeye basın"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_translation__target_lang
@@ -9840,6 +9850,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"Bu seçenek, e-posta gönderildikten sonra ayarlardaki Teknik menü dahil olmak"
+" üzere tüm izlerini kalıcı olarak siler; bu, Odoo veritabanınızdaki depolama"
+" alanını korumak içindir."
 
 #. module: mail
 #. odoo-javascript
