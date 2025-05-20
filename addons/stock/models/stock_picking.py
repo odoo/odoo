@@ -192,6 +192,8 @@ class StockPickingType(models.Model):
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
         if 'sequence_code' in vals:
             for picking_type in self:
+                if vals.get('sequence_id') is False:  # revert the sequence_id
+                    vals['sequence_id'] = picking_type.sequence_id.id
                 if picking_type.warehouse_id:
                     picking_type.sequence_id.sudo().write({
                         'name': _('%(warehouse)s Sequence %(code)s', warehouse=picking_type.warehouse_id.name, code=vals['sequence_code']),
