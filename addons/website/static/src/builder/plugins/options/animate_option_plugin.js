@@ -10,6 +10,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { EmphasizeAnimatedText } from "./emphasize_animated_text";
 
 export class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
@@ -67,6 +68,7 @@ export class AnimateOptionPlugin extends Plugin {
                 selectionData.editableSelection.commonAncestorContainer,
                 ".o_animated_text"
             ),
+        lower_panel_entries: withSequence(10, { Component: EmphasizeAnimatedText }),
     };
 
     setup() {

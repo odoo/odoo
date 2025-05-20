@@ -44,7 +44,11 @@
                 <t t-component="ThemeTab" colorPresetToShow="colorPresetToShow"/>
             </t>
         </div>
-        <InvisibleElementsPanel t-if="state.invisibleEls.length" invisibleEls="state.invisibleEls" invisibleSelector="this.getInvisibleSelector()"/>
+        <div class="o_we_lower_panel mt-auto flex-grow-0 flex-shrink-0">
+            <t t-foreach="lowerPanelEntries()" t-as="entry" t-key="entry_index">
+                <t t-component="entry.Component" t-props="entry.props"/>
+            </t>
+        </div>
     </div>
 </t>
 

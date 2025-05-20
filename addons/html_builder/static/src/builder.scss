@@ -124,13 +124,18 @@
     }
 }
 
-.o_we_invisible_el_panel {
+.o_we_lower_panel {
     max-height: 220px;
     overflow-y: auto;
-    padding: $o-we-sidebar-blocks-content-spacing;
     background-color: $o-we-sidebar-blocks-content-bg;
     box-shadow: $o-we-item-standup-top $o-we-bg-lighter;
 
+    &:has(*) {
+        padding: $o-we-sidebar-blocks-content-spacing;
+    }
+}
+
+.o_we_invisible_el_panel {
     .o_panel_header {
         padding: $o-we-sidebar-content-field-spacing 0;
     }
