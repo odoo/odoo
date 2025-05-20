@@ -34,13 +34,13 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
         def _get_payment_method_information(self):
             res = Method_get_payment_method_information(self)
-            res['none'] = {'mode': 'multi', 'type': ('bank',)}
+            res['manual'] = {'mode': 'multi', 'type': ('bank',)}
             return res
 
         with patch.object(AccountPaymentMethod, '_get_payment_method_information', _get_payment_method_information):
             cls.env['account.payment.method'].sudo().create({
                 'name': 'Dummy method',
-                'code': 'none',
+                'code': 'manual',
                 'payment_type': 'inbound'
             })
         # End of code from addons/account_payment/tests/common.py

@@ -24,10 +24,6 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         cls.currency = cls.sale_order.currency_id
         cls.partner = cls.sale_order.partner_invoice_id
 
-        cls.provider.journal_id.inbound_payment_method_line_ids.filtered(
-            lambda l: l.payment_provider_id == cls.provider
-        ).payment_account_id = cls.inbound_payment_method_line.payment_account_id
-
         cls.sale_order.require_payment = True
 
     @mute_logger('odoo.http', 'werkzeug')

@@ -32,4 +32,5 @@ class TestPaymentProvider(AccountPaymentCommon):
                 'company_id': child_company.id,
             })
             provider_duplicated.invalidate_recordset(fnames=['journal_id'])
+            provider_duplicated.state = 'test'
             self.assertEqual(provider_duplicated.journal_id, bank_journal)

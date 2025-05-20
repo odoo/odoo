@@ -491,6 +491,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         invoice.action_post()
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': '2019-01-02',
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
         # Create the credit note, and pay it back.
         action = invoice.action_reverse()
@@ -504,6 +505,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         credit_note.action_post()
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=credit_note.ids).create({
             'payment_date': '2019-01-02',
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
         # Generate the file and assert the type, should be "refund" (04)
         file, errors = credit_note._l10n_my_edi_generate_invoice_xml()

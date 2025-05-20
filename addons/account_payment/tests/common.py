@@ -15,12 +15,12 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
         with cls.mocked_get_payment_method_information(cls):
             cls.dummy_provider_method = cls.env['account.payment.method'].sudo().create({
                 'name': 'Dummy method',
-                'code': 'none',
+                'code': 'online_payment_provider',
                 'payment_type': 'inbound'
             })
             cls.dummy_provider.journal_id = cls.company_data['default_journal_bank']
+            cls.dummy_provider.journal_id.outstanding_payment_account_id = cls.outstanding_payment_account
 
-        cls.account = cls.outbound_payment_method_line.payment_account_id
         cls.invoice = cls.env['account.move'].create({
             'move_type': 'entry',
             'date': '2019-01-01',
@@ -28,13 +28,13 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
             'partner_id': cls.partner.id,
             'line_ids': [
                 (0, 0, {
-                    'account_id': cls.account.id,
+                    'account_id': cls.outstanding_payment_account.id,
                     'debit': 100.0,
                     'credit': 0.0,
                     'amount_currency': 200.0,
                 }),
                 (0, 0, {
-                    'account_id': cls.account.id,
+                    'account_id':  cls.outstanding_payment_account.id,
                     'debit': 0.0,
                     'credit': 100.0,
                     'amount_currency': -200.0,
@@ -42,7 +42,7 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
             ],
         })
 
-        cls.provider.journal_id.inbound_payment_method_line_ids.filtered(lambda l: l.payment_provider_id == cls.provider).payment_account_id = cls.inbound_payment_method_line.payment_account_id
+        cls.provider.journal_id.outstanding_payment_account_id = cls.outstanding_payment_account
 
     def setUp(self):
         self.enable_post_process_patcher = False
@@ -56,7 +56,7 @@ class AccountPaymentCommon(PaymentCommon, AccountTestInvoicingCommon):
 
         def _get_payment_method_information(*args, **kwargs):
             res = Method_get_payment_method_information()
-            res['none'] = {'mode': 'electronic', 'type': ('bank',)}
+            res['online_payment_provider'] = {'type': ('bank',)}
             return res
 
         with patch.object(self.env.registry['account.payment.method'], '_get_payment_method_information', _get_payment_method_information):
