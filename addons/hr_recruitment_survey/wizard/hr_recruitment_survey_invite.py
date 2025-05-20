@@ -148,37 +148,19 @@ class HrRecruitmentSurveyInvite(models.TransientModel):
         self.emails = '\n'.join(valid)
 
     def _prepare_answers(self, partners, emails):
+        # we always want to resend a new recruitment invite from the wizard
         self.ensure_one()
-
-        all_answers_domain = Domain.FALSE
-        for applicant in self.applicant_ids:
-            all_answers_domain = Domain.OR([
-                all_answers_domain,
-                Domain.AND([
-                    Domain('survey_id', '=', applicant.survey_id.id),
-                    Domain('partner_id', '=', applicant.partner_id.id)
-                ])
-            ])
-
-        all_answers = self.env['survey.user_input'].search(all_answers_domain)
-
-        # Index by (survey_id, partner_id)
-        answers_by_applicant = all_answers.grouped(lambda ans: (ans.survey_id.id, ans.partner_id.id))
-
         total_answers = self.env['survey.user_input']
         for applicant in self.applicant_ids:
-            key = (applicant.survey_id.id, applicant.partner_id.id)
-            existing_answers = answers_by_applicant.get(key)
-
-            _, _, answers = self._get_done_partners_emails(existing_answers)
-            survey = applicant.survey_id
-
-            if applicant.response_ids.filtered(lambda res: res.survey_id.id == survey.id):
-                if not existing_answers or self.existing_mode != 'resend':
-                    answers |= survey._create_answer(partner=applicant.partner_id, check_attempts=False, **self._get_answers_values())
-            else:
-                answers |= survey._create_answer(partner=applicant.partner_id, check_attempts=False, **self._get_answers_values())
-
+            answers = applicant.sudo().survey_id._create_answer(
+                partner=applicant.partner_id,
+                check_attempts=False,
+                **self._get_answers_values(),
+            )
+            # answer.applicant_id is missing. We have to set it so that it
+            # appears on the chatter
+            for answer in answers:
+                answer.applicant_id = applicant.id
             total_answers |= answers
 
         return total_answers
@@ -188,11 +170,6 @@ class HrRecruitmentSurveyInvite(models.TransientModel):
         if self.applicant_ids:
             for applicant_id in self.applicant_ids:
                 survey = applicant_id.survey_id.with_context(clean_context(self.env.context))
-                if not applicant_id.response_ids.filtered(lambda res: res.survey_id.id == survey.id):
-                    applicant_id.sudo().write({
-                        'response_ids': (applicant_id.response_ids | survey.sudo()._create_answer(partner=applicant_id.partner_id,
-                            **self._get_answers_values())).ids
-                    })
                 partner = applicant_id.partner_id
                 survey_link = survey._get_html_link(title=survey.title)
                 partner_link = partner._get_html_link()

@@ -8,6 +8,8 @@ class SurveyUser_Input(models.Model):
 
     applicant_id = fields.Many2one('hr.applicant', string='Applicant', index='btree_not_null')
 
+    state = fields.Selection(selection_add=[('cancelled', 'Cancelled')])
+
     def _mark_done(self):
         odoobot = self.env.ref('base.partner_root')
         for user_input in self:
