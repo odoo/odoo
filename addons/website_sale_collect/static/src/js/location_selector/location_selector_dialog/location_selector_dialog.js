@@ -1,4 +1,3 @@
-import { rpc } from '@web/core/network/rpc';
 import { patch } from '@web/core/utils/patch';
 
 import {
@@ -19,6 +18,14 @@ patch(LocationSelectorDialog.prototype, {
         if (this.props.isProductPage) {
             params.product_id = this.props.productId;
         }
-        return params
+        return params;
+    },
+    /**
+     * Override
+     * If on product page don't show warning
+     *
+     */
+    get showTaxRecomputationWarning() {
+        return !this.props.isProductPage && super.showTaxRecomputationWarning;
     },
 });

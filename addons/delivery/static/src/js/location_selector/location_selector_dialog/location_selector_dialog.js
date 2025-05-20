@@ -22,6 +22,7 @@ export class LocationSelectorDialog extends Component {
         zipCode: { type: String, optional: true},
         countryCode: { type: String, optional: true},
         selectedLocationId: { type: String, optional: true},
+        carrierId: Number,
         save: Function,
         close: Function, // This is the close from the env of the Dialog Component
     };
@@ -34,7 +35,7 @@ export class LocationSelectorDialog extends Component {
             locations: [],
             countries: [],
             savedZipCodes: {},
-            selectedCountry: { code: this.props.countryCode },
+            selectedCountry: {},
             error: false,
             viewMode: 'list',
             zipCode: this.props.zipCode,
@@ -49,7 +50,7 @@ export class LocationSelectorDialog extends Component {
         this.debouncedSearchButton = useDebounced(() => {
             this.state.locations = [];
             this._updateLocations();
-        }, 300);
+        }, 10);
 
         onMounted(() => {
             browser.addEventListener('resize', this.debouncedOnResize);
@@ -57,7 +58,20 @@ export class LocationSelectorDialog extends Component {
         });
         onWillUnmount(() => browser.removeEventListener('resize', this.debouncedOnResize));
 
-        onWillStart(async () => this.state.countries = await this._getCountries());
+        onWillStart(async () => {
+            this.state.countries = await this._getCountries();
+            if (this.state.countries) {
+                if (this.props.countryCode) {
+                    this.state.selectedCountry = this.state.countries.find(
+                        (country) => country.value.code == this.props.countryCode
+                    ).value;
+                }
+                else {
+                    this.state.selectedCountry = this.state.countries[0].value;
+                }
+            }
+
+        });
 
         // Fetch new locations when the zip code is updated.
         useEffect(
@@ -77,7 +91,7 @@ export class LocationSelectorDialog extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Fetch the closest pickup locations based on the zip code.
+     * Fetch the closest pickup locations based on the zip code & country.
      *
      * @private
      * @return {Object} The result values.
@@ -106,7 +120,9 @@ export class LocationSelectorDialog extends Component {
      * @return {Object} The result values.
      */
     async _getCountries() {
-        return rpc('/delivery/get_delivery_method_countries');
+        return rpc('/delivery/get_delivery_method_countries',{
+            carrier_id: this.props.carrierId,
+        });
     }
 
     //--------------------------------------------------------------------------
@@ -124,20 +140,25 @@ export class LocationSelectorDialog extends Component {
      */
     async _updateLocations() {
         this.state.error = false;
-        const { pickup_locations, selected_country, error } = await this._getLocations();
+        if (this.state.zipCode){
+            const { pickup_locations, error } = await this._getLocations();
 
-        if (error) {
-            this.state.error = error;
-            console.error(error);
-        } else {
-            this.state.locations = pickup_locations;
-            this.state.selectedCountry = selected_country;
-            if (!this.state.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
-                this.state.selectedLocationId = this.state.locations[0]
-                                                ? String(this.state.locations[0].id)
-                                                : false;
+            if (error) {
+                this.state.error = error;
+                console.error(error);
+            } else {
+                this.state.locations = pickup_locations;
+                if (!this.state.locations.find(l => String(l.id) === this.state.selectedLocationId)) {
+                    this.state.selectedLocationId = this.state.locations[0]
+                        ? String(this.state.locations[0].id)
+                        : false;
+                }
             }
         }
+        else {
+            this.state.locations = []
+        }
+
     }
 
     /**
@@ -251,6 +272,10 @@ export class LocationSelectorDialog extends Component {
 
     get errorMessage() {
         return _t("No result");
+    }
+
+    get missingZipcodeMessage() {
+        return _t("Please enter your postal code to search for locations in your area");
     }
 
     get loadingMessage() {

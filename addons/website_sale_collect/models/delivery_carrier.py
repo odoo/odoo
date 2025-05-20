@@ -50,7 +50,20 @@ class DeliveryCarrier(models.Model):
 
     # === BUSINESS METHODS ===#
 
-    def _in_store_get_close_locations(self, partner_address, product_id=None):
+    def _get_carrier_countries(self):
+        """ Override
+        Get the formatted countries of the delivery carrier based on available warehouses
+
+        :rtype: list[dict]
+        """
+        self.ensure_one()
+        if self.delivery_type == 'in_store' and self.warehouse_ids:
+            countries = self.warehouse_ids.partner_id.country_id
+            return self.format_countries_selector(countries)
+
+        return super()._get_carrier_countries()
+
+    def _in_store_get_close_locations(self, partner_address, product_id=None, country_code=None):
         """ Get the formatted close pickup locations sorted by distance to the partner address.
 
         :param res.partner partner_address: The address to use to sort the pickup locations.
@@ -70,7 +83,10 @@ class DeliveryCarrier(models.Model):
 
         pickup_locations = []
         order_sudo = request.cart
-        for wh in self.warehouse_ids:
+        warehouses = self.warehouse_ids.filtered(
+            lambda wh: wh.partner_id.country_id == partner_address.country_id
+        )
+        for wh in warehouses:
             pickup_location_values = wh._prepare_pickup_location_data()
             if not pickup_location_values:  # Ignore warehouses with badly configured addresses.
                 continue
