@@ -26,6 +26,7 @@ export class OptionsContainer extends BaseOptionComponent {
         removeDisabledReason: { type: String, optional: true },
         isClonable: false,
         cloneDisabledReason: { type: String, optional: true },
+        optionTitleComponents: { type: Array },
         containerTopButtons: { type: Array },
         containerTitle: { type: Object, optional: true },
         headerMiddleButtons: { type: Array, optional: true },
