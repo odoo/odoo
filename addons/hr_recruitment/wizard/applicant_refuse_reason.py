@@ -134,7 +134,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
                     for duplicate in self.duplicate_applicant_ids
                 }
             )
-        refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False, 'refuse_date': datetime.now()})
+        refused_applications.write({'refuse_reason_id': self.refuse_reason_id.id, 'refuse_date': datetime.now()})
+        refused_applications.action_archive()
 
         if self.send_mail:
             self._prepare_send_refusal_mails()
