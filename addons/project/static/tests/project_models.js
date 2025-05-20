@@ -72,7 +72,7 @@ export class ProjectTask extends models.Model {
     subtask_count = fields.Integer();
     closed_subtask_count = fields.Integer();
     project_id = fields.Many2one({ relation: "project.project", falsy_value_label: "🔒 Private" });
-    display_in_project = fields.Boolean();
+    display_in_project = fields.Boolean({ default: true });
     stage_id = fields.Many2one({ relation: "project.task.type" });
     milestone_id = fields.Many2one({ relation: "project.milestone" });
     state = fields.Selection({
