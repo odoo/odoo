@@ -30,7 +30,7 @@ test("Can change type of spreadsheet chart in dashboard", async () => {
     createBasicChart(setupModel, "chartId");
     const { model } = await createDashboardActionWithData(setupModel.exportData());
 
-    expect(".o-chart-dashboard-item[data-id='column']").toHaveClass("active");
+    expect(".o-chart-dashboard-item[data-id='bar']").toHaveClass("active");
 
     await contains(".o-chart-dashboard-item[data-id='pie']", { visible: false }).click();
 
