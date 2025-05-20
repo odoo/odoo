@@ -112,6 +112,8 @@ export class TablePlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => this.deselectTable(root),
         before_line_break_handlers: this.resetTableSelection.bind(this),
         before_split_block_handlers: this.resetTableSelection.bind(this),
+        post_undo_handlers: this.update.bind(this),
+        post_redo_handlers: this.update.bind(this),
 
         /** Overrides */
         tab_overrides: withSequence(20, this.handleTab.bind(this)),
@@ -591,6 +593,7 @@ export class TablePlugin extends Plugin {
             focusNode: firstTd,
             focusOffset: nodeSize(firstTd),
         });
+        delete this.currentGridTable;
     }
 
     /**
@@ -1183,7 +1186,8 @@ export class TablePlugin extends Plugin {
             return;
         }
         table.classList.toggle("o_selected_table", true);
-        const columns = getTableCells(table);
+        this.buildTableGrid(table);
+        const columns = this.tableGrid.flat();
         const startCol =
             [selection.startContainer, ...ancestors(selection.startContainer, this.editable)].find(
                 (node) => node.nodeName === "TD" && closestElement(node, "table") === table
@@ -1193,8 +1197,9 @@ export class TablePlugin extends Plugin {
                 (node) => node.nodeName === "TD" && closestElement(node, "table") === table
             ) || columns[columns.length - 1];
         const [startRow, endRow] = [closestElement(startCol, "tr"), closestElement(endCol, "tr")];
-        const [startColIndex, endColIndex] = [getColumnIndex(startCol), getColumnIndex(endCol)];
         const [startRowIndex, endRowIndex] = [getRowIndex(startRow), getRowIndex(endRow)];
+        const startColIndex = this.tableGrid[startRowIndex].findIndex((c) => c === startCol);
+        const endColIndex = this.tableGrid[endRowIndex].findIndex((c) => c === endCol);
         const [minRowIndex, maxRowIndex] = [
             Math.min(startRowIndex, endRowIndex),
             Math.max(startRowIndex, endRowIndex),
@@ -1203,17 +1208,16 @@ export class TablePlugin extends Plugin {
             Math.min(startColIndex, endColIndex),
             Math.max(startColIndex, endColIndex),
         ];
-        // Create an array of arrays of tds (each of which is a row).
-        const grid = [...table.querySelectorAll("tr")]
-            .filter((tr) => closestElement(tr, "table") === table)
-            .map((tr) => [...tr.children].filter((child) => child.nodeName === "TD"));
-        for (const tds of grid.filter((_, index) => index >= minRowIndex && index <= maxRowIndex)) {
-            for (const td of tds.filter(
-                (_, index) => index >= minColIndex && index <= maxColIndex
-            )) {
-                td.classList.toggle("o_selected_td", true);
-                this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
-            }
+
+        const tdsToSelect = new Set(
+            this.tableGrid
+                .slice(minRowIndex, maxRowIndex + 1)
+                .flatMap((row) => row.slice(minColIndex, maxColIndex + 1))
+        );
+
+        for (const td of tdsToSelect) {
+            td.classList.toggle("o_selected_td", true);
+            this.dispatchTo("deselect_custom_selected_nodes_handlers", td);
         }
     }
 
@@ -1343,5 +1347,53 @@ export class TablePlugin extends Plugin {
         }
         this.deselectTable(clonedContents);
         return clonedContents;
+    }
+
+    /**
+     * Builds and returns a 2D grid representing the structure of the given table.
+     * Each cell in the grid corresponds to a <td> or <th> element, taking into
+     * account their rowspan and colspan.
+     *
+     * @param {HTMLTableElement} table - The table element to process.
+     * @returns {undefined}
+     */
+    buildTableGrid(table) {
+        if (!table || this.currentGridTable === table) {
+            return;
+        }
+        const grid = [];
+        const rows = [...table.rows];
+        for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+            const row = rows[rowIndex];
+            grid[rowIndex] = grid[rowIndex] || [];
+            let colIndex = 0;
+
+            for (const cell of [...row.cells]) {
+                while (grid[rowIndex][colIndex]) {
+                    colIndex++;
+                }
+
+                const rowspan = cell.rowSpan || 1;
+                const colspan = cell.colSpan || 1;
+
+                for (let r = 0; r < rowspan; r++) {
+                    for (let c = 0; c < colspan; c++) {
+                        const targetRow = rowIndex + r;
+                        const targetCol = colIndex + c;
+                        grid[targetRow] = grid[targetRow] || [];
+                        grid[targetRow][targetCol] = cell;
+                    }
+                }
+
+                colIndex += colspan;
+            }
+        }
+        this.currentGridTable = table;
+        this.tableGrid = grid;
+    }
+
+    update() {
+        delete this.currentGridTable;
+        delete this.tableGrid;
     }
 }
