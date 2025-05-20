@@ -5,6 +5,8 @@ function onRpcReal(route) {
     onRpc(route, async () => globals.fetch.call(window, route), { pure: true });
 }
 
+export const testImgSrc = "/web/image/website.s_text_image_default_image";
+
 export const testImg = `
     <img src='/web/image/website.s_text_image_default_image'
         data-original-id="1"

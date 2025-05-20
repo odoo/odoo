@@ -1,10 +1,12 @@
 import { BaseOptionComponent } from "@html_builder/core/utils";
 import { getBgImageURLFromEl, normalizeColor } from "@html_builder/utils/utils_css";
+import { ImageSize } from "../image/image_size";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 
 export class BackgroundImageOption extends BaseOptionComponent {
     static template = "website.BackgroundImageOption";
     static props = {};
+    static components = { ImageSize };
     setup() {
         // done here because we have direct access to the editing element
         // (which we don't have in the normalize of the current plugin)
