@@ -1267,6 +1267,41 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'limitedProductPricelistLoading', login="pos_user")
 
+    def test_restricted_categories_combo_product(self):
+        """
+        Ensure combo choices product are always loaded if parent is in allowed categories, even when restricted categories are configured:
+        - These combo choices should be visible when configuring the parent combo product but not be visible as product that we can directly sell inside POS
+        - These combo choices should appear on the preparation ticket changes
+        """
+        pos_restricted_categ = self.env["pos.category"].create({
+            "name": "Restricted product",
+        })
+        pos_other_categ = self.env["pos.category"].create({
+            "name": "Other products",
+        })
+        self.env['pos.printer'].create({
+            'name': 'Printer',
+            'printer_type': 'epson_epos',
+            'epson_printer_ip': '0.0.0.0',
+            'product_categories_ids': [Command.set(self.env['pos.category'].search([]).ids)],
+        })
+
+        self.main_pos_config.write({
+            'is_order_printer': True,
+            'printer_ids': [Command.set(self.env['pos.printer'].search([]).ids)],
+        })
+        self.main_pos_config.write({
+            "limit_categories": True,
+            "iface_available_categ_ids": [(6, 0, [pos_restricted_categ.id])],
+        })
+        setup_product_combo_items(self)
+        self.office_combo.pos_categ_ids = [(6, 0, [pos_restricted_categ.id])]
+        self.office_combo.combo_ids = [(6, 0, [self.desks_combo.id])]
+        self.desks_combo.combo_item_ids[0].product_id.pos_categ_ids = [(6, 0, [pos_restricted_categ.id])]
+        self.desks_combo.combo_item_ids[1].product_id.pos_categ_ids = [(6, 0, [pos_other_categ.id])]
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_restricted_categories_combo_product', login="pos_user")
+
     def test_multi_product_options(self):
         self.pos_user.write({
             'group_ids': [

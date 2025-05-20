@@ -1788,6 +1788,9 @@ export class PosStore extends WithLazyGetterTrap {
             const product = this.models["product.product"].get(change["product_id"]);
             const categoryIds = product.parentPosCategIds;
 
+            if (change.isCombo) {
+                return true;
+            }
             for (const categoryId of categoryIds) {
                 if (categories.includes(categoryId)) {
                     return true;
@@ -2351,35 +2354,36 @@ export class PosStore extends WithLazyGetterTrap {
         if (!list || list.length === 0) {
             return [];
         }
-        const excludedProductIds = this.getExcludedProductIds();
 
-        list = list
-            .filter((product) => !excludedProductIds.includes(product.id) && product.canBeDisplayed)
-            .sort((a, b) => {
-                // Sort in the same order as what we receive (look _load_product_with_domain)
-                if (a.sequence !== b.sequence) {
-                    return a.sequence - b.sequence;
-                }
-                if (a.default_code !== b.default_code) {
-                    if (!b.default_code) {
-                        return -1;
-                    }
-                    if (!a.default_code) {
-                        return 1;
-                    }
-                    return a.default_code.localeCompare(b.default_code);
-                }
-                return a.name.localeCompare(b.name);
-            })
-            .slice(0, 100);
+        const filteredList = [];
+        const excludedProductIds = new Set(this.getExcludedProductIds());
+        const availableCateg = new Set(
+            (this.config.iface_available_categ_ids || []).map((c) => c.id)
+        );
 
-        if (this.areAllProductsSpecial(list)) {
+        for (const p of list) {
+            if (filteredList.length >= 100) {
+                break;
+            }
+
+            if (excludedProductIds.has(p.id) || !p.canBeDisplayed) {
+                continue;
+            }
+
+            if (availableCateg.size && !p.pos_categ_ids.some((c) => availableCateg.has(c.id))) {
+                continue;
+            }
+
+            filteredList.push(p);
+        }
+
+        if (this.areAllProductsSpecial(filteredList)) {
             return [];
         }
 
         return searchWord !== ""
-            ? list.sort((a, b) => b.is_favorite - a.is_favorite)
-            : list.sort((a, b) => {
+            ? filteredList.sort((a, b) => b.is_favorite - a.is_favorite)
+            : filteredList.sort((a, b) => {
                   if (b.is_favorite !== a.is_favorite) {
                       return b.is_favorite - a.is_favorite;
                   } else if (a.pos_sequence !== b.pos_sequence) {
