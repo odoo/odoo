@@ -13,18 +13,18 @@ patch(CustomerAddress.prototype, {
     },
 
     computeCodiceFiscale() {
-        const vatValue = this.el.querySelector('input[name="vat"]').value;
+        const vat = this.el.querySelector('input[name="vat"]');
         const countryValue = this.el.querySelector('select[name="country_id"]')
             .selectedOptions[0]?.getAttribute('code');
         const l10nItCodiceFiscaleInput = this.el.querySelector('input[name="l10n_it_codice_fiscale"]');
 
         if (
             l10nItCodiceFiscaleInput
-            && vatValue
-            && (vatValue.startsWith('IT') || countryValue === 'IT')
+            && vat
+            && (vat.value.startsWith('IT') || countryValue === 'IT')
         ) {
-            l10nItCodiceFiscaleInput.value = /^IT[0-9]{11}$/.test(vatValue)
-                ? vatValue.slice(2, 13) : vatValue;
+            l10nItCodiceFiscaleInput.value = /^IT[0-9]{11}$/.test(vat.value)
+                ? vat.value.slice(2, 13) : vat.value;
         }
     },
 });
