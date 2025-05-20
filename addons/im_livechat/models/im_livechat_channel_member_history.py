@@ -66,12 +66,13 @@ class ImLivechatChannelMemberHistory(models.Model):
                 history.agent_expertise_ids or history.member_id.agent_expertise_ids
             )
 
-    @api.depends("partner_id.name", "guest_id.name")
+    @api.depends("livechat_member_type", "partner_id.name", "partner_id.display_name", "guest_id.name")
     def _compute_display_name(self):
         for history in self:
-            history.display_name = (
-                history.partner_id.name or history.guest_id.name or self.env._("Unknown")
-            )
+            name = history.partner_id.name or history.guest_id.name
+            if history.partner_id and history.livechat_member_type == "visitor":
+                name = history.partner_id.display_name
+            history.display_name = name or self.env._("Unknown")
 
     @api.depends("partner_id.avatar_128", "guest_id.avatar_128")
     def _compute_avatar_128(self):
