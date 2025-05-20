@@ -36,8 +36,7 @@
     </t>
     <t t-name="pos_restaurant.ReceiptHeader" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('cashier')]" position="after">
-            <t t-if="order.table_id">Table <t t-esc="order.table_id.table_number" /></t>
-            <t t-if="order.table_id and order.customer_count">, Guests: <t t-esc="order.customer_count" /></t>
+            <t t-if="order.table_id" t-esc="tableName"/>
         </xpath>
         <xpath expr="//div[hasclass('pos-receipt-contact')]" position="before">
             <h1 class="tracking-number text-center" style="font-size: 100px" t-if="order.tracking_number and order.config.self_ordering_mode !== 'nothing'" t-esc="order.tracking_number" />
