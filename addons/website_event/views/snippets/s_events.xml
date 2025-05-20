@@ -6,7 +6,7 @@
         <t t-set="snippet_name" t-value="'s_events'"/>
         <t t-set="snippet_classes" t-value="'s_event_upcoming_snippet %s' % snippet_extra_classes"/>
         <t t-set="main_page_url" t-value="'/event'"/>
-        <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true}'/>
+        <t t-set="custom_template_data" t-valuef='{"events_event_time_active":true, "events_event_location_active":true}'/>
         <t t-out="0"/>
     </t>
 </template>
@@ -78,13 +78,14 @@
             <div class="text-center w-100 h-100 px-3 d-flex flex-column justify-content-center flex-grow-1">
                 <div t-if="is_sample" class="h5 o_ribbon_right bg-primary text-uppercase">Sample</div>
                 <h3 class="text-white" t-field="record.name"/>
-                <time t-att-datetime="record.date_begin" class="text-white">
+                <time t-att-datetime="record.date_begin" class="text-white text-center">
                     <span t-out="record.date_begin"
                           t-options="{'widget': 'datetime', 'date_only': 'true', 'format': 'long', 'tz_name': record.date_tz}"/>
                     <span t-if="events_event_time_active" class="s_events_event_time">
                         - <span t-out="record.date_begin" t-options="{'widget': 'datetime', 'time_only': 'true', 'format': 'short', 'tz_name': record.date_tz}"/>
                         (<span t-out="record.date_tz.replace('_', ' ')"/>)
                     </span>
+                    <div class="d-flex justify-content-center" t-if="events_event_location_active" t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                 </time>
             </div>
         </a>
@@ -119,7 +120,7 @@
                     <h5 class="text-truncate" t-field="record.name"/>
                     <small class="text-muted" t-field="record.subtitle"/>
                 </div>
-                <div class="mt-2 fw-bold" t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
+                <div class="mt-2 fw-bold" t-if="events_event_location_active" t-field="record.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
             </div>
         </a>
     </t>
