@@ -20,10 +20,10 @@
 
     <BuilderRow label.translate="Colors" level="2">
         <t t-foreach="getDefaultColorNames()" t-as="colorName" t-key="colorName_index">
-            <BuilderColorPicker action="'backgroundShapeColor'" actionParam="colorName"/>
+            <BuilderColorPicker action="'backgroundShapeColor'" actionParam="colorName" enabledTabs="['solid', 'custom']"/>
         </t>
         <!-- TODO handle all the attributes -->
-        <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'"/>
+        <BuilderColorPicker styleAction="'background-color'" applyTo="':scope > .o_we_shape'" enabledTabs="['solid', 'custom']"/>
     </BuilderRow>
     <BuilderRow label.translate="Speed" level="2" t-if="state.isAnimated">
         <BuilderRange
