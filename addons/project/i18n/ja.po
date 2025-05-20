@@ -230,6 +230,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                <t t-out=\"partner.name or ''\">Brandon Freeman</t>様<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                こんにちは。<br/><br/>\n"
+"            </t>\n"
+"            以下に関連した当社のサービスの評価アンケートにご協力をお願い致します: <strong t-out=\"object.name or ''\">計画と予算</strong>タスク\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                担当: <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>当社のサービスに関するご感想をお聞かせ下さい。</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(以下より1つを選択して下さい)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/src/img/rating_5.png\" title=\"Happy\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            フィードバックを頂きありがとうございました。引き続き改善に努めて参ります。\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">お客様のチケットがステージ: <b t-out=\"object.stage_id.name or ''\">進行中</b> ステージ</span> に移動したため、このお客様アンケートが送信されました。\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">このお客様満足度アンケートは <b t-out=\"object.project_id.rating_status_period or ''\">毎週</b> タスクが <b t-out=\"object.stage_id.name or ''\">進行中</b> ステージにある限り送信されます。</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>宜しくお願い致します。</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.example.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -415,7 +490,7 @@ msgstr "<strong>マイルストン:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Priority:</strong>"
-msgstr ""
+msgstr "<strong>優先:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -444,7 +519,7 @@ msgstr "このエイリアスの新しいレコードを作成する時にデフ
 msgid ""
 "A collaborator cannot be selected more than once in the project sharing "
 "access. Please remove duplicate(s) and try again."
-msgstr "プロジェクト共有アクセスでは、協力者を複数回選択することはできません。重複を削除して再度試して下さい。"
+msgstr "プロジェクト共有アクセスでは、共同作業者を複数回選択することはできません。重複を削除して再度試して下さい。"
 
 #. module: project
 #. odoo-python
@@ -578,7 +653,7 @@ msgstr "マイルストンを追加"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr ""
+msgstr "サブタスクを追加"
 
 #. module: project
 #. odoo-javascript
@@ -1119,18 +1194,18 @@ msgstr "終了ステージ"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_collaborator_wizard__partner_id
 msgid "Collaborator"
-msgstr "協力者"
+msgstr "共同作業者"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__collaborator_ids
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Collaborators"
-msgstr "協力者"
+msgstr "共同作業者"
 
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr "共有済プロジェクトの協力者"
+msgstr "共有済プロジェクトの共同作業者"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1178,7 +1253,7 @@ msgstr "会社"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
 msgid "Complete"
-msgstr ""
+msgstr "完了"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -1253,7 +1328,7 @@ msgstr "タスク/サブタスクに変換"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_convert_to_template
 msgid "Convert to Template"
-msgstr ""
+msgstr "テンプレートに変換"
 
 #. module: project
 #. odoo-javascript
@@ -1892,7 +1967,7 @@ msgstr "フォロー"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comment on tasks in your projects"
-msgstr ""
+msgstr "プロジェクトのタスクのフォローやコメントができます"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2792,7 +2867,7 @@ msgstr "タグが見つかりません。作成しましょう！"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_task_templates_action
 msgid "No task templates found. Let's create one!"
-msgstr ""
+msgstr "タスクテンプレートが見つかりません。作成しましょう。"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3155,7 +3230,7 @@ msgstr "プライベートタスクをサブタスクに変換することはで
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Private tasks cannot be converted into templates"
-msgstr ""
+msgstr "プライベートタスクはテンプレートに変換できません"
 
 #. module: project
 #. odoo-javascript
@@ -3235,7 +3310,7 @@ msgstr "プロジェクト共有"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr "プロジェクト共有協力者ウィザード"
+msgstr "プロジェクト共有共同作業者ウィザード"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
@@ -3309,7 +3384,7 @@ msgstr "プロジェクトの説明..."
 #. odoo-python
 #: code:addons/project/wizard/project_share_wizard.py:0
 msgid "Project shared with your collaborators."
-msgstr "協力者と共有するプロジェクト。"
+msgstr "共同作業者と共有するプロジェクト。"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -3320,13 +3395,13 @@ msgstr "プロジェクトのタスク"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s"
-msgstr ""
+msgstr "プロジェクト: %(project_name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s, Stage: %(stage_name)s"
-msgstr ""
+msgstr "プロジェクト: %(project_name)s, ステージ: %(stage_name)s"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -3585,7 +3660,7 @@ msgstr "関連ドキュメントモデル"
 #. odoo-javascript
 #: code:addons/project/static/src/core/web/follower_list_patch.js:0
 msgid "Remove Collaborator"
-msgstr "協力者の削除"
+msgstr "共同作業者の削除"
 
 #. module: project
 #. odoo-javascript
@@ -3697,6 +3772,8 @@ msgid ""
 "Save time by using task templates with pre-filled details.<br>\n"
 "                    Standardize workflows and ensure consistency across tasks."
 msgstr ""
+"詳細があらかじめ入力されたタスクテンプレートを使用することで、時間を節約できます。<br>\n"
+"                    ワークフローを標準化し、タスク間の一貫性を確保します。"
 
 #. module: project
 #. odoo-javascript
@@ -4192,7 +4269,7 @@ msgstr "タスクステージ"
 #: model:ir.actions.act_window,name:project.project_task_templates_action
 #: model:ir.ui.menu,name:project.project_menu_config_task_templates
 msgid "Task Templates"
-msgstr ""
+msgstr "タスクテンプレート"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4236,7 +4313,7 @@ msgstr "タスクがキャンセルされました"
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Task converted to template"
-msgstr ""
+msgstr "タスクがテンプレートに変換されました"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4321,7 +4398,7 @@ msgstr "テンプレート"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Template converted back to regular task"
-msgstr ""
+msgstr "テンプレートが通常タスクに再変換されました"
 
 #. module: project
 #. odoo-javascript
@@ -4523,7 +4600,7 @@ msgid ""
 "This follower is currently a project collaborator. Removing them will revoke"
 " their portal access to the project. Are you sure you want to proceed?"
 msgstr ""
-"このフォロワーは現在プロジェクトの協力者です。このフォロワーを削除すると、プロジェクトへのポータルアクセスが無効になります。本当によろしいですか？"
+"このフォロワーは現在プロジェクトの共同作業者です。このフォロワーを削除すると、プロジェクトへのポータルアクセスが無効になります。本当によろしいですか？"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -4578,7 +4655,7 @@ msgstr "このタスクにはサブタスクがあるため、プライベート
 msgid ""
 "This task is already a template. Do you want to convert it back to a regular"
 " task?"
-msgstr ""
+msgstr "このタスクはすでにテンプレートです。通常のタスクに戻しますか？"
 
 #. module: project
 #. odoo-javascript
@@ -5079,7 +5156,7 @@ msgstr "これらのステージに含まれるすべてのタスクもアーカ
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
-msgstr ""
+msgstr "タスク名を書く"
 
 #. module: project
 #. odoo-javascript
@@ -5428,7 +5505,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "{{0}} Milestones reached out of {{1}}"
-msgstr ""
+msgstr "{{0}} マイルストーン到達 以下のうち: {{1}}"
 
 #. module: project
 #. odoo-python

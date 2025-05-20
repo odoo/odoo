@@ -305,6 +305,8 @@ msgid ""
 "<i class=\"fa fa-lock\"/>\n"
 "                        Locked"
 msgstr ""
+"<i class=\"fa fa-lock\"/>\n"
+"                        ロック済"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -1543,7 +1545,7 @@ msgstr "注文するプロダクトの数量を指定してください。"
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,help:purchase.field_purchase_order__purchase_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
+msgstr "ユーザが設定した取引先またはプロダクトに対する内部警告です。"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1705,7 +1707,7 @@ msgstr "ロック済"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__locked
 msgid "Locked Purchase Orders cannot be modified."
-msgstr ""
+msgstr "ロック済の購買オーダは修正できません。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2425,12 +2427,12 @@ msgstr "購買レポート"
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_warning_text
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__purchase_warning_text
 msgid "Purchase Warning"
-msgstr ""
+msgstr "購買警告"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
 msgid "Purchase Warnings"
-msgstr "購入の警告"
+msgstr "購買警告"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2528,7 +2530,7 @@ msgstr "請求予定数量"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_to_invoice
 msgid "Qty to invoice"
-msgstr ""
+msgstr "未請求数量"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_qty
@@ -3246,7 +3248,7 @@ msgstr "ロック解除"
 #: code:addons/purchase/models/purchase_order.py:0
 msgid ""
 "Unlocking the order is not allowed as 'Lock Confirmed Orders' is enabled."
-msgstr ""
+msgstr " '確定済オーダのロック'が有効になっているため、オーダのロックを解除することはできません。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3269,7 +3271,7 @@ msgstr "税抜合計"
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "取引先請求書をアップロード"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3399,12 +3401,12 @@ msgstr "このドキュメントをOdooでインポートしますか？"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "Warning on Purchase Orders"
-msgstr ""
+msgstr "購買オーダに関する警告"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "Warning on Purchase Orders and Bills"
-msgstr ""
+msgstr "購買オーダおよび請求書に関する警告"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -3455,7 +3457,7 @@ msgstr "ベンダーは、名前、TIN、電子メール、または内部参照
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "You can only upload a bill for a single partner at a time."
-msgstr ""
+msgstr "一度にアップロードできる仕入先請求書は、1 つの取引先分のみです。"
 
 #. module: purchase
 #. odoo-python
@@ -3519,12 +3521,12 @@ msgstr "日前"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "e.g. There is a newer version of this product."
-msgstr ""
+msgstr "例: このプロダクトには新しいバージョンがあります。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
 msgid "e.g. This vendor is on vacation until the end of August."
-msgstr ""
+msgstr "例: この仕入先は 8 月末まで休暇中です。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form

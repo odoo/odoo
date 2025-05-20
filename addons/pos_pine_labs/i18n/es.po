@@ -23,27 +23,27 @@ msgstr ""
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
 msgid "A client id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Un ID de cliente emitido al comerciante por Pine Labs."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
 msgid "A merchant id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Un ID de comerciante emitido al comerciante por Pine Labs."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "A security token issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Un token de seguridad emitido al comerciante por Pine Labs."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "A store id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Un ID de la tienda emitido al comerciante por Pine Labs."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
 msgid "Accepted payment modes by Pine Labs for transactions."
-msgstr ""
+msgstr "Métodos de pago aceptados por Pine Labs para transacciones."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__all
@@ -76,12 +76,12 @@ msgstr "ID"
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
 msgid "Pine Labs Allowed Payment Modes"
-msgstr ""
+msgstr "Modos de pago permitidos por Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_client
 msgid "Pine Labs Client ID"
-msgstr ""
+msgstr "ID de cliente de Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
@@ -100,11 +100,13 @@ msgstr "ID de comerciante de Pine Labs"
 msgid ""
 "Pine Labs POS transaction cancelled. Retry again for collecting payment."
 msgstr ""
+"Transacción del TPV de Pine Labs POS cancelada. Inténtelo de nuevo para "
+"cobrar el pago."
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr ""
+msgstr "PlutusTransactionReferenceID de Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
@@ -114,30 +116,34 @@ msgstr "Token de seguridad de Pine Labs"
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "Pine Labs Store ID"
-msgstr ""
+msgstr "ID de la tienda de Pine Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Pine Labs Test Mode"
-msgstr ""
+msgstr "Modo de prueba de Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs get payment status request failed"
 msgstr ""
+"Se ha producido un error con la solicitud de estado de pago de Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs make payment request failed"
 msgstr ""
+"Se ha producido un error con la solicitud de realizar el pago de Pine Labs"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs payment cancellation request failed"
 msgstr ""
+"Se ha producido un error con la solicitud de cancelación de pago de Pine "
+"Labs"
 
 #. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
@@ -162,11 +168,14 @@ msgid ""
 "https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
 "request-for-Void-ICB-on-UPI-transaction"
 msgstr ""
+"Se necesita durante el proceso de reembolso del pedido: "
+"https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
+"request-for-Void-ICB-on-UPI-transaction"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Test Pine Labs transaction process."
-msgstr ""
+msgstr "Pruebe el proceso de transacción de Pine Labs."
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -175,6 +184,8 @@ msgid ""
 "The expected error code for the Pine Labs POS status request was not "
 "included in the response."
 msgstr ""
+"No se incluyó el código de error esperado para la solicitud de estado de "
+"Pine Labs POS en la respuesta."
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -191,4 +202,4 @@ msgstr "Ocurrió un error con la transacción debido a inactividad"
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
-msgstr ""
+msgstr "UPI"

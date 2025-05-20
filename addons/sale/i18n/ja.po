@@ -2643,6 +2643,8 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                                discount column."
 msgstr ""
+"販売オーダの明細では、元価格は単価、\n"
+"                                割引は割引列になります。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
@@ -2659,7 +2661,7 @@ msgstr "税込)"
 #: model:ir.model.fields,help:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,help:sale.field_sale_order__sale_warning_text
 msgid "Internal warning for the partner or the products as set by the user."
-msgstr ""
+msgstr "ユーザが設定した取引先またはプロダクトに対する内部警告です。"
 
 #. module: sale
 #. odoo-python
@@ -3789,7 +3791,7 @@ msgstr "数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_delivered
 msgid "Qty Delivered"
-msgstr "配送済数量"
+msgstr "納品済数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_invoiced
@@ -3804,7 +3806,7 @@ msgstr "オーダ数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
 msgid "Qty To Deliver"
-msgstr "配送予定数量"
+msgstr "未納品数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -3814,7 +3816,7 @@ msgstr "未請求数量"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "販売オーダからの請求対象数量"
+msgstr "販売オーダからの未請求数量"
 
 #. module: sale
 #. odoo-javascript
@@ -3829,7 +3831,7 @@ msgstr "数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr "請求する数量"
+msgstr "未請求数量"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3884,7 +3886,7 @@ msgstr "見積が閲覧されました"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "見積確認済"
+msgstr "見積が確定されました"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
@@ -3932,7 +3934,7 @@ msgstr "見積・受注"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr "要確認見積書"
+msgstr "要確認の見積"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -4122,7 +4124,7 @@ msgstr "販売決済プロバイダーオンボーディングウィザード"
 #: model:ir.model.fields,field_description:sale.field_account_move__sale_warning_text
 #: model:ir.model.fields,field_description:sale.field_sale_order__sale_warning_text
 msgid "Sale Warning"
-msgstr ""
+msgstr "販売警告"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5345,12 +5347,12 @@ msgstr "見積書の会社の変更の警告"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Warning on Sales Orders"
-msgstr ""
+msgstr "販売オーダに関する警告"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on Sales Orders and Invoices"
-msgstr ""
+msgstr "販売オーダおよび請求書に関する警告"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
@@ -5369,6 +5371,9 @@ msgid ""
 "                                displayed in sale order lines. Calculated/fixed price is set as unit price\n"
 "                                with 0% discount."
 msgstr ""
+"式で計算された価格や固定価格の場合、\n"
+"                               販売オーダの明細には元価格は表示されません。\n"
+"                                計算/固定価格は、割引率 0% の単価として設定されます。"
 
 #. module: sale
 #. odoo-python
@@ -5526,12 +5531,12 @@ msgstr "日"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "e.g. This customer has reported recurring issues with previous orders."
-msgstr ""
+msgstr "例: この顧客は、以前のオーダで繰り返し問題が発生していると報告しています。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "e.g. This product is defective."
-msgstr ""
+msgstr "例: このプロダクトは不良品です。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

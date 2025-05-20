@@ -341,7 +341,7 @@ msgstr "2行"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "=PIVOT(${"
-msgstr ""
+msgstr "=PIVOT(${"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -662,7 +662,7 @@ msgstr "範囲を追加"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Additional cases to try if the previous ones don't match expression."
-msgstr ""
+msgstr "前の条件に一致しない場合に試す追加のケース。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -803,7 +803,7 @@ msgstr "平均化する追加値"
 msgid ""
 "Additional values to be returned if their corresponding cases match "
 "expression."
-msgstr ""
+msgstr "対応するケースが式に一致した場合に返される追加の値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -894,7 +894,7 @@ msgstr "操作前に、データベースの値をフィルタリングするた
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An error occurred while uploading the image. %s"
-msgstr ""
+msgstr "画像のアップロード中にエラーが発生しました%s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -973,7 +973,7 @@ msgstr "単位マトリクスのディメンション数を指定する整数。
 msgid ""
 "An optional default value to be returned if none of the cases match "
 "expression."
-msgstr ""
+msgstr "いずれのケースも式と一致しない場合に返されるオプションのデフォルト値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1018,6 +1018,8 @@ msgid ""
 "An unexpected error occurred while pasting content.\n"
 "          Additional information can be found in the browser console."
 msgstr ""
+"コンテンツを貼り付ける際に予期しないエラーが発生しました\n"
+"          追加情報は、ブラウザのコンソールでご確認いただけます。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1719,7 +1721,7 @@ msgstr "カテゴリー"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Category color"
-msgstr ""
+msgstr "カテゴリー色"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1763,7 +1765,7 @@ msgstr "チャート"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/index.js:0
 msgid "Chart - %(chart_model)s"
-msgstr ""
+msgstr "チャート - %(chart_model)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2248,7 +2250,7 @@ msgstr "コピー"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Copy as image"
-msgstr ""
+msgstr "画像としてコピー"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3394,7 +3396,7 @@ msgstr "塗りつぶし"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Fill color"
-msgstr ""
+msgstr "塗りつぶし"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3412,7 +3414,7 @@ msgstr "フィルター"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/plugins/global_filters_core_view_plugin.js:0
 msgid "Filter \"%(filter_name)s\" not found"
-msgstr ""
+msgstr "フィルタ \"%(filter_name)s\" が見つかりません"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3721,19 +3723,19 @@ msgstr "関数 [[FUNCTION_NAME]] パラメータ 2 値 は範囲外です。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Funnel"
-msgstr ""
+msgstr "ファネル"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Funnel colors"
-msgstr ""
+msgstr "ファネルの色"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Funnel options"
-msgstr ""
+msgstr "ファネルオプション"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3955,7 +3957,7 @@ msgstr "ヘッダ"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Headers and labels"
-msgstr ""
+msgstr "ヘッダーとラベル"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4015,7 +4017,7 @@ msgstr "シートを非表示"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Hierarchical"
-msgstr ""
+msgstr "階層型"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4444,6 +4446,8 @@ msgid ""
 "Invalid number of arguments for the %(functionName)s function. Expected "
 "%(maxArgPossible)s maximum, but got %(nbrArgSupplied)s instead."
 msgstr ""
+"%(functionName)s関数に対する引数の数が無効です。最大 %(maxArgPossible)sを期待しましたが、代わりに "
+"%(nbrArgSupplied)s が指定されました。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4452,6 +4456,8 @@ msgid ""
 "Invalid number of arguments for the %(functionName)s function. Expected "
 "%(minArgRequired)s minimum, but got %(nbrArgSupplied)s instead."
 msgstr ""
+" "
+"関数%(functionName)s用の引数の数が無効です。最少%(minArgRequired)sを想定していますが、代わりに%(nbrArgSupplied)sを取得しました。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4461,6 +4467,8 @@ msgid ""
 "arguments should be supplied in groups of %(nbrArgRepeating)s, with up to "
 "%(nbrArgOptional)s optional. Got %(nbrValueRemaining)s too many."
 msgstr ""
+"%(functionName)s関数に対する引数の数が無効です。繰り返し使用される引数は、%(nbrArgRepeating)sのグループで指定し、最大"
+" %(nbrArgOptional)sまでオプションとして指定してください。%(nbrValueRemaining)s多く指定されています。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4869,7 +4877,7 @@ msgstr "シートへリンク"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/index.js:0
 msgid "List #%(list_id)s"
-msgstr ""
+msgstr "リスト数%(list_id)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5792,7 +5800,7 @@ msgstr "ピボット #%(formulaId)s"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/index.js:0
 msgid "Pivot #%(pivot_id)s"
-msgstr ""
+msgstr "ピボット数%(pivot_id)s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5824,7 +5832,7 @@ msgstr "ピボットテーブル"
 msgid ""
 "Pivot updates only work with dynamic pivot tables. Use the formula '%s' or "
 "re-insert the static pivot from the Data menu."
-msgstr ""
+msgstr "ピボットの更新は、動的ピボットテーブルでのみ機能します。式 '%s' を使用するか、データメニューから静的ピボットを再度挿入してください。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6331,7 +6339,7 @@ msgstr "数字のシーケンスを返します。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Returns a value by comparing cases to an expression."
-msgstr ""
+msgstr "ケースを式と比較して値を返します。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6764,13 +6772,13 @@ msgstr "計算式ヘルプを表示"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show headers"
-msgstr ""
+msgstr "ヘッダーを表示"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Show labels"
-msgstr ""
+msgstr "ラベルを表示"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7174,13 +7182,13 @@ msgstr "複数の基準に応じた範囲を合計します。"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Sunburst"
-msgstr ""
+msgstr "サンバースト"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Sunburst options"
-msgstr ""
+msgstr "サンバーストのオプション"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7244,13 +7252,13 @@ msgstr "テキスト"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Text Color"
-msgstr "テキスト色"
+msgstr "テキストの色"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Text color"
-msgstr ""
+msgstr "テキストの色"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -7711,7 +7719,7 @@ msgstr "空白とエラーを無視する制御。0(デフォルト)はすべて
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The corresponding value to be returned if case1 matches expression."
-msgstr ""
+msgstr "case1 が式と一致する場合に返される対応する値。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8126,6 +8134,9 @@ msgid ""
 "It will not be added to your OS clipboard.\n"
 "You can download it directly instead."
 msgstr ""
+"コピーしようとしているファイルが大きすぎます(>%sMB)。\n"
+"OS のクリップボードには追加されません。\n"
+"代わりに直接ダウンロードすることができます。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -8137,7 +8148,7 @@ msgstr "最初の加数"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "The first case to be checked against expression."
-msgstr ""
+msgstr "式に対して最初にチェックするケース。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10792,6 +10803,8 @@ msgid ""
 "This tool analyzes formulas for patterns and highlights inconsistencies. Irregularities\n"
 "            may indicate potential errors in formula structures, references or arguments."
 msgstr ""
+"このツールは、数式をパターンについて分析し、不整合を強調表示します。不規則性\n"
+"は、数式の構造、参照、または引数に潜在的なエラーがある可能性を示しています。"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -10904,13 +10917,13 @@ msgstr "ラベルをテキストとして扱います"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Tree Map"
-msgstr ""
+msgstr "ツリーマップ"
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Tree map colors"
-msgstr ""
+msgstr "ツリーマップの色"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11133,7 +11146,7 @@ msgstr "行%sをヘッダーとして使用"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 msgid "Use value-based gradient"
-msgstr ""
+msgstr "値に基づくグラデーションを使用"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11146,7 +11159,7 @@ msgstr "数値"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Value %s"
-msgstr ""
+msgstr "値 %s"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11366,7 +11379,7 @@ msgstr "垂直アライメント"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Vertical alignment"
-msgstr ""
+msgstr "垂直方向配置"
 
 #. module: spreadsheet
 #. odoo-javascript
