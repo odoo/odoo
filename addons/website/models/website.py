@@ -1586,16 +1586,15 @@ class Website(models.Model):
             domain += [('url', 'like', query_string)]
 
         # ==== User Defined Redirections ====
-        redirects = self.env['website.rewrite'].sudo().search([])
+        redirects = self.env["website.rewrite"].sudo().search([])
 
         pages = self._get_website_pages(domain)
 
+        redirect_map = {r.url_from: r.url_to for r in redirects}
         for page in pages:
-            user_redirect = next((r for r in redirects if r.url_from == page.url), None)
-            if user_redirect:
-                yield {'loc': user_redirect.url_to}
+            if page.url in redirect_map:
+                yield {"loc": redirect_map[page.url]}
                 continue
-
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
@@ -1621,12 +1620,6 @@ class Website(models.Model):
                 func = rule.endpoint.routing['sitemap']
                 if func is False:
                     continue
-
-                user_redirect = next((r for r in redirects if r.url_from == rule.rule), None)
-                if user_redirect:
-                    yield {'loc': user_redirect.url_to}
-                    continue
-
                 for loc in func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
                     yield loc
                 continue
