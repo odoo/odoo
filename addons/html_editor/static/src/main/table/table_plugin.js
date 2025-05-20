@@ -944,25 +944,20 @@ export class TablePlugin extends Plugin {
      * @param {KeyboardEvent} ev
      */
     updateTableKeyboardSelection(ev) {
-        const selection = this.dependencies.selection.getSelectionData().deepEditableSelection;
-        const startTable = closestElement(selection.anchorNode, "table");
-        const endTable = closestElement(selection.focusNode, "table");
+        const { anchorNode, anchorOffset, focusNode, focusOffset, direction } =
+            this.dependencies.selection.getSelectionData().deepEditableSelection;
+        const startTable = closestElement(anchorNode, "table");
+        const endTable = closestElement(focusNode, "table");
         if (!(startTable || endTable)) {
             return;
         }
-        const [startTd, endTd] = [
-            closestElement(selection.anchorNode, isTableCell),
-            closestElement(selection.focusNode, isTableCell),
-        ];
         if (startTable !== endTable) {
             // Deselect the table if it was fully selected.
             if (endTable) {
                 const deselectingBackward =
-                    ["ArrowLeft", "ArrowUp"].includes(ev.key) &&
-                    selection.direction === DIRECTIONS.RIGHT;
+                    ["ArrowLeft", "ArrowUp"].includes(ev.key) && direction === DIRECTIONS.RIGHT;
                 const deselectingForward =
-                    ["ArrowRight", "ArrowDown"].includes(ev.key) &&
-                    selection.direction === DIRECTIONS.LEFT;
+                    ["ArrowRight", "ArrowDown"].includes(ev.key) && direction === DIRECTIONS.LEFT;
                 let targetNode;
                 if (deselectingBackward) {
                     targetNode = endTable.previousElementSibling;
@@ -972,8 +967,8 @@ export class TablePlugin extends Plugin {
                 if (targetNode) {
                     ev.preventDefault();
                     this.dependencies.selection.setSelection({
-                        anchorNode: selection.anchorNode,
-                        anchorOffset: selection.anchorOffset,
+                        anchorNode,
+                        anchorOffset,
                         focusNode: targetNode,
                         focusOffset: deselectingBackward ? nodeSize(targetNode) : 0,
                     });
@@ -981,9 +976,13 @@ export class TablePlugin extends Plugin {
             }
             return;
         }
+
+        const [startTd, endTd] = [
+            closestElement(anchorNode, "td, th"),
+            closestElement(focusNode, "td, th"),
+        ];
         // Handle selection for the single cell.
         if (startTd === endTd && !startTd.classList.contains("o_selected_td")) {
-            const { focusNode, focusOffset } = selection;
             // Do not prevent default when there is a text in cell.
             if (focusNode.nodeType === Node.TEXT_NODE) {
                 const textNodes = descendants(startTd).filter(isTextNode);
@@ -1005,46 +1004,80 @@ export class TablePlugin extends Plugin {
             }
             return;
         }
-        // Select cells symmetrically.
-        const endCellPosition = { x: getRowIndex(endTd), y: getColumnIndex(endTd) };
-        const tds = [...startTable.rows].map((row) => [...row.cells]);
-        let targetTd, targetNode;
+
+        const tableGrid = this.buildTableGrid(startTable);
+        const endRowIndex = getRowIndex(endTd);
+        const endColIndex = tableGrid[endRowIndex].indexOf(endTd);
+        if (endColIndex < 0) {
+            return;
+        }
+        // Handle selection for multiple cells.
+        let targetNode = endTd;
+        let targetOffset = nodeSize(targetNode);
+        const hasRowSpan = endTd.hasAttribute("rowspan");
+        const hasColSpan = endTd.hasAttribute("colspan");
+        const isAtStart = focusOffset === 0;
+        const lastRow = tableGrid.length - 1;
+        const lastCol = tableGrid[0]?.length - 1;
         switch (ev.key) {
             case "ArrowUp": {
-                if (endCellPosition.x > 0) {
-                    targetTd = tds[endCellPosition.x - 1][endCellPosition.y];
+                if (endRowIndex > 0 && (isAtStart || !hasRowSpan)) {
+                    targetNode = tableGrid[endRowIndex - 1][endColIndex];
+                    if (targetNode?.rowSpan > 1) {
+                        targetNode = tableGrid[endRowIndex - targetNode.rowSpan]?.[endColIndex];
+                    }
+                    targetOffset = nodeSize(targetNode);
+                } else if (~isAtStart && hasRowSpan) {
+                    targetOffset = 0;
                 } else {
                     targetNode = previousLeaf(startTable, this.editable);
                 }
                 break;
             }
             case "ArrowDown": {
-                if (endCellPosition.x < tds.length - 1) {
-                    targetTd = tds[endCellPosition.x + 1][endCellPosition.y];
-                } else {
+                if (endRowIndex < lastRow && (isAtStart || !hasRowSpan)) {
+                    targetNode = tableGrid[endRowIndex + 1][endColIndex];
+                    if (targetNode?.rowSpan > 1) {
+                        targetNode =
+                            tableGrid[endRowIndex + targetNode.rowSpan]?.[endColIndex] ||
+                            targetNode;
+                    }
+                    targetOffset = nodeSize(targetNode);
+                } else if (!isAtStart || !hasRowSpan) {
                     targetNode = nextLeaf(startTable, this.editable);
                 }
                 break;
             }
             case "ArrowRight": {
-                if (endCellPosition.y < tds[0].length - 1) {
-                    targetTd = tds[endCellPosition.x][endCellPosition.y + 1];
+                if (endColIndex < lastCol && (isAtStart || !hasColSpan)) {
+                    targetNode = tableGrid[endRowIndex][endColIndex + 1];
+                    if (targetNode?.colSpan > 1) {
+                        targetNode =
+                            tableGrid[endRowIndex][endColIndex + targetNode.colSpan] || targetNode;
+                    }
+                    targetOffset = nodeSize(targetNode);
                 }
                 break;
             }
             case "ArrowLeft": {
-                if (endCellPosition.y > 0) {
-                    targetTd = tds[endCellPosition.x][endCellPosition.y - 1];
+                if (endColIndex > 0 && (isAtStart || !hasColSpan)) {
+                    targetNode = tableGrid[endRowIndex][endColIndex - 1];
+                    if (targetNode?.colSpan > 1) {
+                        targetNode = tableGrid[endRowIndex][endColIndex - targetNode.colSpan];
+                    }
+                    targetOffset = nodeSize(targetNode);
+                } else if (!isAtStart || hasColSpan) {
+                    targetOffset = 0;
                 }
                 break;
             }
         }
-        if (targetTd || targetNode) {
+        if (targetNode) {
             this.dependencies.selection.setSelection({
-                anchorNode: selection.anchorNode,
-                anchorOffset: selection.anchorOffset,
-                focusNode: targetTd || targetNode,
-                focusOffset: 0,
+                anchorNode,
+                anchorOffset,
+                focusNode: targetNode,
+                focusOffset: targetOffset,
             });
         }
         ev.preventDefault();
@@ -1326,10 +1359,20 @@ export class TablePlugin extends Plugin {
             [selection.endContainer, ...ancestors(selection.endContainer, this.editable)].find(
                 (node) => isTableCell(node) && closestElement(node, "table") === table
             ) || columns[columns.length - 1];
-        const [startRow, endRow] = [closestElement(startCol, "tr"), closestElement(endCol, "tr")];
-        const [startRowIndex, endRowIndex] = [getRowIndex(startRow), getRowIndex(endRow)];
-        const startColIndex = tableGrid[startRowIndex].indexOf(startCol);
-        const endColIndex = tableGrid[endRowIndex].indexOf(endCol);
+        const startRowIndex =
+            getRowIndex(startCol) + (selection.startOffset > 0 ? startCol.rowSpan - 1 : 0);
+
+        const endRowIndex =
+            getRowIndex(endCol) + (selection.endOffset > 0 ? endCol.rowSpan - 1 : 0);
+
+        const startColIndex =
+            selection.startOffset > 0
+                ? tableGrid[startRowIndex].lastIndexOf(startCol)
+                : tableGrid[startRowIndex].indexOf(startCol);
+        const endColIndex =
+            selection.endOffset > 0
+                ? tableGrid[endRowIndex].lastIndexOf(endCol)
+                : tableGrid[endRowIndex].indexOf(endCol);
         const [minRowIndex, maxRowIndex] = [
             Math.min(startRowIndex, endRowIndex),
             Math.max(startRowIndex, endRowIndex),
