@@ -507,27 +507,6 @@ class L10nInEwaybill(models.Model):
         self._cr.commit()
 
     @api.model
-    def _indian_timezone_to_odoo_utc(self, str_date, time_format='%d/%m/%Y %I:%M:%S %p'):
-        """
-            This method is used to convert date from Indian timezone to UTC
-        """
-        # TODO remove in master
-        if not str_date:
-            return False
-        try:
-            local_time = datetime.strptime(str_date, time_format)
-        except ValueError:
-            try:
-                # Misc. due to a bug in eWaybill sometimes there are chances of getting below format in response
-                local_time = datetime.strptime(str_date, "%d/%m/%Y %H:%M:%S ")
-            except ValueError:
-                # Worst senario no date format matched
-                _logger.warning("Something went wrong while L10nInEwaybill date conversion")
-                return fields.Datetime.to_string(fields.Datetime.now())
-        utc_time = local_time.astimezone(pytz.utc)
-        return fields.Datetime.to_string(utc_time)
-
-    @api.model
     def _convert_str_datetime_to_date(self, str_datetime):
         """
         Expected datetime formats:
