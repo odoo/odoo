@@ -13,6 +13,7 @@ from . import mrp_workorder
 from . import product
 from . import res_company
 from . import stock_move
+from . import stock_move_line
 from . import stock_orderpoint
 from . import stock_picking
 from . import stock_lot
