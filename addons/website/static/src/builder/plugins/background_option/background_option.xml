@@ -32,17 +32,9 @@
         <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
         <!-- Color filter -->
         <BuilderRow t-if="this.showColorFilter()" label.translate="Color Filter" level="2">
-            <!-- TODO handle all the attributes -->
-            <BuilderColorPicker action="'selectFilterColor'"/>
+            <!-- TODO handle data-opacity="0.5" -->
+            <BuilderColorPicker action="'selectFilterColor'" enabledTabs="['custom', 'gradient']" selectedTab="'gradient'"/>
         </BuilderRow>
-        <!-- <div t-att-data-js="with_colors and with_color_combinations and 'ColoredLevelBackground' or 'BackgroundToggler'"
-            <we-colorpicker string="Color Filter"
-                            data-opacity="0.5"
-                            data-with-gradients="1"
-                            data-selected-tab="gradients"
-                            data-excluded="theme, common"
-            />
-        </div> -->
         <BackgroundShapeOption t-if="props.withShapes"/>
     </t>
 </t>

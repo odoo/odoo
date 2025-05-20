@@ -16,7 +16,7 @@
 
     <BuilderRow label.translate="Style" applyTo="'.s_blockquote_line_elt'" level="1" t-if="this.isActiveItem('blockquote_with_line_opt')">
         <BuilderNumberInput styleAction="'width'" min="0" unit="'px'"/>
-        <BuilderColorPicker styleAction="'background-color'" />
+        <BuilderColorPicker styleAction="'background-color'" enabledTabs="['solid', 'custom', 'gradient']"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Author Alignment" applyTo="'.s_blockquote_infos'">
