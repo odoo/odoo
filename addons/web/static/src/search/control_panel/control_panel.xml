@@ -86,7 +86,7 @@
                     <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap " role="search">
                         <Pager t-props="pagerProps"/>
                     </div>
-                    <button t-if="state.embeddedInfos.embeddedActions?.length and !env.isSmall" class="btn btn-secondary"
+                    <button t-if="state.embeddedInfos.embeddedActions?.length and !env.isSmall" name="embedded_actions" class="btn btn-secondary"
                             t-att-class="{active: state.embeddedInfos.showEmbedded}"
                             t-on-click="onClickShowEmbedded"
                             title="View related documents">
@@ -135,7 +135,7 @@
             </button>
             <t t-set-slot="content">
                 <t t-foreach="state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
-                    <DropdownItem 
+                    <DropdownItem
                         class="this.getDropdownClass(action)"
                         onSelected="() => this.env.isSmall ? this.onEmbeddedActionClick(action) : this._setVisibility(action.id)"
                         closingMode="'none'"
