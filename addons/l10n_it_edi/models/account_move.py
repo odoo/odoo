@@ -1397,19 +1397,30 @@ class AccountMove(models.Model):
                 move_line.tax_ids = [Command.set(fitting_taxes)]
 
         # Discounts
-        if elements := element.xpath('.//ScontoMaggiorazione'):
-            # Special case of only 1 percentage discount
-            if len(elements) == 1:
-                element = elements[0]
-                if discount_percentage := get_float(element, './/Percentuale'):
-                    discount_type = get_text(element, './/Tipo')
-                    discount_sign = -1 if discount_type == 'MG' else 1
-                    move_line.discount = discount_sign * discount_percentage
-            # Discounts in cascade summarized in 1 percentage
-            else:
-                total = get_float(element, './/PrezzoTotale')
-                discount = 100 - (100 * total) / (move_line.quantity * move_line.price_unit)
-                move_line.discount = discount
+        if discounts := element.xpath('.//ScontoMaggiorazione'):
+            current_unit_price = move_line.price_unit
+            # We apply the discounts in the order they are found in the XML.
+            # The first discount is applied to the unit price, the second to the result of the first, etc.
+            # If the discount is a percentage, it is applied to the unit price.
+            # If the discount is an amount, it is subtracted from the unit price.
+            # If the computed amount is different than the expected one, we log a message.
+            for discount in discounts:
+                discount_type = get_text(discount, './/Tipo')
+                discount_sign = -1 if discount_type == 'MG' else 1
+                if discount_percentage := get_float(discount, './/Percentuale'):
+                    current_unit_price *= discount_sign * (100 - discount_percentage) / 100
+                elif discount_amount := get_float(discount, './/Importo'):
+                    current_unit_price -= discount_sign * discount_amount
+            expected_total = get_float(element, './/PrezzoTotale')
+            current_total = current_unit_price * move_line.quantity
+            if float_compare(expected_total, current_total, precision_rounding=move_line.currency_id.rounding) != 0:
+                message = Markup("<br/>").join((
+                    _("The amount_total %(current_total)s is different than PrezzoTotale %(expected_total)s for '%(move_name)s'", current_total=current_total, expected_total=expected_total, move_name=move_line.name),
+                    self._compose_info_message(element, '.')
+                ))
+                message_to_log.append(message)
+            discount = 100 - (100 * current_unit_price) / move_line.price_unit
+            move_line.discount = discount
 
         return message_to_log
 
