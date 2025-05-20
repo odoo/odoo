@@ -12,6 +12,12 @@
                     <field name="item_amount"/>
                     <field name="item_delivery_lead"/>
                 </xpath>
+                <xpath expr="//group[@name='internal_notes']" position="after">
+                    <div class="oe_button_box d-flex justify-content-between" style="margin-top: 10px;">
+                        <button string="Import from CSV" type="object" name="action_import_csv" class="btn-secondary"/>
+                        <button string="Guardar" type="object" name="write" class="btn-primary"/>
+                    </div>
+                </xpath>
             </field>
         </record>
     </data>

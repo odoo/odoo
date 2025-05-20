@@ -8,6 +8,9 @@
                 <xpath expr="//field[@name='order_line']//form//field[@name='tax_id']" position="before">
                     <field name="item_delivery_date"/>
                 </xpath>
+                <xpath expr="//button[@name='action_quotation_send']" position="after">
+                    <button name="action_import_csv" string="Import from CSV"/>
+                </xpath>
             </field>
         </record>
 
@@ -54,6 +57,20 @@
 
                 <xpath expr="//page[@name='customer_signature']" position="attributes">
                     <attribute name="invisible">1</attribute>
+                </xpath>
+
+                <xpath expr="//field[@name='delivery_date']" position="after">
+                    <div class="o_td_label">
+                        <label for="delivery_method" string="Lugar de entrega"/>
+                    </div>
+                    <field name="delivery_method" nolabel="1" on_change="1"/>
+                </xpath>
+
+                <xpath expr="//field[@name='date_order']" position="after">
+                    <div class="o_td_label">
+                        <label for="discount" string="Descuento"/>
+                    </div>
+                    <field name="discount" readonly="1" nolabel="1" on_change="1"/>
                 </xpath>
 
             </field>
