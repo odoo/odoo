@@ -44,9 +44,12 @@ class LangDataDict(ReadonlyDict):
     """
     __slots__ = ()
 
-    def __missing__(self, key: Any) -> LangData:
-        some_lang = next(iter(self.values()))  # should have at least one active language
-        return LangData(dict.fromkeys(some_lang, False))
+    def __getitem__(self, key: Any) -> LangData:
+        try:
+            return self._data__[key]
+        except KeyError:
+            some_lang = next(iter(self.values()))  # should have at least one active language
+            return LangData(dict.fromkeys(some_lang, False))
 
 
 class ResLang(models.Model):
