@@ -45,6 +45,7 @@ from odoo.tools.mail import (
     generate_tracking_message_id,
     unfold_references,
 )
+from odoo.addons.mail.tools.background_task import background_task
 
 MAX_DIRECT_PUSH = 5
 
@@ -3196,6 +3197,7 @@ class MailThread(models.AbstractModel):
             self._notify_cancel_by_type_generic('email')
         return True
 
+    @background_task
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         """ Main notification method. This method basically does two things
 
@@ -3219,6 +3221,7 @@ class MailThread(models.AbstractModel):
 
         :return: recipients data (see ``MailThread._notify_get_recipients()``)
         """
+        message = message.with_env(self.env)
         # add lang to context immediately since it will be useful in various rendering later
         self = self._fallback_lang()
         self._raise_for_invalid_parameters(
