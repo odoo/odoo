@@ -1884,13 +1884,14 @@ describe("Selection not collapsed", () => {
                     <tr><td><br></td><td>]<br></td></tr>
                 </tbody></table>`
             ),
-            stepFunction: deleteBackward,
-            contentAfter: unformat(
-                `<table><tbody>
-                    <tr><td>[]<br></td><td><br></td></tr>
-                    <tr><td><br></td><td><br></td></tr>
+            contentBeforeEdit: unformat(
+                `[<table class="o_selected_table"><tbody>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td"><br></td></tr>
+                    <tr><td class="o_selected_td"><br></td><td class="o_selected_td">]<br></td></tr>
                 </tbody></table>`
             ),
+            stepFunction: deleteBackward,
+            contentAfter: unformat("<p>[]<br></p>"),
         });
     });
 
