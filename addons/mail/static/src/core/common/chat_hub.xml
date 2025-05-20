@@ -2,6 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.ChatHub">
+    <t t-if="chatHub" t-call="mail.ChatHub.main"/>
+</t>
+
+<t t-name="mail.ChatHub.main">
     <div class="o-mail-ChatHub" t-if="isShown or ui.isSmall">
         <t t-set="visibleChatWindows" t-value="chatHub.compact ? chatHub.opened.filter(({ bypassCompact }) => bypassCompact) : chatHub.opened "/>
         <t t-foreach="visibleChatWindows" t-as="cw" t-key="cw.localId">

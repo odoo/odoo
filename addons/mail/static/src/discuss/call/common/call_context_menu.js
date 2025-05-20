@@ -18,7 +18,6 @@ export class CallContextMenu extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.rtc = useService("discuss.rtc");
         this.state = useState({
             downloadStats: {},
             uploadStats: {},
@@ -34,6 +33,10 @@ export class CallContextMenu extends Component {
             this.updateStatsTimeout = browser.setInterval(() => this.updateStats(), 3000);
         });
         onWillUnmount(() => browser.clearInterval(this.updateStatsTimeout));
+    }
+
+    get rtc() {
+        return this.store.rtc;
     }
 
     get isSelf() {

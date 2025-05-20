@@ -7,7 +7,7 @@
                 New Message
             </button>
             <t t-if="ui.isSmall">
-                <t t-if="store.discuss.activeTab !== 'main' or !env.inDiscussApp">
+                <t t-if="store.discuss?.activeTab !== 'main' or !env.inDiscussApp">
                     <button name="startMeetingButton" class="w-50 m-1 me-0 btn btn-primary" t-on-click.stop="onClickStartMeeting">
                         <i class="fa fa-users"/> Start a meeting
                     </button>

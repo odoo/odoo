@@ -146,6 +146,7 @@ Help your customers with this chat, and analyse their feedback.
             'rating/static/tests/mock_server/**/*',
             'im_livechat/static/tests/mock_server/**/*',
             'bus/static/tests/mock_websocket.js',
+            'bus/static/src/outdated_page_watcher_service.js',
         ],
         'im_livechat.embed_assets_unit_tests': [
             'web/static/tests/_framework/**/*',

@@ -301,34 +301,49 @@ export class Rtc extends Record {
         this.blurManager = undefined;
     }
 
+    delete() {
+        if (this.localSession) {
+            this.leaveCall();
+        }
+        super.delete();
+    }
+
     start() {
         const services = this.store.env.services;
         this.notification = services.notification;
         this.soundEffectsService = services["mail.sound_effects"];
-        this.pttExtService = services["discuss.ptt_extension"];
         /**
          * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
          */
         this.p2pService = services["discuss.p2p"];
-        onChange(this.store.settings, "useBlur", () => {
+        const stopFn1 = onChange(this.store.settings, "useBlur", () => {
             if (this.state.sendCamera) {
                 this.toggleVideo("camera", true);
             }
         });
-        onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
-            if (this.blurManager) {
-                this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
-                this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
+        const stopFn2 = onChange(
+            this.store.settings,
+            ["edgeBlurAmount", "backgroundBlurAmount"],
+            () => {
+                if (this.blurManager) {
+                    this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
+                    this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
+                }
             }
-        });
-        onChange(this.store.settings, ["voiceActivationThreshold", "use_push_to_talk"], () => {
-            this.linkVoiceActivationDebounce();
-        });
-        onChange(this.store.settings, "audioInputDeviceId", async () => {
+        );
+        const stopFn3 = onChange(
+            this.store.settings,
+            ["voiceActivationThreshold", "use_push_to_talk"],
+            () => {
+                this.linkVoiceActivationDebounce();
+            }
+        );
+        const stopFn4 = onChange(this.store.settings, "audioInputDeviceId", async () => {
             if (this.selfSession) {
                 await this.resetAudioTrack({ force: true });
             }
         });
+        toRaw(this)._raw._.reactiveStopFns.push(stopFn1, stopFn2, stopFn3, stopFn4);
         this.store.env.bus.addEventListener("RTC-SERVICE:PLAY_MEDIA", () => {
             const channel = this.state.channel;
             if (!channel) {
@@ -472,7 +487,7 @@ export class Rtc extends Record {
         channel.rtcInvitingSession = undefined;
         channel.activeRtcSession = undefined;
         if (channel.eq(this.state.channel)) {
-            this.pttExtService.unsubscribe();
+            this.store.env.services["discuss.ptt_extension"].unsubscribe();
             this.network?.disconnect();
             this.clear();
             this.soundEffectsService.play("call-leave");
@@ -662,7 +677,7 @@ export class Rtc extends Record {
     log(session, entry, param2 = {}) {
         const { error, step, state, important, ...data } = param2;
         session.logStep = entry;
-        if (!this.store.settings.logRtc && !important) {
+        if (!this.store.settings?.logRtc && !important) {
             return;
         }
         console.debug(
@@ -924,7 +939,7 @@ export class Rtc extends Record {
             this.notification.add(_t("Your browser does not support webRTC."), { type: "warning" });
             return;
         }
-        this.pttExtService.subscribe();
+        this.store.env.services["discuss.ptt_extension"].subscribe();
         this.state.hasPendingRequest = true;
         const data = await rpc(
             "/mail/rtc/channel/join_call",
@@ -970,7 +985,7 @@ export class Rtc extends Record {
         }
         await this._initConnection();
         await this.resetAudioTrack({ force: audio });
-        if (!this.state.channel?.id) {
+        if (!this.state.channel?.id || !this.store.exists()) {
             return;
         }
         this.soundEffectsService.play("call-join");
@@ -1147,7 +1162,7 @@ export class Rtc extends Record {
         }
         this.selfSession.isTalking = isTalking;
         if (!this.selfSession.isMute) {
-            this.pttExtService.notifyIsTalking(isTalking);
+            this.store.env.services["discuss.ptt_extension"].notifyIsTalking(isTalking);
             await this.refreshAudioStatus();
         }
     }
@@ -1611,7 +1626,6 @@ export const rtcService = {
     dependencies: [
         "bus_service",
         "discuss.p2p",
-        "discuss.ptt_extension",
         "mail.sound_effects",
         "mail.store",
         "multi_tab",

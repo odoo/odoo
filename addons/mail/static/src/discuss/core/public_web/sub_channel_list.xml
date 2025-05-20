@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.SubChannelList">
+        <t t-if="store?.exists()" t-call="mail.SubChannelList.main"/>
+    </t>
+
+    <t t-name="mail.SubChannelList.main">
         <ActionPanel title.translate="Threads" resizable="false" icon="'fa fa-comments-o'">
             <t t-set-slot="header">
                 <div class="d-flex align-items-center my-0">

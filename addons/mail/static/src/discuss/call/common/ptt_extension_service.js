@@ -7,6 +7,7 @@ import { escape, sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 
 export const pttExtensionHookService = {
+    dependencies: ["discuss.rtc"],
     start(env) {
         const INITIAL_RELEASE_TIMEOUT = 500;
         const COMMON_RELEASE_TIMEOUT = 200;
@@ -43,7 +44,7 @@ export const pttExtensionHookService = {
         });
 
         browser.addEventListener("message", ({ data, origin, source }) => {
-            const rtc = env.services["discuss.rtc"];
+            const rtc = env.services["mail.store"].rtc;
             if (
                 source !== window ||
                 origin !== location.origin ||
