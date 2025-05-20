@@ -2887,99 +2887,47 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="step_wizard" name="Step Checkout">
     <!-- wizard_step: A recordset of all published website.checkout.steps-->
-    <div class="o_wizard d-flex flex-wrap justify-content-between justify-content-md-start my-3 my-sm-4">
-        <div class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-center">
-            <!-- Large screen views -->
-            <t t-foreach="wizard_step" t-as="step">
-                <t
-                    t-set="is_current_step"
-                    t-value="step.step_href == current_website_checkout_step_href"
-                />
-                <t t-if="is_current_step">
-                    <t t-set="current_step" t-value="step"/>
-                    <t t-set="current_step_index" t-value="step_index"/>
-                </t>
-                <span t-if="current_step"
-                        t-attf-class="#{not is_current_step and 'o_disabled'} d-none d-md-flex no-decoration">
-                    <div t-attf-class="d-flex align-items-center {{'o_wizard_step_active fw-bold' if is_current_step else 'text-muted'}}">
-                        <p class="o_wizard_steplabel text-center mb-0">
-                            <span t-field="step.name"/>
-                        </p>
-                        <span t-if="not step_last"
-                                class="fa fa-angle-right d-inline-block align-middle mx-sm-3 text-muted fs-5"/>
-                    </div>
-                </span>
-                <a
-                    t-else=""
-                    class="d-none d-md-flex no-decoration"
-                    t-att-href="step.step_href"
-                    t-att-title="step.name"
+    <div class="o_wizard d-flex flex-wrap row-gap-2 my-3 small">
+        <t t-foreach="wizard_step" t-as="step">
+            <t
+                t-set="is_current_step"
+                t-value="step.step_href == current_website_checkout_step_href"
+            />
+            <t t-if="is_current_step" t-set="not_completed_step" t-value="'True'"/>
+            <span
+                t-if="not_completed_step"
+                t-attf-class="#{not is_current_step and 'o_disabled'} d-flex no-decoration"
+            >
+                <div
+                    name="step_name"
+                    t-attf-class="d-flex align-items-center {{'fw-bold' if is_current_step else 'text-muted'}}"
                 >
-                    <div class="d-flex align-items-center o_wizard_step-done">
-                        <p class="o_wizard_steplabel text-center mb-0">
-                            <span t-field="step.name"/>
-                        </p>
-                        <span t-if="not step_last"
-                                class="fa fa-angle-right d-inline-block align-middle mx-sm-3 text-muted fs-5"/>
-                    </div>
-                </a>
-            </t>
-            <!-- Mobile screen views -->
-            <div class="d-flex d-md-none flex-column align-items-start">
-                <div class="dropdown">
-                    <a class="dropdown-toggle fw-bold"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        title="Steps">
-                        <span t-field="current_step.name"/>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <t t-set="current_step" t-value="None"/>
-                        <li t-foreach="wizard_step" t-as="step">
-                            <t
-                                t-set="is_current_step"
-                                t-value="step.step_href == current_website_checkout_step_href"
-                            />
-                            <t t-if="is_current_step">
-                                <t t-set="current_step" t-value="step"/>
-                                <t t-set="_steps_in_deg"
-                                    t-value="(step_index + 1) / len(wizard_step) * 360"/>
-                                <t t-set="next_step"
-                                    t-value="wizard_step[step_index+1] if step_index+1 &lt; len(wizard_step) else False"/>
-                            </t>
-                            <a t-if="not current_step"
-                                class="dropdown-item"
-                                t-att-href="step.step_href"
-                                t-field="step.name"
-                                t-att-title="step.name"/>
-                            <span t-else=""
-                                    t-attf-class="dropdown-item {{'fw-bold' if is_current_step else 'text-muted o_disabled'}}"
-                                    t-field="step.name"
-                                    t-att-title="step.name"/>
-                        </li>
-                    </ul>
+                    <p class="text-center mb-0">
+                        <span t-field="step.name"/>
+                    </p>
+                    <span
+                        t-if="not step_last"
+                        class="fa fa-angle-right d-inline-block align-middle mx-3 text-muted fs-5"
+                    />
                 </div>
-                <span t-if="next_step"
-                        class="d-inline-block d-md-none text-muted">
-                        Next: <span t-field="next_step.name"/>
-                </span>
-            </div>
-        </div>
-        <div class="o_wizard_circle_progress progress d-md-none position-relative rounded-circle ms-3 bg-transparent"
-                t-attf-style="--rightProgress:{{'180' if _steps_in_deg >= 180 else _steps_in_deg}}deg; --leftProgress:{{_steps_in_deg-180 if _steps_in_deg >= 180 else 0}}deg;">
-            <span class="o_wizard_circle_progress_left position-absolute start-0 top-0 z-1 overflow-hidden w-50 h-100 ">
-                <span class="progress-bar position-absolute start-100 top-0 w-100 h-100 border border-5 border-start-0 border-primary bg-transparent"/>
             </span>
-            <span class="o_wizard_circle_progress_right position-absolute top-0 end-0 z-1 overflow-hidden w-50 h-100">
-                <span class="progress-bar position-absolute top-0 end-100 w-100 h-100 border border-5 border-end-0 border-primary bg-transparent"/>
-            </span>
-            <p class="mx-auto fw-bold">
-                <t t-out="current_step_index+1"/>
-                of
-                <t t-out="len(wizard_step)"/>
-            </p>
-        </div>
+            <a
+                t-else=""
+                class="d-flex no-decoration"
+                t-att-href="step.step_href"
+                t-att-title="step.name"
+            >
+                <div class="d-flex align-items-center">
+                    <p class="text-center mb-0">
+                        <span t-field="step.name"/>
+                    </p>
+                    <span
+                        t-if="not step_last"
+                        class="fa fa-angle-right d-inline-block align-middle mx-3 text-muted fs-5"
+                    />
+                </div>
+            </a>
+        </t>
     </div>
 </template>
 
