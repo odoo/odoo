@@ -60,9 +60,6 @@ class StockLocation(models.Model):
         help='This location (if it\'s internal) and all its descendants filtered by type=Internal.'
     )
     comment = fields.Html('Additional Information')
-    posx = fields.Integer('Corridor (X)', default=0, help="Optional localization details, for information purpose only")
-    posy = fields.Integer('Shelves (Y)', default=0, help="Optional localization details, for information purpose only")
-    posz = fields.Integer('Height (Z)', default=0, help="Optional localization details, for information purpose only")
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
