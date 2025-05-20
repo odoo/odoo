@@ -176,6 +176,22 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
 
+    def test_object_write_equation(self):
+        # Do: update partners city
+        self.action.write({
+            'state': 'object_write',
+            'fields_lines': [Command.create({
+                'col1': self.res_partner_city_field.id,
+                'evaluation_type': 'equation',
+                'value': 'record.id',
+            })],
+        })
+        partners = self.test_partner + self.test_partner.copy()
+        self.action.with_context(self.context, active_ids=partners.ids).run()
+        # Test: partners updated
+        self.assertEqual(partners[0].city, str(partners[0].id))
+        self.assertEqual(partners[1].city, str(partners[1].id))
+
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
         # Data: 2 server actions that will be nested
