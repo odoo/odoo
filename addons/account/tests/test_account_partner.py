@@ -24,6 +24,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             'partner_id': partner.id,
             'payment_type': 'inbound',
             'partner_type': 'customer',
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
         self.env.invalidate_all()
         self.assertEqual(partner.days_sales_outstanding, 0.0)

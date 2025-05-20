@@ -1540,6 +1540,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         move.action_post()
         with Form.from_action(self.env, move.action_register_payment()) as wiz_form:
+            wiz_form.journal_id = self.bank_journal_for_payment
             self.assertEqual(wiz_form.payment_date.strftime('%Y-%m-%d'), '2023-02-01')
             self.assertEqual(wiz_form.amount, 276)  # First installment of 30%
             self.assertTrue(wiz_form.group_payment)
@@ -1560,10 +1561,10 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         action_register_payment = move.action_force_register_payment()  # should not raise an error on non-posted move
         self.assertTrue(action_register_payment)
-        wizard = self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
-
-        action_create_payment = wizard.action_create_payments()
-        payment = self.env[action_create_payment['res_model']].browse(action_create_payment['res_id'])
+        wizard = self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({
+            'journal_id': self.bank_journal_for_payment.id
+        })
+        wizard._create_payments()
 
         move.action_post()
         self.assertFalse(move.payment_ids)  # don't auto reconcile payments
@@ -1571,7 +1572,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # If the move is already fully paid, we should alert the user
         with self.assertRaisesRegex(UserError, r"There's nothing left to pay for the selected journal items, so no payment registration is necessary. You've got your finances under control like a boss!"):
             action_register_payment = move.action_force_register_payment()
-            self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({})
+            self.env[action_register_payment['res_model']].with_context(action_register_payment['context']).create({
+                'journal_id': self.bank_journal_for_payment.id
+            })
 
     def test_in_invoice_switch_type_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund,
@@ -2034,6 +2037,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_debit_ids')
@@ -2168,6 +2172,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         # make payment
         self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
             'payment_date': invoice.date,
+            'journal_id': self.bank_journal_for_payment.id,
         })._create_payments()
         # check caba move
         partial_rec = invoice.mapped('line_ids.matched_debit_ids')
@@ -2339,6 +2344,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 .with_context(active_ids=move.ids, active_model='account.move')\
                 .create({
                     'amount': amount,
+                    'journal_id': self.bank_journal_for_payment.id,
                 })\
                 ._create_payments()
 
