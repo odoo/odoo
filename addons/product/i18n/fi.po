@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-27 20:37+0000\n"
+"POT-Creation-Date: 2025-05-16 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -376,7 +376,7 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
-"Hinta on joukko myyntihintoja tai sääntöjä, joilla lasketaan myyntitilausrivien hinta tuotteiden, tuoteryhmien, päivämäärien ja tilattujen määrien perusteella.\n"
+"Hinta on joukko myyntihintoja tai sääntöjä, joiden perusteella myyntitilausrivien hinnat lasketaan tuotteiden, tuoteryhmien, päivämäärien ja tilattujen määrien mukaan\n"
 "            Tämä on täydellinen työkalu useiden hinnoittelujen, kausialennusten jne. käsittelyyn."
 
 #. module: product
@@ -546,10 +546,8 @@ msgid "All Product Variants using this Tag"
 msgstr "Kaikki tuotevariantit, jotka käyttävät tätä tunnusta"
 
 #. module: product
-#. odoo-javascript
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
-#: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "All Products"
@@ -938,7 +936,7 @@ msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
 msgstr ""
-"Yhdistelmät mahdollistavat yhden tuotteen valitsemisen kategorian eri "
+"Yhdistelmät mahdollistavat yhden tuotteen valitsemisen tuoteryhmän eri "
 "vaihtoehdoista."
 
 #. module: product
@@ -2689,7 +2687,7 @@ msgstr "Tuoteluettelo Mixin"
 #: model_terms:ir.ui.view,arch_db:product.product_category_list_view
 #: model_terms:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr "Tuotekategoriat"
+msgstr "Tuoteryhmät"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -2700,7 +2698,7 @@ msgstr "Tuotekategoriat"
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Category"
-msgstr "Tuotekategoria"
+msgstr "Tuoteryhmä"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo
@@ -3190,8 +3188,8 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
-"Määrittele tuotekategoria jos tämä sääntö koskee ainoastaan kyseisen "
-"kategorian tuotteita. Jätä muutoin tyhjäksi."
+"Määrittele tuoteryhmä, jos tämä sääntö koskee ainoastaan kyseisen "
+"tuoteryhmän tuotteita. Jätä muutoin tyhjäksi."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -3391,7 +3389,7 @@ msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
 msgstr ""
-"Tähän kategoriaan kuuluvien tuotteiden määrä (ei ota huomioon "
+"Tähän tuoteryhmään kuuluvien tuotteiden määrä (ei ota huomioon "
 "alakategorioita)"
 
 #. module: product

@@ -14945,12 +14945,12 @@ msgstr "Aktiivisten kielten määrä"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__parent_res_id
 msgid "Active Parent Id"
-msgstr "Aktiivinen ylemmän tason Id"
+msgstr "Aktiivinen ylätunnus"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__parent_res_model
 msgid "Active Parent Model"
-msgstr "Aktiivisen ylemmän tason malli"
+msgstr "Aktiivinen ylämalli"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_next_actual
@@ -23327,7 +23327,7 @@ msgstr "Toimialueen arvo"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_embedded_actions__domain
 msgid "Domain applied to the active id of the parent model"
-msgstr "Vanhemman mallin aktiiviseen id:hen sovellettava toimialue"
+msgstr "Ylämallin aktiiviseen tunnukseen sovellettava toimialue"
 
 #. module: base
 #. odoo-python
@@ -23790,7 +23790,7 @@ msgstr "Sulautetut toiminnot"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__embedded_parent_res_id
 msgid "Embedded Parent Res"
-msgstr "Sulautettu ylemmän tason Res"
+msgstr "Upotettu ylemmän tason Res"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__is_visible
@@ -24060,7 +24060,7 @@ msgstr "Epson ePOS-tulostimet kassassa"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_epson_printer
 msgid "Epson ePOS Printers in PoS Kiosk"
-msgstr "Epson ePOS-tulostimet kassa-kioskissa"
+msgstr "Epson ePOS-tulostimet Kassajärjestelmän itsepalvelupäätteellä"
 
 #. module: base
 #: model:res.country,name:base.gq
@@ -27739,8 +27739,8 @@ msgid ""
 "         "
 msgstr ""
 "Jos tämä näkymä periytyy,\n"
-"* jos True, näkymä laajentaa aina ylätason näkymänsä\n"
-"* jos False, näkymä ei tällä hetkellä laajenna ylätasoaan, mutta se voidaan ottaa käyttöön\n"
+"* jos tosi, näkymä laajentaa aina ylätason näkymänsä\n"
+"* jos epätosi, näkymä ei tällä hetkellä laajenna ylätasoaan, mutta se voidaan ottaa käyttöön\n"
 "         "
 
 #. module: base
@@ -28955,7 +28955,7 @@ msgstr "IoT kassaa varten"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_self_order_iot
 msgid "IoT in PoS Kiosk"
-msgstr "Esineiden internet (IoT) kassakioskissa"
+msgstr "IoT Kassajärjestelmän itsepalvelupäätteellä"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_menu_ir_profile
@@ -33779,10 +33779,10 @@ msgid ""
 "interaction history, profiles, and more.\n"
 "\n"
 msgstr ""
-"Odoo Kassapääte\n"
+"Odoo Kassajärjestelmä\n"
 "-----------------------------\n"
 "\n"
-"Odoon <a href=\"https://www.odoo.com/app/point-of-sale-shop\">Kassapääte</a>\n"
+"Odoo <a href=\"https://www.odoo.com/app/point-of-sale-shop\">Kassajärjestelmä</a>\n"
 "esittelee erittäin siistin käyttöliittymän, jota ei tarvitse asentaa ja joka toimii\n"
 "online- ja offline-tilassa nykyaikaisilla laitteistoilla.\n"
 "\n"
@@ -33795,12 +33795,12 @@ msgstr ""
 "\n"
 "### Web-selaimessa\n"
 "\n"
-"Odoo Kassapääte on verkkosovellus, jota voidaan käyttää millä tahansa laitteella, joka on yhteensopiva\n"
+"Odoo Kassajärjestelmä on verkkosovellus, jota voidaan käyttää millä tahansa laitteella, joka on yhteensopiva\n"
 "verkkosivujen kanssa, eikä asennusta tarvita juuri lainkaan.\n"
 "\n"
 "### Kosketusnäyttö vai näppäimistö?\n"
 "\n"
-"Kassapääte toimii täydellisesti millä tahansa kosketusnäyttö laitteella, olipa kyseessä sitten\n"
+"Kassajärjestelmä toimii täydellisesti millä tahansa kosketusnäyttö laitteella, olipa kyseessä sitten\n"
 "iPadin kaltaiset tabletit tai näppäimistöttömät resistiiviset\n"
 "kosketusnäyttölaitteet.\n"
 "\n"
@@ -33828,7 +33828,7 @@ msgstr ""
 "\n"
 "### Yksinkertainen ja kaunis\n"
 "\n"
-"Sano hyvästit rumille, vanhentuneille kassaohjelmistoille ja nauti Odoo-verkkokäyttöliittymästä\n"
+"Sano hyvästit rumille, vanhentuneille kassaohjelmistoille ja nauti Odoo-verkkokäyttöliittymästä,\n"
 "joka on suunniteltu nykyaikaista vähittäiskauppaa varten.\n"
 "\n"
 "### Suunniteltu tuottavuutta varten\n"
@@ -33839,7 +33839,7 @@ msgstr ""
 "### Salamannopea haku\n"
 "\n"
 "Skannaa tuotteita, selaa hierarkkisia luokkia tai hae nopeasti tietoa\n"
-"tuotteista nopealla suodattimella kaikkien tuotteiden joukosta.\n"
+"tuotteista nopeasti suodattamalla kaikkien tuotteiden joukosta.\n"
 "\n"
 "Integroitu varastonhallinta\n"
 "-------------------------------\n"
@@ -36003,12 +36003,12 @@ msgstr "Ylätaso"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_embedded_actions__parent_action_id
 msgid "Parent Action"
-msgstr "Vanhempien toiminta"
+msgstr "Ylemmän tason toimenpide"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__parent_id
 msgid "Parent Application"
-msgstr "Ylätason ohjelma"
+msgstr "Kantasovellus"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__group_by_parent_id
@@ -36019,26 +36019,26 @@ msgstr "Emoyhtiö"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_field_id
 msgid "Parent Field"
-msgstr "Ylemmän tason kenttä"
+msgstr "Kantakenttä"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_id
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__menu_id
 msgid "Parent Menu"
-msgstr "Ylätason valikko"
+msgstr "Kantavalikko"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_menu__parent_path
 #: model:ir.model.fields,field_description:base.field_res_company__parent_path
 #: model:ir.model.fields,field_description:base.field_res_partner_category__parent_path
 msgid "Parent Path"
-msgstr "Ylempi polku"
+msgstr "Kantapolku"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__parent_name
 #: model:ir.model.fields,field_description:base.field_res_users__parent_name
 msgid "Parent name"
-msgstr "Ylätason nimi"
+msgstr "Ylemmän tason nimi"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_gs1_nomenclature
@@ -44533,7 +44533,9 @@ msgstr "Käytä kuponkeja, lahjakortteja ja kanta-asiakasohjelmia kassassa"
 #. module: base
 #: model:ir.module.module,description:base.module_pos_self_order_epson_printer
 msgid "Use Epson ePOS Printers without the IoT Box in the PoS Kiosk"
-msgstr "Käytä Epson ePOS -tulostimia ilman IoT-laatikkoa kassakioskissa"
+msgstr ""
+"Käytä Epson ePOS -tulostimia ilman IoT-boksia Kassajärjestelmän "
+"itsepalvelupäätteellä"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot

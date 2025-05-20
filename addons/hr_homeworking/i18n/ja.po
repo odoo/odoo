@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"POT-Creation-Date: 2025-05-16 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Wil Odoo, 2024\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -133,12 +133,6 @@ msgid "At Other - Online"
 msgstr "他 - オンライン"
 
 #. module: hr_homeworking
-#. odoo-javascript
-#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
-msgid "At {{location}} - {{status}}"
-msgstr "At {{location}} - {{status}}"
-
-#. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_hr_employee_base
 msgid "Basic Employee"
 msgstr "基本社員"
@@ -181,7 +175,11 @@ msgid "Day Week String"
 msgstr "曜日ストリング"
 
 #. module: hr_homeworking
+#: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__display_name
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__display_name
+#: model:ir.model.fields,field_description:hr_homeworking.field_hr_work_location__display_name
+#: model:ir.model.fields,field_description:hr_homeworking.field_res_partner__display_name
+#: model:ir.model.fields,field_description:hr_homeworking.field_res_users__display_name
 msgid "Display Name"
 msgstr "表示名"
 
@@ -216,7 +214,11 @@ msgid "Hr Icon Display"
 msgstr "時間アイコン表示"
 
 #. module: hr_homeworking
+#: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__id
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__id
+#: model:ir.model.fields,field_description:hr_homeworking.field_hr_work_location__id
+#: model:ir.model.fields,field_description:hr_homeworking.field_res_partner__id
+#: model:ir.model.fields,field_description:hr_homeworking.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -325,12 +327,6 @@ msgstr "特定されていない"
 #: model:ir.model,name:hr_homeworking.model_res_users
 msgid "User"
 msgstr "ユーザ"
-
-#. module: hr_homeworking
-#. odoo-javascript
-#: code:addons/hr_homeworking/static/src/im_status_patch.xml:0
-msgid "User work at {{location}} and is {{status}}"
-msgstr "ユーザは {{location}} で勤務中でステータスは {{status}}"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__wednesday_location_id

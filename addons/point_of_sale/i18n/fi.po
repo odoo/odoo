@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:37+0000\n"
+"POT-Creation-Date: 2025-05-16 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1106,7 +1106,7 @@ msgstr "Käytettävissä olevat maksutavat"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr "Saatavilla olevat kassatuotekategoriat"
+msgstr "Saatavilla olevat Kassajärjestelmän tuoteryhmät"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_preset_ids
@@ -2624,8 +2624,8 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_template_action_pos_product
 msgid "Define products and categories for POS retail and restaurant"
 msgstr ""
-"Määrittele tuotteet ja kategoriat Kassa-vähittäismyyntiä ja ravintolaa "
-"varten"
+"Määrittele tuotteet ja tuoteryhmät Kassajärjestelmässä vähittäismyyntiä ja "
+"ravintolaa varten"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -2946,10 +2946,10 @@ msgid ""
 "            An Order Printer will only print updates for products belonging to one of\n"
 "            its categories."
 msgstr ""
-"Jokaisella tilaustulostimella on IP-osoite, joka määrittää IoT-laatikon/laitteiston\n"
-"            Välityspalvelimen, josta tulostin löytyy, ja luettelo tuotekategorioista.\n"
-"            Tilaustulostin tulostaa päivityksiä vain tuotteille, jotka kuuluvat johonkin seuraavista luokista\n"
-"            sen luokkaan kuuluviin tuotteisiin."
+"Jokaisella tilaustulostimella on IP-osoite, joka määrittää IoT-boksin/laitteiston\n"
+"            välityspalvelimen, josta tulostin löytyy, ja luettelon tuoteryhmistä.\n"
+"            Tilaustulostin tulostaa päivityksiä vain tuotteille, jotka kuuluvat johonkin\n"
+"            sen ryhmistä."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_preset
@@ -3881,7 +3881,7 @@ msgstr "On laskutettava"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__is_kiosk_mode
 msgid "Is Kiosk Mode"
-msgstr "On kioskitila"
+msgstr "Onko Itsepalvelupäätetila"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__is_total_cost_computed
@@ -5245,7 +5245,7 @@ msgstr "Kassapäätteen tulostin"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_tree_view
 msgid "POS Product Category"
-msgstr "Kassan tuotekategoria"
+msgstr "Kassajärjestelmän tuoteryhmä"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total
@@ -5696,12 +5696,12 @@ msgstr "Kassapäätteen tilaukset"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "PoS Product Categories"
-msgstr "Kassan tuotekategoriat"
+msgstr "Kassan tuoteryhmät"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
 msgid "PoS Product Category"
-msgstr "Kassan tuotekategoria"
+msgstr "Kassajärjestelmän tuoteryhmä"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_load_mixin
@@ -5927,7 +5927,7 @@ msgstr "Kassan maksu"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Product Categories"
-msgstr "Kassapäätteen tuoteryhmät"
+msgstr "Kassajärjestelmän tuoteryhmät"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_refunded_invoice_ids
@@ -6277,7 +6277,7 @@ msgstr "Tuote"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product & PoS categories"
-msgstr "Tuote- ja kassa-luokat"
+msgstr "Tuote- & Kassajärjestelmäkategoriat"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_attribute
@@ -6294,7 +6294,7 @@ msgstr "Tuotteen määritteen mukautettu arvo"
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_categ_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Product Category"
-msgstr "Tuotekategoria"
+msgstr "Tuoteryhmä"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_combo
@@ -7723,7 +7723,7 @@ msgstr "YHTEENSÄ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/pos_kanban_view/pos_kanban_view.js:0
 msgid "Tables, menus, kitchen display, etc."
-msgstr "Pöydät, ruokalistat, keittiön näyttö jne."
+msgstr "Pöydät, ruokalistat, keittiönäyttö jne."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -8092,9 +8092,9 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
-"Kassassa näytetään vain tuotteet, jotka kuuluvat johonkin valittuun "
-"kategoriahierakiaan. Jos kategoriaa ei ole määritetty, kaikki saatavilla "
-"olevat tuotteet näytetään"
+"Kassajärjestelmässä näytetään vain tuotteet, jotka kuuluvat johonkin "
+"valittuun kategoriahierakiaan. Jos kategoriaa ei ole määritetty, kaikki "
+"saatavilla olevat tuotteet näytetään"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -9185,7 +9185,7 @@ msgid ""
 "When active, orderlines will be sorted based on product category and "
 "sequence in the product screen's order cart."
 msgstr ""
-"Kun toiminto on aktiivinen, tilausrivit lajitellaan tuotekategorian ja "
+"Kun toiminto on aktiivinen, tilausrivit lajitellaan tuoteryhmän ja "
 "järjestyksen perusteella tuoteruudun tilauskorissa."
 
 #. module: point_of_sale
@@ -9597,12 +9597,6 @@ msgid "discount off on"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. 0123456789"
-msgstr "esim. 0123456789"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "e.g. 1234567890"
 msgstr "esim. 1234567890"
@@ -9637,12 +9631,6 @@ msgstr "esim. Palautusoikeus, Kiitos, että olet tehnyt ostoksia kanssamme!"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
 msgstr "esim. virvoitusjuomat"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. john.doe@mail.com"
-msgstr "esim. john.doe@mail.com"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9793,18 +9781,3 @@ msgstr "painikkeiden aktivoimiseksi."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "käyttäen"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr "{{ !barcodeReader ? 'Ei nimikkeistöä' : '' }}"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
-msgid ""
-"{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
-msgstr ""
-"{{ line.hasValidProductLot() ? 'Voimassa oleva tuoteerä' : 'Virheellinen "
-"tuoteerä'}}"

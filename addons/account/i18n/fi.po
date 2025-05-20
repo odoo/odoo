@@ -9874,7 +9874,7 @@ msgstr "Jätä avoimeksi"
 msgid ""
 "Keep this field empty to use the default value from the product category."
 msgstr ""
-"Jätä tämä kenttä tyhjäksi, jos haluat käyttää tuotekategorian oletusarvoa."
+"Jätä tämä kenttä tyhjäksi, jos haluat käyttää tuoteryhmän oletusarvoa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
@@ -9884,9 +9884,9 @@ msgid ""
 " anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"Jätä tämä kenttä tyhjäksi, jos haluat käyttää tuotekategorian oletusarvoa. "
-"Jos anglo-saxon on määritetty automatisoidulla arvostusmenetelmällä, "
-"käytetään tuotekategorian menotiliä."
+"Jätä tämä kenttä tyhjäksi, jos haluat käyttää tuoteryhmän oletusarvoa. Jos "
+"anglo-saxon on määritetty automatisoidulla arvostusmenetelmällä, käytetään "
+"tuotekategorian menotiliä."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -10193,15 +10193,14 @@ msgid ""
 "Line \"%(line)s\" defines line \"%(parent_line)s\" as its parent, but "
 "appears before it in the report. The parent must always come first."
 msgstr ""
-"Rivi \"%(line)s\" määrittelee rivin \"%(parent_line)s\" ylemmäksi tahokseen,"
-" mutta näkyy raportissa ennen sitä. Ylemmän tason rivin on aina oltava "
-"ensimmäisenä."
+"Rivi \"%(line)s\" määrittelee rivin \"%(parent_line)s\" kantarivikseen, "
+"mutta näkyy raportissa ennen sitä. Kantarivin on aina oltava ensimmäisenä."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Line \"%s\" defines itself as its parent."
-msgstr "Rivi \"%s\" määrittelee itsensä omaksi ylemmäksi tasokseen."
+msgstr "Rivi \"%s\" määrittelee itsensä omaksi kantarivikseen."
 
 #. module: account
 #: model:account.reconcile.model,name:account.1_reconcile_from_label
@@ -11934,12 +11933,12 @@ msgstr "Ylätaso"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__parent_id
 msgid "Parent Line"
-msgstr "Ylätason rivi"
+msgstr "Kantarivi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__report_id
 msgid "Parent Report"
-msgstr "Ylätason raportti"
+msgstr "Kantaraportti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12741,7 +12740,7 @@ msgstr "Tuote"
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "Tuotekategoria"
+msgstr "Tuoteryhmä"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__quantity
@@ -13907,7 +13906,7 @@ msgid ""
 "analytic default (e.g. create new customer invoice or Sales order if we "
 "select this product, it will automatically take this as an analytic account)"
 msgstr ""
-"Valitse tuotekategoria, joka käyttää analyyttistä tiliä, joka on määritetty "
+"Valitse tuoteryhmä, joka käyttää analyyttistä tiliä, joka on määritetty "
 "analyyttisessä oletusarvossa (esim. luodessamme uuden asiakaslaskun tai "
 "myyntitilauksen, jos valitsemme tämän tuotteen, se ottaa automaattisesti "
 "tämän analyyttiseksi tiliksi)"

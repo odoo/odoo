@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:37+0000\n"
+"POT-Creation-Date: 2025-05-16 20:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
 "Last-Translator: Deniz Guvener, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -53,6 +53,8 @@ msgid ""
 "<br/>\n"
 "                    URL:"
 msgstr ""
+"<br/>\n"
+"                    URL:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
@@ -66,6 +68,8 @@ msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
 msgstr ""
+"Hiçbir oturum açık değilken self-servis sipariş sitesine erişildiğinde bu "
+"kullanıcının erişim hakları kullanılacaktır."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -128,12 +132,12 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_after
 msgid "Availability After"
-msgstr ""
+msgstr "Şu Zamandan Sonra Uygun:"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__hour_until
 msgid "Availability Until"
-msgstr ""
+msgstr "Şu Zamana Kadar Uygun"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -151,7 +155,7 @@ msgstr "Mevcut Diller"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_product_pos_category_form_view
 msgid "Available between"
-msgstr ""
+msgstr "Şu Zamanlar Arasında Uygun"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.product_template_search_view_pos
@@ -266,7 +270,7 @@ msgstr "Kombo"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo reference"
-msgstr ""
+msgstr "Karma ürün referansı"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -327,7 +331,7 @@ msgstr "Güncel Değer"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "Custom Links"
-msgstr ""
+msgstr "Özel Bağlantılar"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_self_order_custom_link
@@ -341,7 +345,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Customize Header"
-msgstr ""
+msgstr "Başlığı Özelleştirin"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__danger
@@ -433,7 +437,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Each Order"
-msgstr ""
+msgstr "Her Sipariş"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -467,6 +471,8 @@ msgid ""
 "Feel free to use and print this QR code as many times as needed according to"
 " your requirements."
 msgstr ""
+"İhtiyacınıza göre bu QR kodunu dilediğiniz kadar kullanabilir ve "
+"yazdırabilirsiniz."
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_account_fiscal_position
@@ -499,7 +505,7 @@ msgstr "HTTP Yönlendirme"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__has_paper
 msgid "Has paper"
-msgstr ""
+msgstr "Fiş şablonu"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -514,7 +520,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Home buttons"
-msgstr ""
+msgstr "Ana Sayfa Düğmeleri"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -558,7 +564,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:pos_self_order.field_product_product__self_order_available
 #: model:ir.model.fields,help:pos_self_order.field_product_template__self_order_available
 msgid "If this product is available in the Self Order screens"
-msgstr ""
+msgstr "Bu ürün Self Servis Sipariş ekranlarında mevcutsa"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -583,6 +589,8 @@ msgstr ""
 msgid ""
 "In Self-Order mode, you must have at least one table to generate QR codes"
 msgstr ""
+"Self-Order modunda QR kodları oluşturmak için en az bir masaya sahip olmanız"
+" gerekir."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__inactive
@@ -601,6 +609,8 @@ msgid ""
 "It seems there hasn't been any activity on this kiosk. Would you like to "
 "continue?"
 msgstr ""
+"Bu kioskta herhangi bir işlem yapılmamış gibi görünüyor. Devam etmek ister "
+"misiniz?"
 
 #. module: pos_self_order
 #. odoo-python
@@ -641,6 +651,8 @@ msgstr "Son Güncelleme"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Let your customers order using their mobile or a kiosk."
 msgstr ""
+"Müşterilerinizin mobil cihaz veya kiosk kullanarak sipariş vermesine izin "
+"verin."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
@@ -668,6 +680,8 @@ msgid ""
 "Make it easy for your customers to explore your menu\n"
 "                online with the QR codes on your tables"
 msgstr ""
+"Masalarınıza yerleştireceğiniz QR kodları ile müşterilerinizin menünüzü\n"
+"                çevrim içi keşfetmesini kolaylaştırın"
 
 #. module: pos_self_order
 #. odoo-python
@@ -719,7 +733,7 @@ msgstr "Adı"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Name of the image to display on the self order screen"
-msgstr ""
+msgstr "Self sipariş ekranında gösterilecek görselin adı"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -770,7 +784,7 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Open Kiosk"
-msgstr ""
+msgstr "Kiosk'u Açın"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -814,12 +828,12 @@ msgstr "Ödeme İşlemi"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_pay_after
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Pay After:"
-msgstr ""
+msgstr "Şundan Sonra Ödeyin:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Pay after"
-msgstr ""
+msgstr "Sonradan Ödeyin"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -833,6 +847,8 @@ msgid ""
 "Personalize your splash screen by adding one or multiple images to create a "
 "slideshow"
 msgstr ""
+"Bir slayt gösterisi oluşturmak için bir veya birden fazla görsel ekleyerek "
+"açılış ekranınızı kişiselleştirin."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -850,7 +866,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_service_mode__counter
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_preset__service_at__counter
 msgid "Pickup zone"
-msgstr ""
+msgstr "Teslim Alma alanı"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_load_mixin
@@ -966,7 +982,7 @@ msgstr "QR kodları"
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "QR codes can only be generated in mobile or consultation mode."
-msgstr ""
+msgstr "QR kodları yalnızca mobil veya danışma modunda oluşturulabilir."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__consultation
@@ -989,7 +1005,7 @@ msgstr ""
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Quantity select"
-msgstr ""
+msgstr "Miktar seçimi"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1078,13 +1094,13 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
 msgid "Self Order:"
-msgstr ""
+msgstr "Self Order:"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 #: model_terms:ir.ui.view,arch_db:pos_self_order.view_pos_preset_form
 msgid "Self Ordering"
-msgstr ""
+msgstr "Kendi Sipariş Verme"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -1123,7 +1139,7 @@ msgstr "Sıralama"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Service at"
-msgstr ""
+msgstr "Servis yeri"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1140,12 +1156,12 @@ msgstr ""
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Splash screens"
-msgstr ""
+msgstr "Açılış ekranları"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Start Kiosk"
-msgstr ""
+msgstr "Kiosk'u Başlatın"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
@@ -1183,7 +1199,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/components/receipt_header/receipt_header.xml:0
 msgid "Table Tracker:"
-msgstr ""
+msgstr "Masa Takipçisi:"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1230,7 +1246,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_category.py:0
 msgid "The Availability Until must be set between 00:00 and 24:00"
-msgstr ""
+msgstr "Müsaitlik Bitiş Saati 00:00 ile 24:00 arasında olmalıdır."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1334,7 +1350,7 @@ msgstr "Evet"
 #: code:addons/pos_self_order/models/pos_config.py:0
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "You cannot add cash payment methods in kiosk mode."
-msgstr ""
+msgstr "Kiosk modunda nakit ödeme yöntemleri ekleyemezsiniz."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1359,7 +1375,7 @@ msgstr "Siparişiniz"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Your Selection"
-msgstr ""
+msgstr "Seçiminiz"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1400,12 +1416,6 @@ msgstr "ve"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "empty = all points of sale"
 msgstr ""
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/popup_table/popup_table.xml:0
-msgid "floor"
-msgstr "الجزء الصحيح"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
