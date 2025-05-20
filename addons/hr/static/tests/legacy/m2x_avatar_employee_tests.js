@@ -213,7 +213,7 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                             },
                         });
                     }
-                    if (route === "/web/dataset/call_kw/resource.resource/get_avatar_card_data") {
+                    if (route === "/web/dataset/call_kw/hr.employee.public/get_avatar_card_data") {
                         const resourceIdArray = args.args[0];
                         const resourceId = resourceIdArray[0];
                         const resources = pyEnv['hr.employee.public'].search_read([['id', '=', resourceId]]);
@@ -531,8 +531,8 @@ QUnit.module("M2XAvatarEmployee", ({ beforeEach }) => {
                 )[1]
             );
             assert.verifySteps([
-                `read resource.resource ${employeeId_1}`,
-                `read resource.resource ${employeeId_2}`,
+                `read hr.employee ${employeeId_1}`,
+                `read hr.employee ${employeeId_2}`,
             ]);
         }
     );

@@ -22,6 +22,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2024
 # Murat Durmuş <muratd@projetgrup.com>, 2024
 # Melih Melik Sonmez, 2025
+# Deniz Guvener, 2025
 # 
 msgid ""
 msgstr ""
@@ -29,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-26 08:56+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Melih Melik Sonmez, 2025\n"
+"Last-Translator: Deniz Guvener, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -253,6 +254,8 @@ msgid ""
 "<b class=\"d-block \">This answer has been flagged</b>\n"
 "                            As a moderator, you can either validate or reject this answer."
 msgstr ""
+"<b class=\"d-block \">Bu yanıt işaretlendi</b>\n"
+"                            Bir moderatör olarak bu yanıtı onaylayabilir veya reddedebilirsiniz."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -379,10 +382,10 @@ msgid ""
 "            - no need to answer the same question twice. Also, please <b>don't forget to vote</b>\n"
 "            - it really helps to select the best questions and answers!"
 msgstr ""
-"<b>Lütfen önemli bir cevap vermeye çalışın.</b> Soru veya cevap hakkında yorum yapmak istiyorsanız,\n"
-"            <b>yorum aracını kullanın.</b> Yanıtlarınızı her zaman gözden geçirebileceğinizi  <b>lütfen unutmayın</b>\n"
-"            - aynı soruyu iki kez cevaplamaya gerek yok. <b>Ayrıca, lütfen oy vermeyi unutmayın</b>\n"
-"            -gerçekten en iyi soruları ve cevapları seçmek için yardımcı olur!"
+"<b>Lütfen anlamlı ve kapsamlı bir yanıt vermeye çalışın.</b> Eğer sadece soruya ya da cevaba yorum yapmak istiyorsanız\n"
+"            <b>yorumlama aracını kullanın.</b> Unutmayın, <b>cevaplarınızı her zaman gözden geçirebilir ve güncelleyebilirsiniz</b>\n"
+"            - aynı soruya tekrar cevap vermenize gerek yok. Ayrıca lütfen <b>oy vermeyi unutmayın</b>\n"
+"            - en iyi soru ve cevapların öne çıkmasına gerçekten yardımcı olur!"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -763,6 +766,8 @@ msgid ""
 "<span>Please wait for a moderator to validate your previous post to be "
 "allowed to reply to questions.</span>"
 msgstr ""
+"<span>Sorulara yanıt verebilmek için lütfen bir moderatörün önceki "
+"gönderinizi onaylamasını bekleyin.</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar_header
@@ -883,7 +888,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Answer %s"
-msgstr ""
+msgstr "Yanıt %s"
 
 #. module: website_forum
 #. odoo-python
@@ -966,7 +971,7 @@ msgstr "Cevaplandı"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post
 msgid "Answered on"
-msgstr ""
+msgstr "Yanıtlanma zamanı:"
 
 #. module: website_forum
 #: model_terms:gamification.badge,description:website_forum.badge_a_8
@@ -1004,7 +1009,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "As a moderator, you can either validate or reject this answer."
-msgstr ""
+msgstr "Bir moderatör olarak, bu yanıtı onaylayabilir veya reddedebilirsiniz."
 
 #. module: website_forum
 #. odoo-python
@@ -1148,7 +1153,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
 msgid "Best Answer"
-msgstr ""
+msgstr "En İyi Yanıt"
 
 #. module: website_forum
 #. odoo-javascript
@@ -1788,6 +1793,9 @@ msgid ""
 "Field to keep track of a post's last activity. Updated whenever it is "
 "replied to, or when a comment is added on the post or one of its replies."
 msgstr ""
+"Bir gönderinin son etkinliğini takip etmek için kullanılan alan. Her "
+"yanıtlandığında veya gönderiye ya da yanıtlarından birine bir yorum "
+"eklendiğinde güncellenir."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -2810,7 +2818,7 @@ msgstr "Soru"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "Question %s"
-msgstr ""
+msgstr "Soru %s"
 
 #. module: website_forum
 #. odoo-python
@@ -2957,7 +2965,7 @@ msgstr "Reddet"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_related_posts
 msgid "Related Posts"
-msgstr ""
+msgstr "İlgili Gönderiler"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
@@ -3389,9 +3397,9 @@ msgid ""
 "represents number of votes for a post, and 'days' is number of days since "
 "the post creation"
 msgstr ""
-"Bu formül ilişkilileri düzenine göre sıralamak için kullanılır.  'Oylar' "
-"değişkeni bir gönderi için oyları temsil eder ve 'günler' gönderi oluştuktan"
-" sonraki günlerin sayısını ifade eder"
+"Bu formül, alaka düzeyine göre sıralamak için kullanılır. 'votes' değişkeni "
+"bir gönderinin aldığı oy sayısını, 'days' ise gönderinin oluşturulmasından "
+"bu yana geçen gün sayısını ifade eder."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3421,6 +3429,8 @@ msgid ""
 "This post is currently awaiting moderation and is not published yet.<br/>\n"
 "                    As a moderator you can either <b>Accept</b> or <b>Reject</b> this post."
 msgstr ""
+"Bu gönderi şu anda moderasyon bekliyor ve henüz yayınlanmadı.<br/>\n"
+"                    Moderatör olarak bu gönderiyi <b>Kabul</b> veya <b>Red</b> edebilirsiniz."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3934,7 +3944,7 @@ msgstr "olumsuz oy"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "downvoted"
-msgstr ""
+msgstr "eksilenmiş"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
@@ -4074,7 +4084,7 @@ msgstr "eşleştirme \""
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "no changes"
-msgstr ""
+msgstr "değişiklik yok"
 
 #. module: website_forum
 #. odoo-python
@@ -4152,7 +4162,7 @@ msgstr "olumlu oy, yorumlar ekle"
 #. odoo-python
 #: code:addons/website_forum/models/forum_post_vote.py:0
 msgid "upvoted"
-msgstr ""
+msgstr "desteklenmiş"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.no_results_message

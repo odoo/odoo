@@ -158,7 +158,7 @@ test("ImageField with alt attribute", async () => {
             </form>`,
     });
 
-    expect(".o_field_widget[name='document'] img").toHaveAttribute("data-alt", "something", {
+    expect(".o_field_widget[name='document'] img").toHaveAttribute("alt", "something", {
         message: "the image should correctly set its alt attribute",
     });
 });
@@ -184,7 +184,7 @@ test("ImageField on a many2one", async () => {
         "data-src",
         `${getOrigin()}/web/image/partner/1/document?unique=1486375200000`
     );
-    expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("data-alt", "first record");
+    expect(".o_field_widget[name='parent_id'] img").toHaveAttribute("alt", "first record");
 });
 
 test("url should not use the record last updated date when the field is related", async () => {
@@ -679,14 +679,14 @@ test("ImageField is reset when changing record", async () => {
     });
 
     const imageFile = new File([imageData], "fake_file.png", { type: "png" });
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should not be set" }
     );
 
     await setFiles(imageFile);
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         `data:image/png;base64,${MY_IMAGE}`,
         {
@@ -698,14 +698,14 @@ test("ImageField is reset when changing record", async () => {
     await click(".o_control_panel_main_buttons .o_form_button_create");
     await runAllTimers();
     await animationFrame();
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should be reset" }
     );
 
     await setFiles(imageFile);
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         `data:image/png;base64,${MY_IMAGE}`,
         {
@@ -838,7 +838,7 @@ test("convert image to webp", async () => {
     });
 
     const imageFile = new File([imageData], "fake_file.jpeg", { type: "jpeg" });
-    expect("img[data-alt='Binary file']").toHaveAttribute(
+    expect("img[alt='Binary file']").toHaveAttribute(
         "data-src",
         "/web/static/img/placeholder.png",
         { message: "image field should not be set" }

@@ -3,7 +3,7 @@ from markupsafe import Markup
 from odoo import _, models, Command
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_repr, format_list
+from odoo.tools import float_is_zero, float_repr, format_list
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
@@ -655,7 +655,8 @@ class AccountEdiCommon(models.AbstractModel):
         # discount
         discount = 0
         if delivered_qty * price_unit != 0 and price_subtotal is not None:
-            discount = 100 * (1 - (price_subtotal - charge_amount) / (delivered_qty * price_unit))
+            inferred_discount = 100 * (1 - (price_subtotal - charge_amount) / (delivered_qty * price_unit))
+            discount = inferred_discount if not float_is_zero(inferred_discount, 2) else 0.0
 
         # Sometimes, the xml received is very bad; e.g.:
         #   * unit price = 0, qty = 0, but price_subtotal = -200

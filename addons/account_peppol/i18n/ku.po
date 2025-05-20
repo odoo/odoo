@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-14 20:47+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Raz Omer Hussein, 2025\n"
 "Language-Team: Kurdish (https://app.transifex.com/odoo/teams/41243/ku/)\n"
@@ -59,7 +59,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid ""
 "<br/>\n"
-"                            If you need a Peppol compliant software, we recommend"
+"                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
 
 #. module: account_peppol
@@ -451,7 +451,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__id
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__smp_registration
@@ -464,13 +464,6 @@ msgstr ""
 #: code:addons/account_peppol/controllers/portal.py:0
 msgid ""
 "If you want to be invoiced by Peppol, your configuration must be valid."
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"In Belgium, electronic invoicing will be <u>mandatory as of January "
-"2026</u>."
 msgstr ""
 
 #. module: account_peppol
@@ -487,7 +480,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__invoice_sending_method
 msgid "Invoice sending"
-msgstr ""
+msgstr "ناردنی فاکتورە"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_account_peppol_service_wizard__service_json
@@ -510,14 +503,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__write_uid
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "دوایین نوێکردنەوە لەلایەن..."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__write_date
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service_wizard__write_date
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "دوایین نوێکردنەوە لە..."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__prod
@@ -557,7 +550,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "Odoo"
-msgstr ""
+msgstr "ئۆدۆ"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -620,20 +613,6 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_get_participant_status_ir_actions_server
 msgid "PEPPOL: update participant status"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: <b style=\"color: $o-enterprise-action-color;\">We did not send your "
-"invoice on Peppol.</b>"
-msgstr ""
-
-#. module: account_peppol
-#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
-msgid ""
-"PS: This invoice has also been <b style=\"color: $o-enterprise-action-"
-"color\">sent on Peppol</b>."
 msgstr ""
 
 #. module: account_peppol
@@ -971,6 +950,11 @@ msgid ""
 msgstr ""
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "This invoice has also been"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "This verification code has expired. Please request a new one."
@@ -1172,6 +1156,26 @@ msgid "by Peppol"
 msgstr ""
 
 #. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "could not be sent via Peppol"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "invoices and credit notes."
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "sent via Peppol"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "to send invoices, but this one"
+msgstr ""
+
+#. module: account_peppol
+#: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
+msgid "uses"
 msgstr ""

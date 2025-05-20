@@ -9,12 +9,14 @@ import {
 import { Thread } from "@mail/core/common/thread";
 import { describe, test } from "@odoo/hoot";
 import { advanceTime, Deferred, tick } from "@odoo/hoot-dom";
+import { disableAnimations } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 defineMailModels();
 describe.current.tags("desktop");
 
 test("can highlight messages that are not yet loaded", async () => {
+    disableAnimations();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     let middleMessageId;
@@ -38,6 +40,7 @@ test("can highlight messages that are not yet loaded", async () => {
 });
 
 test("can highlight message (slow ref registration)", async () => {
+    disableAnimations();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     let middleMessageId;

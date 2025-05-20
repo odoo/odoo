@@ -3,7 +3,12 @@
 import { queryAll } from "@odoo/hoot-dom";
 import { reactive, useEffect, useExternalListener } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
-import { isIterable, toSelector } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import {
+    isIterable,
+    parseRegExp,
+    R_WHITE_SPACE,
+    toSelector,
+} from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { DiffMatchPatch } from "./lib/diff_match_patch";
 import { getRunner } from "./main_runner";
 
@@ -36,6 +41,8 @@ import { getRunner } from "./main_runner";
  * @typedef {"expected" | "group" | "received" | "technical"} MarkupType
  *
  * @typedef {string | RegExp | { new(): any }} Matcher
+ *
+ * @typedef {QueryRegExp | QueryExactString | QueryPartialString} QueryPart
  *
  * @typedef {{
  *  assertions: number;
@@ -485,6 +492,44 @@ const _formatTechnical = (value, depth, isObjectValue, cache) => {
     return `${baseIndent}${proto}{${content.length ? `\n${content.join("")}${endIndent}` : ""}}`;
 };
 
+class QueryRegExp extends RegExp {
+    /**
+     * @param {string} value
+     */
+    matchValue(value) {
+        return this.test(value);
+    }
+}
+
+class QueryString extends String {
+    /** @type {(a: string; b: string) => boolean} */
+    compareFn;
+
+    /**
+     * @param {string} value
+     * @param {boolean} exclude
+     */
+    constructor(value, exclude) {
+        super(value);
+        this.exclude = exclude;
+    }
+
+    /**
+     * @param {string} value
+     */
+    matchValue(value) {
+        return this.compareFn(this.toString(), value);
+    }
+}
+
+class QueryExactString extends QueryString {
+    compareFn = (a, b) => b.includes(a);
+}
+
+class QueryPartialString extends QueryString {
+    compareFn = getFuzzyScore;
+}
+
 /** @type {Map<Function, (value: unknown) => string>} */
 const GENERIC_SERIALIZERS = new Map([
     [BigInt, (v) => v.valueOf()],
@@ -507,6 +552,8 @@ const ELLIPSIS = "…";
 const MAX_HUMAN_READABLE_SIZE = 80;
 const MIN_HUMAN_READABLE_SIZE = 8;
 
+const QUERY_EXCLUDE = "-";
+
 const R_ASYNC_FUNCTION = /^\s*async/;
 const R_CLASS = /^[A-Z][a-z]/;
 const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
@@ -522,6 +569,13 @@ const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
 };
+
+/**
+ * Global object used in {@link getFuzzyScore} when performing a lookup, to avoid
+ * computing score for the same string twice.
+ * @type {Record<string, number> | null}
+ */
+let fuzzyScoreMap = null;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -905,10 +959,15 @@ export function generateHash(...strings) {
  * Better matches will get a higher score: consecutive letters are better,
  * and a match closer to the beginning of the string is also scored higher.
  *
- * @param {string} pattern (normalized)
+ * @param {string} pattern (normalized & lower-cased)
  * @param {string} string (normalized)
  */
 export function getFuzzyScore(pattern, string) {
+    string = string.toLowerCase();
+    if (fuzzyScoreMap && string in fuzzyScoreMap) {
+        return fuzzyScoreMap[string];
+    }
+
     let totalScore = 0;
     let currentScore = 0;
     let patternIndex = 0;
@@ -924,7 +983,11 @@ export function getFuzzyScore(pattern, string) {
         totalScore = totalScore + currentScore;
     }
 
-    return patternIndex === pattern.length ? totalScore : 0;
+    const score = patternIndex === pattern.length ? totalScore : 0;
+    if (fuzzyScoreMap) {
+        fuzzyScoreMap[string] = score;
+    }
+    return score;
 }
 
 /**
@@ -1068,38 +1131,31 @@ export function levenshtein(a, b) {
  * letters).
  *
  * @template {{ key: string }} T
- * @param {string | RegExp} pattern normalized string or RegExp
+ * @param {QueryPart[]} parsedQuery normalized string or RegExp
  * @param {Iterable<T>} items
  * @param {keyof T} [property]
  * @returns {T[]}
  */
-export function lookup(pattern, items, property = "key") {
-    /** @type {T[]} */
-    const result = [];
-    if (pattern instanceof RegExp) {
-        // Regex lookup
+export function lookup(parsedQuery, items, property = "key") {
+    for (const queryPart of parsedQuery) {
+        const isPartial = queryPart instanceof QueryPartialString;
+        if (isPartial) {
+            fuzzyScoreMap = $create(null);
+        }
+        const result = [];
         for (const item of items) {
-            if (pattern.test(item[property])) {
+            const pass = queryPart.matchValue(String(item[property]));
+            if (queryPart.exclude ? !pass : pass) {
                 result.push(item);
             }
         }
-    } else {
-        // Fuzzy lookup
-        const scores = new Map();
-        for (const item of items) {
-            if (scores.has(item)) {
-                result.push(item);
-                continue;
-            }
-            const score = getFuzzyScore(pattern, item[property]);
-            if (score > 0) {
-                scores.set(item, score);
-                result.push(item);
-            }
+        if (isPartial) {
+            result.sort((a, b) => fuzzyScoreMap[b[property]] - fuzzyScoreMap[a[property]]);
         }
-        result.sort((a, b) => scores.get(b) - scores.get(a));
+        items = result;
     }
-    return result;
+    fuzzyScoreMap = null;
+    return items;
 }
 
 /**
@@ -1194,7 +1250,6 @@ export function match(value, ...matchers) {
 export function normalize(string) {
     return string
         .trim()
-        .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
 }
@@ -1221,6 +1276,58 @@ export function ordinal(number) {
             return `${strNumber}th`;
         }
     }
+}
+
+/**
+ * @param {string} query
+ * @returns {QueryPart[]}
+ */
+export function parseQuery(query) {
+    const nQuery = normalize(query);
+    if (!nQuery) {
+        return [];
+    }
+    const regex = parseRegExp(nQuery, { safe: true });
+    if (regex instanceof RegExp) {
+        // Do not go further: the entire query is treated as a regular expression
+        return [new QueryRegExp(regex)];
+    }
+
+    /** @type {QueryPart[]} */
+    const parsedQuery = [];
+
+    // Step 1: remove "exact" parts of the string query and add them as exact string
+    // matchers
+    const nQueryPartial = nQuery
+        .replaceAll(R_QUERY_EXACT, (...args) => {
+            const { content, exclude } = args.at(-1);
+            if (content) {
+                parsedQuery.push(new QueryExactString(content, Boolean(exclude)));
+            }
+            return "";
+        })
+        .toLowerCase(); // Lower-cased *after* extracting the exact matches
+
+    // Step 2: split remaining string query on white spaces and:
+    //  - add all excluding parts as separate partial matchers
+    //  - aggregate non-excluding parts as one partial matcher
+    const partialIncludeParts = [];
+    for (const part of nQueryPartial.split(R_WHITE_SPACE)) {
+        if (!part) {
+            continue;
+        }
+        if (part.startsWith(QUERY_EXCLUDE)) {
+            const woExclude = part.slice(QUERY_EXCLUDE.length);
+            parsedQuery.push(new QueryPartialString(woExclude, true));
+        } else {
+            partialIncludeParts.push(part);
+        }
+    }
+    if (partialIncludeParts.length) {
+        parsedQuery.push(new QueryPartialString(partialIncludeParts.join(" "), false));
+    }
+
+    return parsedQuery;
 }
 
 export async function paste() {
@@ -1563,7 +1670,7 @@ export class Markup {
      */
     static diff(expected, actual) {
         const eType = typeof expected;
-        if (eType !== typeof actual || !(eType === "object" || eType === "string")) {
+        if (eType !== typeof actual || !((expected && eType === "object") || eType === "string")) {
             // Cannot diff
             return null;
         }
@@ -1728,6 +1835,7 @@ export const CASE_EVENT_TYPES = {
     },
 };
 export const DEFAULT_EVENT_TYPES = CASE_EVENT_TYPES.assertion.value | CASE_EVENT_TYPES.error.value;
+export const EXACT_MARKER = `"`;
 
 export const INCLUDE_LEVEL = {
     url: 1,
@@ -1749,3 +1857,8 @@ export const STORAGE = {
 
 export const S_ANY = Symbol("any value");
 export const S_NONE = Symbol("no value");
+
+export const R_QUERY_EXACT = new RegExp(
+    `(?<exclude>-)?${EXACT_MARKER}(?<content>[^${EXACT_MARKER}]*)${EXACT_MARKER}`,
+    "g"
+);

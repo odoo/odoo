@@ -5116,6 +5116,7 @@ class AccountMove(models.Model):
         }
 
     def action_update_fpos_values(self):
+        self.invoice_line_ids._compute_price_unit()
         self.invoice_line_ids._compute_tax_ids()
         self.line_ids._compute_account_id()
 
@@ -5595,9 +5596,9 @@ class AccountMove(models.Model):
             next_amount_to_pay = self.amount_residual
             next_payment_reference = self.name
             next_due_date = epd_installment['date_maturity']
-            discount_date = epd_installment['line'].discount_date
+            discount_date = epd_installment['line'].discount_date or fields.Date.context_today(self)
             discount_amount_currency = epd_installment['discount_amount_currency']
-            days_left = (discount_date - fields.Date.context_today(self)).days  # should never be lower than 0 since epd is valid
+            days_left = max(0, (discount_date - fields.Date.context_today(self)).days)  # should never be lower than 0 since epd is valid
             if days_left > 0:
                 discount_msg = _(
                     "Discount of %(amount)s if paid within %(days)s days",

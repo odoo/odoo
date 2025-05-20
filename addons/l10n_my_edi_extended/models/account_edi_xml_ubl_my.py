@@ -20,6 +20,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
                 'industry_classification_code_attrs': {'name': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.name},
                 'industry_classification_code': invoice.partner_id.commercial_partner_id.l10n_my_edi_industrial_classification.code,
             })
+            # Self-billed invoices must use the number given by the supplier.
+            if invoice.ref:
+                vals['vals']['id'] = invoice.ref
         # Sometimes, a foreign customer is also a supplier.
         # To avoid needing to change the Generic TIN depending on what you do with your commercial partner, we will automatically switch
         # depending on the context.

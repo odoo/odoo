@@ -5324,7 +5324,8 @@ test(`switching to another record from a dirty one on desktop`, async () => {
     expect(getPagerValue()).toEqual([1]);
 });
 
-test.tags("desktop")("Save record, no changes but dirty (add and remove tag)", async () => {
+test.tags("desktop");
+test("Save record, no changes but dirty (add and remove tag)", async () => {
     onRpc("web_save", () => expect.step("ERROR: web_save should not be called"));
     onRpc("web_read", () => expect.step("web_read"));
     await mountView({
@@ -5357,48 +5358,46 @@ test.tags("desktop")("Save record, no changes but dirty (add and remove tag)", a
     expect.verifySteps([]); // avoid doint an extra web_read
 });
 
-test.tags("desktop")(
-    "switching to another record from a dirty record but wo changes (add and remove tag)",
-    async () => {
-        onRpc("web_save", () => expect.step("ERROR: web_save should not be called"));
-        onRpc("web_read", () => expect.step("web_read"));
-        await mountView({
-            type: "form",
-            resModel: "partner",
-            arch: `<form>
+test.tags("desktop");
+test("switching to another record from a dirty record but wo changes (add and remove tag)", async () => {
+    onRpc("web_save", () => expect.step("ERROR: web_save should not be called"));
+    onRpc("web_read", () => expect.step("web_read"));
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form>
                   <field name="type_ids" widget="many2many_tags"/>
               </form>`,
-            resIds: [1, 2],
-            resId: 1,
-        });
+        resIds: [1, 2],
+        resId: 1,
+    });
 
-        expect(getPagerValue()).toEqual([1]);
-        expect(getPagerLimit()).toBe(2);
+    expect(getPagerValue()).toEqual([1]);
+    expect(getPagerLimit()).toBe(2);
 
-        expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(0);
-        expect(`.o_breadcrumb`).toHaveText("first record");
+    expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(0);
+    expect(`.o_breadcrumb`).toHaveText("first record");
 
-        // add a tag
-        await contains(`.o_input_dropdown input`).click();
-        await contains(`.dropdown-item:contains(gold)`).click();
+    // add a tag
+    await contains(`.o_input_dropdown input`).click();
+    await contains(`.dropdown-item:contains(gold)`).click();
 
-        expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(1);
+    expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(1);
 
-        // remove tag
-        await contains(`.o_field_widget[name=type_ids] .o_tag .o_delete`).click();
-        expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(0);
-        expect.verifySteps(["web_read", "web_read"]);
+    // remove tag
+    await contains(`.o_field_widget[name=type_ids] .o_tag .o_delete`).click();
+    expect(`.o_field_widget[name=type_ids] .o_tag`).toHaveCount(0);
+    expect.verifySteps(["web_read", "web_read"]);
 
-        // click on the pager to switch to the next record
-        // The `web_save` RPC should not be called as there are no changes.
-        // The next record should be load correctly.
-        await contains(`.o_pager_next`).click();
-        expect(`.modal`).toHaveCount(0);
-        expect(getPagerValue()).toEqual([2]);
-        expect(`.o_breadcrumb`).toHaveText("second record");
-        expect.verifySteps(["web_read"]);
-    }
-);
+    // click on the pager to switch to the next record
+    // The `web_save` RPC should not be called as there are no changes.
+    // The next record should be load correctly.
+    await contains(`.o_pager_next`).click();
+    expect(`.modal`).toHaveCount(0);
+    expect(getPagerValue()).toEqual([2]);
+    expect(`.o_breadcrumb`).toHaveText("second record");
+    expect.verifySteps(["web_read"]);
+});
 
 test(`do not reload after save when using pager`, async () => {
     onRpc(({ method }) => expect.step(method));
@@ -9422,7 +9421,7 @@ test(`display tooltips for buttons (debug = false)`, async () => {
 
 test.tags("desktop");
 test(`display tooltips for buttons (debug = true)`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -9554,6 +9553,12 @@ test(`Can switch to form view on inline tree`, async () => {
         doAction(action, options) {
             expect.step("doAction");
             expect(action).toEqual({
+                context: {
+                    allowed_company_ids: [1],
+                    lang: "en",
+                    tz: "taht",
+                    uid: 7,
+                },
                 res_id: id,
                 res_model: "partner",
                 type: "ir.actions.act_window",
@@ -9780,7 +9785,7 @@ test(`basic support for widgets: onchange update`, async () => {
 
 test.tags("desktop");
 test(`proper stringification in debug mode tooltip`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -9810,7 +9815,7 @@ test(`proper stringification in debug mode tooltip`, async () => {
 
 test.tags("desktop");
 test(`field tooltip in debug mode, on field with domain attr`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -9832,7 +9837,7 @@ test(`field tooltip in debug mode, on field with domain attr`, async () => {
 
 test.tags("desktop");
 test(`do not display unset attributes in debug field tooltip`, async () => {
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -11036,7 +11041,7 @@ test(`save a form view with an invisible required field in a x2many`, async () =
 
 test(`help on field as precedence over field's declaration -- form`, async () => {
     Partner._fields.foo = fields.Char({ help: "pythonhelp" });
-    serverState.debug = true;
+    serverState.debug = "1";
 
     await mountView({
         resModel: "partner",
@@ -12593,7 +12598,8 @@ test("executing new action, closes dialog, and avoid reload previous view", asyn
     ]);
 });
 
-test.tags("mobile")(`pager is up to date`, async () => {
+test.tags("mobile");
+test(`pager is up to date`, async () => {
     patchWithCleanup(transitionConfig, { disabled: true });
     await mountView({
         resModel: "partner",

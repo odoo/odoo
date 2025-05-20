@@ -68,7 +68,7 @@ class TestBuyGiftCard(TestSaleCouponCommon):
 
         # Confirm order as Public User to trigger loyalty mail
         public_user = self.env.ref('base.public_user')
-        orders.with_context({}).with_user(public_user).sudo().action_confirm()
+        orders.with_user(public_user).with_company(order.company_id).sudo().action_confirm()
 
         mails = self.env['mail.mail'].search([])
         self.assertEqual(len(mails), 2)

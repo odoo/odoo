@@ -45,7 +45,7 @@ class ProductProduct(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, config_id):
         params = super()._load_pos_self_data_fields(config_id)
-        params += ['public_description']
+        params += ['public_description', 'list_price']
         return params
     
     @api.model
