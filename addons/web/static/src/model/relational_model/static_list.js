@@ -1016,7 +1016,7 @@ export class StaticList extends DataPoint {
                     if (orderBy[0].asc) {
                         orderBy[0] = { name: orderBy[0].name, asc: false };
                     } else {
-                        orderBy = [];
+                        orderBy = [{ name: "id", asc: true }];
                     }
                 }
             } else {

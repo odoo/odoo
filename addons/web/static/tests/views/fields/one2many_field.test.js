@@ -11126,6 +11126,12 @@ test("x2many list sorted by many2one", async () => {
     expect(queryAllTexts(".o_data_row .o_list_number")).toEqual(["2", "1", "4"], {
         message: "should have correct order (DESC)",
     });
+
+    await contains(".o_list_renderer thead th:eq(1)").click();
+
+    expect(queryAllTexts(".o_data_row .o_list_number")).toEqual(["1", "2", "4"], {
+        message: "should fall back to initial order",
+    });
 });
 
 test("one2many with extra field from server not in (inline) form", async () => {
