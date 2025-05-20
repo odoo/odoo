@@ -96,5 +96,6 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             'product_uom_id': order_line.product_uom_id.id,
             'display_type': order_line.display_type,
             'analytic_distribution': order_line.analytic_distribution,
+            'group_id': order_line.group_id.id,
             **({'name': order_line.name} if order_line.display_type in ('line_section', 'line_note') or not has_product_description else {}),
         }
