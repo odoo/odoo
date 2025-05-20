@@ -227,7 +227,7 @@
                             <setting id="show_purchase_receipts" help="Activate to create purchase receipt">
                                 <field name="group_show_purchase_receipts"/>
                             </setting>
-                            <setting id="autopost_bills" help="After importing three bills for a vendor without making changes, Odoo will suggest automatically validating future bills. You can toggle this feature at any time in the vendor's profile.">
+                            <setting id="autopost_bills" help="Propose to validate bills automatically when AI accuracy is right 3 times in a row for a vendor.">
                                 <field name="autopost_bills"/>
                             </setting>
                         </block>
@@ -343,7 +343,7 @@
                             </setting>
                         </block>
                         <block title="Reporting" id="account_reports_settings" groups="account.group_account_user" invisible="not module_account_reports">
-                            <setting string="Restrictive Audit Trail" company_dependent="1" invisible="force_restrictive_audit_trail" help="As soon as a journal item is involved, changes to the account, partner, journal entry or journal item are logged. You can then not delete those records anymore">
+                            <setting string="Restrictive Audit Trail" company_dependent="1" invisible="force_restrictive_audit_trail" help="Log changes to posted journal entries immutably">
                                 <field name="restrictive_audit_trail"/>
                             </setting>
                         </block>
@@ -362,7 +362,7 @@
                             </div>
                         </block>
                         <block title="Storno Accounting" id="storno" groups="account.group_account_user">
-                            <setting id="enable_storno_accounting" company_dependent="1" help="Use Storno accounting" title="Allows you to use Storno accounting.">
+                            <setting id="enable_storno_accounting" company_dependent="1" help="Use negative numbers to reverse original entries">
                                 <field name="account_storno"/>
                             </setting>
                         </block>
