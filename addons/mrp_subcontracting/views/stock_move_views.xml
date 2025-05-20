@@ -135,7 +135,7 @@
         <field name="model">stock.move</field>
         <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <list delete="0" create="0" decoration-muted="is_done" decoration-warning="quantity - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
+            <list delete="0" create="0" decoration-muted="state in ['done', 'cancel']" decoration-warning="quantity - product_uom_qty &gt; 0.0001" decoration-success="state not in ['done', 'cancel'] and quantity - product_uom_qty &lt; 0.0001" js_class="subcontracting_portal_move_list_view">
                 <field name="company_id" column_invisible="True"/>
                 <field name="sequence" column_invisible="True"/>
                 <field name="unit_factor" column_invisible="True"/>
@@ -143,7 +143,6 @@
                 <field name="picking_type_id" column_invisible="True"/>
                 <field name="has_tracking" column_invisible="True"/>
                 <field name="operation_id" column_invisible="True"/>
-                <field name="is_done" column_invisible="True"/>
                 <field name="bom_line_id" column_invisible="True"/>
                 <field name="location_id" column_invisible="True"/>
                 <field name="warehouse_id" column_invisible="True"/>
