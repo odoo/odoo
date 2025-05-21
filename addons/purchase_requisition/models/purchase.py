@@ -32,15 +32,6 @@ class PurchaseOrder(models.Model):
         domain="[('id', '!=', id), ('state', 'in', ['draft', 'sent', 'to approve'])]",
         string="Alternative POs", check_company=True,
         help="Other potential purchase orders for purchasing products")
-    has_alternatives = fields.Boolean(
-        "Has Alternatives", compute='_compute_has_alternatives',
-        help="Whether or not this purchase order is linked to another purchase order as an alternative.")
-
-    @api.depends('purchase_group_id')
-    def _compute_has_alternatives(self):
-        self.has_alternatives = False
-        if self.env.user.has_group('purchase_requisition.group_purchase_alternatives'):
-            self.filtered(lambda po: po.purchase_group_id).has_alternatives = True
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
