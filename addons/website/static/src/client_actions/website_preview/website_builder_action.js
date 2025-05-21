@@ -145,7 +145,10 @@ export class WebsiteBuilder extends Component {
                 if (isEditing) {
                     setTimeout(() => {
                         registry.category("systray").remove("website.WebsiteSystrayItem");
+                        document.querySelector(".o_builder_open .o_main_navbar").classList.add("d-none");
                     }, 200);
+                } else {
+                    document.querySelector(".o_main_navbar")?.classList.remove("d-none");
                 }
             },
             () => [this.state.isEditing]

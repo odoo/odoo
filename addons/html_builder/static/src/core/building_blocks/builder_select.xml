@@ -5,7 +5,7 @@
     <BuilderComponent>
         <!-- Render the SelectItem(s) into an invisible node to ensure the label of the
         button is being set. -->
-        <div t-ref="root" class="w-100" style="overflow: hidden;">
+        <div t-ref="root" class="w-100">
             <div t-att-class="'d-none ' + props.className" t-ref="content"><WithIgnoreItem><t t-slot="default" /></WithIgnoreItem></div>
             <Dropdown state="this.dropdown">
                 <button class="btn btn-primary text-start o-dropdown-caret w-100 overflow-hidden" t-ref="button" t-att-id="props.id"

@@ -15,13 +15,13 @@
             </div>
         </div>
         <div class="o-snippets-tabs d-flex justify-content-between mt-2 p-2 pb-0 flex-shrink-0">
-            <button data-name="blocks" class="px-2 cursor-pointer pb-1 pe-auto bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="props.isTranslation">
+            <button data-name="blocks" data-hotkey="1" class="px-2 cursor-pointer pb-1 pe-auto bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="props.isTranslation">
                 <span class="ps-1">Blocks</span>
             </button>
             <button data-name="customize" class="px-2 cursor-pointer pb-1 bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'customize'}" t-on-click="() => this.onTabClick('customize')">
                 <span>Customize</span>
             </button>
-            <button data-name="theme" t-if="ThemeTab" class="px-2 cursor-pointer pb-1 bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="props.isTranslation">
+            <button data-name="theme" t-if="ThemeTab" data-hotkey="2" class="px-2 cursor-pointer pb-1 bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="props.isTranslation">
                 <span class="pe-1">Theme</span>
             </button>
         </div>

@@ -6,7 +6,7 @@ import {
 } from "./website_helpers";
 import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, waitFor } from "@odoo/hoot-dom";
 import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
@@ -53,4 +53,10 @@ test("Set and update the 'contenteditable' attribute on the editable elements", 
     await contains(".overlay .oe_snippet_remove").click();
     expect(wrapwrapEl.getAttribute("contenteditable")).toBe("false");
     expect(wrapEl.getAttribute("contenteditable")).toBe("false");
+});
+
+test("Admin navbar is hidden in edit mode", async () => {
+    await setupWebsiteBuilder("<section><p>TEST</p></section>");
+    await waitFor(":iframe section");
+    expect(".o_main_navbar").not.toBeVisible();
 });
