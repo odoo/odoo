@@ -6,6 +6,7 @@ from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.convert import convert_file
 from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 from odoo.osv import expression
 
@@ -312,6 +313,34 @@ class FleetVehicle(models.Model):
         if 'plan_to_change_bike' in vals:
             su_vals['plan_to_change_bike'] = vals.pop('plan_to_change_bike')
         return su_vals
+
+    @api.model
+    def has_demo_data(self):
+        # This record only exists if the scenario has been already launched
+        demo_tag = self.env.ref('fleet.scenario_vehicle_tag_demo', raise_if_not_found=False)
+        if demo_tag:
+            return True
+        return bool(self.env['ir.module.module'].search_count([
+            ('state', 'in', ['installed', 'to upgrade', 'uninstallable']),
+            ('demo', '=', True)
+        ]))
+
+    @api.model
+    def _action_load_fleet_vehicle_scenario(self):
+
+        convert_file(
+            self.env,
+            "fleet",
+            "data/scenarios/fleet_vehicle_scenario.xml",
+            None,
+            mode="init",
+            kind="data",
+        )
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "reload",
+        }
 
     @api.model_create_multi
     def create(self, vals_list):

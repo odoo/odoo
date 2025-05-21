@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Vehicle Tags -->
+        <record id="scenario_vehicle_tag_leasing" model="fleet.vehicle.tag" >
+            <field name="name">Employee Car</field>
+            <field name="color" eval="3"/>
+        </record>
+
+        <record id="scenario_vehicle_tag_senior" model="fleet.vehicle.tag" >
+            <field name="name">Senior</field>
+            <field name="color" eval="2"/>
+        </record>
+
+        <record id="scenario_vehicle_tag_junior" model="fleet.vehicle.tag" >
+                <field name="name">Junior</field>
+                <field name="color" eval="1"/>
+        </record>
+
+        <record id="scenario_vehicle_tag_private" model="fleet.vehicle.tag">
+            <field name="name">Private</field>
+            <field name="color" eval="8"/>
+        </record>
+
+        <record id="scenario_vehicle_tag_purchased" model="fleet.vehicle.tag" >
+            <field name="name">Purchased</field>
+            <field name="color" eval="4"/>
+        </record>
+
+        <record id="scenario_vehicle_tag_demo" model="fleet.vehicle.tag">
+            <field name="name">Demo</field>
+            <field name="color" eval="3"/>
+        </record>
+
+        <!-- Vehicle Category -->
+        <record id="scenario_model_category_sedan" model="fleet.vehicle.model.category">
+            <field name="name">Sedan</field>
+        </record>
+
+        <record id="scenario_model_category_coupe" model="fleet.vehicle.model.category">
+            <field name="name">Coupe</field>
+        </record>
+
+        <record id="scenario_model_category_compact" model="fleet.vehicle.model.category">
+            <field name="name">Compact</field>
+        </record>
+
+        <record id="scenario_model_category_suv" model="fleet.vehicle.model.category">
+            <field name="name">SUV</field>
+        </record>
+
+        <!-- Vehicle Models -->
+        <record id="scenario_model_clio" model="fleet.vehicle.model">
+            <field name="name">Clio</field>
+            <field name="brand_id" ref="brand_renault" />
+            <field name="vehicle_type">car</field>
+            <field name="category_id" ref="scenario_model_category_compact"/>
+            <field name="seats">5</field>
+            <field name="doors">5</field>
+            <field name="model_year">2023</field>
+            <field name="default_fuel_type">gasoline</field>
+            <field name="default_co2">118.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">49</field>
+            <field name="horsepower">67</field>
+            <field name="horsepower_tax">0.00</field>
+        </record>
+
+        <record id="scenario_model_honda_crv" model="fleet.vehicle.model">
+            <field name="name">Honda CR-V</field>
+            <field name="brand_id" ref="brand_honda"/>
+            <field name="vehicle_type">car</field>
+            <field name="category_id" ref="scenario_model_category_suv"/>
+            <field name="seats">5</field>
+            <field name="doors">5</field>
+            <field name="model_year">2022</field>
+            <field name="default_fuel_type">gasoline</field>
+            <field name="default_co2">162.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">132</field>
+            <field name="horsepower">179</field>
+            <field name="horsepower_tax">0.00</field>
+        </record>
+
+        <record id="scenario_model_audi_a4" model="fleet.vehicle.model">
+            <field name="name">Audi A4</field>
+            <field name="brand_id" ref="brand_audi"/>
+            <field name="vehicle_type">car</field>
+            <field name="category_id" ref="scenario_model_category_sedan"/>
+            <field name="seats">5</field>
+            <field name="doors">4</field>
+            <field name="model_year">2021</field>
+            <field name="default_fuel_type">diesel</field>
+            <field name="default_co2">143.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">110</field>
+            <field name="horsepower">150</field>
+            <field name="horsepower_tax">0.00</field>
+        </record>
+
+        <record id="scenario_model_mercedes_benz_c_class" model="fleet.vehicle.model">
+            <field name="name">Mercedes Benz C-Class</field>
+            <field name="brand_id" ref="brand_mercedes"/>
+            <field name="vehicle_type">car</field>
+            <field name="category_id" ref="scenario_model_category_sedan"/>
+            <field name="seats">5</field>
+            <field name="doors">4</field>
+            <field name="model_year">2020</field>
+            <field name="default_fuel_type">gasoline</field>
+            <field name="default_co2">145.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">135</field>
+            <field name="horsepower">180</field>
+            <field name="horsepower_tax">0.00</field>
+        </record>
+
+        <!-- Fleet Vehicles -->
+        <record id="scenario_vehicle_1" model="fleet.vehicle">
+            <field name="license_plate">1-BMW-001</field>
+            <field name="vin_sn">54818</field>
+            <field name="model_id" ref="scenario_model_clio"/>
+            <field name="color">Titanium Grey</field>
+            <field name="location">Grand-Rosiere</field>
+            <field name="category_id" ref="scenario_model_category_compact"/>
+            <field name="seats">5</field>
+            <field name="doors">5</field>
+            <field name="model_year">2023</field>
+            <field name="fuel_type">gasoline</field>
+            <field name="co2">118.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">49</field>
+            <field name="horsepower">67</field>
+            <field name="driver_id" ref="base.user_admin" />
+            <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+            <field name="state_id" ref="fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">20000</field>
+            <field eval="[Command.set([
+                    ref('fleet.scenario_vehicle_tag_leasing'),
+                    ref('fleet.scenario_vehicle_tag_purchased'),
+                    ref('fleet.scenario_vehicle_tag_senior'),
+                    ref('fleet.scenario_vehicle_tag_demo')
+                ])]" name="tag_ids"/>
+        </record>
+
+        <record id="scenario_vehicle_2" model="fleet.vehicle">
+            <field name="license_plate">2-HON-001</field>
+            <field name="vin_sn">87456</field>
+            <field name="model_id" ref="scenario_model_honda_crv"/>
+            <field name="color">Lunar Silver</field>
+            <field name="location">Dover</field>
+            <field name="category_id" ref="scenario_model_category_suv"/>
+            <field name="seats">5</field>
+            <field name="doors">5</field>
+            <field name="model_year">2022</field>
+            <field name="fuel_type">gasoline</field>
+            <field name="co2">162.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">132</field>
+            <field name="horsepower">179</field>
+            <field name="driver_id" ref="base.user_admin"/>
+            <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')"/>
+            <field name="state_id" ref="fleet_vehicle_state_downgraded"/>
+            <field name="odometer_unit">kilometers</field>
+            <field name="car_value">28000</field>
+            <field eval="[Command.set([
+                    ref('fleet.scenario_vehicle_tag_leasing'),
+                    ref('fleet.scenario_vehicle_tag_purchased'),
+                    ref('fleet.scenario_vehicle_tag_junior'),
+                    ref('fleet.scenario_vehicle_tag_demo')
+                ])]" name="tag_ids"/>
+        </record>
+
+        <record id="scenario_vehicle_3" model="fleet.vehicle">
+            <field name="license_plate">3-AUD-001</field>
+            <field name="vin_sn">95874</field>
+            <field name="model_id" ref="scenario_model_audi_a4"/>
+            <field name="color">Ibis White</field>
+            <field name="location">London</field>
+            <field name="category_id" ref="scenario_model_category_sedan"/>
+            <field name="seats">5</field>
+            <field name="doors">4</field>
+            <field name="model_year">2021</field>
+            <field name="fuel_type">diesel</field>
+            <field name="co2">143.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">110</field>
+            <field name="horsepower">150</field>
+            <field name="driver_id" ref="base.user_admin"/>
+            <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')"/>
+            <field name="state_id" ref="fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">miles</field>
+            <field name="car_value">35000</field>
+            <field eval="[Command.set([
+                    ref('fleet.scenario_vehicle_tag_leasing'),
+                    ref('fleet.scenario_vehicle_tag_purchased'),
+                    ref('fleet.scenario_vehicle_tag_senior'),
+                    ref('fleet.scenario_vehicle_tag_demo')
+                ])]" name="tag_ids"/>
+        </record>
+
+        <record id="scenario_vehicle_4" model="fleet.vehicle">
+            <field name="license_plate">3-MBC-002</field>
+            <field name="vin_sn">45637</field>
+            <field name="model_id" ref="scenario_model_mercedes_benz_c_class"/>
+            <field name="color">Obsidian Black</field>
+            <field name="location">Manchester</field>
+            <field name="category_id" ref="scenario_model_category_sedan"/>
+            <field name="seats">5</field>
+            <field name="doors">4</field>
+            <field name="model_year">2020</field>
+            <field name="fuel_type">gasoline</field>
+            <field name="co2">145.00</field>
+            <field name="co2_standard">WLTP</field>
+            <field name="power">135</field>
+            <field name="horsepower">180</field>
+            <field name="driver_id" ref="base.user_admin"/>
+            <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')"/>
+            <field name="state_id" ref="fleet_vehicle_state_registered"/>
+            <field name="odometer_unit">miles</field>
+            <field name="car_value">40000</field>
+            <field eval="[Command.set([
+                    ref('scenario_vehicle_tag_private'),
+                    ref('fleet.scenario_vehicle_tag_demo')
+                ])]" name="tag_ids"/>
+        </record>
+
+        <!-- Odoometer -->
+        <record id="scenario_log_odometer_1" model="fleet.vehicle.odometer">
+            <field name="vehicle_id" ref="scenario_vehicle_3" />
+            <field name="date" eval="(DateTime.now() - timedelta(days=289)).strftime('%Y-%m-%d')" />
+            <field name="value">1360</field>
+        </record>
+
+        <record id="scenario_log_odometer_2" model="fleet.vehicle.odometer">
+            <field name="vehicle_id" ref="scenario_vehicle_3" />
+            <field name="date" eval="(DateTime.now() - timedelta(days=260)).strftime('%Y-%m-%d')" />
+            <field name="value">2044</field>
+        </record>
+
+        <record id="scenario_log_odometer_3" model="fleet.vehicle.odometer">
+            <field name="vehicle_id" ref="scenario_vehicle_3" />
+            <field name="date" eval="(DateTime.now() - timedelta(days=230)).strftime('%Y-%m-%d')" />
+            <field name="value">2756</field>
+        </record>
+
+        <!-- Service Types -->
+        <record id="scenario_type_service_service_1" model="fleet.service.type">
+            <field name="name">Repair and maintenance</field>
+            <field name="category">service</field>
+        </record>
+
+        <record id="scenario_type_service_service_2" model="fleet.service.type">
+            <field name="name">Depreciation and Interests</field>
+            <field name="category">service</field>
+        </record>
+
+        <record id="scenario_type_service_service_3" model="fleet.service.type">
+            <field name="name">Tax roll</field>
+            <field name="category">service</field>
+        </record>
+
+        <record id="scenario_type_service_service_4" model="fleet.service.type">
+            <field name="name">Fuel</field>
+            <field name="category">service</field>
+        </record>
+
+        <record id="scenario_type_service_service_5" model="fleet.service.type">
+            <field name="name">Insurance</field>
+            <field name="category">service</field>
+        </record>
+
+        <record id="scenario_type_service_service_6" model="fleet.service.type">
+            <field name="name">Roadside Assistance</field>
+            <field name="category">service</field>
+        </record>
+
+        <record id="scenario_type_service_service_7" model="fleet.service.type">
+            <field name="name">Parking Fee</field>
+            <field name="category">service</field>
+        </record>
+
+        <!-- Vehicle Services -->
+        <record id="scenario_log_service_1" model="fleet.vehicle.log.services" >
+            <field name="vehicle_id" ref="scenario_vehicle_1" />
+            <field name="amount">412</field>
+            <field name="service_type_id" ref="scenario_type_service_service_1"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=120)).strftime('%Y-%m-%d')" />
+            <field name="inv_ref">20984</field>
+            <field name="vendor_id" ref="base.user_admin" />
+            <field name="notes">Maintenance</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="scenario_log_service_2" model="fleet.vehicle.log.services">
+            <field name="vehicle_id" ref="scenario_vehicle_2"/>
+            <field name="amount">300</field>
+            <field name="service_type_id" ref="scenario_type_service_service_4"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=90)).strftime('%Y-%m-%d')"/>
+            <field name="inv_ref">32567</field>
+            <field name="vendor_id" ref="base.user_admin"/>
+            <field name="notes">Fuel purchase</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="scenario_log_service_3" model="fleet.vehicle.log.services">
+            <field name="vehicle_id" ref="scenario_vehicle_3"/>
+            <field name="amount">150</field>
+            <field name="service_type_id" ref="scenario_type_service_service_6"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="inv_ref">32589</field>
+            <field name="vendor_id" ref="base.user_admin"/>
+            <field name="notes">Roadside Assistance</field>
+            <field name="state">done</field>
+        </record>
+
+        <record id="scenario_log_service_4" model="fleet.vehicle.log.services">
+            <field name="vehicle_id" ref="scenario_vehicle_4"/>
+            <field name="amount">50</field>
+            <field name="service_type_id" ref="scenario_type_service_service_7"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="inv_ref">98765</field>
+            <field name="vendor_id" ref="base.user_admin"/>
+            <field name="notes">Parking fee for the month</field>
+            <field name="state">done</field>
+        </record>
+
+        <!-- Vehicle Contracts -->
+        <record id="scenario_log_contract_1" model="fleet.vehicle.log.contract" >
+            <field name="vehicle_id" ref="scenario_vehicle_1" />
+            <field name="cost_subtype_id" ref="type_contract_leasing" />
+            <field name="amount">0</field>
+            <field name="name">Monthly leasing</field>
+            <field name="cost_generated">400</field>
+            <field name="cost_frequency">monthly</field>
+            <field name="date" eval="time.strftime('%Y-01-01')"/>
+            <field name="start_date" eval="time.strftime('%Y-01-01')" />
+            <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
+            <field name="insurer_id" ref="base.user_admin" />
+            <field name="notes">Monthly leasing contract</field>
+            <field name="state">open</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field eval="[Command.set([
+                    ref('fleet.type_contract_omnium'),
+                    ref('fleet.scenario_type_service_service_3'),
+                    ref('fleet.scenario_type_service_service_2')
+                ])]" name="service_ids"/>
+        </record>
+
+        <record id="scenario_log_contract_2" model="fleet.vehicle.log.contract">
+            <field name="vehicle_id" ref="scenario_vehicle_2"/>
+            <field name="cost_subtype_id" ref="type_contract_leasing"/>
+            <field name="amount">0</field>
+            <field name="name">Monthly leasing</field>
+            <field name="cost_generated">450</field>
+            <field name="cost_frequency">monthly</field>
+            <field name="date" eval="time.strftime('%Y-02-01')"/>
+            <field name="start_date" eval="time.strftime('%Y-02-01')"/>
+            <field name="expiration_date" eval="time.strftime('%Y-12-31')"/>
+            <field name="insurer_id" ref="base.user_admin"/>
+            <field name="notes">Monthly leasing contract for Honda CR-V</field>
+            <field name="state">open</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field eval="[Command.set([
+                    ref('fleet.type_contract_omnium'),
+                    ref('fleet.scenario_type_service_service_5')
+                ])]" name="service_ids"/>
+        </record>
+
+        <record id="scenario_log_contract_3" model="fleet.vehicle.log.contract">
+            <field name="vehicle_id" ref="scenario_vehicle_3"/>
+            <field name="cost_subtype_id" ref="type_contract_leasing"/>
+            <field name="amount">0</field>
+            <field name="name">Leasing Contract</field>
+            <field name="cost_generated">700</field>
+            <field name="cost_frequency">monthly</field>
+            <field name="date" eval="time.strftime('%Y-03-01')"/>
+            <field name="start_date" eval="time.strftime('%Y-03-01')"/>
+            <field name="expiration_date" eval="time.strftime('%Y-12-31')"/>
+            <field name="insurer_id" ref="base.user_admin"/>
+            <field name="notes">Audi A4 monthly leasing contract</field>
+            <field name="state">open</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field eval="[Command.set([
+                    ref('fleet.type_contract_omnium'),
+                    ref('fleet.scenario_type_service_service_6')
+                ])]" name="service_ids"/>
+        </record>
+
+        <record id="scenario_log_contract_4" model="fleet.vehicle.log.contract">
+            <field name="vehicle_id" ref="scenario_vehicle_4"/>
+            <field name="cost_subtype_id" ref="type_contract_leasing"/>
+            <field name="amount">0</field>
+            <field name="name">Leasing Contract</field>
+            <field name="cost_generated">750</field>
+            <field name="cost_frequency">monthly</field>
+            <field name="date" eval="time.strftime('%Y-04-01')"/>
+            <field name="start_date" eval="time.strftime('%Y-04-01')"/>
+            <field name="expiration_date" eval="time.strftime('%Y-12-31')"/>
+            <field name="insurer_id" ref="base.user_admin"/>
+            <field name="notes">Mercedes Benz C-Class monthly leasing contract</field>
+            <field name="state">open</field>
+            <field name="user_id" ref="base.user_admin"/>
+            <field eval="[Command.set([ref('fleet.type_contract_omnium')])]" name="service_ids"/>
+        </record>
+    </data>
+</odoo>
