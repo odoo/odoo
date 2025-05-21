@@ -1,0 +1,7 @@
+<odoo>
+    <div t-name="spreadsheet.FullScreenChart" t-inherit="o-spreadsheet-FullScreenChart" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-figure')]" position="attributes">
+            <attribute name="t-att-role">hasOdooMenu ? "button" : ""</attribute>
+        </xpath>
+    </div>
+</odoo>
