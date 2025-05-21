@@ -358,15 +358,23 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         invoice = self.env['account.move'].create({
             'partner_id': self.partner_a.id,
             'move_type': 'out_invoice',
-            'invoice_line_ids': [Command.create({
-                'product_id': self.product_a.id,
-                'quantity': 3,
-                'price_unit': 11.34,
-            })],
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 3,
+                    'price_unit': 11.34,
+                }),
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 1.65,
+                    'price_unit': 29.9,
+                }),
+            ],
         })
         xml_attachment = self.env['ir.attachment'].create({
             'raw': self.env['account.edi.xml.cii']._export_invoice(invoice)[0],
             'name': 'test_invoice.xml',
         })
         imported_invoice = self.import_attachment(xml_attachment, self.company_data["default_journal_sale"])
-        self.assertFalse(imported_invoice.invoice_line_ids.discount)  # if slight rounding error won't be falsy
+        for line in imported_invoice.invoice_line_ids:
+            self.assertFalse(line.discount, "A discount on the imported lines signals a rounding error in the discount computation")
