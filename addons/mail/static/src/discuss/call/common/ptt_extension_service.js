@@ -93,7 +93,7 @@ export const pttExtensionHookService = {
                 return;
             }
             const version = parseVersion(await versionPromise);
-            if (!location.origin) {
+            if (location.origin === "null") {
                 return;
             }
             if (version.isLowerThan("1.0.0.2")) {

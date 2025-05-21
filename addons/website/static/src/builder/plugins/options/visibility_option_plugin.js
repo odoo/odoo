@@ -5,10 +5,7 @@ import { pyToJsLocale } from "@web/core/l10n/utils";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { VisibilityOption } from "./visibility_option";
 import { withSequence } from "@html_editor/utils/resource";
-import {
-    CONDITIONAL_VISIBILITY,
-    DEVICE_VISIBILITY,
-} from "@website/builder/option_sequence";
+import { CONDITIONAL_VISIBILITY, DEVICE_VISIBILITY } from "@website/builder/option_sequence";
 
 export const VISIBILITY_OPTION_SELECTOR = "section, .s_hr";
 export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";

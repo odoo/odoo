@@ -3,6 +3,7 @@
 import odoo.tests
 import unittest
 
+
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestSnippetBackgroundVideo(odoo.tests.HttpCase):
     # TODO master-mysterious-egg fix error

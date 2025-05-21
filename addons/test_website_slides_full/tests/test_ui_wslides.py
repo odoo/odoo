@@ -8,6 +8,7 @@ from odoo.tests.common import users
 from odoo.addons.website_slides.tests.test_ui_wslides import TestUICommon
 import unittest
 
+
 @tests.common.tagged('post_install', '-at_install')
 class TestUi(TestUICommon):
 

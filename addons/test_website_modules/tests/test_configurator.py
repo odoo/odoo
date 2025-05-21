@@ -5,6 +5,7 @@ import odoo.tests
 from odoo.addons.website.tests.test_configurator import TestConfiguratorCommon
 import unittest
 
+
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestConfigurator(TestConfiguratorCommon):
 

@@ -4,6 +4,7 @@
 from odoo.tests import HttpCase, tagged
 import unittest
 
+
 @tagged('post_install', '-at_install')
 class TestSnippets(HttpCase):
 
