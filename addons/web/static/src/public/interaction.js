@@ -470,6 +470,6 @@ export class Interaction {
      * @param {Object|null} [props]
      */
     mountComponent(el, C, props = null) {
-        this.__colibri__.mountComponent([el], C, props);
+        this.__colibri__.mountComponent(el, C, props);
     }
 }
