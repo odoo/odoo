@@ -196,6 +196,23 @@ describe("redo", () => {
         });
     });
 
+    test("should type a, b, undo x2, redo, undo, redo x2", async () => {
+        await testEditor({
+            contentBefore: "<p>[]</p>",
+            stepFunction: async (editor) => {
+                await insertText(editor, "a");
+                await insertText(editor, "b");
+                undo(editor);
+                undo(editor);
+                redo(editor);
+                undo(editor);
+                redo(editor);
+                redo(editor);
+            },
+            contentAfter: "<p>ab[]</p>",
+        });
+    });
+
     test("should discard draft mutations", async () => {
         const { el, editor } = await setupEditor(`<p>[]c</p>`);
         const p = el.querySelector("p");
@@ -377,7 +394,8 @@ describe("makeSavePoint", () => {
         let steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(2);
         const zStep = steps.at(-1);
-        expect(historyPlugin.stepsStates.get(zStep.id)).toBe(undefined);
+        expect(historyPlugin.consumedSteps.has(zStep.id)).toBe(false);
+        expect(historyPlugin.stepsKinds.get(zStep.id)).toBe(undefined);
         // draft to discard
         p.append(document.createTextNode("e"));
         expect(getContent(el)).toBe(`<p>z[]cde</p>`);
@@ -386,8 +404,8 @@ describe("makeSavePoint", () => {
         steps = editor.shared.history.getHistorySteps();
         expect(steps.length).toBe(3);
         expect(steps.at(-2)).toBe(zStep);
-        expect(historyPlugin.stepsStates.get(zStep.id)).toBe("consumed");
-        expect(historyPlugin.stepsStates.get(steps.at(-1).id)).toBe("consumed");
+        expect(historyPlugin.consumedSteps.has(zStep.id)).toBe(true);
+        expect(historyPlugin.consumedSteps.has(steps.at(-1).id)).toBe(true);
         undo(editor);
         expect(getContent(el)).toBe(`<p>[]c</p>`);
         redo(editor);
