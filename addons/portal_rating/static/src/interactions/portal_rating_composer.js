@@ -13,7 +13,27 @@ import { user } from "@web/core/user";
 export class RatingPopupComposer extends Interaction {
     static selector = ".o_rating_popup_composer";
 
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _btn: () => document.querySelectorAll(".o_rating_popup_composer_btn"),
+        _btn_label: () =>
+            document.querySelectorAll(".o_rating_popup_composer_btn .o_rating_popup_composer_text"),
+    };
+
+    dynamicContent = {
+        _root: {
+            "t-att-data-message-id": () => this.documentId,
+        },
+        _btn: {
+            "t-att-class": () => ({ "d-none": !this.isBtnDisplayed }),
+        },
+        _btn_label: {
+            "t-out": () => this.btnLabel,
+        },
+    };
+
     setup() {
+        this.isBtnDisplayed = false;
         const options = this.el.dataset;
         this.rating_avg = Math.round(options["rating_avg"] * 100) / 100 || 0.0;
         this.rating_count = options["rating_count"] || 0.0;
@@ -52,6 +72,11 @@ export class RatingPopupComposer extends Interaction {
                 widget: this,
                 val: this.rating_avg,
             }, starsEl);
+            if (this.options.stars_click_relay_selector) {
+                this.el.querySelector(".o_rating_popup_composer_stars").onclick = () => {
+                    document.querySelector(this.options.stars_click_relay_selector).click();
+                };
+            }
         }
 
         // Append the modal
@@ -82,13 +107,15 @@ export class RatingPopupComposer extends Interaction {
         this.composerEl = this.renderAt("portal.Composer", { widget: {options: this.env.portalComposerOptions }}, locationEl, "afterend")[0];
         delete this.env.portalComposerOptions;
         locationEl.remove();
-        // Change the text of the button
-        this.el.querySelector(".o_rating_popup_composer_text").textContent =
-            options.is_fullscreen
-                ? _t("Review")
-                : options.default_message_id
-                    ? _t("Edit Review")
-                    : _t("Add Review");
+        this.documentId = options.default_message_id;
+        this.isBtnDisplayed =
+            options.is_fullscreen || !options.default_message_id || options.default_message === "";
+        this.btnLabel = options.is_fullscreen
+            ? _t("Review")
+            : options.default_message_id
+            ? _t("Edit Review")
+            : _t("Add your review");
+        this.updateContent();
     }
 
     /**

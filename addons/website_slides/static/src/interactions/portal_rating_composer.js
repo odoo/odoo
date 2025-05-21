@@ -1,8 +1,23 @@
-import { patch } from "@web/core/utils/patch";
-import { _t } from "@web/core/l10n/translation";
 import { RatingPopupComposer } from "@portal_rating/interactions/portal_rating_composer";
+import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
 
 patch(RatingPopupComposer.prototype, {
+    start() {
+        super.start(...arguments);
+        if (this.options?.res_model !== "slide.channel") {
+            return;
+        }
+        // When the review is emptied in the chatter, display the button as it cannot be edited in the chatter anymore.
+        this.addListener(this.env.bus, "WEBSITE_SLIDES:CHANNEL_DELETE_MESSAGE", ({ detail }) => {
+            // this.documentId can be a string representing a number
+            if (detail.id === Number(this.documentId)) {
+                this.isBtnDisplayed = true;
+                this.updateContent();
+            }
+        });
+    },
+
     updateOptions(data) {
         super.updateOptions(...arguments);
         this.options.force_submit_url =

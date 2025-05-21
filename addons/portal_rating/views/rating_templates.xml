@@ -75,21 +75,25 @@
             t-att-data-icon="icon"
             t-att-data-text_classes="_text_classes"
             t-att-data-hide_rating_avg="hide_rating_avg"
-            t-att-data-is_fullscreen="is_fullscreen">
+            t-att-data-is_fullscreen="is_fullscreen"
+            t-att-data-stars_click_relay_selector="stars_click_relay_selector">
             <div class="d-flex flex-wrap align-items-center">
                 <div class="o_rating_popup_composer_stars text-nowrap"/>
-                <button t-if="display_composer" type="button"
-                    t-att-class="'btn ' + _link_btn_classes or 'btn-primary'"
-                    data-bs-toggle="modal" data-bs-target="#ratingpopupcomposer">
-                    <i t-if="icon" t-att-class="icon"/>
-                    <span t-attf-class="#{_text_classes} o_rating_popup_composer_text">
-                        <t t-if="is_fullscreen">Review</t>
-                        <t t-elif="default_message_id">Edit Review</t>
-                        <t t-else="">Add Review</t>
-                    </span>
-                </button>
+                <t t-call="portal_rating.rating_stars_static_popup_composer_button"/>
                 <div class="o_rating_popup_composer_modal"/>
             </div>
         </div>
+    </template>
+
+    <template id="rating_stars_static_popup_composer_button">
+        <button t-if="display_composer" type="button"
+            t-att-class="'btn o_rating_popup_composer_btn ' + (_link_btn_classes or 'btn-primary')"
+            data-bs-toggle="modal" data-bs-target="#ratingpopupcomposer">
+            <i t-if="icon" t-att-class="icon"/>
+            <span t-attf-class="#{_text_classes} o_rating_popup_composer_text">
+                <t t-if="is_fullscreen">Review</t>
+                <t t-else="">Add your review</t>
+            </span>
+        </button>
     </template>
 </odoo>
