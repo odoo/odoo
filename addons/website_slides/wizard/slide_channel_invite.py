@@ -3,9 +3,11 @@
 
 import logging
 import re
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import is_html_empty
 
 _logger = logging.getLogger(__name__)
 
@@ -47,6 +49,30 @@ class SlideChannelInvite(models.TransientModel):
     def _compute_send_email(self):
         self.send_email = self.channel_visibility != 'public' or self.enroll_mode
 
+    def _compute_subject(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it. When removing the
+        template, reset it. """
+        for composer_mixin in self:
+            if composer_mixin.template_id.subject:
+                if composer_mixin.channel_id.channel_partner_all_ids:
+                    rec = composer_mixin.channel_id.channel_partner_all_ids[0]
+                else:
+                    rec = self.env[composer_mixin.render_model].new({
+                        'channel_id': composer_mixin.channel_id.id,
+                        'partner_id': composer_mixin.channel_id.create_uid.partner_id.id,
+                    })
+                composer_mixin.subject = composer_mixin.template_id._render_field(
+                    'subject',
+                    [rec.id],
+                    compute_lang=True,
+                    options={'post_process': True},
+                )[rec.id]
+            elif not composer_mixin.template_id:
+                composer_mixin.subject = False
+            # elif composer_mixin.template_id.subject:
+            #     composer_mixin.subject = composer_mixin.template_id.subject
+
     def action_invite(self):
         """ Process the wizard content and proceed with sending the related email(s),
             rendering any template patterns on the fly if needed. This method is used both
@@ -63,7 +89,6 @@ class SlideChannelInvite(models.TransientModel):
         if not self.partner_ids:
             raise UserError(_("Please select at least one recipient."))
 
-        mail_values = []
         attendees_to_reinvite = self.env['slide.channel.partner'].search([
             ('member_status', '=', 'invited'),
             ('channel_id', '=', self.channel_id.id),
@@ -78,45 +103,29 @@ class SlideChannelInvite(models.TransientModel):
         if not self.enroll_mode:
             (attendees_to_reinvite | channel_partners).last_invitation_date = fields.Datetime.now()
 
-        for channel_partner in (attendees_to_reinvite | channel_partners):
-            mail_values.append(self._prepare_mail_values(channel_partner))
-        self.env['mail.mail'].sudo().create(mail_values)
+        self.composer_send_mail(
+            attendees_to_reinvite | channel_partners,
+            attachment_ids=self.attachment_ids.ids,
+            compute_lang=True,
+        )
 
         return {'type': 'ir.actions.act_window_close'}
 
-    def _prepare_mail_values(self, slide_channel_partner):
-        """ Create mail specific for recipient """
-        lang = self._render_lang(slide_channel_partner.ids)[slide_channel_partner.id]
-        subject = self._render_field('subject', slide_channel_partner.ids, set_lang=lang)[slide_channel_partner.id]
-        body = self._render_field('body', slide_channel_partner.ids, set_lang=lang)[slide_channel_partner.id]
-        # post the message
-        mail_values = {
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'author_id': self.env.user.partner_id.id,
-            'auto_delete': self.template_id.auto_delete if self.template_id else True,
-            'body_html': body,
-            'email_from': self.env.user.email_formatted,
-            'model': None,
-            'recipient_ids': [(4, slide_channel_partner.partner_id.id)],
-            'res_id': None,
-            'subject': subject,
+    def _get_recipient_data(self, record):
+        data = super()._get_recipient_data(record)
+        template_ctx = {
+            "record_name": self.channel_id.name,
+            "show_button": True,
+            "button_access": {
+                "url": record.invitation_link,
+                "title": _("Getting Started"),
+            },
+            "subtitles": [],
+            "signature": Markup("<div>-- <br/>%s</div>")
+            % self.channel_id.user_id.signature
+            if not is_html_empty(self.channel_id.user_id.signature)
+            else False,
         }
-
-        # optional support of default_email_layout_xmlid in context
-        email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
-        if email_layout_xmlid:
-            # could be great to use ``_notify_by_email_prepare_rendering_context`` someday
-            template_ctx = {
-                'message': self.env['mail.message'].sudo().new({'body': mail_values['body_html'], 'record_name': self.channel_id.name}),
-                'model_description': self.env['ir.model']._get('slide.channel').display_name,
-                'record': slide_channel_partner,
-                'company': self.env.company,
-                'signature': self.channel_id.user_id.signature,
-            }
-            body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, engine='ir.qweb', minimal_qcontext=True, raise_if_not_found=False, lang=lang)
-            if body:
-                mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
-            else:
-                _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layout.', email_layout_xmlid)
-
-        return mail_values
+        data["template_context"].update(template_ctx)
+        data["mail_values"].update({"recipient_ids": [(4, record.partner_id.id)]})
+        return data

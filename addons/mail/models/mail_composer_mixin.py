@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import api, fields, models, tools, _
+
+_logger = logging.getLogger(__name__)
 
 
 class MailComposerMixin(models.AbstractModel):
@@ -203,3 +206,72 @@ class MailComposerMixin(models.AbstractModel):
 
         record = self.sudo() if call_sudo else self
         return super(MailComposerMixin, record)._render_field(field, res_ids, *args, **kwargs)
+
+    def _get_recipient_data(self, record):
+        self.ensure_one()
+        return {
+            "template_context": {},
+            "mail_values": {},
+        }
+
+    def composer_send_mail(self, records, author_id=None, email_from=None, subject=None, attachment_ids=[], compute_lang=False, **kwargs):
+        mail_create_vals = self.prepare_mail_values(
+            records, author_id, email_from, subject, attachment_ids, compute_lang)
+        new_mails = self.env["mail.mail"].sudo().create(mail_create_vals)
+        if len(new_mails) < 20:
+            new_mails.send()
+        return new_mails
+
+    def prepare_mail_values(self, records, author_id=None, email_from=None, subject=None, attachment_ids=[], compute_lang=False):
+        total_mail = []
+        common_mail_values = {
+            "attachment_ids": [(4, id) for id in attachment_ids],
+            "author_id": author_id or self.env.user.partner_id.id,
+            "auto_delete": self.template_id.auto_delete if self.template_id else True,
+            "email_from": email_from or self.env.user.email_formatted,
+            "model": None,
+            "res_id": None,
+        }
+
+        if not subject:
+            subject_by_res_ids = self._render_field(
+                field="subject", res_ids=records.ids, compute_lang=compute_lang)
+        else:
+            subject_by_res_ids = {record.id: subject for record in records}
+
+        body_by_res_ids = self._render_field(
+            field="body", res_ids=records.ids, compute_lang=compute_lang)
+
+        # sudo for now to avoid access error in `_render_template_inline_template`
+        res_ids_langs = self.sudo()._render_lang(records.ids)
+
+        for rec in records:
+            recipient_data = self._get_recipient_data(rec)
+            mail_values = {
+                "body_html": body_by_res_ids[rec.id],
+                "subject": subject_by_res_ids[rec.id],
+                **common_mail_values,
+                **recipient_data["mail_values"],
+            }
+            email_layout_xmlid = self.env.context.get("default_email_layout_xmlid")
+            if email_layout_xmlid == "mail.mail_notification_layout_non_threaded":
+                template_ctx = {
+                    "message": self.env["mail.message"].sudo().new({
+                        "body": mail_values["body_html"],
+                        "record_name": recipient_data["template_context"].get("record_name"),
+                    }),
+                    "record": rec,
+                    "show_button": False,
+                    "company": self.env.company,
+                    **recipient_data["template_context"],
+                }
+                record_body = self.env["ir.qweb"]._render(
+                    email_layout_xmlid, template_ctx, engine="ir.qweb", minimal_qcontext=True, raise_if_not_found=False, lang=res_ids_langs.get(rec.id) or False)
+                if record_body:
+                    mail_values["body_html"] = self.env["mail.render.mixin"]._replace_local_links(
+                        record_body)
+                else:
+                    _logger.warning(
+                        "QWeb template %s not found when sending mails. Sending without layout.", email_layout_xmlid)
+            total_mail.append(mail_values)
+        return total_mail
