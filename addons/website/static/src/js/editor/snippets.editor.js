@@ -220,6 +220,19 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
         const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
         const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
+
+        // TODO: Remove in Master.
+        const snippetCarouselOptionEl =
+            html.querySelector("[data-js='Carousel'][data-target='> .carousel']");
+        if (snippetCarouselOptionEl) {
+            const oldExcludeSelector = snippetCarouselOptionEl.dataset.exclude;
+            snippetCarouselOptionEl.dataset.exclude =
+                oldExcludeSelector.replace(
+                    ".s_quotes_carousel_wrapper",
+                    ".s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)"
+                );
+        }
+
         return super._computeSnippetTemplates(html);
     }
     /**
