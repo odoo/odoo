@@ -36,7 +36,16 @@ export class BoothRegistration extends Interaction {
         },
     };
 
-    setup() {
+    // xmlTemplates = ["/website_event_booth/static/src/xml/event_booth_registration_templates.xml"];
+    // xmlTemplates = {
+    //     "/website_event_booth/static/src/xml/event_booth_registration_templates.xml": [
+    //         "event_booth_checkbox_list",
+    //         "event_booth_registration_complete",
+    //     ],
+    // };
+    assetBundles = ["website_event_booth.assets_widget_xml"];
+
+    start() {
         this.inError = false;
         this.boothCache = {};
         this.isFirstRender = true;

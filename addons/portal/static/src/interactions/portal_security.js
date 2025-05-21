@@ -38,6 +38,16 @@ export class PortalSecurity extends Interaction {
         },
     };
 
+    // xmlTemplates = ["/portal/static/src/xml/portal_security.xml"];
+    // xmlTemplates = {
+    //     "/portal/static/src/xml/portal_security.xml": [
+    //         "portal.identitycheck",
+    //         "portal.keydescription",
+    //         "portal.keyshow",
+    //     ],
+    // };
+    assetBundles = ["portal.assets_widget_xml"];
+
     setup() {
         // Show the "deactivate your account" modal if needed
         const modalEl = document.querySelector(".modal.show#portal_deactivate_account_modal");

@@ -38,8 +38,10 @@
         'web.assets_frontend': [
             'website_slides_survey/static/src/scss/website_slides_survey.scss',
             'website_slides_survey/static/src/js/slides_course_fullscreen_player.js',
-            'website_slides_survey/static/src/xml/website_slides_fullscreen.xml',
             'website_slides_survey/static/src/js/public/**/*',
+        ],
+        'website_slides.assets_widget_xml': [
+            'website_slides_survey/static/src/xml/website_slides_fullscreen.xml'
         ],
         'survey.survey_assets': [
             'website_slides_survey/static/src/scss/website_slides_survey_result.scss',

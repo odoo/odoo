@@ -40,6 +40,10 @@
             'payment/static/lib/jquery.payment/jquery.payment.js',
             'payment/static/src/**/*',
             ('remove', 'payment/static/src/js/payment_wizard_copy_clipboard_field.js'),
+            ('remove', 'payment/static/src/xml/*'),
+        ],
+        'payment.assets_widget_xml': [
+            'payment/static/src/xml/payment_form_templates.xml',
         ],
         'web.assets_backend': [
             'payment/static/src/scss/payment_provider.scss',

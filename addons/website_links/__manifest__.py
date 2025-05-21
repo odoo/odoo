@@ -20,13 +20,16 @@ Those trackers can be used in Google Analytics to track clicks and visitors, or 
             'website_links/static/src/components/*.js',
             'website_links/static/src/interactions/*.js',
             'website_links/static/src/css/website_links.css',
-            'website_links/static/src/xml/*.xml',
+            'website_links/static/src/xml/website_links_tags_wrapper.xml',
         ],
         'web.assets_tests': [
             'website_links/static/tests/**/*',
         ],
         'website.assets_editor': [
             'website_links/static/src/services/website_custom_menus.js',
+        ],
+        'website_links.assets_widget_xml': [
+            'website_links/static/src/xml/recent_link.xml',
         ],
     },
     'author': 'Odoo S.A.',

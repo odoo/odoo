@@ -2,6 +2,7 @@ import { renderToFragment } from "@web/core/utils/render";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import { INITIAL_VALUE, SKIP_IMPLICIT_UPDATE } from "./colibri";
 import { makeAsyncHandler, makeButtonHandler } from "./utils";
+import { loadBundle, loadXML } from "@web/core/assets";
 
 /**
  * This is the base class to describe interactions. The Interaction class
@@ -97,6 +98,20 @@ export class Interaction {
      * @type {Object}
      */
     dynamicContent = {};
+
+    /**
+     * Asset bundles to be loaded for this interaction.
+     *
+     * @type {null | string[]}
+     */
+    assetBundles = null;
+
+    /**
+     * XML templates to be loaded for this interaction.
+     *
+     * @type {null | string[]}
+     */
+    xmlTemplates = null;
 
     /**
      * The constructor is not supposed to be defined in a subclass. Use setup
@@ -460,5 +475,71 @@ export class Interaction {
      */
     mountComponent(el, C, props = null) {
         this.__colibri__.mountComponent([el], C, props);
+    }
+
+    /**
+     * Load XML templates listed in `xmlTemplates`.
+     * Ensures each resource is loaded only once.
+     *
+     * @returns {Promise<void>}
+     */
+    async loadXMLTemplates() {
+        if (!this.xmlTemplates || !this.xmlTemplates.length) {
+            return;
+        }
+
+        if (!Interaction._templateLoadPromises) {
+            Interaction._templateLoadPromises = new Map();
+        }
+
+        const templatePromises = this.xmlTemplates.map((path) => {
+            if (!path) {
+                return Promise.resolve();
+            }
+
+            // If already loading, return the same promise
+            if (!Interaction._templateLoadPromises.has(path)) {
+                const promise = loadXML(path).then(() => {
+                    console.log("loaded XML ::", path);
+                });
+                Interaction._templateLoadPromises.set(path, promise);
+            }
+
+            return Interaction._templateLoadPromises.get(path);
+        });
+
+        await Promise.all(templatePromises);
+    }
+
+    /**
+     * Load asset bundles listed in `assetBundles`.
+     * Ensures each resource is loaded only once.
+     *
+     * @returns {Promise<void>}
+     */
+    async loadAssetBundles() {
+        if (!this.assetBundles || !this.assetBundles.length) {
+            return;
+        }
+
+        if (!Interaction._assetLoadPromises) {
+            Interaction._assetLoadPromises = new Map();
+        }
+
+        const assetPromises = this.assetBundles.map((bundleName) => {
+            if (!bundleName) {
+                return Promise.resolve();
+            }
+            // If already loading, return the same promise
+            if (!Interaction._assetLoadPromises.has(bundleName)) {
+                const promise = loadBundle(bundleName).then(() => {
+                    console.log("loaded asset ::", bundleName);
+                });
+                Interaction._assetLoadPromises.set(bundleName, promise);
+            }
+            return Interaction._assetLoadPromises.get(bundleName);
+        });
+
+        await Promise.all(assetPromises);
     }
 }
