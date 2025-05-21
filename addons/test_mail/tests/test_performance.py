@@ -1526,7 +1526,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "persona": {
+                                    "res_partner_id": {
                                         "id": self.user_test_inbox.partner_id.id,
                                         "type": "partner",
                                     },
@@ -1537,7 +1537,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "persona": {
+                                    "res_partner_id": {
                                         "id": self.user_test_inbox_2.partner_id.id,
                                         "type": "partner",
                                     },
@@ -1639,7 +1639,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "persona": {
+                                    "res_partner_id": {
                                         "id": self.user_test_inbox.partner_id.id,
                                         "type": "partner",
                                     },
@@ -1650,7 +1650,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "persona": {
+                                    "res_partner_id": {
                                         "id": self.user_test_inbox_2.partner_id.id,
                                         "type": "partner",
                                     },
