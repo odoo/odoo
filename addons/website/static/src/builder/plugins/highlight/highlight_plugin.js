@@ -94,24 +94,32 @@ export class HighlightPlugin extends Plugin {
     }
 
     _applyHighlight(highlightId) {
-        const highlightedNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => {
-                    const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
-                    return el.closest(".o_text_highlight");
-                })
-                .filter(Boolean)
-        );
-        for (const node of highlightedNodes) {
+        const highlightedNodes = this.dependencies.selection
+            .getTargetedNodes()
+            .map((n) => {
+                const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
+                return el.closest(".o_text_highlight");
+            })
+            .filter(Boolean);
+        for (const node of new Set(highlightedNodes)) {
             for (const svg of node.querySelectorAll(".o_text_highlight_svg")) {
                 svg.remove();
             }
         }
+
+        let thicknessToRestore;
+        let colorToRestore;
+        if (highlightedNodes.length > 0) {
+            const style = getComputedStyle(highlightedNodes[0]);
+            colorToRestore = style.getPropertyValue("--text-highlight-color");
+            thicknessToRestore = style.getPropertyValue("--text-highlight-width");
+        }
+
         this.dependencies.format.formatSelection("highlight", {
-            formatProps: { highlightId },
+            formatProps: { highlightId, colorToRestore, thicknessToRestore },
             applyStyle: true,
         });
+
         this.updateSelectedHighlight();
     }
 
@@ -169,9 +177,21 @@ registry.category("website-plugins").add(HighlightPlugin.id, HighlightPlugin);
 formatsSpecs.highlight = {
     isFormatted: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
     hasStyle: (node) => closestElement(node)?.classList.contains("o_text_highlight"),
-    addStyle: (node, { highlightId }) => {
+    addStyle: (node, { highlightId, thicknessToRestore, colorToRestore }) => {
         node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
         node.classList.add("o_text_highlight", `o_text_highlight_${highlightId}`);
+        if (colorToRestore) {
+            node.style.setProperty("--text-highlight-color", colorToRestore);
+        }
+        if (thicknessToRestore) {
+            node.style.setProperty("--text-highlight-width", thicknessToRestore);
+        } else {
+            const style = getComputedStyle(node);
+            node.style.setProperty(
+                "--text-highlight-width",
+                Math.round(parseFloat(style.fontSize) * 0.1) + "px"
+            );
+        }
     },
     removeStyle: (node) => {
         node.classList.remove(
