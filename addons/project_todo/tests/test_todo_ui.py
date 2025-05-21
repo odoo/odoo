@@ -5,6 +5,7 @@ from odoo.tests import tagged, users
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 import unittest
 
+
 @tagged('post_install', '-at_install')
 class TestTodoUi(HttpCaseWithUserDemo):
 

@@ -1,8 +1,5 @@
 import { InstallModuleDialog } from "./install_module_dialog";
-import {
-    MODULE_STATUS,
-    NewContentElement,
-} from "./new_content_element";
+import { MODULE_STATUS, NewContentElement } from "./new_content_element";
 import { Component, onWillStart, useState, xml } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";

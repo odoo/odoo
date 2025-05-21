@@ -12,7 +12,6 @@ import { LayoutColumnOption, LayoutGridOption, LayoutOption } from "./layout_opt
 import { withSequence } from "@html_editor/utils/resource";
 import { LAYOUT, LAYOUT_COLUMN, LAYOUT_GRID } from "@website/builder/option_sequence";
 
-
 class LayoutOptionPlugin extends Plugin {
     static id = "LayoutOption";
     static dependencies = ["clone", "selection"];

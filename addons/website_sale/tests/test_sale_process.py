@@ -12,6 +12,7 @@ import unittest
 
 _logger = logging.getLogger(__name__)
 
+
 # TODO master-mysterious-egg fix error
 @unittest.skip("prepare mysterious-egg for merging")
 @tagged('post_install', '-at_install')

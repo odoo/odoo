@@ -3,6 +3,7 @@
 import odoo.tests
 from odoo.fields import Command
 
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestUi(odoo.tests.HttpCase):
     def test_01_free_delivery_when_exceed_threshold(self):
