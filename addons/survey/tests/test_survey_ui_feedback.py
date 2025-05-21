@@ -153,7 +153,6 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'scale_min': 1,
                     'scale_max': 5,
                     'scale_min_label': 'Bad experience',
-                    'scale_mid_label': 'Do the job',
                     'scale_max_label': 'Very good experience',
                     'constr_mandatory': True,
                 }),

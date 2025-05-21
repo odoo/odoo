@@ -85,11 +85,11 @@ class SurveyQuestion(models.Model):
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
-        ('simple_choice', 'Multiple choice: only one answer'),
-        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-        ('text_box', 'Multiple Lines Text Box'),
-        ('char_box', 'Single Line Text Box'),
-        ('numerical_box', 'Numerical Value'),
+        ('simple_choice', 'Single-Select'),
+        ('multiple_choice', 'Multi-Select'),
+        ('text_box', 'Long Text'),
+        ('char_box', 'Short Text'),
+        ('numerical_box', 'Number'),
         ('scale', 'Scale'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
@@ -111,7 +111,7 @@ class SurveyQuestion(models.Model):
         "Save as user email", compute='_compute_save_as_email', readonly=False, store=True, copy=True,
         help="If checked, this option will save the user's answer as its email address.")
     save_as_nickname = fields.Boolean(
-        "Save as user nickname", compute='_compute_save_as_nickname', readonly=False, store=True, copy=True,
+        "Save as nickname", compute='_compute_save_as_nickname', readonly=False, store=True, copy=True,
         help="If checked, this option will save the user's answer as its nickname.")
     # -- simple choice / multiple choice / matrix
     suggested_answer_ids = fields.One2many(
@@ -128,8 +128,13 @@ class SurveyQuestion(models.Model):
     scale_min = fields.Integer("Scale Minimum Value", default=0)
     scale_max = fields.Integer("Scale Maximum Value", default=10)
     scale_min_label = fields.Char("Scale Minimum Label", translate=True)
-    scale_mid_label = fields.Char("Scale Middle Label", translate=True)
     scale_max_label = fields.Char("Scale Maximum Label", translate=True)
+    scale_min_label_placeholder = fields.Char(
+        compute='_compute_scale_min_label_placeholder',
+        string="Min Label Placeholder")
+    scale_max_label_placeholder = fields.Char(
+        compute='_compute_scale_max_label_placeholder',
+        string="Max Label Placeholder")
     # -- display & timing options
     is_time_limited = fields.Boolean("The question is limited in time",
         help="Currently only supported for live sessions.")
@@ -253,6 +258,16 @@ class SurveyQuestion(models.Model):
             if question.question_type in ('simple_choice', 'multiple_choice', 'matrix') \
                     or not question.question_placeholder:  # avoid CacheMiss errors
                 question.question_placeholder = False
+
+    @api.depends('scale_min')
+    def _compute_scale_min_label_placeholder(self):
+        for question in self:
+            question.scale_min_label_placeholder = _("Label for %s", question.scale_min)
+
+    @api.depends('scale_max')
+    def _compute_scale_max_label_placeholder(self):
+        for question in self:
+            question.scale_max_label_placeholder = _("Label for %s", question.scale_max)
 
     @api.depends('is_page')
     def _compute_background_image(self):
