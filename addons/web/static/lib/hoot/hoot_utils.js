@@ -854,7 +854,13 @@ export function ensureArguments(args, ...argumentsDefs) {
  * @returns {T[]}
  */
 export function ensureArray(value) {
-    return isIterable(value) ? [...value] : [value];
+    if (Array.isArray(value)) {
+        return value;
+    }
+    if (isIterable(value)) {
+        return [...value];
+    }
+    return [value];
 }
 
 /**
