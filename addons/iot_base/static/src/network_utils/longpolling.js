@@ -86,16 +86,7 @@ export class IoTLongpolling {
             device_identifier: device_identifier,
             data: JSON.stringify(data),
         };
-        return this._rpcIoT(iot_ip, route || this.actionRoute, body, undefined, fallback).then(
-            (result) => {
-                return result
-            },
-            (e) => {
-                if (e.name === "TimeoutError") {
-                    this._onError();
-                }
-            }
-        );
+        return this._rpcIoT(iot_ip, route || this.actionRoute, body, undefined, fallback);
     }
 
     /**
