@@ -133,7 +133,7 @@ test("respond to notification prompt (denied)", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o_notification:has(.o_notification_bar.bg-warning)", {
-        text: "Odoo will not send notifications on this device.",
+        text: "Notifications blocked. Odoo will not send notifications on this device.",
     });
     await contains(".o-mail-MessagingMenu-counter", { count: 0 });
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -146,7 +146,7 @@ test("respond to notification prompt (granted)", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await contains(".o_notification:has(.o_notification_bar.bg-success)", {
-        text: "Odoo will send notifications on this device!",
+        text: "Notifications allowed. Odoo will send notifications on this device!",
     });
 });
 
