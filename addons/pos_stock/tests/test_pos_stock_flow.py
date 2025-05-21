@@ -177,7 +177,6 @@ class TestPosStockFlow(CommonPosStockTest):
             'amount_total': untax + tax,
             'amount_paid': 0.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}'
         })
 
         pos_order.action_pos_order_invoice()
@@ -543,7 +542,6 @@ class TestPosStockFlow(CommonPosStockTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}'
             }
         self.env['pos.order'].sync_from_ui([order_data])
         order = current_session.order_ids[0]
@@ -640,7 +638,6 @@ class TestPosStockFlow(CommonPosStockTest):
             'amount_total': 30.0,
             'amount_tax': 0.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}',
         }
         self.env['pos.order'].sync_from_ui([order_data])
         order = current_session.order_ids[0]
@@ -759,7 +756,6 @@ class TestPosStockFlow(CommonPosStockTest):
             'amount_tax': 0.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}'
         })
 
         payment_context = {"active_ids": order.ids, "active_id": order.id}
@@ -1018,7 +1014,6 @@ class TestPosStockFlow(CommonPosStockTest):
             "amount_return": 0.0,
             "shipping_date": fields.Date.today(),
             "to_invoice": True,
-            "last_order_preparation_change": "{}",
         }
         self.env["pos.order"].sync_from_ui([order_data])
 

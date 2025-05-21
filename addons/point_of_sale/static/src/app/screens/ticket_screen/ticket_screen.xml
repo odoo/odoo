@@ -203,7 +203,7 @@
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="this.getNumpadButtons()"/>
                                         <ActionpadWidget
-                                            partner="this.getSelectedOrder()?.getPartner()"
+                                            order="this.getSelectedOrder()"
                                             buttonClasses="this.buttonClasses"
                                             actionName.translate="Refund"
                                             actionToTrigger.bind="this.onDoRefund"

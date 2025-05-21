@@ -364,7 +364,6 @@ class TestPosMrp(CommonPosMrpTest):
                     })
                 ],
                 'uuid': '12345-123-1234',
-                'last_order_preparation_change': '{}',
                 'user_id': self.env.uid
             }
         self.env['pos.order'].sync_from_ui([pos_order_data])['pos.order'][0]['id']

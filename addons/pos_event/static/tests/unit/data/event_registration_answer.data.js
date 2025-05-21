@@ -14,6 +14,7 @@ export class EventRegistrationAnswer extends models.ServerModel {
             "partner_id",
             "write_date",
             "event_id",
+            "uuid",
         ];
     }
 }

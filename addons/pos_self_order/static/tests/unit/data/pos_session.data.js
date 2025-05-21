@@ -45,6 +45,8 @@ patch(PosSession.prototype, {
             "account.cash.rounding",
             "res.country",
             "res.country.state",
+            "pos.prep.order",
+            "pos.prep.line",
         ];
     },
     getModelsToLoad(opts) {

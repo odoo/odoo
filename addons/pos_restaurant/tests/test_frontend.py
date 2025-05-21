@@ -257,7 +257,6 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SplitBillScreenTour')
         self.start_pos_tour('FloorScreenTour', login="pos_admin")
-        self.start_pos_tour('TableMergeUnmergeTour', login="pos_admin")
 
     def test_02_others_bis(self):
         # disable kitchen printer to avoid printing errors
@@ -358,8 +357,8 @@ class TestFrontend(TestFrontendCommon):
     def test_10_save_last_preparation_changes(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('SaveLastPreparationChangesTour')
-        self.assertTrue(self.pos_config.current_session_id.order_ids.last_order_preparation_change, "There should be a last order preparation change")
-        self.assertTrue("Coca" in self.pos_config.current_session_id.order_ids.last_order_preparation_change, "The last order preparation change should contain 'Coca'")
+        self.assertTrue(self.pos_config.current_session_id.order_ids.prep_order_ids, "There should be a last order preparation change")
+        self.assertTrue(self.coca_cola_test.id == self.pos_config.current_session_id.order_ids.prep_order_ids.prep_line_ids.product_id.id, "The last order preparation change should contain 'Coca'")
 
     def test_12_order_tracking(self):
         self.pos_config.write({'order_edit_tracking': True})

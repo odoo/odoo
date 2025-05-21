@@ -23,7 +23,6 @@ import {
 } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
@@ -673,7 +672,7 @@ export class PosStore extends WithLazyGetterTrap {
                     if (
                         !ignoreChange &&
                         order.isSynced &&
-                        Object.keys(order.last_order_preparation_change).length > 0
+                        (order.prep_order_ids || []).length > 0
                     ) {
                         const orderPresetDate = DateTime.fromISO(order.preset_time);
                         const isSame = DateTime.now().hasSame(orderPresetDate, "day");
@@ -1793,44 +1792,10 @@ export class PosStore extends WithLazyGetterTrap {
     get printOptions() {
         return { webPrintFallback: true };
     }
-    getOrderChanges(order = this.getOrder()) {
-        return getOrderChanges(order, this.config.preparationCategories);
-    }
-    async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
-        if (!order.isSynced) {
-            return this.sendOrderInPreparation(order, opts);
-        }
 
-        const data = await this.data.call("pos.order", "get_preparation_change", [order.id]);
-        const rawchange = data.last_order_preparation_change || "{}";
-        const lastChanges = JSON.parse(rawchange);
-        const lastServerDate = DateTime.fromSQL(lastChanges.metadata?.serverDate).toUTC();
-        const lastLocalDate = DateTime.fromSQL(
-            order.last_order_preparation_change?.metadata?.serverDate
-        ).toUTC();
-
-        if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
-            this.dialog.add(AlertDialog, {
-                title: _t("Order Outdated"),
-                body: _t(
-                    "The order has been modified on another device. If you have modified existing " +
-                        "order lines, check that your changes have not been overwritten.\n\n" +
-                        "The order will be sent to the server with the last changes made on this device."
-                ),
-            });
-
-            // Update before syncing otherwise it will overwrite the last change
-            order.last_order_preparation_change = lastChanges;
-            await this.syncAllOrders({ orders: [order] });
-            return;
-        }
-
-        return this.sendOrderInPreparation(order, opts);
-    }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         let isPrinted = false;
-
         if (this.config.printerCategories.size && !opts.byPassPrint) {
             try {
                 isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
@@ -1844,7 +1809,7 @@ export class PosStore extends WithLazyGetterTrap {
                 );
             }
         }
-        order.updateLastOrderChange();
+        order.updateLastOrderChange(opts);
         // Ensure that other devices are aware of the changes
         // Otherwise several devices can print the same changes
         // We need to check if a preparation display is configured to avoid unnecessary sync
@@ -1852,6 +1817,23 @@ export class PosStore extends WithLazyGetterTrap {
             await this.syncAllOrders({ orders: [order] });
         }
     }
+    async checkPreparationStateAndSentOrderInPreparation(order, opts = {}) {
+        if (!order.isSynced) {
+            return this.sendOrderInPreparation(order, opts);
+        }
+
+        const [{ write_date }] = await this.data.read("pos.order", [order.id], ["write_date"]);
+        const lastServerDate = DateTime.fromSQL(write_date).toUTC();
+        const lastLocalDate = DateTime.fromSQL(order.raw.write_date).toUTC();
+
+        if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
+            await this.syncAllOrders({ orders: [order] });
+        }
+        // Will not sent duplicated changes due to above check, and will
+        // ensure the order is in preparation if not already
+        return this.sendOrderInPreparation(order, opts);
+    }
+
     async sendOrderInPreparationUpdateLastChange(o, opts) {
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
@@ -2564,23 +2546,6 @@ export class PosStore extends WithLazyGetterTrap {
         return this.config.raw.trusted_config_ids.length > 0;
     }
 
-    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
-        const srcKey = srcLine.preparationKey;
-        const destKey = destLine.preparationKey;
-        const srcQty = srcPrep[srcKey]?.quantity;
-
-        if (srcQty) {
-            if (srcQty <= qty) {
-                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
-                destPrep[destKey] = newPrep;
-                delete srcPrep[srcKey];
-            } else {
-                srcPrep[srcKey].quantity = srcQty - qty;
-                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
-            }
-        }
-    }
-
     get isSelectedLineCombo() {
         return Boolean(this.selectedOrder?.getSelectedOrderline()?.isPartOfCombo());
     }
@@ -2844,7 +2809,38 @@ export class PosStore extends WithLazyGetterTrap {
         }
         return matchingCombos;
     }
+    async onPrepLinesSynced(prepLinePairs) {}
+
     async createComboFromLines(productTmpl, combinations) {
+        const prepLinePairs = [];
+        const handlePreparationHistory = (srcLine, destLine, qty) => {
+            const prepLines = srcLine.prep_line_ids;
+            let toTransfer = qty;
+
+            for (const prepLine of prepLines) {
+                const preparedQty = prepLine.quantity - prepLine.cancelled;
+                const transferredQty = Math.min(preparedQty, toTransfer);
+
+                if (transferredQty > 0) {
+                    const newPrepLine = this.models["pos.prep.line"].create({
+                        prep_order_id: prepLine.prep_order_id,
+                        pos_order_line_id: destLine,
+                        product_id: srcLine.getProduct().id,
+                        quantity: transferredQty,
+                        cancelled: 0,
+                        attribute_value_ids: srcLine.attribute_value_ids,
+                    });
+                    prepLinePairs.push([prepLine.uuid, newPrepLine.uuid]);
+                    prepLine.quantity -= transferredQty;
+                    toTransfer -= transferredQty;
+                }
+
+                if (toTransfer === 0) {
+                    break;
+                }
+            }
+        };
+
         const concernedLinesQty = {};
         combinations.forEach((items) => {
             for (const combo of Object.values(items)) {
@@ -2903,40 +2899,30 @@ export class PosStore extends WithLazyGetterTrap {
                         continue;
                     }
                     if (link.qty >= concernedLinesQty[oldLine.uuid]) {
-                        this.handlePreparationHistory(
-                            this.selectedOrder.last_order_preparation_change.lines,
-                            this.selectedOrder.last_order_preparation_change.lines,
-                            oldLine,
-                            link,
-                            concernedLinesQty[oldLine.uuid]
-                        );
+                        handlePreparationHistory(oldLine, link, concernedLinesQty[oldLine.uuid]);
                         linkOldNewLines[link.uuid] += concernedLinesQty[oldLine.uuid];
                         concernedLinesQty[oldLine.uuid] = 0;
                         break;
                     } else {
-                        this.handlePreparationHistory(
-                            this.selectedOrder.last_order_preparation_change.lines,
-                            this.selectedOrder.last_order_preparation_change.lines,
-                            oldLine,
-                            link,
-                            link.qty
-                        );
+                        handlePreparationHistory(oldLine, link, link.qty);
                         linkOldNewLines[link.uuid] += link.qty;
                         concernedLinesQty[oldLine.uuid] -= link.qty;
                     }
                 }
             }
 
-            // make orderline ignored by preparation printers if at least one child orderline has already been sent to the kitchen
-            if (
-                comboLine.combo_line_ids.some(
-                    (cl) =>
-                        this.selectedOrder.last_order_preparation_change.lines[cl.preparationKey]
-                )
-            ) {
-                this.selectedOrder.last_order_preparation_change[comboLine.preparationKey] = {
-                    ignoreQty: comboLine.qty,
-                };
+            if (comboLine.combo_line_ids.some((cl) => cl.prep_line_ids.length)) {
+                const firstChildPrepLine = comboLine.combo_line_ids.flatMap(
+                    (cl) => cl.prep_line_ids
+                )[0];
+                const newComboParentPrepLine = this.models["pos.prep.line"].create({
+                    prep_order_id: firstChildPrepLine.prep_order_id,
+                    pos_order_line_id: comboLine,
+                    product_id: comboLine.product_id.id,
+                    quantity: comboLine.qty,
+                    cancelled: 0,
+                });
+                prepLinePairs.push([firstChildPrepLine.uuid, newComboParentPrepLine.uuid]);
             }
         }
         for (const [lineUuid, newQty] of Object.entries(concernedLinesQty)) {
@@ -2946,6 +2932,10 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 line.order_id.removeOrderline(line);
             }
+        }
+        if (prepLinePairs.length) {
+            await this.syncAllOrders({ orders: [this.selectedOrder] });
+            await this.onPrepLinesSynced(prepLinePairs);
         }
         if (comboLine) {
             this.selectedOrder.selectOrderline(comboLine);
@@ -2964,7 +2954,7 @@ export class PosStore extends WithLazyGetterTrap {
             return true;
         });
     }
-    breakCombo(orderline) {
+    async breakCombo(orderline) {
         if (!this.isSelectedLineCombo) {
             return;
         }
@@ -2975,9 +2965,12 @@ export class PosStore extends WithLazyGetterTrap {
                 line.product_id.getPrice(order.pricelist_id, line.qty, 0, false, line.product_id)
             );
         }
-        const preparationKey = orderline.preparationKey;
+        const needsSync = orderline.prep_line_ids.some((pl) => Number.isInteger(pl.id));
+        this.models["pos.prep.line"].deleteMany(orderline.prep_line_ids);
         order.removeOrderline(orderline, false);
-        delete order.last_order_preparation_change.lines[preparationKey];
+        if (needsSync) {
+            await this.syncAllOrders({ orders: [order] });
+        }
     }
 
     async initSnoozedProducts() {

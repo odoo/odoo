@@ -163,7 +163,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'amount_tax': 0.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}'
         })
         payment_context = {"active_ids": order.ids, "active_id": order.id}
         order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
@@ -748,7 +747,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'amount_tax': 0.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}'
         })
 
         # generate an invoice for pos order
@@ -942,7 +940,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                     }),
             ],
             "uuid": "12345-123-1234",
-            "last_order_preparation_change": "{}",
             "user_id": self.env.uid,
             "to_invoice": True,
         }

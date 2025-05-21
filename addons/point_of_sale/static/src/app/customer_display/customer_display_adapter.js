@@ -72,7 +72,7 @@ export class CustomerDisplayPosAdapter {
             taxGroupLabels: line.taxGroupLabels,
             discount: line.getDiscountStr(),
             customerNote: line.getCustomerNote() || "",
-            internalNote: line.getNote() || "[]",
+            internalNote: line.getNote() || "",
             productName: line.getFullProductName(),
             price: line.currencyDisplayPrice,
             qty: line.getQuantityStr().qtyStr,

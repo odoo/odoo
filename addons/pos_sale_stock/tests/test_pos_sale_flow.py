@@ -493,7 +493,6 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
             'amount_tax': 0.0,
             'amount_paid': 0.0,
             'amount_return': 0.0,
-            'last_order_preparation_change': '{}'
         })
 
         # generate an invoice for pos order

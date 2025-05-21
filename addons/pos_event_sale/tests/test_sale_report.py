@@ -54,7 +54,6 @@ class TestPoSEventSaleReport(TestUi):
                     }),
             ],
             "uuid": "12345-123-1234",
-            "last_order_preparation_change": "{}",
             "user_id": self.env.uid,
             "to_invoice": False,
         }

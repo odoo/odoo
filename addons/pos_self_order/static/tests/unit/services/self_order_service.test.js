@@ -286,7 +286,7 @@ test("sendDraftOrderToServer updateLastOrderChange", async () => {
     const product1 = store.models["product.template"].get(8);
     await store.addToCart(product1, 1, "");
     await store.sendDraftOrderToServer();
-    expect(Object.keys(order.last_order_preparation_change.lines)).toHaveLength(3);
+    expect(Object.keys(order.prep_order_ids[0].prep_line_ids)).toHaveLength(3);
 });
 
 describe("setOrderPrices", () => {
@@ -416,7 +416,7 @@ describe("printOrderChanges", () => {
         const printedData = [];
         patchWithCleanup(store.ticketPrinter, {
             async generateIframe(template, data) {
-                printedData.push(data.changes.data.map((line) => line.name));
+                printedData.push(data.changes.data.map((line) => line.basic_name));
                 return document.createElement("iframe");
             },
             setIframeSizeFromPrinter(iframe, printer) {

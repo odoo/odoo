@@ -4,6 +4,7 @@ import {
     makeDialogMockEnv,
     mountWithCleanup,
     patchWithCleanup,
+    onRpc,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
@@ -28,6 +29,7 @@ export const setupPosEnv = async () => {
     };
 
     await makeDialogMockEnv();
+    onRpc("/css", () => "");
     const store = getService("pos");
     store.setCashier(store.user);
     patchWithCleanup(user, {
