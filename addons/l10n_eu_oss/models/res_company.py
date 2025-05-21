@@ -46,7 +46,6 @@ class ResCompany(models.Model):
             tg = self.env['account.tax.group'].search([
                 *self.env['account.tax.group']._check_company_domain(company),
                 ('tax_payable_account_id', '!=', False)], limit=1)
-            self.env['account.account']._search_new_account_code(tg.tax_payable_account_id.code)
             default_oss_payable_account = self.env['account.account']
 
             for destination_country in oss_countries:
@@ -72,14 +71,11 @@ class ResCompany(models.Model):
                     if tax_amount and domestic_tax not in fpos.tax_ids.original_tax_ids:
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
-                            if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
-                                tg = self.env['account.tax.group'].search([
-                                    *self.env['account.tax.group']._check_company_domain(company),
-                                    ('tax_payable_account_id', '!=', False)], limit=1)
+                            if tg and not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
                                 if not default_oss_payable_account:
                                     default_oss_payable_account = self.env['account.account'].create([{
                                         'name': f'{tg.tax_payable_account_id.name} OSS',
-                                        'code': self.env['account.account']._search_new_account_code(tg.tax_payable_account_id.code),
+                                        'code': self.env['account.account']._search_new_account_code(tg.tax_payable_account_id.with_company(company).code),
                                         'account_type': tg.tax_payable_account_id.account_type,
                                         'reconcile': tg.tax_payable_account_id.reconcile,
                                         'non_trade': tg.tax_payable_account_id.non_trade,
@@ -87,7 +83,7 @@ class ResCompany(models.Model):
                                     }])
                                     default_oss_receivable_account = self.env['account.account'].create([{
                                         'name': f'{tg.tax_receivable_account_id.name} OSS',
-                                        'code': self.env['account.account']._search_new_account_code(tg.tax_receivable_account_id.code),
+                                        'code': self.env['account.account']._search_new_account_code(tg.tax_receivable_account_id.with_company(company).code),
                                         'account_type': tg.tax_receivable_account_id.account_type,
                                         'reconcile': tg.tax_receivable_account_id.reconcile,
                                         'non_trade': tg.tax_receivable_account_id.non_trade,
