@@ -1111,12 +1111,21 @@ class PurchaseOrder(models.Model):
             params=params
         )
         if seller:
+            product_uom = (seller.product_id or seller.product_tmpl_id).uom_id
             price = seller.price_discounted
             if seller.currency_id != self.currency_id:
-                price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
+                price = seller.currency_id._convert(price, self.currency_id)
+            if seller.product_uom_id != product_uom:
+                # The discounted price is expressed in the product's UoM, not in the vendor
+                # price's UoM, so we need to convert it into to match the displayed UoM.
+                price = product_uom._compute_price(price, seller.product_uom_id)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,
+                uom={
+                    'display_name': seller.product_uom_id.display_name,
+                    'id': seller.product_uom_id.id,
+                },
             )
 
         return product_infos
@@ -1192,6 +1201,7 @@ class PurchaseOrder(models.Model):
         :rtype: float
         """
         self.ensure_one()
+        uom_id = kwargs.get('uom_id', False)
         pol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
         if pol:
             if quantity != 0:
@@ -1207,19 +1217,21 @@ class PurchaseOrder(models.Model):
                 'order_id': self.id,
                 'product_id': product_id,
                 'product_qty': quantity,
+                'product_uom_id': uom_id,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
             seller = pol.product_id._select_seller(
                 partner_id=pol.partner_id,
-                quantity=pol.product_qty,
+                quantity=pol.product_qty or 1,
                 date=pol.order_id.date_order and pol.order_id.date_order.date() or fields.Date.context_today(pol),
                 uom_id=pol.product_uom_id)
             if seller:
-                price = seller.price_discounted
-                if seller.currency_id != self.currency_id:
-                    price = seller.currency_id._convert(seller.price_discounted, self.currency_id)
                 # Fix the PO line's price on the seller's one.
+                price = seller.price
+                if seller.currency_id != self.currency_id:
+                    price = seller.currency_id._convert(price, self.currency_id)
                 pol.price_unit = price
+                pol.discount = seller.discount
         return pol.price_unit_discounted
 
     def _create_update_date_activity(self, updated_dates):

@@ -74,6 +74,7 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
             quantity: this.productCatalogData.quantity,
             res_model: this.env.orderResModel,
             child_field: this.env.childField,
+            uom_id: this.productCatalogData.uom?.id || false,
         }
     }
 
