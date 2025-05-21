@@ -130,6 +130,7 @@ import warnings
 import zlib
 from abc import ABC, abstractmethod
 from datetime import datetime
+from importlib import metadata
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
@@ -256,7 +257,7 @@ ROUTING_KEYS = {
     'alias', 'host', 'methods',
 }
 
-if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
+if parse_version(getattr(werkzeug, '__version__', None) or metadata.version("werkzeug")) >= parse_version('2.0.2'):
     # Werkzeug 2.0.2 adds the websocket option. If a websocket request
     # (ws/wss) is trying to access an HTTP route, a WebsocketMismatch
     # exception is raised. On the other hand, Werkzeug 0.16 does not
