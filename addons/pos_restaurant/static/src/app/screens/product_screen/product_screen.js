@@ -48,10 +48,16 @@ patch(ProductScreen.prototype, {
         return this.pos.categoryCount.slice(0, 3);
     },
     async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
         this.pos.addPendingOrder([this.currentOrder.id]);
+<<<<<<< 85321186dae5c13c2b669c766dbcf6cd58db327b
         const page = this.pos.defaultPage;
         this.pos.navigate(page.page, page.params);
+||||||| af3bc0332cb71072b164059370e0a5a74e60a105
+        this.pos.showScreen(this.pos.defaultScreen, {}, this.pos.defaultScreen == "ProductScreen");
+=======
+        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+        this.pos.showScreen(this.pos.defaultScreen, {}, this.pos.defaultScreen == "ProductScreen");
+>>>>>>> 7ab45f16ddbc4a44ff7c02fec0ab428a4973beab
     },
     get primaryReviewButton() {
         return (
