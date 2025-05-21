@@ -7,6 +7,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { boundariesOut, rightPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class CaptionPlugin extends Plugin {
     static id = "caption";
@@ -24,6 +25,7 @@ export class CaptionPlugin extends Plugin {
                 id: "toggleImageCaption",
                 title: _t("Add/remove a caption"),
                 run: this.toggleImageCaption.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         toolbar_items: [
