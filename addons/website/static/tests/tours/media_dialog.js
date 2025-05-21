@@ -15,6 +15,10 @@ registerWebsitePreviewTour("website_media_dialog_undraw", {
     groupName: "Content",
 }),
 {
+    // TODO: should check if o_loading_screen is not present (TO check with PIPU)
+    // Await step in the history
+    trigger: ":iframe:has(#wrap[contenteditable='true'])",
+}, {
     content: "Open the media dialog from the snippet",
     trigger: ":iframe .s_text_image img",
     run: "dblclick",
