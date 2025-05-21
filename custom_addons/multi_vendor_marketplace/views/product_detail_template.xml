@@ -151,16 +151,17 @@
                                     <div class="action-buttons d-flex mb-3" style="padding: 0; background: none; border-radius: 12px; overflow: hidden; width: 100%;">
                                         <div id="o_wsale_cta_wrapper" class="d-flex w-100" style="width: 100%;">
                                             <!-- Buy Now Button (левая, оранжевый) -->
-                                            <button type="button" id="buy_now" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center o_we_buy_now"
-                                                style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; width: 50%; transition: filter 0.2s;"
+                                            <button type="button" id="buy_now" class="btn btn-lg d-flex align-items-center justify-content-center o_we_buy_now"
+                                                style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;"
                                                 data-action="buy_now">
                                                 <span>Купить</span>
                                             </button>
                                             <!-- Add to Cart Button (правая, жёлтый) -->
-                                            <button type="button" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit"
-                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; font-size: 1.1rem; height: 56px; width: 50%; transition: filter 0.2s;"
+                                            <button type="button" id="add_to_cart" class="btn btn-lg d-flex align-items-center justify-content-center js_check_product a-submit"
+                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;"
                                                 data-action="add_to_cart">
-                                                <span style="padding: 0 12px;">Добавить в корзину</span>
+                                                <span class="d-none d-sm-block" style="font-size: 1.1rem; white-space: nowrap;">Добавить в корзину</span>
+                                                <span class="d-block d-sm-none" style="font-size: 1.25rem;">Добавить в корзину</span>
                                             </button>
                                         </div>
                                     </div>
@@ -171,8 +172,21 @@
                         <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
                         
                         <!-- Блок информации и параметров -->
-                        <div class="container my-4">
-                            <div style="background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 32px 32px 24px 32px; max-width: 900px; margin: 0 auto;">
+                        <div class="container-fluid px-0 my-4">
+                            <div style="background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 18px 16px; width: 100%; margin: 0; border-radius: 12px;" class="d-md-none">
+                                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; white-space: nowrap;">Информация и параметры</h3>
+                                <div style="color: #333; font-size: 16px;">
+                                    <t t-if="product.description">
+                                        <t t-raw="product.description"/>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="text-muted">Нет дополнительной информации.</span>
+                                    </t>
+                                </div>
+                            </div>
+                            
+                            <!-- Desktop version with rounded corners -->
+                            <div style="background: #fff; border-radius: 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); padding: 32px; max-width: 900px; margin: 0 auto;" class="d-none d-md-block">
                                 <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 18px;">Информация и параметры</h3>
                                 <div style="color: #333; font-size: 16px;">
                                     <t t-if="product.description">
