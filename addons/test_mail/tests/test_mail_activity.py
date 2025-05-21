@@ -541,6 +541,234 @@ class TestActivityViewHelpers(TestActivityCommon):
             })
 
 
+<<<<<<< eb3e7ec18544cca9c38463a438e73911c798d3dc
+||||||| 18c34146daa359312ea87968fe7a4ffb1f6420eb
+@tests.tagged('mail_activity')
+class TestORM(TestActivityCommon):
+    """Test for read_progress_bar"""
+
+    def test_groupby_activity_state_progress_bar_behavior(self):
+        """Test activity_state groupby logic on mail.test.lead when 'activity_state'
+        is present multiple times in the groupby field list.
+        """
+
+        lead_timedelta_setup = [0, 0, -2, -2, -2, 2]
+
+        leads = self.env["mail.test.lead"].create(
+            [{"name": f"CRM Lead {i}"} for i in range(1, len(lead_timedelta_setup) + 1)]
+        )
+
+        self.env["mail.activity"].create([{
+            "summary": f"Test activity for CRM lead {lead.id}",
+            "res_model_id": self.env["ir.model"]._get_id("mail.test.lead"),
+            "res_id": lead.id,
+            "date_deadline": datetime.now(timezone.utc) + timedelta(days=delta_days),
+            "user_id": self.env.user.id,
+        } for lead, delta_days in zip(leads, lead_timedelta_setup)])
+
+        # grouping by 'activity_state' and 'activity_state' as the progress bar
+        domain = [("name", "!=", "")]
+        groupby = "activity_state"
+        progress_bar = {
+            "field": "activity_state",
+            "colors": {
+                "overdue": "danger",
+                "today": "warning",
+                "planned": "success",
+            },
+        }
+        progressbars = self.env["mail.test.lead"].read_progress_bar(
+            domain=domain, group_by=groupby, progress_bar=progress_bar
+        )
+
+        self.assertEqual(len(progressbars), 3)
+        expected_progressbars = {
+            "overdue": {"overdue": 3, "today": 0, "planned": 0},
+            "today": {"overdue": 0, "today": 2, "planned": 0},
+            "planned": {"overdue": 0, "today": 0, "planned": 1},
+        }
+        self.assertEqual(dict(progressbars), expected_progressbars)
+
+    def test_week_grouping(self):
+        """The labels associated to each record in read_progress_bar should match
+        the ones from read_group, even in edge cases like en_US locale on sundays
+        """
+        MailTestActivityCtx = self.env['mail.test.activity'].with_context({"lang": "en_US"})
+
+        # Don't mistake fields date and date_deadline:
+        # * date is just a random value
+        # * date_deadline defines activity_state
+        with freeze_time("2024-09-24 10:00:00"):
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-02',
+                'name': "Yesterday, all my troubles seemed so far away",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test super asap (yesterday)",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-09',
+                'name': "Things we said today",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test asap",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-16',
+                'name': "Tomorrow Never Knows",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make a test tomorrow",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+            )
+
+            domain = [('date', "!=", False)]
+            groupby = "date:week"
+            progress_bar = {
+                'field': 'activity_state',
+                'colors': {
+                    "overdue": 'danger',
+                    "today": 'warning',
+                    "planned": 'success',
+                }
+            }
+
+            # call read_group to compute group names
+            groups = MailTestActivityCtx.formatted_read_group(domain, groupby=[groupby])
+            progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+            self.assertEqual(len(groups), 3)
+            self.assertEqual(len(progressbars), 3)
+
+        # format the read_progress_bar result to get a dictionary under this
+        # format: {activity_state: group_name}; the original format
+        # (after read_progress_bar) is {group_name: {activity_state: count}}
+        pg_groups = {
+            next(state for state, count in data.items() if count): group_name
+            for group_name, data in progressbars.items()
+        }
+
+        self.assertEqual(groups[0][groupby][0], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby][0], pg_groups["today"])
+        self.assertEqual(groups[2][groupby][0], pg_groups["planned"])
+
+
+=======
+@tests.tagged('mail_activity')
+class TestORM(TestActivityCommon):
+    """Test for read_progress_bar"""
+
+    def test_groupby_activity_state_progress_bar_behavior(self):
+        """ Test activity_state groupby logic on mail.test.lead when 'activity_state'
+        is present multiple times in the groupby field list. """
+        lead_timedelta_setup = [0, 0, -2, -2, -2, 2]
+
+        leads = self.env["mail.test.lead"].create([
+            {"name": f"CRM Lead {i}"}
+            for i in range(1, len(lead_timedelta_setup) + 1)
+        ])
+
+        with freeze_time("2025-05-21 10:00:00"):
+            self.env["mail.activity"].create([
+                {
+                    "summary": f"Test activity for CRM lead {lead.id}",
+                    "res_model_id": self.env["ir.model"]._get_id("mail.test.lead"),
+                    "res_id": lead.id,
+                    "date_deadline": datetime.now(timezone.utc) + timedelta(days=delta_days),
+                    "user_id": self.env.user.id,
+                } for lead, delta_days in zip(leads, lead_timedelta_setup)
+            ])
+
+            # grouping by 'activity_state' and 'activity_state' as the progress bar
+            domain = [("name", "!=", "")]
+            groupby = "activity_state"
+            progress_bar = {
+                "field": "activity_state",
+                "colors": {
+                    "overdue": "danger",
+                    "today": "warning",
+                    "planned": "success",
+                },
+            }
+            progressbars = self.env["mail.test.lead"].read_progress_bar(
+                domain=domain, group_by=groupby, progress_bar=progress_bar
+            )
+
+            self.assertEqual(len(progressbars), 3)
+            expected_progressbars = {
+                "overdue": {"overdue": 3, "today": 0, "planned": 0},
+                "today": {"overdue": 0, "today": 2, "planned": 0},
+                "planned": {"overdue": 0, "today": 0, "planned": 1},
+            }
+            self.assertEqual(dict(progressbars), expected_progressbars)
+
+    def test_week_grouping(self):
+        """The labels associated to each record in read_progress_bar should match
+        the ones from read_group, even in edge cases like en_US locale on sundays
+        """
+        MailTestActivityCtx = self.env['mail.test.activity'].with_context({"lang": "en_US"})
+
+        # Don't mistake fields date and date_deadline:
+        # * date is just a random value
+        # * date_deadline defines activity_state
+        with freeze_time("2024-09-24 10:00:00"):
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-02',
+                'name': "Yesterday, all my troubles seemed so far away",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test super asap (yesterday)",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) - timedelta(days=7),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-09',
+                'name': "Things we said today",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make another test asap",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx),
+            )
+            self.env['mail.test.activity'].create({
+                'date': '2021-05-16',
+                'name': "Tomorrow Never Knows",
+            }).activity_schedule(
+                'test_mail.mail_act_test_todo',
+                summary="Make a test tomorrow",
+                date_deadline=fields.Date.context_today(MailTestActivityCtx) + timedelta(days=7),
+            )
+
+            domain = [('date', "!=", False)]
+            groupby = "date:week"
+            progress_bar = {
+                'field': 'activity_state',
+                'colors': {
+                    "overdue": 'danger',
+                    "today": 'warning',
+                    "planned": 'success',
+                }
+            }
+
+            # call read_group to compute group names
+            groups = MailTestActivityCtx.formatted_read_group(domain, groupby=[groupby])
+            progressbars = MailTestActivityCtx.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+            self.assertEqual(len(groups), 3)
+            self.assertEqual(len(progressbars), 3)
+
+        # format the read_progress_bar result to get a dictionary under this
+        # format: {activity_state: group_name}; the original format
+        # (after read_progress_bar) is {group_name: {activity_state: count}}
+        pg_groups = {
+            next(state for state, count in data.items() if count): group_name
+            for group_name, data in progressbars.items()
+        }
+
+        self.assertEqual(groups[0][groupby][0], pg_groups["overdue"])
+        self.assertEqual(groups[1][groupby][0], pg_groups["today"])
+        self.assertEqual(groups[2][groupby][0], pg_groups["planned"])
+
+
+>>>>>>> fef6e9267de623b2167c54446098f4a8ad479e04
 @tests.tagged('post_install', '-at_install')
 class TestTours(HttpCase):
 
