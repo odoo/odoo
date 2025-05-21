@@ -677,7 +677,7 @@ class StockPicking(models.Model):
     weight_bulk = fields.Float(
         'Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
     shipping_weight = fields.Float(
-        "Weight for Shipping", compute='_compute_shipping_weight', readonly=False, store=True,
+        "Weight for Shipping", digits="Stock Weight", compute='_compute_shipping_weight', readonly=False, store=True,
         help="Total weight of packages and products not in a package. "
         "Packages with no shipping weight specified will default to their products' total weight. "
         "This is the weight used to compute the cost of the shipping.")
