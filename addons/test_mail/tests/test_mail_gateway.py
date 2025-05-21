@@ -1445,7 +1445,7 @@ class TestMailgateway(MailGatewayCommon):
         self.assertEqual(new_msg.parent_id, self.fake_email, 'Mail: flattening attach to original message')
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment (before flattening)')
 
-    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail', 'odoo.tests')
+    # @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_message_process_references_multi_parent_notflat(self):
         """ Incoming email with multiple references with ``_mail_flat_thread``
         being False (mail.group/discuss.channel behavior like). """
@@ -1456,20 +1456,27 @@ class TestMailgateway(MailGatewayCommon):
         })
 
         # Set a first message on public group to test update and hierarchy
-        first_msg = self._create_gateway_message(test_record, 'first_msg')
+        first_msg = self._create_gateway_message(
+            test_record, 'first_msg',
+            subject='first_msg',
+        )
         reply1 = self._create_gateway_message(
             test_record, 'reply1', parent_id=first_msg.id,
+            subject='reply1',
         )
         reply2 = self._create_gateway_message(
             test_record, 'reply2', parent_id=first_msg.id,
+            subject='reply2',
             subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
         )
         reply1_1 = self._create_gateway_message(
             test_record, 'reply1_1', parent_id=reply1.id,
+            subject='reply1_1',
             subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
         )
         reply2_1 = self._create_gateway_message(
             test_record, 'reply2_1', parent_id=reply2.id,
+            subject='reply2_1',
         )
 
         self.format_and_process(
@@ -1502,21 +1509,26 @@ class TestMailgateway(MailGatewayCommon):
         # no references: new discussion thread started
         self.format_and_process(
             MAIL_TEMPLATE, self.email_from, f'test.gateway@{self.alias_domain}',
-            subject='New thread',
+            subject='New thread (no ref)',
             extra='References:'
         )
         new_thread = test_record.message_ids[0]
         self.assertFalse(new_thread.parent_id, 'Mail: pseudo no flattening: no parent means new thread')
-        self.assertEqual(new_thread.subject, 'New thread')
+        self.assertEqual(new_thread.subject, 'New thread (no ref)')
         self.assertEqual(new_thread.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment')
 
         # mixed up references: newer message wins
         self.format_and_process(
             MAIL_TEMPLATE, self.email_from, f'test.gateway@{self.alias_domain}',
-            subject='New thread',
+            subject='New thread (mix references)',
             extra=f'References: {new_thread.message_id} {reply1_1.message_id}'
         )
         new_msg = test_record.message_ids[0]
+        print('---------------------------')
+        print('new_msg', new_msg, new_msg.subject)
+        print('new_thread', new_thread, new_thread.subject)
+        print('new_msg parent', new_msg.parent_id, new_msg.parent_id.subject)
+        print('expeced parent', new_thread, new_thread.subject)
         self.assertEqual(new_msg.parent_id, new_thread)
         self.assertEqual(new_msg.subtype_id, self.env.ref('mail.mt_comment'), 'Mail: parent should be a comment')
 

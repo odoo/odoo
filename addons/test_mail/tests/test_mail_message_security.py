@@ -609,14 +609,14 @@ class TestMailMessageAccess(MessageAccessCommon):
         message.write({'body': 'Update Me'})
         with self.assertRaises(AccessError):
             message.write({'model': 'res.partner'})
-        # To change in 18+
-        message.write({'partner_ids': [(4, self.user_portal_2.partner_id.id)]})
+        with self.assertRaises(AccessError):
+            message.write({'partner_ids': [(4, self.user_portal_2.partner_id.id)]})
         with self.assertRaises(AccessError):
             message.write({'res_id': self.record_public.id})
-        # To change in 18+
-        message.write({'notification_ids': [
-            (0, 0, {'res_partner_id': self.user_portal_2.partner_id.id})
-        ]})
+        with self.assertRaises(AccessError):
+            message.write({'notification_ids': [
+                (0, 0, {'res_partner_id': self.user_portal_2.partner_id.id})
+            ]})
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_access_write_portal_notification(self):
@@ -761,15 +761,17 @@ class TestMessageSubModelAccess(MessageAccessCommon):
             partner_ids=(self.user_portal.partner_id + self.user_employee.partner_id).ids,
             subtype_id=self.env.ref('mail.mt_comment').id,
         )
-        notifications = message.with_user(self.user_employee).notification_ids
-        self.assertEqual(len(notifications), 2)
-        self.assertTrue(bool(notifications.read(['is_read'])), 'Internal can read')
+        notifications_su = message.notification_ids.sudo()
+        self.assertEqual(len(notifications_su), 2)
 
-        notif_other = notifications.filtered(lambda n: n.res_partner_id == self.user_portal.partner_id)
+        notif_other = notifications_su.filtered(lambda n: n.res_partner_id == self.user_portal.partner_id).with_user(self.user_employee)
+        with self.assertRaises(AccessError):
+            notif_other.read(['is_read'])
         with self.assertRaises(AccessError):
             notif_other.write({'is_read': True})
 
-        notif_own = notifications.filtered(lambda n: n.res_partner_id == self.user_employee.partner_id)
+        notif_own = notifications_su.filtered(lambda n: n.res_partner_id == self.user_employee.partner_id).with_user(self.user_employee)
+        self.assertTrue(bool(notif_own.read(['is_read'])), 'Internal can read')
         notif_own.write({'is_read': True})
         # with self.assertRaises(AccessError):
         #     notif_own.write({'author_id': self.user_portal.partner_id.id})
@@ -790,7 +792,9 @@ class TestMessageSubModelAccess(MessageAccessCommon):
             partner_ids=(self.user_portal_2.partner_id + self.user_employee.partner_id).ids,
             subtype_id=self.env.ref('mail.mt_comment').id,
         )
-        notifications = message.notification_ids
-        self.assertEqual(len(notifications), 2)
-        self.assertTrue(bool(notifications.read(['is_read'])), 'Portal can read')
-        self.assertEqual(notifications.res_partner_id, self.user_portal_2.partner_id + self.user_employee.partner_id)
+        notifications_su = message.notification_ids.sudo()
+        self.assertEqual(len(notifications_su), 2)
+        for notification in notifications_su:
+            with self.assertRaises(AccessError):
+                self.assertTrue(bool(notification.with_user(self.user_portal).read(['is_read'])), 'Portal can read')
+        self.assertEqual(notifications_su.res_partner_id, self.user_portal_2.partner_id + self.user_employee.partner_id)
