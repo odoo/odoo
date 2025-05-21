@@ -23,6 +23,12 @@
                             invisible="state in ['pending', 'generated']"
                             data-hotkey="r"
                             confirm="Are you sure you want to re-send the e-Waybill?"/>
+                    <button name="action_print"
+                            string="Print"
+                            class="oe_highlight"
+                            type="object"
+                            invisible="state != 'generated'"
+                            data-hotkey="f"/>
                     <button name="action_export_content_json"
                             string="Download Content JSON"
                             type="object"

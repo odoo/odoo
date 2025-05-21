@@ -132,6 +132,17 @@ class L10nInEwaybill(models.Model):
             'state': 'challan',
         })
 
+    def action_print(self):
+        self.ensure_one()
+        if self.state == 'generated':
+            return super().action_print()
+        if self.state != 'challan':
+            raise UserError(_(
+                "Please generate the E-Waybill or mark the document as a Challan to print it."
+            ))
+
+        return self._generate_and_attach_pdf(_("Challan"))
+
     def _check_lines(self):
         if self.picking_id:
             error_message = []

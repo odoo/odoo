@@ -12,6 +12,9 @@
                         invisible="state != 'pending' or not picking_id"
                         data-hotkey="d"/>
             </xpath>
+            <xpath expr="//button[@name='action_print']" position="attributes">
+                <attribute name="invisible">state not in ['generated', 'challan']</attribute>
+            </xpath>
             <xpath expr="//field[@name='state']" position="attributes">
                 <attribute name="invisible">state == 'challan'</attribute>
             </xpath>
