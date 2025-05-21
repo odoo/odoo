@@ -51,7 +51,7 @@
                             <page string="Content" name="content">
                                 <field name="can_write" invisible="1"/>
                                 <field name="body_html" widget="html_mail" class="oe-bordered-editor"
-                                    options="{'codeview': true, 'dynamic_placeholder': true}"
+                                    options="{'codeview': true, 'dynamic_placeholder': true, 'disableVideo': true}"
                                     readonly="not can_write and id"/>
                                 <div class="d-flex align-items-center gap-3">
                                     <field name="attachment_ids" widget="many2many_binary" class="m-0"/>
