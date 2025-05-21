@@ -3,7 +3,6 @@
 
 import odoo
 import odoo.tests
-import unittest
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestWebsiteSettings(odoo.tests.HttpCase):

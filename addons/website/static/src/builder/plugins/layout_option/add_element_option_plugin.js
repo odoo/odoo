@@ -28,11 +28,12 @@ export class AddElementOptionPlugin extends Plugin {
                 },
             },
             addElImage: {
-                load: async () => {
+                load: async ({ editingElement }) => {
                     let selectedImage;
                     await new Promise((resolve) => {
                         const onClose = this.dependencies.media.openMediaDialog({
                             onlyImages: true,
+                            node: editingElement,
                             save: (images) => {
                                 selectedImage = images;
                                 resolve();

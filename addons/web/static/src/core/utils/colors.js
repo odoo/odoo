@@ -217,6 +217,16 @@ export function convertCSSColorToRgba(cssColor) {
     }
 
     // Otherwise, check if cssColor is an hexadecimal code color
+    // first check if it's in its compact form (e.g. #FFF)
+    if (/^#([0-9a-f]{3})$/i.test(cssColor)) {
+        return {
+            red: parseInt(cssColor[1] + cssColor[1], 16),
+            green: parseInt(cssColor[2] + cssColor[2], 16),
+            blue: parseInt(cssColor[3] + cssColor[3], 16),
+            opacity: 100,
+        };
+    }
+
     if (/^#([0-9A-F]{6}|[0-9A-F]{8})$/i.test(cssColor)) {
         return {
             red: parseInt(cssColor.substr(1, 2), 16),

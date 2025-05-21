@@ -28,9 +28,3 @@ export class DynamicSnippetCarousel extends DynamicSnippet {
 registry
     .category("public.interactions")
     .add("website.dynamic_snippet_carousel", DynamicSnippetCarousel);
-
-registry
-    .category("public.interactions.edit")
-    .add("website.dynamic_snippet_carousel", {
-        Interaction: DynamicSnippetCarousel,
-    });

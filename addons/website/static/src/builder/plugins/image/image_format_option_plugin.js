@@ -29,10 +29,10 @@ class ImageFormatOptionPlugin extends Plugin {
                     );
                 },
                 load: async ({ editingElement: img, params: { width, mimetype } }) =>
-                    this.dependencies.imagePostProcess.processImage(img, {
+                    this.dependencies.imagePostProcess.processImage({ img, newDataset: {
                         resizeWidth: width,
                         formatMimetype: mimetype,
-                    }),
+                    }}),
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();
                 },
@@ -41,9 +41,9 @@ class ImageFormatOptionPlugin extends Plugin {
                 getValue: ({ editingElement: img }) =>
                     ("quality" in img.dataset && img.dataset.quality) || DEFAULT_IMAGE_QUALITY,
                 load: async ({ editingElement: img, value: quality }) =>
-                    this.dependencies.imagePostProcess.processImage(img, {
+                    this.dependencies.imagePostProcess.processImage({ img, newDataset: {
                         quality,
-                    }),
+                    }}),
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();
                 },
