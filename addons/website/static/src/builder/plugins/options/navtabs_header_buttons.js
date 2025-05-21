@@ -10,9 +10,12 @@ export class NavTabsHeaderMiddleButtons extends Component {
     };
 
     setup() {
-        this.state = useDomState((editingElement) => ({
-            tabEls: editingElement.querySelectorAll(".s_tabs_nav .nav-item"),
-        }));
+        this.state = useDomState((editingElement) => {
+            const navEl = editingElement.querySelector(".nav");
+            return {
+                tabEls: navEl.querySelectorAll(".nav-item"),
+            }
+        });
 
         this.callOperation = useOperation();
     }
