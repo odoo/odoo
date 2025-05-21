@@ -159,12 +159,10 @@ export class Colibri {
         }
     }
 
-    mountComponent(nodes, C, props) {
-        for (const node of nodes) {
-            const root = this.core.prepareRoot(node, C, props);
-            root.mount();
-            this.cleanups.push(() => root.destroy());
-        }
+    mountComponent(node, C, props) {
+        const root = this.core.prepareRoot(node, C, props);
+        root.mount();
+        this.cleanups.push(() => root.destroy());
     }
 
     applyTOut(el, value, initialValue) {
@@ -292,9 +290,13 @@ export class Colibri {
                 } else if (directive === "t-component") {
                     const { Component } = odoo.loader.modules.get("@odoo/owl");
                     if (Object.prototype.isPrototypeOf.call(Component, value)) {
-                        this.mountComponent(nodes, value);
+                        for (const node of nodes) {
+                            this.mountComponent(node, value);
+                        }
                     } else {
-                        this.mountComponent(nodes, ...value());
+                        for (const node of nodes) {
+                            this.mountComponent(node, ...value(node));
+                        }
                     }
                 } else {
                     const suffix = directive.startsWith("t-") ? "" : " (should start with t-)";
