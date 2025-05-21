@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PriorityField">
-        <div class="o_priority" role="radiogroup" name="priority" aria-label="Priority">
+        <div class="o_priority opacity-trigger-hover" role="radiogroup" name="priority" aria-label="Priority">
             <t t-foreach="options" t-as="value" t-key="value">
                 <t t-if="!value_first">
                     <t t-if="props.readonly">
@@ -21,7 +21,7 @@
                             href="#"
                             class="o_priority_star fa"
                             role="radio"
-                            t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o'"
+                            t-att-class="value_index lte index ? 'fa-star' : 'fa-star-o opacity-25 opacity-100-hover'"
                             tabindex="0"
                             t-att-data-tooltip="getTooltip(value[1])"
                             t-att-aria-checked="value_index === index ? 'true' : 'false'"
