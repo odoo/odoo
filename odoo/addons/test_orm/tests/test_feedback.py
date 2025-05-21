@@ -125,13 +125,13 @@ class TestACLFeedback(Feedback):
 
 No group currently allows this operation.
 
-Contact your administrator to request access if necessary."""
+Contact your administrator to request access if necessary.""",
         )
 
     def test_one_group(self):
         with self.assertRaises(AccessError) as ctx:
             self.env(user=self.user)['test_access_right.some_obj'].create({
-                'val': 1
+                'val': 1,
             })
         self.assertEqual(
             ctx.exception.args[0],
@@ -139,7 +139,7 @@ Contact your administrator to request access if necessary."""
 
 This operation is allowed for the following groups:\n\t- Group 0
 
-Contact your administrator to request access if necessary."""
+Contact your administrator to request access if necessary.""",
         )
 
     def test_two_groups(self):
@@ -157,6 +157,7 @@ Contact your administrator to request access if necessary."""
             r.read(['val'])
         self.assertEqual(ctx.exception.args[0], expected)
 
+
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
@@ -171,7 +172,7 @@ class TestIRRuleFeedback(Feedback):
         cls.maxDiff = None
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
-        res = self.env['ir.rule'].create({
+        return self.env['ir.rule'].create({
             'name': name,
             'model_id': self.model.id,
             'groups': [] if global_ else [Command.link(self.group2.id)],
@@ -182,7 +183,6 @@ class TestIRRuleFeedback(Feedback):
             'perm_unlink': False,
             'perm_' + attr: True,
         })
-        return res
 
     def test_local(self):
         self._make_rule('rule 0', '[("val", "=", 42)]')
@@ -268,7 +268,7 @@ If you really, really need access, perhaps you can win over your friendly admini
         % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
 
     def test_globals_any(self):
-        """ Global rules are AND-eded together, so when an access fails it
+        """ Global rules are AND-eded together, so when access fails it
         might be just one of the rules, and we want an exact listing
         """
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
@@ -313,7 +313,7 @@ If you really, really need access, perhaps you can win over your friendly admini
     def test_warn_company_no_access(self):
         """ If one of the failing rules mentions company_id, add a note that
         this might be a multi-company issue, but the user doesn't access to this company
-        then no information about the company is showed.
+        then no information about the company is shown.
         """
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
@@ -335,7 +335,7 @@ If you really, really need access, perhaps you can win over your friendly admini
     def test_warn_company_no_company_field(self):
         """ If one of the failing rules mentions company_id, add a note that
         this might be a multi-company issue, but the record doesn't have company_id field
-        then no information about the company is showed.
+        then no information about the company is shown.
         """
         ChildModel = self.env['test_access_right.child'].sudo()
         self.env['ir.rule'].create({
@@ -454,7 +454,7 @@ class TestFieldGroupFeedback(Feedback):
 Operation: read
 User: %s
 Groups: allowed for groups 'Role / Portal', 'Test Group'"""
-    % self.user.id
+    % self.user.id,
         )
 
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
@@ -466,7 +466,7 @@ Groups: allowed for groups 'Role / Portal', 'Test Group'"""
 
 Operation: read
 User: %s
-Groups: always forbidden""" % self.user.id
+Groups: always forbidden""" % self.user.id,
         )
 
     @mute_logger('odoo.models')
@@ -484,7 +484,7 @@ Groups: always forbidden""" % self.user.id
 Operation: write
 User: %s
 Groups: allowed for groups 'Role / Portal', 'Test Group'"""
-    % self.user.id
+    % self.user.id,
         )
 
     @mute_logger('odoo.models')
