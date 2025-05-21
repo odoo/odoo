@@ -265,7 +265,6 @@ export class ProductTemplate extends Base {
         const fields = ["barcode"];
         const variantMatch = this.product_variant_ids.some(
             (variant) =>
-                (variant.default_code && variant.default_code.toLowerCase() == searchWord) ||
                 (variant.barcode && variant.barcode.toLowerCase() == searchWord) ||
                 variant.product_template_variant_value_ids.some((vv) =>
                     vv.name.toLowerCase().includes(searchWord)
