@@ -129,7 +129,7 @@ class AccountEdiFormat(models.Model):
                     tax_info = {
                         'TipoImpositivo': tax_values['applied_tax_amount'],
                         'BaseImponible': round(base_amount, 2),
-                        'CuotaRepercutida': round(math.copysign(tax_values['tax_amount'], base_amount), 2),
+                        'CuotaRepercutida': round(math.copysign(tax_values['tax_amount_currency'], base_amount), 2),
                     }
 
                     recargo = recargo_tax_details.get(tax_values['group_tax_details'][0]['tax_repartition_line'].tax_id)
