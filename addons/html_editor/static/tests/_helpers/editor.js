@@ -1,12 +1,14 @@
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { expect, getFixture } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { Component, EventBus, xml } from "@odoo/owl";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent } from "./selection";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { dispatchCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { mockImageRequests } from "./image";
+import { HistoryPlugin } from "@html_editor/core/history_plugin";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -77,6 +79,14 @@ class TestEditor extends Component {
  * @returns { Promise<{el: HTMLElement; editor: Editor; plugins: Map<string,Plugin>}> }
  */
 export async function setupEditor(content, options = {}) {
+    mockImageRequests();
+    const historyStepBus = new EventBus();
+    patchWithCleanup(HistoryPlugin.prototype, {
+        addStep() {
+            super.addStep(...arguments);
+            historyStepBus.trigger("next");
+        },
+    });
     const wysiwygProps = Object.assign({}, options.props);
     wysiwygProps.config = options.config || {};
     const attachedEditor = new Promise((resolve) => {
@@ -111,11 +121,18 @@ export async function setupEditor(content, options = {}) {
         await animationFrame();
     }
 
+    function waitNextHistoryStep() {
+        return new Promise((resolve) => {
+            historyStepBus.addEventListener("next", resolve, { once: true });
+        });
+    }
+
     // @todo: return editor, tests can destructure const { editable } = ... if they want
     return {
         el: editor.editable,
         editor,
         plugins,
+        waitNextHistoryStep,
     };
 }
 
@@ -149,6 +166,7 @@ export async function testEditor(config) {
             });
         };
     }
+    mockImageRequests();
     const isMobileTest = config.props?.mobile;
     delete config.props?.mobile;
     const { el, editor } = await setupEditor(contentBefore, config);

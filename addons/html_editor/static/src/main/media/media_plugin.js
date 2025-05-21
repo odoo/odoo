@@ -25,7 +25,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class MediaPlugin extends Plugin {
     static id = "media";
-    static dependencies = ["selection", "history", "dom", "dialog"];
+    static dependencies = ["selection", "history", "dom", "dialog", "imagePostProcess"];
     static shared = ["savePendingImages", "openMediaDialog"];
     static defaultConfig = {
         allowImage: true,
@@ -126,7 +126,7 @@ export class MediaPlugin extends Plugin {
         }
     }
 
-    onSaveMediaDialog(element, { node }) {
+    async onSaveMediaDialog(element, { node }) {
         if (!element) {
             // @todo @phoenix to remove
             throw new Error("Element is required: onSaveMediaDialog");
@@ -152,6 +152,10 @@ export class MediaPlugin extends Plugin {
         const [anchorNode, anchorOffset] = rightPos(element);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.delegateTo("afer_save_media_dialog_handlers", element);
+        // @todo: without operation plugin mutex, some race condition could mess
+        // up the history.
+        const updateAttributes = await this.dependencies.imagePostProcess.processImage(element);
+        updateAttributes();
         this.dependencies.history.addStep();
     }
 

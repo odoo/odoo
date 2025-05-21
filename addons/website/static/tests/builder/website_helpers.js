@@ -37,7 +37,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { WebClient } from "@web/webclient/webclient";
 import { patchWithCleanupImg } from "@html_builder/../tests/helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { mockImageRequests } from "./image_test_helpers";
+import { mockImageRequests } from "@html_editor/../tests/_helpers/image";
 import { Mutex } from "@web/core/utils/concurrency";
 
 class Website extends models.Model {

@@ -18,7 +18,10 @@ test("Can replace an image", async () => {
         },
     ]);
     const env = await makeMockEnv();
-    await setupEditor(`<p> <img class="img-fluid" src="/web/static/img/logo.png"> </p>`, { env });
+    const { waitNextHistoryStep } = await setupEditor(
+        `<p> <img class="img-fluid" src="/web/static/img/logo.png"> </p>`,
+        { env }
+    );
     expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
     await click("img");
     await tick(); // selectionchange
@@ -26,10 +29,11 @@ test("Can replace an image", async () => {
     expect("button[name='replace_image']").toHaveCount(1);
     await click("button[name='replace_image']");
     await animationFrame();
+
     await click("img.o_we_attachment_highlight");
-    await animationFrame();
+    await waitNextHistoryStep();
     expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
-    expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
+    expect("img[data-original-src='/web/static/img/logo2.png']").toHaveCount(1);
 });
 
 test.tags("focus required");

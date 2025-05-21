@@ -3,7 +3,7 @@ import { animationFrame, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { delay } from "@web/core/utils/concurrency";
-import { testImg } from "./image_test_helpers";
+import { testImg } from "@html_editor/../tests/_helpers/image";
 
 defineWebsiteModels();
 

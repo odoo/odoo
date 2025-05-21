@@ -43,6 +43,9 @@ export class ImagePostProcessPlugin extends Plugin {
         }
 
         const data = getImageTransformationData({ ...img.dataset, ...newDataset });
+        if (!data.originalSrc) {
+            return () => {};
+        }
         const {
             mimetypeBeforeConversion,
             formatMimetype,
