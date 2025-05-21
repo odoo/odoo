@@ -117,3 +117,29 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
                 }
             }
         )
+
+        # Unregistered Transporter (No GSTIN)
+        self.partner_b.write({
+            'vat': False,
+            'name': 'Atlas'
+        })
+        ewaybill_a.transporter_id = self.partner_b
+        self.assertDictEqual(
+            ewaybill_a._ewaybill_generate_irn_json(),
+            {
+                'Irn': '1234567890',
+                'Distance': '20',
+                'TransMode': '1',
+                'TransName': 'Atlas',
+                'VehNo': 'GJ11AA1234',
+                'VehType': 'R',
+                'DispDtls': {
+                    'Addr1': 'Khodiyar Chowk',
+                    'Loc': 'Amreli',
+                    'Pin': 365220,
+                    'Stcd': '24',
+                    'Addr2': 'Sala Number 3',
+                    'Nm': 'Default Company'
+                }
+            }
+        )
