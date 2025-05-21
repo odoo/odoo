@@ -21,7 +21,9 @@ test("disconnect during vacuum should ask for reload", async () => {
     browser.location.addEventListener("reload", () => asyncStep("reload"));
     addBusServiceListeners(
         ["connect", () => asyncStep("connect")],
-        ["disconnect", () => asyncStep("disconnect")]
+        ["disconnect", () => asyncStep("disconnect")],
+        ["reconnecting", () => asyncStep("reconnecting")],
+        ["reconnect", () => asyncStep("reconnect")]
     );
     onRpc("/bus/has_missed_notifications", () => true);
     await mountWithCleanup(WebClient);
@@ -30,8 +32,9 @@ test("disconnect during vacuum should ask for reload", async () => {
     await runAllTimers();
     await waitForSteps(["connect"]);
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
-    await waitForSteps(["disconnect"]);
+    await waitForSteps(["disconnect", "reconnecting"]);
     await runAllTimers();
+    await waitForSteps(["reconnect"]);
     await waitFor(".o_notification");
     expect(".o_notification_content:first").toHaveText(
         "Save your work and refresh to get the latest updates and avoid potential issues."
