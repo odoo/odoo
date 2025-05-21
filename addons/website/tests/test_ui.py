@@ -608,8 +608,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_media_dialog_insert_media(self):
         self.start_tour("/", "website_media_dialog_insert_media", login="admin")
 
-    # TODO @mysterious-egg: new tour
-    @unittest.skip
     def test_website_text_font_size(self):
         self.start_tour('/@/', 'website_text_font_size', login='admin', timeout=300)
 
@@ -620,8 +618,6 @@ class TestUi(HttpCaseWithWebsiteUser):
     def test_website_text_highlights(self):
         self.start_tour("/", 'text_highlights', login='admin')
 
-    # TODO @mysterious-egg: new tour
-    @unittest.skip
     def test_website_extra_items_no_dirty_page(self):
         """
         Having enough menus to trigger the "+" folded menus has been known to
@@ -656,7 +652,6 @@ class TestUi(HttpCaseWithWebsiteUser):
 
         self.start_tour('/', 'website_no_action_no_dirty_page', login='admin')
 
-    @unittest.skip
     def test_website_no_dirty_page(self):
         # Previous tests are testing the dirty behavior when the extra items
         # "+" menu comes in play. For other "no dirty" tests, we just remove
