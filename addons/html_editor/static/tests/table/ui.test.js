@@ -58,6 +58,26 @@ test("should display the table ui menu only if hover on first row/col", async ()
     await waitForNone(".o-we-table-menu");
 });
 
+test("should not display the table UI menu when hovering over non-first row/col cells", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+                <tr><td rowspan="3">1</td><td>2</td><td>3</td></tr>
+                <tr><td class="a">4[]</td><td>5</td></tr>
+                <tr><td class="b">6</td><td>7</td></tr>
+            </tbody>
+        </table>`);
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.a"));
+    await animationFrame();
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.b"));
+    await animationFrame();
+    await expectElementCount(".o-we-table-menu", 0);
+});
+
 test("should not display the table ui menu if the table element isContentEditable=false", async () => {
     const { el } = await setupEditor(`
         <table contenteditable="false"><tbody><tr>
