@@ -14,13 +14,14 @@ export class CarouselOptionPlugin extends Plugin {
             {
                 template: "html_builder.CarouselOption",
                 selector: "section",
-                exclude: ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper",
+                exclude:
+                    ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)",
                 applyTo: ":scope > .carousel",
             },
             {
                 template: "html_builder.CarouselBottomControllersOption",
                 selector: "section",
-                applyTo: ".s_carousel_intro",
+                applyTo: ".s_carousel_intro, .s_quotes_carousel_compact",
             },
             {
                 template: "html_builder.CarouselCardsOption",
