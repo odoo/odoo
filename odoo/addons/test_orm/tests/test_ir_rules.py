@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
-from odoo import Command
 import contextlib
 
 
@@ -22,15 +19,15 @@ class TestRules(TransactionCase):
         # (or zero) val
         cls.env['ir.rule'].create({
             'name': 'Forbid negatives',
-            'model_id': cls.env.ref('test_access_rights.model_test_access_right_some_obj').id,
-            'domain_force': "[('val', '>', 0)]"
+            'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'domain_force': "[('val', '>', 0)]",
         })
         # create a global rule that forbid access to records without
         # categories, the search is part of the test
         cls.env['ir.rule'].create({
             'name': 'See all categories',
-            'model_id': cls.env.ref('test_access_rights.model_test_access_right_some_obj').id,
-            'domain_force': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]"
+            'model_id': cls.env.ref('test_orm.model_test_access_right_some_obj').id,
+            'domain_force': "[('categ_id', 'in', user.env['test_access_right.obj_categ'].search([]).ids)]",
         })
 
     @mute_logger('odoo.addons.base.models.ir_rule')
@@ -56,9 +53,9 @@ class TestRules(TransactionCase):
         # we forbid access to the public group, to which the public user belongs
         self.env['ir.rule'].create({
             'name': 'Forbid public group',
-            'model_id': self.env.ref('test_access_rights.model_test_access_right_some_obj').id,
+            'model_id': self.env.ref('test_orm.model_test_access_right_some_obj').id,
             'groups': [Command.set([self.env.ref('base.group_public').id])],
-            'domain_force': "[(0, '=', 1)]"
+            'domain_force': "[(0, '=', 1)]",
         })
 
         # everything should blow up
@@ -176,7 +173,7 @@ class TestRules(TransactionCase):
 
         rule = self.env['ir.rule'].create({
             'name': 'Test record rule',
-            'model_id': self.env.ref('test_access_rights.model_test_access_right_some_obj').id,
+            'model_id': self.env.ref('test_orm.model_test_access_right_some_obj').id,
             'domain_force': [],
         })
         invalid_domains = [
