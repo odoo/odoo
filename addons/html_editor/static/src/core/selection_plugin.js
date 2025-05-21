@@ -51,6 +51,7 @@ import { closestScrollableY } from "@web/core/utils/scrolling";
  * @property { boolean } documentSelectionIsInEditable
  * @property { boolean } documentSelectionIsProtected
  * @property { boolean } documentSelectionIsProtecting
+ * @property { boolean } documentSelectionIsRestrictedText
  */
 
 /**
@@ -486,6 +487,15 @@ export class SelectionPlugin extends Plugin {
             get: function () {
                 return documentSelection?.anchorNode
                     ? isProtected(documentSelection.anchorNode)
+                    : false;
+            }.bind(this),
+        });
+        Object.defineProperty(selectionData, "documentSelectionIsRestrictedText", {
+            get: function () {
+                return documentSelection?.anchorNode
+                    ? this.getResource("restricted_text_container_selectors").some(
+                          (s) => !!closestElement(documentSelection.anchorNode, s)
+                      )
                     : false;
             }.bind(this),
         });

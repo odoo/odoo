@@ -124,6 +124,8 @@ export class Builder extends Component {
                     can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
 
                     // disable the toolbar for images and icons
+                    restricted_text_container_selectors:
+                        '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])',
                 },
                 getRecordInfo: (editableEl) => {
                     if (!editableEl) {
