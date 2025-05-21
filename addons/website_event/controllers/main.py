@@ -17,11 +17,22 @@ from odoo.tools.misc import get_lang
 from odoo.tools import lazy
 from odoo.exceptions import UserError, ValidationError
 
+def get_event_url(event):
+    if event.menu_id and event.menu_id.child_id:
+        return event.menu_id.child_id[0].url
+    return "/event/%s/register" % request.env["ir.http"]._slug(event)
+
 class WebsiteEventController(http.Controller):
 
     def sitemap_event(env, rule, qs):
         if not qs or qs.lower() in '/events':
             yield {'loc': '/events'}
+
+    def sitemap_events(env, rule, qs):
+        """ Sitemap for event pages. """
+        events = env["event.event"].sudo().search([("website_published", "=", True)], order="id")
+        for event in events:
+            yield {"loc": get_event_url(event)}
 
     # ------------------------------------------------------------
     # EVENT LIST
@@ -187,14 +198,11 @@ class WebsiteEventController(http.Controller):
 
         return request.render(page, values)
 
-    @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=True, readonly=True)
+    @http.route(['''/event/<model("event.event"):event>'''], type="http", auth="public", website=True, sitemap=sitemap_events, readonly=True)
     def event(self, event, **post):
-        if event.menu_id and event.menu_id.child_id:
-            target_url = event.menu_id.child_id[0].url
-        else:
-            target_url = '/event/%s/register' % str(event.id)
-        if post.get('enable_editor') == '1':
-            target_url += '?enable_editor=1'
+        target_url = get_event_url(event)
+        if post.get("enable_editor") == "1":
+            target_url += "?enable_editor=1"
         return request.redirect(target_url)
 
     @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False, readonly=True)

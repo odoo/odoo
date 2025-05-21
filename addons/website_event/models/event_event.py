@@ -98,7 +98,7 @@ class EventEvent(models.Model):
         """Fall back on the website_url to share the event."""
         for event in self:
             event.event_share_url = event.event_url or werkzeug.urls.url_join(event.get_base_url(), event.website_url)
- 
+
     @api.depends('registration_ids')
     @api.depends_context('uid')
     def _compute_is_participating(self):
