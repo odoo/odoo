@@ -4,6 +4,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -20,6 +21,7 @@ export class TableUIPlugin extends Plugin {
                 description: _t("Insert a table"),
                 icon: "fa-table",
                 run: this.openPickerOrInsertTable.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_items: [
