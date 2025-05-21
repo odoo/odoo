@@ -98,6 +98,13 @@ export function roundPrecision(value, precision, method = "HALF-UP") {
     return denormalize(roundedValue);
 }
 
+function formatFixedDecimals(value, decimals) {
+    const rounded = roundDecimals(value, decimals);
+    const [intPart, decPart = ""] = rounded.toString().split(".");
+    const paddedDecimals = decPart.padEnd(decimals, "0").slice(0, decimals);
+    return decimals === 0 ? intPart : `${intPart}.${paddedDecimals}`;
+}
+
 export function roundDecimals(value, decimals) {
     /**
      * The following decimals introduce numerical errors:
@@ -183,7 +190,7 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
     // determine if we should keep the decimals (we don't want to display 1,020.02k for 1020020)
     const decimalsToKeep = number >= 1000 ? 0 : decimals;
     number = sign * number;
-    const [integerPart, decimalPart] = number.toFixed(decimalsToKeep).split(".");
+    const [integerPart, decimalPart] = formatFixedDecimals(number, decimalsToKeep).split(".");
     const int = insertThousandsSep(integerPart, thousandsSep, grouping);
     if (!decimalPart) {
         return int + symbol;
@@ -223,7 +230,7 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = value.toFixed(precision).split(".");
+    const formatted = formatFixedDecimals(value, precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.trailingZeros === false && formatted[1]) {
         formatted[1] = formatted[1].replace(/0+$/, "");
@@ -232,12 +239,36 @@ export function formatFloat(value, options = {}) {
 }
 
 const _INVERTDICT = Object.freeze({
-    1e-1: 1e+1, 1e-2: 1e+2, 1e-3: 1e+3, 1e-4: 1e+4, 1e-5: 1e+5,
-    1e-6: 1e+6, 1e-7: 1e+7, 1e-8: 1e+8, 1e-9: 1e+9, 1e-10: 1e+10,
-    2e-1: 5e+0, 2e-2: 5e+1, 2e-3: 5e+2, 2e-4: 5e+3, 2e-5: 5e+4,
-    2e-6: 5e+5, 2e-7: 5e+6, 2e-8: 5e+7, 2e-9: 5e+8, 2e-10: 5e+9,
-    5e-1: 2e+0, 5e-2: 2e+1, 5e-3: 2e+2, 5e-4: 2e+3, 5e-5: 2e+4,
-    5e-6: 2e+5, 5e-7: 2e+6, 5e-8: 2e+7, 5e-9: 2e+8, 5e-10: 2e+9,
+    1e-1: 1e1,
+    1e-2: 1e2,
+    1e-3: 1e3,
+    1e-4: 1e4,
+    1e-5: 1e5,
+    1e-6: 1e6,
+    1e-7: 1e7,
+    1e-8: 1e8,
+    1e-9: 1e9,
+    1e-10: 1e10,
+    2e-1: 5,
+    2e-2: 5e1,
+    2e-3: 5e2,
+    2e-4: 5e3,
+    2e-5: 5e4,
+    2e-6: 5e5,
+    2e-7: 5e6,
+    2e-8: 5e7,
+    2e-9: 5e8,
+    2e-10: 5e9,
+    5e-1: 2,
+    5e-2: 2e1,
+    5e-3: 2e2,
+    5e-4: 2e3,
+    5e-5: 2e4,
+    5e-6: 2e5,
+    5e-7: 2e6,
+    5e-8: 2e7,
+    5e-9: 2e8,
+    5e-10: 2e9,
 });
 
 /**
