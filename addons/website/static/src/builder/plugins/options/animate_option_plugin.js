@@ -6,6 +6,7 @@ import { AnimateOption } from "./animate_option";
 import { ANIMATE } from "@website/builder/option_sequence";
 import { _t } from "@web/core/l10n/translation";
 import { AnimateText } from "./animate_text";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { ancestors, closestElement, findFurthest } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex, DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { BuilderAction } from "@html_builder/core/builder_action";
@@ -44,6 +45,7 @@ class AnimateOptionPlugin extends Plugin {
                     isDisabled: this.isAnimatedTextDisabled.bind(this),
                     animateOptionProps: { ...this.animateOptionProps, requireAnimation: true },
                 },
+                isAvailable: isHtmlContentSupported,
             },
         ],
         system_classes: ["o_animating"],

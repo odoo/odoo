@@ -10,6 +10,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, childNodeIndex } from "@html_editor/utils/position";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
 const GRID_COLUMN_WIDTH = 40; //@todo Configurable?
@@ -39,8 +40,16 @@ export class TabulationPlugin extends Plugin {
     static shared = ["indentBlocks", "outdentBlocks"];
     resources = {
         user_commands: [
-            { id: "tab", run: this.handleTab.bind(this) },
-            { id: "shiftTab", run: this.handleShiftTab.bind(this) },
+            {
+                id: "tab",
+                run: this.handleTab.bind(this),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "shiftTab",
+                run: this.handleShiftTab.bind(this),
+                isAvailable: isHtmlContentSupported,
+            },
         ],
         shortcuts: [
             { hotkey: "tab", commandId: "tab" },

@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { parseHTML } from "@html_editor/utils/html";
 import { _t } from "@web/core/l10n/translation";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class StarPlugin extends Plugin {
     static id = "star";
@@ -13,6 +14,7 @@ export class StarPlugin extends Plugin {
                 description: _t("Insert a rating"),
                 icon: "fa-star",
                 run: this.addStars.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_items: [

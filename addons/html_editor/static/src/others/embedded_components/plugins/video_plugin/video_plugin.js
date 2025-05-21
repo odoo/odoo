@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { VideoSelectorDialog } from "@html_editor/others/embedded_components/plugins/video_plugin/video_selector_dialog/video_selector_dialog";
 import { renderToElement } from "@web/core/utils/render";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class VideoPlugin extends Plugin {
     static id = "video";
@@ -18,6 +19,7 @@ export class VideoPlugin extends Plugin {
                         this.insertVideo(media);
                     });
                 },
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_items: [

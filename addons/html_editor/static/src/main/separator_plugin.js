@@ -7,6 +7,7 @@ import {
     isListItemElement,
     paragraphRelatedElementsSelector,
 } from "../utils/dom_info";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { removeClass } from "@html_editor/utils/dom";
 import { withSequence } from "@html_editor/utils/resource";
 import { fillEmpty } from "../utils/dom";
@@ -22,6 +23,7 @@ export class SeparatorPlugin extends Plugin {
                 description: _t("Insert a horizontal rule separator"),
                 icon: "fa-minus",
                 run: this.insertSeparator.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_items: withSequence(1, {

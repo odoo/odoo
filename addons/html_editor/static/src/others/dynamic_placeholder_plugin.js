@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder_popover";
 import { withSequence } from "@html_editor/utils/resource";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 /**
  * @typedef {Object} DynamicPlaceholderShared
@@ -20,6 +21,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
                 description: _t("Insert a field"),
                 icon: "fa-hashtag",
                 run: (params = {}) => this.open(params.resModel || this.defaultResModel),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_categories: withSequence(60, {

@@ -95,6 +95,13 @@ export function isNotAllowedContent(node) {
     return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
 }
 
+export function isHtmlContentSupported(selection) {
+    return !closestElement(
+        selection.focusNode,
+        '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
+    );
+}
+
 /**
  * @returns edge text nodes if they do not have content selected
  */

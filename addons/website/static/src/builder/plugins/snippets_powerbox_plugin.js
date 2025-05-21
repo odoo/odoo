@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 class SnippetsPowerboxPlugin extends Plugin {
     static id = "alert";
@@ -14,6 +15,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert an alert snippet"),
                 icon: "fa-info",
                 run: this.insertSnippet.bind(this, "s_alert"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_rating",
@@ -21,6 +23,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a rating snippet"),
                 icon: "fa-star-half-o",
                 run: this.insertSnippet.bind(this, "s_rating"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_card",
@@ -28,6 +31,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a card snippet"),
                 icon: "fa-sticky-note",
                 run: this.insertSnippet.bind(this, "s_card"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_share",
@@ -35,6 +39,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a share snippet"),
                 icon: "fa-share-square-o",
                 run: this.insertSnippet.bind(this, "s_share"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_text_highlight",
@@ -42,6 +47,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a text highlight snippet"),
                 icon: "fa-sticky-note",
                 run: this.insertSnippet.bind(this, "s_text_highlight"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_chart",
@@ -49,6 +55,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a chart snippet"),
                 icon: "fa-bar-chart",
                 run: this.insertSnippet.bind(this, "s_chart"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_progress_bar",
@@ -56,6 +63,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a progress bar snippet"),
                 icon: "fa-spinner",
                 run: this.insertSnippet.bind(this, "s_progress_bar"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_badge",
@@ -63,6 +71,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a badge snippet"),
                 icon: "fa-tags",
                 run: this.insertSnippet.bind(this, "s_badge"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_blockquote",
@@ -70,6 +79,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a blockquote snippet"),
                 icon: "fa-quote-left",
                 run: this.insertSnippet.bind(this, "s_blockquote"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "s_hr",
@@ -77,6 +87,7 @@ class SnippetsPowerboxPlugin extends Plugin {
                 description: _t("Insert a horizontal separator snippet"),
                 icon: "fa-minus",
                 run: this.insertSnippet.bind(this, "s_hr"),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_categories: withSequence(110, {

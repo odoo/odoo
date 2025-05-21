@@ -12,6 +12,7 @@ import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
 import { withSequence } from "@html_editor/utils/resource";
 import { isBlock, closestBlock } from "@html_editor/utils/blocks";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
@@ -150,7 +151,7 @@ export class LinkPlugin extends Plugin {
                     const linkEl = findInSelection(selection, "a");
                     return linkEl
                         ? this.getResource("link_popovers").some((p) => p.isAvailable(linkEl))
-                        : true;
+                        : isHtmlContentSupported(selection);
                 },
             },
             {
@@ -160,7 +161,11 @@ export class LinkPlugin extends Plugin {
                 icon: "fa-unlink",
                 isAvailable: (selection) => {
                     const linkEl = findInSelection(selection, "a");
-                    return !!linkEl && !this.isLinkImmutable(linkEl);
+                    return (
+                        !!linkEl &&
+                        !this.isLinkImmutable(linkEl) &&
+                        isHtmlContentSupported(selection)
+                    );
                 },
                 run: this.removeLinkFromSelection.bind(this),
             },
@@ -297,8 +302,13 @@ export class LinkPlugin extends Plugin {
             {
                 hotkey: "control+k",
                 category: "shortcut_conflict",
-                isAvailable: () =>
-                    this.dependencies.selection.getSelectionData().documentSelectionIsInEditable,
+                isAvailable: () => {
+                    const selectionData = this.dependencies.selection.getSelectionData();
+                    return (
+                        selectionData.documentSelectionIsInEditable &&
+                        isHtmlContentSupported(selectionData.editableSelection)
+                    );
+                },
             }
         );
         this.ignoredClasses = new Set(this.getResource("system_classes"));
@@ -1002,7 +1012,7 @@ export class LinkPlugin extends Plugin {
     handleAutomaticLinkInsertion() {
         let selection = this.dependencies.selection.getEditableSelection();
         if (
-            isHtmlContentSupported(selection.anchorNode) &&
+            isHtmlContentSupported(selection) &&
             !closestElement(selection.anchorNode, "a") &&
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
@@ -1125,19 +1135,4 @@ export class LinkPlugin extends Plugin {
     isLinkImmutable(linkEl) {
         return this.getResource("immutable_link_selectors").some((s) => linkEl.matches(s));
     }
-}
-
-// @phoenix @todo: duplicate from the clipboard plugin, should be moved to a shared location
-/**
- * Returns true if the provided node can suport html content.
- *
- * @param {Node} node
- * @returns {boolean}
- */
-export function isHtmlContentSupported(node) {
-    return !closestElement(
-        node,
-        '[data-oe-model]:not([data-oe-field="arch"]):not([data-oe-type="html"]),[data-oe-translation-id]',
-        true
-    );
 }

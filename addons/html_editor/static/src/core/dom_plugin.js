@@ -39,6 +39,7 @@ import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
 import { DIRECTIONS, childNodeIndex, nodeSize, rightPos } from "../utils/position";
 import { normalizeCursorPosition } from "@html_editor/utils/selection";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 /**
  * Get distinct connected parents of nodes
@@ -70,8 +71,16 @@ export class DomPlugin extends Plugin {
     static shared = ["insert", "copyAttributes", "setTag", "setTagName"];
     resources = {
         user_commands: [
-            { id: "insertFontAwesome", run: this.insertFontAwesome.bind(this) },
-            { id: "setTag", run: this.setTag.bind(this) },
+            {
+                id: "insertFontAwesome",
+                run: this.insertFontAwesome.bind(this),
+                isAvailable: isHtmlContentSupported,
+            },
+            {
+                id: "setTag",
+                run: this.setTag.bind(this),
+                isAvailable: isHtmlContentSupported,
+            },
         ],
         /** Handlers */
         clean_for_save_handlers: ({ root }) => {

@@ -6,6 +6,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { renderToString } from "@web/core/utils/render";
 import { markup } from "@odoo/owl";
 import { isEmptyBlock, paragraphRelatedElementsSelector } from "@html_editor/utils/dom_info";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export const SIGNATURE_CLASS = "o-signature-container";
 
@@ -21,6 +22,7 @@ export class SignaturePlugin extends Plugin {
                 description: _t("Insert your signature"),
                 icon: "fa-pencil-square-o",
                 run: this.insertSignature.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_categories: withSequence(100, { id: "basic_block", name: _t("Basic Bloc") }),

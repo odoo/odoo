@@ -4,6 +4,7 @@ import { FontFamilySelector } from "@html_editor/main/font/font_family_selector"
 import { reactive } from "@odoo/owl";
 import { closestElement } from "../../utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export const defaultFontFamily = {
     name: "Default system font",
@@ -49,6 +50,7 @@ export class FontFamilyPlugin extends Plugin {
                         this.fontFamily.displayName = item.nameShort;
                     },
                 },
+                isAvailable: isHtmlContentSupported,
             }),
         ],
         /** Handlers */

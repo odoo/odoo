@@ -3,6 +3,7 @@ import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement } from "../utils/dom_traversal";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class TextDirectionPlugin extends Plugin {
     static id = "textDirection";
@@ -15,6 +16,7 @@ export class TextDirectionPlugin extends Plugin {
                 description: _t("Switch the text's direction"),
                 icon: "fa-exchange",
                 run: this.switchDirection.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_items: [
