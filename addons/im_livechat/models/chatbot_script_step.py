@@ -30,6 +30,7 @@ class ChatbotScriptStep(models.Model):
         ('forward_operator', 'Forward to Operator'),
         ('free_input_single', 'Free Input'),
         ('free_input_multi', 'Free Input (Multi-Line)'),
+        ("end_session", "End Session"),
     ], default='text', required=True)
     # answers
     answer_ids = fields.One2many(
@@ -246,6 +247,8 @@ class ChatbotScriptStep(models.Model):
             -> NOK
         """
         self.ensure_one()
+        if self.step_type == "end_session":
+            return self.env["chatbot.script.step"]
         domain = [('chatbot_script_id', '=', self.chatbot_script_id.id), ('sequence', '>', self.sequence)]
         if selected_answer_ids:
             domain = expression.AND([domain, [
