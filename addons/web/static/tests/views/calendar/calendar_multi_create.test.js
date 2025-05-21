@@ -22,7 +22,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { selectDateRange } from "./calendar_test_helpers";
 
-import { markup } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { CalendarModel } from "@web/views/calendar/calendar_model";
@@ -834,7 +833,7 @@ test("multi_create: test required attribute in form", async () => {
     await multiCreateClickAddButton();
     await multiCreatePopoverClickAddButton();
     expect(".o_multi_create_popover .o_form_view [name='name']").toHaveClass("o_required_modifier");
-    expect.verifySteps([markup`<ul><li>Name</li></ul>`]);
+    expect.verifySteps(["Missing required fields"]);
 
     const { drop: dropOk } = await contains(".fc-day[data-date='2019-03-04']").drag();
     await animationFrame();
