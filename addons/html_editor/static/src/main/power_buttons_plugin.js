@@ -68,9 +68,13 @@ export class PowerButtonsPlugin extends Plugin {
         const composePowerButton = (/**@type {PowerButton} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
             return {
-                ...pick(command, "description", "icon", "isAvailable"),
+                ...pick(command, "description", "icon"),
                 ...omit(item, "commandId", "commandParams"),
                 run: () => command.run(item.commandParams),
+                isAvailable: (selection) =>
+                    [command.isAvailable, item.isAvailable]
+                        .filter(Boolean)
+                        .every((predicate) => predicate(selection)),
             };
         };
         const renderButton = ({ description, icon, text, run }) => {
@@ -133,7 +137,7 @@ export class PowerButtonsPlugin extends Plugin {
             this.powerButtonsContainer.setAttribute("dir", direction);
             // Hide/show buttons based on their availability.
             for (const [{ isAvailable }, buttonElement] of this.descriptionToElementMap.entries()) {
-                const shouldHide = Boolean(isAvailable && !isAvailable(editableSelection));
+                const shouldHide = Boolean(!isAvailable(editableSelection));
                 buttonElement.classList.toggle("d-none", shouldHide); // 2nd arg must be a boolean
             }
             this.setPowerButtonsPosition(block, blockRect, direction);

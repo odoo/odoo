@@ -113,7 +113,7 @@ import { _t } from "@web/core/l10n/translation";
  * @property {Function} run
  * @property {string} [icon]
  * @property {string} [text]
- * @property {(selection: EditorSelection) => boolean} [isAvailable]
+ * @property {(selection: EditorSelection) => boolean} isAvailable
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isActive]
  * @property {(selection: EditorSelection, nodes: Node[]) => boolean} [isDisabled]
  *
@@ -271,7 +271,9 @@ export class ToolbarPlugin extends Plugin {
             return composeToolbarButton(command, item);
         };
 
-        return toolbarItems.map((item) => ("Component" in item ? item : commandItemToButton(item)));
+        return toolbarItems.map((item) =>
+            "Component" in item ? { isAvailable: () => true, ...item } : commandItemToButton(item)
+        );
     }
 
     getButtonGroups() {
@@ -400,8 +402,7 @@ export class ToolbarPlugin extends Plugin {
                 }
                 this.state.buttonsActiveState[button.id] = button.isActive?.(selection, nodes);
                 this.state.buttonsDisabledState[button.id] = button.isDisabled?.(selection, nodes);
-                this.state.buttonsAvailableState[button.id] =
-                    button.isAvailable === undefined || button.isAvailable(selection);
+                this.state.buttonsAvailableState[button.id] = button.isAvailable(selection);
                 this.state.buttonsTitleState[button.id] =
                     button.description instanceof Function
                         ? button.description(selection, nodes)

@@ -73,7 +73,7 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
  * @property {string} icon
  * @property {Function} run
  * @property {TranslatedString[]} [keywords]
- * @property { (selection: EditorSelection) => boolean  } [isAvailable]
+ * @property { (selection: EditorSelection) => boolean } isAvailable
  */
 
 /**
@@ -140,9 +140,7 @@ export class PowerboxPlugin extends Plugin {
      */
     getAvailablePowerboxCommands() {
         const selection = this.dependencies.selection.getEditableSelection();
-        return this.powerboxCommands.filter(
-            (cmd) => cmd.isAvailable === undefined || cmd.isAvailable(selection)
-        );
+        return this.powerboxCommands.filter((cmd) => cmd.isAvailable(selection));
     }
 
     /**
@@ -159,10 +157,14 @@ export class PowerboxPlugin extends Plugin {
         return powerboxItems.map((/** @type {PowerboxItem} */ item) => {
             const command = this.dependencies.userCommand.getCommand(item.commandId);
             return {
-                ...pick(command, "title", "description", "icon", "isAvailable"),
+                ...pick(command, "title", "description", "icon"),
                 ...omit(item, "commandId", "commandParams"),
                 categoryName: categoryDict[item.categoryId].name,
                 run: () => command.run(item.commandParams),
+                isAvailable: (selection) =>
+                    [command.isAvailable, item.isAvailable]
+                        .filter(Boolean)
+                        .every((predicate) => predicate(selection)),
             };
         });
     }
