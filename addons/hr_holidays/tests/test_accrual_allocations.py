@@ -1643,7 +1643,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'name': 'Accrual Plan For Test',
             'accrued_gain_time': 'start',
             'carryover_date': 'other',
-            'carryover_day': 20,
+            'carryover_day': 31,
             'carryover_month': 'apr',
             'level_ids': [(0, 0, {
                 'added_value_type': 'day',
@@ -1657,7 +1657,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'postpone_max_days': 69,
             })],
         })
-        with freeze_time("2023-04-20"):
+        with freeze_time("2023-04-30"):
             allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
                 'name': 'Accrual allocation for employee',
                 'accrual_plan_id': accrual_plan.id,
@@ -1665,11 +1665,11 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': self.leave_type.id,
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
-                'date_from': '2023-04-20',
+                'date_from': '2023-04-30',
             })
             allocation.action_approve()
 
-        with freeze_time("2024-04-20"):
+        with freeze_time("2024-04-30"):
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 69, "Carryover at other date, level's maximum leave is 69.")
 
