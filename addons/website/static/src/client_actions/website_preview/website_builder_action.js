@@ -168,7 +168,8 @@ export class WebsiteBuilder extends Component {
             isMobile: this.websiteContext.isMobile,
             Plugins: websitePlugins,
             config: { initialTarget: this.target, initialTab: this.initialTab },
-            getThemeTab: () => odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
+            getThemeTab: () =>
+                odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
         };
     }
 

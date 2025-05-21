@@ -4,6 +4,7 @@
 import odoo.tests
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 
+
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
     @classmethod

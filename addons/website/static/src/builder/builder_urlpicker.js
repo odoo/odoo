@@ -73,7 +73,6 @@ export class BuilderUrlPicker extends Component {
     }
 }
 
-
 class UrlPickerPlugin extends Plugin {
     static id = "urlPickerPlugin";
 

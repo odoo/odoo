@@ -14,11 +14,16 @@ function removeImageSrc(xmlString) {
     return new XMLSerializer().serializeToString(doc);
 }
 
-let websiteSnippets;
+let websiteSnippetsPromise;
 export const getWebsiteSnippets = async () => {
-    if (!websiteSnippets) {
-        const str = await realOrm("ir.ui.view", "render_public_asset", ["website.snippets"], {});
-        websiteSnippets = removeImageSrc(str.trim());
+    if (!websiteSnippetsPromise) {
+        websiteSnippetsPromise = realOrm(
+            "ir.ui.view",
+            "render_public_asset",
+            ["website.snippets"],
+            {}
+        );
     }
-    return websiteSnippets;
+    const str = await websiteSnippetsPromise;
+    return removeImageSrc(str.trim());
 };
