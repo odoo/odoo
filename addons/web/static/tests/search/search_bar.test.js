@@ -1316,7 +1316,7 @@ test("search a property: definition record id in the context", async () => {
 
 test("edit a filter", async () => {
     onRpc("/web/domain/validate", () => true);
-    await mountWithSearch(SearchBar, {
+    const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
         searchViewId: false,
@@ -1355,11 +1355,12 @@ test("edit a filter", async () => {
     expect(SELECTORS.condition).toHaveCount(1);
     expect(getCurrentPath()).toBe("Id");
     expect(getCurrentOperator()).toBe("equals");
-    expect(getCurrentValue()).toBe("1");
+    expect(getCurrentValue()).toBe("");
 
     await contains(".modal footer button").click();
     expect(`.modal`).toHaveCount(0);
-    expect(getFacetTexts()).toEqual(["Id = 1", "Bool"]);
+    expect(getFacetTexts()).toEqual(["Id = ( )", "Bool"]);
+    expect(searchBar.env.searchModel.domain).toEqual([["id", "in", []]]);
 });
 
 test("edit a filter with context: context is kept after edition", async () => {

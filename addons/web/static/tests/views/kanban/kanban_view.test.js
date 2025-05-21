@@ -5220,7 +5220,7 @@ test("edit a favorite: group by = default_group_by", async () => {
     await contains(".o_searchview_facet_label").click();
     await addNewRule();
     await contains("button:contains('Search')").click();
-    expect(getFacetTexts()).toEqual(["Id = 1"]);
+    expect(getFacetTexts()).toEqual(["Id = ( )"]);
 });
 
 test.tags("desktop");
@@ -5263,7 +5263,7 @@ test("edit a favorite: group by != default_group_by", async () => {
     await contains(".o_searchview_facet_label").click();
     await addNewRule();
     await contains("button:contains('Search')").click();
-    expect(getFacetTexts()).toEqual(["Id = 1", "Product"]);
+    expect(getFacetTexts()).toEqual(["Id = ( )", "Product"]);
 });
 
 test.tags("desktop");
