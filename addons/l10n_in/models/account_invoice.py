@@ -541,7 +541,16 @@ class AccountMove(models.Model):
         return super()._get_name_invoice_report()
 
     def _post(self, soft=True):
-        """Use journal type to define document type because not miss state in any entry including POS entry"""
+        if any(move.company_id.chart_template == 'in' and move.country_code != 'IN' for move in self):
+            _ = self.env._
+            raise RedirectWarning(
+                message=_(
+                    "The Fiscal country and your fiscal localization's country do not match.\n"
+                    "Please change it from your Account's configuration.",
+                ),
+                action=self.env.ref('account.action_account_config').id,
+                button_text=_("Accounting Settings"),
+            )
         posted = super()._post(soft)
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
