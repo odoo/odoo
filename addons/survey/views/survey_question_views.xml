@@ -22,124 +22,67 @@
                         <label for="background_image"/>
                         <field name="background_image" widget="image" class="oe_avatar"/>
                     </div>
-                    <div class="oe_title" style="width: 100%;">
+                    <div invisible="is_page" class="mb-0">
+                        <field name="question_type" nolabel="1" widget="selection_badge_icons" required="not is_page"
+                            options="{'icon_mapping': {
+                                'simple_choice': 'fa-dot-circle-o',
+                                'multiple_choice': 'fa-check-square-o',
+                                'text_box': 'fa-bars',
+                                'char_box': 'fa-minus',
+                                'numerical_box': 'fa-hashtag',
+                                'scale': 'fa-smile-o',
+                                'date': 'fa-calendar-o',
+                                'datetime': 'fa-calendar',
+                                'time': 'fa-clock-o',
+                                'matrix': 'fa-th',    
+                            }}"/>
+                    </div>
+                    <div class="oe_title">
                         <label for="title" string="Section" invisible="not is_page"/>
-                        <label for="title" string="Question" invisible="is_page"/><br/>
-                        <field name="title" placeholder="e.g. &quot;What is the...&quot;" colspan="4"/>
+                        <label for="title" string="Question" invisible="is_page"/>
+                        <h1>
+                            <field name="title" 
+                                   placeholder="Ask something..." 
+                                   nolabel="1" 
+                                   options="{'line_breaks': False}" 
+                                   widget="text"/>
+                        </h1>
+                    </div>
+
+                    <div class="w-100 mw-100">
                         <field name="questions_selection" invisible="1"/>
+                        <field name="description"
+                            options="{'embedded_components': false}"
+                            placeholder="Optional: provide extra guidelines, instructions, pictures... here, to help attendees answer"
+                            nolabel="1"
+                            class="o_survey_description_editor"/>
                     </div>
                     <group class="o_label_nowrap" invisible="not is_page or questions_selection == 'all'">
                         <field name="random_questions_count"/>
-                    </group>
-                    <group invisible="is_page">
-                        <group>
-                            <field name="question_type" widget="radio" required="not is_page" />
-                        </group>
-                        <group>
-                            <div class="mx-lg-auto w-lg-50 d-none d-sm-block o_preview_questions bg-light" colspan="2">
-                                <!-- Multiple choice: only one answer -->
-                                <div invisible="question_type != 'simple_choice'" role="img" aria-label="Multiple choice with one answer"
-                                    title="Multiple choice with one answer">
-                                    <span>Which is yellow?</span><br/>
-                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
-                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-dot-circle-o fa-lg me-2"/>answer</div>
-                                    <div class="o_preview_questions_choice"><i class="fa fa-circle-o  fa-lg me-2"/>answer</div>
-                                </div>
-                                <!-- Multiple choice: multiple answers allowed -->
-                                <div invisible="question_type != 'multiple_choice'" role="img" aria-label="Multiple choice with multiple answers"
-                                    title="Multiple choice with multiple answers">
-                                    <span>Which are yellow?</span><br/>
-                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-square-o fa-lg me-2"/>answer</div>
-                                    <div class="o_preview_questions_choice mb-2"><i class="fa fa-check-square-o fa-lg me-2"/>answer</div>
-                                    <div class="o_preview_questions_choice"><i class="fa fa-check-square-o fa-lg me-2"/>answer</div>
-                                </div>
-                                <!-- Multiple Lines Text Zone -->
-                                <div invisible="question_type != 'text_box'">
-                                    <span>Name all the animals</span><br/>
-                                    <i class="fa fa-align-justify fa-4x" role="img" aria-label="Multiple lines" title="Multiple Lines"/>
-                                </div>
-                                <!-- Single Line Text Zone -->
-                                <div invisible="question_type != 'char_box'">
-                                    <span>Name one animal</span><br/>
-                                    <i class="fa fa-minus fa-4x" role="img" aria-label="Single Line" title="Single Line"/>
-                                </div>
-                                <!-- Numerical Value -->
-                                <div invisible="question_type != 'numerical_box'">
-                                    <span>How many ...?</span><br/>
-                                    <i class="fa fa-2x" role="img" aria-label="Numeric" title="Numeric">123&#160;</i>
-                                    <i class="fa fa-2x fa-sort" role="img" aria-label="Numeric"/>
-                                </div>
-                                <!-- Date -->
-                                <div invisible="question_type != 'date'">
-                                    <span>When is Christmas?</span><br/>
-                                    <p class="o_datetime border-0" >YYYY-MM-DD
-                                        <i class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"/>
-                                    </p>
-                                </div>
-                                <!-- Date and Time -->
-                                <div invisible="question_type != 'datetime'">
-                                    <span>When does ... start?</span><br/>
-                                    <p class="o_datetime border-0">YYYY-MM-DD hh:mm:ss
-                                        <i class="fa fa-calendar" role="img" aria-label="Calendar" title="Calendar"/>
-                                    </p>
-                                </div>
-                                <!-- Matrix -->
-                                <div invisible="question_type != 'matrix'">
-                                    <div class="row o_matrix_head">
-                                        <div class="col-3"></div>
-                                        <div class="col-3">ans</div>
-                                        <div class="col-3">ans</div>
-                                        <div class="col-3">ans</div>
-                                    </div>
-                                    <div class="row o_matrix_row">
-                                        <div class="col-3">Row1</div>
-                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                    </div>
-                                    <div class="row o_matrix_row">
-                                        <div class="col-3">Row2</div>
-                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                    </div>
-                                    <div class="row o_matrix_row">
-                                        <div class="col-3">Row3</div>
-                                        <div class="col-3"><i class="fa fa-dot-circle-o fa-lg" role="img" aria-label="Checked" title="Checked"/></div>
-                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                        <div class="col-3"><i class="fa fa-circle-o fa-lg" role="img" aria-label="Not checked" title="Not checked"/></div>
-                                    </div>
-                                </div>
-                                <!-- Scale -->
-                                <div invisible="question_type != 'scale'">
-                                    <span>Do you like it?</span><br/>
-                                    <div class="btn-group w-100" role="group" aria-label="Scale">
-                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">1</a>
-                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">2</a>
-                                        <a role="button" type="button" class="btn btn-secondary disabled o_preview_questions_choice">3</a>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <div>Label</div>
-                                        <div>Label</div>
-                                        <div>Label</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </group>
                     </group>
                     <notebook>
                         <page string="Answers" name="answers" invisible="is_page or question_type == 'text_box' or scoring_type == 'no_scoring' and question_type in ['numerical_box', 'date', 'datetime']">
                             <group>
                                 <group invisible="question_type != 'scale'">
-                                    <field name="scale_min" placeholder="Scale Minimum Value (0 to 10)"/>
-                                    <field name="scale_max" placeholder="Scale Maximum Value (0 to 10)"/>
+                                    <label for="scale_min" string="Scale Range"/>
+                                    <div class="o_row">
+                                        <field name="scale_min" nolabel="1" placeholder="Scale Minimum Value (0 to 10)"/>
+                                        <span class="mx-2 o_form_label">to</span>
+                                        <field name="scale_max" nolabel="1" placeholder="Scale Maximim Value (0 to 10)"/>
+                                    </div>
+                                    
+                                    <label for="scale_min_label" string="Labels"/>
+                                    <field name="scale_min_label_placeholder" invisible="1"/>
+                                    <field name="scale_max_label_placeholder" invisible="1"/>
+                                    <div class="o_row">
+                                        <field name="scale_min_label" nolabel="1" 
+                                            options="{'placeholder_field': 'scale_min_label_placeholder'}"/>
+                                        <span class="mx-2 o_form_label">to</span>
+                                        <field name="scale_max_label" nolabel="1" 
+                                            options="{'placeholder_field': 'scale_max_label_placeholder'}"/>
+                                    </div>
                                 </group>
-                                <group invisible="question_type != 'scale'">
-                                    <field name="scale_min_label" placeholder="Not likely at all"/>
-                                    <field name="scale_mid_label" placeholder="Neutral"/>
-                                    <field name="scale_max_label" placeholder="Extremely likely"/>
-                                </group>
-                                <group invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']">
+                                <group invisible="question_type not in ['numerical_box', 'date', 'datetime']">
                                     <field name="answer_numerical_box" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'numerical_box'"
                                         required="is_scored_question and question_type == 'numerical_box'" />
@@ -149,10 +92,18 @@
                                     <field name="answer_datetime" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'datetime'"
                                         required="is_scored_question and question_type == 'datetime'"/>
+                                </group>
 
-                                    <field name="validation_email" invisible="question_type != 'char_box'"/>
-                                    <field name="save_as_email" invisible="not validation_email or question_type != 'char_box'"/>
-                                    <field name="save_as_nickname" invisible="question_type != 'char_box'"/>
+                                <group invisible="question_type !='char_box'">
+                                    <group invisible="question_type != 'char_box'">
+                                        <field name="validation_email"/>
+                                    </group>
+                                    <group invisible="not validation_email or question_type != 'char_box'">
+                                        <field name="save_as_email"/>
+                                    </group>
+                                    <group invisible="question_type != 'char_box'">
+                                        <field name="save_as_nickname"/>
+                                    </group>
                                 </group>
 
                                 <group invisible="scoring_type == 'no_scoring' or question_type not in ['numerical_box', 'date', 'datetime']">
@@ -167,7 +118,7 @@
                             <field name="suggested_answer_ids" context="{'default_question_id': id}" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']">
                                 <list editable="bottom">
                                     <field name="sequence" widget="handle"/>
-                                    <field name="value" string="Choices" required="not value_image"/>
+                                    <field name="value" string="Choices" required="not value_image" placeholder="Option Name"/>
                                     <field name="is_correct"
                                         column_invisible="parent.scoring_type == 'no_scoring' or parent.question_type == 'matrix'"/>
                                     <field name="answer_score"
@@ -185,11 +136,6 @@
                                     <field name="value" string="Rows"/>
                                 </list>
                             </field>
-                        </page>
-                        <page string="Description" name="survey_description">
-                            <field name="description" widget="html"
-                                   options="{'embedded_components': false}"
-                                   placeholder="e.g. Guidelines, instructions, picture, ... to help attendees answer"/>
                         </page>
                         <page string="Options" name="options" invisible="is_page">
                             <group>
@@ -261,14 +207,11 @@
                                         invisible="not constr_mandatory"
                                         placeholder="This question requires an answer."/>
                                 </group>
-                                <group string="Live Sessions">
+                                <group string="Live Sessions" invisible="not session_available">
                                     <field name="is_time_customized" invisible="True"/>
                                     <field name="session_available" invisible="True"/>
-                                    <p class="text-muted" colspan="2" invisible="session_available">
-                                        Time limits are only available for Live Sessions.
-                                    </p>
-                                    <label for="is_time_limited" string="Time Limit (seconds)" invisible="not session_available"/>
-                                    <div invisible="not session_available">
+                                    <label for="is_time_limited" string="Time Limit (seconds)"/>
+                                    <div>
                                         <field name="is_time_limited" nolabel="1" class="oe_inline"
                                             widget="boolean_update_flag"
                                             options="{'flagFieldName': 'is_time_customized'}"
