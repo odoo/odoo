@@ -96,4 +96,5 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         })
 
         self.env.ref("website_blog.opt_blog_sidebar_show").active = True
+        self.env.ref("website_blog.opt_blog_post_sidebar").active = True
         self.start_tour("/blog", "blog_sidebar_with_date_and_tag", login="admin")

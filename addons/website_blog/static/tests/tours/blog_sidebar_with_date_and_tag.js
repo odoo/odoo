@@ -48,5 +48,24 @@ registerWebsitePreviewTour(
                 }
             },
         },
+        {
+            content: "Click on the 'Second Blog Post' to view its details.",
+            trigger: ":iframe article a:contains('Second Blog Post')",
+            run: "click",
+        },
+        {
+            content: "Click on 'Add some' to navigate to the backend view of the blog post.",
+            trigger: ":iframe #edit-in-backend",
+            run: "click",
+        },
+        {
+            content: "Verify that we are redirected to the backend blog post form view.",
+            trigger: ".o_form_view",
+            run: () => {
+                if (!window.location.href.includes("/odoo/website/blog.post/")) {
+                    throw new Error("We should be on the blog page backend view");
+                }
+            },
+        },
     ]
 );
