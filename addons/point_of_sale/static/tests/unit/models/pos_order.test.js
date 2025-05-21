@@ -22,6 +22,8 @@ describe("pos.order", () => {
                 inputTipAmount: "",
             },
             requiredPartnerDetails: {},
+            last_general_customer_note: "",
+            last_internal_note: "",
         });
     });
 
@@ -92,16 +94,6 @@ describe("pos.order", () => {
             product.taxes_id[0].id,
             product2.taxes_id[0].id,
         ]);
-    });
-
-    test("updateLastOrderChange", async () => {
-        const store = await setupPosEnv();
-        const order = await getFilledOrder(store);
-        order.setGeneralCustomerNote("Customer note");
-        order.setInternalNote("Internal note");
-        order.updateLastOrderChange();
-        expect(order.last_order_preparation_change.general_customer_note).toBe("Customer note");
-        expect(order.last_order_preparation_change.internal_note).toBe("Internal note");
     });
 
     test("removeOrderline", async () => {

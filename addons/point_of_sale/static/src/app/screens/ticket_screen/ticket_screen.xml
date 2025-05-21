@@ -191,7 +191,8 @@
                                 <div class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="getNumpadButtons()"/>
                                         <ActionpadWidget
-                                            partner="getSelectedOrder()?.getPartner()"
+                                            t-if="this.pos.cashier._role !== 'minimal'"
+                                            order="_selectedSyncedOrder"
                                             actionName.translate="Refund"
                                             actionToTrigger.bind="onDoRefund"
                                         />

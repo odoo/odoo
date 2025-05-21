@@ -23,7 +23,7 @@ describe("control_buttons.js", () => {
         // Total quantity in the order
         const potentialQty = order.getOrderlines().reduce((acc, line) => acc + line.qty, 0);
 
-        const component = await mountWithCleanup(ControlButtons, {});
+        const component = await mountWithCleanup(ControlButtons, { props: { order: order } });
 
         const result = await component._applyReward(reward, card.id, potentialQty);
 
@@ -43,7 +43,7 @@ describe("control_buttons.js", () => {
         await addProductLineToOrder(store, order);
         order._code_activated_coupon_ids = [card];
 
-        const component = await mountWithCleanup(ControlButtons, {});
+        const component = await mountWithCleanup(ControlButtons, { props: { order: order } });
 
         const rewards = component.getPotentialRewards();
         const reward = rewards[0].reward;

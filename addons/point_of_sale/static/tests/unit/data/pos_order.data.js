@@ -3,12 +3,9 @@ import { models } from "@web/../tests/web_test_helpers";
 export class PosOrder extends models.ServerModel {
     _name = "pos.order";
 
-    get_preparation_change(id) {
+    get_last_order_change_date(id) {
         const read = this.read([id]);
-        const changes = read[0]?.last_order_preparation_change || "{}";
-        return {
-            last_order_preparation_change: changes,
-        };
+        return read[0]?.write_date;
     }
 
     read_pos_orders(domain) {
@@ -44,6 +41,7 @@ export class PosOrder extends models.ServerModel {
     sync_from_ui(data) {
         const orderIds = [];
         for (const record of data) {
+            delete record.relations_uuid_mapping;
             if (record.id) {
                 this.write([record.id], record);
                 orderIds.push(record.id);
