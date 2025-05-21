@@ -8,7 +8,11 @@ class PosOrder(models.Model):
 
     @api.model
     def sync_from_ui(self, orders):
-        print('hereeeeeeeeeeeeee')
-        result = super().sync_from_ui( orders)
-        print('result',result)
+        print('sync_from_ui', orders)
+        odoo_secret_key = tools.config.get("odoo_secret_key")
+        print("odoo_secret_key", odoo_secret_key)
+        result = super().sync_from_ui(orders)
+        for order in orders:
+            print("order => ", order)
+        print('result of super', result)
         return result
