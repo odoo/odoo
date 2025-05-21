@@ -19,6 +19,7 @@ import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 /**
  * @typedef { Object } MediaShared
@@ -40,6 +41,7 @@ export class MediaPlugin extends Plugin {
                 description: _t("Replace media"),
                 icon: "fa-exchange",
                 run: this.replaceImage.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "insertMedia",
@@ -48,6 +50,7 @@ export class MediaPlugin extends Plugin {
                 keywords: [_t("Image"), _t("Icon")],
                 icon: "fa-file-image-o",
                 run: this.openMediaDialog.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
         toolbar_groups: withSequence(31, { id: "replace_image", namespaces: ["image"] }),

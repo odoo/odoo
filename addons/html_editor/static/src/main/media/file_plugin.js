@@ -5,6 +5,7 @@ import {
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -19,7 +20,8 @@ export class FilePlugin extends Plugin {
             description: _t("Add a download box"),
             icon: "fa-upload",
             run: this.uploadAndInsertFiles.bind(this),
-            isAvailable: this.isUploadCommandAvailable.bind(this),
+            isAvailable: (selection) =>
+                this.isUploadCommandAvailable(selection) && isSelectionInHtmlContent(selection),
         },
         powerbox_items: {
             categoryId: "media",

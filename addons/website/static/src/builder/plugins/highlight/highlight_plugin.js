@@ -13,6 +13,7 @@ import { isTextNode } from "@html_editor/utils/dom_info";
 import { omit } from "@web/core/utils/objects";
 import { getCurrentTextHighlight } from "@website/js/highlight_utils";
 import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
@@ -35,6 +36,7 @@ export class HighlightPlugin extends Plugin {
                     getHighlightState: () => this.highlightState,
                     getUsedCustomColors: this.getUsedCustomColors.bind(this),
                 },
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
         clean_for_save_handlers: ({ root }) => {

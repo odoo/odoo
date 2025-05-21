@@ -4,6 +4,7 @@ import { isVisibleTextNode } from "@html_editor/utils/dom_info";
 import { _t } from "@web/core/l10n/translation";
 import { AlignSelector } from "./align_selector";
 import { reactive } from "@odoo/owl";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 const alignmentItems = [
     { mode: "left" },
@@ -20,18 +21,22 @@ export class AlignPlugin extends Plugin {
             {
                 id: "alignLeft",
                 run: () => this.setAlignment("left"),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "alignCenter",
                 run: () => this.setAlignment("center"),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "alignRight",
                 run: () => this.setAlignment("right"),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "justify",
                 run: () => this.setAlignment("justify"),
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
         toolbar_items: [
@@ -47,6 +52,7 @@ export class AlignPlugin extends Plugin {
                         this.setAlignment(item.mode);
                     },
                 },
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
 

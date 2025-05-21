@@ -31,6 +31,7 @@ import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
 import { composeToolbarButton } from "../toolbar/toolbar";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 const listSelectorItems = [
     {
@@ -72,6 +73,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Create a simple bulleted list"),
                 icon: "fa-list-ul",
                 run: () => this.toggleListCommand({ mode: "UL" }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "toggleListOL",
@@ -79,6 +81,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Create a list with numbering"),
                 icon: "fa-list-ol",
                 run: () => this.toggleListCommand({ mode: "OL" }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "toggleListCL",
@@ -86,6 +89,7 @@ export class ListPlugin extends Plugin {
                 description: _t("Track tasks with a checklist"),
                 icon: "fa-check-square-o",
                 run: () => this.toggleListCommand({ mode: "CL" }),
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
         shortcuts: [
@@ -104,6 +108,7 @@ export class ListPlugin extends Plugin {
                     getListMode: this.getListMode.bind(this),
                     key: this.toolbarListSelectorKey,
                 },
+                isAvailable: isSelectionInHtmlContent,
             }),
         ],
         powerbox_items: [

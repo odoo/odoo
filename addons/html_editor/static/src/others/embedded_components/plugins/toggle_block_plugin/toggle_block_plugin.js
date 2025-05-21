@@ -17,6 +17,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
 import { uuid } from "@web/views/utils";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 const toggleSelector = "[data-embedded='toggleBlock']";
 const titleSelector = "[data-embedded-editable='title']";
@@ -63,7 +64,9 @@ export class ToggleBlockPlugin extends Plugin {
                 title: _t("Toggle list"),
                 description: _t("Hide Text under foldable toggles"),
                 icon: "fa-caret-square-o-right",
-                isAvailable: (node) => !closestElement(node, `${toggleSelector} ${titleSelector}`),
+                isAvailable: (selection) =>
+                    isSelectionInHtmlContent(selection) &&
+                    !closestElement(selection.anchorNode, `${toggleSelector} ${titleSelector}`),
                 run: () => {
                     this.insertToggleBlock();
                 },

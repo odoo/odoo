@@ -26,6 +26,7 @@ import { HtmlViewer } from "@html_editor/components/html_viewer/html_viewer";
 import { EditorVersionPlugin } from "@html_editor/core/editor_version_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { fixInvalidHTML, instanceofMarkup } from "@html_editor/utils/sanitize";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 /**
  * Check whether the current value contains nodes that would break
@@ -276,6 +277,7 @@ export class HtmlField extends Component {
                         description: _t("Code view"),
                         icon: "fa-code",
                         run: this.toggleCodeView.bind(this),
+                        isAvailable: isSelectionInHtmlContent,
                     },
                 ],
                 toolbar_groups: withSequence(100, {

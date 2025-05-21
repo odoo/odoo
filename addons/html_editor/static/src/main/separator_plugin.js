@@ -5,6 +5,7 @@ import { closestElement } from "../utils/dom_traversal";
 import { isListItemElement, paragraphRelatedElementsSelector } from "../utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
 import { withSequence } from "@html_editor/utils/resource";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 export class SeparatorPlugin extends Plugin {
     static id = "separator";
@@ -17,6 +18,7 @@ export class SeparatorPlugin extends Plugin {
                 description: _t("Insert a horizontal rule separator"),
                 icon: "fa-minus",
                 run: this.insertSeparator.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
         powerbox_items: withSequence(1, {

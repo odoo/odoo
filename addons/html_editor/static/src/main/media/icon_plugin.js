@@ -3,6 +3,7 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { ColorSelector } from "../font/color_selector";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
@@ -13,37 +14,44 @@ export class IconPlugin extends Plugin {
                 id: "resizeIcon1",
                 description: _t("Resize icon 1x"),
                 run: () => this.resizeIcon({ size: "1" }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "resizeIcon2",
                 description: _t("Resize icon 2x"),
                 run: () => this.resizeIcon({ size: "2" }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "resizeIcon3",
                 description: _t("Resize icon 3x"),
                 run: () => this.resizeIcon({ size: "3" }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "resizeIcon4",
                 description: _t("Resize icon 4x"),
                 run: () => this.resizeIcon({ size: "4" }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "resizeIcon5",
                 description: _t("Resize icon 5x"),
                 run: () => this.resizeIcon({ size: "5" }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "toggleSpinIcon",
                 description: _t("Toggle icon spin"),
                 icon: "fa-play",
                 run: this.toggleSpinIcon.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "replaceIcon",
                 description: _t("Replace icon"),
                 run: this.openIconDialog.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
         toolbar_namespaces: [
@@ -72,6 +80,7 @@ export class IconPlugin extends Plugin {
                 description: _t("Select Font Color"),
                 Component: ColorSelector,
                 props: this.dependencies.color.getPropsForColorSelector("foreground"),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "icon_backcolor",
@@ -79,6 +88,7 @@ export class IconPlugin extends Plugin {
                 description: _t("Select Background Color"),
                 Component: ColorSelector,
                 props: this.dependencies.color.getPropsForColorSelector("background"),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "icon_size_1",

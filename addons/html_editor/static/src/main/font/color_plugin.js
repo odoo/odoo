@@ -25,6 +25,7 @@ import {
 } from "@web/core/utils/colors";
 import { ColorSelector } from "./color_selector";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -51,6 +52,7 @@ export class ColorPlugin extends Plugin {
             {
                 id: "applyColor",
                 run: this.applyColor.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
         toolbar_items: [
@@ -60,6 +62,7 @@ export class ColorPlugin extends Plugin {
                 description: _t("Apply Font Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "backcolor",
@@ -67,6 +70,7 @@ export class ColorPlugin extends Plugin {
                 description: _t("Apply Background Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("background"),
+                isAvailable: isSelectionInHtmlContent,
             },
         ],
 

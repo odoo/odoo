@@ -95,6 +95,16 @@ export function isNotAllowedContent(node) {
     return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
 }
 
+export function isSelectionInHtmlContent(selection) {
+    return !closestElement(
+        selection.focusNode,
+        // TODO: which selector should be used ?:
+        // '[data-oe-model]:not([data-oe-field="arch"]):not([data-oe-type="html"]),[data-oe-translation-id]'
+        // '[data-oe-model]:not([data-oe-field="arch"],[data-oe-field="arch_db"]):not([data-oe-type="html"])'
+        '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
+    );
+}
+
 /**
  * @returns edge text nodes if they do not have content selected
  */

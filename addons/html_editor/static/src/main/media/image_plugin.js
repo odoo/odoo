@@ -11,6 +11,7 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { reactive } from "@odoo/owl";
+import { isSelectionInHtmlContent } from "@html_editor/core/selection_plugin";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -44,38 +45,48 @@ export class ImagePlugin extends Plugin {
                 description: _t("Remove (DELETE) image"),
                 icon: "fa-trash text-danger",
                 run: this.deleteImage.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "previewImage",
                 description: _t("Preview image"),
                 icon: "fa-search-plus",
                 run: this.previewImage.bind(this),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "setImageShapeRounded",
                 description: _t("Set shape: Rounded"),
                 icon: "fa-square",
                 run: () => this.setImageShape("rounded", { excludeClasses: ["rounded-circle"] }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "setImageShapeCircle",
                 description: _t("Set shape: Circle"),
                 icon: "fa-circle-o",
                 run: () => this.setImageShape("rounded-circle", { excludeClasses: ["rounded"] }),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "setImageShapeShadow",
                 description: _t("Set shape: Shadow"),
                 icon: "fa-sun-o",
                 run: () => this.setImageShape("shadow"),
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "setImageShapeThumbnail",
                 description: _t("Set shape: Thumbnail"),
                 icon: "fa-picture-o",
                 run: () => this.setImageShape("img-thumbnail"),
+                isAvailable: isSelectionInHtmlContent,
             },
-            { id: "resizeImage", run: this.resizeImage.bind(this) },
+            {
+                id: "resizeImage",
+                run: this.resizeImage.bind(this),
+                isAvailable: isSelectionInHtmlContent,
+            },
         ],
         toolbar_namespaces: [
             {
@@ -112,6 +123,7 @@ export class ImagePlugin extends Plugin {
                     getTooltip: () => this.getImageAttribute("title"),
                     updateImageDescription: this.updateImageDescription.bind(this),
                 },
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "shape_rounded",
@@ -150,6 +162,7 @@ export class ImagePlugin extends Plugin {
                         this.setImagePadding({ size: item.value });
                     },
                 },
+                isAvailable: isSelectionInHtmlContent,
             },
             {
                 id: "image_size",
