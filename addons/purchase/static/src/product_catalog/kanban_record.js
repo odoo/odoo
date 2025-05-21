@@ -23,5 +23,4 @@ patch(ProductCatalogKanbanRecord.prototype, {
             super.addProduct(...arguments);
         }
     },
-
 });
