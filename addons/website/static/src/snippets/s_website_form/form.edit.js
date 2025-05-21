@@ -6,23 +6,12 @@ import {
     formatDate,
     formatDateTime,
 } from "@web/core/l10n/dates";
-import wUtils from "@website/js/utils";
 
 const { DateTime } = luxon;
 
 export class FormEdit extends Interaction {
     static selector = ".s_website_form form, form.s_website_form"; // !compatibility
     start() {
-        // The "data-for" values were removed (on destroy before saving),
-        // but we still need to restore them in edit mode in the case of
-        // a simple widget refresh.
-        this.dataForValues = wUtils.getParsedDataFor(this.el.id, this.el.ownerDocument);
-        for (const fieldEl of this._getDataForFields()) {
-            if (!fieldEl.getAttribute("value")) {
-                fieldEl.setAttribute("value", this.dataForValues[fieldEl.name]);
-            }
-        }
-
         // We do not initialize the datetime picker in edit mode but want the dates to be formatted.
         for (const el of this.el.querySelectorAll(".s_website_form_input.datetimepicker-input")) {
             const value = el.getAttribute("value");
@@ -36,15 +25,7 @@ export class FormEdit extends Interaction {
         }
     }
 
-    destroy() {
-        // The "data-for" values are always correctly added to the form on the
-        // form interaction start. But if we make any change to it in "edit"
-        // mode, we need to be sure it will not be saved with the new values.
-        for (const fieldEl of this._getDataForFields()) {
-            fieldEl.removeAttribute("value");
-        }
-    }
-
+    // Todo: remove in master
     _getDataForFields() {
         if (!this.dataForValues) {
             return [];
