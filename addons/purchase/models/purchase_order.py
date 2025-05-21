@@ -1112,8 +1112,12 @@ class PurchaseOrder(models.Model):
         )
         if seller:
             product_infos.update(
-                price=seller.price_discounted,
+                price=seller.price,
                 min_qty=seller.min_qty,
+                uom = {
+                    'display_name': seller.product_uom_id.display_name,
+                    'id': seller.product_uom_id.id,
+                },
             )
 
         return product_infos
@@ -1180,6 +1184,27 @@ class PurchaseOrder(models.Model):
         for line, date in updated_dates:
             line._update_date_planned(date)
 
+    def _update_order_line_uom(self, product_id, quantity, **kwargs):
+        """ Update purchase order line information for a given product or create
+        a new one if none exists yet.
+        :param int product_id: The product, as a `product.product` id.
+        :return: The unit price of the product, based on the pricelist of the
+                 purchase order and the quantity selected.
+        :rtype: float
+        """
+        self.ensure_one()
+        pol = self.order_line.filtered(lambda line: line.product_id.id == product_id)
+        product = self.env['product.product'].browse(product_id)
+        uom = product.uom_id
+        if not pol:
+            seller = product._select_seller(
+                partner_id=self.partner_id,
+                quantity=1,
+                date=self.date_order and self.date_order.date() or fields.Date.context_today(self))
+            uom = seller.product_uom_id
+        uom = pol.product_uom_id or uom
+        return {'product_uom_id': uom.id, 'display_uom': uom.display_name}
+
     def _update_order_line_info(self, product_id, quantity, **kwargs):
         """ Update purchase order line information for a given product or create
         a new one if none exists yet.
@@ -1196,7 +1221,6 @@ class PurchaseOrder(models.Model):
             elif self.state in ['draft', 'sent']:
                 price_unit = self._get_product_price_and_data(pol.product_id)['price']
                 pol.unlink()
-                return price_unit
             else:
                 pol.product_qty = 0
         elif quantity > 0:
@@ -1206,14 +1230,17 @@ class PurchaseOrder(models.Model):
                 'product_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-            seller = pol.product_id._select_seller(
-                partner_id=pol.partner_id,
-                quantity=pol.product_qty,
-                date=pol.order_id.date_order and pol.order_id.date_order.date() or fields.Date.context_today(pol),
-                uom_id=pol.product_uom_id)
-            if seller:
-                # Fix the PO line's price on the seller's one.
-                pol.price_unit = seller.price_discounted
+        seller = pol.product_id._select_seller(
+            partner_id=pol.partner_id,
+            quantity=pol.product_qty or 1,
+            date=pol.order_id.date_order and pol.order_id.date_order.date() or fields.Date.context_today(pol),
+            uom_id=pol.product_uom_id)
+        if seller:
+            # Fix the PO line's price on the seller's one.
+            pol.price_unit = seller.price
+            pol.discount = seller.discount
+        elif price_unit:
+            pol.price_unit = price_unit
         return pol.price_unit_discounted
 
     def _create_update_date_activity(self, updated_dates):
