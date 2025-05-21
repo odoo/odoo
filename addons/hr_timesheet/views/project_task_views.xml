@@ -202,9 +202,6 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_project_task_graph"/>
             <field name="arch" type="xml">
-                <xpath expr="//graph" position="attributes">
-                    <attribute name="js_class">hr_timesheet_graphview</attribute>
-                </xpath>
                 <xpath expr="//field[@name='stage_id']" position='after'>
                     <field name="allocated_hours" widget="timesheet_uom" groups="hr_timesheet.group_hr_timesheet_user"/>
                     <field name="allocated_hours" widget="timesheet_uom" invisible="1" groups="!hr_timesheet.group_hr_timesheet_user"/>
