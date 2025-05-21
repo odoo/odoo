@@ -33,7 +33,7 @@ export class InventoryReportListModel extends RelationalModel {
                 _t(
                     "You tried to create a record that already exists. The existing record was modified instead."
                 ),
-                { title: _t("This record already exists.") }
+                { title: _t("This record already exists") }
             );
             const duplicateRecords = this.root.records.filter(
                 (record) => record.resId === reloadedRecord.resId && record.id !== reloadedRecord.id

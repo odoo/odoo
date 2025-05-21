@@ -73,7 +73,6 @@ export class EventScanView extends Component {
         if (result.error && result.error === "invalid_ticket") {
             this.playSound("error");
             this.notification.add(_t("Invalid ticket"), {
-                title: _t("Warning"),
                 type: "danger",
             });
         } else {

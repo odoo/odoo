@@ -19,18 +19,15 @@ test("receive and display simple notification", async () => {
     await mountWithCleanup(WebClient);
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
         message: "simple notification",
-        title: "simple title",
     });
     await waitFor(".o_notification");
     expect(queryFirst(".o_notification_content")).toHaveText("simple notification");
-    expect(queryFirst(".o_notification_title")).toHaveText("simple title");
 });
 
 test("receive and display simple notification with specific type", async () => {
     await mountWithCleanup(WebClient);
     MockServer.env["bus.bus"]._sendone(serverState.partnerId, "simple_notification", {
         message: "simple notification",
-        title: "simple title",
         type: "info",
     });
     await waitFor(".o_notification");
