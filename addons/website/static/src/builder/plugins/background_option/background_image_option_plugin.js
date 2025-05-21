@@ -6,12 +6,10 @@ import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 import { getBackgroundImageColor } from "./background_image_option";
 
-// TODO: support the setTarget
-
 export class BackgroundImageOptionPlugin extends Plugin {
     static id = "backgroundImageOption";
     static dependencies = ["builderActions", "media", "style"];
-    static shared = ["changeEditingEl"];
+    static shared = ["changeEditingEl", "setImageBackground"];
     resources = {
         builder_actions: this.getActions(),
     };
@@ -174,9 +172,9 @@ export class BackgroundImageOptionPlugin extends Plugin {
      */
     setImageBackground(el, backgroundURL) {
         if (backgroundURL) {
-            el.classList.add("oe_img_bg", "o_bg_img_center");
+            el.classList.add("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box");
         } else {
-            el.classList.remove("oe_img_bg", "o_bg_img_center", "o_modified_image_to_save");
+            el.classList.remove("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box", "o_modified_image_to_save");
         }
         // TODO: check this comment
         // We use selectStyle so that if when a background image is removed the
