@@ -784,6 +784,18 @@ class Partner(models.Model):
         if 'is_company' in vals and not self.env.su and self.env.user.has_group('base.group_partner_manager'):
             result = super(Partner, self.sudo()).write({'is_company': vals.get('is_company')})
             del vals['is_company']
+        parent_id_changed = vals.get('commercial_partner_id')
+        main_partner = self.env['res.partner'].browse(parent_id_changed)
+        if parent_id_changed:
+            for partner in self:
+                if main_partner.vat == partner.vat and self.env.user.has_group('account.group_account_user'):
+                    # Update account.move.line where partner_id is the current partner
+                    amls = self.env['account.move.line'].search([('partner_id', '=', partner.id)])
+                    amls.write({'partner_id': parent_id_changed})
+
+                    # Update account.move where partner_id is the current partner
+                    ams = self.env['account.move'].search([('partner_id', '=', partner.id)])
+                    ams.write({'commercial_partner_id': parent_id_changed})
         result = result and super().write(vals)
         for partner in self:
             if any(u._is_internal() for u in partner.user_ids if u != self.env.user):
