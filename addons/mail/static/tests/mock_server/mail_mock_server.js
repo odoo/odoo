@@ -754,28 +754,19 @@ async function read_subscription_data(request) {
 
     const { follower_id } = await parseRequestParams(request);
     const [follower] = MailFollowers.browse(follower_id);
-    const subtypes = MailMessageSubtype._filter([
+    const subtypes = MailMessageSubtype.search([
         "&",
         ["hidden", "=", false],
         "|",
         ["res_model", "=", follower.res_model],
         ["res_model", "=", false],
     ]);
-    const subtypes_list = subtypes.map((subtype) => {
-        const [parent] = MailMessageSubtype.browse(subtype.parent_id);
-        return {
-            default: subtype.default,
-            followed: follower.subtype_ids.includes(subtype.id),
-            id: subtype.id,
-            internal: subtype.internal,
-            name: subtype.name,
-            parent_model: parent ? parent.res_model : false,
-            res_model: subtype.res_model,
-            sequence: subtype.sequence,
-        };
-    });
-    // NOTE: server is also doing a sort here, not reproduced for simplicity
-    return subtypes_list;
+    return {
+        store_data: new mailDataHelpers.Store(subtypes, makeKwArgs({ fields: ["name"] }))
+            .add(MailFollowers.browse(follower_id), makeKwArgs({ fields: { subtype_ids: true } }))
+            .get_result(),
+        subtype_ids: subtypes, // Not sorted for simplicity.
+    };
 }
 
 registerRoute("/mail/rtc/session/update_and_broadcast", session_update_and_broadcast);

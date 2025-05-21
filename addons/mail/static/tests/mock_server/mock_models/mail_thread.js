@@ -105,6 +105,8 @@ export class MailThread extends models.ServerModel {
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = this.env["res.users"];
+        /** @type {import("mock_models").MailMessageSubtype} */
+        const MailMessageSubtype = this.env["mail.message.subtype"];
 
         const id = ids[0]; // ensure_one
         if (kwargs.context?.mail_post_autofollow && kwargs.partner_ids?.length) {
@@ -123,7 +125,6 @@ export class MailThread extends models.ServerModel {
             });
             kwargs.attachment_ids = attachmentIds.map((attachmentId) => Command.link(attachmentId));
         }
-        const subtype_xmlid = kwargs.subtype_xmlid || "mail.mt_note";
         let author_id;
         let email_from;
         const author_guest_id =
@@ -141,8 +142,9 @@ export class MailThread extends models.ServerModel {
             author_id,
             author_guest_id,
             email_from,
-            is_discussion: subtype_xmlid === "mail.mt_comment",
-            is_note: subtype_xmlid === "mail.mt_note",
+            subtype_id: MailMessageSubtype._filter([
+                ["subtype_xmlid", "=", kwargs.subtype_xmlid || "mail.mt_note"],
+            ])[0]?.id,
             model: this._name,
             res_id: id,
         });

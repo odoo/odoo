@@ -11,6 +11,7 @@ export class Follower extends Record {
     /** @type {boolean} */
     is_active;
     partner_id = fields.One("Persona");
+    subtype_ids = fields.Many("mail.message.subtype");
 
     /** @returns {boolean} */
     get isEditable() {

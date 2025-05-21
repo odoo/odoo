@@ -80,10 +80,12 @@ export class Message extends Record {
     incoming_email_cc;
     /** @type {Array[Array[string]]} */
     incoming_email_to;
-    /** @type {boolean} */
-    is_discussion;
-    /** @type {boolean} */
-    is_note;
+    get isDiscussion() {
+        return this.store.mt_comment?.eq(this.subtype_id);
+    }
+    get isNote() {
+        return this.store.mt_note?.eq(this.subtype_id);
+    }
     /** @type {boolean} */
     is_transient;
     message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
@@ -106,6 +108,7 @@ export class Message extends Record {
     });
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
     partner_ids = fields.Many("Persona");
+    subtype_id = fields.One("mail.message.subtype");
     thread = fields.One("Thread");
     threadAsNeedaction = fields.One("Thread", {
         compute() {
@@ -136,8 +139,6 @@ export class Message extends Record {
     });
     /** @type {string} */
     subject;
-    /** @type {string} */
-    subtype_description;
     /** @type {Object[]} */
     trackingValues = [];
     /** @type {string|undefined} */
@@ -168,10 +169,10 @@ export class Message extends Record {
         if (this.message_type === "notification") {
             return undefined;
         }
-        if (!this.isSelfAuthored && !this.is_note && !this.isHighlightedFromMention) {
+        if (!this.isSelfAuthored && !this.isNote && !this.isHighlightedFromMention) {
             return "blue";
         }
-        if (this.isSelfAuthored && !this.is_note && !this.isHighlightedFromMention) {
+        if (this.isSelfAuthored && !this.isNote && !this.isHighlightedFromMention) {
             return "green";
         }
         if (this.isHighlightedFromMention) {
@@ -298,7 +299,7 @@ export class Message extends Record {
                 this.isBodyEmpty &&
                 this.attachment_ids.length === 0 &&
                 this.trackingValues.length === 0 &&
-                !this.subtype_description
+                !this.subtype_id?.description
             );
         },
     });
@@ -407,7 +408,7 @@ export class Message extends Record {
         /** @this {import("models").Message} */
         compute() {
             if (!this.hasOnlyAttachments) {
-                return this.inlineBody || this.subtype_description;
+                return this.inlineBody || this.subtype_id?.description;
             }
             const { attachment_ids: attachments } = this;
             if (!attachments || attachments.length === 0) {

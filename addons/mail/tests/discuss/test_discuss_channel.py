@@ -94,7 +94,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         },
                                         "body": [
                                             "markup",
-                                            f'<div class="o_mail_notification" data-oe-type=\"channel-joined\">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
+                                            f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
                                         ],
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date
@@ -105,8 +105,6 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "id": message.id,
                                         "incoming_email_cc": False,
                                         "incoming_email_to": False,
-                                        "is_discussion": True,
-                                        "is_note": False,
                                         "message_link_preview_ids": [],
                                         "message_type": "notification",
                                         "model": "discuss.channel",
@@ -120,11 +118,14 @@ class TestChannelInternals(MailCommon, HttpCase):
                                         "res_id": channel.id,
                                         "scheduledDatetime": False,
                                         "subject": False,
-                                        "subtype_description": False,
+                                        "subtype_id": self.env.ref("mail.mt_comment").id,
                                         "thread": {"id": channel.id, "model": "discuss.channel"},
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
+                                "mail.message.subtype": [
+                                    {"description": False, "id": self.env.ref("mail.mt_comment").id}
+                                ],
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Channel",

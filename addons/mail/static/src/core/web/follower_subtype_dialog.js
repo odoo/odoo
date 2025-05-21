@@ -6,13 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 /**
- * @typedef {Object} SubtypeData
- * @property {boolean} followed
- * @property {number} id
- * @property {string} name
- */
-
-/**
  * @typedef {Object} Props
  * @property {function} close
  * @property {import("models").Follower} follower
@@ -28,13 +21,17 @@ export class FollowerSubtypeDialog extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.state = useState({
-            /** @type {SubtypeData[]} */
+            /** @type {import("models").MailMessageSubtype[]} */
             subtypes: [],
         });
         onWillStart(async () => {
-            this.state.subtypes = await rpc("/mail/read_subscription_data", {
+            const { store_data, subtype_ids } = await rpc("/mail/read_subscription_data", {
                 follower_id: this.props.follower.id,
             });
+            this.store.insert(store_data);
+            this.state.subtypes = subtype_ids.map((id) =>
+                this.store["mail.message.subtype"].get(id)
+            );
         });
     }
 
@@ -43,11 +40,17 @@ export class FollowerSubtypeDialog extends Component {
      * @param {SubtypeData} subtype
      */
     onChangeCheckbox(ev, subtype) {
-        subtype.followed = ev.target.checked;
+        if (ev.target.checked) {
+            this.props.follower.subtype_ids.add(subtype);
+        } else {
+            this.props.follower.subtype_ids.delete(subtype);
+        }
     }
 
     async onClickApply() {
-        const selectedSubtypes = this.state.subtypes.filter((s) => s.followed);
+        const selectedSubtypes = this.state.subtypes.filter((s) =>
+            s.in(this.props.follower.subtype_ids)
+        );
         if (selectedSubtypes.length === 0) {
             await this.props.follower.remove();
         } else {
@@ -60,7 +63,7 @@ export class FollowerSubtypeDialog extends Component {
                     subtype_ids: selectedSubtypes.map((subtype) => subtype.id),
                 }
             );
-            if (!selectedSubtypes.some((subtype) => subtype.id === this.store.mt_comment_id)) {
+            if (this.store.mt_comment.notIn(selectedSubtypes)) {
                 this.props.follower.removeRecipient();
             }
             this.env.services.notification.add(

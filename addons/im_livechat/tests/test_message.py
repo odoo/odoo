@@ -95,8 +95,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     "id": chatbot_message.id,
                     "incoming_email_cc": False,
                     "incoming_email_to": False,
-                    "is_discussion": True,
-                    "is_note": False,
                     "message_link_preview_ids": [],
                     "message_type": "comment",
                     "model": "discuss.channel",
@@ -116,7 +114,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "model": "discuss.channel",
                     },
                     "subject": False,
-                    "subtype_description": False,
+                    "subtype_id": self.env.ref("mail.mt_comment").id,
                     "trackingValues": [],
                     "write_date": fields.Datetime.to_string(chatbot_message.write_date),
                 }
@@ -169,8 +167,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "default_subject": "test1 Ernest Employee",
                         "incoming_email_cc": False,
                         "incoming_email_to": False,
-                        "is_discussion": False,
-                        "is_note": True,
                         "message_link_preview_ids": [],
                         "message_type": "notification",
                         "reactions": [],
@@ -187,10 +183,13 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "scheduledDatetime": False,
                         "starred": False,
                         "subject": False,
-                        "subtype_description": False,
+                        "subtype_id": self.env.ref("mail.mt_note").id,
                         "trackingValues": [],
                     },
                 ),
+                "mail.message.subtype": [
+                    {"description": False, "id": self.env.ref("mail.mt_note").id}
+                ],
                 "mail.thread": self._filter_threads_fields(
                     {
                         "display_name": "test1 Ernest Employee",
@@ -283,8 +282,6 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                         "id": message.id,
                                         "incoming_email_cc": False,
                                         "incoming_email_to": False,
-                                        "is_discussion": True,
-                                        "is_note": False,
                                         "message_link_preview_ids": [],
                                         "message_type": "notification",
                                         "model": "discuss.channel",
@@ -297,11 +294,14 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                         "res_id": channel.id,
                                         "scheduledDatetime": False,
                                         "subject": False,
-                                        "subtype_description": False,
+                                        "subtype_id": self.env.ref("mail.mt_comment").id,
                                         "thread": {"id": channel.id, "model": "discuss.channel"},
                                         "write_date": fields.Datetime.to_string(message.write_date),
                                     },
                                 ),
+                                "mail.message.subtype": [
+                                    {"description": False, "id": self.env.ref("mail.mt_comment").id}
+                                ],
                                 "mail.thread": self._filter_threads_fields(
                                     {
                                         "display_name": "Chell Gladys Ernest Employee",

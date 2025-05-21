@@ -47,7 +47,7 @@ export class DiscussCoreCommon {
                 author: this.store.odoobot,
                 body: markup(body),
                 id: lastMessageId + 0.01,
-                is_note: true,
+                subtype_id: this.store.mt_note,
                 is_transient: true,
                 thread: { id: channel_id, model: "discuss.channel" },
             });
