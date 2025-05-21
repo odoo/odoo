@@ -11,12 +11,14 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
-import { Registry } from "@odoo/o-spreadsheet";
+import { Registry, stores } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 
 export const dashboardActionRegistry = new Registry();
+const { useStoreProvider } = stores;
 
 export class SpreadsheetDashboardAction extends Component {
     static template = "spreadsheet_dashboard.DashboardAction";
@@ -27,6 +29,7 @@ export class SpreadsheetDashboardAction extends Component {
         DashboardMobileSearchPanel,
         MobileFigureContainer,
         SpreadsheetShareButton,
+        DashboardSearchBar,
     };
     static props = { ...standardActionServiceProps };
     static displayName = _t("Dashboards");
@@ -45,6 +48,7 @@ export class SpreadsheetDashboardAction extends Component {
         this.loader = useState(
             new DashboardLoader(this.env, this.env.services.orm, geoJsonService)
         );
+        this.stores = useStoreProvider();
         onWillStart(async () => {
             if (this.props.state && this.props.state.dashboardLoader) {
                 const { groups, dashboards } = this.props.state.dashboardLoader;
@@ -58,7 +62,10 @@ export class SpreadsheetDashboardAction extends Component {
             }
         });
         useEffect(
-            () => router.pushState({ dashboard_id: this.activeDashboardId }),
+            () => {
+                this.stores.resetStores();
+                router.pushState({ dashboard_id: this.activeDashboardId });
+            },
             () => [this.activeDashboardId]
         );
         useEffect(
