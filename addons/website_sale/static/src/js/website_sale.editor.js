@@ -12,20 +12,34 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @override
      */
-    start: function () {
+    async start() {
+        await this._super(...arguments);
+
         const gridEl = this.$target[0].querySelector('#o_wsale_products_grid');
-        this.ppg = parseInt(gridEl.dataset.ppg);
-        this.ppr = parseInt(gridEl.dataset.ppr);
-        this.gap = this.$target[0].style.getPropertyValue('--o-wsale-products-grid-gap');
-        this.default_sort = gridEl.dataset.defaultSort;
+        if (gridEl) {
+            this.ppg = parseInt(gridEl.dataset.ppg);
+            this.ppr = parseInt(gridEl.dataset.ppr);
+            this.gap = this.$target[0].style.getPropertyValue('--o-wsale-products-grid-gap');
+            this.default_sort = gridEl.dataset.defaultSort;
+        } else {
+            const { data_res_model, data_res_id } = this.options.recordInfo;
+            [{
+                shop_ppg: this.ppg,
+                shop_ppr: this.ppr,
+                shop_gap: this.gap,
+                shop_default_sort: this.default_sort,
+            }] = await this.orm.read(
+                data_res_model,
+                [data_res_id],
+                ['shop_ppg', 'shop_ppr', 'shop_gap', 'shop_default_sort'],
+            );
+        }
 
         // Activate HTML previews when necessary only
         // See 'website_sale.editor_previews' XML template
         if(this.$target[0].classList.contains('o_wsale_edit_preview_enabled')) {
             this._handlePreviews();
         }
-
-        return this._super.apply(this, arguments);
     },
     /**
      * @override
