@@ -5,22 +5,19 @@ import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { QUARTER_OPTIONS } from "@web/search/utils/dates";
 import { _t } from "@web/core/l10n/translation";
 import { monthsOptions } from "@spreadsheet/assets_backend/constants";
-import { stores } from "@odoo/o-spreadsheet";
 
 const { DateTime } = luxon;
-const { useStore, SidePanelStore } = stores;
 
 export class DashboardSearchBar extends Component {
     static template = "spreadsheet_dashboard.DashboardSearchBar";
     static components = {
         DashboardFacet,
     };
-    static props = { filters: Object, model: Object };
+    static props = { filters: Object, model: Object, toggleFilterPanel: Function };
 
     setup() {
         this.facets = [];
         this.nameService = useService("name");
-        // this.sidePanelStore = useStore(SidePanelStore);
 
         onWillStart(this.computeFacets.bind(this));
         onWillUpdateProps(this.computeFacets.bind(this));
@@ -31,8 +28,7 @@ export class DashboardSearchBar extends Component {
     }
 
     openSidePanel() {
-        const store = this.env.getStore(SidePanelStore);
-        store.toggle("GLOBAL_FILTERS_SIDE_PANEL");
+        this.props.toggleFilterPanel();
     }
 
     async computeFacets() {

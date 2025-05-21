@@ -11,14 +11,13 @@ import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
-import { Registry, stores } from "@odoo/o-spreadsheet";
+import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 
 export const dashboardActionRegistry = new Registry();
-const { useStoreProvider } = stores;
 
 export class SpreadsheetDashboardAction extends Component {
     static template = "spreadsheet_dashboard.DashboardAction";
@@ -48,7 +47,6 @@ export class SpreadsheetDashboardAction extends Component {
         this.loader = useState(
             new DashboardLoader(this.env, this.env.services.orm, geoJsonService)
         );
-        this.stores = useStoreProvider();
         onWillStart(async () => {
             if (this.props.state && this.props.state.dashboardLoader) {
                 const { groups, dashboards } = this.props.state.dashboardLoader;
@@ -62,10 +60,7 @@ export class SpreadsheetDashboardAction extends Component {
             }
         });
         useEffect(
-            () => {
-                this.stores.resetStores();
-                router.pushState({ dashboard_id: this.activeDashboardId });
-            },
+            () => router.pushState({ dashboard_id: this.activeDashboardId }),
             () => [this.activeDashboardId]
         );
         useEffect(
@@ -90,7 +85,11 @@ export class SpreadsheetDashboardAction extends Component {
         });
         useSpreadsheetPrint(() => this.state.activeDashboard?.model);
         /** @type {{ activeDashboard: import("./dashboard_loader").Dashboard}} */
-        this.state = useState({ activeDashboard: undefined, sidebarExpanded: true });
+        this.state = useState({
+            activeDashboard: undefined,
+            sidebarExpanded: true,
+            isFilterPanelOpen: true,
+        });
     }
 
     get dashboardButton() {
@@ -113,6 +112,16 @@ export class SpreadsheetDashboardAction extends Component {
             return [];
         }
         return dashboard.model.getters.getGlobalFilters();
+    }
+
+    toggleFilterPanel() {
+        this.state.isFilterPanelOpen = !this.state.isFilterPanelOpen;
+    }
+
+    openFilterPanel() {
+        if (!this.state.activeDashboard) {
+            return;
+        }
     }
 
     /**

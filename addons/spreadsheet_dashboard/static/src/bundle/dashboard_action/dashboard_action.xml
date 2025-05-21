@@ -9,6 +9,7 @@
                                         t-key="activeDashboardId"
                                         filters="filters"
                                         model="state.activeDashboard.model"
+                                        toggleFilterPanel.bind="toggleFilterPanel"
                                          />
                     <!-- <div t-if="status === Status.Loaded"
                         class="o_filter_value_container"
@@ -62,6 +63,27 @@
                             t-key="dashboard.id"/>
                     </div>
                 </t>
+            </t>
+            <!-- Filter Side Bar -->
+            <t t-if="!env.isSmall and state.activeDashboard and state.isFilterPanelOpen">
+                <div class="o_spreadsheet_dashboard_filter_panel o_search_panel flex-grow-0 border-end flex-shrink-0 pe-2 pb-5 ps-4 h-100 bg-view overflow-auto position-relative">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h3 class="fw-bold mt-2 mb-0">
+                            Filters
+                        </h3>
+                        <button t-if="!env.isSmall" class="btn btn-light btn-sm  m-1 mb-2 px-2 py-1" t-on-click="toggleFilterPanel">
+                            <i class="fa fa-fw fa-times"/>
+                        </button>
+                    </div>
+                    <div class="d-flex flex-column mt-4">
+                        <div class="o-section pivot_filter_section py-3" t-if="status === Status.Loaded" t-foreach="filters" t-as="filter" t-key="activeDashboardId + '_' + filter.id">
+                            <div class="fw-bold" t-esc="filter.label"/>
+                            <div class="pivot_filter position-relative">
+                                <FilterValue filter="filter" model="state.activeDashboard.model" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </t>
         </div>
     </div>
