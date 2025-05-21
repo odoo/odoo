@@ -394,9 +394,9 @@ test("press enter on autocomplete with empty source (2)", async () => {
         static template = xml`<AutoComplete value="''" sources="sources"/>`;
         static props = [];
 
-        sources = buildSources((request) => {
-            return request.length > 2 ? [item("test A"), item("test B"), item("test C")] : [];
-        });
+        sources = buildSources((request) =>
+            request.length > 2 ? [item("test A"), item("test B"), item("test C")] : []
+        );
     }
 
     await mountWithCleanup(Parent);
@@ -812,7 +812,8 @@ test("items are selected only when the mouse moves, not just on enter", async ()
         "ui-state-active"
     );
 
-    await hover(".o-autocomplete--dropdown-item:nth-child(2)");
+    const item2 = queryOne(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item");
+    await manuallyDispatchProgrammaticEvent(item2, "mouseenter");
     await animationFrame();
     // mouseenter should be ignored
     expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass(
@@ -825,7 +826,8 @@ test("items are selected only when the mouse moves, not just on enter", async ()
         "ui-state-active"
     );
 
-    await hover(".o-autocomplete--dropdown-item:nth-child(3)");
+    const item3 = queryOne(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item");
+    await manuallyDispatchProgrammaticEvent(item3, "mousemove");
     await animationFrame();
     expect(".o-autocomplete--dropdown-item:nth-child(2) .dropdown-item").not.toHaveClass(
         "ui-state-active"
@@ -833,4 +835,41 @@ test("items are selected only when the mouse moves, not just on enter", async ()
     expect(".o-autocomplete--dropdown-item:nth-child(3) .dropdown-item").toHaveClass(
         "ui-state-active"
     );
+});
+
+test.tags("desktop");
+test(`early option selection`, async () => {
+    const deferred = new Deferred();
+
+    class Parent extends Component {
+        static template = xml`<AutoComplete value="state.value" sources="sources"/>`;
+        static components = { AutoComplete };
+        static props = [];
+
+        state = useState({ value: "" });
+        sources = buildSources(async () => {
+            await deferred;
+            return [
+                item("Hello", this.onSelect.bind(this)),
+                item("World", this.onSelect.bind(this)),
+            ];
+        });
+
+        onSelect(option) {
+            this.state.value = option.label;
+        }
+    }
+
+    await mountWithCleanup(Parent);
+    queryOne(`.o-autocomplete input`).focus();
+    queryOne(`.o-autocomplete input`).click();
+
+    await contains("input").edit("ello", { confirm: false });
+    await press("enter");
+    await runAllTimers();
+
+    deferred.resolve();
+    await animationFrame();
+    expect(`.o-autocomplete input`).toBeFocused();
+    expect(`.o-autocomplete input`).toHaveValue("Hello");
 });

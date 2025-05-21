@@ -70,8 +70,8 @@ class NavigationItem {
     setActive(focus = true) {
         scrollTo(this.target);
         this._navigator._setActiveItem(this.index);
-        this.target.classList.add(ACTIVE_ELEMENT_CLASS);
         this.target.ariaSelected = true;
+        this.target.classList.add(this._options.activeClass);
 
         if (focus && !this._options.virtualFocus) {
             throttledFocus.cancel();
@@ -80,7 +80,7 @@ class NavigationItem {
     }
 
     setInactive(blur = true) {
-        this.target.classList.remove(ACTIVE_ELEMENT_CLASS);
+        this.target.classList.remove(this._options.activeClass);
         this.target.ariaSelected = false;
         if (blur && !this._options.virtualFocus) {
             this.target.blur();
@@ -124,6 +124,7 @@ export class Navigator {
                 isNavigationAvailable: ({ target }) => this.contains(target),
                 shouldFocusChildInput: true,
                 virtualFocus: false,
+                activeClass: ACTIVE_ELEMENT_CLASS,
                 hotkeys: {
                     home: () => this.items[0]?.setActive(),
                     end: () => this.items.at(-1)?.setActive(),
@@ -282,6 +283,7 @@ export class Navigator {
         this.activeItem?.setInactive(false);
         this.activeItem = this.items[index];
         this.activeItemIndex = index;
+        this._options.onNavigated?.(this);
     }
 
     /**
@@ -307,6 +309,8 @@ export class Navigator {
  * focused so the actual focus can be kept on another input.
  * @property {Boolean} [shouldFocusChildInput=false] - If true, elements like inputs or buttons
  * inside of the items are focused instead of the items themselves.
+ * @property {string} activeClass - CSS class which is added on the currently
+ * active element.
  */
 
 /**
