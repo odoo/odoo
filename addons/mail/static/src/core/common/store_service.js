@@ -81,8 +81,8 @@ export class Store extends BaseStore {
     users = {};
     /** @type {number} */
     internalUserGroupId;
-    /** @type {number} */
-    mt_comment_id;
+    mt_comment = fields.One("mail.message.subtype");
+    mt_note = fields.One("mail.message.subtype");
     /** @type {boolean} */
     hasMessageTranslationFeature;
     imStatusTrackedPersonas = fields.Many("Persona", {

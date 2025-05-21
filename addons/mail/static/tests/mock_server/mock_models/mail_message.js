@@ -15,8 +15,6 @@ export class MailMessage extends models.ServerModel {
     _name = "mail.message";
 
     author_id = fields.Generic({ default: () => serverState.partnerId });
-    is_discussion = fields.Boolean({ string: "Discussion" });
-    is_note = fields.Boolean({ string: "Note" });
     pinned_at = fields.Generic({ default: false });
 
     /** @param {DomainListRepr} [domain] */
@@ -103,14 +101,11 @@ export class MailMessage extends models.ServerModel {
                 "body",
                 "create_date",
                 "date",
-                "is_discussion",
-                "is_note",
                 "message_type",
                 "model",
                 "pinned_at",
                 "res_id",
                 "subject",
-                "subtype_description",
                 "write_date",
             ];
         }
@@ -185,8 +180,10 @@ export class MailMessage extends models.ServerModel {
                 ),
             });
             if (message.subtype_id) {
-                const [subtype] = MailMessageSubtype.browse(message.subtype_id);
-                data.subtype_description = subtype.description;
+                data.subtype_id = mailDataHelpers.Store.one(
+                    MailMessageSubtype.browse(message.subtype_id),
+                    makeKwArgs({ fields: ["description"] })
+                );
             }
             if (for_current_user) {
                 data["needaction"] = Boolean(

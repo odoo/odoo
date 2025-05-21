@@ -12,6 +12,7 @@ declare module "models" {
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
     import { MailActivityType as MailActivityTypeClass } from "@mail/core/common/mail_activity_type_model";
+    import { MailMessageSubtype as MailMessageSubtypeClass } from "@mail/core/common/mail_message_subtype_model";
     import { MailTemplate as MailTemplateClass } from "@mail/core/common/mail_template_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
@@ -39,6 +40,7 @@ declare module "models" {
     export interface Follower extends FollowerClass {}
     export interface LinkPreview extends LinkPreviewClass {}
     export interface MailActivityType extends MailActivityTypeClass {}
+    export interface MailMessageSubtype extends MailMessageSubtypeClass {}
     export interface MailTemplate extends MailTemplateClass {}
     export interface Message extends MessageClass {}
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
@@ -68,6 +70,7 @@ declare module "models" {
         "mail.link.preview": StaticMailRecord<LinkPreview, typeof LinkPreviewClass>;
         "mail.message": StaticMailRecord<Message, typeof MessageClass>;
         "mail.message.link.preview": StaticMailRecord<MessageLinkPreview, typeof MessageLinkPreviewClass>;
+        "mail.message.subtype": StaticMailRecord<MailMessageSubtype, typeof MailMessageSubtypeClass>;
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
         "mail.template": StaticMailRecord<MailTemplate, typeof MailTemplateClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
@@ -97,6 +100,7 @@ declare module "models" {
         "mail.link.preview": LinkPreview;
         "mail.message": Message;
         "mail.message.link.preview": MessageLinkPreview;
+        "mail.message.subtype": MailMessageSubtype;
         "mail.notification": Notification;
         "mail.template": MailTemplate;
         MessageReactions: MessageReactions;

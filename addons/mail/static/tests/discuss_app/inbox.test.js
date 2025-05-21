@@ -95,7 +95,9 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        is_note: true,
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_note"],
+        ])[0],
         model: "res.partner",
         needaction: true,
         res_id: partnerId,
@@ -127,7 +129,9 @@ test('"reply to" composer should send message if message replied to is not a not
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        is_discussion: true,
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_comment"],
+        ])[0],
         model: "res.partner",
         needaction: true,
         res_id: partnerId,

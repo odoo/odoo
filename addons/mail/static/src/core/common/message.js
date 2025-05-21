@@ -277,8 +277,8 @@ export class Message extends Component {
 
     get showSubtypeDescription() {
         return (
-            this.message.subtype_description &&
-            this.message.subtype_description.toLowerCase() !==
+            this.message.subtype_id?.description &&
+            this.message.subtype_id.description.toLowerCase() !==
                 htmlToTextContentInline(this.message.body || "").toLowerCase()
         );
     }
@@ -291,7 +291,7 @@ export class Message extends Component {
             return _t("Automated message");
         }
         if (
-            !this.props.message.is_discussion &&
+            !this.props.message.isDiscussion &&
             this.props.message.message_type !== "user_notification"
         ) {
             return _t("Note");

@@ -27,7 +27,7 @@
                         </t>
                     </div>
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
-                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.is_note, 'pe-2': props.asCard and isMobileOS }" name="header">
+                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.isNote, 'pe-2': props.asCard and isMobileOS }" name="header">
                             <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
                                 <strong class="me-1" t-esc="message.authorName"/>
                             </span>
@@ -58,10 +58,10 @@
                                    'flex-row-reverse': isAlignedRight,
                                    }"
                         >
-                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.is_note }">
+                            <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote }">
                                 <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
                                     <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
-                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_description or isEditing or message.edited))">
+                                    <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.edited))">
                                         <MessageLinkPreviewList t-if="!isEditing and message.linkPreviewSquash" messageLinkPreviews="message.message_link_preview_ids"/>
                                         <t t-else="">
                                             <div t-if="message.bubbleColor and !props.squashed" class="o-mail-Message-bubbleTail position-absolute d-flex" t-att-style="isAlignedRight ? 'right: -4px; transform: rotateY(180deg);' : 'left: -4px;'" t-att-class="{
@@ -86,14 +86,14 @@
                                                 }"/>
                                                 <MessageInReply t-if="message.parent_id" message="message" onClick="props.onParentMessageClick"/>
                                                 <div class="position-relative text-break o-mail-Message-body" t-att-class="{
-                                                            'p-1': message.is_note,
+                                                            'p-1': message.isNote,
                                                             'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
-                                                            'mb-0': !message.is_note,
-                                                            'py-2': !message.is_note and !isEditing,
-                                                            'pt-2 pb-1': !message.is_note and isEditing,
-                                                            'o-note': message.is_note,
+                                                            'mb-0': !message.isNote,
+                                                            'py-2': !message.isNote and !isEditing,
+                                                            'pt-2 pb-1': !message.isNote and isEditing,
+                                                            'o-note': message.isNote,
                                                             'o-rounded-bubble': props.squashed,
-                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.is_note and !props.squashed,
+                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.isNote and !props.squashed,
                                                             'flex-grow-1': isEditing,
                                                             }" t-ref="body">
                                                     <i t-if="message.isEmpty" class="text-muted opacity-75" t-out="message.inlineBody"/>
@@ -110,7 +110,7 @@
                                                             <i class="text-danger fa fa-warning" role="img" aria-label="Translation Failure"/>
                                                             <t t-if="message.translationErrors" t-esc="translationFailureText"/>
                                                         </p>
-                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_description) ?? message.subtype_description"/>
+                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtype_id?.description) ?? message.subtype_id?.description"/>
                                                     </t>
                                                 </div>
                                             </div>
