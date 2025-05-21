@@ -56,8 +56,7 @@ test("html field with required attribute", async () => {
     expect(".o_field_html textarea").toHaveValue("");
 
     await clickSave();
-    expect(".o_notification_title").toHaveText("Invalid fields:");
-    expect(queryFirst(".o_notification_content")).toHaveInnerHTML("<ul><li>txt</li></ul>");
+    expect(queryFirst(".o_notification_content")).toHaveText("Missing required fields");
 });
 
 test("html fields are correctly rendered (edit)", async () => {

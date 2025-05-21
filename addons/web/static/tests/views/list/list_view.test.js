@@ -1653,7 +1653,7 @@ test("multi_edit: edit a required field with invalid value", async () => {
     await contains(`.o_field_widget[name=foo] input`).clear();
 
     expect(`.o_notification`).toHaveCount(1);
-    expect(`.o_notification`).toHaveText("Invalid fields:\nFoo");
+    expect(`.o_notification`).toHaveText("Missing required fields");
     expect(`.o_data_row:eq(0) .o_data_cell[name='foo']`).toHaveText("yop");
     expect(`.o_data_row:eq(0)`).toHaveClass("o_data_row_selected");
     expect(`.o_data_row:eq(0)`).not.toHaveClass("o_selected_row");
@@ -15592,9 +15592,8 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
     };
 
     mockService("notification", {
-        add(message, options) {
-            expect.step(options.title.toString());
-            expect.step(message.toString());
+        add(message, _) {
+            expect.step(message);
         },
     });
 
@@ -15609,7 +15608,7 @@ test(`Auto save: modify a record and leave action (reject)`, async () => {
     expect(queryAllTexts(`.o_data_cell`)).toEqual(["", "blip", "gnap", "blip"]);
     expect(`.o_selected_row .o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_data_row`).toHaveCount(4);
-    expect.verifySteps(["Invalid fields: ", "<ul><li>Foo</li></ul>"]);
+    expect.verifySteps(["Missing required fields"]);
 });
 
 test(`Auto save: add a record and change page`, async () => {

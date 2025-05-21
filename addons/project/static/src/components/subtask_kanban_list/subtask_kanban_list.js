@@ -1,4 +1,4 @@
-import { Component, useState, markup } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -88,8 +88,7 @@ export class SubtaskKanbanList extends Component {
 
     async _onSubtaskCreateNameChanged(name) {
         if (name.trim() === "") {
-            this.notification.add(markup`<ul><li>${_t("Display Name")}</li></ul>`, {
-                title: _t("Invalid fields: "),
+            this.notification.add(_t("Invalid Display Name"), {
                 type: "danger",
             });
         } else {

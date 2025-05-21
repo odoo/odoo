@@ -131,7 +131,7 @@ test("widget many2many_binary", async () => {
 });
 
 test("widget many2many_binary displays notification on error", async () => {
-    expect.assertions(12);
+    expect.assertions(11);
 
     mockService("http", {
         post(route, { ufile }) {
@@ -186,8 +186,7 @@ test("widget many2many_binary displays notification on error", async () => {
     });
     expect("div.o_field_widget .oe_fileupload .o_attachments").toHaveCount(1);
     expect(".o_notification").toHaveCount(1);
-    expect(".o_notification_title").toHaveText("Uploading error");
-    expect(".o_notification_content").toHaveText("Error on file: bad_file.txt");
+    expect(".o_notification_content").toHaveText("Uploading error. Error on file: bad_file.txt");
     expect(".o_notification_bar").toHaveClass("bg-danger");
 });
 

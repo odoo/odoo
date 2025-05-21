@@ -27,7 +27,7 @@ test("can listen on bus and display notifications in DOM and click OK", async ()
             notify_at: "1978-04-14 12:45:00",
         },
     ]);
-    await contains(".o_notification", { text: "Very old meeting message" });
+    await contains(".o_notification", { text: "Meeting. Very old meeting message" });
     await click(".o_notification_buttons button", { text: "OK" });
     await contains(".o_notification", { count: 0 });
     await waitForSteps(["notify_ack"]);
@@ -51,7 +51,7 @@ test("can listen on bus and display notifications in DOM and click Detail", asyn
             notify_at: "1978-04-14 12:45:00",
         },
     ]);
-    await contains(".o_notification", { text: "Very old meeting message" });
+    await contains(".o_notification", { text: "Meeting. Very old meeting message" });
     await click(".o_notification_buttons button", { text: "Details" });
     await contains(".o_notification", { count: 0 });
     await waitForSteps(["ir.actions.act_window"]);
@@ -71,7 +71,7 @@ test("can listen on bus and display notifications in DOM and click Snooze", asyn
             notify_at: "1978-04-14 12:45:00",
         },
     ]);
-    await contains(".o_notification", { text: "Very old meeting message" });
+    await contains(".o_notification", { text: "Meeting. Very old meeting message" });
     await click(".o_notification button", { text: "Snooze" });
     await contains(".o_notification", { count: 0 });
     await waitForSteps([]);

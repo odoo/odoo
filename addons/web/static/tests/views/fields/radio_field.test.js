@@ -78,11 +78,7 @@ test("required radio field on a many2one", async () => {
 
     expect(".o_field_radio input:checked").toHaveCount(0);
     await clickSave();
-    expect(".o_notification_title:first").toHaveText("Invalid fields:");
-    expect(".o_notification_content:first").toHaveProperty(
-        "innerHTML",
-        "<ul><li>Product</li></ul>"
-    );
+    expect(".o_notification_content:first").toHaveText("Missing required fields");
     expect(".o_notification_bar:first").toHaveClass("bg-danger");
 });
 

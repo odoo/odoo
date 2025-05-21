@@ -54,5 +54,7 @@ test("push notifications are Odoo toaster on Android", async () => {
             thread_id: channelId,
         })
     );
-    await contains(".o_notification:has(.o_notification_bar.bg-info)", { text: "Hello world!" });
+    await contains(".o_notification:has(.o_notification_bar.bg-info)", {
+        text: "Visitor. Hello world!",
+    });
 });

@@ -66,7 +66,7 @@ export class WebsiteEventTrackReminder extends Interaction {
             if (result.error && result.error === "ignored") {
                 this.notification.add(
                     _t("Talk already in your Favorites. The page does not seem to be up-to-date and needs a refresh."),
-                    {type: "info", title: _t("Error")}
+                    {type: "info"}
                  );
             } else {
                 this.reminderOn = reminderOnValue;

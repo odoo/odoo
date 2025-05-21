@@ -373,7 +373,7 @@ export class FileSelector extends Component {
                         this.notificationService.add(
                             _t("An error occurred while fetching the entered URL."),
                             {
-                                title: _t("Error"),
+                                type: "danger",
                                 sticky: true,
                             }
                         );

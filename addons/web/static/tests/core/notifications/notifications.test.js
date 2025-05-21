@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, hover, leave } from "@odoo/hoot-dom";
+import { click, hover, leave, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { getService, makeMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
@@ -30,16 +30,15 @@ test("can display a notification with a className", async () => {
     expect(".o_notification.abc").toHaveCount(1);
 });
 
-test("title and message are escaped by default", async () => {
+test("message are escaped by default", async () => {
     await makeMockEnv();
     const { Component: NotificationContainer, props } = registry
         .category("main_components")
         .get("NotificationContainer");
     await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
-    getService("notification").add("<i>Some message</i>", { title: "<b>Some title</b>" });
+    getService("notification").add("<i>Some message</i>");
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
-    expect(".o_notification_title").toHaveText("<b>Some title</b>");
     expect(".o_notification_content").toHaveText("<i>Some message</i>");
 });
 
@@ -68,23 +67,6 @@ test("can display a notification of type danger", async () => {
     expect(".o_notification_bar").toHaveClass("bg-danger");
 });
 
-test("can display a danger notification with a title", async () => {
-    await makeMockEnv();
-    const { Component: NotificationContainer, props } = registry
-        .category("main_components")
-        .get("NotificationContainer");
-    await mountWithCleanup(NotificationContainer, { props, noMainContainer: true });
-    getService("notification").add("I'm a danger notification", {
-        title: "Some title",
-        type: "danger",
-    });
-    await animationFrame();
-    expect(".o_notification").toHaveCount(1);
-    expect(".o_notification_title").toHaveText("Some title");
-    expect(".o_notification_content").toHaveText("I'm a danger notification");
-    expect(".o_notification_bar").toHaveClass("bg-danger");
-});
-
 test("can display a notification with a button", async () => {
     await makeMockEnv();
     const { Component: NotificationContainer, props } = registry
@@ -95,7 +77,6 @@ test("can display a notification with a button", async () => {
         buttons: [
             {
                 name: "I'm a button",
-                primary: true,
                 onClick: () => {
                     expect.step("Button clicked");
                 },
@@ -105,7 +86,7 @@ test("can display a notification with a button", async () => {
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
     expect(".o_notification_buttons").toHaveText("I'm a button");
-    await click(".o_notification .btn-primary");
+    await click(".o_notification .btn-link");
     await animationFrame();
     expect.verifySteps(["Button clicked"]);
     expect(".o_notification").toHaveCount(1);
@@ -141,7 +122,8 @@ test("notifications aren't sticky by default", async () => {
     await animationFrame();
     expect(".o_notification").toHaveCount(1);
     // Wait for the notification to close
-    await runAllTimers();
+    await advanceTime(4000);
+    await animationFrame();
     expect(".o_notification").toHaveCount(0);
 });
 
@@ -245,12 +227,12 @@ test("can refresh the duration of a non-sticky notification", async () => {
     await advanceTime(3000);
     await hover(".o_notification:first-child");
     await advanceTime(5000);
-    // Both notifications should be visible as long as mouse is over one of them
-    expect(".o_notification").toHaveCount(2);
+    // hovered notification should be visible as long as mouse is over
+    expect(".o_notification").toHaveCount(1);
     await leave();
     await advanceTime(3000);
-    // Both notifications should be refreshed in duration (4000 ms)
-    expect(".o_notification").toHaveCount(2);
+    // notification should be refreshed in duration (4000 ms)
+    expect(".o_notification").toHaveCount(1);
     await advanceTime(2000);
     expect(".o_notification").toHaveCount(0);
 });
@@ -305,6 +287,7 @@ test("notification autocloses after a specified delay", async () => {
         autocloseDelay: 1000,
     });
 
+    await waitFor(".o_notification");
     await advanceTime(500);
     await animationFrame();
     expect(".o_notification").toHaveCount(1);

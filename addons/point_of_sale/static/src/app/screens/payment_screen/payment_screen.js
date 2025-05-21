@@ -143,7 +143,7 @@ export class PaymentScreen extends Component {
                 _t(
                     "To ensure due balance follow-up, generate an invoice or download the accounting application. "
                 ),
-                { autocloseDelay: 7000, title: _t("Warning") }
+                { autocloseDelay: 7000 }
             );
         }
         if (this.pos.paymentTerminalInProgress && paymentMethod.use_payment_terminal) {

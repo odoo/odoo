@@ -1,10 +1,7 @@
-import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { NotificationContainer } from "./notification_container";
 
 import { reactive } from "@odoo/owl";
-
-const AUTOCLOSE_DELAY = 4000;
 
 /**
  * @typedef {Object} NotificationButton
@@ -47,48 +44,14 @@ export const notificationService = {
             const id = ++notifId;
             const closeFn = () => close(id);
             const props = Object.assign({}, options, { message, close: closeFn });
-            const autocloseDelay = options.autocloseDelay ?? AUTOCLOSE_DELAY;
-            const sticky = props.sticky;
-            delete props.sticky;
             delete props.onClose;
-            delete props.autocloseDelay;
-            let closeTimeout;
-            const refresh = sticky
-                ? () => {}
-                : () => {
-                      closeTimeout = browser.setTimeout(closeFn, autocloseDelay);
-                  };
-            const freeze = sticky
-                ? () => {}
-                : () => {
-                      browser.clearTimeout(closeTimeout);
-                  };
-            props.refresh = refreshAll;
-            props.freeze = freezeAll;
             const notification = {
                 id,
                 props,
                 onClose: options.onClose,
-                refresh,
-                freeze,
             };
             notifications[id] = notification;
-            if (!sticky) {
-                closeTimeout = browser.setTimeout(closeFn, autocloseDelay);
-            }
             return closeFn;
-        }
-
-        function refreshAll() {
-            for (const id in notifications) {
-                notifications[id].refresh();
-            }
-        }
-
-        function freezeAll() {
-            for (const id in notifications) {
-                notifications[id].freeze();
-            }
         }
 
         function close(id) {
