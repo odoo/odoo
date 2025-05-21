@@ -125,13 +125,13 @@ class TestACLFeedback(Feedback):
 
 No group currently allows this operation.
 
-Contact your administrator to request access if necessary."""
+Contact your administrator to request access if necessary.""",
         )
 
     def test_one_group(self):
         with self.assertRaises(AccessError) as ctx:
             self.env(user=self.user)['test_access_right.some_obj'].create({
-                'val': 1
+                'val': 1,
             })
         self.assertEqual(
             ctx.exception.args[0],
@@ -139,7 +139,7 @@ Contact your administrator to request access if necessary."""
 
 This operation is allowed for the following groups:\n\t- Group 0
 
-Contact your administrator to request access if necessary."""
+Contact your administrator to request access if necessary.""",
         )
 
     def test_two_groups(self):
@@ -157,6 +157,7 @@ Contact your administrator to request access if necessary."""
             r.read(['val'])
         self.assertEqual(ctx.exception.args[0], expected)
 
+
 class TestIRRuleFeedback(Feedback):
     """ Tests that proper feedback is returned on ir.rule errors
     """
@@ -171,7 +172,7 @@ class TestIRRuleFeedback(Feedback):
         cls.maxDiff = None
 
     def _make_rule(self, name, domain, global_=False, attr='write'):
-        res = self.env['ir.rule'].create({
+        return self.env['ir.rule'].create({
             'name': name,
             'model_id': self.model.id,
             'groups': [] if global_ else [Command.link(self.group2.id)],
@@ -182,7 +183,6 @@ class TestIRRuleFeedback(Feedback):
             'perm_unlink': False,
             'perm_' + attr: True,
         })
-        return res
 
     def test_local(self):
         self._make_rule('rule 0', '[("val", "=", 42)]')
@@ -190,44 +190,44 @@ class TestIRRuleFeedback(Feedback):
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s (%s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description} ({self.record._name})
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record._name))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
         # debug mode
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
 Blame the following rules:
 - rule 0
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
         ChildModel = self.env['test_access_right.inherits']
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
             ChildModel.with_user(self.user).create({'some_id': self.record.id, 'val': 2})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
 Blame the following rules:
 - rule 0
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
     def test_locals(self):
         self._make_rule('rule 0', '[("val", "=", 42)]')
@@ -236,17 +236,17 @@ If you really, really need access, perhaps you can win over your friendly admini
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
 Blame the following rules:
 - rule 0
 - rule 1
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
     def test_globals_all(self):
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
@@ -255,20 +255,20 @@ If you really, really need access, perhaps you can win over your friendly admini
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
 Blame the following rules:
 - rule 0
 - rule 1
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
     def test_globals_any(self):
-        """ Global rules are AND-eded together, so when an access fails it
+        """ Global rules are AND-eded together, so when access fails it
         might be just one of the rules, and we want an exact listing
         """
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
@@ -277,16 +277,16 @@ If you really, really need access, perhaps you can win over your friendly admini
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
 Blame the following rules:
 - rule 0
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
     def test_combination(self):
         self._make_rule('rule 0', '[("val", "=", 42)]', global_=True)
@@ -297,23 +297,23 @@ If you really, really need access, perhaps you can win over your friendly admini
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
 Blame the following rules:
 - rule 0
 - rule 2
 - rule 3
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
     def test_warn_company_no_access(self):
         """ If one of the failing rules mentions company_id, add a note that
         this might be a multi-company issue, but the user doesn't access to this company
-        then no information about the company is showed.
+        then no information about the company is shown.
         """
         self._make_rule('rule 0', "[('company_id', '=', user.company_id.id)]")
         self._make_rule('rule 1', '[("val", "=", 0)]', global_=True)
@@ -321,21 +321,21 @@ If you really, really need access, perhaps you can win over your friendly admini
             self.record.write({'val': 1})
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'write' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'write' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id})
 
 Blame the following rules:
 - rule 0
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
     def test_warn_company_no_company_field(self):
         """ If one of the failing rules mentions company_id, add a note that
         this might be a multi-company issue, but the record doesn't have company_id field
-        then no information about the company is showed.
+        then no information about the company is shown.
         """
         ChildModel = self.env['test_access_right.child'].sudo()
         self.env['ir.rule'].create({
@@ -352,16 +352,16 @@ If you really, really need access, perhaps you can win over your friendly admini
             _ = child_record.parent_id
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'read' access to:
-- %s, %s (%s: %s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
+- {child_record._description}, {child_record.display_name} ({child_record._name}: {child_record.id})
 
 Blame the following rules:
 - rule 0
 
-If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies."""
-        % (self.user.name, self.user.id, child_record._description, child_record.display_name, child_record._name, child_record.id))
+If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.""",
+        )
 
     def test_warn_company_access(self):
         """ because of prefetching, read() goes through a different codepath
@@ -374,18 +374,18 @@ If you really, really need access, perhaps you can win over your friendly admini
             _ = self.record.val
         self.assertEqual(
             ctx.exception.args[0],
-            """Uh-oh! Looks like you have stumbled upon some top-secret records.
+            f"""Uh-oh! Looks like you have stumbled upon some top-secret records.
 
-Sorry, %s (id=%s) doesn't have 'read' access to:
-- %s, %s (%s: %s, company=%s)
+Sorry, {self.user.name} (id={self.user.id}) doesn't have 'read' access to:
+- {self.record._description}, {self.record.display_name} ({self.record._name}: {self.record.id}, company={self.record.sudo().company_id.display_name})
 
 Blame the following rules:
 - rule 0
 
 If you really, really need access, perhaps you can win over your friendly administrator with a batch of freshly baked cookies.
 
-This seems to be a multi-company issue, you might be able to access the record by switching to the company: %s."""
-        % (self.user.name, self.user.id, self.record._description, self.record.display_name, self.record._name, self.record.id, self.record.sudo().company_id.display_name, self.record.sudo().company_id.display_name))
+This seems to be a multi-company issue, you might be able to access the record by switching to the company: {self.record.sudo().company_id.display_name}.""",
+        )
         p = self.env['test_access_right.inherits'].create({'some_id': self.record.id})
         self.env.flush_all()
         self.env.invalidate_all()
@@ -449,12 +449,11 @@ class TestFieldGroupFeedback(Feedback):
 
         self.assertEqual(
             ctx.exception.args[0],
-            """You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            f"""You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
 Operation: read
-User: %s
-Groups: allowed for groups 'Role / Portal', 'Test Group'"""
-    % self.user.id
+User: {self.user.id}
+Groups: allowed for groups 'Role / Portal', 'Test Group'""",
         )
 
         with self.debug_mode(), self.assertRaises(AccessError) as ctx:
@@ -462,11 +461,11 @@ Groups: allowed for groups 'Role / Portal', 'Test Group'"""
 
         self.assertEqual(
             ctx.exception.args[0],
-            """You do not have enough rights to access the field "forbidden3" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            f"""You do not have enough rights to access the field "forbidden3" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
 Operation: read
-User: %s
-Groups: always forbidden""" % self.user.id
+User: {self.user.id}
+Groups: always forbidden""",
         )
 
     @mute_logger('odoo.models')
@@ -479,12 +478,11 @@ Groups: always forbidden""" % self.user.id
 
         self.assertEqual(
             ctx.exception.args[0],
-            """You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
+            f"""You do not have enough rights to access the field "forbidden" on Object For Test Access Right (test_access_right.some_obj). Please contact your system administrator.
 
 Operation: write
-User: %s
-Groups: allowed for groups 'Role / Portal', 'Test Group'"""
-    % self.user.id
+User: {self.user.id}
+Groups: allowed for groups 'Role / Portal', 'Test Group'""",
         )
 
     @mute_logger('odoo.models')
