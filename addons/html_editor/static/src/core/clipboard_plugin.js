@@ -15,6 +15,7 @@ import {
     getBaseContainerSelector,
 } from "@html_editor/utils/base_container";
 import { DIRECTIONS } from "../utils/position";
+import { isHtmlContentSupported } from "./selection_plugin";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -198,8 +199,7 @@ export class ClipboardPlugin extends Plugin {
      * @param {DataTransfer} clipboardData
      */
     handlePasteUnsupportedHtml(selection, clipboardData) {
-        const targetSupportsHtmlContent = isHtmlContentSupported(selection.anchorNode);
-        if (!targetSupportsHtmlContent) {
+        if (!isHtmlContentSupported(selection)) {
             const text = clipboardData.getData("text/plain");
             this.dependencies.dom.insert(text);
             return true;
@@ -560,10 +560,10 @@ export class ClipboardPlugin extends Plugin {
      */
     async onDrop(ev) {
         ev.preventDefault();
-        if (!isHtmlContentSupported(ev.target)) {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (!isHtmlContentSupported(selection)) {
             return;
         }
-        const selection = this.dependencies.selection.getEditableSelection();
         const nodeToSplit =
             selection.direction === DIRECTIONS.RIGHT ? selection.focusNode : selection.anchorNode;
         const offsetToSplit =
@@ -690,19 +690,6 @@ function getImageUrl(file) {
     });
 }
 
-// @phoenix @todo: move to Odoo plugin?
-/**
- * Returns true if the provided node can suport html content.
- *
- * @param {Node} node
- * @returns {boolean}
- */
-export function isHtmlContentSupported(node) {
-    return !closestElement(
-        node,
-        '[data-oe-model]:not([data-oe-field="arch"]):not([data-oe-type="html"]),[data-oe-translation-id]'
-    );
-}
 
 /**
  * Add origin to relative img src.
