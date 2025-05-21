@@ -88,7 +88,7 @@ export class SpreadsheetDashboardAction extends Component {
         this.state = useState({
             activeDashboard: undefined,
             sidebarExpanded: true,
-            isFilterPanelOpen: true,
+            isFilterPanelOpen: false,
         });
     }
 
