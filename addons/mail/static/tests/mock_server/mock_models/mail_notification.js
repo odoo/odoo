@@ -41,9 +41,9 @@ export class MailNotification extends models.ServerModel {
                 ["failure_type", "mail_message_id", "notification_status", "notification_type"],
                 false
             );
-            data.persona = mailDataHelpers.Store.one(
+            data.res_partner_id = mailDataHelpers.Store.one(
                 ResPartner.browse(notification.res_partner_id),
-                makeKwArgs({ fields: ["name"] })
+                makeKwArgs({ fields: ["name", "email"] })
             );
             store.add(this.browse(notification.id), data);
         }

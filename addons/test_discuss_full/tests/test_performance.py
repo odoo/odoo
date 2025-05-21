@@ -1607,7 +1607,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mail_message_id": last_message.id,
                 "notification_status": "sent",
                 "notification_type": "inbox",
-                "persona": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "res_partner_id": {"id": self.users[0].partner_id.id, "type": "partner"},
             }
         return {}
 
