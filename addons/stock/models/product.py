@@ -175,8 +175,8 @@ class Product(models.Model):
             # Calculate the moves that were done before now to calculate back in time (as most questions will be recent ones)
             domain_move_in_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_in_done
             domain_move_out_done = [('state', '=', 'done'), ('date', '>', to_date)] + domain_move_out_done
-            moves_in_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_in_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
-            moves_out_res_past = dict((item['product_id'][0], item['product_qty']) for item in Move._read_group(domain_move_out_done, ['product_id', 'product_qty'], ['product_id'], orderby='id'))
+            moves_in_res_past = dict((item['product_id'][0], item['quantity_done']) for item in Move._read_group(domain_move_in_done, ['product_id', 'quantity_done'], ['product_id'], orderby='id'))
+            moves_out_res_past = dict((item['product_id'][0], item['quantity_done']) for item in Move._read_group(domain_move_out_done, ['product_id', 'quantity_done'], ['product_id'], orderby='id'))
 
         res = dict()
         for product in self.with_context(prefetch_fields=False):
