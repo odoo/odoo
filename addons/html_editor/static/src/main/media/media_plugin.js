@@ -16,6 +16,7 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { MediaDialog } from "./media_dialog/media_dialog";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -41,6 +42,7 @@ export class MediaPlugin extends Plugin {
                 description: _t("Replace media"),
                 icon: "fa-exchange",
                 run: this.replaceImage.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "insertMedia",
@@ -49,6 +51,7 @@ export class MediaPlugin extends Plugin {
                 keywords: [_t("Image"), _t("Icon")],
                 icon: "fa-file-image-o",
                 run: this.openMediaDialog.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         toolbar_groups: withSequence(31, { id: "replace_image", namespaces: ["image"] }),

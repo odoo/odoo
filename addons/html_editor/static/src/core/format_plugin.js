@@ -27,6 +27,7 @@ import {
 } from "../utils/dom_traversal";
 import { formatsSpecs } from "../utils/formatting";
 import { boundariesIn, boundariesOut, DIRECTIONS, leftPos, rightPos } from "../utils/position";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 
@@ -59,24 +60,28 @@ export class FormatPlugin extends Plugin {
                 description: _t("Toggle bold"),
                 icon: "fa-bold",
                 run: this.formatSelection.bind(this, "bold"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "formatItalic",
                 description: _t("Toggle italic"),
                 icon: "fa-italic",
                 run: this.formatSelection.bind(this, "italic"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "formatUnderline",
                 description: _t("Toggle underline"),
                 icon: "fa-underline",
                 run: this.formatSelection.bind(this, "underline"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "formatStrikethrough",
                 description: _t("Toggle strikethrough"),
                 icon: "fa-strikethrough",
                 run: this.formatSelection.bind(this, "strikeThrough"),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "formatFontSize",
@@ -85,6 +90,7 @@ export class FormatPlugin extends Plugin {
                         applyStyle: true,
                         formatProps: { size },
                     }),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "formatFontSizeClassName",
@@ -93,6 +99,7 @@ export class FormatPlugin extends Plugin {
                         applyStyle: true,
                         formatProps: { className },
                     }),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "removeFormat",
@@ -102,6 +109,7 @@ export class FormatPlugin extends Plugin {
                         : _t("Selection has no format"),
                 icon: "fa-eraser",
                 run: this.removeFormat.bind(this),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         shortcuts: [

@@ -3,6 +3,7 @@ import { MEDIA_SELECTOR, isProtected } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 import { _t } from "@web/core/l10n/translation";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export class MediaWebsitePlugin extends Plugin {
     static id = "media_website";
@@ -21,6 +22,7 @@ export class MediaWebsitePlugin extends Plugin {
                     noIcons: true,
                     extraTabs: false,
                 }),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         powerbox_items: [

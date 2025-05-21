@@ -31,6 +31,7 @@ import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 import { withSequence } from "@html_editor/utils/resource";
 import { reactive } from "@odoo/owl";
 import { FontSizeSelector } from "./font_size_selector";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 export const fontItems = [
     {
@@ -124,6 +125,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Big section heading"),
                 icon: "fa-header",
                 run: () => this.dependencies.dom.setTag({ tagName: "H1" }),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "setTagHeading2",
@@ -131,6 +133,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Medium section heading"),
                 icon: "fa-header",
                 run: () => this.dependencies.dom.setTag({ tagName: "H2" }),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "setTagHeading3",
@@ -138,6 +141,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Small section heading"),
                 icon: "fa-header",
                 run: () => this.dependencies.dom.setTag({ tagName: "H3" }),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "setTagParagraph",
@@ -149,6 +153,7 @@ export class FontPlugin extends Plugin {
                         tagName: this.dependencies.baseContainer.getDefaultNodeName(),
                     });
                 },
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "setTagQuote",
@@ -156,6 +161,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Add a blockquote section"),
                 icon: "fa-quote-right",
                 run: () => this.dependencies.dom.setTag({ tagName: "blockquote" }),
+                isAvailable: isHtmlContentSupported,
             },
             {
                 id: "setTagPre",
@@ -163,6 +169,7 @@ export class FontPlugin extends Plugin {
                 description: _t("Add a code section"),
                 icon: "fa-code",
                 run: () => this.dependencies.dom.setTag({ tagName: "pre" }),
+                isAvailable: isHtmlContentSupported,
             },
         ],
         toolbar_groups: [
@@ -188,6 +195,7 @@ export class FontPlugin extends Plugin {
                         this.updateFontSelectorParams();
                     },
                 },
+                isAvailable: isHtmlContentSupported,
             }),
             withSequence(20, {
                 id: "font-size",
@@ -213,6 +221,7 @@ export class FontPlugin extends Plugin {
                         this.updateFontSizeSelectorParams();
                     },
                 },
+                isAvailable: isHtmlContentSupported,
             }),
         ],
         powerbox_categories: withSequence(5, { id: "format", name: _t("Format") }),

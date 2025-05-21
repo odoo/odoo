@@ -7,9 +7,13 @@ import { htmlEscape } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { isParagraphRelatedElement } from "../utils/dom_info";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 function isAvailable(selection) {
-    return !closestElement(selection.anchorNode, ".o_editor_banner");
+    return (
+        isHtmlContentSupported(selection) &&
+        !closestElement(selection.anchorNode, ".o_editor_banner")
+    );
 }
 export class BannerPlugin extends Plugin {
     static id = "banner";
