@@ -154,13 +154,13 @@
                                             <button type="button" id="buy_now" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center o_we_buy_now"
                                                 style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; width: 50%; transition: filter 0.2s;"
                                                 data-action="buy_now">
-                                                <span>Купить сейчас</span>
+                                                <span>Купить</span>
                                             </button>
                                             <!-- Add to Cart Button (правая, жёлтый) -->
                                             <button type="button" id="add_to_cart" class="btn btn-lg flex-fill d-flex align-items-center justify-content-center js_check_product a-submit"
-                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; font-size: 1.25rem; height: 56px; width: 50%; transition: filter 0.2s;"
+                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; font-size: 1.1rem; height: 56px; width: 50%; transition: filter 0.2s;"
                                                 data-action="add_to_cart">
-                                                <span>Добавить в корзину</span>
+                                                <span style="padding: 0 12px;">Добавить в корзину</span>
                                             </button>
                                         </div>
                                     </div>
@@ -241,39 +241,52 @@
                     </div>
                 </t>
             </div>
-            <!-- Новый красивый блок продавца -->
-            <div class="seller-info-card" style="background:#fff; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:32px 32px 24px 32px; display:flex; flex-direction:row; align-items:center; justify-content:center; max-width:900px; margin:32px auto 32px auto;">
+            <!-- Новый красивый блок продавца с улучшенным мобильным отображением -->
+            <div class="seller-info-card" style="background:#fff; border-radius:18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); padding:32px; max-width:900px; margin:32px auto;">
                 <div class="product-detail-seller-bottom" style="width:100%;">
-                    <div style="display:flex; flex-direction:row; flex:1; align-items:center;">
-                        <div class="card" style="width:90px; height:90px; display:flex; align-items:center; justify-content:center;">
-                            <img width="70" height="70" alt="" src="/multi_vendor_marketplace/static/src/img/user.png" loading="lazy" style="border-radius:50%;"/>
-                        </div>
-                        <div style="margin-left:24px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
-                            <div class="seller-name" style="font-weight:600; font-size:18px; margin-bottom:6px;">Administrator</div>
-                            <div class="o_website_rating_static mb-2">
+                    <!-- Desktop layout (row) and Mobile layout (column) -->
+                    <div class="seller-container" style="display:flex; flex-wrap:wrap;">
+                        <!-- Logo and main info section -->
+                        <div class="seller-main-info" style="display:flex; flex-direction:column; align-items:center; flex:1; min-width:280px; margin-bottom:24px;">
+                            <!-- Logo centered on mobile -->
+                            <div class="card" style="width:90px; height:90px; display:flex; align-items:center; justify-content:center; margin:0 auto 16px auto;">
+                                <img width="70" height="70" alt="" src="/multi_vendor_marketplace/static/src/img/user.png" loading="lazy" style="border-radius:50%;"/>
+                            </div>
+                            
+                            <!-- Shop name centered on mobile -->
+                            <div class="seller-name" style="font-weight:600; font-size:18px; margin-bottom:8px; text-align:center;">Administrator</div>
+                            
+                            <!-- Rating centered on mobile -->
+                            <div class="o_website_rating_static mb-3" style="text-align:center;">
                                 <i class="fa fa-star-o" role="img"></i>
                                 <i class="fa fa-star-o" role="img"></i>
                                 <i class="fa fa-star-o" role="img"></i>
                                 <i class="fa fa-star-o" role="img"></i>
                                 <i class="fa fa-star-o" role="img"></i>
                             </div>
-                            <a id="test" role="button" class="btn btn-outline-primary" href="/seller_shop?product_id=31" style="min-width:150px; font-weight:500;">
+                            
+                            <!-- Button centered and with full width on mobile -->
+                            <a role="button" class="btn btn-outline-primary" href="/seller_shop?product_id=31" 
+                               style="min-width:200px; font-weight:500; margin:0 auto;">
                                 Перейти в магазин
                             </a>
                         </div>
-                    </div>
-                    <div style="margin-left:48px; min-width:220px; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
-                        <div style="font-weight:600; font-size:16px; margin-bottom:8px;">Контакты:</div>
-                        <div style="margin-bottom:4px; color:#333; font-size:15px;"><i class="fa fa-phone me-2"></i>+1 (555) 123-4567</div>
-                        <div style="margin-bottom:4px; color:#333; font-size:15px;"><i class="fa fa-envelope me-2"></i>seller@example.com</div>
-                        <div style="display:flex; gap:12px; margin-top:4px;">
-                            <a href="https://wa.me/15551234567" target="_blank" style="color:#25D366; font-size:22px;"><i class="fa fa-whatsapp"></i></a>
-                            <a href="https://instagram.com/yourshop" target="_blank" style="color:#C13584; font-size:22px;"><i class="fa fa-instagram"></i></a>
+                        
+                        <!-- Contact info section -->
+                        <div class="seller-contact-info" style="display:flex; flex-direction:column; min-width:280px; flex:1; align-items:center;">
+                            <div style="font-weight:600; font-size:16px; margin-bottom:16px; text-align:center; width:100%;">Контакты:</div>
+                            <div style="margin-bottom:10px; color:#333; font-size:15px; text-align:center; width:100%;"><i class="fa fa-phone me-2"></i>+1 (555) 123-4567</div>
+                            <div style="margin-bottom:16px; color:#333; font-size:15px; text-align:center; width:100%;"><i class="fa fa-envelope me-2"></i>seller@example.com</div>
+                            <div style="display:flex; gap:20px; margin-top:4px; justify-content:center; width:100%;">
+                                <a href="https://wa.me/15551234567" target="_blank" style="color:#25D366; font-size:24px;"><i class="fa fa-whatsapp"></i></a>
+                                <a href="https://instagram.com/yourshop" target="_blank" style="color:#C13584; font-size:24px;"><i class="fa fa-instagram"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <!-- конец блока -->
+            
             <!-- Блок рекомендаций по магазину -->
             <div class="seller-recommendations py-4 mb-4" style="background:#f8f8f8; border-radius:0;">
                 <div class="container">
