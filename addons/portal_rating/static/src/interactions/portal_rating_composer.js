@@ -13,7 +13,27 @@ import { user } from "@web/core/user";
 export class RatingPopupComposer extends Interaction {
     static selector = ".o_rating_popup_composer";
 
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _btn: () => document.querySelector(".o_rating_popup_composer_btn"),
+        _btn_label: () =>
+            document.querySelector(".o_rating_popup_composer_btn .o_rating_popup_composer_text"),
+    };
+
+    dynamicContent = {
+        _root: {
+            "t-att-data-message-id": () => this.documentId,
+        },
+        _btn: {
+            "t-att-class": () => ({ "d-none": !this.isBtnDisplayed }),
+        },
+        _btn_label: {
+            "t-out": () => this.btnLabel,
+        },
+    };
+
     setup() {
+        this.isBtnDisplayed = false;
         const options = this.el.dataset;
         this.rating_avg = Math.round(options["rating_avg"] * 100) / 100 || 0.0;
         this.rating_count = options["rating_count"] || 0.0;
@@ -82,13 +102,15 @@ export class RatingPopupComposer extends Interaction {
         this.composerEl = this.renderAt("portal.Composer", { widget: {options: this.env.portalComposerOptions }}, locationEl, "afterend")[0];
         delete this.env.portalComposerOptions;
         locationEl.remove();
-        // Change the text of the button
-        this.el.querySelector(".o_rating_popup_composer_text").textContent =
-            options.is_fullscreen
-                ? _t("Review")
-                : options.default_message_id
-                    ? _t("Edit Review")
-                    : _t("Add Review");
+        this.documentId = options.default_message_id;
+        this.isBtnDisplayed =
+            options.is_fullscreen || !options.default_message_id || options.default_message === "";
+        this.btnLabel = options.is_fullscreen
+            ? _t("Review")
+            : options.default_message_id
+            ? _t("Edit Review")
+            : _t("Add Review");
+        this.updateContent();
     }
 
     /**
@@ -115,19 +137,17 @@ export class RatingPopupComposer extends Interaction {
      */
     updateOptions(data) {
         const message = data["mail.message"] && data["mail.message"][0];
+        const body = message?.body || "";
+        const cleanedBody = (Array.isArray(body) ? body[1] : body).replace(/<[^>]+>/g, "");
         const defaultOptions = {
-            default_message:
-                data.default_message || (message && message.body && message.body[1].replace(/<[^>]+>/g, "")),
+            default_message: data.default_message || cleanedBody,
             default_message_id:
                 data.default_message_id ||
                 (message &&
-                    (message.body && message.body[1].replace(/<[^>]+>/g, "") ||
-                        message.attachment_ids.length ||
-                        message.rating_id) &&
+                    (cleanedBody || message.attachment_ids.length || message.rating_id) &&
                     message.id),
             default_attachment_ids: data.default_attachment_ids || data["ir.attachment"],
-            default_rating_value:
-                data.default_rating_value || this.rating_value || 4,
+            default_rating_value: data.default_rating_value || this.rating_value || 4,
         };
         Object.assign(data, defaultOptions);
         this.options = Object.assign(this.options, data);
