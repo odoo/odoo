@@ -15,7 +15,7 @@ export class OrderSummary extends Component {
         Orderline,
         OrderDisplay,
     };
-    static props = {};
+    static props = ["order"];
 
     setup() {
         super.setup();
@@ -30,7 +30,7 @@ export class OrderSummary extends Component {
     }
 
     get currentOrder() {
-        return this.pos.selectedOrder;
+        return this.props.order;
     }
 
     async editPackLotLines(line) {
@@ -64,13 +64,11 @@ export class OrderSummary extends Component {
 
         // Prevent if already sent to kitchen
         if (typeof order.id === "number") {
-            const preparation_data = await this.pos.data.call(
-                "pos.order",
-                "get_preparation_change",
-                [order.id]
-            );
-            const prep = JSON.parse(preparation_data.last_order_preparation_change || "{}");
-            if (prep.lines && Object.keys(prep.lines).some((l) => l === orderline.uuid)) {
+            if (
+                this.pos.models["pos.prep.line"].some(
+                    (l) => l.pos_order_line_uuid === orderline.uuid
+                )
+            ) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Cannot edit orderline"),
                     body: _t(

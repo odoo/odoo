@@ -30,21 +30,6 @@ export class PosOrder extends Base {
         this.setShippingDate(vals.shipping_date);
         this.state = vals.state || "draft";
 
-        if (!vals.last_order_preparation_change) {
-            this.last_order_preparation_change = {
-                lines: {},
-                metadata: {},
-                general_customer_note: "",
-                internal_note: "",
-                sittingMode: 0,
-            };
-        } else {
-            this.last_order_preparation_change =
-                typeof vals.last_order_preparation_change === "object"
-                    ? vals.last_order_preparation_change
-                    : JSON.parse(vals.last_order_preparation_change);
-        }
-
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
 
@@ -73,6 +58,8 @@ export class PosOrder extends Base {
                 inputTipAmount: "",
             },
             requiredPartnerDetails: {},
+            last_general_customer_note: this.general_customer_note || "",
+            last_internal_note: this.internal_note || "",
         };
     }
 
@@ -315,54 +302,208 @@ export class PosOrder extends Base {
      * so that if one of them returns an error, it is possible to send the information back to it
      * without impacting the other tools.
      */
-    updateLastOrderChange() {
-        const orderlineIdx = [];
-        this.lines.forEach((line) => {
-            orderlineIdx.push(line.preparationKey);
+    updateLastOrderChange(opts = {}) {
+        if (opts.cancelled) {
+            this.prep_order_ids?.forEach((po) =>
+                po.prep_line_ids?.forEach((pl) => (pl.cancelled = pl.quantity))
+            );
+        } else {
+            let prepOrder = null;
+            this.lines.forEach((line) => {
+                line.uiState.last_internal_note = line.getNote();
+                line.uiState.last_customer_note = line.getCustomerNote();
+                const prepLines = this.models["pos.prep.line"].filter(
+                    (l) => l.pos_order_line_uuid === line.uuid
+                );
+                const prepQty = prepLines.reduce((sum, l) => sum + l.quantity - l.cancelled, 0);
+                const lineDiff = line.getQuantity() - prepQty;
+                if (lineDiff !== 0) {
+                    if (lineDiff > 0) {
+                        const order = (prepOrder ||= this.models["pos.prep.order"].create({
+                            pos_order_id: this,
+                        }));
+                        let parent = null;
+                        if (line.combo_parent_id) {
+                            parent = this.models["pos.prep.line"].find(
+                                (l) =>
+                                    l.pos_order_line_uuid === line.combo_parent_id.uuid &&
+                                    l.prep_order_id.uuid === order.uuid
+                            );
+                        }
+                        this.models["pos.prep.line"].create({
+                            prep_order_id: order,
+                            pos_order_line_uuid: line.uuid,
+                            product_id: line.getProduct().id,
+                            quantity: lineDiff,
+                            cancelled: 0,
+                            pos_order_line_id: line,
+                            attribute_value_ids: line.attribute_value_ids,
+                            combo_parent_id: parent,
+                        });
+                    } else {
+                        let toCancel = -lineDiff;
+                        for (const prepLine of prepLines.reverse()) {
+                            const prep_line_qty = prepLine.quantity - prepLine.cancelled;
+                            const cancelQty = Math.min(prep_line_qty, toCancel);
+                            prepLine.cancelled += cancelQty;
+                            toCancel -= cancelQty;
+                            if (toCancel === 0) {
+                                break;
+                            }
+                        }
+                    }
+                }
+                line.setHasChange(false);
+                line.uiState.savedQuantity = line.getQuantity();
+            });
+            this.uiState.last_general_customer_note = this.general_customer_note;
+            this.uiState.last_internal_note = this.internal_note;
+        }
+        this.models["pos.prep.line"]
+            .filter((l) => l.pos_order_line_id === undefined && l.co_prep_line_id === undefined)
+            .forEach((l) => {
+                l.cancelled = l.quantity;
+            });
+    }
+    changesToOrder(opts = {}) {
+        const toAdd = [];
+        const toRemove = [];
 
-            if (this.last_order_preparation_change.lines[line.preparationKey]) {
-                this.last_order_preparation_change.lines[line.preparationKey] = {
-                    ...this.last_order_preparation_change.lines[line.preparationKey],
-                    quantity: line.getQuantity(),
-                    note: line.getNote(),
-                    customer_note: line.getCustomerNote(),
-                };
+        if (opts.cancelled) {
+            this.lines.forEach((l) => (l.qty = 0));
+        }
+
+        const orderChanges = this.orderChanges;
+        const linesChanges = Object.values(orderChanges.orderlines);
+
+        for (const lineChange of linesChanges) {
+            if (lineChange["quantity"] > 0) {
+                toAdd.push(lineChange);
             } else {
-                this.last_order_preparation_change.lines[line.preparationKey] = {
-                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
-                    uuid: line.uuid,
-                    isCombo: line.combo_item_id?.id,
-                    product_id: line.getProduct().id,
-                    name: line.getFullProductName(),
-                    basic_name: line.getProduct().name,
-                    display_name: line.getProduct().display_name,
-                    note: line.getNote(),
-                    quantity: line.getQuantity(),
-                    customer_note: line.getCustomerNote(),
-                };
-            }
-            line.setHasChange(false);
-            line.uiState.savedQuantity = line.getQuantity();
-        });
-        // Checks whether an orderline has been deleted from the order since it
-        // was last sent to the preparation tools or updated. If so we delete older changes.
-        for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
-            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
-            const lineNote = orderline?.note;
-            const changeNote = change?.note;
-            if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
-                delete this.last_order_preparation_change.lines[key];
+                lineChange["quantity"] = Math.abs(lineChange["quantity"]); // we need always positive values.
+                toRemove.push(lineChange);
             }
         }
-        this.last_order_preparation_change.general_customer_note = this.general_customer_note;
-        this.last_order_preparation_change.internal_note = this.internal_note;
-        this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
-        this.last_order_preparation_change.metadata = {
-            serverDate: serializeDateTime(DateTime.now()),
-        };
-        this._markDirty();
-    }
 
+        return {
+            new: toAdd,
+            cancelled: toRemove,
+            noteUpdate: Object.values(orderChanges.noteUpdate),
+            general_customer_note: orderChanges.general_customer_note,
+            internal_note: orderChanges.internal_note,
+        };
+    }
+    get orderChanges() {
+        const prepaCategoryIds = this.config_id.preparationCategories;
+        const changes = {};
+        const noteUpdate = {};
+        let changeAbsCount = 0;
+
+        // Compares the orderlines of the order with the last ones sent.
+        // When one of them has changed, we add the change.
+        for (const orderline of this.getOrderlines()) {
+            const product = orderline.getProduct();
+            const lineKey = orderline.uuid;
+            const baseProduct = orderline.combo_parent_id
+                ? orderline.combo_parent_id.product_id
+                : product;
+            const productCategoryIds = baseProduct.parentPosCategIds.filter((id) =>
+                prepaCategoryIds.has(id)
+            );
+
+            if (productCategoryIds.length > 0) {
+                const prepLines = this.models["pos.prep.line"].filter(
+                    (l) => l.pos_order_line_uuid === orderline.uuid
+                );
+                const prepQty = prepLines.reduce((sum, l) => sum + l.quantity - l.cancelled, 0);
+                const quantity = orderline.getQuantity();
+
+                const quantityDiff = quantity - prepQty;
+
+                const lineDetails = {
+                    uuid: orderline.uuid,
+                    basic_name: product.name,
+                    isCombo: orderline.combo_item_id?.id,
+                    product_id: product.id,
+                    attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
+                    quantity: quantityDiff,
+                    note: orderline.getNote(),
+                    customer_note: orderline.getCustomerNote(),
+                    pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
+                    pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
+                    group: orderline.getCourse(),
+                };
+
+                if (quantityDiff) {
+                    // if note update with qty add
+                    changes[lineKey] = lineDetails;
+                    changeAbsCount += Math.abs(quantityDiff);
+                    orderline.setHasChange(true);
+                } else if (orderline.changeNote) {
+                    lineDetails.quantity = prepQty;
+                    noteUpdate[lineKey] = lineDetails;
+                    orderline.setHasChange(true);
+                } else {
+                    orderline.setHasChange(false);
+                }
+            } else {
+                orderline.setHasChange(false);
+            }
+        }
+        // Checks whether an orderline has been deleted from the order since it
+        // was last sent to the preparation tools. If so we add this to the changes.
+        const posOrderLineUuids = [
+            ...new Set(
+                this.prep_order_ids?.flatMap((o) =>
+                    o.prep_line_ids.map((l) => l.pos_order_line_uuid)
+                )
+            ),
+        ];
+        for (const orderLineUuid of posOrderLineUuids) {
+            if (!this.models["pos.order.line"].getBy("uuid", orderLineUuid)) {
+                const deletedPrepLines = this.models["pos.prep.line"].filter(
+                    (l) => l.pos_order_line_uuid === orderLineUuid
+                );
+                const deletedPrepQty = deletedPrepLines.reduce(
+                    (sum, l) => sum + l.quantity - l.cancelled,
+                    0
+                );
+
+                if (deletedPrepQty === 0) {
+                    continue;
+                }
+
+                if (!changes[orderLineUuid]) {
+                    const orderline = deletedPrepLines[0];
+                    changes[orderLineUuid] = {
+                        uuid: orderLineUuid,
+                        basic_name: orderline.product_id.name,
+                        product_id: orderline.product_id.id,
+                        group: false,
+                        quantity: -deletedPrepQty,
+                        isCombo: orderline.combo_parent_id?.id,
+                        attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
+                    };
+                    changeAbsCount += Math.abs(deletedPrepQty);
+                } else {
+                    changes[orderLineUuid]["quantity"] -= deletedPrepQty;
+                }
+            }
+        }
+        const result = {
+            nbrOfChanges: changeAbsCount,
+            noteUpdate: noteUpdate,
+            orderlines: changes,
+        };
+        // if `generalCustomerNote` key is present, then there is a change in the generalCustomerNote
+        if (this.hasGeneralCustomerNoteChanged) {
+            result.general_customer_note = this.general_customer_note;
+        }
+        if (this.hasInternalNoteChanged) {
+            result.internal_note = this.internal_note;
+        }
+        return result;
+    }
     isEmpty() {
         return this.lines.length === 0;
     }
@@ -889,17 +1030,6 @@ export class PosOrder extends Base {
         return this.lines;
     }
 
-    serializeForORM(opts = {}) {
-        const data = super.serializeForORM(opts);
-        if (
-            data.last_order_preparation_change &&
-            typeof data.last_order_preparation_change === "object"
-        ) {
-            data.last_order_preparation_change = JSON.stringify(data.last_order_preparation_change);
-        }
-        return data;
-    }
-
     get floatingOrderName() {
         return this.floating_order_name || this.tracking_number.toString() || "";
     }
@@ -948,6 +1078,23 @@ export class PosOrder extends Base {
                 line.price_type === "original" &&
                 !(line.combo_line_ids?.length || line.combo_parent_id)
         );
+    }
+
+    get hasGeneralCustomerNoteChanged() {
+        const hasChanged = this.uiState.last_general_customer_note !== this.general_customer_note;
+        if (hasChanged && !this.isDirty()) {
+            this.uiState.last_general_customer_note = this.general_customer_note;
+            return false;
+        }
+        return hasChanged;
+    }
+    get hasInternalNoteChanged() {
+        const hasChanged = this.uiState.last_internal_note !== this.internal_note;
+        if (hasChanged && !this.isDirty()) {
+            this.uiState.internal_note = this.internal_note;
+            return false;
+        }
+        return hasChanged;
     }
 }
 

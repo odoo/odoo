@@ -33,7 +33,7 @@ export class NoteButton extends Component {
     // Update line changes and set them
     async setChanges(selectedOrderline, payload) {
         var quantity_with_note = 0;
-        const changes = this.pos.getOrderChanges();
+        const changes = this.pos.getOrder().orderChanges;
         for (const key in changes.orderlines) {
             if (changes.orderlines[key].uuid == selectedOrderline.uuid) {
                 quantity_with_note = changes.orderlines[key].quantity;
@@ -118,9 +118,9 @@ export class InternalNoteButton extends NoteButton {
 
     async onClick() {
         const selectedOrderline = this.pos.getOrder().getSelectedOrderline();
-        const selectedNote = JSON.parse(this.currentNote || "[]");
-        const payload = await this.openTextInput(selectedNote.map((n) => n.text).join("\n"));
-        const coloredNotes = payload ? this.reframeNotes(payload) : "[]";
+        const selectedNote = JSON.parse(this.currentNote || null);
+        const payload = await this.openTextInput(selectedNote?.map((n) => n.text).join("\n"));
+        const coloredNotes = payload ? this.reframeNotes(payload) : "";
         if (selectedOrderline) {
             this.setChanges(selectedOrderline, coloredNotes);
         } else {

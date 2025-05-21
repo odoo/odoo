@@ -27,6 +27,8 @@ export class PosOrderline extends Base {
         this.uiState = {
             hasChange: true,
             savedQuantity: 0,
+            last_internal_note: this.note || "",
+            last_customer_note: this.customer_note || "",
         };
     }
 
@@ -700,10 +702,10 @@ export class PosOrderline extends Base {
         return this.price_extra;
     }
     getNote() {
-        return this.note || "[]";
+        return this.note || "";
     }
     setNote(note) {
-        this.note = note || "[]";
+        this.note = note || "";
     }
     setHasChange(isChange) {
         this.uiState.hasChange = isChange;
@@ -746,6 +748,22 @@ export class PosOrderline extends Base {
                 0
             ) || 0
         );
+    }
+    getCourse() {
+        // To be overridden
+    }
+    get changeNote() {
+        const note = this.getNote();
+        const customerNote = this.getCustomerNote();
+        let changeNote =
+            this.uiState.last_internal_note !== note ||
+            this.uiState.last_customer_note !== customerNote;
+        if (changeNote && !this.isDirty()) {
+            changeNote = false;
+            this.uiState.last_internal_note = note;
+            this.uiState.last_customer_note = customerNote;
+        }
+        return changeNote;
     }
 }
 

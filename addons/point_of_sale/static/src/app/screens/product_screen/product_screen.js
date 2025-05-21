@@ -306,7 +306,9 @@ export class ProductScreen extends Component {
         this.showOptionalProductPopupIfNeeded(product);
     }
     displayAllControlPopup() {
-        this.dialog.add(ControlButtonsPopup);
+        this.dialog.add(ControlButtonsPopup, {
+            order: this.currentOrder,
+        });
     }
 
     switchPane() {

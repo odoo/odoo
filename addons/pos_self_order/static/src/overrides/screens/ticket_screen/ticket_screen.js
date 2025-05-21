@@ -29,7 +29,7 @@ patch(TicketScreen.prototype, {
             if (
                 ["kiosk", "mobile"].includes(order.source) &&
                 !order.online_payment_method_id &&
-                !Object.keys(order.last_order_preparation_change.lines).length
+                !order.prep_order_ids.length
             ) {
                 order.updateLastOrderChange();
             }
