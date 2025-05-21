@@ -2,7 +2,7 @@ import { WebsiteBuilder } from "@website/client_actions/website_preview/website_
 import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, press, queryAllTexts, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -129,4 +129,21 @@ test("Clicking on the 'BLOCKS' or 'THEME' tab should deactivate the options", as
     await contains(".o-snippets-tabs button:contains('CUSTOMIZE')").click();
     expect(".o-snippets-tabs button:contains('CUSTOMIZE')").toHaveClass("active");
     expect(".o_customize_tab .options-container").toHaveCount(0);
+});
+
+test("Hotkeys on Theme and Blocks tab", async () => {
+    await setupWebsiteBuilder("<section><p>TEST</p></section>");
+    await waitFor(":iframe section");
+    expect("[data-name=blocks]").toHaveClass("active");
+    expect("[data-name=theme]").not.toHaveClass("active");
+    await press(["alt", "2"]);
+    await animationFrame();
+    await animationFrame();
+    expect("[data-name=blocks]").not.toHaveClass("active");
+    expect("[data-name=theme]").toHaveClass("active");
+    await press(["alt", "1"]);
+    await animationFrame();
+    await animationFrame();
+    expect("[data-name=blocks]").toHaveClass("active");
+    expect("[data-name=theme]").not.toHaveClass("active");
 });
