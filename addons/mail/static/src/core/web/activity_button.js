@@ -88,6 +88,7 @@ export class ActivityButton extends Component {
                 onActivityChanged: (thread) => {
                     const recordToLoad = resIds ? selectedRecords : [this.props.record];
                     recordToLoad.forEach((r) => r.load());
+                    this.onActivityChanged();
                     this.popover.close();
                 },
                 resId,
@@ -96,4 +97,7 @@ export class ActivityButton extends Component {
             });
         }
     }
+
+    /** Add custom behavior on activity changed */
+    onActivityChanged() {}
 }
