@@ -12,6 +12,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { HeaderBorderOption } from "./header_border_option";
+import { HeaderElementOption } from "./header_element_option";
 
 const [
     HEADER_TEMPLATE,
@@ -74,7 +75,7 @@ class HeaderOptionPlugin extends Plugin {
             }),
             withSequence(HEADER_ELEMENT, {
                 editableOnly: false,
-                template: "website.headerElementOption",
+                OptionComponent: HeaderElementOption,
                 selector: "#wrapwrap > header",
                 groups: ["website.group_website_designer"],
             }),

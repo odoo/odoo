@@ -20,7 +20,8 @@ class ImageSnippetOptionPlugin extends Plugin {
         await new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
                 onlyImages: true,
-                save: (selectedImageEl) => {
+                node: snippetEl,
+                save: async (selectedImageEl) => {
                     isImageSelected = true;
                     snippetEl.replaceWith(selectedImageEl);
                 },

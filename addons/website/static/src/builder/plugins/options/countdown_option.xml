@@ -41,7 +41,7 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Text Color">
-        <BuilderColorPicker dataAttributeAction="'textColor'"/>
+        <BuilderColorPicker dataAttributeAction="'textColor'" enabledTabs="['solid', 'custom']"/>
     </BuilderRow>
 
     <BuilderRow label.translate="Layout">
@@ -62,7 +62,7 @@
         </BuilderRow>
         <BuilderRow label.translate="Layout Background Color"
                     t-if="!this.isActiveItem('no_background_layout_opt')">
-            <BuilderColorPicker dataAttributeAction="'layoutBackgroundColor'"/>
+            <BuilderColorPicker dataAttributeAction="'layoutBackgroundColor'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Progress Bar Style">
@@ -82,7 +82,7 @@
             </BuilderRow>
             <BuilderRow label.translate="Progress Bar Color"
                         t-if="!this.isActiveItem('no_progressbar_style_opt')">
-                <BuilderColorPicker dataAttributeAction="'progressBarColor'"/>
+                <BuilderColorPicker dataAttributeAction="'progressBarColor'" enabledTabs="['solid', 'custom']"/>
             </BuilderRow>
         </t>
     </t>

@@ -77,7 +77,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
                     editingElement.querySelector(".o_we_bg_filter")?.remove();
                     this.applyReplaceBackgroundImage.bind(this)({
                         editingElement: editingElement,
-                        loadResult: "",
+                        loadResult: undefined,
                         params: { forceClean: true },
                     });
                     this.dispatchTo("on_bg_image_hide_handlers", editingElement);
@@ -134,12 +134,13 @@ export class BackgroundImageOptionPlugin extends Plugin {
             newEditingEl.classList.toggle("o_modified_image_to_save", isModifiedImage);
         }
     }
-    loadReplaceBackgroundImage() {
+    loadReplaceBackgroundImage({ editingElement }) {
         return new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
                 onlyImages: true,
-                save: (imageEl) => {
-                    resolve(imageEl.getAttribute("src"));
+                node: editingElement,
+                save: async (imageEl) => {
+                    resolve(imageEl);
                 },
             });
             onClose.then(resolve);
@@ -147,18 +148,24 @@ export class BackgroundImageOptionPlugin extends Plugin {
     }
     applyReplaceBackgroundImage({
         editingElement,
-        loadResult: imageSrc,
+        loadResult: imageEl,
         params: { forceClean = false },
     }) {
-        if (!forceClean && !imageSrc) {
+        if (!forceClean && !imageEl) {
             // Do nothing: no images has been selected on the media dialog
             return;
         }
-        this.setImageBackground(editingElement, imageSrc);
+        const src = imageEl?.src || "";
+        this.setImageBackground(editingElement, src);
         for (const attr of removeOnImageChangeAttrs) {
             delete editingElement.dataset[attr];
         }
-        // TODO: call _autoOptimizeImage of the ImageHandlersOption
+        if (imageEl) {
+            if (src.startsWith("data:")) {
+                editingElement.classList.add("o_modified_image_to_save");
+            }
+            Object.assign(editingElement.dataset, imageEl.dataset);
+        }
     }
     /**
      *

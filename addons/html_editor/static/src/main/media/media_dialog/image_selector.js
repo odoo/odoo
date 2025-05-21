@@ -94,7 +94,7 @@ export class ImageSelector extends FileSelector {
 
         this.fileMimetypes = IMAGE_MIMETYPES.join(",");
         this.isImageField =
-            !!this.props.media?.closest("[data-oe-type=image]") || !!this.env.addFieldImage;
+            !!this.props.media?.closest("[data-oe-type=image]") || !!this.props.addFieldImage;
     }
 
     get canLoadMore() {

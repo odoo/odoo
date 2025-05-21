@@ -1,5 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
-import { CSS_SHORTHANDS, applyNeededCss, areCssValuesEqual } from "@html_builder/utils/utils_css";
+import {
+    CSS_SHORTHANDS,
+    applyNeededCss,
+    areCssValuesEqual,
+    normalizeColor,
+} from "@html_builder/utils/utils_css";
 
 export function withoutTransition(editingElement, callback) {
     if (editingElement.classList.contains("o_we_force_no_transition")) {
@@ -263,10 +268,18 @@ const attributeAction = {
 };
 
 const dataAttributeAction = {
-    getValue: ({ editingElement, params: { mainParam: attributeName } = {} }) =>
-        editingElement.dataset[attributeName],
+    // if it's a color action, we have to normalize the value
+    getValue: ({ editingElement, params: { mainParam: attributeName } = {} }) => {
+        if (!/(^color|Color)($|(?=[A-Z]))/.test(attributeName)) {
+            return editingElement.dataset[attributeName];
+        }
+        const color = normalizeColor(editingElement.dataset[attributeName]);
+        return color;
+    },
     isApplied: ({ editingElement, params: { mainParam: attributeName } = {}, value }) => {
         if (value) {
+            const match = value.match(/^var\(--(.*)\)$/);
+            value = match ? match[1] : value;
             return editingElement.dataset[attributeName] === value;
         } else {
             return !(attributeName in editingElement.dataset);
@@ -274,6 +287,8 @@ const dataAttributeAction = {
     },
     apply: ({ editingElement, params: { mainParam: attributeName } = {}, value }) => {
         if (value) {
+            const match = value.match(/^var\(--(.*)\)$/);
+            value = match ? match[1] : value;
             editingElement.dataset[attributeName] = value;
         } else {
             delete editingElement.dataset[attributeName];

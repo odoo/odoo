@@ -2,7 +2,6 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { ProductPageOption } from "./product_page_option";
-import { AttachmentMediaDialog } from "./attachment_media_dialog";
 import { rpc } from "@web/core/network/rpc";
 import { isImageCorsProtected } from "@html_editor/utils/image";
 import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
@@ -10,7 +9,7 @@ import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
 export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
-    static dependencies = ["builderActions", "dialog", "customizeWebsite"];
+    static dependencies = ["builderActions", "media", "customizeWebsite"];
     resources = {
         builder_options: {
             OptionComponent: ProductPageOption,
@@ -183,10 +182,12 @@ class ProductPageOptionPlugin extends Plugin {
                         );
                     }
                     await new Promise((resolve) => {
-                        const onClose = this.dependencies.dialog.addDialog(AttachmentMediaDialog, {
+                        const onClose = this.dependencies.media.openMediaDialog({
+                            addFieldImage: true,
                             multiImages: true,
                             noDocuments: true,
                             noIcons: true,
+                            node: el,
                             // Kinda hack-ish but the regular save does not get the information we need
                             save: async (imgEls, selectedMedia, activeTab) => {
                                 if (selectedMedia.length) {

@@ -42,10 +42,10 @@ test("Drag & drop an 'Image' snippet opens the dialog to select an image", async
     expect(".o-website-builder_sidebar .fa-undo").not.toBeEnabled();
 
     await contains(".o_select_media_dialog img[title='logo']").click();
-    expect(".o_select_media_dialog").toHaveCount(0);
     await waitForEndOfOperation();
+    expect(".o_select_media_dialog").toHaveCount(0);
 
-    expect(":iframe div img[src='/web/static/img/logo2.png']").toHaveCount(1);
+    expect(":iframe div img[src^='data:image/webp;base64,']").toHaveCount(1);
     expect(":iframe img").toHaveCount(1);
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });

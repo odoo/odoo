@@ -38,42 +38,46 @@ export class ImageFormatOption extends BaseOptionComponent {
         if (this.props.computeMaxDisplayWidth) {
             return this.props.computeMaxDisplayWidth(img);
         }
-        const window = img.ownerDocument.defaultView;
-        if (!window) {
-            return;
-        }
-        const computedStyles = window.getComputedStyle(img);
-        const displayWidth = parseFloat(computedStyles.getPropertyValue("width"));
-        const gutterWidth =
-            parseFloat(computedStyles.getPropertyValue("--o-grid-gutter-width")) || 30;
-
-        // For the logos we don't want to suggest a width too small.
-        if (img.closest("nav")) {
-            return Math.round(Math.min(displayWidth * 3, this.MAX_SUGGESTED_WIDTH));
-            // If the image is in a container(-small), it might get bigger on
-            // smaller screens. So we suggest the width of the current image unless
-            // it is smaller than the size of the container on the md breapoint
-            // (which is where our bootstrap columns fallback to full container
-            // width since we only use col-lg-* in Odoo).
-        } else if (img.closest(".container, .o_container_small")) {
-            const mdContainerMaxWidth =
-                parseFloat(computedStyles.getPropertyValue("--o-md-container-max-width")) || 720;
-            const mdContainerInnerWidth = mdContainerMaxWidth - gutterWidth;
-            return Math.round(clamp(displayWidth, mdContainerInnerWidth, this.MAX_SUGGESTED_WIDTH));
-            // If the image is displayed in a container-fluid, it might also get
-            // bigger on smaller screens. The same way, we suggest the width of the
-            // current image unless it is smaller than the max size of the container
-            // on the md breakpoint (which is the LG breakpoint since the container
-            // fluid is full-width).
-        } else if (img.closest(".container-fluid")) {
-            const lgBp = parseFloat(computedStyles.getPropertyValue("--breakpoint-lg")) || 992;
-            const mdContainerFluidMaxInnerWidth = lgBp - gutterWidth;
-            return Math.round(
-                clamp(displayWidth, mdContainerFluidMaxInnerWidth, this.MAX_SUGGESTED_WIDTH)
-            );
-        }
-        // If it's not in a container, it's probably not going to change size
-        // depending on breakpoints. We still keep a margin safety.
-        return Math.round(Math.min(displayWidth * 1.5, this.MAX_SUGGESTED_WIDTH));
+        return computeMaxDisplayWidth(img, this.MAX_SUGGESTED_WIDTH);
     }
+}
+
+export function computeMaxDisplayWidth(img, MAX_SUGGESTED_WIDTH = 1920) {
+    const window = img.ownerDocument.defaultView;
+    if (!window) {
+        return;
+    }
+    const computedStyles = window.getComputedStyle(img);
+    const displayWidth = parseFloat(computedStyles.getPropertyValue("width"));
+    const gutterWidth =
+        parseFloat(computedStyles.getPropertyValue("--o-grid-gutter-width")) || 30;
+
+    // For the logos we don't want to suggest a width too small.
+    if (img.closest("nav")) {
+        return Math.round(Math.min(displayWidth * 3, MAX_SUGGESTED_WIDTH));
+        // If the image is in a container(-small), it might get bigger on
+        // smaller screens. So we suggest the width of the current image unless
+        // it is smaller than the size of the container on the md breapoint
+        // (which is where our bootstrap columns fallback to full container
+        // width since we only use col-lg-* in Odoo).
+    } else if (img.closest(".container, .o_container_small")) {
+        const mdContainerMaxWidth =
+            parseFloat(computedStyles.getPropertyValue("--o-md-container-max-width")) || 720;
+        const mdContainerInnerWidth = mdContainerMaxWidth - gutterWidth;
+        return Math.round(clamp(displayWidth, mdContainerInnerWidth, MAX_SUGGESTED_WIDTH));
+        // If the image is displayed in a container-fluid, it might also get
+        // bigger on smaller screens. The same way, we suggest the width of the
+        // current image unless it is smaller than the max size of the container
+        // on the md breakpoint (which is the LG breakpoint since the container
+        // fluid is full-width).
+    } else if (img.closest(".container-fluid")) {
+        const lgBp = parseFloat(computedStyles.getPropertyValue("--breakpoint-lg")) || 992;
+        const mdContainerFluidMaxInnerWidth = lgBp - gutterWidth;
+        return Math.round(
+            clamp(displayWidth, mdContainerFluidMaxInnerWidth, MAX_SUGGESTED_WIDTH)
+        );
+    }
+    // If it's not in a container, it's probably not going to change size
+    // depending on breakpoints. We still keep a margin safety.
+    return Math.round(Math.min(displayWidth * 1.5, MAX_SUGGESTED_WIDTH));
 }

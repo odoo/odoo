@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
 <t t-name="website_sale.checkoutPageOption">
+    <BuilderRow label.translate="Extra Step">
+        <BuilderCheckbox action="'setExtraStep'" actionParam="{views: ['website_sale.extra_info']}"/>
+    </BuilderRow>
     <BuilderContext action="'websiteConfig'">
-        <BuilderRow label.translate="Extra Step">
-            <BuilderCheckbox actionParam="{views: ['website_sale.extra_info']}"/>
-        </BuilderRow>
         <BuilderRow label.translate="Suggested Accessories">
             <BuilderCheckbox actionParam="{views: ['website_sale.suggested_products_list']}"/>
         </BuilderRow>

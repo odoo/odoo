@@ -20,9 +20,9 @@ class ImageFilterOptionPlugin extends Plugin {
                     }
                 },
                 load: async ({ editingElement: img, params: { mainParam: glFilterName } }) =>
-                    await this.dependencies.imagePostProcess.processImage(img, {
+                    await this.dependencies.imagePostProcess.processImage({ img, newDataset: {
                         glFilter: glFilterName,
-                    }),
+                    }}),
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();
                 },
@@ -53,9 +53,9 @@ class ImageFilterOptionPlugin extends Plugin {
                     const filterOptions = JSON.parse(img.dataset.filterOptions || "{}");
                     filterOptions[filterProperty] =
                         filterProperty === "filterColor" ? normalizeColor(value) : value;
-                    return this.dependencies.imagePostProcess.processImage(img, {
+                    return this.dependencies.imagePostProcess.processImage({ img, newDataset: {
                         filterOptions: JSON.stringify(filterOptions),
-                    });
+                    }});
                 },
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();

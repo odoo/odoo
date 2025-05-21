@@ -139,7 +139,8 @@ export class ColorPlugin extends Plugin {
     getElementColors(el) {
         const elStyle = getComputedStyle(el);
         const backgroundImage = elStyle.backgroundImage;
-        const hasGradient = isColorGradient(backgroundImage);
+        const gradient = backgroundImageCssToParts(backgroundImage).gradient;
+        const hasGradient = isColorGradient(gradient);
         const hasTextGradientClass = el.classList.contains("text-gradient");
 
         let backgroundColor = elStyle.backgroundColor;
@@ -158,9 +159,9 @@ export class ColorPlugin extends Plugin {
         }
 
         return {
-            color: hasGradient && hasTextGradientClass ? backgroundImage : rgbaToHex(elStyle.color),
+            color: hasGradient && hasTextGradientClass ? gradient : rgbaToHex(elStyle.color),
             backgroundColor:
-                hasGradient && !hasTextGradientClass ? backgroundImage : rgbaToHex(backgroundColor),
+                hasGradient && !hasTextGradientClass ? gradient : rgbaToHex(backgroundColor),
         };
     }
 
