@@ -24,4 +24,11 @@ patch(ProductCatalogKanbanRecord.prototype, {
         }
     },
 
+    _getUpdateQuantityAndGetPriceParams() {
+        const params = super._getUpdateQuantityAndGetPriceParams();
+        if (this.productCatalogData.purchase_uom) {
+            params.uom_id = this.productCatalogData.purchase_uom.id;
+        }
+        return params;
+    },
 });

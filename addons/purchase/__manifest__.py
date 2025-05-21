@@ -53,6 +53,9 @@
             'purchase/static/src/interactions/**/*',
             'purchase/static/src/scss/purchase_portal.scss',
         ],
+        'web.assets_tests': [
+            'purchase/static/tests/tours/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
