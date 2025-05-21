@@ -3,14 +3,6 @@ import { models, Command } from "@web/../tests/web_test_helpers";
 export class PosOrder extends models.ServerModel {
     _name = "pos.order";
 
-    get_preparation_change(id) {
-        const read = this.read([id]);
-        const changes = read[0]?.last_order_preparation_change || "{}";
-        return {
-            last_order_preparation_change: changes,
-        };
-    }
-
     read_pos_orders(domain) {
         const results = this.search(domain, this._load_pos_data_fields(), false);
         return this.read_pos_data(results);
@@ -93,12 +85,42 @@ export class PosOrder extends models.ServerModel {
         return this.read_pos_data(orderIds, data, this.config_id);
     }
 
+    record_uuid_mapping(uuidMapping) {
+        for (const [model, data] of Object.entries(uuidMapping)) {
+            for (const [uuid, fields] of Object.entries(data)) {
+                const record = this.env[model].search_read([["uuid", "=", uuid]], []);
+                if (record.length === 0) {
+                    continue;
+                }
+
+                for (const [fieldName, vals] of Object.entries(fields)) {
+                    const relation = this.env[model]._fields[fieldName].relation;
+                    if (!relation) {
+                        continue;
+                    }
+
+                    const rels = this.env[relation].search_read([["uuid", "in", vals]], ["id"]);
+                    const ids = rels.map((r) => r.id);
+                    if (ids.length === 0) {
+                        continue;
+                    }
+
+                    const value = Array.isArray(vals) ? [...ids, ...record[fieldName]] : ids[0];
+                    console.log("David ", value);
+                    this.env[model].write([record[0].id], { [fieldName]: value });
+                }
+            }
+        }
+    }
+
     read_pos_data(orderIds, data, config_id) {
         const posOrder = [];
         const posSession = [];
         const posPayment = [];
         const posOrderLine = [];
         const posCustomAttributeValue = [];
+        const posPrepOrder = [];
+        const posPrepLine = [];
         const readOrder = this.read(orderIds, this._load_pos_data_fields(config_id), false);
 
         for (const order of readOrder) {
@@ -123,6 +145,27 @@ export class PosOrder extends models.ServerModel {
                 false
             );
 
+            let prepOrders = [];
+            let prepLines = [];
+
+            if (order.prep_order_ids.length > 0) {
+                prepOrders = this.env["pos.prep.order"].read(
+                    order.prep_order_ids,
+                    this.env["pos.prep.order"]._load_pos_data_fields(config_id),
+                    false
+                );
+            }
+
+            if (prepOrders.length > 0) {
+                prepLines = this.env["pos.prep.line"].read(
+                    prepOrders.flatMap((po) => po.prep_line_ids),
+                    this.env["pos.prep.line"]._load_pos_data_fields(config_id),
+                    false
+                );
+            }
+
+            posPrepOrder.push(...prepOrders);
+            posPrepLine.push(...prepLines);
             posOrderLine.push(...lines);
             posPayment.push(...payments);
             posCustomAttributeValue.push(...customAttributeValues);
@@ -134,6 +177,8 @@ export class PosOrder extends models.ServerModel {
             "pos.payment": posPayment,
             "pos.order.line": posOrderLine,
             "product.attribute.custom.value": posCustomAttributeValue,
+            "pos.prep.order": posPrepOrder,
+            "pos.prep.line": posPrepLine,
         };
     }
 }

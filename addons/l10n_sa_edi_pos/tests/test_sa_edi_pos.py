@@ -191,7 +191,6 @@ class TestUi(TestGenericSAEdi):
                 "amount_tax": 3,
                 "amount_return": 0.0,
                 "to_invoice": True,
-                "last_order_preparation_change": "{}",
             },
         )
 

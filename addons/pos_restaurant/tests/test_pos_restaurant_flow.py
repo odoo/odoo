@@ -84,7 +84,6 @@ class TestPosRestaurantFlow(TestFrontendCommon):
             'fiscal_position_id': False,
             'pricelist_id': session.config_id.pricelist_id.id,
             'name': 'Order 00001-001-0001',
-            'last_order_preparation_change': '{}',
             'lines': [(0, 0, {
                 'id': 1,
                 'price_unit': product_variant.lst_price,

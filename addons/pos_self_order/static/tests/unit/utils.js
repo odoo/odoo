@@ -153,7 +153,7 @@ export async function checkKioskPreparationTicketData(store, expectedData) {
         return `Mismatch in number of lines. Expected ${expectedData.length}, got ${printedLines.length}`;
     }
     for (const expected of expectedData) {
-        const found = printedLines.find((line) => line.name === expected.name);
+        const found = printedLines.find((line) => line.basic_name === expected.name);
         if (!found) {
             return `Product ${expected.name} not found in preparation data`;
         }

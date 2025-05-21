@@ -10,7 +10,7 @@ definePosModels();
 test("getNewLine", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
-    const orderSummary = await mountWithCleanup(OrderSummary, {});
+    const orderSummary = await mountWithCleanup(OrderSummary);
     order.getSelectedOrderline().uiState.savedQuantity = 5;
     const newLine = orderSummary.getNewLine();
     expect(newLine.order_id.id).toBe(order.id);
@@ -22,7 +22,7 @@ test("Display tax include/exclude subtotal label", async () => {
     const order = await getFilledOrder(store);
 
     order.config.iface_tax_included = "total";
-    await mountWithCleanup(OrderSummary, {});
+    await mountWithCleanup(OrderSummary);
     const total = queryOne(".total");
     const subtotal = queryAll(".subtotal");
     expect(subtotal).toHaveLength(0);

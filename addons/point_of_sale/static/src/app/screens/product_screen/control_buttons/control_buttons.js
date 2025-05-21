@@ -41,7 +41,7 @@ export class ControlButtons extends Component {
         });
     }
     get partner() {
-        return this.pos.getOrder()?.getPartner();
+        return this.currentOrder?.getPartner();
     }
     get currentOrder() {
         return this.pos.getOrder();

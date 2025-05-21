@@ -23,11 +23,26 @@ export class DataServiceOptions {
                 getRecordsBasedOnLines: (orderlines) =>
                     orderlines.flatMap((line) => line.custom_attribute_value_ids),
             },
+            "pos.prep.order": {
+                key: "uuid",
+                condition: (record) => !record.pos_order_id,
+            },
+            "pos.prep.line": {
+                key: "uuid",
+                condition: (record) => !record.prep_order_id,
+            },
         };
     }
 
     get dynamicModels() {
-        return ["pos.order", "pos.order.line", "pos.payment", "product.attribute.custom.value"];
+        return [
+            "pos.order",
+            "pos.order.line",
+            "pos.payment",
+            "product.attribute.custom.value",
+            "pos.prep.order",
+            "pos.prep.line",
+        ];
     }
 
     get databaseIndex() {
@@ -36,6 +51,7 @@ export class DataServiceOptions {
             "pos.order": ["uuid"],
             "pos.order.line": ["uuid"],
             "pos.payment": ["uuid"],
+            "product.attribute.custom.value": ["uuid"],
             "product.template": ["pos_categ_ids", "write_date"],
             "product.product": ["pos_categ_ids", "barcode"],
             "account.fiscal.position": ["tax_ids"],

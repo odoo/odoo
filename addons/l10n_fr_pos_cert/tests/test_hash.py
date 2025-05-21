@@ -33,7 +33,6 @@ class TestHash(CommonPosTest):
             'sequence_number': 2,
             'payment_ids': [],
             'uuid': '12345-123-1234',
-            'last_order_preparation_change': '{}',
             'user_id': self.env.uid,
             'state': 'draft',
         }
@@ -67,7 +66,6 @@ class TestHash(CommonPosTest):
                 'name': fields.Datetime.now(),
                 'payment_method_id': self.cash_payment_method.id}]],
             'uuid': '12345-123-1234',
-            'last_order_preparation_change': '{}',
             'user_id': self.env.uid,
             'state': 'paid',
         }

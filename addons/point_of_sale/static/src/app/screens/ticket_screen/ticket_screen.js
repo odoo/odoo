@@ -1008,6 +1008,8 @@ export class TicketScreen extends Component {
 
             const serializedTipLine = order.getSelectedOrderline().serializeForORM();
             order.getSelectedOrderline().delete();
+            delete serializedTipLine["record_dependencies"];
+            delete serializedTipLine["relations_uuid_mapping"];
 
             promises.push(
                 new Promise((resolve) => {

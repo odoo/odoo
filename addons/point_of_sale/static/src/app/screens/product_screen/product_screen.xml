@@ -11,8 +11,8 @@
                     </div>
                     <div class="subpads d-flex flex-column gap-2">
                         <Numpad t-if="!this.currentOrder?.isEmpty() and this.pos.getOrder()?.uiState.selected_orderline_uuid" class="'d-grid'" buttons="this.getNumpadButtons()" onClick.bind="this.onNumpadClick"/>
-                        <ActionpadWidget 
-                            partner="this.currentOrder?.getPartner()" 
+                        <ActionpadWidget
+                            order="this.currentOrder"
                             onClickMore.bind="this.displayAllControlPopup"
                             actionName.translate="Payment"
                             actionToTrigger="() => this.pos.pay()"

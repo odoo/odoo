@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import json
 from datetime import datetime
 from collections import defaultdict
 from uuid import uuid4
@@ -305,7 +304,6 @@ class PosOrder(models.Model):
         return invoice_lines
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='Employee',
@@ -383,38 +381,11 @@ class PosOrder(models.Model):
     source = fields.Selection(string="Origin", selection=[('pos', 'Point of Sale')], default='pos')
     defer_invoice_pdf = fields.Boolean(string="Defer Invoice PDF Generation", index=True)
 
+    prep_order_ids = fields.One2many('pos.prep.order', 'pos_order_id', string='Preparation orders')
     _unique_uuid = models.Constraint('unique (uuid)', 'An order with this uuid already exists')
 
     def ask_for_ticket_printing(self):
         self.config_id._notify("TICKET_PRINTING_REQUESTED", self.ids)
-
-    def get_preparation_change(self):
-        self.ensure_one()
-        return {
-            'last_order_preparation_change': self.last_order_preparation_change,
-        }
-
-    def _ensure_to_keep_last_preparation_change(self, vals):
-        for record in self:
-            if record.last_order_preparation_change:
-                change = json.loads(record.last_order_preparation_change)
-                if not change.get('metadata'):
-                    return
-
-                local_change = json.loads(vals.get('last_order_preparation_change', '{}'))
-                if not local_change.get('metadata'):
-                    vals['last_order_preparation_change'] = record.last_order_preparation_change
-                    return
-
-                server_date = fields.Datetime.from_string(change['metadata'].get('serverDate'))
-                local_date = fields.Datetime.from_string(local_change['metadata'].get('serverDate'))
-
-                if server_date > local_date:
-                    _logger.warning("Preparation changes were outdated, probably linked to a synching issue.")
-                    vals['last_order_preparation_change'] = record.last_order_preparation_change
-                else:
-                    local_change['metadata']['serverDate'] = fields.Datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                    vals['last_order_preparation_change'] = json.dumps(local_change)
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -1265,7 +1236,6 @@ class PosOrder(models.Model):
 
             existing_order = self._get_open_order(order)
             if existing_order and existing_order.state == 'draft':
-                existing_order._ensure_to_keep_last_preparation_change(order)
                 order_ids.append(self._process_order(order, existing_order))
                 _logger.info("PoS synchronisation #%d order %s updated pos.order #%d", sync_token, order_log_name, order_ids[-1])
             elif not existing_order:
@@ -1274,7 +1244,6 @@ class PosOrder(models.Model):
             else:
                 # In theory, this situation is unintended
                 # In practice it can happen when "Tip later" option is used
-                existing_order._ensure_to_keep_last_preparation_change(order)
                 # This will update the order if edited after payent from UI.
                 if existing_order.state == "paid" and not existing_order.nb_print:
                     self.process_saved_payments(order, existing_order)
@@ -1313,6 +1282,8 @@ class PosOrder(models.Model):
             'pos.order.line': self.env['pos.order.line']._load_pos_data_read(self.lines, config) if config else [],
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_data_read(self.lines.custom_attribute_value_ids, config) if config else [],
             'account.move': self.env['account.move'].sudo()._load_pos_data_read(account_moves, config) if config else [],
+            'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(self.prep_order_ids, config) if config else [],
+            'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(self.prep_order_ids.prep_line_ids, config) if config else [],
         }
 
     @api.model

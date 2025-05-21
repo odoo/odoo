@@ -59,7 +59,7 @@ export class Base extends WithLazyGetterTrap {
     }
 
     isDirty() {
-        return this._dirty;
+        return Boolean(this._dirty);
     }
 
     formatDateOrTime(field, type = "datetime") {
@@ -103,14 +103,18 @@ export class Base extends WithLazyGetterTrap {
         return this.model.backLink(this, link);
     }
 
-    _markDirty() {
+    markDirty() {
         if (this.models._loadingData || this._dirty) {
             return;
         }
 
         this._dirty = true;
         this.model.getParentFields().forEach((field) => {
-            this[field.name]?._markDirty?.();
+            this[field.name]?.markDirty?.();
         });
+    }
+
+    unmarkDirty() {
+        this._dirty = false;
     }
 }

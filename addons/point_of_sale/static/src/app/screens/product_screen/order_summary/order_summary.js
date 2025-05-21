@@ -75,13 +75,7 @@ export class OrderSummary extends Component {
 
         // Prevent if already sent to kitchen
         if (typeof order.id === "number") {
-            const preparation_data = await this.pos.data.call(
-                "pos.order",
-                "get_preparation_change",
-                [order.id]
-            );
-            const prep = JSON.parse(preparation_data.last_order_preparation_change || "{}");
-            if (prep.lines && Object.keys(prep.lines).some((l) => l === orderline.uuid)) {
+            if (orderline.prep_line_ids.length > 0) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Cannot edit orderline"),
                     body: _t(

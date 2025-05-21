@@ -159,10 +159,7 @@ export class FloorPlan extends FloorPlanBase {
             return false;
         }
 
-        if (!newTableMOParent) {
-            const mainOrder = this.pos.getActiveOrdersOnTable(tableMO.rootTable)?.[0];
-            this.pos.restoreOrdersToOriginalTable(mainOrder, tableMO);
-        } else if (currentTableMOParent !== newTableMOParent) {
+        if (currentTableMOParent !== newTableMOParent) {
             const oToTrans = this.pos.getActiveOrdersOnTable(tableMO)[0];
             if (oToTrans) {
                 this.pos.mergeTableOrders(oToTrans.uuid, newTableMOParent);

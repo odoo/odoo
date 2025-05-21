@@ -54,7 +54,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon):
         })
 
         self.key_to_skip = {
-            'pos.order': ['last_order_preparation_change', 'lines', 'payment_ids', 'message_ids', 'write_date'],
+            'pos.order': ['lines', 'payment_ids', 'message_ids', 'write_date'],
             'pos.order.line': ['write_date'],
             'pos.payment': ['write_date'],
             'res.partner': ['write_date'],

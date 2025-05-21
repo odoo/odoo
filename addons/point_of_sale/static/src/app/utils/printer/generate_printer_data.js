@@ -1,10 +1,6 @@
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 import { formatCurrency } from "@web/core/currency";
-import {
-    changesToOrder,
-    filterChangeByCategories,
-    getStrNotes,
-} from "../../models/utils/order_change";
+import { filterChangeByCategories, getStrNotes } from "../../models/utils/order_change";
 import { _t } from "@web/core/l10n/translation";
 
 const { DateTime } = luxon;
@@ -276,11 +272,11 @@ export class GeneratePrinterData {
 
     generatePreparationChanges(orderChange, categoryIdsSet) {
         const isPartOfCombo = (line) =>
-            line.isCombo ||
+            line.combo_line_ids?.length ||
             line.combo_parent_uuid ||
             this.models["product.product"].get(line.product_id).type == "combo";
-        const comboChanges = orderChange.new.filter(isPartOfCombo);
-        const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
+        const comboChanges = orderChange.addedQuantity.filter(isPartOfCombo);
+        const normalChanges = orderChange.addedQuantity.filter((line) => !isPartOfCombo(line));
         normalChanges.sort((a, b) => {
             const sequenceA = a.pos_categ_sequence;
             const sequenceB = b.pos_categ_sequence;
@@ -290,27 +286,27 @@ export class GeneratePrinterData {
 
             return sequenceA - sequenceB;
         });
-        orderChange.new = [...comboChanges, ...normalChanges];
+        orderChange.addedQuantity = [...comboChanges, ...normalChanges];
         return filterChangeByCategories(categoryIdsSet, orderChange, this.models);
     }
 
     generatePreparationReceipts(orderChange, categoryIdsSet) {
         const changes = this.generatePreparationChanges(orderChange, categoryIdsSet);
         const receiptsData = [];
-        if (changes.new.length) {
+        if (changes.addedQuantity.length) {
             receiptsData.push(
                 this.preparePreparationGroupedData({
                     title: _t("NEW"),
-                    data: changes.new,
+                    data: changes.addedQuantity,
                 })
             );
         }
 
-        if (changes.cancelled.length) {
+        if (changes.removedQuantity.length) {
             receiptsData.push(
                 this.preparePreparationGroupedData({
                     title: _t("CANCELLED"),
-                    data: changes.cancelled,
+                    data: changes.removedQuantity,
                 })
             );
         }
@@ -334,12 +330,12 @@ export class GeneratePrinterData {
     generatePreparationData(categoryIdsSet, opts = { orderChange: null }) {
         const order = this.order;
         const override = opts.orderChange;
-        let orderChange = override || changesToOrder(this.order, categoryIdsSet, opts.cancelled);
+        let orderChange = override || order.getChanges({ cancelled: opts.cancelled });
         let reprint = false;
 
         if (
-            !orderChange.new.length &&
-            !orderChange.cancelled.length &&
+            !orderChange.addedQuantity.length &&
+            !orderChange.removedQuantity.length &&
             !orderChange.noteUpdate.length &&
             !orderChange.internal_note &&
             !orderChange.general_customer_note &&

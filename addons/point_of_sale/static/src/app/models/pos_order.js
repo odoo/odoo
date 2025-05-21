@@ -1,8 +1,8 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { computeComboItems } from "./utils/compute_combo_items";
-import { serializeDateTime } from "@web/core/l10n/dates";
 import { PosOrderAccounting } from "./accounting/pos_order_accounting";
+import { getStrNotes } from "./utils/order_change";
 
 const { DateTime } = luxon;
 
@@ -34,21 +34,6 @@ export class PosOrder extends PosOrderAccounting {
         this.to_invoice = vals.to_invoice || false;
         this.state = vals.state || "draft";
 
-        if (!vals.last_order_preparation_change) {
-            this.last_order_preparation_change = {
-                lines: {},
-                metadata: {},
-                general_customer_note: "",
-                internal_note: "",
-                sittingMode: 0,
-            };
-        } else {
-            this.last_order_preparation_change =
-                typeof vals.last_order_preparation_change === "object"
-                    ? vals.last_order_preparation_change
-                    : JSON.parse(vals.last_order_preparation_change);
-        }
-
         this.general_customer_note = vals.general_customer_note || "";
         this.internal_note = vals.internal_note || "";
 
@@ -68,7 +53,6 @@ export class PosOrder extends PosOrderAccounting {
         super.initState();
         // !!Keep all uiState in one object!!
         this.uiState = {
-            unmerge: {},
             lastPrints: [],
             lineToRefund: {},
             displayed: this.state !== "cancel",
@@ -82,6 +66,8 @@ export class PosOrder extends PosOrderAccounting {
             },
             requiredPartnerDetails: {},
             tip: { value: false, type: false },
+            last_general_customer_note: this.general_customer_note || "",
+            last_internal_note: this.internal_note || "",
         };
     }
 
@@ -219,60 +205,6 @@ export class PosOrder extends PosOrderAccounting {
 
     get hasChange() {
         return this.lines.some((l) => l.uiState.hasChange);
-    }
-    /**
-     * This function is called after the order has been successfully sent to the preparation tool(s).
-     * In the future, this status should be separated between the different preparation tools,
-     * so that if one of them returns an error, it is possible to send the information back to it
-     * without impacting the other tools.
-     */
-    updateLastOrderChange() {
-        const orderlineIdx = [];
-        this.lines.forEach((line) => {
-            orderlineIdx.push(line.preparationKey);
-
-            if (this.last_order_preparation_change.lines[line.preparationKey]) {
-                this.last_order_preparation_change.lines[line.preparationKey] = {
-                    ...this.last_order_preparation_change.lines[line.preparationKey],
-                    quantity: line.getQuantity(),
-                    note: line.getNote(),
-                    customer_note: line.getCustomerNote(),
-                };
-            } else {
-                this.last_order_preparation_change.lines[line.preparationKey] = {
-                    attribute_value_names: line.attribute_value_ids.map((a) => a.name),
-                    uuid: line.uuid,
-                    isCombo: Boolean(line?.combo_line_ids?.length),
-                    combo_parent_uuid: line?.combo_parent_id?.uuid,
-                    product_id: line.getProduct().id,
-                    name: line.getFullProductName(),
-                    basic_name: line.getProduct().name,
-                    display_name: line.getProduct().display_name,
-                    note: line.getNote(),
-                    quantity: line.getQuantity(),
-                    customer_note: line.getCustomerNote(),
-                };
-            }
-            line.setHasChange(false);
-            line.uiState.savedQuantity = line.getQuantity();
-        });
-        // Checks whether an orderline has been deleted from the order since it
-        // was last sent to the preparation tools or updated. If so we delete older changes.
-        for (const [key, change] of Object.entries(this.last_order_preparation_change.lines)) {
-            const orderline = this.models["pos.order.line"].getBy("uuid", change.uuid);
-            const lineNote = orderline?.note;
-            const changeNote = change?.note;
-            if (!orderline || (lineNote && changeNote && changeNote.trim() !== lineNote.trim())) {
-                delete this.last_order_preparation_change.lines[key];
-            }
-        }
-        this.last_order_preparation_change.general_customer_note = this.general_customer_note;
-        this.last_order_preparation_change.internal_note = this.internal_note;
-        this.last_order_preparation_change.sittingMode = this.preset_id?.id || 0;
-        this.last_order_preparation_change.metadata = {
-            serverDate: serializeDateTime(DateTime.now()),
-        };
-        this._markDirty();
     }
 
     isEmpty() {
@@ -693,17 +625,6 @@ export class PosOrder extends PosOrderAccounting {
         return this.lines;
     }
 
-    serializeForORM(opts = {}) {
-        const data = super.serializeForORM(opts);
-        if (
-            data.last_order_preparation_change &&
-            typeof data.last_order_preparation_change === "object"
-        ) {
-            data.last_order_preparation_change = JSON.stringify(data.last_order_preparation_change);
-        }
-        return data;
-    }
-
     get floatingOrderName() {
         return this.floating_order_name || this.tracking_number.toString() || "";
     }
@@ -758,6 +679,258 @@ export class PosOrder extends PosOrderAccounting {
                 !(line.combo_line_ids?.length || line.combo_parent_id)
         );
     }
+
+    get prepLines() {
+        return this.prep_order_ids?.flatMap((po) => po.prep_line_ids);
+    }
+    get preparationCategories() {
+        return this.config.preparationCategories;
+    }
+
+    dataMaker(prepOrPosLine, quantity) {
+        const line = prepOrPosLine.pos_order_line_id || prepOrPosLine;
+        const product = line.product_id;
+        const attributes = line.attribute_value_ids || [];
+        return {
+            line: line,
+            data: {
+                basic_name: line.order_id?.config_id.module_pos_restaurant
+                    ? line.product_id.name
+                    : line.product_id.display_name,
+                product_id: product.id,
+                attribute_value_names: attributes.map((a) => a.name),
+                quantity: quantity,
+                note: getStrNotes(line?.getNote?.() || false),
+                customer_note: getStrNotes(line?.getCustomerNote?.() || false),
+                pos_categ_id: product.pos_categ_ids[0]?.id || 0,
+                pos_categ_sequence: product.pos_categ_ids[0]?.sequence || 0,
+                group: line?.getCourse?.() || false,
+                combo_line_ids: line?.combo_line_ids,
+                combo_parent_uuid: line?.combo_parent_id?.uuid,
+            },
+        };
+    }
+
+    get preparationChanges() {
+        const changes = {
+            quantity: 0,
+            categoryCount: {},
+            addedQuantity: [],
+            removedQuantity: [],
+            noteUpdate: [],
+        };
+
+        const hasPreparationCategory = (product) => {
+            if (!product) {
+                return false;
+            }
+            return product.parentPosCategIds.some((id) => this.preparationCategories.has(id));
+        };
+
+        const addCategoryCount = (category, delta) => {
+            if (!changes.categoryCount[category.id]) {
+                changes.categoryCount[category.id] = { name: category.name, count: 0 };
+            }
+            changes.quantity += Math.abs(delta);
+            changes.categoryCount[category.id].count += delta;
+        };
+
+        for (const orderline of this.lines) {
+            const product = orderline.product_id;
+            const category = product.pos_categ_ids.find((c) =>
+                this.preparationCategories.has(c.id)
+            );
+            const shouldCountCategory = category && !orderline.combo_line_ids?.length;
+            const hasPrepaCategory =
+                hasPreparationCategory(product) ||
+                orderline.combo_line_ids?.some((line) => hasPreparationCategory(line.getProduct()));
+
+            if (!hasPrepaCategory) {
+                orderline.setHasChange(false);
+                continue;
+            }
+
+            const quantityDiff = orderline.qty - orderline.prepQty;
+            if (quantityDiff !== 0) {
+                changes[quantityDiff > 0 ? "addedQuantity" : "removedQuantity"].push(
+                    this.dataMaker(orderline, quantityDiff)
+                );
+                if (shouldCountCategory) {
+                    addCategoryCount(category, quantityDiff);
+                }
+            } else if (orderline.changeNote) {
+                changes.noteUpdate.push(this.dataMaker(orderline, orderline.qty));
+                if (shouldCountCategory) {
+                    changes.categoryCount["noteUpdate"] ??= { name: _t("Note"), count: 0 };
+                    changes.categoryCount["noteUpdate"].count += 1;
+                }
+            }
+            orderline.setHasChange(quantityDiff !== 0 || orderline.changeNote);
+        }
+
+        // Checks whether an orderline has been deleted from the order since it
+        // was last sent to the preparation tools. If so we addthis.prep_order_ids this to the changes.
+
+        const removedOrderlines =
+            this.prep_order_ids
+                ?.flatMap((o) => o.prep_line_ids)
+                .filter((l) => !l.pos_order_line_id && l.quantity > l.cancelled) ?? [];
+        const removedByKey = {};
+
+        for (const prepLine of removedOrderlines) {
+            const key = keyMaker(prepLine);
+            if (!removedByKey[key]) {
+                removedByKey[key] = { quantity: 0, prepLine };
+            }
+            removedByKey[key].quantity += prepLine.quantity - prepLine.cancelled;
+        }
+        for (const { quantity, prepLine } of Object.values(removedByKey)) {
+            if (quantity <= 0) {
+                continue;
+            }
+            const product = prepLine.product_id;
+            const category = product.pos_categ_ids.find((c) =>
+                this.preparationCategories.has(c.id)
+            );
+            const lineData = this.dataMaker(prepLine, -quantity);
+            changes.removedQuantity.push(lineData);
+            if (category && lineData.data.combo_line_ids?.length === 0) {
+                addCategoryCount(category, -quantity);
+            }
+        }
+
+        if (this.uiState.last_general_customer_note !== this.general_customer_note) {
+            changes.general_customer_note = this.general_customer_note;
+        }
+
+        if (this.uiState.last_internal_note !== this.internal_note) {
+            changes.internal_note = this.internal_note;
+        }
+
+        const noteCount = ["general_customer_note", "internal_note"].reduce(
+            (count, note) => count + (note in changes ? 1 : 0),
+            0
+        );
+
+        if (noteCount) {
+            changes.categoryCount["generalNoteUpdate"] = {
+                name: _t("Message"),
+                count: noteCount,
+            };
+        }
+
+        changes.categoryCount = Object.values(changes.categoryCount);
+
+        return changes;
+    }
+
+    /**
+     * Update the prep order group according to the given order changes.
+     * Used after printing the preparation ticket to update the prep lines.
+     */
+    updateLastOrderChange(opts = {}) {
+        if (opts.cancelled) {
+            this.prepLines?.forEach((pl) => (pl.cancelled = pl.quantity));
+        } else {
+            // We don't need to add note updates here since preparation display will always show
+            // the latest notes from the order lines.
+            const changes = this.preparationChanges;
+            const allChanges = [...changes.addedQuantity, ...changes.removedQuantity];
+
+            let prepOrder = null;
+            for (const change of allChanges) {
+                const line = change.line;
+                const data = change.data;
+
+                if (data.quantity > 0) {
+                    const order = (prepOrder ||= this.models["pos.prep.order"].create({
+                        pos_order_id: this,
+                    }));
+                    this.models["pos.prep.line"].create({
+                        prep_order_id: order,
+                        pos_order_line_id: line,
+                        product_id: line.getProduct().id,
+                        quantity: data.quantity,
+                        cancelled: 0,
+                        attribute_value_ids: line.attribute_value_ids,
+                    });
+                } else {
+                    let toCancel = -data.quantity;
+                    let prepLinesToCancel;
+                    if (line.model.name === "pos.order.line") {
+                        prepLinesToCancel = line.prep_line_ids;
+                    } else {
+                        const mainKey = keyMaker(line);
+                        prepLinesToCancel = [...this.prepLines].filter(
+                            (pl) => !pl.pos_order_line_id && keyMaker(pl) === mainKey
+                        );
+                    }
+                    for (const prepLine of prepLinesToCancel.toReversed()) {
+                        const lineQty = prepLine.quantity - prepLine.cancelled;
+                        const cancellable = Math.min(lineQty, toCancel);
+                        prepLine.cancelled += cancellable;
+                        toCancel -= cancellable;
+                        if (toCancel <= 0) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Update last known state to avoid re-sending changes
+        this.uiState.last_general_customer_note = this.general_customer_note;
+        this.uiState.last_internal_note = this.internal_note;
+        this.lines.forEach((line) => {
+            line.setHasChange(false);
+            line.uiState.last_internal_note = line.getNote() || "";
+            line.uiState.last_customer_note = line.getCustomerNote() || "";
+            line.uiState.savedQuantity = line.getQuantity();
+        });
+    }
+    /**
+     * PoS config can have several printers with different preparation categories.
+     * This method allows to filter the changes for only the given categories.
+     */
+    getChanges(opts = {}) {
+        const changes = this.preparationChanges;
+        let addedQuantity = [];
+        let removedQuantity = [];
+        let noteUpdate = [];
+        if (opts.cancelled) {
+            removedQuantity = this.lines.map(
+                (l) =>
+                    this.dataMaker(
+                        l,
+                        l.prep_line_ids.reduce(
+                            (sum, obj) => sum + (obj.quantity - obj.cancelled),
+                            0
+                        )
+                    ).data
+            );
+        } else {
+            addedQuantity = changes.addedQuantity.map((c) => c.data);
+            removedQuantity = changes.removedQuantity.map((c) => c.data);
+            noteUpdate = changes.noteUpdate.map((c) => c.data);
+        }
+        return {
+            ...changes,
+            noteChange: false,
+            addedQuantity: addedQuantity,
+            removedQuantity: removedQuantity,
+            noteUpdate: noteUpdate,
+        };
+    }
 }
+
+const keyMaker = (prepLine) => {
+    const objectKey = {
+        product_id: prepLine.product_id.id,
+        combo_parent_id: prepLine.combo_parent_id?.id,
+        combo_line_ids: prepLine.combo_line_ids.map((c) => c.id).sort(),
+        attribute_value_ids: prepLine.attribute_value_ids.map((a) => a.id).sort(),
+    };
+    return JSON.stringify(objectKey);
+};
 
 registry.category("pos_available_models").add(PosOrder.pythonModel, PosOrder);

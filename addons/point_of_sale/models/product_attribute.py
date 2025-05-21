@@ -1,3 +1,4 @@
+from uuid import uuid4
 from odoo import api, fields, models
 
 
@@ -14,6 +15,7 @@ class ProductAttributeCustomValue(models.Model):
     _name = 'product.attribute.custom.value'
     _inherit = ["product.attribute.custom.value", "pos.load.mixin"]
 
+    uuid = fields.Char(string='Uuid', readonly=True, default=lambda self: str(uuid4()), copy=False)
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade', index='btree_not_null')
 
     @api.model
@@ -22,7 +24,7 @@ class ProductAttributeCustomValue(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id', 'write_date']
+        return ['custom_value', 'custom_product_template_attribute_value_id', 'pos_order_line_id', 'write_date', 'uuid']
 
 
 class ProductTemplateAttributeLine(models.Model):
