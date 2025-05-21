@@ -139,23 +139,13 @@ export class Dropdown extends Component {
             ...deepMerge(this.nesting.navigationOptions, this.props.navigationOptions),
         });
 
-        // Set up UI active element related behavior ---------------------------
-        let activeEl;
         this.uiService = useService("ui");
-        useEffect(
-            () => {
-                Promise.resolve().then(() => {
-                    activeEl = this.uiService.activeElement;
-                });
-            },
-            () => []
-        );
 
         const getPosition = () => this.position;
         this.popover = usePopover(DropdownPopover, {
             animation: false,
             arrow: false,
-            closeOnClickAway: (target) => this.popoverCloseOnClickAway(target, activeEl),
+            closeOnClickAway: (target) => this.popoverCloseOnClickAway(target),
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             env: this.__owl__.childEnv,
             holdOnHover: this.props.holdOnHover,
@@ -245,12 +235,12 @@ export class Dropdown extends Component {
         }
     }
 
-    popoverCloseOnClickAway(target, activeEl) {
+    popoverCloseOnClickAway(target) {
         const rootNode = target.getRootNode();
         if (rootNode instanceof ShadowRoot) {
             target = rootNode.host;
         }
-        return this.uiService.getActiveElementOf(target) === activeEl;
+        return this.uiService.getActiveElementOf(target) === this.activeEl;
     }
 
     setTargetElement(target) {
@@ -344,6 +334,7 @@ export class Dropdown extends Component {
 
     onOpened() {
         this._focusedElBeforeOpen = document.activeElement;
+        this.activeEl = this.uiService.activeElement;
         this.navigation.update();
         this.props.onOpened?.();
         this.props.onStateChanged?.(true);
@@ -363,6 +354,7 @@ export class Dropdown extends Component {
     onClosed() {
         this.navigation.update();
         this.props.onStateChanged?.(false);
+        delete this.activeEl;
 
         if (this.target) {
             this.target.ariaExpanded = false;
