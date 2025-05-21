@@ -1,6 +1,6 @@
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
-import { Expression } from "@web/core/tree_editor/condition_tree";
+import { Expression, formatValue } from "@web/core/tree_editor/condition_tree";
 import { Select } from "@web/core/tree_editor/tree_editor_components";
 
 const { DateTime } = luxon;
@@ -93,6 +93,10 @@ export function getEditorInfoForOptionsWithSelect(name, params) {
         }),
         defaultValue: getCurrent(UNITS[name]),
         isSupported: (value) => typeof value !== "string" && getOption(value),
+        stringify: (value, disambiguate) => {
+            const option = getOption(value);
+            return option ? option[1] : disambiguate ? formatValue(value) : String(value);
+        },
         message: _t("Value not in selection"),
     };
 }

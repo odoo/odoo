@@ -5,8 +5,8 @@ import { Select } from "@web/core/tree_editor/tree_editor_components";
 
 const OPERATOR_DESCRIPTIONS = {
     // valid operators (see TERM_OPERATORS in expression.py)
-    "=": _t("equals"),
-    "!=": _t("not equals"),
+    "=": _t("="),
+    "!=": _t("!="),
     "<=": _t("lower or equal"),
     "<": _t("lower"),
     ">": _t("greater"),
@@ -18,8 +18,8 @@ const OPERATOR_DESCRIPTIONS = {
     "not like": _t("not like"),
     ilike: _t("contains"),
     "not ilike": _t("not contains"),
-    in: _t("is in"),
-    "not in": _t("is not in"),
+    in: _t("equals"),
+    "not in": _t("not equals"),
     child_of: _t("child of"),
     parent_of: _t("parent of"),
 

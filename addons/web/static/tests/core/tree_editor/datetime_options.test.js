@@ -1,12 +1,16 @@
 import { describe, expect, test } from "@odoo/hoot";
 
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
 import { formatDomain } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { makeMockEnv } from "@web/../tests/web_test_helpers";
 
 import {
+    applyTransformations,
     condition,
     connector,
+    constructTree,
+    createDatetimeOptions,
     domainFromTree,
+    removeAnyOperators,
     treeFromDomain,
 } from "@web/core/tree_editor/condition_tree";
 
@@ -29,6 +33,11 @@ const options = {
         return null;
     },
 };
+
+function apply(transformations, domain) {
+    const tree = constructTree(domain);
+    return applyTransformations(transformations, tree, options);
+}
 
 test("datetime options: =", async () => {
     await makeMockEnv();
@@ -76,7 +85,7 @@ test("datetime options: =", async () => {
         },
     ];
     for (const { domain, tree } of toTest) {
-        expect(treeFromDomain(domain, options)).toEqual(tree);
+        expect(apply([removeAnyOperators, createDatetimeOptions], domain)).toEqual(tree);
         expect(domainFromTree(tree)).toEqual(formatDomain(domain));
     }
 });
@@ -126,7 +135,7 @@ test("datetime options: !=", async () => {
         },
     ];
     for (const { domain, tree } of toTest) {
-        expect(treeFromDomain(domain, options)).toEqual(tree);
+        expect(apply([removeAnyOperators, createDatetimeOptions], domain)).toEqual(tree);
         expect(domainFromTree(tree)).toEqual(formatDomain(domain));
     }
 });
@@ -453,6 +462,111 @@ test("datetime options: between", async () => {
     }
 });
 
+test("datetime options: not between", async () => {
+    await makeMockEnv();
+    const toTest = [
+        {
+            domain: `[
+                "|", "|", "|", "|", "|",
+                    ("datetime_1.hour_number", "<", 1),
+                    "&",
+                        ("datetime_1.hour_number", "=", 1), ("datetime_1.minute_number", "<", 15),
+                    "&", "&",
+                        ("datetime_1.hour_number", "=", 1),
+                        ("datetime_1.minute_number", "=", 15),
+                        ("datetime_1.second_number", "<", 24),
+                    ("datetime_1.hour_number", ">", 22),
+                    "&",
+                        ("datetime_1.hour_number", "=", 22),
+                        ("datetime_1.minute_number", ">", 6),
+                    "&", "&",
+                        ("datetime_1.hour_number", "=", 22),
+                        ("datetime_1.minute_number", "=", 6),
+                        ("datetime_1.second_number", ">", 56)
+            ]`,
+            tree: condition("datetime_1.__time", "not_between", ["01:15:24", "22:06:56"]),
+        },
+        {
+            domain: `[
+                "|", "|", "|", "|", "|",
+                    ("datetime_1.year_number", "<", 2025),
+                    "&",
+                        ("datetime_1.year_number", "=", 2025),
+                        ("datetime_1.month_number", "<", 6),
+                    "&", "&",
+                        ("datetime_1.year_number", "=", 2025),
+                        ("datetime_1.month_number", "=", 6),
+                        ("datetime_1.day_of_month", "<", 4),
+                    ("datetime_1.year_number", ">", 2026),
+                    "&",
+                        ("datetime_1.year_number", "=", 2026),
+                        ("datetime_1.month_number", ">", 6),
+                    "&", "&",
+                        ("datetime_1.year_number", "=", 2026),
+                        ("datetime_1.month_number", "=", 6),
+                        ("datetime_1.day_of_month", ">", 27)
+            ]`,
+            tree: condition("datetime_1.__date", "not_between", ["2025-06-04", "2026-06-27"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "|", "|", "|", "|", "|",
+                        ("datetime_2.hour_number", "<", 1),
+                        "&",
+                            ("datetime_2.hour_number", "=", 1),
+                            ("datetime_2.minute_number", "<", 15),
+                        "&", "&",
+                            ("datetime_2.hour_number", "=", 1),
+                            ("datetime_2.minute_number", "=", 15),
+                            ("datetime_2.second_number", "<", 24),
+                        ("datetime_2.hour_number", ">", 22),
+                        "&",
+                            ("datetime_2.hour_number", "=", 22),
+                            ("datetime_2.minute_number", ">", 6),
+                        "&", "&",
+                            ("datetime_2.hour_number", "=", 22),
+                            ("datetime_2.minute_number", "=", 6),
+                            ("datetime_2.second_number", ">", 56)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__time", "not_between", ["01:15:24", "22:06:56"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "|", "|", "|", "|", "|",
+                        ("datetime_2.year_number", "<", 2025),
+                        "&",
+                            ("datetime_2.year_number", "=", 2025),
+                            ("datetime_2.month_number", "<", 6),
+                        "&", "&",
+                            ("datetime_2.year_number", "=", 2025),
+                            ("datetime_2.month_number", "=", 6),
+                            ("datetime_2.day_of_month", "<", 4),
+                        ("datetime_2.year_number", ">", 2026),
+                        "&",
+                            ("datetime_2.year_number", "=", 2026),
+                            ("datetime_2.month_number", ">", 6),
+                        "&", "&",
+                            ("datetime_2.year_number", "=", 2026),
+                            ("datetime_2.month_number", "=", 6),
+                            ("datetime_2.day_of_month", ">", 27)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__date", "not_between", ["2025-06-04", "2026-06-27"]),
+        },
+    ];
+    for (const { domain, tree } of toTest) {
+        expect(treeFromDomain(domain, options)).toEqual(tree);
+        expect(domainFromTree(tree)).toEqual(formatDomain(domain));
+    }
+});
+
 test("datetime options: set", async () => {
     await makeMockEnv();
     const toTest = [
@@ -486,5 +600,287 @@ test("datetime options: not_set", async () => {
     for (const { domain, tree } of toTest) {
         expect(treeFromDomain(domain, options)).toEqual(tree);
         expect(domainFromTree(tree)).toEqual(formatDomain(domain));
+    }
+});
+
+test("datetime options: in", async () => {
+    await makeMockEnv();
+
+    const toTest = [
+        {
+            domain: `[(0, "=", 1)]`,
+            tree: condition("datetime_1.__time", "in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[("m2m", "any", [(0, "=", 1)])]`,
+            tree: condition("m2m.datetime_2.__time", "in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[
+                "&", "&",
+                    ("datetime_1.hour_number", "=", 1),
+                    ("datetime_1.minute_number", "=", 15),
+                    ("datetime_1.second_number", "=", 24)
+            ]`,
+            tree: condition("datetime_1.__time", "in", ["01:15:24"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "&", "&",
+                        ("datetime_2.hour_number", "=", 1),
+                        ("datetime_2.minute_number", "=", 15),
+                        ("datetime_2.second_number", "=", 24)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__time", "in", ["01:15:24"]),
+        },
+        {
+            domain: `[
+                "|",
+                    "&", "&",
+                        ("datetime_1.hour_number", "=", 1),
+                        ("datetime_1.minute_number", "=", 15),
+                        ("datetime_1.second_number", "=", 24),
+                    "&", "&",
+                        ("datetime_1.hour_number", "=", 12),
+                        ("datetime_1.minute_number", "=", 57),
+                        ("datetime_1.second_number", "=", 0)
+            ]`,
+            tree: condition("datetime_1.__time", "in", ["01:15:24", "12:57:00"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "|",
+                        "&", "&",
+                            ("datetime_2.hour_number", "=", 1),
+                            ("datetime_2.minute_number", "=", 15),
+                            ("datetime_2.second_number", "=", 24),
+                        "&", "&",
+                            ("datetime_2.hour_number", "=", 12),
+                            ("datetime_2.minute_number", "=", 57),
+                            ("datetime_2.second_number", "=", 0)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__time", "in", ["01:15:24", "12:57:00"]),
+        },
+        {
+            domain: `[(0, "=", 1)]`,
+            tree: condition("datetime_1.__date", "in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[("m2m", "any", [(0, "=", 1)])]`,
+            tree: condition("m2m.datetime_2.__date", "in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[
+                "&", "&",
+                    ("datetime_1.year_number", "=", 2025),
+                    ("datetime_1.month_number", "=", 6),
+                    ("datetime_1.day_of_month", "=", 4)
+            ]`,
+            tree: condition("datetime_1.__date", "in", ["2025-06-04"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "&", "&",
+                        ("datetime_2.year_number", "=", 2025),
+                        ("datetime_2.month_number", "=", 6),
+                        ("datetime_2.day_of_month", "=", 4)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__date", "in", ["2025-06-04"]),
+        },
+        {
+            domain: `[
+                "|",
+                    "&", "&",
+                        ("datetime_1.year_number", "=", 2025),
+                        ("datetime_1.month_number", "=", 6),
+                        ("datetime_1.day_of_month", "=", 4),
+                    "&", "&",
+                        ("datetime_1.year_number", "=", 2026),
+                        ("datetime_1.month_number", "=", 1),
+                        ("datetime_1.day_of_month", "=", 6)
+            ]`,
+            tree: condition("datetime_1.__date", "in", ["2025-06-04", "2026-01-06"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "|",
+                        "&", "&",
+                            ("datetime_2.year_number", "=", 2025),
+                            ("datetime_2.month_number", "=", 6),
+                            ("datetime_2.day_of_month", "=", 4),
+                        "&", "&",
+                            ("datetime_2.year_number", "=", 2026),
+                            ("datetime_2.month_number", "=", 1),
+                            ("datetime_2.day_of_month", "=", 6)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__date", "in", ["2025-06-04", "2026-01-06"]),
+        },
+    ];
+    for (const { domain, tree, lossOfInfo } of toTest) {
+        expect(domainFromTree(tree)).toEqual(formatDomain(domain));
+        if (!lossOfInfo) {
+            expect(treeFromDomain(domain, options)).toEqual(tree);
+        }
+    }
+});
+
+test("datetime options: not in", async () => {
+    await makeMockEnv();
+
+    const toTest = [
+        {
+            domain: `[]`,
+            tree: condition("datetime_1.__time", "not in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[("m2m", "any", [])]`,
+            tree: condition("m2m.datetime_2.__time", "not in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[
+                "|", "|",
+                    ("datetime_1.hour_number", "!=", 1),
+                    ("datetime_1.minute_number", "!=", 15),
+                    ("datetime_1.second_number", "!=", 24)
+            ]`,
+            tree: condition("datetime_1.__time", "not in", ["01:15:24"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "|", "|",
+                        ("datetime_2.hour_number", "!=", 1),
+                        ("datetime_2.minute_number", "!=", 15),
+                        ("datetime_2.second_number", "!=", 24)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__time", "not in", ["01:15:24"]),
+        },
+        {
+            domain: `[
+                "&",
+                    "|", "|",
+                        ("datetime_1.hour_number", "!=", 1),
+                        ("datetime_1.minute_number", "!=", 15),
+                        ("datetime_1.second_number", "!=", 24),
+                    "|", "|",
+                        ("datetime_1.hour_number", "!=", 12),
+                        ("datetime_1.minute_number", "!=", 57),
+                        ("datetime_1.second_number", "!=", 0)
+            ]`,
+            tree: condition("datetime_1.__time", "not in", ["01:15:24", "12:57:00"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "&",
+                        "|", "|",
+                            ("datetime_2.hour_number", "!=", 1),
+                            ("datetime_2.minute_number", "!=", 15),
+                            ("datetime_2.second_number", "!=", 24),
+                        "|", "|",
+                            ("datetime_2.hour_number", "!=", 12),
+                            ("datetime_2.minute_number", "!=", 57),
+                            ("datetime_2.second_number", "!=", 0)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__time", "not in", ["01:15:24", "12:57:00"]),
+        },
+        {
+            domain: `[]`,
+            tree: condition("datetime_1.__date", "not in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[("m2m", "any", [])]`,
+            tree: condition("m2m.datetime_2.__date", "not in", []),
+            lossOfInfo: true,
+        },
+        {
+            domain: `[
+                "|", "|",
+                    ("datetime_1.year_number", "!=", 2025),
+                    ("datetime_1.month_number", "!=", 6),
+                    ("datetime_1.day_of_month", "!=", 4)
+            ]`,
+            tree: condition("datetime_1.__date", "not in", ["2025-06-04"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "|", "|",
+                        ("datetime_2.year_number", "!=", 2025),
+                        ("datetime_2.month_number", "!=", 6),
+                        ("datetime_2.day_of_month", "!=", 4)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__date", "not in", ["2025-06-04"]),
+        },
+        {
+            domain: `[
+                "&",
+                    "|", "|",
+                        ("datetime_1.year_number", "!=", 2025),
+                        ("datetime_1.month_number", "!=", 6),
+                        ("datetime_1.day_of_month", "!=", 4),
+                    "|", "|",
+                        ("datetime_1.year_number", "!=", 2026),
+                        ("datetime_1.month_number", "!=", 1),
+                        ("datetime_1.day_of_month", "!=", 6)
+            ]`,
+            tree: condition("datetime_1.__date", "not in", ["2025-06-04", "2026-01-06"]),
+        },
+        {
+            domain: `[(
+                "m2m",
+                "any",
+                [
+                    "&",
+                        "|", "|",
+                            ("datetime_2.year_number", "!=", 2025),
+                            ("datetime_2.month_number", "!=", 6),
+                            ("datetime_2.day_of_month", "!=", 4),
+                        "|", "|",
+                            ("datetime_2.year_number", "!=", 2026),
+                            ("datetime_2.month_number", "!=", 1),
+                            ("datetime_2.day_of_month", "!=", 6)
+                ]
+            )]`,
+            tree: condition("m2m.datetime_2.__date", "not in", ["2025-06-04", "2026-01-06"]),
+        },
+    ];
+    for (const { domain, tree, lossOfInfo } of toTest) {
+        expect(domainFromTree(tree)).toEqual(formatDomain(domain));
+        if (!lossOfInfo) {
+            expect(treeFromDomain(domain, options)).toEqual(tree);
+        }
     }
 });

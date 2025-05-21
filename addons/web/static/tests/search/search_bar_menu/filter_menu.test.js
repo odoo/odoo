@@ -700,17 +700,17 @@ test("Add a custom filter", async () => {
     await clickOnButtonAddBranch(-1);
     await clickOnButtonAddRule(-1);
     await contains(".modal footer button").click();
-    expect(getFacetTexts()).toEqual(["Filter", "Id = 1", "Id = 1", "Id = 1"]);
+    expect(getFacetTexts()).toEqual(["Filter", "Id = ( )", "Id = ( )", "Id = ( )"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["foo", "=", "abc"],
         "&",
-        ["id", "=", 1],
+        ["id", "in", []],
         "&",
-        ["id", "=", 1],
+        ["id", "in", []],
         "|",
-        ["id", "=", 1],
-        ["id", "=", 1],
+        ["id", "in", []],
+        ["id", "in", []],
     ]);
 
     // open again the search menu -> the custom filter should not be displayed

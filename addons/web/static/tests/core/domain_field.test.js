@@ -904,7 +904,7 @@ test("domain field with 'inDialog' options", async function () {
     await contains(`.modal ${SELECTORS.addNewRule}`).click();
     await contains(".modal-footer .btn-primary").click();
     expect(SELECTORS.condition).toHaveCount(1);
-    expect(getConditionText()).toBe("Id = 1");
+    expect(getConditionText()).toBe("Id = ( )");
 });
 
 test("invalid value in domain field with 'inDialog' options", async function () {
@@ -1121,7 +1121,7 @@ test("add condition in empty foldable domain", async function () {
     await contains(".o_domain_add_first_node_button").click();
     // Domain is now unfolded with the default condition
     expect(".o_model_field_selector").toHaveCount(1);
-    expect(SELECTORS.debugArea).toHaveValue('[("id", "=", 1)]');
+    expect(SELECTORS.debugArea).toHaveValue('[("id", "in", [])]');
 });
 
 test("foldable domain field unfolds and hides caret when domain is invalid", async function () {
@@ -1316,6 +1316,7 @@ test("hide today, last, next operators when allow_expressions = False", async fu
         "not between",
         "set",
         "not set",
+        "=",
     ]);
 
     await contains(SELECTORS.debugArea).edit(

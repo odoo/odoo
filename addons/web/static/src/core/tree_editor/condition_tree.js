@@ -264,8 +264,9 @@ function areEqualTreesUpToHole(tree, otherTree) {
 }
 
 export function areEquivalentTrees(tree, otherTree) {
-    const simplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_ELIMINATION, tree);
-    const otherSimplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_ELIMINATION, otherTree);
+    const transformations = [removeFalseTrueLeaves, ...FULL_VIRTUAL_OPERATORS_ELIMINATION];
+    const simplifiedTree = applyTransformations(transformations, tree);
+    const otherSimplifiedTree = applyTransformations(transformations, otherTree);
     return areEqualTrees(simplifiedTree, otherSimplifiedTree);
 }
 
@@ -316,8 +317,7 @@ export function isTree(value) {
  */
 function toAST(value) {
     if (isTree(value)) {
-        const domain = new Domain(domainFromTree(value));
-        return domain.ast;
+        return { type: 4, value: getASTs(value) };
     }
     if (value instanceof Expression) {
         return value.toAST();
@@ -422,11 +422,14 @@ export function constructTree(domain, distributeNot = false) {
     return tree;
 }
 
+const TRUE_TREE = condition(1, "=", 1);
+const FALSE_TREE = condition(0, "=", 1);
+
 /**
  * @param {Tree} tree
  * @returns {AST[]}
  */
-function getASTs(tree) {
+function getASTs(tree, isSubTree = false) {
     const ASTs = [];
     if (tree.type === "condition") {
         if (tree.negate) {
@@ -440,16 +443,28 @@ function getASTs(tree) {
     }
 
     const length = tree.children.length;
-    if (length && tree.negate) {
+    if (length === 0) {
+        if (tree.value === "|") {
+            return tree.negate ? getASTs(TRUE_TREE) : getASTs(FALSE_TREE);
+        } else {
+            return tree.negate ? getASTs(FALSE_TREE) : isSubTree ? getASTs(TRUE_TREE) : [];
+        }
+    }
+
+    if (tree.negate) {
         ASTs.push(toAST("!"));
     }
     for (let i = 0; i < length - 1; i++) {
         ASTs.push(toAST(tree.value));
     }
     for (const child of tree.children) {
-        ASTs.push(...getASTs(child));
+        ASTs.push(...getASTs(child, true));
     }
     return ASTs;
+}
+
+export function constructDomain(tree) {
+    return formatAST(toAST(tree));
 }
 
 function not(ast) {
@@ -818,16 +833,21 @@ export function splitPath(path) {
     return { initialPath, lastPart };
 }
 
+/**
+ * @param {string} path
+ * @returns {[string,string]} path
+ */
 export function splitPath2(path) {
-    const pathParts = typeof path === "string" ? path.split(".") : [];
-    if (pathParts.length > 0) {
-        let index = pathParts.findIndex((p) => ["__date", "__time"].includes(p)); // by construction, must be -1 or >= 1
-        index = index > -1 ? index - 1 : pathParts.length - 1;
-        const path1 = pathParts.slice(0, index).join(".");
-        const path2 = pathParts.slice(index).join(".");
-        return [path1, path2];
-    }
-    return [null, path];
+    const pathParts = path.split(".");
+    let index = pathParts.findIndex((p) => ["__date", "__time"].includes(p)); // by construction, must be -1 or >= 1
+    index = index > -1 ? index - 1 : pathParts.length - 1;
+    const path1 = pathParts.slice(0, index).join(".");
+    const path2 = pathParts.slice(index).join(".");
+    return [path1, path2];
+}
+
+function isSimplePath(path) {
+    return typeof path === "string" && !splitPath2(path)[0];
 }
 
 function allEqual(...values) {
@@ -842,23 +862,31 @@ export function applyTransformations(transformations, transformed, ...fixedParam
     return transformed;
 }
 
-function rewriteNConsecutiveChildren(transformation, connector, options = {}, N = 2) {
-    const children = [];
-    const currentChildren = connector.children;
-    for (let i = 0; i < currentChildren.length; i++) {
-        const NconsecutiveChildren = currentChildren.slice(i, i + N);
-        let replacement = null;
-        if (NconsecutiveChildren.length === N) {
-            replacement = transformation(connector, NconsecutiveChildren, options);
+function getReplacement(v) {
+    return v instanceof Nothing ? null : v instanceof Just ? v.value : v;
+}
+
+function rewriteNConsecutiveChildren(transformation, N = 2) {
+    return (c, options) => {
+        const children = [];
+        const currentChildren = c.children;
+        for (let i = 0; i < currentChildren.length; i++) {
+            const NconsecutiveChildren = currentChildren.slice(i, i + N);
+            let replacement = null;
+            if (NconsecutiveChildren.length === N) {
+                replacement = getReplacement(
+                    transformation(connector(c.value, NconsecutiveChildren), options)
+                );
+            }
+            if (replacement) {
+                children.push(replacement);
+                i += N - 1;
+            } else {
+                children.push(NconsecutiveChildren[0]);
+            }
         }
-        if (replacement) {
-            children.push(replacement);
-            i += N - 1;
-        } else {
-            children.push(NconsecutiveChildren[0]);
-        }
-    }
-    return { ...connector, children };
+        return { ...c, children };
+    };
 }
 
 function normalizeConnector(connector) {
@@ -914,7 +942,7 @@ function operate(
             ),
         };
         if (treeType === "connector") {
-            return normalizeConnector(transformation(newTree, options) || newTree);
+            return normalizeConnector(getReplacement(transformation(newTree, options)) || newTree);
         }
         return normalizeConnector(newTree);
     }
@@ -929,7 +957,7 @@ function operate(
         );
     }
     if (treeType === tree.type) {
-        return transformation(clone, options) || clone;
+        return getReplacement(transformation(clone, options)) || clone;
     }
     return clone;
 }
@@ -1050,6 +1078,81 @@ class OperatorPattern extends Pattern {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// in - not in
+////////////////////////////////////////////////////////////////////////////////
+
+function isPathOnDatetimeOption(path) {
+    return ["__date", "__time"].includes(splitPath(path).lastPart);
+}
+
+function _introduceInForDatetimeOptions(c) {
+    const { path, operator, value, negate } = c;
+    if (value === false || !isPathOnDatetimeOption(path)) {
+        return;
+    }
+    if (operator === "=") {
+        return condition(path, "in", normalizeValue([value]), negate);
+    }
+    if (operator === "!=") {
+        return condition(path, "not in", normalizeValue([value]), negate);
+    }
+}
+
+function isSimplePathOnDatetimeOption(path) {
+    return isPathOnDatetimeOption(path) && isSimplePath(path);
+}
+
+function _mergeInOperatorsForDatetimeOptions(c) {
+    const op = c.value === "|" ? "in" : "not in";
+    const children = [];
+    let currentCondition = null;
+    for (let index = 0; index < c.children.length; index++) {
+        const child = c.children[index];
+        if (isSimplePathOnDatetimeOption(child.path) && !child.negate && child.operator === op) {
+            if (!currentCondition || child.path !== currentCondition.path) {
+                currentCondition = condition(child.path, op, []);
+                children.push(currentCondition);
+            }
+            // @ts-ignore
+            currentCondition.value.push(...child.value);
+        } else {
+            currentCondition = null;
+            children.push(child);
+        }
+    }
+    return { ...c, children };
+}
+
+function _removeInForDatetimeOptions(c) {
+    const { path, operator, value, negate } = c;
+    if (!isPathOnDatetimeOption(path)) {
+        return;
+    }
+    const [initialPath, lastPart] = splitPath2(path);
+
+    if (operator === "in" && Array.isArray(value)) {
+        return wrapInAny(
+            connector(
+                "|",
+                value.map((v) => condition(lastPart, "=", normalizeValue(v)))
+            ),
+            initialPath,
+            negate
+        );
+    }
+    if (operator === "not in" && Array.isArray(value)) {
+        return wrapInAny(
+            connector(
+                "&",
+                value.map((v) => condition(lastPart, "!=", normalizeValue(v)))
+            ),
+            initialPath,
+            negate
+        );
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // between - not_between
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1071,37 +1174,27 @@ const patternBetweenForDatetimeOptions = OperatorPattern.of(
     ]`
 );
 
-function wrapInAny(mv, initialPath, negate) {
-    if (mv instanceof Nothing) {
-        return;
-    }
-    let con = cloneTree(mv.value);
+function wrapInAny(tree, initialPath, negate) {
+    let con = cloneTree(tree);
     if (initialPath) {
         con = condition(initialPath, "any", con);
     }
     con.negate = negate;
-    return con;
+    return Just.of(con);
 }
 
 /**
  * @param {Connector} c
- * @param {[Tree, Tree]} param
  */
-function _createBetweenOperator(c, [child1, child2]) {
-    const pattern = Pattern.S([patternBetween, patternNotBetween]);
-    const mv = pattern.detect(connector(c.value, [child1, child2]));
-    if (mv instanceof Nothing) {
-        return;
-    }
-    const { path, operator, value1, value2 } = mv.value;
-    if (typeof path !== "string") {
-        return;
-    }
-    const [initialPath] = splitPath2(path);
-    if (initialPath) {
-        return;
-    }
-    return condition(path, operator, normalizeValue([value1, value2]));
+function _createBetweenOperator(c) {
+    return Pattern.S([patternBetween, patternNotBetween])
+        .detect(c)
+        .bind(({ path, operator, value1, value2 }) => {
+            if (isSimplePath(path)) {
+                return Just.of(condition(path, operator, normalizeValue([value1, value2])));
+            }
+            return Nothing.of();
+        });
 }
 
 /**
@@ -1110,41 +1203,34 @@ function _createBetweenOperator(c, [child1, child2]) {
 function _removeBetweenOperator(c) {
     const { negate, path, operator, value } = c;
     // @ts-ignore
-    if (!Array.isArray(value) || !["between", "not_between"].includes(operator)) {
+    if (
+        !Array.isArray(value) ||
+        !["between", "not_between"].includes(operator) ||
+        typeof path !== "string"
+    ) {
         return;
     }
     const [initialPath, lastPart] = splitPath2(path);
-    const mv = Pattern.S([patternBetween, patternNotBetween]).make({
-        path: lastPart,
-        operator,
-        value1: value[0],
-        value2: value[1],
-    });
-    return wrapInAny(mv, initialPath, negate);
+    return Pattern.S([patternBetween, patternNotBetween])
+        .make({
+            path: lastPart,
+            operator,
+            value1: value[0],
+            value2: value[1],
+        })
+        .bind((tree) => wrapInAny(tree, initialPath, negate));
 }
 
 /**
  * @param {Connector} c
- * @param {[Tree, Tree]} param
  */
-function _createBetweenOperatorForDatetimeOptions(c, [child1, child2]) {
-    const mv = patternBetweenForDatetimeOptions.detect(connector(c.value, [child1, child2]));
-    if (mv instanceof Nothing) {
-        return;
-    }
-    const { path, operator, value1, value2 } = mv.value;
-    if (typeof path !== "string") {
-        return;
-    }
-    const [initialPath] = splitPath2(path);
-    if (initialPath) {
-        return;
-    }
-    const { lastPart } = splitPath(path);
-    if (!["__date", "__time"].includes(lastPart)) {
-        return;
-    }
-    return condition(path, operator, normalizeValue([value1, value2]));
+function _createBetweenOperatorForDatetimeOptions(c) {
+    return patternBetweenForDatetimeOptions.detect(c).bind(({ path, operator, value1, value2 }) => {
+        if (isSimplePathOnDatetimeOption(path)) {
+            return Just.of(condition(path, operator, normalizeValue([value1, value2])));
+        }
+        return Nothing.of();
+    });
 }
 
 /**
@@ -1152,21 +1238,18 @@ function _createBetweenOperatorForDatetimeOptions(c, [child1, child2]) {
  */
 function _removeBetweenOperatorForDatetimeOptions(c) {
     const { negate, path, operator, value } = c;
-    if (
-        !Array.isArray(value) ||
-        operator !== "between" ||
-        !["__date", "__time"].includes(splitPath(path).lastPart)
-    ) {
+    if (!Array.isArray(value) || operator !== "between" || !isPathOnDatetimeOption(path)) {
         return;
     }
     const [initialPath, lastPart] = splitPath2(path);
-    const mv = patternBetweenForDatetimeOptions.make({
-        path: lastPart,
-        operator,
-        value1: value[0],
-        value2: value[1],
-    });
-    return wrapInAny(mv, initialPath, negate);
+    return patternBetweenForDatetimeOptions
+        .make({
+            path: lastPart,
+            operator,
+            value1: value[0],
+            value2: value[1],
+        })
+        .bind((tree) => wrapInAny(tree, initialPath, negate));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1180,8 +1263,7 @@ function _removeBetweenOperatorForDatetimeOptions(c) {
 function _createSpecialPath(c, options = {}) {
     const { negate, path, operator, value } = c;
     const { initialPath, lastPart } = splitPath(path);
-    const { lastPart: previousPart } = splitPath(initialPath);
-    if (!["__date", "__time", ""].includes(previousPart) && lastPart) {
+    if (!isPathOnDatetimeOption(initialPath) && lastPart) {
         if (getFieldType(initialPath, options) === "datetime") {
             const pathFieldType = getFieldType(path, options);
             if (pathFieldType === "date_option") {
@@ -1202,9 +1284,10 @@ function _createSpecialPath(c, options = {}) {
 function _removeSpecialPath(c) {
     const { negate, path, operator, value } = c;
     const { initialPath, lastPart } = splitPath(path);
-    const { initialPath: subPath, lastPart: previousPart } = splitPath(initialPath);
-    if (["__date", "__time"].includes(previousPart) && lastPart) {
-        return condition([subPath, lastPart].join("."), operator, value, negate);
+    const { initialPath: subPath } = splitPath(initialPath);
+    if (isPathOnDatetimeOption(initialPath) && lastPart) {
+        const newPath = [subPath, lastPart].join(".");
+        return condition(newPath, operator, value, negate);
     }
 }
 
@@ -1294,7 +1377,7 @@ class ParamsPattern extends Pattern {
     make(c) {
         const { path, operator, value } = c;
         const { initialPath, lastPart } = splitPath(path);
-        if (!initialPath || !["__date", "__time"].includes(lastPart)) {
+        if (!isPathOnDatetimeOption(path)) {
             return Nothing.of();
         }
 
@@ -1419,17 +1502,11 @@ const simpleOperatorPatternsWithAny = [
 ];
 /**
  * @param {Connector} c
- * @param {[Condition, Condition, Condition]} param
  * @param {Options} [options={}]
  */
-function _createDatetimeOption(c, [child1, child2, child3], options = {}) {
+function _createDatetimeOption(c, options = {}) {
     const paramsPattern = new ParamsPattern(options);
-    const pattern = Pattern.C([Pattern.S(simpleOperatorPatterns), paramsPattern]);
-    const mv = pattern.detect(connector(c.value, [child1, child2, child3]));
-    if (mv instanceof Nothing) {
-        return;
-    }
-    return mv.value;
+    return Pattern.C([Pattern.S(simpleOperatorPatterns), paramsPattern]).detect(c);
 }
 
 /**
@@ -1464,8 +1541,7 @@ function _removeAnyOperator(c) {
         typeof value.path === "string" &&
         !negate &&
         !value.negate &&
-        (["between", "not_between"].includes(value.operator) ||
-            ["__date", "__time"].includes(splitPath(value.path).lastPart))
+        (["between", "not_between"].includes(value.operator) || isPathOnDatetimeOption(value.path))
     ) {
         return condition(`${path}.${value.path}`, value.operator, value.value);
     }
@@ -1644,6 +1720,16 @@ function _removeVirtualOperator(c) {
     }
 }
 
+function _removeFalseTrueLeaves(c) {
+    const { path, operator, value, negate } = c;
+    if (areEqualTrees(condition(path, operator, value), FALSE_TREE)) {
+        return connector(negate ? "&" : "|", []);
+    }
+    if (areEqualTrees(condition(path, operator, value), TRUE_TREE)) {
+        return connector(negate ? "|" : "&", []);
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //  operations on trees
 ////////////////////////////////////////////////////////////////////////////////
@@ -1670,13 +1756,7 @@ function _removeComplexCondition(c) {
  * @returns {Tree}
  */
 function createBetweenOperators(tree, options = {}) {
-    return operate(
-        (connector, options) =>
-            rewriteNConsecutiveChildren(_createBetweenOperator, connector, options),
-        tree,
-        options,
-        "connector"
-    );
+    return operate(rewriteNConsecutiveChildren(_createBetweenOperator), tree, options, "connector");
 }
 
 /**
@@ -1693,12 +1773,7 @@ function removeBetweenOperators(tree) {
  */
 function createBetweenOperatorsForDatetimeOptions(tree, options = {}) {
     return operate(
-        (connector, options) =>
-            rewriteNConsecutiveChildren(
-                _createBetweenOperatorForDatetimeOptions,
-                connector,
-                options
-            ),
+        rewriteNConsecutiveChildren(_createBetweenOperatorForDatetimeOptions),
         tree,
         options,
         "connector"
@@ -1718,10 +1793,9 @@ function removeBetweenOperatorsForDatetimeOptions(tree) {
  * @param {Options} [options={}]
  * @returns {Tree}
  */
-function createDatetimeOptions(tree, options = {}) {
+export function createDatetimeOptions(tree, options = {}) {
     return operate(
-        (connector, options) =>
-            rewriteNConsecutiveChildren(_createDatetimeOption, connector, options, 3),
+        rewriteNConsecutiveChildren(_createDatetimeOption, 3),
         tree,
         options,
         "connector"
@@ -1753,8 +1827,16 @@ export function removeVirtualOperators(tree) {
     return operate(_removeVirtualOperator, tree);
 }
 
-function removeAnyOperators(tree) {
-    return operate(_removeAnyOperator, tree);
+export function introduceInForDatetimeOptions(tree) {
+    return operate(_introduceInForDatetimeOptions, tree);
+}
+
+export function mergeInOperatorsForDatetimeOptions(tree, options = {}) {
+    return operate(_mergeInOperatorsForDatetimeOptions, tree, options, "connector");
+}
+
+export function removeInOperatorsForDatetimeOptions(tree) {
+    return operate(_removeInForDatetimeOptions, tree);
 }
 
 /**
@@ -1762,7 +1844,7 @@ function removeAnyOperators(tree) {
  * @param {Options} [options=[]]
  * @returns {Tree}
  */
-function createSpecialPaths(tree, options = {}) {
+export function createSpecialPaths(tree, options = {}) {
     return operate(_createSpecialPath, tree, options);
 }
 
@@ -1790,17 +1872,26 @@ function removeComplexConditions(tree) {
     return operate(_removeComplexCondition, tree, {}, "complex_condition");
 }
 
+export function removeAnyOperators(tree) {
+    return operate(_removeAnyOperator, tree);
+}
+
+function removeFalseTrueLeaves(tree) {
+    return operate(_removeFalseTrueLeaves, tree);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 //  PUBLIC: MAPPINGS
-//    expression <-> tree
-//    domain <-> tree
+//    expression <-> tree <-> domain
 ////////////////////////////////////////////////////////////////////////////////
 
 const VIRTUAL_OPERATORS_INTRODUCTION = [createVirtualOperators, createBetweenOperators];
 export const FULL_VIRTUAL_OPERATORS_INTRODUCTION = [
     removeAnyOperators,
-    createBetweenOperatorsForDatetimeOptions,
+    mergeInOperatorsForDatetimeOptions,
+    introduceInForDatetimeOptions,
     ...VIRTUAL_OPERATORS_INTRODUCTION,
+    createBetweenOperatorsForDatetimeOptions,
     createSpecialPaths,
     createDatetimeOptions,
 ];
@@ -1810,6 +1901,7 @@ export const FULL_VIRTUAL_OPERATORS_ELIMINATION = [
     removeDatetimeOptions,
     removeSpecialPaths,
     ...VIRTUAL_OPERATORS_ELIMINATION,
+    removeInOperatorsForDatetimeOptions,
     removeBetweenOperatorsForDatetimeOptions,
     removeComplexConditions,
 ];
@@ -1844,11 +1936,7 @@ export function expressionFromTree(tree, options = {}) {
  */
 export function domainFromTree(tree) {
     const simplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_ELIMINATION, tree);
-    const domainAST = {
-        type: 4,
-        value: getASTs(simplifiedTree),
-    };
-    return formatAST(domainAST);
+    return constructDomain(simplifiedTree);
 }
 
 /**
