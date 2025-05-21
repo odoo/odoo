@@ -976,8 +976,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             declared_value += (line.product_id.list_price or 10.0) * (line.quantity or 1.0)
 
         payload = {
-            "merchant_code": config["DEFAULT_MERCHANT_CODE"],
+            #"merchant_code": config["DEFAULT_MERCHANT_CODE"],
+            "merchant_code": (
+                "MYD"
+                if sale and sale.carrier and sale.carrier.strip().lower() == "couriers please"
+                and self.tenant_code_id.name.strip().upper() == "MYDEAL"
+                else config["DEFAULT_MERCHANT_CODE"]
+            ),
             "service_type": sale.service_type or "STANDARD",
+            "carrier_code": sale.carrier,
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "tu_id": None,
@@ -1361,8 +1368,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             declared_value += (line.product_id.list_price or 10.0) * (line.quantity or 1.0)
 
         payload = {
-            "merchant_code": config["DEFAULT_MERCHANT_CODE"],
+            #"merchant_code": config["DEFAULT_MERCHANT_CODE"],
+            "merchant_code": (
+            "MYD"
+            if sale and sale.carrier and sale.carrier.strip().lower() == "couriers please"
+            and self.tenant_code_id.name.strip().upper() == "MYDEAL"
+            else config["DEFAULT_MERCHANT_CODE"]
+        ),
             "service_type": sale.service_type or "STANDARD",
+            "carrier_code": sale.carrier,
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "auto_generate_label": config["DEFAULT_AUTO_GENERATE_LABEL"],
