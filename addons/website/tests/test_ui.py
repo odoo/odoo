@@ -160,7 +160,6 @@ class TestUiHtmlEditor(HttpCaseWithUserDemo):
         self.start_tour(self.env['website'].get_client_action_url('/contactus'), 'test_html_editor_scss', login='admin')
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_html_editor_scss_2', login='demo')
 
-    @unittest.skip
     def test_media_dialog_undraw(self):
         BASE_URL = self.base_url()
         banner = '/website/static/src/img/snippets_demo/s_banner.jpg'
