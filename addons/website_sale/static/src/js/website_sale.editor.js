@@ -12,12 +12,28 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
+        const _super = this._super.bind(this);
+
         const gridEl = this.$target[0].querySelector('#o_wsale_products_grid');
-        this.ppg = parseInt(gridEl.dataset.ppg);
-        this.ppr = parseInt(gridEl.dataset.ppr);
-        this.gap = this.$target[0].style.getPropertyValue('--o-wsale-products-grid-gap');
-        this.default_sort = gridEl.dataset.defaultSort;
+        if (gridEl) {
+            this.ppg = parseInt(gridEl.dataset.ppg);
+            this.ppr = parseInt(gridEl.dataset.ppr);
+            this.gap = this.$target[0].style.getPropertyValue('--o-wsale-products-grid-gap');
+            this.default_sort = gridEl.dataset.defaultSort;
+        } else {
+            const { data_res_model, data_res_id } = this.options.recordInfo;
+            [{
+                shop_ppg: this.ppg,
+                shop_ppr: this.ppr,
+                shop_gap: this.gap,
+                shop_default_sort: this.default_sort,
+            }] = await this.orm.read(
+                data_res_model,
+                [data_res_id],
+                ['shop_ppg', 'shop_ppr', 'shop_gap', 'shop_default_sort'],
+            );
+        }
 
         // Activate HTML previews when necessary only
         // See 'website_sale.editor_previews' XML template
@@ -25,7 +41,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
             this._handlePreviews();
         }
 
-        return this._super.apply(this, arguments);
+        return _super(...arguments);
     },
     /**
      * @override
