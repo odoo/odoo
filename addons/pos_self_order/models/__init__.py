@@ -16,3 +16,4 @@ from . import pos_preset
 from . import res_partner
 from . import res_country
 from . import mail_template
+from . import pos_prep_order

@@ -31,7 +31,7 @@ describe("order_summary.js", () => {
             manual: false,
         };
 
-        const component = await mountWithCleanup(OrderSummary, {});
+        const component = await mountWithCleanup(OrderSummary, { props: { order: order } });
 
         await component._updateGiftCardOrderline("ABC123", points);
 
