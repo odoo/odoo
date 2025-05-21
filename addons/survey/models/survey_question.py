@@ -85,16 +85,17 @@ class SurveyQuestion(models.Model):
     # question specific
     page_id = fields.Many2one('survey.question', string='Page', compute="_compute_page_id", store=True)
     question_type = fields.Selection([
-        ('simple_choice', 'Multiple choice: only one answer'),
-        ('multiple_choice', 'Multiple choice: multiple answers allowed'),
-        ('text_box', 'Multiple Lines Text Box'),
-        ('char_box', 'Single Line Text Box'),
-        ('numerical_box', 'Numerical Value'),
+        ('simple_choice', 'Choice-based'),
+        ('multiple_choice', 'Choice-based: multiple answers allowed'),
+        ('text_box', 'Long Text'),
+        ('char_box', 'Short Text'),
+        ('numerical_box', 'Number'),
         ('scale', 'Scale'),
         ('date', 'Date'),
         ('datetime', 'Datetime'),
         ('matrix', 'Matrix')], string='Question Type',
         compute='_compute_question_type', readonly=False, store=True)
+    allowed_question_types = fields.Json(string="Allowed types", compute="_compute_allowed_question_types")
     is_scored_question = fields.Boolean(
         'Scored', compute='_compute_is_scored_question',
         readonly=False, store=True, copy=True,
@@ -413,6 +414,9 @@ class SurveyQuestion(models.Model):
         self.validation_min_float_value = 0
         self.validation_max_float_value = 0
 
+    def _compute_allowed_question_types(self):
+        self.allowed_question_types = [
+            value for value, _ in self._fields['question_type'].selection if value != "multiple_choice"]
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
