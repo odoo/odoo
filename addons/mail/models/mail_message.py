@@ -860,17 +860,45 @@ class MailMessage(models.Model):
             ])])
             domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
             res["count"] = self.search_count(domain)
-        if around is not None:
-            messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
-            messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
-            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
-        if before:
-            domain = expression.AND([domain, [('id', '<', before)]])
+
+        is_chatter_view = self._context.get('is_chatter_view', False)
+
+        if is_chatter_view:
+            if around is not None:
+                around_message = self.browse(around)
+                messages_before = self.search(domain=[*domain, ('date', '<=', around_message.date)], limit=limit // 2, order="date DESC, id DESC")
+                messages_after = self.search(domain=[*domain, ('date', '>', around_message.date)], limit=limit // 2, order='date ASC, id ASC')
+                return {**res, "messages": (messages_after + messages_before).sorted(lambda m: (m.date, m.id), reverse=True)}
+            if before:
+                before_message = self.browse(before)
+                domain = expression.AND([domain, expression.OR([
+                    [('date', '<', before_message.date)],
+                    [('date', '=', before_message.date), ('id', '<', before)]
+                ])])
+            if after:
+                after_message = self.browse(after)
+                domain = expression.AND([domain, expression.OR([
+                    [('date', '>', after_message.date)],
+                    [('date', '=', after_message.date), ('id', '>', after)]
+                ])])
+            order = 'date ASC, id ASC' if after else 'date DESC, id DESC'
+        else:
+            if around is not None:
+                messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
+                messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
+                return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
+            if before:
+                domain = expression.AND([domain, [('id', '<', before)]])
+            if after:
+                domain = expression.AND([domain, [('id', '>', after)]])
+            order = order = 'id ASC' if after else 'id DESC'
+
+        res["messages"] = self.search(domain, limit=limit, order=order)
         if after:
-            domain = expression.AND([domain, [('id', '>', after)]])
-        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
-        if after:
-            res["messages"] = res["messages"].sorted('id', reverse=True)
+            if is_chatter_view:
+                res["messages"] = res["messages"].sorted(lambda m: (m.date, m.id), reverse=True)
+            else:
+                res["messages"] = res["messages"].sorted('id', reverse=True)
         return res
 
     def _message_reaction(self, content, action, partner, guest, store: Store = None):
