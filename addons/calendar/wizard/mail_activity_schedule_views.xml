@@ -18,7 +18,7 @@
             <xpath expr="//field[@name='note']" position="attributes">
                 <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
-            <xpath expr="//group[@name='summary_group']" position="attributes">
+            <xpath expr="//group[@name='summary_group']|//field[@name='summary']" position="attributes">
                 <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
             <xpath expr="//field[@name='note']" position="before">
