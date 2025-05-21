@@ -20,6 +20,17 @@ export class DataServiceOptions {
                 condition: (record) =>
                     record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
+            "pos.prep.order": {
+                key: "uuid",
+                condition: (record) =>
+                    record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
+            },
+            "pos.prep.line": {
+                key: "uuid",
+                condition: (record) =>
+                    record.pos_order_line_id?.finalized &&
+                    typeof record.pos_order_line_id.id === "number",
+            },
         };
     }
 
@@ -30,6 +41,8 @@ export class DataServiceOptions {
             "pos.payment",
             "pos.pack.operation.lot",
             "product.attribute.custom.value",
+            "pos.prep.order",
+            "pos.prep.line",
         ];
     }
 

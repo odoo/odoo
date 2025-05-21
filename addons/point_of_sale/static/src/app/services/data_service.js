@@ -351,12 +351,24 @@ export class PosData extends Reactive {
         const data = await this.loadInitialData(hard, limit);
         const order = data["pos.order"] || [];
         const orderlines = data["pos.order.line"] || [];
+        const posPrepOrder = data["pos.prep.order"] || [];
+        const posPrepLine = data["pos.prep.line"] || [];
 
         delete data["pos.order"];
         delete data["pos.order.line"];
+        delete data["pos.prep.order"];
+        delete data["pos.prep.line"];
 
         this.models.loadConnectedData(data, this.modelToLoad);
-        this.models.loadConnectedData({ "pos.order": order, "pos.order.line": orderlines }, []);
+        this.models.loadConnectedData(
+            {
+                "pos.order": order,
+                "pos.order.line": orderlines,
+                "pos.prep.order": posPrepOrder,
+                "pos.prep.line": posPrepLine,
+            },
+            []
+        );
         this.sanitizeData();
     }
 

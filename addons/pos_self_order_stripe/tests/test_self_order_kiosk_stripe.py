@@ -87,7 +87,6 @@ class TestSelfOrderKioskStripe(SelfOrderCommonTest):
             'amount_tax': 0.0,
             'amount_return': 0.0,
             'to_invoice': True,
-            'last_order_preparation_change': '{}',
             'access_token': 'order_access',
         })
         with patch(

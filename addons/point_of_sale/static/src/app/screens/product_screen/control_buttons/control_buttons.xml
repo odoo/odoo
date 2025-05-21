@@ -52,7 +52,7 @@
     </t>
     <t t-name="point_of_sale.ControlButtonsPopup">
         <Dialog bodyClass="'d-flex flex-column'" footer="false" title.translate="Actions" t-on-click="props.close">
-            <ControlButtons showRemainingButtons="true" close="props.close"/>
+            <ControlButtons showRemainingButtons="true" close="props.close" order="props.order"/>
         </Dialog>
     </t>
 </templates>

@@ -23,7 +23,7 @@ patch(ProductScreen.prototype, {
         });
     },
     get nbrOfChanges() {
-        return this.pos.getOrderChanges().nbrOfChanges;
+        return this.pos.getOrder().orderChanges.nbrOfChanges;
     },
     get swapButton() {
         return this.pos.config.module_pos_restaurant && this.pos.config.preparationCategories.size;
@@ -40,7 +40,8 @@ patch(ProductScreen.prototype, {
     },
     get primaryOrderButton() {
         return (
-            this.pos.getOrderChanges().nbrOfChanges !== 0 && this.pos.config.module_pos_restaurant
+            this.pos.getOrder().orderChanges.nbrOfChanges !== 0 &&
+            this.pos.config.module_pos_restaurant
         );
     },
     getNumpadButtons() {

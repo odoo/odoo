@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.OrderTabs" t-inherit="point_of_sale.OrderTabs" t-inherit-mode="extension">
        <xpath expr="//div[hasclass('floating-order-container')]" position="before">
-            <t t-set="changes" t-value="this.pos.getOrderChanges(order)" />
+            <t t-set="changes" t-value="order.orderChanges" />
         </xpath>
         <xpath expr="//div[hasclass('floating-order-container')]" position="inside">
             <div t-if="changes.nbrOfChanges and this.pos.config.module_pos_restaurant"

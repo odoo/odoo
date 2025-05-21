@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
-import json
 
 
 class PosSession(models.Model):
@@ -18,18 +17,4 @@ class PosSession(models.Model):
     @api.model
     def _set_last_order_preparation_change(self, order_ids):
         for order_id in order_ids:
-            order = self.env['pos.order'].browse(order_id)
-            last_order_preparation_change = {
-                'lines': {},
-                'generalCustomerNote': '',
-            }
-            for orderline in order['lines']:
-                last_order_preparation_change['lines'][orderline.uuid + " - "] = {
-                    "uuid": orderline.uuid,
-                    "name": orderline.full_product_name,
-                    "note": "",
-                    "product_id": orderline.product_id.id,
-                    "quantity": orderline.qty,
-                    "attribute_value_ids": orderline.attribute_value_ids.ids,
-                }
-            order.write({'last_order_preparation_change': json.dumps(last_order_preparation_change)})
+            self.env['pos.prep.order']._compute_prep_order(order_id)
