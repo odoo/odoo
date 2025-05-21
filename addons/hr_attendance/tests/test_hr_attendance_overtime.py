@@ -489,6 +489,37 @@ class TestHrAttendanceOvertime(TransactionCase):
         # Employee with flexible working schedule should not be checked out
         self.assertEqual(attendance_flexible_pending.check_out, False)
 
+    @freeze_time("2024-02-2 20:00:00")
+    def test_auto_check_out_calendar_tz(self):
+        """Check expected working hours and previously worked hours are from the correct day when
+        using a calendar with a different timezone."""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 1
+        })
+        self.jpn_employee.resource_calendar_id.tz = 'Asia/Tokyo'  # UTC+9
+        self.jpn_employee.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == "4" and a.day_period in ["lunch", "afternoon"]).unlink()
+
+        attendances_jpn = self.env['hr.attendance'].create([
+            {
+                'employee_id': self.jpn_employee.id,
+                'check_in': datetime(2024, 2, 1, 6, 0),
+                'check_out': datetime(2024, 2, 1, 7, 0)
+            },
+            {
+                'employee_id': self.jpn_employee.id,
+                'check_in': datetime(2024, 2, 1, 21, 0),
+                'check_out': datetime(2024, 2, 1, 22, 0)
+            },
+            {
+                'employee_id': self.jpn_employee.id,
+                'check_in': datetime(2024, 2, 1, 23, 0)
+            }
+        ])
+
+        self.env['hr.attendance']._cron_auto_check_out()
+        self.assertEqual(attendances_jpn[2].check_out, datetime(2024, 2, 2, 3, 0), "Check-out after 4 hours (4 hours expected from calendar + 1 hours tolerance - 1 hour previous attendance)")
+
     def test_auto_check_out_lunch_period(self):
         Attendance = self.env['hr.attendance']
         self.company.write({
