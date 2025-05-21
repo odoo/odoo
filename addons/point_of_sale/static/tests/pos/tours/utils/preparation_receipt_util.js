@@ -26,11 +26,7 @@ export async function generateReceiptsToPrint(order, orderChange) {
 // Return rendered order change receipts that will be printed when clicking "Order" button
 export async function generatePreparationReceipts() {
     const order = posmodel.getOrder();
-    const orderChange = posmodel.changesToOrder(
-        order,
-        posmodel.config.preparationCategories,
-        false
-    );
+    const orderChange = order.changesToOrder();
     return await generateReceiptsToPrint(order, orderChange);
 }
 
@@ -41,7 +37,7 @@ export async function generateFireCourseReceipts() {
     const orderChange = {
         new: [],
         cancelled: [],
-        noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+        noteUpdate: course.lines.map((line) => ({ orderline: line })),
         noteUpdateTitle: _t("Course %s fired", "" + course.index),
         printNoteUpdateData: false,
     };

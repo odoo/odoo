@@ -150,39 +150,34 @@ patch(PosStore.prototype, {
 
         return await super.sendOrderInPreparationUpdateLastChange(order, cancelled);
     },
-    handlePreparationHistory(srcPrep, destPrep, srcLine, destLine, qty) {
-        const srcKey = srcLine.preparationKey;
-        const destKey = destLine.preparationKey;
-        const srcQty = srcPrep[srcKey]?.quantity;
-
-        if (srcQty) {
-            if (srcQty <= qty) {
-                const newPrep = { ...srcPrep[srcKey], uuid: destLine.uuid };
-                destPrep[destKey] = newPrep;
-                delete srcPrep[srcKey];
-            } else {
-                srcPrep[srcKey].quantity = srcQty - qty;
-                destPrep[destKey] = { ...srcPrep[srcKey], uuid: destLine.uuid, quantity: qty };
-            }
+    handlePreparationHistory(destLine, prepLines) {
+        for (const prepLine of prepLines) {
+            prepLine.pos_order_line_uuid = destLine.uuid;
+            prepLine.pos_order_line_id = destLine;
         }
     },
     async mergeOrders(sourceOrder, destOrder) {
         let whileGuard = 0;
         const mergedCourses = this.mergeCourses(sourceOrder, destOrder);
+        const prepOrders = this.models["pos.prep.order"].filter(
+            (l) => l.pos_order_uuid === sourceOrder.uuid
+        );
+        for (const prepOrder of prepOrders) {
+            prepOrder.pos_order_uuid = destOrder.uuid;
+            prepOrder.pos_order_id = destOrder;
+        }
         while (sourceOrder.lines.length) {
             const orphanLine = sourceOrder.lines[0];
             const destinationLine = destOrder?.lines?.find((l) => l.canBeMergedWith(orphanLine));
             let uuid = "";
+            const prepLines = this.models["pos.prep.line"].filter(
+                (l) => l.pos_order_line_uuid === orphanLine.uuid
+            );
+
             if (destinationLine) {
                 destinationLine.merge(orphanLine);
                 uuid = destinationLine.uuid;
-                this.handlePreparationHistory(
-                    sourceOrder.last_order_preparation_change.lines,
-                    destOrder.last_order_preparation_change.lines,
-                    orphanLine,
-                    destinationLine,
-                    orphanLine.qty
-                );
+                this.handlePreparationHistory(destinationLine, prepLines);
             } else {
                 const serializedLine = { ...orphanLine.raw };
                 serializedLine.order_id = destOrder.id;
@@ -200,19 +195,14 @@ patch(PosStore.prototype, {
                         );
                     }
                 }
-                this.handlePreparationHistory(
-                    sourceOrder.last_order_preparation_change.lines,
-                    destOrder.last_order_preparation_change.lines,
-                    orphanLine,
-                    newLine,
-                    orphanLine.qty
-                );
+                this.handlePreparationHistory(newLine, prepLines);
             }
 
             if (sourceOrder.table_id) {
                 destOrder.uiState.unmerge[uuid] = {
                     table_id: sourceOrder.table_id.id,
                     quantity: orphanLine.qty,
+                    prepLineUuids: prepLines.map((pl) => pl.uuid),
                 };
             }
 
@@ -239,9 +229,8 @@ patch(PosStore.prototype, {
                 });
             }
         }
-
-        await this.deleteOrders([sourceOrder], [], true);
         this.syncAllOrders({ orders: [destOrder] });
+        await this.deleteOrders([sourceOrder], [], true);
         return destOrder;
     },
     mergeCourses(sourceOrder, destOrder) {
@@ -298,6 +287,7 @@ patch(PosStore.prototype, {
                     acc.push({
                         quantity: details.quantity,
                         uuid: uuid,
+                        prepLineUuids: details.prepLineUuids,
                     });
                 }
                 return acc;
@@ -319,9 +309,16 @@ patch(PosStore.prototype, {
                 []
             );
         }
-
-        if (beforeMergeDetails.length) {
+        if (beforeMergeDetails?.length) {
+            const prepLineUuids = beforeMergeDetails.map((bm) => bm.prepLineUuids).flat();
+            const prepOrders = this.models["pos.prep.line"]
+                .filter((pl) => prepLineUuids.includes(pl.uuid))
+                .map((pl) => pl.prep_order_id);
             const newOrder = this.addNewOrder({ table_id: unmergeTable });
+            for (const prepOrder of prepOrders) {
+                prepOrder.pos_order_uuid = newOrder.uuid;
+                prepOrder.pos_order_id = newOrder;
+            }
 
             const courseByLines = {};
             if (beforeMergeCourseDetails?.length) {
@@ -341,11 +338,31 @@ patch(PosStore.prototype, {
             }
 
             for (const detail of beforeMergeDetails) {
+                const prepLines = order.models["pos.prep.line"].filter((l) =>
+                    detail.prepLineUuids.includes(l.uuid)
+                );
+                if (!prepLines.length) {
+                    const prepLinesExist = this.models["pos.prep.line"].filter(
+                        (f) => f.pos_order_line_uuid === detail.uuid
+                    );
+                    if (prepLinesExist.length) {
+                        delete order.uiState.unmerge[detail.uuid];
+                        continue;
+                    }
+                }
                 const line = order.lines.find((l) => l.uuid === detail.uuid);
                 const serializedLine = { ...line.raw };
                 delete serializedLine.uuid;
                 delete serializedLine.id;
                 const course = courseByLines[detail.uuid];
+                if (prepLines?.length) {
+                    detail.quantity = prepLines.reduce(
+                        (sum, l) => sum + l.quantity - l.cancelled,
+                        0
+                    );
+                } else {
+                    detail.quantity = Math.min(detail.quantity, line.qty);
+                }
                 Object.assign(serializedLine, {
                     order_id: newOrder.id,
                     qty: detail.quantity,
@@ -360,13 +377,7 @@ patch(PosStore.prototype, {
                 } else {
                     line.setQuantity(line.qty - newLine.qty);
                 }
-                this.handlePreparationHistory(
-                    order.last_order_preparation_change.lines,
-                    newOrder.last_order_preparation_change.lines,
-                    line,
-                    newLine,
-                    detail.quantity
-                );
+                this.handlePreparationHistory(newLine, prepLines);
 
                 delete order.uiState.unmerge[line.uuid];
             }
@@ -403,8 +414,8 @@ patch(PosStore.prototype, {
             );
             const qtyChange = tableOrders.reduce(
                 (acc, order) => {
-                    const quantityChange = this.getOrderChanges(order);
-                    acc.changed += quantityChange.count;
+                    const quantityChange = order.orderChanges;
+                    acc.changed += quantityChange.nbrOfChanges;
                     return acc;
                 },
                 { changed: 0 }
@@ -414,13 +425,11 @@ patch(PosStore.prototype, {
         }
     },
     get categoryCount() {
-        const orderChanges = this.getOrderChanges();
+        const orderChanges = this.getOrder().orderChanges;
         const linesChanges = orderChanges.orderlines;
 
         const categories = Object.values(linesChanges).reduce((acc, curr) => {
-            const categories =
-                this.models["product.product"].get(curr.product_id)?.product_tmpl_id
-                    ?.pos_categ_ids || [];
+            const categories = curr.orderline?.product_id?.product_tmpl_id?.pos_categ_ids || [];
 
             for (const category of categories.slice(0, 1)) {
                 if (!acc[category.id]) {
@@ -443,15 +452,6 @@ patch(PosStore.prototype, {
         const nbNoteChange = Object.keys(orderChanges.noteUpdate).length;
         if (nbNoteChange) {
             categories["noteUpdate"] = { count: nbNoteChange, name: _t("Note") };
-        }
-        // Only send modeUpdate if there's already an older mode in progress.
-        const currentOrder = this.getOrder();
-        if (
-            orderChanges.modeUpdate &&
-            Object.keys(currentOrder.last_order_preparation_change.lines).length
-        ) {
-            const displayName = _t(currentOrder.preset_id?.name);
-            categories["modeUpdate"] = { count: 1, name: displayName };
         }
 
         return [
@@ -925,7 +925,7 @@ patch(PosStore.prototype, {
         const order = course.order_id;
         course.fired = true;
         order.deselectCourse();
-        await this.sendOrderInPreparation(order, { firedCourseId: course.id, byPassPrint: true });
+        await this.data.call("pos.prep.order", "fire_course", [order.id, course.id]);
         await this.printCourseTicket(course);
         return true;
     },
@@ -934,7 +934,7 @@ patch(PosStore.prototype, {
             const changes = {
                 new: [],
                 cancelled: [],
-                noteUpdate: course.lines.map((line) => ({ product_id: line.getProduct().id })),
+                noteUpdate: course.lines.map((line) => ({ orderline: line })),
                 noteUpdateTitle: _t("Course %s fired", "" + course.index),
                 printNoteUpdateData: false,
             };
