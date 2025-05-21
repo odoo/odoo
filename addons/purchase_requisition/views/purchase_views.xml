@@ -61,11 +61,6 @@
         <field name="inherit_id" ref="purchase.purchase_order_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="before">
-                <field name="has_alternatives" column_invisible="True"/>
-                <button class="fa fa-copy"
-                    title="Has Alternatives"
-                    disabled="1"
-                    invisible="not has_alternatives"/>
             </field>
         </field>
     </record>
