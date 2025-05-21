@@ -21,6 +21,7 @@
                             </group>
                             <group col="2" invisible="not send_email">
                                 <field name="partner_ids"
+                                    string="To"
                                     widget="many2many_tags_email"
                                     placeholder="Add contacts..."
                                     required="send_email"
@@ -45,9 +46,9 @@
                         </group>
                     </sheet>
                     <footer>
-                        <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Close" invisible="send_email" class="btn-secondary" special="cancel" data-hotkey="x"/>
-                        <button string="Cancel" invisible="not send_email" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Send Invitations" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" invisible="send_email" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Discard" invisible="not send_email" class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
             </field>

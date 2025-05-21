@@ -61,14 +61,17 @@
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </group>
                             <group>
-                                <field name="deadline"/>
                                 <field name="template_id" label="Use template"/>
                             </group>
                         </group>
                     </group>
                     <footer>
-                        <button string="Send" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <button string="Send Invitations" invisible="not send_email" name="action_invite" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                        <div>
+                            <label for="deadline" class="fw-bold text-900 me-1" invisible="not send_email"/>
+                            <field name="deadline" invisible="not send_email"/>
+                        </div>
                     </footer>
                 </form>
             </field>
