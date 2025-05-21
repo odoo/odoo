@@ -180,13 +180,29 @@ export class SplitBillScreen extends Component {
                     line.update({ qty: newQty });
                 }
 
-                this.pos.handlePreparationHistory(
-                    originalOrder.last_order_preparation_change.lines,
-                    newOrder.last_order_preparation_change.lines,
-                    line,
-                    newLine,
-                    this.qtyTracker[line.uuid]
+                const prepLines = this.pos.models["pos.prep.line"].filter(
+                    (l) => l.pos_order_line_uuid === line.uuid
                 );
+                let toDelete = this.qtyTracker[line.uuid];
+                for (const prepLine of prepLines) {
+                    const qty = prepLine.quantity - prepLine.cancelled;
+                    const deletedQty = Math.min(qty, toDelete);
+                    if (deletedQty > 0) {
+                        this.pos.models["pos.prep.line"].create({
+                            prep_order_id: prepLines[0].prep_order_id,
+                            pos_order_line_uuid: newLine.uuid,
+                            product_id: line.getProduct().id,
+                            quantity: deletedQty,
+                            pos_order_line_id: newLine,
+                            co_prep_line_id: prepLine,
+                        });
+                        prepLine.quantity -= deletedQty;
+                        toDelete -= deletedQty;
+                    }
+                    if (toDelete === 0) {
+                        break;
+                    }
+                }
             }
         }
 

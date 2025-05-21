@@ -270,7 +270,6 @@ class PosOrder(models.Model):
         return price_unit
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
-    last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
         comodel_name='res.users', string='Employee',
@@ -353,6 +352,7 @@ class PosOrder(models.Model):
         ('invoiced', 'Fully Invoiced'),
         ('to_invoice', 'To Invoice'),
     ], string='Invoice Status', compute='_compute_invoice_status')
+    prep_order_ids = fields.One2many('pos.prep.order', 'pos_order_id', string='Preparation orders')
 
     @api.depends('account_move')
     def _compute_invoice_status(self):
@@ -1150,7 +1150,6 @@ class PosOrder(models.Model):
 
     def read_pos_data(self, data, config_id):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
-
         return {
             'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.session': [],
@@ -1158,6 +1157,8 @@ class PosOrder(models.Model):
             'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
             'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
             "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.prep.order': self.prep_order_ids.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.prep.line': self.prep_order_ids.prep_line_ids.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
         }
 
     @api.model

@@ -20,6 +20,17 @@ export class DataServiceOptions {
                 condition: (record) =>
                     record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
+            "pos.prep.order": {
+                key: "uuid",
+                condition: (record) =>
+                    record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
+            },
+            "pos.prep.line": {
+                key: "uuid",
+                condition: (record) =>
+                    record.pos_order_line_id?.finalized &&
+                    typeof record.pos_order_line_id.id === "number",
+            },
         };
     }
 
@@ -46,6 +57,8 @@ export class DataServiceOptions {
             "calendar.event": ["appointment_resource_ids"],
             "res.partner": ["barcode"],
             "product.uom": ["barcode"],
+            "pos.prep.order": ["pos_order_uuid"],
+            "pos.prep.line": ["pos_order_line_uuid"],
         };
 
         for (const model in databaseTable) {

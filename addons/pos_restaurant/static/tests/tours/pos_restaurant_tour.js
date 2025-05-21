@@ -31,7 +31,7 @@ function checkOrderChanges(expected_changes) {
             )}`,
             trigger: ".pos", // dummy trigger
             run: function () {
-                const orderChanges = window.posmodel.getOrderChanges();
+                const orderChanges = window.posmodel.getOrder().orderChanges;
                 const orderChangesKeys = Object.keys(orderChanges.orderlines);
                 const orderChangesNbr = orderChangesKeys.length;
                 // Quick check for lenght
@@ -44,7 +44,7 @@ function checkOrderChanges(expected_changes) {
                     const order_change_line = orderChangesKeys.find((key) => {
                         const change = orderChanges.orderlines[key];
                         return (
-                            change.name === expected_change.name &&
+                            change.orderline.full_product_name === expected_change.name &&
                             change.quantity === expected_change.quantity
                         );
                     });

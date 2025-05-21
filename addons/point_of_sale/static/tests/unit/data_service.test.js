@@ -72,6 +72,8 @@ class PosSession extends models.ServerModel {
             "pos.category": { relations: {}, fields: {} },
             "pos.order": { relations: {}, fields: {} },
             "pos.order.line": { relations: {}, fields: {} },
+            "pos.prep.line": { relations: {}, fields: {} },
+            "pos.prep.order": { relations: {}, fields: {} },
             "pos.payment": { relations: {}, fields: {} },
             "pos.pack.operation.lot": { relations: {}, fields: {} },
             "product.pricelist.item": { relations: {}, fields: {} },

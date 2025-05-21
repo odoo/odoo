@@ -22,6 +22,7 @@ export class ControlButtons extends Component {
         showRemainingButtons: { type: Boolean, optional: true },
         onClickMore: { type: Function, optional: true },
         close: { type: Function, optional: true },
+        order: { type: Object, optional: true },
     };
     static defaultProps = {
         showRemainingButtons: false,
@@ -33,10 +34,10 @@ export class ControlButtons extends Component {
         this.notification = useService("notification");
     }
     get partner() {
-        return this.pos.getOrder()?.getPartner();
+        return this.currentOrder?.getPartner();
     }
     get currentOrder() {
-        return this.pos.getOrder();
+        return this.props.order;
     }
     async clickFiscalPosition() {
         const currentFiscalPosition = this.currentOrder.fiscal_position_id;
@@ -150,10 +151,11 @@ export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
     static template = xml`
         <Dialog bodyClass="'d-flex flex-column'" footer="false" title="'Actions'" t-on-click="props.close">
-            <ControlButtons showRemainingButtons="true" close="props.close"/>
+            <ControlButtons showRemainingButtons="true" close="props.close" order="props.order"/>
         </Dialog>
     `;
     static props = {
         close: Function,
+        order: { type: Object, optional: true },
     };
 }

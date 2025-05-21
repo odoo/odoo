@@ -22,7 +22,6 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
@@ -519,7 +518,7 @@ export class PosStore extends WithLazyGetterTrap {
                 if (
                     !ignoreChange &&
                     typeof order.id === "number" &&
-                    Object.keys(order.last_order_preparation_change).length > 0
+                    order.prep_order_ids.length > 0
                 ) {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");
@@ -1350,7 +1349,6 @@ export class PosStore extends WithLazyGetterTrap {
             for (const order of orders) {
                 order.recomputeOrderData();
             }
-
             const serializedOrder = orders.map((order) => order.serializeForORM());
             const data = await this.data.call("pos.order", "sync_from_ui", [serializedOrder], {
                 context,
@@ -1517,7 +1515,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (!this.selectedOrderUuid) {
             return undefined;
         }
-
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
     get selectedOrder() {
@@ -1654,22 +1651,12 @@ export class PosStore extends WithLazyGetterTrap {
     get printOptions() {
         return { webPrintFallback: true };
     }
-    getOrderChanges(order = this.getOrder()) {
-        return getOrderChanges(order, this.config.preparationCategories);
-    }
-    changesToOrder(order, skipped = false, orderPreparationCategories, cancelled = false) {
-        return changesToOrder(order, skipped, orderPreparationCategories, cancelled);
-    }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         if (this.config.printerCategories.size && !opts.byPassPrint) {
             try {
                 let reprint = false;
-                let orderChange = changesToOrder(
-                    order,
-                    this.config.preparationCategories,
-                    opts.cancelled
-                );
+                let orderChange = order.changesToOrder(opts.cancelled);
 
                 if (
                     !orderChange.new.length &&
@@ -1693,7 +1680,7 @@ export class PosStore extends WithLazyGetterTrap {
                 console.info("Failed in printing the changes in the order", e);
             }
         }
-        order.updateLastOrderChange();
+        order.updateLastOrderChange(opts.cancelled);
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
         if (this.data.network.offline) {
@@ -1731,7 +1718,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     generateOrderChange(order, orderChange, categories, reprint = false) {
         const isPartOfCombo = (line) =>
-            line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
+            line.orderline?.combo_item_id?.id || line.orderline.product_id.type == "combo";
         const comboChanges = orderChange.new.filter(isPartOfCombo);
         const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
         normalChanges.sort((a, b) => {
@@ -1749,7 +1736,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         const changes = this.filterChangeByCategories(categories, orderChange);
         for (const changeItem of [...changes.new, ...changes.cancelled, ...changes.noteUpdate]) {
-            changeItem.note = this.getStrNotes(changeItem.note || "[]");
+            changeItem.note = this.getStrNotes(changeItem.orderline?.getNote() || null);
         }
         return { orderData, changes };
     }
@@ -1764,7 +1751,6 @@ export class PosStore extends WithLazyGetterTrap {
                 printer.config.product_categories_ids,
                 reprint
             );
-
             if (changes.new.length) {
                 orderData.changes = {
                     title: _t("NEW"),
@@ -1786,7 +1772,6 @@ export class PosStore extends WithLazyGetterTrap {
                     unsuccedPrints.push(printer.config.name);
                 }
             }
-
             if (changes.noteUpdate.length) {
                 const { noteUpdateTitle, printNoteUpdateData = true } = orderChange;
                 orderData.changes = {
@@ -1840,10 +1825,10 @@ export class PosStore extends WithLazyGetterTrap {
 
     filterChangeByCategories(categories, currentOrderChange) {
         const filterFn = (change) => {
-            const product = this.models["product.product"].get(change["product_id"]);
+            const product = change.product_id;
             const categoryIds = product.parentPosCategIds;
 
-            if (change.isCombo) {
+            if (change.orderline?.combo_item_id?.id) {
                 return true;
             }
             for (const categoryId of categoryIds) {

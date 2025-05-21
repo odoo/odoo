@@ -59,7 +59,6 @@ class TestPoSEventSale(TestUi):
                     }),
             ],
             "uuid": "12345-123-1234",
-            "last_order_preparation_change": "{}",
             "user_id": self.env.uid,
             "to_invoice": False,
         }
@@ -100,7 +99,6 @@ class TestPoSEventSale(TestUi):
             "sequence_number": 2,
             "payment_ids": [],
             "uuid": "12345-123-4331",
-            "last_order_preparation_change": "{}",
             "user_id": self.env.uid,
             "to_invoice": False,
             "state": "draft",

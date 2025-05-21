@@ -4,11 +4,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 export function generatePreparationChanges() {
     const order = posmodel.getOrder();
-    const orderChange = posmodel.changesToOrder(
-        order,
-        posmodel.config.preparationCategories,
-        false
-    );
+    const orderChange = order.changesToOrder();
 
     return posmodel.generateOrderChange(
         order,
