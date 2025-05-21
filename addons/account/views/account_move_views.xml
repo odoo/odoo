@@ -1611,7 +1611,7 @@
                     <filter name="in_payment" string="In payment" domain="[('state', '=', 'posted'), ('payment_state', '=', 'in_payment')]"/>
                     <!-- overdue -->
                     <filter name="late" string="Overdue" domain="[
-                        ('invoice_date_due', '&lt;', time.strftime('%Y-%m-%d')),
+                        ('next_payment_date', '&lt;', time.strftime('%Y-%m-%d')),
                         ('state', '=', 'posted'),
                         ('payment_state', 'in', ('not_paid', 'partial'))
                     ]" help="Overdue invoices, maturity date passed"/>
