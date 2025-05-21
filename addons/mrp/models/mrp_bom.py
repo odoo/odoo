@@ -600,7 +600,6 @@ class MrpBomLine(models.Model):
     product_qty = fields.Float(
         'Quantity', default=1.0,
         digits='Product Unit', required=True)
-    allowed_uom_ids = fields.Many2many('uom.uom', compute='_compute_allowed_uom_ids')
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit',
         default=_get_default_product_uom_id, required=True)
@@ -633,9 +632,6 @@ class MrpBomLine(models.Model):
         'CHECK (product_qty>=0)',
         'All product quantities must be greater or equal to 0.\nLines with 0 quantities can be used as optional lines. \nYou should install the mrp_byproduct module if you want to manage extra products on BoMs!',
     )
-
-    def _compute_allowed_uom_ids(self):
-        self.allowed_uom_ids = False
 
     @api.depends('product_id', 'bom_id')
     def _compute_child_bom_id(self):
