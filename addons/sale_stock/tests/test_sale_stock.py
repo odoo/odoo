@@ -2165,3 +2165,29 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         so.order_line.name += '\nRandom sale notes'
         so.action_confirm()
         self.assertEqual(so.picking_ids.move_ids.description_picking, 'No variant: extra\nDeliver with care')
+
+    def test_multicompany_transit_with_one_company_for_user(self):
+        """ Check that the inter-company transit location is created when
+        user has only one allowed company. """
+        company_a = self.env['res.company'].create({'name': 'Company A'})
+        company_b = self.env['res.company'].create({'name': 'Company B'})
+        user_a = self.env['res.users'].create({
+            'name': 'user only in company a',
+            'login': 'user a',
+            'company_id': company_a.id,
+            'company_ids': [Command.link(company_a.id)],
+            'group_ids': [Command.link(self.env.ref('sales_team.group_sale_salesman').id)],
+        })
+        product = self.new_product
+        so = self.env['sale.order'].with_user(user_a).create({
+            'partner_id': company_b.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                }),
+            ],
+        })
+        so.action_confirm()
+        intercom_location = self.env.ref('stock.stock_location_inter_company')
+        self.assertEqual(so.picking_ids.location_dest_id, intercom_location)
+        self.assertEqual(so.picking_ids.move_ids.location_dest_id, intercom_location)
