@@ -1,4 +1,7 @@
-import { expect, test, describe } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
+
+import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { formatDomain } from "./condition_tree_editor_test_helpers";
 
 import { Domain } from "@web/core/domain";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
@@ -6,13 +9,14 @@ import {
     complexCondition,
     condition,
     connector,
+    constructDomain,
+    constructTree,
     domainFromTree,
     expression,
     expressionFromTree,
     treeFromDomain,
     treeFromExpression,
 } from "@web/core/tree_editor/condition_tree";
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
 
 function expressionFromDomain(domain, options = {}) {
     const tree = treeFromDomain(domain, options);
@@ -1038,5 +1042,78 @@ test("evaluation . expressionFromTree = contains . domainFromTree", () => {
         expect(evaluateBooleanExpr(expressionFromTree(tree, options), record)).toBe(
             new Domain(domainFromTree(tree)).contains(record)
         );
+    }
+});
+
+test("constructTree", async () => {
+    const toTest = [
+        { tree: connector("&"), domain: `[]` },
+        { tree: condition(0, "=", 1), domain: `[(0, "=", 1)]` },
+        { tree: condition(1, "=", 1), domain: `[(1, "=", 1)]` },
+        { tree: condition(0, "=", 1, true), domain: `["!", (0, "=", 1)]` },
+        { tree: condition(1, "=", 1, true), domain: `["!", (1, "=", 1)]` },
+    ];
+    for (const { tree, domain } of toTest) {
+        expect(constructTree(domain)).toEqual(tree);
+    }
+});
+
+test("constructDomain", async () => {
+    const toTest = [
+        { tree: connector("&"), domain: `[]` },
+        { tree: connector("&", [], true), domain: `[(0, "=", 1)]` },
+        { tree: connector("|"), domain: `[(0, "=", 1)]` },
+        { tree: connector("|", [], true), domain: `[(1, "=", 1)]` },
+        { tree: condition(1, "=", 1), domain: `[(1, "=", 1)]` },
+        { tree: condition(0, "=", 1), domain: `[(0, "=", 1)]` },
+        { tree: condition(1, "=", 1, true), domain: `["!", (1, "=", 1)]` },
+        { tree: condition(0, "=", 1, true), domain: `["!", (0, "=", 1)]` },
+        { tree: connector("|", [connector("|")]), domain: `[(0, "=", 1)]` },
+        { tree: connector("|", [connector("&")]), domain: `[(1, "=", 1)]` },
+        { tree: connector("&", [connector("&")]), domain: `[(1, "=", 1)]` },
+        { tree: connector("&", [connector("|")]), domain: `[(0, "=", 1)]` },
+        {
+            tree: connector("|", [connector("|"), condition("id", "=", 1)]),
+            domain: `["|", (0, "=", 1), ("id", "=", 1)]`,
+        },
+        {
+            tree: connector("|", [connector("&"), condition("id", "=", 1)]),
+            domain: `["|", (1, "=", 1), ("id", "=", 1)]`,
+        },
+        {
+            tree: connector("&", [connector("&"), condition("id", "=", 1)]),
+            domain: `["&", (1, "=", 1), ("id", "=", 1)]`,
+        },
+        {
+            tree: connector("&", [connector("|"), condition("id", "=", 1)]),
+            domain: `["&", (0, "=", 1), ("id", "=", 1)]`,
+        },
+        {
+            tree: condition("id", "=", 1),
+            domain: `[("id", "=", 1)]`,
+        },
+        {
+            tree: condition("m2m", "any", connector("&")),
+            domain: `[("m2m", "any", [])]`,
+        },
+        {
+            tree: condition("m2m", "any", connector("&", [connector("&")])),
+            domain: `[("m2m", "any", [(1, "=", 1)])]`,
+        },
+        {
+            tree: condition("m2m", "any", connector("&", [connector("|")])),
+            domain: `[("m2m", "any", [(0, "=", 1)])]`,
+        },
+        {
+            tree: condition("m2m", "any", connector("|", [connector("|")])),
+            domain: `[("m2m", "any", [(0, "=", 1)])]`,
+        },
+        {
+            tree: condition("m2m", "any", connector("|", [connector("&")])),
+            domain: `[("m2m", "any", [(1, "=", 1)])]`,
+        },
+    ];
+    for (const { tree, domain } of toTest) {
+        expect(constructDomain(tree)).toBe(formatDomain(domain));
     }
 });

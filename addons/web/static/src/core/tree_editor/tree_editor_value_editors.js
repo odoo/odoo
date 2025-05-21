@@ -215,8 +215,6 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "in":
         case "not in": {
             switch (fieldDef.type) {
-                case "tags":
-                    return STRING_EDITOR;
                 case "many2one":
                 case "many2many":
                 case "one2many":
@@ -242,6 +240,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                         },
                         isSupported: (value) => Array.isArray(value),
                         defaultValue: () => [],
+                        shouldResetValue: (value) => !value.every(editorInfo.isSupported),
                     };
                 }
             }
@@ -294,6 +293,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                         }
                         return (
                             Array.isArray(value) &&
+                            value.length === 2 &&
                             isTodayExpr(value[0], type) &&
                             isEndOfTodayExpr(value[1])
                         );
@@ -391,8 +391,8 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             } else if (fieldDef.name === "__time") {
                 return {
                     component: TimePicker,
-                    extractProps: ({ value, update }) => ({
-                        value: parseTime(value, true),
+                    extractProps: ({ value, update, displayPlaceholder }) => ({
+                        value: params.startEmpty ? false : parseTime(value, true),
                         onChange: (time) =>
                             update(
                                 DateTime.fromObject(
@@ -400,6 +400,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                                 ).toFormat("HH:mm:ss")
                             ),
                         showSeconds: true,
+                        placeholder: displayPlaceholder ? undefined : "",
                     }),
                     isSupported: (value) =>
                         typeof value === "string" && Boolean(parseTime(value, true)),

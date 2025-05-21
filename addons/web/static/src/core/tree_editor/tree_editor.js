@@ -81,6 +81,10 @@ export class TreeEditor extends Component {
             this.previousTree = null;
         }
 
+        await this.prepareInfo(props);
+    }
+
+    async prepareInfo(props) {
         const [fieldDefs, getFieldDef] = await Promise.all([
             this.fieldService.loadFields(props.resModel),
             this.makeGetFieldDef(props.resModel, this.tree),
@@ -236,6 +240,7 @@ export class TreeEditor extends Component {
             // no interesting changes for parent
             // this means that the parent might not render the domain selector
             // but we need to udpate editors
+            await this.prepareInfo(this.props);
             this.render();
         }
         this.notifyChanges();

@@ -174,8 +174,6 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     let { operator, negate, value, path } = node;
     if (["=", "!="].includes(operator) && value === false) {
         operator = operator === "=" ? "not_set" : "set";
-    } else if (["in", "not in"].includes(operator) && Array.isArray(value) && value.length === 0) {
-        operator = operator === "in" ? "not_set" : "set";
     }
     const fieldDef = getFieldDef(path);
     const operatorLabel = getOperatorLabel(operator, fieldDef?.type, negate, (operator) => {
@@ -233,7 +231,7 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
             break;
         case "in":
         case "not in":
-            addParenthesis = false;
+            addParenthesis = values.length === 0;
         // eslint-disable-next-line no-fallthrough
         default:
             join = _t("or");
