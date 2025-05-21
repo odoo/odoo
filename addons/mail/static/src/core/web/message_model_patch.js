@@ -6,7 +6,7 @@ import { patch } from "@web/core/utils/patch";
 const messagePatch = {
     /** @param {import("models").Thread} thread the thread where the message is shown */
     canReplyAll(thread) {
-        return this.canForward(thread) && !this.is_note;
+        return this.canForward(thread) && !this.isNote;
     },
     /** @param {import("models").Thread} thread */
     canForward(thread) {

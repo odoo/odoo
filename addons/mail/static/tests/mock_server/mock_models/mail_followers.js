@@ -5,9 +5,10 @@ import { getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 export class MailFollowers extends models.ServerModel {
     _name = "mail.followers";
 
-    _to_store(ids, store, fields) {
-        const kwargs = getKwArgs(arguments, "ids", "store", "fields");
+    _to_store(ids, store, fields, extra_fields) {
+        const kwargs = getKwArgs(arguments, "ids", "store", "fields", "extra_fields");
         fields = kwargs.fields;
+        extra_fields = kwargs.extra_fields;
 
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
@@ -24,6 +25,7 @@ export class MailFollowers extends models.ServerModel {
                 thread: [],
             };
         }
+        fields = { ...fields, ...extra_fields };
         const followers = MailFollowers.browse(ids);
         for (const follower of followers) {
             const [data] = this._read_format(
@@ -41,6 +43,11 @@ export class MailFollowers extends models.ServerModel {
                 data.thread = mailDataHelpers.Store.one(
                     this.env[follower.res_model].browse(follower.res_id),
                     makeKwArgs({ as_thread: true, only_id: true })
+                );
+            }
+            if ("subtype_ids" in fields) {
+                data.subtype_ids = mailDataHelpers.Store.many(
+                    this.env["mail.message.subtype"].browse(follower.subtype_ids)
                 );
             }
             store.add(this.browse(follower.id), data);

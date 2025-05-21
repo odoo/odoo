@@ -1091,7 +1091,9 @@ test("Do not squash logged notes", async () => {
             author_id: serverState.partnerId,
             needaction: true,
             res_id: partnerId,
-            is_note: true,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_note"],
+            ])[0],
         },
         {
             model: "res.partner",
@@ -1099,7 +1101,9 @@ test("Do not squash logged notes", async () => {
             author_id: serverState.partnerId,
             needaction: true,
             res_id: partnerId,
-            is_note: true,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_note"],
+            ])[0],
         },
     ]);
     pyEnv["mail.notification"].create({

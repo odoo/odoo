@@ -125,24 +125,18 @@ class ThreadController(http.Controller):
         record.check_access("read")
         # find current model subtypes, add them to a dictionary
         subtypes = record._mail_get_message_subtypes()
-        followed_subtypes_ids = set(follower.subtype_ids.ids)
-        subtypes_list = [
-            {
-                "name": subtype.name,
-                "res_model": subtype.res_model,
-                "sequence": subtype.sequence,
-                "default": subtype.default,
-                "internal": subtype.internal,
-                "followed": subtype.id in followed_subtypes_ids,
-                "parent_model": subtype.parent_id.res_model,
-                "id": subtype.id,
-            }
-            for subtype in subtypes
-        ]
-        return sorted(
-            subtypes_list,
-            key=lambda it: (it["parent_model"] or "", it["res_model"] or "", it["internal"], it["sequence"]),
-        )
+        store = Store(subtypes, ["name"]).add(follower, ["subtype_ids"])
+        return {
+            "store_data": store.get_result(),
+            "subtype_ids": subtypes.sorted(
+                key=lambda s: (
+                    s.parent_id.res_model or "",
+                    s.res_model or "",
+                    s.internal,
+                    s.sequence,
+                ),
+            ).ids,
+        }
 
     def _prepare_post_data(self, post_data, thread, partner_emails=None, **kwargs):
         partners = request.env["res.partner"].browse(post_data.pop("partner_ids", []))

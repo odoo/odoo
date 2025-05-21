@@ -942,8 +942,6 @@ class MailMessage(models.Model):
         return [field_name]
 
     def _to_store_defaults(self):
-        com_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_comment")
-        note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
         field_names = [
             # sudo: mail.message - reading attachments on accessible message is allowed
             Store.Many("attachment_ids", sort="id", sudo=True),
@@ -952,8 +950,6 @@ class MailMessage(models.Model):
             "date",
             "incoming_email_cc",
             "incoming_email_to",
-            Store.Attr("is_note", lambda m: m.subtype_id.id == note_id),
-            Store.Attr("is_discussion", lambda m: m.subtype_id.id == com_id),
             # sudo: mail.message - reading link preview on accessible message is allowed
             "message_format",
             "message_link_preview_ids",
@@ -966,15 +962,16 @@ class MailMessage(models.Model):
             Store.Many("reaction_ids", rename="reactions", sudo=True),
             "res_id",  # keep for iOS app
             "subject",
-            # sudo: mail.message.subtype - reading description on accessible message is allowed
-            Store.Attr("subtype_description", lambda m: m.subtype_id.sudo().description),
+            # sudo: mail.message.subtype - reading subtype on accessible message is allowed
+            Store.One("subtype_id", ["description"], sudo=True),
             "write_date",
         ]
         if self.env.user._is_internal():
+            # sudo - mail.notification: internal users can access notifications.
             field_names.append(
                 Store.Many(
                     "notification_ids",
-                    value=lambda m: m.notification_ids._filtered_for_web_client(),
+                    value=lambda m: m.sudo().notification_ids._filtered_for_web_client(),
                 )
             )
         return field_names
