@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="survey.SurveyTimeField">
+        <span t-if="props.readonly" t-esc="value"/>
+        <input t-else="" type="time" min="00:00" max="24:00" class="o_input" t-ref="input"/>
+    </t>
+</templates>

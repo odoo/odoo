@@ -384,6 +384,7 @@
             <t t-if="question.question_type == 'numerical_box'" t-call="survey.question_numerical_box"/>
             <t t-if="question.question_type == 'date'" t-call="survey.question_date"/>
             <t t-if="question.question_type == 'datetime'" t-call="survey.question_datetime"/>
+            <t t-if="question.question_type == 'time'" t-call="survey.question_time"/>
             <t t-if="question.question_type == 'simple_choice'" t-call="survey.question_simple_choice"/>
             <t t-if="question.question_type == 'scale'" t-call="survey.question_scale"/>
             <t t-if="question.question_type == 'multiple_choice'" t-call="survey.question_multiple_choice"/>
@@ -494,6 +495,15 @@
                    t-att-data-min-date="question.validation_min_datetime"
                    t-att-data-max-date="question.validation_max_datetime"/>
             <div t-if="not survey_form_readonly" class="position-absolute input-group-text o_input_group_date_icon text-primary border-0 bg-transparent p-0 end-0"><i class="fa fa-calendar"></i></div>
+        </div>
+    </template>
+
+    <template id="question_time" name="Question: time input">
+        <div class="input_group o_survey_form_time o_survey_answer_wrapper p-1 rounded">
+            <input type="time" min="00:00" max="24:00"
+                t-attf-class="form-control o_survey_question_time bg-transparent rounded-0 p-0 #{'w-100' if survey_form_readonly else 'w-auto'}"
+                t-att-name="question.id" t-att-data-question-type="question.question_type"
+                t-att-value="answer_lines[0].formatted_value_time if answer_line else None"/>
         </div>
     </template>
 

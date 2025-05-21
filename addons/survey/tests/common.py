@@ -290,6 +290,9 @@ class SurveyCase(common.TransactionCase):
             elif question_type == 'matrix':
                 kwargs['labels'] = [{'value': 'Column0'}, {'value': 'Column1'}]
                 kwargs['labels_2'] = [{'value': 'Row0'}, {'value': 'Row1'}]
+            elif question_type == 'time':
+                kwargs['answer_score'] = 1
+                kwargs['formatted_answer_time'] = "00:00"
             all_questions |= self._add_question(self.page_0, 'Q0', question_type, **kwargs)
 
         return all_questions

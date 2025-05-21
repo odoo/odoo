@@ -599,6 +599,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
                 qtype_mapping['simple_choice'].suggested_answer_ids.filtered_domain([('value', '=', 'SChoice0')]).ids,
             qtype_mapping['multiple_choice'].id:
                 qtype_mapping['multiple_choice'].suggested_answer_ids.filtered_domain([('value', 'in', ['MChoice0', 'MChoice1'])]).ids,
+            qtype_mapping['time'].id: datetime.datetime(9999, 1, 1, 0, 0),
         }
         self.assertEqual(questions._get_correct_answers(), expected_correct_answer)
 

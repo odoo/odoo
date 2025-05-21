@@ -36,7 +36,7 @@
                         <field name="random_questions_count"/>
                     </group>
                     <notebook>
-                        <page string="Answers" name="answers" invisible="is_page or question_type == 'text_box' or scoring_type == 'no_scoring' and question_type in ['numerical_box', 'date', 'datetime']">
+                        <page string="Answers" name="answers" invisible="is_page or question_type == 'text_box' or scoring_type == 'no_scoring' and question_type in ['numerical_box', 'date', 'datetime', 'time']">
                             <group>
                                 <group invisible="question_type != 'scale'">
                                     <field name="scale_min" placeholder="Scale Minimum Value (0 to 10)"/>
@@ -47,7 +47,7 @@
                                     <field name="scale_mid_label" placeholder="Neutral"/>
                                     <field name="scale_max_label" placeholder="Extremely likely"/>
                                 </group>
-                                <group invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']">
+                                <group invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime', 'time']">
                                     <field name="answer_numerical_box" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'numerical_box'"
                                         required="is_scored_question and question_type == 'numerical_box'" />
@@ -57,13 +57,16 @@
                                     <field name="answer_datetime" string="Correct Answer" class="oe_inline"
                                         invisible="question_type != 'datetime'"
                                         required="is_scored_question and question_type == 'datetime'"/>
+                                    <field name="formatted_answer_time" string="Correct Answer" class="oe_inline"
+                                        invisible="question_type != 'time'" widget="survey_time"
+                                        required="is_scored_question and question_type == 'time'"/>
 
                                     <field name="validation_email" invisible="question_type != 'char_box'"/>
                                     <field name="save_as_email" invisible="not validation_email or question_type != 'char_box'"/>
                                     <field name="save_as_nickname" invisible="question_type != 'char_box'"/>
                                 </group>
 
-                                <group invisible="scoring_type == 'no_scoring' or question_type not in ['numerical_box', 'date', 'datetime']">
+                                <group invisible="scoring_type == 'no_scoring' or question_type not in ['numerical_box', 'date', 'datetime', 'time']">
                                     <label for="is_scored_question"/>
                                     <div name="survey_scored_question">
                                         <field name="is_scored_question" nolabel="1"/>
@@ -104,7 +107,7 @@
                                 <group string="Answers" invisible="question_type == 'scale'">
                                     <!-- Global validation setting -->
                                     <field name="validation_required"
-                                           invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime']"/>
+                                           invisible="question_type not in ['char_box', 'numerical_box', 'date', 'datetime', 'time']"/>
                                     <div class="o_wrap_label o_form_label" invisible="not validation_required">Min/Max Limits</div>
                                     <div class="o_survey_question_validation_parameters" invisible="not validation_required">
                                         <!-- Minima -->
@@ -141,7 +144,7 @@
 
                                     <field name="matrix_subtype" invisible="question_type != 'matrix'" required="question_type == 'matrix'"/>
                                     <field name="question_placeholder"
-                                           invisible="question_type not in ['text_box', 'char_box', 'date', 'datetime', 'numerical_box']"
+                                           invisible="question_type not in ['text_box', 'char_box', 'date', 'datetime', 'numerical_box', 'time']"
                                            placeholder="Help Participants know what to write"/>
                                     <field name="question_type" string="Multiple Selection" widget="multiple_choice_boolean" invisible="question_type not in ['simple_choice', 'multiple_choice']"/>
                                     <field name="comments_allowed" invisible="question_type not in ['simple_choice', 'multiple_choice', 'matrix']"/>

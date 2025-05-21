@@ -737,6 +737,7 @@ class Survey(http.Controller):
             'search_finished': post.get('finished') == 'true',
             'search_failed': post.get('failed') == 'true',
             'search_passed': post.get('passed') == 'true',
+            'format_time': lambda dt: dt.strftime("%H:%M"),
         }
 
         if survey.session_show_leaderboard:
