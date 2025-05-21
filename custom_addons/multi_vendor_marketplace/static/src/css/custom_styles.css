@@ -97,19 +97,67 @@ li.o_wsale_my_cart {
     transition: filter 0.3s ease;
 }
 
-/* Product detail page - rounded images */
+/* Product detail page - rounded images - with border removal */
 #product_detail .product_detail_img {
     border-radius: 12px;
     overflow: hidden;
+    border: none !important;
 }
 
 #product_detail .o_wsale_product_images img {
     border-radius: 12px;
+    border: none !important;
 }
 
-/* Увеличение изображения при наведении (меньше) */
-.oe_product_cart:hover .oe_product_image {
-    filter: brightness(0.85); /* легкое затемнение */
+/* Fix for product image borders - ensure containers and borders match the rounded corners */
+#product_detail .carousel-item,
+#product_detail .carousel-inner,
+#product_detail .carousel,
+#product_detail .o_wsale_product_images_image,
+#product_detail .o_wsale_product_images_image .img-fluid,
+#product_detail .product_detail_img img,
+#product_detail .oe_product_image,
+#product_detail .o_image_64_contain,
+#product_detail .o_wsale_product_images .carousel-inner,
+#product_detail .o_wsale_product_images .carousel-item,
+#product_detail .o_wsale_product_images .o_wsale_product_images_image,
+.product-gallery-img,
+.product-gallery .carousel-item {
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    border: none !important;
+}
+
+/* Complete border removal from all product thumbnails and images */
+#product_detail .o_wsale_product_images .border,
+#product_detail .o_wsale_product_images [class*="border-"],
+#product_detail .o_wsale_product_images img.border,
+#product_detail .o_wsale_product_images .img-thumbnail,
+.product-gallery .border,
+.product-gallery [class*="border-"],
+.product-gallery .img-thumbnail,
+.o_carousel_product_indicators img,
+.o_wsale_product_info .carousel-inner img,
+.o_wsale_product_info .carousel-indicators img,
+.o_wsale_product_info .carousel-indicators li,
+.o_wsale_product_images .carousel-indicators img,
+.o_wsale_product_images .carousel-indicators li,
+.o_wsale_product_cart_options .carousel-indicators li,
+.o_wsale_product_cart_options .carousel-indicators img {
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 12px !important;
+}
+
+/* Additional styling to ensure no borders anywhere in product images */
+.o_wsale_product_images *,
+#product_detail .o_wsale_product_images *,
+.carousel-inner img,
+.carousel-indicators li,
+.carousel-indicators img,
+.o_carousel_product_indicators li,
+.o_carousel_product_indicators img {
+    border: none !important;
 }
 
 /* Стили для текстовой информации */
