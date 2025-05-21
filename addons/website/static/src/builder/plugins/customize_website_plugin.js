@@ -87,7 +87,13 @@ export class CustomizeWebsitePlugin extends Plugin {
                     if (gradientColor) {
                         const gradientValue = this.getWebsiteVariableValue(gradientColor);
                         if (gradientValue) {
-                            return gradientValue;
+                            // Pass through style to restore rgb/a which might
+                            // have been lost during SCSS generation process.
+                            // TODO Remove this once colorpicker will be able
+                            // to cope with #rrggbb gradient color elements.
+                            const el = document.createElement("div");
+                            el.style.setProperty("background-image", gradientValue);
+                            return el.style.getPropertyValue("background-image");
                         }
                     }
                     return getCSSVariableValue(color, style);

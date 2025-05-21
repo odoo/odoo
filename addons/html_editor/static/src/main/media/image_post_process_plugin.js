@@ -24,13 +24,20 @@ export class ImagePostProcessPlugin extends Plugin {
      *
      * @param {HTMLImageElement} img the image to which modifications are applied
      * @param {Object} newDataset an object containing the modifications to apply
+     * @param {Function} [onImageInfoLoaded] can be used to fill
+     * newDataset after having access to image info, return true to cancel call
      * @returns {Function} callback that sets dataURL of the image with the
      * applied modifications to `img` element
      */
-    async processImage(img, newDataset = {}) {
+    async processImage({ img, newDataset = {}, onImageInfoLoaded }) {
         const processContext = {};
         if (!newDataset.originalSrc || !newDataset.mimetypeBeforeConversion) {
             Object.assign(newDataset, await loadImageInfo(img));
+        }
+        if (onImageInfoLoaded) {
+            if (await onImageInfoLoaded(newDataset)) {
+                return () => {};
+            }
         }
         for (const cb of this.getResource("process_image_warmup_handlers")) {
             const addedContext = await cb(img, newDataset);

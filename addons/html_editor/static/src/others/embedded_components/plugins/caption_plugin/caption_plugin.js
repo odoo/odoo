@@ -40,7 +40,7 @@ export class CaptionPlugin extends Plugin {
         mount_component_handlers: this.setupNewCaption.bind(this),
         delete_handlers: this.afterDelete.bind(this),
         delete_image_handlers: this.handleDeleteImage.bind(this),
-        afer_save_media_dialog_handlers: this.onImageReplaced.bind(this),
+        after_save_media_dialog_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
         unsplittable_node_predicates: [
             (node) => ["FIGURE", "FIGCAPTION"].includes(node.nodeName), // avoid merge
