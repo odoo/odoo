@@ -225,7 +225,7 @@ class StockMove(models.Model):
             elif move.picking_type_id:
                 location_dest = move.picking_type_id.default_location_dest_id
             is_move_to_interco_transit = False
-            if self.env.user.has_group('base.group_multi_company') and location_dest:
+            if location_dest:
                 customer_loc, __ = self.env['stock.warehouse']._get_partner_locations()
                 inter_comp_location = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
                 is_move_to_interco_transit = location_dest._child_of(customer_loc) and move.location_final_id == inter_comp_location
