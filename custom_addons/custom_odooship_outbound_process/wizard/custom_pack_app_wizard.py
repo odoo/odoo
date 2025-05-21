@@ -984,7 +984,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             else config["DEFAULT_MERCHANT_CODE"]
         ),
             "service_type": sale.service_type or "STANDARD",
-            "carrier_code": sale.carrier
+            "carrier_code": sale.carrier,
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "tu_id": None,
@@ -1376,7 +1376,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             else config["DEFAULT_MERCHANT_CODE"]
         ),
             "service_type": sale.service_type or "STANDARD",
-            "carrier_code": sale.carrier
+            "carrier_code": sale.carrier,
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "auto_generate_label": config["DEFAULT_AUTO_GENERATE_LABEL"],
