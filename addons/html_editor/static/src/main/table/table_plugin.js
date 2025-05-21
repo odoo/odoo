@@ -91,6 +91,7 @@ export class TablePlugin extends Plugin {
         "clearRowContent",
         "mergeSelectedCells",
         "unmergeSelectedCell",
+        "buildTableGrid",
     ];
     resources = {
         user_commands: [
@@ -1435,11 +1436,14 @@ export class TablePlugin extends Plugin {
      * account their rowspan and colspan.
      *
      * @param {HTMLTableElement} table - The table element to process.
-     * @returns {undefined}
+     * @returns {HTMLElement[][] | undefined}
      */
     buildTableGrid(table) {
-        if (!table || this.currentGridTable === table) {
+        if (!table) {
             return;
+        }
+        if (this.currentGridTable === table) {
+            return this.tableGrid;
         }
         const grid = [];
         const rows = [...table.querySelectorAll("tr")].filter(
@@ -1476,8 +1480,8 @@ export class TablePlugin extends Plugin {
         }
         this.currentGridTable = table;
         this.tableGrid = grid;
+        return this.tableGrid;
     }
-
     update() {
         delete this.currentGridTable;
         delete this.tableGrid;

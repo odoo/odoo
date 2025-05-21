@@ -4,6 +4,7 @@ import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { TableMenu } from "./table_menu";
 import { TablePicker } from "./table_picker";
+import { getRowIndex } from "@html_editor/utils/table";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -162,7 +163,9 @@ export class TableUIPlugin extends Plugin {
             mergeSelectedCells: withAddStep(this.dependencies.table.mergeSelectedCells),
             unmergeSelectedCell: withAddStep(this.dependencies.table.unmergeSelectedCell),
         };
-        if (td.cellIndex === 0) {
+        const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
+        const rowIndex = getRowIndex(td.parentElement);
+        if (grid[rowIndex][0] === td) {
             this.rowMenu.open({
                 target: td,
                 props: {
