@@ -81,7 +81,7 @@ export class Chatbot extends Record {
             chatbot_script_id: this.script.id,
         });
         this.store.insert(store_data);
-        this.thread.messages.push(this.store["mail.message"].get(message_id));
+        this.thread.messages.add(message_id);
         if (this.currentStep) {
             this.currentStep.isLast = false;
             this.thread.livechat_active = true;
