@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo.tests
 from odoo import Command
 
@@ -7,7 +5,7 @@ from odoo import Command
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestAccess(odoo.tests.HttpCase):
     def setUp(self):
-        super(TestAccess, self).setUp()
+        super().setUp()
 
         self.portal_user = self.env['res.users'].create({
             'login': 'P',
