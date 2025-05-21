@@ -4,7 +4,15 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, useExternalListener, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onWillUpdateProps,
+    useEffect,
+    useExternalListener,
+    useRef,
+    useState,
+} from "@odoo/owl";
+import { useNavigation } from "@web/core/navigation/navigation";
 
 export class AutoComplete extends Component {
     static template = "web.AutoComplete";
@@ -100,7 +108,7 @@ export class AutoComplete extends Component {
 
         useExternalListener(window, "scroll", this.externalClose, true);
         useExternalListener(window, "pointerdown", this.externalClose, true);
-        useExternalListener(window, "mousemove", () => this.mouseSelectionActive = true, true);
+        useExternalListener(window, "mousemove", () => (this.mouseSelectionActive = true), true);
 
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
@@ -122,6 +130,8 @@ export class AutoComplete extends Component {
         } else {
             this.open(false);
         }
+
+        this.setupNavigation();
     }
 
     get targetDropdown() {
@@ -213,7 +223,8 @@ export class AutoComplete extends Component {
         }
 
         await Promise.all(proms);
-        this.navigate(0);
+        this.navigator.update();
+        this.navigator.items[1]?.setActive();
     }
     get displayOptions() {
         return !this.props.dropdown || (this.isOpened && this.hasOptions);
@@ -267,53 +278,85 @@ export class AutoComplete extends Component {
         this.close();
     }
 
-    navigate(direction) {
-        let step = Math.sign(direction);
-        if (!step) {
-            this.state.activeSourceOption = null;
-            step = 1;
-        } else {
+    setupNavigation() {
+        const onArrow = (navigator, action) => {
             this.state.navigationRev++;
-        }
-
-        do {
-            if (this.state.activeSourceOption) {
-                let [sourceIndex, optionIndex] = this.state.activeSourceOption;
-                let source = this.sources[sourceIndex];
-
-                optionIndex += step;
-                if (0 > optionIndex || optionIndex >= source.options.length) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
-
-                    while (source && source.isLoading) {
-                        sourceIndex += step;
-                        source = this.sources[sourceIndex];
-                    }
-
-                    if (source) {
-                        optionIndex = step < 0 ? source.options.length - 1 : 0;
-                    }
-                }
-
-                this.state.activeSourceOption = source ? [sourceIndex, optionIndex] : null;
+            if (this.isOpened) {
+                navigator[action]();
             } else {
-                let sourceIndex = step < 0 ? this.sources.length - 1 : 0;
-                let source = this.sources[sourceIndex];
-
-                while (source && source.isLoading) {
-                    sourceIndex += step;
-                    source = this.sources[sourceIndex];
-                }
-
-                if (source) {
-                    const optionIndex = step < 0 ? source.options.length - 1 : 0;
-                    if (optionIndex < source.options.length) {
-                        this.state.activeSourceOption = [sourceIndex, optionIndex];
-                    }
-                }
+                this.open(true);
             }
-        } while (this.activeOption?.unselectable);
+        };
+
+        this.navigator = useNavigation(this.listRef, {
+            virtualFocus: true,
+            activeClass: "ui-state-active",
+            getItems: () => {
+                const items = [];
+                if (this.inputRef.el) {
+                    items.push(this.inputRef.el);
+                }
+                if (this.listRef.el) {
+                    items.push(
+                        ...this.listRef.el.querySelectorAll(
+                            ":scope .o-autocomplete--dropdown-item a[role=option]"
+                        )
+                    );
+                }
+                return items;
+            },
+            /**
+             * @param {import("@web/core/navigation/navigation").Navigator} navigator
+             */
+            onNavigated: (navigator) => {
+                const el = navigator.activeItem && navigator.activeItem.el;
+                if (el && el.hasAttributes("data-source") && el.hasAttribute("data-option")) {
+                    const sourceIndex = parseInt(el.dataset.source);
+                    const optionIndex = parseInt(el.dataset.option);
+                    this.state.activeSourceOption = [sourceIndex, optionIndex];
+                    this.inputRef.el.setAttribute(
+                        "aria-activedescendant",
+                        this.activeSourceOptionId
+                    );
+                } else {
+                    this.state.activeSourceOption = null;
+                    this.inputRef.el.removeAttribute("aria-activedescendant");
+                }
+            },
+            hotkeys: {
+                arrowup: {
+                    callback: (navigator) => onArrow(navigator, "previous"),
+                },
+                arrowdown: {
+                    callback: (navigator) => onArrow(navigator, "next"),
+                },
+                escape: {
+                    isAvailable: () => this.isOpened,
+                    callback: () => this.cancel(),
+                },
+                tab: {
+                    isAvailable: () => false,
+                    callback: () => {},
+                },
+                "shift+tab": {
+                    isAvailable: () => false,
+                    callback: () => {},
+                },
+                enter: {
+                    isAvailable: () => false,
+                    callback: () => {},
+                },
+            },
+        });
+
+        useEffect(
+            (listEl) => {
+                if (listEl) {
+                    this.navigator?.items[1]?.setActive();
+                }
+            },
+            () => [this.listRef.el]
+        );
     }
 
     onInputBlur() {
@@ -376,81 +419,52 @@ export class AutoComplete extends Component {
 
     async onInputKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        const isSelectKey = hotkey === "enter" || hotkey === "tab";
+        const isSelectKey = ["enter", "tab"].includes(hotkey);
 
         if (this.loadingPromise && isSelectKey) {
             if (hotkey === "enter") {
                 ev.stopPropagation();
                 ev.preventDefault();
             }
-
             await this.loadingPromise;
         }
 
+        const trySelectActiveOption = () => {
+            if (this.activeOption) {
+                this.selectOption(this.activeOption);
+                return true;
+            } else {
+                const firstOption = this.sources[0]?.options[0];
+                if (firstOption) {
+                    this.selectOption(firstOption);
+                    return true;
+                }
+            }
+            return false;
+        };
+
         switch (hotkey) {
             case "enter":
-                if (!this.isOpened || !this.state.activeSourceOption) {
-                    return;
+                if (trySelectActiveOption()) {
+                    ev.stopPropagation();
+                    ev.preventDefault();
                 }
-                this.selectOption(this.activeOption);
-                break;
-            case "escape":
-                if (!this.isOpened) {
-                    return;
-                }
-                this.cancel();
                 break;
             case "tab":
             case "shift+tab":
-                if (!this.isOpened) {
-                    return;
-                }
                 if (
                     this.props.autoSelect &&
-                    this.state.activeSourceOption &&
                     (this.state.navigationRev > 0 || this.inputRef.el.value.length > 0)
                 ) {
-                    this.selectOption(this.activeOption);
+                    trySelectActiveOption();
                 }
                 this.close();
-                return;
-            case "arrowup":
-                this.navigate(-1);
-                if (!this.isOpened) {
-                    this.open(true);
-                }
-                this.scroll();
-                break;
-            case "arrowdown":
-                this.navigate(+1);
-                if (!this.isOpened) {
-                    this.open(true);
-                }
-                this.scroll();
                 break;
             default:
-                return;
-        }
-
-        ev.stopPropagation();
-        ev.preventDefault();
-    }
-
-    onOptionMouseEnter(indices) {
-        if (!this.mouseSelectionActive) {
-            return;
-        }
-
-        const [sourceIndex, optionIndex] = indices;
-        if (this.sources[sourceIndex].options[optionIndex]?.unselectable) {
-            this.state.activeSourceOption = null;
-        } else {
-            this.state.activeSourceOption = indices;
+                break;
         }
     }
-    onOptionMouseLeave() {
-        this.state.activeSourceOption = null;
-    }
+
     onOptionClick(option) {
         this.selectOption(option);
         this.inputRef.el.focus();

@@ -52,8 +52,6 @@
                                 <li
                                     class="o-autocomplete--dropdown-item ui-menu-item d-block"
                                     t-att-class="option.cssClass"
-                                    t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
-                                    t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
                                     t-on-click="() => this.onOptionClick(option)"
                                     t-on-pointerdown="(ev) => this.onOptionPointerDown(option, ev)"
                                 >
@@ -64,6 +62,8 @@
                                         t-att-href="!option.unselectable and '#'"
                                         t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
                                         t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
+                                        t-att-data-source="source_index"
+                                        t-att-data-option="option_index"
                                     >
                                         <t t-slot="{{ source.optionSlot }}" label="option.label" data="option.data">
                                             <t t-out="option.label"/>
