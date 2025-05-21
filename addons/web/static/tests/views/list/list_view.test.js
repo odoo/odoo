@@ -2401,16 +2401,25 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     Bar._views = {
         form: `<form><field name="name"/></form>`,
     };
+    Foo._views = {
+        "list,1": `<list default_group_by="m2o"><field name="foo"/></list>`,
+        "search,1": `<search/>`,
+    };
     onRpc("bar", "web_save", ({ args }) => {
         expect(args).toEqual([[1], { name: "Value edit" }]);
         expect.step("web_save");
     });
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list><field name="foo"/></list>`,
-        groupBy: ["m2o"],
-    });
+    defineActions([
+        {
+            id: 1,
+            name: "Action 1",
+            res_model: "foo",
+            views: [[1, "list"]],
+            search_view_id: [1, "search"],
+        },
+    ]);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
 
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (3)", "Value 2 (1)"]);
     expect(`.o_group_header:first .o_group_config`).toHaveCount(1);
@@ -2426,6 +2435,12 @@ test(`grouped list rendering with groupby m2o field: edit group`, async () => {
     expect(`.o_dialog`).toHaveCount(0);
     expect.verifySteps(["web_save"]);
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value edit (3)", "Value 2 (1)"]);
+    await contains(`.o_group_header:first .o_group_config button`, { visible: false }).click();
+    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(1);
+    await contains(getFixture()).click();
+    expect(`.o_popover.o-dropdown--group-config-menu`).toHaveCount(0, {
+        message: "Close on click away should occur properly",
+    });
 });
 
 test(`grouped list rendering with groupby m2o field: delete group`, async () => {
