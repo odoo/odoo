@@ -22,16 +22,6 @@ odoo.define('website.s_website_form', function (require) {
          */
         start: function () {
             if (this.editableMode) {
-                // TODO: Improve this. Since the form behavior was handled using
-                // two separate public widgets, and the "data-for" values were
-                // removed (on destroy before saving), we still need to restore
-                // them in edit mode in the case of a simple widget refresh.
-                this.dataForValues = wUtils.getParsedDataFor(this.$target[0].id, this.$target[0].ownerDocument);
-                for (const fieldEl of this._getDataForFields()) {
-                    if (!fieldEl.getAttribute("value")) {
-                        fieldEl.setAttribute("value", this.dataForValues[fieldEl.name]);
-                    }
-                }
                 // We do not initialize the datetime picker in edit mode but want the dates to be formated
                 const dateTimeFormat = time.getLangDatetimeFormat();
                 const dateFormat = time.getLangDateFormat();
@@ -45,21 +35,7 @@ odoo.define('website.s_website_form', function (require) {
             }
             return this._super(...arguments);
         },
-        /**
-         * @override
-         */
-        destroy() {
-            if (this.editableMode) {
-                // The "data-for" values are always correctly added to the form
-                // on the form widget start. But if we make any change to it in
-                // "edit" mode, we need to be sure it will not be saved with
-                // the new values.
-                for (const fieldEl of this._getDataForFields()) {
-                    fieldEl.removeAttribute("value");
-                }
-            }
-            this._super(...arguments);
-        },
+        // Todo: remove in master
         /**
          * @private
          */
