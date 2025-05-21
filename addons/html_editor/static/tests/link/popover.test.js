@@ -1335,3 +1335,44 @@ describe("hidden label field", () => {
         expect(".o_we_href_input_link").toHaveValue("http://test.com/");
     });
 });
+
+describe("link popover with empty URL", () => {
+    test("should not close the popover when pressing Enter with an empty URL", async () => {
+        const { editor } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/link");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Link");
+        await click(".o-we-command-name:first");
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        await contains(".o-we-linkpopover input.o_we_label_link").fill("label");
+        await click(".o-we-linkpopover input.o_we_href_input_link");
+        await press("Enter");
+        await animationFrame();
+        expect(".o-we-linkpopover").toHaveCount(1);
+    });
+    test("should close the popover and not create a link when clicking outside the popover when link URL is empty", async () => {
+        const { editor, el } = await setupEditor("<p>ab[]</p>");
+        await insertText(editor, "/link");
+        await animationFrame();
+        expect(".active .o-we-command-name").toHaveText("Link");
+        await click(".o-we-command-name:first");
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        await contains(".o-we-linkpopover input.o_we_label_link").fill("label");
+        await click(el);
+        await animationFrame();
+        expect(".o-we-linkpopover").toHaveCount(0);
+        expect(getContent(el)).toBe("<p>[]ab</p>");
+    });
+    test("when edit a link URL to '', and clicking outside the link popover should remove the existing link", async () => {
+        const { el } = await setupEditor('<p>this is a <a href="http://test.com/">li[]nk</a></p>');
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await contains(".o-we-linkpopover input.o_we_href_input_link").clear();
+        await click(el);
+        await animationFrame();
+        expect(".o-we-linkpopover").toHaveCount(0);
+        expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[]this is a link</p>");
+    });
+});
