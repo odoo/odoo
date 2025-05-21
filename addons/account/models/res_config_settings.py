@@ -92,7 +92,6 @@ class ResConfigSettings(models.TransientModel):
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
     module_account_intrastat = fields.Boolean(string='Intrastat')
     module_product_margin = fields.Boolean(string="Allow Product Margin")
-    module_l10n_eu_oss = fields.Boolean(string="EU Intra-community Distance Selling")
     module_account_extract = fields.Boolean(string="Document Digitization")
     module_account_invoice_extract = fields.Boolean("Invoice Digitization", compute='_compute_module_account_invoice_extract', readonly=False, store=True)
     module_account_bank_statement_extract = fields.Boolean("Bank Statement Digitization", compute='_compute_module_account_bank_statement_extract', readonly=False, store=True)
@@ -302,3 +301,10 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'res_id': self.company_id.id,
         }
+
+    def action_eu_oss_tax_mapping(self):
+        l10n_eu_oss_module = self.env['ir.module.module'].search([('name', '=', 'l10n_eu_oss')], limit=1)
+        if l10n_eu_oss_module:
+            if l10n_eu_oss_module.state != 'installed':
+                l10n_eu_oss_module.button_immediate_install()
+            self.env.companies._map_eu_taxes()
