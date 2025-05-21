@@ -60,6 +60,16 @@ class TestUi(TestPointOfSaleHttpCommon):
                         (0, 0, {'name': 'Q2-Answer1'}),
                         (0, 0, {'name': 'Q2-Answer2'})
                     ],
+                }),
+                (0, 0, {
+                    'title': 'Question3',
+                    'question_type': 'simple_choice',
+                    'once_per_order': True,
+                    'is_mandatory_answer': True,
+                    'answer_ids': [
+                        (0, 0, {'name': 'Q3-Answer1'}),
+                        (0, 0, {'name': 'Q3-Answer2'})
+                    ],
                 })
             ]
         })
