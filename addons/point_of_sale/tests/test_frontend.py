@@ -602,43 +602,59 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
-    def test_01_pos_basic_order(self):
-        self.tip.write({
-            'taxes_id': False
-        })
+    def _test_01_pos_basic_order_common(self):
         self.main_pos_config.write({
             'iface_tipproduct': True,
             'tip_product_id': self.tip.id,
-            'ship_later': True
+            'ship_later': True,
         })
-
-        # Mark a product as favorite to check if it is displayed in first position
-        self.whiteboard_pen.write({
-            'is_favorite': True
-        })
-
-        # open a session, the /pos/ui controller will redirect to it
+        self.tip.write({'taxes_id': False})
+        self.whiteboard_pen.write({'is_favorite': True})
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        # needed because tests are run before the module is marked as
-        # installed. In js web will only load qweb coming from modules
-        # that are returned by the backend in module_boot. Without
-        # this you end up with js, css but no qweb.
+        # needed because tests are run before the module is marked as installed. In js web will only load qweb coming from modules
+        # that are returned by the backend in module_boot. Without this you end up with js, css but no qweb.
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_pricelist', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_01_multi_payment_and_change', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_02_decimal_order_quantity', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'pos_basic_order_03_tax_position', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'FloatingOrderTour', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ProductScreenTour', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'PaymentScreenTour', login="pos_user")
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="pos_user")
+    def test_pos_pricelist(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour('test_pos_pricelist')
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
 
-        for order in self.env['pos.order'].search([]):
-            self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+    def test_payment_screen_tour(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour('test_payment_screen_tour')
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
 
-        # check if email from ReceiptScreenTour is properly sent
+    def test_product_screen_tour(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour('test_product_screen_tour')
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
+
+    def test_floating_order_tour(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour('test_floating_order_tour')
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
+
+    def test_pos_basic_order_02_decimal_order_quantity(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour('test_pos_basic_order_02_decimal_order_quantity')
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
+
+    def test_pos_basic_order_03_tax_position(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour('test_pos_basic_order_03_tax_position')
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
+
+    def test_pos_basic_order_01_multi_payment_and_change(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour("test_pos_basic_order_01_multi_payment_and_change")
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
+
+    def test_01_pos_basic_order_receipt_screen(self):
+        self._test_01_pos_basic_order_common()
+        self.start_pos_tour('test_01_pos_basic_order_receipt_screen')
+        self.assertFalse(self.main_pos_config.current_session_id.order_ids.filtered(lambda o: o.state != 'paid'))
         email_count = self.env['mail.mail'].search_count([('email_to', '=', 'test@receiptscreen.com')])
         self.assertEqual(email_count, 1)
 
@@ -1466,7 +1482,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'printer_ids': [Command.set(self.printer.ids)],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('test_printer_not_linked_to_any_combo_category', login="pos_user")
+        self.start_pos_tour('test_printer_not_linked_to_any_combo_category', login="pos_user", debug=True)
 
     def test_multi_product_options(self):
         self.pos_user.write({

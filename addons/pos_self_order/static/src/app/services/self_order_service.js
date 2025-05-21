@@ -24,10 +24,6 @@ import {
     getTaxesAfterFiscalPosition,
     getTaxesValues,
 } from "@point_of_sale/app/models/utils/tax_utils";
-import {
-    changesToOrder,
-    filterChangeByCategories,
-} from "@point_of_sale/app/models/utils/order_change";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 
 export class SelfOrder extends Reactive {
@@ -472,24 +468,14 @@ export class SelfOrder extends Reactive {
             ? this.models["pos.order"].find((o) => o.access_token === access_token)
             : this.currentOrder;
 
-        const orderData = order.getOrderData();
-        const changes = changesToOrder(order, this.config.preparationCategories);
         for (const printer of this.kitchenPrinters) {
-            const orderlines = filterChangeByCategories(
-                printer.config.product_categories_ids.map((c) => c.id),
-                changes,
-                this.models
-            ).new;
-            if (orderlines.length > 0) {
-                const printingChanges = {
-                    ...orderData,
-                    changes: {
-                        title: _t("NEW"),
-                        data: orderlines,
-                    },
-                };
+            const categoryIds = printer.config.product_categories_ids;
+            const categoryIdsSet = new Set(categoryIds);
+            const receiptData = await order.generatePrinterData({ categoryIdsSet });
+
+            for (const data of receiptData) {
                 const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
-                    data: printingChanges,
+                    data: data,
                 });
                 await printer.printReceipt(receipt);
             }

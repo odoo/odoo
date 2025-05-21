@@ -10,7 +10,6 @@ test("uiState", async () => {
 
     expect(order.uiState).toEqual({
         unmerge: {},
-        lastPrints: [],
         lineToRefund: {},
         displayed: true,
         booked: false,
@@ -21,6 +20,8 @@ test("uiState", async () => {
             inputTipAmount: "",
         },
         requiredPartnerDetails: {},
+        last_general_customer_note: "",
+        last_internal_note: "",
     });
 });
 
@@ -98,9 +99,119 @@ test("updateLastOrderChange", async () => {
     const order = await getFilledOrder(store);
     order.setGeneralCustomerNote("Customer note");
     order.setInternalNote("Internal note");
+    const firstLine = order.lines[0];
+    firstLine.setNote("Internal line note");
+    firstLine.setCustomerNote("Customer line note");
     order.updateLastOrderChange();
-    expect(order.last_order_preparation_change.general_customer_note).toBe("Customer note");
-    expect(order.last_order_preparation_change.internal_note).toBe("Internal note");
+    expect(order.uiState.last_general_customer_note).toBe("Customer note");
+    expect(order.uiState.last_internal_note).toBe("Internal note");
+    expect(firstLine.uiState.last_internal_note).toBe("Internal line note");
+    expect(firstLine.uiState.last_customer_note).toBe("Customer line note");
+
+    const originalQty = firstLine.getQuantity();
+    firstLine.setQuantity(originalQty + 2);
+
+    order.updateLastOrderChange();
+
+    expect(order.prep_order_group_id.prep_order_ids.length).toBe(2);
+    const prepLines = firstLine.prep_line_ids || [];
+    const totalPrepQty = prepLines.reduce((sum, l) => sum + l.quantity - l.cancelled, 0);
+    expect(totalPrepQty).toBe(originalQty + 2);
+
+    expect(order.hasChange).toBe(false);
+    expect(firstLine.uiState.savedQuantity).toBe(originalQty + 2);
+
+    firstLine.setQuantity(1);
+
+    order.updateLastOrderChange();
+    expect(order.prep_order_group_id.prep_order_ids.length).toBe(2);
+    const totalPrepQtyAfterCancelled = prepLines.reduce(
+        (sum, l) => sum + l.quantity - l.cancelled,
+        0
+    );
+    expect(totalPrepQtyAfterCancelled).toBe(1);
+    expect(prepLines[0].cancelled).toBe(originalQty - 1);
+    expect(prepLines[1].cancelled).toBe(2);
+
+    order.updateLastOrderChange({ cancelled: true });
+    expect(prepLines[0].cancelled).toBe(originalQty);
+    expect(prepLines[1].cancelled).toBe(2);
+});
+
+test("getPreparationChanges", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+
+    order.setGeneralCustomerNote("Customer note");
+    order.setInternalNote("Internal note");
+    const firstLine = order.lines[0];
+    const secondLine = order.lines[1];
+
+    const firstLineOriginalQty = firstLine.getQuantity();
+    const secondLineOriginalQty = secondLine.getQuantity();
+
+    //Check order notes and return
+    const changes = order.preparationChanges;
+    expect(changes.generalCustomerNote).toBe("Customer note");
+    expect(changes.internalNote).toBe("Internal note");
+    expect(changes.quantity).toBe(firstLineOriginalQty + secondLineOriginalQty);
+    const firstOrderlineChange = changes.printerData.addedQuantity[0];
+    expect(firstOrderlineChange).toEqual({
+        basic_name: firstLine.getProduct().name,
+        isCombo: firstLine.combo_item_id?.id || false,
+        product_id: firstLine.getProduct().id,
+        attribute_value_names: firstLine.attribute_value_ids.map((a) => a.name),
+        quantity: firstLineOriginalQty,
+        note: firstLine.getNote() || "",
+        customer_note: firstLine.getCustomerNote() || "",
+        pos_categ_id: firstLine.getProduct().pos_categ_ids[0]?.id ?? 0,
+        pos_categ_sequence: firstLine.getProduct().pos_categ_ids[0]?.sequence ?? 0,
+        group: firstLine.getCourse() || false,
+    });
+
+    //Check note update and change line quantity
+    order.updateLastOrderChange();
+    secondLine.setQuantity(secondLineOriginalQty + 2);
+    firstLine.setNote("Internal line note");
+    firstLine.setCustomerNote("Customer line note");
+    const secondChanges = order.preparationChanges;
+    const noteUpdate = secondChanges.printerData.noteUpdate[0];
+    expect(noteUpdate.customer_note).toBe("Customer line note");
+    expect(noteUpdate.note).toBe("Internal line note");
+    const secondOrderlineChange = secondChanges.printerData.addedQuantity[0];
+    expect(secondOrderlineChange).toEqual({
+        basic_name: secondLine.getProduct().name,
+        isCombo: secondLine.combo_item_id?.id || false,
+        product_id: secondLine.getProduct().id,
+        attribute_value_names: secondLine.attribute_value_ids.map((a) => a.name),
+        quantity: 2,
+        note: secondLine.getNote() || "",
+        customer_note: secondLine.getCustomerNote() || "",
+        pos_categ_id: secondLine.getProduct().pos_categ_ids[0]?.id ?? 0,
+        pos_categ_sequence: secondLine.getProduct().pos_categ_ids[0]?.sequence ?? 0,
+        group: secondLine.getCourse() || false,
+    });
+
+    //Check line delete
+    order.updateLastOrderChange();
+    const firstLineProduct = firstLine.getProduct();
+    const firstLineIsCombo = firstLine.combo_item_id?.id;
+    const firstLineAttributes = firstLine.attribute_value_ids.map((a) => a.name);
+    order.removeOrderline(firstLine);
+    const deleteLineChanges = order.preparationChanges;
+    const deleteOrderlineChange = deleteLineChanges.printerData.removedQuantity[0];
+    expect(deleteOrderlineChange).toEqual({
+        basic_name: firstLineProduct.name,
+        isCombo: firstLineIsCombo || false,
+        product_id: firstLineProduct.id,
+        attribute_value_names: firstLineAttributes,
+        quantity: -firstLineOriginalQty,
+        group: false,
+        note: "",
+        customer_note: "",
+        pos_categ_id: firstLineProduct.pos_categ_ids[0]?.id ?? 0,
+        pos_categ_sequence: firstLineProduct.pos_categ_ids[0]?.sequence ?? 0,
+    });
 });
 
 test("removeOrderline", async () => {

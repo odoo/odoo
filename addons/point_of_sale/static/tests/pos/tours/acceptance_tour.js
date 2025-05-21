@@ -6,12 +6,14 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 
-registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
+registry.category("web_tour.tours").add("test_pos_basic_order_01_multi_payment_and_change", {
     steps: () =>
         [
             waitForLoading(),
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2", "10.20"),
@@ -31,11 +33,12 @@ registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_ch
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quantity", {
+registry.category("web_tour.tours").add("test_pos_basic_order_02_decimal_order_quantity", {
     steps: () =>
         [
             waitForLoading(),
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1"),
             inLeftSide([
                 { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
@@ -52,11 +55,12 @@ registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quanti
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("pos_basic_order_03_tax_position", {
+registry.category("web_tour.tours").add("test_pos_basic_order_03_tax_position", {
     steps: () =>
         [
             waitForLoading(),
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Letter Tray", true, "1"),
             inLeftSide(...Order.hasTotal("5.28")),
             ProductScreen.clickFiscalPosition("FP-POS-2M", true),

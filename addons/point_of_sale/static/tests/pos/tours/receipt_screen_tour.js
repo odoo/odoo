@@ -13,11 +13,12 @@ import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { run, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
-registry.category("web_tour.tours").add("ReceiptScreenTour", {
+registry.category("web_tour.tours").add("test_01_pos_basic_order_receipt_screen", {
     steps: () =>
         [
             // press close button in receipt screen
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),

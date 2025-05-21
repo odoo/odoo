@@ -11,6 +11,7 @@ test("highlightPay", async () => {
     const order = await getFilledOrder(store);
     const comp = await mountWithCleanup(ActionpadWidget, {
         props: {
+            order: order,
             actionName: "Payment",
             actionToTrigger: () => {},
         },

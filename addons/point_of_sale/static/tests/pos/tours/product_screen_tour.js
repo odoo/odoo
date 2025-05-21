@@ -21,12 +21,13 @@ import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 
-registry.category("web_tour.tours").add("ProductScreenTour", {
+registry.category("web_tour.tours").add("test_product_screen_tour", {
     steps: () =>
         [
             // Go by default to home category
 
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
             ProductScreen.firstProductIsFavorite("Whiteboard Pen"),
             // Make sure we don't have any scroll bar on the product list
@@ -180,10 +181,11 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("FloatingOrderTour", {
+registry.category("web_tour.tours").add("test_floating_order_tour", {
     steps: () =>
         [
             Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
             ProductScreen.orderIsEmpty(),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
             ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2.0", "10.20"),

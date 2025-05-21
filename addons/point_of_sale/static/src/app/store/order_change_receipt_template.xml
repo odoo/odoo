@@ -66,8 +66,9 @@
             <div class="d-flex medium">
                 <span class="me-3" t-esc="line.quantity"/> <span class="product-name" t-esc="line.basic_name"/>
             </div>
-            <div t-if="line.attribute_value_names?.length" class="ms-5" style="font-size: 91%;">
-                <t t-foreach="line.attribute_value_names" t-as="name" t-key="name_index">
+            <t t-set="attribute_value_names" t-value="line.attribute_value_names"/>
+            <div t-if="attribute_value_names?.length" class="ms-5" style="font-size: 91%;">
+                <t t-foreach="attribute_value_names" t-as="name" t-key="name_index">
                     <p class="p-0 m-0">
                         - <t t-esc="name" />
                     </p>

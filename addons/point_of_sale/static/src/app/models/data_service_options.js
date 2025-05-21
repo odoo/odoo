@@ -8,12 +8,15 @@ export class DataServiceOptions {
                 condition: (record) =>
                     record.finalized &&
                     typeof record.id === "number" &&
-                    record.pos_session_id !== parseInt(odoo.pos_session_id),
+                    record.pos_session_id !== parseInt(odoo.pos_session_id) &&
+                    !record.prep_order_group_id,
             },
             "pos.order.line": {
                 key: "uuid",
                 condition: (record) =>
-                    record.order_id?.finalized && typeof record.order_id.id === "number",
+                    record.order_id?.finalized &&
+                    typeof record.order_id.id === "number" &&
+                    !record.order_id.prep_order_group_id,
             },
             "pos.payment": {
                 key: "uuid",
@@ -21,9 +24,28 @@ export class DataServiceOptions {
                     record.pos_order_id?.finalized && typeof record.pos_order_id.id === "number",
             },
             "product.attribute.custom.value": {
-                key: "id",
+                key: "uuid",
                 condition: (record) =>
                     record.order_id?.finalized && typeof record.order_id.id === "number",
+            },
+            "pos.prep.order": {
+                key: "uuid",
+                condition: (record) => !record.prep_order_group_id,
+            },
+            "pos.prep.line": {
+                key: "uuid",
+                condition: (record) => !record.prep_order_id,
+            },
+            "pos.prep.order.group": {
+                key: "uuid",
+                condition: (record) =>
+                    record.pos_order_ids.every(
+                        (order) => order.finalized && typeof order.id === "number"
+                    ),
+            },
+            "pos.pack.operation.lot": {
+                key: "uuid",
+                condition: (record) => !record.order_id?.finalized && !record.order_id,
             },
         };
     }
@@ -35,6 +57,9 @@ export class DataServiceOptions {
             "pos.payment",
             "pos.pack.operation.lot",
             "product.attribute.custom.value",
+            "pos.prep.order",
+            "pos.prep.line",
+            "pos.prep.order.group",
         ];
     }
 
@@ -44,6 +69,9 @@ export class DataServiceOptions {
             "pos.order": ["uuid"],
             "pos.order.line": ["uuid"],
             "pos.payment": ["uuid"],
+            "product.attribute.custom.value": ["uuid"],
+            "pos.prep.order.group": ["uuid"],
+            "pos.pack.operation.lot": ["uuid"],
             "product.template": ["pos_categ_ids", "write_date"],
             "product.product": ["pos_categ_ids", "barcode"],
             "account.fiscal.position": ["tax_ids"],

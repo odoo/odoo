@@ -14,6 +14,7 @@ export class PosOrderLine extends models.ServerModel {
             "price_subtotal_incl",
             "order_id",
             "note",
+            "prep_line_ids",
             "price_type",
             "product_id",
             "discount",

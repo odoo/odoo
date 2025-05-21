@@ -8,9 +8,9 @@
         </t>
         <button t-if="pos.config.use_presets and !props.showRemainingButtons"
             class="btn btn-secondary btn-lg flex-shrink-0 border-0"
-            t-attf-class="{{currentOrder.preset_id?.color and `o_colorlist_item_color_${currentOrder.preset_id?.color}`}}"
+            t-attf-class="{{currentOrder?.preset_id?.color and `o_colorlist_item_color_${currentOrder?.preset_id?.color}`}}"
             t-on-click="() => this.pos.selectPreset()">
-            <span t-if="currentOrder.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
+            <span t-if="currentOrder?.preset_id?.name" t-esc="currentOrder.preset_id?.name" />
             <span t-else="">Preset</span>
         </button>
         <button class="btn btn-secondary btn-lg flex-shrink-0 ms-auto more-btn" t-if="!props.showRemainingButtons and !ui.isSmall and props.onClickMore" t-on-click="props.onClickMore">
@@ -52,7 +52,7 @@
     </t>
     <t t-name="point_of_sale.ControlButtonsPopup">
         <Dialog bodyClass="'d-flex flex-column'" footer="false" title.translate="Actions" t-on-click="props.close">
-            <ControlButtons showRemainingButtons="true" close="props.close"/>
+            <ControlButtons showRemainingButtons="true" close="props.close" order="props.order"/>
         </Dialog>
     </t>
 </templates>

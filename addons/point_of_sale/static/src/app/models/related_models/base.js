@@ -30,7 +30,10 @@ export class Base extends WithLazyGetterTrap {
      * @param {*} _vals
      */
     setup(_vals) {
-        this._dirty = typeof this.id !== "number";
+        if (typeof this.id !== "number" && this.models._dirtyRecords[this.model.name]) {
+            this.models._dirtyRecords[this.model.name].add(this.uuid);
+            this._dirty = true;
+        }
     }
 
     /**
@@ -46,7 +49,7 @@ export class Base extends WithLazyGetterTrap {
     }
 
     isDirty() {
-        return this._dirty;
+        return Boolean(this._dirty);
     }
 
     formatDateOrTime(field, type = "datetime") {
@@ -87,14 +90,28 @@ export class Base extends WithLazyGetterTrap {
         return this.model.backLink(this, link);
     }
 
-    _markDirty() {
-        if (this.models._loadingData || this._dirty) {
+    markDirty() {
+        if (
+            this.models._loadingData ||
+            this._dirty ||
+            !this.models._dirtyRecords[this.model.name]
+        ) {
             return;
         }
 
         this._dirty = true;
+        this.models._dirtyRecords[this.model.name].add(this.uuid);
         this.model.getParentFields().forEach((field) => {
-            this[field.name]?._markDirty?.();
+            this[field.name]?.markDirty?.();
         });
+    }
+
+    unmarkDirty() {
+        if (!this.models._dirtyRecords[this.model.name]) {
+            return;
+        }
+
+        this.models._dirtyRecords[this.model.name].delete(this.uuid);
+        this._dirty = false;
     }
 }

@@ -794,7 +794,6 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'fiscal_position_id': fiscal_position.id,
             'pricelist_id': self.config.pricelist_id.id,
             'name': 'Order %s' % uuid,
-            'last_order_preparation_change': '{}',
             'lines': order_lines,
             'partner_id': customer and customer.id,
             'session_id': self.pos_session.id,

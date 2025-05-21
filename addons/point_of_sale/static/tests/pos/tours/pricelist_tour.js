@@ -13,7 +13,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import { refresh, scan_barcode } from "@point_of_sale/../tests/generic_helpers/utils";
 
-registry.category("web_tour.tours").add("pos_pricelist", {
+registry.category("web_tour.tours").add("test_pos_pricelist", {
     steps: () =>
         [
             Chrome.startPoS(),

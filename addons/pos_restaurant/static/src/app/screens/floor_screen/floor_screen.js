@@ -25,7 +25,6 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { getButtons, DECIMAL, ZERO, BACKSPACE } from "@point_of_sale/app/components/numpad/numpad";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { pick } from "@web/core/utils/objects";
-import { getOrderChanges } from "@point_of_sale/app/models/utils/order_change";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
@@ -1059,18 +1058,8 @@ export class FloorScreen extends Component {
         }
     }
     getChangeCount(table) {
-        // This information in uiState came by websocket
-        // If the table is not synced, we need to count the unsynced orders
-        let changeCount = 0;
-        const tableOrders = this.pos.models["pos.order"].filter(
-            (o) => o.table_id?.id === table.id && !o.finalized
-        );
-
-        for (const order of tableOrders) {
-            const changes = getOrderChanges(order, this.pos.config.preparationCategories);
-            changeCount += changes.nbrOfChanges;
-        }
-
+        const order = table.getOrder();
+        const changeCount = order?.getPreparationChanges?.()?.quantity || 0;
         return { changes: changeCount };
     }
     setColor(hasSelectedTable, color, key) {

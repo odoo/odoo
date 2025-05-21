@@ -57,16 +57,6 @@ describe("restaurant pos_store.js", () => {
         expect(store.getOrder().id).toBe(blankOrder.id);
     });
 
-    test("computeTableCount", async () => {
-        const store = await setupPosEnv();
-        const order1 = store.addNewOrder();
-        const table = store.models["restaurant.table"].get(2);
-        expect(table.uiState.orderCount).toBe(0);
-        order1.table_id = table;
-        store.computeTableCount();
-        expect(table.uiState.orderCount).toBe(1);
-    });
-
     test("sync dirty order when unsetting table", async () => {
         const store = await setupPosEnv();
         const table = store.models["restaurant.table"].get(2);
@@ -282,11 +272,11 @@ describe("restaurant pos_store.js", () => {
         order.lines[0].note = '[{"text":"Test Note","colorIndex":0}]';
         order.lines[1].note = '[{"text":"Test 1","colorIndex":0},{"text":"Test 2","colorIndex":0}]';
         order.general_customer_note = '[{"text":"General Note","colorIndex":0}]';
-        const changes = store.categoryCount;
-        expect(changes).toEqual([
+        const changes = store.getOrder().preparationChanges;
+        expect(changes.noteChange).toBe(true);
+        expect(changes.categoryCount).toEqual([
             { count: 3, name: "Category 1" },
             { count: 2, name: "Category 2" },
-            { count: 1, name: "Message" },
         ]);
     });
 
