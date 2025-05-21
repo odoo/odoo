@@ -208,7 +208,9 @@ export class SelectionPlugin extends Plugin {
             }
         });
         this.addDomListener(this.editable, "mousedown", (ev) => {
-            if (ev.detail >= 3) {
+            if (ev.detail === 2) {
+                this.correctDoubleClick = true;
+            } else if (ev.detail >= 3) {
                 this.correctTripleClick = true;
             }
         });
@@ -253,6 +255,31 @@ export class SelectionPlugin extends Plugin {
                 if (focusOffset === 0 && anchorNode !== focusNode) {
                     [focusNode, focusOffset] = endPos(previousLeaf(focusNode));
                     return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+                }
+            }
+            if (this.correctDoubleClick) {
+                this.correctDoubleClick = false;
+                const { anchorNode, anchorOffset, focusNode } = this.activeSelection;
+                const anchorElement = closestElement(anchorNode);
+                // Allow editing the text of a link after "double click" on the last word of said link.
+                // This is done by correcting the selection focus inside of the link
+                if (
+                    anchorElement.tagName === "A" &&
+                    anchorNode !== focusNode &&
+                    focusNode.previousSibling === anchorElement
+                ) {
+                    const anchorElementLength = anchorElement.childNodes.length;
+
+                    // Due to the ZWS added around links we can always expect
+                    // the last childNode to be a ZWS in its own textNode.
+                    // therefore we can safely set the selection focus before last node.
+                    const newSelection = {
+                        anchorNode: anchorNode,
+                        anchorOffset: anchorOffset,
+                        focusNode: anchorElement,
+                        focusOffset: anchorElementLength - 1,
+                    };
+                    return this.setSelection(newSelection);
                 }
             }
 
