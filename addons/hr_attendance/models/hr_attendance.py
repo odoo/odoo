@@ -679,6 +679,10 @@ class HrAttendance(models.Model):
         })
 
     def _cron_auto_check_out(self):
+        def check_in_tz(attendance):
+            """Returns check-in time in calendar's timezone."""
+            return attendance.check_in.astimezone(pytz.timezone(attendance.employee_id.resource_calendar_id.tz or 'UTC'))
+
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
              ('employee_id.company_id.auto_check_out', '=', True),
@@ -688,15 +692,15 @@ class HrAttendance(models.Model):
         if not to_verify:
             return
 
-        previous_duration = self.env['hr.attendance']._read_group(
-            domain=[
-                ('employee_id', 'in', to_verify.mapped('employee_id').ids),
-                ('check_in', '>', (fields.Datetime.now() - relativedelta(days=1)).replace(hour=0, minute=0, second=0)),
-                ('check_out', '!=', False)], groupby=['check_in:day', 'employee_id'], aggregates=['worked_hours:sum'])
+        previous_attendances = self.env['hr.attendance'].search([
+                    ('employee_id', 'in', to_verify.mapped('employee_id').ids),
+                    ('check_in', '>', (fields.Datetime.now() - relativedelta(days=1)).replace(hour=0, minute=0, second=0)),
+                    ('check_out', '!=', False)
+        ])
 
         mapped_previous_duration = defaultdict(lambda: defaultdict(float))
-        for rec in previous_duration:
-            mapped_previous_duration[rec[1]][rec[0].date()] += rec[2]
+        for previous in previous_attendances:
+            mapped_previous_duration[previous.employee_id][check_in_tz(previous).date()] += previous.worked_hours
 
         all_companies = to_verify.employee_id.company_id
 
@@ -705,13 +709,14 @@ class HrAttendance(models.Model):
             to_verify_company = to_verify.filtered(lambda a: a.employee_id.company_id.id == company.id)
 
             # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
-            to_check_out = to_verify_company.filtered(lambda a: (fields.Datetime.now() - a.check_in).seconds / 3600 + mapped_previous_duration[a.employee_id][a.check_in.date()] - max_tol > (sum(a.employee_id.resource_calendar_id.attendance_ids.filtered(lambda att: att.dayofweek == str(a.check_in.weekday()) and (not att.two_weeks_calendar or att.week_type == str(att.get_week_type(a.check_in.date())))).mapped(lambda at: at.hour_to - at.hour_from))))
+            to_check_out = to_verify_company.filtered(lambda a: (fields.Datetime.now() - a.check_in).seconds / 3600 + mapped_previous_duration[a.employee_id][check_in_tz(a).date()] - max_tol >
+                                                                (sum(a.employee_id.resource_calendar_id.attendance_ids.filtered(lambda att: att.dayofweek == str(check_in_tz(a).weekday()) and (not att.two_weeks_calendar or att.week_type == str(att.get_week_type(check_in_tz(a).date())))).mapped(lambda at: at.hour_to - at.hour_from))))
             body = _('This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours.')
 
             for att in to_check_out:
-                expected_worked_hours = sum(att.employee_id.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == str(att.check_in.weekday()) and (not a.two_weeks_calendar or a.week_type == str(a.get_week_type(att.check_in.date())))).mapped("duration_hours"))
+                expected_worked_hours = sum(att.employee_id.resource_calendar_id.attendance_ids.filtered(lambda a: a.dayofweek == str(check_in_tz(att).weekday()) and (not a.two_weeks_calendar or a.week_type == str(a.get_week_type(check_in_tz(att).date())))).mapped("duration_hours"))
                 att.check_out = fields.Datetime.now()
-                excess_hours = att.worked_hours - (expected_worked_hours + max_tol - mapped_previous_duration[att.employee_id][att.check_in.date()])
+                excess_hours = att.worked_hours - (expected_worked_hours + max_tol - mapped_previous_duration[att.employee_id][check_in_tz(att).date()])
                 att.write({
                     "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
                     "out_mode": "auto_check_out"
