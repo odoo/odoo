@@ -885,7 +885,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             sale.write({
                 'consignment_number': "Manual WB",
                 'pick_status': 'packed',
-                'delivery_status': 'partial',
+                # 'delivery_status': 'partial',
             })
             picking.write({'current_state': 'pack'})
             picking.button_validate()
@@ -1013,7 +1013,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         sale.write({
             'carrier': carrier,
             'pick_status': 'packed',
-            'delivery_status': 'partial',
+            # 'delivery_status': 'partial',
             'consignment_number': con_id,
             'status': label_url,
             'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
@@ -1431,7 +1431,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             sale.write({
                 'carrier': carrier,
                 'pick_status': 'packed',
-                'delivery_status': 'partial',
+                # 'delivery_status': 'partial',
                 'consignment_number': con_id,
                 'status': label_url,
                 'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
