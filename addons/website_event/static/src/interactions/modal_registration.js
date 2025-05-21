@@ -1,5 +1,4 @@
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Interaction } from "@web/public/interaction";
@@ -36,7 +35,6 @@ export class ModalRegistration extends Interaction {
         if (this.recaptchaToken.error) {
             this.services.notification.add(this.recaptchaToken.error, {
                 type: "danger",
-                title: _t("Error"),
                 sticky: true,
             });
             this.enableRegistrationFormSubmit();

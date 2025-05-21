@@ -56,13 +56,11 @@ export class NewEmployeeDialog extends Component {
                 this.props.close();
             } else {
                 this.notification.add(_t("Failed to create employee."), {
-                    title: _t("Error"),
                     type: "danger",
                 });
             }
         } catch (error) {
             this.notification.add(_t("Error creating employee: ") + error.message, {
-                    title: _t("Error"),
                     type: "danger",
                 });
         }
@@ -91,7 +89,6 @@ export class NewEmployeeDialog extends Component {
         } else {
             this.notification.add( _t("Error: ") + _t(data?.message),{
                 type: "danger",
-                title: _t("Error"),
             });
         }
     }

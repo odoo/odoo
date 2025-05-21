@@ -1,7 +1,6 @@
 import { Interaction } from '@web/public/interaction';
 import { registry } from '@web/core/registry';
 import { rpc } from '@web/core/network/rpc';
-import { _t } from '@web/core/l10n/translation';
 import { session } from '@web/session';
 import { ReCaptcha } from '@google_recaptcha/js/recaptcha';
 import { isVisible } from "@html_editor/utils/dom_info";
@@ -111,7 +110,6 @@ export class Subscribe extends Interaction {
         if (tokenObj.error) {
             this.notification.add(tokenObj.error, {
                 type: 'danger',
-                title: _t("Error"),
                 sticky: true,
             });
             return;
@@ -133,7 +131,6 @@ export class Subscribe extends Interaction {
         }
         this.notification.add(result.toast_content, {
             type: toastType,
-            title: toastType === 'success' ? _t("Success") : _t("Error"),
             sticky: true,
         });
     }

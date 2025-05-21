@@ -326,14 +326,12 @@ test("test display_notification client action", async () => {
         type: "ir.actions.client",
         tag: "display_notification",
         params: {
-            title: "title",
             message: "message",
             sticky: true,
         },
     });
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification_manager .o_notification .o_notification_title").toHaveText("title");
     expect(".o_notification_manager .o_notification .o_notification_content").toHaveText("message");
     expect(".o_kanban_view").toHaveCount(1);
     await contains(".o_notification_close").click();
@@ -349,7 +347,6 @@ test("test display_notification client action with links", async () => {
         type: "ir.actions.client",
         tag: "display_notification",
         params: {
-            title: "title",
             message: "message %s <R&D>",
             sticky: true,
             links: [
@@ -362,7 +359,6 @@ test("test display_notification client action with links", async () => {
     });
     await animationFrame(); // wait for the notification to be displayed
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification_manager .o_notification .o_notification_title").toHaveText("title");
     expect(".o_notification_manager .o_notification .o_notification_content").toHaveText(
         "message test <R&D> <R&D>"
     );

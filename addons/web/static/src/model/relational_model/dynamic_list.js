@@ -248,9 +248,7 @@ export class DynamicList extends DataPoint {
             });
 
             if (resIds.length > copiedRecords.length) {
-                this.model.notification.add(_t("Some records could not be duplicated"), {
-                    title: _t("Warning"),
-                });
+                this.model.notification.add(_t("Some records could not be duplicated"));
             }
             return this.model.load();
         };
@@ -290,7 +288,7 @@ export class DynamicList extends DataPoint {
                 "Only the first %(count)s records have been deleted (out of %(total)s selected)",
                 { count: resIds.length, total: this.count }
             );
-            this.model.notification.add(msg, { title: _t("Warning") });
+            this.model.notification.add(msg);
         }
         await this.model.load();
         return unlinked;
@@ -487,7 +485,7 @@ export class DynamicList extends DataPoint {
                     firstRecords: this.count,
                 }
             );
-            this.model.notification.add(msg, { title: _t("Warning") });
+            this.model.notification.add(msg);
         }
         const reload = () => this.model.load();
         if (action && Object.keys(action).length) {
