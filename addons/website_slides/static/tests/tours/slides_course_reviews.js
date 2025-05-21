@@ -23,7 +23,8 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means the log note is considered as a review
-            trigger: "span:contains(Add Review)",
+            content: "Add review",
+            trigger: ".o_rating_popup_composer_btn",
             run: "click",
         },
         {
@@ -49,7 +50,18 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means the system is allowing you to add another review.
-            trigger: "span:contains(Edit Review)",
+            content: "The button to add or edit review is hidden.",
+            trigger: ".o_rating_popup_composer_btn:not(:visible)",
+        },
+        {
+            content: "Display contextual menu of the rating message",
+            trigger: "#chatterRoot:shadow .o-mail-Message-textContent:contains(Great course!)",
+            run: "hover && click",
+        },
+        {
+            content: 'Click on "edit" action of the contextual menu of the rating message',
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message-textContent:contains(Great course!) button[name='edit']",
             run: "click",
         },
         {
