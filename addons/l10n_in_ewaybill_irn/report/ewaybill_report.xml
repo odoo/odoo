@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_ewaybill_inherit_irn" inherit_id="l10n_in_ewaybill.report_ewaybill">
+        <xpath expr="//t[@t-if='doc.state in ewaybill_states']/h5" position="after">
+            <t t-if="doc.is_process_through_irn">
+                IRN: <t t-out="doc.account_move_id._get_l10n_in_edi_response_json().get('Irn')"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>
