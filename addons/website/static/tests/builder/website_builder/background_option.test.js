@@ -78,6 +78,18 @@ test("toggle Show/Hide on mobile of the shape background", async () => {
     expect(":iframe section .o_we_shape").not.toHaveClass("o_shape_show_mobile");
 });
 
+test("Check if an element with a background image has necessary classes", async () => {
+    await setupWebsiteBuilder(`
+        <section class="s_banner overflow-hidden" style="background-color:(0, 0, 0, 0); 
+                background-image: url(&quot;/website_slides/static/src/img/banner_default.svg&quot;); height: 300px" data-snippet="s_banner">
+            AAA
+        </section>`);
+    await contains(":iframe section").click();
+    expect(":iframe section").toHaveClass("oe_img_bg");
+    expect(":iframe section").toHaveClass("o_bg_img_center");
+    expect(":iframe section").toHaveClass("o_bg_img_origin_border_box");
+})
+
 test("Change the background position and apply", async () => {
     await dragAndDropBgImage();
     await contains(".overlay .btn-primary").click();
