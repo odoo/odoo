@@ -23,7 +23,6 @@ Council Implementing Regulation (EU) 2019/2026
     """,
     'depends': ['account'],
     'data': [
-        'views/res_config_settings_views.xml',
         'data/account_account_tag.xml',
     ],
     'uninstall_hook': 'l10n_eu_oss_uninstall',
