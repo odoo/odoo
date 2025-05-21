@@ -3,7 +3,6 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
-import { htmlJoin } from "@web/core/utils/html";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { FetchRecordError } from "./errors";
@@ -648,14 +647,7 @@ export class Record extends DataPoint {
     }
 
     _displayInvalidFieldNotification() {
-        const items = [...this._invalidFields].map(
-            (fieldName) => markup`<li>${this.fields[fieldName].string || fieldName}</li>`,
-            this
-        );
-        return this.model.notification.add(markup`<ul>${htmlJoin(items)}</ul>`, {
-            title: _t("Invalid fields: "),
-            type: "danger",
-        });
+        return this.model.notification.add(_t("Missing required fields"), { type: "danger" });
     }
 
     _formatServerValue(fieldType, value) {
