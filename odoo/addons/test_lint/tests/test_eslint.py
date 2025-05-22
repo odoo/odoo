@@ -9,7 +9,6 @@ from odoo import tools
 from odoo.tests import tagged
 from odoo.tools.misc import file_path
 from odoo.modules import get_modules
-import unittest
 
 from . import lint_case
 

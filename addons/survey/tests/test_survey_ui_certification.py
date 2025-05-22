@@ -4,7 +4,8 @@ import odoo.tests
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
-@odoo.tests.common.tagged('post_install', '-at_install', 'plop')
+
+@odoo.tests.common.tagged('post_install', '-at_install')
 class TestUiCertification(HttpCaseWithUserDemo):
 
     def setUp(self):

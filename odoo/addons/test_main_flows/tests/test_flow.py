@@ -5,7 +5,6 @@ from odoo.tools import mute_logger
 
 import logging
 import odoo.tests
-import unittest
 
 _logger = logging.getLogger(__name__)
 
