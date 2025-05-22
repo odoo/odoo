@@ -495,6 +495,7 @@ export async function insertCategorySnippet({ group, snippet } = {}) {
         } .o_snippet_thumbnail .o_snippet_thumbnail_area`
     ).click();
     await confirmAddSnippet(snippet);
+    await waitForEndOfOperation();
 }
 
 export async function waitForSnippetDialog() {
