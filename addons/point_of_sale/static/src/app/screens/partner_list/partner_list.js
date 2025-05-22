@@ -6,7 +6,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { Component, useEffect, useState } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { unaccent } from "@web/core/utils/strings";
+import { normalize } from "@web/core/l10n/utils";
 import { debounce } from "@web/core/utils/timing";
 
 export class PartnerList extends Component {
@@ -114,7 +114,7 @@ export class PartnerList extends Component {
         this.pos.closeTempScreen();
     }
     getPartners(partners) {
-        const searchWord = unaccent((this.state.query || "").trim(), false).toLowerCase();
+        const searchWord = normalize(this.state.query?.trim() ?? "");
         const exactMatches = partners.filter((partner) => partner.exactMatch(searchWord));
 
         if (exactMatches.length > 0) {
@@ -125,7 +125,7 @@ export class PartnerList extends Component {
 
         const availablePartners = searchWord
             ? partners.filter((p) =>
-                  unaccent(p.searchString).includes(isSearchWordNumber ? numberString : searchWord)
+                  normalize(p.searchString).includes(isSearchWordNumber ? numberString : searchWord)
               )
             : partners
                   .slice(0, 1000)
