@@ -267,6 +267,12 @@ class TestPropertiesExportImport(HttpCase):
             ]
         )
 
+    def test_export_properties_field(self):
+        """Test that the 'properties' field exports as a dictionary."""
+        export_data = self.properties_records[0].export_data(['properties']).get('datas', [])
+        self.assertIsInstance(export_data[0][0], dict)
+        self.assertEqual(export_data[0][0], {'char_prop': 'Not the default', 'selection_prop': 'selection_2'})
+
     def test_import_properties(self):
         def_record_1 = self.definition_records[0]
         def_record_2 = self.definition_records[1]

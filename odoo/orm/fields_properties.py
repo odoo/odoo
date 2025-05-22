@@ -207,6 +207,12 @@ class Properties(Field):
         """If we write a list on the child, update the definition record."""
         return value
 
+    def convert_to_export(self, value, record):
+        """ Convert value from the record format to the export format. """
+        if isinstance(value, Property):
+            value = value._values
+        return value or ''
+
     def _get_res_ids_per_model(self, env, values_list):
         """Read everything needed in batch for the given records.
 
