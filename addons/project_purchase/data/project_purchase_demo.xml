@@ -77,5 +77,43 @@
             <field name="analytic_distribution" eval="{ref('project.analytic_construction'): 100}"/>
             <field name="date_planned" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
+
+        <!-- purchase order for the 'Purchase Orders' section -->
+        <record id="purchase_order_profitability" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="date_order" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_planned" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="project_id" eval="ref('project.project_a_very_profitable_project')"/>
+        </record>
+
+        <record id="purchase_order_line_for_profitability_1" model="purchase.order.line">
+            <field name="order_id" ref="project_purchase.purchase_order_profitability"/>
+            <field name="product_id" ref="project_account.product_product_screw_driver"/>
+            <field name="product_qty" eval="3"/>
+            <field name="qty_received" eval="3"/>
+            <field name="date_planned" eval="(datetime.today()).strftime('%Y-%m-%d %H:%M:%S')"/>
+        </record>
+        <function model="purchase.order" name="button_confirm" eval="[ref('project_purchase.purchase_order_profitability')]"/>
+
+        <record id="purchase_order_vendor_bill_profitability" model="account.move">
+            <field name="name">/</field>
+            <field name="ref"></field>
+            <field name="move_type">in_invoice</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="invoice_line_ids" eval="[
+                Command.create({
+                    'display_type': 'product',
+                    'name': 'Screw Driver',
+                    'quantity': 3.0,
+                    'product_id': ref('project_account.product_product_screw_driver'),
+                    'analytic_distribution': {ref('project.analytic_profitable_project'): 100.0},
+                    'purchase_line_id': ref('project_purchase.purchase_order_line_for_profitability_1')
+                }),
+            ]"/>
+        </record>
+
     </data>
 </odoo>
