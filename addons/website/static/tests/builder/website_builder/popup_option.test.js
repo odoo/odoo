@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, waitFor } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, queryOne, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
@@ -9,6 +9,8 @@ import {
     waitForEndOfOperation,
 } from "../website_helpers";
 import { Plugin } from "@html_editor/plugin";
+import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
 
@@ -70,7 +72,7 @@ describe("Popup options: popup in page before edit", () => {
                     <div class="modal-dialog d-flex">
                         <div class="modal-content oe_structure">
                             <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close" contenteditable="false">×</div>
-                            <section>Popup content</section>
+                            <section><p>Popup content</p></section>
                         </div>
                     </div>
                 </div>
@@ -102,5 +104,23 @@ describe("Popup options: popup in page before edit", () => {
         // Ensure that no mutations were registered in the history.
         // `addStep` return the created step, or false if there was no mutations
         expect(builder.getEditor().shared.history.addStep()).toBe(false);
+    });
+
+    test("editing s_popup, then closing it, then undo show it again", async () => {
+        const editor = builder.getEditor();
+        await contains(".o_we_invisible_entry .fa-eye-slash").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(":iframe .s_popup .modal").toBeVisible();
+        setSelection({ anchorNode: queryOne(":iframe .s_popup section p"), anchorOffset: 0 });
+        insertText(editor, "Other content");
+        await animationFrame();
+        await contains(":iframe .s_popup div.js_close_popup").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(":iframe .s_popup .modal").not.toBeVisible();
+        expect(editor.shared.history.canUndo()).toBe(true);
+        undo(editor);
+        await animationFrame();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        expect(":iframe .s_popup .modal").toBeVisible();
     });
 });

@@ -344,6 +344,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 targetEl = nextTarget;
             }
             if (targetEl) {
+                this.dispatchTo("on_restore_containers_handlers", targetEl);
                 this.updateContainers(targetEl, { forceUpdate: true });
                 // Scroll to the target if not visible.
                 if (!isElementInViewport(targetEl)) {
