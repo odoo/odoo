@@ -10,13 +10,14 @@ import { markup } from "@odoo/owl";
 
 import { stateToUrl } from "@web/core/browser/router";
 import { loadEmoji, loader } from "@web/core/emoji_picker/emoji_picker";
+import { normalize } from "@web/core/l10n/utils";
 import {
     createElementWithContent,
     htmlEscape,
     htmlFormatList,
     setElementContent,
 } from "@web/core/utils/html";
-import { escapeRegExp, unaccent } from "@web/core/utils/strings";
+import { escapeRegExp } from "@web/core/utils/strings";
 import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
@@ -299,7 +300,7 @@ export function convertBrToLineBreak(str) {
 }
 
 export function cleanTerm(term) {
-    return unaccent((typeof term === "string" ? term : "").toLowerCase());
+    return typeof term === "string" ? normalize(term) : "";
 }
 
 /**

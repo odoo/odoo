@@ -29,7 +29,7 @@ import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_po
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { SelectionPopup } from "../components/popups/selection_popup/selection_popup";
 import { user } from "@web/core/user";
-import { unaccent } from "@web/core/utils/strings";
+import { normalize } from "@web/core/l10n/utils";
 import { WithLazyGetterTrap } from "@point_of_sale/lazy_getter";
 import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "../utils/devices_synchronisation";
@@ -2404,8 +2404,8 @@ export class PosStore extends WithLazyGetterTrap {
 
     sortByWordIndex(products, words) {
         return products.sort((a, b) => {
-            const nameA = unaccent(a.name);
-            const nameB = unaccent(b.name);
+            const nameA = normalize(a.name);
+            const nameB = normalize(b.name);
 
             const indexA = nameA.indexOf(words);
             const indexB = nameB.indexOf(words);
@@ -2416,16 +2416,14 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     getProductsBySearchWord(searchWord, products) {
-        const words = unaccent(searchWord.toLowerCase(), false);
+        const words = normalize(searchWord);
         const exactMatches = products.filter((product) => product.exactMatch(words));
 
         if (exactMatches.length > 0 && words.length > 2) {
             return this.sortByWordIndex(exactMatches, words);
         }
 
-        const matches = products.filter((p) =>
-            unaccent(p.searchString, false).toLowerCase().includes(words)
-        );
+        const matches = products.filter((p) => normalize(p.searchString).includes(words));
 
         return this.sortByWordIndex(Array.from(new Set([...exactMatches, ...matches])), words);
     }

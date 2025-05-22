@@ -9,7 +9,6 @@ import {
     isEmail,
     isNumeric,
     sprintf,
-    unaccent,
     odoomark,
 } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
@@ -108,13 +107,6 @@ describe("sprintf", () => {
 test("capitalize", () => {
     expect(capitalize("abc def")).toBe("Abc def");
     expect(capitalize("Abc def")).toBe("Abc def");
-});
-
-test("unaccent", () => {
-    expect(unaccent("éèàôù")).toBe("eeaou");
-    expect(unaccent("ⱮɀꝾƶⱵȥ")).toBe("mzgzhz"); // single characters
-    expect(unaccent("ǱǄꝎꜩꝡƕ")).toBe("dzdzootzvyhv"); // doubled characters
-    expect(unaccent("ⱮɀꝾƶⱵȥ", true)).toBe("MzGzHz"); // case sensitive characters
 });
 
 test("isEmail", () => {
