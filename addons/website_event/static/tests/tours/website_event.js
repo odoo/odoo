@@ -48,19 +48,8 @@ function websiteCreateEventTourSteps() {
             id: "s_image_text",
             name: "Image - Text",
             groupName: "Content",
-        }), {
-            // Wait until the drag and drop is resolved (causing a history step)
-            // before clicking save.
-            trigger: ".o_we_external_history_buttons button.fa-undo:not([disabled])",
-        }, {
-            trigger: "button[data-action=save]",
-            content: "Once you click on save, your event is updated.",
-            tooltipPosition: "bottom",
-            run: "click",
-        },
-        {
-            trigger: ":iframe body:not(.editor_enable)",
-        },
+        }),
+        ...clickOnSave(),
         {
             trigger: ".o_menu_systray_item.o_website_publish_container a",
             content: "Click to publish your event.",
