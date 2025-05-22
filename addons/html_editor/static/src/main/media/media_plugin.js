@@ -148,6 +148,7 @@ export class MediaPlugin extends Plugin {
         } else {
             this.dependencies.dom.insert(newImgElement);
         }
+        await Promise.all(this.getResource("process_new_image").map((cb) => cb(newImgElement)));
         // Collapse selection after the inserted/replaced element.
         const [anchorNode, anchorOffset] = rightPos(newImgElement);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
