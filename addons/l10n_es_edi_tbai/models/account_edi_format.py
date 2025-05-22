@@ -650,7 +650,7 @@ class AccountEdiFormat(models.Model):
         if intracom:
             values['regime_key'] = ['09']
         elif reagyp:
-            values['regime_key'] = ['02']
+            values['regime_key'] = ['19']
         else:
             values['regime_key'] = ['01']
         # Credit notes (factura rectificativa)
