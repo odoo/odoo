@@ -701,34 +701,3 @@ class AccountMove(models.Model):
             url,
             _("Buy Credits")
         )
-
-    def _get_l10n_in_customer_invoice_title(self, proforma=False):
-        """
-        Get the title to display in front of a customer invoice number.
-        The title is generated based on the state of the invoice and the `proforma` parameter.
-
-        :param proforma: Is the invoice a proforma one, defaults to False
-        :type proforma: bool, optional
-        :return: A customer invoice title
-        :rtype: str
-        """
-        self.ensure_one()
-        if self.move_type == 'out_invoice' and self.state == 'posted':
-            if self.invoice_line_ids.tax_ids:
-                return _("Tax Invoice") if not proforma else _("Proforma Tax Invoice")
-            else:
-                return _("Invoice") if not proforma else _("Proforma Invoice")
-        elif self.move_type == 'out_invoice' and self.state == 'draft':
-            return _("Draft Invoice") if not proforma else _("Draft Proforma Invoice")
-        elif self.move_type == 'out_invoice' and self.state == 'cancel':
-            return _("Cancelled Invoice") if not proforma else _("Cancelled Proforma Invoice")
-        elif self.move_type == 'out_refund' and self.state == 'posted':
-            return _("Credit Note") if not proforma else _("Proforma Credit Note")
-        elif self.move_type == 'out_refund' and self.state == 'draft':
-            return _("Draft Credit Note") if not proforma else _("Draft Proforma Credit Note")
-        elif self.move_type == 'out_refund' and self.state == 'cancel':
-            return _("Cancelled Credit Note") if not proforma else _("Cancelled Proforma Credit Note")
-        elif self.move_type == 'in_refund':
-            return _("Vendor Credit Note") if not proforma else _("Proforma Vendor Credit Note")
-        elif self.move_type == 'in_invoice':
-            return _("Vendor Bill") if not proforma else _("Proforma Vendor Bill")
