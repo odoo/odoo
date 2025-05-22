@@ -9,7 +9,7 @@
                     t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
                 
                 <!-- Заменяем блок поиска и иконок, чтобы они отображались в одной строке -->
-                <div class="product-detail-search-container" style="margin-top: 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; max-width: 800px; margin-left: auto; margin-right: auto;">
+                <div class="product-detail-search-container" style="margin-top: 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; max-width: 800px; margin-left: auto; margin-right: auto; gap: 30px;">
                     <form action="/shop" method="get" class="d-flex flex-grow-1" style="max-width: 600px;">
                         <input type="text" name="search" class="form-control" placeholder="Поиск товаров..." style="border-radius: 24px 0 0 24px; height: 44px; font-size: 16px; border-right: none;"/>
                         <button type="submit" class="btn" style="background: #ff7300; color: #fff; border-radius: 0 24px 24px 0; height: 44px; min-width: 48px;">
@@ -18,7 +18,7 @@
                     </form>
                     
                     <!-- Иконки навигации справа от поиска -->
-                    <div class="desktop-nav-icons d-none d-md-flex" style="display: flex !important; align-items: center; gap: 12px; margin-left: 20px;">
+                    <div class="desktop-nav-icons d-none d-md-flex" style="display: flex !important; align-items: center; gap: 12px;">
                         <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
                             <i class="fa fa-home"></i>
                         </a>
