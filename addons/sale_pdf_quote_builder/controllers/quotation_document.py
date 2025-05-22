@@ -27,7 +27,16 @@ class QuotationDocumentController(Controller):
         sale_order_template = request.env['sale.order.template'].browse(
             int(sale_order_template_id)
         )
-        company = sale_order_template.company_id if sale_order_template else request.env.company
+        if sale_order_template:
+            sale_order_template.check_access('write')
+            additional_vals = {
+                'company_id': sale_order_template.company_id.id,
+                'quotation_template_ids': sale_order_template.ids,
+            }
+        else:
+            additional_vals = {
+                'company_id': request.env.company.id,
+            }
         files = request.httprequest.files.getlist('ufile')
         result = {'success': _("All files uploaded")}
         for ufile in files:
@@ -37,8 +46,7 @@ class QuotationDocumentController(Controller):
                     'name': ufile.filename,
                     'mimetype': mimetype,
                     'raw': ufile.read(),
-                    'quotation_template_ids': sale_order_template.ids,
-                    'company_id': company.id,
+                    **additional_vals,
                 })
                 # pypdf will also catch malformed document
                 utils._ensure_document_not_encrypted(base64.b64decode(doc.datas))
