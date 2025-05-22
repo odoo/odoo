@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_leave_public_holiday_view_search_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.public.holiday.search.inherit</field>
+        <field name="model">hr.leave.public.holiday</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_public_holiday_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="work_address" position="after">
+                <field name="work_entry_type_id" groups="hr.group_hr_user"/>
+                <filter name="work_entry" string="Work Entry Type" context="{'group_by':'work_entry_type_id'}" groups="hr.group_hr_user"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="hr_leave_public_holiday_view_list_inherit" model="ir.ui.view">
+        <field name="name">hr.leave.public.holiday.list.inherit</field>
+        <field name="model">hr.leave.public.holiday</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_public_holiday_view_list"/>
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="work_entry_type_id" optional="hide"/>
+            </field>
+        </field>
+    </record>
+</odoo>
