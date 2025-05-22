@@ -3,8 +3,8 @@ import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 
 export function onOdooChartItemClick(getters, chart) {
-    return navigateInOdooMenuOnClick(getters, chart, (chartJsItem) => {
-        const { datasets, labels } = chart.dataSource.getData();
+    return navigateInOdooMenuOnClick(getters, chart, (chartJsItem, chartData) => {
+        const { datasets, labels } = chartData;
         const { datasetIndex, index } = chartJsItem;
         const dataset = datasets[datasetIndex];
         let name = labels[index];
@@ -16,9 +16,9 @@ export function onOdooChartItemClick(getters, chart) {
 }
 
 export function onWaterfallOdooChartItemClick(getters, chart) {
-    return navigateInOdooMenuOnClick(getters, chart, (chartJsItem) => {
+    return navigateInOdooMenuOnClick(getters, chart, (chartJsItem, chartData) => {
         const showSubtotals = chart.showSubTotals;
-        const { datasets, labels } = chart.dataSource.getData();
+        const { datasets, labels } = chartData;
 
         // DataSource datasets are all merged in a single dataset in waterfall charts (with possibly subtotals)
         // We need to transform back the chartJS index to the DataSource index
@@ -53,11 +53,12 @@ export function onWaterfallOdooChartItemClick(getters, chart) {
 function navigateInOdooMenuOnClick(getters, chart, getDomainFromChartItem) {
     return async (event, items) => {
         const env = getters.getOdooEnv();
-        if (!items.length || !env || event.type !== "click") {
+        const { datasets, labels } = chart.dataSource.getData();
+        if (!items.length || !env || event.type !== "click" || !datasets[items[0].datasetIndex]) {
             return;
         }
         event.native.preventDefault(); // Prevent other click actions
-        const { name, domain } = getDomainFromChartItem(items[0]);
+        const { name, domain } = getDomainFromChartItem(items[0], { datasets, labels });
         await navigateTo(
             env,
             chart.actionXmlId,
