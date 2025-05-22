@@ -397,12 +397,18 @@
         <!-- Parameters description:
             - label: The label of the submit button.
         -->
+        <!-- TODO-PDA submit_button_label not set anymore
+             Better to keep the translations inside the template or on the checkout.step?
+             Checkout step means it's coherent with the other buttons.
+             Check all inheritance.
+        -->
         <button name="o_payment_submit_button"
                 type="submit"
-                t-out="submit_button_label"
                 class="btn btn-primary w-100 w-md-auto ms-auto px-5"
                 disabled="true"
-        />
+        >
+            <span t-field="current_website_checkout_step.submit_button_label"/>
+        </button>
     </template>
 
     <template id="payment.no_pms_available_warning">

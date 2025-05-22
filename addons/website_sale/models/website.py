@@ -712,8 +712,9 @@ class Website(models.Model):
             next_href = False
 
         return {
-            'current_website_checkout_step_href': href,
             'previous_website_checkout_step': previous_step,
+            'current_website_checkout_step': current_step,
+            'current_website_checkout_step_href': href,
             'next_website_checkout_step': next_step,
             'next_website_checkout_step_href': next_href,
         }

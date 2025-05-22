@@ -14,6 +14,7 @@ class WebsiteCheckoutStep(models.Model):
     step_href = fields.Char(string="Href", required=True)
     main_button_label = fields.Char(translate=True)
     back_button_label = fields.Char(translate=True)
+    submit_button_label = fields.Char(translate=True)
     website_id = fields.Many2one('website', ondelete='cascade')
 
     def _get_next_checkout_step(self, allowed_steps_domain):
