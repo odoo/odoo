@@ -272,7 +272,7 @@ class ScheduledMessage(models.Model):
         domain = [('scheduled_date', '<=', fields.Datetime.now())]
         messages_to_post = self.search(domain, limit=limit)
         _logger.info("Posting %s scheduled messages", len(messages_to_post))
-        messages_to_post._post_message(raise_exception=False)
+        messages_to_post.with_context(mail_notify_force_send=True)._post_message(raise_exception=False)
 
         # restart cron if needed
         if self.search_count(domain, limit=1):
