@@ -1039,10 +1039,38 @@ class PosGlobalState extends PosModel {
                 shadow: !options.to_invoice
             })
             .then(function (server_ids) {
-                _.each(order_ids_to_sync, function (order_id) {
-                    self.db.remove_order(order_id);
-                    self.syncingOrders.delete(order_id)
-                });
+                // Only remove orders from local storage if they were successfully processed
+                // server_ids should be an array of objects with pos_reference and id
+                if (server_ids && server_ids.length > 0) {
+                    const processed_order_ids = new Set();
+                    server_ids.forEach(function(server_order) {
+                        // Find the local order that matches this server response
+                        const local_order = ordersToSync.find(order => 
+                            order.pos_reference === server_order.pos_reference || 
+                            order.name === server_order.pos_reference
+                        );
+                        if (local_order) {
+                            processed_order_ids.add(local_order.id);
+                        }
+                    });
+                    
+                    // Remove only the orders that were successfully processed
+                    processed_order_ids.forEach(function(order_id) {
+                        self.db.remove_order(order_id);
+                        self.syncingOrders.delete(order_id);
+                    });
+                    
+                    // Clean up any remaining unprocessed orders from syncing set
+                    ordersToSync.forEach(order => {
+                        if (!processed_order_ids.has(order.id)) {
+                            self.syncingOrders.delete(order.id);
+                        }
+                    });
+                } else {
+                    // No successful processing occurred, remove all from syncing set
+                    ordersToSync.forEach(order => self.syncingOrders.delete(order.id));
+                }
+                
                 self.failed = false;
                 self.set_synch('connected');
                 return server_ids;
