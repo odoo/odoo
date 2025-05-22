@@ -63,6 +63,7 @@ class TestModuleManifest(BaseCase):
             'live_test_url': '',
             'name': f'Temp {self.module_name}',
             'new_page_templates': {},
+            'other_files': [],
             'post_init_hook': '',
             'post_load': '',
             'pre_init_hook': '',
