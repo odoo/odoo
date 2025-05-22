@@ -223,7 +223,7 @@ class PurchaseOrderLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_purchase(self):
         for line in self:
-            if line.order_id.state == 'purchase':
+            if line.order_id.state == 'purchase' and line.display_type not in ['line_note', 'line_section']:
                 state_description = {state_desc[0]: state_desc[1] for state_desc in self._fields['state']._description_selection(self.env)}
                 raise UserError(_('Cannot delete a purchase order line which is in state “%s”.', state_description.get(line.state)))
 
