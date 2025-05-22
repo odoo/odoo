@@ -36,7 +36,7 @@ class Product(models.Model):
 
         # Check if any existing product has same default_code AND same tenant_id
         if self.tenant_id:
-            domain.append(('tenant_id', '=', self.tenant_id.id))
+            domain.append(('tenant_id', '=', self.tenant_id))
 
         # If such a product exists — show warning
         if self.env['product.product'].search(domain, limit=1):
