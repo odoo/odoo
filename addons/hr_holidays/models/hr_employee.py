@@ -282,9 +282,9 @@ class HrEmployee(models.Model):
     def get_mandatory_days(self, start_date, end_date):
         all_days = {}
 
-        self = self or self.env.user.employee_id
+        employee = self or self.env.user.employee_id
 
-        mandatory_days = self._get_mandatory_days(start_date, end_date)
+        mandatory_days = employee._get_mandatory_days(start_date, end_date)
         for mandatory_day in mandatory_days:
             num_days = (mandatory_day.end_date - mandatory_day.start_date).days
             for d in range(num_days + 1):
@@ -301,10 +301,10 @@ class HrEmployee(models.Model):
 
     @api.model
     def get_public_holidays_data(self, date_start, date_end):
-        self = self._get_contextual_employee()
-        employee_tz = pytz.timezone(self._get_tz() if self else self.env.user.tz or 'utc')
-        public_holidays = self._get_public_holidays(date_start, date_end).sorted('date_from')
-        return list(map(lambda bh: {
+        self_with_context = self._get_contextual_employee()
+        employee_tz = pytz.timezone(self_with_context._get_tz() if self_with_context else self_with_context.env.user.tz or 'utc')
+        public_holidays = self_with_context._get_public_holidays(date_start, date_end).sorted('date_from')
+        return [{
             'id': -bh.id,
             'colorIndex': 0,
             'end': datetime.combine(bh.date_to.astimezone(employee_tz), datetime.max.time()).isoformat(),
@@ -313,7 +313,7 @@ class HrEmployee(models.Model):
             'start': datetime.combine(bh.date_from.astimezone(employee_tz), datetime.min.time()).isoformat(),
             'startType': "datetime",
             'title': bh.name,
-        }, public_holidays))
+        } for bh in public_holidays]
 
     @api.model
     def get_allocation_requests_amount(self):
@@ -325,22 +325,20 @@ class HrEmployee(models.Model):
 
     def _get_public_holidays(self, date_start, date_end):
         domain = [
-            ('resource_id', '=', False),
             ('company_id', 'in', self.env.companies.ids),
             ('date_from', '<=', date_end),
             ('date_to', '>=', date_start),
             '|',
-            ('calendar_id', '=', False),
-            ('calendar_id', '=', self.resource_calendar_id.id),
+            ('resource_calendar_ids', '=', False),
+            ('resource_calendar_ids', 'in', self.resource_calendar_id.id),
         ]
-
-        return self.env['resource.calendar.leaves'].search(domain)
+        return self.env['hr.leave.public.holiday'].search(domain)
 
     @api.model
     def get_mandatory_days_data(self, date_start, date_end):
-        self = self._get_contextual_employee()
-        mandatory_days = self._get_mandatory_days(date_start, date_end).sorted('start_date')
-        return list(map(lambda sd: {
+        self_with_context = self._get_contextual_employee()
+        mandatory_days = self_with_context._get_mandatory_days(date_start, date_end).sorted('start_date')
+        return [{
             'id': -sd.id,
             'colorIndex': sd.color,
             'end': datetime.combine(sd.end_date, datetime.max.time()).isoformat(),
@@ -349,7 +347,7 @@ class HrEmployee(models.Model):
             'start': datetime.combine(sd.start_date, datetime.min.time()).isoformat(),
             'startType': "datetime",
             'title': sd.name,
-        }, mandatory_days))
+        } for sd in mandatory_days]
 
     def _get_mandatory_days(self, start_date, end_date):
         domain = [
@@ -467,7 +465,7 @@ class HrEmployee(models.Model):
             if allocation.allocation_type == 'accrual':
                 future_leaves = allocation._get_future_leaves_on(target_date)
             max_leaves = allocation.number_of_hours_display\
-                if allocation.holiday_status_id.request_unit in ['hour']\
+                if allocation.holiday_status_id.request_unit == 'hour'\
                 else allocation.number_of_days_display
             max_leaves += future_leaves
             allocation_data.update({

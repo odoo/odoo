@@ -547,9 +547,8 @@ Contracts:
                 continue
             if calendar.flexible_hours:
                 days = (leave.date_to - leave.date_from).days + (1 if not leave.request_unit_half else 0.5)
-                public_holidays = self.env['resource.calendar.leaves'].search([
-                    ('resource_id', '=', False),
-                    ('calendar_id', '=', calendar.id),
+                public_holidays = self.env['hr.leave.public.holiday'].search([
+                    ('resource_calendar_ids', 'in', calendar.id),
                     ('date_from', '<=', leave.date_to),
                     ('date_to', '>=', leave.date_from)
                 ])

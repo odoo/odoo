@@ -1,12 +1,14 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime, timedelta
+
+from odoo import Command
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 from odoo.exceptions import ValidationError
 from freezegun import freeze_time
 
 from odoo.tests import tagged
+
 
 @tagged('global_leaves')
 class TestGlobalLeaves(TestHrHolidaysCommon):
@@ -51,56 +53,56 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             ]
         })
 
-        cls.global_leave = cls.env['resource.calendar.leaves'].create({
+        cls.global_leave = cls.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': date(2022, 3, 7),
             'date_to': date(2022, 3, 7),
         })
 
-        cls.calendar_leave = cls.env['resource.calendar.leaves'].create({
+        cls.calendar_leave = cls.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': date(2022, 3, 8),
             'date_to': date(2022, 3, 8),
-            'calendar_id': cls.calendar_1.id,
+            'resource_calendar_ids': [Command.link(cls.calendar_1.id)],
         })
 
     def test_leave_on_global_leave(self):
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.env['hr.leave.public.holiday'].create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
-                'calendar_id': self.calendar_1.id,
+                'resource_calendar_ids': [Command.link(self.calendar_1.id)],
             })
 
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.env['hr.leave.public.holiday'].create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 7),
                 'date_to': date(2022, 3, 7),
             })
 
     def test_leave_on_calendar_leave(self):
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
                 'name': 'Correct Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
-                'calendar_id': self.calendar_2.id,
+                'resource_calendar_ids': [Command.link(self.calendar_2.id)],
             })
 
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.env['hr.leave.public.holiday'].create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
             })
 
         with self.assertRaises(ValidationError):
-            self.env['resource.calendar.leaves'].create({
+            self.env['hr.leave.public.holiday'].create({
                 'name': 'Wrong Time Off',
                 'date_from': date(2022, 3, 8),
                 'date_to': date(2022, 3, 8),
-                'calendar_id': self.calendar_1.id,
+                'resource_calendar_ids': [Command.link(self.calendar_1.id)],
             })
 
     @freeze_time('2023-05-12')
@@ -111,16 +113,16 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         """
         calendar_asia = self.env['resource.calendar'].create({
             'name': 'Asia calendar',
-            'tz': 'Asia/Kolkata', # UTC +05:30
+            'tz': 'Asia/Kolkata',  # UTC +05:30
             'hours_per_day': 8.0,
             'attendance_ids': []
         })
         self.env.user.tz = 'Europe/Brussels'
-        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
+        global_leave = self.env['hr.leave.public.holiday'].with_user(self.env.user).create({
             'name': 'Public holiday',
-            'date_from': "2023-05-15 06:00:00", # utc from 8:00:00 for Europe/Brussels (UTC +02:00)
-            'date_to': "2023-05-15 15:00:00", # utc from 17:00:00 for Europe/Brussels (UTC +02:00)
-            'calendar_id': calendar_asia.id,
+            'date_from': "2023-05-15 06:00:00",  # utc from 8:00:00 for Europe/Brussels (UTC +02:00)
+            'date_to': "2023-05-15 15:00:00",  # utc from 17:00:00 for Europe/Brussels (UTC +02:00)
+            'resource_calendar_ids': [Command.link(calendar_asia.id)],
         })
         # Expectation:
         # 6:00:00 in UTC (data from the browser) --> 8:00:00 for Europe/Brussel (UTC +02:00)
@@ -136,11 +138,11 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
             Check that leaves stored in memory (and not in the database)
             take into account global leaves.
         """
-        global_leave = self.env['resource.calendar.leaves'].create({
+        global_leave = self.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': datetime(2024, 1, 3, 6, 0, 0),
             'date_to': datetime(2024, 1, 3, 19, 0, 0),
-            'calendar_id': self.calendar_1.id,
+            'resource_calendar_ids': [Command.link(self.calendar_1.id)],
         })
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Paid Time Off',
@@ -208,11 +210,11 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         })
         partially_covered_leave.action_approve()
 
-        global_leave = self.env['resource.calendar.leaves'].with_user(self.env.user).create({
+        self.env['hr.leave.public.holiday'].with_user(self.env.user).create({
             'name': 'Public holiday',
             'date_from': "2024-12-04 06:00:00",
             'date_to': "2024-12-04 23:00:00",
-            'calendar_id': self.calendar_1.id,
+            'resource_calendar_ids': [Command.link(self.calendar_1.id)],
         })
 
         # retrieve resource leaves linked to the employee's leave

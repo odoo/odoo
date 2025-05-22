@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="hr_leave_public_holiday_view_search" model="ir.ui.view">
+        <field name="name">hr.leave.public.holiday.search</field>
+        <field name="model">hr.leave.public.holiday</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="country_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="resource_calendar_ids"/>
+                <field name="work_address_ids"/>
+                <filter name="filter_date" date="date_from" default_period="year" string="Period"/>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Time Off"/>
+                    <filter string="Country" name="country" domain="[]" context="{'group_by':'country_id'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_calendar_ids'}"/>
+                    <filter string="Work Address" name="work_address" domain="[]" context="{'group_by':'work_address_ids'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_leave_public_holiday_view_list" model="ir.ui.view">
+        <field name="name">hr.leave.public.holiday.list</field>
+        <field name="model">hr.leave.public.holiday</field>
+        <field name="arch" type="xml">
+            <list string="Public Holidays" editable="bottom">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="resource_calendar_ids" widget="many2many_tags" optional="hide" placeholder="All Schedules"/>
+                <field name="work_address_ids" widget="many2many_tags" optional="hide" placeholder="All Work Addresses"/>
+                <field name="country_id" widget="many2one_tags" optional="hide" placeholder="All Countries"/>
+                <field name="company_id" widget="many2one_tags" placeholder="All Companies"/>
+            </list>
+        </field>
+
+    </record>
+    <record id="hr_leave_public_holiday_action" model="ir.actions.act_window">
+        <field name="name">Public Holidays</field>
+        <field name="res_model">hr.leave.public.holiday</field>
+        <field name="view_mode">list</field>
+        <field name="context">{'search_default_filter_date': True}</field>
+        <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
+        <field name="search_view_id" ref="hr_leave_public_holiday_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No Public Holidays yet!
+            </p>
+        </field>
+    </record>
+</odoo>

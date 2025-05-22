@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
+from odoo import Command
 from odoo.addons.hr_calendar.tests.common import TestHrCalendarCommon
 
 from odoo.tests import tagged
@@ -120,11 +121,11 @@ class TestWorkingHours(TestHrCalendarCommon):
         self.env.user.company_id = self.company_A
         self.env.user.company_ids = [self.company_A.id, self.company_B.id]
 
-        self.env['resource.calendar.leaves'].create({
+        self.env['hr.leave.public.holiday'].create({
             'name': 'Global Time Off',
             'date_from': datetime(2023, 12, 25),
             'date_to': datetime(2023, 12, 26, 23, 59, 59),
-            'calendar_id': self.calendar_35h.id,
+            'resource_calendar_ids': [Command.link(self.calendar_35h.id)],
         })
 
         work_hours = self.env['res.partner'].get_working_hours_for_all_attendees(

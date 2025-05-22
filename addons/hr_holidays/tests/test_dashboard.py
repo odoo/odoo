@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from odoo import Command
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -40,7 +41,7 @@ class TestDashboard(TestHrHolidaysCommon):
                 'name': 'Public holiday (employee schedule)',
                 'date_from': "2021-06-15 06:00:00",
                 'date_to': "2021-06-15 15:00:00",
-                'calendar_id': employee.resource_calendar_id.id,
+                'resource_calendar_ids': [Command.link(employee.resource_calendar_id.id)],
             },
             {
                 'name': 'Public holiday (no schedule)',
@@ -51,10 +52,10 @@ class TestDashboard(TestHrHolidaysCommon):
                 'name': 'Public holiday (other schedule)',
                 'date_from': "2021-06-17 06:00:00",
                 'date_to': "2021-06-17 15:00:00",
-                'calendar_id': other_calendar.id,
+                'resource_calendar_ids': [Command.link(other_calendar.id)],
             },
         ]
-        self.env['resource.calendar.leaves'].create(public_holiday_vals)
+        self.env['hr.leave.public.holiday'].create(public_holiday_vals)
 
         dashboard_data = self.env['hr.employee'].get_special_days_data("2021-06-01", "2021-07-01")
 
