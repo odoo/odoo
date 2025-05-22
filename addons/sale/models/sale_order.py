@@ -276,6 +276,7 @@ class SaleOrder(models.Model):
     tag_ids = fields.Many2many(
         comodel_name='crm.tag',
         relation='sale_order_tag_rel', column1='order_id', column2='tag_id',
+        groups="sales_team.group_sale_salesman",
         string="Tags")
 
     # Remaining non stored computed fields (hide/make fields readonly, ...)
