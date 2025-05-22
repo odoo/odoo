@@ -65,7 +65,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             'res_model': 'product.product',
             'res_id': cls.product.id,
         })
-        cls.internal_user = cls._create_new_internal_user(login='internal.user@test.odoo.com')
+        cls.internal_user = cls._create_new_internal_user(login='internal.user@test.odoo.com', groups='sales_team.group_sale_salesman')
         cls.alt_company = cls.env['res.company'].create({'name': "Backup Company"})
 
     def _create_so_form(self, **values):
