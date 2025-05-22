@@ -360,11 +360,11 @@ test("should apply background color to a list of 3 links", async () => {
 
 test("should distribute color to texts and to button separately", async () => {
     await testEditor({
-        contentBefore: '<p>a[b<a class="btn">c</a>d]e</p>',
+        contentBefore: '<p>a[b<a href="#" class="btn">c</a>d]e</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
             '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
-            '<a class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
+            '<a href="#" class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
             '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
     });
 });
