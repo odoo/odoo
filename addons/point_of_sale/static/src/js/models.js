@@ -1039,36 +1039,62 @@ class PosGlobalState extends PosModel {
                 shadow: !options.to_invoice
             })
             .then(function (server_ids) {
-                // Only remove orders from local storage if they were successfully processed
-                // server_ids should be an array of objects with pos_reference and id
+                // Enhanced fix: Only remove orders from local storage if they were successfully processed
+                // server_ids is an array of objects returned by create_from_ui with {id, pos_reference, account_move}
+                console.log('DEBUG: _save_to_server received server_ids:', server_ids);
+                console.log('DEBUG: ordersToSync:', ordersToSync.map(o => ({id: o.id, name: o.name, pos_reference: o.pos_reference})));
+                
                 if (server_ids && server_ids.length > 0) {
                     const processed_order_ids = new Set();
+                    
+                    // Create a map of pos_reference to server response for easier lookup
+                    const serverOrdersMap = new Map();
                     server_ids.forEach(function(server_order) {
-                        // Find the local order that matches this server response
-                        const local_order = ordersToSync.find(order => 
-                            order.pos_reference === server_order.pos_reference || 
-                            order.name === server_order.pos_reference
-                        );
-                        if (local_order) {
-                            processed_order_ids.add(local_order.id);
+                        if (server_order.pos_reference) {
+                            serverOrdersMap.set(server_order.pos_reference, server_order);
                         }
                     });
                     
-                    // Remove only the orders that were successfully processed
+                    console.log('DEBUG: serverOrdersMap:', Object.fromEntries(serverOrdersMap));
+                    
+                    // Find local orders that have corresponding server responses
+                    ordersToSync.forEach(function(local_order) {
+                        const order_ref = local_order.pos_reference || local_order.name;
+                        if (order_ref && serverOrdersMap.has(order_ref)) {
+                            processed_order_ids.add(local_order.id);
+                            console.log('DEBUG: Marking order for removal:', local_order.id, order_ref);
+                        } else {
+                            console.log('DEBUG: Order NOT found in server response:', local_order.id, order_ref);
+                        }
+                    });
+                    
+                    console.log('DEBUG: Orders to be removed from localStorage:', Array.from(processed_order_ids));
+                    
+                    // Remove only the orders that were successfully processed by the backend
                     processed_order_ids.forEach(function(order_id) {
+                        console.log('DEBUG: Removing order from DB:', order_id);
                         self.db.remove_order(order_id);
                         self.syncingOrders.delete(order_id);
                     });
                     
-                    // Clean up any remaining unprocessed orders from syncing set
+                    // Clean up any remaining unprocessed orders from syncing set (but keep in localStorage)
                     ordersToSync.forEach(order => {
                         if (!processed_order_ids.has(order.id)) {
+                            console.log('DEBUG: Order was not processed, keeping in localStorage but removing from syncing:', order.id);
                             self.syncingOrders.delete(order.id);
                         }
                     });
+                    
+                    // Log final state for debugging
+                    console.log('DEBUG: Remaining orders in localStorage after sync:', self.db.get_orders().length);
+                    
                 } else {
-                    // No successful processing occurred, remove all from syncing set
-                    ordersToSync.forEach(order => self.syncingOrders.delete(order.id));
+                    // No successful processing occurred, remove all from syncing set but keep in localStorage
+                    console.log('DEBUG: No server_ids returned, keeping all orders in localStorage');
+                    ordersToSync.forEach(order => {
+                        console.log('DEBUG: Removing from syncing set (no server response):', order.id);
+                        self.syncingOrders.delete(order.id);
+                    });
                 }
                 
                 self.failed = false;
