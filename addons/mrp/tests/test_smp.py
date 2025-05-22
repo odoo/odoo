@@ -167,6 +167,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': tracked_product.product_tmpl_id.id,
             'product_qty': 1,
+            'consumption': 'flexible',
             'bom_line_ids': [Command.create({
                 'product_id': component.id,
                 'product_qty': 1,
@@ -203,7 +204,7 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         mo.action_assign()
         mo.qty_producing = 2
         mo.move_raw_ids.move_line_ids.write({'quantity': 1})
-        mo.button_mark_done()
+        mo.with_context(skip_consumption=True).button_mark_done()
         self.assertEqual(mo.state, 'done')
         # create a Mo to produce 2 units of tracked product
         mo_form = Form(self.env['mrp.production'])
