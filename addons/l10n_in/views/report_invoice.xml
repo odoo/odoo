@@ -60,22 +60,22 @@
         </xpath>
 
         <t name="invoice_title" position="replace">
-            <t name="invoice_title" t-out="o._get_l10n_in_customer_invoice_title()"/>
-        </t>
-        <t name="draft_invoice_title" position="replace">
-            <t name="draft_invoice_title" t-out="o._get_l10n_in_customer_invoice_title()"/>
-        </t>
-        <t name="cancelled_invoice_title" position="replace">
-            <t name="cancelled_invoice_title" t-out="o._get_l10n_in_customer_invoice_title()"/>
+            <t name="invoice_title">
+                <span t-if="o.invoice_line_ids.tax_ids">
+                    Tax Invoice
+                </span>
+                <span t-else="">
+                    Invoice
+                </span>
+            </t>
         </t>
         <t name="proforma_invoice_title" position="replace">
-            <t name="proforma_invoice_title" t-out="o._get_l10n_in_customer_invoice_title(proforma=True)"/>
-        </t>
-        <t name="draft_proforma_invoice_title" position="replace">
-            <t name="draft_proforma_invoice_title" t-out="o._get_l10n_in_customer_invoice_title(proforma=True)"/>
-        </t>
-        <t name="cancelled_proforma_invoice_title" position="replace">
-            <t name="cancelled_proforma_invoice_title" t-out="o._get_l10n_in_customer_invoice_title(proforma=True)"/>
+                <span t-if="o.invoice_line_ids.tax_ids">
+                   Proforma Tax Invoice
+                </span>
+                <span t-else="">
+                    Proforma Invoice
+                </span>
         </t>
 
         <xpath expr="//div[@id='payment_term']" position="after">
