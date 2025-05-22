@@ -309,6 +309,7 @@ class AccountMoveLine(models.Model):
         inverse='_inverse_product_id',
         ondelete='restrict',
         check_company=True,
+        index=True,
     )
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
