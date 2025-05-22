@@ -102,9 +102,10 @@ class AccountMove(models.Model):
             errors.append(_("There are pending transactions for this invoice."))
         return '\n'.join(errors)
 
+    @api.private
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.with_context(active_test=False).transaction_ids.sudo()._get_last()
+        return self.with_context(active_test=False).sudo().transaction_ids._get_last()
 
     def payment_action_capture(self):
         """ Capture all transactions linked to this invoice. """
@@ -112,14 +113,14 @@ class AccountMove(models.Model):
         payment_utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
-        return self.transaction_ids.sudo().action_capture()
+        return self.sudo().transaction_ids.action_capture()
 
     def payment_action_void(self):
         """ Void all transactions linked to this invoice. """
         payment_utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
-        self.authorized_transaction_ids.sudo().action_void()
+        self.sudo().authorized_transaction_ids.action_void()
 
     def action_view_payment_transactions(self):
         action = self.env['ir.actions.act_window']._for_xml_id('payment.action_payment_transaction')

@@ -655,7 +655,7 @@
                     <hr class="mt-1 mb-2"/>
                     <t t-foreach="invoices" t-as="i">
                         <t t-set="report_url" t-value="i.get_portal_url()"/>
-                        <t t-set="authorized_tx_ids" t-value="i.authorized_transaction_ids"/>
+                        <t t-set="authorized_tx_ids" t-value="i.sudo().authorized_transaction_ids"/>
                         <div class="d-flex flex-column gap-2">
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-center justify-content-between">

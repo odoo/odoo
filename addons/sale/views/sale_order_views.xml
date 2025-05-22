@@ -261,14 +261,14 @@
                     type="object"
                     data-hotkey="shift+g"
                     class="oe_highlight"
-                    invisible="not authorized_transaction_ids"/>
+                    invisible="not has_authorized_transaction_ids"/>
                 <button
                     string="Void Transaction"
                     name="payment_action_void"
                     type="object"
                     data-hotkey="shift+v"
                     confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
-                    invisible="not authorized_transaction_ids"/>
+                    invisible="not has_authorized_transaction_ids"/>
                 <button
                     string="Create Invoice"
                     id="create_invoice"
