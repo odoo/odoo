@@ -44,8 +44,9 @@ class SaleOrder(models.Model):
                 self.env['quotation.document']._check_company_domain(order.company_id),
                 order='sequence',
             ).filtered(lambda doc:
-                order.sale_order_template_id in doc.quotation_template_ids
-                or not doc.quotation_template_ids
+                # templates are available only to salesman
+                not (templates := doc.sudo().quotation_template_ids)
+                or order.sale_order_template_id in templates
             )
 
     @api.depends(
