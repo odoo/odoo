@@ -79,6 +79,7 @@
         'views/seller_list_templates.xml',
         'wizard/settings_view_views.xml',
         'views/custom_product_variants.xml',
+        'views/website_sale_templates.xml',
     ],
     'assets': {
         'web.assets_backend': [
