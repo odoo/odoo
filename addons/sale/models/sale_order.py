@@ -252,12 +252,18 @@ class SaleOrder(models.Model):
         comodel_name='payment.transaction',
         relation='sale_order_transaction_rel', column1='sale_order_id', column2='transaction_id',
         string="Transactions",
+        groups='account.group_account_invoice',
         copy=False, readonly=True)
     authorized_transaction_ids = fields.Many2many(
         comodel_name='payment.transaction',
         string="Authorized Transactions",
         compute='_compute_authorized_transaction_ids',
         copy=False,
+        groups='account.group_account_invoice',
+        compute_sudo=True)
+    has_authorized_transaction_ids = fields.Boolean(
+        string="Has Authorized Transactions",
+        compute='_compute_authorized_transaction_ids',
         compute_sudo=True)
     amount_paid = fields.Float(
         string="Payment Transactions Amount",
@@ -644,6 +650,7 @@ class SaleOrder(models.Model):
     def _compute_authorized_transaction_ids(self):
         for trans in self:
             trans.authorized_transaction_ids = trans.transaction_ids.filtered(lambda t: t.state == 'authorized')
+            trans.has_authorized_transaction_ids = bool(trans.authorized_transaction_ids)
 
     @api.depends('transaction_ids')
     def _compute_amount_paid(self):
@@ -1357,10 +1364,10 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        txs_to_be_linked = self.transaction_ids.sudo().filtered(
+        txs_to_be_linked = self.sudo().transaction_ids.filtered(
             lambda tx: (
                 tx.state in ('pending', 'authorized')
-                or tx.state == 'done' and not (tx.payment_id and tx.payment_id.is_reconciled)
+                or (tx.state == 'done' and not tx.payment_id.is_reconciled)
             )
         )
 
@@ -1732,18 +1739,18 @@ class SaleOrder(models.Model):
         payment_utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
-        return self.transaction_ids.sudo().action_capture()
+        return self.sudo().transaction_ids.action_capture()
 
     def payment_action_void(self):
         """ Void all transactions linked to this sale order. """
         payment_utils.check_rights_on_recordset(self)
 
         # In sudo mode to bypass the checks on the rights on the transactions.
-        self.authorized_transaction_ids.sudo().action_void()
+        self.sudo().authorized_transaction_ids.action_void()
 
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.transaction_ids.sudo()._get_last()
+        return self.sudo().transaction_ids._get_last()
 
     def _get_order_lines_to_report(self):
         down_payment_lines = self.order_line.filtered(lambda line:
