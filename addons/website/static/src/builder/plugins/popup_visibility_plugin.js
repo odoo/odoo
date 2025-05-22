@@ -1,9 +1,10 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { patch } from "@web/core/utils/patch";
 
 export class PopupVisibilityPlugin extends Plugin {
     static id = "popupVisibilityPlugin";
-    static dependencies = ["visibility"];
+    static dependencies = ["visibility", "history"];
     static shared = ["onTargetShow", "onTargetHide"];
 
     resources = {
@@ -23,6 +24,25 @@ export class PopupVisibilityPlugin extends Plugin {
                 this.dependencies.visibility.onOptionVisibilityUpdate(popupEl, false);
             }
         });
+        const history = this.dependencies.history;
+        this.unpatchModal = this.window.Modal // null in tests without loadAssetsFrontendJS
+            ? patch(this.window.Modal.prototype, {
+                  _hideModal() {
+                      return history.ignoreDOMMutations(() => super._hideModal());
+                  },
+                  show() {
+                      return history.ignoreDOMMutations(() => super.show());
+                  },
+                  hide() {
+                      return history.ignoreDOMMutations(() => super.hide());
+                  },
+              })
+            : () => {};
+    }
+
+    destroy() {
+        super.destroy();
+        this.unpatchModal();
     }
 
     onTargetShow(target) {
