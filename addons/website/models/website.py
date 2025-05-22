@@ -306,7 +306,7 @@ class Website(models.Model):
         :return: True if the menu contains a record like url
         """
         return any(self.env['website.menu'].search_fetch(Domain('website_id', '=', self.id), ['url']).filtered(
-            lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url) or menu.group_ids
+            lambda menu: re.search(r"[/](([^/=?&]+-)?[0-9]+)([/]|$)", menu.url) or menu.sudo().group_ids
         ))
 
     @api.model_create_multi
