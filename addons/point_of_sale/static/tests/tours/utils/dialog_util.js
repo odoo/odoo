@@ -28,6 +28,14 @@ export function discard() {
         run: "click",
     };
 }
+export function clickButton(name) {
+    return {
+        content: "click button",
+        trigger: `.modal-footer button:contains("${name}")`,
+        in_modal: true,
+        run: "click",
+    };
+}
 export function is({ title } = {}) {
     let trigger = ".modal .modal-content";
     if (title) {

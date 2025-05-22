@@ -543,6 +543,13 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
 @tagged('post_install', '-at_install')
 class TestUi(TestPointOfSaleHttpCommon):
+    def test_product_edition(self):
+        product = self.env['product.product'].search([('name', '=', 'Desk Pad')])
+        self.main_pos_config.iface_available_categ_ids = [(6, 0, product.pos_categ_ids.ids)]
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour("ProductEditionTour", login="pos_admin")
+        self.assertEqual(product.name, 'Test Desk 2')
+
     def test_01_pos_basic_order(self):
         self.tip.write({
             'taxes_id': False
