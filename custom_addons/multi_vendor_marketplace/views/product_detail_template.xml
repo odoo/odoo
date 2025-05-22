@@ -100,9 +100,9 @@
                                         <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
                                         
                                         <t t-if="product.attribute_line_ids">
-                                            <ul class="list-unstyled js_add_cart_variants" t-att-data-attribute_exclusions="product._get_attribute_exclusions()">
+                                            <div class="js_add_cart_variants" t-att-data-attribute_exclusions="product._get_attribute_exclusions()">
                                                 <t t-call="multi_vendor_marketplace.custom_product_variants"/>
-                                            </ul>
+                                            </div>
                                         </t>
                                         <t t-else="">
                                             <ul class="list-unstyled js_add_cart_variants d-none" t-att-data-attribute_exclusions="product._get_attribute_exclusions()"/>
