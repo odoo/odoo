@@ -35,6 +35,7 @@ export class PresetInfoPopup extends Component {
                 access_token: this.selfOrder.access_token,
                 partner_id: this.state.selectedPartnerId,
                 name: this.state.name,
+                email: this.state.email,
                 phone: this.state.phone,
                 street: this.state.street,
                 city: this.state.city,
@@ -61,6 +62,7 @@ export class PresetInfoPopup extends Component {
     selectExistingPartner(event) {
         const partner = this.selfOrder.models["res.partner"].get(event.target.value);
         this.state.name = partner?.name || "";
+        this.state.email = partner?.email || "";
         this.state.phone = partner?.phone || "";
         this.state.street = partner?.street || "";
         this.state.city = partner?.city || "";

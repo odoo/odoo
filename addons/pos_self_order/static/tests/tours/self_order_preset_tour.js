@@ -43,6 +43,7 @@ registry.category("web_tour.tours").add("self_order_preset_delivery_tour", {
         CartPage.checkProduct("Free", "0", "1"),
         Utils.clickBtn("Pay"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Email", "dre@dr.com"),
         CartPage.fillInput("Phone", "0490 90 43 90"),
         CartPage.fillInput("Street and Number", "Rue du Bronx 90"),
         CartPage.fillInput("Zip", "9999"),

@@ -119,7 +119,7 @@ class PosSelfOrderController(http.Controller):
                 lst_price = 0
 
     @http.route('/pos-self-order/validate-partner', auth='public', type='jsonrpc', website=True)
-    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None):
+    def validate_partner(self, access_token, name, phone, street, zip, city, country_id, state_id=None, partner_id=None, email=None):
         pos_config = self._verify_pos_config(access_token)
         existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
 
@@ -132,6 +132,7 @@ class PosSelfOrderController(http.Controller):
         country_id = pos_config.env['res.country'].browse(int(country_id))
         partner_sudo = request.env['res.partner'].sudo().create({
             'name': name,
+            'email': email,
             'phone': phone,
             'street': street,
             'zip': zip,
