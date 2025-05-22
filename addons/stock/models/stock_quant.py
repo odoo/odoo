@@ -680,7 +680,7 @@ class StockQuant(models.Model):
                 if pkg[0] is None:
                     # Lazily retrieve ids for single items
                     if not single_item_ids:
-                        single_item_ids = self.search(expression.AND([[('package_id', '=', None)], domain])).mapped('id')
+                        single_item_ids = self.search(expression.AND([[('package_id', '=', None)], domain])).ids
                     selected_single_items.append(single_item_ids.pop())
 
             expr = [('package_id', 'in', [elem[0] for elem in node.taken_packages if elem[0] is not None])]

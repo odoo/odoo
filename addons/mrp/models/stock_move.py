@@ -263,6 +263,7 @@ class StockMove(models.Model):
         for bom in self.bom_line_id.bom_id:
             if bom.type != 'phantom':
                 continue
+            # mapped('id') to keep NewId
             line_ids = self.bom_line_id.filtered(lambda line: line.bom_id == bom).mapped('id')
             total = len(line_ids)
             for i, line_id in enumerate(line_ids):

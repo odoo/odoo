@@ -263,7 +263,7 @@ class TestStockValuationLayerRevaluation(TestStockValuationCommon):
         # Adjusting layers for multiple products at once: raise
         with self.assertRaises(UserError):
             Form(self.env['stock.valuation.layer.revaluation'].with_context({
-                'active_ids': self.env['stock.valuation.layer'].search([]).mapped("id"),
+                'active_ids': self.env['stock.valuation.layer'].search([]).ids,
                 'active_model': 'stock.valuation.layer'
             })).save()
 
