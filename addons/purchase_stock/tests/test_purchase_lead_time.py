@@ -258,12 +258,12 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
         orderpoint_form.visibility_days = 1.0
-        orderpoint = orderpoint_form.save()
+        orderpoint_form.save()
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_company(company2))
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.0
-        orderpoint = orderpoint_form.save()
+        orderpoint_form.save()
 
         delivery_moves = self.env['stock.move']
         for i in range(0, 6):
@@ -284,11 +284,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(len(po_line), 1)
         self.assertEqual(po_line.product_uom_qty, 25.0)
         self.assertEqual(len(po_line.order_id), 1)
-        orderpoint_form = Form(orderpoint)
-        orderpoint_form.save()
 
         self.mock_date.today.return_value = fields.Date.today() + timedelta(days=2)
-        orderpoint._compute_qty()
+        self.env.invalidate_all()
         self.env['procurement.group'].run_scheduler()
         po_line02 = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
         self.assertEqual(po_line02, po_line, 'The orderpoint execution should not create a new POL')

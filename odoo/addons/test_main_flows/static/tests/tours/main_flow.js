@@ -906,14 +906,12 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 },
 {
-    // FIXME WOWL: remove first part of selector when legacy view is dropped
-    trigger: "input.o_field_widget[name=product_min_qty], .o_field_widget[name=product_min_qty] input",
+    trigger: ".o_field_widget[name=product_min_qty] input",
     content: _t("Set the minimum product quantity"),
     tooltipPosition: "right",
     run: "edit 1",
 }, {
-    // FIXME WOWL: remove first part of selector when legacy view is dropped
-    trigger: "input.o_field_widget[name=product_max_qty], .o_field_widget[name=product_max_qty] input",
+    trigger: ".o_field_widget[name=product_max_qty] input",
     content: _t("Set the maximum product quantity"),
     tooltipPosition: "right",
     run: "edit 10",

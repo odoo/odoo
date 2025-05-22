@@ -38,7 +38,7 @@ class StockWarehouseOrderpoint(models.Model):
     warehouse_id = fields.Many2one(
         'stock.warehouse', 'Warehouse',
         compute="_compute_warehouse_id", store=True, readonly=False, precompute=True,
-        check_company=True, ondelete="cascade", required=True)
+        check_company=True, ondelete="cascade", required=True, index=True)
     location_id = fields.Many2one(
         'stock.location', 'Location', index=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True,
@@ -83,7 +83,7 @@ class StockWarehouseOrderpoint(models.Model):
     qty_on_hand = fields.Float('On Hand', readonly=True, compute='_compute_qty', digits='Product Unit')
     qty_forecast = fields.Float('Forecast', readonly=True, compute='_compute_qty', digits='Product Unit')
     qty_to_order = fields.Float('To Order', compute='_compute_qty_to_order', inverse='_inverse_qty_to_order', search='_search_qty_to_order', digits='Product Unit')
-    qty_to_order_computed = fields.Float('To Order Computed', compute='_compute_qty_to_order_computed', digits='Product Unit')
+    qty_to_order_computed = fields.Float('To Order Computed', store=True, compute='_compute_qty_to_order_computed', digits='Product Unit')
     qty_to_order_manual = fields.Float('To Order Manual', digits='Product Unit')
 
     days_to_order = fields.Float(compute='_compute_days_to_order', help="Numbers of days  in advance that replenishments demands are created.")
@@ -333,7 +333,8 @@ class StockWarehouseOrderpoint(models.Model):
                     ('id', 'in', matched_ids)
                 ]
 
-    @api.depends('replenishment_uom_id', 'qty_forecast', 'product_min_qty', 'product_max_qty', 'visibility_days')
+    @api.depends('replenishment_uom_id', 'product_min_qty', 'product_max_qty',
+    'visibility_days', 'product_id', 'location_id', 'product_id.seller_ids.delay')
     def _compute_qty_to_order_computed(self):
         for orderpoint in self:
             if not orderpoint.product_id or not orderpoint.location_id:
