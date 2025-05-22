@@ -923,7 +923,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "address2": partner.street2 or None,
             "city": partner.city or "",
             "province": partner.state_id.name if partner.state_id else "",
-            "province_code": partner.zip or "",
+            "zip": partner.zip or "",
             "country": country,
             "country_code": country_code,
             "street_address": None,
@@ -1322,7 +1322,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "address2": partner.street2 or None,
             "city": partner.city or "",
             "province": partner.state_id.name if partner.state_id else "",
-            "province_code": partner.zip or "",
+            "zip": partner.zip or "",
             "country": partner.country_id.name or "Australia",
             "country_code": country_code,
             "contact": {
