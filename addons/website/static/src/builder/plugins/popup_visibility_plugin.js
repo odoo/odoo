@@ -11,6 +11,8 @@ export class PopupVisibilityPlugin extends Plugin {
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        on_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
+        on_reveal_target_handlers: this.hidePopupsWithoutTarget.bind(this),
     };
 
     setup() {
@@ -72,6 +74,25 @@ export class PopupVisibilityPlugin extends Plugin {
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
         }
+    }
+
+    /**
+     * Hides all the open popups that do not contain the given target element.
+     *
+     * @param {HTMLElement} targetEl the element
+     */
+    hidePopupsWithoutTarget(targetEl) {
+        const openPopupEls = this.editable.querySelectorAll(".s_popup:not([data-invisible='1']");
+        if (!openPopupEls.length) {
+            return;
+        }
+
+        for (const popupEl of openPopupEls) {
+            if (!popupEl.contains(targetEl)) {
+                this.dependencies.visibility.toggleTargetVisibility(popupEl, false);
+            }
+        }
+        this.config.updateInvisibleElementsPanel();
     }
 }
 
