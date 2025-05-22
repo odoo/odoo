@@ -30,6 +30,7 @@ class IrAttachment(models.Model):
             attachment.res_model == 'account.move'
             and attachment.res_id
             and attachment.raw
+            and attachment.company_id.restrictive_audit_trail
             and guess_mimetype(attachment.raw) in (
                 'application/pdf',
                 'application/xml',
