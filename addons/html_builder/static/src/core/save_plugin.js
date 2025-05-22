@@ -4,7 +4,8 @@ import { registry } from "@web/core/registry";
 
 export class SavePlugin extends Plugin {
     static id = "savePlugin";
-    static shared = ["save"];
+    static shared = ["save", "isAlreadySaved"];
+    static dependencies = ["history"];
 
     resources = {
         handleNewRecords: this.handleMutations.bind(this),
@@ -76,6 +77,14 @@ export class SavePlugin extends Plugin {
         // used to track dirty out of the editable scope, like header, footer or wrapwrap
         const willSaves = this.getResource("save_handlers").map((c) => c());
         await Promise.all(saveProms.concat(willSaves));
+        this.lastSavedStep = this.dependencies.history.getHistorySteps().at(-1);
+    }
+
+    isAlreadySaved() {
+        return (
+            !this.dependencies.history.getHistorySteps().length ||
+            this.lastSavedStep === this.dependencies.history.getHistorySteps().at(-1)
+        );
     }
 
     /**
