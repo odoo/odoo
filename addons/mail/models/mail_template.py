@@ -17,11 +17,14 @@ _logger = logging.getLogger(__name__)
 class MailTemplate(models.Model):
     "Templates for sending email"
     _name = 'mail.template'
-    _inherit = ['mail.render.mixin', 'template.reset.mixin']
+    _inherit = ['mail.render.mixin', 'template.reset.mixin', 'html.field.history.mixin']
     _description = 'Email Templates'
     _order = 'user_id, name, id'
 
     _unrestricted_rendering = True
+
+    def _get_versioned_fields(self):
+        return [MailTemplate.body_html.name]
 
     @api.model
     def default_get(self, fields):
