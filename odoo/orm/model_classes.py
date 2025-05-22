@@ -383,7 +383,7 @@ def _setup(model: BaseModel):
                 _logger.debug("Patching %s.%s with translate=True", model_cls._name, name)
                 fields_.append(type(fields_[0])(translate=True))
         if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == model_cls._name:
-            model_cls._fields = ReadonlyDict({**model_cls._fields, name: fields_[0]})
+            model_cls._fields._data__[name] = fields_[0]
         else:
             Field = type(fields_[-1])
             add_field(model, name, Field(_base_fields__=tuple(fields_)))
