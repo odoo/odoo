@@ -10,6 +10,7 @@ class PopupVisibilityPlugin extends Plugin {
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
+        savable_mutation_record_predicates: (record) => !record.target.matches?.(".s_popup .modal"),
     };
 
     setup() {
