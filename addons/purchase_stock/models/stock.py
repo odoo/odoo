@@ -121,9 +121,11 @@ class StockWarehouseOrderpoint(models.Model):
     product_supplier_id = fields.Many2one('res.partner', compute='_compute_product_supplier_id', store=True, string='Product Supplier')
 
     @api.depends('product_id.purchase_order_line_ids.product_qty', 'product_id.purchase_order_line_ids.state')
-    def _compute_qty(self):
-        """ Extend to add more depends values """
-        return super()._compute_qty()
+    def _compute_qty_to_order_computed(self):
+        """ Extend to add more depends values
+        TODO: Probably performance costly due to x2many in depends
+        """
+        return super()._compute_qty_to_order_computed()
 
     @api.depends('supplier_id')
     def _compute_lead_days(self):
