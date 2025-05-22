@@ -71,7 +71,9 @@ class PrinterDriver(Driver):
         super(PrinterDriver, self).__init__(identifier, device)
         self.device_type = 'printer'
         self.device_connection = device['device-class'].lower()
-        self.device_name = device['device-make-and-model']
+        self.connected_by_usb = self.device_connection == 'direct'
+        connection_prefix = "[USB] " if self.connected_by_usb else ""
+        self.device_name = connection_prefix + device['device-make-and-model']
         self.state = {
             'status': 'connecting',
             'message': 'Connecting to printer',
@@ -86,7 +88,6 @@ class PrinterDriver(Driver):
         })
 
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
-        self.connected_by_usb = self.device_connection == 'direct'
 
         if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.device_subtype = "receipt_printer"
