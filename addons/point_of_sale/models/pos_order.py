@@ -806,6 +806,11 @@ class PosOrder(models.Model):
         rounding_method = pos_config.rounding_method
         amount_total = sum(order.amount_total for order in self)
         move_type = 'out_invoice' if amount_total >= 0 else 'out_refund'
+        invoice_payment_term_id = (
+            self.partner_id.property_payment_term_id.id
+            if self.partner_id.property_payment_term_id and any(p.payment_method_id.type == 'pay_later' for p in self.payment_ids)
+            else False
+        )
 
         vals = {
             'invoice_origin': ', '.join(ref or '' for ref in self.mapped('pos_reference')),
@@ -820,7 +825,7 @@ class PosOrder(models.Model):
             'invoice_user_id': self.user_id.id,
             'fiscal_position_id': fiscal_position.id,
             'invoice_line_ids': self._prepare_invoice_lines(move_type),
-            'invoice_payment_term_id': False,
+            'invoice_payment_term_id': invoice_payment_term_id,
             'invoice_cash_rounding_id': rounding_method.id,
         }
         if is_single_order and self.refunded_order_id.account_move:
