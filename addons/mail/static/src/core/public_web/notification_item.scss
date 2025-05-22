@@ -4,8 +4,8 @@
     background-color: var(--mail-NotificationItem-bg, mix($gray-100, $o-view-background-color, 95%));
 
     &.o-important {
-        background-color: mix($o-gray-100, $o-info, 90%) !important;
-        border-color: darken(mix($o-gray-100, $o-info, 90%), 5%) !important;
+        background-color: mix($o-view-background-color, lighten($info, 5%), 87.5%);
+        border-color: darken(mix($o-view-background-color, lighten($info, 5%), 87.5%), 7.5%) !important;
     }
     &.o-active {
         outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));

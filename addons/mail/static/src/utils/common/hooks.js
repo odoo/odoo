@@ -145,7 +145,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
                 awayTimeout = setTimeout(() => {
                     clearTimeout(hoveringTimeout);
                     onAway();
-                }, 200);
+                }, 100);
             }
         }
         wasHovering = hovering;
