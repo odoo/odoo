@@ -504,45 +504,45 @@ describe("Selection collapsed", () => {
 
         test("should insert a paragraph break outside the starting edge of an anchor at start of block", async () => {
             await testEditor({
-                contentBefore: "<p><a>[]ab</a></p>",
+                contentBefore: '<p><a href="#">[]ab</a></p>',
                 stepFunction: splitBlockA,
                 contentAfterEdit:
-                    '<p><br></p><p>\ufeff<a class="o_link_in_selection">\ufeff[]ab\ufeff</a>\ufeff</p>',
-                contentAfter: "<p><br></p><p><a>[]ab</a></p>",
+                    '<p><br></p><p>\ufeff<a href="#" class="o_link_in_selection">\ufeff[]ab\ufeff</a>\ufeff</p>',
+                contentAfter: '<p><br></p><p><a href="#">[]ab</a></p>',
             });
         });
         test("should insert a paragraph break outside the starting edge of an anchor after some text", async () => {
             await testEditor({
-                contentBefore: "<p>ab<a>[]cd</a></p>",
+                contentBefore: '<p>ab<a href="#">[]cd</a></p>',
                 stepFunction: splitBlockA,
                 contentAfterEdit:
-                    '<p>ab</p><p>\ufeff<a class="o_link_in_selection">\ufeff[]cd\ufeff</a>\ufeff</p>',
-                contentAfter: "<p>ab</p><p><a>[]cd</a></p>",
+                    '<p>ab</p><p>\ufeff<a href="#" class="o_link_in_selection">\ufeff[]cd\ufeff</a>\ufeff</p>',
+                contentAfter: '<p>ab</p><p><a href="#">[]cd</a></p>',
             });
         });
         test("should insert a paragraph break in the middle of an anchor", async () => {
             await testEditor({
-                contentBefore: "<p><a>a[]b</a></p>",
+                contentBefore: '<p><a href="#">a[]b</a></p>',
                 stepFunction: splitBlockA,
                 contentAfterEdit:
-                    '<p>\ufeff<a>\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeff</p>',
-                contentAfter: "<p><a>a</a></p><p><a>[]b</a></p>",
+                    '<p>\ufeff<a href="#">\ufeffa\ufeff</a>\ufeff</p><p>\ufeff<a href="#" class="o_link_in_selection">\ufeff[]b\ufeff</a>\ufeff</p>',
+                contentAfter: '<p><a href="#">a</a></p><p><a href="#">[]b</a></p>',
             });
         });
         test("should insert a paragraph break outside the ending edge of an anchor", async () => {
             await testEditor({
-                contentBefore: "<p><a>ab[]</a></p>",
+                contentBefore: '<p><a href="#">ab[]</a></p>',
                 stepFunction: splitBlockA,
-                contentAfterEdit: `<p>\ufeff<a>\ufeffab\ufeff</a>\ufeff</p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
-                contentAfter: `<p><a>ab</a></p><p>[]<br></p>`,
+                contentAfterEdit: `<p>\ufeff<a href="#">\ufeffab\ufeff</a>\ufeff</p><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfter: `<p><a href="#">ab</a></p><p>[]<br></p>`,
             });
         });
         test("should insert a paragraph break outside the ending edge of an anchor (2)", async () => {
             await testEditor({
-                contentBefore: "<p><a>ab[]</a>cd</p>",
+                contentBefore: '<p><a href="#">ab[]</a>cd</p>',
                 stepFunction: splitBlockA,
-                contentAfterEdit: "<p>\ufeff<a>\ufeffab\ufeff</a>\ufeff</p><p>[]cd</p>",
-                contentAfter: "<p><a>ab</a></p><p>[]cd</p>",
+                contentAfterEdit: '<p>\ufeff<a href="#">\ufeffab\ufeff</a>\ufeff</p><p>[]cd</p>',
+                contentAfter: '<p><a href="#">ab</a></p><p>[]cd</p>',
             });
         });
     });
