@@ -2264,6 +2264,7 @@
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
                 <div
+                    t-if='line.name'
                     class="o_cart_product d-flex gap-3 pb-4"
                     t-attf-data-product-id="#{line.product_id and line.product_id.id}"
                 >
