@@ -107,4 +107,17 @@ describe("Popup options: popup in page before edit", () => {
         await animationFrame();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
     });
+
+    test("undoing something on a target outside s_popup closes it", async () => {
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        expect(".o_add_snippet_dialog").toHaveCount(0);
+        await waitForEndOfOperation();
+        await contains(":iframe .s_cover").click();
+        await contains("button:contains(Grid)").click(); // arbitrary thing to undo
+        await contains(".o_we_invisible_entry .fa-eye-slash").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        builder.getEditor().shared.history.undo();
+        await animationFrame();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+    });
 });
