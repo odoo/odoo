@@ -126,36 +126,32 @@ export class MediaPlugin extends Plugin {
         }
     }
 
-    async onSaveMediaDialog(element, { node }) {
-        if (!element) {
-            // @todo @phoenix to remove
-            throw new Error("Element is required: onSaveMediaDialog");
-            // return;
-        }
-
-        if (node) {
-            const changedIcon = isIconElement(node) && isIconElement(element);
+    /**
+     *  Called when the media dialog is saved.
+     *
+     * @param {HTMLImageElement} newImgElement the element to insert
+     * @param {HTMLImageElement} originalImgElement the element to replace
+     */
+    async onSaveMediaDialog(newImgElement, originalImgElement) {
+        if (originalImgElement) {
+            const changedIcon = isIconElement(originalImgElement) && isIconElement(newImgElement);
             if (changedIcon) {
                 // Preserve tag name when changing an icon and not recreate the
                 // editors unnecessarily.
-                for (const attribute of element.attributes) {
-                    node.setAttribute(attribute.nodeName, attribute.nodeValue);
+                for (const attribute of newImgElement.attributes) {
+                    originalImgElement.setAttribute(attribute.nodeName, attribute.nodeValue);
                 }
-                element = node;
+                newImgElement = originalImgElement;
             } else {
-                node.replaceWith(element);
+                originalImgElement.replaceWith(newImgElement);
             }
         } else {
-            this.dependencies.dom.insert(element);
+            this.dependencies.dom.insert(newImgElement);
         }
         // Collapse selection after the inserted/replaced element.
-        const [anchorNode, anchorOffset] = rightPos(element);
+        const [anchorNode, anchorOffset] = rightPos(newImgElement);
         this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
         this.delegateTo("afer_save_media_dialog_handlers", element);
-        // @todo: without operation plugin mutex, some race condition could mess
-        // up the history.
-        const updateAttributes = await this.dependencies.imagePostProcess.processImage(element);
-        updateAttributes();
         this.dependencies.history.addStep();
     }
 
@@ -170,7 +166,7 @@ export class MediaPlugin extends Plugin {
             ), // @todo @phoenix: should be removed and moved to config.mediaModalParams
             media: params.node,
             save: (element) => {
-                this.onSaveMediaDialog(element, { node: params.node });
+                this.onSaveMediaDialog(element, params.node);
             },
             onAttachmentChange: this.config.onAttachmentChange || (() => {}),
             noVideos: !this.config.allowMediaDialogVideo,
