@@ -966,6 +966,7 @@ class TestSubcontractingTracking(TransactionCase):
             bom_line.product_id = cls.comp2
             bom_line.product_qty = 1
         cls.bom_tracked = bom_form.save()
+        cls.bom_tracked.consumption = 'strict'
 
     def test_flow_tracked_1(self):
         """ This test mimics test_flow_1 but with a BoM that has tracking included in it.

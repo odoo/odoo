@@ -250,7 +250,7 @@ class MrpProduction(models.Model):
         ('strict', 'Blocked')],
         required=True,
         readonly=True,
-        default='flexible',
+        default='warning',
     )
 
     mrp_production_child_count = fields.Integer("Number of generated MO", compute='_compute_mrp_production_child_count')

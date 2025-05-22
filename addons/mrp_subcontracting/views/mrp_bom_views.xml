@@ -8,9 +8,6 @@
             <xpath expr="//field[@name='type']" position="after">
                 <field name="subcontractor_ids" widget="many2many_tags" invisible="type != 'subcontract'" required="type == 'subcontract'"/>
             </xpath>
-            <xpath expr="//field[@name='consumption']" position="attributes">
-                <attribute name="invisible">type == 'phantom' or type == 'subcontract'</attribute>
-            </xpath>
         </field>
     </record>
 </odoo>
