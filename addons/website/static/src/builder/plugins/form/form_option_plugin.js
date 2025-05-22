@@ -3,6 +3,7 @@ import { Cache } from "@web/core/utils/cache";
 import { Plugin } from "@html_editor/plugin";
 import { reactive } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { redirect } from "@web/core/utils/urls";
 import { FormOptionRedraw } from "./form_option_redraw";
 import { FormFieldOptionRedraw } from "./form_field_option_redraw";
 import { FormOptionAddFieldButton } from "./form_option_add_field_button";
@@ -39,7 +40,7 @@ import { renderToElement } from "@web/core/utils/render";
 
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
-    static dependencies = ["builderActions", "builder-options"];
+    static dependencies = ["builderActions", "builder-options", "savePlugin"];
     resources = {
         builder_header_middle_buttons: [
             {
@@ -239,33 +240,25 @@ export class FormOptionPlugin extends Plugin {
                 },
             },
             promptSaveRedirect: {
-                apply: ({ editingElement: el }) => {
-                    // TODO Convert after reload-related operations are available
-                    /*
-                    return new Promise((resolve, reject) => {
-                        const message = _t("Would you like to save before being redirected? Unsaved changes will be discarded.");
-                        this.dialog.add(ConfirmationDialog, {
+                apply: async ({ params: { mainParam } }) => {
+                    const redirectToAction = (action) => {
+                        redirect(`/odoo/action-${encodeURIComponent(action)}`);
+                    }
+
+                    new Promise((resolve) => {
+                        const message = _t("You are about to be redirected. Your changes will be saved.");
+                        this.services.dialog.add(ConfirmationDialog, {
                             body: message,
-                            confirmLabel: _t("Save"),
-                            confirm: () => {
-                                this.env.requestSave({
-                                    reload: false,
-                                    onSuccess: () => {
-                                        this._redirectToAction(value);
-                                    },
-                                    onFailure: () => {
-                                        this.notification.add(_t("Something went wrong."), {
-                                            type: 'danger',
-                                            sticky: true,
-                                        });
-                                    },
-                                });
+                            confirmLabel: _t("Save and Redirect"),
+                            confirm: async () => {
+                                await this.dependencies.savePlugin.save();
+                                await this.config.closeEditor();
+                                redirectToAction(mainParam);
                                 resolve();
                             },
                             cancel: () => resolve(),
                         });
                     });
-                    */
                 },
             },
             updateLabelsMark: {

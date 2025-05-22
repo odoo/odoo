@@ -102,6 +102,9 @@ export class Builder extends Component {
                         ...param,
                     });
                 },
+                closeEditor: async () => {
+                    await this.props.closeEditor();
+                },
                 resources: {
                     trigger_dom_updated: () => {
                         editorBus.trigger("DOM_UPDATED");
