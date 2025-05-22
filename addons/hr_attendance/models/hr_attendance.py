@@ -30,8 +30,7 @@ class HrAttendance(models.Model):
     _inherit = ["mail.thread"]
 
     def _default_employee(self):
-        if self.env.user.has_group('hr_attendance.group_hr_attendance_manager'):
-            return self.env.user.employee_id
+        return self.env.user.employee_id
 
     employee_id = fields.Many2one('hr.employee', string="Employee", default=_default_employee, required=True,
         ondelete='cascade', index=True, group_expand='_read_group_employee_id')
@@ -42,6 +41,7 @@ class HrAttendance(models.Model):
     attendance_manager_id = fields.Many2one('res.users', related="employee_id.attendance_manager_id",
         export_string_translation=False)
     is_manager = fields.Boolean(compute="_compute_is_manager")
+    is_own = fields.Boolean(compute="_compute_is_manager")
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True, tracking=True, index=True)
     check_out = fields.Datetime(string="Check Out", tracking=True)
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
@@ -184,9 +184,12 @@ class HrAttendance(models.Model):
     def _compute_is_manager(self):
         have_manager_right = self.env.user.has_group('hr_attendance.group_hr_attendance_manager')
         have_officer_right = self.env.user.has_group('hr_attendance.group_hr_attendance_officer')
+        have_own_right = self.env.user.has_group('hr_attendance.group_hr_attendance_own')
         for attendance in self:
             attendance.is_manager = have_manager_right or \
                 (have_officer_right and attendance.attendance_manager_id.id == self.env.user.id)
+            attendance.is_own = have_own_right and attendance.employee_id.user_id == self.env.user and \
+                attendance.overtime_status == 'to_approve'
 
     def _get_employee_calendar(self):
         self.ensure_one()
