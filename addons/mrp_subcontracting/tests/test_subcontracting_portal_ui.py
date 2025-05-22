@@ -39,7 +39,6 @@ class TestSubcontractingPortalUi(HttpCase):
         })
         bom_form = Form(cls.env['mrp.bom'])
         bom_form.type = 'subcontract'
-        bom_form.consumption = 'warning'
         bom_form.subcontractor_ids.add(cls.partner_portal)
         bom_form.product_tmpl_id = cls.finished_product.product_tmpl_id
         with bom_form.bom_line_ids.new() as bom_line:
