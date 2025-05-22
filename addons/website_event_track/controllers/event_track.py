@@ -15,6 +15,7 @@ import operator
 import pytz
 
 from odoo import exceptions, http, fields, tools, _
+from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import is_html_empty, plaintext2html
@@ -69,6 +70,10 @@ class EventTrackController(http.Controller):
           * 'search': search string;
           * 'tags': list of tag IDs for filtering;
         """
+
+        if searches.get('tags') and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
+            return request.redirect(f'/event/{slug(event)}/track', code=301)
+
         return request.render(
             "website_event_track.tracks_session",
             self._event_tracks_get_values(event, tag=tag, **searches)

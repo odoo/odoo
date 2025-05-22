@@ -126,12 +126,13 @@
                                 <ul class="list-group list-group-flush">
                                     <t t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" t-foreach="tag_category.tag_ids" t-as="tag">
                                         <li class="list-group-item border-0 px-0">
-                                                <a t-att-href="'/event/%s/track?%s' % (
+                                                <a t-att-data-post="'/event/%s/track?%s' % (
                                                         slug(event),
-                                                        keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
+                                                        keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
                                                     )"
                                                     t-if="tag.color"
-                                                    t-attf-class="d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}">
+                                                    t-attf-class="post_link d-flex align-items-center justify-content-between text-reset #{'active' if tag in search_tags else ''}"
+                                                    rel="nofollow">
                                                     <t t-out="tag.name"/>
                                                 </a>
                                         </li>
@@ -160,12 +161,13 @@
                 </a>
                 <div class="dropdown-menu">
                     <t t-foreach="tag_category.tag_ids" t-as="tag">
-                        <a t-att-href="'/event/%s/track?%s' % (
+                        <a t-att-data-post="'/event/%s/track?%s' % (
                                 slug(event),
-                                keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
+                                keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids), prevent_redirect=True)
                             )"
                             t-if="tag.color"
-                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                            t-attf-class="post_link dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}"
+                            rel="nofollow">
                             <t t-out="tag.name"/>
                         </a>
                     </t>
@@ -441,8 +443,9 @@
             <span class="align-items-baseline border d-inline-flex rounded">
                 <i class="fa fa-tag mx-2 text-muted"/>
                 <t t-out="tag.display_name"/>
-                <a t-att-href="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids)))"
-                    class="btn border-0 py-1">
+                <a t-att-data-post="'/event/%s/track?%s' % (slug(event), keep_query('*', tags=str((search_tags - tag).ids), prevent_redirect=True))"
+                    class="post_link btn border-0 py-1"
+                    rel="nofollow">
                     &#215;
                 </a>
             </span>
@@ -456,19 +459,21 @@
 
 <template id="track_tag_badge_link" name="Track: Tag Badge Link">
     <a t-if="search_tags"
-        t-att-href="'/event/%s/track?%s'% (
+        t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
-            keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
+            keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids),prevent_redirect=True)
         )"
-        t-att-class="'badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_tag_color_hovered_0')"
-        t-out="tag.name"/>
+        t-att-class="'post_link badge rounded-pill text-decoration-none %s' % ('text-bg-primary opacity-75-hover' if tag in search_tags else 'o_tag_color_hovered_0')"
+        t-out="tag.name"
+        rel="nofollow"/>
     <a t-else=""
-        t-att-href="'/event/%s/track?%s'% (
+        t-att-data-post="'/event/%s/track?%s'% (
             slug(event),
-            keep_query('*', tags=str(tag.ids))
+            keep_query('*', tags=str(tag.ids), prevent_redirect=True)
         )"
-        t-att-class="'badge rounded-pill text-decoration-none o_tag_color_hovered_%s' % (tag.color)"
-        t-out="tag.name"/>
+        t-att-class="'post_link badge rounded-pill text-decoration-none o_tag_color_hovered_%s' % (tag.color)"
+        t-out="tag.name"
+        rel="nofollow"/>
 </template>
 
 <template id="track_tag_badge_info" name="Track: Tag Badge Info">
