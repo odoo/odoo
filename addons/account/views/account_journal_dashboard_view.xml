@@ -222,9 +222,9 @@
                         </div>
                         <div id="dashboard_general_right" class="col-auto">
                             <t t-if="dashboard.number_to_check > 0">
-                                <div class="row">
+                                <div class="row" groups="account.group_account_user">
                                     <div class="col overflow-hidden text-start">
-                                        <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-out="dashboard.number_to_check"/> To Check</a>
+                                        <a type="object" name="open_action" context="{'action_name': 'action_move_journal_line', 'search_default_to_check': True}"><t t-out="dashboard.number_to_check"/> To Review</a>
                                     </div>
                                     <div class="col-auto text-end">
                                         <span dir="ltr"><t t-out="dashboard.to_check_balance"/></span>
@@ -361,9 +361,9 @@
                                 </div>
                             </div>
                             <t t-if="dashboard.number_to_check > 0">
-                                <div class="row">
+                                <div class="row" groups="account.group_account_user">
                                     <div class="col overflow-hidden text-start">
-                                        <a type="object" name="open_action" context="{'search_default_to_check': True}"><t t-out="dashboard.number_to_check"/> To Check</a>
+                                        <a type="object" name="open_action" context="{'search_default_to_check': True}"><t t-out="dashboard.number_to_check"/> To Review</a>
                                     </div>
                                     <div class="col-auto text-end">
                                         <span dir="ltr"><t t-out="dashboard.to_check_balance"/></span>

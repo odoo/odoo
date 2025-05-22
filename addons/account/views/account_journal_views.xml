@@ -15,7 +15,6 @@
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide"/>
                     <field name="code" optional="show"/>
                     <field name="default_account_id" optional="show"/>
-                    <field name="autocheck_on_post" optional="hide"/>
                     <field name="active" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                     <field name="company_id" groups="!base.group_multi_company" column_invisible="True"/>
@@ -159,7 +158,6 @@
                                     <group string="Automation" groups="account.group_account_manager">
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" invisible="type not in ['sale', 'purchase', 'general']"
                                         />
-                                        <field name="autocheck_on_post"/>
                                     </group>
                                     <group string="Emails" name="group_email_alias"
                                            invisible="type not in ('general', 'sale', 'purchase')">

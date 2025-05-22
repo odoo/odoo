@@ -624,6 +624,24 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         return line
 
+    def _create_invoice(self, **invoice_args):
+        return self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_date': '2024-10-10',
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'quantity': 10,
+                }),
+                Command.create({
+                    'product_id': self.product_b.id,
+                    'quantity': 5,
+                }),
+            ],
+            **invoice_args,
+        })
+
     def assertInvoiceValues(self, move, expected_lines_values, expected_move_values):
         def sort_lines(lines):
             return lines.sorted(lambda line: (line.sequence, not bool(line.tax_line_id), line.name or line.product_id.display_name or '', line.balance))

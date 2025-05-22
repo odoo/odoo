@@ -147,7 +147,7 @@
             <xpath expr="//search/field[@name='journal_id']" position="after">
                 <field name="l10n_gr_edi_state"/>
             </xpath>
-            <xpath expr="//filter[@name='to_check']" position="after">
+            <xpath expr="//filter[@name='out_refund']" position="after">
                 <filter string="To send to MyDATA" name="l10n_gr_edi_state_false"
                         domain="[('l10n_gr_edi_state', 'in', (False, 'bill_fetched'))]"/>
                 <filter string="Sent to MyDATA" name="l10n_gr_edi_state_sent"

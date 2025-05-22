@@ -88,7 +88,7 @@
             <xpath expr="//search/field[@name='journal_id']" position="after">
                 <field name="l10n_ro_edi_state"/>
             </xpath>
-            <xpath expr="//filter[@name='to_check']" position="after">
+            <xpath expr="//filter[@name='out_refund']" position="after">
                 <filter string="Sent E-Factura" name="l10n_ro_edi_state_invoice_sent"
                         domain="[('l10n_ro_edi_state', 'in', ['invoice_not_indexed', 'invoice_sent'])]"/>
                 <filter string="Refused E-Factura" name="l10n_ro_edi_state_invoice_refused"
