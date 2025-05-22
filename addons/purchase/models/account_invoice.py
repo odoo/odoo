@@ -507,6 +507,9 @@ class AccountMove(models.Model):
                         'sequence': -1,
                     })]
 
+        if not any(line.purchase_order_id for line in self.line_ids):
+            self.invoice_origin = False
+
 
 class AccountMoveLine(models.Model):
     """ Override AccountInvoice_line to add the link to the purchase order line it is related to"""
