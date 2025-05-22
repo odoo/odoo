@@ -9,6 +9,11 @@
     &.o-mobile {
         margin-right: $o-mail-ChatHub-bubblesMargin + 5px;
         transform: translateY(-35px);
+
+        body:has(.o-mail-Discuss):not(:has(.o-mail-ChatWindow)) &, body:has(.o-mail-MessagingMenu):not(:has(.o-mail-ChatWindow)) &  {
+            transform: translateY(-65px);
+            z-index: $zindex-modal + 5;
+        }
     }
 }
 
@@ -89,11 +94,16 @@
     height: 30px !important;
     border: $border-width solid transparent !important;
 
-    &:hover, &.show {
-        background-color: mix($o-gray-200, $o-gray-300) !important;
-        opacity: 100% !important;
+    &.o-bubblesHover {
+        opacity: 50%;
+    }
+
+    &:hover {
+        border-color: $o-gray-300 !important;
+        opacity: 75%;
     }
     &.show {
+        opacity: 100% !important;
         border-color: mix($o-gray-300, $o-gray-400) !important;
     }
 }
