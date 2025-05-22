@@ -16,7 +16,7 @@ export class WorkEntryCalendarController extends CalendarController {
     }
 
     getEmployeeIds() {
-        return [...new Set(Object.values(this.model.records).map(rec => rec.rawRecord.employee_id[0]))];
+        return [...new Set(Object.values(this.model.records).map(rec => rec.rawRecord.employee_id.id))];
     }
 }
 
