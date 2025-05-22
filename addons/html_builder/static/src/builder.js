@@ -294,7 +294,7 @@ export class Builder extends Component {
     }
 
     async onBeforeLeave() {
-        if (this.state.canUndo) {
+        if (this.state.canUndo && !this.editor.shared.savePlugin.isAlreadySaved()) {
             let continueProcess = true;
             await new Promise((resolve) => {
                 this.dialog.add(ConfirmationDialog, {
