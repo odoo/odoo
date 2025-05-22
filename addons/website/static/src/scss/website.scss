@@ -166,6 +166,13 @@ $-seen-urls: ();
         $custom-colors: append($custom-colors, $key);
     }
     @include print-variable('custom-colors', $custom-colors);
+
+    // A background color is set on <html> to prevent the fallback iframe used
+    // for navigation in the backend to be visible once the top iframe is loaded
+    // (see /website/iframefallback). Indeed, if the website <body> uses a
+    // transparent background color, the fallback iframe would be visible on
+    // some browsers (e.g. Chrome).
+    background-color: white;
 }
 
 @mixin body-image-bg-style() {
