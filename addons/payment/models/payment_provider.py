@@ -759,3 +759,16 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         return set()
+
+    def _run_onboarding_action(self, **kwargs):
+        """ Run the onboarding action for the provider.
+
+        For a module to run a specific onboarding action, it must override this method and call the
+        appropriate action.
+
+        :param dict kwargs: The onboarding action's parameters. This parameter is not used here.
+        :return: The action returned by the onboarding action.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {}

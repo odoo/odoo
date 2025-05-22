@@ -15,16 +15,30 @@
                         documentation="/applications/finance/payment_providers.html"
                     >
                         <div class="content-group">
-                            <div class="row" invisible="providers_state == 'other_than_paypal'">
+                            <div class="row" invisible="providers_state">
                                 <field name="providers_state" invisible="1"/>
-                                <field name="is_stripe_supported_country" invisible="1"/>
-                                <div class="oe_inline"
-                                     invisible="not is_stripe_supported_country">
-                                    <button string="Activate Stripe" name="action_activate_stripe" type="object" class="btn-primary"/>
+                                <div
+                                    class="oe_inline"
+                                    invisible="not onboarding_payment_provider"
+                                >
+                                    <button
+                                        name="action_activate_payment_provider"
+                                        type="object"
+                                        class="btn-primary"
+                                    >
+                                        Activate
+                                        <field
+                                            name="onboarding_payment_provider"
+                                            nolabel="1"
+                                            class="oe_inline"
+                                        />
+                                    </button>
                                 </div>
-                                <div class="oe_inline"
-                                     title="Stripe Connect is not available in your country, please use another payment provider."
-                                     invisible="is_stripe_supported_country">
+                                <div
+                                    class="oe_inline"
+                                    title="Stripe Connect is not available in your country, please use another payment provider."
+                                    invisible="onboarding_payment_provider"
+                                >
                                     <button string="Activate Stripe" class="btn-primary" disabled=""/>
                                 </div>
                                 <button type="action"
@@ -34,12 +48,18 @@
                                         icon="oi-arrow-right"
                                 />
                             </div>
-                            <div invisible="providers_state != 'other_than_paypal'">
-                                <button name="action_configure_first_provider"
-                                        type="object"
-                                        class="btn-primary col-auto"
+                            <div invisible="providers_state != 'primary_provider'">
+                                <button
+                                    name="action_configure_primary_provider"
+                                    type="object"
+                                    class="btn-primary col-auto"
                                 >
-                                    <field name="first_provider_label" nolabel="1" class="oe_inline"/>
+                                    Configure
+                                    <field
+                                        name="onboarding_payment_provider"
+                                        nolabel="1"
+                                        class="oe_inline"
+                                    />
                                 </button>
                                 <button type="action"
                                         name="%(payment.action_payment_provider)d"
