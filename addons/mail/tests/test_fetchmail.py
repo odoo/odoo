@@ -32,10 +32,10 @@ class TestFetchmail(TransactionCase):
         # mock connection
         cls.connection = MockedConnection()
 
-        def connect(self, allow_archived=False):
+        def _connect__(self, allow_archived=False):
             self.ensure_one()
             return cls.connection
-        patcher = patch.object(cls.registry['fetchmail.server'], 'connect', connect)
+        patcher = patch.object(cls.registry['fetchmail.server'], '_connect__', _connect__)
         patcher.start()
         cls.addClassCleanup(patcher.stop)
 
@@ -81,12 +81,12 @@ class TestFetchmail(TransactionCase):
         # fetch mail
         connection_failed_exception = Exception("mocked connection that fails")
 
-        def connect(obj, **kw):
+        def _connect__(obj, **kw):
             raise connection_failed_exception
         with (
             self.enter_registry_test_mode(),
             self.registry.cursor() as cr,
-            patch.object(self.registry['fetchmail.server'], 'connect', side_effect=connect, autospec=True) as connect,
+            patch.object(self.registry['fetchmail.server'], '_connect__', side_effect=_connect__, autospec=True),
             mute_logger('odoo.addons.mail.models'),
             self.assertLogs('odoo.addons.base.models.ir_cron') as cron_log_catcher,
         ):

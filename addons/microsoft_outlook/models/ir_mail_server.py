@@ -77,11 +77,11 @@ class IrMail_Server(models.Model):
         if self.smtp_authentication == 'outlook':
             self.from_filter = self.smtp_user
 
-    def _smtp_login(self, connection, smtp_user, smtp_password):
+    def _smtp_login__(self, connection, smtp_user, smtp_password):  # noqa: PLW3201
         if len(self) == 1 and self.smtp_authentication == 'outlook':
             auth_string = self._generate_outlook_oauth2_string(smtp_user)
             oauth_param = base64.b64encode(auth_string.encode()).decode()
             connection.ehlo()
             connection.docmd('AUTH', f'XOAUTH2 {oauth_param}')
         else:
-            super()._smtp_login(connection, smtp_user, smtp_password)
+            super()._smtp_login__(connection, smtp_user, smtp_password)

@@ -246,7 +246,7 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
         r = self._access_begin(certification, answer_token)
         self.assertResponse(r, 200)
 
-        with patch.object(IrMail_Server, 'connect'):
+        with patch.object(IrMail_Server, '_connect__'):
             question_ids = user_inputs.predefined_question_ids
             self.assertEqual(len(question_ids), 1, 'Only one question should have been selected by the randomization')
             # Whatever which question was selected, the correct answer is the first one

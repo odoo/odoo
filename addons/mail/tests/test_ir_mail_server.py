@@ -80,7 +80,7 @@ class TestIrMailServer(MailCommon):
         ]:
             with self.subTest(mail_values=mail_values, smtp_to_lst=smtp_to_lst):
                 with self.mock_smtplib_connection():
-                    smtp_session = mail_server.connect(smtp_from=mail_from)
+                    smtp_session = mail_server._connect__(smtp_from=mail_from)
                     message = self._build_email(mail_from=mail_from, **mail_values)
                     mail_server.send_email(message, smtp_session=smtp_session)
 
@@ -122,7 +122,7 @@ class TestIrMailServer(MailCommon):
                     self.env.company.alias_domain_id = self.mail_alias_domain
                 else:
                     self.env.company.alias_domain_id = False
-                message = self.env["ir.mail_server"].build_email(
+                message = self.env["ir.mail_server"]._build_email__(
                     False, "recipient@example.com", "Subject",
                     "The body of an email",
                 )
@@ -174,7 +174,7 @@ class TestIrMailServer(MailCommon):
                 with self.subTest(mail_from=mail_from, provide_smtp=provide_smtp):
                     with self.mock_smtplib_connection():
                         if provide_smtp:
-                            smtp_session = IrMailServer.connect(smtp_from=mail_from)
+                            smtp_session = IrMailServer._connect__(smtp_from=mail_from)
                             message = self._build_email(mail_from=mail_from)
                             IrMailServer.send_email(message, smtp_session=smtp_session)
                         else:
@@ -334,7 +334,7 @@ class TestIrMailServer(MailCommon):
                 with self.subTest(mail_from=mail_from):
                     with self.mock_smtplib_connection():
                         if provide_smtp:
-                            smtp_session = IrMailServer.connect(smtp_from=mail_from)
+                            smtp_session = IrMailServer._connect__(smtp_from=mail_from)
                             message = self._build_email(mail_from=mail_from)
                             IrMailServer.send_email(message, smtp_session=smtp_session)
                         else:
@@ -358,7 +358,7 @@ class TestIrMailServer(MailCommon):
         for provide_smtp in [False, True]:
             with self.mock_smtplib_connection():
                 if provide_smtp:
-                    smtp_session = IrMailServer.connect(smtp_from='"Name" <test@unknown_domain.com>')
+                    smtp_session = IrMailServer._connect__(smtp_from='"Name" <test@unknown_domain.com>')
                     message = self._build_email(mail_from='"Name" <test@unknown_domain.com>')
                     IrMailServer.send_email(message, smtp_session=smtp_session)
                 else:

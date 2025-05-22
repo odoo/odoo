@@ -2,7 +2,6 @@
 
 import datetime
 import functools
-import imaplib
 import logging
 import poplib
 
@@ -25,17 +24,9 @@ MAIL_SERVER_DEACTIVATE_TIME = datetime.timedelta(days=5)  # deactivate cron when
 poplib._MAXLINE = 65536
 
 
-def make_wrap_property(name):
-    return property(
-        lambda self: getattr(self.__obj__, name),
-        lambda self, value: setattr(self.__obj__, name, value),
-    )
-
-
-class IMAP4Connection:
-    """Wrapper around IMAP4 and IMAP4_SSL"""
-    def __init__(self, server, port, is_ssl, timeout=MAIL_TIMEOUT):
-        self.__obj__ = IMAP4_SSL(server, port, timeout=timeout) if is_ssl else IMAP4(server, port, timeout=timeout)
+class OdooIMAP4(IMAP4):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._unread_messages = None
 
     def check_unread_messages(self):
@@ -62,10 +53,13 @@ class IMAP4Connection:
         self.logout()
 
 
-class POP3Connection:
-    """Wrapper around POP3 and POP3_SSL"""
-    def __init__(self, server, port, is_ssl, timeout=MAIL_TIMEOUT):
-        self.__obj__ = POP3_SSL(server, port, timeout=timeout) if is_ssl else POP3(server, port, timeout=timeout)
+class OdooIMAP4_SSL(OdooIMAP4, IMAP4_SSL):
+    pass
+
+
+class OdooPOP3(POP3):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._unread_messages = None
 
     def check_unread_messages(self):
@@ -88,17 +82,8 @@ class POP3Connection:
         self.quit()
 
 
-IMAP_COMMANDS = [cmd.lower() for cmd in imaplib.Commands]
-IMAP_ATTRIBUTES = ['examine', 'login_cram_md5', 'move', 'recent', 'response', 'shutdown', 'unselect'] + IMAP_COMMANDS
-POP3_ATTRIBUTES = [
-    'apop', 'capa', 'close', 'dele', 'list', 'noop', 'pass_', 'quit', 'retr', 'rpop', 'rset', 'set_debuglevel', 'stat',
-    'stls', 'top', 'uidl', 'user', 'utf8'
-]
-for name in IMAP_ATTRIBUTES:
-    setattr(IMAP4Connection, name, make_wrap_property(name))
-
-for name in POP3_ATTRIBUTES:
-    setattr(POP3Connection, name, make_wrap_property(name))
+class OdooPOP3_SSL(OdooPOP3, POP3_SSL):
+    pass
 
 
 class FetchmailServer(models.Model):
@@ -190,7 +175,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         self.write({'state': 'draft'})
         return True
 
-    def connect(self, allow_archived=False):
+    def _connect__(self, allow_archived=False):  # noqa: PLW3201
         """
         :param bool allow_archived: by default (False), an exception is raised when calling this method on an
            archived record. It can be set to True for testing so that the exception is no longer raised.
@@ -200,17 +185,19 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             raise UserError(_('The server "%s" cannot be used because it is archived.', self.display_name))
         connection_type = self._get_connection_type()
         if connection_type == 'imap':
-            connection = IMAP4Connection(self.server, int(self.port), self.is_ssl)
-            self._imap_login(connection)
+            server, port, is_ssl = self.server, int(self.port), self.is_ssl
+            connection = OdooIMAP4_SSL(server, port, timeout=MAIL_TIMEOUT) if is_ssl else OdooIMAP4(server, port, timeout=MAIL_TIMEOUT)
+            self._imap_login__(connection)
         elif connection_type == 'pop':
-            connection = POP3Connection(self.server, int(self.port), self.is_ssl)
+            server, port, is_ssl = self.server, int(self.port), self.is_ssl
+            connection = OdooPOP3_SSL(server, port, timeout=MAIL_TIMEOUT) if is_ssl else OdooPOP3(server, port, timeout=MAIL_TIMEOUT)
             #TODO: use this to remove only unread messages
             #connection.user("recent:"+server.user)
             connection.user(self.user)
             connection.pass_(self.password)
         return connection
 
-    def _imap_login(self, connection):
+    def _imap_login__(self, connection):  # noqa: PLW3201
         """Authenticate the IMAP connection.
 
         Can be overridden in other module for different authentication methods.
@@ -224,7 +211,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
         for server in self:
             connection = None
             try:
-                connection = server.connect(allow_archived=True)
+                connection = server._connect__(allow_archived=True)
                 server.write({'state': 'done'})
             except UnicodeError as e:
                 raise UserError(_("Invalid server name!\n %s", tools.exception_to_unicode(e)))
@@ -285,7 +272,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             server_connection = None
             message_cr = None
             try:
-                server_connection = server.connect()
+                server_connection = server._connect__()
                 message_cr = self.env.registry.cursor()
                 MailThread = server.env['mail.thread'].with_env(self.env(cr=message_cr)).with_context(default_fetchmail_server_id=server.id)
                 thread_process_message = functools.partial(

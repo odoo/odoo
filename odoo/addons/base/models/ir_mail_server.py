@@ -40,31 +40,6 @@ class MailDeliveryException(Exception):
     """Specific exception subclass for mail delivery errors"""
 
 
-def make_wrap_property(name):
-    return property(
-        lambda self: getattr(self.__obj__, name),
-        lambda self, value: setattr(self.__obj__, name, value),
-    )
-
-
-class SMTPConnection:
-    """Wrapper around smtplib.SMTP and smtplib.SMTP_SSL"""
-    def __init__(self, server, port, encryption, context=None):
-        if encryption in ('ssl', 'ssl_strict'):
-            self.__obj__ = smtplib.SMTP_SSL(server, port, timeout=SMTP_TIMEOUT, context=context)
-        else:
-            self.__obj__ = smtplib.SMTP(server, port, timeout=SMTP_TIMEOUT)
-
-
-SMTP_ATTRIBUTES = [
-    'auth', 'auth_cram_md5', 'auth_login', 'auth_plain', 'close', 'data', 'docmd', 'ehlo', 'ehlo_or_helo_if_needed',
-    'expn', 'from_filter', 'getreply', 'has_extn', 'login', 'mail', 'noop', 'putcmd', 'quit', 'rcpt', 'rset',
-    'send_message', 'sendmail', 'set_debuglevel', 'smtp_from', 'starttls', 'user', 'verify', '_host', 'esmtp_features',
-]
-for name in SMTP_ATTRIBUTES:
-    setattr(SMTPConnection, name, make_wrap_property(name))
-
-
 # Python 3: patch SMTP's internal printer/debugger
 def _print_debug(self, *args):
     _logger.debug(' '.join(str(a) for a in args))
@@ -305,7 +280,7 @@ class IrMail_Server(models.Model):
         for server in self:
             smtp = False
             try:
-                smtp = self.connect(mail_server_id=server.id, allow_archived=True)
+                smtp = self._connect__(mail_server_id=server.id, allow_archived=True)
                 # simulate sending an email from current user's address - without sending it!
                 email_from = server._get_test_email_from()
                 email_to = server._get_test_email_to()
@@ -385,7 +360,7 @@ class IrMail_Server(models.Model):
         # no e-mails during testing or when registry is initializing
         return modules.module.current_test or cls.pool._init
 
-    def connect(self, host=None, port=None, user=None, password=None, encryption=None,
+    def _connect__(self, host=None, port=None, user=None, password=None, encryption=None,  # noqa: PLW3201
                 smtp_from=None, ssl_certificate=None, ssl_private_key=None, smtp_debug=False, mail_server_id=None,
                 allow_archived=False):
         """Returns a new SMTP connection to the given SMTP server.
@@ -506,7 +481,10 @@ class IrMail_Server(models.Model):
                 "or provide the SMTP parameters explicitly.",
             ))
 
-        connection = SMTPConnection(smtp_server, smtp_port, smtp_encryption, context=ssl_context)
+        if smtp_encryption in ('ssl', 'ssl_strict'):
+            connection = smtplib.SMTP_SSL(smtp_server, smtp_port, timeout=SMTP_TIMEOUT, context=ssl_context)
+        else:
+            connection = smtplib.SMTP(smtp_server, smtp_port, timeout=SMTP_TIMEOUT)
         connection.set_debuglevel(smtp_debug)
         if smtp_encryption in ('starttls', 'starttls_strict'):
             # starttls() will perform ehlo() if needed first
@@ -522,7 +500,7 @@ class IrMail_Server(models.Model):
             local, at, domain = smtp_user.rpartition('@')
             if at:
                 smtp_user = local + at + idna.encode(domain).decode('ascii')
-            mail_server._smtp_login(connection, smtp_user, smtp_password or '')
+            mail_server._smtp_login__(connection, smtp_user, smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
@@ -535,7 +513,7 @@ class IrMail_Server(models.Model):
 
         return connection
 
-    def _smtp_login(self, connection, smtp_user, smtp_password):
+    def _smtp_login__(self, connection, smtp_user, smtp_password):  # noqa: PLW3201
         """Authenticate the SMTP connection.
 
         Can be overridden in other module for different authentication methods.Can be
@@ -547,7 +525,7 @@ class IrMail_Server(models.Model):
         """
         connection.login(smtp_user, smtp_password)
 
-    def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+    def _build_email__(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,  # noqa: PLW3201
                     attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None,
                     body_alternative=None, subtype_alternative='plain'):
         """Constructs an RFC2822 email.message.Message object based on the keyword arguments passed, and returns it.
@@ -665,7 +643,7 @@ class IrMail_Server(models.Model):
             'mail.default.from_filter', tools.config.get('from_filter')
         )
 
-    def _prepare_email_message(self, message, smtp_session):
+    def _prepare_email_message__(self, message, smtp_session):  # noqa: PLW3201
         """Prepare the SMTP information (from, to, message) before sending.
 
         :param message: the email.message.Message to send, information like the
@@ -700,7 +678,7 @@ class IrMail_Server(models.Model):
             smtp_from = encapsulate_email(message['From'], notifications_email)
 
         # alter message
-        self._alter_message(message, smtp_from, smtp_to_list)
+        self._alter_message__(message, smtp_from, smtp_to_list)
 
         # Check if it's still possible to put the bounce address as smtp_from
         if self._match_from_filter(bounce_address, from_filter):
@@ -721,7 +699,7 @@ class IrMail_Server(models.Model):
         return smtp_from, smtp_to_list, message
 
     @api.model
-    def _alter_message(self, message, smtp_from, smtp_to_list):
+    def _alter_message__(self, message, smtp_from, smtp_to_list):  # noqa: PLW3201
         # `To:` header forged, e.g. for posting on discuss.channels, to avoid confusion
         if x_forge_to := message['X-Forge-To']:
             message.replace_header('To', x_forge_to)
@@ -823,12 +801,12 @@ class IrMail_Server(models.Model):
         """
         smtp = smtp_session
         if not smtp:
-            smtp = self.connect(
+            smtp = self._connect__(
                 smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption,
                 smtp_from=message['From'], ssl_certificate=smtp_ssl_certificate, ssl_private_key=smtp_ssl_private_key,
                 smtp_debug=smtp_debug, mail_server_id=mail_server_id,)
 
-        smtp_from, smtp_to_list, message = self._prepare_email_message(message, smtp)
+        smtp_from, smtp_to_list, message = self._prepare_email_message__(message, smtp)
 
         # Do not actually send emails in testing mode!
         if self._disable_send():
