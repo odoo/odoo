@@ -1528,11 +1528,6 @@ class MrpProduction(models.Model):
                 move.write({
                     'workorder_id': workorder_per_operation[move.operation_id].id if move.operation_id in workorder_per_operation else False
                 })
-            else:
-                bom = move.bom_line_id.bom_id if (move.bom_line_id and move.bom_line_id.bom_id in workorder_boms) else self.bom_id
-                move.write({
-                    'workorder_id': last_workorder_per_bom[bom].id
-                })
 
     def action_assign(self):
         for production in self:

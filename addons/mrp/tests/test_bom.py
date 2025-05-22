@@ -1707,6 +1707,7 @@ class TestBoM(TestMrpCommon):
             ],
         })
         bom.bom_line_ids[0].operation_id = bom.operation_ids[0].id
+        bom.bom_line_ids[1].operation_id = bom.operation_ids[1].id
         # Creates a MO and confirms it.
         mo_form = Form(self.env['mrp.production'])
         mo_form.bom_id = bom
@@ -1714,7 +1715,7 @@ class TestBoM(TestMrpCommon):
         mo_1.action_confirm()
         self.assertRecordValues(mo_1.move_raw_ids, [
             {'operation_id': bom.operation_ids[0].id, 'workorder_id': mo_1.workorder_ids[0].id},
-            {'operation_id': False, 'workorder_id': mo_1.workorder_ids[1].id},
+            {'operation_id': bom.operation_ids[1].id, 'workorder_id': mo_1.workorder_ids[1].id},
         ])
 
         # Adds a new operation and links BoM's lines to other operations.
@@ -1748,8 +1749,8 @@ class TestBoM(TestMrpCommon):
         mo_1.action_update_bom()
         self.assertEqual(mo_1.is_outdated_bom, False)
         self.assertRecordValues(mo_1.move_raw_ids, [
-            {'operation_id': False, 'workorder_id': mo_1.workorder_ids[2].id},
-            {'operation_id': False, 'workorder_id': mo_1.workorder_ids[2].id},
+            {'operation_id': False, 'workorder_id': False},
+            {'operation_id': False, 'workorder_id': False},
         ])
 
     def test_bom_updates_mo_with_pre_prod_picking(self):
