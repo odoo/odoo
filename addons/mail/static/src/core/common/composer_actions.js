@@ -41,7 +41,7 @@ composerActionsRegistry
     .add("send-message", {
         btnClass: (component) => {
             if (component.sendMessageState.active) {
-                return "o-sendMessageActive o-text-white";
+                return "o-sendMessageActive o-text-white shadow-sm";
             }
             return "";
         },

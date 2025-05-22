@@ -6,6 +6,7 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { CountryFlag } from "@mail/core/common/country_flag";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 class ChatBubblePreview extends Component {
     static props = ["chatWindow", "close"];
@@ -38,10 +39,12 @@ export class ChatBubble extends Component {
         super.setup();
         this.store = useService("mail.store");
         const popoverRef = useChildRef();
+        this.isMobileOS = isMobileOS();
         this.popover = usePopover(ChatBubblePreview, {
             animation: false,
             position: "left-middle",
-            popoverClass: "dropdown-menu bg-view border-0 p-0 overflow-visible rounded-3 mx-1",
+            popoverClass:
+                "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
             onClose: () => (this.state.showClose = false),
             ref: popoverRef,
         });
