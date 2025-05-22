@@ -25,11 +25,7 @@
         #Table Tags
         'views/restaurant_floor.xml',
         'views/table_tags.xml',
-
     ],
-
-
-
     'assets': {
             'web.assets_backend': [
                 'custom_module/static/src/xml/custom_button.xml',
@@ -57,7 +53,7 @@
                 #'custom_module/static/src/js/pos_navbar_inherit.js',
                 #'custom_module/static/src/xml/pos_navbar_inherit.xml',
                 'custom_module/static/src/js/pos_store_inherit.js',
-
+                'custom_module/static/src/js/pos_order_inherit.js'
             ],
     },
     'images': [

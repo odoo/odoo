@@ -7,7 +7,7 @@ patch(PosOrder.prototype, {
     /* This function is called after the order has been successfully sent to the preparation tool(s). */
     // @Override
     updateLastOrderChange() {
-        const res = await super.updateLastOrderChange();
+        const res = super.updateLastOrderChange();
         console.log("done inherited");
     }
 });
