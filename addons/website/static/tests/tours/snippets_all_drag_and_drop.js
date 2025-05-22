@@ -67,7 +67,7 @@ for (let snippet of snippetsNames) {
         run: "drag_and_drop :iframe #wrap .oe_drop_zone",
     }, {
         content: `Edit ${snippet.name} snippet`,
-        trigger: `:iframe #wrap.o_editable [data-snippet='${subSnippetTemplates[snippet.name] || snippet.name}']${isModal ? ' .modal.show' : ''}`,
+        trigger: `:iframe #wrap.o_editable [data-snippet='${subSnippetTemplates[snippet.name] || snippet.name.replace(/s_dynamic_filter_template_/, "s_")}']${isModal ? ' .modal.show' : ''}`,
         run: "click",
     }, {
         content: `check ${snippet.name} setting are loaded, wait panel is visible`,
