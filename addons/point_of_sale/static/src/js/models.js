@@ -1039,10 +1039,28 @@ class PosGlobalState extends PosModel {
                 shadow: !options.to_invoice
             })
             .then(function (server_ids) {
-                _.each(order_ids_to_sync, function (order_id) {
-                    self.db.remove_order(order_id);
-                    self.syncingOrders.delete(order_id)
-                });
+                // Only remove orders from localStorage that were successfully processed by the backend
+                if (server_ids && server_ids.length > 0) {
+                    // Create a map of pos_reference to server response for efficient lookup
+                    const serverOrdersMap = new Map();
+                    server_ids.forEach(function(server_order) {
+                        if (server_order.pos_reference) {
+                            serverOrdersMap.set(server_order.pos_reference, server_order);
+                        }
+                    });
+                    
+                    // Only remove orders that have corresponding server responses
+                    ordersToSync.forEach(function(local_order) {
+                        const order_ref = local_order.pos_reference || local_order.name;
+                        if (order_ref && serverOrdersMap.has(order_ref)) {
+                            self.db.remove_order(local_order.id);
+                        }
+                    });
+                }
+                
+                // Always clean up syncing state regardless of processing success
+                ordersToSync.forEach(order => self.syncingOrders.delete(order.id));
+                
                 self.failed = false;
                 self.set_synch('connected');
                 return server_ids;
