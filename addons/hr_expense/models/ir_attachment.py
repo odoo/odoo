@@ -1,4 +1,5 @@
 from odoo import models, api
+from odoo.exceptions import AccessError
 
 
 class IrAttachment(models.Model):
@@ -14,10 +15,14 @@ class IrAttachment(models.Model):
                 for expense in expenses.filtered('sheet_id'):
                     checksums = set(expense.sheet_id.attachment_ids.mapped('checksum'))
                     for attachment in expense.attachment_ids.filtered(lambda att: att.checksum not in checksums):
-                        attachment.copy({
-                            'res_model': 'hr.expense.sheet',
-                            'res_id': expense.sheet_id.id,
-                        })
+                        try:
+                            attachment.copy({
+                                'res_model': 'hr.expense.sheet',
+                                'res_id': expense.sheet_id.id,
+                            })
+                        except AccessError:
+                            attachment.unlink()
+                            raise
         return attachments
 
     def unlink(self):
