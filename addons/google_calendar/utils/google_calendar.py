@@ -71,7 +71,7 @@ class GoogleCalendarService():
         return GoogleEvent(events), next_sync_token, default_reminders
 
     @requires_auth_token
-    def fetch_working_location_events(self, token=None, start=None, end=None, timeout=3):
+    def fetch_working_location_events(self, token, start, end, timeout=3):
         """ Get working location events from Google Calendar. """
         url = "/calendar/v3/calendars/primary/events"
         headers = {'Content-type': 'application/json'}

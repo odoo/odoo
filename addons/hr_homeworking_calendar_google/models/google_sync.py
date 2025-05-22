@@ -61,18 +61,21 @@ class GoogleSync(models.AbstractModel):
         :param working_location_gevents: List of working location Google events
         :param user: The events' owner linked to the employee record to be updated.
         """
+        new_working_locations = []
         existing_location_names = [loc.name for loc in self.env['hr.work.location'].search([])]
 
         for gevent in working_location_gevents:
             _, odoo_location_type, location_name = self._get_working_location_info(gevent)
 
             if location_name not in existing_location_names:
-                self.env['hr.work.location'].sudo().create({
+                new_working_locations += [{
                     'name': location_name,
                     'location_type': odoo_location_type,
                     'address_id': user.partner_id.id,
-                })
+                }]
                 existing_location_names += [location_name]
+        if new_working_locations:
+            self.env['hr.work.location'].sudo().create(new_working_locations)
 
     def _update_employee_working_locations(self, gevents, user):
         """
@@ -85,13 +88,24 @@ class GoogleSync(models.AbstractModel):
         week_end = week_start + datetime.timedelta(days=7)
         most_recent_location_per_weekday = {}
 
+        # Get existing work locations from the DB searching from their names.
+        location_names = []
+        gevent_to_location_name_dict = {}
+        for gevent in gevents:
+            _, _, location_name = self._get_working_location_info(gevent)
+            gevent_to_location_name_dict[gevent.id] = location_name
+            location_names += [location_name]
+        odoo_locations = self.env['hr.work.location'].search([('name', 'in', location_names)])
+        name_to_odoo_location_dict = {loc.name: loc for loc in odoo_locations}
+
         for gevent in gevents:
             # Extract the date from the string received from Google (all day or datetime).
             date_str = gevent.start and (gevent.start.get('dateTime') or gevent.start.get('date'))
-            _, _, location_name = self._get_working_location_info(gevent)
-            odoo_location = self.env['hr.work.location'].search([('name', '=', location_name)])
+            location_name = gevent_to_location_name_dict.get(gevent.id)
+            odoo_location = name_to_odoo_location_dict.get(location_name)
 
-            if gevent.rrule and any(freq in gevent.rrule for freq in ['UNTIL', 'COUNT', 'BYDAY']):  # Recurrent working location.
+            # Recurrent working location.
+            if location_name and odoo_location and gevent.rrule and any(freq in gevent.rrule for freq in ['UNTIL', 'COUNT', 'BYDAY']):
                 intersections = self._get_week_intersections_rrule(week_start, week_end, gevent)
 
                 # Handle events that start and finish in different days.
