@@ -251,4 +251,8 @@
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        # file loaded from load_onboarding_furniture_scenario method
+        'data/orders_demo.xml',
+    ],
 }

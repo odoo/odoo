@@ -34,4 +34,7 @@ Auto-complete partner companies' data
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'data/cron.xml',
+    ],
 }

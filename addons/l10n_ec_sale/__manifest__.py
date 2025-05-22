@@ -16,4 +16,7 @@
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'data/payment_method_data.xml',
+    ],
 }

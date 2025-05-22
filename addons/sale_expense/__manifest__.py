@@ -24,4 +24,8 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'security/ir.model.access.csv',
+        'security/sale_expense_security.xml',
+    ],
 }
