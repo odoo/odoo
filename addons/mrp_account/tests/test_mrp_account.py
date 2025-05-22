@@ -624,6 +624,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             'time_cycle': 5,
             'sequence': 1,
         })]
+        self.bom.bom_line_ids.operation_id = self.bom.operation_ids
         production = self.env['mrp.production'].create({
             'bom_id': self.bom.id,
             'product_qty': 1,
@@ -647,8 +648,8 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             {'name': production.name + ' - Labour', 'debit': 20.0, 'credit': 0.0},
             {'name': production.name + ' - ' + self.product_A.name, 'debit': 0.0, 'credit': 10.0},
             {'name': production.name + ' - ' + self.product_A.name, 'debit': 10.0, 'credit': 0.0},
-            {'name': production.name + ' - ' + self.product_B.name, 'debit': 0.0, 'credit': 10.0},
-            {'name': production.name + ' - ' + self.product_B.name, 'debit': 10.0, 'credit': 0.0},
+            {'name': production.name + ' - ' + self.product_B.name, 'debit': 0.0, 'credit': 20.0},
+            {'name': production.name + ' - ' + self.product_B.name, 'debit': 20.0, 'credit': 0.0},
         ])
 
     def test_labor_cost_balancing_with_cost_share(self):

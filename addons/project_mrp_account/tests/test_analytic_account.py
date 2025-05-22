@@ -463,6 +463,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_routings')
 
         self.bom.project_id = self.project
+        self.bom.bom_line_ids.operation_id = self.bom.operation_ids
         mo_form = Form(self.env['mrp.production'])
         mo_form.product_id = self.product
         mo_form.bom_id = self.bom
