@@ -93,12 +93,12 @@ class TestStockLandedCostsLots(TestLotValuation):
         lot = self.env['stock.lot'].search([('name', 'ilike', 'LClot')])
         lot_product_a = lot.filtered(lambda l: l.product_id == self.product1)
         lot_product_b = lot - lot_product_a
-        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted('product_id'), [
-            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[0].id, 'quantity': 0, 'value': 1.5},
-            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[1].id, 'quantity': 0, 'value': 1.5},
+        self.assertRecordValues(lc.stock_valuation_layer_ids.sorted(lambda svl: svl.product_id.id), [
             {'lot_id': lot_product_a[0].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[0].id, 'quantity': 0, 'value': 1},
             {'lot_id': lot_product_a[1].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[1].id, 'quantity': 0, 'value': 1},
             {'lot_id': lot_product_a[2].id, 'product_id': self.product1.id, 'stock_valuation_layer_id': og_p1_layers[2].id, 'quantity': 0, 'value': 1},
+            {'lot_id': lot_product_b[0].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[0].id, 'quantity': 0, 'value': 1.5},
+            {'lot_id': lot_product_b[1].id, 'product_id': product2.id, 'stock_valuation_layer_id': og_p2_layers[1].id, 'quantity': 0, 'value': 1.5},
         ])
 
         for l, price in zip(lot_product_a, [10.2, 10.2, 10.2]):

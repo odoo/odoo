@@ -1,4 +1,5 @@
 from odoo.addons.base.tests.common import BaseCommon
+from odoo.tests.common import new_test_user
 
 
 class AnalyticCommon(BaseCommon):
@@ -41,3 +42,24 @@ class AnalyticCommon(BaseCommon):
     def get_default_groups(cls):
         groups = super().get_default_groups()
         return groups + cls.env.ref('analytic.group_analytic_accounting')
+
+    @classmethod
+    def setup_independent_user(cls):
+        # Add group_system to be able to create companies notably in the class setup
+        default_groups = cls.env.ref('base.group_system') + cls.get_default_groups()
+        # Removes access rights linked to timesheet and project as these add
+        # record rules blocking analytic flows; account overrides it
+        if 'account.account' not in cls.env:
+            core_group_ids = cls.env.ref("hr_timesheet.group_hr_timesheet_user", raise_if_not_found=False) or cls.env['res.groups']
+            problematic_group_ids = default_groups.filtered(lambda g: (g | g.trans_implied_ids) & core_group_ids)
+            if problematic_group_ids:
+                default_groups -= problematic_group_ids
+        return new_test_user(
+            cls.env,
+            name='The anal(ytic) expert!',
+            login='analytic',
+            password='analytic',
+            email='analyticman@test.com',
+            groups_id=default_groups.ids,
+            company_id=cls.env.company.id,
+        )

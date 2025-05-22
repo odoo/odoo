@@ -11,7 +11,7 @@ from pytz import timezone
 from requests.exceptions import RequestException
 
 from odoo import _, api, fields, models, release
-from odoo.addons.l10n_es_edi_sii.models.account_edi_format import PatchedHTTPAdapter
+from odoo.addons.certificate.tools import CertificateAdapter
 from odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_agencies import get_key
 from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
     NS_MAP,
@@ -190,7 +190,7 @@ class L10nEsEdiTbaiDocument(models.Model):
         def _send_request_to_agency(*args, **kwargs):
             session = requests.Session()
             session.cert = kwargs.pop('pkcs12_data')
-            session.mount("https://", PatchedHTTPAdapter())
+            session.mount("https://", CertificateAdapter())
             response = session.request('post', *args, **kwargs)
             response.raise_for_status()
             response_xml = None

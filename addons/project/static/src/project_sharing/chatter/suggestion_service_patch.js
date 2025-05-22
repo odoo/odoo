@@ -13,12 +13,7 @@ patch(SuggestionService.prototype, {
                 { abortSignal }
             );
             this.store.insert(suggestedPartners);
-            const suggestedPartnersIds = suggestedPartners["res.partner"].map(
-                (partner) => partner.id
-            );
-            thread.limitedMentions = Object.values(this.store.Persona.records).filter((persona) =>
-                suggestedPartnersIds.includes(persona.id)
-            );
+            thread.limitedMentions = suggestedPartners["res.partner"];
         }
         return super.fetchPartners(...arguments);
     },

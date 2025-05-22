@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Junko Augias, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-19 20:36+0000\n"
 "PO-Revision-Date: 2025-05-09 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,27 +23,27 @@ msgstr ""
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_client
 msgid "A client id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Pine Labs が販売者に直接発行するクライアントID 。"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
 msgid "A merchant id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Pine Labs が販売者に直接発行する販売者ID。"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "A security token issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Pine Labs が販売者に直接発行するセキュリティトークン。"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "A store id issued directly to the merchant by Pine Labs."
-msgstr ""
+msgstr "Pine Labs が販売者に直接発行する店舗ID。"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
 msgid "Accepted payment modes by Pine Labs for transactions."
-msgstr ""
+msgstr "Pine Labs が取引で受け付ける支払方法。"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__all
@@ -63,68 +64,68 @@ msgstr "カード"
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_allowed_payment_mode
 msgid "Pine Labs Allowed Payment Modes"
-msgstr ""
+msgstr "Pine Labsで利用可能な支払方法"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_client
 msgid "Pine Labs Client ID"
-msgstr ""
+msgstr "Pine LabsクライアントID"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs Error"
-msgstr ""
+msgstr "Pine Labsエラー"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_merchant
 msgid "Pine Labs Merchant ID"
-msgstr ""
+msgstr "Pine LabsマーチャントID"
 
 #. module: pos_pine_labs
 #. odoo-python
 #: code:addons/pos_pine_labs/models/pos_payment_method.py:0
 msgid ""
 "Pine Labs POS transaction cancelled. Retry again for collecting payment."
-msgstr ""
+msgstr "Pine Labs POS 取引が取消されました。支払いの回収を再試行してください。"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment__pine_labs_plutus_transaction_ref
 msgid "Pine Labs PlutusTransactionReferenceID"
-msgstr ""
+msgstr "Pine Labs PlutusTransactionReferenceID"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_security_token
 msgid "Pine Labs Security Token"
-msgstr ""
+msgstr "Pine Labsセキュリティトークン"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_store
 msgid "Pine Labs Store ID"
-msgstr ""
+msgstr "Pine Labs店舗D"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,field_description:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Pine Labs Test Mode"
-msgstr ""
+msgstr "Pine Labs テストモード"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs get payment status request failed"
-msgstr ""
+msgstr "Pine Labs の支払状況の照会に失敗しました"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs make payment request failed"
-msgstr ""
+msgstr "Pine Labs の支払要求が失敗しました"
 
 #. module: pos_pine_labs
 #. odoo-javascript
 #: code:addons/pos_pine_labs/static/src/app/utils/payment/payment_pine_labs.js:0
 msgid "Pine Labs payment cancellation request failed"
-msgstr ""
+msgstr "Pine Labs支払いキャンセルリクエストに失敗しました"
 
 #. module: pos_pine_labs
 #: model:ir.model,name:pos_pine_labs.model_pos_payment_method
@@ -149,11 +150,13 @@ msgid ""
 "https://developer.pinelabs.com/in/instore/cloud-integration#Example-JSON-"
 "request-for-Void-ICB-on-UPI-transaction"
 msgstr ""
+"払い戻しオーダ処理時に必要です: https://developer.pinelabs.com/in/instore/cloud-"
+"integration#Example-JSON-request-for-Void-ICB-on-UPI-transaction"
 
 #. module: pos_pine_labs
 #: model:ir.model.fields,help:pos_pine_labs.field_pos_payment_method__pine_labs_test_mode
 msgid "Test Pine Labs transaction process."
-msgstr ""
+msgstr "Pine Labs の取引プロセスをテストします。"
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -161,7 +164,7 @@ msgstr ""
 msgid ""
 "The expected error code for the Pine Labs POS status request was not "
 "included in the response."
-msgstr ""
+msgstr "Pine Labs POS ステータス要求の予想されるエラーコードが応答に含まれていませんでした。"
 
 #. module: pos_pine_labs
 #. odoo-python
@@ -178,4 +181,4 @@ msgstr "無効のため取引に失敗しました。"
 #. module: pos_pine_labs
 #: model:ir.model.fields.selection,name:pos_pine_labs.selection__pos_payment_method__pine_labs_allowed_payment_mode__upi
 msgid "Upi"
-msgstr ""
+msgstr "Upi"

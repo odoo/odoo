@@ -591,7 +591,8 @@ class ProductProduct(models.Model):
                 products = self.search_fetch(expression.AND([domain, [('default_code', operator, name)]]), ['display_name'], limit=limit)
                 limit_rest = limit and limit - len(products)
                 if limit_rest is None or limit_rest > 0:
-                    products |= self.search_fetch(expression.AND([domain, [('id', 'not in', products.ids)], [('name', operator, name)]]), ['display_name'], limit=limit_rest)
+                    products_query = self._search(expression.AND([domain, [('default_code', operator, name)]]), limit=limit)
+                    products |= self.search_fetch(expression.AND([domain, [('id', 'not in', products_query)], [('name', operator, name)]]), ['display_name'], limit=limit_rest)
             else:
                 domain_neg = [
                     ('name', operator, name),

@@ -81,7 +81,7 @@ msgid ""
 "(object.state in ('draft', 'sent') and 'Quotation - %s' % (object.name)) or "
 "'Order - %s' % (object.name)"
 msgstr ""
-"(object.state in ('draft', 'sent') and 'Cotação - %s' % (object.name)) or "
+"(object.state in ('draft', 'sent') and 'Orçamento - %s' % (object.name)) or "
 "'Ordem - %s' % (object.name)"
 
 #. module: sale
@@ -456,15 +456,15 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        <t t-set=\"doc_name\" t-value=\"object.type_name\"/>\n"
-"        Car@ <t t-out=\"object.partner_id.name or ''\">utilizador</t>,\n"
+"        Caro <t t-out=\"object.partner_id.name or ''\">utilizador</t>,\n"
 "        <br/><br/>\n"
 "        Informamos que o seu\n"
 "        orçamento <strong t-out=\"object.name or ''\">S00052</strong>\n"
 "        <t t-if=\"object.origin\">\n"
 "            (com a referência: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "        </t>\n"
-"        foi cancelado. Assim sendo, não deverá ser cobrado mais nenhum valor sobre esta encomenda.\n"
-"        Se for necessário algum crédito, isso será efetuado com a melhor conveniência.\n"
+"        foi cancelado. Assim sendo, não deverá ser cobrado mais nenhum valor relativo a esta encomenda.\n"
+"        Se for necessário algum crédito, isso será efetuado da forma mais conveniente.\n"
 "        <br/><br/>\n"
 "        Não hesite em contactar-nos se tiver alguma questão.\n"
 "        <br/>\n"
@@ -708,7 +708,7 @@ msgstr "<strong>Esta oferta expirou!</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been cancelled.</strong>"
-msgstr ""
+msgstr "<strong>Este orçamento foi cancelado.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -729,8 +729,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr ""
-"Uma anotação cujo conteúdo se aplica à seção ou artigo de produto acima."
+msgstr "Uma anotação cujo conteúdo se aplica à seção ou artigo acima."
 
 #. module: sale
 #. odoo-python
@@ -777,13 +776,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Aceitar e Pagar Orçamento"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Aceitar e Pagar Orçamento"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1151,8 +1150,8 @@ msgid ""
 msgstr ""
 "Aumente as suas vendas com vários tipos de programas: Cupões, Promoções, "
 "Cartão Oferta, Fidelidade. Condições específicas podem ser definidas "
-"(produtos, clientes, valor mínimo de compra, período). As recompensas podem "
-"ser descontos (% ou valor) ou produtos gratuitos."
+"(artigos, clientes, valor mínimo de compra, período). As recompensas podem "
+"ser descontos (% ou valor) ou artigos gratuitos."
 
 #. module: sale
 #. odoo-javascript
@@ -1215,7 +1214,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_mass_cancel_orders
 msgid "Cancel multiple quotations"
-msgstr ""
+msgstr "Cancelar vários orçamentos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1696,7 +1695,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_company__quotation_validity_days
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__quotation_validity_days
 msgid "Default Quotation Validity"
-msgstr ""
+msgstr "Validade padrão do orçamento"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_price_include
@@ -1838,7 +1837,7 @@ msgstr "Valor do Desconto"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_discount_product_id
 msgid "Discount Product"
-msgstr "Desconto em Produto"
+msgstr "Artigo de Desconto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__discount_type
@@ -2839,7 +2838,7 @@ msgstr "Minhas Encomendas"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
 msgid "My Quotations"
-msgstr "As Minhas Cotações"
+msgstr "Meus Orçamentos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
@@ -2944,7 +2943,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
-"Número de dias da confirmação da venda até à expedição dos produtos para o "
+"Número de dias da confirmação da venda até à expedição dos artigos para o "
 "cliente"
 
 #. module: sale
@@ -3478,7 +3477,7 @@ msgstr "Categoria do Artigo"
 #. module: sale
 #: model:ir.model,name:sale.model_product_document
 msgid "Product Document"
-msgstr "Documento do produto"
+msgstr "Documento do Artigo"
 
 #. module: sale
 #. odoo-javascript
@@ -3627,25 +3626,25 @@ msgstr "Orçamento"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation #"
-msgstr "Cotação #"
+msgstr "Orçamento #"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
-msgstr ""
+msgstr "N.º Orçamentos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Quotation Date"
-msgstr "Data da Cotação"
+msgstr "Data do Orçamento"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__sent
 msgid "Quotation Sent"
-msgstr "Orçamento enviado"
+msgstr "Orçamento Enviado"
 
 #. module: sale
 #. odoo-python
@@ -3657,25 +3656,25 @@ msgstr ""
 #: model:mail.message.subtype,name:sale.mt_order_viewed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
-msgstr ""
+msgstr "Orçamento visualizado"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "Orçamento confirmado"
+msgstr "Orçamento Confirmado"
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
-msgstr "Cotação enviada"
+msgstr "Orçamento enviado"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/controllers/portal.py:0
 msgid "Quotation viewed by customer %s"
-msgstr ""
+msgstr "Orçamento lido pelo cliente %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
@@ -3696,22 +3695,22 @@ msgstr "Orçamentos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations & Orders"
-msgstr ""
+msgstr "Orçamentos & Encomendas"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
 msgid "Quotations Analysis"
-msgstr "Análise de cotações"
+msgstr "Análise de Orçamentos"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "Cotações e Vendas"
+msgstr "Orçamentos e Vendas"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_sale
 msgid "Quotations to review"
-msgstr ""
+msgstr "Orçamentos a rever"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__rating_ids
@@ -3763,7 +3762,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Rejeitar este Orçamento"
 
 #. module: sale
 #. odoo-javascript
@@ -3963,7 +3962,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_salesperson
 msgid "Sales Analysis By Salespersons"
-msgstr ""
+msgstr "Análise de Vendas por Vendedor"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -4117,7 +4116,7 @@ msgstr ""
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Vendas: Enviar Orçamento"
 
 #. module: sale
 #. odoo-python
@@ -4160,7 +4159,7 @@ msgstr "Secção"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "Nome da seção (ex., produtos, serviços)"
+msgstr "Nome da seção (ex., Artigos, Serviços)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -4171,7 +4170,7 @@ msgstr "Código (token) de Segurança"
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Select a product, or create a new one on the fly."
-msgstr "Selecione um produto ou crie um novo rapidamente."
+msgstr "Selecione um artigo ou crie um novo rapidamente."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__selected_combo_items
@@ -4318,7 +4317,7 @@ msgstr "Exibir margens nas ordens"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "Assinar & Pagar Orçamento"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4547,8 +4546,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
-"Diga-nos porque está a recusar esta cotação, isto irá ajudar-nos a melhorar "
-"os nossos serviços."
+"Diga-nos porque está a recusar este orçamento, isto irá ajudar-nos a "
+"melhorar os nossos serviços."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -4746,7 +4745,7 @@ msgstr "O valor do adiantamento deve ser positivo."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "There are currently no quotations for your account."
-msgstr "Atualmente não existem cotações na sua conta."
+msgstr "Atualmente não existem orçamentos na sua conta."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -4849,8 +4848,8 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
-"Este relatório realiza uma análise sobre as cotações e pedidos das vendas. "
-"Analisa e verifica as receitas das vendas e classifica-as por critérios e "
+"Este relatório realiza uma análise sobre os orçamentos e pedidos das vendas."
+" Analisa e verifica as receitas das vendas e classifica-as por critérios e "
 "diferentes grupos (vendedor, parceiro, artigo, etc.) Utilize este relatório "
 "para realizar a análise sobre as vendas que não foram faturadas ainda. Se "
 "quiser analisar o volume dos negócios, deve usar o relatório de análise da "
@@ -4865,12 +4864,12 @@ msgid ""
 "invoiced yet. If you want to analyse your turnover, you should use the "
 "Invoice Analysis report in the Accounting application."
 msgstr ""
-"Este relatório realiza a análise de suas cotações. Análise das receitas de "
-"vendas e classifica-as por diferentes critérios do grupo (vendedores, "
-"parceiros, produtos, etc). Use este relatório para realizar uma análise "
+"Este relatório realiza a análise dos seus orçamentos. Analisa as receitas de"
+" vendas e classifica-as por diferentes critérios do agrupamento (vendedores,"
+" parceiros, artigos, etc). Use este relatório para realizar uma análise "
 "sobre as vendas que ainda não faturou. Se você quiser analisar o seu volume "
-"de negócios, você deve usar o relatório de análise da fatura na aplicação de"
-" Contabilidade."
+"de negócios, você deve usar o relatório de análise da faturas na aplicação "
+"de Contabilidade."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -4883,10 +4882,10 @@ msgid ""
 msgstr ""
 "Este relatório realiza a análise de suas cotações. Análise das receitas de "
 "vendas e classifica-as por diferentes critérios do grupo (vendedores, "
-"parceiros, produtos, etc). Use este relatório para realizar uma análise "
-"sobre as vendas que ainda não faturou. Se você quiser analisar o seu volume "
-"de negócios, você deve usar o relatório de análise da fatura na aplicação de"
-" Contabilidade."
+"parceiros, artigos, etc). Use este relatório para realizar uma análise sobre"
+" as vendas que ainda não faturou. Se você quiser analisar o seu volume de "
+"negócios, você deve usar o relatório de análise da fatura na aplicação de "
+"Contabilidade."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -5170,7 +5169,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "View Quotation"
-msgstr ""
+msgstr "Ver Orçamento"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__virtual_id
@@ -5362,8 +5361,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
-"A cotação contém produtos da empresa %(product_company)s Considerando que vossa cotação pertence à empresa %(quote_company)s,\n"
-"mude a empresa da cotação ou remova os produtos de outras empresas (%(bad_products)s)."
+"O orçamento contém artigos da empresa %(product_company)s Considerando que o orçamento pertence à empresa %(quote_company)s,\n"
+"mude a empresa da cotação ou remova os artigos de outras empresas (%(bad_products)s)."
 
 #. module: sale
 #. odoo-javascript
