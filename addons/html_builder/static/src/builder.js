@@ -96,8 +96,8 @@ export class Builder extends Component {
                         editorBus.trigger("DOM_UPDATED");
                     }
                 },
-                reloadEditor: (param = {}) => {
-                    this.props.reloadEditor({
+                reloadEditor: async (param = {}) => {
+                    await this.props.reloadEditor({
                         initialTab: this.state.activeTab,
                         ...param,
                     });

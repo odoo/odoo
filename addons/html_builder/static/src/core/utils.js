@@ -586,7 +586,7 @@ function useOperationWithReload(callApply, reload) {
         await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
         const target = env.editor.shared["builder-options"].getReloadSelector(editingElement);
         const url = reload.getReloadUrl?.();
-        env.editor.config.reloadEditor({ target, url });
+        await env.editor.config.reloadEditor({ target, url });
     };
 }
 export function useInputBuilderComponent({

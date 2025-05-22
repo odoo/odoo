@@ -323,7 +323,7 @@ export class AddFontDialog extends Component {
         if (styleEl) {
             delete styleEl.dataset.fontPreview;
         }
-        this.props.reloadEditor();
+        await this.props.reloadEditor();
         return true;
     }
 }
