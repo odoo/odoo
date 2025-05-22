@@ -7,6 +7,25 @@
             <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
+                <style type="text/css">
+                    @media (max-width: 767.98px) { /* Target screens smaller than md breakpoint */
+                        .product-detail-search-container {
+                            display: flex !important; /* Explicitly set display type */
+                            gap: 0 !important; /* Remove gap as only one item (search form) is visible on mobile */
+                            max-width: 100% !important; /* Allow container to be full width */
+                            width: 100% !important;
+                            margin: 0 !important; /* Override all inline margins */
+                            padding: 0 !important; /* Ensure no internal padding affects width/alignment */
+                            justify-content: flex-start !important; /* Align content (the form) to the start */
+                        }
+                        .product-detail-search-container > form {
+                            display: flex !important; /* Ensure form is flex for its children (input, button) */
+                            flex-grow: 1 !important; /* Make the form expand to fill its parent container */
+                            width: 100% !important; /* Make the form take full container width */
+                            max-width: none !important; /* Override inline max-width for mobile */
+                        }
+                    }
+                </style>
                 
                 <!-- Заменяем блок поиска и иконок, чтобы они отображались в одной строке -->
                 <div class="product-detail-search-container" style="margin-top: 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; max-width: 800px; margin-left: auto; margin-right: auto; gap: 30px;">
