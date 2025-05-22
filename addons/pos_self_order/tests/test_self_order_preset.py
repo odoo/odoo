@@ -51,6 +51,7 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
 
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.partner_id.name, 'Dr Dre')
+        self.assertEqual(last_order.partner_id.email, 'dre@dr.com')
         self.assertEqual(last_order.partner_id.street, 'Rue du Bronx 90')
         self.assertEqual(last_order.partner_id.zip, '9999')
         self.assertEqual(last_order.partner_id.city, 'New York')
