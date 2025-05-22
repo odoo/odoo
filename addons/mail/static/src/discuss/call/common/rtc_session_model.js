@@ -38,9 +38,14 @@ export class RtcSession extends Record {
 
     // Server data
     channel_member_id = fields.One("discuss.channel.member", { inverse: "rtcSession" });
-    persona = fields.One("Persona", {
+    partner_id = fields.One("res.partner", {
         compute() {
-            return this.channel_member_id?.persona;
+            return this.channel_member_id?.partner_id;
+        },
+    });
+    guest_id = fields.One("mail.guest", {
+        compute() {
+            return this.channel_member_id?.guest_id;
         },
     });
     /** @type {boolean} */

@@ -17,7 +17,11 @@ export class ChannelMember extends Record {
     id;
     last_interest_dt = fields.Datetime();
     last_seen_dt = fields.Datetime();
-    persona = fields.One("Persona", { inverse: "channelMembers" });
+    guest_id = fields.One("mail.guest", { inverse: "channelMembers" });
+    partner_id = fields.One("res.partner", { inverse: "channelMembers" });
+    get persona() {
+        return this.partner_id || this.guest_id;
+    }
     channel_id = fields.One("Thread", { inverse: "channel_member_ids" });
     threadAsSelf = fields.One("Thread", {
         compute() {

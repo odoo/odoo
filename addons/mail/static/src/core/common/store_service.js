@@ -24,9 +24,7 @@ let temporaryIdOffset = 0.01;
 
 export const pyToJsModels = {
     "discuss.channel": "Thread",
-    "mail.guest": "Persona",
     "mail.thread": "Thread",
-    "res.partner": "Persona",
 };
 
 export const addFieldsByPyModel = {
@@ -60,8 +58,8 @@ export class Store extends BaseStore {
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
     /** This is the current logged partner / guest */
-    selfPartner = fields.One("Persona");
-    selfGuest = fields.One("Persona");
+    selfPartner = fields.One("res.partner");
+    selfGuest = fields.One("mail.guest");
     get self() {
         return this.selfPartner || this.selfGuest;
     }
@@ -79,7 +77,7 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
-    odoobot = fields.One("Persona");
+    odoobot = fields.One("res.partner");
     users = {};
     /** @type {number} */
     internalUserGroupId;
@@ -529,7 +527,7 @@ export class Store extends BaseStore {
      * @param {Object} param0
      * @param {number} param0.userId
      * @param {number} param0.partnerId
-     * @returns {Promise<import("models").Persona> | undefined}
+     * @returns {Promise<import("models").ResPartner> | undefined}
      */
     async getPartner({ userId, partnerId }) {
         if (userId) {
@@ -558,7 +556,7 @@ export class Store extends BaseStore {
             partnerId = user.partner_id;
         }
         if (partnerId) {
-            const partner = this.Persona.insert({ id: partnerId, type: "partner" });
+            const partner = this["res.partner"].insert({ id: partnerId });
             if (!partner.userId) {
                 const [userId] = await this.env.services.orm.silent.search(
                     "res.users",

@@ -14,7 +14,7 @@ export class ScheduledMessage extends Record {
     /** @type {number} */
     id;
     attachment_ids = fields.Many("ir.attachment");
-    author_id = fields.One("Persona");
+    author_id = fields.One("res.partner");
     body = fields.Html("");
     /** @type {boolean} */
     composition_batch;

@@ -1,4 +1,4 @@
-import { AND, fields, Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 import { imageUrl } from "@web/core/utils/urls";
 import { rpc } from "@web/core/network/rpc";
 import { debounce } from "@web/core/utils/timing";
@@ -7,18 +7,10 @@ const TRANSPARENT_AVATAR =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAQAAABpN6lAAAAAqElEQVR42u3QMQEAAAwCoNm/9GJ4CBHIjYsAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBDQ9+KgAIHd5IbMAAAAAElFTkSuQmCC";
 const { DateTime } = luxon;
 
-/**
- * @typedef {'offline' | 'bot' | 'online' | 'away' | 'im_partner' | undefined} ImStatus
- * @typedef Data
- * @property {number} id
- * @property {string} name
- * @property {string} email
- * @property {'partner'|'guest'} type
- * @property {ImStatus} im_status
- */
+export class MailGuest extends Record {
+    static id = "id";
+    static _name = "mail.guest";
 
-export class Persona extends Record {
-    static id = AND("type", "id");
     static new() {
         const record = super.new(...arguments);
         record.debouncedSetImStatus = debounce(
@@ -58,10 +50,7 @@ export class Persona extends Record {
             if (!this.store.env.services.bus_service.isActive || this.id <= 0) {
                 return false;
             }
-            return (
-                this.type === "guest" ||
-                (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public)
-            );
+            return true;
         },
     });
     _triggerPresenceSubscription = fields.Attr(null, {
@@ -86,8 +75,6 @@ export class Persona extends Record {
     country_id = fields.One("res.country");
     /** @type {string} */
     email;
-    /** @type {number} */
-    userId;
     /** @type {ImStatus} */
     im_status = fields.Attr(null, {
         onUpdate() {
@@ -107,7 +94,7 @@ export class Persona extends Record {
         compute() {
             const parts = [
                 "odoo-presence",
-                `${this.type === "partner" ? "res.partner" : "mail.guest"}_${this.id}`,
+                `mail.guest_${this.id}`,
             ];
             if (this.im_status_access_token) {
                 parts.push(this.im_status_access_token);
@@ -122,14 +109,9 @@ export class Persona extends Record {
     isAdmin = false;
     isInternalUser = false;
     write_date = fields.Datetime();
-    group_ids = fields.Many("res.groups", { inverse: "personas" });
 
     _computeDisplayName() {
         return this.name;
-    }
-
-    get emailWithoutDomain() {
-        return this.email.substring(0, this.email.lastIndexOf("@"));
     }
 
     get avatarUrl() {
@@ -137,27 +119,13 @@ export class Persona extends Record {
         if (!this.store.self.isInternalUser) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
-        if (this.type === "partner") {
-            return imageUrl("res.partner", this.id, "avatar_128", {
-                ...accessTokenParam,
-                unique: this.write_date,
-            });
+        if (this.id === -1) {
+            return TRANSPARENT_AVATAR;
         }
-        if (this.type === "guest") {
-            if (this.id === -1) {
-                return TRANSPARENT_AVATAR;
-            }
-            return imageUrl("mail.guest", this.id, "avatar_128", {
-                ...accessTokenParam,
-                unique: this.write_date,
-            });
-        }
-        if (this.userId) {
-            return imageUrl("res.users", this.userId, "avatar_128", {
-                unique: this.write_date,
-            });
-        }
-        return this.store.DEFAULT_AVATAR;
+        return imageUrl("mail.guest", this.id, "avatar_128", {
+            ...accessTokenParam,
+            unique: this.write_date,
+        });
     }
 
     searchChat() {
@@ -181,8 +149,8 @@ export class Persona extends Record {
     }
 
     _getActualModelName() {
-        return this.type === "partner" ? "res.partner" : "mail.guest";
+        return MailGuest._name;
     }
 }
 
-Persona.register();
+MailGuest.register();

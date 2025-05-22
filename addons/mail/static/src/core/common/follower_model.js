@@ -10,7 +10,7 @@ export class Follower extends Record {
     id;
     /** @type {boolean} */
     is_active;
-    partner_id = fields.One("Persona");
+    partner_id = fields.One("res.partner");
     subtype_ids = fields.Many("mail.message.subtype");
 
     /** @returns {boolean} */

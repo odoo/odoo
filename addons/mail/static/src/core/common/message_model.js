@@ -32,8 +32,8 @@ export class Message extends Record {
     }
 
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
-    author_id = fields.One("Persona");
-    author_guest_id = fields.One("Persona");
+    author_id = fields.One("res.partner");
+    author_guest_id = fields.One("mail.guest");
     get author() {
         return this.author_id || this.author_guest_id;
     }
@@ -111,7 +111,7 @@ export class Message extends Record {
         sort: (r1, r2) => r1.sequence - r2.sequence,
     });
     notification_ids = fields.Many("mail.notification", { inverse: "mail_message_id" });
-    partner_ids = fields.Many("Persona");
+    partner_ids = fields.Many("res.partner");
     subtype_id = fields.One("mail.message.subtype");
     thread = fields.One("Thread");
     threadAsNeedaction = fields.One("Thread", {
