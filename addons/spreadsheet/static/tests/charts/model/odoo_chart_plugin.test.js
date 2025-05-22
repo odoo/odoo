@@ -26,6 +26,38 @@ import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 const { toZone } = spreadsheet.helpers;
 
+const action = {
+    domain: [
+        ["date", ">=", "2022-01-01"],
+        ["date", "<", "2022-02-01"],
+        "&",
+        ["date", ">=", "2022-01-01"],
+        ["date", "<=", "2022-12-31"],
+    ],
+    name: "January 2022 / Probability",
+    res_model: "partner",
+    target: "current",
+    type: "ir.actions.act_window",
+    views: [
+        [false, "list"],
+        [false, "form"],
+    ],
+};
+
+const fakeActionService = {
+    doAction: async (request, options = {}) => {
+        if (request.type === "ir.actions.act_window") {
+            expect.step("do-action");
+            expect(request).toEqual(action);
+        }
+    },
+    loadAction(actionRequest) {
+        expect.step("load-action");
+        expect(actionRequest).toBe("test.my_action");
+        return action;
+    },
+};
+
 describe.current.tags("headless");
 defineSpreadsheetModels();
 defineSpreadsheetActions();
@@ -629,7 +661,7 @@ const cumulativeChartDefinition = {
     title: "Partners",
     dataSourceId: "42",
     id: "42",
-}
+};
 
 test("cumulative line chart with past data before domain period without specifying cumulated start", async () => {
     const { model } = await createSpreadsheetWithChart({
@@ -763,71 +795,15 @@ test("Odoo chart datasource display name has a default when the chart title is e
 });
 
 test("See records when clicking on a bar chart bar", async () => {
-    const action = {
-        domain: [
-            ["date", ">=", "2022-01-01"],
-            ["date", "<", "2022-02-01"],
-            "&",
-            ["date", ">=", "2022-01-01"],
-            ["date", "<=", "2022-12-31"],
-        ],
-        name: "January 2022 / Probability",
-        res_model: "partner",
-        target: "current",
-        type: "ir.actions.act_window",
-        views: [
-            [false, "list"],
-            [false, "form"],
-        ],
-    };
-    const fakeActionService = {
-        doAction: async (request, options = {}) => {
-            if (request.type === "ir.actions.act_window") {
-                expect.step("do-action");
-                expect(request).toEqual(action);
-            }
-        },
-        loadAction(actionRequest) {
-            expect.step("load-action");
-            expect(actionRequest).toBe("test.my_action");
-            return action;
-        },
-    };
     mockService("action", fakeActionService);
-    const serverData = getBasicServerData();
-    serverData.models.partner.records = [
-        { date: "2020-01-01", probability: 10 },
-        { date: "2021-01-01", probability: 2 },
-        { date: "2022-01-01", probability: 3 },
-        { date: "2022-03-01", probability: 4 },
-        { date: "2022-06-01", probability: 5 },
-    ];
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_bar",
-        serverData,
+        serverData: cumulativeDateServerData,
         definition: {
+            ...cumulativeChartDefinition,
             type: "odoo_bar",
-            metaData: {
-                groupBy: ["date"],
-                measure: "probability",
-                order: null,
-                resModel: "partner",
-            },
-            searchParams: {
-                comparison: null,
-                context: {},
-                domain: [
-                    ["date", ">=", "2022-01-01"],
-                    ["date", "<=", "2022-12-31"],
-                ],
-                groupBy: [],
-                orderBy: [],
-            },
             actionXmlId: "test.my_action",
             cumulative: true,
-            title: { text: "Partners" },
-            dataSourceId: "42",
-            id: "42",
         },
     });
     const sheetId = model.getters.getActiveSheetId();
@@ -842,63 +818,79 @@ test("See records when clicking on a bar chart bar", async () => {
     expect.verifySteps(["load-action", "do-action"]);
 });
 
+test("See records when clicking on a line chart point", async () => {
+    mockService("action", fakeActionService);
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_line",
+        serverData: cumulativeDateServerData,
+        definition: {
+            ...cumulativeChartDefinition,
+            actionXmlId: "test.my_action",
+            cumulative: true,
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect.verifySteps([]);
+
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [{ datasetIndex: 0, index: 0 }]);
+    await animationFrame();
+    expect.verifySteps(["load-action", "do-action"]);
+});
+
+test("Actions not triggered by trendline clicks", async () => {
+    mockService("action", fakeActionService);
+    const { model } = await createSpreadsheetWithChart({
+        type: "odoo_line",
+        serverData: cumulativeDateServerData,
+        definition: {
+            ...cumulativeChartDefinition,
+            type: "odoo_line",
+            actionXmlId: "test.my_action",
+            cumulative: true,
+            trend: "polynomial",
+        },
+    });
+
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    await waitForDataLoaded(model);
+    const runtime = model.getters.getChartRuntime(chartId);
+    expect.verifySteps([]);
+
+    const trendlineDatasetIndex = runtime.chartJsConfig.data.datasets.length;
+    const event = { type: "click", native: new Event("click") };
+    await runtime.chartJsConfig.options.onClick(event, [
+        { datasetIndex: trendlineDatasetIndex, index: 0 },
+    ]);
+    await animationFrame();
+    expect.verifySteps([]);
+});
+
 test("See records when clicking on a pie chart slice", async () => {
     const fakeActionService = {
         doAction: async (request, options = {}) => {
             if (request.type === "ir.actions.act_window") {
                 expect.step("do-action");
                 expect(request).toEqual({
-                    domain: [
-                        ["date", ">=", "2022-01-01"],
-                        ["date", "<", "2022-02-01"],
-                        "&",
-                        ["date", ">=", "2022-01-01"],
-                        ["date", "<=", "2022-12-31"],
-                    ],
+                    ...action,
                     name: "January 2022",
-                    res_model: "partner",
-                    target: "current",
-                    type: "ir.actions.act_window",
-                    views: [
-                        [false, "list"],
-                        [false, "form"],
-                    ],
                 });
             }
         },
     };
     mockService("action", fakeActionService);
-    const serverData = getBasicServerData();
-    serverData.models.partner.records = [
-        { date: "2020-01-01", probability: 10 },
-        { date: "2021-01-01", probability: 2 },
-        { date: "2022-01-01", probability: 3 },
-        { date: "2022-03-01", probability: 4 },
-        { date: "2022-06-01", probability: 5 },
-    ];
     const { model } = await createSpreadsheetWithChart({
         type: "odoo_pie",
-        serverData,
+        serverData: cumulativeDateServerData,
         definition: {
+            ...cumulativeChartDefinition,
             type: "odoo_pie",
-            metaData: {
-                groupBy: ["date"],
-                measure: "probability",
-                resModel: "partner",
-            },
-            searchParams: {
-                context: {},
-                domain: [
-                    ["date", ">=", "2022-01-01"],
-                    ["date", "<=", "2022-12-31"],
-                ],
-                groupBy: [],
-                orderBy: [],
-            },
+            actionXmlId: "test.my_action",
             cumulative: true,
-            title: { text: "Partners" },
-            dataSourceId: "42",
-            id: "42",
         },
     });
     const sheetId = model.getters.getActiveSheetId();
