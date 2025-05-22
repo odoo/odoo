@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, queryOne } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
@@ -9,6 +9,8 @@ import {
     waitForEndOfOperation,
 } from "../website_helpers";
 import { Plugin } from "@html_editor/plugin";
+import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
+import { setSelection } from "@html_editor/../tests/_helpers/selection";
 
 defineWebsiteModels();
 
@@ -97,5 +99,18 @@ describe("Popup options: popup in page before edit", () => {
         // Ensure that no mutations were registered in the history.
         // `addStep` return the created step, or false if there was no mutations
         expect(builder.getEditor().shared.history.addStep()).toBe(false);
+    });
+
+    test("editing s_popup, then closing it, then undo show it again", async () => {
+        await contains(".o_we_invisible_entry .fa-eye-slash").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        setSelection({ anchorNode: queryOne(":iframe .s_popup section"), anchorOffset: 0 });
+        insertText(builder.getEditor(), "Other content");
+        await contains(":iframe .s_popup div.js_close_popup").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(builder.getEditor().shared.history.canUndo()).toBe(true);
+        undo(builder.getEditor());
+        await animationFrame();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
     });
 });
