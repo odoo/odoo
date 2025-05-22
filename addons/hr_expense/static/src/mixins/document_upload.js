@@ -80,6 +80,7 @@ export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends 
 
         useBus(this.env.bus, "change_file_input", async (ev) => {
             this.fileInput.el.files = ev.detail.files;
+            this.uploadsProcessing++;
             await this.onChangeFileInput();
         });
 
