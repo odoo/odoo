@@ -39,6 +39,7 @@ class QuotationDocument(models.Model):
         string="Quotation Templates",
         comodel_name='sale.order.template',
         relation='header_footer_quotation_template_rel',
+        groups='sales_team.group_sale_salesman',
         check_company=True,
     )
     form_field_ids = fields.Many2many(

@@ -27,6 +27,7 @@ class QuotationDocumentController(Controller):
         sale_order_template = request.env['sale.order.template'].browse(
             int(sale_order_template_id)
         )
+        sale_order_template.check_access('read')
         company = sale_order_template.company_id if sale_order_template else request.env.company
         files = request.httprequest.files.getlist('ufile')
         result = {'success': _("All files uploaded")}

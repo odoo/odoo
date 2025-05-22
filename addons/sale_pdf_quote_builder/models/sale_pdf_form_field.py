@@ -35,10 +35,12 @@ class SalePdfFormField(models.Model):
              "Leave empty to be able to customized it in the quotation form."
     )
     product_document_ids = fields.Many2many(
-        string="Product Documents", comodel_name='product.document'
+        string="Product Documents", comodel_name='product.document',
+        groups='base.group_user',
     )
     quotation_document_ids = fields.Many2many(
-        string="Quotation Documents", comodel_name='quotation.document'
+        string="Quotation Documents", comodel_name='quotation.document',
+        groups='base.group_user',
     )
 
     _unique_name_per_doc_type = models.Constraint(

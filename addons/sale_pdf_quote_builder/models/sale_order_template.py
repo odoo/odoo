@@ -12,4 +12,5 @@ class SaleOrderTemplate(models.Model):
         comodel_name='quotation.document',
         relation='header_footer_quotation_template_rel',
         check_company=True,
+        groups='base.group_user',
     )
