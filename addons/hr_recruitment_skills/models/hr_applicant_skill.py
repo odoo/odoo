@@ -35,7 +35,7 @@ class HrApplicantSkill(models.Model):
     level_progress = fields.Integer(
         related='skill_level_id.level_progress')
 
-    __unique_skill = models.Constraint(
+    _unique_skill = models.Constraint(
         'unique (applicant_id, skill_id)',
         'Two levels for the same skill is not allowed',
     )
