@@ -134,3 +134,30 @@ export function getTextColorOrClass(node) {
     }
     return null;
 }
+
+/**
+ * Returns the visible color (foreground or background) from the given node
+ * or its ancestors, depending on the specified mode.
+ *
+ * @param {Element} element
+ * @param {string} mode 'color' or 'backgroundColor'
+ * @returns {string | null}
+ */
+export function getColor(element, mode) {
+    const targetEl = closestElement(
+        element,
+        (node) => node.isContentEditable && hasColor(node, mode)
+    );
+    if (!targetEl) {
+        return null;
+    }
+    const elStyle = getComputedStyle(targetEl);
+    const backgroundImage = elStyle.backgroundImage;
+    const hasGradient = isColorGradient(backgroundImage);
+    const hasTextGradientClass = targetEl.classList.contains("text-gradient");
+    if (mode === "color") {
+        return hasGradient && hasTextGradientClass ? backgroundImage : elStyle.color;
+    } else {
+        return hasGradient && !hasTextGradientClass ? backgroundImage : elStyle.backgroundColor;
+    }
+}
