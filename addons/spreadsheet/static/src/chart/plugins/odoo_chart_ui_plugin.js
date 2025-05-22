@@ -146,7 +146,12 @@ export class OdooChartUIPlugin extends OdooUIPlugin {
         const env = this.custom.env;
         return {
             onClick: async (event, items) => {
-                if (!items.length || !env || event.type !== "click") {
+                if (
+                    !items.length ||
+                    !env ||
+                    event.type !== "click" ||
+                    items[0].datasetIndex >= datasets.length
+                ) {
                     return;
                 }
                 event.native.preventDefault(); // Prevent other click actions
