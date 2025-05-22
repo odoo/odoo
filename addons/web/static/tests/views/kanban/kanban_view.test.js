@@ -9397,6 +9397,39 @@ test("progress bar recompute after filter selection (aggregates)", async () => {
     expect.verifySteps(["read_progress_bar", "web_read_group", "web_search_read"]);
 });
 
+test("progress bar with false aggregate value", async () => {
+    // false aggregate values happen in case of different currencies being used
+    // inside the same group
+    onRpc("web_read_group", ({ parent }) => {
+        const result = parent();
+        result.groups[0]["salary:sum"] = false;
+        return result;
+    });
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="salary"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_kanban_counter:first .o_animated_number").toHaveCount(0);
+    expect(".o_kanban_counter:last .o_animated_number").toHaveCount(1);
+
+    expect(".o_kanban_counter:first b").toHaveText("—");
+    expect(".o_kanban_counter:first b").toHaveAttribute(
+        "data-tooltip",
+        "Different currencies cannot be aggregated"
+    );
+});
+
 test("progress bar with aggregates: activate bars (grouped by boolean)", async () => {
     Partner._records = [
         { foo: "yop", bar: true, int_field: 1 },

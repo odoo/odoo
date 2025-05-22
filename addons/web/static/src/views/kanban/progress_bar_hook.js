@@ -133,21 +133,20 @@ class ProgressBarState {
         let value = 0;
         if (!this.activeBars[group.serverValue]) {
             value = group.count;
-            if (aggregateField) {
-                value =
-                    _findGroup(this._aggregateValues, group.groupByField, group.serverValue)[
-                        aggregateField.name
-                    ] || 0;
+            if (value && aggregateField) {
+                value = _findGroup(this._aggregateValues, group.groupByField, group.serverValue)[
+                    aggregateField.name
+                ];
             }
         } else {
             value = this.activeBars[group.serverValue].count;
-            if (aggregateField) {
+            if (value && aggregateField) {
                 value =
-                    (this.activeBars[group.serverValue]?.aggregates &&
-                        this.activeBars[group.serverValue]?.aggregates[aggregateField.name]) ||
-                    0;
+                    this.activeBars[group.serverValue]?.aggregates &&
+                    this.activeBars[group.serverValue]?.aggregates[aggregateField.name];
             }
         }
+        value ??= false;
         return { title, value };
     }
 
