@@ -15,7 +15,7 @@
                     Input device
                 </h5>
                 <div class="flex-grow-1"/>
-                <select name="inputDevice" class="form-select d-flex w-auto" t-on-change="onChangeSelectAudioInput">
+                <select name="inputDevice" class="form-select d-flex w-auto shadow-sm" t-on-change="onChangeSelectAudioInput">
                     <option value="">Browser default</option>
                     <t t-foreach="state.userDevices" t-as="device" t-key="device_index" device="device">
                         <option t-if="device.kind === 'audioinput'" t-att-selected="store.settings.audioInputDeviceId === device.deviceId" t-att-value="device.deviceId">

@@ -19,7 +19,7 @@
             <span t-if="props.action?.searchValueSuffix" class="o-action fw-bold" t-esc="props.searchValue"/>
             <span class="flex-grow-1"/>
             <div t-if="props.counter > 0">
-                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold" t-esc="props.counter"/>
+                <span t-attf-class="badge rounded-pill o-discuss-badge ms-3 me-1 fw-bold shadow-sm" t-esc="props.counter"/>
             </div>
         </div>
     </t>
@@ -28,7 +28,7 @@
         <Dialog size="'sm'" title.translate="New Channel">
             <div class="d-flex flex-column" t-on-keydown="onKeydown">
                 <span class="ms-1 text-uppercase text-muted o-xsmaller opacity-75"><i class="fa fa-hashtag"/> Channel name</span>
-                <input type="text" class="form-control lh-1" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
+                <input type="text" class="form-control lh-1 shadow-sm" t-att-class="{ 'is-invalid': state.isInvalid }" placeholder="Channel name" t-model="state.name" tabindex="1"/>
                 <div class="invalid-feedback">Channel must have a name.</div>
             </div>
             <t t-set-slot="footer">
