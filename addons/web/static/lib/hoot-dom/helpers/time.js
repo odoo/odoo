@@ -1,7 +1,5 @@
 /** @odoo-module */
 
-import { HootDomError } from "../hoot_dom_utils";
-
 /**
  * @typedef {{
  *  animationFrame?: boolean;
@@ -89,6 +87,10 @@ const now = () => (frozen ? 0 : $performanceNow()) + timeOffset;
  */
 const timeoutToId = (id) => ID_PREFIX.timeout + String(id);
 
+class HootTimingError extends Error {
+    name = "HootTimingError";
+}
+
 const ID_PREFIX = {
     animation: "a_",
     interval: "i_",
@@ -169,7 +171,7 @@ export async function advanceTime(ms, options) {
  * @returns {Promise<void>}
  */
 export function animationFrame() {
-    return new Promise((resolve) => requestAnimationFrame(() => delay().then(resolve)));
+    return new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
 }
 
 /**
@@ -351,7 +353,7 @@ export function runAllTimers(options) {
 export function setFrameRate(frameRate) {
     frameRate = parseNat(frameRate);
     if (frameRate < 1 || frameRate > 1000) {
-        throw new Error("frame rate must be an number between 1 and 1000");
+        throw new HootTimingError("frame rate must be an number between 1 and 1000");
     }
     frameDelay = 1000 / frameRate;
 }
@@ -379,7 +381,7 @@ export function tick() {
  * The promise automatically rejects after a given `timeout` (defaults to 5 seconds).
  *
  * @template T
- * @param {() => T} predicate
+ * @param {(last: boolean) => T} predicate
  * @param {WaitOptions} [options]
  * @returns {Promise<T>}
  * @example
@@ -388,24 +390,26 @@ export function tick() {
  *  const button = await waitUntil(() => queryOne("button:visible"));
  *  button.click();
  */
-export function waitUntil(predicate, options) {
+export async function waitUntil(predicate, options) {
+    await Promise.resolve();
+
     // Early check before running the loop
-    const result = predicate();
+    const result = predicate(false);
     if (result) {
-        return Promise.resolve().then(() => result);
+        return result;
     }
 
     const timeout = $floor(options?.timeout ?? 200);
+    const maxFrameCount = $ceil(timeout / frameDelay);
+    let frameCount = 0;
     let handle;
-    let timeoutId;
-    let running = true;
-
     return new Promise((resolve, reject) => {
         const runCheck = () => {
-            const result = predicate();
+            const isLast = ++frameCount >= maxFrameCount;
+            const result = predicate(isLast);
             if (result) {
                 resolve(result);
-            } else if (running) {
+            } else if (!isLast) {
                 handle = requestAnimationFrame(runCheck);
             } else {
                 let message =
@@ -413,15 +417,17 @@ export function waitUntil(predicate, options) {
                 if (typeof message === "function") {
                     message = message();
                 }
-                reject(new HootDomError(message.replace("%timeout%", String(timeout))));
+                if (message instanceof Error) {
+                    reject(message);
+                } else {
+                    reject(new HootTimingError(message.replace("%timeout%", String(timeout))));
+                }
             }
         };
 
         handle = requestAnimationFrame(runCheck);
-        timeoutId = setTimeout(() => (running = false), timeout);
     }).finally(() => {
         cancelAnimationFrame(handle);
-        clearTimeout(timeoutId);
     });
 }
 
