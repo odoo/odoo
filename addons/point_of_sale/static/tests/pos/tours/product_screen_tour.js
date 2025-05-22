@@ -707,7 +707,7 @@ registry.category("web_tour.tours").add("test_preset_timing", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
-            ProductScreen.selectPreset("Eat in", "Takeaway"),
+            ProductScreen.selectPreset("Dine in", "Takeaway"),
             TextInputPopup.inputText("John"),
             Dialog.confirm(),
             Chrome.selectPresetTimingSlotHour("12:00"),
@@ -721,6 +721,6 @@ registry.category("web_tour.tours").add("test_preset_timing", {
             TicketScreen.nthRowContains(1, "John"),
             TicketScreen.nthRowContains(1, "Takeaway", false),
             TicketScreen.nthRowContains(2, "002"),
-            TicketScreen.nthRowContains(2, "Eat in", false),
+            TicketScreen.nthRowContains(2, "Dine in", false),
         ].flat(),
 });
