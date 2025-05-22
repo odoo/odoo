@@ -43,7 +43,7 @@
             </t>
             <t t-if="mailbox.counter > 0" t-call="mail.discuss_badge">
                 <t t-set="counter" t-value="mailbox.counter"/>
-                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebar-badge ' + (store.discuss.isSidebarCompact ? 'position-absolute top-0 o-compact' : 'mx-1')"/>
+                <t t-set="badgeClass" t-value="'o-mail-DiscussSidebar-badge shadow-sm ' + (store.discuss.isSidebarCompact ? 'position-absolute top-0 o-compact' : 'mx-1')"/>
                 <t t-set="counterClass" t-value="(mailbox.id === 'starred' ? 'o-muted' : '')"/>
                 <t t-set="floating" t-value="store.discuss.isSidebarCompact"/>
             </t>
