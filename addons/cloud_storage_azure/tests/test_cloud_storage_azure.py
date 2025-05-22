@@ -7,7 +7,9 @@ from datetime import datetime, timezone, timedelta
 from requests import Response
 from unittest.mock import patch
 
+from odoo.addons.mail.tests.common import MockEmail
 from odoo.tests.common import TransactionCase
+from odoo.tests import Form
 from odoo.exceptions import ValidationError, UserError
 
 from ..utils.cloud_storage_azure_utils import UserDelegationKey
@@ -53,7 +55,7 @@ class TestCloudStorageAzureCommon(TransactionCase):
         CloudStorageAzureUserDelegationKeys.clear()
 
 
-class TestCloudStorageAzure(TestCloudStorageAzureCommon):
+class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
     def test_get_user_delegation_key_success(self):
         request_num = 0
 
@@ -161,6 +163,40 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon):
             attachment._generate_cloud_storage_upload_info()
             attachment._generate_cloud_storage_download_info()
 
+    def test_mail_composer_cloud_storage_attachment(self):
+        """Ensure cloud attachments are converted to links in outgoing emails."""
+
+        partner = self.env["res.partner"].create({"name": "Cloud Test Partner", "email": "cloud@test.com"})
+        cloud_attachment = self.env["ir.attachment"].create({
+            "name": "cloud_attachment.txt",
+            "type": "cloud_storage",
+            "url": "https://storage.googleapis.com/fakebucket/cloud_attachment.txt",
+            "res_model": "res.partner",
+            "res_id": partner.id,
+            "mimetype": "text/plain",
+        })
+
+        context = {
+            'default_model': 'res.partner',
+            'default_res_ids': [partner.id],
+            'default_composition_mode': 'comment',
+            'default_partner_ids': [partner.id],
+        }
+        composer = self.env['mail.compose.message'].with_context(context).create({
+            'body': "<p>Hello</p>",
+            'attachment_ids': [(4, cloud_attachment.id)],
+        })
+        composer_form = Form(composer)
+        composer_form.body = "<p>Hello</p>"
+        composer_form.attachment_ids.add(cloud_attachment)
+        composer = composer_form.save()
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
+        sent_mail = next((m for m in self._mails if 'cloud_attachment.txt' in m['body']), None)
+        self.assertIsNotNone(sent_mail)
+        self.assertIn(self.env['ir.qweb']._render('mail.mail_attachment_links', {'attachments': cloud_attachment}), sent_mail['body'])
+
     def test_uninstall_fail(self):
         with self.assertRaises(UserError, msg="Don't uninstall the module if there are Azure attachments in use"):
             attachment = self.env['ir.attachment'].create([{
@@ -181,3 +217,4 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon):
         self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_client_id'))
         self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_client_secret'))
         self.assertFalse(self.env['ir.config_parameter'].get_param('cloud_storage_azure_container_name'))
+
