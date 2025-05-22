@@ -1,6 +1,13 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, dblclick, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
+import {
+    manuallyDispatchProgrammaticEvent,
+    animationFrame,
+    dblclick,
+    queryAll,
+    queryFirst,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
@@ -37,6 +44,21 @@ test("double click on text", async () => {
     await dblclick(":iframe .text_class");
     await animationFrame();
     expect(".modal-content").toHaveCount(0);
+});
+
+test("image should not be draggable", async () => {
+    const { getEditor } = await setupWebsiteBuilder(
+        `<div><p>a</p><img class=a_nice_img src='${dummyBase64Img}'></div>`
+    );
+    const editor = getEditor();
+    const img = editor.editable.querySelector("img");
+
+    const dragdata = new DataTransfer();
+    const ev = await manuallyDispatchProgrammaticEvent(img, "dragstart", {
+        dataTransfer: dragdata,
+    });
+
+    expect(ev.defaultPrevented).toBe(true);
 });
 
 describe("Image format/optimize", () => {
