@@ -196,13 +196,13 @@ class PosOrder(models.Model):
                                                                                   p.pos_report_print_id)
         if gift_card_programs:
             gift_cards = self.env['loyalty.card'].search([('source_pos_order_id', '=', self.id),
-                                                          ('program_id', 'in', gift_card_programs.mapped('id'))])
+                                                          ('program_id', 'in', gift_card_programs.ids)])
             if gift_cards:
                 for program in gift_card_programs:
                     filtered_gift_cards = gift_cards.filtered(lambda gc: gc.program_id == program)
                     if filtered_gift_cards:
                         action_report = program.pos_report_print_id
-                        report = action_report._render_qweb_pdf(action_report.report_name, filtered_gift_cards.mapped('id'))
+                        report = action_report._render_qweb_pdf(action_report.report_name, filtered_gift_cards.ids)
                         filename = name + '.pdf'
                         gift_card_pdf = self.env['ir.attachment'].create({
                             'name': filename,
