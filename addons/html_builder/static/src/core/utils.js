@@ -471,19 +471,41 @@ export function useClickableBuilderComponent() {
                 callOperation(applyOperation.commit, {
                     operationParams: {
                         withLoadingEffect: withLoadingEffect,
+                        operationType: "commit",
                     },
                 });
             }
         },
         preview: () => {
-            callOperation(applyOperation.preview, {
-                operationParams: {
-                    cancellable: true,
-                    cancelPrevious: () => applyOperation.revert(),
+            callOperation(
+                (...args) => {
+                    if (comp.env.editor.shared.history.getIsPreviewing()) {
+                        return;
+                    }
+                    applyOperation.preview(...args);
                 },
-            });
+                {
+                    operationParams: {
+                        operationType: "preview",
+                        cancellable: true,
+                        cancelPrevious: (operationType) => {
+                            if (
+                                operationType === "preview" &&
+                                comp.env.editor.shared.history.getIsPreviewing()
+                            ) {
+                                // Avoid previewing if it is already previewed.
+                                return;
+                            }
+                            applyOperation.revert();
+                        },
+                    },
+                }
+            );
         },
         revert: () => {
+            if (!comp.env.editor.shared.history.getIsPreviewing()) {
+                return;
+            }
             // The `next` will cancel the previous operation, which will revert
             // the operation in case of a preview.
             comp.env.editor.shared.operation.next();

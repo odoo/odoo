@@ -15,6 +15,8 @@ import { Mutex } from "@web/core/utils/concurrency";
  *   appear on the editable during the operation
  * @property {Number} [loadingEffectDelay=500] the delay after which the
  *   spinner should appear
+ * @property {'preview'|'commit'|'revert'} [operationType] the type of operation
+ *   to apply
  */
 
 export class Operation {
@@ -40,17 +42,18 @@ export class Operation {
             cancelTime = 50,
             withLoadingEffect = true,
             loadingEffectDelay = 500,
+            operationType,
         } = {}
     ) {
-        this.cancelPrevious?.();
+        this.cancelPrevious?.(operationType);
         let isCancel = false;
         let cancelResolve;
         this.cancelPrevious =
             cancellable &&
-            (() => {
+            ((operationType) => {
                 this.cancelPrevious = null;
                 isCancel = true;
-                cancelPrevious?.();
+                cancelPrevious?.(operationType);
                 cancelResolve?.();
             });
 
