@@ -2,6 +2,7 @@ from ast import literal_eval
 
 from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Domain
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import groupby
 from collections import defaultdict
@@ -972,7 +973,49 @@ class AccountJournal(models.Model):
             if journal.type == 'bank' and not journal.bank_account_id and vals.get('bank_acc_number'):
                 journal.set_bank_account(vals.get('bank_acc_number'), vals.get('bank_id'))
 
+        journals.filtered(lambda journal: journal.type == 'bank')._setup_fees_reconciliation_model()
+
         return journals
+
+    def _setup_fees_reconciliation_model(self):
+        """
+            Create a reconciliation model for bank fees for each new bank journal
+            As the name must be unique (while the journal name does not have to), we add a number to it
+        """
+        reco_model_values = []
+        reco_names = {
+            company.id: set(model_names)
+            for (company, model_names)
+            in self.env['account.reconcile.model']._read_group(
+                Domain.OR([('name', 'like', f'Fees ({name})%')] for name in self.mapped('name')),
+                ['company_id'],
+                ['name:array_agg'],
+            )
+        }
+        for journal in self:
+            base_model_name = _('Fees (%s)', journal.name)
+            new_model_name = ''
+            if base_model_name not in reco_names.get(journal.company_id.id, {}):
+                reco_names.setdefault(journal.company_id.id, set()).add(base_model_name)
+                new_model_name = base_model_name
+            else:
+                for num in range(2, 100):
+                    new_model_name = f'{base_model_name} {num}'
+                    if new_model_name not in reco_names.get(journal.company_id.id, {}):
+                        reco_names.setdefault(journal.company_id.id, set()).add(base_model_name)
+                        break
+            if not new_model_name:
+                # Could not manage to find a name that would stay unique, don't create the reconciliation model
+                break
+            reco_model_values.append({
+                'xml_id': f'account.account_reco_model_fee_{journal.id}',
+                'values': {
+                    'company_id': journal.company_id.id,
+                    'match_journal_ids': journal.ids,
+                    'name': new_model_name,
+                },
+            })
+        self.env['account.reconcile.model']._load_records(reco_model_values)
 
     def set_bank_account(self, acc_number, bank_id=None):
         """ Create a res.partner.bank (if not exists) and set it as value of the field bank_account_id """
