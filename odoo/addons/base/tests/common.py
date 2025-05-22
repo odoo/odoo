@@ -427,7 +427,7 @@ class MockSmtplibCase:
         self.testing_smtp_session = TestingSMTPSession()
 
         IrMailServer = self.env['ir.mail_server']
-        connect_origin = type(IrMailServer).connect
+        connect_origin = type(IrMailServer)._connect__
         find_mail_server_origin = type(IrMailServer)._find_mail_server
 
         # custom mock to avoid losing context
@@ -444,7 +444,7 @@ class MockSmtplibCase:
         with patch('smtplib.SMTP_SSL', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch('smtplib.SMTP', side_effect=lambda *args, **kwargs: self.testing_smtp_session), \
              patch.object(type(IrMailServer), '_disable_send', lambda _: False), \
-             patch.object(type(IrMailServer), 'connect', mock_function(connect_origin)) as connect_mocked, \
+             patch.object(type(IrMailServer), '_connect__', mock_function(connect_origin)) as connect_mocked, \
              patch.object(type(IrMailServer), '_find_mail_server', mock_function(find_mail_server_origin)) as find_mail_server_mocked:
             self.connect_mocked = connect_mocked.mock
             self.find_mail_server_mocked = find_mail_server_mocked.mock
@@ -453,7 +453,7 @@ class MockSmtplibCase:
     def _build_email(self, mail_from, return_path=None, **kwargs):
         headers = {'Return-Path': return_path} if return_path else {}
         headers.update(**kwargs.pop('headers', {}))
-        return self.env['ir.mail_server'].build_email(
+        return self.env['ir.mail_server']._build_email__(
             mail_from,
             kwargs.pop('email_to', 'dest@example-é.com'),
             kwargs.pop('subject', 'subject'),

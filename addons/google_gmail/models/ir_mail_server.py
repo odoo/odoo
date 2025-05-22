@@ -69,11 +69,11 @@ class IrMail_Server(models.Model):
                     'Please fill the "Username" field with your Gmail username (your email address). '
                     'This should be the same account as the one used for the Gmail OAuthentication Token.'))
 
-    def _smtp_login(self, connection, smtp_user, smtp_password):
+    def _smtp_login__(self, connection, smtp_user, smtp_password):  # noqa: PLW3201
         if len(self) == 1 and self.smtp_authentication == 'gmail':
             auth_string = self._generate_oauth2_string(smtp_user, self.google_gmail_refresh_token)
             oauth_param = base64.b64encode(auth_string.encode()).decode()
             connection.ehlo()
             connection.docmd('AUTH', f'XOAUTH2 {oauth_param}')
         else:
-            super()._smtp_login(connection, smtp_user, smtp_password)
+            super()._smtp_login__(connection, smtp_user, smtp_password)

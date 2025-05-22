@@ -433,7 +433,7 @@ class TestMailMail(MailCommon):
         managed and stored at mail and notification level. """
         mail, notification = self.test_mail, self.test_notification
 
-        # MailServer.build_email(): invalid from (missing)
+        # MailServer._build_email__(): invalid from (missing)
         for default_from in [False, '']:
             self.mail_alias_domain.default_from = default_from
             self._reset_data()
@@ -451,7 +451,7 @@ class TestMailMail(MailCommon):
             self.assertEqual(notification.failure_type, 'mail_from_missing')
             self.assertEqual(notification.notification_status, 'exception')
 
-        # MailServer.send_email(): _prepare_email_message: unexpected ASCII / Malformed 'Return-Path' or 'From' address
+        # MailServer.send_email(): _prepare_email_message__: unexpected ASCII / Malformed 'Return-Path' or 'From' address
         # Force bounce alias to void, will force usage of email_from
         self.mail_alias_domain.bounce_alias = False
         self.env.company.invalidate_recordset(fnames={'bounce_email', 'bounce_formatted'})
@@ -493,7 +493,7 @@ class TestMailMail(MailCommon):
                     self.assertEqual(notification.failure_type, False, 'Mail: missing email_to: notification is wrongly set as sent')
                     self.assertEqual(notification.notification_status, 'sent', 'Mail: missing email_to: notification is wrongly set as sent')
 
-        # MailServer.send_email(): _prepare_email_message: invalid To
+        # MailServer.send_email(): _prepare_email_message__: invalid To
         for email_to, failure_type in zip(
             self.emails_invalid,
             ['mail_email_missing', 'mail_email_missing']
@@ -510,7 +510,7 @@ class TestMailMail(MailCommon):
                 self.assertEqual(notification.failure_type, failure_type, 'Mail: invalid email_to: missing instead of invalid')
                 self.assertEqual(notification.notification_status, 'exception')
 
-        # MailServer.send_email(): _prepare_email_message: invalid To (ascii)
+        # MailServer.send_email(): _prepare_email_message__: invalid To (ascii)
         for email_to in self.emails_invalid_ascii:
             with self.subTest(email_to=email_to):
                 self._reset_data()
@@ -524,7 +524,7 @@ class TestMailMail(MailCommon):
                 self.assertEqual(notification.failure_type, 'mail_email_invalid')
                 self.assertEqual(notification.notification_status, 'exception')
 
-        # MailServer.send_email(): _prepare_email_message: ok To (ascii or just ok)
+        # MailServer.send_email(): _prepare_email_message__: ok To (ascii or just ok)
         for email_to in self.emails_valid:
             with self.subTest(email_to=email_to):
                 self._reset_data()

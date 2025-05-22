@@ -32,7 +32,7 @@ class FetchmailServer(models.Model):
             self.google_gmail_access_token_expiration = False
             super(FetchmailServer, self).onchange_server_type()
 
-    def _imap_login(self, connection):
+    def _imap_login__(self, connection):  # noqa: PLW3201
         """Authenticate the IMAP connection.
 
         If the mail server is Gmail, we use the OAuth2 authentication protocol.
@@ -43,7 +43,7 @@ class FetchmailServer(models.Model):
             connection.authenticate('XOAUTH2', lambda x: auth_string)
             connection.select('INBOX')
         else:
-            super(FetchmailServer, self)._imap_login(connection)
+            super()._imap_login__(connection)
 
     def _get_connection_type(self):
         """Return which connection must be used for this mail server (IMAP or POP).

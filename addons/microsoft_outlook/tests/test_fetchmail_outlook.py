@@ -11,7 +11,7 @@ from odoo.tests.common import TransactionCase
 
 class TestFetchmailOutlook(TransactionCase):
 
-    @patch('odoo.addons.mail.models.fetchmail.IMAP4_SSL')
+    @patch('odoo.addons.mail.models.fetchmail.OdooIMAP4_SSL')
     def test_connect(self, mock_imap):
         """Test that the connect method will use the right
         authentication method with the right arguments.
@@ -29,7 +29,7 @@ class TestFetchmailOutlook(TransactionCase):
             'is_ssl': True,
         })
 
-        mail_server.connect()
+        mail_server._connect__()
 
         mock_connection.authenticate.assert_called_once_with('XOAUTH2', ANY)
         args = mock_connection.authenticate.call_args[0]

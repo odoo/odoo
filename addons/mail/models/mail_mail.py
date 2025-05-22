@@ -368,7 +368,7 @@ class MailMail(models.Model):
         :param mail_server: <ir.mail_server> mail server that will be used to send the mails,
           False if it is the default one
         :param dict doc_to_followers: see ``Followers._get_mail_doc_to_followers()``
-        :returns: list of dicts used in IrMailServer.build_email()
+        :returns: list of dicts used in IrMailServer._build_email__()
         :rtype: list[dict]
         """
         self.ensure_one()
@@ -595,7 +595,7 @@ class MailMail(models.Model):
         for mail_server_id, alias_domain_id, smtp_from, batch_ids in self._split_by_mail_configuration():
             smtp_session = None
             try:
-                smtp_session = self.env['ir.mail_server'].connect(mail_server_id=mail_server_id, smtp_from=smtp_from)
+                smtp_session = self.env['ir.mail_server']._connect__(mail_server_id=mail_server_id, smtp_from=smtp_from)
             except Exception as exc:
                 if raise_exception:
                     # To be consistent and backward compatible with mail_mail.send() raised
@@ -716,7 +716,7 @@ class MailMail(models.Model):
                         )
                     else:
                         SendIrMailServer = IrMailServer.with_context(send_validated_to=email_to_normalized)
-                    msg = SendIrMailServer.build_email(
+                    msg = SendIrMailServer._build_email__(
                         email_from=email_from,
                         email_to=email['email_to'],
                         subject=email['subject'],
