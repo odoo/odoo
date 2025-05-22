@@ -62,6 +62,10 @@ class StockMove(models.Model):
         'Manual Consumption', compute='_compute_manual_consumption', store=True, readonly=False,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
              "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.")
+    expected_qty = fields.Float(
+        'To Consume', compute='_compute_expected_qty',
+        help="The quantity the given manufacturing order is supposed to consume of this component."
+             "Always 0.0 if the order has a bill of materials and this component is not a part of it.")
 
     @api.depends('product_id.bom_ids', 'product_id.bom_ids.product_uom_id')
     def _compute_allowed_uom_ids(self):
@@ -208,6 +212,15 @@ class StockMove(models.Model):
                     and not move.raw_material_production_id.picking_type_id.use_create_components_lots:
                 move.display_import_lot = False
                 move.display_assign_serial = False
+
+    @api.depends('bom_line_id', 'product_uom_qty', 'raw_material_production_id.bom_id',
+                 'raw_material_production_id.product_qty', 'raw_material_production_id.qty_producing')
+    def _compute_expected_qty(self):
+        for move in self:
+            if (mo := move.raw_material_production_id) and not (mo.bom_id and not move.bom_line_id):
+                move.expected_qty = move.product_uom_qty * mo.qty_producing / mo.product_qty
+            else:
+                move.expected_qty = 0.0
 
     @api.onchange('product_uom_qty', 'product_uom')
     def _onchange_product_uom_qty(self):

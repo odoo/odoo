@@ -1655,60 +1655,22 @@ class MrpProduction(models.Model):
         })
         self.is_planned = False
 
-    def _get_consumption_issues(self):
-        """Compare the quantity consumed of the components, the expected quantity
-        on the BoM and the consumption parameter on the order.
-
-        :return: list of tuples (order_id, product_id, consumed_qty, expected_qty) where the
-            consumption isn't honored. order_id and product_id are recordset of mrp.production
-            and product.product respectively
-        :rtype: list
-        """
-        issues = []
+    def _get_inconsistent_moves(self):
+        issues = self.env['stock.move']
         if self.env.context.get('skip_consumption', False):
             return issues
         for order in self:
-            if order.consumption == 'flexible' or not order.bom_id or not order.bom_id.bom_line_ids:
+            if order.consumption == 'flexible':
                 continue
-            expected_move_values = order._get_moves_raw_values()
-            expected_qty_by_product = defaultdict(float)
-            for move_values in expected_move_values:
-                move_product = self.env['product.product'].browse(move_values['product_id'])
-                move_uom = self.env['uom.uom'].browse(move_values['product_uom'])
-                move_product_qty = move_uom._compute_quantity(move_values['product_uom_qty'], move_product.uom_id)
-                expected_qty_by_product[move_product] += move_product_qty * order.qty_producing / order.product_qty
-
-            done_qty_by_product = defaultdict(float)
             for move in order.move_raw_ids:
-                quantity = move.product_uom._compute_quantity(move._get_picked_quantity(), move.product_id.uom_id)
-                # extra lines with non-zero qty picked
-                if move.product_id not in expected_qty_by_product and move.picked and not move.product_id.uom_id.is_zero(quantity):
-                    issues.append((order, move.product_id, quantity, 0.0))
-                    continue
-                done_qty_by_product[move.product_id] += quantity if move.picked else 0.0
-
-            # origin lines from bom with different qty
-            for product, qty_to_consume in expected_qty_by_product.items():
-                quantity = done_qty_by_product.get(product, 0.0)
-                if product.uom_id.compare(qty_to_consume, quantity) != 0:
-                    issues.append((order, product, quantity, qty_to_consume))
-
+                if move.product_uom.compare(move.quantity, move.expected_qty):
+                    issues |= move
         return issues
 
-    def _action_generate_consumption_wizard(self, consumption_issues):
+    def _action_generate_consumption_wizard(self, inconsistent_moves):
         ctx = self.env.context.copy()
-        lines = []
-        for order, product_id, consumed_qty, expected_qty in consumption_issues:
-            lines.append((0, 0, {
-                'mrp_production_id': order.id,
-                'product_id': product_id.id,
-                'consumption': order.consumption,
-                'product_uom_id': product_id.uom_id.id,
-                'product_consumed_qty_uom': consumed_qty,
-                'product_expected_qty_uom': expected_qty
-            }))
         ctx.update({'default_mrp_production_ids': self.ids,
-                    'default_mrp_consumption_warning_line_ids': lines,
+                    'default_inconsistent_move_ids': inconsistent_moves.ids,
                     'form_view_ref': False})
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_mrp_consumption_warning")
         action['context'] = ctx
@@ -2252,9 +2214,9 @@ class MrpProduction(models.Model):
         # Produce by-products also for not auto productions.
         (self - productions_auto)._mark_byproducts_as_produced()
 
-        consumption_issues = self._get_consumption_issues()
-        if consumption_issues:
-            return self._action_generate_consumption_wizard(consumption_issues)
+        inconsistent_moves = self._get_inconsistent_moves()
+        if inconsistent_moves:
+            return self._action_generate_consumption_wizard(inconsistent_moves)
 
         quantity_issues = self._get_quantity_produced_issues()
         if quantity_issues:

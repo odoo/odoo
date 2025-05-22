@@ -136,6 +136,7 @@ class TestMrpStockReports(TestReportsCommon):
             'product_uom_id': product_apple_pie.uom_id.id,
             'product_qty': 1.0,
             'type': 'normal',
+            'consumption': 'flexible',
             'bom_line_ids': [
                 (0, 0, {'product_id': product_apple.id, 'product_qty': 5}),
             ],
