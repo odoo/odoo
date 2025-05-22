@@ -163,8 +163,7 @@ class HrLeaveType(models.Model):
     def _check_overlapping_public_holidays(self):
         # checking for the current user's company too
         companies = self.company_id | self.env.company
-        public_holidays = self.env['resource.calendar.leaves'].search([
-            ('resource_id', '=', False),
+        public_holidays = self.env['hr.leave.public.holiday'].search([
             ('company_id', 'in', companies.ids),
         ])
 
