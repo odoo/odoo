@@ -23,7 +23,7 @@ class ChatbotMessage(models.Model):
     user_raw_script_answer_id = fields.Integer(help="Id of the script answer. Useful for statistics when answer is deleted.")
     user_raw_answer = fields.Html(string="User's raw answer")
 
-    __unique_mail_message_id = models.Constraint(
+    _unique_mail_message_id = models.Constraint(
         'unique (mail_message_id)',
         'A mail.message can only be linked to a single chatbot message',
     )
