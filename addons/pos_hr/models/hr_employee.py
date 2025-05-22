@@ -31,7 +31,7 @@ class HrEmployee(models.Model):
         fields = self._load_pos_data_fields(data['pos.config'][0]['id'])
 
         employees = self.search(domain)
-        manager_ids = employees.filtered(lambda emp: data['pos.config'][0]['group_pos_manager_id'] in emp.user_id.groups_id.ids).mapped('id')
+        manager_ids = employees.filtered(lambda emp: data['pos.config'][0]['group_pos_manager_id'] in emp.user_id.groups_id.ids).ids
 
         employees_barcode_pin = employees.get_barcodes_and_pin_hashed()
         bp_per_employee_id = {bp_e['id']: bp_e for bp_e in employees_barcode_pin}
