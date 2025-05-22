@@ -310,14 +310,14 @@ class Im_LivechatChannel(models.Model):
         :rtype : res.users
         """
         self.ensure_one()
+        # FIXME: remove inactive call sessions so operators no longer in call are available
+        # sudo: required to use garbage collecting function.
+        self.env["discuss.channel.rtc.session"].sudo()._gc_inactive_sessions()
         users = users if users is not None else self.available_operator_ids
         if not users:
             return self.env["res.users"]
         if expertises is None:
             expertises = self.env["im_livechat.expertise"]
-        # FIXME: remove inactive call sessions so operators no longer in call are available
-        # sudo: required to use garbage collecting function.
-        self.env["discuss.channel.rtc.session"].sudo()._gc_inactive_sessions()
         self.env.cr.execute("""
             WITH operator_rtc_session AS (
                 SELECT COUNT(DISTINCT s.id) as nbr, member.partner_id as partner_id
