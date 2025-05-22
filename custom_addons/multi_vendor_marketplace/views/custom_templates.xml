@@ -447,7 +447,7 @@
                     top: 0;
                     left: 0;
                     height: 100dvh;
-                    width: 220px;
+                    width: 280px; /* Increased from 220px to 280px */
                     background: #fff;
                     box-shadow: 2px 0 16px rgba(0,0,0,0.08);
                     z-index: 2000;
@@ -466,7 +466,7 @@
                     display: flex;
                     flex-direction: column;
                     height: 100dvh;
-                    padding: 24px 12px 20px 12px;
+                    padding: 24px 16px 20px 16px; /* Increased horizontal padding from 12px to 16px */
                 }
                 .catalog-sidebar__header {
                     display: flex;
@@ -484,10 +484,18 @@
                 .catalog-sidebar__categories .o_categories_collapse_title {
                     display: none !important;
                 }
+                .catalog-sidebar__categories a {
+                    font-size: 15px; /* Added to make text slightly smaller but still readable */
+                    padding: 8px 6px; /* Added padding to improve readability */
+                }
+                .catalog-sidebar__categories .list-group-item {
+                    padding-left: 6px; /* Reduce left padding to maximize text space */
+                    padding-right: 6px; /* Reduce right padding to maximize text space */
+                }
                 @media (max-width: 600px) {
                     .catalog-sidebar {
-                        width: 45vw;
-                        min-width: 0;
+                        width: 65vw; /* Increased from 45vw to 65vw for mobile */
+                        min-width: 260px; /* Added to ensure minimum width even on small screens */
                     }
                 }
                 body.sidebar-open {
