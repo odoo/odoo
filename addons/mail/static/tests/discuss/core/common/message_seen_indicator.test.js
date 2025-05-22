@@ -48,7 +48,7 @@ test("rendering when just one has received the message", async () => {
     await contains(".o-mail-MessageSeenIndicator");
     await contains(".o-mail-MessageSeenIndicator[title='Sent']");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 1 });
-    await contains(".o-mail-MessageSeenIndicator.text-primary", { count: 0 });
+    await contains(".o-mail-MessageSeenIndicator.o-hasEveryoneSeen", { count: 0 });
 });
 
 test("rendering when everyone have received the message", async () => {
@@ -80,7 +80,7 @@ test("rendering when everyone have received the message", async () => {
     await contains(".o-mail-MessageSeenIndicator");
     await contains(".o-mail-MessageSeenIndicator[title='Sent']");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 1 });
-    await contains(".o-mail-MessageSeenIndicator.text-primary", { count: 0 });
+    await contains(".o-mail-MessageSeenIndicator.o-hasEveryoneSeen", { count: 0 });
 });
 
 test("rendering when just one has seen the message", async () => {
@@ -119,7 +119,7 @@ test("rendering when just one has seen the message", async () => {
     await contains(".o-mail-MessageSeenIndicator");
     await contains(".o-mail-MessageSeenIndicator[title='Seen by Demo User']");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
-    await contains(".o-mail-MessageSeenIndicator.text-primary", { count: 0 });
+    await contains(".o-mail-MessageSeenIndicator.o-hasEveryoneSeen", { count: 0 });
 });
 
 test("rendering when just one has seen & received the message", async () => {
@@ -154,7 +154,7 @@ test("rendering when just one has seen & received the message", async () => {
     await contains(".o-mail-MessageSeenIndicator");
     await contains(".o-mail-MessageSeenIndicator[title='Seen by Demo User']");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
-    await contains(".o-mail-MessageSeenIndicator.text-primary", { count: 0 });
+    await contains(".o-mail-MessageSeenIndicator.o-hasEveryoneSeen", { count: 0 });
 });
 
 test("rendering when just everyone has seen the message", async () => {
@@ -186,7 +186,7 @@ test("rendering when just everyone has seen the message", async () => {
     await contains(".o-mail-MessageSeenIndicator");
     await contains(".o-mail-MessageSeenIndicator[title='Seen by everyone']");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
-    await contains(".o-mail-MessageSeenIndicator.text-primary", { count: 1 });
+    await contains(".o-mail-MessageSeenIndicator.o-hasEveryoneSeen", { count: 1 });
 });
 
 test("'channel_fetch' notification received is correctly handled", async () => {
@@ -436,7 +436,7 @@ test("all seen indicator in chat displayed only once (chat created by correspond
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 2 });
-    await contains(".o-mail-MessageSeenIndicator.text-primary .fa-check", { count: 2 });
+    await contains(".o-mail-MessageSeenIndicator.o-hasEveryoneSeen .fa-check", { count: 2 });
 });
 
 test("no seen indicator in 'channel' channels (with is_typing)", async () => {

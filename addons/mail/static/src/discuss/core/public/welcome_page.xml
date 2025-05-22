@@ -10,7 +10,7 @@
         <h2 class="m-5" t-esc="store.companyName"/>
         <div class="d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
             <div t-if="this.store.discuss_public_thread.default_display_mode === 'video_full_screen'" class="position-relative d-flex justify-content-center" t-ref="root">
-                <video class="shadow rounded bg-dark" t-attf-height="{{ui.isSmall ? 240 : 480}}" t-attf-width="{{ui.isSmall ? 320 : 640}}" autoplay="" t-ref="video"/>
+                <video class="shadow rounded-3 bg-dark" t-attf-height="{{ui.isSmall ? 240 : 480}}" t-attf-width="{{ui.isSmall ? 320 : 640}}" autoplay="" t-ref="video"/>
                 <p t-if="hasRtcSupport and !state.videoStream" class="position-absolute bottom-50 text-light">
                     Camera is off
                 </p>

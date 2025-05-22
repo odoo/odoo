@@ -19,7 +19,7 @@
     <t t-name="mail.DiscussSidebarCallParticipants.main">
         <div class="o-mail-DiscussSidebarCallParticipants d-flex py-1 bg-inherit" t-ref="root" t-att-class="{
             'justify-content-center': compact,
-            'ps-4 pe-2': props.compact === undefined and !compact,
+            'ps-3 pe-2': props.compact === undefined and !compact,
             'px-2': props.compact === false,
             'rounded-3': props.compact === undefined,
             'opacity-75': props.thread.notEq(rtc.channel) and compact,
