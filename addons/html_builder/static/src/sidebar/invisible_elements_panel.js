@@ -81,31 +81,22 @@ export class InvisibleElementsPanel extends Component {
     }
 
     toggleElementVisibility(invisibleEntry) {
-        const toggleVisibility = (snippetEl) => {
-            const show = this.shared.visibility.toggleTargetVisibility(snippetEl);
-            invisibleEntry.isVisible = show;
-
-            this.shared.disableSnippets.disableUndroppableSnippets();
-            if (show) {
-                this.shared["builderOptions"].updateContainers(snippetEl);
-            } else {
-                this.shared["builderOptions"].deactivateContainers();
-            }
-        };
-
-        // When toggling the visibility of an element to "Hide", also toggle all
-        // its descendants.
+        const oldTarget = this.shared.builderOptions.getTarget();
         if (invisibleEntry.isVisible) {
-            invisibleEntry.children.forEach((child) => {
-                if (child.isVisible) {
-                    this.toggleElementVisibility(child);
-                }
-            });
-        } else if (invisibleEntry.parentEl && !invisibleEntry.parentEl.isVisible) {
-            // When toggling the visibility of an element to "Show", also toggle
-            // all its parents.
-            this.toggleElementVisibility(invisibleEntry.parentEl);
+            invisibleEntry.isVisible = false;
+            this.shared.visibility.toggleTargetVisibility(invisibleEntry.snippetEl, false);
+            if (invisibleEntry.snippetEl.contains(oldTarget)) {
+                this.shared.builderOptions.deactivateContainers();
+            }
+        } else {
+            for (let entry = invisibleEntry; entry; entry = entry.parentEl) {
+                entry.isVisible = true;
+            }
+            this.env.editor.resources["reveal_target_handlers"].forEach((handler) =>
+                handler({ oldTarget, newTarget: invisibleEntry.snippetEl })
+            );
+            this.shared.builderOptions.updateContainers(invisibleEntry.snippetEl);
         }
-        toggleVisibility(invisibleEntry.snippetEl);
+        this.shared.disableSnippets.disableUndroppableSnippets();
     }
 }

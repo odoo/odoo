@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime } from "@odoo/hoot-dom";
+import { advanceTime, animationFrame, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     addPlugin,
@@ -92,5 +92,19 @@ describe("Popup options: popup in page before edit", () => {
         expect(":iframe .s_popup").not.toBeVisible();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
         expect(builder.getEditor().shared.history.addStep()).toBe(false);
+    });
+
+    test("editing s_popup, then closing it, then undo show it again", async () => {
+        await contains(".o_we_invisible_entry .fa-eye-slash").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        await contains(":iframe .s_popup section").focus();
+        (await waitFor(":iframe .s_popup section")).textContent = "Other content";
+        builder.getEditor().shared.history.addStep();
+        await contains(":iframe .s_popup div.js_close_popup").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
+        expect(builder.getEditor().shared.history.canUndo()).toBe(true);
+        builder.getEditor().shared.history.undo();
+        await animationFrame();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
     });
 });

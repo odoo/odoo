@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { isMobileView } from "@html_builder/utils/utils";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
@@ -15,6 +16,7 @@ export class VisibilityPlugin extends Plugin {
         on_mobile_preview_clicked: withSequence(10, this.onMobilePreviewClicked.bind(this)),
         system_attributes: ["data-invisible"],
         system_classes: ["o_snippet_override_invisible"],
+        reveal_target_handlers: ({ newTarget }) => newTarget && this.ensureTargetVisible(newTarget),
     };
 
     setup() {
@@ -34,6 +36,17 @@ export class VisibilityPlugin extends Plugin {
                     invisibleEl.removeAttribute("data-invisible");
                 }
             });
+    }
+
+    ensureTargetVisible(target) {
+        let updated = false;
+        while ((target = closestElement(target, "[data-invisible='1']"))) {
+            updated = true;
+            this.toggleTargetVisibility(target, true);
+        }
+        if (updated) {
+            this.config.updateInvisibleElementsPanel();
+        }
     }
 
     cleanForSaveVisibility(editingEl) {
