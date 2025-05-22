@@ -53,6 +53,9 @@
     'demo': [
         'data/hr_demo.xml',
     ],
+    'other_files': [
+        'data/scenarios/hr_scenario.xml',
+    ],
     'application': True,
     'assets': {
         'web._assets_primary_variables': [

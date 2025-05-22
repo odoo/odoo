@@ -34,6 +34,9 @@ actions(Check in/Check out) performed by them.
     'demo': [
         'data/hr_attendance_demo.xml'
     ],
+    'other_files': [
+        'data/scenarios/hr_attendance_scenario.xml',
+    ],
     'application': True,
     'assets': {
         'web.assets_backend': [

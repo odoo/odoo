@@ -47,6 +47,9 @@
     'demo': [
         'data/hr_recruitment_demo.xml',
     ],
+    'other_files': [
+        'data/scenarios/hr_recruitment_scenario.xml',
+    ],
     'application': True,
     "uninstall_hook": "uninstall_hook",
     'assets': {

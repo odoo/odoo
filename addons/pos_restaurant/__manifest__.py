@@ -31,6 +31,14 @@ This module adds several features to the Point of Sale that are specific to rest
     'demo': [
         'data/demo_data.xml',
     ],
+    'other_files': [
+        'data/scenarios/bar_category_data.xml',
+        'data/scenarios/bar_demo_data.xml',
+        'data/scenarios/restaurant_category_data.xml',
+        'data/scenarios/restaurant_demo_data.xml',
+        'data/scenarios/restaurant_demo_session.xml',
+        'data/scenarios/restaurant_floor.xml',
+    ],
     'application': True,
     'post_init_hook': '_auto_install_pos_urban_piper_with_demo',
     'assets': {

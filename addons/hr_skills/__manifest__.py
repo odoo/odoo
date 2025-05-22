@@ -39,6 +39,9 @@ This module introduces skills and resume management for employees.
         'data/hr_employee_skill_demo.xml',
         'data/hr.resume.line.csv',
     ],
+    'other_files': [
+        'data/scenarios/hr_skills_scenario.xml',
+    ],
     'auto_install': True,
     'application': True,
     'assets': {

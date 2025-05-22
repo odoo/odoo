@@ -66,6 +66,15 @@
     'demo': [
         'data/demo_data.xml',
     ],
+    'other_files': [
+        'data/orders_demo.xml',
+        'data/scenarios/bakery_category_data.xml',
+        'data/scenarios/bakery_data.xml',
+        'data/scenarios/clothes_category_data.xml',
+        'data/scenarios/clothes_data.xml',
+        'data/scenarios/furniture_category_data.xml',
+        'data/scenarios/furniture_data.xml',
+    ],
     'application': True,
     'website': 'https://www.odoo.com/app/point-of-sale-shop',
     'assets': {

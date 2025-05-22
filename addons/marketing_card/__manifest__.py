@@ -33,4 +33,7 @@
     'application': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'other_files': [
+        'data/utm_source_data.xml',
+    ],
 }
