@@ -62,7 +62,6 @@
 
     <BuilderRow label.translate="Gap" level="1">
         <BuilderRange
-            styleAction="'--o-wsale-products-grid-gap'"
             action="'setGap'"
             min="0"
             max="28"
@@ -107,7 +106,7 @@
                         classAction="style.className"
                         actionParam="[
                             {action: 'websiteConfig', actionParam: {views: style.views}},
-                            {action: 'setDefaultGap', actionValue: style.gap + 'px'},
+                            {action: 'setGap', actionValue: style.gap + 'px'},
                         ]"
                         t-out="style.label"
                 />
