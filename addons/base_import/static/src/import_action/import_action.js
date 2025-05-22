@@ -1,17 +1,17 @@
-import { _t } from "@web/core/l10n/translation";
 import { Component, onWillStart, useRef, useState } from "@odoo/owl";
+import { useDropzone } from "@web/core/dropzone/dropzone_hook";
+import { FileInput } from "@web/core/file_input/file_input";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
-import { FileInput } from "@web/core/file_input/file_input";
-import { useDropzone } from "@web/core/dropzone/dropzone_hook";
-import { useImportModel } from "../import_model";
+import { Layout } from "@web/search/layout";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { ImportDataContent } from "../import_data_content/import_data_content";
 import { ImportDataProgress } from "../import_data_progress/import_data_progress";
 import { ImportDataSidepanel } from "../import_data_sidepanel/import_data_sidepanel";
-import { Layout } from "@web/search/layout";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
-import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
+import { useImportModel } from "../import_model";
 
 export class ImportAction extends Component {
     static template = "ImportAction";
@@ -26,6 +26,7 @@ export class ImportAction extends Component {
     static props = { ...standardActionServiceProps };
 
     setup() {
+        this.actionService = useService("action");
         this.notification = useService("notification");
         this.orm = useService("orm");
         this.env.config.setDisplayName(this.props.action.name || _t("Import a File"));
@@ -97,7 +98,18 @@ export class ImportAction extends Component {
     }
 
     exit(resIds) {
-        this.env.config.historyBack();
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            name: _t("Imported records"),
+            res_model: this.model.resModel,
+            view_mode: "tree,form",
+            views: [
+                [false, "list"],
+                [false, "form"],
+            ],
+            domain: [["id", "in", resIds]],
+            target: "current",
+        });
     }
 
     get display() {
@@ -228,7 +240,9 @@ export class ImportAction extends Component {
                 this.notification.add(_t("%s records successfully imported", res.ids.length), {
                     type: "success",
                 });
-                this.exit(res.ids);
+                if (!this.state.isPaused) {
+                    this.exit(res.ids);
+                }
             } else {
                 this.state.isTested = true;
             }

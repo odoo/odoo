@@ -474,6 +474,7 @@ describe("Import view", () => {
 
     test.tags("desktop");
     test("drag-and-drop file support", async () => {
+        onRpc("has_group", () => true);
         mockService("http", {
             post(route, params) {
                 expect.step(route);
@@ -481,8 +482,38 @@ describe("Import view", () => {
                 return super.post(route, params);
             },
         });
+        mockService("notification", {
+            add: (message) => {
+                expect.step(message);
+                return () => {};
+            },
+        });
+        mockService("action", {
+            doAction(action) {
+                expect.step("action");
+                if (action !== 1) {
+                    expect(action).toEqual({
+                        type: "ir.actions.act_window",
+                        name: "Imported records",
+                        res_model: "partner",
+                        view_mode: "tree,form",
+                        views: [
+                            [false, "list"],
+                            [false, "form"],
+                        ],
+                        domain: [["id", "in", [1]]],
+                        target: "current",
+                    });
+                }
+                return super.doAction(...arguments);
+            },
+        });
+        onRpc("base_import.import", "execute_import", ({ route }) => {
+            expect.step(route);
+        });
         await mountWebClient();
         await getService("action").doAction(1);
+        expect.verifySteps(["action"]);
         queryOne(".o_nocontent_help").draggable = true;
         const file = new File(["fake_file"], "fake_file.csv", {
             type: "text/plain",
@@ -494,6 +525,15 @@ describe("Import view", () => {
         await animationFrame();
         expect(".o_import_action .o_import_data_content").toHaveCount(1);
         expect.verifySteps(["/base_import/set_file"]);
+        await contains(".o_control_panel_main_buttons button:first").click();
+        expect.verifySteps(["/web/dataset/call_kw/base_import.import/execute_import"]);
+        await contains(".o_control_panel_main_buttons button:first").click();
+        expect.verifySteps([
+            "/web/dataset/call_kw/base_import.import/execute_import",
+            "1 records successfully imported",
+            "action",
+        ]);
+        expect(".o_list_view").toHaveCount(1);
     });
 
     test("additional options in debug", async () => {
