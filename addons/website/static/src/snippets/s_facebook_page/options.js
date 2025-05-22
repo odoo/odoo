@@ -17,14 +17,16 @@ options.registry.facebookPage = options.Class.extend({
     willStart: function () {
         var defs = [this._super.apply(this, arguments)];
 
-        var defaults = {
+        const defaults = {
             href: '',
             id: '',
-            height: 215,
-            width: 350,
-            tabs: '',
-            small_header: true,
-            hide_cover: "true",
+            height: "700px",
+            width: `${Math.min(this.$target[0].firstElementChild?.offsetWidth, 500)}px`, // Default width is the width of the parent element
+            tabs: "timeline",
+            small_header: false,
+            hide_cover: "false",
+            show_facepile: true,
+            adapt_container_width: true,
         };
         this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, ...Object.keys(defaults)));
         if (!this.fbData.href) {
@@ -41,12 +43,6 @@ options.registry.facebookPage = options.Class.extend({
 
         return Promise.all(defs).then(() => this._markFbElement()).then(() => this._refreshPublicWidgets());
     },
-    /**
-     * @override
-     */
-    onBuilt() {
-        this.$target[0].querySelector('.o_facebook_page_preview')?.remove();
-    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -60,6 +56,8 @@ options.registry.facebookPage = options.Class.extend({
      */
     toggleOption: function (previewMode, widgetValue, params) {
         let optionName = params.optionName;
+        const fbPageElement = this._getFbPageElement();
+
         if (optionName.startsWith('tab.')) {
             optionName = optionName.replace('tab.', '');
             if (widgetValue) {
@@ -68,17 +66,21 @@ options.registry.facebookPage = options.Class.extend({
                     .filter(t => t !== '')
                     .concat([optionName])
                     .join(',');
+                fbPageElement.setAttribute("data-tabs", this.fbData.tabs);
             } else {
                 this.fbData.tabs = this.fbData.tabs
                     .split(',')
                     .filter(t => t !== optionName)
                     .join(',');
+                fbPageElement.setAttribute("data-tabs", this.fbData.tabs);
             }
         } else {
             if (optionName === 'show_cover') {
                 this.fbData.hide_cover = widgetValue ? "false" : "true";
+                fbPageElement.setAttribute("data-hide-cover", this.fbData.hide_cover);
             } else {
                 this.fbData[optionName] = widgetValue;
+                fbPageElement.setAttribute(`data-${optionName}`, widgetValue);
             }
         }
         return this._markFbElement();
@@ -93,10 +95,41 @@ options.registry.facebookPage = options.Class.extend({
         return this._markFbElement();
     },
 
+    /**
+     * Sets the Facebook page's height.
+     * @see this.selectClass for parameters
+     */
+    setHeight(previewMode, widgetValue, params) {
+        // Enhance UX by clamping the value within the allowed range.
+        const numericValue = Math.min(Math.max(parseFloat(widgetValue), 70), 2673);
+        this.fbData.height = `${numericValue}px`;
+        return this._markFbElement();
+    },
+
+    /**
+     * Sets the Facebook page's width.
+     * @see this.selectClass for parameters
+     */
+    setWidth(previewMode, widgetValue, params) {
+        // Enhance UX by clamping the value within the allowed range.
+        const numericValue = Math.min(Math.max(parseFloat(widgetValue), 180), 500);
+        this.fbData.width = `${numericValue}px`;
+        return this._markFbElement();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Gets the Facebook page element.
+     *
+     * @private
+     * @returns {Element} The Facebook page element.
+     */
+    _getFbPageElement() {
+        return this.$target[0].querySelector(".fb-page");
+    },
     /**
      * Sets the correct dataAttributes on the facebook iframe and refreshes it.
      *
@@ -104,14 +137,6 @@ options.registry.facebookPage = options.Class.extend({
      */
     _markFbElement: function () {
         return this._checkURL().then(() => {
-            // Managing height based on options
-            if (this.fbData.tabs) {
-                this.fbData.height = this.fbData.tabs === 'events' ? 300 : 500;
-            } else if (this.fbData.small_header) {
-                this.fbData.height = 70;
-            } else {
-                this.fbData.height = 150;
-            }
             for (const [key, value] of Object.entries(this.fbData)) {
                 this.$target[0].dataset[key] = value;
             }
@@ -136,9 +161,16 @@ options.registry.facebookPage = options.Class.extend({
             case 'pageUrl': {
                 return this._checkURL().then(() => this.fbData.href);
             }
+            case "setHeight": {
+                return this.fbData.height;
+            }
+            case "setWidth": {
+                return this.fbData.width;
+            }
         }
         return this._super(...arguments);
     },
+
     /**
      * @private
      */
@@ -171,7 +203,17 @@ options.registry.facebookPage = options.Class.extend({
                         type: "warning",
                     });
                 }
-            });
+                })
+                .catch(() => {
+                    this.notification.add(
+                        _t(
+                            "Uh-oh! It looks like your Facebook page took a detour. Could be your internet connection or some extensions blocking its way!"
+                        ),
+                        {
+                            type: "warning",
+                        }
+                    );
+                });
         }
         this.fbData.id = "";
         this.fbData.href = defaultURL;

@@ -3,8 +3,8 @@
 
 <!-- Snippet template -->
 <template id="s_facebook_page" name="Facebook">
-    <div class="o_facebook_page o_not_editable">
-        <iframe class="mw-100 o_facebook_page_preview" src="https://www.facebook.com/plugins/page.php?height=70&amp;hide_cover=true&amp;href=https%3A%2F%2Fwww.facebook.com%2FOdoo&amp;show_facepile=false&amp;small_header=true&amp;tabs=&amp;width=500" style="width: 500px; height: 70px; border: medium none; overflow: hidden;" aria-label="Facebook"/>
+    <div class="o_facebook_page o_not_editable" data-vxml="001">
+        <div class="fb_page"></div>
     </div>
 </template>
 
@@ -18,6 +18,10 @@
             <we-checkbox string="Events" data-option-name="tab.events" data-toggle-option="true" data-no-preview="true"/>
             <we-checkbox string="Messages" data-option-name="tab.messages" data-toggle-option="true" data-no-preview="true"/>
             <we-checkbox string="Small Header" data-option-name="small_header" data-toggle-option="true" data-no-preview="true"/>
+            <we-input class="o_we_large" string="Height" data-set-height="" data-no-preview="true" data-unit="px"
+                data-tooltip="Facebook snippet height: 70 to 2673px."/>
+            <we-input class="o_we_large" string="Width" data-set-width="" data-no-preview="true" data-unit="px"
+                data-tooltip="Facebook snippet width: 180 to 500px."/>
         </div>
     </xpath>
 </template>
