@@ -30,7 +30,4 @@ export class BackgroundOption extends BaseOptionComponent {
         const { showColorFilter } = useBackgroundOption(this.isActiveItem);
         this.showColorFilter = showColorFilter;
     }
-    computeMaxDisplayWidth() {
-        return 1920;
-    }
 }

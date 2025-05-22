@@ -6,6 +6,7 @@ import { Plugin } from "@html_editor/plugin";
 import { loadImage, loadImageInfo } from "@html_editor/utils/image_processing";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { clamp } from "@web/core/utils/numbers";
 
 class ImageFormatOptionPlugin extends Plugin {
     static id = "imageFormatOption";
@@ -14,6 +15,7 @@ class ImageFormatOptionPlugin extends Plugin {
     resources = {
         builder_actions: this.getActions(),
     };
+    MAX_SUGGESTED_WIDTH = 1920;
     getActions() {
         return {
             setImageFormat: {
@@ -53,8 +55,16 @@ class ImageFormatOptionPlugin extends Plugin {
     /**
      * Returns a list of valid formats for a given image or an empty list if
      * there is no mimetypeBeforeConversion data attribute on the image.
+     *
+     * @param {HTMLImageElement} img
+     * @param {string} computeFrom - The source of the image, either "image" or "background".
      */
-    async computeAvailableFormats(img, computeMaxDisplayWidth) {
+    async computeAvailableFormats(img, computeFrom) {
+        const computeMaxDisplayWidth =
+            computeFrom === "image"
+                ? this.computeMaxDisplayWidth.bind(this)
+                : this.computeMaxDisplayWidthBackground;
+
         const data = { ...img.dataset, ...(await loadImageInfo(img)) };
         if (!data.mimetypeBeforeConversion || shouldPreventGifTransformation(data)) {
             return [];
@@ -89,6 +99,49 @@ class ImageFormatOptionPlugin extends Plugin {
     async getImageWidth(originalSrc, width) {
         const getNaturalWidth = () => loadImage(originalSrc).then((i) => i.naturalWidth);
         return width ? Math.round(width) : await getNaturalWidth();
+    }
+
+    computeMaxDisplayWidthBackground(img) {
+        return 1920;
+    }
+    computeMaxDisplayWidth(img) {
+        const window = img.ownerDocument.defaultView;
+        if (!window) {
+            return;
+        }
+        const computedStyles = window.getComputedStyle(img);
+        const displayWidth = parseFloat(computedStyles.getPropertyValue("width"));
+        const gutterWidth =
+            parseFloat(computedStyles.getPropertyValue("--o-grid-gutter-width")) || 30;
+
+        // For the logos we don't want to suggest a width too small.
+        if (img.closest("nav")) {
+            return Math.round(Math.min(displayWidth * 3, this.MAX_SUGGESTED_WIDTH));
+            // If the image is in a container(-small), it might get bigger on
+            // smaller screens. So we suggest the width of the current image unless
+            // it is smaller than the size of the container on the md breapoint
+            // (which is where our bootstrap columns fallback to full container
+            // width since we only use col-lg-* in Odoo).
+        } else if (img.closest(".container, .o_container_small")) {
+            const mdContainerMaxWidth =
+                parseFloat(computedStyles.getPropertyValue("--o-md-container-max-width")) || 720;
+            const mdContainerInnerWidth = mdContainerMaxWidth - gutterWidth;
+            return Math.round(clamp(displayWidth, mdContainerInnerWidth, this.MAX_SUGGESTED_WIDTH));
+            // If the image is displayed in a container-fluid, it might also get
+            // bigger on smaller screens. The same way, we suggest the width of the
+            // current image unless it is smaller than the max size of the container
+            // on the md breakpoint (which is the LG breakpoint since the container
+            // fluid is full-width).
+        } else if (img.closest(".container-fluid")) {
+            const lgBp = parseFloat(computedStyles.getPropertyValue("--breakpoint-lg")) || 992;
+            const mdContainerFluidMaxInnerWidth = lgBp - gutterWidth;
+            return Math.round(
+                clamp(displayWidth, mdContainerFluidMaxInnerWidth, this.MAX_SUGGESTED_WIDTH)
+            );
+        }
+        // If it's not in a container, it's probably not going to change size
+        // depending on breakpoints. We still keep a margin safety.
+        return Math.round(Math.min(displayWidth * 1.5, this.MAX_SUGGESTED_WIDTH));
     }
 }
 registry.category("website-plugins").add(ImageFormatOptionPlugin.id, ImageFormatOptionPlugin);
