@@ -223,15 +223,15 @@ describe("parse/render", () => {
         test('should not insert navigation helpers when adjacent to a fontawesome in contenteditable=false format (oe-nested)', async () => {
             await testEditor({
                 contentBefore:
-                    '<p contenteditable="true"><a contenteditable="true"><b contenteditable="false">abc[]<i class="fa fa-pastafarianism"></i></b></a></p>',
+                    '<p contenteditable="true"><a href="#" contenteditable="true"><b contenteditable="false">abc[]<i class="fa fa-pastafarianism"></i></b></a></p>',
                 contentAfter:
-                    '<p contenteditable="true"><a contenteditable="true"><b contenteditable="false">abc<i class="fa fa-pastafarianism" contenteditable="false"></i></b></a></p>',
+                    '<p contenteditable="true"><a href="#" contenteditable="true"><b contenteditable="false">abc<i class="fa fa-pastafarianism" contenteditable="false"></i></b></a></p>',
             });
             await testEditor({
                 contentBefore:
-                    '<p contenteditable="true"><a contenteditable="true"><b contenteditable="false"><i class="fa fa-pastafarianism"></i>[]abc</b></a></p>',
+                    '<p contenteditable="true"><a href="#" contenteditable="true"><b contenteditable="false"><i class="fa fa-pastafarianism"></i>[]abc</b></a></p>',
                 contentAfter:
-                    '<p contenteditable="true"><a contenteditable="true"><b contenteditable="false"><i class="fa fa-pastafarianism" contenteditable="false"></i>abc</b></a></p>',
+                    '<p contenteditable="true"><a href="#" contenteditable="true"><b contenteditable="false"><i class="fa fa-pastafarianism" contenteditable="false"></i>abc</b></a></p>',
             });
         });*/
 });
