@@ -2010,8 +2010,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         """
         Test to set order preset hour inside a tour
         """
-        self.preset_eat_in = self.env['pos.preset'].create({
-            'name': 'Eat in',
+        self.preset_dine_in = self.env['pos.preset'].create({
+            'name': 'Dine in',
         })
         self.preset_takeaway = self.env['pos.preset'].create({
             'name': 'Takeaway',
@@ -2023,7 +2023,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.write({
             'use_presets': True,
-            'default_preset_id': self.preset_eat_in.id,
+            'default_preset_id': self.preset_dine_in.id,
             'available_preset_ids': [(6, 0, [self.preset_takeaway.id, self.preset_delivery.id])],
         })
         resource_calendar = self.env['resource.calendar'].create({

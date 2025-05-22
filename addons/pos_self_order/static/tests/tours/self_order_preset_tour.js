@@ -4,12 +4,12 @@ import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
 
-registry.category("web_tour.tours").add("self_order_preset_eat_in_tour", {
+registry.category("web_tour.tours").add("self_order_preset_dine_in_tour", {
     steps: () => [
-        // Test preset "Eat in" location with table
+        // Test preset "Dine in" location with table
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Eat in"),
+        LandingPage.selectLocation("Dine in"),
         ProductPage.clickProduct("Coca-Cola"),
         Utils.clickBtn("Checkout"),
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),

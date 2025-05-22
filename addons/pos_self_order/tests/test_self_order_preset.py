@@ -6,8 +6,8 @@ from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCom
 class TestSelfOrderPreset(SelfOrderCommonTest):
     def setUp(self):
         super().setUp()
-        self.preset_eat_in = self.env['pos.preset'].create({
-            'name': 'Eat in',
+        self.preset_dine_in = self.env['pos.preset'].create({
+            'name': 'Dine in',
             'available_in_self': True,
             'service_at': 'table',
         })
@@ -26,15 +26,15 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
             'use_presets': True,
-            'default_preset_id': self.preset_eat_in.id,
+            'default_preset_id': self.preset_dine_in.id,
             'available_preset_ids': [(6, 0, [self.preset_takeaway.id, self.preset_delivery.id])],
         })
 
-    def test_preset_eat_in_tour(self):
+    def test_preset_dine_in_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, "")
         self_route = self.pos_config._get_self_order_route()
-        self.start_tour(self_route, "self_order_preset_eat_in_tour")
+        self.start_tour(self_route, "self_order_preset_dine_in_tour")
 
     def test_preset_takeaway_tour(self):
         self.pos_config.with_user(self.pos_user).open_ui()
