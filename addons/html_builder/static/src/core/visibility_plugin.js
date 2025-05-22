@@ -16,6 +16,7 @@ export class VisibilityPlugin extends Plugin {
         system_classes: ["o_snippet_override_invisible"],
         clean_for_save_handlers: this.cleanForSaveVisibility.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_restore_containers_handlers: (newTargetEl) => this.makeTargetVisible(newTargetEl),
     };
 
     setup() {
@@ -33,6 +34,24 @@ export class VisibilityPlugin extends Plugin {
                 invisibleEl.removeAttribute("data-invisible");
             }
         });
+    }
+
+    /**
+     * Toggles the visibility of the given element and its ancestors if it was
+     * not visible.
+     *
+     * @param {HTMLElement} targetEl the element
+     */
+    makeTargetVisible(targetEl) {
+        let invisibleEl = targetEl.closest("[data-invisible='1']");
+        if (!invisibleEl) {
+            return;
+        }
+        while (invisibleEl) {
+            this.toggleTargetVisibility(invisibleEl, true);
+            invisibleEl = targetEl.closest("[data-invisible='1']");
+        }
+        this.config.updateInvisibleElementsPanel();
     }
 
     cleanForSaveVisibility({ root: rootEl }) {
