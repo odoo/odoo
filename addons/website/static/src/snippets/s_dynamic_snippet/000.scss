@@ -1,6 +1,12 @@
 .s_dynamic {
-    &.o_dynamic_snippet_empty:not(.o_check_scroll_position) {
-        display: none !important;
+    // Dynamic snippet loading style.
+    #wrap &.o_dynamic_snippet_empty:not(.o_check_scroll_position) {
+        section:not(.s_dynamic_snippet_holder) {
+            display: none !important;
+        }
+        .s_dynamic_snippet_holder {
+            display: block !important;
+        }
     }
     [data-url] {
         cursor: pointer;
@@ -44,6 +50,12 @@
                     flex: 1 1 var(--DynamicSnippet__entry-maxWidth, #{$-entry-min-width});
                 }
             }
+        }
+    }
+
+    &.s_dynamic_snippet_cover_left {
+        .s_dynamic_snippet_content_position {
+            flex-direction: row-reverse;
         }
     }
 }

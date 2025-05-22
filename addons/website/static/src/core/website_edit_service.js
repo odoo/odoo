@@ -94,6 +94,10 @@ PublicRoot.include({
      * @override
      */
     _restartInteractions(targetEl, options) {
+        // Skip restarting interactions if the snippet is inactive by default.
+        if (options.skipInterations) {
+            return;
+        }
         const websiteEdit = this.bindService("website_edit");
         const mode = options?.editableMode ? "edit" : false;
         websiteEdit.update(targetEl, mode);
