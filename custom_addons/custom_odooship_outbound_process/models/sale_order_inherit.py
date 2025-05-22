@@ -8,3 +8,9 @@ class SaleOrderLine(models.Model):
 
     serial_number = fields.Char(string="Serial Number")
     line_item_id = fields.Char(string="Line Item ID")
+
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    message_code = fields.Integer(string='Message code')

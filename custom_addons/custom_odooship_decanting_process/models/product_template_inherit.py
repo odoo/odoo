@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
         if self.id:
             domain.append(('id', '!=', self.id))
         if self.tenant_id:
-            domain.append(('tenant_id', '=', self.tenant_id.id))
+            domain.append(('tenant_id', '=', self.tenant_id))
 
         # Search in product.template for duplicates in the same tenant
         if self.env['product.template'].search(domain, limit=1):

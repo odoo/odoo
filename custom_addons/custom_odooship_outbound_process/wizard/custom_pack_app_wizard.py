@@ -885,7 +885,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             sale.write({
                 'consignment_number': "Manual WB",
                 'pick_status': 'packed',
-                'delivery_status': 'partial',
+                # 'delivery_status': 'partial',
             })
             picking.write({'current_state': 'pack'})
             picking.button_validate()
@@ -923,7 +923,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "address2": partner.street2 or None,
             "city": partner.city or "",
             "province": partner.state_id.name if partner.state_id else "",
-            "province_code": partner.zip or "",
+            "zip": partner.zip or "",
             "country": country,
             "country_code": country_code,
             "street_address": None,
@@ -1013,7 +1013,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         sale.write({
             'carrier': carrier,
             'pick_status': 'packed',
-            'delivery_status': 'partial',
+            # 'delivery_status': 'partial',
             'consignment_number': con_id,
             'status': label_url,
             'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
@@ -1130,6 +1130,87 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.error(f"OneTraker request exception: {e}")
             raise UserError(f"Request error: {str(e)}")
 
+    # def send_payload_and_print_label(self, payload, pick_name=None):
+    #     self.ensure_one()
+    #
+    #     config = self.get_onetraker_config()
+    #     api_url = config.get("ONETRAKER_CREATE_ORDER_URL")
+    #     bearer_token = config.get("BEARER")
+    #     bench_ip = self.pack_bench_id.printer_ip
+    #
+    #     if not bench_ip:
+    #         raise UserError(_("Pack Bench is missing printer IP."))
+    #
+    #     headers = {
+    #         'Content-Type': 'application/json',
+    #         'Authorization': bearer_token
+    #     }
+    #
+    #     try:
+    #         t_start = time.perf_counter()
+    #         response = requests.post(api_url, headers=headers, json=payload, timeout=50)
+    #         response.raise_for_status()
+    #
+    #         response_json = response.json()
+    #         _logger.info(f"[ONETRAKER][FULL RESPONSE] for {pick_name or 'N/A'}:\n{json.dumps(response_json, indent=4)}")
+    #
+    #         generic = response_json.get("genericResponse", {})
+    #         status_code = generic.get("apiStatusCode")
+    #         status_success = generic.get("apiSuccessStatus")
+    #         status_message = generic.get("apiStatusMessage", "Unknown error from OneTraker")
+    #
+    #         if status_code != 200 or status_success != "True":
+    #             _logger.error(f"[ONETRAKER][ERROR] Code: {status_code}, Message: {status_message}")
+    #             raise UserError(_(status_message))
+    #         else:
+    #             _logger.info(f"[ONETRAKER][SUCCESS] Code: {status_code}, Message: {status_message}")
+    #
+    #         label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
+    #                                                                                                 {}).get("url")
+    #
+    #         # if not label_url:
+    #         #     raise UserError(_("Label URL not found in OneTraker response."))
+    #         con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
+    #
+    #         # if not label_url:
+    #         #     raise UserError(_("Label URL not found in OneTraker response."))
+    #
+    #         t_label_start = time.perf_counter()
+    #         label_resp = requests.get(label_url, stream=True, timeout=50)
+    #         label_resp.raise_for_status()
+    #
+    #         zpl_data = ""
+    #         for chunk in label_resp.iter_content(chunk_size=1024):
+    #             zpl_data += chunk.decode('utf-8')
+    #
+    #         t_label_end = time.perf_counter()
+    #
+    #         if not zpl_data.strip():
+    #             raise UserError(_("Downloaded label is empty."))
+    #
+    #         t_print_start = time.perf_counter()
+    #         with socket.create_connection((bench_ip, 9100), timeout=40) as sock:
+    #             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+    #             sock.sendall(zpl_data.encode('utf-8'))
+    #
+    #         t_end = time.perf_counter()
+    #         time_to_response = t_label_start - t_start
+    #         time_to_label_download = t_label_end - t_label_start
+    #         time_to_print = t_end - t_print_start
+    #         total_time = t_end - t_start
+    #         _logger.info(
+    #             f"[PERF][{pick_name or 'N/A'}] "
+    #             f"API Response: {time_to_response:.2f}s, "
+    #             f"Label Download: {time_to_label_download:.2f}s, "
+    #             f"Print: {time_to_print:.2f}s, "
+    #             f"Total Time: {total_time:.2f}s"
+    #         )
+    #         return label_url, con_id
+    #
+    #     except Exception as e:
+    #         _logger.error(f"[ONETRAKER][FAILURE] {str(e)}")
+    #         raise UserError(_("Failed to print label:\n%s") % str(e))
+
     def send_payload_and_print_label(self, payload, pick_name=None):
         self.ensure_one()
 
@@ -1147,69 +1228,43 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         }
 
         try:
-            t_start = time.perf_counter()
             response = requests.post(api_url, headers=headers, json=payload, timeout=50)
             response.raise_for_status()
-
             response_json = response.json()
-            _logger.info(f"[ONETRAKER][FULL RESPONSE] for {pick_name or 'N/A'}:\n{json.dumps(response_json, indent=4)}")
+
+            _logger.info(f"[ONETRAKER][SINGLE PICK RESPONSE] {json.dumps(response_json, indent=4)}")
 
             generic = response_json.get("genericResponse", {})
-            status_code = generic.get("apiStatusCode")
-            status_success = generic.get("apiSuccessStatus")
-            status_message = generic.get("apiStatusMessage", "Unknown error from OneTraker")
-
-            if status_code != 200 or status_success != "True":
-                _logger.error(f"[ONETRAKER][ERROR] Code: {status_code}, Message: {status_message}")
-                raise UserError(_(status_message))
-            else:
-                _logger.info(f"[ONETRAKER][SUCCESS] Code: {status_code}, Message: {status_message}")
+            if generic.get("apiStatusCode") != 200 or generic.get("apiSuccessStatus") != "True":
+                raise UserError(_(generic.get("apiStatusMessage", "Unknown error from OneTraker")))
 
             label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                     {}).get("url")
-
-            # if not label_url:
-            #     raise UserError(_("Label URL not found in OneTraker response."))
             con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
 
-            # if not label_url:
-            #     raise UserError(_("Label URL not found in OneTraker response."))
+            # 🧵 Start async label printing
+            try:
+                label_resp = requests.get(label_url, stream=True, timeout=10)
+                label_resp.raise_for_status()
+                zpl_data = b''.join(label_resp.iter_content(chunk_size=1024))
 
-            t_label_start = time.perf_counter()
-            label_resp = requests.get(label_url, stream=True, timeout=50)
-            label_resp.raise_for_status()
+                if zpl_data.strip():
+                    threading.Thread(
+                        target=self._fire_and_forget_label_print,
+                        args=(zpl_data, bench_ip),
+                        daemon=True
+                    ).start()
+                else:
+                    raise ValueError("Empty label data")
 
-            zpl_data = ""
-            for chunk in label_resp.iter_content(chunk_size=1024):
-                zpl_data += chunk.decode('utf-8')
+            except Exception as e:
+                _logger.warning(f"[LABEL][PRINT FAIL] for pick {pick_name}: {str(e)}")
 
-            t_label_end = time.perf_counter()
-
-            if not zpl_data.strip():
-                raise UserError(_("Downloaded label is empty."))
-
-            t_print_start = time.perf_counter()
-            with socket.create_connection((bench_ip, 9100), timeout=40) as sock:
-                sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-                sock.sendall(zpl_data.encode('utf-8'))
-
-            t_end = time.perf_counter()
-            time_to_response = t_label_start - t_start
-            time_to_label_download = t_label_end - t_label_start
-            time_to_print = t_end - t_print_start
-            total_time = t_end - t_start
-            _logger.info(
-                f"[PERF][{pick_name or 'N/A'}] "
-                f"API Response: {time_to_response:.2f}s, "
-                f"Label Download: {time_to_label_download:.2f}s, "
-                f"Print: {time_to_print:.2f}s, "
-                f"Total Time: {total_time:.2f}s"
-            )
             return label_url, con_id
 
         except Exception as e:
             _logger.error(f"[ONETRAKER][FAILURE] {str(e)}")
-            raise UserError(_("Failed to print label:\n%s") % str(e))
+            raise UserError(_("Failed to process label:\n%s") % str(e))
 
     def print_label_via_pack_bench(self, label_url):
         self.ensure_one()
@@ -1245,47 +1300,20 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise UserError(_("Printer socket error:\n%s") % str(e))
 
     def send_payload_to_onetraker(self, env, picking, lines, config):
-        """
-        Prepares and sends OneTraker payload for given picking and its associated lines.
-        Prevents picking validation to avoid deleting wizard lines.
-        """
         if not picking:
             raise ValidationError("Picking is required to send OneTraker payload.")
 
         partner = picking.partner_id
         sale = picking.sale_id
-        if sale and sale.service_type and sale.service_type.strip().upper() == "MANUAL WB":
-            _logger.info("[MANUAL WB] Skipping label creation for Manual WB multi-pick.")
-
-            picking.write({'current_state': 'pack'})
-            sale.write({
-                'consignment_number': "Manual WB",
-                'pick_status': 'packed',
-                'delivery_status': 'partial',
-            })
-            picking.button_validate()
-
-            self.send_tracking_update_to_ot_orders(
-                so_number=sale.name,
-                con_id="Manual WB",
-                carrier="Manual",
-                origin=sale.origin or "N/A",
-                tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
-            )
-
-            return True
         if not partner or not partner.email:
             raise ValidationError("Missing or invalid customer email.")
-
-        import re
         if not re.match(r"[^@]+@[^@]+\.[^@]+", partner.email):
-            raise ValidationError("Invalid email for customer: %s" % partner.name)
+            raise ValidationError("Invalid email format.")
 
         order_number = sale.name or picking.name
         customer_ref = sale.client_order_ref or "NA"
-        country = partner.country_id.name or "Australia"
         country_code = partner.country_id.code or "AU"
-        carrier = sale.carrier or 'AUSPOST'
+        carrier = sale.carrier or "AUSPOST"
 
         to_address = {
             "google_formated_address": None,
@@ -1294,42 +1322,33 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "address2": partner.street2 or None,
             "city": partner.city or "",
             "province": partner.state_id.name if partner.state_id else "",
-            "province_code": partner.zip or "",
-            "country": country,
+            "zip": partner.zip or "",
+            "country": partner.country_id.name or "Australia",
             "country_code": country_code,
-            "street_address": None,
-            "area_name": None,
-            "locality": None,
-            "unit_floor": None,
-            "landmark": None,
-            "google_place_id": None,
             "contact": {
                 "name": partner.name,
-                "mobile_number": partner.mobile or  "0000000000",
-                "email": partner.email or "support@shiperoo.com"
+                "mobile_number": partner.mobile or "00000000",
+                "email": partner.email
             }
         }
 
-        grouped_items = {}
-        declared_value = 0.0
-
+        grouped_items, declared_value = {}, 0.0
         for line in lines:
-            pkg_num = line.product_package_number
-            if pkg_num not in grouped_items:
-                grouped_items[pkg_num] = {
-                    "type": None,
-                    "quantity": 1,
-                    "products": [],
-                    "authority_to_leave": True,
-                    "attributes": [
-                        {"category": "length", "unit": "m", "value": 0.1},
-                        {"category": "width", "unit": "m", "value": 0.2},
-                        {"category": "height", "unit": "m", "value": 0.3},
-                        {"category": "weight", "unit": "KG", "value": line.weight or 0.5}
-                    ]
-                }
+            pkg = line.product_package_number
+            grouped_items.setdefault(pkg, {
+                "type": None,
+                "quantity": 1,
+                "products": [],
+                "authority_to_leave": True,
+                "attributes": [
+                    {"category": "length", "unit": "m", "value": 0.1},
+                    {"category": "width", "unit": "m", "value": 0.2},
+                    {"category": "height", "unit": "m", "value": 0.3},
+                    {"category": "weight", "unit": "KG", "value": line.weight or 0.5}
+                ]
+            })
 
-            grouped_items[pkg_num]["products"].append({
+            grouped_items[pkg]["products"].append({
                 "product_id": line.product_id.default_code,
                 "name": (line.product_id.name or "")[:40],
                 "weight": line.weight or 0.5,
@@ -1339,7 +1358,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "declared_value": round(line.product_id.list_price or 10.0, 2),
                 "item_contents_reference": ""
             })
-
             declared_value += (line.product_id.list_price or 10.0) * (line.quantity or 1.0)
 
         payload = {
@@ -1347,8 +1365,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             "service_type": sale.service_type or "STANDARD",
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
-            "tu_id": None,
-            "tu_type": "",
             "auto_generate_label": config["DEFAULT_AUTO_GENERATE_LABEL"],
             "shipment": {
                 "from_location_id": config["DEFAULT_FROM_LOCATION_ID"],
@@ -1376,44 +1392,52 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         }
 
         api_url = config["ONETRAKER_CREATE_ORDER_URL"]
-        _logger.info(f"[ONETRAKER] Sending payload to {api_url} for order {order_number}")
-        _logger.info(json.dumps(payload, indent=4))
-        time_start = datetime.datetime.now()
-        _logger.info(f"[TIMING][{order_number}] Payload send start: {time_start}")
 
         try:
+            _logger.info(f"[ONETRAKER] Sending payload to {api_url} for order {order_number}")
+            _logger.info(json.dumps(payload, indent=4))
             response = requests.post(api_url, headers=headers, data=json.dumps(payload))
             response.raise_for_status()
             resp_data = response.json()
 
-            _logger.info(f"[ONETRAKER][FULL RESPONSE] for {order_number}:\n{json.dumps(resp_data, indent=4)}")
+            _logger.info(f"[ONETRAKER][MULTI-PICK RESPONSE] {json.dumps(resp_data, indent=4)}")
             if resp_data.get("genericResponse", {}).get("apiSuccessStatus") != "True":
-                error_msg = resp_data.get("genericResponse", {}).get("apiStatusMessage",
-                                                                     "Unknown error from OneTraker.")
-                raise ValidationError(_(error_msg))
+                raise ValidationError(resp_data.get("genericResponse", {}).get("apiStatusMessage", "Unknown error"))
 
             label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                 {}).get("url")
-
-            # if not label_url:
-            #     raise UserError(_("Label URL not found in the OneTraker response."))
-
-            #  Print label fast
-            self.print_label_via_pack_bench(label_url)
-
-            #  DO NOT VALIDATE PICKING (no button_validate)
-            picking.write({'current_state': 'pack'})
             con_id = resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
+
+            # 🧵 Fire-and-forget label printing
+            try:
+                label_resp = requests.get(label_url, stream=True, timeout=10)
+                label_resp.raise_for_status()
+                zpl_data = b''.join(label_resp.iter_content(chunk_size=1024))
+
+                if zpl_data.strip():
+                    threading.Thread(
+                        target=self._fire_and_forget_label_print,
+                        args=(zpl_data, self.pack_bench_id.printer_ip),
+                        daemon=True
+                    ).start()
+                else:
+                    raise ValueError("Empty label data")
+
+            except Exception as e:
+                _logger.warning(f"[LABEL][PRINT FAIL] Multi-pick label fetch/print failed: {str(e)}")
+
+            # Update DB
+            picking.write({'current_state': 'pack'})
             sale.write({
                 'carrier': carrier,
                 'pick_status': 'packed',
-                'delivery_status': 'partial',
-                'consignment_number': resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get(
-                    "con_id", ""),
+                # 'delivery_status': 'partial',
+                'consignment_number': con_id,
                 'status': label_url,
                 'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
             })
             picking.button_validate()
+
             self.send_tracking_update_to_ot_orders(
                 so_number=sale.name,
                 con_id=con_id,
@@ -1421,17 +1445,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 origin=sale.origin or "N/A",
                 tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
             )
-
-            _logger.info("[ONETRAKER] Label sent successfully and records updated.")
             return True
 
-        except requests.exceptions.RequestException as e:
-            _logger.error(f"[ONETRAKER] Request failed: {str(e)}")
-            raise UserError(f"Failed to send payload to OneTraker: {str(e)}")
-
-        except ValueError:
-            _logger.error("[ONETRAKER] Invalid JSON response from OneTraker.")
-            raise UserError("Failed to decode OneTraker API response. Check the response format.")
+        except Exception as e:
+            _logger.error(f"[ONETRAKER][FAILURE] {str(e)}")
+            raise UserError(f"Failed to send payload:\n{str(e)}")
 
     def send_tracking_update_to_ot_orders(self, so_number, con_id, carrier, origin, tenant_code):
             is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
@@ -1463,6 +1481,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 )
             except requests.exceptions.RequestException as e:
                 _logger.warning(f"[OT_ORDERS] Tracking update skipped due to network issue: {str(e)}")
+
+    def _fire_and_forget_label_print(self, zpl_data, printer_ip):
+        try:
+            with socket.create_connection((printer_ip, 9100), timeout=10) as sock:
+                sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+                sock.sendall(zpl_data)
+            _logger.info(f"[ZEBRA][ASYNC] Label sent successfully to printer {printer_ip}")
+        except Exception as e:
+            _logger.warning(f"[ZEBRA][ASYNC FAIL] Could not send label to {printer_ip}: {str(e)}")
 
 
 class PackDeliveryReceiptWizardLine(models.TransientModel):
