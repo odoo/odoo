@@ -6,7 +6,6 @@ import {
     defineWebsiteModels,
     insertCategorySnippet,
     setupWebsiteBuilder,
-    waitForEndOfOperation,
 } from "../website_helpers";
 import { Plugin } from "@html_editor/plugin";
 import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
@@ -23,7 +22,6 @@ describe("Popup options: empty page before edit", () => {
     test("dropping the popup snippet automatically displays it", async () => {
         await insertCategorySnippet({ group: "content", snippet: "s_popup" });
         expect(".o_add_snippet_dialog").toHaveCount(0);
-        await waitForEndOfOperation();
         // Check if the popup is visible.
         expect(":iframe .s_popup .modal").toHaveClass("show");
         expect(":iframe .s_popup .modal").toHaveStyle({ display: "block" });
@@ -121,5 +119,17 @@ describe("Popup options: popup in page before edit", () => {
         await animationFrame();
         expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
         expect(":iframe .s_popup .modal").toBeVisible();
+    });
+
+    test("undoing something on a target outside s_popup closes it", async () => {
+        await insertCategorySnippet({ group: "intro", snippet: "s_cover" });
+        expect(".o_add_snippet_dialog").toHaveCount(0);
+        await contains(":iframe .s_cover").click();
+        await contains("button:contains(Grid)").click(); // arbitrary thing to undo
+        await contains(".o_we_invisible_entry .fa-eye-slash").click();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye");
+        undo(builder.getEditor());
+        await animationFrame();
+        expect(".o_we_invisible_entry .fa").toHaveClass("fa-eye-slash");
     });
 });
