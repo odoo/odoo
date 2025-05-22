@@ -85,6 +85,17 @@ class AccountJournal(models.Model):
     l10n_sa_latest_submission_hash = fields.Char("Latest Submission Hash", copy=False,
                                                  help="Hash of the latest submitted invoice to be used as the Previous Invoice Hash (KSA-13)")
 
+    def _l10n_sa_reset_chain_head_error(self):
+        """
+            Reset the chain head error from the journal's stuck invoices
+        """
+        stuck_invoices = self.env['account.move'].search([
+            ('l10n_sa_edi_chain_head_id', '!=', False),
+            ('journal_id', 'in', self.ids),
+        ])
+        # We only need to remove blocking errors, so webservices do not need to be triggered
+        stuck_invoices._retry_edi_documents_error()
+
     # ====== Utility Functions =======
 
     def _l10n_sa_ready_to_submit_einvoices(self):
