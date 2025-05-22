@@ -14,11 +14,21 @@ class L10nInWithholdWizard(models.TransientModel):
     def default_get(self, fields_list):
         result = super().default_get(fields_list)
         active_model = self._context.get('active_model')
+<<<<<<< 18.0
         active_ids = self._context.get('active_ids', [])
         if len(active_ids) > 1:
             raise UserError(_("You can only create a withhold for only one record at a time."))
+||||||| 1f99b446187a3d0879c1b1f9b9ea488787219375
+        active_ids = self._context.get('active_ids')
+        if len(active_ids) > 1:
+            raise UserError(_("You can only create a withhold for only one record at a time."))
+=======
+        active_ids = self._context.get('active_ids')
+>>>>>>> 9f22fa372b32c2c8939b2ec8b9d0f5b750978229
         if active_model not in ('account.move', 'account.payment') or not active_ids:
             raise UserError(_("TDS must be created from an Invoice or a Payment."))
+        if len(active_ids) > 1:
+            raise UserError(_("You can only create a withhold for only one record at a time."))
         active_record = self.env[active_model].browse(active_ids)
         result['reference'] = _("TDS of %s", active_record.name)
         if active_model == 'account.move':
