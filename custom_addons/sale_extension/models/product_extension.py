@@ -48,3 +48,4 @@ class ProductExtension(models.Model):
     def action_import_csv(self):
         return {
         }
+    
