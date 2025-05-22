@@ -110,7 +110,6 @@ class AccountJournal(models.Model):
         Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.
         Select 'General' for miscellaneous operations journals.
         """)
-    autocheck_on_post = fields.Boolean(string="Auto-Check on Post", default=True)
     default_account_type = fields.Char(string='Default Account Type', compute="_compute_default_account_type")
     default_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',

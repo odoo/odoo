@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.CharWithPlaceholderFieldToCheck" t-inherit="account.CharWithPlaceholderField" t-inherit-mode="extension">
+        <xpath expr="//span" position="after">
+            <span t-if="props.record.data.checked === false and props.record.data.state === 'posted'"
+                  groups="account.group_account_user"
+                  class="badge rounded-pill text-bg-info mx-2 d-inline-flex">
+                To review
+            </span>
+        </xpath>
+    </t>
+
+</templates>
