@@ -365,3 +365,23 @@ class TestIrModelInherit(TransactionCase):
         self.assertEqual(len(imi), 1)
         self.assertEqual(imi.parent_id.model, "ir.actions.server")
         self.assertEqual(imi.parent_field_id.name, "ir_actions_server_id")
+
+
+@tagged('-at_install', 'post_install')
+class TestFieldGroupsSync(TransactionCase):
+    def test_reflect_field_groups(self):
+        # Using a known static field with group restrictions (e.g., smtp_user = fields(...,groups='base.group_system'))
+        field = self.env['ir.model.fields'].search([('name', '=', 'smtp_user')], limit=1)
+        self.assertTrue(hasattr(field, 'groups'), "The base field 'smtp_user' should have a 'groups' attribute.")
+        self.assertTrue(field.groups, "The 'groups' attribute of the field 'smtp_user' should not be empty.")
+
+        for group in field.groups:
+            self.env.cr.execute("""
+                SELECT 1 FROM ir_model_fields_group_rel
+                WHERE field_id = %s AND group_id = %s
+            """, (field.id, group.id))
+
+            self.assertIsNotNone(
+                self.env.cr.fetchone(),
+                f"Expected a relation in 'ir_model_fields_group_rel' for field '{field.name}' and group '{group.name}', but none was found."
+            )

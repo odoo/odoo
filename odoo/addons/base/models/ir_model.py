@@ -542,7 +542,7 @@ class IrModelFields(models.Model):
     domain = fields.Char(default="[]", help="The optional domain to restrict possible values for relationship fields, "
                                             "specified as a Python expression defining a list of triplets. "
                                             "For example: [('color','=','red')]")
-    groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id') # CLEANME unimplemented field (empty table)
+    groups = fields.Many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id')
     group_expand = fields.Boolean(string="Expand Groups",
                                   help="If checked, all the records of the target model will be included\n"
                                         "in a grouped result (e.g. 'Group By' filters, Kanban columns, etc.).\n"
@@ -949,6 +949,62 @@ class IrModelFields(models.Model):
 
         return self
 
+    def _reflect_field_groups(self):
+        """Synchronize the groups field based on the 'groups' attribute declared in the model field's definitions.
+        This looks up the external IDs declared in Python (e.g. test_field = fields.Char(...,groups='base.group_user')),
+        retrieves the corresponding group records, and updates the 'ir_model_fields_group_rel' relation.
+        """
+        field_ids = tuple(self.ids)
+        if not field_ids:
+            return True
+
+        self.env.cr.execute("""
+            SELECT field_id, group_id
+            FROM ir_model_fields_group_rel
+            WHERE field_id IN %s
+        """, (field_ids,))
+        existing_relation = set(self.env.cr.fetchall())
+
+        # Collect XMLIDs to resolve
+        xmlids_by_field = {}
+        for field in self:
+            try:
+                model_obj = self.env[field.model]
+                field_def = model_obj._fields.get(field.name)
+                if not field_def or not field_def.groups:
+                    continue
+
+                xmlids = [xmlid.strip() for xmlid in field_def.groups.split(',') if '.' in xmlid]
+                if xmlids:
+                    xmlids_by_field[field.id] = xmlids
+            except KeyError:
+                continue
+            except Exception as e:  # noqa: BLE001
+                _logger.warning("Failed to process field '%s.%s': %s: %s", field.model, field.name, e.__class__.__name__, e)
+
+        all_xmlids = {id for ids in xmlids_by_field.values() for id in ids}
+        group_data = self.env['ir.model.data'].search([
+            ('model', '=', 'res.groups'),
+            ('module', 'in', [id.split('.')[0] for id in all_xmlids]),
+            ('name', 'in', [id.split('.')[1] for id in all_xmlids]),
+        ])
+        group_map = {f"{rec.module}.{rec.name}": rec.res_id for rec in group_data}
+
+        to_insert = {
+            (field_id, group_map[xmlid])
+            for field_id, xmlids in xmlids_by_field.items()
+            for xmlid in xmlids
+            if xmlid in group_map and (field_id, group_map[xmlid]) not in existing_relation
+        }
+
+        if to_insert:
+            self.env.cr.execute(
+                "INSERT INTO ir_model_fields_group_rel (field_id, group_id) VALUES %s" %
+                ','.join(self.env.cr.mogrify("(%s,%s)", row).decode() for row in to_insert)
+            )
+
+        return True
+
     def unlink(self):
         if not self:
             return True
@@ -1217,6 +1273,9 @@ class IrModelFields(models.Model):
                 record = self.browse(field_id)
                 data_list.append({'xml_id': xml_id, 'record': record})
         self.env['ir.model.data']._update_xmlids(data_list)
+
+        # Syncing the 'groups' attribute of a field
+        self.search([])._reflect_field_groups()
 
     @tools.ormcache()
     def _all_manual_field_data(self):
