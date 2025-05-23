@@ -185,7 +185,7 @@ class TestDocstring(BaseCase):
                     continue
                 if method_name in seen_methods:
                     continue
-                seen_methods.add((model_name, method_name))
+                seen_methods.add(method_name)
 
                 # We don't care of the docstring in overrides, find the
                 # class that introduced the method.
