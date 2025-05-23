@@ -124,9 +124,9 @@ class WebManifest(http.Controller):
 
         if app_icon['type'] == "image/svg+xml":
             # We don't handle SVG images here, let's look for the module icon if possible
-            manifest = modules.module.get_manifest(app_id)
+            manifest = modules.Manifest.for_addon(app_id, display_warning=False)
             add_padding = True
-            if len(manifest) > 0 and manifest['icon']:
+            if manifest and manifest['icon']:
                 icon_src = manifest['icon']
             else:
                 icon_src = f"/{self._icon_path()}"
@@ -167,7 +167,7 @@ class WebManifest(http.Controller):
         return []
 
     def _get_scoped_app_name(self, app_id):
-        manifest = modules.module.get_manifest(app_id)
+        manifest = modules.Manifest.for_addon(app_id, display_warning=False)
         if manifest:
             return manifest['name']
         return app_id

@@ -1,19 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
 import logging
-import warnings
 
-import werkzeug
-import werkzeug.exceptions
-import werkzeug.utils
-import werkzeug.wrappers
-import werkzeug.wsgi
-
-import odoo
-import odoo.modules.registry
+import odoo.tools
 from odoo import http
-from odoo.modules import get_manifest
+from odoo.modules import Manifest
 from odoo.http import request
 from odoo.tools.misc import file_path
 from .utils import _local_web_translations
@@ -42,7 +33,7 @@ class WebClient(http.Controller):
 
         translations_per_module = {}
         for addon_name in mods:
-            manifest = get_manifest(addon_name)
+            manifest = Manifest.for_addon(addon_name)
             if manifest and manifest['bootstrap']:
                 f_name = file_path(f'{addon_name}/i18n/{lang}.po')
                 if not f_name:
