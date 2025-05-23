@@ -124,16 +124,12 @@
                             <DetalleIVA t-foreach="iva_values" t-as="tax">
                                 <CompraBienesCorrientesGastosBienesInversion t-out="tax['code']"/>
                                 <InversionSujetoPasivo t-out="'N' if tax['rec'].l10n_es_type != 'sujeto_isp' else 'S'"/>
-                                <BaseImponible t-out="format_float(tax['base'])"/>
-                            <t t-if="tax['rec'].l10n_es_type == 'sujeto_agricultura'">
-                                <PorcentajeCompensacionREAGYP t-out="tax['rec'].amount"/>
-                                <ImporteCompensacionREAGYP t-out="format_float(tax['tax'])"/>
-                            </t>
-                            <t t-else="">
-                                <TipoImpositivo t-out="tax['rec'].amount"/>
-                                <CuotaIVASoportada t-out="format_float(tax['tax'])"/>
-                                <CuotaIVADeducible t-out="format_float(tax['tax']) if tax['rec'].l10n_es_type != 'no_deducible' else '0.00'"/>
-                            </t>
+                                <BaseImponible t-out="format_float(tax['base'])" />
+                                <TipoImpositivo t-out="tax['rec'].amount" t-if="tax['rec'].l10n_es_type != 'sujeto_agricultura'" />
+                                <CuotaIVASoportada t-out="format_float(tax['tax'])" t-if="tax['rec'].l10n_es_type != 'sujeto_agricultura'"/>
+                                <CuotaIVADeducible t-out="format_float(tax['tax']) if tax['rec'].l10n_es_type != 'no_deducible' else '0.00'" t-if="tax['rec'].l10n_es_type != 'sujeto_agricultura'"/>
+                                <PorcentajeCompensacionREAGYP t-out="tax['rec'].amount" t-if="tax['rec'].l10n_es_type == 'sujeto_agricultura'"/>
+                                <ImporteCompensacionREAGYP t-out="format_float(tax['tax'])" t-if="tax['rec'].l10n_es_type == 'sujeto_agricultura'"/>
                             </DetalleIVA>
                         </IVA>
                     </t>
