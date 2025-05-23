@@ -38,6 +38,7 @@ import { openProxyCustomerDisplay } from "@point_of_sale/customer_display/utils"
 import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_info_popup/product_info_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { EditOrderNamePopup } from "@point_of_sale/app/components/popups/edit_order_name_popup/edit_order_name_popup";
+import { DebugWidget } from "../utils/debug/debug_widget";
 
 const { DateTime } = luxon;
 
@@ -155,6 +156,12 @@ export class PosStore extends WithLazyGetterTrap {
         this.closeOtherTabs();
         this.syncAllOrdersDebounced = debounce(this.syncAllOrders, 100);
         this._searchTriggered = false;
+
+        if (this.env.debug) {
+            registry.category("main_components").add("DebugWidget", {
+                Component: DebugWidget,
+            });
+        }
     }
 
     navigate(routeName, routeParams = {}) {

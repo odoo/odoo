@@ -41,7 +41,6 @@ export class Navbar extends Component {
         this.pos = usePos();
         this.ui = useService("ui");
         this.state = useState({ searchBarOpen: false });
-        this.debug = useService("debug");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.hardwareProxy = useService("hardware_proxy");
