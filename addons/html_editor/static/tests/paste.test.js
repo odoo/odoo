@@ -261,6 +261,20 @@ describe("Simple text", () => {
                 contentAfter: "<pre>a<br>b<br>c[]</pre>",
             });
         });
+
+        test("should preserve spaces and not add nbsp when pasting plain text inside <pre>", async () => {
+            await testEditor({
+                contentBefore: "<pre>[]<br></pre>",
+                stepFunction: async (editor) => {
+                    pasteText(
+                        editor,
+                        "function example() {\n    console.log('Hello,    world!');\n    // Indented    comment\n}"
+                    );
+                },
+                contentAfter:
+                    "<pre>function example() {<br>    console.log('Hello,    world!');<br>    // Indented    comment<br>}[]</pre>",
+            });
+        });
     });
 
     describe("range not collapsed", () => {
