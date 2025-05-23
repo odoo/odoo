@@ -84,13 +84,19 @@ class ChannelMember(models.Model):
             self.env['mail.message'].flush_model()
             self.flush_recordset(['channel_id', 'seen_message_id'])
             self.env.cr.execute("""
-                     SELECT count(mail_message.id) AS count,
+                     SELECT count(distinct mail_message.id) AS count,
                             discuss_channel_member.id
                        FROM mail_message
                  INNER JOIN discuss_channel_member
                          ON discuss_channel_member.channel_id = mail_message.res_id
+                  LEFT JOIN message_attachment_rel
+                         ON message_attachment_rel.message_id = mail_message.id
                       WHERE mail_message.model = 'discuss.channel'
                         AND mail_message.message_type NOT IN ('notification', 'user_notification')
+                        AND (
+                            mail_message.body != ''
+                         OR message_attachment_rel.attachment_id IS NOT NULL
+                        )
                         AND (
                             mail_message.id > discuss_channel_member.seen_message_id
                          OR discuss_channel_member.seen_message_id IS NULL
