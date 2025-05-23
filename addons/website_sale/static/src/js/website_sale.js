@@ -571,6 +571,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             'input[type="radio"][name="product_id"]:checked',
         ].join(','))?.value);
         const quantity = parseFloat(form.querySelector('input[name="add_qty"]')?.value);
+        const uomId = this._getUoMId(form);
         const isCombo = form.querySelector(
             'input[type="hidden"][name="product_type"]'
         )?.value === 'combo';
@@ -580,6 +581,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 'input[type="hidden"][name="product_template_id"]',
             ).value),
             ...(quantity ? {quantity: quantity} : {}),
+            ...(uomId ? {uomId: uomId} : {}),
             ptavs: this._getSelectedPTAV(form),
             productCustomAttributeValues: this._getCustomPTAVValues(form),
             noVariantAttributeValues: this._getSelectedNoVariantPTAV(form),

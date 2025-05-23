@@ -1449,6 +1449,31 @@ class ProductTemplate(models.Model):
             ])
         ])
 
+    def _get_list_price(self, price):
+        """ Get the product sales price from a public price based on taxes defined on the product.
+        To be overridden in accounting module."""
+        self.ensure_one()
+        return price
+
+    @api.model
+    def _service_tracking_blacklist(self) -> list:
+        """ Service tracking field is used to distinguish some specific categories of products.
+        Those products shouldn't be displayed or used in unrelated applications.
+        This method returns a domain targeting all those specific products (events, courses, ...).
+        """
+        return []
+
+    def _has_multiple_uoms(self) -> bool:
+        if self.type == 'combo':
+            return False
+        return self.env['res.groups']._is_feature_enabled('uom.group_uom') and len(
+            self._get_available_uoms()
+        ) > 1
+
+    def _get_available_uoms(self):
+        self.ensure_one()
+        return self.uom_id | self.uom_ids
+
     ###################
     # DEMO DATA SETUP #
     ###################
@@ -1466,17 +1491,3 @@ class ProductTemplate(models.Model):
                 'record': acoustic_bloc_screens.product_variant_ids[1],
                 'noupdate': True,
             }])
-
-    def _get_list_price(self, price):
-        """ Get the product sales price from a public price based on taxes defined on the product.
-        To be overridden in accounting module."""
-        self.ensure_one()
-        return price
-
-    @api.model
-    def _service_tracking_blacklist(self):
-        """ Service tracking field is used to distinguish some specific categories of products.
-        Those products shouldn't be displayed or used in unrelated applications.
-        This method returns a domain targeting all those specific products (events, courses, ...).
-        """
-        return []

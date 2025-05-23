@@ -43,9 +43,9 @@ class ProductTemplate(models.Model):
 
         return res
 
-    def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
+    def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
         combination_info = super()._get_additionnal_combination_info(
-            product_or_template, quantity, date, website
+            product_or_template, quantity, uom, date, website
         )
         pricelist_prices = request.pricelist._compute_price_rule(self, 1.0)
 

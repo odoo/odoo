@@ -7,13 +7,6 @@
              role="alert"
              aria-live="assertive"
              aria-atomic="true">
-            <div class="toast-header justify-content-between">
-                <strong t-if="props.message" t-out="props.message"/>
-                <button class="btn-close"
-                        type="button"
-                        t-on-click="props.close"
-                        aria-label="Close"/>
-            </div>
             <div class="toast-body">
                 <WarningNotification t-if="this.props.warning" warning="this.props.warning"/>
                 <AddToCartNotification

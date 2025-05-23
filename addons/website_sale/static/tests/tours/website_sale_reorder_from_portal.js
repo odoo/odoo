@@ -19,8 +19,8 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             run: "click",
             expectUnloadPage: true,
         },
-        assertCartContains({productName: 'Reorder Product 1'}),
-        assertCartContains({productName: 'Reorder Product 2'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 2'}),
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
@@ -53,8 +53,8 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             run: "click",
             expectUnloadPage: true,
         },
-        assertCartContains({productName: 'Reorder Product 1'}),
-        assertCartContains({productName: 'Reorder Product 2'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 2'}),
         {
             content: "Check that quantity is 2",
             trigger: ".js_quantity[value='2']",
@@ -87,8 +87,8 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             run: "click",
             expectUnloadPage: true,
         },
-        assertCartContains({productName: 'Reorder Product 1'}),
-        assertCartContains({productName: 'Reorder Product 2'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 2'}),
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
@@ -148,7 +148,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
             run: "click",
             expectUnloadPage: true,
         },
-        assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",

@@ -7,18 +7,28 @@ from odoo.exceptions import UserError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    def _cart_find_product_line(self, product_id, *, event_slot_id=False, event_ticket_id=False, **kwargs):
+    def _cart_find_product_line(self, *args, event_slot_id=False, event_ticket_id=False, **kwargs):
         lines = super()._cart_find_product_line(
-            product_id, event_slot_id=event_slot_id, event_ticket_id=event_ticket_id, **kwargs,
+            *args, event_slot_id=event_slot_id, event_ticket_id=event_ticket_id, **kwargs,
         )
         if not event_slot_id and not event_ticket_id:
             return lines
 
         return lines.filtered(lambda line: line.event_slot_id.id == event_slot_id and line.event_ticket_id.id == event_ticket_id)
 
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, *, event_slot_id=False, event_ticket_id=False, **kwargs):
+    def _verify_updated_quantity(
+        self, order_line, product_id, new_qty, uom_id, *, event_slot_id=False, event_ticket_id=False, **kwargs
+    ):
         """Restrict quantity updates for event tickets according to available seats."""
-        new_qty, warning = super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
+        new_qty, warning = super()._verify_updated_quantity(
+            order_line,
+            product_id,
+            new_qty,
+            uom_id,
+            event_slot_id=event_slot_id,
+            event_ticket_id=event_ticket_id,
+            **kwargs,
+        )
 
         if not event_ticket_id:
             if not order_line.event_ticket_id or new_qty < order_line.product_uom_qty:
@@ -64,9 +74,11 @@ class SaleOrder(models.Model):
 
         return new_qty, warning
 
-    def _prepare_order_line_values(self, product_id, quantity, *, event_slot_id=False, event_ticket_id=False, **kwargs):
+    def _prepare_order_line_values(self, product_id, *args, event_slot_id=False, event_ticket_id=False, **kwargs):
         """Add corresponding event to the SOline creation values (if ticket is provided)."""
-        values = super()._prepare_order_line_values(product_id, quantity, **kwargs)
+        values = super()._prepare_order_line_values(
+            product_id, *args, event_ticket_id=event_ticket_id, **kwargs,
+        )
 
         if not event_ticket_id:
             return values

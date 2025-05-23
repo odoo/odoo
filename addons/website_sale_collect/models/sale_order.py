@@ -152,7 +152,7 @@ class SaleOrder(models.Model):
                     unavailable_order_lines |= ol
         return unavailable_order_lines
 
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
         """ Override of `website_sale_stock` to skip the verification when click and collect
         is activated. The quantity is verified later. """
         product = self.env['product.product'].browse(product_id)
@@ -162,4 +162,4 @@ class SaleOrder(models.Model):
             and self.website_id.in_store_dm_id
         ):
             return new_qty, ''
-        return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
+        return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
