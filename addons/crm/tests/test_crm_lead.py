@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import patch
@@ -985,6 +986,141 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertFalse(lead.phone_sanitized)
 
+    @users('user_sales_manager')
+    def test_leads_rotting(self):
+        # create a stage with rotting days = 5
+        stage_rot = self.env['crm.stage'].create({
+            'name': 'Can Rot',
+            'sequence': 10,
+            'day_rot': 5,
+            'is_won': False,
+        })
+        stage_rot_2 = self.env['crm.stage'].create({
+            'name': 'Can Rot 2',
+            'sequence': 12,
+            'day_rot': 5,
+            'is_won': False,
+        })
+
+        rotten_leads = self.env['crm.lead']
+        clean_leads = self.env['crm.lead']
+        now = datetime(2025, 1, 20, 12, 0, 0)
+        close_past = datetime(2025, 1, 18, 12, 0, 0)
+        past = datetime(2025, 1, 10, 12, 0, 0)
+        last_year = datetime(2024, 1, 20, 12, 0, 0)
+
+        with patch.object(self.env.cr, 'now', lambda: past), \
+             freeze_time(past):
+            for x in range(6):
+                rotten_leads += self.env['crm.lead'].create({
+                    'name': 'Opportunity',
+                    'type': 'opportunity',
+                    'stage_id': stage_rot.id
+                })
+
+        with patch.object(self.env.cr, 'now', lambda: close_past), \
+             freeze_time(close_past):
+            clean_leads += self.env['crm.lead'].create({
+                'name': 'Fresh Opportuniy',
+                'type': 'opportunity',
+                'stage_id': stage_rot.id,
+            })
+        with patch.object(self.env.cr, 'now', lambda: last_year), \
+             freeze_time(last_year):
+            clean_leads += self.env['crm.lead'].create({
+                'name': 'Won Opportuniy',
+                'type': 'opportunity',
+                'stage_id': self.stage_gen_won.id,
+            })
+
+        with patch.object(self.env.cr, 'now', lambda: now), \
+             freeze_time(now):
+            for lead in rotten_leads:
+                self.assertTrue(lead.is_rotting)
+            for lead in clean_leads:
+                self.assertFalse(lead.is_rotting)
+
+            # assert the following:
+            # edit lead: no longer rotting
+            edited = rotten_leads[0]
+            edited.write({'name': 'Edited Opportunity'})
+            self.assertFalse(edited.is_rotting)
+
+            # send message: no longer rotting
+            lead_send_message = rotten_leads[1]
+            lead_send_message.message_post(body='Heya', message_type='email_outgoing')
+            self.assertFalse(lead_send_message.is_rotting)
+
+            # log note: no longer rotting
+            lead_comment = rotten_leads[2]
+            lead_comment.message_post(body='Heya', message_type='comment')
+            self.assertFalse(lead_comment.is_rotting)
+
+            # create activity and resolve it: no longer rotting
+            lead_done_activity = rotten_leads[3]
+            act = self.env['mail.activity'].create({
+                'activity_type_id': self.activity_type_1.id,
+                'note': 'note',
+                'res_id': lead_done_activity.id,
+                'res_model_id': self.env.ref('crm.model_crm_lead').id,
+            })
+            act.action_done()
+            self.assertFalse(lead_done_activity.is_rotting)
+
+            # change stage: no longer rotting
+            lead_changed_stage = rotten_leads[4]
+            lead_changed_stage.stage_id = stage_rot_2.id
+            self.assertFalse(lead_changed_stage.is_rotting)
+
+            # receive email: still rotting
+            lead_email_received = rotten_leads[5]
+            lead_email_received.message_post(body='Heya', message_type='email')
+            self.assertTrue(lead_email_received.is_rotting)
+
+    def test_incoming_email_lead_assignment(self):
+        # create two sales teams with an alias each
+        team1 = self.env['crm.team'].create({
+            'name': 'team_1',
+            'alias_name': 'team.1',
+        })
+        team2 = self.env['crm.team'].create({
+            'name': 'team2',
+            'alias_name': 'team.2',
+        })
+
+        # create two users each belonging to one of the teams
+        user1 = self.env['res.users'].create({'name': '1', 'login': '1'})
+        user2 = self.env['res.users'].create({'name': '2', 'login': '2'})
+        self.env['crm.team.member'].create({'user_id': user1.id, 'crm_team_id': team1.id})
+        self.env['crm.team.member'].create({'user_id': user2.id, 'crm_team_id': team2.id})
+
+        # send three emails to both aliases
+        for x in range(3):
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@custo1{x}.be',
+                team1.alias_email,
+                subject=f'OpportunityTeam1{x}',
+                target_model='crm.lead',
+            )
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@custo2{x}.be',
+                team2.alias_email,
+                subject=f'OpportunityTeam2{x}',
+                target_model='crm.lead',
+            )
+
+        # each team should receive all three of their new opportunities and none of the others'
+        team1_leads = self.env['crm.lead'].search([('team_id', '=', team1.id)])
+        team2_leads = self.env['crm.lead'].search([('team_id', '=', team2.id)])
+        for lead in team1_leads:
+            self.assertTrue('source.email@custo1' in lead.email_from)
+            self.assertTrue(lead.user_id == user1)
+        for lead in team2_leads:
+            self.assertTrue('source.email@custo2' in lead.email_from)
+            self.assertTrue(lead.user_id == user2)
+
 
 @tagged('lead_internals')
 class TestLeadFormTools(FormatAddressCase):
@@ -1009,3 +1145,219 @@ class TestCrmLeadMailTrackingDuration(MailTrackingDurationMixinCase):
 
     def test_crm_lead_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()
+
+    # @users('user_sales_manager')
+    def test_leads_rainbowman(self):
+        """
+        This test ensures that all rainbowman messages can trigger, and that they do so in correct order of priority.
+        """
+
+        # setup
+        team = self.env['crm.team'].create({
+            'name': 'Rainbowman Team',
+        })
+        user1 = self.env['res.users'].sudo().create({'name': 'user1', 'login': 'user1'})
+        user2 = self.env['res.users'].sudo().create({'name': 'user2', 'login': 'user2'})
+        self.env['crm.team.member'].create({'user_id': user1.id, 'crm_team_id': team.id})
+        self.env['crm.team.member'].create({'user_id': user2.id, 'crm_team_id': team.id})
+
+        stage1 = self.env['crm.stage'].create({
+            'name': 'stage1',
+            'team_ids': [team.id],
+        })
+        stage2 = self.env['crm.stage'].create({
+            'name': 'stage2',
+            'team_ids': [team.id],
+        })
+        self.env['crm.stage'].create({
+            'name': 'stage_win',
+            'team_ids': [team.id],
+            'is_won': True,
+        })
+
+        # setup timestamps:
+
+        past = datetime(2024, 12, 15, 12, 0)
+        jan1_10am = datetime(2025, 1, 1, 10, 0)
+        jan1_12pm = datetime(2025, 1, 1, 12, 0)
+        jan2 = datetime(2025, 1, 2, 12, 0)
+        jan3_12pm = datetime(2025, 1, 3, 12, 0)
+        jan3_1pm = datetime(2025, 1, 3, 13, 0)
+        jan6 = datetime(2025, 1, 6, 12, 0)
+        jan11 = datetime(2025, 1, 11, 12, 0)
+        march1 = datetime(2025, 3, 1, 12, 0)
+
+        # setup main batch of leads
+        with patch.object(self.env.cr, 'now', lambda: past), \
+             freeze_time(past):
+            leads = TestCrmCommon._create_leads_batch(self, count=15, partner_count=5, user_ids=[user1.id, user2.id], lead_type='opportunity')
+            leads.write({'stage_id': stage1.id})
+            leads_er = TestCrmCommon._create_leads_batch(self, count=12, partner_count=3, user_ids=[user1.id, user2.id], lead_type='opportunity')
+            leads_er.write({
+                'stage_id': stage1.id,
+                'expected_revenue': 500,
+            })
+            all_leads = leads | leads_er
+            # initialize tracking
+            self.flush_tracking()
+
+        # setup duration tracking array, as normal behavior doesn't work in test env and has to be replicated
+        # This test uses _update_duration_tracking to keep track of current duration_trackings as they evolve for the duration of the test.
+        # They are added to each lead right as they're about to be marked as won.
+        tracking_array = [(lead, defaultdict(lambda: 0)) for lead in leads] + [(lead, defaultdict(lambda: 0)) for lead in leads_er]
+
+        def set_won_get_message(lead, user):
+            """
+            Set the lead as won. Then, if there's a message, return that message; otherwise return False.
+            This method overrides normal duration_tracking computation to use tracking values set during the test
+            """
+            lead.user_id = user
+
+            with patch.object(lead.__class__, '_compute_duration_tracking', lambda lead: next(dt for (tracked_lead, dt) in tracking_array if tracked_lead.id == lead.id)):
+                lead.duration_tracking = next(dt for (tracked_lead, dt) in tracking_array if tracked_lead.id == lead.id)
+                ret = lead.action_set_won_rainbowman()
+            if ret and not isinstance(ret, bool):
+                return ret['effect']['message']
+            return False
+
+        # test lead resolution
+
+        # test messages for leads with no expected revenue
+        # cases to test (by current order of priority)
+        # First deal
+        # Fifth deal won today
+        # First win in target country (all team)
+        # First win from that UTM source (all team)
+        # Win with 25 messages on the counter
+        # Three-day streak
+        # Fastest close in a 30-day window
+        # First stage to last stage
+
+        with patch.object(self.env.cr, 'now', lambda: jan1_10am), \
+             freeze_time(jan1_10am):
+            interval = (jan1_10am - past).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+            all_leads.write({'stage_id': stage2.id})
+
+            msg = set_won_get_message(leads[0], user1)
+            self.assertEqual(msg, 'Go, go, go! Congrats for your first deal.')
+
+            leads[1].country_id = self.env.ref('base.au')
+            msg = set_won_get_message(leads[1], user1)
+            self.assertEqual(msg, 'You just expanded the map! First win in Australia.')
+
+            custom_source = self.env['utm.source'].create({'name': 'Custom Source'})
+            leads[2].source_id = custom_source
+            msg = set_won_get_message(leads[2], user1)
+            self.assertEqual(msg, 'Yay, your first win from Custom Source!')
+
+        with patch.object(self.env.cr, 'now', lambda: jan1_12pm), \
+             freeze_time(jan1_12pm):
+            interval = (jan1_12pm - jan1_10am).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+
+            for x in range(25):
+                leads[3].message_post(
+                    body='Message',
+                    subtype_xmlid='mail.mt_comment',
+                    message_type='comment',
+                )
+            msg = set_won_get_message(leads[3], user1)
+            self.assertEqual(msg, 'Phew, that took some effort — but you nailed it. Good job!')
+
+            msg = set_won_get_message(leads[4], user1)
+            self.assertEqual(msg, 'You\'re on fire! Fifth deal won today 🔥')
+
+            leads[5].expected_revenue = 100
+            msg = set_won_get_message(leads[5], user2)
+            self.assertEqual(msg, 'Go, go, go! Congrats for your first deal.')
+
+            leads[6].source_id = custom_source.id
+            leads[7].country_id = self.env.ref('base.au')
+
+            msg = set_won_get_message(leads[6], user2)
+            self.assertFalse(msg)
+            msg = set_won_get_message(leads[7], user2)
+            self.assertFalse
+
+            new_lead = self.env['crm.lead'].create({
+                'name': 'lead',
+                'type': 'opportunity',
+                'stage_id': stage1.id,
+                'user_id': user1.id,
+            })
+            new_lead2 = self.env['crm.lead'].create({
+                'name': 'lead',
+                'type': 'opportunity',
+                'stage_id': stage1.id,
+                'user_id': user1.id
+            })
+            tracking_array += [(new_lead, defaultdict(lambda: 0)), (new_lead2, defaultdict(lambda: 0))]
+            all_leads |= new_lead | new_lead2
+
+        with patch.object(self.env.cr, 'now', lambda: jan2), \
+             freeze_time(jan2):
+            interval = (jan2 - jan1_12pm).total_seconds() / 60
+
+            self.flush_tracking()
+            self._update_duration_tracking(tracking_array, interval)
+            all_leads._compute_duration_tracking()
+            msg = set_won_get_message(new_lead, user1)
+            self.assertEqual(msg, 'Wow, that was fast. That deal didn’t stand a chance!')
+
+        with patch.object(self.env.cr, 'now', lambda: jan3_12pm), \
+             freeze_time(jan3_12pm):
+            interval = (jan3_12pm - jan2).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+            msg = set_won_get_message(leads[8], user1)
+            self.assertEqual(msg, 'You\'re on a winning streak. 3 deals in 3 days, congrats!')
+
+        with patch.object(self.env.cr, 'now', lambda: jan3_1pm), \
+             freeze_time(jan3_1pm):
+            interval = (jan3_1pm - jan3_12pm).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+            msg = set_won_get_message(new_lead2, user1)
+            self.assertEqual(msg, 'No detours, no delays - from stage1 straight to the win! 🚀')
+
+            self.assertFalse(set_won_get_message(leads[9], user1))
+            self.assertFalse(set_won_get_message(leads[10], user2))
+
+            # test messages for leads with expected revenues
+            # cases to test:
+            # Team record for the last 30 days
+            # Team record for the last 7 days
+            # Personal record for the last 30 days
+            # Personal record for the last 7 days
+            leads_er[0].expected_revenue = 800
+            msg = set_won_get_message(leads_er[0], user1)
+            self.assertEqual(msg, 'Boom! Team record for the past 30 days.')
+
+            leads_er[1].expected_revenue = 600
+            msg = set_won_get_message(leads_er[1], user2)
+            self.assertEqual(msg, 'You just beat your personal record for the past 30 days.')
+
+        with patch.object(self.env.cr, 'now', lambda: jan6), \
+             freeze_time(jan6):
+            interval = (jan6 - jan3_1pm).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+            msg = set_won_get_message(leads_er[2], user1)
+            self.assertFalse(msg)
+
+            msg = set_won_get_message(leads_er[3], user2)
+            self.assertFalse(msg)
+
+        with patch.object(self.env.cr, 'now', lambda: jan11), \
+             freeze_time(jan11):
+            leads_er[4].expected_revenue = 650
+            msg = set_won_get_message(leads_er[4], user1)
+            self.assertEqual(msg, 'Yeah! Best deal out of the last 7 days for the team.')
+
+            leads_er[5].expected_revenue = 550
+            msg = set_won_get_message(leads_er[5], user2)
+            self.assertEqual(msg, 'You just beat your personal record for the past 7 days.')
+
+        with patch.object(self.env.cr, 'now', lambda: march1), \
+             freeze_time(march1):
+            leads_er[6].expected_revenue = 750
+            msg = set_won_get_message(leads_er[6], user1)
+            self.assertEqual(msg, 'Boom! Team record for the past 30 days.')
