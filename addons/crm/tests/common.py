@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import defaultdict
 from contextlib import contextmanager
 from datetime import timedelta
 from unittest.mock import patch
@@ -315,7 +316,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
     def _create_leads_batch(self, lead_type='lead', count=10, email_dup_count=0,
                             partner_count=0, partner_ids=None, user_ids=None,
-                            country_ids=None, probabilities=None, suffix=''):
+                            country_ids=None, probabilities=None, suffix='', additional_lead_values=defaultdict(None)):
         """ Helper tool method creating a batch of leads, useful when dealing
         with batch processes. Please update me.
 
@@ -333,6 +334,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'name': f'TestLead{suffix}_{x:04d}',
             'type': lead_type if lead_type else types[x % 2],
             'priority': '%s' % (x % 3),
+            **additional_lead_values,
         } for x in range(count)]
 
         # generate customer information
