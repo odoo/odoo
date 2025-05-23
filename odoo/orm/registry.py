@@ -321,7 +321,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         models: OrderedSet[str] = OrderedSet()
         queue = deque(model_names)
         while queue:
-            model = self[queue.popleft()]
+            model = self.get(queue.popleft())
+            if model is None or model._name in models:
+                continue
             models.add(model._name)
             for func in funcs:
                 queue.extend(func(model))
@@ -360,9 +362,13 @@ class Registry(Mapping[str, type["BaseModel"]]):
         return model_names
 
     @locked
-    def _setup_models__(self, cr: BaseCursor) -> None:
-        """ Complete the setup of models.
-            This must be called after loading modules and before using the ORM.
+    def _setup_models__(self, cr: BaseCursor, model_names: Iterable[str] | None = None) -> None:  # noqa: PLW3201
+        """ Perform the setup of models.
+        This must be called after loading modules and before using the ORM.
+
+        When given ``model_names``, it performs an incremental setup: only the
+        models impacted by the given ``model_names`` and all the already-marked
+        models will be set up. Otherwise, all models are set up.
         """
         from .environments import Environment  # noqa: PLC0415
         env = Environment(cr, SUPERUSER_ID, {})
@@ -385,7 +391,19 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         self.field_depends.clear()
         self.field_depends_context.clear()
-        self.many2many_relations.clear()
+
+        if model_names is None:
+            self.many2many_relations.clear()
+
+            # mark all models for setup
+            for model_cls in self.models.values():
+                model_cls._setup_done__ = False
+
+        else:
+            # only mark impacted models for setup
+            for model_name in self.descendants(model_names, '_inherit', '_inherits'):
+                self[model_name]._setup_done__ = False
+
         self.many2one_company_dependents.clear()
 
         model_classes.setup_model_classes(env)
