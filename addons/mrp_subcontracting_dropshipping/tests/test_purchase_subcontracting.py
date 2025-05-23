@@ -555,6 +555,7 @@ class TestSubcontractingDropshippingPortal(TestSubcontractingPortal):
         mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
         # Registering components for the first manufactured product
         mo_form.lot_producing_id = finished_serial
+        mo_form.qty_producing = 1.0
         mo = mo_form.save()
         mo.subcontracting_record_component()
         self.assertRecordValues(mo, [{

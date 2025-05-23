@@ -339,6 +339,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             mo = self.env['mrp.production'].browse(action['res_id'])
             mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
             mo_form.lot_producing_id = serials_finished[i]
+            mo_form.qty_producing = 1.0
             with mo_form.move_line_raw_ids.edit(0) as ml:
                 self.assertEqual(ml.product_id, self.comp1)
                 ml.lot_id = serials_comp1[i]
