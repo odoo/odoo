@@ -10,3 +10,4 @@ from . import pos_restaurant_inherit
 from . import hr_employee_inherit
 from . import pos_config_inherit
 
+from . import res_config_settings

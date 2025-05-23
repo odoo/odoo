@@ -39,9 +39,6 @@
                 'custom_module/static/src/img/favicon.ico',
                 'custom_module/static/src/scss/custom_pwa.scss',
                 'custom_module/static/src/scss/login_screen.scss',
-
-
-
             ],
             'web.assets_frontend' : [
                 'custom_module/static/src/scss/login.scss',
@@ -63,6 +60,8 @@
                 'custom_module/static/src/js/pos_order_inherit.js',
                 'custom_module/static/src/js/floor_screen_inherit.js',
 
+                'custom_module/static/src/js/pos_order_inherit.js',
+                'custom_module/static/src/js/hw_printer_inherited.js',
             ],
     },
     'images': [
