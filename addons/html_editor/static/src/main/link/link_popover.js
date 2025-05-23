@@ -414,7 +414,7 @@ export class LinkPopover extends Component {
 
     get classes() {
         let classes = [...this.props.linkElement.classList]
-            .filter((value) => value != "btn" && !value.match(/btn-(sm|lg|fill)/))
+            .filter((value) => !value.match(/btn(-[a-z0-9]+)*/))
             .join(" ");
 
         if (this.state.type) {
