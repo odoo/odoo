@@ -901,7 +901,7 @@ class SaleOrder(models.Model):
                 selected_combo_items = json.loads(line.selected_combo_items)
                 if (
                     selected_combo_items
-                    and len(selected_combo_items) != len(line.product_template_id.combo_ids)
+                    and len(selected_combo_items) != len(line.product_template_id.sudo().combo_ids)
                 ):
                     raise ValidationError(_(
                         "The number of selected combo items must match the number of available"

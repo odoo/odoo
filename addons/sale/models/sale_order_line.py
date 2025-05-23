@@ -748,7 +748,7 @@ class SaleOrderLine(models.Model):
                 to_currency=self.currency_id,
                 company=self.company_id,
                 date=self.order_id.date_order,
-            ) for combo_id in combo_line.product_template_id.combo_ids
+            ) for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
         # Compute the prorated combo prices.
@@ -765,7 +765,7 @@ class SaleOrderLine(models.Model):
         # the combo prices to make the delta 0.
         combo_price_delta = combo_product_price - sum(combo_prices.values())
         if combo_price_delta:
-            combo_prices[combo_line.product_template_id.combo_ids[-1]] += combo_price_delta
+            combo_prices[combo_line.product_template_id.sudo().combo_ids[-1]] += combo_price_delta
         # Add the extra price of this combo item, as well as the extra prices of any `no_variant`
         # attributes to the combo price.
         return (
