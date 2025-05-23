@@ -1,4 +1,157 @@
 <odoo>
+    <!-- Global styles for navigation icons -->
+    <template id="global_nav_icons_styles" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+            <style>
+                /* Navigation icons styling */
+                .nav-icon-btn {
+                    background: none !important;
+                    margin: 0 7px !important;
+                    position: relative !important;
+                    width: auto !important;
+                    height: auto !important;
+                    padding: 12px !important;
+                    border-radius: 0 !important;
+                    color: #333 !important;
+                    box-shadow: none !important;
+                    transition: color 0.2s ease !important;
+                }
+
+                .nav-icon-btn i {
+                    font-size: 22px !important;
+                }
+
+                .nav-icon-btn.active {
+                    color: #ff6600 !important;
+                    background: none !important;
+                    box-shadow: none !important;
+                }
+
+                .nav-icon-btn:hover {
+                    background-color: transparent !important;
+                    transform: none !important;
+                    box-shadow: none !important;
+                    color: #ff6600 !important;
+                }
+
+                .nav-icon-btn:focus,
+                .nav-icon-btn:active {
+                    outline: none !important;
+                    box-shadow: none !important;
+                }
+
+                .desktop-nav-icons {
+                    border: none !important;
+                    background: #fff !important;
+                    overflow: visible !important;
+                    padding-bottom: 20px !important;
+                }
+
+                /* Tooltip styling enhancement */
+                .icon-tooltip {
+                    position: absolute !important;
+                    bottom: -32px !important;
+                    left: 50% !important;
+                    transform: translateX(-50%) !important;
+                    background: #333 !important;
+                    color: white !important;
+                    padding: 4px 8px !important;
+                    border-radius: 4px !important;
+                    font-size: 12px !important;
+                    white-space: nowrap !important;
+                    opacity: 0 !important;
+                    visibility: hidden !important;
+                    transition: all 0.2s ease !important;
+                    z-index: 9999 !important;
+                    display: none !important; /* Changed from block to none by default */
+                    pointer-events: none !important;
+                }
+
+                /* Show tooltip on hover - more specific selector */
+                .has-tooltip:hover .icon-tooltip {
+                    opacity: 1 !important;
+                    visibility: visible !important;
+                    display: block !important; /* Explicitly show on hover */
+                }
+
+                /* Add bottom margin to nav-icon-btn to make room for tooltip */
+                .nav-icon-btn {
+                    margin-bottom: 10px !important;
+                }
+
+                /* Making sure tooltips are not cut off */
+                .desktop-nav-icons {
+                    overflow: visible !important;
+                    padding-bottom: 20px !important;
+                }
+            </style>
+            
+            <script type="text/javascript">
+            //<![CDATA[
+                // Script to ensure tooltips work correctly
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Set specific tooltip text based on href - this ensures tooltips have the correct text
+                    const tooltipMap = {
+                        '/shop': 'Главная',
+                        '/shop/cart': 'Корзина',
+                        '/profile': 'Профиль',
+                        '/videos': 'Видео'
+                    };
+                    
+                    // Get all tooltips and set the correct text
+                    const allTooltips = document.querySelectorAll('.has-tooltip');
+                    allTooltips.forEach(function(btn) {
+                        const href = btn.getAttribute('href');
+                        if (href && tooltipMap[href]) {
+                            // Find the tooltip span
+                            const tooltip = btn.querySelector('.icon-tooltip');
+                            if (tooltip) {
+                                // Ensure the tooltip has text content
+                                tooltip.textContent = tooltipMap[href];
+                                
+                                // Force important inline styles to override any conflicting CSS
+                                tooltip.style.setProperty('display', 'none', 'important');
+                                tooltip.style.setProperty('position', 'absolute', 'important');
+                                tooltip.style.setProperty('bottom', '-32px', 'important');
+                                tooltip.style.setProperty('left', '50%', 'important');
+                                tooltip.style.setProperty('transform', 'translateX(-50%)', 'important');
+                                tooltip.style.setProperty('background', '#333', 'important');
+                                tooltip.style.setProperty('color', 'white', 'important');
+                                tooltip.style.setProperty('padding', '4px 8px', 'important');
+                                tooltip.style.setProperty('border-radius', '4px', 'important');
+                                tooltip.style.setProperty('font-size', '12px', 'important');
+                                tooltip.style.setProperty('white-space', 'nowrap', 'important');
+                                tooltip.style.setProperty('z-index', '9999', 'important');
+                            }
+                        }
+                    });
+                    
+                    // Force tooltips to be visible on hover with JavaScript
+                    allTooltips.forEach(function(btn) {
+                        btn.addEventListener('mouseenter', function() {
+                            const tooltip = this.querySelector('.icon-tooltip');
+                            if (tooltip) {
+                                tooltip.style.setProperty('opacity', '1', 'important');
+                                tooltip.style.setProperty('visibility', 'visible', 'important');
+                                tooltip.style.setProperty('display', 'block', 'important');
+                            }
+                        });
+                        
+                        btn.addEventListener('mouseleave', function() {
+                            const tooltip = this.querySelector('.icon-tooltip');
+                            if (tooltip) {
+                                tooltip.style.setProperty('opacity', '0', 'important');
+                                tooltip.style.setProperty('visibility', 'hidden', 'important');
+                                tooltip.style.setProperty('display', 'none', 'important');
+                            }
+                        });
+                    });
+                });
+            //]]>
+            </script>
+        </xpath>
+    </template>
+
     <!-- Каталог с выпадающими категориями -->
     <template id="catalog_dropdown" name="Каталог с категориями">
         <div id="catalog-toggle-container" style="margin-bottom: 20px;">
@@ -13,6 +166,7 @@
             </div>
         </div>
         <script type="text/javascript">
+        //<![CDATA[
             document.addEventListener('DOMContentLoaded', function() {
                 var btn = document.getElementById('catalog-toggle-btn');
                 var cat = document.getElementById('catalog-categories');
@@ -20,6 +174,7 @@
                     cat.style.display = (cat.style.display === 'none' || cat.style.display === '') ? 'block' : 'none';
                 });
             });
+        //]]>
         </script>
         <style>
             #catalog-categories {
@@ -328,25 +483,29 @@
         <!-- Пустой для удаления -->
     </template>
 
-    <!-- Create a new template that directly injects icons into the products_header -->
+    <!-- Add a new template that directly injects icons into the products_header -->
     <template id="product_header_with_icons" inherit_id="website_sale.products">
         <xpath expr="//div[hasclass('products_header')]" position="attributes">
             <attribute name="class" add="position-relative d-flex align-items-center" separator=" "/>
         </xpath>
         
         <xpath expr="//div[hasclass('products_header')]" position="inside">
-            <div class="desktop-nav-icons ms-3 d-none d-md-flex mobile-hidden-force" style="align-items: center; gap: 15px; margin-left: auto;">
-                <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
-                    <i class="fa fa-home"></i>
+            <div class="desktop-nav-icons ms-3 d-none d-md-flex mobile-hidden-force" style="align-items: center; margin-left: auto; border: none; border-radius: 8px; padding: 4px 8px; background: #fff; overflow: visible;">
+                <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-home" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Главная</span>
                 </a>
-                <a href="/videos" class="nav-icon-btn">
-                    <i class="fa fa-play"></i>
+                <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-play" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Видео</span>
                 </a>
-                <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
-                    <i class="fa fa-shopping-cart"></i>
+                <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Корзина</span>
                 </a>
-                <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
-                    <i class="fa fa-user"></i>
+                <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                    <i class="fa fa-user" style="font-size: 22px;"></i>
+                    <span class="icon-tooltip">Профиль</span>
                 </a>
             </div>
         </xpath>
@@ -406,6 +565,7 @@
             }
         </style>
         <script type="text/javascript">
+        //<![CDATA[
             document.addEventListener('DOMContentLoaded', function() {
                 var btn = document.getElementById('catalog-toggle-btn');
                 var block = document.getElementById('catalog-categories-block');
@@ -420,6 +580,7 @@
                     }, 200);
                 });
             });
+        //]]>
         </script>
     </template>
 
@@ -505,6 +666,7 @@
                 }
             </style>
             <script type="text/javascript">
+            //<![CDATA[
                 document.addEventListener('DOMContentLoaded', function() {
                     var btn = document.querySelector('.catalog-button');
                     var sidebar = document.querySelector('.catalog-sidebar');
@@ -528,7 +690,7 @@
                     if(btn) {
                         btn.addEventListener('click', function(e) {
                             e.stopPropagation();
-                            if(sidebar &amp;&amp; sidebar.classList.contains('open')) {
+                            if(sidebar && sidebar.classList.contains('open')) {
                                 closeSidebar();
                             } else {
                                 openSidebar();
@@ -542,11 +704,12 @@
                     }
                     // Закрытие по клику вне сайдбара
                     document.addEventListener('click', function(e) {
-                        if(sidebar &amp;&amp; sidebar.classList.contains('open') &amp;&amp; !sidebar.contains(e.target) &amp;&amp; e.target !== btn) {
+                        if(sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== btn) {
                             closeSidebar();
                         }
                     });
                 });
+            //]]>
             </script>
         </xpath>
     </template>
@@ -556,18 +719,22 @@
         <xpath expr="//main" position="before">
             <t t-if="request.httprequest.path == '/videos'">
                 <div class="container py-3">
-                    <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
-                        <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
-                            <i class="fa fa-home"></i>
+                    <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; display: flex; align-items: center; border: none; border-radius: 8px; padding: 4px 8px; background: #fff; justify-content: center; overflow: visible;">
+                        <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-home" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Главная</span>
                         </a>
-                        <a href="/videos" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/videos' else '' }}">
-                            <i class="fa fa-play"></i>
+                        <a href="/videos" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/videos' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-play" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Видео</span>
                         </a>
-                        <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
-                            <i class="fa fa-shopping-cart"></i>
+                        <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Корзина</span>
                         </a>
-                        <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
-                            <i class="fa fa-user"></i>
+                        <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                            <i class="fa fa-user" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Профиль</span>
                         </a>
                     </div>
                 </div>
@@ -579,18 +746,22 @@
     <template id="cart_nav_icons" inherit_id="website_sale.cart">
         <xpath expr="//div[hasclass('container')]" position="before">
             <div class="container py-3">
-                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
-                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
-                        <i class="fa fa-home"></i>
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px; border: none; background: #fff; overflow: visible;">
+                    <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-home" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Главная</span>
                     </a>
-                    <a href="/videos" class="nav-icon-btn">
-                        <i class="fa fa-play"></i>
+                    <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-play" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Видео</span>
                     </a>
-                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
-                        <i class="fa fa-shopping-cart"></i>
+                    <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Корзина</span>
                     </a>
-                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
-                        <i class="fa fa-user"></i>
+                    <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-user" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Профиль</span>
                     </a>
                 </div>
             </div>
@@ -601,18 +772,22 @@
     <template id="checkout_nav_icons" inherit_id="website_sale.checkout">
         <xpath expr="//div[hasclass('container')]" position="before">
             <div class="container py-3">
-                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
-                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
-                        <i class="fa fa-home"></i>
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px; border: none; background: #fff; overflow: visible;">
+                    <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-home" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Главная</span>
                     </a>
-                    <a href="/videos" class="nav-icon-btn">
-                        <i class="fa fa-play"></i>
+                    <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-play" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Видео</span>
                     </a>
-                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
-                        <i class="fa fa-shopping-cart"></i>
+                    <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Корзина</span>
                     </a>
-                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
-                        <i class="fa fa-user"></i>
+                    <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                        <i class="fa fa-user" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Профиль</span>
                     </a>
                 </div>
             </div>
@@ -623,18 +798,22 @@
     <template id="profile_nav_icons" inherit_id="multi_vendor_marketplace.custom_user_profile">
         <xpath expr="//div[hasclass('container')]" position="before">
             <div class="container py-3">
-                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px;">
-                    <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
-                        <i class="fa fa-home"></i>
+                <div class="desktop-nav-icons d-none d-md-flex mobile-hidden-force mx-auto" style="max-width: 240px; align-items: center; justify-content: center; gap: 20px; border: none; background: #fff; overflow: visible;">
+                    <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-home" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Главная</span>
                     </a>
-                    <a href="/videos" class="nav-icon-btn">
-                        <i class="fa fa-play"></i>
+                    <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-play" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Видео</span>
                     </a>
-                    <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
-                        <i class="fa fa-shopping-cart"></i>
+                    <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Корзина</span>
                     </a>
-                    <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
-                        <i class="fa fa-user"></i>
+                    <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px;">
+                        <i class="fa fa-user" style="font-size: 22px;"></i>
+                        <span class="icon-tooltip">Профиль</span>
                     </a>
                 </div>
             </div>
@@ -798,6 +977,7 @@
                 }
             </style>
             <script type="text/javascript">
+            //<![CDATA[
                 // JavaScript to aggressively hide the cart empty message
                 document.addEventListener('DOMContentLoaded', function() {
                     function hideEmptyCartMessage() {
@@ -823,6 +1003,7 @@
                     setTimeout(hideEmptyCartMessage, 100);
                     setTimeout(hideEmptyCartMessage, 500);
                 });
+            //]]>
             </script>
         </xpath>
     </template>
@@ -847,6 +1028,7 @@
                 }
             </style>
             <script type="text/javascript">
+            //<![CDATA[
                 // Fix for language switching issues
                 document.addEventListener('DOMContentLoaded', function() {
                     // Get all language switching links
@@ -861,6 +1043,7 @@
                         });
                     }
                 });
+            //]]>
             </script>
         </xpath>
     </template>

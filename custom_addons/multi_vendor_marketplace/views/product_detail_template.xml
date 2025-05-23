@@ -36,22 +36,87 @@
                         </button>
                     </form>
                     
-                    <!-- Иконки навигации справа от поиска -->
-                    <div class="desktop-nav-icons d-none d-md-flex" style="display: flex !important; align-items: center; gap: 12px;">
-                        <a href="/shop" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}">
-                            <i class="fa fa-home"></i>
+                    <!-- Иконки навигации справа от поиска - обновленный дизайн с белым фоном без рамки -->
+                    <div class="desktop-nav-icons d-none d-md-flex" style="display: flex !important; align-items: center; border: none; border-radius: 8px; padding: 4px 8px; background: #fff;">
+                        <a href="/shop" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-home" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Главная</span>
                         </a>
-                        <a href="/videos" class="nav-icon-btn">
-                            <i class="fa fa-play"></i>
+                        <a href="/videos" class="nav-icon-btn has-tooltip" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-play" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Видео</span>
                         </a>
-                        <a href="/shop/cart" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}">
-                            <i class="fa fa-shopping-cart"></i>
+                        <a href="/shop/cart" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-shopping-cart" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Корзина</span>
                         </a>
-                        <a href="/profile" class="nav-icon-btn" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}">
-                            <i class="fa fa-user"></i>
+                        <a href="/profile" class="nav-icon-btn has-tooltip" t-attf-class="nav-icon-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}" style="background: none; margin: 0 7px; position: relative; width: auto; height: auto; padding: 12px; box-shadow: none !important;">
+                            <i class="fa fa-user" style="font-size: 22px;"></i>
+                            <span class="icon-tooltip">Профиль</span>
                         </a>
                     </div>
                 </div>
+                
+                <!-- Add tooltip styles -->
+                <style>
+                    .has-tooltip {
+                        position: relative;
+                    }
+                    
+                    .icon-tooltip {
+                        position: absolute;
+                        bottom: -32px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: #333;
+                        color: white;
+                        padding: 4px 8px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        white-space: nowrap;
+                        opacity: 0;
+                        visibility: hidden;
+                        transition: all 0.2s ease;
+                        z-index: 100;
+                    }
+                    
+                    .icon-tooltip:after {
+                        content: '';
+                        position: absolute;
+                        top: -6px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        border-width: 0 6px 6px 6px;
+                        border-style: solid;
+                        border-color: transparent transparent #333 transparent;
+                    }
+                    
+                    /* Remove background on hover that causes square effect */
+                    .has-tooltip:hover {
+                        background-color: transparent;
+                        border-radius: 0;
+                        box-shadow: none !important;
+                    }
+                    
+                    .has-tooltip:hover .icon-tooltip {
+                        opacity: 1;
+                        visibility: visible;
+                    }
+                    
+                    .nav-icon-btn.active {
+                        color: #ff6600;
+                    }
+                    
+                    .desktop-nav-icons .nav-icon-btn:hover {
+                        transform: none;
+                        box-shadow: none !important;
+                    }
+
+                    /* Ensure no shadow on any nav button */
+                    .nav-icon-btn {
+                        box-shadow: none !important;
+                    }
+                </style>
                 
                 <!-- Удаляем старый блок с иконками, который был отдельно под поиском -->
                 <div class="desktop-nav-icons ms-3 d-none d-md-flex">

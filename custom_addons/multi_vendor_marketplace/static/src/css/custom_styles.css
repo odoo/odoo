@@ -1608,14 +1608,14 @@ header .navbar-brand.logo {
 
 /* Simple positioning of nav icons with !important to override other styles */
 .desktop-nav-icons {
-    position: absolute !important;
-    top: 50% !important;
-    right: 85px !important; /* Position to the right, next to search form */
-    transform: translateY(-50%) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 15px !important;
-    z-index: 1000 !important;
+    position: absolute;
+    top: 50%;
+    right: 85px; /* Position to the right, next to search form */
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000;
 }
 
 /* Taller navbar for more space */
@@ -1901,6 +1901,90 @@ header > .desktop-nav-icons {
 
 .product-detail-search-container form {
     flex: 1 !important;
+}
+
+/* Updated Navigation Icon Styling */
+.desktop-nav-icons {
+    display: flex !important;
+    align-items: center !important;
+    border: none !important;
+    border-radius: 8px !important; 
+    padding: 4px 8px !important;
+    background: #fff !important;
+    gap: 0 !important;
+}
+
+.nav-icon-btn {
+    background: none !important;
+    margin: 0 7px !important;
+    position: relative !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 12px !important;
+    border-radius: 4px !important;
+    color: #333 !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.nav-icon-btn.active {
+    color: #ff6600 !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.nav-icon-btn:hover {
+    background-color: transparent !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.nav-icon-btn i {
+    font-size: 22px !important;
+}
+
+/* Enhanced tooltip styling */
+.has-tooltip {
+    position: relative !important;
+}
+
+.icon-tooltip {
+    position: absolute !important;
+    bottom: -32px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: #333 !important;
+    color: white !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.2s ease !important;
+    z-index: 9999 !important; /* Higher z-index to ensure visibility */
+    display: block !important; /* Ensure it's a block element */
+}
+
+.icon-tooltip:after {
+    content: '' !important;
+    position: absolute !important;
+    top: -6px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    border-width: 0 6px 6px 6px !important;
+    border-style: solid !important;
+    border-color: transparent transparent #333 transparent !important;
+}
+
+.has-tooltip:hover .icon-tooltip {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+/* Add more spacing for tooltip display */
+.nav-icon-btn {
+    margin-bottom: 10px !important; /* Add bottom space for tooltip */
 }
 
 
