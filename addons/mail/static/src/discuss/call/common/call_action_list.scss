@@ -1,4 +1,4 @@
-.o-discuss-CallActionList-bar button:not(.btn-danger):not(.btn-success) {
+.o-discuss-CallActionList-bar button:not(.btn-danger):not(.btn-success), .o-discuss-CallActionList-dropdown {
     background-color: var(--o-discuss-CallActionList-bgColor, #{$o-gray-800});
     color: #FFFFFF;
 }
@@ -6,8 +6,26 @@
 .o-discuss-CallActionList-bar button {
     aspect-ratio: 1;
     border-color: rgba(0, 0, 0, .5) !important;
+
+    &:active {
+        transform: scale(0.90);
+    }
 }
 
 .o-discuss-CallActionList-pulse {
     animation: pulse 1s infinite;
+}
+
+.o-discuss-CallActionList-dropdown {
+    background-color: $o-mail-CallMenu-bgColor;
+    border-color: $o-mail-CallMenu-bgColor-lighter;
+
+    .o-discuss-CallActionList-dropdownItem {
+        &:hover {
+            background-color: $o-mail-CallMenu-bgColor-lighter;
+        }
+        &:active {
+            transform: scale(0.95);
+        }
+    }
 }

@@ -10,6 +10,7 @@ callActionsRegistry
         condition: (component) => component.rtc,
         name: (component) => (component.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
         isActive: (component) => component.rtc.selfSession?.isMute,
+        isTracked: true,
         inactiveIcon: "fa-microphone",
         icon: "fa-microphone-slash",
         activeClass: "text-danger",
@@ -21,6 +22,7 @@ callActionsRegistry
         condition: (component) => component.rtc,
         name: (component) => (component.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
         isActive: (component) => component.rtc.selfSession?.is_deaf,
+        isTracked: true,
         inactiveIcon: "fa-headphones",
         icon: "fa-deaf",
         activeClass: "text-danger",
@@ -40,6 +42,7 @@ callActionsRegistry
                 : _t("Turn camera on");
         },
         isActive: (component) => component.rtc.selfSession?.is_camera_on,
+        isTracked: true,
         icon: "fa-video-camera",
         activeClass: "text-success",
         select: (component) => component.rtc.toggleVideo("camera"),
@@ -50,6 +53,7 @@ callActionsRegistry
         name: (component) =>
             component.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand"),
         isActive: (component) => component.rtc.selfSession?.raisingHand,
+        isTracked: true,
         icon: "fa-hand-paper-o",
         select: (component) => component.rtc.raiseHand(!component.rtc.selfSession.raisingHand),
         sequence: 50,
@@ -65,6 +69,7 @@ callActionsRegistry
                 ? _t("Stop Sharing Screen")
                 : _t("Share Screen");
         },
+        isTracked: true,
         isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
         icon: "fa-desktop",
         activeClass: "text-success",
@@ -87,7 +92,7 @@ callActionsRegistry
         sequence: 60,
     })
     .add("fullscreen", {
-        condition: (component) => component.props && component.props.fullscreen,
+        condition: (component) => component.props?.fullscreen && !component.rtc?.state.isPipMode,
         name: (component) =>
             component.props.fullscreen.isActive ? _t("Exit Fullscreen") : _t("Enter Full Screen"),
         isActive: (component) => component.props.fullscreen.isActive,
@@ -101,6 +106,33 @@ callActionsRegistry
             }
         },
         sequence: 70,
+    })
+    .add("picture-in-picture", {
+        condition: (component) =>
+            component.pipService &&
+            component.rtc &&
+            !component.env?.isSmall &&
+            !component.env?.embedLivechat,
+        available: (component) => !component.rtc?.isRemote,
+        name: (component) => {
+            if (component.rtc?.state.isPipMode) {
+                return _t("Exit Picture in Picture");
+            } else {
+                return _t("Picture in Picture");
+            }
+        },
+        isActive: (component) => component.rtc?.state.isPipMode,
+        icon: "oi oi-launch",
+        select: (component) => {
+            const isPipMode = component.rtc?.state.isPipMode;
+            if (isPipMode) {
+                component.rtc.closePip();
+                window.focus();
+            } else {
+                component.rtc.openPip();
+            }
+        },
+        sequence: 80,
     });
 
 function transformAction(component, id, action) {
