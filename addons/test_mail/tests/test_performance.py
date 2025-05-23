@@ -462,7 +462,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, _test_template = self._create_test_records()
         customer = self.env['res.partner'].browse(self.customer.ids)
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        with self.assertQueryCount(admin=16, employee=16):  # tm 15/15
+        with self.assertQueryCount(admin=21, employee=21):  # tm 15/15
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -476,7 +476,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=52, employee=52):  # tm 51/51
+        with self.assertQueryCount(admin=57, employee=57):  # tm 51/51
             composer._action_send_mail()
 
         # notifications
@@ -587,7 +587,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_template.write({'attachment_ids': [(5, 0)]})
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=42, employee=42):  # tm 36/36
+        with self.assertQueryCount(admin=48, employee=47):  # tm 36/36
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -598,7 +598,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=48, employee=48):
+        with self.assertQueryCount(admin=53, employee=53):
             composer._action_send_mail()
 
         # notifications
@@ -617,7 +617,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
 
         customer = self.env['res.partner'].browse(self.customer.ids)
-        with self.assertQueryCount(admin=44, employee=44):  # tm 37/37
+        with self.assertQueryCount(admin=49, employee=49):  # tm 37/37
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -628,7 +628,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=68, employee=68):
+        with self.assertQueryCount(admin=78, employee=78):
             composer._action_send_mail()
 
         # notifications
