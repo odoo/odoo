@@ -28,14 +28,12 @@ async function get_session(request) {
 
     let {
         channel_id,
-        anonymous_name,
         previous_operator_id,
         persisted,
         context = {},
     } = await parseRequestParams(request);
     previous_operator_id = parseInt(previous_operator_id);
     let country_id;
-    // don't use the anonymous name if the user is logged in
     if (this.env.user && !ResUsers._is_public(this.env.uid)) {
         country_id = this.env.user.country_id;
     } else {
@@ -45,13 +43,11 @@ async function get_session(request) {
             const country = ResCountry._filter([["code", "=", countryCode]])[0];
             if (country) {
                 country_id = country.id;
-                anonymous_name = anonymous_name + " (" + country.name + ")";
             }
         }
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(
         channel_id,
-        anonymous_name,
         previous_operator_id,
         country_id,
         persisted

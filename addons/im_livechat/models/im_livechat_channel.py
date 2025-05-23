@@ -213,8 +213,11 @@ class Im_LivechatChannel(models.Model):
     # --------------------------
     # Channel Methods
     # --------------------------
+    def _get_guest_name(self):
+        return _("Visitor")
+
     def _get_livechat_discuss_channel_vals(
-        self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
+        self, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
     ):
         user_operator = False
         if chatbot_script:
@@ -247,7 +250,7 @@ class Im_LivechatChannel(models.Model):
             name = chatbot_script.title
         else:
             name = ' '.join([
-                visitor_user.display_name if visitor_user else anonymous_name,
+                visitor_user.display_name if visitor_user else self._get_guest_name(),
                 user_operator.livechat_username or user_operator.name
             ])
 
@@ -258,7 +261,7 @@ class Im_LivechatChannel(models.Model):
             'livechat_channel_id': self.id,
             "livechat_failure": "no_answer" if user_operator else "no_failure",
             'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id if chatbot_script else False,
-            'anonymous_name': False if user_id else anonymous_name,
+            'anonymous_name': False if user_id else self._get_guest_name(),
             'country_id': country_id,
             'channel_type': 'livechat',
             'name': name,

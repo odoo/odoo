@@ -73,12 +73,9 @@ class LivechatController(http.Controller):
         info = channel.get_livechat_info(username=username)
         return request.render('im_livechat.loader', {'info': info}, headers=[('Content-Type', 'application/javascript')])
 
-    def _get_guest_name(self):
-        return _("Visitor")
-
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True):
+    def get_session(self, channel_id, previous_operator_id=None, chatbot_script_id=None, persisted=True):
         store = Store()
         user_id = None
         country_id = None
@@ -105,7 +102,6 @@ class LivechatController(http.Controller):
                 lang=request.env["chatbot.script"]._get_chatbot_language()
             ).browse(chatbot_script_id)
         channel_vals = request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_livechat_discuss_channel_vals(
-            anonymous_name,
             previous_operator_id=previous_operator_id,
             chatbot_script=chatbot_script,
             user_id=user_id,
@@ -151,7 +147,7 @@ class LivechatController(http.Controller):
             with replace_exceptions(UserError, by=NotFound()):
                 # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
                 __, guest = channel.sudo()._find_or_create_persona_for_channel(
-                    guest_name=self._get_guest_name(),
+                    guest_name=channel.livechat_channel_id._get_guest_name(),
                     country_code=request.geoip.country_code,
                     timezone=request.env['mail.guest']._get_timezone_from_request(request),
                     create_member_params={"livechat_member_type": "visitor"},

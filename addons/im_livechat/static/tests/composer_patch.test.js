@@ -26,7 +26,6 @@ test("Can execute help command on livechat channels", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -50,7 +49,6 @@ test('Receives visitor typing status "is typing"', async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 20" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 20",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),

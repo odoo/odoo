@@ -86,7 +86,6 @@ test("Focus should not be stolen when a new livechat open", async () => {
     const channelIds = pyEnv["discuss.channel"].create([
         { name: "general" },
         {
-            anonymous_name: "Visitor 12",
             channel_member_ids: [
                 Command.create({
                     partner_id: serverState.partnerId,

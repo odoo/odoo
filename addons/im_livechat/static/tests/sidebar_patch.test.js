@@ -26,7 +26,6 @@ test("Unknown visitor", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -121,7 +120,6 @@ test("Smiley face avatar for livechat item linked to a guest", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -168,7 +166,6 @@ test("No counter if the category is unfolded and with unread messages", async ()
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({
                 message_unread_counter: 10,
@@ -191,7 +188,6 @@ test("No counter if category is folded and without unread messages", async () =>
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -210,7 +206,6 @@ test("Counter should have correct value of unread threads if category is folded 
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({
                 partner_id: serverState.partnerId,
@@ -237,7 +232,6 @@ test("Close manually by clicking the title", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -260,7 +254,6 @@ test("Open manually by clicking the title", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({
                 partner_id: serverState.partnerId,
@@ -293,7 +286,6 @@ test("Category item should be invisible if the category is closed", async () => 
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: guestId }),
@@ -320,7 +312,6 @@ test("Active category item should be visible even if the category is closed", as
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({
                 partner_id: serverState.partnerId,
@@ -342,7 +333,6 @@ test("Active category item should be visible even if the category is closed", as
 test("Clicking on leave button leaves the channel", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
             Command.create({ guest_id: pyEnv["mail.guest"].create({ name: "Visitor 11" }) }),
@@ -364,7 +354,6 @@ test("Message unread counter", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     const channelId = pyEnv["discuss.channel"].create({
-        anonymous_name: "Visitor 11",
         channel_member_ids: [
             Command.create({
                 partner_id: serverState.partnerId,
