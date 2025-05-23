@@ -393,13 +393,19 @@ export class TablePlugin extends Plugin {
      */
     addColumn(position, reference, columnsToAdd = 1) {
         const table = closestElement(reference, "table");
+        const rows = table.rows;
         const tableWidth = table.style.width && parseFloat(table.style.width);
+        const tableGrid = this.buildTableGrid(table);
+        const referenceRowIndex = getRowIndex(reference);
+        const sholdInsertAfter = position === "after";
         for (let columnOffset = 0; columnOffset < columnsToAdd; columnOffset++) {
-            const columnIndex = getColumnIndex(reference);
+            const rowGrid = tableGrid[referenceRowIndex];
+            const gridCellIndex = sholdInsertAfter
+                ? rowGrid.findLastIndex((cell) => cell === reference)
+                : rowGrid.indexOf(reference);
             const referenceCellWidth = reference.style.width
                 ? parseFloat(reference.style.width)
                 : reference.clientWidth;
-
             // Temporarily set widths so proportions are respected.
             const firstRowCells = [...table.rows[0].cells];
             let totalWidth = 0;
@@ -417,29 +423,43 @@ export class TablePlugin extends Plugin {
                     totalWidth += newWidth;
                 }
             }
-
-            for (let rowIndex = 0; rowIndex < table.rows.length; rowIndex++) {
-                const row = table.rows[rowIndex];
-                const cell = row.cells[columnIndex];
+            for (let rowIndex = 0; rowIndex < tableGrid.length; rowIndex++) {
+                const cell = tableGrid[rowIndex][gridCellIndex];
+                if (
+                    cell ===
+                    (sholdInsertAfter
+                        ? tableGrid[rowIndex][gridCellIndex + 1]
+                        : tableGrid[rowIndex][gridCellIndex - 1])
+                ) {
+                    cell.colSpan += 1;
+                    continue;
+                }
                 const newCell = this.document.createElement(cell.tagName);
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 fillEmpty(baseContainer);
                 newCell.append(baseContainer);
-                cell[position](newCell);
-
-                if (rowIndex === 0) {
+                if (rows[rowIndex].contains(cell)) {
+                    cell[position](newCell);
                     // If the first row is a header, ensure the new column's
                     // first cell is also marked as a header (<th>).
-                    if (cell.classList.contains("o_table_header")) {
+                    if (rowIndex === 0 && cell.classList.contains("o_table_header")) {
                         newCell.classList.add("o_table_header");
                     }
-                    if (tableWidth) {
-                        newCell.style.width = cell.style.width;
-                        totalWidth += parseFloat(cell.style.width);
+                } else {
+                    const row = tableGrid[rowIndex];
+                    const nextAdjacentCell = sholdInsertAfter
+                        ? row.findLast((c, index) => index < gridCellIndex && c.rowSpan === 1)
+                        : row.find((c, index) => index > gridCellIndex && c.rowSpan === 1);
+                    if (nextAdjacentCell) {
+                        nextAdjacentCell[position](newCell);
+                    } else {
+                        // If no adjacent cell, append or prepend depending on position
+                        sholdInsertAfter
+                            ? rows[rowIndex].prepend(newCell)
+                            : rows[rowIndex].append(newCell);
                     }
                 }
             }
-
             if (tableWidth) {
                 if (totalWidth !== tableWidth - 1) {
                     // -1 for the width of the border of the new column.
@@ -452,6 +472,7 @@ export class TablePlugin extends Plugin {
                 table.style.width = tableWidth + "px";
             }
         }
+        this.tableGridMap.delete(table);
     }
     /**
      * @param {'before'|'after'} position
@@ -459,22 +480,37 @@ export class TablePlugin extends Plugin {
      * @param {number} [rowsToAdd=1]
      */
     addRow(position, reference, rowsToAdd = 1) {
+        const table = closestElement(reference, "table");
+        const tableGrid = this.buildTableGrid(table);
+        const rowIndex = getRowIndex(reference);
+
         const referenceRowHeight = reference.style.height && parseFloat(reference.style.height);
         for (let rowOffset = 0; rowOffset < rowsToAdd; rowOffset++) {
             const newRow = this.document.createElement("tr");
             if (referenceRowHeight) {
                 newRow.style.height = referenceRowHeight + "px";
             }
+            const gridCells = tableGrid[rowIndex];
 
-            for (let columnIndex = 0; columnIndex < reference.cells.length; columnIndex++) {
-                const td = this.document.createElement("td");
-                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                fillEmpty(baseContainer);
-                td.append(baseContainer);
-                newRow.append(td);
+            for (let columnIndex = 0; columnIndex < gridCells.length; columnIndex++) {
+                const cell = gridCells[columnIndex];
+                if (
+                    columnIndex > 0 &&
+                    cell ===
+                        (position === "after"
+                            ? tableGrid[rowIndex + 1]?.[columnIndex]
+                            : tableGrid[rowIndex - 1]?.[columnIndex])
+                ) {
+                    cell.rowSpan += 1;
+                } else {
+                    const td = this.document.createElement("td");
+                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                    fillEmpty(baseContainer);
+                    td.append(baseContainer);
+                    newRow.append(td);
+                }
             }
             reference[position](newRow);
-
             // Preserve the width of the columns (applied only on the first row).
             if (getRowIndex(newRow) === 0) {
                 for (let columnIndex = 0; columnIndex < reference.cells.length; columnIndex++) {
@@ -484,6 +520,7 @@ export class TablePlugin extends Plugin {
                 }
             }
         }
+        this.tableGridMap.delete(table);
     }
     /**
      * @param {HTMLTableRowElement} reference
