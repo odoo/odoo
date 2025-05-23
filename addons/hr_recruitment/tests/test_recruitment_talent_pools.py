@@ -2,6 +2,7 @@
 
 from odoo.fields import Domain
 from odoo.tests import Form, tagged, TransactionCase
+from odoo.exceptions import ValidationError
 
 
 @tagged("recruitment")
@@ -278,6 +279,7 @@ class TestRecruitmentTalentPool(TransactionCase):
         """
         self.env["talent.pool.add.applicants"].create({
             "applicant_ids": self.t_applicant_1.ids,
+            "talent_pool_ids": self.t_talent_pool_1,
         }).action_add_applicants_to_pool()
 
         new_email = "updated@gmail.com"
@@ -287,3 +289,14 @@ class TestRecruitmentTalentPool(TransactionCase):
             new_email,
             "The email_from field should be updated successfully",
         )
+
+    def test_talent_must_have_at_least_one_pool(self):
+        """
+        Ensure that removing all the talent pool from a talent created raises a ValidationError.
+        """
+        wizard = Form(self.env["talent.pool.add.applicants"])
+        wizard.talent_pool_ids.add(self.t_talent_pool_1)
+        wizard.applicant_ids.add(self.t_applicant_1)
+        talent = wizard.save()._add_applicants_to_pool()
+        with self.assertRaises(ValidationError):
+            talent.write({"talent_pool_ids": [(5, 0, 0)]})
