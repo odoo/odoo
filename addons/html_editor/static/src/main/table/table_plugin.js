@@ -447,7 +447,8 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableCellElement} cell
      */
     moveColumn(position, cell) {
-        const columnIndex = getColumnIndex(cell);
+        const trs = this.tableGrid;
+        const columnIndex = trs[0].findIndex((td) => td === cell);
         const nColumns = cell.parentElement.children.length;
         if (
             columnIndex < 0 ||
@@ -457,8 +458,7 @@ export class TablePlugin extends Plugin {
             return;
         }
 
-        const trs = cell.parentElement.parentElement.children;
-        const tdsToMove = [...trs].map((tr) => tr.children[columnIndex]);
+        const tdsToMove = new Set([...trs].map((tr) => tr[columnIndex]));
         const selectionToRestore = this.dependencies.selection.getEditableSelection();
         if (position === "left") {
             tdsToMove.forEach((td) => td.previousElementSibling.before(td));
