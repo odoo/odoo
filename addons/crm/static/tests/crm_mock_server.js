@@ -59,7 +59,7 @@ onRpc("get_rainbowman_message", function getRainbowmanMessage({ args, model }) {
         } else if (query_result.max_team_30 === record.planned_revenue) {
             message = "Boom! Team record for the past 30 days.";
         } else if (query_result.max_team_7 === record.planned_revenue) {
-            message = "Yeah! Deal of the last 7 days for the team.";
+            message = "Yeah! Best deal out of the last 7 days for the team.";
         } else if (query_result.max_user_30 === record.planned_revenue) {
             message = "You just beat your personal record for the past 30 days.";
         } else if (query_result.max_user_7 === record.planned_revenue) {
