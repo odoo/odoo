@@ -1,0 +1,62 @@
+import { registry } from "@web/core/registry";
+import { Call } from "@mail/discuss/call/common/call";
+import { reactive } from "@odoo/owl";
+
+export const callPipService = {
+    dependencies: ["mail.popout"],
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     * @param {import("services").ServiceFactories} services
+     */
+    start(env, services) {
+        const popoutService = services["mail.popout"];
+        const popout = popoutService.createManager(Symbol("discuss.native.pip"));
+        let pipWindow = null;
+        const state = reactive({
+            active: false,
+        });
+        popout.addHooks(
+            () => {},
+            () => {
+                state.active = false;
+                env.services["discuss.rtc"]?.channel?.openChatWindow();
+            }
+        );
+        function closePip() {
+            state.active = false;
+            pipWindow?.close();
+        }
+        async function openPip() {
+            const rtc = env.services["discuss.rtc"];
+            if (!rtc?.channel) {
+                return;
+            }
+            state.active = true;
+            if (!window.documentPictureInPicture) {
+                /** Application-level PiP. @see CallPip **/
+                return;
+            }
+            pipWindow = await popout.pip(Call, {
+                props: { isPip: true, thread: rtc.channel },
+            });
+            pipWindow.addEventListener("keydown", (ev) => {
+                rtc.onKeyDown(ev);
+            });
+            pipWindow.addEventListener("keyup", (ev) => {
+                rtc.onKeyUp(ev);
+            });
+            pipWindow.document.body.style.backgroundColor = "black";
+            pipWindow.document.body.style.overflow = "hidden";
+        }
+        return reactive({
+            get isNativePipAvailable() {
+                return Boolean(window.documentPictureInPicture);
+            },
+            state,
+            closePip,
+            openPip,
+        });
+    },
+};
+
+registry.category("services").add("discuss.pip_service", callPipService);
