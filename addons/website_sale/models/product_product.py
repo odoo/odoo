@@ -300,7 +300,11 @@ class ProductProduct(models.Model):
         combination_info = self.with_context(
             **price_context,
         ).product_tmpl_id._get_additionnal_combination_info(
-            self, 1.0, fields.Date.context_today(self), request.website,
+            self,
+            quantity=1.0,
+            uom=self.uom_id,
+            date=fields.Date.context_today(self),
+            website=request.website,
         )
         if combination_info['prevent_zero_price_sale']:
             return {}

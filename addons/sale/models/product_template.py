@@ -292,10 +292,9 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_additional_configurator_data(
-        self, product_or_template, date, currency, pricelist, **kwargs
+        self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
     ):
-        """ Return additional data about the specified product, to be used by the product and combo
-        configurators.
+        """Return additional data about the specified product.
 
         This is a hook meant to append module-specific data in overriding modules.
 
@@ -304,6 +303,7 @@ class ProductTemplate(models.Model):
         :param datetime date: The date to use to compute prices.
         :param res.currency currency: The currency to use to compute prices.
         :param product.pricelist pricelist: The pricelist to use to compute prices.
+        :param uom.uom uom: The uom to use to compute prices.
         :param dict kwargs: Locally unused data passed to overrides.
         :rtype: dict
         :return: A dict containing additional data about the specified product.
