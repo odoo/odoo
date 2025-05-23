@@ -1585,14 +1585,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order_sudo.amount_total and not tx_sudo:
             return request.redirect(self._get_shop_path())
 
-        if not order_sudo.amount_total and not tx_sudo:
-            if order_sudo.state != 'sale':
-                # Only confirm the order if it wasn't already confirmed.
-                order_sudo._validate_order()
-
-            # clean context and session, then redirect to the portal page
-            request.website.sale_reset()
-            return request.redirect(order_sudo.get_portal_url())
+        if not order_sudo.amount_total and not tx_sudo and order_sudo.state != 'sale':
+            # Only confirm the order if it wasn't already confirmed.
+            order_sudo._validate_order()
 
         # clean context and session, then redirect to the confirmation page
         request.website.sale_reset()
