@@ -31,7 +31,7 @@ registry.category("web_tour.tours").add('shop_sale_ewallet', {
             run: "click",
         },
         {
-            trigger: 'div[id="introduction"] h2:contains("Sales Order")'
+            trigger: 'div h3:contains("Thank you for your order.")'
         },
         {
             trigger: 'a[href="/shop/cart"]',
