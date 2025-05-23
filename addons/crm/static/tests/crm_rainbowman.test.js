@@ -274,7 +274,7 @@ test("team record 7 days, click on statusbar on desktop", async () => {
 
     await contains(".o_statusbar_status button[data-value='3']").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
-    expect.verifySteps(["Yeah! Deal of the last 7 days for the team."]);
+    expect.verifySteps(["Yeah! Best deal out of the last 7 days for the team."]);
 });
 
 test.tags("mobile");
@@ -287,7 +287,7 @@ test("team record 7 days, click on statusbar on mobile", async () => {
     await contains(".o_statusbar_status button.dropdown-toggle").click();
     await contains(".o-dropdown--menu .dropdown-item:contains('Won')").click();
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
-    expect.verifySteps(["Yeah! Deal of the last 7 days for the team."]);
+    expect.verifySteps(["Yeah! Best deal out of the last 7 days for the team."]);
 });
 
 test.tags("desktop");
@@ -395,7 +395,7 @@ test("team record 7 days, drag & drop kanban", async () => {
 
     await contains(".o_kanban_record:contains(Lead 1):eq(0)").dragAndDrop(".o_kanban_group:eq(2)");
     expect(".o_reward svg.o_reward_rainbow_man").toHaveCount(1);
-    expect.verifySteps(["Yeah! Deal of the last 7 days for the team."]);
+    expect.verifySteps(["Yeah! Best deal out of the last 7 days for the team."]);
 });
 
 test.tags("desktop");
