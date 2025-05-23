@@ -143,7 +143,7 @@
                     <label for="partner_name" class="oe_edit_only" string="Applicant" invisible="is_pool_applicant"/>
                     <label for="partner_name" class="oe_edit_only" string="Talent" invisible="not is_pool_applicant"/>
                     <h1 class="d-flex justify-content-between align-items-center me-4">
-                        <field name="partner_name" options="{'line_breaks': False}" context="{'default_company_id': company_id}"/>
+                        <field name="partner_name" options="{'line_breaks': False}" context="{'default_company_id': company_id}" required="1"/>
                     </h1>
                 </div>
                 <group>
@@ -157,7 +157,7 @@
                     </group>
                     <group>
                         <field name="priority" widget="priority"/>
-                        <field name="job_id" invisible="is_pool_applicant"/>
+                        <field name="job_id" invisible="is_pool_applicant" placeholder="Spontaneous application"/>
                         <field name="talent_pool_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not is_pool_applicant"/>
                         <field name="user_id" widget="many2one_avatar_user" placeholder="Unassigned"/>
                         <field name="interviewer_ids" options="{'no_create': True}" widget="many2many_avatar_user" invisible="is_pool_applicant" placeholder="Who can access applicants" />
@@ -269,6 +269,9 @@
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
+                <filter string="Applicants" name="applicants" domain="[('talent_pool_ids', '=', False)]"/>
+                <filter string="Talents" name="talents" domain="[('talent_pool_ids', '!=', False)]"/>
+                <separator/>
                 <filter string="In Progress" name="ongoing" domain="[('date_closed', '=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]"/>
                 <filter string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>
                 <separator/>
@@ -303,6 +306,7 @@
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
+                    <filter string="Talent Pool" name="talent_pool" domain="[]" context="{'group_by': 'talent_pool_ids'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Hiring Date" name="hired_date" context="{'group_by': 'date_closed'}"/>
                     <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
@@ -438,7 +442,13 @@
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,list,form,graph,calendar,pivot,activity</field>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
-        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'dialog_size':'medium', 'allow_search_matching_applicants': 1}</field>
+        <field name="context">{
+            'search_default_job_id': [active_id],
+            'search_default_applicants': 1,
+            'default_job_id': active_id,
+            'dialog_size':'medium',
+            'allow_search_matching_applicants': 1
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet
@@ -475,7 +485,7 @@
             (5, 0, 0),
             (0, 0, {'view_mode': 'list'}),
             (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_kanban_view_applicant_talent_pool')})]"/>
-        <field name="context">{'default_talent_pool_ids': active_ids, 'create': False}</field>
+        <field name="context">{'default_talent_pool_ids': active_ids}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No Talents in the pool yet
@@ -500,6 +510,7 @@
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
+        <field name="context">{'search_default_applicants': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet
