@@ -80,6 +80,7 @@
         'wizard/settings_view_views.xml',
         'views/custom_product_variants.xml',
         'views/website_sale_templates.xml',
+        'views/custom_cart_template.xml',  # Add this line to include the new template
     ],
     'assets': {
         'web.assets_backend': [
@@ -94,6 +95,7 @@
             'multi_vendor_marketplace/static/src/scss/partner_rating.css',
             'https://unpkg.com/sweetalert/dist/sweetalert.min.js',
             'multi_vendor_marketplace/static/src/css/mobile_nav.css',
+            'multi_vendor_marketplace/static/src/css/cart_styles.css',  # Add this line to include the new CSS
         ],
     },
     'license': 'LGPL-3',
