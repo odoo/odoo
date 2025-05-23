@@ -332,7 +332,7 @@ class MailScheduledMessage(models.Model):
     def _to_store_defaults(self):
         return [
             Store.Many("attachment_ids"),
-            Store.One("author_id", rename="author"),
+            Store.One("author_id"),
             "body",
             "is_note",
             "scheduled_date",

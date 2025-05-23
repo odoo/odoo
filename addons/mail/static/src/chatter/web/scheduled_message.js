@@ -38,7 +38,7 @@ export class ScheduledMessage extends Component {
 
     get scheduledDate() {
         return this.props.scheduledMessage.scheduled_date.toLocaleString(
-            luxon.DateTime.DATETIME_SHORT,
+            luxon.DateTime.DATETIME_SHORT
         );
     }
 
@@ -46,7 +46,7 @@ export class ScheduledMessage extends Component {
         return (
             this.props.scheduledMessage.textContent.substring(
                 0,
-                SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD,
+                SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD
             ) + "..."
         );
     }
@@ -68,7 +68,7 @@ export class ScheduledMessage extends Component {
     onClickAuthor(ev) {
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(ev.currentTarget, {
-                id: this.props.scheduledMessage.author.userId,
+                id: this.props.scheduledMessage.author_id.userId,
             });
         }
     }
