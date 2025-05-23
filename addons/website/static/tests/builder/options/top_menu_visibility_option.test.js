@@ -137,6 +137,7 @@ test("regular -> hidden -> regular", async () => {
     const precedentWrapwrap = queryOne(":iframe #wrapwrap").outerHTML;
     await contains("[data-label='Header Position'] .dropdown").click();
     await contains(".o-overlay-container [data-action-value='hidden']").click();
+    await contains(":iframe #wrapwrap > header").click();
     await contains("[data-label='Header Position'] .dropdown").click();
     await contains(".o-overlay-container [data-action-value='regular']").click();
     const modifiedWrapwrap = queryOne(":iframe #wrapwrap");

@@ -12,7 +12,7 @@ export const HIDE_FOOTER = after(FOOTER_SCROLL_TO);
 
 class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
-    static dependencies = ["history"];
+    static dependencies = ["history", "visibility"];
     resources = {
         builder_actions: this.getActions(),
         builder_options: [
@@ -34,6 +34,8 @@ class WebsitePageConfigOptionPlugin extends Plugin {
                 groups: ["website.group_website_designer"],
             }),
         ],
+        target_show: this.onTargetVisibilityToggle.bind(this, true),
+        target_hide: this.onTargetVisibilityToggle.bind(this, false),
         save_handlers: this.onSave.bind(this),
     };
 
@@ -50,6 +52,17 @@ class WebsitePageConfigOptionPlugin extends Plugin {
                     this.isDirty = true;
                 },
                 isApplied: ({ editingElement, value }) => this.getVisibilityItem() === value,
+            },
+            setWebsiteFooterVisible: {
+                isApplied: ({ editingElement }) => !this.getFooterVisibility(),
+                apply: ({ editingElement }) => {
+                    this.setFooterVisible(true);
+                    this.isDirty = true;
+                },
+                clean: ({ editingElement }) => {
+                    this.setFooterVisible(false);
+                    this.isDirty = true;
+                },
             },
             setPageWebsiteDirty: {
                 apply: ({ editingElement }) => {
@@ -138,6 +151,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
         const headerEl = this.document.querySelector("#wrapwrap > header");
         headerEl.classList.toggle("d-none", shouldApply);
         headerEl.classList.toggle("o_snippet_invisible", shouldApply);
+        this.dependencies.visibility.onOptionVisibilityUpdate(headerEl, !shouldApply);
     }
 
     resetHeaderColor() {
@@ -158,6 +172,21 @@ class WebsitePageConfigOptionPlugin extends Plugin {
                 headerEl.classList.remove(cls);
             }
         });
+    }
+
+    setFooterVisible(show) {
+        const footerEl = this.document.querySelector("#wrapwrap > footer");
+        footerEl.classList.toggle("d-none", !show);
+        footerEl.classList.toggle("o_snippet_invisible", !show);
+        this.dependencies.visibility.onOptionVisibilityUpdate(footerEl, show);
+    }
+
+    onTargetVisibilityToggle(show, target) {
+        if (target.matches("#wrapwrap > header, #wrapwrap > footer")) {
+            this.dependencies.history.ignoreDOMMutations(() => {
+                target.classList.toggle("d-none", !show);
+            });
+        }
     }
 }
 
