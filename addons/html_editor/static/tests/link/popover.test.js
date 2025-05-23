@@ -682,6 +682,38 @@ describe("Link formatting in the popover", () => {
             '<p><a href="http://test.com/" class="btn btn-fill-primary">link2</a></p>'
         );
     });
+    test("after changing the link format, the link should be updated (2)", async () => {
+        const { el } = await setupEditor(
+            '<p><a href="http://test.com/" class="btn btn-secondary">link2[]</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+
+        expect(queryOne('select[name="link_type"]').selectedIndex).toBe(2);
+
+        await click('select[name="link_type"');
+        await select("primary");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.com/" class="btn btn-fill-primary">link2</a></p>'
+        );
+    });
+    test("after changing the link format, the link should be updated (3)", async () => {
+        const { el } = await setupEditor(
+            '<p><a href="http://test.com/" class="random-css-class btn btn-outline-secondary text-muted">link2[]</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        await click(".o_we_edit_link");
+        await animationFrame();
+
+        expect(queryOne('select[name="link_type"]').selectedIndex).toBe(2);
+
+        await click('select[name="link_type"');
+        await select("primary");
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://test.com/" class="random-css-class text-muted btn btn-fill-primary">link2</a></p>'
+        );
+    });
     test("after applying the link format, the link's format should be updated", async () => {
         const { el } = await setupEditor('<p><a href="http://test.com/">link2[]</a></p>');
         await waitFor(".o-we-linkpopover");
