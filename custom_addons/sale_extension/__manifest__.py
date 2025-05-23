@@ -11,6 +11,11 @@
         'views/sale_order_form_file_manager.xml',
         'views/res_partner_form_inherit.xml'
     ],
+    'assets': {
+        'web.assets_backend': [
+            'sale_extension/static/src/scss/hide_topbar.scss',
+        ],
+    },
     'installable': True,
     'application':True,
     'auto_install': False,

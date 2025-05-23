@@ -49,3 +49,5 @@ class ProductExtension(models.Model):
         return {
         }
     
+    def action_save_product(self):
+        return True
