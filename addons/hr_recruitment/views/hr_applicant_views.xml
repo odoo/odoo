@@ -269,6 +269,8 @@
                 <filter string="My Applications" name="my_applications" domain="[('user_id', '=', uid)]"/>
                 <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                 <separator/>
+                <filter string="Applicants" name="applicants" domain="[('talent_pool_ids', '=', False)]"/>
+                <filter string="Talents" name="talents" domain="[('talent_pool_ids', '!=', False)]"/>
                 <filter string="In Progress" name="ongoing" domain="[('date_closed', '=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]"/>
                 <filter string="Hired" name="hired" domain="[('date_closed', '!=', False)]"/>
                 <separator/>
@@ -303,6 +305,7 @@
                     <filter string="Job" name="job" domain="[]" context="{'group_by': 'job_id'}"/>
                     <filter string="Stage" name="stage" domain="[]" context="{'group_by': 'stage_id'}"/>
                     <filter string="Responsible" name="responsible" domain="[]"  context="{'group_by': 'user_id'}"/>
+                    <filter string="Talent Pool" name="talent_pool" domain="[]" context="{'group_by': 'talent_pool_ids'}"/>
                     <filter string="Creation Date" name="creation_date" context="{'group_by': 'create_date'}"/>
                     <filter string="Hiring Date" name="hired_date" context="{'group_by': 'date_closed'}"/>
                     <filter string="Last Stage Update" name="last_stage_update" context="{'group_by': 'date_last_stage_update'}"/>
@@ -438,7 +441,13 @@
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">kanban,list,form,graph,calendar,pivot,activity</field>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
-        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id, 'dialog_size':'medium', 'allow_search_matching_applicants': 1}</field>
+        <field name="context">{
+            'search_default_job_id': [active_id],
+            'search_default_applicants': 1,
+            'default_job_id': active_id,
+            'dialog_size':'medium',
+            'allow_search_matching_applicants': 1
+        }</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet
@@ -500,6 +509,7 @@
         <field name="view_mode">kanban,list,form,pivot,graph,calendar,activity</field>
         <field name="view_id" eval="False"/>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
+        <field name="context">{'search_default_applicants': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No applications yet

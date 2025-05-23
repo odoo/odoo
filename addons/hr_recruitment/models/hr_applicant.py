@@ -146,6 +146,12 @@ class HrApplicant(models.Model):
 
     _job_id_stage_id_idx = models.Index("(job_id, stage_id) WHERE active IS TRUE")
 
+    @api.constrains("talent_pool_ids")
+    def _check_talent_pool_required(self):
+        for talent in self:
+            if talent.pool_applicant_id == talent and not talent.talent_pool_ids:
+                raise ValidationError(self.env._("Talent must belong to at least one Talent Pool."))
+
     @api.depends("email_normalized", "partner_phone_sanitized", "linkedin_profile", "pool_applicant_id.talent_pool_ids")
     def _compute_talent_pool_count(self):
         """
@@ -891,6 +897,9 @@ class HrApplicant(models.Model):
         return res
 
     def _creation_subtype(self):
+        self.ensure_one()
+        if self.is_pool_applicant:
+            return self.env.ref('hr_recruitment.mt_talent_new', raise_if_not_found=False)
         return self.env.ref('hr_recruitment.mt_applicant_new')
 
     def _track_subtype(self, init_values):
