@@ -351,3 +351,14 @@ class TestMrpSerialMassProduce(TestMrpCommon):
         mo.action_assign()
         action = mo.action_mass_produce()
         self.assertEqual(action, None)
+
+    def test_mass_produce_without_component_separator(self):
+        mo = self.generate_mo(tracking_final='serial', tracking_base_1='serial', qty_final=3, qty_base_1=1, qty_base_2=1)[0]
+        mo.action_confirm()
+        action = mo.button_mark_done()
+        with self.debug_mode():
+            wizard = Form(self.env['mrp.batch.produce'].with_context(**action['context']))
+        wizard.component_separator = False
+        self.assertEqual(wizard.production_text_help, 'Write one line per finished product to produce, with serial numbers as follows:\nYoung TomBotox')
+        wizard.component_separator = ','
+        self.assertEqual(wizard.production_text_help, 'Write one line per finished product to produce, with serial numbers as follows:\nYoung Tom,Botox')
