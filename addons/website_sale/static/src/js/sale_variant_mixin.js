@@ -153,6 +153,10 @@ var VariantMixin = {
      * @param {$.Element} $container the container to look into
      */
     getSelectedVariantValues: function ($container) {
+        const combination = $container.find('input.js_product_change:checked').data('combination');
+        if (combination) {
+            return combination;
+        }
         var values = [];
 
         var variantsValuesSelectors = [
