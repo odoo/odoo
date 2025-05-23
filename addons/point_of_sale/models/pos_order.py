@@ -222,7 +222,7 @@ class PosOrder(models.Model):
                 'product_uom_id': line_values['uom_id'].id,
             }
 
-        return {
+        invoice_line_values = {
             'product_id': line_values['product_id'].id,
             'quantity': qty_sign * line_values['quantity'],
             'discount': line_values['discount'],
@@ -232,6 +232,10 @@ class PosOrder(models.Model):
             'product_uom_id': line_values['uom_id'].id,
             'extra_tax_data': self.env['account.tax']._export_base_line_extra_tax_data(line_values),
         }
+        # If the price was manually changed for pos_order_line, treat the price as tax-included
+        if pos_line.price_type == "override" and line_values['special_mode']:
+            invoice_line_values["extra_tax_data"]["special_mode"] = line_values['special_mode']
+        return invoice_line_values
 
     def _prepare_invoice_lines(self, move_type):
         """ Prepare a list of orm commands containing the dictionaries to fill the
@@ -1439,6 +1443,7 @@ class PosOrderLine(models.Model):
         ('original', 'Original'),
         ('manual', 'Manual'),
         ('automatic', 'Automatic'),
+        ('override', 'Override'),
     ], string='Price Type', default='original')
     margin = fields.Monetary(string="Margin", compute='_compute_margin')
     margin_percent = fields.Float(string="Margin (%)", compute='_compute_margin', digits=(12, 4))
@@ -1773,21 +1778,25 @@ class PosOrderLine(models.Model):
         product_name = line.with_context(lang=lang).full_product_name or line.product_id.with_context(lang=lang).display_name
         if line.product_id.description_sale:
             product_name += '\n' + line.product_id.with_context(lang=lang).description_sale
+        base_line_args = {
+            'partner_id': commercial_partner,
+            'currency_id': self.order_id.currency_id,
+            'rate': self.order_id.currency_rate,
+            'product_id': line.product_id,
+            'tax_ids': line.tax_ids_after_fiscal_position,
+            'price_unit': line.price_unit,
+            'quantity': line.qty * (-1 if is_refund_order else 1),
+            'discount': line.discount,
+            'account_id': account,
+            'is_refund': is_refund_line,
+            'sign': 1 if is_refund_order else -1,
+        }
+        # If the price was manually changed, treat the price as tax-included
+        if line.tax_ids and self.price_type == "override":
+            base_line_args["special_mode"] = "total_included"
+
         return {
-            **self.env['account.tax']._prepare_base_line_for_taxes_computation(
-                line,
-                partner_id=commercial_partner,
-                currency_id=self.order_id.currency_id,
-                rate=self.order_id.currency_rate,
-                product_id=line.product_id,
-                tax_ids=line.tax_ids_after_fiscal_position,
-                price_unit=line.price_unit,
-                quantity=line.qty * (-1 if is_refund_order else 1),
-                discount=line.discount,
-                account_id=account,
-                is_refund=is_refund_line,
-                sign=1 if is_refund_order else -1,
-            ),
+            **self.env['account.tax']._prepare_base_line_for_taxes_computation(line, **base_line_args),
             'uom_id': line.product_uom_id,
             'name': product_name,
         }

@@ -36,8 +36,11 @@ registry.category("web_tour.tours").add("ReceiptScreenTour", {
             //receipt had expected delivery printed
             ReceiptScreen.shippingDateExists(),
             ReceiptScreen.shippingDateIsToday(),
-            // letter tray has 10% tax (search SRC)
-            ReceiptScreen.totalAmountContains("55.0"),
+            // When the price is manually entered using the numpad on the product screen.
+            // The tax computation is adjusted accordingly. For example, if the user manually
+            // enters 50, the system calculates price_unit = 50, price_subtotal = 45.50, and
+            // tax = 4.50, ensuring the total remains 50 with tax included in the price.
+            ReceiptScreen.totalAmountContains("50.0"),
             ReceiptScreen.clickNextOrder(),
 
             // send email in receipt screen

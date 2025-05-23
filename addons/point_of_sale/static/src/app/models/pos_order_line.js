@@ -303,7 +303,11 @@ export class PosOrderline extends Base {
             false,
             product
         );
-        order_line_price = this.currency.round(order_line_price);
+        if (this.price_type === "override" && this.getProduct().id === orderline.getProduct().id) {
+            order_line_price = this.currency.round(price);
+        } else {
+            order_line_price = this.currency.round(order_line_price);
+        }
 
         const isSameCustomerNote =
             (Boolean(orderline.getCustomerNote()) === false &&
@@ -374,6 +378,9 @@ export class PosOrderline extends Base {
                 order.models
             );
         }
+        if (values.tax_ids && this?.price_type === "override") {
+            values.special_mode = "total_included";
+        }
         return values;
     }
 
@@ -407,14 +414,13 @@ export class PosOrderline extends Base {
                       { priceWithTax: 0, priceWithoutTax: 0 }
                   )
                 : this.allUnitPrices;
-
-        return this.config.iface_tax_included === "total"
+        return this.config.iface_tax_included === "total" || this.price_type === "override"
             ? prices.priceWithTax
             : prices.priceWithoutTax;
     }
 
     getUnitDisplayPriceBeforeDiscount() {
-        if (this.config.iface_tax_included === "total") {
+        if (this.config.iface_tax_included === "total" || this.price_type === "override") {
             return this.allUnitPrices.priceWithTaxBeforeDiscount;
         } else {
             return this.allUnitPrices.priceWithoutTaxBeforeDiscount;
@@ -427,7 +433,7 @@ export class PosOrderline extends Base {
     }
 
     getDisplayPrice() {
-        if (this.config.iface_tax_included === "total") {
+        if (this.config.iface_tax_included === "total" || this.price_type === "override") {
             return this.getPriceWithTax();
         } else {
             return this.getPriceWithoutTax();

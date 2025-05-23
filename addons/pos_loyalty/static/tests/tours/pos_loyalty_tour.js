@@ -214,7 +214,10 @@ registry.category("web_tour.tours").add("PosCouponTour5", {
             ProductScreen.addOrderline("Test Product 1", "1", "100"),
             PosLoyalty.clickDiscountButton(),
             Dialog.confirm(),
-            ProductScreen.totalAmountIs("92.00"),
+            // If the user manually enters 100 (15% tax-inclusive) and a 20% global discount is applied,
+            // the final amount becomes 80. Taxes are adjusted accordingly: subtotal = 69.57, tax = 10.43,
+            // keeping the 15% tax included in the discounted total.
+            ProductScreen.totalAmountIs("80.00"),
         ].flat(),
 });
 
