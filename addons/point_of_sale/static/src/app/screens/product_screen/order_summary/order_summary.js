@@ -167,6 +167,13 @@ export class OrderSummary extends Component {
                 }
                 this.pos.setDiscountFromUI(selectedLine, val);
             } else if (numpadMode === "price" && val !== "remove") {
+                const excludedProductIds = this.pos.getExcludedProductIds();
+                if (
+                    selectedLine.product_id.taxes_id &&
+                    !excludedProductIds.includes(selectedLine.product_id.id)
+                ) {
+                    selectedLine.uiState.isManualPriceChange = true;
+                }
                 this.setLinePrice(selectedLine, val);
             }
         }
