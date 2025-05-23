@@ -307,10 +307,10 @@ describe("column", () => {
                 stepFunction: addColumn("before"),
                 contentAfter:
                     '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<td style="width: 32px;"><p><br></p></td>' +
+                    '<td style="width: 29px;"><p><br></p></td>' +
                     '<td style="width: 32px;">ab[]</td>' +
                     '<td style="width: 40px;">cd</td>' +
-                    '<td style="width: 45px;">ef</td>' +
+                    '<td style="width: 48px;">ef</td>' +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -337,10 +337,10 @@ describe("column", () => {
                 stepFunction: addColumn("before"),
                 contentAfter:
                     '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
-                    '<th style="width: 32px;"><p><br></p></th>' +
+                    '<th style="width: 29px;"><p><br></p></th>' +
                     '<th style="width: 32px;">ab[]</th>' +
                     '<th style="width: 40px;">cd</th>' +
-                    '<th style="width: 45px;">ef</th>' +
+                    '<th style="width: 48px;">ef</th>' +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td><p><br></p></td>" +
@@ -373,9 +373,9 @@ describe("column", () => {
                 contentAfter:
                     '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
                     '<td style="width: 38px;">ab</td>' +
-                    '<td style="width: 49px;"><p><br></p></td>' +
+                    '<td style="width: 48px;"><p><br></p></td>' +
                     '<td style="width: 49px;">cd</td>' +
-                    '<td style="width: 63px;">ef</td>' +
+                    '<td style="width: 64px;">ef</td>' +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -412,11 +412,11 @@ describe("column", () => {
                     '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
                     '<td style="width: 29px;">ab</td>' +
                     '<td style="width: 36px;">cd</td>' +
-                    '<td style="width: 41px;">ef[]</td>' +
+                    '<td style="width: 43px;">ef[]</td>' +
                     // size was slightly adjusted to
                     // preserve table width in view on
                     // fractional division results
-                    '<td style="width: 43px;"><p><br></p></td>' +
+                    '<td style="width: 41px;"><p><br></p></td>' +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -445,8 +445,8 @@ describe("column", () => {
                     '<table style="width: 150px;"><tbody><tr style="height: 20px;">' +
                     '<th style="width: 30px;">ab</th>' +
                     '<th style="width: 38px;">cd[]</th>' +
-                    '<th style="width: 38px;"><p><br></p></th>' +
-                    '<th style="width: 43px;">ef</th>' +
+                    '<th style="width: 36px;"><p><br></p></th>' +
+                    '<th style="width: 45px;">ef</th>' +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +
@@ -480,8 +480,8 @@ describe("column", () => {
                     '<table style="width: 200px;"><tbody><tr style="height: 20px;">' +
                     '<td style="width: 38px;">ab</td>' +
                     '<td style="width: 49px;">cd</td>' +
-                    '<td style="width: 49px;"><p><br></p></td>' +
-                    '<td style="width: 63px;">ef</td>' +
+                    '<td style="width: 48px;"><p><br></p></td>' +
+                    '<td style="width: 64px;">ef</td>' +
                     "</tr>" +
                     '<tr style="height: 30px;">' +
                     "<td>ab</td>" +

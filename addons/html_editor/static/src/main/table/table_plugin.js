@@ -228,12 +228,31 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableCellElement} reference
      */
     addColumn(position, reference) {
-        const columnIndex = getColumnIndex(reference);
         const table = closestElement(reference, "table");
+        this.buildTableGrid(table);
+        const rowIndex = getRowIndex(reference);
+        const refCellIndex = this.tableGrid[rowIndex].findIndex((cell) => cell === reference);
+        const columnIndex = getColumnIndex(reference);
+        const colSpanOffset = reference.colSpan - 1;
+        const isInsertAfter = position === "after";
+        const actualColIndex = isInsertAfter ? columnIndex + colSpanOffset : columnIndex;
+        const gridColIndex = isInsertAfter ? refCellIndex + colSpanOffset : refCellIndex;
         const tableWidth = table.style.width && parseFloat(table.style.width);
-        const referenceColumn = table.querySelectorAll(
-            `tr td:nth-of-type(${columnIndex + 1}), tr th:nth-of-type(${columnIndex + 1})`
-        );
+        const rowInsertPositions = this.tableGrid.map((row, index) => {
+            if (index === 0) {
+                // For the first row, just use the reference cell
+                return [isInsertAfter ? actualColIndex + 1 : actualColIndex, reference];
+            }
+            const maxColumnToCheck = isInsertAfter ? gridColIndex + 1 : gridColIndex;
+            const rowSpanCells = row
+                .slice(0, maxColumnToCheck)
+                .filter((cell) => cell.rowSpan > 1 && cell.parentElement.rowIndex < index);
+            let insertColIdx = gridColIndex - rowSpanCells.length;
+            if (isInsertAfter) {
+                insertColIdx += 1;
+            }
+            return [Math.max(0, insertColIdx), row[gridColIndex]];
+        });
         const referenceCellWidth = reference.style.width
             ? parseFloat(reference.style.width)
             : reference.clientWidth;
@@ -257,15 +276,28 @@ export class TablePlugin extends Plugin {
                 totalWidth += newWidth;
             }
         }
-        referenceColumn.forEach((cell, rowIndex) => {
-            const newCell = this.document.createElement(cell.tagName);
+        rowInsertPositions.forEach(([insertColIdx, refCell], rowIndex) => {
+            const colSpan = refCell.colSpan - 1;
+            const cellIndex = getColumnIndex(refCell);
+            const endCellIndex = cellIndex + colSpan;
+            const isWithinMergedColumnRange = isInsertAfter
+                ? cellIndex <= insertColIdx && endCellIndex > insertColIdx
+                : cellIndex < insertColIdx && endCellIndex >= insertColIdx;
+            if (isWithinMergedColumnRange) {
+                refCell.colSpan += 1;
+                return;
+            }
+            const currentRow = table.rows[rowIndex];
+            const cell = currentRow.childNodes[insertColIdx];
+            const tag = cell ? cell.tagName : "td";
+            const newCell = this.document.createElement(tag);
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             baseContainer.append(this.document.createElement("br"));
             newCell.append(baseContainer);
-            cell[position](newCell);
+            currentRow.insertBefore(newCell, currentRow.children[insertColIdx]);
             if (rowIndex === 0 && tableWidth) {
-                newCell.style.width = cell.style.width;
-                totalWidth += parseFloat(cell.style.width);
+                newCell.style.width = tableWidth - totalWidth - 1 + "px";
+                totalWidth += parseFloat(newCell.style.width);
             }
         });
         if (tableWidth) {
@@ -279,21 +311,39 @@ export class TablePlugin extends Plugin {
             // Fix the table and row's width so it doesn't change.
             table.style.width = tableWidth + "px";
         }
+        delete this.currentGridTable;
     }
     /**
      * @param {'before'|'after'} position
      * @param {HTMLTableRowElement} reference
      */
     addRow(position, reference) {
+        this.buildTableGrid(closestElement(reference, "table"));
         const referenceRowHeight = reference.style.height && parseFloat(reference.style.height);
         const newRow = this.document.createElement("tr");
         if (referenceRowHeight) {
             newRow.style.height = referenceRowHeight + "px";
         }
-        const cells = reference.querySelectorAll("td, th");
+        const rowIndex = getRowIndex(reference);
+        const cells = this.tableGrid[rowIndex];
+        const isAfter = position === "after";
         const referenceRowWidths = [...cells].map((cell) => cell.style.width);
+        const filteredCells = Array.from(cells).filter((cell) => {
+            if (cell.rowSpan > 1) {
+                const startRowIndex = getRowIndex(cell.parentElement);
+                const endRowIndex = startRowIndex + (cell.rowSpan - 1);
+                const isWithinMergedRowRange = isAfter
+                    ? rowIndex >= startRowIndex && rowIndex < endRowIndex
+                    : rowIndex > startRowIndex && rowIndex <= endRowIndex;
+                if (isWithinMergedRowRange) {
+                    cell.rowSpan += 1;
+                    return false;
+                }
+            }
+            return true;
+        });
         newRow.append(
-            ...Array.from(cells).map((cell) => {
+            ...filteredCells.map((cell) => {
                 const td = this.document.createElement(cell.tagName);
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 baseContainer.append(this.document.createElement("br"));
@@ -314,6 +364,7 @@ export class TablePlugin extends Plugin {
                 columnIndex++;
             }
         }
+        delete this.currentGridTable;
     }
     /**
      * @param {HTMLTableCellElement} cell
