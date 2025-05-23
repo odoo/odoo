@@ -81,9 +81,13 @@ patch(PosStore.prototype, {
         let userWasAskedAboutLoadedLots = false;
         let previousProductLine = null;
 
-        const converted_lines = await this.data.call("sale.order.line", "read_converted", [
-            sale_order.order_line.map((l) => l.id),
-        ]);
+        const convertedLines = Object.fromEntries(
+            (
+                await this.data.call("sale.order.line", "read_converted", [
+                    sale_order.order_line.map((l) => l.id),
+                ])
+            ).map((line) => [line.id, line])
+        );
 
         for (let i = 0; i < sale_order.order_line.length; ++i) {
             const line = sale_order.order_line[i];
@@ -122,11 +126,11 @@ patch(PosStore.prototype, {
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
 
-            const converted_line = converted_lines[i];
+            const convertedLine = convertedLines[line.id];
             if (
                 newLine.get_product().tracking !== "none" &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
-                converted_line.lot_names.length > 0
+                convertedLine.lot_names.length > 0
             ) {
                 if (!useLoadedLots && !userWasAskedAboutLoadedLots) {
                     useLoadedLots = await ask(this.dialog, {
@@ -138,7 +142,7 @@ patch(PosStore.prototype, {
                 if (useLoadedLots) {
                     newLine.setPackLotLines({
                         modifiedPackLotLines: [],
-                        newPackLotLines: (converted_line.lot_names || []).map((name) => ({
+                        newPackLotLines: (convertedLine.lot_names || []).map((name) => ({
                             lot_name: name,
                         })),
                     });
