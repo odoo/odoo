@@ -6,8 +6,9 @@
             <field name="arch" type="xml">
                 <form string="Lost Lead">
                     <field name="lead_ids" invisible="1"></field>
+                    <field name="lost_reason_id" placeholder="Select a Lost Reason..." widget="selection_badge" />
                     <group>
-                        <field name="lost_reason_id" placeholder="Select a Lost Reason..." options="{'no_create_edit': True}" />
+                        <label for="lost_feedback" class="o_form_label">Closing Note</label>
                         <field name="lost_feedback" placeholder="What went wrong?" nolabel="1" colspan="2"/>
                     </group>
                     <footer>
