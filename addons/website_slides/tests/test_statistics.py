@@ -257,11 +257,13 @@ class TestHttpSlideStatistics(HttpCase, common.SlidesCase):
         self.assertEqual(self.slide.public_views, 0)
         self.assertEqual(self.slide.total_views, 0)
         # Open the slide a first time. Must increase the views by 1
-        self.url_open(f'/slides/slide/{self.slide.id}')
+        res = self.url_open(f'/slides/slide/{self.slide.id}')
+        self.assertEqual(res.status_code, 200)
         self.assertEqual(self.slide.public_views, 1)
         self.assertEqual(self.slide.total_views, 1)
         # Open the slide a second time.
         # As it's the same session, it must not increase the views anymore
-        self.url_open(f'/slides/slide/{self.slide.id}')
+        res = self.url_open(f'/slides/slide/{self.slide.id}')
+        self.assertEqual(res.status_code, 200)
         self.assertEqual(self.slide.public_views, 1)
         self.assertEqual(self.slide.total_views, 1)
