@@ -665,3 +665,26 @@ class TestAttendeeCase(HttpCaseWithUserPortal):
             self.env['slide.channel'].search([('is_visible', '=', True)]),
             self.env['slide.channel'].search([('is_visible', '!=', False)]),
         )
+
+    def test_slide_slide_notification_link(self):
+        """Check link shared in content notification mail redirect to appropriate content"""
+        self.authenticate("portal", "portal")
+
+        url = self.slide.website_share_url
+        response = self.url_open(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertURLEqual(
+            response.url,
+            f"/slides/{self.channel.id}?access_error=course_content&access_error_slide_id={self.slide.id}&access_error_slide_name=How+to+understand+membership",
+            "Unathorized user cannot access non published content",
+        )
+
+        # Adding attendee to the course
+        self.channel._action_add_members(self.user_portal.partner_id)
+        response = self.url_open(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertURLEqual(
+            response.url,
+            f"/slides/slide/{self.env['ir.http']._slug(self.slide)}",
+            "Should redirect to the slide page",
+        )
