@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="spreadsheet_dashboard.DashboardSearchDialog">
+        <Dialog title.translate="Global Filters" size="md">
+            <div class="d-flex flex-column o-dashboard-search-dialog">
+                <div t-foreach="state.activeFilters" t-as="item" t-key="item_index" class="d-flex o-filter-item align-items-center">
+                    <div class="me-1 w-25">
+                        <t t-esc="getTranslatedFilterLabel(item.globalFilter)"/>
+                    </div>
+                    <FilterValue filter="item.globalFilter"
+                                 model="props.model"
+                                 setGlobalFilterValue="(id, value, displayNames) => this.setGlobalFilterValue(item, value, displayNames)"
+                                 globalFilterValue="item.value"/>
+                    <button class="btn btn-link px-2 text-danger fs-4" t-on-click="() => this.removeFilter(item.globalFilter.id)">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+                <div class="d-flex">
+                    <Dropdown t-if="hasUnusedGlobalFilters">
+                        <a href="#" class="pt-2">
+                            Add filter
+                        </a>
+                        <t t-set-slot="content">
+                            <t t-foreach="unusedGlobalFilters" t-as="filter" t-key="filter.id">
+                                <DropdownItem onSelected="() => this.activateFilter(filter)">
+                                    <span t-esc="getTranslatedFilterLabel(filter)"/>
+                                </DropdownItem>
+                            </t>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="onConfirm">Filter</button>
+                <button class="btn btn-secondary" t-on-click="onDiscard">Discard</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
