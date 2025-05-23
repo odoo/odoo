@@ -57,6 +57,11 @@ class PaymentMethod(models.Model):
         max_width=45,
         max_height=30,
     )
+    pay_label = fields.Char(
+        string="Pay Label",
+        help="The label displayed on the payment form when the customer is about to pay.",
+        translate=True,
+    )
 
     # Feature support fields.
     support_tokenization = fields.Boolean(

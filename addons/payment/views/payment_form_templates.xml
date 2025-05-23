@@ -276,6 +276,7 @@
                            data-payment-option-type="payment_method"
                            t-att-data-payment-option-id="pm_sudo.id"
                            t-att-data-payment-method-code="pm_sudo.code"
+                           t-att-data-payment-method-pay-label="pm_sudo.pay_label"
                            t-att-data-provider-id="provider_sudo.id"
                            t-att-data-provider-code="provider_sudo._get_code()"
                            t-att-data-provider-state="provider_sudo.state"
@@ -406,8 +407,9 @@
                 type="submit"
                 class="btn btn-primary w-100 w-md-auto ms-auto px-5"
                 disabled="true"
+                t-out="submit_button_label"
         >
-            <span t-field="current_website_checkout_step.submit_button_label"/>
+            <!-- <span t-field="current_website_checkout_step.submit_button_label"/> -->
         </button>
     </template>
 
