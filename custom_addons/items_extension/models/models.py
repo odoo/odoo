@@ -3,9 +3,9 @@
 # from odoo import models, fields, api
 
 
-# class sale_extension(models.Model):
-#     _name = 'sale_extension.sale_extension'
-#     _description = 'sale_extension.sale_extension'
+# class items_extension(models.Model):
+#     _name = 'items_extension.items_extension'
+#     _description = 'items_extension.items_extension'
 
 #     name = fields.Char()
 #     value = fields.Integer()
