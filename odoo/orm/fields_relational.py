@@ -500,7 +500,6 @@ class _RelationalMulti(_Relational):
                 records.env.transaction.field_data_patches[self][record_id].append(new_id)
             else:
                 field_cache[record_id] = tuple(unique(cache_value + (new_id,)))
-        records.modified([self.name])
 
     def _update_cache(self, records, cache_value, dirty=False):
         field_patches = records.env.transaction.field_data_patches.get(self)
