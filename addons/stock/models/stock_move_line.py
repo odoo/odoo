@@ -505,9 +505,6 @@ class StockMoveLine(models.Model):
                 # Unreserve and reserve following move in order to have the real reserved quantity on move_line.
                 next_moves |= ml.move_id.move_dest_ids.filtered(lambda move: move.state not in ('done', 'cancel'))
 
-                # Log a note
-                if ml.picking_id:
-                    ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
             move_done = mls.move_id
             if move_done:
                 move_done._check_quantity()
