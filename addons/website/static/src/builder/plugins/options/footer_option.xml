@@ -112,7 +112,8 @@
     <BuilderRow label.translate="Scroll Top Button">
         <BuilderCheckbox id="'footer_scrolltop_opt'" action="'websiteConfig'" actionParam="{
             views: ['website.option_footer_scrolltop'],
-            vars: {'footer-scrolltop': !this.isActiveItem('footer_scrolltop_opt')},
+            vars: {'footer-scrolltop': 'true'},
+            varsOnClean: {'footer-scrolltop': 'false'}
         }"/>
         <BuilderSelect t-if="this.isActiveItem('footer_scrolltop_opt')" applyTo="'#o_footer_scrolltop_wrapper'">
             <BuilderSelectItem classAction="'justify-content-start'">Left</BuilderSelectItem>
