@@ -670,12 +670,12 @@ export class TablePlugin extends Plugin {
      */
     shiftCursorToTableCell(shiftIndex) {
         const sel = this.dependencies.selection.getEditableSelection();
-        const currentTd = closestElement(sel.anchorNode, "td");
+        const currentTd = closestElement(sel.anchorNode, "td, th");
         const closestTable = closestElement(currentTd, "table");
         if (!currentTd || !closestTable) {
             return false;
         }
-        const tds = [...closestTable.querySelectorAll("td")];
+        const tds = [...closestTable.querySelectorAll("td, th")];
         const cursorDestination = tds[tds.findIndex((td) => currentTd === td) + shiftIndex];
         if (!cursorDestination) {
             return false;
