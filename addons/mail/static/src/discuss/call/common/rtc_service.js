@@ -69,6 +69,7 @@ export const CROSS_TAB_HOST_MESSAGE = {
     PING: "PING", // signals that the host is still active
     UPDATE_REMOTE: "UPDATE_REMOTE", // sent with updated state of the remote rtc sessions of the call
     CLOSE: "CLOSE", // sent when the host ends the call
+    PIP_CHANGE: "PIP_CHANGE", // sent when the host changes the pip mode
 };
 export const CROSS_TAB_CLIENT_MESSAGE = {
     INIT: "INIT", // sent by a tab to signal its presence and receive a state update
@@ -77,6 +78,7 @@ export const CROSS_TAB_CLIENT_MESSAGE = {
     UPDATE_VOLUME: "UPDATE_VOLUME", // sent by a tab to signal a volume change
 };
 const PING_INTERVAL = 30_000;
+const UNAVAILABLE_AS_REMOTE = _t("This action can only be done in the call tab.");
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -325,12 +327,17 @@ export class Rtc extends Record {
         compute() {
             return callActionsRegistry
                 .getEntries()
-                .filter(([key, action]) => action.condition({ rtc: this }))
-                .map(([key, action]) => [key, action.isActive({ rtc: this })]);
+                .filter(([key, action]) => {
+                    return action.condition({ rtc: this });
+                })
+                .map(([key, action]) => [key, action.isActive({ rtc: this }), action.isTracked]);
         },
         onUpdate() {
-            for (const [key, isActive] of this.callActions) {
+            for (const [key, isActive, isTracked] of this.callActions) {
                 if (isActive === this.lastActions[key]) {
+                    continue;
+                }
+                if (!isTracked) {
                     continue;
                 }
                 if (isActive) {
@@ -376,6 +383,7 @@ export class Rtc extends Record {
              * Whether the network fell back to p2p mode in a SFU call.
              */
             fallbackMode: false,
+            isPipMode: false,
         });
         this.blurManager = undefined;
     }
@@ -425,25 +433,14 @@ export class Rtc extends Record {
         browser.addEventListener(
             "keydown",
             (ev) => {
-                if (!this.store.settings.isPushToTalkKey(ev)) {
-                    return;
-                }
-                this.onPushToTalk();
+                this.onKeyDown(ev);
             },
             { capture: true }
         );
         browser.addEventListener(
             "keyup",
             (ev) => {
-                if (
-                    !this.state.channel ||
-                    !this.store.settings.use_push_to_talk ||
-                    !this.store.settings.isPushToTalkKey(ev) ||
-                    !this.localSession.isTalking
-                ) {
-                    return;
-                }
-                this.setPttReleaseTimeout();
+                this.onKeyUp(ev);
             },
             { capture: true }
         );
@@ -487,6 +484,25 @@ export class Rtc extends Record {
 
     get displaySurface() {
         return this.state.sourceScreenStream?.getVideoTracks()[0]?.getSettings().displaySurface;
+    }
+
+    onKeyDown(ev) {
+        if (!this.store.settings.isPushToTalkKey(ev)) {
+            return;
+        }
+        this.onPushToTalk();
+    }
+
+    onKeyUp(ev) {
+        if (
+            !this.state.channel ||
+            !this.store.settings.use_push_to_talk ||
+            !this.store.settings.isPushToTalkKey(ev) ||
+            !this.localSession.isTalking
+        ) {
+            return;
+        }
+        this.setPttReleaseTimeout();
     }
 
     showMirroringWarning() {
@@ -534,6 +550,24 @@ export class Rtc extends Record {
             this.soundEffectsService.play("ptt-press");
         }
         this.setTalking(true);
+    }
+
+    async openPip() {
+        if (this.isHost) {
+            await this.pipService.openPip();
+            return;
+        }
+        this.notification.add(UNAVAILABLE_AS_REMOTE, {
+            type: "warning",
+        });
+    }
+
+    closePip() {
+        if (this.isHost) {
+            this.pipService.closePip();
+        } else {
+            this._remoteAction({ pip: false });
+        }
     }
 
     /**
@@ -894,6 +928,13 @@ export class Rtc extends Record {
                 this.clear();
                 return;
             }
+            case CROSS_TAB_HOST_MESSAGE.PIP_CHANGE: {
+                if (this.isHost) {
+                    return;
+                }
+                this.state.isPipMode = changes.isPipMode;
+                return;
+            }
             case CROSS_TAB_HOST_MESSAGE.PING: {
                 this._refreshCrossTabTimeout();
                 return;
@@ -903,6 +944,10 @@ export class Rtc extends Record {
                     return;
                 }
                 this._updateRemoteTabs({ [this.localSession.id]: toRaw(this.formatInfo()) });
+                this._postToTabs({
+                    type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
+                    changes: { isPipMode: this.state.isPipMode },
+                });
                 return;
             }
             case CROSS_TAB_CLIENT_MESSAGE.REQUEST_ACTION: {
@@ -952,6 +997,16 @@ export class Rtc extends Record {
                         break;
                     }
                     promises.push(this.raiseHand(value));
+                    break;
+                case "pip":
+                    if (value === this.state.isPipMode) {
+                        break;
+                    }
+                    if (value) {
+                        promises.push(this.openPip());
+                    } else {
+                        this.closePip();
+                    }
                     break;
             }
         }
@@ -1504,6 +1559,7 @@ export class Rtc extends Record {
         this.state.cameraTrack?.stop();
         this.state.screenTrack?.stop();
         this.state.fallbackMode = undefined;
+        this.state.isPipMode = false;
         closeStream(this.state.sourceCameraStream);
         this.state.sourceCameraStream = null;
         closeStream(this.state.sourceScreenStream);
@@ -1530,6 +1586,7 @@ export class Rtc extends Record {
             channel: undefined,
             fallbackMode: false,
         });
+        this.pipService?.closePip();
     }
 
     /**
@@ -1589,7 +1646,7 @@ export class Rtc extends Record {
      */
     async toggleVideo(type, force) {
         if (this.isRemote) {
-            this.notification.add(_t("This action can only be done in the call tab."), {
+            this.notification.add(UNAVAILABLE_AS_REMOTE, {
                 type: "warning",
             });
             return;
@@ -2083,6 +2140,7 @@ export const rtcService = {
     dependencies: [
         "bus_service",
         "discuss.p2p",
+        "discuss.pip_service",
         "discuss.ptt_extension",
         "mail.sound_effects",
         "mail.store",
@@ -2096,6 +2154,20 @@ export const rtcService = {
      */
     start(env, services) {
         const rtc = env.services["mail.store"].rtc;
+        rtc.pipService = services["discuss.pip_service"];
+        onChange(rtc.pipService.state, "active", () => {
+            const isPipMode = rtc.pipService.state.active;
+            if (!isPipMode) {
+                rtc.channel?.openChatWindow();
+            }
+            rtc.state.isPipMode = isPipMode;
+            if (rtc.pipService.isNativePipAvailable) {
+                rtc._postToTabs({
+                    type: CROSS_TAB_HOST_MESSAGE.PIP_CHANGE,
+                    changes: { isPipMode },
+                });
+            }
+        });
         rtc.p2pService = services["discuss.p2p"];
         rtc.p2pService.acceptOffer = async (id, sequence) => {
             const session = await this.store["discuss.channel.rtc.session"].getWhenReady(

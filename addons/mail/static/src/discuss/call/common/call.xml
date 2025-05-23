@@ -7,7 +7,8 @@
             'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen,
             'o-compact': props.compact and !isMobileOs,
             'o-minimized': minimized,
-            'position-relative rounded-2 o-mx-0_5 o-mt-0_5 p-1': !state.isFullscreen,
+            'o-pip': props.isPip,
+            'position-relative rounded-2 o-mx-0_5 o-mt-0_5 p-1': !state.isFullscreen and !props.isPip,
         }">
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
                 <div
@@ -42,7 +43,7 @@
                 </t>
                 <div t-if="state.overlay or !isControllerFloating" class="o-discuss-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute z-2 bottom-0 pb-2': isControllerFloating }">
                     <div t-on-mousemove="onMousemoveOverlay">
-                        <CallActionList thread="props.thread" compact="props.compact" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
+                        <CallActionList thread="props.thread" compact="props.compact or props.isPip" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }"/>
                     </div>
                 </div>
                 <div t-if="hasCallNotifications" class="position-absolute d-flex flex-column-reverse start-0 bottom-0" t-att-class="{ 'ps-5 pb-5': state.isFullscreen, 'ps-2 pb-2': !state.isFullscreen }">

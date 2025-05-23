@@ -1,8 +1,7 @@
 import { Component, useRef } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CallPopover } from "@mail/discuss/call/common/call_popover";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
@@ -12,20 +11,27 @@ import { Tooltip } from "@web/core/tooltip/tooltip";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
 
 export class CallActionList extends Component {
-    static components = { Dropdown, DropdownItem, CallActionButton };
-    static props = ["thread", "fullscreen", "compact?"];
+    static components = { CallPopover, CallActionButton };
+    static props = ["thread", "fullscreen?", "compact?"];
     static template = "discuss.CallActionList";
 
     setup() {
         super.setup();
-        this.CALL_PROMOTE_FULLSCREEN = CALL_PROMOTE_FULLSCREEN;
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
+        this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions();
         this.more = useRef("more");
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
+    }
+
+    get isPromotingFullscreen() {
+        return Boolean(
+            !this.env.pipWindow &&
+                this.props.thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
+        );
     }
 
     get MORE() {
@@ -37,7 +43,7 @@ export class CallActionList extends Component {
     }
 
     get isSmall() {
-        return Boolean(this.props.compact && !this.props.fullscreen.isActive);
+        return Boolean(this.props.compact && !this.props.fullscreen?.isActive);
     }
 
     get isMobileOS() {
@@ -62,7 +68,7 @@ export class CallActionList extends Component {
     }
 
     onMouseenterMore() {
-        if (this.props.thread.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE) {
+        if (this.isPromotingFullscreen) {
             this.popover.open(this.more.el, { tooltip: _t("Enter full screen!") });
             this.props.thread.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         }

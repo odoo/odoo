@@ -36,7 +36,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
  */
 export class Call extends Component {
     static components = { CallActionList, CallParticipantCard, PttAdBanner };
-    static props = ["thread", "compact?"];
+    static props = ["thread", "compact?", "isPip?"];
     static template = "discuss.Call";
 
     overlayTimeout;
@@ -192,7 +192,9 @@ export class Call extends Component {
 
     get hasSidebarButton() {
         return Boolean(
-            this.props.thread.activeRtcSession && this.state.overlay && !this.props.compact
+            this.props.thread.activeRtcSession &&
+                this.state.overlay &&
+                (!this.props.compact || this.state.isFullscreen)
         );
     }
 

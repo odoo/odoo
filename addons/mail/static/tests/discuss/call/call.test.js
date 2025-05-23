@@ -18,7 +18,7 @@ import {
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 
-import { describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, hover, manuallyDispatchProgrammaticEvent, queryFirst } from "@odoo/hoot-dom";
 import { mockSendBeacon, mockUserAgent } from "@odoo/hoot-mock";
 import {
@@ -35,8 +35,11 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("basic rendering", async () => {
+beforeEach(() => {
     mockGetMedia();
+});
+
+test("basic rendering", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -63,7 +66,6 @@ test("basic rendering", async () => {
 });
 
 test("keep the `more` popover active when hovering it", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -72,7 +74,8 @@ test("keep the `more` popover active when hovering it", async () => {
     await contains(".o-discuss-Call");
     await contains(".o-discuss-CallActionList");
     await click("[title='More']");
-    const enterFullScreenSelector = ".o-dropdown-item[title='Enter Full Screen']";
+    const enterFullScreenSelector =
+        ".o-discuss-CallActionList-dropdownItem[title='Enter Full Screen']";
     await contains(enterFullScreenSelector);
     await hover(queryFirst(enterFullScreenSelector));
     await contains(enterFullScreenSelector);
@@ -94,7 +97,6 @@ test("no call with odoobot", async () => {
 });
 
 test("should not display call UI when no more members (self disconnect)", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -106,7 +108,6 @@ test("should not display call UI when no more members (self disconnect)", async 
 });
 
 test("show call UI in chat window when in call", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -120,7 +121,6 @@ test("show call UI in chat window when in call", async () => {
 });
 
 test("should disconnect when closing page while in call", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -196,7 +196,6 @@ test("should display invitations", async () => {
 });
 
 test("can share screen", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -212,7 +211,6 @@ test("can share screen", async () => {
 });
 
 test("can share user camera", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -225,7 +223,6 @@ test("can share user camera", async () => {
 });
 
 test("Camera video stream stays in focus when on/off", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -245,7 +242,6 @@ test("Camera video stream stays in focus when on/off", async () => {
 });
 
 test("Create a direct message channel when clicking on start a meeting", async () => {
-    mockGetMedia();
     await start();
     await openDiscuss();
     await click("button", { text: "Start a meeting" });
@@ -255,7 +251,6 @@ test("Create a direct message channel when clicking on start a meeting", async (
 });
 
 test("Can share user camera and screen together", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -268,7 +263,6 @@ test("Can share user camera and screen together", async () => {
 });
 
 test("Click on inset card should replace the inset and active stream together", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -284,7 +278,6 @@ test("Click on inset card should replace the inset and active stream together", 
 });
 
 test("join/leave sounds are only played on main tab", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const env1 = await start({ asTab: true });
@@ -312,7 +305,6 @@ test("join/leave sounds are only played on main tab", async () => {
 });
 
 test("'Start a meeting' in mobile", async () => {
-    mockGetMedia();
     patchUiSize({ size: SIZES.SM });
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 2" });
@@ -334,7 +326,6 @@ test("'Start a meeting' in mobile", async () => {
 });
 
 test("Systray icon shows latest action", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -357,7 +348,6 @@ test("Systray icon shows latest action", async () => {
 });
 
 test("Systray icon keeps track of earlier actions", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -384,7 +374,6 @@ test("Systray icon keeps track of earlier actions", async () => {
 });
 
 test("show call participants in discuss sidebar", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -398,7 +387,6 @@ test("show call participants in discuss sidebar", async () => {
 });
 
 test("Sort call participants in side bar by name", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["discuss.channel.rtc.session"].create([
@@ -445,7 +433,6 @@ test("Sort call participants in side bar by name", async () => {
 });
 
 test("expand call participants when joining a call", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const partners = pyEnv["res.partner"].create([
         { name: "Alice" },
@@ -509,7 +496,6 @@ test("start call when accepting from push notification", async () => {
 });
 
 test("Use saved volume settings", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerName = "Another Participant";
@@ -542,7 +528,6 @@ test("Use saved volume settings", async () => {
 });
 
 test("show call participants after stopping screen share", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -558,7 +543,6 @@ test("show call participants after stopping screen share", async () => {
 });
 
 test("show call participants after stopping camera share", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
@@ -573,7 +557,6 @@ test("show call participants after stopping camera share", async () => {
 });
 
 test("Cross tab calls: tabs can interact with calls remotely", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const broadcastChannel = new BroadcastChannel("call_sync_state");
@@ -629,7 +612,6 @@ test("automatically cancel incoming call after some time", async () => {
 });
 
 test("should also invite to the call when inviting to the channel", async () => {
-    mockGetMedia();
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         email: "testpartner@odoo.com",

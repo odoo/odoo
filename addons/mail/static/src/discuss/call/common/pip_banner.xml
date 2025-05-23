@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="discuss.pipBanner">
+    <span class="o-discuss-PipBanner px-2 py-1 mx-1 mt-1 rounded-1">
+        <div class="d-flex justify-content-between align-items-center p-2">
+            <span class="small fw-bold">The call is currently open in picture-in-picture mode.</span>
+            <button class="btn o-discuss-PipBannerButton d-flex rounded-1" title="Bring call back" t-on-click="onClickClose">
+                Bring back
+            </button>
+        </div>
+        <div class="d-flex justify-content-center">
+            <CallActionList thread="rtc.channel" compact="true"/>
+        </div>
+    </span>
+</t>
+
+</templates>
