@@ -291,3 +291,43 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
             sol.product_no_variant_attribute_value_ids,
             product_template.attribute_line_ids.product_template_value_ids,
         )
+
+    def test_product_configurator_uom_selection(self):
+        self.env['product.pricelist'].create({
+            'name': 'Custom pricelist (TEST)',
+            'sequence': 4,
+            'item_ids': [(0, 0, {
+                'base': 'list_price',
+                'applied_on': '1_product',
+                'product_tmpl_id': self.product_product_custo_desk.id,
+                'price_discount': 20,
+                'min_quantity': 2,
+                'compute_price': 'formula'
+            })]
+        })
+
+        self.env.ref('base.group_user').write({
+            'implied_ids': [
+                # Required to set pricelist
+                Command.link(self.env.ref('product.group_product_pricelist').id),
+                # Required to set uom in configurator
+                Command.link(self.group_uom.id),
+            ],
+        })
+
+        self.product_product_custo_desk.uom_id = self.uom_unit
+        self.assertEqual(self.product_product_custo_desk.uom_id, self.uom_unit)
+        self.product_product_custo_desk.uom_ids += self.uom_dozen
+        self.product_product_conf_chair.uom_ids = self.uom_dozen
+
+        self.assertIn(self.uom_dozen, self.product_product_custo_desk.uom_ids)
+
+        # Add a 15% tax on desk
+        tax = self.env['account.tax'].create({'name': "Test tax", 'amount': 15})
+        self.product_product_custo_desk.taxes_id = tax
+
+        # Remove tax from Conference Chair and Chair floor protection
+        self.product_product_conf_chair.taxes_id = None
+        self.product_product_conf_chair_floor_protect.taxes_id = None
+        self.assertTrue(self.salesman._has_group('product.group_product_pricelist'))
+        self.start_tour("/odoo", 'sale_product_configurator_uom_tour', login='salesman')
