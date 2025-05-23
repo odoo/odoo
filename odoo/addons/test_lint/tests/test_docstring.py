@@ -26,7 +26,7 @@ KEYWORD_ONLY = inspect.Parameter.KEYWORD_ONLY
 VAR_KEYWORD = inspect.Parameter.VAR_KEYWORD
 
 DOCUTILS_WARNING = 2
-DOCUTILS_CRITIAL = 5
+DOCUTILS_CRITICAL = 5
 
 RST_INFO_FIELDS_DOC = (
     "https://www.sphinx-doc.org/en/master/usage/domains/python.html#info-field-lists")
@@ -162,6 +162,18 @@ class TestDocstring(BaseCase):
             docutils.parsers.rst.directives.register_directive(
                 directive, docutils.parsers.rst.directives.admonitions.Note)
 
+        doctree = docutils.core.publish_doctree("", settings_overrides={
+            'report_level': DOCUTILS_CRITICAL,
+            'halt_level': DOCUTILS_CRITICAL,
+        })
+        cls.doctree_settings_silent = doctree.settings
+
+        doctree = docutils.core.publish_doctree("", settings_overrides={
+            'report_level': DOCUTILS_WARNING,
+            'halt_level': DOCUTILS_CRITICAL,
+        })
+        cls.doctree_settings_verbose = doctree.settings
+
     def test_docstring(self):
         """ Verify that the function signature and its docstring match. """
         registry = Registry(get_db_name())
@@ -185,10 +197,10 @@ class TestDocstring(BaseCase):
                 if not method.__doc__:
                     continue
 
-                report_level = DOCUTILS_WARNING if (
+                settings = self.doctree_settings_verbose if (
                     (model_cls._original_module or model_name).startswith(MODULES_TO_LINT)
                     and not (parent_class._name or '').startswith('mail.')  # until we lint mail
-                ) else DOCUTILS_CRITIAL
+                ) else self.doctree_settings_silent
 
                 with self.subTest(
                     module=parent_class._module,
@@ -198,10 +210,7 @@ class TestDocstring(BaseCase):
                     with contextlib.redirect_stderr(io.StringIO()) as stderr:
                         doctree = docutils.core.publish_doctree(
                             inspect.cleandoc(method.__doc__),
-                            settings_overrides={
-                                'report_level': report_level,
-                                'halt_level': 5,  # CRITICAL TICAL!
-                            },
+                            settings=settings,
                         )
                         if stderr.tell():
                             self.fail(stderr.getvalue())
