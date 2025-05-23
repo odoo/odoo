@@ -108,7 +108,7 @@ import * as hootMock from "@odoo/hoot-mock";
 
 const {
     clearTimeout,
-    console: { error: $error, groupEnd: $groupEnd, log: $log, table: $table },
+    console: { error: $error },
     EventTarget,
     Map,
     Math: { abs: $abs, floor: $floor },
@@ -213,31 +213,7 @@ const shuffle = (array) => {
  */
 const handleConsoleIssues = (test, shouldSuppress) => {
     if (shouldSuppress && test.config.todo) {
-        const restoreConsole = () => $assign(globalThis.console, originalMethods);
-
-        /**
-         * @param {string} label
-         * @param {string} color
-         */
-        const suppressIssueLogger = (label, color) => {
-            const groupName = [`%c[${label}]%c suppressed by "test.todo"`, `color: ${color}`, ""];
-            return (...args) => {
-                logger.groupCollapsed(...groupName);
-                $log(...args);
-                $groupEnd();
-            };
-        };
-
-        const originalMethods = {
-            error: globalThis.console.error,
-            warn: globalThis.console.warn,
-        };
-        $assign(globalThis.console, {
-            error: suppressIssueLogger("ERROR", "#9f1239"),
-            warn: suppressIssueLogger("WARNING", "#f59e0b"),
-        });
-
-        return restoreConsole;
+        return logger.suppressIssues(`suppressed by "test.todo"`);
     } else {
         const offConsoleEvents = () => {
             while (cleanups.length) {
@@ -1806,9 +1782,9 @@ export class Runner {
                 table[key] = `[${[...table[key]].join(", ")}]`;
             }
         }
-        logger.groupCollapsed("Configuration (click to expand)");
-        $table(table);
-        $groupEnd();
+        logger.group("Configuration (click to expand)", () => {
+            logger.table(table);
+        });
         logger.logRun("Starting test suites");
 
         // Adjust debug mode if more or less than 1 test will be run
