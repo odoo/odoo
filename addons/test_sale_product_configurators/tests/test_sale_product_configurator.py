@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests.common import HttpCase, tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -114,6 +115,10 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
         )
 
     def test_03_product_configurator_edition(self):
+        # Enable pricelist
+        self.env.user.write(
+            {'group_ids': [Command.link(self.env.ref('product.group_product_pricelist').id)]}
+        )
         self.start_tour("/odoo", 'sale_product_configurator_edition_tour', login='salesman')
 
     def test_04_product_configurator_single_custom_value(self):
