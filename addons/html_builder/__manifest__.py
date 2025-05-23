@@ -33,6 +33,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'web/static/fonts/fonts.scss',
             'html_builder/static/src/**/*',
         ],
         'html_builder.inside_builder_style': [
