@@ -294,7 +294,7 @@ export class Many2One extends Component {
     async processScannedBarcode(barcode) {
         const pairs = await this.orm.call(this.props.relation, "name_search", [], {
             name: barcode,
-            args: this.props.domain(),
+            domain: this.props.domain(),
             operator: "ilike",
             limit: 2, // If one result we set directly and if more than one we use normal flow so no need to search more
             context: this.props.context,
