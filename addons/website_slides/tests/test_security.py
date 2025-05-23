@@ -515,7 +515,7 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertFalse(channel_portal.can_publish)
 
         # allow employees to upload
-        channel_manager.write({'upload_group_ids': [(4, self.ref('base.group_user'))]})
+        channel_manager.sudo().write({'upload_group_ids': [(4, self.ref('base.group_user'))]})
         self.assertTrue(channel_emp.can_upload)
         self.assertFalse(channel_emp.can_publish)
         self.assertFalse(channel_portal.can_upload)
@@ -529,12 +529,12 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertTrue(channel_officer.can_upload)
         self.assertTrue(channel_officer.can_publish)
 
-        channel_officer.write({'upload_group_ids': [(4, self.ref('base.group_system'))]})
+        channel_officer.sudo().write({'upload_group_ids': [(4, self.ref('base.group_system'))]})
         self.assertTrue(channel_officer.can_upload)
         self.assertTrue(channel_officer.can_publish)
 
         channel_manager = self.channel.with_user(self.user_manager)
-        channel_manager.write({
+        channel_manager.sudo().write({
             'upload_group_ids': [(5, 0)],
             'user_id': self.user_manager.id
         })
@@ -550,7 +550,7 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertTrue(channel_manager.can_publish)
 
         # test upload group limitation: member of group_system OR responsible OR manager
-        channel_manager.write({'upload_group_ids': [(4, self.ref('base.group_system'))]})
+        channel_manager.sudo().write({'upload_group_ids': [(4, self.ref('base.group_system'))]})
         self.assertFalse(channel_manager.can_upload)
         self.assertFalse(channel_manager.can_publish)
         channel_manager.write({'user_id': self.user_manager.id})
@@ -558,7 +558,7 @@ class TestAccessFeatures(common.SlidesCase):
         self.assertTrue(channel_manager.can_publish)
 
         # Needs the manager to write on channel as user_officer is not the responsible anymore
-        channel_manager.write({'upload_group_ids': [(5, 0)]})
+        channel_manager.sudo().write({'upload_group_ids': [(5, 0)]})
         self.assertTrue(channel_manager.can_upload)
         self.assertTrue(channel_manager.can_publish)
         channel_manager.write({'user_id': self.user_officer.id})
