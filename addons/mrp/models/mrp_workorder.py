@@ -95,6 +95,7 @@ class MrpWorkorder(models.Model):
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation', check_company=True)
         # Should be used differently as BoM can change in the meantime
+    has_worksheet = fields.Boolean(compute='_compute_has_worksheet')
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
     worksheet_type = fields.Selection(
@@ -368,6 +369,11 @@ class MrpWorkorder(models.Model):
                 order.progress = order.duration * 100 / order.duration_expected
             else:
                 order.progress = 0
+
+    def _compute_has_worksheet(self):
+        workorders_has_worksheet = self.env['mrp.workorder'].search([('worksheet', '!=', False), ('id', 'in', self.ids)])
+        for order in self:
+            order.has_worksheet = order in workorders_has_worksheet
 
     def _compute_working_users(self):
         """ Checks whether the current user is working, all the users currently working and the last user that worked. """
