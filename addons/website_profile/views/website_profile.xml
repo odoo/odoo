@@ -84,20 +84,14 @@
         <div>
             <form t-attf-action="/profile/user/save" method="post" role="form" class="o_wprofile_editor_form js_website_submit_form row" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input type="file" class="d-none o_forum_file_upload" name="ufile" accept="image/*"/>
                 <input type="hidden" name="url_param" t-att-value="request.params.get('url_param')"/>
                 <div class="col-12 col-sm-3">
                     <div class="card o_card_people">
                         <div class="card-body">
-                            <img class="o_wforum_avatar_img w-100 mb-3" t-att-src="website.image_url(user, 'avatar_128')"/>
-                            <div class="text-center">
-                                <a href="#" class="o_forum_profile_pic_edit btn btn-primary" aria-label="Edit">
-                                    <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit"></i>
-                                </a>
-                                <a href="#" title="Clear" aria-label="Clear" class="btn border-primary o_forum_profile_pic_clear">
-                                    <i class="fa fa-trash-o float-sm-none float-md-end"></i>
-                                </a>
-                            </div>
+                            <t t-call="portal.portal_profile_picture_card">
+                                <t t-set="image_field" t-value="'ufile'"/>
+                                <t t-set="image_src" t-value="website.image_url(user, 'avatar_128')"/>
+                            </t>
                             <div class="my-3 mb-0 pt-2 border-top">
                                 <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="fw-bold">Public Profile</span></label>
                                 <div class=" mb-0 float-end" t-if="user.id == uid">
