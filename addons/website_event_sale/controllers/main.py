@@ -89,5 +89,7 @@ class WebsiteEventSaleController(WebsiteEventController):
                 # Free order -> auto confirmation without checkout
                 order_sudo.action_confirm()  # tde notsure: email sending ?
                 request.website.sale_reset()
+                request.session['sale_last_order_id'] = order_sudo.id
+                return request.redirect("/shop/confirmation")
 
         return res
