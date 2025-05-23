@@ -35,6 +35,7 @@ registry.category('web_tour.tours').add('shop_update_cart', {
             run: "click",
             expectUnloadPage: true,
         },
+        ...tourUtils.assertCartContains({productName: 'Conference Chair', combinationName: 'Steel'}),
         {
             content: "add suggested",
             trigger: '.js_cart_lines:has(a:contains("Storage Box")) button:contains("Add to cart")',
@@ -46,12 +47,11 @@ registry.category('web_tour.tours').add('shop_update_cart', {
         },
         {
             content: "add one more",
-            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Steel")) a.js_add_cart_json:eq(1)',
+            trigger: '#cart_products div:has(a[name="o_cart_line_product_link"]>h6:contains("Conference Chair")) a.js_add_cart_json:eq(1)',
             run: "click",
         },
         {
-            trigger:
-                '#cart_products div:has(div>a>h6:contains("Steel")) input.js_quantity:value(2)',
+            trigger: '#cart_products div:has(div>a>h6:contains("Conference Chair")) input.js_quantity:value(2)',
         },
         {
             content: "remove Storage Box",

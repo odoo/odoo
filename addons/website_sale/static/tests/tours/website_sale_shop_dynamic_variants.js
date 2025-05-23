@@ -28,9 +28,9 @@ registry.category("web_tour.tours").add('tour_shop_dynamic_variants', {
         trigger: '#add_to_cart',
         run: "click",
     },
-        tourUtils.goToCart(),
-    {
-        content: "check the variant is in the cart",
-        trigger: 'div>a>h6:contains(Dynamic Product (Dynamic Value 2))',
-    },
+    tourUtils.goToCart(),
+    ...tourUtils.assertCartContains({
+        productName: 'Dynamic Product',
+        combinationName: 'Dynamic Value 2',
+    }),
 ]});

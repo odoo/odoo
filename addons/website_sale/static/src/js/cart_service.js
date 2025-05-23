@@ -8,7 +8,6 @@ import {
 import { getSelectedCustomPtav, serializeComboItem } from '@sale/js/sale_utils';
 import { browser } from '@web/core/browser/browser';
 import { serializeDateTime } from '@web/core/l10n/dates';
-import { _t } from '@web/core/l10n/translation';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { session } from '@web/session';
@@ -87,6 +86,8 @@ export class CartService {
      *      dynamic.
      * @param {Number} [product.quantity=1] - The quantity of the product to add to the cart.
      *      Defaults to 1.
+     * @param {Number} [product.uom_id=undefined] - The product's uom id, as a `uom.uom` id.
+     *      If not provided, considers the product default uom.
      * @param {Number[]} [product.ptavs=[]] - The selected stored attribute(s), as a list of
      *      `product.template.attribute.value` ids.
      * @param {CustomAttributeValues[]} [product.productCustomAttributeValues=[]] - An
@@ -111,6 +112,7 @@ export class CartService {
             productTemplateId,
             productId = undefined,
             quantity = 1,
+            uomId = undefined,
             ptavs = [],
             productCustomAttributeValues = [],
             noVariantAttributeValues = [],
@@ -139,6 +141,7 @@ export class CartService {
                 {
                     product_tmpl_id: productTemplateId,
                     quantity: quantity,
+                    // NOTE: no uom for combos on purpose
                     date: serializeDateTime(DateTime.now()),
                     ...rest
                 }
@@ -155,6 +158,7 @@ export class CartService {
                     productTemplateId: productTemplateId,
                     productId: productId,
                     quantity: remainingData.quantity,
+                    uomId: uomId,
                     linked_products: selectedComboItems.map(
                         (comboItem) => this._serializeComboItem(
                             comboItem, productTemplateId, remainingData.quantity
@@ -183,6 +187,7 @@ export class CartService {
                 productTemplateId,
                 productId,
                 quantity,
+                uomId,
                 productCustomAttributeValues,
                 noVariantAttributeValues,
                 shouldRedirectToCart: isBuyNow && redirectToCart,
@@ -202,6 +207,7 @@ export class CartService {
             return this._openProductConfigurator(
                 productTemplateId,
                 quantity,
+                uomId,
                 ptavs.concat(noVariantAttributeValues),
                 productCustomAttributeValues,
                 {
@@ -217,6 +223,7 @@ export class CartService {
             productTemplateId,
             productId,
             quantity,
+            uomId,
             productCustomAttributeValues,
             noVariantAttributeValues,
             shouldRedirectToCart: isBuyNow && redirectToCart,
@@ -271,6 +278,7 @@ export class CartService {
                         productTemplateId: productTemplateId,
                         productId: productId,
                         quantity: comboProductData.quantity,
+                        // NOTE: no uom since not handled in combo configurator
                         linked_products: selectedComboItems.map(
                             (comboItem) => this._serializeComboItem(
                                 comboItem, productTemplateId, comboProductData.quantity
@@ -307,6 +315,7 @@ export class CartService {
     async _openProductConfigurator(
         productTemplateId,
         quantity,
+        uomId,
         combination,
         productCustomAttributeValues,
         options,
@@ -321,6 +330,7 @@ export class CartService {
                     value: customPtav.custom_value,
                 })),
                 quantity: quantity,
+                productUOMId: uomId,
                 soDate: serializeDateTime(DateTime.now()),
                 edit: false,
                 isFrontend: true,
@@ -332,6 +342,7 @@ export class CartService {
                         productTemplateId: product.product_template_id,
                         productId: product.product_id,
                         quantity: product.quantity,
+                        uom_id: product.uom_id,
                         productCustomAttributeValues: product.product_custom_attribute_values,
                         noVariantAttributeValues: product.no_variant_attribute_value_ids,
                         linked_products: optionalProducts.map(this._serializeProduct),
@@ -358,6 +369,7 @@ export class CartService {
             product_template_id: product.product_tmpl_id,
             parent_product_template_id: product.parent_product_tmpl_id,
             quantity: product.quantity,
+            uom_id: product.uom.id,
         }
 
         if (!product.attribute_lines) {
@@ -418,6 +430,7 @@ export class CartService {
      * @param {Number} data.productTemplateId - The product template's id, as a
      *      `product.template` id.
      * @param {Number} data.productId - The product's id, as a `product.product` id.
+     * @param {Number} data.uomId - The uom's id, as a `uom.uom` id.
      * @param {Number} data.quantity - The quantity of the product to add to the cart.
      * @param {CustomAttributeValues[]} [data.productCustomAttributeValues=[]] - An
      *      array of objects representing custom attribute values for the product.
@@ -433,6 +446,7 @@ export class CartService {
         productTemplateId,
         productId,
         quantity,
+        uomId=undefined,
         productCustomAttributeValues=[],
         noVariantAttributeValues=[],
         shouldRedirectToCart=false,
@@ -442,6 +456,7 @@ export class CartService {
             product_template_id: productTemplateId,
             product_id: productId,
             quantity: quantity,
+            uom_id: uomId,
             product_custom_attribute_values: productCustomAttributeValues,
             no_variant_attribute_value_ids: noVariantAttributeValues,
             ...rest
@@ -502,14 +517,14 @@ export class CartService {
      */
     _showCartNotification(props, options = {}) {
         if (props.lines) {
-            this.cartNotificationService.add(_t('Item(s) added to your cart'), {
+            this.cartNotificationService.add('', {
                 lines: props.lines,
                 currency_id: props.currency_id,
                 ...options,
             });
         }
         if (props.warning) {
-            this.cartNotificationService.add(_t('Warning'), {
+            this.cartNotificationService.add('', {
                 warning: props.warning,
                 ...options,
             });

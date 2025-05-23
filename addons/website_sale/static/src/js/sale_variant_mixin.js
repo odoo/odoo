@@ -62,6 +62,7 @@ var VariantMixin = {
             'product_id': this._getProductId($parent),
             'combination': combination,
             'add_qty': parseInt($parent.find('input[name="add_qty"]').val()),
+            'uom_id': this._getUoMId($parent[0]),
             'context': this.context,
             ...this._getOptionalCombinationInfoParam($parent),
         }).then((combinationData) => {
@@ -71,6 +72,10 @@ var VariantMixin = {
             this._onChangeCombination(ev, $parent, combinationData);
             this._checkExclusions($parent, combination);
         });
+    },
+
+    _getUoMId: function (element) {
+        return parseInt(element.querySelector('input[name="uom_id"]:checked')?.value)
     },
 
     /**

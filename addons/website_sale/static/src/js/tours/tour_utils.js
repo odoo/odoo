@@ -57,16 +57,26 @@ export function assertCartAmounts({taxes = false, untaxed = false, total = false
     return steps
 }
 
-export function assertCartContains({productName, backend, notContains = false} = {}) {
+export function assertCartContains({productName, backend, notContains = false, combinationName = false} = {}) {
     let trigger = `h6:contains(${productName})`;
 
     if (notContains) {
         trigger = `:not(${trigger})`;
     }
-    return {
+    let steps = [{
         content: `Checking if ${productName} is in the cart`,
         trigger: `${backend ? ":iframe" : ""} ${trigger}`,
-    };
+    }];
+
+    if (combinationName) {
+        const combination_trigger = `span[class*=h6]:contains(${combinationName})`;
+        steps.push({
+            content: `Checking if ${combinationName} is the chosen combination in the cart`,
+            trigger: `${backend ? ":iframe" : ""} ${combination_trigger}`,
+        })
+    }
+
+    return steps;
 }
 
 /**

@@ -387,9 +387,9 @@ class ProductTemplate(models.Model):
         return next(self._get_possible_combinations(parent_combination), False) is not False
 
     def _get_combination_info(
-        self, combination=False, product_id=False, add_qty=1.0, only_template=False,
+        self, combination=False, product_id=False, add_qty=1.0, uom_id=False, only_template=False,
     ):
-        """ Return info about a given combination.
+        """Return info about a given combination.
 
         Note: this method does not take into account whether the combination is
         actually possible.
@@ -405,6 +405,7 @@ class ProductTemplate(models.Model):
 
         :param float add_qty: the quantity for which to get the info,
             indeed some pricelist rules might depend on it.
+        :param int|None uom_id: the uom for which to get the info, as an `uom.uom` id.
 
         :param only_template: boolean, if set to True, get the info for the
             template only: ignore combination and don't try to find variant
@@ -435,6 +436,7 @@ class ProductTemplate(models.Model):
 
         combination = combination or self.env['product.template.attribute.value']
         website = request.website.with_context(self.env.context)
+        uom = self.env['uom.uom'].browse(uom_id) or self.uom_id
 
         if not product_id and not combination and not only_template:
             combination = self._get_first_possible_combination()
@@ -472,6 +474,7 @@ class ProductTemplate(models.Model):
             **self._get_additionnal_combination_info(
                 product_or_template=product_or_template,
                 quantity=add_qty or 1.0,
+                uom=uom,
                 date=fields.Date.context_today(self),
                 website=website,
             )
@@ -498,12 +501,13 @@ class ProductTemplate(models.Model):
 
         return combination_info
 
-    def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
-        """Computes additional combination info, based on given parameters
+    def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
+        """Compute additional combination info, based on given parameters.
 
         :param product_or_template: `product.product` or `product.template` record
             as variant values must take precedence over template values (when we have a variant)
-        :param float quantity:
+        :param float quantity: requested quantity
+        :param uom: `uom.uom` record
         :param date date: today's date, avoids useless calls to today/context_today and harmonize
             behavior
         :param website: `website` record holding the current website of the request (if any),
@@ -518,6 +522,7 @@ class ProductTemplate(models.Model):
         pricelist_price, pricelist_rule_id = pricelist._get_product_price_rule(
             product=product_or_template,
             quantity=quantity,
+            uom=uom,
             target_currency=currency,
         )
 
@@ -528,7 +533,7 @@ class ProductTemplate(models.Model):
                 product=product_or_template,
                 quantity=quantity or 1.0,
                 date=date,
-                uom=product_or_template.uom_id,
+                uom=uom,
                 currency=currency,
             )
 

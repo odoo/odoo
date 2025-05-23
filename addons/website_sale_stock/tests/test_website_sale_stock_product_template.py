@@ -63,7 +63,11 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
             combination_info = self.env['product.template'].with_context(
                 website_sale_stock_get_quantity=True
             )._get_additionnal_combination_info(
-                combo_product, quantity=3, date=datetime(2000, 1, 1), website=self.website
+                combo_product,
+                quantity=3,
+                uom=combo_product.uom_id,
+                date=datetime(2000, 1, 1),
+                website=self.website
             )
 
         self.assertEqual(combination_info['max_combo_quantity'], 2)
@@ -79,7 +83,11 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
             combination_info = self.env['product.template'].with_context(
                 website_sale_stock_get_quantity=True
             )._get_additionnal_combination_info(
-                combo_product, quantity=3, date=datetime(2000, 1, 1), website=self.website
+                combo_product,
+                quantity=3,
+                uom=combo_product.uom_id,
+                date=datetime(2000, 1, 1),
+                website=self.website
             )
 
         self.assertNotIn('max_combo_quantity', combination_info)

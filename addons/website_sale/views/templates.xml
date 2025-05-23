@@ -1850,8 +1850,12 @@
 
     <!-- /shop/product page -->
     <template id="base_unit_price" name="Product Base unit price">
-        (<span class="o_base_unit_price" t-esc="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-         / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>)
+        <span
+            class="o_base_unit_price"
+            t-esc="base_unit_price"
+            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+        />
+         / <span class="oe_custom_base_unit" t-field="product.base_unit_name"/>
     </template>
 
     <template id="product" name="Product" track="1">
@@ -2739,12 +2743,30 @@
                         <div class="d-flex gap-3">
                             <div class="flex-grow-1 text-wrap w-100">
                                 <div class="d-flex justify-content-between">
-                                    <t t-call="website_sale.cart_line_product_link">
-                                        <h6
-                                            t-field="line.name_short"
-                                            class="d-inline align-top fw-bold text-wrap small"
-                                        />
-                                    </t>
+                                    <div class="d-md-flex flex-md-wrap column-gap-md-2 align-items-md-center">
+                                        <t t-call="website_sale.cart_line_product_link">
+                                            <h6
+                                                t-out="line._get_line_header()"
+                                                class="mb-0 fw-bold text-wrap small"
+                                            />
+                                        </t>
+                                        <t t-set="combination_name" t-value="line._get_combination_name()"/>
+                                        <div
+                                            t-if="combination_name or line.product_template_id._has_multiple_uoms()"
+                                            class="d-inline-flex flex-wrap column-gap-2 row-gap-1 align-items-center my-1 my-md-0 w-100 w-md-auto"
+                                        >
+                                            <span
+                                                t-if="combination_name"
+                                                class="h6 text-muted small mb-0"
+                                                t-out="combination_name"
+                                            />
+                                            <span
+                                                t-if="line.product_template_id._has_multiple_uoms()"
+                                                class="badge bg-light"
+                                                t-out="line.product_uom_id.name"
+                                            />
+                                        </div>
+                                    </div>
                                     <div
                                         t-attf-class="{{'d-block d-md-none' if not is_combo else ''}}"
                                         t-call="website_sale.cart_lines_price"
@@ -2781,7 +2803,7 @@
                             <div t-if="not is_combo" class="d-none d-md-block">
                                 <t t-call="website_sale.cart_lines_price"/>
                                 <div
-                                    class="d-none d-md-block"
+                                    class="d-none d-md-block mt-2"
                                     t-call="website_sale.cart_lines_quantity"
                                 />
                             </div>
@@ -2869,7 +2891,7 @@
 
     <template id="cart_lines_price" name="Shopping Cart Line Price">
         <h6
-            class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end small fw-bold"
+            class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-md-end mb-0 small fw-bold"
             name="website_sale_cart_line_price"
         >
             <t t-if="line.discount and line._is_sellable() and line._get_displayed_unit_price()">
@@ -2881,20 +2903,20 @@
             </t>
             <t t-set="product_price" t-value="line._get_cart_display_price()"/>
             <t t-call="website_sale.cart_product_price"/>
-            <small
-                t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
-                class="cart_product_base_unit_price d-block text-muted"
-                groups="website_sale.group_show_uom_price"
-            >
-                <t t-call="website_sale.base_unit_price">
-                    <t t-set="product" t-value="line.product_id"/>
-                    <t
-                        t-set="base_unit_price"
-                        t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"
-                    />
-                </t>
-            </small>
         </h6>
+        <small
+            t-if="line._is_sellable() and line.env['res.groups']._is_feature_enabled('website_sale.group_show_uom_price') and line.product_id.base_unit_price"
+            class="cart_product_base_unit_price d-block text-muted text-end"
+            groups="website_sale.group_show_uom_price"
+        >
+            <t t-call="website_sale.base_unit_price">
+                <t t-set="product" t-value="line.product_id"/>
+                <t
+                    t-set="base_unit_price"
+                    t-value="product._get_base_unit_price(product_price/line.product_uom_qty)"
+                />
+            </t>
+        </small>
     </template>
 
     <template id="cart_combo_item_line">
@@ -3632,9 +3654,13 @@
                                 class="td-product_name td-qty w-100 pt-3"
                                 name="website_sale_cart_summary_product_name"
                             >
-                                <span class="text-wrap">
-                                    <t t-out="line.name_short"/>
-                                </span>
+                                <span class="text-wrap" t-out="line._get_line_header()"/>
+                                <p class="text-muted small mb-0" t-out="line._get_combination_name()"/>
+                                <span
+                                    t-if="line.product_template_id._has_multiple_uoms()"
+                                    class="badge mt-1 bg-light"
+                                    t-out="line.product_uom_id.name"
+                                />
                             </td>
                             <td class="td-price pe-0 pt-3 text-end"
                                 name="website_sale_cart_summary_line_price">

@@ -6,8 +6,8 @@ from odoo import models
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    def _get_additionnal_combination_info(self, product_or_template, quantity, date, website):
-        res = super()._get_additionnal_combination_info(product_or_template, quantity, date, website)
+    def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
+        res = super()._get_additionnal_combination_info(product_or_template, quantity, uom, date, website)
 
         if not self.env.context.get('website_sale_stock_wishlist_get_wish'):
             return res

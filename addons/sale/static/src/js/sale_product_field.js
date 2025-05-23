@@ -41,12 +41,18 @@ async function applyProduct(record, product) {
 
     // We use `_update` (not locked) instead of `update` (locked) so that multiple records can be
     // updated in parallel (for performance).
-    await record._update({
+    const update_values = {
         product_id: { id: product.id, display_name: product.display_name },
         product_uom_qty: product.quantity,
         product_no_variant_attribute_value_ids: [x2ManyCommands.set(noVariantPTAVIds)],
         product_custom_attribute_value_ids: customAttributesCommands,
-    });
+    }
+    if (product.uom) {
+        // only update uom field if uom are enabled (uom_data provided), otherwise we don't have the display_name
+        // and the value isn't expected to change anyway.
+        update_values.product_uom_id = product.uom;
+    }
+    await record._update(update_values);
 }
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {

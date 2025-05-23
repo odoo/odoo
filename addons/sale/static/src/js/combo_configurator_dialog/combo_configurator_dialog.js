@@ -78,7 +78,12 @@ export class ComboConfiguratorDialog extends Component {
                 currencyId: this.props.currency_id,
                 soDate: this.props.date,
                 edit: true, // Hide the optional products, if any.
-                options: { canChangeVariant: false, showQuantity: false, showPrice: false },
+                options: {
+                    canChangeVariant: false,
+                    showQuantity: false,
+                    showPrice: false,
+                    showPackaging: false,
+                },
                 save: async configuredProduct => {
                     const selectedComboItem = comboItem.deepCopy();
                     selectedComboItem.product.ptals = configuredProduct.attribute_lines.map(
