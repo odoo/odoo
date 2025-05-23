@@ -30,6 +30,8 @@ export class FilterValue extends Component {
     static props = {
         filter: Object,
         model: Object,
+        setGlobalFilterValue: Function,
+        globalFilterValue: { optional: true },
         showTitle: { type: Boolean, optional: true },
         showClear: { type: Boolean, optional: true },
     };
@@ -63,7 +65,7 @@ export class FilterValue extends Component {
     }
 
     get filterValue() {
-        return this.getters.getGlobalFilterValue(this.filter.id);
+        return this.props.globalFilterValue;
     }
 
     get textAllowedValues() {
@@ -89,15 +91,15 @@ export class FilterValue extends Component {
     }
 
     onDateInput(id, value) {
-        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
+        this.props.setGlobalFilterValue(id, value);
     }
 
     onTextInput(id, value) {
-        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
+        this.props.setGlobalFilterValue(id, value);
     }
 
     onBooleanInput(id, value) {
-        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id, value });
+        this.props.setGlobalFilterValue(id, value);
     }
 
     async onTagSelected(id, resIds) {
@@ -109,15 +111,11 @@ export class FilterValue extends Component {
                 this.filter.modelName,
                 resIds
             );
-            this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
-                id,
-                value: resIds,
-                displayNames: Object.values(displayNames),
-            });
+            this.props.setGlobalFilterValue(id, resIds, Object.values(displayNames));
         }
     }
 
     clear(id) {
-        this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", { id });
+        this.props.setGlobalFilterValue(id);
     }
 }

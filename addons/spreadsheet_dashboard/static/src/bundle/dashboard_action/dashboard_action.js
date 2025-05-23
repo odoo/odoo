@@ -6,7 +6,6 @@ import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component
 import { useSetupAction } from "@web/search/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
-import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
@@ -15,6 +14,7 @@ import { Registry } from "@odoo/o-spreadsheet";
 import { router } from "@web/core/browser/router";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
+import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar";
 
 export const dashboardActionRegistry = new Registry();
 
@@ -23,10 +23,10 @@ export class SpreadsheetDashboardAction extends Component {
     static components = {
         ControlPanel,
         SpreadsheetComponent,
-        FilterValue,
         DashboardMobileSearchPanel,
         MobileFigureContainer,
         SpreadsheetShareButton,
+        DashboardSearchBar,
     };
     static props = { ...standardActionServiceProps };
     static displayName = _t("Dashboards");
@@ -106,6 +106,14 @@ export class SpreadsheetDashboardAction extends Component {
             return [];
         }
         return dashboard.model.getters.getGlobalFilters();
+    }
+
+    setGlobalFilterValue(id, value, displayNames) {
+        this.state.activeDashboard.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+            id,
+            value,
+            displayNames,
+        });
     }
 
     /**

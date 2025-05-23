@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { pointerDown, press, queryAll } from "@odoo/hoot-dom";
+import { queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -212,44 +212,17 @@ test("Can clear filter date filter value that defaults to current period", async
     const serverData = getServerData(spreadsheetData);
     await createSpreadsheetDashboard({ serverData });
     const year = luxon.DateTime.local().year;
-    expect(".o_control_panel_actions input.o_datetime_input").toHaveValue(String(year));
-    await contains("input.o_datetime_input").click();
+    expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year));
+    await contains(".o_searchview_facet_label").click();
     await contains("input.o_datetime_input").edit(String(year - 1));
-    await animationFrame();
+    await contains(".modal-footer .btn-primary").click();
 
-    expect(".o_control_panel_actions input.o_datetime_input").toHaveValue(String(year - 1));
-    expect(".o_control_panel_actions .fa-times").toHaveCount(1);
-    await contains(".o_control_panel_actions .fa-times").click();
+    expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year - 1));
 
-    expect(".o_control_panel_actions .fa-times").toHaveCount(0);
-    expect(".o_control_panel_actions input.o_datetime_input").toHaveProperty(
-        "placeholder",
-        "Select year..."
-    );
-});
+    expect(".o_control_panel_actions .o_facet_remove").toHaveCount(1);
+    await contains(".o_control_panel_actions .o_facet_remove").click();
 
-test("Can delete record tag in the filter by hitting Backspace", async function () {
-    const spreadsheetData = {
-        globalFilters: [
-            {
-                id: "1",
-                type: "relation",
-                label: "Relation Filter",
-                modelName: "product",
-                defaultValue: [37],
-            },
-        ],
-    };
-    const serverData = getServerData(spreadsheetData);
-    await createSpreadsheetDashboard({ serverData });
-    expect(".o_control_panel_actions div.o_multi_record_selector .o_tag").toHaveCount(1);
-
-    await pointerDown(
-        ".o_control_panel_actions div.o_multi_record_selector .o-autocomplete--input.o_input"
-    );
-    await press("Backspace");
-    await animationFrame();
-    expect(".o_control_panel_actions div.o_multi_record_selector .o_tag").toHaveCount(0);
+    expect(".o_control_panel_actions .o_facet_remove").toHaveCount(0);
 });
 
 test("share dashboard from dashboard view", async function () {
@@ -316,10 +289,10 @@ test("Changing filter values will create a new share", async function () {
 
     await contains("i.fa-share-alt").click();
     const year = luxon.DateTime.local().year;
-    expect(".o_control_panel_actions input.o_datetime_input").toHaveValue(String(year));
-    await contains("input.o_datetime_input").click();
+    expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year));
+    await contains(".o_searchview_facet_label").click();
     await contains("input.o_datetime_input").edit(String(year - 1));
-    await animationFrame();
+    await contains(".modal-footer .btn-primary").click();
 
     await contains("i.fa-share-alt").click();
     await animationFrame();
@@ -373,10 +346,154 @@ test("Global filter with same id is not shared between dashboards", async functi
         789, 790,
     ];
     await createSpreadsheetDashboard({ serverData });
+    expect(".o_searchview_facet").toHaveCount(0);
+    await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
+
+    await contains(".o-dashboard-search-dialog a.dropdown-toggle").click();
+    await contains(".o-dropdown-item").click();
+
+    await contains(".o-autocomplete--input.o_input").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(0);
-    await contains(".o_control_panel_actions .o-autocomplete--input.o_input").click();
-    await contains(".o_control_panel_actions .dropdown-item:first").click();
+    await contains(".dropdown-item:first").click();
     expect(".o-filter-value .o_tag_badge_text").toHaveCount(1);
+
+    await contains(".modal-footer .btn-primary").click();
+    expect(".o_searchview_facet").toHaveCount(1);
+
     await contains(".o_search_panel li:last-child").click();
-    expect(".o-filter-value .o_tag_badge_text").toHaveCount(0);
+    expect(".o_searchview_facet").toHaveCount(0);
+});
+
+test("Search bar is not present if there is no global filters", async function () {
+    const spreadsheetData = {
+        globalFilters: [],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+
+    expect(".o_sp_dashboard_search").toHaveCount(0);
+});
+
+test("Can add a new global filter from the search bar", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+
+    await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
+    expect(".o-dashboard-search-dialog a.dropdown-toggle").toHaveText("Add filter");
+    await contains(".o-dashboard-search-dialog a.dropdown-toggle").click();
+    await contains(".o-dropdown-item").click();
+
+    expect(".o-dashboard-search-dialog a.dropdown-toggle").toHaveCount(0);
+
+    expect(".o-autocomplete--input.o_input").toHaveCount(1);
+    expect(".o-autocomplete--input.o_input").toHaveValue("");
+    await contains(".o-autocomplete--input.o_input").click();
+    await contains(".o-autocomplete--dropdown-item").click();
+    await contains(".modal-footer .btn-primary").click();
+
+    expect(".o_searchview_facet").toHaveCount(1);
+    expect(".o_searchview_facet .o_searchview_facet_label").toHaveText("Relation Filter");
+    expect(".o_searchview_facet .o_facet_value").toHaveText("xphone");
+});
+
+test("Can remove a global filter from the dialog", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: [37], // xphone
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+
+    expect(".o_searchview_facet").toHaveCount(1);
+    expect(".o_searchview_facet .o_searchview_facet_label").toHaveText("Relation Filter");
+    expect(".o_searchview_facet .o_facet_value").toHaveText("xphone");
+
+    await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
+    await contains(".fa-trash").click();
+    await contains(".modal-footer .btn-primary").click();
+
+    expect(".o_searchview_facet").toHaveCount(0);
+});
+
+test("Can open the dialog by clicking on a facet", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: [37], // xphone
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+
+    expect(".o_searchview_facet").toHaveCount(1);
+    await contains(".o_searchview_facet").click();
+    expect(".o-dashboard-search-dialog").toHaveCount(1);
+});
+
+test("Can open the dialog by clicking on the search bar", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: [37], // xphone
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+
+    await contains(".o_searchview").click();
+    expect(".o-dashboard-search-dialog").toHaveCount(1);
+});
+
+test("Changes of global filters are not dispatched while inside the dialog", async function () {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    const { model } = await createSpreadsheetDashboard({ serverData });
+
+    expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
+
+    await contains(".o_spreadsheet_dashboard_action .dropdown-toggle").click();
+    await contains(".o-dashboard-search-dialog a.dropdown-toggle").click();
+    await contains(".o-dropdown-item").click();
+
+    await contains(".o-autocomplete--input.o_input").click();
+    await contains(".o-autocomplete--dropdown-item").click();
+    expect(model.getters.getGlobalFilterValue("1")).toBe(undefined);
+    await contains(".modal-footer .btn-primary").click();
+    expect(model.getters.getGlobalFilterValue("1")).toEqual([37]);
 });

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet_dashboard.DashboardSearchBar">
+        <div class="o_sp_dashboard_search d-flex input-group mt-1 mt-md-0">
+            <div class="o_searchview form-control d-flex align-items-center py-1 border-end-0" t-on-click="openDialog">
+                <button class="btn border-0 p-0">
+                    <i class="oi oi-search me-2"></i>
+                </button>
+                <div class="d-flex flex-grow-1 flex-wrap gap-1 mw-100">
+                    <t t-foreach="facets" t-as="facet" t-key="facet.id">
+                        <DashboardFacet facet="facet" clearFilter="() => this.clearFilter(facet.id)" onClick.bind="openDialog"/>
+                    </t>
+                </div>
+            </div>
+            <button class="btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown" t-on-click="openDialog"/>
+        </div>
+    </t>
+</templates>
