@@ -13,7 +13,6 @@ class StockMoveLine(models.Model):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True, index='btree_not_null')
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
-    description_bom_line = fields.Char(related='move_id.description_bom_line')
 
     @api.depends('production_id')
     def _compute_picking_type_id(self):
@@ -165,7 +164,6 @@ class StockMove(models.Model):
         help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.")
     product_qty_available = fields.Float('Product On Hand Quantity', related='product_id.qty_available', depends=['product_id'])
     product_virtual_available = fields.Float('Product Forecasted Quantity', related='product_id.virtual_available', depends=['product_id'])
-    description_bom_line = fields.Char('Kit', compute='_compute_description_bom_line')
     manual_consumption = fields.Boolean(
         'Manual Consumption', compute='_compute_manual_consumption', store=True, readonly=False,
         help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
@@ -218,7 +216,8 @@ class StockMove(models.Model):
         return super(StockMove, self.browse(ids_to_super))._compute_location_dest_id()
 
     @api.depends('bom_line_id')
-    def _compute_description_bom_line(self):
+    def _compute_description_picking(self):
+        super()._compute_description_picking()
         bom_line_description = {}
         for bom in self.bom_line_id.bom_id:
             if bom.type != 'phantom':
@@ -230,7 +229,8 @@ class StockMove(models.Model):
                 bom_line_description[line_id] = '%s - %d/%d' % (bom.display_name, i + 1, total)
 
         for move in self:
-            move.description_bom_line = bom_line_description.get(move.bom_line_id.id, move.description_bom_line)
+            if not move.description_picking_manual and move.bom_line_id.id in bom_line_description:
+                move.description_picking += ('\n' if move.description_picking else '') + bom_line_description.get(move.bom_line_id.id)
 
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
