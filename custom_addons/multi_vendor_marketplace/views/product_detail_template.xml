@@ -269,13 +269,22 @@
                                 var qtyInput = document.querySelector('.js_quantity');
                                 var cartForm = document.getElementById('cart_add_form');
                                 var cartQtyInput = document.getElementById('cart_add_qty');
+                                var cartProductIdInput = document.querySelector('#cart_add_form input[name="product_id"]');
                                 
                                 // Add click handler for cart button
                                 if (addButton) {
                                     addButton.addEventListener('click', function(e) {
+                                        // Get the currently selected product variant ID from the main form
+                                        var currentProductId = document.querySelector('.js_product input.product_id').value;
+                                        
                                         // Update quantity from the visible input
                                         if (qtyInput && cartQtyInput) {
                                             cartQtyInput.value = qtyInput.value;
+                                        }
+                                        
+                                        // Update the product ID with the currently selected variant
+                                        if (cartProductIdInput && currentProductId) {
+                                            cartProductIdInput.value = currentProductId;
                                         }
                                         
                                         // Submit the dedicated cart form
@@ -284,6 +293,14 @@
                                         }
                                     });
                                 }
+                                
+                                // Add event listener to update our hidden product_id when variant changes
+                                $(document).on('change', '.js_product .js_variant_change', function(ev) {
+                                    setTimeout(function() {
+                                        var selectedProductId = $('.js_product input.product_id').val();
+                                        $('#cart_add_form input[name="product_id"]').val(selectedProductId);
+                                    }, 100); // Small delay to ensure Odoo's handlers have updated the product_id
+                                });
                             });
                         //]]>
                         </script>
