@@ -395,14 +395,19 @@ function migrate12to13(data) {
             if (!pivot.sortedColumn) {
                 continue;
             }
+            const measure = pivot.measures.find(
+                (measure) => measure.fieldName === pivot.sortedColumn.measure
+            );
             // We're missing some information to convert the sortedColumn (fieldType), so we'll drop the sorted columns
             // that are not on the total column
-            if (pivot.sortedColumn.groupId[1]?.length) {
+            // Also, a previous bug allowed to have a sortedColumn measure that is not in the measures,
+            // in this case we also drop the sortedColumn because we can't sort a measure that is not there
+            if (pivot.sortedColumn.groupId[1]?.length || !measure) {
                 pivot.sortedColumn = undefined;
                 continue;
             }
             pivot.sortedColumn = {
-                measure: pivot.sortedColumn.measure,
+                measure: measure.id,
                 order: pivot.sortedColumn.order,
                 domain: [],
             };
