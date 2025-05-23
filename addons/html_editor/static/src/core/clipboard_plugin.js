@@ -274,20 +274,27 @@ export class ClipboardPlugin extends Plugin {
      */
     pasteText(text) {
         const textFragments = text.split(/\r?\n/);
+        let selection = this.dependencies.selection.getEditableSelection();
+        const preEl = closestElement(selection.anchorNode, "PRE");
         let textIndex = 1;
         for (const textFragment of textFragments) {
-            // Replace consecutive spaces by alternating nbsp.
-            const modifiedTextFragment = textFragment.replace(/( {2,})/g, (match) => {
-                let alertnateValue = false;
-                return match.replace(/ /g, () => {
-                    alertnateValue = !alertnateValue;
-                    const replaceContent = alertnateValue ? "\u00A0" : " ";
-                    return replaceContent;
+            let modifiedTextFragment = textFragment;
+
+            // <pre> preserves whitespace by default, so no need for &nbsp.
+            if (!preEl) {
+                // Replace consecutive spaces by alternating nbsp.
+                modifiedTextFragment = textFragment.replace(/( {2,})/g, (match) => {
+                    let alternateValue = false;
+                    return match.replace(/ /g, () => {
+                        alternateValue = !alternateValue;
+                        const replaceContent = alternateValue ? "\u00A0" : " ";
+                        return replaceContent;
+                    });
                 });
-            });
+            }
             this.dependencies.dom.insert(modifiedTextFragment);
             if (textIndex < textFragments.length) {
-                const selection = this.dependencies.selection.getEditableSelection();
+                selection = this.dependencies.selection.getEditableSelection();
                 // Break line by inserting new paragraph and
                 // remove current paragraph's bottom margin.
                 const block = closestBlock(selection.anchorNode);
