@@ -119,12 +119,13 @@ export class PosData extends Reactive {
         // used with models like pos.order, pos.order.line, pos.payment etc. These models are created
         // in the frontend and are not loaded from the backend.
         const modelsParams = Object.entries(this.opts.databaseTable);
+        const data = {};
         for (const [model, params] of modelsParams) {
             const put = [];
             const remove = [];
-            const data = this.models[model].getAll();
+            const modelData = this.models[model].getAll();
 
-            for (const record of data) {
+            for (const record of modelData) {
                 const isToRemove = params.condition(record);
 
                 if (isToRemove === undefined || isToRemove === true) {
@@ -138,7 +139,10 @@ export class PosData extends Reactive {
 
             await this.indexedDB.delete(model, remove);
             await this.indexedDB.create(model, put);
+            data[model] = put;
         }
+
+        return data;
     }
 
     async synchronizeServerDataInIndexedDB(serverData = {}) {
@@ -151,11 +155,14 @@ export class PosData extends Reactive {
         }
     }
 
-    async getLocalDataFromIndexedDB() {
+    async getLocalDataFromIndexedDB(data = false) {
         // Used to retrieve models containing states from the indexedDB.
         // This method will load the records directly via loadData.
         const models = Object.keys(this.opts.databaseTable);
-        const data = await this.indexedDB.readAll(models);
+
+        if (!data) {
+            data = await this.indexedDB.readAll(models);
+        }
 
         if (!data) {
             return;

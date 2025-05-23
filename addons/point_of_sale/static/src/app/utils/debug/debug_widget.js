@@ -1,76 +1,59 @@
 import { _t } from "@web/core/l10n/translation";
-import { Transition } from "@web/core/transition";
 import { useBus, useService } from "@web/core/utils/hooks";
-
-import { useRef, useState, Component } from "@odoo/owl";
+import { useRef, useState, Component, onMounted, onWillDestroy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
-import { pick } from "@web/core/utils/objects";
+
 const { DateTime } = luxon;
 
-const useDialogDraggable = makeDraggableHook({
-    name: "useDialogDraggable",
-    onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
-        ctx.current.container = document.createElement("div");
-        const { height } = getRect(ctx.current.element);
-        addStyle(ctx.current.container, {
-            position: "fixed",
-            top: "0",
-            bottom: `${height}px`,
-            left: "0",
-            right: "0",
-        });
-        ctx.current.element.after(ctx.current.container);
-        addCleanup(() => ctx.current.container.remove());
-    },
-    onDrop: ({ ctx, getRect }) => pick(getRect(ctx.current.element), "left", "top"),
-});
-
 export class DebugWidget extends Component {
-    static components = { Transition };
     static template = "point_of_sale.DebugWidget";
-    static props = { state: { type: Object, shape: { showWidget: Boolean } } };
+    static props = {};
+
     setup() {
         this.pos = usePos();
-        this.debug = useService("debug");
         this.barcodeReader = useService("barcode_reader");
         this.hardwareProxy = useService("hardware_proxy");
         this.notification = useService("notification");
-        const numberBuffer = useService("number_buffer");
+        this.numberBuffer = useService("number_buffer");
         this.dialog = useService("dialog");
-        useBus(numberBuffer, "buffer-update", this._onBufferUpdate);
+        this.importOrderInput = useRef("import-order-input");
         this.state = useState({
+            isOpen: false,
             barcodeInput: "",
             weightInput: "",
-            buffer: numberBuffer.get(),
-        });
-        this.root = useRef("root");
-        this.position = useState({ left: null, top: null });
-        useDialogDraggable({
-            ref: this.root,
-            elements: ".debug-widget",
-            handle: ".drag-handle",
-            onDrop: ({ left, top }) => {
-                this.position.left = left;
-                this.position.top = top;
-            },
+            buffer: this.numberBuffer.get(),
         });
 
-        // Make the background of the "hardware events" section flash when a corresponding message
-        // is sent to the proxy.
-        for (const eventName of ["open_cashbox", "print_receipt", "scale_read"]) {
-            const ref = useRef(eventName);
-            let animation;
-            useBus(this.hardwareProxy, `send_message:${eventName}`, () => {
-                animation?.cancel();
-                animation = ref.el?.animate({ backgroundColor: ["#6CD11D", "#1E1E1E"] }, 2000);
-            });
-        }
+        useBus(this.numberBuffer, "buffer-update", this._onBufferUpdate);
+        onMounted(() => {
+            if (!this.importOrderInput || !this.importOrderInput.el) {
+                return;
+            }
+
+            this.importOrderInput.el.addEventListener("click", this.handleFileOrderImport);
+        });
+        onWillDestroy(() => {
+            if (this.importOrderInput?.el) {
+                this.importOrderInput.el.removeEventListener("click", this.handleFileOrderImport);
+            }
+        });
+    }
+    get isDisabled() {
+        return this.pos.cashier._role === "minimal";
+    }
+    disableDebugMode() {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("debug");
+        window.history.replaceState({}, document.title, url);
+        window.location.reload();
+    }
+    handleFileOrderImport() {
+        document.getElementById("import-order-input").click();
     }
     toggleWidget() {
-        this.state.isShown = !this.state.isShown;
+        this.state.isOpen = !this.state.isOpen;
     }
     async barcodeScan() {
         if (!this.barcodeReader) {
@@ -116,65 +99,28 @@ export class DebugWidget extends Component {
             },
         });
     }
-    exportOrders({ paid = true } = {}) {
-        const orders = this.pos.models["pos.order"]
-            .filter((order) => order.finalized === paid)
-            .map((o) => o.serializeForORM());
-
-        const blob = this._createBlob(orders);
+    async exportData() {
+        const data = await this.pos.data.synchronizeLocalDataInIndexedDB();
+        const blob = this._createBlob(data);
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        const fileName = `${paid ? "paid" : "unpaid"}_orders_${serializeDateTime(
-            DateTime.now()
-        ).replace(/:|\s/gi, "-")}.json`;
-
+        const fileName = `pos_data${serializeDateTime(DateTime.now()).replace(/:|\s/gi, "-")}.json`;
         a.href = url;
         a.download = fileName;
         a.click();
     }
-    async importOrders(event) {
+    async importData(event) {
         const file = event.target.files[0];
         if (file) {
-            const jsonData = JSON.parse(await file.text());
-            const data = {
-                "pos.order": [],
-            };
-            const manyRel = Object.values(this.pos.data.relations["pos.order"]).filter((rel) =>
-                ["one2many", "many2many"].includes(rel.type)
-            );
-
-            for (const order of jsonData) {
-                for (const rel of manyRel) {
-                    const model = this.pos.models[rel.relation];
-
-                    if (!model) {
-                        continue;
-                    }
-
-                    if (!order[rel.name] && (rel.local || rel.related || rel.compute)) {
-                        order[rel.name] = [];
-                    }
-
-                    const existingRecords = model.getAllBy("id");
-                    const records = order[rel.name]
-                        .filter((rel) => !existingRecords[rel[2]])
-                        .map((rel) => rel[2]);
-
-                    if (!data[rel.relation]) {
-                        data[rel.relation] = [];
-                    }
-
-                    data[rel.relation].push(...records);
-                }
-
-                data["pos.order"].push(order);
+            try {
+                const jsonData = JSON.parse(await file.text());
+                await this.pos.data.getLocalDataFromIndexedDB(jsonData);
+            } catch (error) {
+                console.warn("An error occured during import", error);
             }
-
-            const missing = await this.pos.data.missingRecursive(data);
-            this.pos.data.models.connectNewData(missing);
-            this.notification.add(_t("%s orders imported", data["pos.order"].length));
         }
     }
+
     refreshDisplay() {
         this.hardwareProxy.message("display_refresh", {});
     }
@@ -183,9 +129,5 @@ export class DebugWidget extends Component {
     }
     get bufferRepr() {
         return `"${this.state.buffer}"`;
-    }
-    get style() {
-        const { left, top } = this.position;
-        return top === null ? "" : `position: absolute; left: ${left}px; top: ${top}px;`;
     }
 }

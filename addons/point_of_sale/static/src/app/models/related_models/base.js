@@ -68,8 +68,8 @@ export class Base extends WithLazyGetterTrap {
         return this.model.delete(this, opts);
     }
 
-    serializeForORM() {
-        return this.model.serializeForORM(this);
+    serializeForORM(opts = {}) {
+        return this.model.serializeForORM(this, opts);
     }
 
     serializeForIndexedDB() {

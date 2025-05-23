@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div t-if="!this.pos.getOrder()" class="pos-centerheader d-none d-xl-flex justify-content-center overflow-hidden">
-                <div class="pos-logo mw-100" t-on-click="() => debug.toggleWidget()"/>
+                <div class="pos-logo mw-100" />
             </div>
             <div class="pos-rightheader flex-grow-1">
                 <div class="status-buttons d-flex flex-grow-1 align-items-center justify-content-end gap-1">
@@ -85,9 +85,6 @@
                                 </DropdownItem>
                                 <DropdownItem onSelected="() => this.pos.closeSession()">
                                     Close Register
-                                </DropdownItem>
-                                <DropdownItem t-if="this.env.debug and this.pos.cashier._role != 'minimal'" onSelected="() => debug.toggleWidget()">
-                                    Debug Window
                                 </DropdownItem>
                             </div>
                         </t>
