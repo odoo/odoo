@@ -5,6 +5,9 @@ import { getScrollingElement } from "@web/core/utils/scrolling";
 import { AnimateOption } from "./animate_option";
 import { ANIMATE } from "@website/builder/option_sequence";
 
+const blockquote_parent_handlers = ".s_reviews_wall .row > div";
+const special_blockquote_selector = `div:is(${blockquote_parent_handlers}) > .s_blockquote`;
+
 class AnimateOptionPlugin extends Plugin {
     static id = "animateOption";
     static dependencies = ["imageToolOption"];
@@ -13,8 +16,7 @@ class AnimateOptionPlugin extends Plugin {
             withSequence(ANIMATE, {
                 OptionComponent: AnimateOption,
                 selector: ".o_animable, section .row > div, img, .fa, .btn, .o_animated_text",
-                exclude:
-                    "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize",
+                exclude: `[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, ${special_blockquote_selector}`,
                 props: {
                     getDirectionsItems: this.getDirectionsItems.bind(this),
                     getEffectsItems: this.getEffectsItems.bind(this),

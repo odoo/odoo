@@ -3,9 +3,19 @@
 
 <t t-name="website.BlockquoteOption">
     <!-- Layout -->
+    <t t-if="!this.props.disableWidth" t-call="website.BlockquoteWidthOption"/>
+
+    <WebsiteBackgroundOption
+        withColors="true"
+        withImages="true"
+        withShapes="true"
+        withColorCombinations="true"
+    />
+
     <BuilderRow label.translate="Edge Spacing">
         <BuilderRange action="'setClassRange'" actionParam="['p-1','p-2','p-3','p-4','p-5']" max="4"/>
     </BuilderRow>
+
     <BuilderRow label.translate="Decoration">
         <BuilderSelect>
             <BuilderSelectItem classAction="'s_blockquote_default'">None</BuilderSelectItem>
