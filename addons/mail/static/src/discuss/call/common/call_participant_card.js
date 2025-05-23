@@ -1,5 +1,6 @@
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
+import { CallPopover } from "@mail/discuss/call/common/call_popover";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 import { useHover } from "@mail/utils/common/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
@@ -23,21 +24,22 @@ export class CallParticipantCard extends Component {
         "isSidebarItem?",
         "compact?",
     ];
-    static components = { CallParticipantVideo };
+    static components = { CallParticipantVideo, CallContextMenu, CallPopover };
     static template = "discuss.CallParticipantCard";
 
     setup() {
         super.setup();
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");
-        this.popover = usePopover(CallContextMenu, {
-            arrow: false,
-            popoverClass: "border-secondary",
-        });
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rootHover = useHover("root");
+        /** @deprecated */
+        this.popover = usePopover(CallContextMenu, {
+            arrow: false,
+            popoverClass: "border-secondary",
+        });
         this.isMobileOS = isMobileOS();
         this.dragPos = undefined;
         this.isDrag = false;
@@ -85,6 +87,10 @@ export class CallParticipantCard extends Component {
         return Boolean(
             this.props.isSidebarItem || this.ui.isSmall || this.props.minimized || this.props.inset
         );
+    }
+
+    get window() {
+        return this.env.pipWindow || window;
     }
 
     get showLiveLabel() {
@@ -210,6 +216,7 @@ export class CallParticipantCard extends Component {
     }
 
     /**
+     * @deprecated
      * @param {Event} ev
      */
     onContextMenu(ev) {
@@ -233,7 +240,7 @@ export class CallParticipantCard extends Component {
         const onMousemove = (ev) => this.drag(ev);
         const onMouseup = () => {
             const insetEl = this.root.el;
-            const bottomOffset = this.env.inChatWindow ? window.innerHeight * 0.05 : 0; // 5vh in pixels
+            const bottomOffset = this.env.inChatWindow ? this.window.innerHeight * 0.05 : 0; // 5vh in pixels
             if (parseInt(insetEl.style.left) < insetEl.parentNode.offsetWidth / 2) {
                 insetEl.style.left = "1vh";
                 insetEl.style.right = "";
@@ -273,7 +280,7 @@ export class CallParticipantCard extends Component {
         const parent = insetEl.parentNode;
         const boundingRect =
             this.parentBoundingRect || (this.parentBoundingRect = parent.getBoundingClientRect());
-        const bottomOffset = this.env.inChatWindow ? window.innerHeight * 0.05 : 0; // 5vh in pixels
+        const bottomOffset = this.env.inChatWindow ? this.window.innerHeight * 0.05 : 0; // 5vh in pixels
         const clientX = Math.max((ev.clientX ?? ev.touches[0].clientX) - boundingRect.left, 0);
         const clientY = Math.max((ev.clientY ?? ev.touches[0].clientY) - boundingRect.top, 0);
         if (!this.dragPos) {
