@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
@@ -34,6 +33,7 @@ You can assign several contracts per employee.
     'demo': ['data/hr_contract_demo.xml'],
     'installable': True,
     'application': True,
+    'uninstall_hook': "uninstall_hook",
     'assets': {
         'web.assets_backend': [
             'hr_contract/static/src/**/*',
