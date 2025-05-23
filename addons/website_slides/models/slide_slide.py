@@ -600,12 +600,13 @@ class SlideSlide(models.Model):
     def _compute_website_absolute_url(self):
         super()._compute_website_absolute_url()
 
-    @api.depends('website_absolute_url', 'is_published')
+    @api.depends('is_published')
     def _compute_website_share_url(self):
-        self.website_share_url = '#'
+        self.website_share_url = False
         for slide in self:
-            if slide.website_absolute_url != '#':
-                slide.website_share_url = f'{slide.website_absolute_url}/share'
+            if slide.id:  # ensure we can build the URL
+                base_url = slide.channel_id.get_base_url()
+                slide.website_share_url = '%s/slides/slide/%s/share' % (base_url, slide.id)
 
     @api.depends('channel_id.can_publish')
     def _compute_can_publish(self):
