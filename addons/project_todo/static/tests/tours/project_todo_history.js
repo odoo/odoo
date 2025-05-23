@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         run: "click",
     }, {
         content: "Go to comparison tab",
-        trigger: ".modal .history-container .nav-item:contains(Comparison) a",
+        trigger: ".modal .history-container .nav-item:contains(Comparison) button",
         run: "click",
     }, {
         content: "Verify comparaison text",

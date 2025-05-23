@@ -100,7 +100,7 @@ var certificationCompletionSteps = [{
     content: 'Survey: check certification successful',
     trigger: 'div:contains("Congratulations, you have passed the test")',
 }, { // Sharing the certification
-    trigger: 'a:contains("Share your certification")',
+    trigger: 'button:contains("Share your certification")',
     run: "click",
 }, {
     trigger: '.o_wslides_js_share_email input',

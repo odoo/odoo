@@ -109,9 +109,9 @@ test("basic search panel rendering", async () => {
 
     await contains(".o_search_panel_category_value:nth-of-type(2) header").click();
     expect(".o_search_panel .o-dropdown").toHaveText("gold");
-    expect(".o_search_panel a").toHaveCount(1);
+    expect(".o_search_panel button").toHaveCount(1);
 
-    await contains(".o_search_panel a").click();
+    await contains(".o_search_panel button").click();
     expect(".o_search_panel .o-dropdown").toHaveText("category");
 });
 

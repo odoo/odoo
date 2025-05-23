@@ -64,7 +64,7 @@ QUnit.module('Widgets', (hooks) => {
         });
         assert.containsN(target, ".o_data_row", 2);
         // click the add button
-        await click(target.querySelector(".o_field_x2many_list_row_add > a"));
+        await click(target.querySelector(".o_field_x2many_list_row_add > button"));
         // make sure the new record is added
         assert.containsN(target, ".o_data_row", 3);
         // global click
@@ -72,7 +72,7 @@ QUnit.module('Widgets', (hooks) => {
         // make sure the new record is still there
         assert.containsN(target, ".o_data_row", 3);
         // click the add button again
-        await click(target.querySelector(".o_field_x2many_list_row_add > a"));
+        await click(target.querySelector(".o_field_x2many_list_row_add > button"));
         // make sure the new record is added
         assert.containsN(target, ".o_data_row", 4);
         // click on an existing record

@@ -55,6 +55,7 @@ test("control-click <a href/> in a standalone component", async () => {
     expect.verifySteps(["click", "ctrl-click"]);
 });
 
+// TODO: now i think we can remove this test case
 test.tags("desktop");
 test("control-click propagation stopped on <a href/>", async () => {
     expect.assertions(3);

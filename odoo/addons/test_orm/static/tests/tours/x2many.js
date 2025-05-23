@@ -50,14 +50,14 @@
         trigger: '.o_field_widget[name=moderator] input:value(user_test)',
     }, {
         content: "go to Participants tab to check onchange",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     }, {
         content: "check the onchange from the o2m to the m2m",
         trigger: '.o_field_widget[name=participants] .o_data_cell:contains(user_test)',
     }, { // add ourself as participant
         content: "click to add participants",
-        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "select Admin",
@@ -78,11 +78,11 @@
     ...stepUtils.saveForm(),
     { // add message a
         content: "Select First Tab",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     }, {
         content: "create new message a",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body a",
@@ -98,7 +98,7 @@
     },
     { // add message b
         content: "create new message b",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body b",
@@ -138,7 +138,7 @@
     },
     { // add message c
         content: "create new message c",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body",
@@ -154,11 +154,11 @@
     },
     { // add participants
         content: "change tab to Participants",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     }, {
         content: "click to add participants",
-        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=participants] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "select Demo User",
@@ -178,7 +178,7 @@
         run: "click",
     }, {
         content: "go back to tab 1",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     },
     {
@@ -192,7 +192,7 @@
         trigger: `.o_content:has(.o_field_widget[name=messages] tr:has(td:contains(/^bbb$/)):has(td:contains(/^\\[test_trigger\\] Mitchell Admin$/)))`,
     }, {
         content: "go to tab 3",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     },
     {
@@ -207,7 +207,7 @@
     },
     {
         content: "change tab to Messages",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     },
     {
@@ -215,7 +215,7 @@
     },
     { // add message d
         content: "create new message d",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body",
@@ -231,7 +231,7 @@
     },
     { // add message e
         content: "create new message e",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "insert body",
@@ -316,7 +316,7 @@
         trigger: `.o_content:has(.o_field_widget[name=messages] tbody tr:has(td:contains(/^\\[test_trigger\\] Mitchell Admin$/)):has(td:contains(/^aaa$/)))`,
     }, {
         content: "go to Participants",
-        trigger: '.o_notebook_headers .nav-item a:contains(Participants)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Participants)',
         run: "click",
     },
     {
@@ -327,7 +327,7 @@
         trigger: '.o_content:has(.o_field_widget[name=participants] tbody .o_data_row:eq(2))',
     }, {
         content: "go to Messages",
-        trigger: '.o_notebook_headers .nav-item a:contains(Messages)',
+        trigger: '.o_notebook_headers .nav-item button:contains(Messages)',
         run: "click",
     },
     {
@@ -335,7 +335,7 @@
     },
     { // add message ddd
         content: "create new message ddd",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "select another user",
@@ -483,7 +483,7 @@
     },
     { // add message eee
         content: "create new message eee",
-        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add a',
+        trigger: '.o_field_widget[name=messages] .o_field_x2many_list_row_add button',
         run: "click",
     }, {
         content: "change text value",

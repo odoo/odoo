@@ -1779,7 +1779,7 @@ test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on desktop"
             </field>
         </form>`,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".modal").toHaveCount(1);
 
     await contains(".modal [name='name'] input").edit("yop");
@@ -1815,7 +1815,7 @@ test("Many2ManyTagsField doesn't use virtualId for 'web_name_search' on mobile",
             </field>
         </form>`,
     });
-    await contains(".o_field_x2many_list_row_add a").click();
+    await contains(".o_field_x2many_list_row_add button").click();
     expect(".modal").toHaveCount(1);
 
     await contains(".modal [name='name'] input").edit("yop");
@@ -1858,7 +1858,7 @@ test("Many2ManyTagsField selected records still pickable and not duplicable on d
     expect(".o_tag").toHaveCount(1);
 
     // Check that deleting a record which was selected twice doens't leave one occurence
-    await contains("a.o_delete").click();
+    await contains("button.o_delete").click();
     expect(".o_tag").toHaveCount(0);
 });
 
@@ -1892,7 +1892,7 @@ test("Many2ManyTagsField selected records still pickable and not duplicable on m
     expect(".o_tag").toHaveCount(1);
 
     // Check that deleting a record which was selected twice doens't leave one occurence
-    await contains("a.o_delete").click();
+    await contains("button.o_delete").click();
     expect(".o_tag").toHaveCount(0);
 });
 

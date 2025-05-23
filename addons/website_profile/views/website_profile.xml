@@ -34,7 +34,7 @@
                     <div class="col d-md-none py-1 o_wprofile_user_profile_sub_nav_mobile_col">
                         <div class="btn-group w-100 position-relative" role="group" aria-label="Mobile sub-nav">
                             <div class="btn-group w-100 ms-2">
-                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</a>
+                                <button class="btn bg-black-25 text-white dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nav</button>
 
                                 <ul class="dropdown-menu">
                                     <a class="dropdown-item" t-att-href="home_url or '/'">Home</a>
@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="btn-group ms-1 position-static me-2">
-                                <a class="btn bg-black-25 text-white dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></a>
+                                <button class="btn bg-black-25 text-white dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-search"></i></button>
                                 <div class="dropdown-menu dropdown-menu-end w-100" style="right: 10px;">
                                     <form class="px-3" t-attf-action="/profile/users" role="search" method="get">
                                         <div class="input-group">
@@ -91,12 +91,12 @@
                         <div class="card-body">
                             <img class="o_wforum_avatar_img w-100 mb-3" t-att-src="website.image_url(user, 'avatar_128')"/>
                             <div class="text-center">
-                                <a href="#" class="o_forum_profile_pic_edit btn btn-primary" aria-label="Edit">
+                                <button class="o_forum_profile_pic_edit btn btn-primary" aria-label="Edit">
                                     <i class="fa fa-pencil fa-1g float-sm-none float-md-start" title="Edit"></i>
-                                </a>
-                                <a href="#" title="Clear" aria-label="Clear" class="btn border-primary o_forum_profile_pic_clear">
+                                </button>
+                                <button title="Clear" aria-label="Clear" class="btn border-primary o_forum_profile_pic_clear">
                                     <i class="fa fa-trash-o float-sm-none float-md-end"></i>
-                                </a>
+                                </button>
                             </div>
                             <div class="my-3 mb-0 pt-2 border-top">
                                 <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="fw-bold">Public Profile</span></label>
@@ -288,12 +288,12 @@
                             </div>
                             <div t-if="user.partner_id.website_description" class="o_wprofile_editor_form mb32">
                                 <t t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()">
-                                    <a href="#" class="o_forum_profile_bio_edit btn btn-link float-end">
+                                    <button class="o_forum_profile_bio_edit btn btn-link float-end">
                                         <i class="fa fa-pencil me-1"/>Edit    
-                                    </a>
-                                    <a href="#" class="o_forum_profile_bio_cancel_edit btn btn-link float-end d-none">
+                                    </button>
+                                    <button class="o_forum_profile_bio_cancel_edit btn btn-link float-end d-none">
                                         <i class="fa fa-close me-1"/>Cancel    
-                                    </a>
+                                    </button>
                                 </t>
                                 <h5 class="border-bottom pb-1">Biography</h5>
                                 <span class="o_forum_profile_bio text-break" t-field="user.partner_id.website_description"/>
@@ -689,13 +689,13 @@
         <div t-elif="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
             <button type="button" class="btn-close validation_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             Your Account has not yet been verified.<br/>
-            Click <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>here</u></a> to receive a verification email<t t-esc="additional_validation_email_message"/>!
+            Click <button class="send_validation_email alert-link border-0 bg-transparent p-0" t-att-data-redirect_url="redirect_url"><u>here</u></button> to receive a verification email<t t-esc="additional_validation_email_message"/>!
         </div>
         <div t-elif="validation_email_sent and not validation_email_done" t-att-class="done_alert_classes">
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             Verification Email sent to <t t-out="user.email"/>!<br/>
             Did not receive it? <a class="alert-link" t-att-href="my_account_redirect"><u>Correct your email address</u></a> 
-            or <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>Send Again</u></a>.
+            or <button class="send_validation_email alert-link border-0 bg-transparent p-0" t-att-data-redirect_url="redirect_url"><u>Send Again</u></button>.
         </div>
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
             <button type="button" class="btn-close validated_email_close" data-bs-dismiss="alert" aria-label="Close"/>

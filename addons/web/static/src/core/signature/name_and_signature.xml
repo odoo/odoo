@@ -53,19 +53,19 @@
                 <div class="card-header bg-transparent">
                     <div class="row g-0">
                         <div t-if="!props.noInputName or defaultName" class="col-auto">
-                            <a role="button" href="#" t-on-click.prevent="onClickSignAuto" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ state.signMode === 'auto' ? 'active': '' }}">
+                            <button role="button" t-on-click.prevent="onClickSignAuto" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ state.signMode === 'auto' ? 'active': '' }}">
                                 Auto
-                            </a>
+                            </button>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-on-click.prevent="() => this.setMode('draw')" t-attf-class="o_web_sign_draw_button me-2 btn btn-light {{ state.signMode === 'draw' ? 'active': '' }}">
+                            <button role="button" t-on-click.prevent="() => this.setMode('draw')" t-attf-class="o_web_sign_draw_button me-2 btn btn-light {{ state.signMode === 'draw' ? 'active': '' }}">
                                 Draw
-                            </a>
+                            </button>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-on-click.prevent="onClickSignLoad" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ state.signMode === 'load' ? 'active': '' }}">
+                            <button role="button" t-on-click.prevent="onClickSignLoad" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ state.signMode === 'load' ? 'active': '' }}">
                                 Load
-                            </a>
+                            </button>
                         </div>
 
                         <div class="col-auto division ms-auto"></div>
@@ -84,7 +84,7 @@
                         </div>
 
                         <div t-if="state.signMode === 'draw'" t-attf-class="o_web_sign_draw_clear col-auto">
-                            <a role="button" href="#" t-on-click.prevent="onClickSignDrawClear" class="btn btn-link fa fa-trash"/>
+                            <button role="button" t-on-click.prevent="onClickSignDrawClear" class="btn btn-link fa fa-trash"/>
                         </div>
 
                         <div t-if="state.signMode === 'load'" class="o_web_sign_load_file col-auto">

@@ -10,11 +10,11 @@
         <t t-if="state.invite.pending_users.length">
             <p class="o_form_label pt-3">Pending Invitations:</p>
             <span t-foreach="state.invite.pending_users" t-as="pending" t-key="pending[0]">
-                <a href="#" class="badge rounded-pill text-primary border border-primary o_web_settings_user" t-on-click.prevent="(ev) => this.onClickUser(ev, pending)"> <t t-esc="pending[1]"/> </a>
+                <button class="badge rounded-pill text-primary border border-primary o_web_settings_user" t-on-click.prevent="(ev) => this.onClickUser(ev, pending)"> <t t-esc="pending[1]"/> </button>
             </span>
             <t t-if="state.invite.pending_users.length &lt; state.invite.pending_count">
                 <br/>
-                <a href="#" class="o_web_settings_more" t-on-click.prevent="onClickMore"><t t-esc="state.invite.pending_count - state.invite.pending_users.length"/> more </a>
+                <button class="o_web_settings_more btn btn-link p-0 fw-normal" t-on-click.prevent="onClickMore"><t t-esc="state.invite.pending_count - state.invite.pending_users.length"/> more </button>
             </t>
         </t>
     </div>

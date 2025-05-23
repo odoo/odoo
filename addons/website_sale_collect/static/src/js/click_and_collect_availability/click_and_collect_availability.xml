@@ -32,10 +32,10 @@
                     <div t-else="" class="text-muted">
                         <i class="fa fa-fw fa-circle text-danger"/> Not available
                     </div>
-                    <a t-if="this.props.showSelectStoreButton" role="button" href="#">
+                    <button t-if="this.props.showSelectStoreButton" role="button" class="btn btn-link p-0">
                         <t t-if="this.state.selectedLocationData.id">Change store</t>
                         <t t-elif="this.state.inStoreStockData.in_stock">Select store</t>
-                    </a>
+                    </button>
                 </div>
             </div>
             <hr />

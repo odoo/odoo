@@ -10,7 +10,7 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     content: 'Start editing the project.',
     run: "click",
 }, {
-    trigger: '.modal div[name="collaborator_ids"] .o_field_x2many_list_row_add > a',
+    trigger: '.modal div[name="collaborator_ids"] .o_field_x2many_list_row_add > button',
     content: 'Add a collaborator to the project.',
     run: "click",
 }, {
@@ -152,7 +152,7 @@ registry.category("web_tour.tours").add("project_sharing_with_blocked_task_tour"
         content: 'Click on the task',
         run: "click",
     }, {
-        trigger: 'a:contains("Blocked By")',
+        trigger: 'button:contains("Blocked By")',
         content: 'Go to the Block by task tab',
         run: "click",
     }, {

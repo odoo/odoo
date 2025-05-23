@@ -4,12 +4,12 @@
         <template id="survey_fill_form_done_inherit_website_slides" inherit_id="survey.survey_fill_form_done">
             <xpath expr="//div[hasclass('o_survey_finished')]//a[hasclass('btn-primary')][1]" position="after">
                 <t t-if="channel_id">
-                    <a role="button" class="o_wslides_share me-2 mt-2 mt-md-0 btn btn-secondary btn-lg" href="#"
+                    <button role="button" class="o_wslides_share me-2 mt-2 mt-md-0 btn btn-secondary btn-lg"
                        t-att-data-id="channel_id.id" t-att-data-name="channel_id.name" t-att-data-url="channel_id.website_absolute_url"
                        data-is-channel="True" t-att-data-email-sharing="bool(channel_id.share_channel_template_id)">
                         <i class="fa fa-share-alt" aria-label="Share certification" title="Share certification"/>
                         Share your certification
-                    </a>
+                    </button>
                 </t>
             </xpath>
             <xpath expr="//div[hasclass('o_survey_finished')]/div[last()]" position="after">

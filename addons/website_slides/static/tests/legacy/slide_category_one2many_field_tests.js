@@ -163,7 +163,7 @@ QUnit.test("can create section inline", async (assert) => {
     });
     assert.containsNone($, ".o_selected_row.o_is_section");
 
-    await click($(".o_field_x2many_list_row_add a")[1]);
+    await click($(".o_field_x2many_list_row_add button")[1]);
     assert.containsOnce($, ".o_selected_row.o_is_section");
     assert.containsNone($, ".modal .o_form_view");
 });
@@ -190,7 +190,7 @@ QUnit.test("creates real record in form dialog", async (assert) => {
             </form>`,
     });
 
-    await click($(".o_field_x2many_list_row_add a")[0]);
+    await click($(".o_field_x2many_list_row_add button")[0]);
     assert.containsNone($, ".o_selected_row");
     assert.containsOnce($, ".modal .o_form_view");
 });

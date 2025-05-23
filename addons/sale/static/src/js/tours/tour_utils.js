@@ -28,7 +28,7 @@ function addProduct(productName, rowNumber=1) {
     return [
         {
             content: `Add product ${productName}`,
-            trigger: 'a:contains("Add a product")',
+            trigger: 'button:contains("Add a product")',
             run: 'click',
         },
         {
@@ -51,7 +51,7 @@ function clickSomewhereElse() {
         // TODO find a way for onchange to finish first ?
         {
             content: 'click somewhere else to exit cell focus',
-            trigger: 'a[name=order_lines]',  // click on notebook tab to stop the sol edit mode.
+            trigger: 'button[name=order_lines]',  // click on notebook tab to stop the sol edit mode.
             run: 'click',
         },
         {

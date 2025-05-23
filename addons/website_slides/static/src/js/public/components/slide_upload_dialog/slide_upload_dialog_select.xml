@@ -30,23 +30,22 @@
     </t>
 
     <t t-name="website_slides.SlideCategoryIcon" owl="1">
-        <a
-            href="#"
+        <button
             t-on-click="() => props.onClickSlideCategoryIcon(props.slideCategory)"
             t-att-data-slide-category="props.slideCategory"
-            class="content-type d-flex flex-column align-items-center mb-4 btn rounded border text-600 p-3"
+            class="content-type d-flex flex-column align-items-center mb-4 btn rounded border text-600 p-3 w-100 btn link-body-emphasis"
         >
             <i t-attf-class="fa #{props.categoryData.icon} mb-2 fa-3x"/>
             <t t-out="props.categoryData.label"/>
-        </a>
+        </button>
     </t>
 
     <t t-name="website_slides.ModuleToInstallIcon" owl="1">
-        <a class="w-100 text-center mb-4 btn rounded border text-600 p-3"
-            href="#" t-on-click="() => props.onClickInstallModuleIcon(props.moduleId)"
+        <button class="w-100 text-center mb-4 btn rounded border text-600 p-3"
+            t-on-click="() => props.onClickInstallModuleIcon(props.moduleId)"
             t-att-title="props.title"
             t-att-data-module-id="props.moduleId">
             <i class="fa fa-trophy"/> <t t-out="props.motivational"/><span class="text-primary"> Install the <t t-out="props.title"/> app.</span>
-        </a>
+        </button>
     </t>
 </templates>

@@ -70,7 +70,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
         `,
     });
 
-    expect(`.o_field_widget[name="document"] a > .fa-download`).toHaveCount(1, {
+    expect(`.o_field_widget[name="document"] button > .fa-download`).toHaveCount(1, {
         message: "the binary field should be rendered as a downloadable link in readonly",
     });
     expect(`.o_field_widget[name="document"]`).toHaveText("coucou.txt", {
@@ -94,7 +94,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
     document.addEventListener("click", downloadOnClick);
     after(() => document.removeEventListener("click", downloadOnClick));
 
-    await contains(`.o_field_widget[name="document"] a`).click();
+    await contains(`.o_field_widget[name="document"] button`).click();
     await deferred;
     expect.verifySteps(["/web/content"]);
 });
@@ -456,11 +456,13 @@ test("should accept file with allowed MIME type and reject others", async () => 
 
     await click(`.o_select_file_button`);
     await animationFrame();
-    const textFile = new File(["test"], "text_file.txt", { type: "text/plain"});
+    const textFile = new File(["test"], "text_file.txt", { type: "text/plain" });
     await setInputFiles([textFile]);
     await animationFrame();
 
     expect(".o_notification").toHaveCount(1);
-    expect(".o_notification_content").toHaveText("Oops! 'text_file.txt' didn’t upload since its format isn’t allowed.");
+    expect(".o_notification_content").toHaveText(
+        "Oops! 'text_file.txt' didn’t upload since its format isn’t allowed."
+    );
     expect(".o_notification_bar").toHaveClass("bg-danger");
 });
