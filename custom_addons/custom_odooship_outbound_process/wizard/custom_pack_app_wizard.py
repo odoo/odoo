@@ -29,6 +29,7 @@ def _tote_codes(wizard):
 class PackDeliveryReceiptWizard(models.TransientModel):
     _name = 'custom.pack.app.wizard'
     _description = 'Pack Delivery Receipt Wizard'
+    _inherit = ['mail.thread']
 
     pc_container_code_ids = fields.Many2many(
         "pc.container.barcode.configuration",
@@ -86,6 +87,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         store=True
     )
     confirm_pack_warning = fields.Boolean(string="User Confirmed Pack Warning", default=False)
+    show_message = fields.Boolean(string="Show Message", default=False)
+    message_text = fields.Text(string="Display Message")
+
 
     @api.model
     def default_get(self, fields):
@@ -366,7 +370,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     def _onchange_scanned_sku(self):
         """Handle scanned barcode or SKU (multi-barcode aware)."""
         self.ensure_one()
-
+        self.message_text = False
+        self.show_message = False
         scanned_input = (self.scanned_sku or "").strip()
         if not scanned_input:
             return
@@ -409,6 +414,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             line.product_package_number = self.next_package_number
 
         if len(self.picking_ids) > 1:  # MULTI-PICK
+            sale = line.picking_id.sale_id
+            if sale and sale.message_code and not self.show_message:
+                msg = self.env['custom.message.configuration'].search([
+                    ('message_code', '=', sale.message_code)
+                ], limit=1)
+                if msg:
+                    self.show_message = True
+                    self.message_text = "Sale Order Number: %s\nMessage: %s" % (sale.name, msg.description)
             if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
                 _logger.info("[LEGACY] Triggering legacy multi-pick payload...")
                 if any(l.api_payload_success for l in self.line_ids):
@@ -464,17 +477,29 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "scanned": True,
                         "product_package_number": line.product_package_number or self.next_package_number
                     })
+                    # self.message_text = False
+                    # self.show_message = False
                 else:
                     raise UserError(_("Failed to send label for SKU %s.") % sku)
             except Exception as e:
                 raise UserError(_("Error while sending label for SKU %s:\n%s") % (sku, str(e)))
 
         else:  # SINGLE PICK
+            sale = line.picking_id.sale_id
+            if sale and sale.message_code and not self.show_message:
+                msg = self.env['custom.message.configuration'].search([
+                    ('message_code', '=', sale.message_code)
+                ], limit=1)
+                if msg:
+                    self.show_message = True
+                    # self.message_text = msg.description
+                    self.message_text = "Sale Order Number: %s\nMessage: %s" % (sale.name, msg.description)
             line.quantity = 1
             line.available_quantity = 1
             line.remaining_quantity = 0
             line.line_added = True
             line.scanned = True
+
 
         self.last_scanned_line_id = line
         self.scanned_sku = False
@@ -878,7 +903,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         sale = picking.sale_id
         partner = picking.partner_id
-
         if sale and sale.service_type and sale.service_type.strip().upper() == "MANUAL WB":
             _logger.info("[MANUAL WB] Detected Manual WB order – skipping label generation.")
 
@@ -1305,6 +1329,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         partner = picking.partner_id
         sale = picking.sale_id
+
         if not partner or not partner.email:
             raise ValidationError("Missing or invalid customer email.")
         if not re.match(r"[^@]+@[^@]+\.[^@]+", partner.email):
