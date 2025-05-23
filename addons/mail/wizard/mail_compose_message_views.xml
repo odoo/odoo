@@ -52,9 +52,7 @@
                                 invisible="composition_comment_option != 'forward' and (context.get('clicked_on_full_composer', False) or composition_comment_option == 'reply_all' )"
                                 options="{'edit_tags': True}"
                                 context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
-                            <field name="show_notified_bcc" widget="mail_composer_show_bcc_button" invisible="1" class="w-auto"/> <!-- Will be removed in master -->
                         </div>
-                        <field name="notified_bcc" widget="mail_composer_bcc_list" invisible="1"/> <!--Will be removed in master-->
                         <field name="subject" placeholder="Welcome to MyCompany!" required="True"/>
                         <field name="reply_to" placeholder='Recipient Followers'
                             invisible="reply_to_mode == 'update'"

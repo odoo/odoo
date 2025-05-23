@@ -1,9 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import operator
 from collections import defaultdict
-from itertools import groupby
 from markupsafe import Markup
 
 from odoo import _, api, fields, models, modules
@@ -44,26 +42,17 @@ class MailScheduledMessage(models.Model):
     composition_comment_option = fields.Selection(
         [('reply_all', 'Reply-All'), ('forward', 'Forward')],
         string='Comment Options')  # mainly used for view in specific comment modes
-    notified_bcc = fields.Many2many(
-        string='Bcc', comodel_name='res.partner', compute='_compute_notified_bcc', readonly=True, store=False)
-    show_notified_bcc = fields.Boolean('Show BCC', store=False)  # TODO: remove field in master
-
     # related document
     model = fields.Char('Related Document Model', required=True)
     res_id = fields.Many2oneReference('Related Document Id', model_field='model', required=True)
-
     # origin
     author_id = fields.Many2one('res.partner', 'Author', required=True)
-
     # recipients
     partner_ids = fields.Many2many('res.partner', string='Recipients')
-
     # characteristics
     is_note = fields.Boolean('Is a note', default=False, help="If the message will be posted as a Note.")
-
     # notify parameters (email_from, mail_server_id, force_email_lang,...)
     notification_parameters = fields.Text('Notification parameters')
-
     # context used when posting the message to trigger some actions (eg. change so state when sending quotation)
     send_context = fields.Json('Sending Context')
 
@@ -154,46 +143,6 @@ class MailScheduledMessage(models.Model):
         if new_scheduled_date := vals.get('scheduled_date'):
             self.env.ref('mail.ir_cron_post_scheduled_message')._trigger(fields.Datetime.to_datetime(new_scheduled_date))
         return res
-
-    # ------------------------------------------------------
-    # Compute Methods
-    # ------------------------------------------------------
-
-    @api.depends('model', 'notification_parameters', 'res_id')
-    def _compute_notified_bcc(self):
-        """ Compute 'bcc' which are followers that are going to be 'silently'
-        notified by the scheduled message. """
-
-        mapped_records = self.filtered('model').mapped(
-            lambda record: [
-                record.model,
-                {key: value for key, value in json.loads(record.notification_parameters or '{}').items() if key in ['message_type', 'subtype_id']},
-                record.res_id,
-            ]
-        )
-
-        groupby_model = groupby(mapped_records, operator.itemgetter(0))
-
-        recipients_data_by_res_id = defaultdict(dict)
-
-        for [model, grouping] in groupby_model:
-            for [params, id_group] in groupby(list(grouping), operator.itemgetter(1)):
-                res_ids = list(map(operator.itemgetter(2), id_group))
-                records = self.env[model].browse(res_ids)
-                recipients_data = self.env['mail.followers']._get_recipient_data(
-                    records, params.get('message_type', 'comment'), params.get('subtype_id', False)
-                )
-                recipients_data_by_res_id.update(recipients_data.items())
-
-        for composer in self:
-            recipients_data = recipients_data_by_res_id[composer.res_id]
-            partner_ids = [
-                pid
-                for pid, pdata in recipients_data.items()
-                if (pid and pdata['active']
-                    and pid != self.env.user.partner_id.id)
-            ]
-            composer.notified_bcc = self.env['res.partner'].search([('id', 'in', partner_ids)])
 
     # ------------------------------------------------------
     # Actions
