@@ -17,6 +17,7 @@
         'views/stock_picking_inherit_views.xml',
         'views/sale_order_inherit_view.xml',
         'views/onetracker_config_view.xml',
+        'views/post_pack_message_view.xml',
         'views/menuitem_view.xml',
         'wizard/custom_pack_app_wizard_view.xml',
 
