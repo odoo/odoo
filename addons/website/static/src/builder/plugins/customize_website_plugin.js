@@ -507,9 +507,12 @@ export class CustomizeWebsitePlugin extends Plugin {
         const updateViews = this.toggleTheme(action, "views", apply);
         const updateAssets = this.toggleTheme(action, "assets", apply);
         // step 2: customize vars
-        const updateVars = action.params.vars
-            ? this.customizeWebsiteVariables(action.params.vars, "null", !apply)
-            : Promise.resolve();
+        const updateVars =
+            !apply && action.params.varsOnClean
+                ? this.customizeWebsiteVariables(action.params.varsOnClean, "null", apply)
+                : action.params.vars
+                ? this.customizeWebsiteVariables(action.params.vars, "null", !apply)
+                : Promise.resolve();
         await Promise.all([updateViews, updateAssets, updateVars]);
         if (this.isDestroyed) {
             return true;
