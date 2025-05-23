@@ -390,6 +390,35 @@ class TestMassMailValues(MassMailCommon):
         )
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
+    @users('user_marketing')
+    def test_mailing_create_on_send(self):
+        recipient = self.env['res.partner'].create({
+            'name': 'Mass Mail Partner',
+            'email': 'Customer <test.customer@example.com>',
+        })
+
+        mass_mailing_name = "An arbitrary mailing name"
+
+        composer = self.env['mail.compose.message'].with_user(self.user_marketing).with_context({
+            'default_composition_mode': 'mass_mail',
+            'default_model': 'res.partner',
+            'default_res_ids': recipient.ids,
+        }).create({
+            'subject': 'Mass Mail Responsive',
+            'body': 'I am Responsive body',
+            'mass_mailing_name': mass_mailing_name
+        })
+        self.assertFalse(composer.mass_mailing_id, "No mailing should've been created")
+
+        with self.mock_mail_gateway():
+            composer._action_send_mail(recipient.ids)
+
+        self.assertEqual(len(composer.mass_mailing_id.ids), 1, "A mailing should've been created")
+        self.assertEqual(composer.mass_mailing_id.name, mass_mailing_name, f"Mailing name should be: {mass_mailing_name}")
+
+        mail_values = composer._prepare_mail_values(recipient.ids)[recipient.id]
+        self.assertIn(f"Received the mailing <b>{mass_mailing_name}</b>", mail_values["body"], "The composer doesn't use the provided mass_mailing_name")
+
     @mute_logger('odoo.sql_db')
     @users('user_marketing')
     def test_mailing_trace_values(self):
