@@ -1166,29 +1166,27 @@ class CrmLead(models.Model):
     def _get_rainbowman_message(self):
         if not self.user_id or not self.team_id:
             return False
-        if not self.expected_revenue:
-            # Show rainbow man for the first won lead of a salesman, even if expected revenue is not set. It is not
-            # very often that leads without revenues are marked won, so simply get count using ORM instead of query
-            today = fields.Datetime.today()
-            user_won_leads_count = self.search_count([
-                ('type', '=', 'opportunity'),
-                ('user_id', '=', self.user_id.id),
-                ('won_status', '=', 'won'),
-                ('date_closed', '>=', date_utils.start_of(today, 'year')),
-                ('date_closed', '<', date_utils.end_of(today, 'year')),
-            ])
-            if user_won_leads_count == 1:
-                return _('Go, go, go! Congrats for your first deal.')
-            return False
-
         self.flush_model()  # flush fields to make sure DB is up to date
+
+        # checked here as it is its position in the priority order
+        if len(self.message_ids) >= 25:
+            return _('Phew, that took some effort — but you nailed it. Good job!')
+
         query = """
             SELECT
-                SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
+                SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_year,
                 MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_30,
                 MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_7,
                 MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_30,
-                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7
+                MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7,
+                SUM(CASE WHEN date_closed::date = %(today)s::date AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_today,
+                SUM(CASE WHEN country_id = %(country_id)s AND team_id = %(team_id)s THEN 1 ELSE 0 END) as count_country_closed_year,
+                SUM(CASE WHEN source_id = %(source_id)s AND team_id = %(team_id)s THEN 1 ELSE 0 END) as count_source_closed_year,
+                MIN(CASE WHEN date_closed >= %(today)s - INTERVAL '30 days' AND team_id = %(team_id)s THEN day_close ELSE 1000000 END) as min_day_close_30,
+
+                SUM(CASE WHEN date_closed::date = (%(today)s - INTERVAL '1 day')  AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_yesterday,
+                SUM(CASE WHEN date_closed::date = (%(today)s - INTERVAL '2 days') AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_minus2day,
+                SUM(CASE WHEN date_closed::date = (%(today)s - INTERVAL '3 days') AND user_id = %(user_id)s THEN 1 ELSE 0 END) as count_user_closed_minus3day
             FROM crm_lead
             WHERE
                 type = 'opportunity'
@@ -1197,26 +1195,45 @@ class CrmLead(models.Model):
             AND
                 probability = 100
             AND
-                DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', CURRENT_DATE)
+                DATE_TRUNC('year', date_closed) = DATE_TRUNC('year', %(today)s)
             AND
                 (user_id = %(user_id)s OR team_id = %(team_id)s)
         """
-        self.env.cr.execute(query, {'user_id': self.user_id.id,
-                                    'team_id': self.team_id.id})
+        self.env.cr.execute(query, {
+            'user_id': self.user_id.id,
+            'team_id': self.team_id.id,
+            'country_id': self.country_id.id or -1,
+            'source_id': self.source_id.id or -1,
+            # todo: this needs to be midnight (00:00) of the present day in the current timezone
+            'today': fields.Date.context_today(self),
+        })
         query_result = self.env.cr.dictfetchone()
 
-        message = False
-        if query_result['total_won'] == 1:
-            message = _('Go, go, go! Congrats for your first deal.')
-        elif query_result['max_team_30'] == self.expected_revenue:
-            message = _('Boom! Team record for the past 30 days.')
-        elif query_result['max_team_7'] == self.expected_revenue:
-            message = _('Yeah! Deal of the last 7 days for the team.')
-        elif query_result['max_user_30'] == self.expected_revenue:
-            message = _('You just beat your personal record for the past 30 days.')
-        elif query_result['max_user_7'] == self.expected_revenue:
-            message = _('You just beat your personal record for the past 7 days.')
-        return message
+        if query_result['count_user_closed_year'] == 1:
+            return _('Go, go, go! Congrats for your first deal.')
+        elif self.expected_revenue and query_result['max_team_30'] == self.expected_revenue:
+            return _('Boom! Team record for the past 30 days.')
+        elif self.expected_revenue and query_result['max_team_7'] == self.expected_revenue:
+            return _('Yeah! Best deal out of the last 7 days for the team.')
+        elif self.expected_revenue and query_result['max_user_30'] == self.expected_revenue:
+            return _('You just beat your personal record for the past 30 days.')
+        elif self.expected_revenue and query_result['max_user_7'] == self.expected_revenue:
+            return _('You just beat your personal record for the past 7 days.')
+        elif query_result['count_user_closed_today'] == 5:
+            return _('You\'re on fire! Fifth deal won today 🔥')
+        elif query_result['count_user_closed_today'] == 1 and query_result['count_user_closed_yesterday'] and query_result['count_user_closed_minus2day'] and not query_result['count_user_closed_minus3day']:
+            return _('You\'re on a winning streak. 3 deals in 3 days, congrats!')
+        elif query_result['min_day_close_30'] == self.day_close and self.day_close < 30 and any(duration for duration in self.duration_tracking.values() if duration >= 60):
+            return _('Wow, that was fast. That deal didn’t stand a chance!')
+        elif query_result['count_country_closed_year'] == 1 and self.country_id:
+            return _('You just expanded the map! First win in %(country)s.', country=self.country_id.name)
+        elif query_result['count_source_closed_year'] == 1 and self.source_id:
+            return _('Yay, your first win from %(utm_source_name)s!', utm_source_name=self.source_id.name)
+        # use duration tracking field to determine if the task jumped from first to last stage
+        elif len(stage_ids := [int(stage_id) for stage_id, duration in self.duration_tracking.items() if duration >= 60]) == 1:
+            first_stage = self.env['crm.stage'].browse(stage_ids)
+            return _('No detours, no delays - from %(stage_name)s straight to the win! 🚀', stage_name=first_stage.name)
+        return False
 
     def action_schedule_meeting(self, smart_calendar=True):
         """ Open meeting's calendar view to schedule meeting on current opportunity.

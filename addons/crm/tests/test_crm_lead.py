@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from contextlib import contextmanager
+from collections import defaultdict
 from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import patch
@@ -1009,3 +1011,224 @@ class TestCrmLeadMailTrackingDuration(MailTrackingDurationMixinCase):
 
     def test_crm_lead_queries_batch_mail_tracking_duration(self):
         self._test_queries_batch_duration_tracking()
+
+    def test_leads_rainbowman(self):
+        """
+        This test ensures that all rainbowman messages can trigger, and that they do so in correct order of priority.
+        It is placed in this class to take advantage of the _update_duration_tracking() method inherited from MailTrackingDurationMixinCase,
+        which is quite helpful for dealing with duration tracking in a test environment.
+        """
+
+        # setup
+        team = self.env['crm.team'].create({
+            'name': 'Rainbowman Team',
+        })
+        users = self.env['res.users'].sudo().create([{'name': 'user1', 'login': 'user1'}, {'name': 'user2', 'login': 'user2'}])
+        user1 = users[0]
+        user2 = users[1]
+        self.env['crm.team.member'].create([{'user_id': user1.id, 'crm_team_id': team.id}, {'user_id': user2.id, 'crm_team_id': team.id}])
+
+        stages = self.env['crm.stage'].create([
+            {
+                'name': 'stage1',
+                'team_ids': [team.id],
+            }, {
+                'name': 'stage2',
+                'team_ids': [team.id],
+            }, {
+                'name': 'stage_win',
+                'team_ids': [team.id],
+                'is_won': True,
+            },
+        ])
+        stage1 = stages[0]
+        stage2 = stages[1]
+
+        # setup timestamps:
+
+        past = datetime(2024, 12, 15, 12, 0)
+        jan1_10am = datetime(2025, 1, 1, 10, 0)
+        jan1_12pm = datetime(2025, 1, 1, 12, 0)
+        jan2 = datetime(2025, 1, 2, 12, 0)
+        jan3_12pm = datetime(2025, 1, 3, 12, 0)
+        jan3_1pm = datetime(2025, 1, 3, 13, 0)
+        jan6 = datetime(2025, 1, 6, 12, 0)
+        jan11 = datetime(2025, 1, 11, 12, 0)
+        march1 = datetime(2025, 3, 1, 12, 0)
+
+        # setup main batch of leads
+        with self.mock_datetime_and_now(past):
+            leads = TestCrmCommon._create_leads_batch(self, count=15, partner_count=5, user_ids=[user1.id, user2.id], lead_type='opportunity')
+            leads.write({'stage_id': stage1.id})
+            leads_er = TestCrmCommon._create_leads_batch(self, count=12, partner_count=3, user_ids=[user1.id, user2.id], lead_type='opportunity')
+            leads_er.write({
+                'stage_id': stage1.id,
+                'expected_revenue': 500,
+            })
+            all_leads = leads | leads_er
+            # initialize tracking
+            self.flush_tracking()
+
+        # setup duration tracking array, as normal behavior doesn't work in test env and has to be replicated
+        # This test uses _update_duration_tracking to keep track of current duration_trackings as they evolve for the duration of the test.
+        # They are added to each lead right as they're about to be marked as won.
+        tracking_array = [(lead, defaultdict(lambda: 0)) for lead in leads] + [(lead, defaultdict(lambda: 0)) for lead in leads_er]
+
+        def set_won_get_message(lead, user):
+            """
+            Set the lead as won. Then, if there's a message, return that message; otherwise return False.
+            This method overrides normal duration_tracking computation to use tracking values set during the test
+            """
+            lead.user_id = user
+
+            with patch.object(lead.__class__, '_compute_duration_tracking', lambda lead: next(dt for (tracked_lead, dt) in tracking_array if tracked_lead.id == lead.id)):
+                lead.duration_tracking = next(dt for (tracked_lead, dt) in tracking_array if tracked_lead.id == lead.id)
+                ret = lead.action_set_won_rainbowman()
+            if ret and not isinstance(ret, bool):
+                return ret['effect']['message']
+            return False
+
+        # test lead rainbowman messages (leads without expected revenues)
+
+        with self.mock_datetime_and_now(jan1_10am):
+            interval = (jan1_10am - past).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+            all_leads.write({'stage_id': stage2.id})
+
+            with self.subTest('First deal'):
+                msg = set_won_get_message(leads[0], user1)
+                self.assertEqual(msg, 'Go, go, go! Congrats for your first deal.')
+            
+            with self.subTest('Win with 25 messages on the counter'):
+                for x in range(25):
+                    leads[3].message_post(
+                        body='Message',
+                        subtype_xmlid='mail.mt_comment',
+                        message_type='comment',
+                    )
+                msg = set_won_get_message(leads[3], user1)
+                self.assertEqual(msg, 'Phew, that took some effort — but you nailed it. Good job!')
+
+        with self.mock_datetime_and_now(jan1_12pm):
+            interval = (jan1_12pm - jan1_10am).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+
+            with self.subTest('First win in target country (all team)'):
+                leads[1].country_id = self.env.ref('base.au')
+                msg = set_won_get_message(leads[1], user1)
+                self.assertEqual(msg, 'You just expanded the map! First win in Australia.')
+
+            custom_source = self.env['utm.source'].create({'name': 'Custom Source'})
+            with self.subTest('First win from that UTM source (all team)'):
+                leads[2].source_id = custom_source
+                msg = set_won_get_message(leads[2], user1)
+                self.assertEqual(msg, 'Yay, your first win from Custom Source!')
+
+            with self.subTest('Fifth deal won today'):
+                msg = set_won_get_message(leads[4], user1)
+                self.assertEqual(msg, 'You\'re on fire! Fifth deal won today 🔥')
+
+            with self.subTest('First deal completed for another user'):
+                leads[5].expected_revenue = 100
+                msg = set_won_get_message(leads[5], user2)
+                self.assertEqual(msg, 'Go, go, go! Congrats for your first deal.')
+
+            with self.subTest('Closing a deal from source that already has a closed deal should not trigger \
+                the message again, even for another user in the same team'):
+                leads[6].source_id = custom_source.id
+                msg = set_won_get_message(leads[6], user2)
+                self.assertFalse(msg)
+
+            with self.subTest('Closing a deal from a country that already has a closed deal should not trigger \
+                the message again, even for another user in the same team'):
+                leads[7].country_id = self.env.ref('base.au')
+                msg = set_won_get_message(leads[7], user2)
+                self.assertFalse
+
+            new_leads = self.env['crm.lead'].create([
+                {
+                    'name': 'lead',
+                    'type': 'opportunity',
+                    'stage_id': stage1.id,
+                    'user_id': user1.id,
+                }, {
+                    'name': 'lead',
+                    'type': 'opportunity',
+                    'stage_id': stage1.id,
+                    'user_id': user1.id
+                },
+            ])
+            new_lead = new_leads[0]
+            new_lead2 = new_leads[1]
+            tracking_array += [(new_lead, defaultdict(lambda: 0)), (new_lead2, defaultdict(lambda: 0))]
+            all_leads |= new_lead | new_lead2
+
+        with self.mock_datetime_and_now(jan2):
+            interval = (jan2 - jan1_12pm).total_seconds() / 60
+            self.flush_tracking()
+            self._update_duration_tracking(tracking_array, interval)
+            all_leads._compute_duration_tracking()
+
+            with self.subTest('Fastest close in a 30-day window'):
+                msg = set_won_get_message(new_lead, user1)
+                self.assertEqual(msg, 'Wow, that was fast. That deal didn’t stand a chance!')
+
+        with self.mock_datetime_and_now(jan3_12pm):
+            interval = (jan3_12pm - jan2).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+
+            with self.subTest('Three-day streak'):
+                msg = set_won_get_message(leads[8], user1)
+                self.assertEqual(msg, 'You\'re on a winning streak. 3 deals in 3 days, congrats!')
+
+        with self.mock_datetime_and_now(jan3_1pm):
+            interval = (jan3_1pm - jan3_12pm).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+            msg = set_won_get_message(new_lead2, user1)
+
+            with self.subTest('First stage to last stage'):
+                self.assertEqual(msg, 'No detours, no delays - from stage1 straight to the win! 🚀')
+
+            with self.subTest('Check that no message is returned if no "achievement" is reached'):
+                self.assertFalse(set_won_get_message(leads[9], user1))
+                self.assertFalse(set_won_get_message(leads[10], user2))
+
+        # test lead rainbowman messages (leads with expected revenues)
+
+            with self.subTest('Team record for the last 30 days'):
+                leads_er[0].expected_revenue = 800
+                msg = set_won_get_message(leads_er[0], user1)
+                self.assertEqual(msg, 'Boom! Team record for the past 30 days.')
+
+            with self.subTest('Personal record for the last 30 days'):
+                leads_er[1].expected_revenue = 600
+                msg = set_won_get_message(leads_er[1], user2)
+                self.assertEqual(msg, 'You just beat your personal record for the past 30 days.')
+
+        with self.mock_datetime_and_now(jan6):
+            interval = (jan6 - jan3_1pm).total_seconds() / 60
+            self._update_duration_tracking(tracking_array, interval)
+
+            with self.subTest('No record, no message'):
+                msg = set_won_get_message(leads_er[2], user1)
+                self.assertFalse(msg)
+                msg = set_won_get_message(leads_er[3], user2)
+                self.assertFalse(msg)
+
+        with self.mock_datetime_and_now(jan11):
+            with self.subTest('Team record for the last 7 days'):
+                leads_er[4].expected_revenue = 650
+                msg = set_won_get_message(leads_er[4], user1)
+                self.assertEqual(msg, 'Yeah! Best deal out of the last 7 days for the team.')
+
+            with self.subTest('Personal record for the last 7 days'):
+                leads_er[5].expected_revenue = 550
+                msg = set_won_get_message(leads_er[5], user2)
+                self.assertEqual(msg, 'You just beat your personal record for the past 7 days.')
+
+        with self.mock_datetime_and_now(march1):
+            with self.subTest('Once a month has passed, monthly team records may be set \
+                even if the amount was lower than the alltime max'):
+                leads_er[6].expected_revenue = 750
+                msg = set_won_get_message(leads_er[6], user1)
+                self.assertEqual(msg, 'Boom! Team record for the past 30 days.')
