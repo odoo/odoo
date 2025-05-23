@@ -243,8 +243,8 @@ msgstr ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
-"                        Drogi/-a <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"                        Zostałeś/-aś zaproszony/-a przez <t t-out=\"object.create_uid.name or ''\">OdooBot</t> z <t t-out=\"object.company_id.name or ''\">YourCompany</t> do dołączenia w Odoo.\n"
+"                        Dzień dobry, <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
+"                        Zostałeś/-aś zaproszony/-a przez <t t-out=\"object.create_uid.name or ''\">OdooBot</t> z <t t-out=\"object.company_id.name or ''\">YourCompany</t> do dołączenia do Odoo.\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                            <a t-att-href=\"object.partner_id._get_signup_url()\" t-attf-style=\"background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Zaakceptuj zaproszenie\n"
@@ -254,9 +254,9 @@ msgstr ""
 "                        <t t-set=\"website_url\" t-value=\"object.get_base_url()\"/>\n"
 "                        Twoja domena Odoo to: <b><a t-att-href=\"website_url\" t-out=\"website_url or ''\">http://yourcompany.odoo.com</a></b><br/>\n"
 "                        Twój login e-mail to: <b><a t-attf-href=\"/web/login?login={{ object.email }}\" target=\"_blank\" t-out=\"object.email or ''\">mark.brown23@example.com</a></b><br/><br/>\n"
-"                        Nie słyszałeś nigdy o Odoo? To kompleksowe oprogramowanie biznesowe używane przez ponad 7 milionów użytkowników. Znacząco polepszy Twoje wrażenia z pracy i zwiększy Twoją produktywność.\n"
+"                        Nie słyszałeś nigdy o Odoo? To kompleksowe oprogramowanie biznesowe używane przez ponad 7 milionów użytkowników, które znacząco polepszy Twoje procesy biznesowe i zwiększy Twoją produktywność.\n"
 "                        <br/><br/>\n"
-"                        Rzuć okien na <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a>, aby lepiej poznać to narzędzie.\n"
+"                        Rzuć okiem na <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a>, aby lepiej poznać to narzędzie.\n"
 "                        <br/><br/>\n"
 "                        Miłej pracy z Odoo!<br/>\n"
 "                        --<br/>Zespół <t t-out=\"object.company_id.name or ''\">YourCompany</t>\n"
@@ -501,7 +501,7 @@ msgstr "Wróć do logowania"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Cannot send email: user %s has no email address."
-msgstr "Nie udało się wysłać e-maila: %s nie posiada konta e-mail."
+msgstr "Nie udało się wysłać e-maila: %s nie posiada adresu e-mail."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -535,8 +535,8 @@ msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
-"Nie byliśmy w stanie połączyć się z serwerem e-mail, sprawdź proszę "
-"konfigurację swojego serwera wychodzącej poczty e-mail."
+"Nie byliśmy w stanie połączyć się z serwerem mailowym. Sprawdź konfigurację "
+"swojego serwera wychodzącej poczty e-mail."
 
 #. module: auth_signup
 #. odoo-python
@@ -797,7 +797,7 @@ msgstr "Rejestracja: nie wprowadzono loginu dla nowego użytkownika"
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
 msgid "Signup: no name or partner given for new user"
-msgstr "Rejestracja: nie podano nazwy lub partnera dla nowego użytkownika"
+msgstr "Rejestracja: nie podano nazwy ani partnera dla nowego użytkownika"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state

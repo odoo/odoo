@@ -1534,6 +1534,13 @@ msgid ""
 "- Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
 "- Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 msgstr ""
+"\n"
+"Accounting reports for Czech Republic\n"
+"=====================================\n"
+"This module includes accounting reports for Czech Republic, including:\n"
+"- VAT Control Statement (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHKH1\n"
+"- Souhrnné hlášení VIES Report (creation and XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHSHV\n"
+"- Tax report (XML export). For more information, see https://adisspr.mfcr.cz/dpr/adis/idpr_pub/epo2_info/popis_struktury_detail.faces?zkratka=DPHDP3\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_dk_reports
@@ -2429,6 +2436,17 @@ msgid ""
 "* Quick payments by swiping, scanning, or tapping your credit/debit card or UPI QR code at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, RuPay.\n"
 msgstr ""
+"\n"
+"Allow Pine Labs POS payments\n"
+"==============================\n"
+"\n"
+"This module is available only for companies that use INR currency.\n"
+"It enables customers to pay for their orders using debit/credit cards and UPI through Pine Labs POS terminals.\n"
+"A Pine Labs merchant account is required to process transactions.\n"
+"Features include:\n"
+"\n"
+"* Quick payments by swiping, scanning, or tapping your credit/debit card or UPI QR code at the payment terminal.\n"
+"* Supported cards: Visa, MasterCard, RuPay.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_razorpay
@@ -4669,6 +4687,13 @@ msgid ""
 "TaxBase (DPP) has to be mulitplied by factor of 11/12 while multiplied to tax of 12% which\n"
 "is resulting to 11%.\n"
 msgstr ""
+"\n"
+"E-invoicing feature provided by DJP (Indonesian Tax Office). As of January 1st 2025,\n"
+"Indonesia is using CoreTax system, which changes the file format and content of E-Faktur.\n"
+"We're changing from CSV files into XML.\n"
+"At the same time, due to tax regulation changes back and forth, for general E-Faktur now,\n"
+"TaxBase (DPP) has to be mulitplied by factor of 11/12 while multiplied to tax of 12% which\n"
+"is resulting to 11%.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -12849,6 +12874,29 @@ msgid ""
 "This module ensures compliance with ONSS electronic declaration\n"
 "requirements and reduces manual interaction with the SFTP portal.\n"
 msgstr ""
+"\n"
+"synchronize DmfA to ONSS portal\n"
+"===============================\n"
+"\n"
+"This new module automates the synchronization of DmfA ONSS declarations\n"
+"to the official Belgian SFTP portal.\n"
+"\n"
+"It integrates with the existing `l10n_be_hr_payroll` and\n"
+"`l10n_be_hr_payroll_dmfa` modules to:\n"
+"\n"
+"- Upload the FO, FS, and GO files to the correct ONSS environment folder\n"
+"  (IN, INTEST, INTEST-S).\n"
+"- Poll the OUT folders (OUT, OUTTEST, OUTTEST-S) for returned files.\n"
+"- Link received files to the corresponding declarations and employees\n"
+"  when applicable.\n"
+"\n"
+"Technical features include:\n"
+"- Secure connection using a private key and technical user credentials.\n"
+"- XML file parsing for ACRF and notification files.\n"
+"- Error handling and logging for missing directories or malformed files.\n"
+"\n"
+"This module ensures compliance with ONSS electronic declaration\n"
+"requirements and reduces manual interaction with the SFTP portal.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
@@ -14343,12 +14391,12 @@ msgstr "نموذج تجريدي "
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: False"
-msgstr ""
+msgstr "الملخص: خطأ "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
 msgid "Abstract: True"
-msgstr ""
+msgstr "الملخص: صحيح "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__user_ids
@@ -14994,7 +15042,7 @@ msgstr "قم بإضافة طرق العرض والتعديلات إلى الفع
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Added from"
-msgstr ""
+msgstr "تمت إضافته من "
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
@@ -15659,7 +15707,7 @@ msgstr "Agorot"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_agriculture_shop
 msgid "Agricultural Store"
-msgstr ""
+msgstr "متجر مواد زراعية "
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -17158,7 +17206,7 @@ msgstr "اختلاف في أسلوب البناء "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_architects
 msgid "Architecture Firm"
-msgstr ""
+msgstr "شركة هندسة معمارية "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
@@ -18196,7 +18244,7 @@ msgstr "إكمال عمولة الموظف تلقائياً "
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__automated_name
 #: model:ir.model.fields,field_description:base.field_ir_cron__automated_name
 msgid "Automated Name"
-msgstr ""
+msgstr "الاسم الآلي "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__auto_install
@@ -18925,7 +18973,7 @@ msgstr "برمودا"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_beverage_distributor
 msgid "Beverage Distributor"
-msgstr ""
+msgstr "موزع مشروبات "
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -18945,7 +18993,7 @@ msgstr "الفوترة إلى رقم حساب UPS "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_billboard_rental
 msgid "Billboard Rental"
-msgstr ""
+msgstr "تأجير اللوحات الإعلانية "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_model_id
@@ -19044,7 +19092,7 @@ msgstr "Bonaire, Sint Eustatius and Saba"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bookstore
 msgid "Bookstore"
-msgstr ""
+msgstr "متجر كتب "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_boolean_value
@@ -19585,7 +19633,7 @@ msgstr "CUIT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cake_shop
 msgid "Cake Store"
-msgstr ""
+msgstr "محل كعك "
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -20284,7 +20332,7 @@ msgstr "المدينة"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cleaning_services
 msgid "Cleaning Services"
-msgstr ""
+msgstr "خدمات تنظيف "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
@@ -20335,7 +20383,7 @@ msgstr "إغلاق"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_clothing_boutique
 msgid "Clothing Store"
-msgstr ""
+msgstr "محل ملابس "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cloud_storage
@@ -20763,7 +20811,7 @@ msgstr "احتساب "
 #. odoo-python
 #: code:addons/base/models/ir_actions.py:0
 msgid "Compute %(field_chain_str)s"
-msgstr ""
+msgstr "اختساب %(field_chain_str)s "
 
 #. module: base
 #. odoo-python
@@ -21140,7 +21188,7 @@ msgstr "Cordoba"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_corporate_gifts
 msgid "Corporate Gifts"
-msgstr ""
+msgstr "هدايا الشركات "
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -22677,7 +22725,7 @@ msgstr "المناقشة "
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__disjoint_ids
 msgid "Disjoint Groups"
-msgstr ""
+msgstr "المجموعات المنفصلة "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__view_disjoint_group_ids
@@ -23439,7 +23487,7 @@ msgstr "السلفادور"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_electrician
 msgid "Electricians"
-msgstr ""
+msgstr "الكهربائيين "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock
@@ -24929,7 +24977,7 @@ msgstr "خارج الحدود الإقليمية "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_eyewear_shop
 msgid "Eyewear Store"
-msgstr ""
+msgstr "محل نظارات "
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_F
@@ -24990,7 +25038,7 @@ msgstr "جزر فارو"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fast_food
 msgid "Fast Food"
-msgstr ""
+msgstr "مطعم وجبات سريعة "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -25548,7 +25596,7 @@ msgstr "الخط "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_trucks
 msgid "Food Trucks"
-msgstr ""
+msgstr "عربات بيع الطعام "
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -25757,7 +25805,7 @@ msgstr "France - Work Entries Time Off"
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
 msgid "Free access"
-msgstr ""
+msgstr "الوصول المجاني "
 
 #. module: base
 #: model:res.country,name:base.gf
@@ -25983,7 +26031,7 @@ msgstr "طريقة عرض غانت للوحة بيانات الإجازات "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gardening
 msgid "Gardening"
-msgstr ""
+msgstr "البستنة "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_gelato
@@ -26345,7 +26393,7 @@ msgstr "أداة عرض الشبكة"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fmcg_store
 msgid "Grocery Store"
-msgstr ""
+msgstr "محل بقالة "
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PLN
@@ -26614,7 +26662,7 @@ msgstr "مسار HTTP"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hair_salon
 msgid "Hair Salon"
-msgstr ""
+msgstr "صالون لتصفيف الشعر "
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -26655,7 +26703,7 @@ msgstr "إدارة طلبات غداء موظفيك"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_handyman
 msgid "Handyman Services"
-msgstr ""
+msgstr "خدمات الصيانة "
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -26676,7 +26724,7 @@ msgstr "وكيل الجهاز "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hardware_shop
 msgid "Hardware Store"
-msgstr ""
+msgstr "محد معدات "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
@@ -27036,7 +27084,7 @@ msgstr "Hongkong"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
 msgid "Hospitality"
-msgstr ""
+msgstr "الضيافة "
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_host
@@ -27659,23 +27707,23 @@ msgstr "يقوم بتطبيق نظام النقد المسجل، امتثالا�
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_search
 msgid "Implied"
-msgstr ""
+msgstr "ضمني "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
 msgid "Implied Groups"
-msgstr ""
+msgstr "المجموعات المشار إليها ضمنياً "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_groups_list
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Implied groups"
-msgstr ""
+msgstr "المجموعات المشار إليها ضمنياً "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_by_ids
 msgid "Implying Groups"
-msgstr ""
+msgstr "الإشارة إلى المجموعات ضمنياً "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -28256,7 +28304,7 @@ msgstr "قم بدمج نقطة بيعك مح جهاز دفع Stripe "
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_tyro
 msgid "Integrate your POS with a Tyro payment terminal (AU)"
-msgstr ""
+msgstr "Integrate your POS with a Tyro payment terminal (AU)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_viva_wallet
@@ -29567,7 +29615,7 @@ msgstr "إطلاق معالج التهيئة "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_lawyer
 msgid "Law Firm"
-msgstr ""
+msgstr "مكتب محاماة "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
@@ -30822,7 +30870,7 @@ msgstr "التسويق"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_agency
 msgid "Marketing Agency"
-msgstr ""
+msgstr "وكالة تسويق "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_marketing_automation
@@ -31117,7 +31165,7 @@ msgstr "Mexico/General"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_micro_brewery
 msgid "Microbrewery"
-msgstr ""
+msgstr "مصنع بيرة "
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -31733,7 +31781,7 @@ msgstr "إصلاحات تخطيط متطلبات المواد "
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__multi
 msgid "Multi Actions"
-msgstr ""
+msgstr "الإجراءات المتعددة "
 
 #. module: base
 #: model:res.groups,name:base.group_multi_company
@@ -32240,7 +32288,7 @@ msgstr "لا شيء"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_non_profit_organization
 msgid "Nonprofit Organization"
-msgstr ""
+msgstr "منظمة غير ربحية "
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -33320,7 +33368,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_partner
 msgid "Odoo Partner"
-msgstr ""
+msgstr "شريك أودو "
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -35007,7 +35055,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_outdoor_activities
 msgid "Outdoor Activities"
-msgstr ""
+msgstr "أنشطة خارجية "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -35254,7 +35302,7 @@ msgstr "نقطة بيع Stripe "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_tyro
 msgid "POS Tyro"
-msgstr ""
+msgstr "نقطة بيع Tyro "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos_urban_piper
@@ -36025,7 +36073,7 @@ msgstr "Peppol"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_personal_trainer
 msgid "Personal Trainer"
-msgstr ""
+msgstr "مدرب شخصي "
 
 #. module: base
 #: model:res.country,name:base.pe
@@ -36089,7 +36137,7 @@ msgstr "Pesos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pharmacy_retail
 msgid "Pharmacy"
-msgstr ""
+msgstr "صيدلية "
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -39722,7 +39770,7 @@ msgstr "Shiprocket: Cash on Delivery"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_shoe_maker
 msgid "Shoe Maker"
-msgstr ""
+msgstr "صانع أحذية "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_test_website_sale
@@ -40036,7 +40084,7 @@ msgstr "موصلي التواصل الاجتماعي لإعدادات الشرك
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_software_reseller
 msgid "Software Reseller"
-msgstr ""
+msgstr "وكيل برمجيات "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_solar_installation
@@ -40812,7 +40860,7 @@ msgstr "الوسيطات التكميلية "
 #. module: base
 #: model:ir.module.category,name:base.module_category_supply_chain
 msgid "Supply Chain"
-msgstr ""
+msgstr "سلسلة توريد "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live
@@ -41136,7 +41184,7 @@ msgstr "سجلات المهمة"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_tattoo_shop
 msgid "Tattoo Shop"
-msgstr ""
+msgstr "محل وشوم "
 
 #. module: base
 #. odoo-python
@@ -43263,7 +43311,7 @@ msgstr "الجولات "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_toy_store
 msgid "Toy Store"
-msgstr ""
+msgstr "متجر ألعاب "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
@@ -43872,7 +43920,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "Uninstall…"
-msgstr ""
+msgstr "إلغاء التثبيت... "
 
 #. module: base
 #. odoo-python
@@ -45172,7 +45220,7 @@ msgstr "الملف التعريفي للموقع الإلكتروني "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wedding_planner
 msgid "Wedding Planner"
-msgstr ""
+msgstr "مخطط حفلات الزفاف "
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
@@ -45187,7 +45235,7 @@ msgstr "أسابيع"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wellness_practitioner
 msgid "Wellness Practitioner"
-msgstr ""
+msgstr "ممارس صحي "
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -45234,7 +45282,7 @@ msgstr "WhatsApp في أتمتة التسويق "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_calendar
 msgid "WhatsApp-Calendar"
-msgstr ""
+msgstr "تقويم WhatsApp "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_delivery
@@ -46454,7 +46502,7 @@ msgstr "الاسم"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "narrow"
-msgstr ""
+msgstr "ضيق"
 
 #. module: base
 #. odoo-python
@@ -46569,7 +46617,7 @@ msgstr "selection_value"
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 msgid "short"
-msgstr ""
+msgstr "قصير "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales_subscriptions
@@ -46579,7 +46627,7 @@ msgstr "الاشتراكات "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_tests
 msgid "test"
-msgstr ""
+msgstr "اختبار "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install
