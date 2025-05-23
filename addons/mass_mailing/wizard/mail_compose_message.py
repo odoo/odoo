@@ -55,7 +55,7 @@ class MailComposeMessage(models.TransientModel):
                     mailing_sent_message=Markup(_(
                         'Received the mailing <b>{mailing_name}</b>',
                     )).format(
-                        mailing_name=self.mass_mailing_id.display_name
+                        mailing_name=self.mass_mailing_name or self.mass_mailing_id.display_name
                     ),
                     original_body=mail_values['body'],
                 )
