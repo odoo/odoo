@@ -63,7 +63,19 @@ class AliasMixinOptional(models.AbstractModel):
             if vals.get('alias_name'):
                 vals['alias_name'] = self.env['mail.alias']._sanitize_alias_name(vals['alias_name'])
             if self._require_new_alias(vals):
-                company_id = vals.get(company_fname) or company_id_default
+                effective_company_id = vals.get(company_fname)
+
+                # If company_id is not explicitly set in vals, or if it needs to be overridden by folder
+                if not effective_company_id and vals.get("folder_id"):
+                    folder = self.env["documents.document"].browse(vals["folder_id"])
+                    if folder.company_id:
+                        effective_company_id = folder.company_id.id
+
+                # If still no effective_company_id, fall back to default
+                if not effective_company_id:
+                    effective_company_id = company_id_default
+
+                company_id = effective_company_id
                 company = self.env['res.company'].with_prefetch(company_prefetch_ids).browse(company_id)
                 alias_vals, record_vals = self._alias_filter_fields(vals)
                 # generate record-agnostic base alias values
