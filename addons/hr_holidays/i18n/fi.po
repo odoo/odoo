@@ -458,25 +458,25 @@ msgstr "Kertymän taso"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__accrual_plan_id
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Accrual Plan"
-msgstr "Kertymäsuunnitelma"
+msgstr "Kertymissäännöt"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_accrual_level
 msgid "Accrual Plan Level"
-msgstr "Kertymäsuunnitelman taso"
+msgstr "Kertymissäännön taso"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_accrual_plan.py:0
 msgid "Accrual Plan's Employees"
-msgstr "Kertymissuunnitelman työntekijät"
+msgstr "Kertymissäännön työntekijät"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_accrual_plans
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_accrual_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_tree
 msgid "Accrual Plans"
-msgstr "Kertymissuunnitelmat"
+msgstr "Kertymissäännöt"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
@@ -2629,7 +2629,7 @@ msgstr "Ei rajoituksia"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No rule has been set up for this accrual plan."
-msgstr "Tätä kertymissuunnitelmaa varten ei ole laadittu sääntöjä."
+msgstr "Tälle kertymissäännölle ei ole asetettu sääntöjä."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -3289,8 +3289,8 @@ msgid ""
 "Some of the accrual plans you're trying to delete are linked to an existing "
 "allocation. Delete or cancel them first."
 msgstr ""
-"Jotkin lomien kertymäsuunnitelmista, joita yrität poistaa, liittyvät "
-"olemassa olevaan lomavaraukseen. Poista tai peruuta se ensin."
+"Jotkin kertymissäännöt, joita yrität poistaa, liittyvät olemassa olevaan "
+"lomavaraukseen. Poista tai peruuta se ensin."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__time_off_type_id
@@ -3298,8 +3298,8 @@ msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
 "                Leave empty if this accrual plan can be used with any Time Off Type."
 msgstr ""
-"Määritä, voidaanko tätä kertymissuunnitelmaa käyttää vain tämän lomatyypin kanssa.\n"
-"                Jätä tyhjäksi, jos kertymissuunnitelmaa voidaan käyttää minkä tahansa lomatyypin kanssa."
+"Määritä, voidaanko tätä kertymissääntöä käyttää vain tämän lomatyypin kanssa.\n"
+"                Jätä tyhjäksi, jos kertymissääntöä voidaan käyttää minkä tahansa lomatyypin kanssa."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__transition_mode
@@ -3484,7 +3484,7 @@ msgid ""
 "Training) will be used in the computation of Accrual's plan rate."
 msgstr ""
 "Työajan (esim. läsnäolo) ja poissaolon (esim. koulutus) välistä eroa "
-"käytetään laskettaessa kertymissuunnitelman edistymistä."
+"käytetään laskettaessa kertymissäännön määrää."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
@@ -4292,8 +4292,8 @@ msgid ""
 "When the field is checked the balance of an allocation using this accrual "
 "plan will never exceed the specified amount."
 msgstr ""
-"Kun valittu, tätä suoriteperusteista suunnitelmaa käyttävän kertymän saldo "
-"ei koskaan ylitä asetettua määrää."
+"Kun valittu, tätä kertymissääntöä käyttävän kertymän saldo ei koskaan ylitä "
+"asetettua määrää."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__cap_accrued_time_yearly
@@ -4515,7 +4515,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
 msgid "You must give a rate greater than 0 in accrual plan levels."
-msgstr "Sinun on annettava kertymissuunnitelmatasoissa suurempi arvo kuin 0."
+msgstr "Sinun on annettava kertymissäännön tasoissa suurempi arvo kuin 0."
 
 #. module: hr_holidays
 #. odoo-python

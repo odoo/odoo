@@ -33,7 +33,7 @@ msgstr "Tümü"
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__allowed_payment_modes
 msgid "Allowed Payment Modes"
-msgstr ""
+msgstr "İzin Verilen Ödeme Yöntemleri"
 
 #. module: pos_paytm
 #: model:ir.model.fields.selection,name:pos_paytm.selection__pos_payment_method__accept_payment__auto
@@ -51,6 +51,8 @@ msgid ""
 "Choose accept payment mode: \n"
 " Manually or Automatically"
 msgstr ""
+"Kabul edilecek ödeme yöntemini seçin: \n"
+" Manuel veya Otomatik"
 
 #. module: pos_paytm
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__allowed_payment_modes
@@ -58,6 +60,8 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card or QR"
 msgstr ""
+"İzin verilen ödeme yöntemini seçin: \n"
+" Tümü/Kart veya QR"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__display_name
@@ -68,6 +72,7 @@ msgstr "İsim Göster"
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_mid
 msgid "Go to https://business.paytm.com/ and create the merchant account"
 msgstr ""
+"https://business.paytm.com/ adresine gidin ve satıcı hesabınızı oluşturun"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__id
@@ -85,11 +90,13 @@ msgid ""
 "Merchant/AES key \n"
 " ex: B1o6Ivjy8L1@abc9"
 msgstr ""
+"Mağaza/AES anahtarı \n"
+" örn: B1o6Ivjy8L1@abc9"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__channel_id
 msgid "PayTM Channel ID"
-msgstr ""
+msgstr "PayTM Kanal Kimliği"
 
 #. module: pos_paytm
 #. odoo-javascript
@@ -100,22 +107,22 @@ msgstr "PayTM Hatası"
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_merchant_key
 msgid "PayTM Merchant API Key"
-msgstr ""
+msgstr "PayTM Mağaza API Anahtarı"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_mid
 msgid "PayTM Merchant ID"
-msgstr ""
+msgstr "PayTM Mağaza Kimliği"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_tid
 msgid "PayTM Terminal ID"
-msgstr ""
+msgstr "PayTM Terminal Kimliği"
 
 #. module: pos_paytm
 #: model:ir.model.fields,field_description:pos_paytm.field_pos_payment_method__paytm_test_mode
 msgid "PayTM Test Mode"
-msgstr ""
+msgstr "PayTM Test Modu"
 
 #. module: pos_paytm
 #: model:ir.model,name:pos_paytm.model_pos_payment_method
@@ -131,13 +138,13 @@ msgstr "QR"
 #. odoo-javascript
 #: code:addons/pos_paytm/static/src/app/utils/payment/payment_paytm.js:0
 msgid "Reference number mismatched"
-msgstr ""
+msgstr "Referans numarası uyuşmuyor"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "Something went wrong with paytm request. Please try later."
-msgstr ""
+msgstr "Paytm isteğinde bir sorun oluştu. Lütfen daha sonra tekrar deneyin."
 
 #. module: pos_paytm
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_tid
@@ -145,38 +152,40 @@ msgid ""
 "Terminal model or Activation code \n"
 " ex: 70000123"
 msgstr ""
+"Terminal modeli veya Aktivasyon kodu \n"
+" örn: 70000123"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "This Payment Terminal is only valid for INR Currency"
-msgstr ""
+msgstr "Bu Ödeme Terminali yalnızca INR para birimi için geçerlidir"
 
 #. module: pos_paytm
 #: model:ir.model.fields,help:pos_paytm.field_pos_payment_method__paytm_test_mode
 msgid "Turn it on when in Test Mode"
-msgstr ""
+msgstr "Test Modundayken bunu etkinleştirin"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "makePaymentRequest expected resultCode not found in the response"
-msgstr ""
+msgstr "makePaymentRequest için beklenen resultCode yanıt içinde bulunamadı"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "paymentFetchRequest expected resultCode not found in the response"
-msgstr ""
+msgstr "paymentFetchRequest için beklenen resultCode yanıt içinde bulunamadı"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "paytm transaction failure"
-msgstr ""
+msgstr "paytm işlem hatası"
 
 #. module: pos_paytm
 #. odoo-python
 #: code:addons/pos_paytm/models/pos_payment_method.py:0
 msgid "paytm transaction request declined"
-msgstr ""
+msgstr "paytm işlem isteği reddedildi"
