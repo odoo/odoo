@@ -15,6 +15,7 @@ import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
 import * as PreparationReceipt from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
+import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -446,12 +447,16 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             FloorScreen.clickTable("5"),
+            ProductScreen.clickControlButton("Guests"),
+            NumberPopup.enterValue("5"),
+            NumberPopup.isShown("5"),
+            Dialog.confirm(),
             ProductScreen.clickDisplayedProduct("Product Test"),
             Chrome.freezeDateTime(1739370000000),
             Dialog.confirm("Add"),
             ProductScreen.totalAmountIs("10"),
             {
-                content: "Check if order preparation contains always Variant",
+                content: "Check the content of the preparation receipt",
                 trigger: "body",
                 run: async () => {
                     const receipts = await PreparationReceipt.generatePreparationReceipts();
@@ -464,6 +469,11 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     }
                     if (receipts[0].innerHTML.includes("DUPLICATA!")) {
                         throw new Error("DUPLICATA! should not be present in printed receipt");
+                    }
+
+                    const guestInfo = receipts[0].querySelector(".pos-customer-info");
+                    if (!guestInfo || !guestInfo.innerHTML.includes("Guest: 5")) {
+                        throw new Error("Guest info not found in printed receipt");
                     }
                 },
             },
