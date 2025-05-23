@@ -44,7 +44,7 @@ export class SplitBillScreen extends Component {
         const lines = line.getAllLinesInCombo();
 
         for (const line of lines) {
-            if (!line.isPosGroupable()) {
+            if (!line.isPosGroupable() && !line.isPartOfCombo()) {
                 if (this.qtyTracker[line.uuid] === line.getQuantity()) {
                     this.qtyTracker[line.uuid] = 0;
                 } else {
@@ -145,6 +145,7 @@ export class SplitBillScreen extends Component {
         originalOrder.uiState.splittedOrderUuid = newOrder.uuid;
 
         // Create lines for the new order
+        const comboMap = new Map();
         const lineToDel = [];
         const newCourses = new Map();
         for (const line of originalOrder.lines) {
@@ -164,6 +165,9 @@ export class SplitBillScreen extends Component {
                     }
                 }
                 const data = { ...line.raw };
+
+                // Combo lines will be relinked by the children
+                delete data.combo_line_ids;
                 delete data.uuid;
                 delete data.id;
                 const newLine = this.pos.models["pos.order.line"].create(
@@ -176,6 +180,16 @@ export class SplitBillScreen extends Component {
                     false,
                     true
                 );
+
+                if (line.combo_line_ids.length > 0) {
+                    for (const comboLine of line.combo_line_ids) {
+                        comboMap.set(comboLine.uuid, newLine);
+                    }
+                }
+
+                if (line.combo_parent_id) {
+                    newLine.combo_parent_id = comboMap.get(line.uuid);
+                }
 
                 if (line.getQuantity() === this.qtyTracker[line.uuid]) {
                     lineToDel.push(line);
