@@ -3,8 +3,8 @@
 # 	* account
 # 
 # Translators:
-# Abe Manyo, 2025
 # Wil Odoo, 2025
+# Abe Manyo, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Abe Manyo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -267,7 +267,7 @@ msgstr "%s bukan field yang tersimpan"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s taxes"
-msgstr ""
+msgstr "Pajak %s"
 
 #. module: account
 #. odoo-python
@@ -279,7 +279,7 @@ msgstr "%s, atau / bila tidak berlaku"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s, or not applicable"
-msgstr ""
+msgstr "%s, atau tidak berlaku"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -397,12 +397,12 @@ msgstr "/ bila tidak berlaku"
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr ""
+msgstr "0% Ekspor"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
 msgid "0% Imports"
-msgstr ""
+msgstr "0% Impor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
@@ -1035,6 +1035,9 @@ msgid ""
 "                                    Taxes\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    Pajak-Pajak\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1608,6 +1611,126 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<t t-set=\"invoices\" t-value=\"ctx.get('einvoices', [])\"/>\n"
+"<t t-set=\"invoice_preview_ids\" t-value=\"','.join([str(i) for i in invoices.ids]) if invoices else ''\"/>\n"
+"<t t-set=\"invoice_count\" t-value=\"len(invoices)\"/>\n"
+"<t t-set=\"MAX_TABLE_LINES\" t-value=\"10\"/>\n"
+"\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td align=\"center\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"                <!-- HEADER -->\n"
+"                <tr>\n"
+"                    <td align=\"center\" style=\"min-width: 590px;\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td valign=\"middle\">\n"
+"                                    <span style=\"font-size: 10px;\">Notifikasi</span>\n"
+"                                    <br/>\n"
+"                                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                                        Faktur Elektronik Baru Diterima\n"
+"                                    </span>\n"
+"                                    <div style=\"margin-bottom: 5px; margin-top: 18px;\">\n"
+"                                        <a t-if=\"invoice_count != 1\" t-attf-href=\"/odoo/accounting/action-account.action_account_moves_email_preview?active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ object.company_id.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            Tinjau Faktur-Faktur\n"
+"                                        </a>\n"
+"                                        <a t-else=\"\" t-attf-href=\"/odoo/accounting/{{ object.id }}/account.move/{{ invoices.id }}\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; color: {{ object.company_id.email_primary_color or '#FFFFFF' }}; text-decoration: none !important; font-weight: 400; background-color: {{ object.company_id.email_secondary_color or '#875A7B' }}; border-radius:3px\">\n"
+"                                            Tinjau Faktur\n"
+"                                        </a>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td valign=\"middle\" align=\"right\">\n"
+"                                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
+"                                        <img t-att-src=\"'/logo.png?company=%s' % object.company_id.id\" style=\"height: auto; width: 80px; margin-right: 10px;\" t-att-alt=\"'%s' % object.company_id.name\"/>\n"
+"                                    </t>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                            <tr>\n"
+"                                <td colspan=\"2\" style=\"text-align:center;\">\n"
+"                                    <hr style=\"background-color:#CCCCCC; border:none; height:1px; margin:16px 0;\"/>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <!-- BODY -->\n"
+"                <tr>\n"
+"                    <td align=\"center\">\n"
+"                        <table width=\"590\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding: 0px 8px; background-color: white; border-collapse:separate;\">\n"
+"                            <tr>\n"
+"                                <td style=\"font-size: 14px;\">\n"
+"                                    <p>\n"
+"                                        Kepada <t t-out=\"object.company_id.name or 'Company'\"/>,\n"
+"                                        <br/><br/>\n"
+"                                        Anda telah menerima <strong><t t-out=\"invoice_count or 'new'\"/></strong> faktur.\n"
+"                                        Faktur-faktur tersebut sekarang tersedia untuk Anda tinjau di Odoo.\n"
+"                                        <br/><br/>\n"
+"                                        </p><table width=\"100%\" cellpadding=\"6\" cellspacing=\"0\" style=\"border: 1px solid #DDDDDD; border-collapse: collapse; font-size: 13px; margin-bottom: 16px;\">\n"
+"                                            <thead style=\"background-color: #F9F9F9; text-align: left;\">\n"
+"                                                <tr>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">Faktur</th>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">Vendor</th>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">Tanggal</th>\n"
+"                                                    <th style=\"border: 1px solid #DDDDDD;\">Total</th>\n"
+"                                                </tr>\n"
+"                                            </thead>\n"
+"                                            <tbody>\n"
+"                                                <t t-set=\"MAX_TABLE_LINES\" t-value=\"10\"/>\n"
+"                                                <t t-foreach=\"invoices[:MAX_TABLE_LINES]\" t-as=\"inv\">\n"
+"                                                    <tr>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"inv.name or 'INV'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"inv.partner_id.name or 'Unknown'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"inv.invoice_date or 'Unknown'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-if=\"inv.amount_total is not None\" t-out=\"inv.amount_total\" t-options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or object.company_id.currency_id}\"/>\n"
+"                                                            <t t-else=\"\">Tidak Diketahui</t>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                                <t t-if=\"invoice_count &gt; MAX_TABLE_LINES\">\n"
+"                                                    <tr>\n"
+"                                                        <td colspan=\"4\" style=\"border: 1px solid #DDDDDD; text-align: center;\">\n"
+"                                                            <strong>...</strong>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                                <t t-if=\"invoice_count == 0\">\n"
+"                                                    <tr>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"'INV'\"/>\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            Contoh Vendor\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            2025-01-01\n"
+"                                                        </td>\n"
+"                                                        <td style=\"border: 1px solid #DDDDDD;\">\n"
+"                                                            <t t-out=\"1234.56\" t-options=\"{'widget': 'monetary', 'display_currency': object.company_id.currency_id}\"/>\n"
+"                                                        </td>\n"
+"                                                    </tr>\n"
+"                                                </t>\n"
+"                                            </tbody>\n"
+"                                        </table>\n"
+"                                        Tidak ingin menerima email-email ini? <a t-attf-href=\"/my/journal/{{ object.id }}/unsubscribe\">Batalkan langganan di sini</a> atau update pengaturan jurnal Anda <a t-attf-href=\"/mail/view?model=account.journal&amp;res_id={{ object.id }}\"><t t-out=\"object.name or 'Tagihan Vendor'\"/></a> .\n"
+"                                    \n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"            "
 
 #. module: account
 #. odoo-python
@@ -1653,6 +1776,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Akun bank dengan Nomor Akun %(number)s sudah tersedia untuk Partner "
+"%(partner)s, tapi diarsip. Silakan alih-alih batalkan arsip."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1680,7 +1805,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr ""
+msgstr "Posisi fiskal dengan PPN asing sudah tersedia di negara ini."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1713,6 +1838,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a archived account, you cannot post it."
 msgstr ""
+"Baris pergerakkan ini menggunakan akun yang diarsip, Anda tidak dapat "
+"mempostingnya."
 
 #. module: account
 #. odoo-python
@@ -1986,7 +2113,7 @@ msgstr "Pemetaan Akun"
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
 msgid "Account Move Count"
-msgstr ""
+msgstr "Jumlah Pergerakkan Akun"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2529,7 +2656,7 @@ msgstr "Tambah"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add QR-code link on PDF"
-msgstr ""
+msgstr "Tambahkan link kode QR di PDF"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -2812,7 +2939,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign VAT"
-msgstr ""
+msgstr "Izinkan PPN Asing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3096,7 +3223,7 @@ msgstr "Akun Analitik"
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Analisa Distribusi"
+msgstr "Distribusi Analitik"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
@@ -3172,12 +3299,12 @@ msgstr "Entri lagi dengan nama yang sama sudah tersedia."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Any amount"
-msgstr ""
+msgstr "Jumlah apa pun"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Any currency"
-msgstr ""
+msgstr "Mata uang apa pun"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__hard_lock_date
@@ -3232,7 +3359,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Any label"
-msgstr ""
+msgstr "Label apa pun"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__purchase_lock_date
@@ -3332,6 +3459,9 @@ msgid ""
 "journal entry or journal item are logged. You can then not delete those "
 "records anymore"
 msgstr ""
+"Segera setelah item jurnal terlibat, perubahan ke akun, partner, entri "
+"jurnal atau item jurnal akan direkam. Anda lalu tidak dapat menghapus "
+"rekaman tersebut lagi"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3596,7 +3726,7 @@ msgstr "TAGIHAN"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "BRT *([\\d,\\.]+)"
-msgstr ""
+msgstr "BRT *([\\d,\\.]+)"
 
 #. module: account
 #. odoo-javascript
@@ -3676,7 +3806,7 @@ msgstr "Akun Bank"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "Akun Bank %(link)s dengan nomor %(number)s diarsip"
 
 #. module: account
 #. odoo-python
@@ -4136,7 +4266,7 @@ msgstr "CUST"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__can_be_proposed
 msgid "Can Be Proposed"
-msgstr ""
+msgstr "Dapat Diajukan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__can_edit_body
@@ -4158,6 +4288,8 @@ msgstr "Dapat Melakukan Group Payment"
 #: code:addons/account/models/company.py:0
 msgid "Can't disable restricted audit trail: forced by localization."
 msgstr ""
+"Tidak dapat menonaktifkan jejak audit yang terbatas: dipaksakan oleh "
+"lokalisasi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4282,7 +4414,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "Tidak dapat mengidentifikasi faktur di PDF yang dibuat: %s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -5554,6 +5686,8 @@ msgstr "Batas kredit spesifik untuk mitra ini."
 msgid ""
 "Cross report expressions must follow this format: cross_report(xml_id|id)"
 msgstr ""
+"Ekspressi cross report harus mengikuti format berikut: "
+"cross_report(xml_id|id)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -6459,7 +6593,7 @@ msgstr "Tampilkan Field Alias"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__display_alternative_taxes_field
 msgid "Display Alternative Taxes Field"
-msgstr ""
+msgstr "Tampilkan Field Pajak Alternati"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -6500,7 +6634,7 @@ msgstr "Display Invoice Template Pdf Report"
 #: model:ir.model.fields,field_description:account.field_res_company__link_qr_code
 #: model:ir.model.fields,field_description:account.field_res_config_settings__link_qr_code
 msgid "Display Link QR-code"
-msgstr ""
+msgstr "Tampilkan Link Kode-QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
@@ -6696,7 +6830,7 @@ msgstr "Digitalisasi Dokumen"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Document Fiscal Position"
-msgstr ""
+msgstr "Dokumen Posisi Fiskal"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
@@ -6723,7 +6857,7 @@ msgstr "Lokal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__domestic_fiscal_position_id
 msgid "Domestic Fiscal Position"
-msgstr ""
+msgstr "Posisi Fiskal Domestik"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7112,7 +7246,7 @@ msgstr "Aktifkan penggunaan batas kredit untuk mitra."
 #: model:ir.model.fields,help:account.field_res_company__restrictive_audit_trail
 #: model:ir.model.fields,help:account.field_res_config_settings__restrictive_audit_trail
 msgid "Enable this option to prevent deletion of journal item related logs"
-msgstr ""
+msgstr "Aktifkan opsi ini untuk mencegah penghapusan log terkait item jurnal"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7146,7 +7280,7 @@ msgstr "Masukkan keterangan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Enter an email to get notified"
-msgstr ""
+msgstr "Masukkan email untuk dinotifikasi"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -7248,6 +7382,8 @@ msgid ""
 "Error while creating XML:\n"
 "- %s"
 msgstr ""
+"Error selagi membuat XML:\n"
+"- %s"
 
 #. module: account
 #. odoo-python
@@ -7423,7 +7559,7 @@ msgstr "Extra Edis"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__extra_tax_data
 msgid "Extra Tax Data"
-msgstr ""
+msgstr "Data Pajak Ekstra"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
@@ -7473,7 +7609,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Failed to parse cross_report id or xml_id"
-msgstr ""
+msgstr "Gagal untuk parse cross_report id atau xml_id"
 
 #. module: account
 #. odoo-python
@@ -7505,7 +7641,7 @@ msgstr "Negara Federal"
 #. odoo-javascript
 #: code:addons/account/static/src/components/fetch_einvoices/fetch_einvoices_cog.js:0
 msgid "Fetch e-Invoices"
-msgstr ""
+msgstr "Ambil e-Faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
@@ -7802,12 +7938,12 @@ msgstr "Paksa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__force_restrictive_audit_trail
 msgid "Force Audit Trail"
-msgstr ""
+msgstr "Paksakan Jejak Audit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__force_restrictive_audit_trail
 msgid "Forced Audit Trail"
-msgstr ""
+msgstr "Jejak Audit Dipaksakan"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -7842,7 +7978,7 @@ msgstr "ID Pajak Asing"
 #. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 msgid "Foreign Trade"
-msgstr ""
+msgstr "Perdaganan Luar Negeri"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
@@ -7897,7 +8033,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Frequent Expenses"
-msgstr ""
+msgstr "Pengeluaran Rutin"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -7942,12 +8078,12 @@ msgstr "From label"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "From last fiscal year"
-msgstr ""
+msgstr "Dari tahun fiskal kemarin"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_return_period
 msgid "From previous return period"
-msgstr ""
+msgstr "Dari periode SPT sebelumnya"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -8002,7 +8138,7 @@ msgstr "Referensi Penuh (INV/2024/00001)"
 #. module: account
 #: model:res.groups,comment:account.group_account_manager
 msgid "Full access, including configuration rights."
-msgstr ""
+msgstr "Akses lengkap, termasuk hak konfigurasi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8642,6 +8778,10 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
+"Bila Anda menjual barang dan layanan ke pelanggan di"
+"                                 negara asing UE, Anda harus mengenakan PPN "
+"berdasarkan alamat pengiriman. Peraturan ini berlaku tidak peduli di mana "
+"Anda berada."
 
 #. module: account
 #. odoo-python
@@ -8754,7 +8894,7 @@ msgstr "Tidak Aktif"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Inactive Accounts"
-msgstr ""
+msgstr "Akun-Akun Tidak Aktif"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__inalterable_hash
@@ -9176,7 +9316,7 @@ msgstr "Baris Faktur"
 #: model:ir.model.fields,field_description:account.field_account_journal__incoming_einvoice_notification_email
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Invoice Notifications"
-msgstr ""
+msgstr "Notifikasi-Notifikasi Faktur"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
@@ -9423,13 +9563,13 @@ msgstr ""
 #. module: account
 #: model:res.groups,comment:account.group_account_invoice
 msgid "Invoices, payments and basic invoice reporting."
-msgstr ""
+msgstr "Pelaporan faktur, pembayaran dan faktur basic."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Invoices/Bills/Mandates"
-msgstr ""
+msgstr "Faktur/Tagihan/Mandat"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -9501,7 +9641,7 @@ msgstr "Sudah Lengkap"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__is_domestic
 #: model:ir.model.fields,field_description:account.field_account_tax__is_domestic
 msgid "Is Domestic"
-msgstr ""
+msgstr "Apakah Domestik"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
@@ -9639,7 +9779,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "Item Dengan yang Kurang Distribusi Analitik"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -9984,7 +10124,7 @@ msgstr "Triwulan Lalu"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__previous_return_period
 msgid "Last Return Period"
-msgstr ""
+msgstr "Periode SPT Terakhir"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__last_statement_id
@@ -10451,7 +10591,7 @@ msgstr "Manual"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__mapped_partner_id
 msgid "Mapped Partner"
-msgstr ""
+msgstr "Partner Dipetakan"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -10938,7 +11078,7 @@ msgstr "Baru"
 #. module: account
 #: model:mail.template,subject:account.mail_template_einvoice_notification
 msgid "New Electronic Invoices Received"
-msgstr ""
+msgstr "Faktur Elektronik Baru Diterima"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -10958,7 +11098,7 @@ msgstr "Nilai Baru"
 #. module: account
 #: model:mail.template,name:account.mail_template_einvoice_notification
 msgid "New eInvoices Notification"
-msgstr ""
+msgstr "Notifikasi eFaktur Baru"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__next_activity_type_id
@@ -11064,7 +11204,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_moves_email_preview
 msgid "No journal entries selected"
-msgstr ""
+msgstr "Tidak ada entri jurnal yang dipilih"
 
 #. module: account
 #. odoo-python
@@ -11241,12 +11381,12 @@ msgstr "Catatan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
-msgstr ""
+msgstr "Tidak ada yang perlu dilakukan"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
 msgid "Notification email for newly received eInvoices"
-msgstr ""
+msgstr "Email notifikasi untuk eFaktur yang baru diterima"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -11702,7 +11842,7 @@ msgstr "Lainnya"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_other
 msgid "Other Expenses"
-msgstr ""
+msgstr "Pengeluaran Lainnya"
 
 #. module: account
 #: model:account.account,name:account.1_other_income
@@ -11832,7 +11972,7 @@ msgstr "Akun Laba & Rugi"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PAY IN A FLASH!"
-msgstr ""
+msgstr "BAYAR DALAM SEKEJAP!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -12771,7 +12911,7 @@ msgstr "Property Outbound Payment Method Line"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_restricted
 msgid "Protected by restricted Audit Logs"
-msgstr ""
+msgstr "Dilindungi oleh Log Audit terbatas"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -12969,7 +13109,7 @@ msgstr "Terima Uang"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
 msgid "Receive an email for incoming electronic invoices."
-msgstr ""
+msgstr "Terima email untuk faktur elektronik masuk."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -13028,7 +13168,7 @@ msgstr "Tipe Faktur yang Direkonsiliasi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_ids
 msgid "Reconciled Lines"
-msgstr ""
+msgstr "Baris-Baris yang Direkonsiliasi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -13105,7 +13245,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/fetch_einvoices/fetch_einvoices_cog.js:0
 msgid "Refresh e-Invoices Status"
-msgstr ""
+msgstr "Refresh Status e-Faktur"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -13240,7 +13380,7 @@ msgstr "Repartition Lines"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__original_tax_ids
 msgid "Replaces"
-msgstr ""
+msgstr "Mengganti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__report_id
@@ -13362,18 +13502,18 @@ msgstr "Dibatasi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__restrictive_audit_trail
 msgid "Restricted Audit Trail"
-msgstr ""
+msgstr "Jejak Audit Terbatas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted Only"
-msgstr ""
+msgstr "Hanya Terbatas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__restrictive_audit_trail
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Restrictive Audit Trail"
-msgstr ""
+msgstr "Jejak Audit Terbatas"
 
 #. module: account
 #. odoo-python
@@ -13732,7 +13872,7 @@ msgstr "Scan dengan aplikasi perbankan Anda."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Scan the QR code<br/>or click to pay online"
-msgstr ""
+msgstr "Scan kode QR<br/>atau klik untuk membayar online"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -13874,7 +14014,7 @@ msgstr "Token Keamanan"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "See items"
-msgstr ""
+msgstr "Lihat item"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -14168,7 +14308,7 @@ msgstr "Tetapkan Data Perusahaa"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Set Manual"
-msgstr ""
+msgstr "Tetapkan Manual"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
@@ -14309,12 +14449,12 @@ msgstr "Tunjukkan Detail Discount"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_fetch_in_einvoices_button
 msgid "Show E-Invoice Buttons"
-msgstr ""
+msgstr "Tunjukkan Tombol-Tombol E-Faktur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_refresh_out_einvoices_status_button
 msgid "Show E-Invoice Status Buttons"
-msgstr ""
+msgstr "Tunjukkan Tombol Status E-Faktur"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -14671,7 +14811,7 @@ msgstr "Subtotal"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Successfully unsubscribed from invoice notifications"
-msgstr ""
+msgstr "Sukses membatalkan langganan dari notifikasi faktur"
 
 #. module: account
 #. odoo-python
@@ -14774,7 +14914,7 @@ msgstr "Pajak"
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_0
 msgid "Tax 0%"
-msgstr ""
+msgstr "Pajak 0%"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
@@ -15329,7 +15469,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is archived."
-msgstr ""
+msgstr "Akun %(name)s (%(code)s) telah diarsip."
 
 #. module: account
 #. odoo-python
@@ -15455,7 +15595,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "The cash basis transition account needs to allow reconciliation."
-msgstr ""
+msgstr "Akun transisi basis tunai harus mengizinkan rekonsiliasi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -15513,6 +15653,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position."
 msgstr ""
+"Negara nomor PPN asing tidak dapat dideteksi. Silakan berikan negara ke "
+"posisi fiskal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -15749,6 +15891,7 @@ msgid ""
 "The incoming e-invoice notification email can only be set on purchase "
 "journals."
 msgstr ""
+"Email notifikasi e-faktur masuk hanya dapat ditetapkan pada jurnal purchase."
 
 #. module: account
 #. odoo-python
@@ -15930,6 +16073,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Model rekonsiliasi hanya akan diterapkan saat baik label baris statement atau rincian transaksi cocok dengan yang berikut:\n"
+"        * Memiliki: Baris satement harus memilki string ini (tidak sensitif huruf kapital).\n"
+"        * Tidak Memiliki: Penolakan dari \"Contain\".\n"
+"        * Match Regex: Definisikan expression reguler Anda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -16346,7 +16493,7 @@ msgstr "Triwulan Ini"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_return_period
 msgid "This Return Period"
-msgstr ""
+msgstr "Periode SPT Ini"
 
 #. module: account
 #. odoo-python
@@ -16651,6 +16798,8 @@ msgid ""
 "This view shows only the journal entries that were selected from another context,\n"
 "                such as for sending by email or reviewing a batch of records."
 msgstr ""
+"Tampila ini hanya menunjukkan entri-entri jurnal yang dipilih dari konteks lain,\n"
+"                seperti untuk mengirim melalui email atau meninjau batch rekaman."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16756,6 +16905,8 @@ msgid ""
 "To keep the restrictive audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"Untuk menyimpan jejak audit terbatas, Anda tidak dapat menghapus entri jurnal setelah mereka diposting.\n"
+"Alih-alih, Anda dapat membatalkan entri jurnal."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -17952,7 +18103,7 @@ msgstr "Nilai kredit atau debit yang salah dalam entri akuntansi!"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "XML format"
-msgstr ""
+msgstr "Format XML"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -18090,6 +18241,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You can unsubscribe from emails received upon invoice reception here."
 msgstr ""
+"Anda dapat membatalkan langganan dari email setelah menerima faktur di sini."
 
 #. module: account
 #. odoo-python
@@ -18570,7 +18722,7 @@ msgstr "Anda tidak dapat mendaftarkan pembayaran untuk entri miscellaneous."
 #. odoo-python
 #: code:addons/account/models/ir_attachment.py:0
 msgid "You cannot remove parts of a restricted audit trail."
-msgstr ""
+msgstr "Anda tidak dapat menghapus bagian dari jejak audit yang terbatas."
 
 #. module: account
 #. odoo-python
@@ -18579,6 +18731,8 @@ msgid ""
 "You cannot remove parts of a restricted audit trail. Archive the record "
 "instead."
 msgstr ""
+"Anda tidak dapat menghapus bagian dari jejak audit yang terbatas. Alih-alih "
+"arsipkan rekaman."
 
 #. module: account
 #. odoo-python
@@ -18657,13 +18811,14 @@ msgstr "Anda tidak dapat mengganti tipe dokumen yang telah diposting sekali."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use an archived account."
-msgstr ""
+msgstr "Anda tidak dapat menggunakan akun yang diarsip."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "You cannot use cross report on itself"
 msgstr ""
+"Anda tidak dapat menggunakan cross report pada cross report itu sendiri"
 
 #. module: account
 #. odoo-python
@@ -19182,7 +19337,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "not applicable"
-msgstr ""
+msgstr "tidak berlaku"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax

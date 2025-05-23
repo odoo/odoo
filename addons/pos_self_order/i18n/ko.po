@@ -136,6 +136,26 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">안녕하세요 <t t-out=\"client_name\">고객명</t>님,</t>\n"
+"                        <t t-else=\"\">안녕하세요,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>주문 번호 <t t-out=\"object.tracking_number\">...</t> 주문 금액 <t t-out=\"object.amount_total\">$xx.xx</t> 에 대한 주문이 확정되었습니다. <span t-if=\"object.preset_time\">준비가 <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t>에 완료될 예정입니다.</span></div>\n"
+"                    <br/>\n"
+"                    <div>감사합니다.</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>첨부된 영수증을 참조하시기 바랍니다.</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">상점명</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -937,7 +957,7 @@ msgstr "나중에 결제"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Personalize the Kiosk background"
-msgstr ""
+msgstr "키오스크 배경 개인 설정하기"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1283,7 +1303,7 @@ msgstr "세션 비활성화"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Set background image"
-msgstr ""
+msgstr "배경 이미지 설정"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1448,7 +1468,7 @@ msgstr "미분류"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 msgid "Validate your selection"
-msgstr ""
+msgstr "선택 항목 확인"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1580,7 +1600,7 @@ msgstr "우편번호"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "at the counter"
-msgstr ""
+msgstr "카운터에서"
 
 #. module: pos_self_order
 #. odoo-javascript

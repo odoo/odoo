@@ -103,13 +103,13 @@ msgstr "%(channel name)s 에서 %(author name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "%(author)s started a call."
-msgstr ""
+msgstr "%(author)s 님이 통화를 시작했습니다."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(caller)s started a call"
-msgstr ""
+msgstr "%(caller)s 님이 통화를 시작했습니다."
 
 #. module: mail
 #. odoo-javascript
@@ -176,13 +176,13 @@ msgstr "%(extraCount)s 더 보기"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(file1)s and %(count)d other attachments"
-msgstr ""
+msgstr "%(file1)s 및 %(count)d 개의 기타 첨부 파일"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(file1)s and %(count)s other attachments"
-msgstr ""
+msgstr "%(file1)s 및 %(count)s 개의 기타 첨부 파일"
 
 #. module: mail
 #. odoo-javascript
@@ -294,7 +294,7 @@ msgstr "%(user)s 사용자 접속 완료. 첫 접속이며, 앞으로 유용하�
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr ""
+msgstr "%(user)s 님이 스레드를 시작했습니다: %(goto)s%(thread_name)s%(goto_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -558,7 +558,7 @@ msgstr "<span class=\"d-block w-75 py-2\">버튼 색상</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Text</span>"
-msgstr ""
+msgstr "<span class=\"d-block w-75 py-2\">버튼 텍스트</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -598,6 +598,18 @@ msgid ""
 "                                        notifying all followers. It will appear in the messaging history.\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                        메시지는 서식을 수신하는 대상에게 이메일로 전송되며\n"
+"                                        메시지 이력에는 표시되지 않습니다.\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'note'\">\n"
+"                                        메시지는 내부 사용자가 볼 수 있도록 메모로 게시되어\n"
+"                                        메시지 이력에 표시됩니다.\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'comment'\">\n"
+"                                        메시지는 레코드에 메시지로 게시되어서 팔로워에게 알림 표시되며,\n"
+"                                        메시지 이력에 표시됩니다.\n"
+"                                    </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -1786,7 +1798,7 @@ msgstr "배경 흐림도"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/badge_selection_icons/badge_selection_icons_field.js:0
 msgid "Badges with Icons"
-msgstr ""
+msgstr "배지 아이콘"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -2034,7 +2046,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "Call lasted %(duration)s."
-msgstr ""
+msgstr "통화 지속 시간 %(duration)s"
 
 #. module: mail
 #. odoo-javascript
@@ -2062,7 +2074,7 @@ msgstr "본문 편집 가능"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__can_edit_role
 msgid "Can Edit Role"
-msgstr ""
+msgstr "역할 편집 가능"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -3835,7 +3847,7 @@ msgstr "이메일 버튼 색상"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Button Text"
-msgstr ""
+msgstr "이메일 버튼 텍스트"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -4056,7 +4068,7 @@ msgstr "전체 화면 시작"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 msgid "Enter full screen!"
-msgstr ""
+msgstr "전체 화면을 시작하세요!"
 
 #. module: mail
 #. odoo-javascript
@@ -5792,7 +5804,7 @@ msgstr "통화 참여"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call with Camera"
-msgstr ""
+msgstr "카메라를 사용하여 통화 참여"
 
 #. module: mail
 #. odoo-javascript
@@ -5830,7 +5842,7 @@ msgstr "이메일이 삭제된 경우 이메일 본문 사본을 보관하십시
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
-msgstr ""
+msgstr "통화 기록 보관"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6241,7 +6253,7 @@ msgstr "메일 활동"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule_line
 msgid "Mail Activity Schedule Line"
-msgstr ""
+msgstr "메일 활동 일정 내역"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_activity_type_id
@@ -7480,7 +7492,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role"
-msgstr ""
+msgstr "이 역할을 가진 사용자에게 알리기"
 
 #. module: mail
 #. odoo-javascript
@@ -8087,7 +8099,7 @@ msgstr "협력사"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids_all_have_email
 msgid "Partner Ids All Have Email"
-msgstr ""
+msgstr "파트너 ID에 모두 이메일이 있음"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
@@ -8306,7 +8318,7 @@ msgstr "대신 연락 주십시오."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Please provide a valid email"
-msgstr ""
+msgstr "유효한 ​​이메일을 입력하세요."
 
 #. module: mail
 #. odoo-javascript
@@ -9512,7 +9524,7 @@ msgstr "조회 :"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/activity_model_selector/activity_model_selector.js:0
 msgid "Select a Record To Link"
-msgstr ""
+msgstr "연결할 레코드 선택"
 
 #. module: mail
 #. odoo-javascript
@@ -9962,7 +9974,7 @@ msgstr "별표 표시된 메시지"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
-msgstr ""
+msgstr "통화 시작 메시지"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_dt
@@ -10005,7 +10017,7 @@ msgstr "회의 시작하기"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "%(authorName)s 님이 시작함"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -11944,7 +11956,7 @@ msgstr "주"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
+msgstr "#%(channelName)s 채널에 오신 것을 환영합니다!"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -12321,7 +12333,7 @@ msgstr "등록된 파트너에 연결된 주소"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after previous activity completion date"
-msgstr ""
+msgstr "이전 활동 완료 날짜 이후"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity

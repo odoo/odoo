@@ -6,7 +6,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2025
 # Murat Kaplan <muratk@projetgrup.com>, 2025
 # Wil Odoo, 2025
-# Deniz Guvener, 2025
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-09 20:36+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Deniz Guvener, 2025\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -232,6 +232,10 @@ msgid ""
 "Enter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sEscape%(close_samp)s %(open_em)sto "
+"%(open_cancel)scancel%(close_cancel)s%(close_em)s, %(open_samp)sCTRL-"
+"Enter%(close_samp)s %(open_em)sto "
+"%(open_save)ssave%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-javascript
@@ -242,6 +246,10 @@ msgid ""
 "%(open_samp)sEnter%(close_samp)s %(open_em)sto "
 "%(open_save)ssave%(close_save)s%(close_em)s"
 msgstr ""
+"%(open_samp)sEscape%(close_samp)s %(open_em)sto "
+"%(open_cancel)scancel%(close_cancel)s%(close_em)s, "
+"%(open_samp)sEnter%(close_samp)s %(open_em)sto "
+"%(open_save)ssave%(close_save)s%(close_em)s"
 
 #. module: mail
 #. odoo-python
@@ -2859,7 +2867,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Create a Mail Template"
-msgstr ""
+msgstr "E-posta Şablonu Oluşturun"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__object_id
@@ -3311,6 +3319,8 @@ msgstr "Teslimat hatası"
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
 msgstr ""
+"'default_res_id', kullanımı artık önerilmemektedir, bunun yerine "
+"'default_res_ids' kullanılmalıdır. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__description
@@ -5457,7 +5467,7 @@ msgstr "Geçersiz"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Invalid domain “%(domain)s” (type “%(domain_type)s”)"
-msgstr ""
+msgstr "Geçersiz alan adı “%(domain)s” (tür “%(domain_type)s”)"
 
 #. module: mail
 #. odoo-javascript
@@ -6193,7 +6203,7 @@ msgstr "Aktivite Oluştur"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/composer_patch.js:0
 msgid "Log an internal note…"
-msgstr ""
+msgstr "Dahili bir not kaydedin..."
 
 #. module: mail
 #. odoo-javascript
@@ -6384,7 +6394,7 @@ msgstr "Posta: Fetchmail Hizmeti"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_post_scheduled_message_ir_actions_server
 msgid "Mail: Post scheduled messages"
-msgstr ""
+msgstr "E-posta: Zamanlanmış mesajları gönder"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_web_push_notification_ir_actions_server
@@ -8186,7 +8196,7 @@ msgstr "Telefon görüşmesi"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
 msgid "Pick a specific time"
-msgstr ""
+msgstr "Belirli bir zaman seçin"
 
 #. module: mail
 #. odoo-javascript
@@ -9632,7 +9642,7 @@ msgstr "Şimdi Gönder"
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web_portal/composer_patch.js:0
 msgid "Send a message to followers…"
-msgstr ""
+msgstr "Takipçilere mesaj gönderin…"
 
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_mail_mail
@@ -9663,7 +9673,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__force_send
 msgid "Send mailing or notifications directly"
-msgstr ""
+msgstr "Doğrudan e-posta veya bildirim gönderin"
 
 #. module: mail
 #. odoo-javascript
@@ -10350,7 +10360,7 @@ msgstr "Şablon Sıfırlama Mixin"
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
 msgid "Template creation from composer requires a valid model."
-msgstr ""
+msgstr "Şablon oluşturmak için composer'da geçerli bir model gereklidir."
 
 #. module: mail
 #. odoo-python
@@ -10904,7 +10914,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__model_is_thread
 msgid "Thread-Enabled"
-msgstr ""
+msgstr "Konular Etkin"
 
 #. module: mail
 #. odoo-javascript
@@ -11583,7 +11593,7 @@ msgstr "Burada Kullanıldı"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__res_domain_user_id
 msgid "Used as context used to evaluate composer domain"
-msgstr ""
+msgstr "Composer etki alanını değerlendirmek için bağlam olarak kullanılır"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__message_type
@@ -12621,7 +12631,7 @@ msgstr "örn. true.true.true.. f"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_compose_message_view_form_template_save
 msgid "e.g: Send order confirmation"
-msgstr ""
+msgstr "örn: Sipariş onayı gönderin"
 
 #. module: mail
 #. odoo-javascript
@@ -12802,7 +12812,7 @@ msgstr "veya"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 msgid "or press %(send_keybind)s"
-msgstr ""
+msgstr "veya buraya tıklayın: %(send_keybind)s"
 
 #. module: mail
 #. odoo-javascript

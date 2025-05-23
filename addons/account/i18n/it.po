@@ -269,7 +269,7 @@ msgstr "%s non è un campo memorizzato"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s taxes"
-msgstr ""
+msgstr "%s imposte"
 
 #. module: account
 #. odoo-python
@@ -281,7 +281,7 @@ msgstr "%s, o/se non applicabile"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s, or not applicable"
-msgstr ""
+msgstr "%s, o non applicabile"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -400,12 +400,12 @@ msgstr "/se non applicabile"
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr ""
+msgstr "Esportazioni 0%"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
 msgid "0% Imports"
-msgstr ""
+msgstr "Importazioni 0%"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
@@ -2121,7 +2121,7 @@ msgstr "Mappatura conto"
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
 msgid "Account Move Count"
-msgstr ""
+msgstr "Numero movimento contabile"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -3478,6 +3478,9 @@ msgid ""
 "journal entry or journal item are logged. You can then not delete those "
 "records anymore"
 msgstr ""
+"Non appena viene coinvolto un movimento contabile, le modifiche al conto, al"
+" partner, alla registrazione contabile o al movimento contabile vengono "
+"registrate. Non è più possibile eliminare tali record"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -4285,7 +4288,7 @@ msgstr "CLI"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__can_be_proposed
 msgid "Can Be Proposed"
-msgstr ""
+msgstr "Può essere proposto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__can_edit_body
@@ -4307,6 +4310,8 @@ msgstr "Può raggruppare pagamenti"
 #: code:addons/account/models/company.py:0
 msgid "Can't disable restricted audit trail: forced by localization."
 msgstr ""
+"Impossibile disattivare la traccia di audit limitata: forzata dalla "
+"localizzazione."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -5715,6 +5720,8 @@ msgstr "Limite del credito specifico per questo partner."
 msgid ""
 "Cross report expressions must follow this format: cross_report(xml_id|id)"
 msgstr ""
+"Le espressioni dei resoconti incrociati devono seguire questo formato: "
+"cross_report(xml_id|id)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -6624,7 +6631,7 @@ msgstr "Mostra campi alias"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__display_alternative_taxes_field
 msgid "Display Alternative Taxes Field"
-msgstr ""
+msgstr "Mostra campo Imposte alternative"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -6665,7 +6672,7 @@ msgstr "Mostra Resoconto PDF modello fattura"
 #: model:ir.model.fields,field_description:account.field_res_company__link_qr_code
 #: model:ir.model.fields,field_description:account.field_res_config_settings__link_qr_code
 msgid "Display Link QR-code"
-msgstr ""
+msgstr "Mostra link codice QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
@@ -6863,7 +6870,7 @@ msgstr "Digitalizzazione documento"
 #. odoo-javascript
 #: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
 msgid "Document Fiscal Position"
-msgstr ""
+msgstr "Posizione fiscale documento"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_base_document_layout
@@ -6890,7 +6897,7 @@ msgstr "Nazionale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__domestic_fiscal_position_id
 msgid "Domestic Fiscal Position"
-msgstr ""
+msgstr "Posizione fiscale nazionale"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7282,6 +7289,8 @@ msgstr "Abilita l'utilizzo del limite di credito sui partner."
 #: model:ir.model.fields,help:account.field_res_config_settings__restrictive_audit_trail
 msgid "Enable this option to prevent deletion of journal item related logs"
 msgstr ""
+"Attiva l'opzione per evitare l'eliminazione di registri legati a movimenti "
+"contabili"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7645,7 +7654,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Failed to parse cross_report id or xml_id"
-msgstr ""
+msgstr "Impossibile analizzare cross_report id o xml_id "
 
 #. module: account
 #. odoo-python
@@ -7974,12 +7983,12 @@ msgstr "Forza"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__force_restrictive_audit_trail
 msgid "Force Audit Trail"
-msgstr ""
+msgstr "Forza traccia di audit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__force_restrictive_audit_trail
 msgid "Forced Audit Trail"
-msgstr ""
+msgstr "Traccia di audit forzata"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -8014,7 +8023,7 @@ msgstr "Codice fiscale estero"
 #. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
 msgid "Foreign Trade"
-msgstr ""
+msgstr "Commercio estero"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
@@ -8069,7 +8078,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Frequent Expenses"
-msgstr ""
+msgstr "Spese frequenti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -8820,6 +8829,10 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
+"Se vendi beni e servizi a clienti in un paese straniero dell'UE, devi "
+"addebitare l'IVA in base all'indirizzo di consegna."
+"                                 Questa regola si applica indipendentemente "
+"da dove ti trovi."
 
 #. module: account
 #. odoo-python
@@ -9682,7 +9695,7 @@ msgstr "È completo"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__is_domestic
 #: model:ir.model.fields,field_description:account.field_account_tax__is_domestic
 msgid "Is Domestic"
-msgstr ""
+msgstr "È nazionale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
@@ -10636,7 +10649,7 @@ msgstr "Manuale"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__mapped_partner_id
 msgid "Mapped Partner"
-msgstr ""
+msgstr "Partner mappato"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -11426,12 +11439,12 @@ msgstr "Note"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Nothing to do"
-msgstr ""
+msgstr "Niente da fare"
 
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
 msgid "Notification email for newly received eInvoices"
-msgstr ""
+msgstr "E-mail di notifica per fatture elettroniche appena ricevute"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -12973,7 +12986,7 @@ msgstr "Proprietà riga metodo di pagamento in uscita "
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_restricted
 msgid "Protected by restricted Audit Logs"
-msgstr ""
+msgstr "Protetto da tracce di audit limitate"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -13308,7 +13321,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/fetch_einvoices/fetch_einvoices_cog.js:0
 msgid "Refresh e-Invoices Status"
-msgstr ""
+msgstr "Ricarica stato fatture elettroniche"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__document_type__refund
@@ -13443,7 +13456,7 @@ msgstr "Righe ripartizione"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__original_tax_ids
 msgid "Replaces"
-msgstr ""
+msgstr "Sostituisce"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__report_id
@@ -13564,18 +13577,18 @@ msgstr "Limitato"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__restrictive_audit_trail
 msgid "Restricted Audit Trail"
-msgstr ""
+msgstr "Traccia di audit limitata"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted Only"
-msgstr ""
+msgstr "Solo con limitazioni"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__restrictive_audit_trail
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Restrictive Audit Trail"
-msgstr ""
+msgstr "Traccia di audit restrittiva"
 
 #. module: account
 #. odoo-python
@@ -14371,7 +14384,7 @@ msgstr "Configura dati aziendali"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Set Manual"
-msgstr ""
+msgstr "Imposta manualmente"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_fiscal_year
@@ -14513,12 +14526,12 @@ msgstr "Visualizza dettagli sconto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_fetch_in_einvoices_button
 msgid "Show E-Invoice Buttons"
-msgstr ""
+msgstr "Mostra pulsanti fattura elettronica"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_refresh_out_einvoices_status_button
 msgid "Show E-Invoice Status Buttons"
-msgstr ""
+msgstr "Mostra pulsanti stato fattura elettronica"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -14876,7 +14889,7 @@ msgstr "Totale parziale"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "Successfully unsubscribed from invoice notifications"
-msgstr ""
+msgstr "Ricezione notifiche fatture annullate con successo"
 
 #. module: account
 #. odoo-python
@@ -14979,7 +14992,7 @@ msgstr "Imposta"
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_0
 msgid "Tax 0%"
-msgstr ""
+msgstr "Imposta 0%"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
@@ -15538,7 +15551,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is archived."
-msgstr ""
+msgstr "Il conto %(name)s (%(code)s) è stato archiviato."
 
 #. module: account
 #. odoo-python
@@ -15669,7 +15682,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "The cash basis transition account needs to allow reconciliation."
-msgstr ""
+msgstr "Il conto di transizione per cassa deve consentire la riconciliazione."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -15728,6 +15741,8 @@ msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position."
 msgstr ""
+"Non è stato possibile individuare il Paese corrispondente al numero di "
+"partita IVA estero. Assegna un Paese alla posizione fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -15970,6 +15985,8 @@ msgid ""
 "The incoming e-invoice notification email can only be set on purchase "
 "journals."
 msgstr ""
+"L'e-mail di notifica della fattura elettronica in arrivo può essere "
+"impostata solo sui registri relativi agli acquisti."
 
 #. module: account
 #. odoo-python
@@ -16159,6 +16176,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Il modello di riconciliazione verrà applicato solo quando i dettagli dell'etichetta della riga dell'estratto conto o della transazione soddisferanno i seguenti requisiti:\n"
+"        * Contiene: la riga dell'estratto conto deve contenere questa stringa (maiuscole o minuscole).\n"
+"        * Non contiene: negazione di \"Contiene\".\n"
+"        * Corrisponde a espressione regolare: stabilisci un'espressione regolare"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -16577,7 +16598,7 @@ msgstr "Questo trimestre"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__default_opening_date_filter__this_return_period
 msgid "This Return Period"
-msgstr ""
+msgstr "Questo periodo di dichiarazione"
 
 #. module: account
 #. odoo-python
@@ -16985,6 +17006,8 @@ msgid ""
 "To keep the restrictive audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"Per mantenere la traccia di audit limitata non devi eliminare le registrazioni contabili una volta che sono state registrate.\n"
+"È possibile annullare una registrazione."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -18323,6 +18346,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
 msgid "You can unsubscribe from emails received upon invoice reception here."
 msgstr ""
+"Qui puoi annullare l'iscrizione alle e-mail ricevute a seguito della "
+"ricezione di una fattura."
 
 #. module: account
 #. odoo-python
@@ -18805,7 +18830,7 @@ msgstr "Non è possibile registrare pagamenti per registrazioni varie."
 #. odoo-python
 #: code:addons/account/models/ir_attachment.py:0
 msgid "You cannot remove parts of a restricted audit trail."
-msgstr ""
+msgstr "Non è possibile eliminare parti di una traccia di audit limitata."
 
 #. module: account
 #. odoo-python
@@ -18814,6 +18839,8 @@ msgid ""
 "You cannot remove parts of a restricted audit trail. Archive the record "
 "instead."
 msgstr ""
+"Non è possibile eliminare parti della traccia di audit limitata. Archivia il"
+" record."
 
 #. module: account
 #. odoo-python
@@ -18895,13 +18922,13 @@ msgstr "Non puoi modificare il tipo di un documento già registrato."
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use an archived account."
-msgstr ""
+msgstr "Non puoi utilizzare un conto archiviato."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "You cannot use cross report on itself"
-msgstr ""
+msgstr "Non puoi utilizzare un resoconto incrociato su se stesso"
 
 #. module: account
 #. odoo-python
@@ -19416,7 +19443,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "not applicable"
-msgstr ""
+msgstr "non applicabile"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
