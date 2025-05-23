@@ -500,7 +500,9 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableCellElement} cell
      */
     moveColumn(position, cell) {
-        const columnIndex = getColumnIndex(cell);
+        const table = closestElement(cell, "table");
+        const tableGrid = this.buildTableGrid(table);
+        const columnIndex = tableGrid[0].indexOf(cell);
         const nColumns = cell.parentElement.children.length;
         if (
             columnIndex < 0 ||
@@ -510,8 +512,7 @@ export class TablePlugin extends Plugin {
             return;
         }
 
-        const trs = cell.parentElement.parentElement.children;
-        const tdsToMove = [...trs].map((tr) => tr.children[columnIndex]);
+        const tdsToMove = new Set([...tableGrid].map((tr) => tr[columnIndex]));
         const selectionToRestore = this.dependencies.selection.getEditableSelection();
         if (position === "left") {
             tdsToMove.forEach((td) => td.previousElementSibling.before(td));
@@ -519,6 +520,7 @@ export class TablePlugin extends Plugin {
             tdsToMove.forEach((td) => td.nextElementSibling.after(td));
         }
         this.dependencies.selection.setSelection(selectionToRestore);
+        this.tableGridMap.delete(table);
     }
     /**
      * @param {'up'|'down'} position
@@ -555,6 +557,7 @@ export class TablePlugin extends Plugin {
             });
         }
         this.dependencies.selection.setSelection(selectionToRestore);
+        this.tableGridMap?.delete(closestElement(row, "table"));
     }
 
     /**
