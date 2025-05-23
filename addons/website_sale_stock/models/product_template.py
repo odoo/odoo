@@ -48,7 +48,7 @@ class ProductTemplate(models.Model):
             # max quantity. If none of the combos has a max quantity, then the combo product also
             # has no max quantity.
             max_quantities = [
-                max_quantity for combo in product_or_template.combo_ids.sudo()
+                max_quantity for combo in product_or_template.sudo().combo_ids
                 if (max_quantity := combo._get_max_quantity(website, request.cart)) is not None
             ]
             if max_quantities:
