@@ -6,13 +6,13 @@
         <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
             <div class="o-mail-Message-sidebar d-flex flex-shrink-0">
                 <div class="o-mail-Message-avatarContainer position-relative bg-view" t-on-click="ev => this.onClickAuthor(ev)">
-                    <img class="o-mail-Message-avatar w-100 h-100 rounded o_redirect cursor-pointer o_object_fit_cover" t-att-src="props.scheduledMessage.author.avatarUrl"/>
+                    <img class="o-mail-Message-avatar w-100 h-100 rounded o_redirect cursor-pointer o_object_fit_cover" t-att-src="props.scheduledMessage.author_id.avatarUrl"/>
                 </div>
             </div>
             <div class="w-100 o-min-width-0">
                 <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
                     <span class="o-mail-Message-author cursor-pointer o-hover-text-underline" t-on-click="ev => this.onClickAuthor(ev)">
-                        <strong class="me-1 text-truncate o_redirect cursor-pointer" t-out="props.scheduledMessage.author.name"/>
+                        <strong class="me-1 text-truncate o_redirect cursor-pointer" t-out="props.scheduledMessage.author_id.name"/>
                     </span>
                     <small class="o-mail-Message-date text-muted opacity-75" t-att-title="scheduledDate">
                         <i class="fa fa-paper-plane-o mx-1"/>
@@ -26,7 +26,7 @@
                                 <div class="o-mail-Message-bubble rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100"
                                     t-att-class="{
                                         'bg-success-light opacity-25': !props.scheduledMessage.is_note and props.scheduledMessage.isSelfAuthored,
-                                        'bg-info-light opacity-25': !props.scheduledMessage.is_note and !props.scheduledMessage.isSelfAuthored 
+                                        'bg-info-light opacity-25': !props.scheduledMessage.is_note and !props.scheduledMessage.isSelfAuthored
                                     }"/>
                                 <div t-on-click="onClick"
                                     t-attf-class="position-relative text-break o-mail-Message-body #{props.scheduledMessage.is_note ? 'p-1' : 'mb-0 py-2 px-3 align-self-start'}">
