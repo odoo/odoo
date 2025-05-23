@@ -754,6 +754,134 @@ test("insert column right operation", async () => {
     );
 });
 
+test("insert column at the start of a merge column", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td><td>2</td><td>3</td></tr>
+                <tr><td colspan="3">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // hover on td to show col ui
+    await hover(el.querySelector("td.a"));
+    await waitFor("[data-type='column'].o-we-table-menu");
+
+    // click on it to open dropdown
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor("div[name='insert_left']");
+
+    // insert column left
+    await click("div[name='insert_left']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr>
+                    <td><p><br></p></td>
+                    <td class="a">1[]</td>
+                    <td>2</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td colspan="3">4</td>
+                </tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
+test("insert column in the middle of a a merged column", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr><td class="a">1[]</td><td>2</td><td>3</td></tr>
+                <tr><td colspan="3">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // hover on td to show col ui
+    await hover(el.querySelector("td.a"));
+    await waitFor("[data-type='column'].o-we-table-menu");
+
+    // click on it to open dropdown
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor("div[name='insert_right']");
+
+    // insert column right
+    await click("div[name='insert_right']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td class="a">1[]</td>
+                    <td><p><br></p></td>
+                    <td>2</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td colspan="4">4</td>
+                </tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+    );
+});
+
+test("insert column at the end of a merged column below", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr><td>1</td><td>2</td><td class="a">3[]</td></tr>
+                <tr><td colspan="3">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // hover on td to show col ui
+    await hover(el.querySelector("td.a"));
+    await waitFor("[data-type='column'].o-we-table-menu");
+
+    // click on it to open dropdown
+    await click("[data-type='column'].o-we-table-menu");
+    await waitFor("div[name='insert_right']");
+
+    // insert column right
+    await click("div[name='insert_right']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td class="a">3[]</td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td colspan="3">4</td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`)
+    );
+});
+
 test("insert column right operation when table header exists", async () => {
     const { el } = await setupEditor(
         unformat(`
@@ -952,6 +1080,149 @@ test("insert row below operation", async () => {
             <tbody>
                 <tr><td class="a">1[]</td><td class="b">2</td></tr>
                 <tr><td class="c">3</td><td class="d">4</td></tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
+test("insert row above the rowspan cell", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a" rowspan="3">1[]</td><td class="b">2</td></tr>
+                <tr><td class="c">3</td></tr>
+                <tr><td class="d">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // hover on td to show row ui
+    await hover(el.querySelector("td.a"));
+    await waitFor("[data-type='row'].o-we-table-menu");
+
+    // click on it to open dropdown
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor("div[name='insert_above']");
+
+    // insert row above
+    await click("div[name='insert_above']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td class="a" rowspan="3">1[]</td>
+                    <td class="b">2</td>
+                </tr>
+                <tr>
+                    <td class="c">3</td>
+                </tr>
+                <tr>
+                    <td class="d">4</td>
+                </tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
+test("insert row in the middle of a rowspan cell", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td><td class="b" rowspan="3">2</td></tr>
+                <tr><td class="c">3</td></tr>
+                <tr><td class="d">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // hover on td to show row ui
+    await hover(el.querySelector("td.a"));
+    await waitFor("[data-type='row'].o-we-table-menu");
+
+    // click on it to open dropdown
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor("div[name='insert_below']");
+
+    // insert row below
+    await click("div[name='insert_below']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="a">1[]</td>
+                    <td class="b" rowspan="4">2</td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                </tr>
+                <tr>
+                    <td class="c">3</td>
+                </tr>
+                <tr>
+                    <td class="d">4</td>
+                </tr>
+            </tbody>
+        </table>
+        <p data-selection-placeholder=""><br></p>`)
+    );
+});
+
+test("insert row at the end of a rowspan cell", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+        <table>
+            <tbody>
+                <tr><td class="a">1[]</td><td class="b" rowspan="3">2</td></tr>
+                <tr><td class="c">3</td></tr>
+                <tr><td class="d">4</td></tr>
+            </tbody>
+        </table>`)
+    );
+    await expectElementCount(".o-we-table-menu", 0);
+
+    // hover on td to show row ui
+    await hover(el.querySelector("td.d"));
+    await waitFor("[data-type='row'].o-we-table-menu");
+
+    // click on it to open dropdown
+    await click("[data-type='row'].o-we-table-menu");
+    await waitFor("div[name='insert_below']");
+
+    // insert row below
+    await click("div[name='insert_below']");
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+        <table>
+            <tbody>
+                <tr>
+                    <td class="a">1[]</td>
+                    <td class="b" rowspan="3">2</td>
+                </tr>
+                <tr>
+                    <td class="c">3</td>
+                </tr>
+                <tr>
+                    <td class="d">4</td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
             </tbody>
         </table>
         <p data-selection-placeholder=""><br></p>`)

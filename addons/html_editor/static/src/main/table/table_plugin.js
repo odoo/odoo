@@ -266,12 +266,15 @@ export class TablePlugin extends Plugin {
      * @param {HTMLTableCellElement} reference
      */
     addColumn(position, reference) {
-        const columnIndex = getColumnIndex(reference);
         const table = closestElement(reference, "table");
         const tableWidth = table.style.width && parseFloat(table.style.width);
-        const referenceColumn = table.querySelectorAll(
-            `tr :is(td, th):nth-of-type(${columnIndex + 1})`
-        );
+        const tableGrid = this.buildTableGrid(table);
+        const rowIndex = getRowIndex(reference);
+        const sholdInsertAfter = position === "after";
+        const gridCellIndex = sholdInsertAfter
+            ? tableGrid[rowIndex].findLastIndex((cell) => cell === reference)
+            : tableGrid[rowIndex].indexOf(reference);
+        const referenceColumn = tableGrid.map((row) => row[gridCellIndex]);
         const referenceCellWidth = reference.style.width
             ? parseFloat(reference.style.width)
             : reference.clientWidth;
@@ -296,19 +299,40 @@ export class TablePlugin extends Plugin {
             }
         }
         referenceColumn.forEach((cell, rowIndex) => {
-            const newCell = this.document.createElement(cell.tagName);
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(this.document.createElement("br"));
-            newCell.append(baseContainer);
-            cell[position](newCell);
-            // If the first row is a header, ensure the new column's
-            // first cell is also marked as a header (<th>).
-            if (rowIndex === 0 && cell.classList.contains("o_table_header")) {
-                newCell.classList.add("o_table_header");
-            }
-            if (rowIndex === 0 && tableWidth) {
-                newCell.style.width = cell.style.width;
-                totalWidth += parseFloat(cell.style.width);
+            if (
+                cell ===
+                (sholdInsertAfter
+                    ? tableGrid[rowIndex][gridCellIndex + 1]
+                    : tableGrid[rowIndex][gridCellIndex - 1])
+            ) {
+                cell.colSpan += 1;
+            } else {
+                const rows = table.rows;
+                const newCell = this.document.createElement(cell.tagName);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                baseContainer.append(this.document.createElement("br"));
+                newCell.append(baseContainer);
+                if (rows[rowIndex].contains(cell)) {
+                    cell[position](newCell);
+                    // If the first row is a header, ensure the new column's
+                    // first cell is also marked as a header (<th>).
+                    if (rowIndex === 0 && cell.classList.contains("o_table_header")) {
+                        newCell.classList.add("o_table_header");
+                    }
+                } else {
+                    const nextAdjacentCell = tableGrid[rowIndex].find((c, index) =>
+                        sholdInsertAfter
+                            ? index > gridCellIndex && c.rowSpan === 1
+                            : index < gridCellIndex && c.rowSpan === 1
+                    );
+                    if (nextAdjacentCell) {
+                        nextAdjacentCell[position](newCell);
+                    } else {
+                        sholdInsertAfter
+                            ? rows[rowIndex].append(newCell)
+                            : rows[rowIndex].prepend(newCell);
+                    }
+                }
             }
         });
         if (tableWidth) {
@@ -322,28 +346,43 @@ export class TablePlugin extends Plugin {
             // Fix the table and row's width so it doesn't change.
             table.style.width = tableWidth + "px";
         }
+        this.tableGridMap.delete(table);
     }
     /**
      * @param {'before'|'after'} position
      * @param {HTMLTableRowElement} reference
      */
     addRow(position, reference) {
+        const table = closestElement(reference, "table");
+        const tableGrid = this.buildTableGrid(table);
+        const rowIndex = getRowIndex(reference);
+
         const referenceRowHeight = reference.style.height && parseFloat(reference.style.height);
         const newRow = this.document.createElement("tr");
         if (referenceRowHeight) {
             newRow.style.height = referenceRowHeight + "px";
         }
-        const cells = reference.querySelectorAll("td, th");
-        const referenceRowWidths = [...cells].map((cell) => cell.style.width);
-        newRow.append(
-            ...Array.from(cells).map(() => {
+        const gridCells = tableGrid[rowIndex];
+        const referenceRowWidths = [...gridCells].map((cell) => cell.style.width);
+
+        for (const [index, cell] of Array.from(gridCells).entries()) {
+            if (
+                index > 0 &&
+                cell ===
+                    (position === "after"
+                        ? tableGrid[rowIndex + 1]?.[index]
+                        : tableGrid[rowIndex - 1]?.[index])
+            ) {
+                cell.rowSpan += 1;
+            } else {
                 const td = this.document.createElement("td");
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 baseContainer.append(this.document.createElement("br"));
                 td.append(baseContainer);
-                return td;
-            })
-        );
+                newRow.append(td);
+            }
+        }
+
         reference[position](newRow);
         if (referenceRowHeight) {
             newRow.style.height = referenceRowHeight + "px";
@@ -353,10 +392,11 @@ export class TablePlugin extends Plugin {
             let columnIndex = 0;
             for (const column of newRow.children) {
                 column.style.width = referenceRowWidths[columnIndex];
-                cells[columnIndex].style.width = "";
+                gridCells[columnIndex].style.width = "";
                 columnIndex++;
             }
         }
+        this.tableGridMap.delete(table);
     }
     /**
      * @param {HTMLTableRowElement} reference
