@@ -504,7 +504,16 @@ GROUP BY fol.id%s%s""" % (
 
         p_stypes = dict((pid, external.ids if pid in customer_ids else default.ids) for pid in partner_ids)
 
+        self._add_default_followers_filter_partner_subtypes(res_model, res_ids, p_stypes)
+
         return self._add_followers(res_model, res_ids, partner_ids, p_stypes, check_existing=check_existing, existing_policy=existing_policy)
+
+    def _add_default_followers_filter_partner_subtypes(self, res_model, res_ids, partner_subtypes):
+        """ Hook to filter the default subtypes for partners before being added as followers to the given model and ids.
+
+        :param partner_subtypes: dict of partner ids and their default subtypes
+        """
+        pass
 
     def _add_followers(self, res_model, res_ids, partner_ids, subtypes,
                        check_existing=False, existing_policy='skip'):
