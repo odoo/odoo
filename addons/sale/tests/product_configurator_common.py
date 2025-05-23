@@ -6,10 +6,10 @@ from odoo.fields import Command
 from odoo.tests import HttpCase
 from odoo.tools.misc import file_open
 
-from odoo.addons.base.tests.common import BaseCommon
+from odoo.addons.uom.tests.common import UomCommon
 
 
-class TestProductConfiguratorCommon(BaseCommon, HttpCase):
+class TestProductConfiguratorCommon(UomCommon, HttpCase):
 
     @classmethod
     def setUpClass(cls):
@@ -52,19 +52,17 @@ class TestProductConfiguratorCommon(BaseCommon, HttpCase):
             'name': 'Customizable Desk (TEST)',
             'standard_price': 500.0,
             'list_price': 750.0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': cls.product_attribute_1.id,
+                    'value_ids': [Command.link(product_attribute_value_1.id), Command.link(product_attribute_value_2.id)],
+                }),
+                Command.create({
+                    'attribute_id': product_attribute_2.id,
+                    'value_ids': [Command.link(product_attribute_value_3.id), Command.link(product_attribute_value_4.id)],
+                })
+            ]
         })
-
-        # Generate variants
-        cls.env['product.template.attribute.line'].create([{
-            'product_tmpl_id': cls.product_product_custo_desk.id,
-            'attribute_id': cls.product_attribute_1.id,
-            'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
-        }, {
-            'product_tmpl_id': cls.product_product_custo_desk.id,
-            'attribute_id': product_attribute_2.id,
-            'value_ids': [(4, product_attribute_value_3.id), (4, product_attribute_value_4.id)],
-
-        }])
 
         # Apply a price_extra for the attribute Aluminium
         cls.product_product_custo_desk.attribute_line_ids[0].product_template_value_ids[1].price_extra = 50.40

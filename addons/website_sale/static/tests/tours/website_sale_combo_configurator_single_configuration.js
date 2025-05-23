@@ -9,7 +9,7 @@ registry
             ...wsTourUtils.addToCart({ productName: "Combo product", search: false, expectUnloadPage: true }),
             wsTourUtils.goToCart(),
             // Assert that the combo configurator wasn't shown.
-            wsTourUtils.assertCartContains({ productName: "Combo product" }),
-            wsTourUtils.assertCartContains({ productName: "1 x Test product" }),
+            ...wsTourUtils.assertCartContains({ productName: "Combo product" }),
+            ...wsTourUtils.assertCartContains({ productName: "1 x Test product" }),
         ],
    });

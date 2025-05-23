@@ -55,11 +55,11 @@
         },
         {
             content: "Check always variant",
-            trigger: 'div>a>h6:contains(M always)',
+            trigger: 'span[class*=h6]:contains(M always)',
         },
         {
             content: "Check dynamic variant",
-            trigger: 'div>a>h6:contains(M dynamic)',
+            trigger: 'span[class*=h6]:contains(M dynamic)',
         },
         {
             content: "Check never variant",
