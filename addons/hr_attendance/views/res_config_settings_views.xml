@@ -19,13 +19,13 @@
                         <setting string="Attendances from Backend" company_dependent="1" help="Allow Users to Check in/out from Odoo.">
                             <field name="attendance_from_systray" required="1"/>
                         </setting>
-                        <setting string="Automatic Check-Out" company_dependent="1" help="Automatically Check-Out Employees based on their working schedule with an additional tolerance.">
+                        <setting string="Automatic Check-Out" company_dependent="1" help="Automatically Check-Out Employees based on their working schedule with an additional tolerance. Does not apply to employees with a flexible working schedule.">
                             <field name="auto_check_out"/>
                             <div invisible="not auto_check_out">
                                 <span class="me-2">Tolerance</span><field name="auto_check_out_tolerance" class="text-center" style="width: 5ch;"/><span class="ms-2">Hours</span>
                             </div>
                         </setting>
-                        <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report.">
+                        <setting string="Absence Management" company_dependent="1" help="If checked, days not covered by an attendance will be visible in the Report. Does not apply to employees with a flexible working schedule.">
                             <field name="absence_management"/>
                         </setting>
                     </block>
