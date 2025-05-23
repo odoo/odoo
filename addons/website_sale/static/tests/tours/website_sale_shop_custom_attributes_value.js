@@ -48,7 +48,7 @@ configuratorTourUtils.assertPriceTotal("1,228.50"),
     run: 'click',
     expectUnloadPage: true,
 },
-tourUtils.assertCartContains({
+...tourUtils.assertCartContains({
     productName: "Customizable Desk (TEST)",
     backend: false,
 }),

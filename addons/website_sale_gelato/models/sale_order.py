@@ -6,7 +6,7 @@ from odoo import _, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
         """ Override of `website_sale` to prevent mixing Gelato and non-Gelato products in the cart.
 
         This check is not redundant with the constraint on `sale.order` in `sale_gelato` because the
@@ -33,4 +33,4 @@ class SaleOrder(models.Model):
                 " shipping. Please place your order for the current cart first.",
                 product_name=product.name,
             )
-        return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
+        return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)

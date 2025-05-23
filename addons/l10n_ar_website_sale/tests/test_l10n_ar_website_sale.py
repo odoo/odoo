@@ -54,6 +54,7 @@ class TestL10nArWebsiteSale(TestAr):
             return self.product_1._get_additionnal_combination_info(
                 product_or_template=product_id or self.product_1,
                 quantity=quantity,
+                uom=self.uom_unit,
                 date=datetime(2025, 5, 21),
                 website=self.ar_website
             )

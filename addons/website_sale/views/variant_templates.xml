@@ -158,6 +158,36 @@
                 </li>
             </t>
         </ul>
+        <ul
+            t-if="product._has_multiple_uoms()"
+            t-attf-class="o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants mt-4 pt-3 #{ul_class}"
+            t-att-data-attribute_exclusions="json.dumps(attribute_exclusions)"
+        >
+            <!-- NOTE: the t-att-data-attribute_exclusions is only there to match existing events selectors -->
+            <li>
+                <!-- Separate template to reduce views duplication -->
+                <t t-call="website_sale.packaging_title"/>
+                <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
+                    <t t-set="product_uoms" t-value="product._get_available_uoms()"/>
+                    <t t-foreach="product_uoms" t-as="uom">
+                        <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
+                        <li t-attf-class="o_variant_pills border btn m-0 cursor-pointer #{'active border-primary text-primary-emphasis bg-primary-subtle' if is_main_uom else ''}">
+                            <input
+                                class="position-absolute opacity-0 cursor-pointer"
+                                type="radio"
+                                t-att-checked="is_main_uom"
+                                name="uom_id"
+                                t-att-value="uom.id"
+                                t-attf-id="uom-{{uom.id}}"
+                                t-att-autocomplete="off"/>
+                            <label class="radio_input_value cursor-pointer" t-attf-for="uom-{{uom.id}}">
+                                <span t-field="uom.name"/>
+                            </label>
+                        </li>
+                    </t>
+                </ul>
+            </li>
+        </ul>
     </template>
     <template id="badge_extra_price" name="Badge Extra Price">
         <t t-set="price_extra" t-value="ptav._get_extra_price(combination_info)"/>
@@ -181,6 +211,9 @@
                 "display_currency": website.currency_id
             }'/><t t-if="attribute.display_type in ['pills', 'select']">)</t>
         </span>
+    </template>
+    <template id="website_sale.packaging_title" name="Packaging title">
+        <h6 class="attribute_name mb-2">Packaging</h6>
     </template>
     <template
         id="variants_separator"
