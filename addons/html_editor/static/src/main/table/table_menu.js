@@ -1,5 +1,5 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { getSelectedCellsMergeInfo } from "@html_editor/utils/table";
+import { getRowIndex, getColumnIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Component } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -22,6 +22,7 @@ export class TableMenu extends Component {
         mergeSelectedCells: Function,
         unmergeSelectedCell: Function,
         clearRowContent: Function,
+        buildTableGrid: Function,
         overlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
@@ -88,6 +89,41 @@ export class TableMenu extends Component {
         return span ? false : true;
     }
 
+    isCurrentOrAdjacentCellRowSpanned(position) {
+        const td = this.props.target;
+        const tr = closestElement(td, "tr");
+        const rowIndex = getRowIndex(tr);
+        const grid = this.props.buildTableGrid(closestElement(td, "table"));
+        const adjacentRowIndex = position === "move_down" ? rowIndex + 1 : rowIndex - 1;
+        const rowsToCheck = [rowIndex, adjacentRowIndex];
+
+        for (const i of rowsToCheck) {
+            const row = grid[i];
+            if (row?.some((cell) => cell?.rowSpan > 1)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    isCurrentOrAdjacentCellColSpanned(position) {
+        const td = this.props.target;
+        const columnIndex = getColumnIndex(td);
+        const grid = this.props.buildTableGrid(closestElement(td, "table"));
+        const adjacentIndex = position === "move_right" ? columnIndex + 1 : columnIndex - 1;
+        const columnsToCheck = [columnIndex, adjacentIndex];
+
+        for (const row of grid) {
+            for (const colIndex of columnsToCheck) {
+                const cell = row[colIndex];
+                if (cell?.colSpan > 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     colItems() {
         const ltr = this.props.direction === "ltr";
         const [tds, spanAttr] = getSelectedCellsMergeInfo(this.editable);
@@ -97,12 +133,16 @@ export class TableMenu extends Component {
                 icon: "fa-chevron-left disabled",
                 text: ltr ? _t("Move left") : _t("Move right"),
                 action: this.props.moveColumn.bind(this, "left"),
+                disable: this.isCurrentOrAdjacentCellColSpanned("move_left"),
+                tooltip: _t("Cannot move merge column left or right"),
             },
             !this.isLast && {
                 name: "move_right",
                 icon: "fa-chevron-right",
                 text: ltr ? _t("Move right") : _t("Move left"),
                 action: this.props.moveColumn.bind(this, "right"),
+                disable: this.isCurrentOrAdjacentCellColSpanned("move_right"),
+                tooltip: _t("Cannot move merge column left or right"),
             },
             {
                 name: "insert_left",
@@ -165,12 +205,16 @@ export class TableMenu extends Component {
                 icon: "fa-chevron-up",
                 text: _t("Move up"),
                 action: (target) => this.props.moveRow("up", target.parentElement),
+                disable: this.isCurrentOrAdjacentCellRowSpanned("move_up"),
+                tooltip: _t("Cannot move merge row up or down"),
             },
             !this.isLast && {
                 name: "move_down",
                 icon: "fa-chevron-down",
                 text: _t("Move down"),
                 action: (target) => this.props.moveRow("down", target.parentElement),
+                disable: this.isCurrentOrAdjacentCellRowSpanned("move_down"),
+                tooltip: _t("Cannot move merge row up or down"),
             },
             {
                 name: "insert_above",

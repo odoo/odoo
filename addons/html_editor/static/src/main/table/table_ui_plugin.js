@@ -162,6 +162,7 @@ export class TableUIPlugin extends Plugin {
             clearRowContent: withAddStep(this.dependencies.table.clearRowContent),
             mergeSelectedCells: withAddStep(this.dependencies.table.mergeSelectedCells),
             unmergeSelectedCell: withAddStep(this.dependencies.table.unmergeSelectedCell),
+            buildTableGrid: this.dependencies.table.buildTableGrid,
         };
         const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
         const rowIndex = getRowIndex(td.parentElement);
