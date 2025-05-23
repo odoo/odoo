@@ -51,3 +51,15 @@ class HrTalentPool(models.Model):
         talent_data = {talent_pool.id: count for talent_pool, count in talents}
         for pool in self:
             pool.no_of_talents = talent_data.get(pool.id, 0)
+
+    def action_talent_pool_add_talents(self):
+        self.ensure_one()
+        return {
+            "name": self.env._("Create Talent"),
+            "type": "ir.actions.act_window",
+            "res_model": "hr.applicant",
+            "views": [[False, "form"]],
+            "context": {
+                "default_talent_pool_ids": [self.id],
+            },
+        }
