@@ -60,7 +60,12 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             trigger: ".modal.modal_shown.show button.o_portal_chatter_composer_btn",
-            run: "click",
+            run() {
+                if (this.anchor.textContent !== "Update review") {
+                    throw Error("Button text should be 'Update review'.")
+                }
+                this.anchor.click();
+            },
         },
         {
             content: "Reload page (fetch message)",
