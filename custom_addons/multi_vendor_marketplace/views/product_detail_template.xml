@@ -235,15 +235,14 @@
                                     <div class="action-buttons d-flex mb-3" style="padding: 0; background: none; border-radius: 12px; overflow: hidden; width: 100%;">
                                         <div id="o_wsale_cta_wrapper" class="d-flex w-100" style="width: 100%;">
                                             <!-- Buy Now Button (левая, оранжевый) -->
-                                            <button type="button" id="buy_now" class="btn btn-lg d-flex align-items-center justify-content-center o_we_buy_now"
-                                                style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;"
-                                                data-action="buy_now">
+                                            <button type="submit" id="buy_now" name="express" class="btn btn-lg d-flex align-items-center justify-content-center o_we_buy_now"
+                                                style="background: linear-gradient(90deg, #ff7300 0%, #ffb300 100%); color: #fff; border: none; border-radius: 16px 0 0 16px; font-weight: 700; font-size: 1.25rem; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;">
                                                 <span>Купить</span>
                                             </button>
-                                            <!-- Add to Cart Button (правая, жёлтый) -->
-                                            <button type="button" id="add_to_cart" class="btn btn-lg d-flex align-items-center justify-content-center js_check_product a-submit"
-                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;"
-                                                data-action="add_to_cart">
+                                            
+                                            <!-- Pure HTML button that triggers the standard add to cart -->
+                                            <button type="button" id="add_to_cart_button" class="btn btn-lg d-flex align-items-center justify-content-center"
+                                                style="background: linear-gradient(90deg, #ffd600 0%, #ffb300 100%); color: #fff; border: none; border-radius: 0 16px 16px 0; font-weight: 700; height: 56px; flex: 1; transition: filter 0.2s; min-width: 0;">
                                                 <span class="d-none d-sm-block" style="font-size: 1.1rem; white-space: nowrap;">Добавить в корзину</span>
                                                 <span class="d-block d-sm-none" style="font-size: 1.25rem;">Добавить в корзину</span>
                                             </button>
@@ -252,8 +251,46 @@
                                 </div>
                             </div>
                         </form>
-                        <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
-                        <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
+                        
+                        <!-- Create separate form for cart add to prevent conflicts -->
+                        <form id="cart_add_form" action="/shop/cart/update" method="POST" style="display:none;">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <input type="hidden" name="product_id" t-att-value="product_variant.id or product.id"/>
+                            <input type="hidden" name="add_qty" id="cart_add_qty" value="1"/>
+                        </form>
+                        
+                        <!-- Add direct, clean JavaScript for cart add -->
+                        <t t-if="True">
+                        <script type="text/javascript">
+                        //<![CDATA[
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Get elements
+                                var addButton = document.getElementById('add_to_cart_button');
+                                var qtyInput = document.querySelector('.js_quantity');
+                                var cartForm = document.getElementById('cart_add_form');
+                                var cartQtyInput = document.getElementById('cart_add_qty');
+                                
+                                // Add click handler for cart button
+                                if (addButton) {
+                                    addButton.addEventListener('click', function(e) {
+                                        // Update quantity from the visible input
+                                        if (qtyInput && cartQtyInput) {
+                                            cartQtyInput.value = qtyInput.value;
+                                        }
+                                        
+                                        // Submit the dedicated cart form
+                                        if (cartForm) {
+                                            cartForm.submit();
+                                        }
+                                    });
+                                }
+                            });
+                        //]]>
+                        </script>
+                        </t>
+
+                        <p t-if="not product._is_add_to_cart_possible() and not product.active" class="alert alert-warning">This product is no longer available.</p>
+                        <p t-if="not product._is_add_to_cart_possible() and product.active" class="alert alert-warning">This product has no valid combination.</p>
                         
                         <!-- Блок информации и параметров -->
                         <div class="container-fluid px-0 my-4">
@@ -425,8 +462,10 @@
                 </div>
             </div>
             
-            <!-- JavaScript для инициализации карусели Owl Carousel -->
+            <!-- JavaScript for Owl Carousel with properly wrapped CDATA -->
+            <t t-if="True">
             <script type="text/javascript">
+            //<![CDATA[
                 odoo.define('multi_vendor_marketplace.seller_products_carousel', function (require) {
                     'use strict';
                     
@@ -466,13 +505,19 @@
                         }
                     });
                 });
+            //]]>
             </script>
+            </t>
             
+            <!-- Remove the potentially problematic script -->
+            
+            <!-- Fix the mobile navigation -->
             <div class="mobile-bottom-nav d-md-none">
                 <div class="nav-btns">
                     <a href="/shop" class="nav-btn" t-attf-class="nav-btn{{ ' active' if request.httprequest.path == '/shop' else '' }}"><i class="fa fa-home"></i></a>
                     <a href="/shop/cart" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/shop/cart' in request.httprequest.path else '' }}"><i class="fa fa-shopping-cart"></i></a>
                     <a href="/profile" class="nav-btn" t-attf-class="nav-btn{{ ' active' if '/profile' in request.httprequest.path else '' }}"><i class="fa fa-user"></i></a>
+                    <!-- Remove the duplicated links -->
                 </div>
             </div>
         </xpath>
