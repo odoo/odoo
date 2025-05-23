@@ -14,7 +14,7 @@ export class ScheduledMessage extends Record {
     /** @type {number} */
     id;
     attachment_ids = fields.Many("ir.attachment");
-    author = fields.One("Persona");
+    author_id = fields.One("Persona");
     body = fields.Html("");
     /** @type {boolean} */
     composition_batch;
@@ -40,7 +40,7 @@ export class ScheduledMessage extends Record {
     }
 
     get isSelfAuthored() {
-        return this.author.eq(this.store.self);
+        return this.author_id.eq(this.store.self);
     }
 
     get isSubjectThreadName() {
