@@ -15,8 +15,8 @@ from odoo.tools import float_is_zero
 
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
-    PRICELIST_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
+    PRICELIST_SESSION_CACHE_KEY,
 )
 
 
@@ -303,7 +303,7 @@ class SaleOrder(models.Model):
             delivery_method = self._get_preferred_delivery_method(delivery_methods)
             self._set_delivery_method(delivery_method)
 
-    def _cart_add(self, product_id: int, quantity: float = 1.0, **kwargs) -> dict:
+    def _cart_add(self, product_id: int, quantity: float = 1.0, *, uom_id: int | None = None, **kwargs) -> dict:
         """Add quantity of the given product to the current sales order.
 
         :param product_id: product id, as a `product.product` id.
@@ -314,10 +314,12 @@ class SaleOrder(models.Model):
         self.ensure_one()
         self = self.with_company(self.company_id)
 
-        if existing_sol := self._cart_find_product_line(product_id, **kwargs)[:1]:
+        if not uom_id:
+            uom_id = self.env['product.product'].browse(product_id).uom_id.id  # type: ignore
+        if existing_sol := self._cart_find_product_line(product_id, uom_id=uom_id, **kwargs)[:1]:
             # If a matching line is found, update the existing line instead.
             return self._cart_update_line_quantity(
-                line_id=existing_sol.id,
+                line_id=existing_sol.id,  # type: ignore
                 quantity=existing_sol.product_uom_qty + quantity,
                 **kwargs,
             )
@@ -326,10 +328,11 @@ class SaleOrder(models.Model):
             self.env['sale.order.line'],
             product_id,
             quantity,
+            uom_id=uom_id,
             **kwargs,
         )
 
-        order_line = self._create_new_cart_line(product_id, quantity, **kwargs)
+        order_line = self._create_new_cart_line(product_id, quantity, uom_id, **kwargs)
 
         # NOTE: the provided product_id should not be given after `_create_new_cart_line` call as it
         # could be different from the line's product_id (see variant generation logic in
@@ -343,7 +346,7 @@ class SaleOrder(models.Model):
         }
 
     def _cart_find_product_line(
-        self, product_id, *, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
+        self, product_id, uom_id, linked_line_id=False, no_variant_attribute_value_ids=None, **kwargs
     ):
         """Find the cart line matching the given parameters.
 
@@ -371,6 +374,7 @@ class SaleOrder(models.Model):
 
         domain = [
             ('product_id', '=', product_id),
+            ('product_uom_id', '=', uom_id),
             ('product_custom_attribute_value_ids', '=', False),
             ('linked_line_id', '=', linked_line_id),
             ('combo_item_id', '=', False),
@@ -407,6 +411,7 @@ class SaleOrder(models.Model):
                 order_line,
                 order_line.product_id.id,
                 quantity,
+                uom_id=order_line.product_uom_id.id,
                 **kwargs,
             )
         else:
@@ -425,7 +430,7 @@ class SaleOrder(models.Model):
         }
 
     # hook to be overridden
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
         return new_qty, ''
 
     def _cart_update_order_line(self, order_line, quantity, **kwargs):
@@ -454,7 +459,11 @@ class SaleOrder(models.Model):
                 for item_line in combo_item_lines:
                     if quantity != item_line.product_uom_qty:
                         combo_item_quantity, _warning = self._verify_updated_quantity(
-                            item_line, item_line.product_id.id, quantity, **kwargs
+                            item_line,
+                            item_line.product_id.id,
+                            quantity,
+                            uom_id=item_line.product_uom_id.id,
+                            **kwargs
                         )
                         combo_quantity = min(combo_quantity, combo_item_quantity)
                 for item_line in combo_item_lines:
@@ -479,12 +488,12 @@ class SaleOrder(models.Model):
 
         return values
 
-    def _create_new_cart_line(self, product_id, quantity, **kwargs):
+    def _create_new_cart_line(self, product_id, quantity, uom_id, **kwargs):
         if quantity <= 0.0:
             return self.env['sale.order.line']
 
         line = self.env['sale.order.line'].create(
-            self._prepare_order_line_values(product_id, quantity, **kwargs)
+            self._prepare_order_line_values(product_id, quantity, uom_id, **kwargs)
         )
 
         # The validity of a combo product line can only be checked after creating all of its combo
@@ -497,6 +506,7 @@ class SaleOrder(models.Model):
         self,
         product_id,
         quantity,
+        uom_id,
         *,
         linked_line_id=False,
         no_variant_attribute_value_ids=None,
@@ -525,6 +535,7 @@ class SaleOrder(models.Model):
         values = {
             'product_id': product.id,
             'product_uom_qty': quantity,
+            'product_uom_id': uom_id or product.uom_id.id,
             'order_id': self.id,
             'linked_line_id': linked_line_id,
             'combo_item_id': combo_item_id,

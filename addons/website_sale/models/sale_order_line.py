@@ -25,6 +25,15 @@ class SaleOrderLine(models.Model):
     def get_description_following_lines(self):
         return self.name.splitlines()[1:]
 
+    def _get_combination_name(self):
+        return self.product_id.product_template_attribute_value_ids._get_combination_name()
+
+    def _get_line_header(self):
+        if not self.product_template_attribute_value_ids:
+            return self.name_short
+        # not display_name because we don't want the combination name or the code.
+        return self.product_id.name
+
     def _get_order_date(self):
         self.ensure_one()
         if self.order_id.website_id and self.state == 'draft':

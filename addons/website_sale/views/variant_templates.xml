@@ -133,6 +133,29 @@
                     </t>
                 </li>
             </t>
+            <t t-if="product._has_multiple_uoms()">
+                <li class="o_uom_selection">
+                    <strong class="attribute_name">Packaging</strong>
+
+                    <ul class="btn-group-toggle list-inline list-unstyled" data-bs-toggle="buttons">
+                        <t t-set="product_uoms" t-value="product._get_allowed_uoms()"/>
+                        <t t-foreach="product_uoms" t-as="uom">
+                            <t t-set="is_main_uom" t-value="uom.id == product.uom_id.id"/>
+                            <li t-attf-class="o_variant_pills btn btn-primary mb-1 list-inline-item #{'active' if is_main_uom else ''}">
+                                <input type="radio"
+                                    t-att-checked="is_main_uom"
+                                    name="uom_id"
+                                    t-att-value="uom.id"
+                                    t-attf-id="uom-{{uom.id}}"
+                                    t-att-autocomplete="off"/>
+                                <label class="radio_input_value o_variant_pills_input_value" t-attf-for="uom-{{uom.id}}">
+                                    <span t-field="uom.name"/>
+                                </label>
+                            </li>
+                        </t>
+                    </ul>
+                </li>
+            </t>
         </ul>
     </template>
     <template id="badge_extra_price" name="Badge Extra Price">

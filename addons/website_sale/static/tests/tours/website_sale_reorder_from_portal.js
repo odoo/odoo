@@ -13,8 +13,8 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
-        assertCartContains({productName: 'Reorder Product 1'}),
-        assertCartContains({productName: 'Reorder Product 2'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 2'}),
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
@@ -36,8 +36,8 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
         clickOnElement('No', 'button:contains(No)'),
-        assertCartContains({productName: 'Reorder Product 1'}),
-        assertCartContains({productName: 'Reorder Product 2'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 2'}),
         {
             content: "Check that quantity is 2",
             trigger: ".js_quantity[value='2']",
@@ -59,8 +59,8 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
         clickOnElement('Yes', 'button:contains(Yes)'),
-        assertCartContains({productName: 'Reorder Product 1'}),
-        assertCartContains({productName: 'Reorder Product 2'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 2'}),
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",
@@ -94,7 +94,7 @@ registry.category("web_tour.tours").add('website_sale_reorder_from_portal', {
         },
         clickOnElement('Reorder Again', '.o_wsale_reorder_button'),
         clickOnElement('Confirm', '.o_wsale_reorder_confirm'),
-        assertCartContains({productName: 'Reorder Product 1'}),
+        ...assertCartContains({productName: 'Reorder Product 1'}),
         {
             content: "Check that quantity is 1",
             trigger: ".js_quantity[value='1']",

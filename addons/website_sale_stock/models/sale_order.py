@@ -18,11 +18,18 @@ class SaleOrder(models.Model):
             if not order.warehouse_id:
                 order.warehouse_id = self.env.user._get_default_warehouse_id()
 
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
+    def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
         self.ensure_one()
         product = self.env['product.product'].browse(product_id)
         if product.is_storable and not product.allow_out_of_stock_order:
+            uom = self.env['uom.uom'].browse(uom_id)
+            product_uom = product.uom_id
+
             product_qty_in_cart, available_qty = self._get_cart_and_free_qty(product)
+
+            # Convert cart and available quantities to the requested uom
+            product_qty_in_cart = product_uom._compute_quantity(product_qty_in_cart, uom)
+            available_qty = product_uom._compute_quantity(available_qty, uom)
 
             old_qty = order_line.product_uom_qty if order_line else 0
             added_qty = new_qty - old_qty
@@ -51,7 +58,7 @@ class SaleOrder(models.Model):
                         "The item has not been added to your cart since it is not available."
                     )
                 return allowed_line_qty, returned_warning
-        return super()._verify_updated_quantity(order_line, product_id, new_qty, **kwargs)
+        return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
 
     def _get_cart_and_free_qty(self, product):
         """Get cart quantity and free quantity for given product.
@@ -59,7 +66,7 @@ class SaleOrder(models.Model):
         Note: self.ensure_one()
 
         :param product: `product.product` record.
-        :returns: cart quantity and available quantity
+        :returns: cart quantity and available quantity in the product uom
         :rtype: tuple
         """
         self.ensure_one()
@@ -88,12 +95,19 @@ class SaleOrder(models.Model):
         """Return the quantity of the given product in the current cart, if any.
 
         :param int product_id: `product.product` id
-        :return: product quantity
+        :return: product quantity in the product uom
         :rtype: float
         """
         if not self:
             return 0.0
-        return sum(self._get_common_product_lines(product_id).mapped('product_uom_qty'))
+        order_lines = self._get_common_product_lines(product_id)
+        return sum(
+            order_lines.mapped(
+                lambda sol: sol.product_uom_id._compute_quantity(
+                    sol.product_uom_qty, sol.product_id.uom_id,
+                )
+            )
+        )
 
     def _get_common_product_lines(self, product_id=None):
         """Get all the lines of the current order with the given product."""

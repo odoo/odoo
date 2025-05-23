@@ -13,6 +13,8 @@ export class AddToCartNotification extends Component {
                     linked_line_id: { type: Number, optional: true },
                     image_url: String,
                     quantity: Number,
+                    uom_name: { type: String, optional: true },
+                    combination_name: { type: String, optional: true },
                     name: String,
                     description: { type: String, optional: true },
                     line_price_total: Number,
@@ -55,16 +57,4 @@ export class AddToCartNotification extends Component {
         return formatCurrency(price, this.props.currency_id);
     }
 
-    /**
-     * Return the product summary based on the line information.
-     *
-     * The product summary is computed based on the line quantity and name, separated by the symbol
-     * 'x' (e.g.: 1 x Chair Floor Protection).
-     *
-     * @param {Object} line - The line element for which to return the product summary.
-     * @return {String} - The product summary.
-     */
-    getProductSummary(line) {
-        return line.quantity + " x " + line.name;
-    }
 }

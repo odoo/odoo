@@ -7,7 +7,7 @@ export class CartNotification extends Component {
     static template = "website_sale.cartNotification";
     static props = {
         message: [String, { toString: Function }],
-        warning: {type : [String, { toString: Function }],optional: true},
+        warning: {type : [String, { toString: Function }], optional: true},
         lines: {
             type: Array,
             optional: true,
@@ -18,7 +18,9 @@ export class CartNotification extends Component {
                     linked_line_id: { type: Number, optional: true },
                     image_url: String,
                     quantity: Number,
+                    uom_name: { type: String, optional: true },
                     name: String,
+                    combination_name: { type: String, optional: true },
                     description: { type: String, optional: true },
                     line_price_total: Number,
                 },
