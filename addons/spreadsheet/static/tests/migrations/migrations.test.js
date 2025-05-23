@@ -517,24 +517,33 @@ test("Pivot sorted columns are migrated (12 to 13)", () => {
                 sortedColumn: { groupId: [[], []], measure: "testMeasure", order: "desc" },
                 columns: [],
                 rows: [],
-                measures: [{ id: "testMeasure", fieldName: "testMeasure" }],
+                measures: [{ id: "testMeasure:sum", fieldName: "testMeasure", aggregator: "sum" }],
             },
             2: {
                 name: "test2",
                 sortedColumn: { groupId: [[], [1]], measure: "testMeasure", order: "desc" },
                 columns: [{ fieldName: "product_id" }],
                 rows: [],
-                measures: [{ id: "testMeasure", fieldName: "testMeasure" }],
+                measures: [{ id: "testMeasure:sum", fieldName: "testMeasure", aggregator: "sum" }],
+            },
+            3: {
+                name: "test",
+                // sortedColumn is not in the measures
+                sortedColumn: { groupId: [[], []], measure: "testMeasure", order: "desc" },
+                columns: [],
+                rows: [],
+                measures: [],
             },
         },
     };
     const migratedData = load(data);
     expect(migratedData.pivots["1"].sortedColumn).toEqual({
         domain: [],
-        measure: "testMeasure",
+        measure: "testMeasure:sum",
         order: "desc",
     });
     expect(migratedData.pivots["2"].sortedColumn).toBe(undefined);
+    expect(migratedData.pivots["3"].sortedColumn).toBe(undefined);
 });
 
 test("Chart cumulatedStart is set to true if cumulative at migration", () => {
