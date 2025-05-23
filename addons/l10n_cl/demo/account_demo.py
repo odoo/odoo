@@ -29,6 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
             move_data['demo_invoice_7']['l10n_latam_document_type_id'] = foreign_invoice
             move_data['demo_invoice_8']['l10n_latam_document_type_id'] = foreign_invoice
             move_data['demo_invoice_equipment_purchase']['l10n_latam_document_type_id'] = foreign_invoice
+            move_data['demo_invoice_9']['l10n_latam_document_type_id'] = foreign_invoice
             move_data['demo_move_auto_reconcile_1']['l10n_latam_document_type_id'] = foreign_credit_note
             move_data['demo_move_auto_reconcile_2']['l10n_latam_document_type_id'] = foreign_credit_note
             move_data['demo_move_auto_reconcile_3']['l10n_latam_document_type_id'] = foreign_credit_note
@@ -37,3 +38,9 @@ class AccountChartTemplate(models.AbstractModel):
             move_data['demo_move_auto_reconcile_6']['l10n_latam_document_type_id'] = foreign_credit_note
             move_data['demo_move_auto_reconcile_7']['l10n_latam_document_type_id'] = foreign_credit_note
         return move_data
+
+    @api.model
+    def _get_demo_data_partner(self):
+        if partner_6 := self.env.ref('base.res_partner_6', raise_if_not_found=False):
+            partner_6.l10n_cl_sii_taxpayer_type = '4'
+        return super()._get_demo_data_partner()

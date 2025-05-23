@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, Command
@@ -78,6 +78,7 @@ class AccountChartTemplate(models.AbstractModel):
             + self.ref('demo_invoice_7')
             + self.ref('demo_invoice_8')
             + self.ref('demo_invoice_equipment_purchase')
+            + self.ref('demo_invoice_9')
             + self.ref('demo_move_auto_reconcile_1')
             + self.ref('demo_move_auto_reconcile_2')
             + self.ref('demo_move_auto_reconcile_3')
@@ -95,6 +96,26 @@ class AccountChartTemplate(models.AbstractModel):
             except (UserError, ValidationError):
                 _logger.exception('Error while posting demo data')
 
+        # We want the initial balance to be set in the equity_unaffected account
+        demo_bank_statement_1 = self.ref('demo_bank_statement_1', raise_if_not_found=False)
+        if demo_bank_statement_1:
+            cid = company.id or self.env.company.id
+            current_year_earnings_account = self.env['account.account'].search([
+                *self.env['account.account']._check_company_domain(cid),
+                ('account_type', '=', 'equity_unaffected')
+            ], limit=1)
+            demo_bank_statement_1.line_ids[0].line_ids[1]['account_id'] = current_year_earnings_account.id
+
+        # We want the "Line with Bank Fees" reco model to be applied on the bank fees statement line
+        demo_bank_statement_line_5 = self.ref('demo_bank_statement_line_5', raise_if_not_found=False)
+        if demo_bank_statement_line_5:
+            demo_bank_statement_line_5.line_ids[0]['reconcile_model_id'] = self.ref('reconcile_from_label')
+
+        # The chart template creates a Bank Fees model, if possible, we want to apply it
+        bank_fees_statement_line = self.ref('demo_bank_statement_line_1', raise_if_not_found=False)
+        if bank_fees_statement_line:
+            bank_fees_statement_line.line_ids[0]['reconcile_model_id']: self.ref('bank_fees_reco', raise_if_not_found=False)
+
     @api.model
     def _get_demo_data_bank(self, company=False):
         if company.root_id.partner_id.bank_ids:
@@ -110,12 +131,16 @@ class AccountChartTemplate(models.AbstractModel):
     @api.model
     def _get_demo_data_partner(self):
         if self.env.ref('base.res_partner_2', raise_if_not_found=False):
-            return {}
+            if self.env.ref('base.res_partner_6', raise_if_not_found=False):
+                return {}
+            else:
+                return {'base.res_partner_6': {'name': 'Demo Partner 6'}}
         return {
             'base.res_partner_2': {'name': 'Demo Partner 2'},
             'base.res_partner_3': {'name': 'Demo Partner 3'},
             'base.res_partner_4': {'name': 'Demo Partner 4'},
             'base.res_partner_5': {'name': 'Demo Partner 5'},
+            'base.res_partner_6': {'name': 'Demo Partner 6'},
             'base.res_partner_12': {'name': 'Demo Partner 12'},
             'base.partner_demo': {'name': 'Marc Demo'},
         }
@@ -134,6 +159,7 @@ class AccountChartTemplate(models.AbstractModel):
             return {}
         return {
             'product.product_delivery_01': {'name': 'product_delivery_01', 'type': 'consu'},
+            'product.product_delivery_02': {'name': 'product_delivery_02', 'type': 'consu'},
             'product.consu_delivery_01': {'name': 'consu_delivery_01', 'type': 'consu'},
             'product.consu_delivery_02': {'name': 'consu_delivery_02', 'type': 'consu'},
             'product.consu_delivery_03': {'name': 'consu_delivery_03', 'type': 'consu'},
@@ -281,6 +307,16 @@ class AccountChartTemplate(models.AbstractModel):
                 ],
                 'message_main_attachment_id': 'ir_attachment_in_invoice_2',
             },
+            'demo_invoice_9': {
+                'move_type': 'out_invoice',
+                'partner_id': 'base.res_partner_6',
+                'invoice_user_id': False,
+                'invoice_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
+                'delivery_date': (fields.Date.today() + timedelta(days=-2)).strftime('%Y-%m-%d'),
+                'invoice_line_ids': [
+                    Command.create({'product_id': 'product.product_delivery_02', 'price_unit': 50.00, 'quantity': 15}),
+                ],
+            },
             'demo_move_auto_reconcile_1': {
                 'move_type': 'out_refund',
                 'partner_id': 'base.res_partner_12',
@@ -364,21 +400,28 @@ class AccountChartTemplate(models.AbstractModel):
         )
         return {
             'demo_bank_statement_1': {
-                'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
-                'balance_end_real': 6378.0,
+                'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-03/1',
+                'balance_end_real': 7028.0,
                 'balance_start': 0.0,
                 'line_ids': [
                     Command.create({
                         'journal_id': bnk_journal.id,
                         'payment_ref': 'Initial balance',
                         'amount': 5103.0,
-                        'date': time.strftime('%Y-01-01'),
+                        'date': (datetime.now() - relativedelta(years=1)).strftime("%Y-12-15"),
                     }),
                     Command.create({
                         'journal_id': bnk_journal.id,
                         'payment_ref': time.strftime('INV/%Y/00006 and INV/%Y/00007'),
                         'amount': 1275.0,
-                        'date': time.strftime('%Y-01-01'),
+                        'date': time.strftime('%Y-01-03'),
+                        'partner_name': 'Open Wood Inc.',
+                    }),
+                    Command.create({
+                        'journal_id': bnk_journal.id,
+                        'payment_ref': 'Prepayment',
+                        'date': time.strftime('%Y-01-02'),
+                        'amount': 650,
                         'partner_name': 'Open Wood Inc.',
                     }),
                 ]
@@ -409,28 +452,22 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_bank_statement_line_2': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': 'Prepayment',
-                'amount': 650,
+                'payment_ref': time.strftime('Payment of your invoice #5'),
+                'amount': 2000,
                 'partner_name': 'Open Wood Inc.',
             },
             'demo_bank_statement_line_3': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': time.strftime('INV/%Y/00005'),
-                'amount': 1980,
-                'partner_name': 'Open Wood Inc.',
-            },
-            'demo_bank_statement_line_4': {
-                'journal_id': bnk_journal.id,
                 'payment_ref': 'Last Year Interests',
                 'amount': 102.78,
             },
-            'demo_bank_statement_line_5': {
+            'demo_bank_statement_line_4': {
                 'journal_id': bnk_journal.id,
-                'payment_ref': time.strftime('INV/%Y/00002'),
+                'payment_ref': time.strftime('INV/%Y/00008'),
                 'amount': 750,
-                'partner_id': 'base.res_partner_2',
+                'partner_id': 'base.res_partner_6',
             },
-            'demo_bank_statement_line_6': {
+            'demo_bank_statement_line_5': {
                 'journal_id': bnk_journal.id,
                 'payment_ref': f'R:9772938  10/07 AX 9415116318 T:5 BRT: {formatLang(self.env, 100.0, digits=2)} C/ croip',
                 'amount': 96.67,
