@@ -142,6 +142,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (_author_to_store)
     #       - fetch user (_author_to_store)
     #       - _compute_rating_stats
+    #   1: filtering res_partner (_compute_im_status)
     _query_count_discuss_channels = 59
 
     def setUp(self):
