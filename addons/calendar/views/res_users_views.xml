@@ -18,7 +18,7 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='signature']" position="after">
+                <xpath expr="//group[@name='messaging']|//field[@name='signature']" position="after">
                     <group string="Calendar" name="calendar">
                         <field name="calendar_default_privacy" readonly="0" string="Calendar Default Privacy" invisible="share"/>
                     </group>
