@@ -346,7 +346,6 @@ patch(PosStore.prototype, {
             }
 
             this.set_order(destinationOrder);
-            await this.deleteOrders([order]);
         }
 
         await this.syncAllOrders({ orders: [destinationOrder || order] });
