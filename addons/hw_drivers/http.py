@@ -5,6 +5,7 @@ import collections
 import odoo.http
 
 from odoo.http import JsonRPCDispatcher, serialize_exception
+from odoo.addons.hw_drivers.tools.iot_system import IS_TEST_LOCAL
 from werkzeug.exceptions import Forbidden
 
 
@@ -36,4 +37,6 @@ def db_list(force=False, host=None):
     return []
 
 
-odoo.http.db_list = db_list
+if not IS_TEST_LOCAL:
+    # "Real" IoT does not need a database
+    odoo.http.db_list = db_list

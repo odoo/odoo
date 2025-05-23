@@ -12,7 +12,6 @@ import logging
 import netifaces
 import os
 from pathlib import Path
-import platform
 import re
 import requests
 import secrets
@@ -20,6 +19,7 @@ import socket
 import subprocess
 from urllib.parse import parse_qs
 import urllib3.util
+import sys
 from threading import Thread, Lock
 import time
 import zipfile
@@ -27,11 +27,12 @@ import zipfile
 from odoo import http, release, service
 from odoo.tools.func import reset_cached_properties
 from odoo.tools.misc import file_path
+from odoo.addons.hw_drivers.tools.iot_system import IoTSystem, IOT_SYSTEM, IS_TEST_LOCAL, IS_RPI, IS_WINDOWS
 
 lock = Lock()
 _logger = logging.getLogger(__name__)
 
-if platform.system() == 'Linux':
+if IS_RPI:
     import crypt
 
 
@@ -78,9 +79,7 @@ def toggleable(function):
     return devtools_wrapper
 
 
-if platform.system() == 'Windows':
-    writable = contextlib.nullcontext
-elif platform.system() == 'Linux':
+if IS_RPI:
     @contextlib.contextmanager
     def writable():
         with lock:
@@ -92,6 +91,8 @@ elif platform.system() == 'Linux':
                 subprocess.run(["sudo", "mount", "-o", "remount,ro", "/"], check=False)
                 subprocess.run(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"], check=False)
                 subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"], check=False)
+else:
+    writable = contextlib.nullcontext
 
 
 def require_db(function):
@@ -118,12 +119,12 @@ def require_db(function):
 
 
 def start_nginx_server():
-    if platform.system() == 'Windows':
+    if IS_WINDOWS:
         path_nginx = get_path_nginx()
         if path_nginx:
             _logger.info('Start Nginx server: %s\\nginx.exe', path_nginx)
             subprocess.Popen([str(path_nginx / 'nginx.exe')], cwd=str(path_nginx))
-    elif platform.system() == 'Linux':
+    elif IS_RPI:
         subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
 
@@ -206,8 +207,10 @@ def get_ip():
 
 @cache
 def get_identifier():
-    if platform.system() == 'Linux':
+    if IS_RPI:
         return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+    if IS_TEST_LOCAL:
+        return "test_identifier"
 
     # On windows, get motherboard's uuid (serial number isn't reliable as it's not always present)
     command = ['powershell', '-Command', "(Get-CimInstance Win32_ComputerSystemProduct).UUID"]
@@ -248,20 +251,23 @@ def get_commit_hash():
 
 @cache
 def get_version(detailed_version=False):
-    if platform.system() == 'Linux':
+    if IS_RPI:
         image_version = read_file_first_line('/var/odoo/iotbox_version')
-    elif platform.system() == 'Windows':
+    elif IS_WINDOWS:
         # updated manually when big changes are made to the windows virtual IoT
         image_version = '23.11'
+    elif IS_TEST_LOCAL:
+        image_version = 'test'
 
-    version = platform.system()[0] + image_version
+    version = IOT_SYSTEM.value + image_version
     if detailed_version:
         # Note: on windows IoT, the `release.version` finish with the build date
         version += f"-{release.version}"
-        if platform.system() == 'Linux':
+        if IS_RPI:
             version += f'#{get_commit_hash()}'
 
     return version
+
 
 def delete_iot_handlers():
     """Delete all drivers, interfaces and libs if any.
@@ -332,8 +338,9 @@ def load_iot_handlers():
     """
     for directory in ['interfaces', 'drivers']:
         path = file_path(f'hw_drivers/iot_handlers/{directory}')
-        filesList = list_file_by_os(path)
-        for file in filesList:
+        handler_files = get_handlers_files_to_load(path)
+        _logger.info('Loading %s: %s', directory, handler_files)
+        for file in handler_files:
             spec = util.spec_from_file_location(compute_iot_handlers_addon_name(directory, file), str(Path(path).joinpath(file)))
             if spec:
                 module = util.module_from_spec(spec)
@@ -344,12 +351,24 @@ def load_iot_handlers():
     reset_cached_properties(http.root)
 
 
-def list_file_by_os(file_list):
-    platform_os = platform.system()
-    if platform_os == 'Linux':
-        return [x.name for x in Path(file_list).glob('*[!W].*')]
-    elif platform_os == 'Windows':
-        return [x.name for x in Path(file_list).glob('*[!L].*')]
+def get_handlers_files_to_load(handler_path):
+    """
+    Get all handler files that an IoT system should load in a list.
+    - Rpi IoT boxes load file without suffixe and _L
+    - Windows IoT load file without suffixes and _W
+    - Test IoT load no handler
+    Note: this function will be patched in odoo's tests to force to load certain handlers
+    :param handler_path: The path to the directory containing the files (either drivers or interfaces)
+    :return: files corresponding to the current IoT system
+    :rtype list:
+    """
+    if IS_TEST_LOCAL:
+        return []
+    suffix_to_ignore = tuple({e.value for e in IoTSystem if e != IOT_SYSTEM.value})
+    return [
+        file.name for file in Path(handler_path).glob('*.*')
+        if not file.stem.endswith(suffix_to_ignore)
+    ]
 
 
 def odoo_restart(delay=0):
@@ -367,11 +386,7 @@ def path_file(*args):
 
     :return: The path to the file
     """
-    platform_os = platform.system()
-    if platform_os == 'Linux':
-        return Path("~pi", *args).expanduser()  # Path.home() returns odoo user's home instead of pi's
-    elif platform_os == 'Windows':
-        return Path().absolute().parent.joinpath(*args)
+    return Path(sys.path[0]).parent.joinpath(*args)
 
 
 def read_file_first_line(filename):
@@ -568,7 +583,7 @@ def _get_raspberry_pi_model():
 
     :rtype: int
     """
-    if platform.system() == 'Windows':
+    if not IS_RPI:
         return -1
     with open('/proc/device-tree/model', 'r', encoding='utf-8') as model_file:
         match = re.search(r'Pi (\d)', model_file.read())
