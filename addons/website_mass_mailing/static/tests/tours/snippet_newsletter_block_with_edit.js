@@ -38,7 +38,7 @@ registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     },
     {
         content: 'Toggle the option to display the Thanks message',
-        trigger: 'we-button[data-toggle-thanks-message] we-checkbox',
+        trigger: "div[data-action-id='toggleThanksMessage'] input[type='checkbox']",
         run: "click",
     },
     {
