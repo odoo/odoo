@@ -47,6 +47,17 @@ registry.category("web_tour.tours").add('test_survey_conditional_question_on_dif
             content: 'Check that Q3 is now visible again',
             trigger: 'div.js_question-wrapper:contains("Q3")',
             isCheck: true,
+        }, {
+            content: 'Check that button is going to next page (Q4 is triggered)',
+            trigger: 'button[value="next"]',
+            isCheck: true,
+        }, {
+            content: 'Answer Q2 with Answer 2',
+            trigger: 'div.js_question-wrapper:contains("Q2") label:contains("Answer 2")',
+        }, {
+            content: 'Check that button is ending the survey (Q4 is not active)',
+            trigger: 'button[value="finish"]',
+            isCheck: true,
         }
     ],
 });
