@@ -111,9 +111,6 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='description_picking']" position="after">
-                <field name="description_bom_line" optional="show" column_invisible="not parent.has_kits"/>
-            </xpath>
             <xpath expr="//button[@name='action_view_reception_report']" position="after">
                 <button class="oe_stat_button" name="action_view_mrp_production" type="object" icon="fa-wrench" invisible="not production_count" groups="mrp.group_mrp_user">
                     <div class="o_field_widget o_stat_info">
@@ -121,17 +118,6 @@
                         <span class="o_stat_text">Manufacturing</span>
                     </div>
                 </button>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="view_stock_move_line_detailed_operation_tree_mrp" model="ir.ui.view">
-        <field name="name">stock.move.line.operations.list.mrp</field>
-        <field name="model">stock.move.line</field>
-        <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="description_bom_line" optional="show" column_invisible="not context.get('has_kits')"/>
             </xpath>
         </field>
     </record>
