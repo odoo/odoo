@@ -484,6 +484,39 @@ test(`width computation: date and datetime with fancy formats`, async () => {
     expect(getColumnWidths()).toEqual([40, 325, 170, 265]);
 });
 
+test(`width computation: date and datetime with fancy formats (2)`, async () => {
+    // Those formats contains static parts ("a" not prefixed by "%") which will be escaped when
+    // converted into the luxon format (wrapped into single quotes). The regex that detects patterns
+    // like "MMM" (abrev. month, in letters) must properly ignore those escaped parts. This test
+    // ensures it.
+    defineParams({
+        lang_parameters: {
+            date_format: "%Ya%ba%d",
+            time_format: "%H%M%Sa%p",
+        },
+    });
+    resetDateFieldWidths();
+    after(resetDateFieldWidths);
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="datetime"/>
+            </list>`,
+    });
+
+    expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual([
+        "yop",
+        "2017aJana25",
+        "2016aDeca12 115505aAM",
+    ]);
+    expect(getColumnWidths()).toEqual([40, 470, 99, 191]);
+});
+
 test(`width computation: width attribute in arch and overflowing table`, async () => {
     Foo._records[0].text =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
