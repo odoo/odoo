@@ -745,6 +745,7 @@
                     <field name="company_id" column_invisible="True"/>
                     <field name="user_company_ids" column_invisible="True"/>
                     <field name="date_deadline" column_invisible="True"/>
+                    <field name="activity_calendar_event_id" column_invisible="True"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
@@ -782,13 +783,8 @@
                     <field name="referred" column_invisible="True"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="lead_properties"/>
+                    <widget name="activity_mixin_list_reschedule_dropdown"/>
                     <button name="%(crm.action_lead_mail_compose)d" type="action" string="Email" icon="fa-envelope"/>
-                    <button name="action_reschedule_meeting" class="text-warning" type="object" string="Reschedule"
-                        icon="fa-calendar" invisible="not my_activity_date_deadline or not activity_calendar_event_id"
-                        groups="base.group_user"/>
-                    <button name="action_snooze" class="text-warning" type="object" string="Snooze 7d"
-                        icon="fa-bell-slash" invisible="not my_activity_date_deadline or activity_calendar_event_id"
-                        groups="base.group_user"/>
                 </list>
             </field>
         </record>
