@@ -79,7 +79,7 @@ export class ColorPicker extends Component {
     }
 
     processColorFromEvent(ev) {
-        let color = ev.target.dataset.color;
+        let color = ev.target.dataset.color || "";
         if (color && !isCSSColor(color) && !isColorGradient(color)) {
             color = this.props.colorPrefix + color;
         }
@@ -88,7 +88,7 @@ export class ColorPicker extends Component {
 
     applyColor(color) {
         this.state.currentCustomColor = color;
-        this.props.applyColor(color || "");
+        this.props.applyColor(color);
     }
 
     onColorApply(ev) {
@@ -102,7 +102,7 @@ export class ColorPicker extends Component {
 
     onColorPreview(ev) {
         const color = ev.hex ? ev.hex : this.processColorFromEvent(ev);
-        this.props.applyColorPreview(color || "");
+        this.props.applyColorPreview(color);
     }
 
     onColorHover(ev) {
