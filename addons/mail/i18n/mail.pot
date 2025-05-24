@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
-"PO-Revision-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"PO-Revision-Date: 2025-05-23 18:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -100,7 +100,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "%(date)s at %(time)s"
 msgstr ""
 
@@ -3460,6 +3460,8 @@ msgid "Do you really want to delete this preview?"
 msgstr ""
 
 #. module: mail
+#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
+#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
@@ -4498,8 +4500,8 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
-msgid "Forward message"
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+msgid "Forward Message"
 msgstr ""
 
 #. module: mail
@@ -4722,6 +4724,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_partner__has_message
 #: model:ir.model.fields,field_description:mail.field_res_users__has_message
 msgid "Has Message"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
+msgid "Has Warning"
 msgstr ""
 
 #. module: mail
@@ -5964,6 +5971,11 @@ msgid "Link to"
 msgstr ""
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
+msgid "Linked to"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 msgid "List Activity"
@@ -6845,7 +6857,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users__name
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Name"
 msgstr ""
 
@@ -8786,7 +8797,6 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
-#: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Reply All"
 msgstr ""
 
@@ -9057,18 +9067,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/activity_model_patch.js:0
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity"
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity On Selected Records"
 msgstr ""
 
@@ -9646,6 +9652,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show All Activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__show_notified_bcc
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__show_notified_bcc
 msgid "Show BCC"
@@ -9655,6 +9667,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/chatter/web/chatter_patch.js:0
 msgid "Show Followers"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show My Activities"
 msgstr ""
 
 #. module: mail
@@ -10030,6 +10048,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__summary
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Summary"
 msgstr ""
 
@@ -10245,6 +10265,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The activity can be launched, with these additional effects:"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The activity cannot be launched:"
 msgstr ""
 
@@ -10400,6 +10426,12 @@ msgstr ""
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
 msgstr ""
 
 #. module: mail
@@ -11128,6 +11160,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input.js:0
+#: code:addons/mail/static/src/core/web/recipients_popover.js:0
+#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
+msgid "Unnamed"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
 #: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
@@ -11226,8 +11266,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
-#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
-#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 msgid "Upload Document"
 msgstr ""
 
@@ -11681,6 +11719,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_button.js:0
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__warning
 msgid "Warning"
 msgstr ""
 
