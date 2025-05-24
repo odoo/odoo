@@ -8,8 +8,8 @@
 # Mandy Choy <mnc@odoo.com>, 2024
 # 何彬 <vnsoft.he@gmail.com>, 2025
 # Jeffery CHEN <jeffery9@gmail.com>, 2025
-# Raymond Yu <cl_yu@hotmail.com>, 2025
 # Wil Odoo, 2025
+# Raymond Yu <cl_yu@hotmail.com>, 2025
 # Chloe Wang, 2025
 # 
 msgid ""
@@ -1265,6 +1265,9 @@ msgid ""
 "Accounting Data for Malaysian Payroll Rules\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"马来西亚工资单规则的会计数据\n"
+"===========================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_hr_payroll_account
@@ -2297,6 +2300,8 @@ msgid ""
 "\n"
 "Additional module to allow the export of the Italian monthly tax report to XML format.\n"
 msgstr ""
+"\n"
+"附加模块，可将意大利月度税务报告导出为 XML 格式。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi_ndd
@@ -2461,6 +2466,17 @@ msgid ""
 "* Quick payments by swiping, scanning, or tapping your credit/debit card or UPI QR code at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, RuPay.\n"
 msgstr ""
+"\n"
+"Allow Pine Labs POS payments\n"
+"==============================\n"
+"\n"
+"This module is available only for companies that use INR currency.\n"
+"It enables customers to pay for their orders using debit/credit cards and UPI through Pine Labs POS terminals.\n"
+"A Pine Labs merchant account is required to process transactions.\n"
+"Features include:\n"
+"\n"
+"* Quick payments by swiping, scanning, or tapping your credit/debit card or UPI QR code at the payment terminal.\n"
+"* Supported cards: Visa, MasterCard, RuPay.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_razorpay
@@ -3554,6 +3570,10 @@ msgid ""
 "================================\n"
 "Provides electronic invoicing for Brazil through Avatax in the POS.\n"
 msgstr ""
+"\n"
+"Brazilian Accounting EDI for POS\n"
+"================================\n"
+"Provides electronic invoicing for Brazil through Avatax in the POS.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi_sale
@@ -4752,6 +4772,13 @@ msgid ""
 "TaxBase (DPP) has to be mulitplied by factor of 11/12 while multiplied to tax of 12% which\n"
 "is resulting to 11%.\n"
 msgstr ""
+"\n"
+"由 DJP（印度尼西亚税务局）提供电子发票功能。截至 2025 年 1 月 1 日，\n"
+"印度尼西亚正在使用 CoreTax 系统，该系统改变了 E-Faktur 的文件格式和内容。\n"
+"我们正在将 CSV 文件转换为 XML 文件。\n"
+"同时，由于税收法规的前后变化，现在对于一般的 E-Faktur 而言，\n"
+"税基（DPP）必须乘以 11/12 的系数，再乘以 12% 的税率，\n"
+"结果是 11%。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_skills_slides
@@ -6975,6 +7002,12 @@ msgid ""
 "- Income tax calculations\n"
 "- Stamp tax deductions\n"
 msgstr ""
+"\n"
+"Malaysian Payroll and Tax Rules\n"
+"===============================\n"
+"- Social Security Premium/Insurance calculations for employment and unemployment\n"
+"- Income tax calculations\n"
+"- Stamp tax deductions\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mt_reports
@@ -9896,6 +9929,17 @@ msgid ""
 "- Taxes\n"
 "- Tax report\n"
 msgstr ""
+"\n"
+"This is the base module to manage the accounting chart for Bangladesh in Odoo\n"
+"==============================================================================\n"
+"\n"
+"Bangladesh accounting basic charts and localization.\n"
+"\n"
+"Activates:\n"
+"\n"
+"- Chart of accounts\n"
+"- Taxes\n"
+"- Tax report\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be
@@ -11522,6 +11566,9 @@ msgid ""
 "This module fully implements the ELM 5.0 wage standard and is Swissdec certified under certificate 1203.25. Any unauthorized modifications are strictly prohibited, as they may lead to errors in data transmission and calculations.\n"
 "The Module is not retro-compatible with Previous Swiss Payroll versions, installation will require a re-generation of your yearly Payroll-accounting.\n"
 msgstr ""
+"\n"
+"该模块完全符合 ELM 5.0 工资标准，并通过了 Swissdec 1203.25 认证。严禁任何未经授权的修改，否则可能导致数据传输和计算错误。\n"
+"该模块与瑞士薪资系统以前的版本不兼容，安装后需要重新生成年度薪资核算。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sms
@@ -12292,6 +12339,8 @@ msgid ""
 "\n"
 "This module provides the point of sale function of the Odoo Mobile App.\n"
 msgstr ""
+"\n"
+"该模块提供 Odoo 移动应用程序的销售点功能。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_edi_tbai
@@ -13080,6 +13129,29 @@ msgid ""
 "This module ensures compliance with ONSS electronic declaration\n"
 "requirements and reduces manual interaction with the SFTP portal.\n"
 msgstr ""
+"\n"
+"synchronize DmfA to ONSS portal\n"
+"===============================\n"
+"\n"
+"This new module automates the synchronization of DmfA ONSS declarations\n"
+"to the official Belgian SFTP portal.\n"
+"\n"
+"It integrates with the existing `l10n_be_hr_payroll` and\n"
+"`l10n_be_hr_payroll_dmfa` modules to:\n"
+"\n"
+"- Upload the FO, FS, and GO files to the correct ONSS environment folder\n"
+"  (IN, INTEST, INTEST-S).\n"
+"- Poll the OUT folders (OUT, OUTTEST, OUTTEST-S) for returned files.\n"
+"- Link received files to the corresponding declarations and employees\n"
+"  when applicable.\n"
+"\n"
+"Technical features include:\n"
+"- Secure connection using a private key and technical user credentials.\n"
+"- XML file parsing for ACRF and notification files.\n"
+"- Error handling and logging for missing directories or malformed files.\n"
+"\n"
+"This module ensures compliance with ONSS electronic declaration\n"
+"requirements and reduces manual interaction with the SFTP portal.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_mondialrelay
@@ -13822,6 +13894,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type in "
 "['one2many', 'many2many']\">to</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type in "
+"['one2many', 'many2many']\">至</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -13829,6 +13903,8 @@ msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type not in "
 "['one2many', 'many2many']\">by</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type not in "
+"['one2many', 'many2many']\">由</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -14402,7 +14478,7 @@ msgstr "覆盖印度的支付服务提供商。"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_nuvei
 msgid "A payment provider covering Latin America."
-msgstr ""
+msgstr "覆盖拉丁美洲的支付服务提供商。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_mercado_pago
@@ -16290,7 +16366,7 @@ msgstr "America/Costa_Rica"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/coyhaique
 msgid "America/Coyhaique"
-msgstr ""
+msgstr "America/Coyhaique"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/creston
@@ -17277,7 +17353,7 @@ msgstr "结构差异"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_architects
 msgid "Architecture Firm"
-msgstr ""
+msgstr "建筑事务所"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
@@ -17374,7 +17450,7 @@ msgstr "亚美尼亚"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_art_craft
 msgid "Arts & Crafts Store"
-msgstr ""
+msgstr "工艺品商店"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -18069,7 +18145,7 @@ msgstr "吸引访客订阅邮件列表"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_certification_organism
 msgid "Audit & Certification"
-msgstr ""
+msgstr "审计与认证"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ISK
@@ -18969,12 +19045,12 @@ msgstr "Belgium - Payroll - Dimona"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_dmfa_sftp
 msgid "Belgium - Payroll - DmfA SFTP"
-msgstr ""
+msgstr "比利时 - 工资单 - DmfA SFTP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_acerta
 msgid "Belgium - Payroll - Export to Acerta"
-msgstr ""
+msgstr "比利时 - 工资单 - 出口到 Acerta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_group_s
@@ -18989,7 +19065,7 @@ msgstr "比利时 - 工资单 - 导出到 Partena"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_prisma
 msgid "Belgium - Payroll - Export to Prisma"
-msgstr ""
+msgstr "比利时 - 工资单 - 出口到 Prisma"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_sd_worx
@@ -19041,7 +19117,7 @@ msgstr "百慕大"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_beverage_distributor
 msgid "Beverage Distributor"
-msgstr ""
+msgstr "饮料分销商"
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -19061,7 +19137,7 @@ msgstr "账单到您的UPS帐号"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_billboard_rental
 msgid "Billboard Rental"
-msgstr ""
+msgstr "广告牌租赁"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_model_id
@@ -19160,7 +19236,7 @@ msgstr "博内尔岛，圣尤斯特歇斯和萨巴"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bookstore
 msgid "Bookstore"
-msgstr ""
+msgstr "书店"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_boolean_value
@@ -19280,7 +19356,7 @@ msgstr "Brazilian Accounting EDI For Sale"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_pos
 msgid "Brazilian Accounting EDI for POS"
-msgstr ""
+msgstr "用于 POS 的巴西会计 EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_br_edi_website_sale
@@ -19528,12 +19604,12 @@ msgstr "Bulgaria - Accounting Reports"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bg_reports_ledger
 msgid "Bulgaria - Accounting Reports Ledger"
-msgstr ""
+msgstr "保加利亚 - 会计报告分类账"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bg_ledger
 msgid "Bulgaria - Report ledger"
-msgstr ""
+msgstr "保加利亚 - 报告分类账"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__bundle
@@ -19680,7 +19756,7 @@ msgstr "CUIT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cake_shop
 msgid "Cake Store"
-msgstr ""
+msgstr "蛋糕店"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__calendar
@@ -20369,7 +20445,7 @@ msgstr "城市"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cleaning_services
 msgid "Cleaning Services"
-msgstr ""
+msgstr "清洁服务"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__clear
@@ -20415,7 +20491,7 @@ msgstr "关闭"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_clothing_boutique
 msgid "Clothing Store"
-msgstr ""
+msgstr "服装店"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cloud_storage
@@ -20527,7 +20603,7 @@ msgstr "哥伦比亚会计及税种预配置"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_co_edi_mandate
 msgid "Colombian EDI Mandate Invoicing extension"
-msgstr ""
+msgstr "哥伦比亚 EDI 委托开具发票扩展功能"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_co_dian
@@ -21179,7 +21255,7 @@ msgstr "Cordoba"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_corporate_gifts
 msgid "Corporate Gifts"
-msgstr ""
+msgstr "公司礼物"
 
 #. module: base
 #: model:res.country,name:base.cr
@@ -21882,7 +21958,7 @@ msgstr "自定字段"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_custom_furniture
 msgid "Custom Furniture Production"
-msgstr ""
+msgstr "定制家具生产"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__manual
@@ -23455,7 +23531,7 @@ msgstr "萨尔瓦多"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_electrician
 msgid "Electricians"
-msgstr ""
+msgstr "电工"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock
@@ -25555,7 +25631,7 @@ msgstr "字体"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_trucks
 msgid "Food Trucks"
-msgstr ""
+msgstr "食品卡车"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -25678,7 +25754,7 @@ msgstr "课程论坛"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coal_petroleum
 msgid "Fossil Fuel Trading"
-msgstr ""
+msgstr "化石燃料交易"
 
 #. module: base
 #. odoo-python
@@ -25990,7 +26066,7 @@ msgstr "休假仪表板的甘特图视图"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gardening
 msgid "Gardening"
-msgstr ""
+msgstr "园艺"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_gelato
@@ -26309,7 +26385,7 @@ msgstr "希腊 - 会计报告"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gr_edi
 msgid "Greece - MyDATA"
-msgstr ""
+msgstr "希腊 - MyDATA"
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -26334,7 +26410,7 @@ msgstr "网格视图"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fmcg_store
 msgid "Grocery Store"
-msgstr ""
+msgstr "杂货店"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PLN
@@ -26988,7 +27064,7 @@ msgstr "Hongkong"
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
 msgid "Hospitality"
-msgstr ""
+msgstr "酒店"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_host
@@ -27263,7 +27339,7 @@ msgstr "ISO 代码"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_it_hardware
 msgid "IT Hardware & Support"
-msgstr ""
+msgstr "IT 硬件和支持"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_J
@@ -27966,7 +28042,7 @@ msgstr "印度尼西亚 E-faktur"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id_efaktur_coretax
 msgid "Indonesia E-faktur (Coretax)"
-msgstr ""
+msgstr "印度尼西亚电子发票 （Coretax）"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_id
@@ -28156,7 +28232,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_pine_labs
 msgid "Integrate your POS with Pine Labs payment terminals"
-msgstr ""
+msgstr "将您的 POS 与 Pine Labs 支付终端集成"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_paytm
@@ -28186,7 +28262,7 @@ msgstr "将您的 POS 系统与 Stripe 支付终端集成"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_tyro
 msgid "Integrate your POS with a Tyro payment terminal (AU)"
-msgstr ""
+msgstr "将您的 POS 机与 Tyro 支付终端整合（AU）"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_viva_wallet
@@ -30279,7 +30355,7 @@ msgstr "马来西亚 - 电子发票扩展功能"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_hr_payroll
 msgid "Malaysia - Payroll"
-msgstr ""
+msgstr "马来西亚 - 工资"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_my_hr_payroll_account
@@ -31056,7 +31132,7 @@ msgstr "Mexico/General"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_micro_brewery
 msgid "Microbrewery"
-msgstr ""
+msgstr "微型酿酒厂"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -33325,7 +33401,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_partner
 msgid "Odoo Partner"
-msgstr ""
+msgstr "Odoo 合作伙伴"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -39713,7 +39789,7 @@ msgstr "Shiprocket：货到现金付款"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_shoe_maker
 msgid "Shoe Maker"
-msgstr ""
+msgstr "鞋匠"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_shopee
@@ -39760,7 +39836,7 @@ msgstr "显示有效的币别"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_search
 msgid "Show inactive bank account"
-msgstr ""
+msgstr "显示无效的银行账户"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_search
@@ -40034,12 +40110,12 @@ msgstr "公司设置的社交媒体连接器。"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_software_reseller
 msgid "Software Reseller"
-msgstr ""
+msgstr "软件经销商"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_solar_installation
 msgid "Solar Energy Systems"
-msgstr ""
+msgstr "太阳能能源系统"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PEN

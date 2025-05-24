@@ -7,6 +7,7 @@ registry.category("web_tour.tours").add("self_attribute_selector", {
     steps: () => [
         Utils.clickBtn("Order Now"),
         ProductPage.clickProduct("Desk Organizer"),
+        ProductPage.checkAttributePrice("Size", "S", "$ 0.25"),
         ...ProductPage.setupAttribute([
             { name: "Size", value: "M" },
             { name: "Fabric", value: "Leather" },

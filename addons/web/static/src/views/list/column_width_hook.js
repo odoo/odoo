@@ -106,13 +106,16 @@ function computeOptimalDateWidths() {
     const dates = [];
     const datetimes = [];
     const { dateFormat, timeFormat } = localization;
+    const escapedPartsRegex = /('[^']*')/g;
+    const dateFormatWoEscParts = dateFormat.replaceAll(escapedPartsRegex, "");
     // generate a date for each month if date format contains MMMM or MMM (full or abbrev. month)
-    for (let month = 1; month <= (/(?<!')MMM/.test(dateFormat) ? 12 : 1); month++) {
+    for (let month = 1; month <= (/MMM/.test(dateFormatWoEscParts) ? 12 : 1); month++) {
         // generate a date for each day if date format contains cccc or ccc (full or abbrev. day)
-        for (let day = 1; day <= (/(?<!')ccc/.test(dateFormat) ? 7 : 1); day++) {
+        for (let day = 1; day <= (/ccc/.test(dateFormatWoEscParts) ? 7 : 1); day++) {
             dates.push(formatDate(luxon.DateTime.local(2017, month, day)));
             datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 8, 0, 0)));
-            if (/(?<!')a/.test(timeFormat)) {
+            const timeFormatWoEscParts = timeFormat.replaceAll(escapedPartsRegex, "");
+            if (/a/.test(timeFormatWoEscParts)) {
                 // generate a date in the afternoon if time is displayed with AM/PM or equivalent
                 datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 20, 0, 0)));
             }

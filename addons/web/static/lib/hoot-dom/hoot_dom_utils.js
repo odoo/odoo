@@ -37,7 +37,6 @@
 //-----------------------------------------------------------------------------
 
 const {
-    Boolean,
     navigator: { userAgent: $userAgent },
     Object: { assign: $assign },
     RegExp,
@@ -170,7 +169,7 @@ export function isFirefox() {
  * @returns {V extends Iterable<T> ? true : false}
  */
 export function isIterable(object) {
-    return Boolean(object && typeof object === "object" && object[Symbol.iterator]);
+    return !!(object && typeof object === "object" && object[Symbol.iterator]);
 }
 
 /**
@@ -228,10 +227,6 @@ export class HootDebugHelpers {
     constructor(...helpers) {
         $assign(this, ...helpers);
     }
-}
-
-export class HootDomError extends Error {
-    name = "HootDomError";
 }
 
 export const REGEX_MARKER = "/";

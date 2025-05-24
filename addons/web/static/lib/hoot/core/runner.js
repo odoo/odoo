@@ -108,7 +108,7 @@ import * as hootMock from "@odoo/hoot-mock";
 
 const {
     clearTimeout,
-    console: { error: $error, groupEnd: $groupEnd, log: $log, table: $table },
+    console: { error: $error },
     EventTarget,
     Map,
     Math: { abs: $abs, floor: $floor },
@@ -119,6 +119,7 @@ const {
         entries: $entries,
         freeze: $freeze,
         fromEntries: $fromEntries,
+        keys: $keys,
     },
     performance,
     Promise,
@@ -212,31 +213,7 @@ const shuffle = (array) => {
  */
 const handleConsoleIssues = (test, shouldSuppress) => {
     if (shouldSuppress && test.config.todo) {
-        const restoreConsole = () => $assign(globalThis.console, originalMethods);
-
-        /**
-         * @param {string} label
-         * @param {string} color
-         */
-        const suppressIssueLogger = (label, color) => {
-            const groupName = [`%c[${label}]%c suppressed by "test.todo"`, `color: ${color}`, ""];
-            return (...args) => {
-                logger.groupCollapsed(...groupName);
-                $log(...args);
-                $groupEnd();
-            };
-        };
-
-        const originalMethods = {
-            error: globalThis.console.error,
-            warn: globalThis.console.warn,
-        };
-        $assign(globalThis.console, {
-            error: suppressIssueLogger("ERROR", "#9f1239"),
-            warn: suppressIssueLogger("WARNING", "#f59e0b"),
-        });
-
-        return restoreConsole;
+        return logger.suppressIssues(`suppressed by "test.todo"`);
     } else {
         const offConsoleEvents = () => {
             while (cleanups.length) {
@@ -334,7 +311,7 @@ export class Runner {
          *  - +1/-1: included/excluded by URL
          *  - +2/-2: included/excluded by explicit test tag (readonly)
          *  - +3/-3: included/excluded by preset (readonly)
-         * @type {Record<Omit<SearchFilter, "filter">, Record<string, number>>}
+         * @type {Record<Exclude<SearchFilter, "filter">, Record<string, number>>}
          */
         includeSpecs: {
             suite: {},
@@ -372,7 +349,7 @@ export class Runner {
      * @type {boolean}
      */
     get hasFilter() {
-        return this._hasRemovableFilter;
+        return this._hasRemovableFilter > 0;
     }
 
     // Private properties
@@ -380,8 +357,8 @@ export class Runner {
     /** @type {Job[]} */
     _currentJobs = [];
     _failed = 0;
-    _hasRemovableFilter = false;
-    _hasIncludeFilter = false;
+    _hasRemovableFilter = 0;
+    _hasIncludeFilter = 0;
     /** @type {(() => MaybePromise<void>)[]} */
     _missedCallbacks = [];
     _populateState = false;
@@ -441,22 +418,22 @@ export class Runner {
                     this.queryInclude.push(queryPart);
                 }
             }
-            this._hasIncludeFilter = this.queryInclude.length;
+            this._hasIncludeFilter += this.queryInclude.length;
         }
 
         // Suites
         if (this.config.suite?.length) {
-            this._include("suite", this.config.suite);
+            this._include(this.state.includeSpecs.suite, this.config.suite, INCLUDE_LEVEL.url);
         }
 
         // Tags
         if (this.config.tag?.length) {
-            this._include("tag", this.config.tag);
+            this._include(this.state.includeSpecs.tag, this.config.tag, INCLUDE_LEVEL.url);
         }
 
         // Tests
         if (this.config.test?.length) {
-            this._include("test", this.config.test);
+            this._include(this.state.includeSpecs.test, this.config.test, INCLUDE_LEVEL.url);
         }
 
         if (this.config.networkDelay) {
@@ -815,19 +792,8 @@ export class Runner {
      * @param {number} value
      */
     include(type, id, value) {
-        const { includeSpecs } = this.state;
-        if (value) {
-            includeSpecs[type][id] = value;
-        } else {
-            delete includeSpecs[type][id];
-        }
-
-        for (const type of FILTER_KEYS) {
-            if (type === "filter") {
-                continue;
-            }
-            this.config[type] = formatIncludes(includeSpecs[type]);
-        }
+        this._include(this.state.includeSpecs[type], [id], value);
+        this._updateConfigFromSpecs();
     }
 
     manualStart() {
@@ -848,6 +814,39 @@ export class Runner {
         for (const callback of callbacks) {
             callbackRegistry.add("error", callback, Boolean(test));
         }
+    }
+
+    /**
+     * @param {Partial<Record<SearchFilter, Iterable<string>>>} ids
+     */
+    simplifyUrlIds(ids) {
+        if (!ids) {
+            return {};
+        }
+        const specs = {
+            suite: {},
+            tag: {},
+            test: {},
+        };
+        let items = 0;
+        for (const key in specs) {
+            if (ids[key]) {
+                for (const id of ensureArray(ids[key])) {
+                    items++;
+                    specs[key][id] = INCLUDE_LEVEL.url;
+                }
+            }
+        }
+        if (items > 1) {
+            this._simplifyIncludeSpecs(specs, {
+                test: this.tests,
+                suite: this.suites,
+            });
+        }
+        for (const key in specs) {
+            specs[key] = $keys(specs[key]);
+        }
+        return specs;
     }
 
     /**
@@ -1148,11 +1147,11 @@ export class Runner {
         if (failed > 0) {
             const errorMessage = ["Some tests failed: see above for details"];
             if (this.config.headless) {
-                const link = createUrlFromId(this.state.failedIds, "test");
+                const ids = this.simplifyUrlIds({ test: this.state.failedIds });
+                const link = createUrlFromId(ids, { debug: false });
                 // Tweak parameters to make debugging easier
                 link.searchParams.set("debug", "assets");
                 link.searchParams.set("loglevel", LOG_LEVELS.tests);
-                link.searchParams.delete("debugTest");
                 link.searchParams.delete("headless");
                 errorMessage.push(`Failed tests link: ${link.toString()}`);
             }
@@ -1344,7 +1343,7 @@ export class Runner {
                         );
                     }
                     this._include(
-                        job instanceof Suite ? "suite" : "test",
+                        this.state.includeSpecs[job instanceof Suite ? "suite" : "test"],
                         [job.id],
                         INCLUDE_LEVEL.tag
                     );
@@ -1368,21 +1367,6 @@ export class Runner {
                 );
             } else {
                 job.config.skip = true;
-            }
-        }
-    }
-
-    /**
-     * @param {keyof Runner["config"]} configKey
-     * @param {Map<string, any>} valuesMap
-     */
-    _checkUrlValidity(configKey, valuesMap) {
-        const values = this.state.includeSpecs[configKey];
-        const availableValues = new Set(valuesMap.keys());
-        for (const [key, incLevel] of $entries(values)) {
-            if ($abs(incLevel) === INCLUDE_LEVEL.url && !availableValues.has(key)) {
-                delete values[key];
-                this.config[configKey] = this.config[configKey].filter((val) => key !== val);
             }
         }
     }
@@ -1465,23 +1449,52 @@ export class Runner {
     }
 
     /**
-     * @param {SearchFilter} type
+     * @param {Record<string, number>} values
      * @param {Iterable<string>} ids
-     * @param {number} [priority=1]
+     * @param {number} includeLevel
+     * @param {boolean} [noIncrement]
      */
-    _include(type, ids, priority = INCLUDE_LEVEL.url) {
-        priority = $abs(priority);
-        if (priority === INCLUDE_LEVEL.url) {
-            this._hasRemovableFilter = true;
-        }
-        const values = this.state.includeSpecs[type];
+    _include(values, ids, includeLevel, noIncrement = false) {
+        const isRemovable = $abs(includeLevel) === INCLUDE_LEVEL.url;
+        const shouldInclude = !!includeLevel;
         for (const id of ids) {
-            const nId = normalize(id.toLowerCase());
-            if (id.startsWith(EXCLUDE_PREFIX)) {
-                values[nId.slice(EXCLUDE_PREFIX.length)] = priority * -1;
-            } else if ((values[nId]?.[0] || 0) >= 0) {
-                this._hasIncludeFilter = true;
-                values[nId] = priority;
+            let nId = normalize(id.toLowerCase());
+            let itemIncludeLevel = $abs(includeLevel);
+            if (nId.startsWith(EXCLUDE_PREFIX)) {
+                nId = nId.slice(EXCLUDE_PREFIX.length);
+                itemIncludeLevel *= -1;
+            }
+            const previousValue = values[nId] || 0;
+            const wasRemovable = $abs(previousValue) === INCLUDE_LEVEL.url;
+            if (shouldInclude) {
+                if (previousValue === itemIncludeLevel) {
+                    continue;
+                }
+                values[nId] = itemIncludeLevel;
+                if (noIncrement) {
+                    continue;
+                }
+                if (previousValue <= 0 && itemIncludeLevel > 0) {
+                    this._hasIncludeFilter++;
+                } else if (previousValue > 0 && itemIncludeLevel <= 0) {
+                    this._hasIncludeFilter--;
+                }
+                if (!wasRemovable && isRemovable) {
+                    this._hasRemovableFilter++;
+                } else if (wasRemovable && !isRemovable) {
+                    this._hasRemovableFilter--;
+                }
+            } else {
+                delete values[nId];
+                if (noIncrement) {
+                    continue;
+                }
+                if (previousValue > 0) {
+                    this._hasIncludeFilter--;
+                }
+                if (wasRemovable) {
+                    this._hasRemovableFilter--;
+                }
             }
         }
     }
@@ -1612,7 +1625,7 @@ export class Runner {
                 throw new HootError(`unknown preset: "${this.config.preset}"`);
             }
             if (preset.tags?.length) {
-                this._include("tag", preset.tags, INCLUDE_LEVEL.preset);
+                this._include(this.state.includeSpecs.tag, preset.tags, INCLUDE_LEVEL.preset);
             }
             if (preset.platform) {
                 mockUserAgent(preset.platform);
@@ -1624,14 +1637,13 @@ export class Runner {
         }
 
         // Cleanup invalid IDs and tags from URL
-        if (this.config.suite) {
-            this._checkUrlValidity("suite", this.suites);
-        }
-        if (this.config.tag) {
-            this._checkUrlValidity("tag", this.tags);
-        }
-        if (this.config.test) {
-            this._checkUrlValidity("test", this.tests);
+        const hasChanged = this._simplifyIncludeSpecs(this.state.includeSpecs, {
+            test: this.tests,
+            suite: this.suites,
+            tag: this.tags,
+        });
+        if (hasChanged) {
+            this._updateConfigFromSpecs();
         }
 
         // Cleanup invalid tests from storage
@@ -1751,7 +1763,7 @@ export class Runner {
             globalWarnings[key] = {
                 count: 1,
                 message,
-                name: "warning",
+                name: this.config.fun ? "warming" : "warning",
             };
         }
         return false;
@@ -1770,9 +1782,9 @@ export class Runner {
                 table[key] = `[${[...table[key]].join(", ")}]`;
             }
         }
-        logger.groupCollapsed("Configuration (click to expand)");
-        $table(table);
-        $groupEnd();
+        logger.group("Configuration (click to expand)", () => {
+            logger.table(table);
+        });
         logger.logRun("Starting test suites");
 
         // Adjust debug mode if more or less than 1 test will be run
@@ -1828,5 +1840,52 @@ export class Runner {
         setFrameRate(this.config.fps);
 
         await this._callbacks.call("before-all", logger.error);
+    }
+
+    /**
+     * @param {Runner["state"]["includeSpecs"]} includeSpecs
+     * @param {Partial<Record<keyof includeSpecs, Map<string, Job>>>} valuesMaps
+     */
+    _simplifyIncludeSpecs(includeSpecs, valuesMaps) {
+        let hasChanged = false;
+        for (const [configKey, valuesMap] of $entries(valuesMaps)) {
+            const specs = includeSpecs[configKey];
+            let remaining = $keys(specs);
+            while (remaining.length) {
+                const id = remaining.shift();
+                if (specs[id] !== INCLUDE_LEVEL.url) {
+                    continue;
+                }
+                const item = valuesMap.get(id);
+                if (!item) {
+                    this._include(specs, [id], 0, true);
+                }
+                if (!item?.parent || item.parent.jobs.length < 1) {
+                    // No parent or no need to simplify
+                    continue;
+                }
+                const siblingIds = item.parent.jobs.map((job) => job.id);
+                if (
+                    siblingIds.every(
+                        (siblingId) => siblingId === id || remaining.includes(siblingId)
+                    )
+                ) {
+                    remaining = remaining.filter((id) => !siblingIds.includes(id));
+                    this._include(includeSpecs.suite, [item.parent.id], INCLUDE_LEVEL.url, true);
+                    this._include(specs, siblingIds, 0, true);
+                    hasChanged = true;
+                }
+            }
+        }
+        return hasChanged;
+    }
+
+    _updateConfigFromSpecs() {
+        for (const type of FILTER_KEYS) {
+            if (type === "filter") {
+                continue;
+            }
+            this.config[type] = formatIncludes(this.state.includeSpecs[type]);
+        }
     }
 }

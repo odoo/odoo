@@ -130,7 +130,7 @@ export class HootFixtureElement extends HTMLElement {
 
     static {
         customElements.define(this.TAG_NAME, this);
-        this.styleElement.innerText = /* css */ `
+        this.styleElement.textContent = /* css */ `
             ${this.TAG_NAME} {
                 position: fixed !important;
                 height: 100vh;

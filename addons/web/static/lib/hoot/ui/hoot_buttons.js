@@ -78,8 +78,7 @@ export class HootButtons extends Component {
                     </t>
                     <t t-if="showFailed">
                         <HootLink
-                            type="'test'"
-                            id="runnerState.failedIds"
+                            ids="{ test: runnerState.failedIds }"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
                             title="'Run failed tests'"
                             onClick="onRunFailedClick"
@@ -87,8 +86,7 @@ export class HootButtons extends Component {
                             Run failed <strong>tests</strong>
                         </HootLink>
                         <HootLink
-                            type="'suite'"
-                            id="failedSuites"
+                            ids="{ suite: failedSuites }"
                             class="'bg-btn p-2 whitespace-nowrap transition-colors'"
                             title="'Run failed suites'"
                             onClick="onRunFailedClick"

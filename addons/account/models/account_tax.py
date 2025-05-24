@@ -1882,10 +1882,12 @@ class AccountTax(models.Model):
         # Tags on the base line.
         taxes_data = base_line['tax_details']['taxes_data']
         base_line['tax_tag_ids'] = self.env['account.account.tag']
+        product_tags = self.env['account.account.tag']
         if product:
             countries = {tax_data['tax'].country_id for tax_data in taxes_data}
             countries.add(False)
-            base_line['tax_tag_ids'] |= product.sudo().account_tag_ids
+            product_tags = product.sudo().account_tag_ids
+            base_line['tax_tag_ids'] |= product_tags
 
         for tax_data in taxes_data:
             tax = tax_data['tax']
@@ -1958,9 +1960,9 @@ class AccountTax(models.Model):
 
                 # Compute subsequent taxes/tags.
                 tax_rep_data['taxes'] = self.env['account.tax']
-                tax_rep_data['tax_tags'] = self.env['account.account.tag']
+                tax_rep_data['tax_tags'] = product_tags
                 if include_caba_tags or tax.tax_exigibility == 'on_invoice':
-                    tax_rep_data['tax_tags'] = tax_rep.tag_ids
+                    tax_rep_data['tax_tags'] |= tax_rep.tag_ids
                 if tax.include_base_amount:
                     tax_rep_data['taxes'] |= subsequent_taxes
                     for other_tax, tags in subsequent_tags_per_tax.items():

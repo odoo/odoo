@@ -1546,11 +1546,14 @@ class TestReorderingRule(TransactionCase):
         backorder_wizard_dict = delivery.button_validate()
         backorder_wizard_form = Form.from_action(self.env, backorder_wizard_dict)
         backorder_wizard_form.save().process()
-        # Check that the bakorder is still mto
+        # Check the bakorder values
+        purchase_order_line = self.env["purchase.order.line"].search([("product_id", "=", buy_product.id)])
         self.assertRecordValues(delivery.backorder_ids.move_ids, [{
-            'product_uom_qty': 70, 'procure_method': 'make_to_order',
+            'product_uom_qty': 70, 'procure_method': 'make_to_order', 'state': 'waiting', 'created_purchase_line_ids': purchase_order_line.ids,
         }])
         # Check that the backorder belongs to the same procurement group
         self.assertEqual(delivery.backorder_ids.group_id, delivery.group_id)
-        # Check that the PO was not updated not a new PO created
-        self.assertEqual(self.env["purchase.order.line"].search([("product_id", "=", buy_product.id)]).product_qty, 100)
+        # Check that the qty of the PO was not updated but that both pickings are referenced by the current
+        self.assertRecordValues(purchase_order_line, [
+            {'product_uom_qty': 100, 'move_dest_ids': [delivery.move_ids.id, delivery.backorder_ids.move_ids.id]}
+        ])

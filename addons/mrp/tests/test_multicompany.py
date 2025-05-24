@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import common, Form
 from odoo.exceptions import UserError
 
@@ -281,3 +282,37 @@ class TestMrpMulticompany(common.TransactionCase):
             'code': 'WH2',
         })
         self.assertEqual(new_warehouse.manufacture_pull_id.route_id.company_id, self.company_b)
+
+    def test_multi_company_kit_reservation(self):
+        """
+        Create and assign a delivery in company_b for a product that is a kit in company_a.
+        Check that the move is treated just as a non-kit product.
+        """
+        """ Check that is_kits is company dependant """
+        semi_kit_product = self.env['product.product'].create({
+            'name': 'Kit Kat',
+            'is_storable': True,
+        })
+        self.env['mrp.bom'].create([{
+            'product_id': semi_kit_product.id,
+            'product_tmpl_id': semi_kit_product.product_tmpl_id.id,
+            'company_id': self.company_a.id,
+            'type': 'phantom',
+        }])
+        warehouse_b = self.env['stock.warehouse'].search([('company_id', '=', self.company_b.id)], limit=1)
+        delivery = self.env['stock.picking'].with_company(self.company_b.id).create({
+            'picking_type_id': warehouse_b.out_type_id.id,
+            'location_id': warehouse_b.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_ids': [Command.create({
+                'name': semi_kit_product.name,
+                'product_id': semi_kit_product.id,
+                'product_uom_qty': 1,
+                'location_id':  warehouse_b.lot_stock_id.id,
+                'location_dest_id': self.ref('stock.stock_location_customers'),
+            })]
+        })
+        # confirm and assign the delivery with company_a and check that it was treated as a non-kit product
+        delivery.with_company(self.company_a).action_confirm()
+        delivery.with_company(self.company_a).action_assign()
+        self.assertRecordValues(delivery.move_ids, [{'state': 'confirmed', 'quantity': 0.0}])

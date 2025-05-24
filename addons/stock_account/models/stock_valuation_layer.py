@@ -131,7 +131,7 @@ class StockValuationLayer(models.Model):
         #  Handler called when the user clicked on the 'Valuation at Date' button.
         #  Opens wizard to display, at choice, the products inventory or a computed
         #  inventory at a given date.
-        context = {}
+        context = {"pivot_measures": ["quantity", "value"]}
         if ("default_product_id" in self.env.context):
             context["product_id"] = self.env.context["default_product_id"]
         elif ("default_product_tmpl_id" in self.env.context):

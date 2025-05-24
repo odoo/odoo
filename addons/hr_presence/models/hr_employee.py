@@ -155,7 +155,7 @@ Thank you for your prompt attention to this matter.""")
             "res_model": "sms.composer",
             "view_mode": 'form',
             "context": context,
-            "name": _("Send SMS"),
+            "name": self.env._("Send SMS"),
             "target": "new",
         }
 

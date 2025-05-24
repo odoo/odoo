@@ -334,7 +334,7 @@ class Track(models.Model):
 
     def _search_wishlist_visitor_ids(self, operator, operand):
         if operator == "not in":
-            raise NotImplementedError("Unsupported 'Not In' operation on track wishlist visitors")
+            raise NotImplementedError(self.env._("Unsupported 'Not In' operation on track wishlist visitors"))
 
         track_visitors = self.env['event.track.visitor'].sudo().search([
             ('visitor_id', operator, operand),
