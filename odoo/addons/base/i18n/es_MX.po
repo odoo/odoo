@@ -7261,7 +7261,7 @@ msgstr ""
 "Gestione la coincidencia de tres vías en las facturas de proveedor\n"
 "=====================================\n"
 "\n"
-"En el sector de fabricación es común recibir las facturas de los proveedores antes\n"
+"En la industria manufacturera es común recibir las facturas de los proveedores antes\n"
 "de recibir la compra, pero también es común querer pagar la factura hasta después de haber recibido los\n"
 "bienes.\n"
 "\n"
@@ -7269,14 +7269,14 @@ msgstr ""
 "(según las cantidades ordenadas), pero pagar la factura solo cuando las cantidades\n"
 "recibidas (indicadas en la orden de compra) coincidan con lo indicado en la factura del proveedor.\n"
 "\n"
-"Este módulo introduce un mecanismo de \"emisión de pago\" que marca en cada una de las\n"
-"facturas de los proveedores si estas se pueden pagar o no.\n"
+"Este módulo introduce un mecanismo de \"emisión de pago\" que indica si es posible pagar o no cada una de las\n"
+"facturas de los proveedores.\n"
 "\n"
 "Cada factura recibe uno de los siguientes tres estados:\n"
 "\n"
-"- Sí (es posible pagar la factura)\n"
-"- No (no es posible pagar la factura, no ha recibido los productos)\n"
-"- Excepción (las cantidades recibidas no coinciden con las cantidades facturadas)\n"
+"- Sí (Es posible pagar la factura)\n"
+"- No (No es posible pagar la factura, no ha recibido los productos)\n"
+"- Excepción (Las cantidades recibidas no coinciden con las cantidades facturadas)\n"
 " "
 
 #. module: base
@@ -7598,16 +7598,16 @@ msgstr ""
 "Programa maestro de producción\n"
 "==========================\n"
 "\n"
-"En algunas ocasiones se necesita crear órdenes de compra para los componentes de\n"
-"los pedidos de fabricación que solo podrán crearse después o para los pedidos de\n"
-"producción en los que los pedidos de compra solo pueden entregarse después. La solución\n"
-"es predecir el pronóstico de ventas y, basándose en eso, ya podrá crear algunos pedidos\n"
-"de producción u órdenes de compra.\n"
+"En algunas ocasiones necesita crear órdenes de compra para los componentes de\n"
+"las órdenes de fabricación que solo podrán crearse después, o para órdenes de\n"
+"producción en las que las órdenes de compra solo pueden entregarse después. La solución\n"
+"es predecir el pronóstico de ventas y, basándose en eso, ya podrá crear algunas órdenes\n"
+"de producción o de compra.\n"
 "\n"
-"Tiene que seleccionar los productos que quiera agregar al reporte. Puede elegir\n"
-"el periodo del reporte: día, semana, mes... También se pueden establecer\n"
-"las existencias de seguridad, el mínimo o máximo que se puede suministrar y anular manualmente\n"
-"la cantidad que quiera obtener.\n"
+"Tiene que seleccionar los productos que desea agregar al reporte. Puede elegir\n"
+"el periodo del reporte: día, semana, mes, etc. También puede establecer\n"
+"las existencias de seguridad, el mínimo o máximo que se puede suministrar y anular de forma manual\n"
+"la cantidad que desee obtener.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx
@@ -12656,8 +12656,8 @@ msgid ""
 "<strong>This operation will permanently erase all data currently stored by "
 "the modules!</strong>"
 msgstr ""
-"<strong>Esta operación borrará permanentemente todos los datos registrados "
-"actualmente por los módulos.</strong>"
+"<strong>Esta operación eliminará todos los datos almacenados actualmente por"
+" los módulos de forma permanente.</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -18234,8 +18234,8 @@ msgstr "D - SUMINISTRO DE ELECTRICIDAD, GAS, VAPOR Y AIRE ACONDICIONADO"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
-msgid "DHL Express Shipping"
-msgstr "Envío por DHL Express"
+msgid "DHL Express Shipping (Legacy)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
@@ -19330,8 +19330,8 @@ msgid ""
 "Due to security restrictions, you are not allowed to delete "
 "'%(document_kind)s' (%(document_model)s) records."
 msgstr ""
-"Por restricciones de seguridad no tiene permiso para borrar registros de "
-"\"%(document_kind)s\" (%(document_model)s)."
+"Por restricciones de seguridad no tiene permiso para eliminar los registros "
+"de \"%(document_kind)s\" (%(document_model)s)."
 
 #. module: base
 #. odoo-python
@@ -21228,12 +21228,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec
 msgid "France - FEC Export"
-msgstr "Francia - Exportar FEC"
+msgstr "Francia - Exportación FEC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_fec_import
 msgid "France - FEC Import"
-msgstr "Francia - Importar FEC"
+msgstr "Francia - Importación FEC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fr_facturx_chorus_pro
@@ -25211,11 +25211,11 @@ msgid ""
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
 msgstr ""
-"Gestionar y personalizar los elementos disponibles y mostrados en su menú de"
-" Odoo. Puede borrar un elemento pulsando en la caja al inicio de cada línea "
-"y entonces borrarlo a través del botón que aparece. Los elementos pueden ser"
-" asignados a grupos específicos para hacerlos accesibles sólo a algunos "
-"usuarios del sistema."
+"Gestione y personalice los elementos disponibles que aparecen en su menú de "
+"Odoo. Para eliminar un elemento, haga clic en la caja que se encuentra al "
+"inicio de cada línea y haga clic en el botón de eliminar. Los elementos se "
+"pueden asignar a grupos específicos para que solo algunos usuarios del "
+"sistema puedan acceder a ellos."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -29135,8 +29135,8 @@ msgid ""
 "Only the portal users can delete their accounts. The user(s) %s can not be "
 "deleted."
 msgstr ""
-"Solo los usuarios del portal pueden borrar sus cuentas. Los usuarios %s no "
-"se pueden borrar."
+"Solo los usuarios del portal pueden eliminar sus cuentas. Los usuarios %s no"
+" se pueden eliminar."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -32072,7 +32072,7 @@ msgstr "Restaurante"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant
 msgid "Restaurant extensions for the Point of Sale "
-msgstr "Extensión para Punto de venta de restaurantes"
+msgstr "Extensión de restaurante para la aplicación Punto de venta"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
@@ -32773,7 +32773,7 @@ msgstr "Buscar categoría del partner"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_industry_view_search
 msgid "Search Partner Industry"
-msgstr "Buscar industria del partner"
+msgstr "Buscar industria del contacto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
@@ -33072,8 +33072,11 @@ msgstr "Envíe sus paquetes a través de Shiprocket y rastréelos en línea"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
-msgid "Send your shippings through DHL and track them online"
-msgstr "Haga sus envíos a través de DHL y rastréelos en línea"
+msgid ""
+"This is the legacy integration with DHL Express that is no longer supported."
+" Please install the new \"DHL Express Shipping\" module and uninstall this "
+"one as soon as possible."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -35312,7 +35315,7 @@ msgid ""
 msgstr ""
 "No se pudo completar la operación:\n"
 "- Crear/actualizar: no configuró un campo obligatorio.\n"
-"- Borrar: otro modelo requiere que que se borre el registro. Si es posible, mejor archívelo.\n"
+"- Eliminar: otro modelo necesita que elimine el registro. Si es posible, archívelo.\n"
 "\n"
 "Modelo: %(model_name)s (%(model_tech_name)s)\n"
 "Campo: %(field_name)s (%(field_tech_name)s)\n"
@@ -38415,7 +38418,7 @@ msgstr "No puede crear informes '%(document_kind)s' (%(document_model)s)"
 msgid ""
 "You are not allowed to delete '%(document_kind)s' (%(document_model)s) "
 "records."
-msgstr "No puede borrar informes '%(document_kind)s' (%(document_model)s)"
+msgstr "No puede eliminar registros '%(document_kind)s' (%(document_model)s)."
 
 #. module: base
 #. odoo-python
