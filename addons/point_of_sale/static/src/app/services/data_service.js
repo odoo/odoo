@@ -16,15 +16,16 @@ const INDEXED_DB_VERSION = 1;
 
 export class PosData extends Reactive {
     static modelToLoad = []; // When empty all models are loaded
-    static serviceDependencies = ["orm", "bus_service"];
+    static serviceDependencies = ["orm", "bus_service", "webrtc_data_channel"];
 
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
 
-    async setup(env, { orm, bus_service }) {
+    async setup(env, { orm, bus_service, webrtc_data_channel }) {
         this.orm = orm;
+        this.webrtc = webrtc_data_channel;
         this.bus = bus_service;
         this.relations = [];
         this.custom = {};
@@ -33,6 +34,7 @@ export class PosData extends Reactive {
         this.records = {};
         this.opts = new DataServiceOptions();
         this.channels = [];
+        this.lockRTC = false;
 
         this.network = {
             warningTriggered: false,
@@ -57,6 +59,64 @@ export class PosData extends Reactive {
         });
 
         this.bus.addEventListener("connect", this.reconnectWebSocket.bind(this));
+        await this.initWebRTCService();
+    }
+
+    async initWebRTCService() {
+        await this.webrtc.init();
+        this.webrtc.onMessage = this.handleWebRTCMessage.bind(this);
+        this.initializeWebRTCSynchronization();
+    }
+
+    async handleWebRTCMessage(messages) {
+        const data = messages.data;
+        const deletion = messages.deletion;
+
+        try {
+            this.lockRTC = true;
+
+            const preLoadData = await this.preLoadData(data);
+            const missing = await this.missingRecursive(preLoadData);
+            this.models.loadConnectedData(missing, []);
+
+            for (const [model, ids] of Object.entries(deletion)) {
+                const records = this.models[model].readMany(ids).filter(Boolean);
+
+                if (records.length === 0) {
+                    continue; // No records to delete
+                }
+
+                this.models[model].deleteMany(records, { silent: true });
+            }
+        } finally {
+            this.lockRTC = false;
+        }
+    }
+
+    initializeWebRTCSynchronization() {
+        const watchedEvent = ["update", "delete", "create"];
+        for (const model of this.opts.dynamicModels) {
+            for (const event of watchedEvent) {
+                this.models[model].addEventListener(event, (params) => {
+                    const id = params.id;
+                    const record = this.models[model].get(id);
+                    const serialized = record && record.serializeForIndexedDB();
+
+                    if (this.lockRTC || !id) {
+                        return;
+                    }
+
+                    this.webrtc.messagesQueue.push({
+                        id: id,
+                        event: event,
+                        model: model,
+                        data: serialized, // if data is false, it means the record was deleted
+                    });
+
+                    this.webrtc.debounceSendMessage();
+                });
+            }
+        }
     }
 
     initializeWebsocket() {

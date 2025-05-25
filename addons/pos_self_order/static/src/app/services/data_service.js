@@ -44,4 +44,5 @@ patch(PosData.prototype, {
         return recordMap;
     },
     async checkAndDeleteMissingOrders(results) {},
+    async initWebRTCService() {},
 });

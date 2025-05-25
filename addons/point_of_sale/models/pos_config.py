@@ -245,6 +245,13 @@ class PosConfig(models.Model):
             'deleted_record_ids': delete_record_ids,
         }
 
+    def webrtc_signal(self, login_number, data):
+        self.ensure_one()
+        self._notify('WEBRTC_SIGNAL', {
+            'data': data,
+            'login_number': login_number
+        })
+
     @api.model
     def _load_pos_data_domain(self, data):
         return [('id', '=', data['pos.session'][0]['config_id'])]

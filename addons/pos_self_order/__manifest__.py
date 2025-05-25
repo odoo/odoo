@@ -84,6 +84,11 @@
             "point_of_sale/static/src/app/utils/numbers.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
             "point_of_sale/static/src/app/utils/debug-formatter.js",
+
+            # WebRTC assets
+            "point_of_sale/static/src/app/services/webrtc_service.js",
+            "point_of_sale/static/src/app/utils/enhanced_console.js",
+            "point_of_sale/static/src/app/webrtc/**/*",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [

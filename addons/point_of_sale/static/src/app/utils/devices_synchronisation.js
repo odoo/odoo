@@ -84,6 +84,11 @@ export default class DevicesSynchronisation {
      * and synchronize the records with other devices.
      */
     async readDataFromServer() {
+        // FIXME - WebRTC testing
+        if (!this.isNoSet) {
+            return false;
+        }
+
         const serverOpenOrders = this.pos.getOpenOrders().filter((o) => typeof o.id === "number");
         const { domain, recordIds } = this.constructOrdersDomain(serverOpenOrders);
         let response = {};
