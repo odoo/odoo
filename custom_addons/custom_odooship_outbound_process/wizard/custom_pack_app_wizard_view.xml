@@ -57,9 +57,19 @@
                                     string="Add New Package"
                                     invisible="show_package_box_in_lines == True"
                                     class="btn-primary"/>
-<!--                                    confirm="Are you sure you want to add a new package number?"/>-->
+                            <!--                                    confirm="Are you sure you want to add a new package number?"/>-->
                         </group>
                     </group>
+                    <group>
+                        <field name="message_text"
+                               readonly="1"
+                               role="alert"
+                               widget="text"
+                               class="alert alert-warning text-center fw-bold blink"
+                               style="white-space: pre-wrap; text-align: center; font-weight: bold;"
+                               modifiers="{'invisible': [['show_message', '=', False]]}"/>
+                    </group>
+
                     <group>
                         <field name="line_ids" delete="False">
                             <tree editable="bottom">
