@@ -5,4 +5,7 @@
             <attribute name="height">300</attribute>
         </xpath>
     </t>
+    <t t-name="stock.StockForecastGraphView.Buttons">
+        <t t-if="props.model.searchParams.context.show_graph_buttons" t-call="web.GraphView.Buttons"/>
+    </t>
 </templates>

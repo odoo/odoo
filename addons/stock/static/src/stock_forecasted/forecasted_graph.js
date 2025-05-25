@@ -9,6 +9,7 @@ export class StockForecastedGraphRenderer extends GraphRenderer {
 export const StockForecastedGraphView = {
     ...graphView,
     Renderer: StockForecastedGraphRenderer,
+    buttonTemplate: "stock.StockForecastGraphView.Buttons",
 };
 
 registry.category("views").add("stock_forecasted_graph", StockForecastedGraphView);
