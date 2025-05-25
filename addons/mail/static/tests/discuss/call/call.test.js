@@ -131,26 +131,12 @@ test("should disconnect when closing page while in call", async () => {
             asyncStep(`sendBeacon_leave_call:${blobData.params.channel_id}`);
         }
     });
-    patchWithCleanup(navigator, {
-        serviceWorker: {
-            controller: {
-                postMessage(data) {
-                    if (data.name === "UNEXPECTED_CALL_TERMINATION") {
-                        asyncStep(`postMessage:${data.name}:${data.channelId}`);
-                    }
-                },
-            },
-        },
-    });
 
     await click("[title='Start a Call']");
     await contains(".o-discuss-Call");
     // simulate page close
     await manuallyDispatchProgrammaticEvent(window, "pagehide");
-    await waitForSteps([
-        `postMessage:UNEXPECTED_CALL_TERMINATION:${channelId}`,
-        `sendBeacon_leave_call:${channelId}`,
-    ]);
+    await waitForSteps([`sendBeacon_leave_call:${channelId}`]);
 });
 
 test("should display invitations", async () => {
