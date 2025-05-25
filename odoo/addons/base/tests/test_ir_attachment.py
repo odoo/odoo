@@ -10,7 +10,7 @@ from PIL import Image
 import odoo
 from odoo.exceptions import AccessError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.tools import image_to_base64
+from odoo.tools import image_to_base64, mute_logger
 
 HASH_SPLIT = 2      # FIXME: testing implementations detail is not a good idea
 
@@ -330,6 +330,32 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # Safety assert that base.user_admin is not the superuser, otherwise the test is useless
         self.assertNotEqual(odoo.SUPERUSER_ID, admin_user.id)
         attachment_admin.with_user(admin_user).datas
+
+    @mute_logger("odoo.addons.base.models.ir_rule", "odoo.models")
+    def test_field_read_permission(self):
+        """If the record field can't be read,
+        e.g. `groups="base.group_system"` on the field,
+        the attachment can't be read either.
+        """
+        # check that the information can be read out of the box
+        main_partner = self.env.ref('base.main_partner')
+        self.assertTrue(main_partner.image_128)
+        attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'res.partner'),
+            ('res_id', '=', main_partner.id),
+            ('res_field', '=', 'image_128')
+        ])
+        self.assertTrue(attachment.datas)
+
+        # Patch the field `res.partner.image_128` to make it unreadable by the demo user
+        self.patch(self.env.registry['res.partner']._fields['image_128'], 'groups', 'base.group_system')
+
+        # Assert the field can't be read
+        with self.assertRaises(AccessError):
+            main_partner.image_128
+        # Assert the attachment related to the field can't be read
+        with self.assertRaises(AccessError):
+            attachment.datas
 
     def test_with_write_permissions(self):
         """With write permissions to the linked record, attachment can be
