@@ -42,7 +42,6 @@ function subscribe(target, event, f) {
 }
 
 const SW_MESSAGE_TYPE = {
-    UNEXPECTED_CALL_TERMINATION: "UNEXPECTED_CALL_TERMINATION",
     POST_RTC_LOGS: "POST_RTC_LOGS",
 };
 export const CONNECTION_TYPES = { P2P: "p2p", SERVER: "server" };
@@ -437,10 +436,6 @@ export class Rtc extends Record {
 
         browser.addEventListener("pagehide", () => {
             if (this.state.channel) {
-                browser.navigator.serviceWorker?.controller?.postMessage({
-                    name: SW_MESSAGE_TYPE.UNEXPECTED_CALL_TERMINATION,
-                    channelId: this.state.channel.id,
-                });
                 const data = JSON.stringify({
                     params: { channel_id: this.state.channel.id, session_id: this.selfSession.id },
                 });
@@ -1323,9 +1318,7 @@ export class Rtc extends Record {
             // only register the beforeunload event if there is a call as FireFox will not place
             // the pages with beforeunload listeners in the bfcache.
             subscribe(browser, "beforeunload", (event) => {
-                if (this.store.env.services["multi_tab"].isOnLastTab) {
-                    event.preventDefault();
-                }
+                event.preventDefault();
             })
         );
     }
