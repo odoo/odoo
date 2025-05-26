@@ -369,7 +369,7 @@ export class SelfOrder extends Reactive {
 
         // When no payment methods redirect to confirmation page
         // the client will be able to pay at counter
-        if (paymentMethods.length === 0) {
+        if (paymentMethods.length === 0 || order.amount_total === 0) {
             let screenMode = "pay";
 
             if (Object.keys(order.changes).length > 0) {
@@ -633,7 +633,12 @@ export class SelfOrder extends Reactive {
         }
 
         try {
+<<<<<<< 4bdc5af112b34782eb3c8492a5a8f4f52931a9cf:addons/pos_self_order/static/src/app/services/self_order_service.js
             let uuid = this.selectedOrderUuid;
+||||||| 63c73558bbb97f124d53b2bf9e4c8c53c2421dc5:addons/pos_self_order/static/src/app/self_order_service.js
+=======
+            const uuid = this.currentOrder.uuid;
+>>>>>>> f09a8eeb8bf38691d00864c1a9e2f2b147cd2581:addons/pos_self_order/static/src/app/self_order_service.js
             this.currentOrder.recomputeOrderData();
             const data = await rpc(
                 `/pos-self-order/process-order-args/${this.config.self_ordering_mode}`,
@@ -657,7 +662,16 @@ export class SelfOrder extends Reactive {
 
             this.data.synchronizeLocalDataInIndexedDB();
             this.currentOrder.recomputeChanges();
+<<<<<<< 4bdc5af112b34782eb3c8492a5a8f4f52931a9cf:addons/pos_self_order/static/src/app/services/self_order_service.js
             return this.models["pos.order"].getBy("uuid", uuid);
+||||||| 63c73558bbb97f124d53b2bf9e4c8c53c2421dc5:addons/pos_self_order/static/src/app/self_order_service.js
+            return this.currentOrder;
+=======
+            const originalOrder = this.models["pos.order"].getBy("uuid", uuid);
+            return this.config.self_ordering_mode === "mobile" && originalOrder?.amount_total === 0
+                ? originalOrder
+                : this.currentOrder;
+>>>>>>> f09a8eeb8bf38691d00864c1a9e2f2b147cd2581:addons/pos_self_order/static/src/app/self_order_service.js
         } catch (error) {
             const order = this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
             this.handleErrorNotification(error, [order.access_token]);
