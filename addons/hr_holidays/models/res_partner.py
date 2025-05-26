@@ -35,9 +35,9 @@ class ResPartner(models.Model):
         return self.env['res.users']._get_on_leave_ids(partner=True)
 
     def _to_store_defaults(self, target):
-        return super()._to_store_defaults(target) + [
-            Store.One(
-                "main_user_id",
-                [Store.Attr("leave_date_to", lambda u: u.leave_date_to if u.active else False)],
-            ),
-        ]
+        defaults = super()._to_store_defaults(target)
+        if target.is_internal(self.env):
+            defaults.append(
+                Store.One("main_user_id", Store.Many("employee_ids", "leave_date_to"))
+            )
+        return defaults

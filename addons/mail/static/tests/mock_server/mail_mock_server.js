@@ -1068,6 +1068,14 @@ function _process_request_for_internal_user(store, name, params) {
         ];
         store.add(this.env["mail.canned.response"].search(domain));
     }
+    if (name === "avatar_card") {
+        const userId = params.user_id;
+        const [user] = ResUsers.search([["id", "=", userId]]);
+        if (user) {
+            const fields = ResUsers._get_store_avatar_card_fields();
+            store.add(ResUsers.browse(user), makeKwArgs({ fields }));
+        }
+    }
 }
 
 const ids_by_model = {

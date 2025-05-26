@@ -68,10 +68,12 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         partner2_info = next(p for p in data["res.partner"] if p["id"] == partner2.id)
         user_info = next(u for u in data["res.users"] if u["id"] == partner_info["main_user_id"])
         user2_info = next(u for u in data["res.users"] if u["id"] == partner2_info["main_user_id"])
-        self.assertFalse(user2_info["leave_date_to"], "current user should not be out of office")
+        employee_info = next(e for e in data["hr.employee"] if e["id"] == user_info["employee_ids"][0])
+        employee2_info = next(e for e in data["hr.employee"] if e["id"] == user2_info["employee_ids"][0])
+        self.assertFalse(employee2_info["leave_date_to"], "current user should not be out of office")
         # The employee will be back in the office the day after his second leave ends
         self.assertEqual(
-            user_info["leave_date_to"], "2024-06-12", "correspondent should be out of office"
+            employee_info["leave_date_to"], "2024-06-12", "correspondent should be out of office"
         )
         self.assertEqual(
             self.employee_hruser.user_id.with_context(formatted_display_name=True).display_name,
