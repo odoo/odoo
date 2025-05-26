@@ -3,16 +3,16 @@
 # 	* mail
 # 
 # Translators:
-# Wil Odoo, 2025
 # Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-16 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +101,7 @@ msgstr "%(candidateType)s (%(protocol)s)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "%(date)s at %(time)s"
 msgstr "%(date)s الساعة %(time)s "
 
@@ -4504,9 +4504,9 @@ msgstr "للأمام"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
-msgid "Forward message"
-msgstr "إعادة توجيه الرسالة "
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+msgid "Forward Message"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -5677,7 +5677,7 @@ msgstr "الانضمام إلى مجموعة"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call"
-msgstr ""
+msgstr "الانضمام إلى المكالمة "
 
 #. module: mail
 #. odoo-javascript
@@ -8738,7 +8738,6 @@ msgstr "الرد "
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
-#: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Reply All"
 msgstr "الرد على الكل "
 
@@ -9338,7 +9337,7 @@ msgstr "أرسل رسالة إلى المتابعين... "
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_mail_mail
 msgid "Send an E-mail"
-msgstr ""
+msgstr "إرسال رسالة بريد إلكتروني"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -9593,7 +9592,7 @@ msgstr "إظهار الشريط الجانبي "
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/html_composer_message_field/content_expandable_plugin.xml:0
 msgid "Show trimmed content"
-msgstr ""
+msgstr "إظهار المحتوى المقتطع "
 
 #. module: mail
 #. odoo-javascript
@@ -10976,6 +10975,14 @@ msgstr "إلغاء الكتم "
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
 msgid "Unmute Conversation"
 msgstr "إلغاء كتم المحادثة "
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input.js:0
+#: code:addons/mail/static/src/core/web/recipients_popover.js:0
+#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
+msgid "Unnamed"
+msgstr "غير مسمى"
 
 #. module: mail
 #. odoo-javascript
