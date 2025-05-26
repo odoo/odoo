@@ -16,12 +16,12 @@
                 getIds.bind="getIds"
                 update.bind="update"
             >
-                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
                     <span t-if="isAvatarModel" class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-                        <img class="rounded me-1" t-attf-src="/web/image/{{props.resModel}}/{{autoCompleteItemScope.data.record.id}}/avatar_128"/>
-                        <t t-esc="autoCompleteItemScope.label"/>
+                        <img class="rounded me-1" t-attf-src="/web/image/{{props.resModel}}/{{recordItemScope.data.record.id}}/avatar_128"/>
+                        <t t-esc="recordItemScope.label"/>
                     </span>
-                    <t t-else="" t-esc="autoCompleteItemScope.label"/>
+                    <t t-else="" t-esc="recordItemScope.label"/>
                 </t>
             </RecordAutocomplete>
         </div>

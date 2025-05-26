@@ -42,13 +42,13 @@ export class PartnerAutoCompleteCharField extends CharField {
                             data: suggestion,
                             label: suggestion.name,
                             onSelect: () => this.onSelectPartnerAutocompleteOption(suggestion),
+                            slotName: "partnerOption",
                         }));
                     }
                     else {
                         return [];
                     }
                 },
-                optionSlot: "partnerOption",
                 placeholder: _t('Searching Autocomplete...'),
             },
         ];

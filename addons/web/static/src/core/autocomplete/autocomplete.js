@@ -19,7 +19,6 @@ export class AutoComplete extends Component {
                 shape: {
                     placeholder: { type: String, optional: true },
                     options: [Array, Function],
-                    optionSlot: { type: String, optional: true },
                 },
             },
         },
@@ -247,7 +246,6 @@ export class AutoComplete extends Component {
             options: [],
             isLoading: false,
             placeholder: source.placeholder,
-            optionSlot: source.optionSlot,
         };
     }
 

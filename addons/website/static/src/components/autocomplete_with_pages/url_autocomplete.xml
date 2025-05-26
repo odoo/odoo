@@ -9,14 +9,17 @@
             sources="sources"
             targetDropdown="props.targetDropdown"
         >
-            <t t-set-slot="option" t-slot-scope="optionScope">
-                <div t-att-class="{
-                    'fw-bold text-capitalize p-2': optionScope.data.separator,
-                }">
-                    <t t-if="optionScope.data.icon and optionScope.data.icon.length">
-                        <img t-att-src="optionScope.data.icon" width="24px" height="24px" class="me-2 rounded"/>
+            <t t-set-slot="category" t-slot-scope="categoryScope">
+                <div class="fw-bold text-capitalize p-2">
+                    <t t-out="categoryScope.label"/>
+                </div>
+            </t>
+            <t t-set-slot="item" t-slot-scope="itemScope">
+                <div>
+                    <t t-if="itemScope.data.icon and itemScope.data.icon.length">
+                        <img t-att-src="itemScope.data.icon" width="24px" height="24px" class="me-2 rounded"/>
                     </t>
-                    <t t-out="optionScope.label"/>
+                    <t t-out="itemScope.label"/>
                 </div>
             </t>
         </AutoCompleteWithPages>

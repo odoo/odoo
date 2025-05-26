@@ -24,9 +24,9 @@
                     nameCreateField="props.nameCreateField"
                     searchThreshold="props.searchThreshold"
                 >
-                    <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
-                        <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }">
-                            <t t-out="autoCompleteItemScope.label"/>
+                    <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
+                        <span t-att-class="{ 'fw-bold': isSelected(recordItemScope.data.record) }">
+                            <t t-out="recordItemScope.label"/>
                         </span>
                     </t>
                 </Many2XAutocomplete>

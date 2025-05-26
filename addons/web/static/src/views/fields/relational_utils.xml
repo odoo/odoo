@@ -32,16 +32,7 @@
             t-on-click="onSearchMore"
             t-on-barcode-search="onBarcodeSearch"
         />
-        <AutoComplete t-else="" t-props="autoCompleteProps">
-            <t t-set-slot="option" t-slot-scope="optionScope">
-                <t t-if="optionScope.data.record">
-                    <t t-slot="autoCompleteItem" t-props="optionScope.data" label="optionScope.label"/>
-                </t>
-                <t t-else="">
-                    <t t-esc="optionScope.label"/>
-                </t>
-            </t>
-        </AutoComplete>
+        <AutoComplete t-else="" t-props="autoCompleteProps"/>
         <span class="o_dropdown_button" />
     </div>
 </t>

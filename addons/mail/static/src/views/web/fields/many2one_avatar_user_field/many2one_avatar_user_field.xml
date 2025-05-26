@@ -7,10 +7,10 @@
                 <Avatar cssClass="'o_m2o_avatar'" resModel="relation" resId="value.id" noSpacing="true"/>
             </t>
             <Many2One t-props="m2oProps" cssClass="'w-100'">
-                <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
                     <div class="o_avatar_many2x_autocomplete d-flex align-items-center">
-                        <Avatar resModel="relation" resId="autoCompleteItemScope.record.id" canOpenPopover="false"/>
-                        <t t-out="autoCompleteItemScope.label"/>
+                        <Avatar resModel="relation" resId="recordItemScope.data.record.id" canOpenPopover="false"/>
+                        <t t-out="recordItemScope.label"/>
                     </div>
                 </t>
             </Many2One>

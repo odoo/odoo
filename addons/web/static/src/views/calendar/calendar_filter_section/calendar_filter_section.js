@@ -40,7 +40,6 @@ export class CalendarFilterSection extends Component {
                 {
                     placeholder: _t("Loading..."),
                     options: (request) => this.loadSource(request),
-                    optionSlot: "option",
                 },
             ],
             value: "",
@@ -106,6 +105,7 @@ export class CalendarFilterSection extends Component {
             onSelect: () => {
                 return this.props.model.createFilter(this.section.fieldName, result[0]);
             },
+            slotName: "option",
         }));
 
         if (records.length > 7) {

@@ -59,6 +59,7 @@ export class L10nInHsnAutoComplete extends CharField {
                                 },
                                 label: item.c,
                                 onSelect: () => this.selectSuggestion(item.c, item.n),
+                                slotName: "option",
                             });
                         }
                     }
@@ -83,7 +84,6 @@ export class L10nInHsnAutoComplete extends CharField {
                         return [];
                     }
                 },
-                optionSlot: "option",
                 placeholder: _t("Searching..."),
             },
         ];

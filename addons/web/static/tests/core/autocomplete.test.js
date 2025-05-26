@@ -44,22 +44,18 @@ function isInViewWithinScrollableY(target) {
     return y > 0 && y < containerHeight && x > 0 && x < containerWidth;
 }
 
-function buildSources(generate, options = {}) {
-    return [
-        {
-            options: generate,
-            optionSlot: options.optionSlot,
-        },
-    ];
+function buildSources(...generators) {
+    return generators.map((options) => ({ options }));
 }
 
-function item(label, onSelect, data = {}) {
+function item(label, onSelect, options = {}) {
     return {
-        data,
+        data: options.data ?? {},
         label,
         onSelect() {
             return onSelect?.(this);
         },
+        slotName: options.slotName,
     };
 }
 
@@ -704,13 +700,18 @@ test("autocomplete scrolls when moving with arrows", async () => {
     });
 });
 
-test("source with option slot", async () => {
+test("options with slotName", async () => {
     class Parent extends Component {
         static template = xml`
             <AutoComplete value="''" sources="sources">
-                <t t-set-slot="use_this_slot" t-slot-scope="scope">
-                    <div class="slot_item">
-                        <t t-esc="scope.data.id"/>: <t t-esc="scope.label"/>
+                <t t-set-slot="firstSlot" t-slot-scope="firstSlotScope">
+                    <div class="slot_item first_slot_item">
+                        A. <t t-esc="firstSlotScope.data.id"/>: <t t-esc="firstSlotScope.label"/>
+                    </div>
+                </t>
+                <t t-set-slot="secondSlot" t-slot-scope="secondSlotScope">
+                    <div class="slot_item second_slot_item">
+                        B. <t t-esc="secondSlotScope.label"/>: <t t-esc="secondSlotScope.data.id"/>
                     </div>
                 </t>
             </AutoComplete>
@@ -720,18 +721,17 @@ test("source with option slot", async () => {
 
         sources = buildSources(
             () => [
-                item("Hello", () => {}, { id: 1 }),
-                item("World", () => {}, { id: 2 }),
-            ],
-            { optionSlot: "use_this_slot" }
+                item("Hello", () => {}, { data: { id: 1 }, slotName: "firstSlot" }),
+                item("World", () => {}, { data: { id: 2 }, slotName: "secondSlot" }),
+            ]
         );
     }
 
     await mountWithCleanup(Parent);
     await contains(`.o-autocomplete input`).click();
     expect(queryAllTexts(`.o-autocomplete--dropdown-item .slot_item`)).toEqual([
-        "1: Hello",
-        "2: World",
+        "A. 1: Hello",
+        "B. World: 2",
     ]);
 });
 
