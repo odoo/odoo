@@ -88,9 +88,7 @@ export class SnippetModel extends Reactive {
 
         this.dialog.add(ConfirmationDialog, {
             title: _t("Install %s", snippet.title),
-            body: markup(
-                `${escape(bodyText)}\n<a href="${linkUrl}" target="_blank">${escape(linkText)}</a>`
-            ),
+            body: markup`${bodyText}\n<a href="${linkUrl}" target="_blank">${linkText}</a>`,
             confirm: async () => {
                 try {
                     await this.orm.call("ir.module.module", "button_immediate_install", [
@@ -104,7 +102,9 @@ export class SnippetModel extends Reactive {
                     // });
                 } catch (e) {
                     if (e instanceof RPCError) {
-                        const message = escape(_t("Could not install module %s", snippet.title));
+                        const message = _t("Could not install module %(title)s", {
+                            title: snippet.title,
+                        });
                         this.notification.add(message, {
                             type: "danger",
                             sticky: true,

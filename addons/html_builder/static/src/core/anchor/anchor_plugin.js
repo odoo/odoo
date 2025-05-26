@@ -5,7 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
 import { AnchorDialog } from "./anchor_dialog";
 import { getElementsWithOption } from "@html_builder/utils/utils";
-import { escape } from "@web/core/utils/strings";
 
 const anchorSelector = ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *";
 const anchorExclude =
@@ -92,7 +91,10 @@ export class AnchorPlugin extends Plugin {
         }
         const anchorLink = this.getAnchorLink(element);
         await browser.navigator.clipboard.writeText(anchorLink);
-        const message = markup(_t("Anchor copied to clipboard<br>Link: %s", escape(anchorLink)));
+        const message = _t("Anchor copied to clipboard%(br)sLink: %(anchorLink)s", {
+            anchorLink,
+            br: markup`<br>`,
+        });
         const closeNotification = this.services.notification.add(message, {
             type: "success",
             buttons: [
