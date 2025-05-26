@@ -161,6 +161,7 @@
                         <t t-call="website.publish_management">
                             <t t-set="object" t-value="partner.grade_id"/>
                             <t t-set="publish_edit" t-value="True"/>
+                            <t t-set="action" t-value="'partnership.res_partner_grade_action'"/>
                         </t>
                     </h2>
                     <t t-set="last_grade" t-value="partner.grade_id.id"/>
