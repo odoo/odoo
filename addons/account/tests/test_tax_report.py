@@ -276,6 +276,27 @@ class TaxReportTest(AccountTestInvoicingCommon):
         self.assertEqual(len(tags_after), 2, "Changing the engine should have created tags")
         self.assertEqual(tags_after.mapped('name'), ['-Dudu', '+Dudu'])
 
+    def test_change_engine_shared_tags(self):
+        aggregation_line = self.env['account.report.line'].create({
+            'name': "Je ne mange pas de graines !!!",
+            'report_id': self.tax_report_1.id,
+            'expression_ids': [
+                Command.create({
+                    'label': 'balance',
+                    'engine': 'aggregation',
+                    'formula': 'Dudu',
+                }),
+            ],
+        })
+
+        tags_before = self._get_tax_tags(self.test_country_1, tag_name='01')
+        self.assertEqual(len(tags_before), 2, "The tags should already exist because of another expression")
+
+        aggregation_line.expression_ids.write({'engine': 'tax_tags', 'formula': '01'})
+
+        tags_after = self._get_tax_tags(self.test_country_1, tag_name='01')
+        self.assertEqual(tags_after, tags_before, "No new tag should have been created")
+
     def test_change_formula_multiple_fields(self):
         tags_before = self._get_tax_tags(self.test_country_1, tag_name='Buny')
         self.assertFalse(tags_before, "The tags shouldn't exist yet")

@@ -539,13 +539,17 @@ class AccountReportExpression(models.Model):
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
 
         if vals.get('engine') == 'tax_tags':
-            # We already generate the tags for the expressions receiving a new engine, but keeping the same formula
+            # We already generate the tags for the expressions receiving a new engine
             tags_create_vals = []
             for expression_with_new_engine in self - tax_tags_expressions:
-                tags_create_vals += self.env['account.report.expression']._get_tags_create_vals(
-                    vals.get('formula') or expression_with_new_engine.formula,
-                    expression_with_new_engine.report_line_id.report_id.country_id.id,
-                )
+                tag_name = vals.get('formula') or expression_with_new_engine.formula
+                country = expression_with_new_engine.report_line_id.report_id.country_id
+                if not self.env['account.account.tag']._get_tax_tags(tag_name, country.id):
+                    tags_create_vals += self.env['account.report.expression']._get_tags_create_vals(
+                        tag_name,
+                        country.id,
+                    )
+
             self.env['account.account.tag'].create(tags_create_vals)
 
         if 'formula' not in vals:
