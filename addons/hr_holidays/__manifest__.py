@@ -78,6 +78,12 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         "web.assets_web_dark": [
             'hr_holidays/static/src/**/*.dark.scss',
         ],
+        'im_livechat.assets_embed_core': [
+            'hr_holidays/static/src/core/common/**/*',
+        ],
+        'mail.assets_public': [
+            'hr_holidays/static/src/core/common/**/*',
+        ],
         'web.assets_unit_tests': [
             'hr_holidays/static/tests/**/*',
             ('remove', 'hr_holidays/static/tests/tours/**/*'),

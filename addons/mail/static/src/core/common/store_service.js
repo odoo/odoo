@@ -336,9 +336,13 @@ export class Store extends BaseStore {
     }
 
     _fetchStoreDataRpc(fetchParams) {
+        const context = {
+            ...user.context,
+            allowed_company_ids: user.allowedCompanies.map((c) => c.id),
+        };
         return rpc(
             this.fetchReadonly ? "/mail/data" : "/mail/action",
-            { fetch_params: fetchParams, context: user.context },
+            { fetch_params: fetchParams, context },
             { silent: this.fetchSilent }
         );
     }

@@ -35,7 +35,7 @@ export class ResPartner extends mailModels.ResPartner {
             if (partner.main_user_id) {
                 store.add(
                     ResUsers.browse(partner.main_user_id),
-                    makeKwArgs({ fields: ["leave_date_to"] })
+                    makeKwArgs({ fields: ["employee_ids"] })
                 );
             }
         }
