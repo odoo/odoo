@@ -22,9 +22,14 @@ const { DateTime } = luxon;
 test("Show 'back on' in avatar card", async () => {
     mockDate("2025-04-08 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["res.users"].write([serverState.userId], {
+    const employee = pyEnv["hr.employee"].create({
+        user_id: serverState.userId,
         leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
     });
+    pyEnv["res.users"].write([serverState.userId], {
+        employee_ids: [Command.link(employee)],
+    });
+
     const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
     pyEnv["mail.message"].create({
         author_id: serverState.partnerId,
@@ -42,8 +47,12 @@ test("Show 'back on' in avatar card", async () => {
 test("Show 'back on' in mention list", async () => {
     mockDate("2025-04-08 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["res.users"].write([serverState.userId], {
+    const employee = pyEnv["hr.employee"].create({
+        user_id: serverState.userId,
         leave_date_to: DateTime.now().plus({ days: 3 }).toISODate(),
+    });
+    pyEnv["res.users"].write([serverState.userId], {
+        employee_ids: [Command.link(employee)],
     });
     const channelId = pyEnv["discuss.channel"].create({
         name: "General & good",
@@ -58,8 +67,12 @@ test("Show 'back on' in mention list", async () => {
 test("Show year when 'back on' is on different year than now", async () => {
     mockDate("2024-12-20 12:00:00");
     const pyEnv = await startServer();
-    pyEnv["res.users"].write([serverState.userId], {
+    const employee = pyEnv["hr.employee"].create({
+        user_id: serverState.userId,
         leave_date_to: DateTime.now().plus({ days: 15 }).toISODate(),
+    });
+    pyEnv["res.users"].write([serverState.userId], {
+        employee_ids: [(6, 0, employee)],
     });
     const fakeId = pyEnv["res.fake"].create({ name: "Salutations, voyageur" });
     pyEnv["mail.message"].create({

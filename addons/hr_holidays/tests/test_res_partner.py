@@ -3,7 +3,7 @@
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.tests.common import tagged, TransactionCase
+from odoo.tests.common import new_test_user, tagged, TransactionCase, users
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -51,18 +51,32 @@ class TestPartner(TransactionCase):
             'employee_id': cls.employees[1].id,
             'holiday_status_id': cls.leave_type.id,
         }])
+        cls.user_no_hr_access = new_test_user(
+            cls.env, login="user_no_hr_access",
+        )
 
     @freeze_time('2024-06-04')
     def test_res_partner_to_store(self):
         self.leaves.write({'state': 'validate'})
         self.assertEqual(
-            Store(self.partner).get_result()["res.users"][0]["leave_date_to"],
+            Store(self.partner).get_result()["hr.employee"][0]["leave_date_to"],
             "2024-06-07",
             "Return date is the return date of the main user of the partner",
         )
         self.leaves[0].action_refuse()
         self.assertEqual(
-            Store(self.partner).get_result()["res.users"][0]["leave_date_to"],
+            Store(self.partner).get_result()["hr.employee"][0]["leave_date_to"],
             False,
             "Partner is not considered out of office if their main user is not on holiday",
+        )
+
+    @freeze_time("2024-06-04")
+    @users("user_no_hr_access")
+    def test_res_partner_to_store_no_hr_access(self):
+        self.leaves.write({"state": "validate"})
+        self.assertEqual(
+            Store(self.partner.with_user(self.user_no_hr_access)).get_result()["hr.employee"][0]["leave_date_to"],
+            "2024-06-07",
+            "Return date is the return date of the main user of the partner, "
+            "even if the user has no access to the company",
         )

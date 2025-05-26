@@ -1,5 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
 
 export class AvatarCardPopover extends Component {
@@ -12,27 +12,29 @@ export class AvatarCardPopover extends Component {
 
     setup() {
         this.actionService = useService("action");
-        this.orm = useService("orm");
+        this.store = useService("mail.store");
         this.openChat = useOpenChat("res.users");
-        onWillStart(async () => {
-            [this.user] = await this.orm.read("res.users", [this.props.id], this.fieldNames);
-        });
+        this.store.fetchStoreData("avatar_card", { user_id: this.props.id });
     }
 
-    get fieldNames() {
-        return ["name", "email", "phone", "im_status", "share", "partner_id"];
+    get user() {
+        return this.store["res.users"].get(this.props.id);
+    }
+
+    get name() {
+        return this.user?.name;
     }
 
     get email() {
-        return this.user.email;
+        return this.user?.email;
     }
 
     get phone() {
-        return this.user.phone;
+        return this.user?.phone;
     }
 
     get showViewProfileBtn() {
-        return true;
+        return this.user;
     }
 
     get hasFooter() {
@@ -40,8 +42,11 @@ export class AvatarCardPopover extends Component {
     }
 
     async getProfileAction() {
+        if (!this.user?.partner_id) {
+            return this.user?.partner_id;
+        }
         return {
-            res_id: this.user.partner_id[0],
+            res_id: this.user.partner_id,
             res_model: "res.partner",
             type: "ir.actions.act_window",
             views: [[false, "form"]],
@@ -49,7 +54,7 @@ export class AvatarCardPopover extends Component {
     }
 
     get userId() {
-        return this.user.id;
+        return this.user?.id;
     }
 
     onSendClick() {
@@ -59,6 +64,9 @@ export class AvatarCardPopover extends Component {
 
     async onClickViewProfile(newWindow) {
         const action = await this.getProfileAction();
+        if (!action) {
+            return;
+        }
         this.actionService.doAction(action, { newWindow });
     }
 }

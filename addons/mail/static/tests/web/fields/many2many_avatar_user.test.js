@@ -10,7 +10,6 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, onRpc, waitForSteps } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -297,17 +296,6 @@ test("avatar card preview", async () => {
         }),
         im_status: "online",
     });
-    onRpc("res.users", "read", (params) => {
-        expect(params.args[1]).toEqual([
-            "name",
-            "email",
-            "phone",
-            "im_status",
-            "share",
-            "partner_id",
-        ]);
-        asyncStep("user read");
-    });
     const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
     await start();
     await openKanbanView("m2x.avatar.user", {
@@ -328,7 +316,6 @@ test("avatar card preview", async () => {
     await contains(".o_card_user_infos > span", { text: "Mario" });
     await contains(".o_card_user_infos > a", { text: "Mario@odoo.test" });
     await contains(".o_card_user_infos > a", { text: "+78786987" });
-    await waitForSteps(["user read"]);
     // Close card
     await click(".o_action_manager");
     await contains(".o_avatar_card", { count: 0 });

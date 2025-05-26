@@ -1,6 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { contains, makeMockServer, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, makeMockServer, mountView } from "@web/../tests/web_test_helpers";
+import { contains as mailContains } from "@mail/../tests/mail_test_helpers";
 import { defineHrModels } from "@hr/../tests/hr_test_helpers";
 
 describe.current.tags("desktop");
@@ -29,7 +30,7 @@ test("avatar card preview with hr", async () => {
         work_location_id: workLocationId,
         work_location_type: "office",
         department_id: departmentId,
-    })
+    });
     const employeeId = env["hr.employee"].create({
         version_id: versionId,
         work_email: "Mario@odoo.pro",
@@ -39,26 +40,12 @@ test("avatar card preview with hr", async () => {
         partner_id: partnerId,
         im_status: "online",
         employee_id: employeeId,
+        employee_ids: [employeeId],
+    });
+    env["hr.employee"].write(employeeId, {
+        user_id: userId,
     });
     env["m2x.avatar.user"].create({ user_id: userId });
-    onRpc("res.users", "read", (request) => {
-        expect.step("user read");
-        expect(request.args[1]).toEqual([
-            "name",
-            "email",
-            "phone",
-            "im_status",
-            "share",
-            "partner_id",
-            "work_phone",
-            "work_email",
-            "work_location_id",
-            "work_location_type",
-            "job_title",
-            "department_id",
-            "employee_ids",
-        ]);
-    });
     await mountView({
         type: "kanban",
         resModel: "m2x.avatar.user",
@@ -71,9 +58,8 @@ test("avatar card preview with hr", async () => {
         </kanban>`,
     });
     await contains(".o_m2o_avatar > img").click();
-    expect.verifySteps(["user read"]);
-    expect(".o_avatar_card").toHaveCount(1);
-    expect(".o_avatar_card span[data-tooltip='Work Location'] .fa-building-o").toHaveCount(1);
+    await mailContains(".o_avatar_card");
+    await mailContains(".o_avatar_card span[data-tooltip='Work Location'] .fa-building-o");
     expect(queryAllTexts(".o_card_user_infos > *:not(.o_avatar_card_buttons)")).toEqual([
         "Mario",
         "Management",
@@ -82,5 +68,5 @@ test("avatar card preview with hr", async () => {
         "Odoo",
     ]);
     await contains(".o_action_manager:eq(0)").click();
-    expect(".o_avatar_card").toHaveCount(0);
+    await mailContains(".o_avatar_card", { count: 0 });
 });

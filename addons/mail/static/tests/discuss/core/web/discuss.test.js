@@ -198,6 +198,7 @@ test("can access portal partner profile from avatar popover", async () => {
     await click(".o-mail-Message-avatar", {
         parent: [".o-mail-Message", { text: "Joel" }],
     });
+    await contains(".o_avatar_card", { text: "Joel" });
     await click("button", { text: "View Profile" });
     await contains(".o_form_view");
     await contains(".o_field_widget[name='name'] .o_input", { value: "Joel" });
