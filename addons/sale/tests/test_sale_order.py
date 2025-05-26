@@ -125,6 +125,27 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Sale: author should be in composer recipients thanks to "partner_to" field set on template')
         self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Sale: author should receive mail due to presence in composer recipients')
 
+    def test_sale_order_email_author(self):
+        """Check that the correct partner is selected as author for emails."""
+        self.env.company.email = self.sale_user.email = "2partners@1mail.com"
+
+        mail_template = self.sale_order._find_mail_template()
+        mail_template.auto_delete = False
+
+        sale_order_1 = self.sale_order
+        sale_order_1.user_id = self.sale_user
+        sale_order_2 = sale_order_1.copy({'user_id': None})
+
+        for sale_order in (sale_order_1, sale_order_2):
+            email_ctx = sale_order.action_quotation_send()['context']
+            sale_order.with_context(**email_ctx).message_post_with_source(mail_template)
+            self.assertEqual(sale_order.state, 'sent')
+            self.assertEqual(
+                sale_order.message_ids.author_id,
+                (sale_order.user_id or sale_order.company_id).partner_id,
+                "Mail author should be salesperson if available, otherwise the company",
+            )
+
     def test_sale_sequence(self):
         self.env['ir.sequence'].search([
             ('code', '=', 'sale.order'),
