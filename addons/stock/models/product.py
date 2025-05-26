@@ -133,10 +133,7 @@ class ProductProduct(models.Model):
     @api.depends('product_tmpl_id')
     def _compute_show_qty_update_button(self):
         for product in self:
-            product.show_qty_update_button = (
-                product.product_tmpl_id._should_open_product_quants()
-                or product.tracking != 'none'
-            )
+            product.show_qty_update_button = product.product_tmpl_id._should_open_product_quants()
 
     @api.depends('barcode')
     def _compute_valid_ean(self):
@@ -894,7 +891,6 @@ class ProductTemplate(models.Model):
             product.show_qty_update_button = (
                 product._should_open_product_quants()
                 or product.product_variant_count > 1
-                or product.tracking != 'none'
             )
 
     @api.depends(
