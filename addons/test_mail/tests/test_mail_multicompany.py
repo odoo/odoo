@@ -406,7 +406,7 @@ class TestMultiCompanySetup(TestMailMCCommon, HttpCase):
                     self.assertEqual(other_activity_group["total_count"], 5)
 
 
-@tagged('-at_install', 'post_install', 'multi_company')
+@tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyRedirect(MailCommon, HttpCase):
 
     def test_redirect_to_records(self):

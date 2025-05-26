@@ -67,8 +67,8 @@ class MailController(http.Controller):
             return cls._redirect_to_messaging()
 
         suggested_company = record_sudo._get_redirect_suggested_company()
-        # the record has a window redirection: check access rights
         if uid is not None:
+            # the record has a window redirection: check access rights
             if not RecordModel.with_user(uid).has_access('read'):
                 return cls._redirect_to_messaging()
             try:
@@ -121,10 +121,12 @@ class MailController(http.Controller):
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
             return request.redirect(record_action['url'])
-        # other choice: act_window (no support of anything else currently)
-        elif not record_action['type'] == 'ir.actions.act_window':
+        # if not ULR nor act_window: back to messaging, nothing else supported currently
+        if record_action['type'] != 'ir.actions.act_window':
             return cls._redirect_to_messaging()
 
+        # redirection to an act_window aka probably form view: fetch related menu
+        # and view IDs to help landing on the right view depending on actual record
         url_params = {}
         menu_id = request.env['ir.ui.menu']._get_best_backend_root_menu_id_for_model(model)
         if menu_id:
@@ -134,9 +136,9 @@ class MailController(http.Controller):
             url_params['view_id'] = view_id
         if cids:
             request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
-        
+
         # @see commit c63d14a0485a553b74a8457aee158384e9ae6d3f
-        # @see router.js: heuristics to discrimate a model name from an action path
+        # @see router.js: heuristics to discriminate a model name from an action path
         # is the presence of dots, or the prefix m- for models
         model_in_url = model if "." in model else "m-" + model
         url = f'/odoo/{model_in_url}/{res_id}?{url_encode(url_params)}'

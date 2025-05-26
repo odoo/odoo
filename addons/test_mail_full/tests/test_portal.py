@@ -1,77 +1,30 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from werkzeug.urls import url_parse, url_decode, url_encode, url_unparse
 
 from odoo.addons.auth_signup.models.res_partner import ResPartner
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
+from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
 from odoo.tests.common import HttpCase
-from odoo.tools import html_escape
+from odoo.tools import html_escape, mute_logger
 
 
 @tagged('portal')
 class TestPortal(TestMailFullCommon, TestSMSRecipients):
 
     def setUp(self):
-        super(TestPortal, self).setUp()
+        super().setUp()
 
         self.record_portal = self.env['mail.test.portal'].create({
             'partner_id': self.partner_1.id,
             'name': 'Test Portal Record',
         })
-
         self.record_portal._portal_ensure_token()
 
 
-@tagged('-at_install', 'post_install', 'portal')
-class TestPortalControllers(TestPortal):
-
-    def test_redirect_to_records(self):
-        """ Test redirection of portal-enabled records """
-        # Test Case 0: as anonymous, cannot access, redirect to web/login
-        response = self.url_open('/mail/view?model=%s&res_id=%s' % (
-            self.record_portal._name,
-            self.record_portal.id), timeout=15)
-
-        path = url_parse(response.url).path
-        self.assertEqual(path, '/web/login')
-
-        # Test Case 1: as admin, can access record
-        self.authenticate(self.user_admin.login, self.user_admin.login)
-        response = self.url_open('/mail/view?model=%s&res_id=%s' % (
-            self.record_portal._name,
-            self.record_portal.id), timeout=15)
-
-        self.assertEqual(response.status_code, 200)
-
-        self.assertEqual(response.request._cookies.get('cids'), '%s' % self.user_admin.company_id.id)
-        path = url_parse(response.url).path
-        self.assertEqual(path, f'/odoo/mail.test.portal/{self.record_portal.id}')
-
-    def test_redirect_to_records_norecord(self):
-        """ Check specific use case of missing model, should directly redirect
-        to login page. """
-        for model, res_id in [
-                (False, self.record_portal.id),
-                ('', self.record_portal.id),
-                (self.record_portal._name, False),
-                (self.record_portal._name, ''),
-                (False, False),
-                ('wrong.model', self.record_portal.id),
-                (self.record_portal._name, -4),
-            ]:
-            response = self.url_open(
-                '/mail/view?model=%s&res_id=%s' % (model, res_id),
-                timeout=15
-            )
-            path = url_parse(response.url).path
-            self.assertEqual(
-                path, '/web/login',
-                'Failed with %s - %s' % (model, res_id)
-            )
+@tagged('-at_install', 'post_install', 'portal', 'mail_controller')
+class TestPortalPostControllers(TestPortal):
 
     def test_portal_avatar_with_access_token(self):
         mail_record = self.env['mail.message'].create({
@@ -143,9 +96,9 @@ class TestPortalControllers(TestPortal):
         self.assertEqual(placeholder_response.headers.get('Content-Type'), 'image/png')
         self.assertRegex(placeholder_response.headers.get('Content-Disposition', ''), r'placeholder\.png')
 
-    def test_portal_share_comment(self):
+    def test_controller_post_portal(self):
         """ Test posting through portal controller allowing to use a hash to
-        post wihtout access rights. """
+        post without access rights. """
         self.authenticate(None, None)
         post_url = f"{self.record_portal.get_base_url()}/mail/message/post"
 
@@ -169,7 +122,7 @@ class TestPortalControllers(TestPortal):
         self.assertIn('Test', messages[0].body)
 
 
-@tagged('portal')
+@tagged('-at_install', 'post_install', 'portal', 'mail_controller')
 class TestPortalFlow(MailCommon, HttpCase):
     """Share a link by email to a customer without an account for viewing a record through the portal.
 
@@ -194,6 +147,10 @@ class TestPortalFlow(MailCommon, HttpCase):
             'partner_id': cls.customer.id,
             'user_id': cls.user_admin.id,
         })
+        cls.record_internal = cls.env['mail.test.rating.thread'].create({
+            'customer_id': cls.customer.id,
+            'name': 'Test Internal Record',
+        })
         cls.mail_template = cls.env['mail.template'].create({
             'auto_delete': True,
             'body_html': '<p>Hello <t t-out="object.partner_id.name"/>, your quotation is ready for review.</p>',
@@ -215,125 +172,245 @@ class TestPortalFlow(MailCommon, HttpCase):
             return str([self.id, self._get_login_date(), self.signup_type])
         cls.classPatch(ResPartner, '_generate_signup_token', patched_generate_signup_token)
 
+        # prepare access URLs on self to ease tests
+        # ------------------------------------------------------------
+        base_url = cls.record_portal.get_base_url()
+        cls.test_base_url = base_url
+
+        cls.record_internal_url_base = f'{base_url}/mail/view?model={cls.record_internal._name}&res_id={cls.record_internal.id}'
+        cls.record_portal_url_base = f'{base_url}/mail/view?model={cls.record_portal._name}&res_id={cls.record_portal.id}'
+
+        max_internal_id = cls.env['mail.test.rating.thread'].search([], order="id desc", limit=1).id
+        max_portal_id = cls.env['mail.test.portal'].search([], order="id desc", limit=1).id
+        cls.record_internal_url_no_exists = f'{base_url}/mail/view?model={cls.record_internal._name}&res_id={max_internal_id + 1}'
+        cls.record_portal_url_no_exists = f'{base_url}/mail/view?model={cls.record_portal._name}&res_id={max_portal_id + 1}'
+
+        cls.record_url_no_model = f'{cls.record_portal.get_base_url()}/mail/view?model=this.should.not.exists&res_id=1'
+
+        # find portal + auth data url
         for group_name, group_func, group_data in cls.record_portal.sudo()._notify_get_recipients_groups(
             cls.env['mail.message'], False
         ):
             if group_name == 'portal_customer' and group_func(cls.customer):
-                cls.record_access_url = group_data['button_access']['url']
+                cls.record_portal_url_auth = group_data['button_access']['url']
                 break
         else:
             raise AssertionError('Record access URL not found')
-        # Build record_access_url_wrong_token with altered access_token for testing security
-        parsed_url = url_parse(cls.record_access_url)
+        # build altered access_token URL for testing security
+        parsed_url = url_parse(cls.record_portal_url_auth)
         query_params = url_decode(parsed_url.query)
-        cls.record_access_url_wrong_token = url_unparse(
-            (parsed_url[0], parsed_url[1], parsed_url[2],
-             url_encode({**query_params,
-                         'access_token': query_params['access_token'].translate(
-                             str.maketrans('0123456789abcdef',
-                                           '9876543210fedcba'))},
-                        sort=True),
-             parsed_url[4]))
+        cls.record_portal_hash = query_params['hash']
+        cls.record_portal_url_auth_wrong_token = url_unparse((
+            parsed_url[0], parsed_url[1], parsed_url[2],
+            url_encode(
+                {
+                    **query_params,
+                    'access_token': query_params['access_token'].translate(
+                        str.maketrans('0123456789abcdef', '9876543210fedcba')
+                    )
+                }, sort=True
+            ),
+            parsed_url[4])
+        )
 
-    def assert_URL(self, url, expected_path, expected_fragment_params=None, expected_query=None):
-        """Asserts that the URL has the expected path and if set, the expected fragment parameters and query."""
-        parsed_url = url_parse(url)
-        fragment_params = url_decode(parsed_url.fragment)
-        self.assertEqual(parsed_url.path, expected_path)
-        if expected_fragment_params:
-            for key, expected_value in expected_fragment_params.items():
-                self.assertEqual(fragment_params.get(key), expected_value,
-                                 f'Expected: "{key}={expected_value}" (for path: {expected_path})')
-        if expected_query:
-            self.assertEqual(expected_query, parsed_url.query,
-                             f'Expected: query="{expected_query}" (for path: {expected_path})')
+        # prepare result URLs on self to ease tests
+        # ------------------------------------------------------------
+        cls.portal_web_url = f'{base_url}/my/test_portal/{cls.record_portal.id}'
+        cls.portal_web_url_with_token = f'{base_url}/my/test_portal/{cls.record_portal.id}?{url_encode({"access_token": cls.record_portal.access_token, "pid": cls.customer.id, "hash": cls.record_portal_hash})}'
+        cls.internal_backend_local_url = f'/odoo/mail.test.rating.thread/{cls.record_internal.id}'
+        cls.portal_backend_local_url = f'/odoo/mail.test.portal/{cls.record_portal.id}'
+        cls.discuss_local_url = '/odoo/action-mail.action_discuss'
 
-    def _get_composer_with_context(self, template_id=False):
-        return self.env['mail.compose.message'].with_context({
-            'default_composition_mode': 'comment',
-            'default_email_layout_xmlid': 'mail.mail_notification_layout_with_responsible_signature',
-            'default_model': self.record_portal._name,
-            'default_res_ids': self.record_portal.ids,
-            'default_template_id': template_id,
-            'force_email': True,
-            'lang': 'en_US',
-        })
+    def test_assert_initial_data(self):
+        """ Test some initial values. Test that record_access_url is a valid URL
+        to view the record_portal and that record_access_url_wrong_token only differs
+        from record_access_url by a different access_token. """
+        self.record_internal.with_user(self.user_employee).check_access('read')
+        self.record_portal.with_user(self.user_employee).check_access('read')
+        with self.assertRaises(AccessError):
+            self.record_internal.with_user(self.user_portal).check_access('read')
+            self.record_portal.with_user(self.user_portal).check_access('read')
 
-    def test_initial_data(self):
-        """Test some initial values.
-
-        Test that record_access_url is a valid URL to view the record_portal and that record_access_url_wrong_token
-        only differs from record_access_url by a different access_token.
-        """
-        parsed_record_access_url = url_parse(self.record_access_url)
-        record_access_query_params = url_decode(parsed_record_access_url.query)
-        parsed_record_access_url_wrong_token = url_parse(self.record_access_url_wrong_token)
-        record_access_wrong_token_query_params = url_decode(parsed_record_access_url_wrong_token.query)
-
-        self.assertEqual(parsed_record_access_url.path, '/mail/view')
-        # Note that pid, hash and auth_signup_token are not tested by this test but may be present in the URL (config).
-        self.assertEqual(record_access_query_params.get('model'), 'mail.test.portal')
-        self.assertEqual(int(record_access_query_params.get('res_id')), self.record_portal.id)
-        self.assertTrue(record_access_query_params.get('access_token'))
-
-        self.assertNotEqual(self.record_access_url, self.record_access_url_wrong_token)
-        self.assertEqual(parsed_record_access_url_wrong_token.path, '/mail/view')
-        self.assertTrue(record_access_wrong_token_query_params['access_token'])
-        self.assertNotEqual(record_access_query_params['access_token'],
-                            record_access_wrong_token_query_params['access_token'])
-        self.assertEqual({k: v for k, v in record_access_query_params.items() if k != 'access_token'},
-                         {k: v for k, v in record_access_wrong_token_query_params.items() if k != 'access_token'})
-
-    @users('portal_test')
-    def test_customer_access_logged_without_access(self):
-        """Check that the link redirects the customer (without backend access) to the portal for viewing the record."""
-        self.authenticate(self.env.user.login, self.env.user.login)
-        res = self.url_open(self.record_access_url)
-        self.assertEqual(res.status_code, 200)
-        self.assert_URL(res.url, f'/my/test_portal/{self.record_portal.id}')
-
-    @users('portal_test')
-    def test_customer_access_logged_without_access_wrong_token(self):
-        """Check that it redirects to discuss when logged customer has no access to the record and token is invalid."""
-        self.authenticate(self.env.user.login, self.env.user.login)
-        res = self.url_open(self.record_access_url_wrong_token)
-        self.assertEqual(res.status_code, 200)
-        self.assert_URL(res.url, '/my', expected_query='subpath=action-mail.action_discuss')
-
-    def test_customer_access_not_logged(self):
-        """Check that the access link redirects the customer (not logged) to the portal for viewing the record."""
-        res = self.url_open(self.record_access_url)
-        self.assertEqual(res.status_code, 200)
-        self.assertIn(f'/my/test_portal/{self.record_portal.id}', res.url)
-        self.assert_URL(res.url, f'/my/test_portal/{self.record_portal.id}')
-
-    def test_customer_access_not_logged_wrong_token(self):
-        """Check that the access link redirect the customer to login when the token is invalid."""
-        res = self.url_open(self.record_access_url_wrong_token)
-        self.assertEqual(res.status_code, 200)
-        self.assert_URL(res.url, '/web/login', {'model': 'mail.test.portal', 'id': str(self.record_portal.id)},
-                        expected_query='redirect=')
+        self.assertNotEqual(self.record_portal_url_auth, self.record_portal_url_auth_wrong_token)
+        url_params = []
+        for url in (
+            self.record_portal_url_auth, self.record_portal_url_auth_wrong_token,
+        ):
+            with self.subTest(url=url):
+                parsed = url_parse(url)
+                self.assertEqual(parsed.path, '/mail/view')
+                params = url_decode(parsed.query)
+                url_params.append(params)
+                # Note that pid, hash and auth_signup_token are not tested by this test but may be present in the URL (config).
+                self.assertEqual(params.get('model'), 'mail.test.portal')
+                self.assertEqual(int(params.get('res_id')), self.record_portal.id)
+                self.assertTrue(params.get('access_token'))
+        self.assertNotEqual(url_params[0]['access_token'], url_params[1]['access_token'])
+        self.assertEqual(
+            {k: v for k, v in url_params[0].items() if k != 'access_token'},
+            {k: v for k, v in url_params[1].items() if k != 'access_token'},
+            'URLs should be the same, except for access token'
+        )
 
     @users('employee')
     def test_employee_access(self):
-        """Check that the access link redirects an employee to the backend for viewing the record."""
-        self.authenticate(self.env.user.login, self.env.user.login)
-        res = self.url_open(self.record_access_url)
-        self.assertEqual(res.status_code, 200)
-        self.assert_URL(res.url, f'/odoo/mail.test.portal/{self.record_portal.id}')
+        """ Check internal employee behavior when accessing mail/view """
+        internal_backend_url = f'/odoo/mail.test.rating.thread/{self.record_internal.id}'
+        portal_backend_url = f'/odoo/mail.test.portal/{self.record_portal.id}'
 
-    @users('employee')
-    def test_employee_access_wrong_token(self):
-        """Check that the access link redirects an employee to the record even if the token invalid."""
         self.authenticate(self.env.user.login, self.env.user.login)
-        res = self.url_open(self.record_access_url_wrong_token)
-        self.assertEqual(res.status_code, 200)
-        self.assert_URL(res.url, f'/odoo/mail.test.portal/{self.record_portal.id}')
+        for url_name, url, exp_url in [
+            # accessible records
+            ("Internal record mail/view", self.record_internal_url_base, internal_backend_url),
+            ("Portal record mail/view", self.record_portal_url_base, portal_backend_url),
+            # even with token -> backend
+            ("Portal record with token", self.record_portal_url_auth, portal_backend_url),
+            # invalid token is not an issue for employee -> backend, has access
+            ("Portal record with wrong token", self.record_portal_url_auth_wrong_token, portal_backend_url),
+            # not existing -> redirect to discuss
+            ("Not existing record (internal)", self.record_internal_url_no_exists, self.discuss_local_url),
+            ("Not existing record (portal enabled)", self.record_portal_url_no_exists, self.discuss_local_url),
+            ("Not existign model", self.record_url_no_model, self.discuss_local_url),
+        ]:
+            with self.subTest(name=url_name, url=url):
+                res = self.url_open(url)
+                self.assertEqual(res.status_code, 200)
+                self.assertURLEqual(res.url, exp_url)
+
+    @mute_logger('werkzeug')
+    @users('portal_test')
+    def test_portal_access_logged(self):
+        """ Check portal behavior when accessing mail/view, notably check token
+        support and propagation. """
+        my_discuss_url = f'{self.test_base_url}/my?{url_encode({"subpath": "action-mail.action_discuss"})}'
+
+        self.authenticate(self.env.user.login, self.env.user.login)
+        for url_name, url, exp_url in [
+            # valid token -> ok -> redirect to portal URL
+            (
+                "No access (portal enabled), token", self.record_portal_url_auth,
+                self.portal_web_url_with_token,
+            ),
+            # invalid token -> ko -> redirect to my with discuss action (???)
+            (
+                "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
+                my_discuss_url,
+            ),
+            # std url, no access to record -> redirect to my with subpath being record base portal utl (???)
+            (
+                'No access record (internal)', self.record_internal_url_base,
+                f'{self.test_base_url}/my?{url_encode({"subpath": f"{self.record_internal._name}/{self.record_internal.id}"})}',
+            ),
+            # missing tokan -> redirect to my with discuss action (???)
+            (
+                'No access record (portal enabled)', self.record_portal_url_base,
+                my_discuss_url,
+            ),
+            # not existing -> redirect to my with discuss action (???)
+            (
+                'Not existing record (internal)', self.record_internal_url_no_exists,
+                my_discuss_url,
+            ),
+            (
+                'Not existing record (portal enabled)', self.record_portal_url_no_exists,
+                my_discuss_url,
+            ),
+            (
+                'Not existing model', self.record_url_no_model,
+                my_discuss_url,
+            ),
+        ]:
+            with self.subTest(name=url_name, url=url):
+                res = self.url_open(url)
+                self.assertEqual(res.status_code, 200)
+                self.assertURLEqual(res.url, exp_url)
+
+    @mute_logger('werkzeug')
+    def test_portal_access_not_logged(self):
+        """ Check customer behavior when accessing mail/view, notably check token
+        support and propagation. """
+        self.authenticate(None, None)
+        login_url = f'{self.test_base_url}/web/login'
+        odoo_portal_params = {
+            'model': self.record_portal._name,
+            'id': self.record_portal.id,
+            'active_id': self.record_portal.id,
+        }
+
+        for url_name, url, exp_url in [
+            # valid token -> ok -> redirect to portal URL
+            (
+                "No access (portal enabled), token", self.record_portal_url_auth,
+                self.portal_web_url_with_token,
+            ),
+            # invalid token -> ko -> redirect to login with just some mail/view params kept (???)
+            (
+                "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
+                f'{login_url}?redirect=#{url_encode(odoo_portal_params)}',
+            ),
+            # std url, no access to record -> redirect to login, with internal backend redirect ending with a ? (???)
+            (
+                'No access record (internal)', self.record_internal_url_base,
+                # f'{login_url}?redirect={url_quote(self.record_internal_url_base)}',
+                f'{login_url}?{url_encode({"redirect": f"{self.internal_backend_local_url}?"})}',
+            ),
+            (
+                'No access record (portal enabled)', self.record_portal_url_base,
+                f'{login_url}?redirect=#{url_encode(odoo_portal_params)}',
+            ),
+            # not existing -> redirect to login, with a redirect to messaging ending with a ? (???)
+            (
+                'Not existing record (internal)', self.record_internal_url_no_exists,
+                f'{login_url}?{url_encode({"redirect": f"{self.discuss_local_url}?"})}',
+            ),
+            (
+                'Not existing record (portal enabled)', self.record_portal_url_no_exists,
+                f'{login_url}?{url_encode({"redirect": f"{self.discuss_local_url}?"})}',
+            ),
+            (
+                'Not existing model', self.record_url_no_model,
+                f'{login_url}?{url_encode({"redirect": f"{self.discuss_local_url}?"})}',
+            ),
+        ]:
+            with self.subTest(name=url_name, url=url):
+                res = self.url_open(url)
+                self.assertEqual(res.status_code, 200)
+                self.assertURLEqual(res.url, exp_url)
+
+    def test_redirect_to_records_norecord(self):
+        """ Check specific use case of missing model, should directly redirect
+        to login page. """
+        for model, res_id in [
+            (False, self.record_portal.id),
+            ('', self.record_portal.id),
+            (self.record_portal._name, False),
+            (self.record_portal._name, ''),
+            (False, False),
+            ('wrong.model', self.record_portal.id),
+            (self.record_portal._name, -4),
+        ]:
+            response = self.url_open(
+                '/mail/view?model=%s&res_id=%s' % (model, res_id),
+                timeout=15
+            )
+            path = url_parse(response.url).path
+            self.assertEqual(
+                path, '/web/login',
+                'Failed with %s - %s' % (model, res_id)
+            )
 
     @users('employee')
     def test_send_message_to_customer(self):
         """Same as test_send_message_to_customer_using_template but without a template."""
-        composer = self._get_composer_with_context().create({
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_mail_composer_context(
+                self.record_portal, add_web=False,
+                default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                default_template_id=self.mail_template.id,
+                force_email=True,
+                lang='en_US',
+            )
+        ).create({
             'body': '<p>Hello Mathias Delvaux, your quotation is ready for review.</p>',
             'partner_ids': self.customer.ids,
             'subject': 'Your Quotation "a white table"',
@@ -343,7 +420,7 @@ class TestPortalFlow(MailCommon, HttpCase):
             composer._action_send_mail()
 
         self.assertEqual(len(self._mails), 1)
-        self.assertIn(f'"{html_escape(self.record_access_url)}"', self._mails[0].get('body'))
+        self.assertIn(f'"{html_escape(self.record_portal_url_auth)}"', self._mails[0].get('body'))
         # Check that the template is not used (not the same subject)
         self.assertEqual('Your Quotation "a white table"', self._mails[0].get('subject'))
         self.assertIn('Hello Mathias Delvaux', self._mails[0].get('body'))
@@ -354,30 +431,19 @@ class TestPortalFlow(MailCommon, HttpCase):
 
         Other tests below check that that same link has the correct behavior.
         This test follows the common use case by using a template while the next send the mail without a template."""
-        composer = self._get_composer_with_context(self.mail_template.id).create({})
+        composer = self.env['mail.compose.message'].with_context(
+            self._get_mail_composer_context(
+                self.record_portal, add_web=False,
+                default_email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                default_template_id=self.mail_template.id,
+                force_email=True,
+                lang='en_US',
+            )
+        ).create({})
 
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
 
         self.assertEqual(len(self._mails), 1)
-        self.assertIn(f'"{html_escape(self.record_access_url)}"', self._mails[0].get('body'))
+        self.assertIn(f'"{html_escape(self.record_portal_url_auth)}"', self._mails[0].get('body'))
         self.assertEqual(f'Your quotation "{self.record_portal.name}"', self._mails[0].get('subject'))  # Check that the template is used
-
-
-@tagged('portal')
-class TestPortalMixin(TestPortal):
-
-    @users('employee')
-    def test_portal_mixin(self):
-        """ Test internals of portal mixin """
-        customer = self.partner_1.with_env(self.env)
-        record_portal = self.env['mail.test.portal'].create({
-            'partner_id': customer.id,
-            'name': 'Test Portal Record',
-        })
-
-        self.assertFalse(record_portal.access_token)
-        self.assertEqual(record_portal.access_url, '/my/test_portal/%s' % record_portal.id)
-
-        record_portal._portal_ensure_token()
-        self.assertTrue(record_portal.access_token)

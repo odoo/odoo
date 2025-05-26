@@ -1,11 +1,10 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
 from odoo.addons.mail.tests.test_attachment_controller import TestAttachmentControllerCommon
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
+@tagged("-at_install", "post_install", "mail_controller")
 class TestPortalAttachmentController(TestAttachmentControllerCommon):
+
     def test_attachment_upload_portal(self):
         """Test access to upload an attachment on portal"""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})

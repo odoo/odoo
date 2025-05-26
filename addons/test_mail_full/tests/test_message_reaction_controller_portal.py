@@ -1,13 +1,10 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
-from odoo.addons.mail.tests.test_message_reaction_controller import (
-    TestMessageReactionControllerCommon,
-)
+from odoo.addons.mail.tests.test_message_reaction_controller import TestMessageReactionControllerCommon
+from odoo.tests import tagged
 
 
-@odoo.tests.tagged("-at_install", "post_install")
+@tagged("-at_install", "post_install", "mail_controller")
 class TestPortalMessageReactionController(TestMessageReactionControllerCommon):
+
     def test_message_reaction_portal_no_partner(self):
         """Test access of message reaction for portal without partner."""
         record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})

@@ -8,6 +8,7 @@ from . import test_message_reaction_controller_portal
 from . import test_portal
 from . import test_portal_attachment_controller
 from . import test_portal_message_update_controller
+from . import test_portal_mixin
 from . import test_portal_thread_controller
 from . import test_rating
 from . import test_res_users

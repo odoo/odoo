@@ -41,6 +41,28 @@ class MailTestPortalNoPartner(models.Model):
             record.access_url = '/my/test_portal_no_partner/%s' % self.id
 
 
+class MailTestPortalPublicAccessAction(models.Model):
+    """ Test 'public' target_type access action """
+    _description = 'Portal Public Access Action'
+    _name = 'mail.test.portal.public.access.action'
+    _inherit = 'mail.test.portal'
+
+    def _compute_access_url(self):
+        super()._compute_access_url()
+        for record in self.filtered('id'):
+            record.access_url = 'http://www.example.com/public_access_action'
+
+    def _get_access_action(self, access_uid=None, force_website=False):
+        # Test 'public' target type
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.access_url,
+            'target': 'self',
+            'target_type': 'public',
+            'res_id': self.id,
+        }
+
+
 class MailTestRating(models.Model):
     """ A model inheriting from rating.mixin (which inherits from mail.thread) with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
