@@ -3,6 +3,7 @@ import { rpc } from "@web/core/network/rpc";
 import weUtils from '@web_editor/js/common/utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
 import { KeepLast } from "@web/core/utils/concurrency";
+import { range } from "@web/core/utils/numbers";
 
 import { useRef, useState, useEffect } from "@odoo/owl";
 
@@ -10,7 +11,7 @@ export class AutoResizeImage extends Attachment {
     static template = "web_editor.AutoResizeImage";
     setup() {
         super.setup();
-
+        this.range = range;
         this.image = useRef('auto-resize-image');
         this.container = useRef('auto-resize-image-container');
 

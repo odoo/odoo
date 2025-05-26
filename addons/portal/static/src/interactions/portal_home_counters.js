@@ -1,6 +1,7 @@
-import { Interaction } from "@web/public/interaction";
-import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
+import { range } from "@web/core/utils/numbers";
+import { Interaction } from "@web/public/interaction";
 
 export class PortalHomeCounters extends Interaction {
     static selector = ".o_portal_my_home";
@@ -26,7 +27,7 @@ export class PortalHomeCounters extends Interaction {
         const counterByRpc = Math.ceil(needed.length / numberRpc);
         const countersAlwaysDisplayed = this.getCountersAlwaysDisplayed();
 
-        const proms = [...Array(Math.min(numberRpc, needed.length)).keys()].map(async (i) => {
+        const proms = range(Math.min(numberRpc, needed.length)).map(async (i) => {
             const documentsCountersData = await rpc("/my/counters", {
                 counters: needed.slice(i * counterByRpc, (i + 1) * counterByRpc),
             });

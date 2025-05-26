@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { range } from "@web/core/utils/numbers";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
@@ -273,7 +274,7 @@ export class PropertyTags extends Component {
             return;
         }
         this.popover.open(event.currentTarget, {
-            colors: [...Array(ColorList.COLORS.length).keys()],
+            colors: range(ColorList.COLORS.length),
             tag: { id: tagId, colorIndex: tagColor },
             switchTagColor: this.onTagColorSwitch.bind(this),
         });

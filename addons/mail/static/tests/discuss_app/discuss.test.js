@@ -1,5 +1,6 @@
 import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
+import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import {
     click,
     contains,
@@ -36,10 +37,10 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 
-import { OutOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { EventBus } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpc } from "@web/core/network/rpc";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1890,7 +1891,7 @@ test("failure on loading more messages should display error and prompt retry but
         name: "General",
     });
     const messageIds = pyEnv["mail.message"].create(
-        [...Array(60).keys()].map(() => ({
+        range(60).map(() => ({
             body: "coucou",
             model: "discuss.channel",
             res_id: channelId,
@@ -1929,7 +1930,7 @@ test("Retry loading more messages on failed load more messages should load more 
         name: "General",
     });
     const messageIds = pyEnv["mail.message"].create(
-        [...Array(90).keys()].map(() => ({
+        range(90).map(() => ({
             body: "coucou",
             model: "discuss.channel",
             res_id: channelId,
@@ -1991,7 +1992,9 @@ test("composer state: attachments save and restore", async () => {
         ".o-mail-Composer:has(textarea[placeholder='Message #Special…']) input[type=file]",
         files
     );
-    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", { count: 3 });
+    await contains(".o-mail-Composer .o-mail-AttachmentContainer:not(.o-isUploading)", {
+        count: 3,
+    });
     // Switch back to #general
     await click("button", { text: "General" });
     await contains(".o-mail-Composer .o-mail-AttachmentCard");

@@ -11,6 +11,8 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test, expect } from "@odoo/hoot";
 
+import { range } from "@web/core/utils/numbers";
+
 describe.current.tags("desktop");
 defineMailModels();
 
@@ -20,21 +22,19 @@ test.skip("Form view not scrolled when switching record", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         {
-            description: [...Array(60).keys()].join("\n"),
+            description: range(60).join("\n"),
             display_name: "Partner 1",
         },
         {
-            description: [...Array(60).keys()].join("\n"),
+            description: range(60).join("\n"),
             display_name: "Partner 2",
         },
     ]);
-    const messages = [...Array(60).keys()].map((id) => {
-        return {
-            body: "not empty",
-            model: "res.partner",
-            res_id: id < 29 ? partnerId_1 : partnerId_2,
-        };
-    });
+    const messages = range(60).map((id) => ({
+        body: "not empty",
+        model: "res.partner",
+        res_id: id < 29 ? partnerId_1 : partnerId_2,
+    }));
     pyEnv["mail.message"].create(messages);
     patchUiSize({ size: SIZES.LG });
     await start();
@@ -180,7 +180,7 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
     });
     expect(".o-mail-Message-body span").toHaveCount(0);
     await click(".o-mail-ellipsis");
-    expect(".o-mail-Message-body span").toHaveText('--\nSystem')
+    expect(".o-mail-Message-body span").toHaveText("--\nSystem");
     await click(".o-mail-Message");
     expect(".o-mail-Message-body span").toHaveCount(1);
 });
