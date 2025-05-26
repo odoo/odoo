@@ -146,11 +146,6 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter('filter_journals'), readonly=False,
         precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
-    filter_analytic = fields.Boolean(
-        string="Analytic Filter",
-        compute=lambda x: x._compute_report_option_filter('filter_analytic'), readonly=False,
-        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
-    )
     filter_hierarchy = fields.Selection(
         string="Account Groups",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
