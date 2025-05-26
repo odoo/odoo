@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0+e\n"
+"Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-16 11:45+0000\n"
-"PO-Revision-Date: 2024-01-16 11:45+0000\n"
+"POT-Creation-Date: 2025-06-03 08:35+0000\n"
+"PO-Revision-Date: 2025-06-03 08:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,14 @@ msgid "Accounting Report Expression"
 msgstr ""
 
 #. module: l10n_it
+#: model:ir.model.fields,field_description:l10n_it.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_it.field_account_move__display_name
+#: model:ir.model.fields,field_description:l10n_it.field_account_report_expression__display_name
+#: model:ir.model.fields,field_description:l10n_it.field_account_tax__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: l10n_it
 #: model:ir.model.fields,field_description:l10n_it.field_account_tax__l10n_it_exempt_reason
 msgid "Exoneration"
 msgstr ""
@@ -36,23 +44,34 @@ msgid "Exoneration type"
 msgstr ""
 
 #. module: l10n_it
+#: model:ir.model.fields,field_description:l10n_it.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_it.field_account_move__id
+#: model:ir.model.fields,field_description:l10n_it.field_account_report_expression__id
+#: model:ir.model.fields,field_description:l10n_it.field_account_tax__id
+msgid "ID"
+msgstr ""
+
+#. module: l10n_it
 #. odoo-python
 #: code:addons/l10n_it/models/account_tax.py:0
-#, python-format
 msgid ""
 "If the tax amount is 0%, you must enter the exoneration code and the related"
-" law reference."
+" legal notes."
 msgstr ""
 
 #. module: l10n_it
-#: model:ir.model.fields,field_description:l10n_it.field_account_tax__l10n_it_law_reference
-msgid "Law Reference"
+#: model:ir.model,name:l10n_it.model_account_move
+msgid "Journal Entry"
+msgstr ""
+
+#. module: l10n_it
+#: model:account.account.tag,name:l10n_it.account_tag_A_PASS
+msgid "Shareholders' Equity"
 msgstr ""
 
 #. module: l10n_it
 #. odoo-python
 #: code:addons/l10n_it/models/account_tax.py:0
-#, python-format
 msgid "Split Payment is not compatible with exoneration of kind 'N6'"
 msgstr ""
 
