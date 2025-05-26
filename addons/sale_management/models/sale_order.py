@@ -200,7 +200,7 @@ class SaleOrder(models.Model):
             if sent_orders := self.filtered(lambda so: so.state == 'sent'):
                 sent_orders.activity_schedule(
                     activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
-                    user_id=self.env.user_id.id,
+                    user_id=self.env.user.id,
                     date_deadline=fields.Date.today(),
                     summary=_("Urgent: Customer change in sent quotation"),
                     note=_(
