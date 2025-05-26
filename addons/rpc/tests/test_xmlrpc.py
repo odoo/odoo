@@ -11,7 +11,6 @@ from odoo.http import _request_stack
 from odoo.service import common as auth
 from odoo.service import model
 from odoo.tests import common
-from odoo.tools import DotDict
 
 
 class TestExternalAPI(SavepointCaseWithUserDemo):
@@ -180,9 +179,9 @@ class TestAPIKeys(common.HttpCase):
             raise ValueError("There is no json here")
         # needs a fake request in order to call methods protected with check_identity
         self.http_request_key = self.canonical_tag
-        fake_req = DotDict({
+        fake_req = common.DotDict({
             # various things go and access request items
-            'httprequest': DotDict({
+            'httprequest': common.DotDict({
                 'environ': {'REMOTE_ADDR': 'localhost'},
                 'cookies': {common.TEST_CURSOR_COOKIE_NAME: self.canonical_tag},
                 'args': {},

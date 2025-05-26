@@ -4,7 +4,7 @@ import logging
 
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.web.tests.utils import MockRequest
 
 
 _logger = logging.getLogger(__name__)

@@ -62,7 +62,6 @@ __all__ = [
     'DEFAULT_SERVER_TIME_FORMAT',
     'NON_BREAKING_SPACE',
     'SKIPPED_ELEMENT_TYPES',
-    'DotDict',
     'LastOrderedSet',
     'OrderedSet',
     'Reverse',
@@ -1666,18 +1665,6 @@ class ReadonlyDict(Mapping[K, T], typing.Generic[K, T]):
 
     def __iter__(self):
         return iter(self._data__)
-
-
-class DotDict(dict):
-    """Helper for dot.notation access to dictionary attributes
-
-        E.g.
-          foo = DotDict({'bar': False})
-          return foo.bar
-    """
-    def __getattr__(self, attrib):
-        val = self.get(attrib)
-        return DotDict(val) if isinstance(val, dict) else val
 
 
 def get_diff(data_from, data_to, custom_style=False, dark_color_scheme=False):

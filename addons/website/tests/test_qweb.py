@@ -2,7 +2,7 @@
 
 from odoo import http
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.web.tests.utils import MockRequest
 from odoo.tests.common import TransactionCase
 
 

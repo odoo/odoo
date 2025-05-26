@@ -62,7 +62,7 @@ from odoo.fields import Command
 from odoo.modules.registry import Registry, DummyRLock
 from odoo.service import security
 from odoo.sql_db import Cursor, Savepoint
-from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
+from odoo.tools import config, float_compare, mute_logger, profiler, SQL
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
@@ -300,6 +300,19 @@ def _normalize_arch_for_assert(arch_string, parser_method="xml"):
     parser = Parser(remove_blank_text=True)
     arch_string = etree.fromstring(arch_string, parser=parser)
     return etree.tostring(arch_string, pretty_print=True, encoding='unicode')
+
+
+class DotDict(dict):
+    """Helper for dot.notation access to dictionary attributes
+
+        E.g.
+          foo = DotDict({'bar': False})
+          return foo.bar
+    """
+    def __getattr__(self, attrib):
+        val = self.get(attrib)
+        return DotDict(val) if isinstance(val, dict) else val
+
 
 class BlockedRequest(requests.exceptions.ConnectionError):
     pass

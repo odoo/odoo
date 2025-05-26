@@ -8,7 +8,7 @@ from unittest.mock import patch
 import odoo
 from odoo.http import content_disposition, root
 from odoo.tests import tagged
-from odoo.tests.common import HOST, BaseCase, get_db_name, new_test_user
+from odoo.tests.common import HOST, BaseCase, DotDict, get_db_name, new_test_user
 from odoo.tools import config, file_path, parse_version
 
 from .test_common import TestHttpBase
@@ -64,7 +64,7 @@ class TestHttpMisc(TestHttpBase):
 
     def test_misc2_local_redirect(self):
         def local_redirect(path):
-            fake_req = odoo.tools.misc.DotDict(db=False)
+            fake_req = DotDict(db=False)
             return odoo.http.Request.redirect(fake_req, path, local=True).headers['Location']
         self.assertEqual(local_redirect('https://www.example.com/hello?a=b'), '/hello?a=b')
         self.assertEqual(local_redirect('/hello?a=b'), '/hello?a=b')

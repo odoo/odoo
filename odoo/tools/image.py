@@ -16,7 +16,6 @@ except ImportError:
 from random import randrange
 
 from odoo.exceptions import UserError
-from odoo.tools.misc import DotDict
 from odoo.tools.translate import LazyTranslate
 
 
@@ -514,19 +513,20 @@ def is_image_size_above(base64_source_1, base64_source_2):
 
     def get_image_size(base64_source):
         source = base64.b64decode(base64_source)
+
         if (source[0:4] == b'RIFF' and source[8:15] == b'WEBPVP8'):
             size = get_webp_size(source)
             if size:
-                return DotDict({'width': size[0], 'height': size[0]})
-            else:
-                # False for unknown WEBP format
-                return False
-        else:
-            return image_fix_orientation(binary_to_image(source))
+                return size[0], size[0]
+            # False for unknown WEBP format
+            return False
 
-    image_source = get_image_size(base64_source_1)
-    image_target = get_image_size(base64_source_2)
-    return image_source.width > image_target.width or image_source.height > image_target.height
+        fixed_image = image_fix_orientation(binary_to_image(source))
+        return fixed_image.width, fixed_image.height
+
+    source_width, source_height = get_image_size(base64_source_1)
+    target_width, target_height = get_image_size(base64_source_2)
+    return source_width > target_width or source_height > target_height
 
 
 def image_guess_size_from_field_name(field_name: str) -> Tuple[int, int]:

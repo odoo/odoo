@@ -5,8 +5,9 @@ from lxml import etree
 import re
 from markupsafe import Markup
 
+from odoo.addons.web.tests.utils import MockRequest
 from odoo.addons.website.controllers.main import Website
-from odoo.addons.website.tools import distance, MockRequest
+from odoo.addons.website.tools import distance
 import odoo.tests
 from odoo.tests.common import TransactionCase
 
