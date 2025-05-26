@@ -45,7 +45,7 @@ export class MenuDataPlugin extends Plugin {
                     onClickEditMenu: () => {
                         this.services.dialog.add(EditMenuDialog, {
                             save: async () => {
-                                await this.config.reloadEditor({ url: this.document.URL });
+                                await this.config.reloadEditor();
                             },
                         });
                     },
