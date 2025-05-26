@@ -443,7 +443,7 @@ export function useMagicColumnWidths(tableRef, getState) {
             ev.preventDefault();
             ev.stopPropagation();
             let delta = ev.clientX - initialX;
-            delta = this.isRTL ? -delta : delta;
+            delta = localization.direction === "rtl" ? -delta : delta;
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${Math.floor(newWidth)}px`;
