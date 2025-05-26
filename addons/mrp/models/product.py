@@ -365,7 +365,6 @@ class ProductProduct(models.Model):
             components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
         res = super(ProductProduct, components).action_open_quants()
         if bom_kits:
-            res['context']['single_product'] = False
             res['context'].pop('default_product_tmpl_id', None)
         return res
 
