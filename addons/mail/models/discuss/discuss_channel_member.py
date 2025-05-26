@@ -502,14 +502,12 @@ class DiscussChannelMember(models.Model):
                 self.channel_id._web_push_send_notification(devices, private_key, public_key, payload_by_lang=payload_by_lang)
         return members
 
-    def _mark_as_read(self, last_message_id, sync=False):
+    def _mark_as_read(self, last_message_id):
         """
         Mark channel as read by updating the seen message id of the current
         member as well as its new message separator.
 
         :param last_message_id: the id of the message to be marked as read.
-        :param sync: wether the new message separator and the unread counter in
-            the UX will sync to their server values.
         """
         self.ensure_one()
         domain = [
@@ -521,7 +519,7 @@ class DiscussChannelMember(models.Model):
         if not last_message:
             return
         self._set_last_seen_message(last_message)
-        self._set_new_message_separator(last_message.id + 1, sync=sync)
+        self._set_new_message_separator(last_message.id + 1)
 
     def _set_last_seen_message(self, message, notify=True):
         """
@@ -551,13 +549,10 @@ class DiscussChannelMember(models.Model):
             ],
         )
 
-    def _set_new_message_separator(self, message_id, sync=False):
+    def _set_new_message_separator(self, message_id):
         """
         :param message_id: id of the message above which the new message
             separator should be displayed.
-        :param sync: whether the new message separator and the unread counter
-            in the UX will sync to their server values.
-
         """
         self.ensure_one()
         if message_id == self.new_message_separator:
@@ -573,7 +568,6 @@ class DiscussChannelMember(models.Model):
                 {"message_unread_counter_bus_id": bus_last_id},
                 "new_message_separator",
                 *self.env["discuss.channel.member"]._to_store_persona([]),
-                {"syncUnread": sync},
             ],
         )
 

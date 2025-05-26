@@ -111,8 +111,10 @@ export class DiscussCoreCommon {
             if (message.isSelfAuthored) {
                 channel.onNewSelfMessage(message);
             } else {
+                if (channel.isDisplayed && channel.selfMember?.new_message_separator_ui === 0) {
+                    channel.selfMember.new_message_separator_ui = message.id;
+                }
                 if (!channel.isDisplayed && channel.selfMember) {
-                    channel.selfMember.syncUnread = true;
                     channel.scrollUnread = true;
                 }
                 if (notifId > channel.selfMember?.message_unread_counter_bus_id) {
@@ -134,9 +136,10 @@ export class DiscussCoreCommon {
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
             this.store.self.type === "partner" &&
-            channel.newestPersistentMessage?.eq(channel.newestMessage)
+            channel.newestPersistentMessage?.eq(channel.newestMessage) &&
+            !channel.markedAsUnread
         ) {
-            channel.markAsRead({ sync: false });
+            channel.markAsRead();
         }
         this.env.bus.trigger("discuss.channel/new_message", { channel, message, silent });
         const authorMember = channel.channel_member_ids.find(({ persona }) =>

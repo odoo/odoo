@@ -23,6 +23,12 @@ messageActionsRegistry.add("set-new-message-separator", {
     /** @param {import("@mail/core/common/message").Message} component */
     onClick: (component) => {
         const message = toRaw(component.message);
+        const selfMember = message.thread?.selfMember;
+        if (selfMember) {
+            selfMember.new_message_separator = message.id;
+            selfMember.new_message_separator_ui = selfMember.new_message_separator;
+        }
+        message.thread.markedAsUnread = true;
         rpc("/discuss/channel/set_new_message_separator", {
             channel_id: message.thread.id,
             message_id: message.id,

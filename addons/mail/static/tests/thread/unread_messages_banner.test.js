@@ -11,7 +11,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { tick } from "@odoo/hoot-mock";
+import { disableAnimations, tick } from "@odoo/hoot-mock";
 import {
     asyncStep,
     Command,
@@ -22,7 +22,6 @@ import {
     withUser,
 } from "@web/../tests/web_test_helpers";
 import { rpc } from "@web/core/network/rpc";
-import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import { queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
@@ -31,9 +30,10 @@ defineMailModels();
 test("show unread messages banner when there are unread messages", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -41,18 +41,17 @@ test("show unread messages banner when there are unread messages", async () => {
     }
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
-        text: "message 0",
-    });
+    await contains(".o-mail-Message", { count: 30 });
     await contains("span", { text: "30 new messagesMark as Read" });
 });
 
 test("mark thread as read from unread messages banner", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -60,9 +59,7 @@ test("mark thread as read from unread messages banner", async () => {
     }
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
-        text: "message 0",
-    });
+    await contains(".o-mail-Message", { count: 30 });
     await click("span", {
         text: "Mark as Read",
         parent: ["span", { text: "30 new messagesMark as Read" }],
@@ -72,37 +69,23 @@ test("mark thread as read from unread messages banner", async () => {
 test("reset new message separator from unread messages banner", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    let lastMessageId;
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 30; ++i) {
-        lastMessageId = pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+        pyEnv["mail.message"].create({
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
         });
     }
-    const [selfMember] = pyEnv["discuss.channel.member"].search([
+    pyEnv["discuss.channel.member"].search([
         ["partner_id", "=", serverState.partnerId],
         ["channel_id", "=", channelId],
     ]);
     await start();
-    // Wait for the mark as read notification to update the local state.
-    const markAsReadNotification = [
-        "mail.record/insert",
-        {
-            "discuss.channel.member": [
-                {
-                    id: selfMember,
-                    thread: { id: channelId, model: "discuss.channel" },
-                    persona: { id: serverState.partnerId, type: "partner" },
-                    seen_message_id: lastMessageId,
-                },
-            ],
-            "res.partner": [{ id: serverState.partnerId, name: "Mitchell Admin" }],
-        },
-    ];
-    await Promise.all([openDiscuss(channelId), waitNotifications(markAsReadNotification)]);
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", {
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Message", {
         text: "message 0",
     });
     await click("span", {
@@ -113,6 +96,7 @@ test("reset new message separator from unread messages banner", async () => {
 });
 
 test("scroll to unread notification", async () => {
+    disableAnimations();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
@@ -129,7 +113,6 @@ test("scroll to unread notification", async () => {
     await start();
     await openDiscuss(channelId);
     await tick(); // wait for the scroll to first unread to complete
-    await waitForSteps(["/discuss/channel/mark_as_read"]);
     await click("span", {
         text: "Mark as Read",
         parent: ["span", { text: "60 new messagesMark as Read" }],
@@ -155,21 +138,19 @@ test("scroll to unread notification", async () => {
 test("remove banner when scrolling to bottom", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 50; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
         });
     }
-    onRpc("/discuss/channel/mark_as_read", () => asyncStep("mark_as_read"));
     await start();
     await openDiscuss(channelId);
-    await waitForSteps(["mark_as_read"]);
     await contains(".o-mail-Message", { count: 30 });
     await contains(".o-mail-Thread-banner", { text: "50 new messages" });
-    await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 0" });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Message", { count: 50 });
@@ -183,8 +164,9 @@ test("remove banner when scrolling to bottom", async () => {
 test("remove banner when opening thread at the bottom", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     const messageId = pyEnv["mail.message"].create({
-        author_id: serverState.partnerId,
+        author_id: bobPartnerId,
         body: `Hello World`,
         model: "discuss.channel",
         res_id: channelId,
@@ -209,9 +191,10 @@ test("remove banner when opening thread at the bottom", async () => {
 test("keep banner after mark as unread when scrolling to bottom", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -227,18 +210,18 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
 
 test("sidebar and banner counters display same value", async () => {
     const pyEnv = await startServer();
-    const bobPatnerId = pyEnv["res.partner"].create({ name: "Bob" });
-    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPatnerId });
+    const bobPartnerId = pyEnv["res.partner"].create({ name: "Bob" });
+    const bobUserId = pyEnv["res.users"].create({ name: "Bob", partner_id: bobPartnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
         channel_member_ids: [
             Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: bobPatnerId }),
+            Command.create({ partner_id: bobPartnerId }),
         ],
     });
     for (let i = 0; i < 30; ++i) {
         pyEnv["mail.message"].create({
-            author_id: serverState.partnerId,
+            author_id: bobPartnerId,
             body: `message ${i}`,
             model: "discuss.channel",
             res_id: channelId,
@@ -252,7 +235,7 @@ test("sidebar and banner counters display same value", async () => {
     });
     await click(".o-mail-DiscussSidebarChannel", { text: "Bob" });
     await contains(".o-mail-Thread-banner", { text: "30 new messages" });
-    await contains(".o-mail-DiscussSidebar-badge", { text: "30", count: 0 });
+    await contains(".o-mail-DiscussSidebar-badge", { text: "30" });
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -294,6 +277,7 @@ test("mobile: mark as read when opening chat", async () => {
     await click("button:has(.badge:contains('1'))", { text: "Chat" });
     await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob" });
     await click(".o-mail-NotificationItem", { text: "bob" });
+    await contains(".o-mail-Message");
     await click(".o-mail-ChatWindow-command[title*='Close Chat Window']");
     await contains(".o-mail-NotificationItem:has(.badge:contains(1))", { text: "bob", count: 0 });
 });

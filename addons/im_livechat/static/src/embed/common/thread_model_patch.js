@@ -136,6 +136,7 @@ patch(Thread.prototype, {
         return message;
     },
 
+    /** @deprecated */
     get showUnreadBanner() {
         if (this.chatbot && !this.chatbot.currentStep?.operatorFound) {
             return false;
