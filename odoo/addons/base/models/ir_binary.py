@@ -47,7 +47,7 @@ class IrBinary(models.AbstractModel):
             record = self.env[res_model].browse(res_id).exists()
         if not record:
             raise MissingError(f"No record found for xmlid={xmlid}, res_model={res_model}, id={res_id}")  # pylint: disable=missing-gettext
-        if access_token and verify_limited_field_access_token(record, field, access_token):
+        if access_token and verify_limited_field_access_token(record, field, access_token, scope="binary"):
             return record.sudo()
         if record._can_return_content(field, access_token):
             return record.sudo()

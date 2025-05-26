@@ -4,7 +4,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { isIosApp } from "@web/core/browser/feature_detection";
-import { EventBus } from "@odoo/owl";
+import { EventBus, reactive } from "@odoo/owl";
 import { user } from "@web/core/user";
 
 // List of worker events that should not be broadcasted.
@@ -34,10 +34,7 @@ export const busService = {
          * @typedef {typeof import("@bus/workers/websocket_worker").WORKER_STATE} WORKER_STATE
          * @type {WORKER_STATE[keyof WORKER_STATE]}
          */
-        let workerState;
-        let isActive = false;
         let isInitialized = false;
-        let lastNotificationId = null;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
         let backOnlineTimeout;
         const startedAt = luxon.DateTime.now().set({ milliseconds: 0 });
@@ -89,8 +86,8 @@ export const busService = {
                 }
                 case "notification": {
                     const notifications = data.map(({ id, message }) => ({ id, ...message }));
-                    lastNotificationId = notifications.at(-1).id;
-                    multiTab.setSharedValue("last_notification_id", lastNotificationId);
+                    state.lastNotificationId = notifications.at(-1).id;
+                    multiTab.setSharedValue("last_notification_id", state.lastNotificationId);
                     for (const { id, type, payload } of notifications) {
                         notificationBus.trigger(type, { id, payload });
                         busService._onMessage(env, id, type, payload);
@@ -103,7 +100,7 @@ export const busService = {
                     break;
                 }
                 case "worker_state_updated":
-                    workerState = data;
+                    state.workerState = data;
                     break;
                 case "outdated": {
                     multiTab.unregister();
@@ -214,7 +211,7 @@ export const busService = {
             "online",
             () => {
                 backOnlineTimeout = browser.setTimeout(() => {
-                    if (isActive) {
+                    if (state.isActive) {
                         send("start");
                     }
                 }, BACK_ONLINE_RECONNECT_DELAY);
@@ -231,7 +228,7 @@ export const busService = {
                 capture: true,
             }
         );
-        return {
+        const state = reactive({
             addEventListener: bus.addEventListener.bind(bus),
             addChannel: async (channel) => {
                 if (!worker) {
@@ -240,9 +237,11 @@ export const busService = {
                 await connectionInitializedDeferred;
                 send("add_channel", channel);
                 send("start");
-                isActive = true;
+                state.isActive = true;
             },
-            deleteChannel: (channel) => send("delete_channel", channel),
+            deleteChannel: (channel) => {
+                send("delete_channel", channel);
+            },
             setLoggingEnabled: (isEnabled) => send("set_logging_enabled", isEnabled),
             downloadLogs: () => send("request_logs"),
             forceUpdateChannels: () => send("force_update_channels"),
@@ -255,15 +254,13 @@ export const busService = {
                 }
                 await connectionInitializedDeferred;
                 send("start");
-                isActive = true;
+                state.isActive = true;
             },
             stop: () => {
                 send("leave");
-                isActive = false;
+                state.isActive = false;
             },
-            get isActive() {
-                return isActive;
-            },
+            isActive: false,
             /**
              * Subscribe to a single notification type.
              *
@@ -292,14 +289,11 @@ export const busService = {
                 subscribeFnToWrapper.delete(callback);
             },
             startedAt,
-            get workerState() {
-                return workerState;
-            },
+            workerState: null,
             /** The id of the last notification received by this tab. */
-            get lastNotificationId() {
-                return lastNotificationId;
-            },
-        };
+            lastNotificationId: null,
+        });
+        return state;
     },
     /** Overriden to provide logs in tests. Use subscribe() in production. */
     _onMessage(env, id, type, payload) {},

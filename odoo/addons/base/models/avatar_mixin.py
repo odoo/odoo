@@ -5,6 +5,7 @@ from base64 import b64encode
 from hashlib import sha512
 from odoo import models, fields, api
 from odoo.tools import html_escape, file_open
+from odoo.tools.misc import limited_field_access_token
 
 
 def get_hsl_from_seed(seed):
@@ -77,3 +78,12 @@ class AvatarMixin(models.AbstractModel):
 
     def _avatar_get_placeholder(self):
         return file_open(self._avatar_get_placeholder_path(), 'rb').read()
+
+    def _get_avatar_128_access_token(self):
+        """Return a scoped access token for the `avatar_128` field. The token can be
+        used with `ir_binary._find_record` to bypass access rights.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, "avatar_128", scope="binary")

@@ -1811,9 +1811,9 @@ def verify_hash_signed(env, scope, payload):
     return None
 
 
-def limited_field_access_token(record, field_name, timestamp=None):
-    """Generate a token granting access to the given record and field_name from
-    the binary routes (/web/content or /web/image).
+def limited_field_access_token(record, field_name, timestamp=None, *, scope):
+    """Generate a token granting access to the given record and field_name in
+    the given scope.
 
     The validitiy of the token is determined by the timestamp parameter.
     When it is not specified, a timestamp is automatically generated with a
@@ -1827,6 +1827,9 @@ def limited_field_access_token(record, field_name, timestamp=None):
     :type record: class:`odoo.models.Model`
     :param field_name: the field name of record to generate the token for
     :type field_name: str
+    :param scope: scope of the authentication, to have different signature for the same
+        record/field in different usage
+    :type scope: str
     :param timestamp: expiration timestamp of the token, or None to generate one
     :type timestamp: int, optional
     :return: the token, which includes the timestamp in hex format
@@ -1840,11 +1843,11 @@ def limited_field_access_token(record, field_name, timestamp=None):
         adler32_max = 4294967295
         jitter = two_weeks * zlib.adler32(unique_str.encode()) // adler32_max
         timestamp = hex(start_of_period + 2 * two_weeks + jitter)
-    token = hmac(record.env(su=True), "binary", (record._name, record.id, field_name, timestamp))
+    token = hmac(record.env(su=True), scope, (record._name, record.id, field_name, timestamp))
     return f"{token}o{timestamp}"
 
 
-def verify_limited_field_access_token(record, field_name, access_token):
+def verify_limited_field_access_token(record, field_name, access_token, *, scope):
     """Verify the given access_token grants access to field_name of record.
     In particular, the token must have the right format, must be valid for the
     given record, and must not have expired.
@@ -1855,13 +1858,15 @@ def verify_limited_field_access_token(record, field_name, access_token):
     :type field_name: str
     :param access_token: the access token to verify
     :type access_token: str
+    :param scope: scope of the authentication, to have different signature for the same
+        record/field in different usage
     :return: whether the token is valid for the record/field_name combination at
         the current date and time
     :rtype: bool
     """
     *_, timestamp = access_token.rsplit("o", 1)
     return consteq(
-        access_token, limited_field_access_token(record, field_name, timestamp)
+        access_token, limited_field_access_token(record, field_name, timestamp, scope=scope)
     ) and datetime.datetime.now() < datetime.datetime.fromtimestamp(int(timestamp, 16))
 
 

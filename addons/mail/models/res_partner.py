@@ -232,13 +232,25 @@ class ResPartner(models.Model):
     # DISCUSS
     # ------------------------------------------------------------
 
+    def _get_im_status_access_token(self):
+        """Return a scoped access token for the `im_status` field. The token is used in
+        `ir_websocket._prepare_subscribe_data` to grant access to presence channels.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, "im_status", scope="mail.presence")
+
     def _field_store_repr(self, field_name):
         if field_name == "avatar_128":
             return [
-                Store.Attr(
-                    "avatar_128_access_token", lambda p: limited_field_access_token(p, "avatar_128")
-                ),
+                Store.Attr("avatar_128_access_token", lambda p: p._get_avatar_128_access_token()),
                 "write_date",
+            ]
+        if field_name == "im_status":
+            return [
+                "im_status",
+                Store.Attr("im_status_access_token", lambda p: p._get_im_status_access_token()),
             ]
         return [field_name]
 

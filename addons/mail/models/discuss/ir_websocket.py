@@ -11,28 +11,6 @@ class IrWebsocket(models.AbstractModel):
 
     _inherit = "ir.websocket"
 
-    def _filter_accessible_presences(self, partners, guests):
-        allowed_partners, allowed_guests = super()._filter_accessible_presences(partners, guests)
-        if self.env.user and self.env.user._is_internal():
-            return allowed_partners, allowed_guests
-        current_partner, current_guest = self.env["res.partner"]._get_current_persona()
-        # sudo - mail.guest: guest can access their own channels.
-        channels_domain = Domain(
-            "channel_ids", "in", (current_partner or current_guest.sudo()).channel_ids.ids
-        )
-        # sudo - res.partner: allow access when sharing a common channel.
-        allowed_partners |= (
-            self.env["res.partner"]
-            .with_context(active_test=False)
-            .sudo()
-            .search(Domain("id", "in", partners.ids) & channels_domain)
-        )
-        # sudo - mail.guest: allow access when sharing a common channel.
-        allowed_guests |= (
-            self.env["mail.guest"].sudo().search(Domain("id", "in", guests.ids) & channels_domain)
-        )
-        return allowed_partners, allowed_guests
-
     def _build_bus_channel_list(self, channels):
         channels = list(channels)  # do not alter original list
         discuss_channel_ids = list()

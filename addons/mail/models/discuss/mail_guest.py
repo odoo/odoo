@@ -92,13 +92,25 @@ class MailGuest(models.Model):
         """
         self.env.cr.execute(query, (timezone, self.id))
 
+    def _get_im_status_access_token(self):
+        """Return a scoped access token for the `im_status` field. The token is used in
+        `ir_websocket._prepare_subscribe_data` to grant access to presence channels.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, "im_status", scope="mail.presence")
+
     def _field_store_repr(self, field_name):
         if field_name == "avatar_128":
             return [
-                Store.Attr(
-                    "avatar_128_access_token", lambda g: limited_field_access_token(g, "avatar_128")
-                ),
+                Store.Attr("avatar_128_access_token", lambda g: g._get_avatar_128_access_token()),
                 "write_date",
+            ]
+        if field_name == "im_status":
+            return [
+                "im_status",
+                Store.Attr("im_status_access_token", lambda g: g._get_im_status_access_token()),
             ]
         return [field_name]
 

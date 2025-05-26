@@ -9,8 +9,8 @@ from freezegun import freeze_time
 from PIL import Image
 from werkzeug.urls import url_unquote_plus
 
-from odoo.tools.misc import limited_field_access_token
 from odoo.tests.common import HttpCase, new_test_user, tagged
+from odoo.tools.misc import limited_field_access_token
 
 
 @tagged('-at_install', 'post_install')
@@ -167,9 +167,6 @@ class TestImage(HttpCase):
         def get_datetime_from_token(token):
             return datetime.fromtimestamp(int(token.rsplit("o", 1)[1], 16))
 
-        def get_datetime_from_record_field(record, field):
-            return get_datetime_from_token(limited_field_access_token(record, field))
-
         attachment = self.env["ir.attachment"].create(
             {
                 "datas": b"R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=",
@@ -185,8 +182,13 @@ class TestImage(HttpCase):
         res = self.url_open(f"/web/image/{attachment.id}?access_token=invalid_token")
         res.raise_for_status()
         self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
+        # token from a different scope: ko
+        token = limited_field_access_token(attachment, "raw", scope="other_scope")
+        res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
+        res.raise_for_status()
+        self.assertEqual(res.headers["Content-Disposition"], "inline; filename=placeholder.png")
         # valid token: ok
-        token = limited_field_access_token(attachment, "raw")
+        token = attachment._get_raw_access_token()
         res = self.url_open(f"/web/image/{attachment.id}?access_token={token}")
         res.raise_for_status()
         self.assertEqual(res.headers["Content-Disposition"], "inline; filename=test.gif")
@@ -206,7 +208,7 @@ class TestImage(HttpCase):
         for i in range(14):
             with freeze_time(start_of_period + timedelta(days=i, hours=i % 24, minutes=i % 60)):
                 self.assertEqual(
-                    get_datetime_from_record_field(self.env["ir.attachment"].browse(2), "raw"),
+                    get_datetime_from_token(self.env["ir.attachment"].browse(2)._get_raw_access_token()),
                     base_result,
                 )
         # on each following 14-days period another token is generated, valid for exactly 14 extra
@@ -216,23 +218,31 @@ class TestImage(HttpCase):
                 start_of_period + timedelta(days=14 * i + i % 14, hours=i % 24, minutes=i % 60)
             ):
                 self.assertEqual(
-                    get_datetime_from_record_field(self.env["ir.attachment"].browse(2), "raw"),
+                    get_datetime_from_token(
+                        self.env["ir.attachment"].browse(2)._get_raw_access_token()
+                    ),
                     base_result + timedelta(days=14 * i),
                 )
         with freeze_time(datetime(2021, 3, 1, 1, 2, 3)):
             # at the same time...
             self.assertEqual(
-                get_datetime_from_record_field(self.env["ir.attachment"].browse(2), "raw"),
+                get_datetime_from_token(
+                    self.env["ir.attachment"].browse(2)._get_raw_access_token()
+                ),
                 base_result,
             )
             # a different record generates a different token
-            record_res = get_datetime_from_record_field(self.env["ir.attachment"].browse(3), "raw")
+            record_res = self.env["ir.attachment"].browse(3)._get_raw_access_token()
             self.assertNotIn(record_res, [base_result])
             # a different field generates a different token
-            field_res = get_datetime_from_record_field(self.env["ir.attachment"].browse(3), "datas")
+            field_res = get_datetime_from_token(
+                limited_field_access_token(self.env["ir.attachment"].browse(3), "datas", scope="binary")
+            )
             self.assertNotIn(field_res, [base_result, record_res])
             # a different model generates a different token
-            model_res = get_datetime_from_record_field(self.env["res.partner"].browse(3), "raw")
+            model_res = get_datetime_from_token(
+                limited_field_access_token(self.env["res.partner"].browse(3), "raw", scope="binary")
+            )
             self.assertNotIn(model_res, [base_result, record_res, field_res])
 
     def test_06_web_image_attachment_access(self):
@@ -322,7 +332,7 @@ class TestImage(HttpCase):
                 access_token = (
                     attachment.access_token
                     if token == "token"
-                    else limited_field_access_token(attachment, "raw")
+                    else attachment._get_raw_access_token()
                 )
                 access_token_param = f"?access_token={access_token}"
             res = self.url_open(f"/web/image/{attachment.id}{access_token_param}")

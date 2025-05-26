@@ -6,7 +6,6 @@ from unittest.mock import patch, PropertyMock
 
 from odoo import Command, fields
 from odoo.fields import Domain
-from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import users, tagged, HttpCase, warmup
@@ -377,16 +376,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         The point of having a separate getter is to allow it to be overriden.
         """
         xmlid_to_res_id = self.env["ir.model.data"]._xmlid_to_res_id
+        partner_0 = self.users[0].partner_id
         return {
             "res.partner": self._filter_partners_fields(
                 {
                     "active": False,
-                    "avatar_128_access_token": limited_field_access_token(
-                        self.user_root.partner_id, "avatar_128"
-                    ),
+                    "avatar_128_access_token": self.user_root.partner_id._get_avatar_128_access_token(),
                     "email": "odoobot@example.com",
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
+                    "im_status_access_token": self.user_root.partner_id._get_im_status_access_token(),
                     "isInternalUser": True,
                     "is_company": False,
                     "name": "OdooBot",
@@ -396,9 +395,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 },
                 {
                     "active": True,
-                    "avatar_128_access_token": limited_field_access_token(
-                        self.users[0].partner_id, "avatar_128"
-                    ),
+                    "avatar_128_access_token": partner_0._get_avatar_128_access_token(),
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,
@@ -1616,12 +1613,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[0]:
             res = {
                 "active": True,
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "e.e@example.com",
                 "id": user.partner_id.id,
                 "im_status": "online",
+                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "Ernest Employee",
@@ -1643,12 +1639,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[1]:
             res = {
                 "active": True,
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "country_id": self.env.ref("base.in").id,
                 "id": user.partner_id.id,
                 "im_status": "offline",
+                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "isInternalUser": True,
                 "is_company": False,
                 "is_public": False,
@@ -1663,22 +1658,20 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[2]:
             if only_inviting:
                 return {
-                    "avatar_128_access_token": limited_field_access_token(
-                        user.partner_id, "avatar_128"
-                    ),
+                    "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                     "id": user.partner_id.id,
                     "im_status": "offline",
+                    "im_status_access_token": user.partner_id._get_im_status_access_token(),
                     "name": "test2",
                     "write_date": fields.Datetime.to_string(user.partner_id.write_date),
                 }
             return {
                 "active": True,
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": "test2@example.com",
                 "id": user.partner_id.id,
                 "im_status": "offline",
+                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test2",
@@ -1689,12 +1682,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[3]:
             return {
                 "active": True,
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
+                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test3",
@@ -1705,12 +1697,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[12]:
             return {
                 "active": True,
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
+                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test12",
@@ -1721,12 +1712,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[14]:
             return {
                 "active": True,
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
+                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test14",
@@ -1737,12 +1727,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[15]:
             return {
                 "active": True,
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "email": False,
                 "id": user.partner_id.id,
                 "im_status": "offline",
+                "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
                 "name": "test15",
@@ -1752,9 +1741,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.user_root:
             return {
-                "avatar_128_access_token": limited_field_access_token(
-                    user.partner_id, "avatar_128"
-                ),
+                "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "id": user.partner_id.id,
                 "isInternalUser": True,
                 "is_company": False,
@@ -1764,10 +1751,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if guest:
             return {
-                "avatar_128_access_token": limited_field_access_token(self.guest, "avatar_128"),
+                "avatar_128_access_token": self.guest._get_avatar_128_access_token(),
                 "country_id": self.guest.country_id.id,
                 "id": self.guest.id,
                 "im_status": "offline",
+                "im_status_access_token": self.guest._get_im_status_access_token(),
                 "name": "Visitor",
                 "offline_since": False,
                 "write_date": fields.Datetime.to_string(self.guest.write_date),

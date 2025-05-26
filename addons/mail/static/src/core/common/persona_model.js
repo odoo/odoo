@@ -53,32 +53,31 @@ export class Persona extends Record {
     });
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
     signature = fields.Html(undefined);
-    storeAsTrackedImStatus = fields.One("Store", {
-        /** @this {import("models").Persona} */
+    monitorPresence = fields.Attr(false, {
         compute() {
-            if (
+            if (!this.store.env.services.bus_service.isActive || this.id <= 0) {
+                return false;
+            }
+            return (
                 this.type === "guest" ||
                 (this.type === "partner" && this.im_status !== "im_partner" && !this.is_public)
-            ) {
-                return this.store;
-            }
+            );
         },
-        onAdd() {
-            if (!this.store.env.services.bus_service.isActive) {
-                return;
-            }
-            const model = this.type === "partner" ? "res.partner" : "mail.guest";
-            this.store.env.services.bus_service.addChannel(`odoo-presence-${model}_${this.id}`);
+    });
+    _triggerPresenceSubscription = fields.Attr(null, {
+        compute() {
+            return this.monitorPresence && this.presenceChannel;
         },
-        onDelete() {
-            if (!this.store.env.services.bus_service.isActive) {
-                return;
+        onUpdate() {
+            if (this.previousPresencechannel) {
+                this.store.env.services.bus_service.deleteChannel(this.previousPresencechannel);
             }
-            const model = this.type === "partner" ? "res.partner" : "mail.guest";
-            this.store.env.services.bus_service.deleteChannel(`odoo-presence-${model}_${this.id}`);
+            if (this._triggerPresenceSubscription) {
+                this.store.env.services.bus_service.addChannel(this.presenceChannel);
+            }
+            this.previousPresencechannel = this.presenceChannel;
         },
         eager: true,
-        inverse: "imStatusTrackedPersonas",
     });
     /** @type {'partner' | 'guest'} */
     type;
@@ -97,8 +96,25 @@ export class Persona extends Record {
             }
         },
     });
+    /** @type {string|undefined} */
+    im_status_access_token;
+
     /** @type {luxon.DateTime} */
     offline_since = fields.Datetime();
+    /** @type {string|undefined} */
+    previousPresencechannel;
+    presenceChannel = fields.Attr(null, {
+        compute() {
+            const parts = [
+                "odoo-presence",
+                `${this.type === "partner" ? "res.partner" : "mail.guest"}_${this.id}`,
+            ];
+            if (this.im_status_access_token) {
+                parts.push(this.im_status_access_token);
+            }
+            return parts.join("-");
+        },
+    });
     /** @type {boolean} */
     is_public;
     /** @type {'email' | 'inbox'} */
