@@ -132,7 +132,6 @@ class HrLeave(models.Model):
         ('cancel', 'Cancelled'),
         ], string='Status', store=True, tracking=True, copy=False, readonly=False, default='confirm')
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, readonly=True, index=True)
-    manager_id = fields.Many2one('hr.employee', compute='_compute_from_employee_id', store=True, readonly=False)
     # leave type configuration
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_from_employee_id',
@@ -405,7 +404,6 @@ class HrLeave(models.Model):
     @api.depends('employee_id')
     def _compute_from_employee_id(self):
         for holiday in self:
-            holiday.manager_id = holiday.employee_id.parent_id.id
             if not holiday.holiday_status_id.requires_allocation:
                 continue
             if not holiday.employee_id:
