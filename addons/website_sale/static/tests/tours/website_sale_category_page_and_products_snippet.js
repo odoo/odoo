@@ -20,7 +20,7 @@ registerWebsitePreviewTour('category_page_and_products_snippet_edition', {
     },
     {
         content: "Drag and drop the Products snippet group inside the category area.",
-        trigger: ".o-website-builder_sidebar .o_snippet[name='Products'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
+        trigger: ".o-website-builder_sidebar .o_snippet[name='Catalog'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
         run: "drag_and_drop :iframe #category_header",
     },
     {
