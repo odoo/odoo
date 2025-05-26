@@ -88,15 +88,19 @@ export function isVisible(el) {
  * @param {HTMLElement} rootEl
  * @param {String} selector
  * @param {String} exclude
+ * @param {String} applyTo
  * @returns {Array}
  */
-export function getElementsWithOption(rootEl, selector, exclude = false) {
+export function getElementsWithOption(rootEl, selector, exclude = false, applyTo = false) {
     let matchingEls = [...rootEl.querySelectorAll(selector)];
     if (rootEl.matches(selector)) {
         matchingEls.unshift(rootEl);
     }
     if (exclude) {
         matchingEls = matchingEls.filter((editingEl) => !editingEl.matches(exclude));
+    }
+    if (applyTo) {
+        matchingEls = matchingEls.flatMap((editingEl) => [...editingEl.querySelectorAll(applyTo)]);
     }
     return matchingEls;
 }
