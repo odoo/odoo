@@ -100,3 +100,24 @@ class TestAccountMoveDuplicate(AccountTestInvoicingCommon):
         bill5 = bill4.copy()
         bill5.ref = bill4.ref
         self.assertEqual(bill5.duplicated_ref_ids, bill4)
+
+    def test_invoice_duplicate_posted(self):
+        # Values shouldn't be modified on a record that is being modified.
+        # Create is an api.model method, and shouldn't modify self even if set.
+        invoice_copy = self.init_invoice(
+            'in_invoice', products=self.product_a + self.product_b, post=True
+        )
+        values_before = invoice_copy.read(["is_manually_modified", "needed_terms_dirty"])
+        invoice_copy.copy()
+        values_after = invoice_copy.read(["is_manually_modified", "needed_terms_dirty"])
+        self.assertEqual(values_before, values_after)
+
+    def test_invoice_create_with_recordset(self):
+        # Create is an api.model method, and shouldn't modify self even if set.
+        invoice_create = self.init_invoice(
+            'in_invoice', products=self.product_a + self.product_b, post=True
+        )
+        values_before = invoice_create.read(["is_manually_modified", "needed_terms_dirty"])
+        invoice_create.create({})
+        values_after = invoice_create.read(["is_manually_modified", "needed_terms_dirty"])
+        self.assertEqual(values_before, values_after)
