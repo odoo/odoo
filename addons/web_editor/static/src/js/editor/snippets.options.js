@@ -6471,7 +6471,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             img.dataset.originalMimetype = "image/webp";
             img.dataset.resizeWidth = this.optimizedWidth;
         }
-        await this._applyOptions();
+        await this._applyOptions(false);
         await this.updateUI();
     },
     /**
