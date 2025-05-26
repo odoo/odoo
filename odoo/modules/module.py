@@ -376,8 +376,12 @@ def get_resource_from_path(path: str) -> tuple[str, str, str] | None:
 
 
 def get_module_icon(module: str) -> str:
-    fpath = f"{module}/static/description/icon.png"
+    """ Get the path to the module's icon. Invalid module names are accepted. """
+    manifest = Manifest.for_addon(module, display_warning=False)
+    if manifest and 'icon' in manifest.__dict__:
+        return manifest.icon
     try:
+        fpath = f"{module}/static/description/icon.png"
         tools.file_path(fpath)
         return "/" + fpath
     except FileNotFoundError:
