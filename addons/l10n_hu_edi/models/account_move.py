@@ -339,8 +339,8 @@ class AccountMove(models.Model):
                 'action_text': _('View Company/ies'),
             },
             'company_not_huf': {
-                'records': self.company_id.filtered(lambda c: c.currency_id.name != 'HUF'),
-                'message': _('Please use HUF as company currency!'),
+                'records': self.company_id.filtered(lambda c: c.currency_id.name not in ['HUF', 'EUR']),
+                'message': _('Please use HUF or EUR as your company currency.'),
                 'action_text': _('View Company/ies'),
             },
             'partner_bank_account_invalid': {
