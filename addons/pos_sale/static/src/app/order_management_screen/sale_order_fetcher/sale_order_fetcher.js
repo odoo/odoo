@@ -8,6 +8,7 @@ class SaleOrderFetcher extends EventBus {
     constructor({ orm, pos }) {
         super();
         this.currentPage = 1;
+        this.nPerPage = 80;
         this.ordersToShow = [];
         this.totalCount = 0;
         this.orm = orm;
@@ -30,6 +31,14 @@ class SaleOrderFetcher extends EventBus {
         const nItems = this.totalCount;
         return Math.trunc(nItems / (this.nPerPage + 1)) + 1;
     }
+
+    async _fetchTotalCount() {
+        const domain = [["currency_id", "=", this.pos.currency.id]].concat(
+            this.searchDomain || []
+        );
+        this.totalCount = await this.orm.searchCount("sale.order", domain);
+    }
+
     /**
      * Calling this methods populates the `ordersToShow` then trigger `update` event.
      * @related get
@@ -43,6 +52,7 @@ class SaleOrderFetcher extends EventBus {
         const offset = this.nPerPage + (this.currentPage - 1 - 1) * this.nPerPage;
         const limit = this.nPerPage;
         this.ordersToShow = await this._fetch(limit, offset);
+        await this._fetchTotalCount();
 
         this.trigger("update");
     }
@@ -57,7 +67,6 @@ class SaleOrderFetcher extends EventBus {
     async _fetch(limit, offset) {
         const sale_orders = await this._getOrderIdsForCurrentPage(limit, offset);
 
-        this.totalCount = sale_orders.length;
         return sale_orders;
     }
     async _getOrderIdsForCurrentPage(limit, offset) {

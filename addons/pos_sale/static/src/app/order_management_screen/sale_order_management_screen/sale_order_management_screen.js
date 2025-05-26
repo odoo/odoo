@@ -48,17 +48,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
         onMounted(this.onMounted);
     }
     onMounted() {
-        // calculate how many can fit in the screen.
-        // It is based on the height of the header element.
-        // So the result is only accurate if each row is just single line.
-        const flexContainer = this.root.el.querySelector(".flex-container");
-        const cpEl = this.root.el.querySelector(".control-panel");
-        const headerEl = this.root.el.querySelector(".header-row");
-        const val = Math.trunc(
-            (flexContainer.offsetHeight - cpEl.offsetHeight - headerEl.offsetHeight) /
-                headerEl.offsetHeight
-        );
-        this.saleOrderFetcher.setNPerPage(val);
         this.saleOrderFetcher.fetch();
     }
     _getSaleOrderOrigin(order) {

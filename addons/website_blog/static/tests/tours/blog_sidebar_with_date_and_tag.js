@@ -14,14 +14,14 @@ wTourUtils.registerWebsitePreviewTour(
             trigger: "iframe b:contains('Nature')",
         },
         {
-            content: "Check if the archive dropdown contains exactly 1 option: January.",
+            content: "Check if the archive dropdown contains exactly 1 option: February.",
             trigger: "iframe select[name=archive]",
             run: function () {
                 const optionEls = this.$anchor[0].querySelectorAll("optgroup option");
                 const length = optionEls.length;
                 const monthName = optionEls[0].textContent;
-                if (length !== 1 && !monthName.includes("January")) {
-                    throw new Error("There should be 1 option in the select");
+                if (length !== 1 || !monthName.includes("February")) {
+                    throw new Error("Expected 1 option in the select with February");
                 }
             },
         },
@@ -30,14 +30,14 @@ wTourUtils.registerWebsitePreviewTour(
             trigger: "iframe b:contains('Space')",
         },
         {
-            content: "Verify that the archive dropdown now contains only 1 option: February.",
+            content: "Verify that the archive dropdown now contains only 1 option: January.",
             trigger: "iframe select[name=archive]",
             run: function () {
                 const optionEls = this.$anchor[0].querySelectorAll("optgroup option");
                 const length = optionEls.length;
                 const monthName = optionEls[0].textContent;
-                if (length !== 1 && !monthName.includes("February")) {
-                    throw new Error("There should be 1 option in the select");
+                if (length !== 1 || !monthName.includes("January")) {
+                    throw new Error("Expected 1 option in the select with January");
                 }
             },
         },
