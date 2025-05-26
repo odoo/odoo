@@ -972,7 +972,7 @@ class AccountPayment(models.Model):
             pay.move_id \
                 .with_context(skip_invoice_sync=True) \
                 .write({
-                'name': '/',  # Set the name to '/' to allow it to be changed
+                'name': pay.name if pay.name else '/',  # Set the name to '/' to allow it to be changed
                 'date': pay.date,
                 'partner_id': pay.partner_id.id,
                 'currency_id': pay.currency_id.id,
