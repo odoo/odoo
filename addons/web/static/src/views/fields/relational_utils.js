@@ -309,7 +309,7 @@ export class Many2XAutocomplete extends Component {
     getCreationContext(value) {
         return makeContext([
             this.props.context,
-            { [`default_${this.props.nameCreateField}`]: value },
+            value && { [`default_${this.props.nameCreateField}`]: value },
         ]);
     }
     onInput({ inputValue }) {

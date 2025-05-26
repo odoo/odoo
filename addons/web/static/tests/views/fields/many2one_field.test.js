@@ -32,6 +32,7 @@ import {
     serverState,
     toggleMenuItem,
     toggleSearchBarMenu,
+    patchWithCleanup,
     validateSearch,
 } from "@web/../tests/web_test_helpers";
 
@@ -39,6 +40,7 @@ import { user } from "@web/core/user";
 import { Record } from "@web/model/record";
 import { Field } from "@web/views/fields/field";
 import { WebClient } from "@web/webclient/webclient";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 describe.current.tags("desktop");
 
@@ -948,6 +950,14 @@ test("empty readonly many2one field", async () => {
 });
 
 test("empty many2one field with no result", async () => {
+    patchWithCleanup(Many2XAutocomplete.prototype, {
+        getCreationContext(value){
+            expect(value).toBe("");
+            const context = super.getCreationContext(value);
+            expect(context[`default_${this.props.nameCreateField}`]).toBe(undefined);
+            return context;
+        }
+    });
     class M2O extends models.Model {
         m2o = fields.Many2one({ relation: "m2o" });
     }
