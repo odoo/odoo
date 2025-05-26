@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
+import { isContentEditable, isEmptyBlock, isProtected } from "@html_editor/utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { closestBlock } from "../utils/blocks";
@@ -23,7 +23,11 @@ export class HintPlugin extends Plugin {
                 return [];
             }
             const blockEl = closestBlock(selectionData.editableSelection.anchorNode);
-            return [blockEl];
+            if (isContentEditable(blockEl.parentElement)) {
+                return [blockEl];
+            } else {
+                return [];
+            }
         },
         system_classes: ["o-we-hint"],
         system_attributes: ["o-we-hint-text"],
