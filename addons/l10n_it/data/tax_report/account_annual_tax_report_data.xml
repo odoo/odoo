@@ -2,6 +2,7 @@
 <odoo auto_sequence="1">
     <record id="tax_annual_report_vat" model="account.report">
         <field name="name">Annual Tax Report</field>
+        <field name="name@it">Resoconto fiscale annuale</field>
         <field name="root_report_id" ref="account.generic_tax_report"/>
         <field name="country_id" ref="base.it"/>
         <field name="availability_condition">country</field>
