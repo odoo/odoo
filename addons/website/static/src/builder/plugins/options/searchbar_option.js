@@ -1,7 +1,7 @@
 import { BaseOptionComponent, useGetItemValue } from "@html_builder/core/utils";
 
 export class SearchbarOption extends BaseOptionComponent {
-    static template = "html_builder.SearchbarOption";
+    static template = "website.SearchbarOption";
     static props = {
         getOrderByItems: Function,
         getDisplayItems: Function,

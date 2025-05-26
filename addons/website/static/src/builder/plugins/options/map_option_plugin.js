@@ -8,7 +8,7 @@ class MapOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.mapOption",
+                template: "website.mapOption",
                 selector: ".s_map",
             },
         ],

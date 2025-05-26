@@ -7,7 +7,7 @@ import { ImageFilterOption } from "../image/image_filter_option";
 import { ImageFormatOption } from "../image/image_format_option";
 
 export class BackgroundOption extends BaseOptionComponent {
-    static template = "html_builder.BackgroundOption";
+    static template = "website.BackgroundOption";
     static components = {
         BackgroundImageOption,
         BackgroundPositionOption,

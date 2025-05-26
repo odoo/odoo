@@ -19,13 +19,13 @@ class FooterOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(FOOTER_TEMPLATE, {
-                template: "html_builder.FooterTemplateOption",
+                template: "website.FooterTemplateOption",
                 selector: "#wrapwrap > footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
             }),
             withSequence(FOOTER_WIDTH, {
-                template: "html_builder.FooterWidthOption",
+                template: "website.FooterWidthOption",
                 selector: "#wrapwrap > footer",
                 applyTo:
                     ":is(:scope > #footer > section, .o_footer_copyright) > :is(.container, .container-fluid, .o_container_small)",
@@ -51,14 +51,14 @@ class FooterOptionPlugin extends Plugin {
                 groups: ["website.group_website_designer"],
             }),
             withSequence(FOOTER_BORDER, {
-                template: "html_builder.FooterBorder",
+                template: "website.FooterBorder",
                 selector: "#wrapwrap > footer",
                 applyTo: "#footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
             }),
             withSequence(FOOTER_SCROLL_TO, {
-                template: "html_builder.FooterScrollToTopOption",
+                template: "website.FooterScrollToTopOption",
                 selector: "#wrapwrap > footer",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],

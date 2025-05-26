@@ -112,7 +112,7 @@ class SocialMediaOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(TITLE_LAYOUT_SIZE, {
-                template: "html_builder.SocialMediaOption",
+                template: "website.SocialMediaOption",
                 selector: ".s_share, .s_social_media",
             }),
             withSequence(SNIPPET_SPECIFIC, {
@@ -308,7 +308,7 @@ class SocialMediaOptionPlugin extends Plugin {
     newLinkElement(other, socialMediaName) {
         const el =
             other?.cloneNode(true) ||
-            renderToFragment("html_builder.example_social_media_link").children[0];
+            renderToFragment("website.example_social_media_link").children[0];
         this.removeSocialMediaClasses(el);
         this.removeIconClasses(el);
         el.querySelector(ICON_SELECTOR)?.classList.add(

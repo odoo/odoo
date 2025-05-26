@@ -8,7 +8,7 @@ class VerticalJustifyOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(END, {
-                template: "html_builder.VerticalJustifyOption",
+                template: "website.VerticalJustifyOption",
                 selector: ".s_masonry_block .o_grid_item, .s_quadrant .o_grid_item",
                 exclude: ".o_grid_item_image",
             }),

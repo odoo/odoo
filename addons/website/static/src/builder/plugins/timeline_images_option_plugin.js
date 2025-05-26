@@ -9,15 +9,15 @@ class TimelineImagesOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(BEGIN, {
-                template: "html_builder.TimelineImagesOption",
+                template: "website.TimelineImagesOption",
                 selector: ".s_timeline_images",
             }),
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.DotLinesColorOption",
+                template: "website.DotLinesColorOption",
                 selector: ".s_timeline_images",
             }),
             withSequence(SNIPPET_SPECIFIC, {
-                template: "html_builder.DotColorOption",
+                template: "website.DotColorOption",
                 selector: ".s_timeline_images .s_timeline_images_row",
             }),
         ],

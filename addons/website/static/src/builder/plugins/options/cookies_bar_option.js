@@ -7,7 +7,7 @@ class CookiesBarOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.CookiesBarOption",
+                template: "website.CookiesBarOption",
                 selector: "#website_cookies_bar",
                 applyTo: ".modal",
             },

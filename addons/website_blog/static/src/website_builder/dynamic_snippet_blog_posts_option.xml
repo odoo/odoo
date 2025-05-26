@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website_blog.DynamicSnippetBlogPostsOption" t-inherit="html_builder.DynamicSnippetOption">
+<t t-name="website_blog.DynamicSnippetBlogPostsOption" t-inherit="website.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
         <BuilderRow label.translate="Blog">
             <BuilderSelect dataAttributeAction="'filterByBlogId'" preview="false">

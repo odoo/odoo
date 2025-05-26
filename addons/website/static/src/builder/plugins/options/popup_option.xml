@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.base_popup_options">
+<t t-name="website.base_popup_options">
     <!-- For the cookies popup, only display this for popup mode. -->
     <BuilderRow label.translate="Position" t-if="!isCookiesOption or isActiveItem('layout_popup_opt')">
         <BuilderSelect>
@@ -25,8 +25,8 @@
     </BuilderRow>
 </t>
 
-<t t-name="html_builder.PopupOption">
-    <t t-call="html_builder.base_popup_options"/>
+<t t-name="website.PopupOption">
+    <t t-call="website.base_popup_options"/>
     <BuilderRow label.translate="Close Button Color">
         <BuilderColorPicker styleAction="'color'" applyTo="'.s_popup_close'"/>
     </BuilderRow>
@@ -58,8 +58,8 @@
     </BuilderRow>
 </t>
 
-<t t-name="html_builder.PopupCookiesOption">
-    <t t-call="html_builder.base_popup_options">
+<t t-name="website.PopupCookiesOption">
+    <t t-call="website.base_popup_options">
         <t t-set="isCookiesOption" t-value="true"/>
     </t>
 </t>

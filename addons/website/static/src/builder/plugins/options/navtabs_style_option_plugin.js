@@ -8,12 +8,12 @@ class NavTabsStyleOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.NavTabsStyleOption",
+                template: "website.NavTabsStyleOption",
                 selector: ".s_tabs",
                 applyTo: ".s_tabs_main",
             }),
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.NavTabsImagesStyleOption",
+                template: "website.NavTabsImagesStyleOption",
                 selector: ".s_tabs_images",
                 applyTo: ".s_tabs_main",
             }),

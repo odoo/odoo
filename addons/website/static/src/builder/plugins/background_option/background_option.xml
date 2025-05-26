@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.BackgroundOption">
+<t t-name="website.BackgroundOption">
     <!-- BackgroundToggler -->
     <BuilderRow label.translate="Background" t-if="props.withColors or props.withImages">
     <!-- todo adapt when colorpicker is implemented: snippet_options_background_color_widget-->
-        <t t-if="props.withColors" t-call="html_builder.BackgroundColorWidgetOption"/>
+        <t t-if="props.withColors" t-call="website.BackgroundColorWidgetOption"/>
         <t t-if="props.withImages">
             <BuilderButton
                 action="'toggleBgImage'"
@@ -48,7 +48,7 @@
 </t>
 
 <!-- TODO: handle bg_color_opt-->
-<t t-name="html_builder.BackgroundColorWidgetOption">
+<t t-name="website.BackgroundColorWidgetOption">
     <BuilderColorPicker title.translate="Color" styleAction="'background-color'"/>
 </t>
 

@@ -35,7 +35,7 @@ class GoogleFontAutoComplete extends AutoComplete {
 }
 
 export class AddFontDialog extends Component {
-    static template = "html_builder.website.dialog.addFont";
+    static template = "website.dialog.addFont";
     static components = { GoogleFontAutoComplete, Dialog };
     static props = {
         close: Function,

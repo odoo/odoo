@@ -12,7 +12,7 @@ class InstagramOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.InstagramOption",
+                template: "website.InstagramOption",
                 selector: ".s_instagram_page",
             }),
         ],

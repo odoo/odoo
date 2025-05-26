@@ -10,7 +10,7 @@ class FacebookOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.FacebookOption",
+                template: "website.FacebookOption",
                 selector: ".o_facebook_page",
             },
         ],

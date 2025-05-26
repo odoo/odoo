@@ -3,7 +3,7 @@ import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class ThemeColorsOption extends BaseOptionComponent {
-    static template = "html_builder.ThemeColorsOption";
+    static template = "website.ThemeColorsOption";
     static props = {};
     setup() {
         super.setup();

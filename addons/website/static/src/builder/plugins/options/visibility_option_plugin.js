@@ -24,7 +24,7 @@ class VisibilityOptionPlugin extends Plugin {
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,
             }),
             withSequence(DEVICE_VISIBILITY, {
-                template: "html_builder.DeviceVisibilityOption",
+                template: "website.DeviceVisibilityOption",
                 selector: DEVICE_VISIBILITY_OPTION_SELECTOR,
                 exclude: ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize",
                 cleanForSave: this.dependencies.visibility.cleanForSaveVisibility,

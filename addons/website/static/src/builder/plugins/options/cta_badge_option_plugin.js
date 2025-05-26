@@ -6,7 +6,7 @@ class CTABadgeOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.CTABadgeOption",
+                template: "website.CTABadgeOption",
                 selector: ".s_cta_badge",
             },
         ],

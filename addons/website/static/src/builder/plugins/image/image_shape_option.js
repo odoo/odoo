@@ -3,7 +3,7 @@ import { toRatio } from "@html_builder/utils/utils";
 import { ShapeSelector } from "../shape/shape_selector";
 
 export class ImageShapeOption extends BaseOptionComponent {
-    static template = "html_builder.ImageShapeOption";
+    static template = "website.ImageShapeOption";
     static props = {};
     setup() {
         super.setup();
