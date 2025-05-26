@@ -44,10 +44,7 @@ export class AvatarCardResourcePopover extends AvatarCardPopover {
     }
 
     get fieldNames() {
-        const excludedFields = new Set(["partner_id"]);
-        return super.fieldNames
-            .concat(["user_id", "resource_type"])
-            .filter((field) => !excludedFields.has(field));
+        return ["name", "email", "phone", "im_status", "share", "user_id", "resource_type"];
     }
 
     get email() {

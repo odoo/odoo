@@ -451,3 +451,6 @@ class ResUsers(models.Model):
             if model_name == 'mail.activity':
                 user_activities[model_name]['activity_ids'] = activities.ids
         return list(user_activities.values())
+
+    def _get_store_avatar_card_fields(self):
+        return ["name", "email", "phone", "im_status", "share", "partner_id"]
