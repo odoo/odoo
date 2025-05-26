@@ -47,8 +47,8 @@ class PosCategory(models.Model):
         except requests.exceptions.RequestException:
             return None
 
-    def create_pos_category(self, vals):
-        return super(PosCategory, self).create(vals)
+    def create_pos_category(self, vals_list):
+        return super(PosCategory, self).create(vals_list)
 
     def write_pos_category(self, vals):
         return super(PosCategory, self).write(vals)

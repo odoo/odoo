@@ -241,6 +241,7 @@ export class PosOrder extends Base {
     }
 
     export_for_printing(baseUrl, headerData) {
+    console.log("export_for_printing", baseUrl, headerData);
         const paymentlines = this.payment_ids
             .filter((p) => !p.is_change)
             .map((p) => p.export_for_printing());
@@ -322,6 +323,7 @@ export class PosOrder extends Base {
      * without impacting the other tools.
      */
     updateLastOrderChange() {
+        console.log("updateLastOrderChange");
         const orderlineIdx = [];
         this.lines.forEach((line) => {
             if (!line.skip_change) {
@@ -408,6 +410,7 @@ export class PosOrder extends Base {
     }
 
     get_orderline(id) {
+        console.log("get_orderline", id);
         const orderlines = this.lines;
         for (let i = 0; i < orderlines.length; i++) {
             if (orderlines[i].id === id) {
@@ -461,6 +464,7 @@ export class PosOrder extends Base {
     }
 
     get_last_orderline() {
+        console.log("get_last_orderline");
         const orderlines = this.lines;
         return this.lines.at(orderlines.length - 1);
     }
@@ -546,6 +550,7 @@ export class PosOrder extends Base {
      * @returns {boolean} true if the line was removed, false otherwise
      */
     removeOrderline(line) {
+        console.log("removeOrderline", line);
         const linesToRemove = line.getAllLinesInCombo();
         for (const lineToRemove of linesToRemove) {
             if (lineToRemove.refunded_orderline_id?.uuid in this.uiState.lineToRefund) {
@@ -574,6 +579,7 @@ export class PosOrder extends Base {
     }
 
     get_selected_orderline() {
+    console.log("get_selected_orderline");
         return this.lines.find((line) => line.uuid === this.uiState.selected_orderline_uuid);
     }
 
@@ -584,6 +590,7 @@ export class PosOrder extends Base {
     }
 
     select_orderline(line) {
+    console.log("select_orderline");
         if (line) {
             this.uiState.selected_orderline_uuid = line.uuid;
         } else {
@@ -592,6 +599,7 @@ export class PosOrder extends Base {
     }
 
     deselect_orderline() {
+    console.log("deselect_orderline");
         if (this.uiState.selected_orderline_uuid) {
             this.uiState.selected_orderline_uuid = undefined;
         }

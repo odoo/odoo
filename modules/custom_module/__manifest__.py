@@ -2,10 +2,11 @@
 {
     'name': 'Custom Module',
     'version': '1.0',
-    'depends': ['base', 'web','pos_self_order', 'point_of_sale', 'base_import', 'pos_restaurant','bus', 'pos_hr'],
+    'installable': True,
+    'application': True,
+    'depends': ['base', 'web','pos_self_order', 'point_of_sale', 'base_import', 'pos_restaurant','bus', 'pos_hr','hr'],
     'data': [
         #'security/ir.model.access.csv',
-
         'views/login_layout.xml',
         #'views/pos_assets_index_inherit.xml',
         # Category module
@@ -24,11 +25,9 @@
         #Table Tags
         'views/restaurant_floor.xml',
         'views/table_tags.xml',
-
+        #Employee
+        'views/hr_employee_views_inherit.xml'
     ],
-
-
-
     'assets': {
             'web.assets_backend': [
                 'custom_module/static/src/xml/custom_button.xml',
@@ -47,6 +46,7 @@
 
                 ],
             'point_of_sale._assets_pos': [
+                'custom_module/static/src/js/block_navigatio_bar.js',
                 'custom_module/static/src/scss/pos.scss',
                 'custom_module/static/src/scss/receipt.scss',
                 'custom_module/static/src/css/pos_receipt.css',
@@ -57,7 +57,11 @@
                 #'custom_module/static/src/js/pos_navbar_inherit.js',
                 #'custom_module/static/src/xml/pos_navbar_inherit.xml',
                 'custom_module/static/src/js/pos_store_inherit.js',
+                'custom_module/static/src/js/pos_order_inherit.js',
+                'custom_module/static/src/js/floor_screen_inherit.js',
 
+                'custom_module/static/src/js/pos_order_inherit.js',
+                'custom_module/static/src/js/hw_printer_inherited.js',
             ],
     },
     'images': [
