@@ -8,6 +8,5 @@ patch(PosOrder.prototype, {
     // @Override
     updateLastOrderChange() {
         const res = super.updateLastOrderChange();
-        console.log("done inherited");
     }
 });
