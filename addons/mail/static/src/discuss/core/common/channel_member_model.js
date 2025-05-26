@@ -44,7 +44,9 @@ export class ChannelMember extends Record {
     });
     fetched_message_id = Record.one("mail.message");
     seen_message_id = Record.one("mail.message");
+    /** @deprecated */
     syncUnread = true;
+    /** @deprecated */
     _syncUnread = Record.attr(false, {
         compute() {
             if (!this.syncUnread || !this.eq(this.thread?.selfMember)) {
@@ -62,6 +64,7 @@ export class ChannelMember extends Record {
             }
         },
     });
+    /** @deprecated */
     unreadSynced = Record.attr(true, {
         compute() {
             return this.localNewMessageSeparator === this.new_message_separator;
@@ -72,12 +75,37 @@ export class ChannelMember extends Record {
             }
         },
     });
+    /** @deprecated */
     hideUnreadBanner = false;
+    /** @deprecated */
     localMessageUnreadCounter = 0;
+    /** @deprecated */
     localNewMessageSeparator = null;
-    message_unread_counter = 0;
+    message_unread_counter = Record.attr(0, {
+        /** @this {import("models").ChannelMember} */
+        onUpdate() {
+            if (
+                this.message_unread_counter === 0 ||
+                !this.thread?.isDisplayed ||
+                this.thread?.scrollTop !== "bottom" ||
+                this.thread.markedAsUnread ||
+                !this.thread.isFocused
+            ) {
+                this.message_unread_counter_ui = this.message_unread_counter;
+            }
+        },
+    });
+    message_unread_counter_ui = 0;
     message_unread_counter_bus_id = 0;
-    new_message_separator = null;
+    new_message_separator = Record.attr(null, {
+        /** @this {import("models").ChannelMember} */
+        onUpdate() {
+            if (!this.thread?.isDisplayed) {
+                this.new_message_separator_ui = this.new_message_separator;
+            }
+        },
+    });
+    new_message_separator_ui = null;
     threadAsTyping = Record.one("Thread", {
         compute() {
             return this.isTyping ? this.thread : undefined;
@@ -126,6 +154,7 @@ export class ChannelMember extends Record {
             : undefined;
     }
 
+    /** @deprecated */
     get totalUnreadMessageCounter() {
         let counter = this.message_unread_counter;
         if (!this.unreadSynced) {

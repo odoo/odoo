@@ -38,7 +38,18 @@ export class Composer extends Record {
     };
     /** @type {boolean} */
     forceCursorMove;
-    isFocused = false;
+    isFocused = Record.attr(false, {
+        /** @this {import("models").Composer} */
+        onUpdate() {
+            if (this.thread) {
+                if (this.isFocused) {
+                    this.thread.isFocusedCounter++;
+                } else {
+                    this.thread.isFocusedCounter--;
+                }
+            }
+        },
+    });
     autofocus = 0;
 }
 
