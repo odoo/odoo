@@ -336,3 +336,28 @@ class TestAccountPayment(AccountPaymentCommon):
             original_name,
             "Payment name should remain the same after reposting"
         )
+
+    def test_post_process_does_not_fail_on_cancelled_invoice(self):
+        """ If the payment state is 'pending' and the invoice gets cancelled, and later the payment is confirmed,
+            ensure that the _post_process() method does not raise an error.
+        """
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'test line',
+                    'price_unit': 100.0,
+                }),
+            ],
+        })
+        tx = self._create_transaction(
+            flow='direct',
+            state='pending',
+            invoice_ids=[invoice.id],
+        )
+        invoice.button_cancel()
+        tx._set_done()
+        # _post_process() shouldn't raise an error even though the invoice is cancelled
+        tx._post_process()
+        self.assertEqual(tx.payment_id.state, 'in_process')
