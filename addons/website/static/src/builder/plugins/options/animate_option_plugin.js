@@ -112,7 +112,7 @@ class AnimateOptionPlugin extends Plugin {
                         this.setImagesLazyLoading(editingElement);
                     }
                 },
-                apply: ({ editingElement, value: effectName }) => {
+                apply: ({ editingElement, value: effectName, params: { forceAnimation } }) => {
                     if (animationWithFadein.includes(effectName)) {
                         editingElement.classList.add("o_anim_fade_in");
                     }
@@ -130,6 +130,9 @@ class AnimateOptionPlugin extends Plugin {
                         //     optionName: "ImageTools",
                         //     name: "enable_hover_effect",
                         // });
+                    }
+                    if (forceAnimation) {
+                        this.forceAnimation(editingElement);
                     }
                 },
             },
