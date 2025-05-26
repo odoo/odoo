@@ -543,10 +543,10 @@
                     <field name="status_in_payment"
                            string="Status"
                            widget="badge"
-                           decoration-info="state == 'draft'"
-                           decoration-danger="payment_state == 'not_paid' and invoice_date_due &lt; context_today().strftime('%Y-%m-%d')"
-                           decoration-warning="payment_state in ('partial', 'in_payment')"
-                           decoration-success="payment_state in ('paid', 'reversed')"
+                           decoration-info="status_in_payment == 'draft'"
+                           decoration-danger="status_in_payment == 'cancel'"
+                           decoration-muted="status_in_payment in ('posted', 'sent', 'partial')"
+                           decoration-success="status_in_payment in ('in_payment', 'paid', 'reversed')"
                            invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'"
                            optional="show"
                     />
@@ -912,14 +912,17 @@
                         </div>
 
                         <!-- Payment status for invoices / receipts -->
+                        <widget name="web_ribbon" title="Sent"
+                                bg_color="text-bg-secondary"
+                                invisible="status_in_payment != 'sent' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
                         <widget name="web_ribbon" title="Paid"
                                 invisible="payment_state != 'paid' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
                         <widget name="web_ribbon" title="In Payment"
                                 invisible="payment_state != 'in_payment' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
                         <widget name="web_ribbon" title="Partial"
+                                bg_color="text-bg-secondary"
                                 invisible="payment_state != 'partial' or move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')"/>
                         <widget name="web_ribbon" title="Reversed"
-                                bg_color="text-bg-danger"
                                 invisible="payment_state != 'reversed'"/>
                         <widget name="web_ribbon" title="Blocked"
                                 bg_color="text-bg-danger"

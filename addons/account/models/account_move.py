@@ -584,6 +584,8 @@ class AccountMove(models.Model):
     status_in_payment = fields.Selection(
         selection=PAYMENT_STATE_SELECTION + [
             ('draft', "Draft"),
+            ('posted', 'Posted'),
+            ('sent', "Sent"),
             ('cancel', "Cancelled"),
         ],
         compute='_compute_status_in_payment',
@@ -1217,10 +1219,15 @@ class AccountMove(models.Model):
                         new_pmt_state = invoice._get_invoice_in_payment_state()
             invoice.payment_state = new_pmt_state
 
-    @api.depends('payment_state', 'state')
+    @api.depends('payment_state', 'state', 'is_move_sent')
     def _compute_status_in_payment(self):
         for move in self:
-            move.status_in_payment = move.state if move.state == 'cancel' else move.payment_state
+            if move.state == 'posted' and move.payment_state == 'not_paid' and move.is_move_sent:
+                move.status_in_payment = 'sent'
+            elif move.state == 'posted' and move.payment_state in ('partial', 'in_payment', 'paid', 'reversed'):
+                move.status_in_payment = move.payment_state
+            else:
+                move.status_in_payment = move.state
 
     @api.depends('matched_payment_ids')
     def _compute_payment_count(self):
