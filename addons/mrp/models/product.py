@@ -63,6 +63,10 @@ class ProductTemplate(models.Model):
                 template.show_on_hand_qty_status_button = template.product_variant_count <= 1
                 template.show_forecasted_qty_status_button = False
 
+    def _compute_show_qty_update_button(self):
+        super()._compute_show_qty_update_button()
+        self.filtered(lambda p: p.is_kits).show_qty_update_button = True
+
     def _compute_used_in_bom_count(self):
         for template in self:
             template.used_in_bom_count = self.env['mrp.bom'].search_count(
@@ -178,6 +182,10 @@ class ProductProduct(models.Model):
             '|', ('product_tmpl_id', 'in', bom_tmpl_query.subselect('product_tmpl_id')),
             ('id', 'in', bom_product_query.subselect('product_id'))
         ]
+
+    def _compute_show_qty_update_button(self):
+        super()._compute_show_qty_update_button()
+        self.filtered(lambda p: p.is_kits).show_qty_update_button = True
 
     def _compute_show_qty_status_button(self):
         super()._compute_show_qty_status_button()
