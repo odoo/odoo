@@ -86,6 +86,32 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
+"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
+"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
+"                    <t t-set=\"state\" t-value=\"client.state_id.name or ''\"/>\n"
+"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
+"                    <t t-set=\"country\" t-value=\"client.country_id.name or ''\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">مرحباً <t t-out=\"client_name\">اسم العميل</t>،</t>\n"
+"                        <t t-else=\"\">مرحباً،</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>لقد تم تأكيد طلبك <t t-out=\"object.tracking_number\">...</t> والذي تبلغ قيمته <t t-out=\"object.amount_total\">$xx.xx</t> بنجاح. <span t-if=\"object.preset_time or client.street\">سيكون جاهزاً</span> <span t-if=\"object.preset_time\">الساعة <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 مساءً</t></span> <span t-if=\"client.street\">في <t t-out=\"street\">الشارع</t>، <t t-out=\"state\">الولاية</t>، <t t-out=\"client.zip or ''\">الرمز البريدي</t>، <t t-out=\"city\">المدينة</t>، <t t-out=\"country\">الدولة</t></span></div>\n"
+"                    <br/>\n"
+"                    <div>شكراً لك،</div>\n"
+"                    <br/>\n"
+"                    <div t-if=\"object.state == 'paid'\">\n"
+"                        <div>ستجد إيصالك في المرفقات</div>\n"
+"                        <br/>\n"
+"                    </div>\n"
+"                    <t t-out=\"store_name\">اسم المتجر</t>\n"
+"                </div>\n"
+"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -204,7 +230,7 @@ msgstr "متاح في الخدمة الذاتية "
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__available_in_self
 msgid "Available in self"
-msgstr ""
+msgstr "متاح في الخدمة الذاتية "
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -291,7 +317,7 @@ msgstr "اختر الموقع الذي ستتناول الطعام فيه "
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Choose your time"
-msgstr ""
+msgstr "اختر الوقت الذي تريده "
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -734,7 +760,7 @@ msgstr "فاتح "
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__pos_config_ids
 msgid "Linked PoS Configurations"
-msgstr ""
+msgstr "تهبئة نقطة البيع المرتبطة "
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1129,19 +1155,19 @@ msgstr "تحديد "
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a country"
-msgstr ""
+msgstr "قم بتحديد دولة "
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/slots_popup/slots_popup.xml:0
 msgid "Select a hour"
-msgstr ""
+msgstr "قم بتحديد ساعة "
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select a state"
-msgstr ""
+msgstr "حدد الولاية "
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1164,7 +1190,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "Select your address"
-msgstr ""
+msgstr "حدد عنوانك الخاص "
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1194,7 +1220,7 @@ msgstr "اسم العلامة التجارية لصورة كشك الطلب ال
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
 #: model:ir.model.fields,field_description:pos_self_order.field_product_template__self_order_visible
 msgid "Self Order Visible"
-msgstr ""
+msgstr "الطلبات الذاتية مرئية "
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1268,7 +1294,7 @@ msgstr "الجلسة غير نشطة "
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Set background image"
-msgstr ""
+msgstr "تعيين صورة الخلفية "
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1433,7 +1459,7 @@ msgstr "غير مصنف "
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 msgid "Validate your selection"
-msgstr ""
+msgstr "قك بتأكيد خيارك "
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1565,7 +1591,7 @@ msgstr "الرمز البريدي"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "at the counter"
-msgstr ""
+msgstr "عند الكاشير "
 
 #. module: pos_self_order
 #. odoo-javascript

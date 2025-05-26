@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -799,7 +799,7 @@ msgstr "Les catégories de dépenses peuvent être refacturées à vos clients."
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Expense created from a split."
-msgstr ""
+msgstr "Dépense créée à partir d’une répartition."
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
@@ -1194,6 +1194,8 @@ msgid ""
 "Link your stripe issuing account to manage company credit cards for your "
 "employees through Odoo"
 msgstr ""
+"Liez votre compte émetteur Stripe pour gérer les cartes de crédit de "
+"l’entreprise pour les employés via Odoo"
 
 #. module: hr_expense
 #. odoo-python
@@ -1411,6 +1413,15 @@ msgid "Odoo"
 msgstr "Odoo"
 
 #. module: hr_expense
+#. odoo-python
+#: code:addons/hr_expense/models/hr_expense.py:0
+msgid ""
+"Odoo had a look at your expense, its product, your company and the journal but came back with empty hands.\n"
+"Give Odoo a hand to find an account by setting up an expense account.\n"
+"%(expense)s %(expense_name)s.\n"
+msgstr ""
+
+#. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 msgid ""
 "Once you have created your expense, submit it to your manager who will "
@@ -1466,7 +1477,7 @@ msgstr "Ouvrir le menu développeur."
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Origin Split Expense"
-msgstr ""
+msgstr "Dépense d’origine répartie"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1476,7 +1487,7 @@ msgstr "Montant original"
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__split_expense_origin_id
 msgid "Original expense from a split."
-msgstr ""
+msgstr "Dépense d’origine issue d’une répartition."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__expense_outstanding_account_id
@@ -2158,7 +2169,7 @@ msgstr "Montant hors taxes"
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Untitled Expense %s"
-msgstr ""
+msgstr "Dépense sans titre %s"
 
 #. module: hr_expense
 #. odoo-javascript

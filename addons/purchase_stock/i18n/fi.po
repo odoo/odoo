@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -78,6 +78,16 @@ msgstr "<span> päivää</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
 msgstr "<strong>Incoterm:</strong>"
@@ -86,12 +96,6 @@ msgstr "<strong>Incoterm:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
 msgstr ""
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
-msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Toimitusosoite:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
@@ -1204,16 +1208,6 @@ msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "Löydät toimittajan nimen, verotunnuksen, sähköpostin tai sisäisen viitteen "
 "perusteella."
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/models/purchase_order_line.py:0
-msgid ""
-"You cannot decrease the ordered quantity below the received quantity.\n"
-"Create a return first."
-msgstr ""
-"Tilattua määrää ei voi pienentää alle vastaanotetun määrän.\n"
-"Luo ensin palautus."
 
 #. module: purchase_stock
 #. odoo-python

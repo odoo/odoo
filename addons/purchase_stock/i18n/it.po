@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -79,6 +79,16 @@ msgstr "<span> giorni</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
 msgstr "<strong>Termine di resa:</strong>"
@@ -87,12 +97,6 @@ msgstr "<strong>Termine di resa:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
 msgstr "<strong>Data di spedizione richiesta:</strong>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
-msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Indirizzo di spedizione:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
@@ -1213,16 +1217,6 @@ msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "Un fornitore può essere trovato per nome, codice fiscale, e-mail o "
 "riferimento interno."
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/models/purchase_order_line.py:0
-msgid ""
-"You cannot decrease the ordered quantity below the received quantity.\n"
-"Create a return first."
-msgstr ""
-"Impossibile ridurre la quantità ordinata al di sotto della quantità ricevuta.\n"
-"Creare prima un reso."
 
 #. module: purchase_stock
 #. odoo-python

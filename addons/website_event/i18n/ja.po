@@ -86,6 +86,24 @@ msgstr "<i class=\"fa fa-ban me-2\"/>未公開"
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "<i class=\"fa fa-caret-left me-2\"/><small>Previous</small>"
 msgstr ""
+"<br><div><tx-placeholder class=\"editor-non-editable s-placeholder "
+"s-variable s-tag noSelect translatable-candidate js-tag-attribute-edit s-tag"
+"--unary tipsy_enable\" dir=\"ltr\" contenteditable=\"false\" data-"
+"index=\"1\" data-position=\"1\" data-type=\"unary\" data-tag=\"i\" data-"
+"translatable=\"false\" spellcheck=\"false\" original-title=\"<i "
+"class=&quot;fa fa-caret-left me-2&quot;/>\">1</tx-placeholder><tx-"
+"placeholder class=\"editor-non-editable s-placeholder s-variable s-tag "
+"noSelect translatable-candidate js-tag-attribute-edit s-tag--start "
+"tipsy_enable\" dir=\"ltr\" contenteditable=\"false\" data-index=\"2\" data-"
+"position=\"1\" data-type=\"start\" data-tag=\"small\" data-"
+"translatable=\"false\" spellcheck=\"false\" original-"
+"title=\"<small>\">2</tx-placeholder>前へ<tx-placeholder class=\"editor-non-"
+"editable s-placeholder s-variable s-tag noSelect translatable-candidate js-"
+"tag-attribute-edit s-tag--end tipsy_enable\" dir=\"ltr\" "
+"contenteditable=\"false\" data-index=\"2\" data-position=\"2\" data-"
+"type=\"end\" data-tag=\"small\" data-translatable=\"{TX-PL-TRANSLATABLE}\" "
+"spellcheck=\"false\" original-title=\"</small>\">2</tx-placeholder><br data-"
+"mce-bogus=\"1\"></div>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -101,6 +119,8 @@ msgstr "<i class=\"fa fa-check me-2\"/>登録済"
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
 msgid "<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" title=\"Discord\"/>"
 msgstr ""
+"<i class=\"fa fa-discord text-discord\" aria-label=\"Discord\" "
+"title=\"Discord\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -189,7 +209,7 @@ msgstr "<small class=\"fw-bold\">終了</small>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "<small class=\"fw-bold\">Next Dates</small>"
-msgstr ""
+msgstr "<small class=\"fw-bold\">次の日付</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
@@ -204,7 +224,7 @@ msgstr "<small class=\"text-muted\">カレンダに追加:</small>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "<small>Next</small><i class=\"fa fa-caret-right ms-2\"/>"
-msgstr ""
+msgstr "<small>次へ</small><i class=\"fa fa-caret-right ms-2\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -377,7 +397,7 @@ msgstr "iCal/Outlookに追加"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_calendar_links
 msgid "Add to your calendar"
-msgstr ""
+msgstr "カレンダーに追加"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -447,7 +467,7 @@ msgstr "ビジネスワークショップ"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Calendar links"
-msgstr ""
+msgstr "カレンダーリンク"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__can_publish
@@ -684,7 +704,7 @@ msgstr "イベント登録"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Event Sidebar Position"
-msgstr ""
+msgstr "イベントサイドバー位置"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
@@ -795,7 +815,7 @@ msgstr "このイベントに関する人々の意見や感想を聞いて、会
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Fixed Sidebar"
-msgstr ""
+msgstr "固定サイドバー"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -1023,7 +1043,7 @@ msgstr "次のイベント"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "No Future Dates Available"
-msgstr ""
+msgstr "利用可能な今後の日程はありません"
 
 #. module: website_event
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
@@ -1080,7 +1100,7 @@ msgstr "その他"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__other_menu_ids
 msgid "Other Menus"
-msgstr ""
+msgstr "その他メニュー"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
@@ -1110,7 +1130,7 @@ msgstr "写真"
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
 msgid "Practical"
-msgstr ""
+msgstr "実践的"
 
 #. module: website_event
 #: model:ir.model.fields.selection,name:website_event.selection__event_event__website_visibility__public
@@ -1255,7 +1275,7 @@ msgstr "イベントを検索..."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "Select a Date:"
-msgstr ""
+msgstr "日付を選択:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_search
@@ -1294,7 +1314,7 @@ msgstr "サイドバー"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Sidebar Blocks"
-msgstr ""
+msgstr "サイドバーブロック"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
@@ -1401,7 +1421,7 @@ msgstr "トップバーフィルタ"
 #. odoo-python
 #: code:addons/website_event/models/website_visitor.py:0
 msgid "Unsupported 'Not In' operation on visitors registrations"
-msgstr ""
+msgstr "訪問者の登録に対して '含まれていない(Not In)' 操作はサポートされていません。"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
@@ -1449,7 +1469,7 @@ msgstr "ビュー"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "View More"
-msgstr ""
+msgstr "さらに表示"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -1616,7 +1636,7 @@ msgstr "イベント"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
 msgid "iCal"
-msgstr ""
+msgstr "iCal"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template

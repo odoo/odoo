@@ -4,17 +4,17 @@
 # 
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2025
-# Wil Odoo, 2025
 # Raymond Yu <cl_yu@hotmail.com>, 2025
 # Chloe Wang, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -219,6 +219,12 @@ msgstr "123.45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "18:45 John 4P"
+msgstr "18:45 约翰 4位"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -949,6 +955,13 @@ msgstr "POS的内部确认。"
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__name
 msgid "An internal identification of the printer"
 msgstr "打印机的内部标识"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
+msgid ""
+"An unknown error occurred. Do you want to download the receipt instead?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2787,6 +2800,7 @@ msgstr "拒绝受理"
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
@@ -2878,12 +2892,6 @@ msgstr "您需要打开客户清单来选择客户吗？"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
-msgid "Do you want to retry printing, or download it instead?"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "下载"
 
@@ -2918,6 +2926,12 @@ msgstr "编辑"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr "编辑详情"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Edit Order Name"
+msgstr "编辑订单名称"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -3476,6 +3490,7 @@ msgstr "如何管理含税价格"
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__id
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
@@ -4510,6 +4525,12 @@ msgid "No"
 msgstr "否"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "No Internet Connection"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No PoS configuration found"
@@ -5490,22 +5511,6 @@ msgid "Please add a valid customer to the order."
 msgstr "请为订单加入有效客户。"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid "Please check if the IoT Box is still connected."
-msgstr "请检查IoT Box是否仍连接。"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid ""
-"Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
-msgstr ""
-"请检查打印机是否仍然连接。\n"
-"某些浏览器不允许从网站到网络设备的 HTTP 调用（出于安全原因）。如果是这种情况，您需要按照 Odoo 文档中的 \"ePOS 打印机自签名证书 \"和 \"安全连接 (HTTPS) \"来解决问题。"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/res_company.py:0
 msgid ""
@@ -5536,6 +5541,20 @@ msgstr "请在上面创建/选择一个POS，以显示配置选项。"
 msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr "请为产品“%(product)s”（识别码：%(id)d）设定收入账户。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Please ensure the IoT box is turned on and connected to the network before "
+"retrying."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Please ensure you are connected to the internet before retrying."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7178,6 +7197,7 @@ msgid "Sent to customers with the receipt in attachment"
 msgstr "已传送至客户，收据以附件形式附上"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_ir_sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__sequence
@@ -9137,12 +9157,6 @@ msgstr "您无法在营业点仍处于打开状态时删除营业点类别."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/ir_sequence.py:0
-msgid "You cannot delete a sequence used in an active session: %s"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "You cannot delete a preset that is linked to a POS configuration."
 msgstr "您不可删除已链接至 POS 配置的默认设置。"
@@ -9154,6 +9168,12 @@ msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
 msgstr "您不能删除销售点配置中使用的四舍五入方法。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/ir_sequence.py:0
+msgid "You cannot delete a sequence used in an active session: %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9272,6 +9292,14 @@ msgid "You still have"
 msgstr "您仍有"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your IoT box cannot find the printer, please ensure it is connected and "
+"turned on before retrying."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
@@ -9287,6 +9315,16 @@ msgid ""
 msgstr ""
 "您的地址缺失或未完成。<br/>\n"
 "                               请确保"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your database is not registered.\n"
+"Buy a subscription, or register your subscription code, then retry.\n"
+"\n"
+"You can still download the receipt and print it manually."
+msgstr ""
 
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
@@ -9335,12 +9373,6 @@ msgid "discount off on"
 msgstr "折扣开启"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. 0123456789"
-msgstr "例：0123456789"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "e.g. 1234567890"
 msgstr "例：1234567890"
@@ -9375,12 +9407,6 @@ msgstr "例如退货政策，感谢您的购买！"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
 msgstr "例如: 饮料可乐"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. john.doe@mail.com"
-msgstr "例：john.doe@mail.com"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9552,16 +9578,3 @@ msgstr "以激活按钮。"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "使用中"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
-msgid ""
-"{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
-msgstr "{{ line.hasValidProductLot() ? '产品批次有效' : '产品批次无效'}}"

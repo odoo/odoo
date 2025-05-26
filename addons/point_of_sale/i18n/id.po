@@ -3,16 +3,16 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Wil Odoo, 2025
 # Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -220,6 +220,12 @@ msgstr "123.45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "18:45 John 4P"
+msgstr "18:45 John 4P"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -988,6 +994,13 @@ msgstr "Identifikasi internal untuk pos."
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__name
 msgid "An internal identification of the printer"
 msgstr "Identifikasi internal dari printer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
+msgid ""
+"An unknown error occurred. Do you want to download the receipt instead?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2847,6 +2860,7 @@ msgstr "Dismiss"
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
@@ -2941,12 +2955,6 @@ msgstr "Apakah Anda ingin membuka daftar pelanggan untuk memilih pelanggan?"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
-msgid "Do you want to retry printing, or download it instead?"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "Unduh"
 
@@ -2981,6 +2989,12 @@ msgstr "Edit"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr "Edit Detail"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Edit Order Name"
+msgstr "Edit Nama Pesanan"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -3551,6 +3565,7 @@ msgstr "Bagaimana cara mengelola harga termasuk pajak"
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__id
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
@@ -4610,6 +4625,12 @@ msgid "No"
 msgstr "Tidak"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "No Internet Connection"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No PoS configuration found"
@@ -5607,22 +5628,6 @@ msgid "Please add a valid customer to the order."
 msgstr "Silakan tambahkan pelanggan valid ke pesanan."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid "Please check if the IoT Box is still connected."
-msgstr "Mohon periksa apakah IoT Box masih terhubung."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid ""
-"Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
-msgstr ""
-"Mohon periksa apakah printer masih terhubung.\n"
-"Beberapa browser tidak mengizinkan HTTP call dari website ke perangkat di network (untuk alasan keamanan). Apabila ini kasusnya, Anda harus mengikuti dokumentasi Odoo untuk 'Self-signed certificate for ePOS printers' dan 'Secure connection (HTTPS)' untuk menyelesaikan isu tersebut"
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/res_company.py:0
 msgid ""
@@ -5657,6 +5662,20 @@ msgid ""
 msgstr ""
 "Mohon definisikan akun pendapatan untuk produk ini: '%(product)s' (id: "
 "%(id)d)."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Please ensure the IoT box is turned on and connected to the network before "
+"retrying."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Please ensure you are connected to the internet before retrying."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7310,6 +7329,7 @@ msgid "Sent to customers with the receipt in attachment"
 msgstr "DIkirim ke pelanggan dengan resi terlampir"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_ir_sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__sequence
@@ -9392,12 +9412,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/ir_sequence.py:0
-msgid "You cannot delete a sequence used in an active session: %s"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "You cannot delete a preset that is linked to a POS configuration."
 msgstr ""
@@ -9411,6 +9425,12 @@ msgid ""
 msgstr ""
 "Anda tidak dapat menghapus metode pembulatan yang digunakan di konfigurasi "
 "POS."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/ir_sequence.py:0
+msgid "You cannot delete a sequence used in an active session: %s"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -9549,6 +9569,14 @@ msgid "You still have"
 msgstr "Anda masih memiliki"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your IoT box cannot find the printer, please ensure it is connected and "
+"turned on before retrying."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
@@ -9566,6 +9594,16 @@ msgid ""
 msgstr ""
 "Alamat Anda hilang atau tidak lengkap. <br/>\n"
 "                                Mohon pastikan untuk"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your database is not registered.\n"
+"Buy a subscription, or register your subscription code, then retry.\n"
+"\n"
+"You can still download the receipt and print it manually."
+msgstr ""
 
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
@@ -9614,12 +9652,6 @@ msgid "discount off on"
 msgstr "diskon tidak diaktifkan"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. 0123456789"
-msgstr "contoh. 0123456789"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "e.g. 1234567890"
 msgstr "contoh 1234567890"
@@ -9654,12 +9686,6 @@ msgstr "mis, Kebijakan Retur, Terima kasih telah berbelanja di toko kami!"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
 msgstr "contoh Soft Drink"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. john.doe@mail.com"
-msgstr "contoh. john.doe@contoh.com"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9831,18 +9857,3 @@ msgstr "untuk mengaktifkan tombol-tombol."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "menggunakan"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
-msgid ""
-"{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
-msgstr ""
-"{{ line.hasValidProductLot() ? 'lot produk Valid' : 'lot produk Tidak "
-"Valid'}}"

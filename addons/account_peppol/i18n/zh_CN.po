@@ -72,6 +72,8 @@ msgid ""
 "<br/>\n"
 "                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
+"<br/>\n"
+"                                比利时<u>自 2026 年 1 月起强制使用电子发票</u>，请立即注册。"
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -222,7 +224,7 @@ msgstr "未收到 MSH 之前发送的报文的收据，产生此错误。"
 msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
-msgstr ""
+msgstr "收到片段消息，但先前接收的片段消息具有相同的 GroupId 和 FragmentNum 值"
 
 #. module: account_peppol
 #. odoo-python
@@ -230,7 +232,7 @@ msgstr ""
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
-msgstr ""
+msgstr "收到片段消息，但一个片段组中有多条片段消息指定了压缩元素的值"
 
 #. module: account_peppol
 #. odoo-python
@@ -238,14 +240,14 @@ msgstr ""
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
-msgstr ""
+msgstr "收到片段消息，但一个片段组中有多条片段消息指定了此元素的值"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "A fragment is received that relates to a group that was previously rejected."
-msgstr ""
+msgstr "收到与先前已拒绝组相关的片段消息。"
 
 #. module: account_peppol
 #. odoo-python
@@ -253,7 +255,7 @@ msgstr ""
 msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
-msgstr ""
+msgstr "由于捆绑消息中相关消息单元出错，导致该消息单元未被处理。"
 
 #. module: account_peppol
 #. odoo-python
@@ -277,7 +279,7 @@ msgstr "接收 Peppol 文件必须使用采购日记账。"
 msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
-msgstr ""
+msgstr "响应 MSH 表明其对响应消息应用了备用 MEP 绑定。"
 
 #. module: account_peppol
 #. odoo-python
@@ -285,7 +287,7 @@ msgstr ""
 msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
-msgstr ""
+msgstr "设置了 FragmentCount 值，但先前接收的片段具有更大的值。"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -366,7 +368,7 @@ msgid ""
 "Although the message document is well formed and schema valid, some "
 "element/attribute contains a value that could not be recognized and "
 "therefore could not be used by the MSH."
-msgstr ""
+msgstr "虽然消息文档格式良好且符合模式，但某些元素/属性包含无法识别的值，因此无法被 MSH 使用。"
 
 #. module: account_peppol
 #. odoo-python
@@ -375,7 +377,7 @@ msgid ""
 "Although the message document is well formed and schema valid, some "
 "element/attribute value cannot be processed as expected because the related "
 "feature is not supported by the MSH."
-msgstr ""
+msgstr "虽然消息文档格式良好且符合模式，但由于 MSH 不支持相关功能，某些元素/属性值无法按预期处理。"
 
 #. module: account_peppol
 #. odoo-python
@@ -385,7 +387,7 @@ msgid ""
 "element/attribute value is inconsistent either with the content of other "
 "element/attribute, or with the processing mode of the MSH, or with the "
 "normative requirements of the ebMS specification."
-msgstr ""
+msgstr "虽然消息文档格式良好且符合模式，但某些元素/属性值与其他元素/属性内容、MSH 处理模式或 ebMS 规范要求不一致。"
 
 #. module: account_peppol
 #. odoo-python

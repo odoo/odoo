@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
@@ -206,6 +206,12 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "18:45 John 4P"
 msgstr ""
 
 #. module: point_of_sale
@@ -921,6 +927,13 @@ msgstr "Notrajna identifikacija za POS"
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__name
 msgid "An internal identification of the printer"
 msgstr "Notranja identifikacija tiskalnika"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
+msgid ""
+"An unknown error occurred. Do you want to download the receipt instead?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2764,6 +2777,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
@@ -2856,12 +2870,6 @@ msgstr "Ali želite odpreti seznam strank in izbrati stranko?"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
-msgid "Do you want to retry printing, or download it instead?"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "Prenesi"
 
@@ -2895,6 +2903,12 @@ msgstr "Uredi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Edit Order Name"
 msgstr ""
 
 #. module: point_of_sale
@@ -3458,6 +3472,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__id
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
@@ -3669,7 +3684,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__payment_method_type
 msgid "Integration"
-msgstr ""
+msgstr "Integracija"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -4483,6 +4498,12 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "No"
 msgstr "Ne"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "No Internet Connection"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -5471,20 +5492,6 @@ msgid "Please add a valid customer to the order."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid "Please check if the IoT Box is still connected."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid ""
-"Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/res_company.py:0
 msgid ""
@@ -5516,6 +5523,20 @@ msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
 "Prosim določite konto prihodkov za ta produkt \"%(product)s\" (id:%(id)d)."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Please ensure the IoT box is turned on and connected to the network before "
+"retrying."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Please ensure you are connected to the internet before retrying."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7156,6 +7177,7 @@ msgid "Sent to customers with the receipt in attachment"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_ir_sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__sequence
@@ -9106,12 +9128,6 @@ msgstr "Pos kategorije ne morete izbrisati, dokler je seja še vedno odprta."
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/ir_sequence.py:0
-msgid "You cannot delete a sequence used in an active session: %s"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "You cannot delete a preset that is linked to a POS configuration."
 msgstr ""
@@ -9122,6 +9138,12 @@ msgstr ""
 msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/ir_sequence.py:0
+msgid "You cannot delete a sequence used in an active session: %s"
 msgstr ""
 
 #. module: point_of_sale
@@ -9241,6 +9263,14 @@ msgid "You still have"
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your IoT box cannot find the printer, please ensure it is connected and "
+"turned on before retrying."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
@@ -9255,6 +9285,16 @@ msgstr ""
 msgid ""
 "Your address is missing or incomplete. <br/>\n"
 "                                Please make sure to"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your database is not registered.\n"
+"Buy a subscription, or register your subscription code, then retry.\n"
+"\n"
+"You can still download the receipt and print it manually."
 msgstr ""
 
 #. module: point_of_sale
@@ -9304,12 +9344,6 @@ msgid "discount off on"
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. 0123456789"
-msgstr ""
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "e.g. 1234567890"
 msgstr ""
@@ -9343,12 +9377,6 @@ msgstr "npr. Politika vračila, Hvala za nakupovanje pri nas!"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. john.doe@mail.com"
 msgstr ""
 
 #. module: point_of_sale
@@ -9521,16 +9549,3 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "z uporabo"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
-msgid ""
-"{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
-msgstr ""

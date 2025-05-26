@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2025
-# Wil Odoo, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,7 +119,7 @@ msgstr "%(candidateType)s (%(protocol)s)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "%(date)s at %(time)s"
 msgstr "%(date)s %(time)s"
 
@@ -3568,6 +3568,8 @@ msgid "Do you really want to delete this preview?"
 msgstr "정말로 미리보기를 삭제하시겠습니까?"
 
 #. module: mail
+#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
+#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
@@ -4620,9 +4622,9 @@ msgstr "앞으로"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
-msgid "Forward message"
-msgstr "메시지 전달"
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+msgid "Forward Message"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4845,6 +4847,11 @@ msgstr "언급함"
 #: model:ir.model.fields,field_description:mail.field_res_users__has_message
 msgid "Has Message"
 msgstr "메시지가 있습니다"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
+msgid "Has Warning"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -6102,6 +6109,11 @@ msgid "Link to"
 msgstr "링크 걸기"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
+msgid "Linked to"
+msgstr "다음과 연결됨"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 msgid "List Activity"
@@ -6988,7 +7000,6 @@ msgstr "내 미리 준비된 답변"
 #: model:ir.model.fields,field_description:mail.field_res_users__name
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Name"
 msgstr "이름"
 
@@ -8950,7 +8961,6 @@ msgstr "답장"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
-#: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Reply All"
 msgstr "전체답장"
 
@@ -9223,18 +9233,14 @@ msgstr "예약"
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/activity_model_patch.js:0
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity"
 msgstr "활동 계획표"
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity On Selected Records"
 msgstr "선택한 레코드에서 활동 예약하기"
 
@@ -9816,6 +9822,12 @@ msgid ""
 msgstr "번역을 요청할 대상으로 사용되는 단축 언어 코드입니다."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show All Activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__show_notified_bcc
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__show_notified_bcc
 msgid "Show BCC"
@@ -9826,6 +9838,12 @@ msgstr "BCC 표시"
 #: code:addons/mail/static/src/chatter/web/chatter_patch.js:0
 msgid "Show Followers"
 msgstr "팔로워 표시"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show My Activities"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10207,6 +10225,8 @@ msgstr "다음 제안"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__summary
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Summary"
 msgstr "요약"
 
@@ -10429,6 +10449,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The activity can be launched, with these additional effects:"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The activity cannot be launched:"
 msgstr "활동을 시작할 수 없습니다:"
 
@@ -10597,6 +10623,12 @@ msgid ""
 "<jobs@example.odoo.com>"
 msgstr ""
 "<jobs@example.odoo.com>에 대한 이메일을 수신하도록 하려면 이메일의 별칭 이름을 적어주세요. 예: 'jobs'"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11340,6 +11372,14 @@ msgstr "대화 음소거 해제"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input.js:0
+#: code:addons/mail/static/src/core/web/recipients_popover.js:0
+#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
+msgid "Unnamed"
+msgstr "이름 없음"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
 #: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
@@ -11438,8 +11478,6 @@ msgstr "아바타 업로드"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
-#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
-#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 msgid "Upload Document"
 msgstr "문서 업로드"
 
@@ -11910,6 +11948,7 @@ msgstr "GIF로 대화에 재미를 불어넣고 싶으신가요? 설정에서 �
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_button.js:0
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__warning
 msgid "Warning"
 msgstr "주의"
 

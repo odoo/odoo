@@ -3,17 +3,17 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Wil Odoo, 2025
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2025
 # Fernanda Alvarez, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Fernanda Alvarez, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Spanish (Latin America) (https://app.transifex.com/odoo/teams/41243/es_419/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -222,6 +222,12 @@ msgstr "123.45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "18:45 John 4P"
+msgstr "18:45 John 4P"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -993,6 +999,13 @@ msgstr "Una identificación interna del punto de venta."
 #: model:ir.model.fields,help:point_of_sale.field_pos_printer__name
 msgid "An internal identification of the printer"
 msgstr "Un identificador interno de la impresora"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
+msgid ""
+"An unknown error occurred. Do you want to download the receipt instead?"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -2868,6 +2881,7 @@ msgstr "Descartar"
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__display_name
@@ -2967,12 +2981,6 @@ msgstr "¿Desea abrir la lista de clientes para seleccionar un cliente? "
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
-msgid "Do you want to retry printing, or download it instead?"
-msgstr "¿Desea volver a intentar la impresión o descargarlo mejor?"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "Descargar"
 
@@ -3010,6 +3018,12 @@ msgstr "Editar"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr "Editar detalles"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid "Edit Order Name"
+msgstr "Editar nombre de la orden"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -3585,6 +3599,7 @@ msgstr "Cómo gestionar precios con impuestos incluidos"
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:point_of_sale.field_ir_module_module__id
+#: model:ir.model.fields,field_description:point_of_sale.field_ir_sequence__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bus_mixin__id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__id
@@ -4645,6 +4660,12 @@ msgid "No"
 msgstr "No"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "No Internet Connection"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No PoS configuration found"
@@ -5645,22 +5666,6 @@ msgid "Please add a valid customer to the order."
 msgstr "Agregue un cliente válido a la orden."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid "Please check if the IoT Box is still connected."
-msgstr "Verifique que la caja IoT siga conectada."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
-msgid ""
-"Please check if the printer is still connected. \n"
-"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue. "
-msgstr ""
-"Compruebe que la impresora siga conectada.  \n"
-"Algunos navegadores no permiten solicitudes HTTP desde sitios web a dispositivos en la red (por motivos de seguridad). Si ese es el caso, consulte la documentación de Odoo para \"Certificado autofirmado para impresoras ePOS\" y \"Conexión segura (HTTPS)\" para solucionar el problema."
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/res_company.py:0
 msgid ""
@@ -5696,6 +5701,20 @@ msgid ""
 "Please define income account for this product: '%(product)s' (id:%(id)d)."
 msgstr ""
 "Defina la cuenta de ingresos para este producto: '%(product)s' (ID: %(id)d)."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Please ensure the IoT box is turned on and connected to the network before "
+"retrying."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid "Please ensure you are connected to the internet before retrying."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -7354,6 +7373,7 @@ msgid "Sent to customers with the receipt in attachment"
 msgstr "Enviado a los clientes con el recibo como archivo adjunto"
 
 #. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_ir_sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__sequence
@@ -9466,12 +9486,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
-#: code:addons/point_of_sale/models/ir_sequence.py:0
-msgid "You cannot delete a sequence used in an active session: %s"
-msgstr "No puede eliminar una secuencia utilizada en una sesión activa: %s"
-
-#. module: point_of_sale
-#. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "You cannot delete a preset that is linked to a POS configuration."
 msgstr ""
@@ -9487,6 +9501,12 @@ msgid ""
 msgstr ""
 "No puede eliminar un método de redondeo que se utiliza en una configuración "
 "de Punto de venta."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/ir_sequence.py:0
+msgid "You cannot delete a sequence used in an active session: %s"
+msgstr "No puede eliminar una secuencia utilizada en una sesión activa: %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9624,6 +9644,14 @@ msgid "You still have"
 msgstr "Todavía tiene"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your IoT box cannot find the printer, please ensure it is connected and "
+"turned on before retrying."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
@@ -9641,6 +9669,16 @@ msgid ""
 msgstr ""
 "Falta su dirección o está incompleta. <br/>\n"
 "                                Asegúrese de"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
+msgid ""
+"Your database is not registered.\n"
+"Buy a subscription, or register your subscription code, then retry.\n"
+"\n"
+"You can still download the receipt and print it manually."
+msgstr ""
 
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt
@@ -9689,12 +9727,6 @@ msgid "discount off on"
 msgstr "de descuento en"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. 0123456789"
-msgstr "Por ejemplo, 0123456789"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
 msgid "e.g. 1234567890"
 msgstr "Por ejemplo, 1234567890"
@@ -9730,12 +9762,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "e.g. Soft Drinks"
 msgstr "por ejemplo, Refrescos"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.xml:0
-msgid "e.g. john.doe@mail.com"
-msgstr "Por ejemplo, john.doe@correo.com"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -9907,18 +9933,3 @@ msgstr "para activar los botones."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document
 msgid "using"
 msgstr "usando"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
-msgid "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-msgstr "{{ !barcodeReader ? 'No nomenclature' : '' }}"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
-msgid ""
-"{{ line.hasValidProductLot() ? 'Valid product lot' : 'Invalid product lot'}}"
-msgstr ""
-"{{ line.hasValidProductLot() ? 'Lote de producto válido' : 'Lote de producto"
-" inválido'}}"

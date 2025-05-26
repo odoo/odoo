@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:27+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -152,8 +152,8 @@ msgid ""
 "<b>Log internal notes</b> and use @<b>mentions</b> to notify your "
 "colleagues."
 msgstr ""
-"<b>Log internal notes</b> and use @<b>mentions</b> to notify your "
-"colleagues."
+"<b>Grave notas insternas</b> e use @<b>menções</b> para notificar seus "
+"colegas."
 
 #. module: project
 #: model:mail.template,body_html:project.rating_project_request_email_template
@@ -1048,19 +1048,19 @@ msgstr "Avaliação média (1-5)"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Happy"
-msgstr "Average Rating: Happy"
+msgstr "Avaliação média: Satisfeito"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Neutral"
-msgstr "Average Rating: Neutral"
+msgstr "Avaliação média: Neutro"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Average Rating: Unhappy"
-msgstr "Average Rating: Unhappy"
+msgstr "Avaliação média: Insatisfeito"
 
 #. module: project
 #. odoo-javascript
@@ -1820,6 +1820,7 @@ msgstr "Cancelar"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
+#: model:ir.model.fields,field_description:project.field_res_users__display_name
 msgid "Display Name"
 msgstr "Nome exibido"
 
@@ -2224,6 +2225,7 @@ msgstr "Como está o andamento do projeto?"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
+#: model:ir.model.fields,field_description:project.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -5057,7 +5059,7 @@ msgstr "Deixar de seguir"
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Unhappy face"
-msgstr "Unhappy face"
+msgstr "Emoji triste"
 
 #. module: project
 #. odoo-python
@@ -5181,6 +5183,7 @@ msgstr ""
 "        Certifique-se de usar a ordem e o formato certo, por exemplo: Melhorar a tela de configuração 5h #feature #v16 @Mitchell !"
 
 #. module: project
+#: model:ir.model,name:project.model_res_users
 #: model:res.groups,name:project.group_project_user
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"

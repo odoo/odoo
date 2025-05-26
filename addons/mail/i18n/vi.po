@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2025
-# Wil Odoo, 2025
 # Thi Huong Nguyen, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,7 +119,7 @@ msgstr "%(candidateType)s (%(protocol)s)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "%(date)s at %(time)s"
 msgstr "%(date)s vào lúc %(time)s"
 
@@ -3646,6 +3646,8 @@ msgid "Do you really want to delete this preview?"
 msgstr "Bạn có thực sự muốn xóa bản xem trước này không?"
 
 #. module: mail
+#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
+#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
@@ -4712,9 +4714,9 @@ msgstr "Chuyển tiếp"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
-msgid "Forward message"
-msgstr "Chuyển tiếp nội dung"
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+msgid "Forward Message"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4939,6 +4941,11 @@ msgstr "Có đề cập"
 #: model:ir.model.fields,field_description:mail.field_res_users__has_message
 msgid "Has Message"
 msgstr "Có tin nhắn"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
+msgid "Has Warning"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -6237,6 +6244,11 @@ msgid "Link to"
 msgstr "Liên kết đến"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
+msgid "Linked to"
+msgstr "Liên kết với"
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 msgid "List Activity"
@@ -7152,7 +7164,6 @@ msgstr "Câu trả lời soạn sẵn của tôi"
 #: model:ir.model.fields,field_description:mail.field_res_users__name
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Name"
 msgstr "Tên"
 
@@ -9152,7 +9163,6 @@ msgstr "Trả lời"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
-#: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Reply All"
 msgstr "Trả lời tất cả"
 
@@ -9425,18 +9435,14 @@ msgstr "Lịch trình"
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/activity_model_patch.js:0
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity"
 msgstr "Lên lịch hoạt động"
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity On Selected Records"
 msgstr "Lên lịch hoạt động trên các bản ghi đã chọn"
 
@@ -10019,6 +10025,12 @@ msgid ""
 msgstr "Mã ngôn ngữ viết tắt được sử dụng làm ngôn ngữ đích cho yêu cầu dịch."
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show All Activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__show_notified_bcc
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__show_notified_bcc
 msgid "Show BCC"
@@ -10029,6 +10041,12 @@ msgstr "Hiện BCC"
 #: code:addons/mail/static/src/chatter/web/chatter_patch.js:0
 msgid "Show Followers"
 msgstr "Hiện người theo dõi"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show My Activities"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10422,6 +10440,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__summary
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Summary"
 msgstr "Tóm tắt"
 
@@ -10651,6 +10671,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The activity can be launched, with these additional effects:"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The activity cannot be launched:"
 msgstr "Không thể khởi chạy hoạt động:"
 
@@ -10825,6 +10851,12 @@ msgid ""
 msgstr ""
 "Tên của bí danh email, ví dụ: 'jobs' nếu bạn muốn nhận email gửi đến địa chỉ"
 " <jobs@example.odoo.com>"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11590,6 +11622,14 @@ msgstr "Bật lại thông báo cuộc trò chuyện"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input.js:0
+#: code:addons/mail/static/src/core/web/recipients_popover.js:0
+#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
+msgid "Unnamed"
+msgstr "Chưa đặt tên"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
 #: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
@@ -11688,8 +11728,6 @@ msgstr "Tải lên avatar"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
-#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
-#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 msgid "Upload Document"
 msgstr "Tải lên tài liệu"
 
@@ -12168,6 +12206,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_button.js:0
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__warning
 msgid "Warning"
 msgstr "Cảnh báo"
 

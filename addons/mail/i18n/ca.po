@@ -5,16 +5,16 @@
 # Translators:
 # Josep Anton Belchi, 2025
 # RGB Consulting <odoo@rgbconsulting.com>, 2025
-# Wil Odoo, 2025
 # Noemi Pla, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Noemi Pla, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,7 +116,7 @@ msgstr "%(candidateType)s (%(protocol)s)"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "%(date)s at %(time)s"
 msgstr ""
 
@@ -3548,6 +3548,8 @@ msgid "Do you really want to delete this preview?"
 msgstr "Segur que voleu suprimir aquesta previsualització?"
 
 #. module: mail
+#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
+#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "Document"
@@ -4614,8 +4616,8 @@ msgstr "Endavant"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/web/message_patch.js:0
-msgid "Forward message"
+#: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+msgid "Forward Message"
 msgstr ""
 
 #. module: mail
@@ -4841,6 +4843,11 @@ msgstr "Té Mentions"
 #: model:ir.model.fields,field_description:mail.field_res_users__has_message
 msgid "Has Message"
 msgstr "Té un missatge"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
+msgid "Has Warning"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -6111,6 +6118,11 @@ msgid "Link to"
 msgstr "Enllaçar amb"
 
 #. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
+msgid "Linked to"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
 msgid "List Activity"
@@ -7016,7 +7028,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_res_users__name
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_calendar
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Name"
 msgstr "Nom"
 
@@ -8998,7 +9009,6 @@ msgstr "Respondre"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
-#: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Reply All"
 msgstr ""
 
@@ -9273,18 +9283,14 @@ msgstr "Planificació"
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/activity_model_patch.js:0
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity"
 msgstr "Planificar activitat"
 
 #. module: mail
 #. odoo-javascript
-#. odoo-python
 #: code:addons/mail/static/src/core/web/store_service_patch.js:0
-#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Schedule Activity On Selected Records"
 msgstr ""
 
@@ -9868,6 +9874,12 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show All Activities"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__show_notified_bcc
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__show_notified_bcc
 msgid "Show BCC"
@@ -9878,6 +9890,12 @@ msgstr ""
 #: code:addons/mail/static/src/chatter/web/chatter_patch.js:0
 msgid "Show Followers"
 msgstr "Mostra els següents"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/command_palette.js:0
+msgid "Show My Activities"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10265,6 +10283,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_plan_template__summary
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__summary
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
 msgid "Summary"
 msgstr "Resum"
 
@@ -10485,6 +10505,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The activity can be launched, with these additional effects:"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "The activity cannot be launched:"
 msgstr ""
 
@@ -10649,6 +10675,12 @@ msgid ""
 msgstr ""
 "El nom del pseudònim de correu electrònic, per exemple, \"jobs\", si voleu "
 "obtenir els correus mitjançant <jobs@example.odoo.com>"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "The plan \"%(plan_name)s\" can be launched, with these additional effects:"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -11393,6 +11425,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/web/recipients_input.js:0
+#: code:addons/mail/static/src/core/web/recipients_popover.js:0
+#: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
+msgid "Unnamed"
+msgstr "Sense nom"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
 #: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
@@ -11491,8 +11531,6 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__upload_file
-#: model:mail.activity.type,name:mail.mail_activity_data_upload_document
-#: model:mail.activity.type,summary:mail.mail_activity_data_upload_document
 msgid "Upload Document"
 msgstr "Puja el document"
 
@@ -11954,6 +11992,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity_button.js:0
 #: code:addons/mail/static/src/views/web/fields/list_activity/list_activity.js:0
+#: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__warning
 msgid "Warning"
 msgstr "Avís"
 

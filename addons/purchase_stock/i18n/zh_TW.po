@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -79,6 +79,16 @@ msgstr "<span>天</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
 msgstr "<strong>國際貿易術語：</strong>"
@@ -87,12 +97,6 @@ msgstr "<strong>國際貿易術語：</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
 msgstr "<strong>要求發貨日期：</strong>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
-msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>送貨地址:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
@@ -1168,16 +1172,6 @@ msgstr "當 <b>%s</b> 需要產品時，<br/>會建立報價請求以滿足需�
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_suggest__partner_id
 msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr "你可以找到一個供應商的名稱, 統一編號, 電子郵件或參照."
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/models/purchase_order_line.py:0
-msgid ""
-"You cannot decrease the ordered quantity below the received quantity.\n"
-"Create a return first."
-msgstr ""
-"不能減少已接收數量下的訂購數量。\n"
-"首先建立一個退貨。"
 
 #. module: purchase_stock
 #. odoo-python

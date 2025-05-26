@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -55,12 +55,12 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-muted small\"> Forecasted</span>"
-msgstr "<span class=\"text-muted small\"> Forecasted</span>"
+msgstr "<span class=\"text-muted small\"> Previsto</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.product_view_kanban_catalog_purchase_only
 msgid "<span class=\"text-muted small\">Monthly Demand: </span>"
-msgstr "<span class=\"text-muted small\">Monthly Demand: </span>"
+msgstr "<span class=\"text-muted small\">Demanda mensal: </span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -79,6 +79,16 @@ msgstr "<span>dias</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
+msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
+msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
+msgstr ""
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Incoterm:</strong>"
 msgstr "<strong>Incoterm:</strong>"
@@ -87,12 +97,6 @@ msgstr "<strong>Incoterm:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong>Requested Ship Date:</strong>"
 msgstr "<strong>Data de envio solicitada:</strong>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
-#: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
-msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Endereço de envio:</strong>"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__is_storable
@@ -118,7 +122,7 @@ msgstr "Ação"
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__last_year_3
 msgid "After next month last year"
-msgstr "After next month last year"
+msgstr "Após o próximo mês do ano passado"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
@@ -161,8 +165,8 @@ msgid ""
 "Change the applied filters to receive suggestions about quantities to "
 "replenish for desired products."
 msgstr ""
-"Change the applied filters to receive suggestions about quantities to "
-"replenish for desired products."
+"Altere os filtros aplicados para receber sugestões sobre as quantidades a "
+"repor dos produtos em questão."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_company
@@ -391,7 +395,7 @@ msgstr "Gere a fatura de fornecedor provisória."
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_suggest_view_form
 msgid "Get recommendations of products to purchase at"
-msgstr "Get recommendations of products to purchase at"
+msgstr "Receba recomendações de produtos para comprar em"
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -402,7 +406,7 @@ msgstr "Volte para o pedido de compra para gerar a fatura de fornecedor."
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_suggest__hide_warehouse
 msgid "Hide Warehouse"
-msgstr "Hide Warehouse"
+msgstr "Ocultar armazém"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_account_move__id
@@ -480,7 +484,7 @@ msgstr "Item do diário"
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__one_year
 msgid "Last 12 months"
-msgstr "Last 12 months"
+msgstr "Últimos 12 meses"
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__three_months
@@ -515,7 +519,7 @@ msgstr "Última atualização em"
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order_suggest__based_on__last_year_quarter
 msgid "Last year quarter"
-msgstr "Last year quarter"
+msgstr "Trimestre do ano passado"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_procurement_group__purchase_line_ids
@@ -562,7 +566,7 @@ msgstr "Regra de estoque mínimo"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_product__monthly_demand
 msgid "Monthly Demand"
-msgstr "Monthly Demand"
+msgstr "Demanda mensal"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -1216,16 +1220,6 @@ msgid "You can find a vendor by its Name, TIN, Email or Internal Reference."
 msgstr ""
 "Você pode encontrar um fornecedor por seu nome, CNPJ, e-mail ou referência "
 "interna."
-
-#. module: purchase_stock
-#. odoo-python
-#: code:addons/purchase_stock/models/purchase_order_line.py:0
-msgid ""
-"You cannot decrease the ordered quantity below the received quantity.\n"
-"Create a return first."
-msgstr ""
-"Não é possível reduzir a quantidade solicitada para menos que a quantidade recebida.\n"
-"É necessário criar uma devolução primeiro."
 
 #. module: purchase_stock
 #. odoo-python

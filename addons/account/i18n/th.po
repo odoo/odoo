@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:35+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -1277,6 +1277,11 @@ msgstr "<span>คำเตือน: เอกสารนี้อาจซ้�
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">ยอดรวมย่อย</strong>"
 
@@ -1339,11 +1344,6 @@ msgstr "<strong>วันที่รับสินค้า</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference</strong>"
 msgstr "<strong>ข้อมูลอ้างอิง</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>ที่อยู่จัดส่ง</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3504,7 +3504,7 @@ msgstr "เปอร์เซ็นต์ยอดคงเหลือต้อ
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_45
+#: model:account.account,name:account.1_bank_journal_default_account_46
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -10989,12 +10989,6 @@ msgid "Not hashed"
 msgstr "ไม่ถูกแฮช"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2one_tax_tags.js:0
-msgid "Not sure... Help me!"
-msgstr "ไม่แน่ใจ... ช่วยฉันหน่อย!"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Note"
@@ -11607,6 +11601,11 @@ msgid ""
 "and invoices includes this tax."
 msgstr ""
 "แทนที่ค่าเริ่มต้นของบริษัทว่าราคาที่คุณใช้กับผลิตภัณฑ์และใบแจ้งหนี้รวมภาษีนี้แล้วหรือไม่"
+
+#. module: account
+#: model:account.account,name:account.1_owner_current_account
+msgid "Owner's Current Account"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -12808,6 +12807,11 @@ msgstr "ประเภทใบแจ้งหนี้ที่กระทบ
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_ids
 msgid "Reconciled Lines"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_excluding_exchange_diff_ids
+msgid "Reconciled Lines Excluding Exchange Diff"
 msgstr ""
 
 #. module: account
@@ -15650,7 +15654,7 @@ msgstr "โมเดลการกระทบยอดจะถูกนำไ
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line label or transaction details matches the following:\n"
+"The reconciliation model will only be applied when either the statement line label, the transaction details or the note matches the following:\n"
 "        * Contains: The statement line must contains this string (case insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
@@ -16881,12 +16885,6 @@ msgstr "ยกเลิกการผสาน"
 #: model:ir.actions.server,name:account.action_unmerge_accounts
 msgid "Unmerge account"
 msgstr "บัญชีที่ยกเลิกการผสาน"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Unnamed"
-msgstr "ไม่มีชื่อ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

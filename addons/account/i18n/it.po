@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-09 20:35+0000\n"
+"POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -1383,6 +1383,11 @@ msgstr "<span>Avviso: il documento può essere un duplicato di</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Totale parziale</strong>"
 
@@ -1445,11 +1450,6 @@ msgstr "<strong>Data ricevuta</strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Reference</strong>"
 msgstr "<strong>Riferimento</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>Indirizzo di spedizione</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3790,7 +3790,7 @@ msgstr "La percentuale del saldo non può essere pari a 0"
 #. odoo-python
 #: code:addons/account/models/account_journal.py:0
 #: code:addons/account/models/chart_template.py:0
-#: model:account.account,name:account.1_bank_journal_default_account_45
+#: model:account.account,name:account.1_bank_journal_default_account_46
 #: model:account.journal,name:account.1_bank
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_id
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_id
@@ -11400,12 +11400,6 @@ msgid "Not hashed"
 msgstr "No hash"
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2one_tax_tags.js:0
-msgid "Not sure... Help me!"
-msgstr "Non sono sicuro...Aiutami!"
-
-#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Note"
@@ -12030,6 +12024,11 @@ msgid ""
 msgstr ""
 "Sovrascrive l'impostazione predefinita dell'azienda per quanto riguarda "
 "l'inclusione dell'imposta nel prezzo del prodotto e delle fatture."
+
+#. module: account
+#: model:account.account,name:account.1_owner_current_account
+msgid "Owner's Current Account"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13245,6 +13244,11 @@ msgstr "Tipo di fatture riconciliate"
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_ids
 msgid "Reconciled Lines"
 msgstr "Righe riconciliate"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_excluding_exchange_diff_ids
+msgid "Reconciled Lines Excluding Exchange Diff"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -16171,15 +16175,11 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
 msgid ""
-"The reconciliation model will only be applied when either the statement line label or transaction details matches the following:\n"
+"The reconciliation model will only be applied when either the statement line label, the transaction details or the note matches the following:\n"
 "        * Contains: The statement line must contains this string (case insensitive).\n"
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
-"Il modello di riconciliazione verrà applicato solo quando i dettagli dell'etichetta della riga dell'estratto conto o della transazione soddisferanno i seguenti requisiti:\n"
-"        * Contiene: la riga dell'estratto conto deve contenere questa stringa (maiuscole o minuscole).\n"
-"        * Non contiene: negazione di \"Contiene\".\n"
-"        * Corrisponde a espressione regolare: stabilisci un'espressione regolare"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -17439,12 +17439,6 @@ msgstr "Separa"
 #: model:ir.actions.server,name:account.action_unmerge_accounts
 msgid "Unmerge account"
 msgstr "Separa account"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/many2x_tax_tags/many2x_tax_tags.js:0
-msgid "Unnamed"
-msgstr "Senza nome"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
