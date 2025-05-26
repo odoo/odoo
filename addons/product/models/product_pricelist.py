@@ -16,6 +16,15 @@ class ProductPricelist(models.Model):
     def _default_currency_id(self):
         return self.env.company.currency_id.id
 
+    def _base_domain_item_ids(self):
+        return [
+            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
+            '|', ('product_id', '=', None), ('product_id.active', '=', True),
+        ]
+
+    def _domain_item_ids(self):
+        return self._base_domain_item_ids()
+
     name = fields.Char(string="Pricelist Name", required=True, translate=True)
 
     active = fields.Boolean(
@@ -50,11 +59,8 @@ class ProductPricelist(models.Model):
         comodel_name='product.pricelist.item',
         inverse_name='pricelist_id',
         string="Pricelist Rules",
-        domain=[
-            '&',
-            '|', ('product_tmpl_id', '=', None), ('product_tmpl_id.active', '=', True),
-            '|', ('product_id', '=', None), ('product_id.active', '=', True),
-        ],
+        # must be given as lambda for overrides to work
+        domain=lambda self: self._domain_item_ids(),
         copy=True)
 
     @api.depends('currency_id')
@@ -161,8 +167,8 @@ class ProductPricelist(models.Model):
         return self._compute_price_rule(product, *args, compute_price=False, **kwargs)[product.id][1]
 
     def _compute_price_rule(
-            self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
-            **kwargs
+        self, products, quantity, *, currency=None, uom=None, date=False, compute_price=True,
+        **kwargs
     ):
         """ Low-level method - Mono pricelist, multi products
         Returns: dict{product_id: (price, suitable_rule) for the given pricelist}
