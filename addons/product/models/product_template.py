@@ -572,6 +572,50 @@ class ProductTemplate(models.Model):
             domain = combine([domain, [('product_variant_ids', operator, value)]])
         return domain
 
+    def _get_prioritized_product_query(self):
+        return """
+            SELECT product_id, product_tmpl_id, invoice_date
+            FROM(
+                SELECT DISTINCT ON (product.product_tmpl_id)
+                    aml.product_id,
+                    product.product_tmpl_id,
+                    am.invoice_date
+                FROM account_move am
+                JOIN account_move_line aml ON aml.move_id = am.id
+                JOIN product_product product ON product.id = aml.product_id
+                JOIN account_journal journal ON journal.id = am.journal_id
+                WHERE am.partner_id = %s
+                    AND am.state = 'posted'
+                    AND journal.type = %s
+                ORDER BY product.product_tmpl_id
+            ) sub
+            ORDER BY invoice_date DESC;
+        """
+
+    def get_prioritized_product_and_time(self, journal_type='', is_product=False, domain=[], limit=None):
+        partner_id = self.env.context.get('partner_id')
+        query = self.with_context(journal_type=journal_type)._get_prioritized_product_query()
+        self.env.cr.execute(query, (partner_id, journal_type))
+        prioritized_product_and_time = self.env.cr.dictfetchall()
+
+        if not limit:
+            return prioritized_product_and_time
+        prioritized_products_ids = [item['product_id'] if is_product else item['product_tmpl_id'] for item in prioritized_product_and_time[:limit]]
+        if is_product:
+            prioritized_products = self.env['product.product'].browse(prioritized_products_ids)
+            remaining_products = self.env['product.product'].search(
+                [('id', 'not in', prioritized_products.ids)] + domain,
+                limit=limit - len(prioritized_products)
+            )
+        else:
+            prioritized_products = self.browse(prioritized_products_ids)
+            remaining_products = self.search(
+                [('id', 'not in', prioritized_products.ids)] + domain,
+                limit=limit - len(prioritized_products)
+            )
+        products = prioritized_products + remaining_products
+        return products
+
     @api.model
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
         # Only use the product.product heuristics if there is a search term and the domain

@@ -7,6 +7,8 @@ import { Component, onMounted, onPatched, onWillUnmount, useEffect, useRef, useS
 import { registry } from "@web/core/registry";
 import { useProductAndLabelAutoresize } from "@account/core/utils/product_and_label_autoresize";
 import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { useService } from "@web/core/utils/hooks";
+import { formatDuration } from "@web/core/l10n/dates";
 
 class ProductLabelSectionAndNoteFieldAutocomplete extends AutoComplete {
     onInputKeydown(event) {
@@ -43,6 +45,7 @@ export class ProductLabelSectionAndNoteField extends Component {
         super.setup();
         this.isPrintMode = useState({ value: false });
         this.labelVisibility = useState({ value: false });
+        this.orm = useService("orm");
         this.switchToLabel = false;
         this.columnIsProductAndLabel = useState({ value: this.props.record.columnIsProductAndLabel });
         this.labelNode = useRef("labelNodeRef");
@@ -85,6 +88,36 @@ export class ProductLabelSectionAndNoteField extends Component {
             window.removeEventListener("beforeprint", this.onBeforePrint);
             window.removeEventListener("afterprint", this.onAfterPrint);
         });
+
+        this.get_prioritized_product().then((prioritized_product) => {
+            this.prioritized_product = prioritized_product;
+        })
+    }
+
+    async get_prioritized_product() {
+        if (this.props.context.partner_id && this.props.context.move_type == 'out_invoice') {
+            return await this.orm.call(
+                'product.template',
+                'get_prioritized_product_and_time',
+                [{}, 'sale'],
+                {context: {partner_id: this.props.context.partner_id}});
+        }
+        return []
+    }
+
+    computeTime() {
+        if (this.prioritized_product) {
+            const product_data = this.prioritized_product.filter(key => key.product_id == this.autoCompleteItemScope.value)
+            if (product_data.length > 0) {
+                const duration = (new Date() - new Date(product_data[0].invoice_date)) / 1000
+                if ((duration / (24 * 3600)) > 1) {
+                    return formatDuration(duration, false);
+                }
+                return '0d'
+            }
+            return ''
+        }
+        return ''
     }
 
     get productName() {
