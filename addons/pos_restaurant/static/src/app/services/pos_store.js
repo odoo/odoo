@@ -341,7 +341,10 @@ patch(PosStore.prototype, {
         return super.getDefaultSearchDetails();
     },
     async setTable(table, orderUuid = null) {
-        this.deviceSync.readDataFromServer();
+        // Synchronization is already handled in the transfering process
+        if (!this.isOrderTransferMode) {
+            this.deviceSync.readDataFromServer();
+        }
         let currentOrder = table
             .getOrders()
             .find((order) => (orderUuid ? order.uuid === orderUuid : !order.finalized));
@@ -464,8 +467,6 @@ patch(PosStore.prototype, {
         } else if (order) {
             if (!this.isOrderTransferMode) {
                 this.syncAllOrders();
-            } else if (order && this.previousScreen !== "ReceiptScreen") {
-                await this.syncAllOrders({ orders: [order] });
             }
         }
     },
@@ -491,14 +492,19 @@ patch(PosStore.prototype, {
             if (ev.target.closest(".button-floor")) {
                 return;
             }
-            this.isOrderTransferMode = false;
             const tableElement = ev.target.closest(".table");
             if (!tableElement) {
                 return;
             }
             const table = this.getTableFromElement(tableElement);
-            await this.transferOrder(orderUuid, table);
-            this.setTableFromUi(table);
+
+            try {
+                await this.transferOrder(orderUuid, table);
+                this.setTableFromUi(table);
+            } finally {
+                this.isOrderTransferMode = false;
+            }
+
             document.removeEventListener("click", onClickWhileTransfer);
         };
         document.addEventListener("click", onClickWhileTransfer);
@@ -530,13 +536,18 @@ patch(PosStore.prototype, {
 
         if (destinationTable) {
             if (!this.prepareOrderTransfer(sourceOrder, destinationTable)) {
+                // If there is no active order on the destination table, we can set the
+                // table directly, the method prepareOrderTransfer check if the table
+                // has orders or not.
+                sourceOrder.table_id = destinationTable;
+                await this.syncAllOrders({ orders: [sourceOrder] });
                 return;
             }
             destinationOrder = this.getActiveOrdersOnTable(destinationTable.rootTable)[0];
         }
         await this.mergeOrders(sourceOrder, destinationOrder);
         if (destinationTable) {
-            await this.setTable(destinationTable);
+            await this.setTable(destinationTable, null);
         }
     },
     async mergeTableOrders(orderUuid, destinationTable) {
