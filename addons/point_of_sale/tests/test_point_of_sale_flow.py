@@ -1897,6 +1897,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Branch 1',
             'parent_id': self.env.company.id,
             'chart_template': self.env.company.chart_template,
+            'country_id': self.env.company.country_id.id,
         })
 
         self.env.cr.precommit.run()
