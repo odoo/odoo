@@ -62,6 +62,14 @@ class ProductProduct(models.Model):
 
     pricelist_item_count = fields.Integer("Number of price rules", compute="_compute_variant_item_count")
 
+    pricelist_rule_ids = fields.One2many(
+        string="Pricelist Rules",
+        comodel_name='product.pricelist.item',
+        inverse_name='product_id',
+        compute='_compute_pricelist_rule_ids',
+        readonly=False,
+    )
+
     product_document_ids = fields.One2many(
         string="Documents",
         comodel_name='product.document',
@@ -131,6 +139,16 @@ class ProductProduct(models.Model):
                 record.product_tmpl_id[template_field] = record[template_field]
             else:
                 record[variant_field] = record[template_field]
+
+    @api.depends('product_tmpl_id')
+    def _compute_pricelist_rule_ids(self):
+        for product in self:
+            if not product.id:
+                product.pricelist_rule_ids = False
+                continue
+            product.pricelist_rule_ids = product.product_tmpl_id.pricelist_rule_ids.filtered(
+                lambda rule: not rule.product_id or rule.product_id == product.id
+            )
 
     @api.depends("product_tmpl_id.write_date")
     def _compute_write_date(self):
@@ -669,28 +687,6 @@ class ProductProduct(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('product.action_open_label_layout')
         action['context'] = {'default_product_ids': self.ids}
         return action
-
-    def open_pricelist_rules(self):
-        self.ensure_one()
-        domain = ['|',
-            '&', ('product_tmpl_id', '=', self.product_tmpl_id.id), ('applied_on', '=', '1_product'),
-            '&', ('product_id', '=', self.id), ('applied_on', '=', '0_product_variant'),
-            ('compute_price', '=', 'fixed'),
-        ]
-        return {
-            'name': _('Price Rules'),
-            'view_mode': 'list,form',
-            'views': [(self.env.ref('product.product_pricelist_item_tree_view_from_product').id, 'list')],
-            'res_model': 'product.pricelist.item',
-            'type': 'ir.actions.act_window',
-            'target': 'current',
-            'domain': domain,
-            'context': {
-                'default_product_id': self.id,
-                'default_applied_on': '0_product_variant',
-                'search_default_visible': True,
-            }
-        }
 
     def open_product_template(self):
         """ Utility method used to add an "Open Template" button in product views """
