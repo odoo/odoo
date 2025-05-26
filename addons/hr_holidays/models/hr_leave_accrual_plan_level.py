@@ -37,7 +37,7 @@ class HrLeaveAccrualLevel(models.Model):
     added_value_type = fields.Selection([
         ('day', 'Days'),
         ('hour', 'Hours')
-    ], compute="_compute_added_value_type", store=True, required=True, readonly=False, default="day")
+    ], compute="_compute_added_value_type", precompute=True, store=True, required=True, readonly=False)
     frequency = fields.Selection([
         ('hourly', 'Hourly'),
         ('daily', 'Daily'),
@@ -177,6 +177,8 @@ class HrLeaveAccrualLevel(models.Model):
                 level.added_value_type = "day" if level.accrual_plan_id.time_off_type_id.request_unit in ["day", "half_day"] else "hour"
             elif level.accrual_plan_id.level_ids and level.accrual_plan_id.level_ids[0] != level:
                 level.added_value_type = level.accrual_plan_id.level_ids[0].added_value_type
+            elif not level.added_value_type:
+                level.added_value_type = "day"  # default value
 
     def _set_day(self, day_field, month_field):
         for level in self:
