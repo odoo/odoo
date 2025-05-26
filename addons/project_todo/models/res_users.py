@@ -45,12 +45,12 @@ class ResUsers(models.Model):
             is_task = activity['is_task']
             if is_task not in user_activities:
                 if not is_task:
-                    module = 'project_todo'
+                    module_name = 'project_todo'
                     name = _('To-Do')
                 else:
-                    module = 'project'
+                    module_name = 'project'
                     name = _('Task')
-                icon = modules.module.get_module_icon(module)
+                icon = modules.Manifest.for_addon(module_name).icon
                 user_activities[is_task] = {
                     'id': self.env['ir.model']._get('project.task').id,
                     'name': name,

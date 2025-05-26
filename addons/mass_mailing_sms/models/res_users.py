@@ -36,17 +36,17 @@ class ResUsers(models.Model):
                     'user_id': self.env.uid,
                 })
                 activity_data = self.env.cr.dictfetchall()
-                
+
                 user_activities = {}
                 for act in activity_data:
                     if not user_activities.get(act['mailing_type']):
                         if act['mailing_type'] == 'sms':
-                            module = 'mass_mailing_sms'
+                            module_name = 'mass_mailing_sms'
                             name = _('SMS Marketing')
                         else:
-                            module = 'mass_mailing'
+                            module_name = 'mass_mailing'
                             name = _('Email Marketing')
-                        icon = module and modules.module.get_module_icon(module)
+                        icon = modules.Manifest.for_addon(module_name).icon
                         res_ids = set()
                         user_activities[act['mailing_type']] = {
                             'id': self.env['ir.model']._get('mailing.mailing').id,
