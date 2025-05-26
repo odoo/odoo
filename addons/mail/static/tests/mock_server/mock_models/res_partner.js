@@ -270,6 +270,7 @@ export class ResPartner extends webModels.ResPartner {
             }
             if (fields.includes("im_status")) {
                 data.im_status = this.compute_im_status(partner);
+                data.im_status_access_token = partner.id;
             }
             if (fields.includes("user")) {
                 const users = ResUsers.browse(partner.user_ids);

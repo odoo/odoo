@@ -1,10 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import re
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from odoo import models
 from odoo.fields import Domain
 from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.tools.misc import verify_limited_field_access_token
+
+PRESENCE_CHANNEL_PREFIX = "odoo-presence-"
+PRESENCE_CHANNEL_REGEX = re.compile(
+    rf"{PRESENCE_CHANNEL_PREFIX}"
+    r"(?P<model>res\.partner|mail\.guest)_(?P<record_id>\d+)"
+    r"(?:-(?P<token>[a-f0-9]{64}o0x[a-f0-9]+))?$"
+)
+_logger = logging.getLogger(__name__)
 
 
 class IrWebsocket(models.AbstractModel):
@@ -31,23 +43,21 @@ class IrWebsocket(models.AbstractModel):
             self.env.user if partner else guest, inactivity_period
         )
 
-    def _filter_accessible_presences(self, partners, guests):
-        """Filter presences that are accessible to current user."""
-        if self.env.user and self.env.user._is_internal():
-            return partners, guests
-        return self.env["res.partner"], self.env["mail.guest"]
-
     def _prepare_subscribe_data(self, channels, last):
         data = super()._prepare_subscribe_data(channels, last)
-        str_presence_channels = {
-            c for c in channels if isinstance(c, str) and c.startswith("odoo-presence-")
-        }
-        simplified_presence_channels = [
-            tuple(c.replace("odoo-presence-", "").split("_")) for c in str_presence_channels
-        ]
-        for channel in str_presence_channels:
+        model_ids_to_token = defaultdict(dict)
+        for channel in channels:
+            if not isinstance(channel, str) or not channel.startswith(PRESENCE_CHANNEL_PREFIX):
+                continue
             data["channels"].discard(channel)
-        partner_ids = [int(p[1]) for p in simplified_presence_channels if p[0] == "res.partner"]
+            if not (match := re.match(PRESENCE_CHANNEL_REGEX, channel)):
+                _logger.warning("Malformed presence channel: %s", channel)
+                continue
+            model, record_id, token = match.groups()
+            model_ids_to_token[model][int(record_id)] = token or ""
+        # sudo - res.partner, mail.guest: can access presence targets to decide whether
+        # the current user is allowed to read it or not.
+        partner_ids = model_ids_to_token["res.partner"].keys()
         partners = (
             self.env["res.partner"]
             .with_context(active_test=False)
@@ -55,9 +65,20 @@ class IrWebsocket(models.AbstractModel):
             .search([("id", "in", partner_ids)])
             .sudo(False)
         )
-        guest_ids = [int(p[1]) for p in simplified_presence_channels if p[0] == "mail.guest"]
+        allowed_partners = partners.filtered(
+            lambda p: verify_limited_field_access_token(
+                p, "im_status", model_ids_to_token["res.partner"][p.id], scope="mail.presence"
+            )
+            or p.has_access("read")
+        )
+        guest_ids = model_ids_to_token["mail.guest"].keys()
         guests = self.env["mail.guest"].sudo().search([("id", "in", guest_ids)]).sudo(False)
-        allowed_partners, allowed_guests = self._filter_accessible_presences(partners, guests)
+        allowed_guests = guests.filtered(
+            lambda g: verify_limited_field_access_token(
+                g, "im_status", model_ids_to_token["mail.guest"][g.id], scope="mail.presence"
+            )
+            or g.has_access("read")
+        )
         data["channels"].update((partner, "presence") for partner in allowed_partners)
         data["channels"].update((guest, "presence") for guest in allowed_guests)
         # There is a gap between a subscription client side (which is debounced)
@@ -71,7 +92,7 @@ class IrWebsocket(models.AbstractModel):
             )
             | Domain("guest_id", "in", allowed_guests.ids)
         )
-        # sudo: mail.presence: access to presence was validated with _filter_accessible_presences
+        # sudo: mail.presence: access to presence was validated with access token.
         data["missed_presences"] = self.env["mail.presence"].sudo().search(presence_domain)
         return data
 
@@ -87,5 +108,5 @@ class IrWebsocket(models.AbstractModel):
             self.env.user.sudo().presence_ids.status = "offline"
         token = cookies.get(self.env["mail.guest"]._cookie_name, "")
         if guest := self.env["mail.guest"]._get_guest_from_token(token):
-        # sudo: mail.presence - guest can update their own presence
+            # sudo: mail.presence - guest can update their own presence
             guest.sudo().presence_ids.status = "offline"
