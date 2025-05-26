@@ -359,7 +359,7 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_lead" name="Leads / Opps" inherit_id="portal.portal_my_home" priority="15">
+    <template id="portal_my_home_lead" name="Leads / Opps" customize_show="True" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
             <t t-set="portal_vendor_category_enable" t-value="True"/>
         </xpath>
