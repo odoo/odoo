@@ -74,7 +74,9 @@ export const datetimePickerService = {
                         if (!allowOnClose) {
                             return;
                         }
-                        updateValueFromInputs();
+                        if (inputsChanged.some(Boolean)) {
+                            updateValueFromInputs();
+                        }
                         apply();
                         setFocusClass(null);
                         if (restoreTargetMargin) {

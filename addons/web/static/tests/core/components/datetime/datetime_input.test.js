@@ -309,7 +309,7 @@ describe("DateTimeInput (datetime)", () => {
         await editTime("15:45");
 
         expect(".o_datetime_input").toHaveValue("08/02/1997 15:45");
-        expect.verifySteps(["1997-02-08 12:30:01", "1997-02-08 15:45:01"]);
+        expect.verifySteps(["1997-02-08 12:30:00", "1997-02-08 15:45:00"]);
     });
 
     test("pick a date and time with locale", async () => {
@@ -336,7 +336,7 @@ describe("DateTimeInput (datetime)", () => {
         await editTime("15:45");
 
         expect(".o_datetime_input").toHaveValue("01 sept., 1997 15:45");
-        expect.verifySteps(["1997-09-01 12:30:01", "1997-09-01 15:45:01"]);
+        expect.verifySteps(["1997-09-01 12:30:00", "1997-09-01 15:45:00"]);
     });
 
     test("pick a time with 12 hour format without meridiem", async () => {
@@ -421,7 +421,7 @@ describe("DateTimeInput (datetime)", () => {
     });
 
     test("Datepicker works with norwegian locale", async () => {
-        expect.assertions(5);
+        expect.assertions(6);
 
         await changeLang("nb");
 
@@ -445,6 +445,7 @@ describe("DateTimeInput (datetime)", () => {
         await contains(".o_datetime_input").click();
 
         expect(".o_datetime_input").toHaveValue("09 apr., 1997");
+        expect.verifySteps([]);
 
         await contains(getPickerCell("1")).click();
         expect(".o_datetime_input").toHaveValue("01 apr., 1997");
