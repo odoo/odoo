@@ -1,7 +1,7 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { click, fill, queryOne } from "@odoo/hoot-dom";
+import { clear, click, fill, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, Deferred } from "@odoo/hoot-mock";
 
 import { onRpc } from "@web/../tests/web_test_helpers";
@@ -82,6 +82,87 @@ const formTemplate = /* html */ `
                                 </label>
                                 <div class="col-sm">
                                     <input type="hidden" class="form-control s_website_form_input o_translatable_attribute" name="email_to" value="info@yourcompany.example.com"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
+                            <div style="width: 200px;" class="s_website_form_label"></div>
+                            <span id="s_website_form_result"></span>
+                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+`;
+
+const formWithVisibilityRulesTemplate = /* html */ `
+    <div id="wrapwrap">
+        <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+                <form action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-pre-fill="true" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                    <div class="s_website_form_rows row s_col_no_bgcolor">
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_dnone">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px">
+                                    <span class="s_website_form_label_content"></span>
+                                </label>
+                                <div class="col-sm">
+                                    <input type="hidden" class="form-control s_website_form_input o_translatable_attribute" name="email_to" value="info@yourcompany.example.com">
+                                    <input type="hidden" value="1239f1d1c0d16680501b9974762f153fa21f4fb29aeb982c9b888f22d49cb56e" class="form-control s_website_form_input s_website_form_custom o_translatable_attribute" name="website_form_signature">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="email">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oub62hlfgjwf">
+                                    <span class="s_website_form_label_content">Your Email</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_model_required" data-type="char">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oqsf4m51acj">
+                                    <span class="s_website_form_label_content">Subject</span>
+                                    <span class="s_website_form_mark"> *</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="subject" required="" id="oqsf4m51acj">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="char">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="oea48nwznnp">
+                                    <span class="s_website_form_label_content">FieldA</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="FieldA" id="oea48nwznnp">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldA" data-visibility-comparator="equal" data-visibility-condition="foo">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="o42sfafdr6r9">
+                                    <span class="s_website_form_label_content">FieldB</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="FieldB" id="o42sfafdr6r9" disabled="disabled">
+                                </div>
+                            </div>
+                        </div>
+                        <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom s_website_form_field_hidden_if d-none" data-type="char" data-visibility-dependency="FieldB" data-visibility-comparator="equal" data-visibility-condition="foo">
+                            <div class="row s_col_no_resize s_col_no_bgcolor">
+                                <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="onhykjagdxb">
+                                    <span class="s_website_form_label_content">FieldC</span>
+                                </label>
+                                <div class="col-sm">
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="FieldC" id="onhykjagdxb" disabled="disabled">
                                 </div>
                             </div>
                         </div>
@@ -344,4 +425,33 @@ test("form prefilled conditional", async () => {
     expect(core.interactions).toHaveLength(1);
     expect(queryOne("form input[name=name]")).toHaveValue("Mitchell Admin");
     expect(queryOne("form input[name=phone]")).toHaveValue("+1-555-5555");
+});
+
+test("form elements chained conditional visibility", async () => {
+    await startInteractions(formWithVisibilityRulesTemplate);
+    const fieldA = queryOne("input[name=FieldA]");
+    const fieldB = queryOne("input[name=FieldB]");
+    const fieldC = queryOne("input[name=FieldC]");
+    checkField(fieldB, false, false);
+    checkField(fieldC, false, false);
+    await click(fieldA);
+    await fill("foo");
+    await advanceTime(400); // Debounce delay.
+    checkField(fieldB, true, false);
+    checkField(fieldC, false, false);
+    await click(fieldB);
+    await fill("foo");
+    await advanceTime(400); // Debounce delay.
+    checkField(fieldB, true, false);
+    checkField(fieldC, true, false);
+    await click(fieldA);
+    await clear();
+    await advanceTime(400); // Debounce delay.
+    checkField(fieldB, false, false);
+    checkField(fieldC, false, false);
+    await click(fieldA);
+    await fill("foo");
+    await advanceTime(400); // Debounce delay.
+    checkField(fieldB, true, false);
+    checkField(fieldC, true, false);
 });
