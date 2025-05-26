@@ -22,6 +22,9 @@ import { getVisibleElements } from "../utils/ui";
  *  provides the element on which the overlay should be displayed
  *  Please note that if provided the hotkey will only work with
  *  the overlay access key, similarly to all [data-hotkey] DOM attributes.
+ * @property {boolean} [rawModifiers]
+ *  When true, modifier keys are interpreted directly from the event
+ *  (Alt is always Alt, Ctrl is always Ctrl)
  *
  * @typedef {HotkeyOptions & {
  *  hotkey: string,
@@ -47,7 +50,7 @@ const NAV_KEYS = [
     "space",
 ];
 const MODIFIERS = ["alt", "control", "shift"];
-const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape"];
+const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape", "alt"];
 
 /**
  * Get the actual hotkey being pressed.
@@ -55,7 +58,7 @@ const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape"];
  * @param {KeyboardEvent} ev
  * @returns {string} the active hotkey, in lowercase
  */
-export function getActiveHotkey(ev) {
+export function getActiveHotkey(ev, useNativeModifiers = false) {
     if (!ev.key) {
         // Chrome may trigger incomplete keydown events under certain circumstances.
         // E.g. when using browser built-in autocomplete on an input.
@@ -70,11 +73,22 @@ export function getActiveHotkey(ev) {
 
     // ------- Modifiers -------
     // Modifiers are pushed in ascending order to the hotkey.
-    if (isMacOS() ? ev.ctrlKey : ev.altKey) {
-        hotkey.push("alt");
-    }
-    if (isMacOS() ? ev.metaKey : ev.ctrlKey) {
-        hotkey.push("control");
+    if (useNativeModifiers) {
+        // Raw modifiers - platform independent
+        if (ev.altKey) {
+            hotkey.push("alt");
+        }
+        if (ev.ctrlKey || (isMacOS() && ev.metaKey)) {
+            hotkey.push("control");
+        }
+    } else {
+        // Platform-specific modifiers
+        if (isMacOS() ? ev.ctrlKey : ev.altKey) {
+            hotkey.push("alt");
+        }
+        if (isMacOS() ? ev.metaKey : ev.ctrlKey) {
+            hotkey.push("control");
+        }
     }
     if (ev.shiftKey) {
         hotkey.push("shift");
@@ -108,7 +122,7 @@ export const hotkeyService = {
     dependencies: ["ui"],
     // Be aware that all odoo hotkeys are designed with this modifier in mind,
     // so changing the overlay modifier may conflict with some shortcuts.
-    overlayModifier: "alt",
+    overlayModifier: "control",
     start(env, { ui }) {
         /** @type {Map<number, HotkeyRegistration>} */
         const registrations = new Map();
@@ -142,7 +156,8 @@ export const hotkeyService = {
             }
 
             const hotkey = getActiveHotkey(event);
-            if (!hotkey) {
+            const rawHotkey = getActiveHotkey(event, true);
+            if (!hotkey && !rawHotkey) {
                 return;
             }
             const { activeElement, isBlocked } = ui;
@@ -163,8 +178,8 @@ export const hotkeyService = {
                 }
             }
 
-            // Special case: open hotkey overlays
-            if (!overlaysVisible && hotkey === hotkeyService.overlayModifier) {
+            if (!overlaysVisible && rawHotkey === (isMacOS() ? "control" : "alt")) {
+                // Special case: open hotkey overlays
                 addHotkeyOverlays(activeElement);
                 event.preventDefault();
                 return;
@@ -172,7 +187,8 @@ export const hotkeyService = {
 
             // Is the pressed key NOT whitelisted ?
             const singleKey = hotkey.split("+").pop();
-            if (!AUTHORIZED_KEYS.includes(singleKey)) {
+            const singleRawKey = rawHotkey.split("+").pop();
+            if (!AUTHORIZED_KEYS.includes(singleKey) || !AUTHORIZED_KEYS.includes(singleRawKey)) {
                 return;
             }
 
@@ -192,6 +208,7 @@ export const hotkeyService = {
                 isRepeated: event.repeat,
                 target: event.target,
                 shouldProtectEditable,
+                rawHotkey,
             };
             const dispatched = dispatch(infos);
             if (dispatched) {
@@ -222,11 +239,13 @@ export const hotkeyService = {
          *  isRepeated: boolean,
          *  target: EventTarget,
          *  shouldProtectEditable: boolean,
+         *  rawHotkey: string,
          * }} infos
          * @returns {boolean} true if has been dispatched
          */
         function dispatch(infos) {
-            const { activeElement, hotkey, isRepeated, target, shouldProtectEditable } = infos;
+            const { activeElement, hotkey, isRepeated, target, shouldProtectEditable, rawHotkey } =
+                infos;
 
             // Prepare registrations and the common filter
             const reversedRegistrations = Array.from(registrations.values()).reverse();
@@ -236,7 +255,7 @@ export const hotkeyService = {
             // Find all candidates
             const candidates = allRegistrations.filter(
                 (reg) =>
-                    reg.hotkey === hotkey &&
+                    (reg.rawModifiers ? reg.hotkey === rawHotkey : reg.hotkey === hotkey) &&
                     (reg.allowRepeat || !isRepeated) &&
                     (reg.bypassEditableProtection || !shouldProtectEditable) &&
                     (reg.global || reg.activeElement === activeElement) &&
@@ -433,6 +452,7 @@ export const hotkeyService = {
                 area: options && options.area,
                 isAvailable: options && options.isAvailable,
                 withOverlay: options && options.withOverlay,
+                rawModifiers: options && options.rawModifiers,
             };
 
             // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
