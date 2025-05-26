@@ -102,6 +102,7 @@ class TestWebsiteSaleShopRedirects(HttpCase, WebsiteSaleCommon):
         # Add a different published product to category so that it is accessible to public users
         self.env['product.template'].create({
             'name': 'Test Product',
+            'is_published': True,
             'public_categ_ids': [
                 Command.link(category.id),
             ],
