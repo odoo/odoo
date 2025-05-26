@@ -2691,6 +2691,9 @@
 <template id="robots">
 <t t-translation="off">
 User-agent: *
+<t t-foreach="allowed_routes" t-as="allowed_route">
+Allow: <t t-out="allowed_route"/>
+</t>
 <t t-if="website.domain and not website._is_indexable_url(url_root)">
 Disallow: /
 Sitemap: <t t-esc="website.domain"/>/sitemap.xml

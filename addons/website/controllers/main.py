@@ -231,7 +231,10 @@ class Website(Home):
         # Don't use `request.website.domain` here, the template is in charge of
         # detecting if the current URL is the domain one and add a `Disallow: /`
         # if it's not the case to prevent the crawler to continue.
-        return request.render('website.robots', {'url_root': request.httprequest.url_root}, mimetype='text/plain')
+        return request.render('website.robots', {
+            'allowed_routes': self._get_allowed_robots_routes(),
+            'url_root': request.httprequest.url_root,
+        }, mimetype='text/plain')
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
