@@ -2,6 +2,7 @@
 
 from datetime import timedelta
 from itertools import chain, starmap, zip_longest
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -189,3 +190,23 @@ class SaleOrder(models.Model):
     def _can_be_edited_on_portal(self):
         self.ensure_one()
         return self.state in ('draft', 'sent')
+
+    def write(self, vals):
+        """
+        Override to set a warning activity if the customer (partner_id) is changed
+        on a quotation in 'sent' state.
+        """
+        if 'partner_id' in vals:
+            if sent_orders := self.filtered(lambda so: so.state == 'sent'):
+                sent_orders.activity_schedule(
+                    activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
+                    user_id=self.user_id.id,
+                    date_deadline=fields.Date.today(),
+                    summary=_("Urgent: Customer change in sent quotation"),
+                    note=_(
+                        "The customer was changed while the order was in 'Quotation Sent' state. "
+                        "Please review and contact the customer to confirm the changes."
+                    )
+                )
+
+        return super().write(vals)
