@@ -580,7 +580,10 @@ export class DateTimePicker extends Component {
 
         if (this.props.type === "datetime") {
             // Adjusts result according to the current time values
-            const { hour, minute, second } = this.state.timeValues[valueIndex];
+            let { hour, minute, second } = this.state.timeValues[valueIndex];
+            if (this.props.rounding !== 0) {
+                second = 0;
+            }
             result[valueIndex] = result[valueIndex].set({ hour, minute, second });
         }
         if (!isInRange(result[valueIndex], [this.minDate, this.maxDate])) {
