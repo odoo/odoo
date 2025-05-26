@@ -3,7 +3,7 @@ import { useRef } from "@odoo/owl";
 import { getShapeURL } from "../image/image_helpers";
 
 export class ShapeSelector extends BaseOptionComponent {
-    static template = "html_builder.shapeSelector";
+    static template = "website.shapeSelector";
     static props = {
         onClose: Function,
         shapeGroups: Object,

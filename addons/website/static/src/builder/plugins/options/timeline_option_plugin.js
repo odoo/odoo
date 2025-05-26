@@ -19,15 +19,15 @@ class TimelineOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(TIMELINE, {
-                template: "html_builder.TimelineOption",
+                template: "website.TimelineOption",
                 selector: ".s_timeline",
             }),
             withSequence(DOT_LINES_COLOR, {
-                template: "html_builder.DotLinesColorOption",
+                template: "website.DotLinesColorOption",
                 selector: ".s_timeline",
             }),
             withSequence(DOT_COLOR, {
-                template: "html_builder.DotColorOption",
+                template: "website.DotColorOption",
                 selector: ".s_timeline .s_timeline_row",
             }),
         ],

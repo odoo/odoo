@@ -9,7 +9,7 @@ class FaqHorizontalOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(BEGIN, {
-                template: "html_builder.FaqHorizontalOption",
+                template: "website.FaqHorizontalOption",
                 selector: ".s_faq_horizontal",
             }),
         ],

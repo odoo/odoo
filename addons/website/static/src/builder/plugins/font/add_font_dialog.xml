@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.website.dialog.addFont.singlePreview">
+<t t-name="website.dialog.addFont.singlePreview">
     <div class="row">
         <label class="col-12" t-attf-style="font-weight: {{previewWeight}};" t-out="previewLabel"/>
     </div>
@@ -12,27 +12,27 @@
         </div>
     </div>
 </t>
-<t t-name="html_builder.website.dialog.addFont.preview">
+<t t-name="website.dialog.addFont.preview">
     <div class="mb-3 row text-center">
         <label class="col-12">
             <t t-if="previewFontName">Preview of <t t-out="previewFontName"/></t>
             <t t-else="">Preview</t>
         </label>
     </div>
-    <t t-call="html_builder.website.dialog.addFont.singlePreview">
+    <t t-call="website.dialog.addFont.singlePreview">
         <t t-set="previewLabel">Light</t>
         <t t-set="previewWeight">300</t>
     </t>
-    <t t-call="html_builder.website.dialog.addFont.singlePreview">
+    <t t-call="website.dialog.addFont.singlePreview">
         <t t-set="previewLabel">Regular</t>
         <t t-set="previewWeight">400</t>
     </t>
-    <t t-call="html_builder.website.dialog.addFont.singlePreview">
+    <t t-call="website.dialog.addFont.singlePreview">
         <t t-set="previewLabel">Bold</t>
         <t t-set="previewWeight">700</t>
     </t>
 </t>
-<t t-name="html_builder.website.dialog.addFont">
+<t t-name="website.dialog.addFont">
     <Dialog title.translate="Add a Google font or upload a custom font" size="'xl'">
         <div class="row">
             <div class="col-lg-7">
@@ -76,7 +76,7 @@
             </div>
             <div class="col-lg-5" style="border-left: var(--gray-300) solid 1px;">
                 <!-- Preview -->
-                <t t-call="html_builder.website.dialog.addFont.preview">
+                <t t-call="website.dialog.addFont.preview">
                     <t t-if="state.googleFontFamily">
                         <t t-set="previewFontName" t-value="state.googleFontFamily"/>
                     </t>

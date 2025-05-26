@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.ThemeTab">
+<t t-name="website.ThemeTab">
     <div class="o_theme_tab h-100">
         <div t-ref="content" class="d-flex flex-column h-100">
             <t t-foreach="optionsContainers" t-as="optionsContainer" t-key="optionsContainer.id">
@@ -19,7 +19,7 @@
         </div>
     </div>
 </t>
-<t t-name="html_builder.ThemeWebsiteSettingsOption">
+<t t-name="website.ThemeWebsiteSettingsOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Theme">
             <BuilderButton action="'switchTheme'" className="'o_we_bg_brand_primary'">Switch Theme</BuilderButton>
@@ -50,7 +50,7 @@
     </BuilderContext>
 </t>
 
-<t t-name="html_builder.ThemeParagraphOption">
+<t t-name="website.ThemeParagraphOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Font Size">
             <BuilderNumberInput action="'customizeWebsiteVariable'" actionParam="'font-size-base'" unit="'px'" saveUnit="'rem'"/>
@@ -74,7 +74,7 @@
     </BuilderContext>
 </t>
 
-<t t-name="html_builder.ThemeHeadingsOption">
+<t t-name="website.ThemeHeadingsOption">
     <BuilderContext preview="false">
         <t t-set="heading_label">Heading</t>
         <t t-set="display_label">Display</t>
@@ -162,7 +162,7 @@
     </BuilderContext>
 </t>
 
-<t t-name="html_builder.ThemeButtonOption">
+<t t-name="website.ThemeButtonOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Primary Style">
             <BuilderSelect action="'customizeButtonStyle'" actionParam="'primary'">
@@ -246,7 +246,7 @@
     </BuilderContext>
 </t>
 
-<t t-name="html_builder.ThemeLinkOption">
+<t t-name="website.ThemeLinkOption">
     <BuilderContext preview="false">
         <BuilderRow label.translate="Link Style">
             <BuilderSelect action="'customizeWebsiteVariable'" actionParam="'link-underline'">
@@ -258,7 +258,7 @@
     </BuilderContext>
 </t>
 
-<t t-name="html_builder.ThemeInputOption">
+<t t-name="website.ThemeInputOption">
     <BuilderContext preview="false">
                 <BuilderRow label.translate="Padding" action="'customizeWebsiteVariable'">
             <BuilderNumberInput title.translate="Y" actionParam="'input-padding-y'" unit="'px'" saveUnit="'rem'"/>

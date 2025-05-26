@@ -9,7 +9,7 @@ class FontAwesomeOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(FONT_AWESOME, {
-                template: "html_builder.FontAwesomeOption",
+                template: "website.FontAwesomeOption",
                 selector: "span.fa, i.fa",
                 exclude: "[data-oe-xpath]",
             }),

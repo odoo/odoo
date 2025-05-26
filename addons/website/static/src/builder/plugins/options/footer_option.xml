@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.FooterTemplateOption">
+<t t-name="website.FooterTemplateOption">
     <BuilderRow label.translate="Template">
         <BuilderSelect action="'websiteConfigFooter'">
             <BuilderSelectItem title.translate="Default"
@@ -48,7 +48,7 @@
     </BuilderRow>
 </t>
 
-<t t-name="html_builder.FooterWidthOption">
+<t t-name="website.FooterWidthOption">
     <BuilderRow label.translate="Content width">
         <BuilderButtonGroup action="'websiteConfig'">
             <BuilderButton classAction="'o_container_small'" actionParam="{ views: ['website.footer_copyright_content_width_small'] }">
@@ -103,12 +103,12 @@
     </BuilderRow>
 </t>
 
-<t t-name="html_builder.FooterBorder">
+<t t-name="website.FooterBorder">
     <BorderConfigurator label.translate="Border"/>
     <ShadowOption/>
 </t>
 
-<t t-name="html_builder.FooterScrollToTopOption">
+<t t-name="website.FooterScrollToTopOption">
     <BuilderRow label.translate="Scroll Top Button">
         <BuilderCheckbox id="'footer_scrolltop_opt'" action="'websiteConfig'" actionParam="{
             views: ['website.option_footer_scrolltop'],

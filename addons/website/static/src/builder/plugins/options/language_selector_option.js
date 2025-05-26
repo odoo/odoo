@@ -11,7 +11,7 @@ class LanguageSelectorOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(LANGUAGE_SELECTOR, {
-                template: "html_builder.LanguageSelectorOption",
+                template: "website.LanguageSelectorOption",
                 editableOnly: false,
                 selector: "#wrapwrap > header nav.navbar .o_header_language_selector",
                 groups: ["website.group_website_designer"],

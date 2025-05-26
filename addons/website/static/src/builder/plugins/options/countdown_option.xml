@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.CountdownOption">
+<t t-name="website.CountdownOption">
     <BuilderContext action="'reloadCountdown'"> <!-- TODO AGAU: remove after merging generalized restart interactions -->
     <BuilderRow label.translate="Due Date">
         <BuilderDateTimePicker dataAttributeAction="'endTime'"/>
@@ -89,7 +89,7 @@
     </BuilderContext>
 </t>
 
-<t t-name="html_builder.website.s_countdown.end_message">
+<t t-name="website.s_countdown.end_message">
     <div class="s_countdown_end_message d-none">
         <div class="oe_structure">
             <section class="s_picture pt64 pb64" data-snippet="s_picture">

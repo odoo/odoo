@@ -1,7 +1,7 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class CardImageAlignmentOption extends BaseOptionComponent {
-    static template = "html_builder.CardImageAlignmentOption";
+    static template = "website.CardImageAlignmentOption";
     static props = {
         label: { type: String },
         level: { type: Number, optional: true },

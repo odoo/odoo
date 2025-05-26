@@ -9,7 +9,7 @@ export class GalleryElementOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC, {
-                template: "html_builder.GalleryElementOption",
+                template: "website.GalleryElementOption",
                 selector:
                     ".s_image_gallery img, .s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
             }),

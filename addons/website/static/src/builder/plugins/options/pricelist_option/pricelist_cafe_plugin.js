@@ -32,7 +32,7 @@ class PriceListCafePlugin extends Plugin {
                 },
             }),
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.PriceListCafeDescriptionOption",
+                template: "website.PriceListCafeDescriptionOption",
                 selector: ".s_pricelist_cafe",
             }),
         ],

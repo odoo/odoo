@@ -3,7 +3,7 @@ import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/ed
 import { useService } from "@web/core/utils/hooks";
 
 export class ThemeAdvancedOption extends BaseOptionComponent {
-    static template = "html_builder.ThemeAdvancedOption";
+    static template = "website.ThemeAdvancedOption";
     static props = {
         grays: Object,
         configureGMapsAPI: Function,

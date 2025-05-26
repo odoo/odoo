@@ -9,7 +9,7 @@ class SizeOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(after(BLOCK_ALIGN), {
-                template: "html_builder.SizeOption",
+                template: "website.SizeOption",
                 selector: ".s_alert",
             }),
         ],

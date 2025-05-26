@@ -8,7 +8,7 @@ class BlockAlignmentOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(BLOCK_ALIGN, {
-                template: "html_builder.BlockAlignmentOption",
+                template: "website.BlockAlignmentOption",
                 selector: ".s_alert, .s_blockquote, .s_text_highlight",
             }),
         ],

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.LayoutOption">
+<t t-name="website.LayoutOption">
     <BuilderRow label.translate="Layout">
        <BuilderButtonGroup preview="false">
             <BuilderButton action="'setGridLayout'" id="'grid_mode'">Grid</BuilderButton>
@@ -15,12 +15,12 @@
     </t>
 </t>
 
-<t t-name="html_builder.LayoutGridOption">
+<t t-name="website.LayoutGridOption">
     <AddElementOption applyTo="'.o_grid_mode'"/>
     <SpacingOption applyTo="'.o_grid_mode'"/>
 </t>
 
-<t t-name="html_builder.LayoutColumnOption">
+<t t-name="website.LayoutColumnOption">
     <BuilderRow label.translate="Columns">
         <SelectNumberColumn/>
     </BuilderRow>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.website.s_website_form_form_option">
+<t t-name="website.s_website_form_form_option">
     <BuilderRow t-if="!modelCantChange and models"
             label.translate="Action" preview="false">
         <BuilderSelect>
@@ -44,7 +44,7 @@
     </BuilderRow>
 </t>
 
-<t t-name="html_builder.website.s_website_form_form_action_fields_option">
+<t t-name="website.s_website_form_form_action_fields_option">
     <t t-if="state.formInfo.fields">
         <t t-foreach="state.formInfo.fields" t-as="field" t-key="field.name">
             <BuilderRow t-if="field.type === 'many2one'" label="field.string" preview="false">
@@ -71,7 +71,7 @@
     </t>
 </t>
 
-<t t-name="html_builder.website.s_website_form_form_option_add_field_button">
+<t t-name="website.s_website_form_form_option_add_field_button">
     <button type="button" class="btn o_we_bg_brand_primary"
         t-att-title="props.tooltip"
         t-on-click="() => props.addField(domState.el)"
@@ -80,11 +80,11 @@
     </button>
 </t>
 
-<t t-name="html_builder.website.s_website_form_field_option_redraw">
+<t t-name="website.s_website_form_field_option_redraw">
     <FormFieldOption redrawSequence="domState.redrawSequence" t-props="props"/>
 </t>
 
-<t t-name="html_builder.website.s_website_form_field_option">
+<t t-name="website.s_website_form_field_option">
     <t t-if="domState.elClassList.includes('s_website_form_model_required')">
         <FormModelRequiredFieldAlert fieldName="domState.fieldName" modelName="domState.modelName" fetchModels="props.fetchModels"/>
     </t>
@@ -337,7 +337,7 @@
 	</t>
 </t>
 
-<t t-name="html_builder.website.s_website_form_submit_option">
+<t t-name="website.s_website_form_submit_option">
     <BuilderRow label.translate="Button Position">
         <BuilderSelect>
             <BuilderSelectItem classAction="'text-start s_website_form_no_submit_label'">Left</BuilderSelectItem>
@@ -348,7 +348,7 @@
     </BuilderRow>
 </t>
 
-<t t-name="html_builder.website.s_website_form_model_required_field_alert">
+<t t-name="website.s_website_form_model_required_field_alert">
     <div class="alert alert-info">
         <span t-out="state.message"/>
     </div>

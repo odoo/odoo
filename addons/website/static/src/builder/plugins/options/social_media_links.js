@@ -3,7 +3,7 @@ import { onWillStart, useRef, useState } from "@odoo/owl";
 import { useSortable } from "@web/core/utils/sortable_owl";
 
 export class SocialMediaLinks extends BaseOptionComponent {
-    static template = "html_builder.SocialMediaLinks";
+    static template = "website.SocialMediaLinks";
     static props = {
         getRecordedSocialMediaNames: { type: Function },
         reorderSocialMediaLink: { type: Function },

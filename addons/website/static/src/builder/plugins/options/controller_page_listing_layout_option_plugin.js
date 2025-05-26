@@ -11,7 +11,7 @@ class ControllerPageListingLayoutOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.website.ControllerPageListingLayoutOption",
+                template: "website.ControllerPageListingLayoutOption",
                 selector: ".listing_layout_switcher",
                 editableOnly: false,
                 title: _t("Layout"),

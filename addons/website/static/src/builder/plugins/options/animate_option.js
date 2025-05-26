@@ -3,7 +3,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { isImageSupportedForStyle } from "@website/builder/plugins/image/replace_media_option";
 
 export class AnimateOption extends BaseOptionComponent {
-    static template = "html_builder.AnimateOption";
+    static template = "website.AnimateOption";
     static props = {
         getDirectionsItems: Function,
         getEffectsItems: Function,

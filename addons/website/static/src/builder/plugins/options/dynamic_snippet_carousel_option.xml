@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.DynamicSnippetCarouselOption" t-inherit="html_builder.DynamicSnippetOption">
+<t t-name="website.DynamicSnippetCarouselOption" t-inherit="website.DynamicSnippetOption">
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="after">
 	    <BuilderRow label.translate="Slider Speed">
 	        <BuilderNumberInput action="'setCarouselSliderSpeed'" default="1" unit="'s'" saveUnit="''" step="0.1" min="0" preview="false" id="'speed_opt'"/>

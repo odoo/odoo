@@ -9,7 +9,7 @@ class CountdownOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(before(SNIPPET_SPECIFIC_END), {
-                template: "html_builder.CountdownOption",
+                template: "website.CountdownOption",
                 selector: ".s_countdown",
                 cleanForSave: this.cleanForSave.bind(this),
             }),
@@ -71,7 +71,7 @@ class CountdownOptionPlugin extends Plugin {
                 const existingEndMessage = this.editingElEndMessages.get(editingElement);
                 editingElement.appendChild(
                     existingEndMessage ||
-                        renderToElement("html_builder.website.s_countdown.end_message")
+                        renderToElement("website.s_countdown.end_message")
                 );
             }
         } else {

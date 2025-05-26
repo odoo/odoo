@@ -1,7 +1,7 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class DynamicSvgOption extends BaseOptionComponent {
-    static template = "html_builder.DynamicSvgOption";
+    static template = "website.DynamicSvgOption";
     static props = {};
 
     setup() {

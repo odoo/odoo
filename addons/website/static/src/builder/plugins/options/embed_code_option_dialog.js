@@ -5,7 +5,7 @@ import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/ed
 import { Component, useState } from "@odoo/owl";
 
 export class EmbedCodeOptionDialog extends Component {
-    static template = "html_builder.EmbedCodeOptionDialog";
+    static template = "website.EmbedCodeOptionDialog";
     static components = { Dialog, CodeEditor };
     static props = {
         title: String,

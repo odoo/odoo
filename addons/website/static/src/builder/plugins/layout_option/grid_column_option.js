@@ -1,7 +1,7 @@
 import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 
 export class GridColumnsOption extends BaseOptionComponent {
-    static template = "html_builder.GridColumnsOption";
+    static template = "website.GridColumnsOption";
     static props = {};
 
     setup() {

@@ -2,7 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 import { useDynamicSnippetOption } from "./dynamic_snippet_hook";
 
 export class DynamicSnippetOption extends BaseOptionComponent {
-    static template = "html_builder.DynamicSnippetOption";
+    static template = "website.DynamicSnippetOption";
     static props = {
         slots: { type: Object, optional: true },
         modelNameFilter: { type: String },

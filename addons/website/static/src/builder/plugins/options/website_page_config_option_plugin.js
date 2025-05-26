@@ -27,7 +27,7 @@ class WebsitePageConfigOptionPlugin extends Plugin {
                 },
             }),
             withSequence(HIDE_FOOTER, {
-                template: "html_builder.HideFooterOption",
+                template: "website.HideFooterOption",
                 selector:
                     "[data-main-object]:has(input.o_page_option_data[name='footer_visible']) #wrapwrap > footer",
                 editableOnly: false,

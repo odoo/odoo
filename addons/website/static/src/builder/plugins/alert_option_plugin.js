@@ -38,7 +38,7 @@ class AlertOptionPlugin extends Plugin {
         },
         builder_options: [
             withSequence(before(WIDTH), {
-                template: "html_builder.AlertOption",
+                template: "website.AlertOption",
                 selector: ".s_alert",
             }),
         ],

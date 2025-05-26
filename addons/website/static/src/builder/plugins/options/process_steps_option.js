@@ -8,7 +8,7 @@ export const connectorOptionParams = [
 ];
 
 export class ProcessStepsOption extends BaseOptionComponent {
-    static template = "html_builder.ProcessStepsOption";
+    static template = "website.ProcessStepsOption";
     static props = {};
 
     setup() {

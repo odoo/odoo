@@ -5,7 +5,7 @@ import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";
 
 export class FormOption extends BaseOptionComponent {
-    static template = "html_builder.website.s_website_form_form_option";
+    static template = "website.s_website_form_form_option";
     static props = {
         modelName: String,
         fetchModels: Function,

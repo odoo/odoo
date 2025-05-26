@@ -16,7 +16,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 export class BuilderUrlPicker extends Component {
-    static template = "html_builder.BuilderUrlPicker";
+    static template = "website.BuilderUrlPicker";
     static props = {
         ...basicContainerBuilderComponentProps,
         ...textInputBasePassthroughProps,

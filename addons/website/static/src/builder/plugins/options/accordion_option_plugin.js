@@ -9,11 +9,11 @@ class accordionOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC, {
-                template: "html_builder.AccordionOption",
+                template: "website.AccordionOption",
                 selector: ".s_accordion",
             }),
             withSequence(SNIPPET_SPECIFIC, {
-                template: "html_builder.AccordionItemOption",
+                template: "website.AccordionItemOption",
                 selector: ".s_accordion .accordion-item",
             }),
         ],

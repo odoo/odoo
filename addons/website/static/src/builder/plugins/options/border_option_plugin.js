@@ -9,7 +9,7 @@ class BorderOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(BOX_BORDER_SHADOW, {
-                template: "html_builder.BorderOption",
+                template: "website.BorderOption",
                 selector: "section .row > div",
                 exclude: `.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div, .s_masonry_block .s_col_no_resize, .s_text_cover .row > .o_not_editable, ${CARD_PARENT_HANDLERS}`,
             }),

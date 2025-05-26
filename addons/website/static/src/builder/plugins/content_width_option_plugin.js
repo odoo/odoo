@@ -9,7 +9,7 @@ class ContentWidthOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(CONTAINER_WIDTH, {
-                template: "html_builder.ContentWidthOption",
+                template: "website.ContentWidthOption",
                 selector: "section, .s_carousel .carousel-item, .s_carousel_intro_item",
                 exclude:
                     "[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *",

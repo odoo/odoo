@@ -26,7 +26,7 @@ class PriceListBoxedOptionPlugin extends Plugin {
                 },
             }),
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.PriceListBoxedDescriptionOption",
+                template: "website.PriceListBoxedDescriptionOption",
                 selector: ".s_pricelist_boxed",
             }),
         ],

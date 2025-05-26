@@ -7,7 +7,7 @@ class ProgressBarOptionPlugin extends Plugin {
     selector = ".s_progress_bar";
     resources = {
         builder_options: {
-            template: "html_builder.ProgressBarOption",
+            template: "website.ProgressBarOption",
             selector: this.selector,
             cleanForSave: this.cleanForSave.bind(this),
         },

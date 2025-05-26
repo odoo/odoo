@@ -10,7 +10,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
  */
 
 export class GoogleMapsOption extends BaseOptionComponent {
-    static template = "html_builder.GoogleMapsOption";
+    static template = "website.GoogleMapsOption";
     /** @type {Props} */
     static props = {
         getMapsAPI: { type: Function },

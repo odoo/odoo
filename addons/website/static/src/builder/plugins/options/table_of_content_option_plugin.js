@@ -22,7 +22,7 @@ class TableOfContentOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.TableOfContentOption",
+                template: "website.TableOfContentOption",
                 selector: ".s_table_of_content",
                 cleanForSave: (editingElement) => {
                     const navbarEl = editingElement.querySelector(".s_table_of_content_navbar");
@@ -30,7 +30,7 @@ class TableOfContentOptionPlugin extends Plugin {
                 },
             },
             {
-                template: "html_builder.TableOfContentNavbarOption",
+                template: "website.TableOfContentNavbarOption",
                 selector: ".s_table_of_content_navbar_wrap",
             },
         ],

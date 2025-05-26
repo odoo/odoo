@@ -3,7 +3,7 @@ import { areColsCustomized } from "@html_builder/utils/column_layout_utils";
 import { isMobileView } from "@html_builder/utils/utils";
 
 export class SelectNumberColumn extends BaseOptionComponent {
-    static template = "html_builder.SelectNumberColumn";
+    static template = "website.SelectNumberColumn";
     static props = {};
 
     setup() {

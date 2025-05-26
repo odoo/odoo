@@ -4,7 +4,7 @@ import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 export class ImageFilterOption extends BaseOptionComponent {
-    static template = "html_builder.ImageFilterOption";
+    static template = "website.ImageFilterOption";
     static props = {
         level: { type: Number, optional: true },
     };

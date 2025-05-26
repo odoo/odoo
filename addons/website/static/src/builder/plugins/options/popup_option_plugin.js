@@ -14,13 +14,13 @@ class PopupOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(POPUP, {
-                template: "html_builder.PopupOption",
+                template: "website.PopupOption",
                 selector: ".s_popup",
                 exclude: "#website_cookies_bar",
                 applyTo: ".modal",
             }),
             withSequence(COOKIES_BAR, {
-                template: "html_builder.PopupCookiesOption",
+                template: "website.PopupCookiesOption",
                 selector: ".s_popup#website_cookies_bar",
                 applyTo: ".modal",
             }),

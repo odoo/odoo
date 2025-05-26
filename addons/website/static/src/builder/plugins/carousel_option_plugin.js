@@ -12,19 +12,19 @@ export class CarouselOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.CarouselOption",
+                template: "website.CarouselOption",
                 selector: "section",
                 exclude:
                     ".s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper:has(>.s_quotes_carousel_compact)",
                 applyTo: ":scope > .carousel",
             },
             {
-                template: "html_builder.CarouselBottomControllersOption",
+                template: "website.CarouselBottomControllersOption",
                 selector: "section",
                 applyTo: ".s_carousel_intro, .s_quotes_carousel_compact",
             },
             {
-                template: "html_builder.CarouselCardsOption",
+                template: "website.CarouselCardsOption",
                 selector: "section",
                 applyTo: ".s_carousel_cards",
             },
@@ -108,7 +108,7 @@ export class CarouselOptionPlugin extends Plugin {
         const carouselEl = editingElement.closest(".carousel");
         const cardEls = carouselEl.querySelectorAll(".card");
         for (const cardEl of cardEls) {
-            const imageWrapperEl = renderToElement("html_builder.s_carousel_cards.imageWrapper");
+            const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
             cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
         }
     }
