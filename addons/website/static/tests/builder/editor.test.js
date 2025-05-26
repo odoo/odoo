@@ -3,7 +3,7 @@ import { expect, test, describe } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { click, manuallyDispatchProgrammaticEvent, waitFor } from "@odoo/hoot-dom";
+import { click, manuallyDispatchProgrammaticEvent, waitFor, queryOne } from "@odoo/hoot-dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { parseHTML } from "@html_editor/utils/html";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -79,6 +79,60 @@ test("should set contenteditable to false on .o_not_editable elements", async ()
     editor.shared.history.addStep();
     // Normalization should set contenteditable to false
     expect(snippet).toHaveAttribute("contenteditable", "false");
+});
+
+test("should preserve iframe in the toolbar's font size input", async () => {
+    const { getEditor } = await setupWebsiteBuilder(`
+        <section class="s_text_block pt40 pb40 o_colored_level" data-snippet="s_text_block" data-name="Text">
+            <div class="container s_allow_columns">
+                <p>Some text.</p>
+                <p>Some more text.</p>
+            </div>
+        </section>
+    `);
+    const editor = getEditor();
+    const p = editor.editable.querySelector("p")
+    const p2 = p.nextElementSibling;
+    // Activate the text block snippet.
+    click(p);
+
+    // Select the word "more".
+    editor.shared.selection.setSelection({
+        anchorNode: p2.firstChild,
+        anchorOffset: 5,
+        focusNode: p2.firstChild,
+        focusOffset: 9,
+    });
+    await waitFor(".o-we-toolbar");
+    // Get the font size selector input.
+    let iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    let inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    // Change the font style from paragraph to paragraph.
+    await contains(".o-we-toolbar .btn[name='font'].dropdown-toggle").click();
+    await waitFor(".btn[name='font'].dropdown-toggle.show");
+    await contains(".dropdown-menu [name='p']").click();
+    iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    let newInputEl = iframeEl.contentWindow.document?.querySelector("input");
+    expect(newInputEl).toBe(inputEl); // The input shouldn't have been changed.
+
+    // Select the first word "text".
+    editor.shared.selection.setSelection({
+        anchorNode: p.firstChild,
+        anchorOffset: 5,
+        focusNode: p.firstChild,
+        focusOffset: 9,
+    });
+    await waitFor(".o-we-toolbar");
+    // Get the font size selector input.
+    iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    inputEl = iframeEl.contentWindow.document?.querySelector("input");
+    // Change the font style from paragraph to header 1.
+    await contains(".o-we-toolbar .btn[name='font'].dropdown-toggle").click();
+    await waitFor(".btn[name='font'].dropdown-toggle.show");
+    await contains(".dropdown-menu [name='h2']").click();
+    iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    newInputEl = iframeEl.contentWindow.document?.querySelector("input");
+    expect(newInputEl).toBe(inputEl); // The input shouldn't have been changed.
 });
 
 describe("toolbar dropdowns", () => {

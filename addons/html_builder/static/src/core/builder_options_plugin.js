@@ -115,14 +115,15 @@ export class BuilderOptionsPlugin extends Plugin {
         if (!this.target || !this.target.isConnected) {
             this.lastContainers = this.lastContainers.filter((c) => c.element.isConnected);
             this.target = this.lastContainers.at(-1)?.element;
-            this.dependencies.history.setStepExtra("optionSelection", this.target);
-            this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
-            return;
         }
 
         const newContainers = this.computeContainers(this.target);
         // Do not update the containers if they did not change or not forced to update.
-        if (newContainers.length === this.lastContainers.length && !force) {
+        if (
+            this.target?.isConnected &&
+            newContainers.length === this.lastContainers.length &&
+            !force
+        ) {
             const previousIds = this.lastContainers.map((c) => c.id);
             const newIds = newContainers.map((c) => c.id);
             const areSameElements = newIds.every((id, i) => id === previousIds[i]);
