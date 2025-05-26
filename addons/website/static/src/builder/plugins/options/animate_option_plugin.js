@@ -29,7 +29,7 @@ class AnimateOptionPlugin extends Plugin {
                 OptionComponent: AnimateOption,
                 selector: ".o_animable, section .row > div, img, .fa, .btn, .o_animated_text",
                 exclude:
-                    "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, ${special_blockquote_selector}",
+                    `[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, ${special_blockquote_selector}`,
                 props: this.animateOptionProps,
                 // todo: to implement
                 // textSelector: ".o_animated_text",
