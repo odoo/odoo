@@ -13,7 +13,7 @@ class TestAccountEdiUblCiiTaxExtension(AccountTestInvoicingCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.reverse_charge_tax = cls.company_data['default_tax_sale'].copy({'name': 'Reverse charge tax', 'ubl_cii_tax_category_code': 'AE', 'ubl_cii_tax_exemption_reason_code': 'VATEX_EU_AE'})
+        cls.reverse_charge_tax = cls.company_data['default_tax_sale'].copy({'name': 'Reverse charge tax', 'ubl_cii_tax_category_code': 'AE', 'ubl_cii_tax_exemption_reason_code': 'VATEX-EU-AE'})
         cls.zero_rated_tax = cls.company_data['default_tax_sale'].copy({'name': 'Zero rated tax', 'ubl_cii_tax_category_code': 'Z'})
         cls.prod_tax = cls.company_data['default_tax_sale'].copy({'name': 'Production tax', 'ubl_cii_tax_category_code': 'M'})
         cls.free_export_tax = cls.company_data['default_tax_sale'].copy({'name': 'Free export tax', 'ubl_cii_tax_category_code': 'G', 'ubl_cii_tax_exemption_reason_code': 'VATEX-EU-132-1G'})
