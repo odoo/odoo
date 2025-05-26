@@ -2585,6 +2585,9 @@ Sitemap: <t t-esc="website.domain"/>/sitemap.xml
 </t>
 <t t-else="">
 Sitemap: <t t-esc="url_root"/>sitemap.xml
+<t t-foreach="allowed_routes" t-as="route">
+Allow: <t t-out="route"/>
+</t>
 
 
 ##############
