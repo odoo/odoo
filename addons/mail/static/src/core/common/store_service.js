@@ -83,9 +83,6 @@ export class Store extends BaseStore {
     mt_note = fields.One("mail.message.subtype");
     /** @type {boolean} */
     hasMessageTranslationFeature;
-    imStatusTrackedPersonas = fields.Many("Persona", {
-        inverse: "storeAsTrackedImStatus",
-    });
     hasLinkPreviewFeature = true;
     // messaging menu
     menu = { counter: 0 };
@@ -353,10 +350,9 @@ export class Store extends BaseStore {
                 if (thread) {
                     thread.open({ focus: true });
                 } else {
-                    this.env.services.notification.add(
-                        _t("This thread is no longer available."),
-                        { type: "danger" }
-                    );
+                    this.env.services.notification.add(_t("This thread is no longer available."), {
+                        type: "danger",
+                    });
                 }
             });
             return true;

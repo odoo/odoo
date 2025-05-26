@@ -4,7 +4,7 @@ from requests import Response
 from unittest.mock import patch
 
 import odoo
-from odoo.tools.misc import file_open, limited_field_access_token
+from odoo.tools.misc import file_open
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.cloud_storage_azure.tests.test_cloud_storage_azure import TestCloudStorageAzureCommon
 
@@ -65,9 +65,7 @@ class TestCloudStorageAttachmentController(HttpCaseWithUserDemo, TestCloudStorag
                                     "id": attachment.id,
                                     "mimetype": "text/x-python",
                                     "name": "__init__.py",
-                                    "raw_access_token": limited_field_access_token(
-                                        attachment, "raw"
-                                    ),
+                                    "raw_access_token": attachment._get_raw_access_token(),
                                     "res_name": False,
                                     "thread": False,
                                     "voice": False,

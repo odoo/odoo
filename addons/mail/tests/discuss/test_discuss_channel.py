@@ -7,7 +7,6 @@ from unittest.mock import patch
 from markupsafe import Markup
 
 from odoo import Command, fields
-from odoo.tools.misc import limited_field_access_token
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
@@ -138,9 +137,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 ),
                                 "res.partner": self._filter_partners_fields(
                                     {
-                                        "avatar_128_access_token": limited_field_access_token(
-                                            self.env.user.partner_id, "avatar_128"
-                                        ),
+                                        "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": True,
                                         "is_company": False,
@@ -171,12 +168,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
-                                    "avatar_128_access_token": limited_field_access_token(
-                                        self.test_partner, "avatar_128"
-                                    ),
+                                    "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
+                                    "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                     "isInternalUser": False,
                                     "is_company": False,
                                     "name": "Test Partner",
@@ -218,12 +214,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
-                                    "avatar_128_access_token": limited_field_access_token(
-                                        self.test_partner, "avatar_128"
-                                    ),
+                                    "avatar_128_access_token": self.test_partner._get_avatar_128_access_token(),
                                     "email": "test_customer@example.com",
                                     "id": self.test_partner.id,
                                     "im_status": "im_partner",
+                                    "im_status_access_token": self.test_partner._get_im_status_access_token(),
                                     "isInternalUser": False,
                                     "is_company": False,
                                     "name": "Test Partner",
@@ -453,11 +448,10 @@ class TestChannelInternals(MailCommon, HttpCase):
                         ],
                         "res.partner": self._filter_partners_fields(
                             {
-                                "avatar_128_access_token": limited_field_access_token(
-                                    self.user_admin.partner_id, "avatar_128"
-                                ),
+                                "avatar_128_access_token": self.user_admin.partner_id._get_avatar_128_access_token(),
                                 "id": self.user_admin.partner_id.id,
                                 "im_status": self.user_admin.im_status,
+                                "im_status_access_token": self.user_admin.partner_id._get_im_status_access_token(),
                                 "name": self.user_admin.partner_id.name,
                                 "write_date": fields.Datetime.to_string(
                                     self.user_admin.partner_id.write_date

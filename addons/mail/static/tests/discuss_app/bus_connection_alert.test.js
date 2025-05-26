@@ -20,7 +20,9 @@ test("show warning when bus connection encounters issues", async () => {
     const unlockWebsocket = lockWebsocketConnect();
     MockServer.env["bus.bus"]._simulateDisconnection(WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE);
     await waitForSteps(["reconnecting"]);
-    expect(await waitFor(".o-bus-ConnectionAlert")).toHaveText("Real-time connection lost...");
+    expect(await waitFor(".o-bus-ConnectionAlert", { timeout: 2500 })).toHaveText(
+        "Real-time connection lost..."
+    );
     await runAllTimers();
     await animationFrame();
     expect(".o-bus-ConnectionAlert").toHaveText("Real-time connection lost...");

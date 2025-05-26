@@ -6,7 +6,7 @@ import json
 from odoo import Command, fields
 from odoo.addons.im_livechat.tests import chatbot_common
 from odoo.tests.common import JsonRpcException, new_test_user, tagged
-from odoo.tools.misc import limited_field_access_token, mute_logger
+from odoo.tools.misc import mute_logger
 from odoo.addons.bus.models.bus import json_dump
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools.discuss import Store
@@ -232,16 +232,17 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 0,
                 {
                     "active": False,
-                    "avatar_128_access_token": limited_field_access_token(
-                        self.chatbot_script.operator_partner_id, "avatar_128"
-                    ),
+                    "avatar_128_access_token": self.chatbot_script.operator_partner_id._get_avatar_128_access_token(),
                     "country_id": False,
                     "id": self.chatbot_script.operator_partner_id.id,
                     "im_status": "im_partner",
+                    "im_status_access_token": self.chatbot_script.operator_partner_id._get_im_status_access_token(),
                     "is_public": False,
                     "name": "Testing Bot",
                     "user_livechat_username": False,
-                    "write_date": fields.Datetime.to_string(self.chatbot_script.operator_partner_id.write_date),
+                    "write_date": fields.Datetime.to_string(
+                        self.chatbot_script.operator_partner_id.write_date
+                    ),
                 },
             )
             channel_data = Store(discuss_channel).get_result()
@@ -330,12 +331,11 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             "res.partner": self._filter_partners_fields(
                                 {
                                     "active": True,
-                                    "avatar_128_access_token": limited_field_access_token(
-                                        self.partner_employee, "avatar_128"
-                                    ),
+                                    "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
                                     "country_id": self.env.ref("base.be").id,
                                     "id": self.partner_employee.id,
                                     "im_status": "offline",
+                                    "im_status_access_token": self.partner_employee._get_im_status_access_token(),
                                     "is_public": False,
                                     "name": "Ernest Employee",
                                     "user_livechat_username": False,
@@ -392,9 +392,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             ],
                             "res.partner": self._filter_partners_fields(
                                 {
-                                    "avatar_128_access_token": limited_field_access_token(
-                                        self.partner_employee, "avatar_128"
-                                    ),
+                                    "avatar_128_access_token": self.partner_employee._get_avatar_128_access_token(),
                                     "id": self.partner_employee.id,
                                     "name": "Ernest Employee",
                                     "user_livechat_username": False,

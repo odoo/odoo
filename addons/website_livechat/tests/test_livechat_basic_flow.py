@@ -7,7 +7,6 @@ from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 from odoo.tests.common import new_test_user
-from odoo.tools.misc import limited_field_access_token
 
 
 @tests.tagged('post_install', '-at_install')
@@ -243,10 +242,11 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 ],
                 "mail.guest": [
                     {
-                        "avatar_128_access_token": limited_field_access_token(guest, "avatar_128"),
+                        "avatar_128_access_token": guest._get_avatar_128_access_token(),
                         "country_id": False,
                         "id": guest.id,
                         "im_status": "offline",
+                        "im_status_access_token": guest._get_im_status_access_token(),
                         "name": f"Visitor #{self.visitor.id}",
                         "offline_since": False,
                         "write_date": fields.Datetime.to_string(guest.write_date),
@@ -259,12 +259,11 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "res.partner": self._filter_partners_fields(
                     {
                         "active": True,
-                        "avatar_128_access_token": limited_field_access_token(
-                            self.operator.partner_id, "avatar_128"
-                        ),
+                        "avatar_128_access_token": self.operator.partner_id._get_avatar_128_access_token(),
                         "country_id": False,
                         "id": self.operator.partner_id.id,
                         "im_status": "online",
+                        "im_status_access_token": self.operator.partner_id._get_im_status_access_token(),
                         "is_public": False,
                         "user_livechat_username": "El Deboulonnator",
                         "write_date": fields.Datetime.to_string(

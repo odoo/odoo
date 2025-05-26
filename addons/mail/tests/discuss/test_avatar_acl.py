@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, Command
-from odoo.tools.misc import limited_field_access_token
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
@@ -11,7 +10,7 @@ class TestAvatarAcl(HttpCase):
     def get_avatar_url(self, record, add_token=False):
         access_token = ""
         if add_token:
-            access_token = f"&access_token={limited_field_access_token(record, 'avatar_128')}"
+            access_token = f"&access_token={record._get_avatar_128_access_token()}"
         return f"/web/image?field=avatar_128&id={record.id}&model={record._name}&unique={fields.Datetime.to_string(record.write_date)}{access_token}"
 
     def test_partner_open_guest_avatar(self):
