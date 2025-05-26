@@ -229,112 +229,112 @@
         </BuilderSelect>
     </BuilderRow>
     <t t-if="isActiveItem('hidden_if_opt')">
-	    <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
-	        <BuilderSelect id="'hidden_condition_opt'" preview="false">
-	            <!-- Load every existing form input -->
-	            <BuilderSelectItem t-foreach="state.conditionInputs" t-as="input" t-key="input.name"
-	                action="'setVisibilityDependency'" actionValue="input.name"
-	                t-out="input.textContent"
-	            />
-	        </BuilderSelect>
-	        <BuilderSelect t-if="domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT'"
-	            id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
-	        >
-	            <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'contains'">Contains</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!contains'">Doesn't contain</BuilderSelectItem>
-	        </BuilderSelect>
-	        <BuilderSelect t-if="isTextConditionOperatorVisible"
-	            id="'hidden_condition_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
-	        >
-	            <!-- string comparator possibilities -->
-	            <BuilderSelectItem dataAttributeActionValue="'contains'">Contains</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!contains'">Doesn't contain</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'equal'">Is equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!equal'">Is not equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
-	        </BuilderSelect>
-	        <BuilderSelect t-if="domStateDependency.type === 'number'"
-	            id="'hidden_condition_num_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
-	        >
-	            <!-- number comparator possibilities -->
-	            <BuilderSelectItem dataAttributeActionValue="'equal'">Is equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!equal'">Is not equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'greater'">Is greater than</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'less'">Is less than</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'greater or equal'">Is greater than or equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'less or equal'">Is less than or equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
-	        </BuilderSelect>
-	        <BuilderSelect t-if="domStateDependency.hasDateTimePicker"
-	            id="'hidden_condition_time_comparators_opt'" preview="false"
-	            dataAttributeAction="'visibilityComparator'"
-	        >
-	            <!-- date & datetime comparator possibilities -->
-	            <BuilderSelectItem dataAttributeActionValue="'dateEqual'">Is equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'date!equal'">Is not equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'after'">Is after</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'before'">Is before</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'equal or after'">Is after or equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'equal or before'">Is before or equal to</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'between'">Is between (included)</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!between'">Is not between (excluded)</BuilderSelectItem>
-	        </BuilderSelect>
-	        <BuilderSelect t-if="domStateDependency.type === 'file'"
-	            id="'hidden_condition_file_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
-	        >
-	            <!-- file comparator possibilities -->
-	            <BuilderSelectItem dataAttributeActionValue="'fileset'">Is set</BuilderSelectItem>
-	            <BuilderSelectItem dataAttributeActionValue="'!fileset'">Is not set</BuilderSelectItem>
-	        </BuilderSelect>
+        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
+            <BuilderSelect id="'hidden_condition_opt'" preview="false">
+                <!-- Load every existing form input -->
+                <BuilderSelectItem t-foreach="state.conditionInputs" t-as="input" t-key="input.name"
+                    action="'setVisibilityDependency'" actionValue="input.name"
+                    t-out="input.textContent"
+                />
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT'"
+                id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'contains'">Contains</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!contains'">Doesn't contain</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="isTextConditionOperatorVisible"
+                id="'hidden_condition_text_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- string comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'contains'">Contains</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!contains'">Doesn't contain</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'equal'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!equal'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.type === 'number'"
+                id="'hidden_condition_num_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- number comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'equal'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!equal'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'greater'">Is greater than</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'less'">Is less than</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'greater or equal'">Is greater than or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'less or equal'">Is less than or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.hasDateTimePicker"
+                id="'hidden_condition_time_comparators_opt'" preview="false"
+                dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- date & datetime comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'dateEqual'">Is equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'date!equal'">Is not equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'after'">Is after</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'before'">Is before</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'equal or after'">Is after or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'equal or before'">Is before or equal to</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'set'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!set'">Is not set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'between'">Is between (included)</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!between'">Is not between (excluded)</BuilderSelectItem>
+            </BuilderSelect>
+            <BuilderSelect t-if="domStateDependency.type === 'file'"
+                id="'hidden_condition_file_opt'" preview="false" dataAttributeAction="'visibilityComparator'"
+            >
+                <!-- file comparator possibilities -->
+                <BuilderSelectItem dataAttributeActionValue="'fileSet'">Is set</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'!fileSet'">Is not set</BuilderSelectItem>
+            </BuilderSelect>
             <BuilderSelect t-if="domStateDependency.isRecordField"
                 id="'hidden_condition_record_opt'" dataAttributeAction="'visibilityComparator'" preview="false"
             >
                 <BuilderSelectItem dataAttributeActionValue="'selected'">Is equal to</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'!selected'">Is not equal to</BuilderSelectItem>
             </BuilderSelect>
-	    </div>
-	    <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
-	        <BuilderSelect t-if="state.conditionValueList and (domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT')"
-	            id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
-	        >
-	            <!-- checkbox, select, radio possible values -->
-	            <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
-	                dataAttributeActionValue="record.value"
-	                t-out="record.textContent"
-	            />   
-	        </BuilderSelect>
-	        <BuilderSelect t-if="state.conditionValueList and domStateDependency.isRecordField"
-	            id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
-	        >
-	            <!-- checkbox, select, radio possible values -->
+        </div>
+        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row">
+            <BuilderSelect t-if="state.conditionValueList and (domStateDependency.type === 'checkbox' || domStateDependency.type === 'radio' || domStateDependency.nodeName === 'SELECT')"
+                id="'hidden_condition_no_text_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
+            >
+                <!-- checkbox, select, radio possible values -->
                 <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
                     dataAttributeActionValue="record.value"
                     t-out="record.textContent"
                 />   
-	        </BuilderSelect>
-	        <BuilderTextInput t-if="isTextConditionValueVisible"
-	            id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
-	        />
-	        <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
-	            id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
-	        />
-	        <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
-	            id="'hidden_condition_additional_date'" dataAttributeAction="'visibilityCondition'" type="'date'"
-	        />
-	        <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
-	            id="'hidden_condition_datetime_between'" dataAttributeAction="'visibilityBetween'" type="'datetime'"
-	        />
-	        <BuilderDateTimePicker t-if="domStateDependency.isFormDate and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
-	            id="'hidden_condition_date_between'" dataAttributeAction="'visibilityBetween'" type="'date'"
-	        />
-	    </div>
-	</t>
+            </BuilderSelect>
+            <BuilderSelect t-if="state.conditionValueList and domStateDependency.isRecordField"
+                id="'hidden_condition_record_opt'" preview="false" dataAttributeAction="'visibilityCondition'"
+            >
+                <!-- checkbox, select, radio possible values -->
+                <BuilderSelectItem t-foreach="state.conditionValueList" t-as="record" t-key="record.value"
+                    dataAttributeActionValue="record.value"
+                    t-out="record.textContent"
+                />   
+            </BuilderSelect>
+            <BuilderTextInput t-if="isTextConditionValueVisible"
+                id="'hidden_condition_additional_text'" dataAttributeAction="'visibilityCondition'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_additional_datetime'" dataAttributeAction="'visibilityCondition'" type="'datetime'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and !['set', '!set'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_additional_date'" dataAttributeAction="'visibilityCondition'" type="'date'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDateTime and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_datetime_between'" dataAttributeAction="'visibilityBetween'" type="'datetime'"
+            />
+            <BuilderDateTimePicker t-if="domStateDependency.isFormDate and ['between', '!between'].includes(domState.elDataset.visibilityComparator)"
+                id="'hidden_condition_date_between'" dataAttributeAction="'visibilityBetween'" type="'date'"
+            />
+        </div>
+    </t>
 </t>
 
 <t t-name="html_builder.website.s_website_form_submit_option">
