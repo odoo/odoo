@@ -13,7 +13,7 @@
             <BuilderSelectItem actionValue="'message_no_countdown'">Show Message and hide countdown</BuilderSelectItem>
             <BuilderSelectItem actionValue="'message'">Show Message and keep countdown</BuilderSelectItem>
         </BuilderSelect>
-        <BuilderButton title.translate="'The message will be visible once the countdown ends'"
+        <BuilderButton title.translate="The message will be visible once the countdown ends"
                        t-if="!this.isActiveItem('no_end_action_opt') and !this.isActiveItem('redirect_end_action_opt')"
                        action="'previewEndMessage'"
                        preview="false"
