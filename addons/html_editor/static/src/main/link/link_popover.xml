@@ -24,7 +24,7 @@
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
                                 t-model="state.url"
                                 title="URL"
-                                placeholder="Paste or type your URL"
+                                placeholder="e.g. https://www.odoo.com"
                                 t-on-keydown="onKeydownEnter"
                                 t-on-input="onChange"/>
                             <span class="ms-1" t-if="props.canUpload and !state.url">
@@ -86,8 +86,8 @@
                         </t>
                         <t t-if="props.allowTargetBlank">
                             <div class="d-flex mb-1 target-blank-option">
-                                <label class="me-1">Open link in a new window</label>
-                                <input type="checkbox" t-att-checked="state.linkTarget === '_blank'" t-on-change="(ev)=>this.state.linkTarget = ev.target.checked ? '_blank' : ''"/>
+                                <input class="me-1" type="checkbox" t-att-checked="state.linkTarget === '_blank'" t-on-change="(ev)=>this.state.linkTarget = ev.target.checked ? '_blank' : ''"/>
+                                <label>Open in new window</label>
                             </div>
                         </t>
                         <div class="mt-3">
