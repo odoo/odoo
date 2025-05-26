@@ -170,11 +170,11 @@
         <t t-if="isMobileOS">
             <t t-if="isAlignedRight">
                 <t t-call="mail.Message.emptyQuickAction"/>
-                <t t-call="mail.Message.expandAction"/>
+                <t t-if="!props.asCard" t-call="mail.Message.expandAction"/>
             </t>
             <t t-else="">
                 <t t-call="mail.Message.expandAction"/>
-                <t t-call="mail.Message.emptyQuickAction"/>
+                <t t-if="!props.asCard" t-call="mail.Message.emptyQuickAction"/>
             </t>
         </t>
         <t t-else="">
