@@ -351,25 +351,24 @@ class TestPortalFlow(MailCommon, HttpCase):
             # std url, no access to record -> redirect to login, with internal backend redirect ending with a ? (???)
             (
                 'No access record (internal)', self.record_internal_url_base,
-                # f'{login_url}?redirect={url_quote(self.record_internal_url_base)}',
                 f'{login_url}?{url_encode({"redirect": f"{self.internal_backend_local_url}?"})}',
             ),
             (
                 'No access record (portal enabled)', self.record_portal_url_base,
                 f'{login_url}?redirect=#{url_encode(odoo_portal_params)}',
             ),
-            # not existing -> redirect to login, with a redirect to messaging ending with a ? (???)
+            # not existing -> redirect to login, original (local) URL kept as redirection post login to try again (even if faulty)
             (
                 'Not existing record (internal)', self.record_internal_url_no_exists,
-                f'{login_url}?{url_encode({"redirect": f"{self.discuss_local_url}?"})}',
+                f'{login_url}?{url_encode({"redirect": self.record_internal_url_no_exists.replace(self.test_base_url, "")})}',
             ),
             (
                 'Not existing record (portal enabled)', self.record_portal_url_no_exists,
-                f'{login_url}?{url_encode({"redirect": f"{self.discuss_local_url}?"})}',
+                f'{login_url}?{url_encode({"redirect": self.record_portal_url_no_exists.replace(self.test_base_url, "")})}',
             ),
             (
                 'Not existing model', self.record_url_no_model,
-                f'{login_url}?{url_encode({"redirect": f"{self.discuss_local_url}?"})}',
+                f'{login_url}?{url_encode({"redirect": self.record_url_no_model.replace(self.test_base_url, "")})}',
             ),
         ]:
             with self.subTest(name=url_name, url=url):
