@@ -910,6 +910,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             'name': 'Sub Company',
             'parent_id': self.env.company.id,
             'chart_template': self.env.company.chart_template,
+            'country_id': self.env.company.country_id.id,
         })
         self.env.cr.precommit.run()
         self.env.user.group_ids += self.env.ref('point_of_sale.group_pos_manager')
