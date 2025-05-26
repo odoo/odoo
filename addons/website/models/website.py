@@ -1573,7 +1573,7 @@ class Website(models.Model):
         """
         # ==== WEBSITE.PAGES ====
         # '/' already has a http.route & is in the routing_map so it will already have an entry in the xml
-        domain = [('url', '!=', '/')]
+        domain = [('view_id', '!=', False), ('url', '!=', '/')]
         if not force:
             domain += [('website_indexed', '=', True), ('visibility', '=', False)]
             # is_visible
@@ -1589,10 +1589,9 @@ class Website(models.Model):
 
         for page in pages:
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
-            if page.view_id and page.view_id.priority != 16:
+            if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
-            if page['write_date']:
-                record['lastmod'] = page['write_date'].date()
+            record['lastmod'] = max(page.write_date, page.view_id.write_date).date()
             yield record
 
         # ==== CONTROLLERS ====
