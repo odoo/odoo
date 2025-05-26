@@ -379,8 +379,8 @@ class AccountMove(models.Model):
         invoice_values = {
             'invoice_record': self,
             'invoice_currency': inv_curr,
-            'InvoiceDocumentType': 'FC',
-            'InvoiceClass': 'OO',
+            'InvoiceDocumentType': 'FA' if self.l10n_es_is_simplified else 'FC',
+            'InvoiceClass': 'OR' if self.move_type in ['out_refund', 'in_refund'] else 'OO',
             'Corrective': self._l10n_es_edi_facturae_get_corrective_data(),
             'InvoiceIssueData': {
                 'OperationDate': operation_date,
