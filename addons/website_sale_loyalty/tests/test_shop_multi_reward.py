@@ -19,18 +19,21 @@ class TestClaimReward(WebsiteSaleCommon):
         cls.user_portal = cls._create_new_portal_user()
         cls.partner_portal = cls.user_portal.partner_id
 
+        cls.env['product.pricelist'].search([]).action_archive()
+
         tag = cls.env['product.tag'].create({
             'name': 'multi reward',
         })
-
         cls.product1, cls.product2 = cls.env['product.product'].create([
             {
             'name': 'Test Product',
             'list_price': 10.0,
+            'taxes_id': False,
             'product_tag_ids': tag,
         }, {
             'name': 'Test Product 2',
             'list_price': 20.0,
+            'taxes_id': False,
             'product_tag_ids': tag,
         }])
 
