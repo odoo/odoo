@@ -16,9 +16,31 @@ class MailController(http.Controller):
     _cp_path = '/mail'
 
     @classmethod
+    def _redirect_to_generic_fallback(cls, model, res_id, access_token=None, **kwargs):
+        if request.session.uid is None:
+            return cls._redirect_to_login_with_mail_view(
+                model, res_id, access_token=access_token, **kwargs,
+            )
+        return cls._redirect_to_messaging()
+
+    @classmethod
     def _redirect_to_messaging(cls):
         url = '/web#%s' % url_encode({'action': 'mail.action_discuss'})
         return request.redirect(url)
+
+    @classmethod
+    def _redirect_to_login_with_mail_view(cls, model, res_id, access_token=None, **kwargs):
+        url_base = '/mail/view'
+        url_params = request.env['mail.thread']._get_action_link_params(
+            'view', **{
+                'model': model,
+                'res_id': res_id,
+                'access_token': access_token,
+                **kwargs,
+            }
+        )
+        mail_view_url = f'{url_base}?{url_encode(url_params, sort=True)}'
+        return request.redirect(f'/web/login?{url_encode({"redirect": mail_view_url})}')
 
     @classmethod
     def _check_token(cls, token):
@@ -53,14 +75,18 @@ class MailController(http.Controller):
 
         # no model / res_id, meaning no possible record -> redirect to login
         if not model or not res_id or model not in request.env:
-            return cls._redirect_to_messaging()
+            return cls._redirect_to_generic_fallback(
+                model, res_id, access_token=access_token, **kwargs,
+            )
 
         # find the access action using sudo to have the details about the access link
         RecordModel = request.env[model]
         record_sudo = RecordModel.sudo().browse(res_id).exists()
         if not record_sudo:
             # record does not seem to exist -> redirect to login
-            return cls._redirect_to_messaging()
+            return cls._redirect_to_generic_fallback(
+                model, res_id, access_token=access_token, **kwargs,
+            )
 
         suggested_company = record_sudo._get_mail_redirect_suggested_company()
         # the record has a window redirection: check access rights
