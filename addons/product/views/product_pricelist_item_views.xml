@@ -9,7 +9,7 @@
                 <filter name="Product Rule" domain="[('applied_on', '=', '1_product')]"/>
                 <filter name="Variant Rule" domain="[('applied_on', '=', '0_product_variant')]" groups="product.group_product_variant"/>
                 <separator/>
-                <field name="pricelist_id"/>
+                <field name="pricelist_id" groups="product.group_product_pricelist"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="currency_id" groups="base.group_multi_currency"/>
                 <filter string="Active" name="visible" domain="[('pricelist_id.active', '=', True)]"/>
@@ -43,7 +43,7 @@
         <field name="priority">10</field>
         <field name="arch" type="xml">
             <list string="Price Rules">
-                <field name="pricelist_id"/>
+                <field name="pricelist_id" groups="product.group_product_pricelist" required="is_pricelist_required"/>
                 <field name="name" string="Applied On"/>
                 <field name="price"/>
                 <field name="min_quantity" colspan="4"/>
@@ -65,6 +65,8 @@
                 <field
                     name="pricelist_id"
                     options="{'no_create_edit': 1, 'no_open': 1}"
+                    required="is_pricelist_required"
+                    groups="product.group_product_pricelist"
                 />
                 <field
                     name="product_id"
@@ -139,6 +141,7 @@
                                 widget="radio"
                                 options="{'horizontal': true}"
                                 invisible="display_applied_on == '1_product' and compute_price == 'fixed_price'"
+                                groups="product.group_product_pricelist"
                             />
                             <label for="fixed_price" invisible="compute_price != 'fixed'"/>
                             <div class="o_row" invisible="compute_price != 'fixed'" style="width: 60% !important;">
@@ -152,8 +155,10 @@
                             <div class="o_row gap-3" invisible="compute_price != 'percentage'">
                                 <field name="percent_price"/>
                                 <span>%</span>
-                                <span>on</span>
-                                <field name="base_pricelist_id" placeholder="sales price"/>
+                                <t groups="product.group_product_pricelist">
+                                    <span>on</span>
+                                    <field name="base_pricelist_id" placeholder="sales price" domain="[('id', '!=', pricelist_id)]"/>
+                                </t>
                             </div>
                         </group>
                         <group name="pricelist_rule_limits">
@@ -229,6 +234,38 @@
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_product_template_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.item.product.template.form.inherit</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_form_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="display_applied_on" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="product_tmpl_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
+            <field name="date_start" position="after">
+                <field name="pricelist_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_product_product_form_view" model="ir.ui.view">
+        <field name="name">product.pricelist.item.product.product.form.inherit</field>
+        <field name="model">product.pricelist.item</field>
+        <field name="inherit_id" ref="product.product_pricelist_item_product_template_form_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
         </field>
     </record>
 
