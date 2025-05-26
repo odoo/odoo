@@ -61,8 +61,8 @@
                     <input t-if="country_all" type="hidden" name="country_all" value="True" />
                     <div class="input-group" role="search">
                         <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
-                        <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
-                        <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
+                        <input type="search" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                        <button type="submit" aria-label="Search" title="Search by name or address" class="oe_search_button btn btn-light">
                             <i class="oi oi-search"/>
                         </button>
                     </div>
