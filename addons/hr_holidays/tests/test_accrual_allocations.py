@@ -1889,8 +1889,9 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
         # Simulate the onchange of the dialog form view
         # Trigger the `_compute_added_value_type` method (with virtual records)
-        res = self.env['hr.leave.accrual.level'].onchange({'accrual_plan_id': {'id': accrual_plan.id}}, [], {'added_value_type': {}})
-        self.assertEqual(res['value']['added_value_type'], accrual_plan.level_ids[0].added_value_type)
+        form = Form(accrual_plan)
+        with form.level_ids.new() as level:
+            self.assertEqual(level.added_value_type, 'hour')
 
     def test_accrual_immediate_cron_run(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
