@@ -19,12 +19,17 @@ class ProductPricelistItem(models.Model):
     pricelist_id = fields.Many2one(
         comodel_name='product.pricelist',
         string="Pricelist",
-        index=True, ondelete='cascade',
-        required=True,
-        default=_default_pricelist_id)
+        index=True,
+        ondelete='cascade',
+        # Standard flows do not handle rules without pricelists (but some custom modules do)!
+        required=False,
+        default=_default_pricelist_id,
+    )
 
-    company_id = fields.Many2one(related='pricelist_id.company_id', store=True)
-    currency_id = fields.Many2one(related='pricelist_id.currency_id', store=True)
+    is_pricelist_required = fields.Boolean(compute='_compute_is_pricelist_required')
+
+    company_id = fields.Many2one(comodel_name='res.company', compute='_compute_company_id', store=True)
+    currency_id = fields.Many2one(comodel_name='res.currency', compute='_compute_currency_id', store=True)
 
     date_start = fields.Datetime(
         string="Start Date",
@@ -158,6 +163,23 @@ class ProductPricelistItem(models.Model):
     rule_tip = fields.Char(compute='_compute_rule_tip')
 
     #=== COMPUTE METHODS ===#
+
+    def _compute_is_pricelist_required(self):
+        self.is_pricelist_required = True
+
+    @api.depends('pricelist_id', 'product_tmpl_id')
+    def _compute_company_id(self):
+        for item in self:
+            item.company_id = item.pricelist_id.company_id or item.product_tmpl_id.company_id
+
+    @api.depends('pricelist_id', 'company_id')
+    def _compute_currency_id(self):
+        for item in self:
+            item.currency_id = (
+                item.pricelist_id.currency_id
+                or item.company_id.currency_id
+                or item.env.company.currency_id
+            )
 
     @api.depends('applied_on', 'categ_id', 'product_tmpl_id', 'product_id')
     def _compute_name(self):
