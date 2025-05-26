@@ -181,4 +181,16 @@ class Home(http.Controller):
 
     @http.route(['/robots.txt'], type='http', auth="none")
     def robots(self, **kwargs):
-        return "User-agent: *\nDisallow: /\n"
+        allowed_routes = self._get_allowed_robots_routes()
+        robots_content = ["User-agent: *", "Disallow: /"]
+        robots_content.extend(f"Allow: {route}" for route in allowed_routes)
+
+        return request.make_response("\n".join(robots_content), [('Content-Type', 'text/plain')])
+
+    def _get_allowed_robots_routes(self):
+        """Override this method to return a list of allowed routes.
+
+        :return: A list of URL paths that should be allowed by robots.txt
+              Examples: ['/social_instagram/', '/sitemap.xml', '/web/']
+        """
+        return []
