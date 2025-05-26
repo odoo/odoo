@@ -750,12 +750,25 @@ export class Form extends Interaction {
                 return false;
             }
 
-            const formData = new FormData(this.el);
+            const formData = this.getFormDataIncludingDisabledFields(this.el);
             const currentValueOfDependency = ["contains", "!contains"].includes(comparator)
                 ? formData.getAll(dependencyName).join()
                 : formData.get(dependencyName);
             return this.compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
         };
+    }
+
+    /**
+     * @param {HTMLElement} formEl the form from which we want to retrieve
+     *      the FormData, including the disabled fields.
+     * @returns {FormData} a FormData object containing also disabled fields
+     */
+    getFormDataIncludingDisabledFields(formEl) {
+        const formCopy = formEl.cloneNode(true);
+        formCopy.querySelectorAll("input, select, textarea").forEach((element) => {
+            element.removeAttribute("disabled");
+        });
+        return new FormData(formCopy);
     }
 
     isFieldVisible(fieldEl) {
