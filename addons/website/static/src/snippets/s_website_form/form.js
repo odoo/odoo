@@ -214,6 +214,9 @@ export class Form extends Interaction {
                     value: defaultValue && DateTime.fromSeconds(parseInt(defaultValue)),
                 },
             }).enable());
+            // Disable virtual keyboard to fix popover display issues on small
+            // screens
+            inputEl.setAttribute("inputmode", "none");
         }
         this.datepickerInitialized = true;
     }
