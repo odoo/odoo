@@ -256,17 +256,19 @@ def file_open(name: str, mode: str = "r", filter_ext: tuple[str, ...] = (), env:
     :raise ValueError: if the file doesn't have one of the supported extensions (`filter_ext`)
     """
     path = file_path(name, filter_ext=filter_ext, env=env)
-    if os.path.isfile(path):
-        if 'b' not in mode:
-            # Force encoding for text mode, as system locale could affect default encoding,
-            # even with the latest Python 3 versions.
-            # Note: This is not covered by a unit test, due to the platform dependency.
-            #       For testing purposes you should be able to force a non-UTF8 encoding with:
-            #         `sudo locale-gen fr_FR; LC_ALL=fr_FR.iso8859-1 python3 ...'
-            # See also PEP-540, although we can't rely on that at the moment.
-            return open(path, mode, encoding="utf-8")
-        return open(path, mode)
-    raise FileNotFoundError("Not a file: " + name)
+    encoding = None
+    if 'b' not in mode:
+        # Force encoding for text mode, as system locale could affect default encoding,
+        # even with the latest Python 3 versions.
+        # Note: This is not covered by a unit test, due to the platform dependency.
+        #       For testing purposes you should be able to force a non-UTF8 encoding with:
+        #         `sudo locale-gen fr_FR; LC_ALL=fr_FR.iso8859-1 python3 ...'
+        # See also PEP-540, although we can't rely on that at the moment.
+        encoding = "utf-8"
+    if any(m in mode for m in ('w', 'x', 'a')) and not os.path.isfile(path):
+        # Don't let create new files
+        raise FileNotFoundError(f"Not a file: {path}")
+    return open(path, mode, encoding=encoding)
 
 
 @contextmanager

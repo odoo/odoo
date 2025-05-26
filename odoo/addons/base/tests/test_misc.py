@@ -233,7 +233,7 @@ class TestRemoveAccents(BaseCase):
 
 class TestAddonsFileAccess(BaseCase):
 
-    def assertCannotAccess(self, path, ExceptionType=FileNotFoundError, filter_ext=None):
+    def assertCannotAccess(self, path, ExceptionType=OSError, filter_ext=None):
         with self.assertRaises(ExceptionType):
             file_path(path, filter_ext=filter_ext)
 
@@ -241,7 +241,7 @@ class TestAddonsFileAccess(BaseCase):
         with file_open(path, mode, filter_ext) as f:
             self.assertIn(needle, f.read())
 
-    def assertCannotRead(self, path, ExceptionType=FileNotFoundError, filter_ext=None):
+    def assertCannotRead(self, path, ExceptionType=OSError, filter_ext=None):
         with self.assertRaises(ExceptionType):
             file_open(path, filter_ext=filter_ext)
 
@@ -293,7 +293,7 @@ class TestAddonsFileAccess(BaseCase):
         self.assertCanRead(__file__, test_needle.encode(), mode='rb', filter_ext=('.py',))
 
         # directory target *is* an error
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(IsADirectoryError):
             file_open(os.path.join(__file__, '..'))
 
         # relative path
