@@ -779,7 +779,7 @@ class IrActionsReport(models.Model):
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
             except (PdfReadError, TypeError, NotImplementedError, ValueError) as e:
-                handle_error(error=e, error_stream=stream)
+                handle_error(self, error=e, error_stream=stream)
         result_stream = io.BytesIO()
         streams.append(result_stream)
         writer.write(result_stream)
@@ -1030,7 +1030,7 @@ class IrActionsReport(models.Model):
                 else:
                     _logger.info("The PDF documents %r are now saved in the database", attachment_names)
 
-        def custom_handle_merge_pdfs_error(error, error_stream):
+        def custom_handle_merge_pdfs_error(self, error, error_stream):
             error_record_ids.append(stream_to_ids[error_stream])
 
         stream_to_ids = {v['stream']: k for k, v in collected_streams.items() if v['stream']}
