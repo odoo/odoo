@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import api, models, fields, _, SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.tools.misc import clean_context
+from odoo.addons.mail.tools.discuss import Store
 
 
 HR_READABLE_FIELDS = [
@@ -375,3 +376,10 @@ class ResUsers(models.Model):
             res['views'] = [(self.env.ref('base.view_users_form').id, 'form')]
 
         return res
+
+    def _get_store_avatar_card_fields(self, target):
+        avatar_card_fields = super()._get_store_avatar_card_fields(target)
+        if target.is_internal(self.env):
+            employee_fields = self.employee_ids._get_store_avatar_card_fields(target)
+            avatar_card_fields.append(Store.Many("employee_ids", employee_fields, mode="ADD"))
+        return avatar_card_fields

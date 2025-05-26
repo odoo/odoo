@@ -589,3 +589,6 @@ class HrEmployee(models.Model):
             return 0
         calendars = self._get_calendars(date_from)
         return calendars[self.id].hours_per_day if calendars[self.id] else 24
+
+    def _get_store_avatar_card_fields(self, target):
+        return [*super()._get_store_avatar_card_fields(target), "leave_date_to"]

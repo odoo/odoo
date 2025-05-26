@@ -52,6 +52,7 @@ class TestChannelInternals(MailCommon, HttpCase):
     @freeze_time("2020-03-22 10:42:06")
     def test_channel_members(self):
         channel = self.env['discuss.channel'].browse(self.test_channel.ids)
+        channel.fetch(['group_public_id'])
         self.assertEqual(channel.message_partner_ids, self.env['res.partner'])
         self.assertEqual(channel.channel_partner_ids, self.env['res.partner'])
 
@@ -182,7 +183,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "leave_date_to": False, "share": False},
+                                {"id": self.test_user.id, "share": False},
                             ),
                         },
                     },
@@ -229,7 +230,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 },
                             ),
                             "res.users": self._filter_users_fields(
-                                {"id": self.test_user.id, "leave_date_to": False, "share": False},
+                                {"id": self.test_user.id, "employee_ids": [], "share": False},
                             ),
                         },
                     },

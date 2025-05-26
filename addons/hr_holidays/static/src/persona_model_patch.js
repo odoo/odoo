@@ -8,7 +8,7 @@ const { DateTime } = luxon;
 /** @param {string} datetime */
 export function getOutOfOfficeDateEndText(datetime) {
     const foptions = { ...DateTime.DATE_MED };
-    const dt = deserializeDateTime(datetime);
+    const dt = typeof datetime === "string" ? deserializeDateTime(datetime) : datetime;
     if (dt.year === DateTime.now().year) {
         foptions.year = undefined;
     }
@@ -19,9 +19,9 @@ export function getOutOfOfficeDateEndText(datetime) {
 patch(Persona.prototype, {
     /** @returns {string} */
     get outOfOfficeDateEndText() {
-        if (!this.main_user_id?.leave_date_to) {
+        if (!this.main_user_id?.employee_id?.leave_date_to) {
             return "";
         }
-        return getOutOfOfficeDateEndText(this.main_user_id.leave_date_to);
+        return getOutOfOfficeDateEndText(this.main_user_id.employee_id.leave_date_to);
     },
 });
