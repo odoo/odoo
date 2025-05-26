@@ -14,6 +14,7 @@ class ProductProduct(models.Model):
         'product_id',
         string='Additional Barcodes',
     )
+    tenant_id = fields.Char(related='product_tmpl_id.tenant_id', store=True)
 
     # THIS IS OVERRIDE SQL CONSTRAINTS.
     _sql_constraints = [
@@ -32,42 +33,40 @@ class ProductProduct(models.Model):
 
     @api.constrains('barcode', 'barcode_ids', 'active')
     def _check_unique_barcode(self):
-        barcodes_duplicate = []
         for product in self:
-            barcode_names = []
-            if product.barcode_ids:
-                barcode_names = product.mapped('barcode_ids.name')
+            tenant = product.tenant_id
+            if not tenant:
+                continue  # skip check if tenant not set
+
+            all_barcodes = set()
             if product.barcode:
-                barcode_names.append(product.barcode)
-            if not barcode_names:
+                all_barcodes.add(product.barcode)
+            all_barcodes.update(product.barcode_ids.mapped('name'))
+
+            if not all_barcodes:
                 continue
-            products = self.env['product.product'].search([
-                ('barcode', 'in', barcode_names),
+
+            # Check other products with same tenant and same barcode
+            domain = [
                 ('id', '!=', product.id),
                 ('active', '=', True),
-            ])
-            barcode_ids = self.env['product.barcode.multi'].search([
-                ('name', 'in', barcode_names),
-                ('product_id', '!=', product.id),
-                ('product_id.active', '=', True),
-            ])
-            if len(barcode_names) != len(set(barcode_names)):
-                barcodes_multi = set([barcode for barcode in barcode_names if barcode_names.count(barcode) > 1])
-                for barcode in barcodes_multi:
-                    barcodes_duplicate.append(barcode)
-            if barcode_ids:
-                barcodes = [barcode.name for barcode in barcode_ids]
-                for barcode in barcodes:
-                    barcodes_duplicate.append(barcode)
-            if products:
-                barcodes_product = [product.barcode for product in products]
-                for barcode in barcodes_product:
-                    barcodes_duplicate.append(barcode)
-        if barcodes_duplicate:
-            raise UserError(
-                _(
-                    "The following barcode(s): {0} was found in other active products."
-                    "\nNote that product barcodes should not repeat themselves both in "
-                    '"Barcode" field and "Additional Barcodes" field.'
-                ).format(", ".join(set(barcodes_duplicate)))
-            )
+                ('tenant_id', '=', tenant),
+                '|',
+                ('barcode', 'in', list(all_barcodes)),
+                ('barcode_ids.name', 'in', list(all_barcodes))
+            ]
+            conflict_products = self.env['product.product'].search(domain)
+
+            conflict_barcodes = set()
+            for cp in conflict_products:
+                if cp.barcode in all_barcodes:
+                    conflict_barcodes.add(cp.barcode)
+                conflict_barcodes.update(
+                    cp.barcode_ids.filtered(lambda b: b.name in all_barcodes).mapped('name')
+                )
+
+            if conflict_barcodes:
+                raise UserError(_(
+                    "The following barcode(s): %s are already used in another product within the same tenant (%s)."
+                ) % (", ".join(conflict_barcodes), tenant))
+

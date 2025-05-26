@@ -259,38 +259,49 @@ class DeliveryReceiptWizardLine(models.TransientModel):
             if line.remaining_quantity < 0:
                 raise ValidationError(_("The selected quantity (%s) exceeds the remaining quantity (%s).") % (line.quantity, line.remaining_quantity))
 
-
-
     @api.onchange('product_id')
     def onchange_product_id(self):
         """
-        On change method for product_id and quantity fields.
-        This method checks if the selected product is valid based on
-        the available products in the current picking and returns
-        a warning if the product is not available.
+        Validates the selected product by:
+        - Matching against picking's move lines (ID, SKU, barcode),
+        - Ensuring product's tenant_id matches the wizard's tenant.
+        Also sets related fields.
         """
-        if self.wizard_id and self.wizard_id.picking_id:
-            product_ids = self.wizard_id.picking_id.move_ids_without_package.mapped('product_id.id')
+        if self.wizard_id and self.wizard_id.picking_id and self.product_id:
+            move_lines = self.wizard_id.picking_id.move_ids_without_package
+            valid_products = move_lines.mapped('product_id')
+            tenant_code = self.wizard_id.tenant_code_id.name or ""
+
+            # Match product only if both product and tenant match
+            matched_product = valid_products.filtered(lambda p: (
+                    (
+                            p.id == self.product_id.id or
+                            (p.barcode and p.barcode == self.product_id.barcode) or
+                            (p.default_code and p.default_code == self.product_id.default_code)
+                    ) and
+                    (p.product_tmpl_id.tenant_id == tenant_code)
+            ))
+
+            # Auto-populate fields
             self.picking_id = self.wizard_id.picking_id
             self.location_dest_id = self.wizard_id.location_dest_id
-            if self.product_id and self.product_id.id not in product_ids:
+
+            if not matched_product:
                 return {
                     'warning': {
                         'title': _("Invalid Product Selection"),
-                        'message': _("The selected product is not available in the selected picking."),
+                        'message': _(
+                            "The selected product is either not present in the picking or does not match the expected tenant."
+                        ),
                     }
                 }
-            # Commented below code to remove validation while selecting product if it doesn't matches with the selected automation_manual selection
-            # if self.product_id and self.product_id.automation_manual_product != self.wizard_id.automation_manual:
-            #     raise ValidationError(
-            #         "The selected product's automation/manual type does not match the wizard's automation/manual selection. "
-            #         "Please select a product that corresponds to the chosen automation/manual type."
-            #     )
 
             return {
                 'domain': {
-                    'product_id': [('id', 'in', product_ids)]
+                    'product_id': [('id', 'in', valid_products.ids)]
                 }
             }
 
         return {'domain': {'product_id': []}}
+
+
