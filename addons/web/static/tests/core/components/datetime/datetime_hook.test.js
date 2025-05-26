@@ -172,3 +172,54 @@ test("select time in the afternoon with pm format (showSeconds = false)", async 
     await click(document.body);
     expect(".datetime_hook_input").toHaveValue("06/06/2023 10:00 PM");
 });
+
+test("close popover when owner component is unmounted", async() => {
+    class Child extends Component {
+        static components = { DateTimeInput };
+        static props = [];
+        static template = xml`
+            <div>
+                <input type="text" class="datetime_hook_input" t-ref="start-date"/>
+            </div>
+        `;
+
+        setup() {
+            useDateTimePicker({
+                pickerProps: {
+                    value: [false, false],
+                    type: "date",
+                    range: true,
+                }
+            });
+        }
+    }
+
+    const { resolve: hidePopover, promise } = Promise.withResolvers();
+
+    class DateTimeToggler extends Component {
+        static components = { Child };
+        static props = [];
+        static template = xml`<Child t-if="!state.hidden"/>`;
+
+        setup() {
+            this.state = useState({
+                hidden: false,
+            });
+            promise.then(() => {
+                this.state.hidden = true;
+            });
+        }
+    }
+
+    await mountWithCleanup(DateTimeToggler);
+
+    await click("input.datetime_hook_input");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    // we can't simply add a button because `useClickAway` will be triggered, thus closing the popover properly
+    hidePopover();
+    await animationFrame();
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+});
