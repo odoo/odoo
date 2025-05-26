@@ -1902,6 +1902,14 @@ test("`this` inside rendererProps should reference the component", async () => {
 });
 
 test("empty many2many tags field with no result", async () => {
+    patchWithCleanup(Many2XAutocomplete.prototype, {
+        getCreationContext(value){
+            expect(value).toBe("");
+            const context = super.getCreationContext(value);
+            expect(context[`default_${this.props.nameCreateField}`]).toBe(undefined);
+            return context;
+        }
+    });
     class M2M extends models.Model {
         m2m = fields.Many2many({ relation: "m2m" });
     }
