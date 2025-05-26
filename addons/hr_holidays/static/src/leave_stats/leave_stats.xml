@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <div t-name="hr_holidays.LeaveStatsComponent" class="o_leave_stats">
-        <div t-if="employee" id="o_leave_stats_employee">
+        <div t-if="state.employee" id="o_leave_stats_employee">
             <div class="o_hr_leave_subtitle">
-                <t t-esc="employee[1]"/> in <t t-esc="thisYear"/>
+                <t t-esc="state.employee[1]"/> in <t t-esc="thisYear"/>
             </div>
             <div t-if="state.leaves.length === 0">
                 None
@@ -14,9 +14,9 @@
             </div>
         </div>
 
-        <div t-if="department" id="o_leave_stats_department">
+        <div t-if="state.department" id="o_leave_stats_department">
             <div class="o_horizontal_separator o_hr_leave_subtitle">
-                <t t-esc="department[1]"/>
+                <t t-esc="state.department[1]"/>
             </div>
             <div t-if="state.departmentLeaves.length === 0">
                 None
