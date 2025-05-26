@@ -1018,7 +1018,7 @@ class AccountChartTemplate(models.AbstractModel):
         # Assign the account based on the map
         for field, _account_name in field_and_names:
             for tax_group in tax_group_data.values():
-                tax_group[field] = existing_accounts.get(account_template_xml_id)
+                tax_group[field] = existing_accounts.get(tax_group.get(field))
 
         for tax_template in tax_data.values():
             # This is required because the country isn't provided directly by the template
