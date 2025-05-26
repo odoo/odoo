@@ -71,6 +71,21 @@ Absent from function: {func_missing}
 Absent from docstring: {doc_missing}
 """
 
+PARSE_ERROR = '''Unable to parse the docstring as reStructuredText.
+"""
+{doc}
+"""
+{error}
+Learn rst:
+
+* https://docutils.sourceforge.io/docs/user/rst/quickref.html
+* https://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html
+* https://www.sphinx-doc.org/en/master/usage/domains/python.html
+
+Online editor:
+
+* https://rsted.info.ucl.ac.be/'''
+
 
 def extract_docstring_params(doctree):
     params = {}  # sorted set
@@ -213,7 +228,10 @@ class TestDocstring(BaseCase):
                             settings=settings,
                         )
                         if stderr.tell():
-                            self.fail(stderr.getvalue())
+                            self.fail(PARSE_ERROR.format(
+                                doc=inspect.cleandoc(method.__doc__).strip(),
+                                error=stderr.getvalue(),
+                            ))
 
                     self._test_docstring_params(method, doctree)
 
