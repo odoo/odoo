@@ -2,7 +2,6 @@
 
 from datetime import timedelta
 from itertools import chain, starmap, zip_longest
-from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
