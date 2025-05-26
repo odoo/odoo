@@ -111,10 +111,10 @@ export function useModel(ModelClass, params, options = {}) {
     const model = new ModelClass(component.env, params, services);
     onWillStart(async () => {
         await options.beforeFirstLoad?.();
-        await model.load(component.props);
+        await model.load(getSearchParams(component.props));
         model.whenReady.resolve();
     });
-    onWillUpdateProps((nextProps) => model.load(nextProps));
+    onWillUpdateProps((nextProps) => model.load(getSearchParams(nextProps)));
     return model;
 }
 
