@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 import { markup } from "@odoo/owl";
-import { delay } from "@odoo/hoot-dom";
 
 registry.category("web_tour.tours").add('crm_tour', {
     url: "/odoo",
@@ -81,12 +80,6 @@ registry.category("web_tour.tours").add('crm_tour', {
     content: markup(_t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats!")),
     tooltipPosition: "right",
     run: "drag_and_drop(.o_opportunity_kanban .o_kanban_group:eq(3))",
-},
-{
-    trigger: "body:not(:has(.o_reward_rainbow_man))",
-    async run() {
-        await delay(3000);
-    }
 },
 {
     trigger: ".o_kanban_record",
