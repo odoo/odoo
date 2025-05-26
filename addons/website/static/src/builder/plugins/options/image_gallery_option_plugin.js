@@ -305,7 +305,7 @@ class ImageGalleryOption extends Plugin {
         const carouselEl = imageGalleryElement.querySelector(".carousel");
         const colorContrast =
             carouselEl && carouselEl.classList.contains("carousel-dark") ? "carousel-dark" : " ";
-        const slideshowEl = renderToElement("html_builder.s_image_gallery_slideshow", {
+        const slideshowEl = renderToElement("website.s_image_gallery_slideshow", {
             images: images,
             index: 0,
             interval: currentInterval || 0,

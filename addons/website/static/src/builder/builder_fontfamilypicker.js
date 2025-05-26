@@ -12,7 +12,7 @@ import { BuilderSelect } from "@html_builder/core/building_blocks/builder_select
 import { BuilderSelectItem } from "@html_builder/core/building_blocks/builder_select_item";
 
 export class BuilderFontFamilyPicker extends Component {
-    static template = "html_builder.website.BuilderFontFamilyPicker";
+    static template = "website.BuilderFontFamilyPicker";
     static props = {
         ...basicContainerBuilderComponentProps,
         valueParamName: String,

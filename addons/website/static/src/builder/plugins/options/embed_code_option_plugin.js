@@ -12,7 +12,7 @@ class EmbedCodeOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(BEGIN, {
-                template: "html_builder.EmbedCodeOption",
+                template: "website.EmbedCodeOption",
                 selector: ".s_embed_code",
             }),
         ],

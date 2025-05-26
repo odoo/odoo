@@ -2,7 +2,7 @@ import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class FormModelRequiredFieldAlert extends Component {
-    static template = "html_builder.website.s_website_form_model_required_field_alert";
+    static template = "website.s_website_form_model_required_field_alert";
     static props = {
         fieldName: String,
         modelName: String,

@@ -9,15 +9,15 @@ class TimelineListOptionPlugin extends Plugin {
         builder_options: [
             // TODO AGAU: alignment option sequence doesn't match master, must split template
             withSequence(BEGIN, {
-                template: "html_builder.TimelineListOption",
+                template: "website.TimelineListOption",
                 selector: ".s_timeline_list",
             }),
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.DotLinesColorOption",
+                template: "website.DotLinesColorOption",
                 selector: ".s_timeline_list",
             }),
             withSequence(BEGIN, {
-                template: "html_builder.DotColorOption",
+                template: "website.DotColorOption",
                 selector: ".s_timeline_list .s_timeline_list_row",
             }),
         ],

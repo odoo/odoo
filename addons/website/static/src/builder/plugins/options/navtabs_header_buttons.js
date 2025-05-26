@@ -3,7 +3,7 @@ import { useOperation } from "@html_builder/core/operation_plugin";
 import { Component } from "@odoo/owl";
 
 export class NavTabsHeaderMiddleButtons extends Component {
-    static template = "html_builder.NavTabsHeaderMiddleButtons";
+    static template = "website.NavTabsHeaderMiddleButtons";
     static props = {
         addItem: Function,
         removeItem: Function,

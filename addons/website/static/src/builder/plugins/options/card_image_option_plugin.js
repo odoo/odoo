@@ -49,7 +49,7 @@ class CardImageOptionPlugin extends Plugin {
             },
             addCoverImage: {
                 apply: ({ editingElement }) => {
-                    const imageWrapper = renderToElement("html_builder.s_card.imageWrapper");
+                    const imageWrapper = renderToElement("website.s_card.imageWrapper");
                     editingElement.prepend(imageWrapper);
                     editingElement.classList.add("o_card_img_top");
                 },

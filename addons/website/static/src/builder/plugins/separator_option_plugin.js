@@ -6,7 +6,7 @@ class SeparatorOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             {
-                template: "html_builder.SeparatorOption",
+                template: "website.SeparatorOption",
                 selector: ".s_hr",
                 applyTo: "hr",
             },

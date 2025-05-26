@@ -4,7 +4,7 @@ import { getImageSrc, getMimetype } from "@html_editor/utils/image";
 import { clamp } from "@web/core/utils/numbers";
 
 export class ImageFormatOption extends BaseOptionComponent {
-    static template = "html_builder.ImageFormat";
+    static template = "website.ImageFormat";
     static props = {
         level: { type: Number, optional: true },
         computeMaxDisplayWidth: { type: Function, optional: true },

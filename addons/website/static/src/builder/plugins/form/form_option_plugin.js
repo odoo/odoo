@@ -106,7 +106,7 @@ export class FormOptionPlugin extends Plugin {
                 exclude: ".s_website_form_dnone",
             },
             {
-                template: "html_builder.website.s_website_form_submit_option",
+                template: "website.s_website_form_submit_option",
                 selector: ".s_website_form_submit",
                 exclude: ".s_website_form_no_submit_options",
             },

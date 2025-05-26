@@ -70,7 +70,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
             showDescription: {
                 isApplied: ({ editingElement }) => !!editingElement.querySelector(".description"),
                 apply: ({ editingElement }) => {
-                    editingElement.append(renderToElement("html_builder.GoogleMapsDescription"));
+                    editingElement.append(renderToElement("website.GoogleMapsDescription"));
                 },
                 clean: ({ editingElement }) => {
                     editingElement.querySelector(".description").remove();

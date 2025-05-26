@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.CarouselCardsOption" t-inherit="html_builder.CarouselBottomControllersOption" t-inherit-mode="primary">
+<t t-name="website.CarouselCardsOption" t-inherit="website.CarouselBottomControllersOption" t-inherit-mode="primary">
     <xpath expr="//BuilderRow[@label.translate=&quot;Indicators&quot;]" position="after">
         <BuilderRow label.translate="Images">
             <BuilderCheckbox id="'toggle_card_img_opt'" preview="false" action="'toggleCardImg'"/>
@@ -38,7 +38,7 @@
     </xpath>
 </t>
 
-<t t-name="html_builder.s_carousel_cards.imageWrapper">
+<t t-name="website.s_carousel_cards.imageWrapper">
     <figure class="o_card_img_wrapper mb-0">
         <img class="o_card_img h-100" src="/web/image/website.s_carousel_cards_default_image_1" alt=""/>
     </figure>

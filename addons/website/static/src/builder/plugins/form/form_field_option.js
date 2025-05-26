@@ -5,7 +5,7 @@ import { FormModelRequiredFieldAlert } from "./form_model_required_field_alert";
 import { getDependencyEl, getFieldName, getMultipleInputs, isFieldCustom } from "./utils";
 
 export class FormFieldOption extends BaseOptionComponent {
-    static template = "html_builder.website.s_website_form_field_option";
+    static template = "website.s_website_form_field_option";
     static props = {
         fetchModels: Function,
         loadFieldOptionData: Function,

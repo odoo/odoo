@@ -51,37 +51,37 @@ export class ThemeTabPlugin extends Plugin {
             withSequence(
                 OPTION_POSITIONS.SETTINGS,
                 this.getThemeOptionBlock("website-settings", _t("Website"), {
-                    template: "html_builder.ThemeWebsiteSettingsOption",
+                    template: "website.ThemeWebsiteSettingsOption",
                 })
             ),
             withSequence(
                 OPTION_POSITIONS.PARAGRAPH,
                 this.getThemeOptionBlock("theme-paragraph", _t("Paragraph"), {
-                    template: "html_builder.ThemeParagraphOption",
+                    template: "website.ThemeParagraphOption",
                 })
             ),
             withSequence(
                 OPTION_POSITIONS.HEADINGS,
                 this.getThemeOptionBlock("theme-headings", _t("Headings"), {
-                    template: "html_builder.ThemeHeadingsOption",
+                    template: "website.ThemeHeadingsOption",
                 })
             ),
             withSequence(
                 OPTION_POSITIONS.BUTTON,
                 this.getThemeOptionBlock("theme-button", _t("Button"), {
-                    template: "html_builder.ThemeButtonOption",
+                    template: "website.ThemeButtonOption",
                 })
             ),
             withSequence(
                 OPTION_POSITIONS.LINK,
                 this.getThemeOptionBlock("theme-link", _t("Link"), {
-                    template: "html_builder.ThemeLinkOption",
+                    template: "website.ThemeLinkOption",
                 })
             ),
             withSequence(
                 OPTION_POSITIONS.INPUT,
                 this.getThemeOptionBlock("theme-input", _t("Input Fields"), {
-                    template: "html_builder.ThemeInputOption",
+                    template: "website.ThemeInputOption",
                 })
             ),
             withSequence(

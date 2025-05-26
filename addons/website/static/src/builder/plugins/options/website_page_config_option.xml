@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="html_builder.TopMenuVisibilityOption">
+<t t-name="website.TopMenuVisibilityOption">
     <BuilderRow label.translate="Header Position">
         <BuilderSelect preview="false" action="'setWebsiteHeaderVisibility'">
             <BuilderSelectItem actionValue="'overTheContent'" id="'overTheContent'" t-if="props.doesPageOptionExist('header_overlay')">Over The Content</BuilderSelectItem>
@@ -19,7 +19,7 @@
     </t>
 </t>
 
-<t t-name="html_builder.HideFooterOption">
+<t t-name="website.HideFooterOption">
     <BuilderRow label.translate="Page Visibility">
         <BuilderCheckbox action="'setWebsiteFooterVisible'"/>
     </BuilderRow>

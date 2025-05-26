@@ -26,7 +26,7 @@ class ProductCatalogOptionPlugin extends Plugin {
                 },
             }),
             withSequence(SNIPPET_SPECIFIC_END, {
-                template: "html_builder.ProductCatalogDescriptionOption",
+                template: "website.ProductCatalogDescriptionOption",
                 selector: ".s_product_catalog",
             }),
         ],

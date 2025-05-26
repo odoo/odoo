@@ -2,7 +2,7 @@ import { BaseOptionComponent, useDomState } from "@html_builder/core/utils";
 import { _t } from "@web/core/l10n/translation";
 
 export class ScrollButtonOption extends BaseOptionComponent {
-    static template = "html_builder.ScrollButtonOption";
+    static template = "website.ScrollButtonOption";
     static props = {};
 
     setup() {

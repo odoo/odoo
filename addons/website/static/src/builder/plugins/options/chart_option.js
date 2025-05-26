@@ -5,7 +5,7 @@ import { _t } from "@web/core/l10n/translation";
 export const DATASET_KEY_PREFIX = "chart_dataset_";
 
 export class ChartOption extends BaseOptionComponent {
-    static template = "html_builder.ChartOption";
+    static template = "website.ChartOption";
     static props = {
         isPieChart: Function,
         getColor: Function,

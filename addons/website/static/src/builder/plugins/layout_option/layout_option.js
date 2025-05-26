@@ -4,7 +4,7 @@ import { SelectNumberColumn } from "./select_number_column";
 import { SpacingOption } from "./spacing_option";
 
 export class LayoutOption extends BaseOptionComponent {
-    static template = "html_builder.LayoutOption";
+    static template = "website.LayoutOption";
     static components = {
         SelectNumberColumn,
         SpacingOption,
@@ -14,7 +14,7 @@ export class LayoutOption extends BaseOptionComponent {
 }
 
 export class LayoutGridOption extends BaseOptionComponent {
-    static template = "html_builder.LayoutGridOption";
+    static template = "website.LayoutGridOption";
     static components = {
         SpacingOption,
         AddElementOption,
@@ -23,7 +23,7 @@ export class LayoutGridOption extends BaseOptionComponent {
 }
 
 export class LayoutColumnOption extends BaseOptionComponent {
-    static template = "html_builder.LayoutColumnOption";
+    static template = "website.LayoutColumnOption";
     static components = {
         SelectNumberColumn,
     };

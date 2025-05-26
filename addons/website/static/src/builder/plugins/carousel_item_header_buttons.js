@@ -2,7 +2,7 @@ import { useOperation } from "@html_builder/core/operation_plugin";
 import { Component } from "@odoo/owl";
 
 export class CarouselItemHeaderMiddleButtons extends Component {
-    static template = "html_builder.CarouselItemHeaderMiddleButtons";
+    static template = "website.CarouselItemHeaderMiddleButtons";
     static props = {
         applyAction: Function,
         addSlide: Function,

@@ -9,7 +9,7 @@ class BadgeOptionPlugin extends Plugin {
     resources = {
         builder_options: [
             withSequence(before(ANIMATE), {
-                template: "html_builder.BadgeOption",
+                template: "website.BadgeOption",
                 selector: ".s_badge",
             }),
         ],
