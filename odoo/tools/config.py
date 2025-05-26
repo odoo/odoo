@@ -3,6 +3,7 @@
 import collections
 import configparser as ConfigParser
 import errno
+import functools
 import logging
 import optparse
 import glob
@@ -759,11 +760,11 @@ class configmanager:
     def _is_addons_path(cls, path):
         for f in os.listdir(path):
             modpath = os.path.join(path, f)
-            if os.path.isdir(modpath):
-                def hasfile(filename):
-                    return os.path.isfile(os.path.join(modpath, filename))
-                if hasfile('__init__.py') and hasfile('__manifest__.py'):
-                    return True
+
+            def hasfile(filename):
+                return os.path.isfile(os.path.join(modpath, filename))
+            if hasfile('__init__.py') and hasfile('__manifest__.py'):
+                return True
         return False
 
     @classmethod
@@ -957,7 +958,7 @@ class configmanager:
     def __getitem__(self, key):
         return self.options[key]
 
-    @property
+    @functools.cached_property
     def root_path(self):
         return self._normalize(os.path.join(os.path.dirname(__file__), '..'))
 
@@ -981,7 +982,7 @@ class configmanager:
                 # try to make +rx placeholder dir, will need manual +w to activate it
                 os.makedirs(d, 0o500)
             except OSError:
-                logging.getLogger(__name__).debug('Failed to create addons data dir %s', d)
+                self._log(logging.DEBUG, 'Failed to create addons data dir %s', d)
         return d
 
     @property
