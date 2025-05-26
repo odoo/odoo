@@ -5,12 +5,13 @@ import { Cache } from "@web/core/utils/cache";
 import { loadCSS } from "@web/core/assets";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
 import { showAddFontDialog } from "./add_font_dialog";
+import { WebsiteFontSizeSelector } from "./font_size_selector";
 
 // TODO Website-specific
 class FontPlugin extends Plugin {
     static id = "websiteFont";
     static shared = ["addFont", "deleteFont", "getFontsData"];
-    static dependencies = ["savePlugin", "customizeWebsite"];
+    static dependencies = ["savePlugin", "customizeWebsite", "toolbar"];
     resources = {
         // Lists CSS variables that will be reset when a font is deleted if
         // they refer to that font.
@@ -31,6 +32,17 @@ class FontPlugin extends Plugin {
     };
     setup() {
         this.fontsCache = new Cache(this._fetchFonts.bind(this), JSON.stringify);
+        const buttonGroups = this.dependencies.toolbar.getToolbarInfo().buttonGroups;
+        for (const buttonGroup of buttonGroups) {
+            if (buttonGroup.id !== "font") {
+                continue;
+            }
+            for (const button of buttonGroup.buttons) {
+                if (button.id === "font-size") {
+                    button.Component = WebsiteFontSizeSelector;
+                }
+            }
+        }
     }
     destroy() {
         super.destroy();

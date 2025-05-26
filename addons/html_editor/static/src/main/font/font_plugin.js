@@ -90,10 +90,7 @@ export const fontItems = [
 ];
 
 export const fontSizeItems = [
-    {
-        variableName: "display-1-font-size",
-        className: "display-1-fs",
-    },
+    { variableName: "display-1-font-size", className: "display-1-fs" },
     { variableName: "display-2-font-size", className: "display-2-fs" },
     { variableName: "display-3-font-size", className: "display-3-fs" },
     { variableName: "display-4-font-size", className: "display-4-fs" },

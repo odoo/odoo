@@ -167,7 +167,6 @@ export class ToolbarPlugin extends Plugin {
             }
             groupIds.add(group.id);
         }
-
         this.buttonGroups = this.getButtonGroups();
 
         this.isMobileToolbar = hasTouch() && window.visualViewport;
