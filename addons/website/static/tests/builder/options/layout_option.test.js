@@ -56,3 +56,11 @@ test("Changing the number of columns to 'None' (0)", async () => {
     await contains("[data-action-id='changeColumnCount'][data-action-value='0']").click();
     expect(":iframe .s_text_block .row").toHaveCount(0);
 });
+
+test("Adding columns does not introduce extra offset (offset class removed on clone)", async () => {
+    await setupWebsiteBuilderWithSnippet(["s_text_block"]);
+    await contains(":iframe .s_text_block").click();
+    await contains("[data-label='Layout'] .dropdown").click();
+    await contains("[data-action-id='changeColumnCount'][data-action-value='5']").click();
+    expect(":iframe .s_text_block .container > .row > .offset-lg-1").toHaveCount(1);
+});
