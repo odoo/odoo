@@ -47,7 +47,7 @@ import {
     useState,
     useSubEnv,
 } from "@odoo/owl";
-import { highlightText } from "@web/core/utils/strings";
+import { highlightText, odoomark } from "@web/core/utils/strings";
 
 //
 // Commons
@@ -362,7 +362,9 @@ export class Many2XAutocomplete extends Component {
         const label = record.__formatted_display_name || record.display_name;
         return {
             value: record.id,
-            label: label ? highlightText(request, label, "text-primary fw-bold") : _t("Unnamed"),
+            label: label
+                ? highlightText(request, odoomark(label), "text-primary fw-bold")
+                : _t("Unnamed"),
         };
     }
 

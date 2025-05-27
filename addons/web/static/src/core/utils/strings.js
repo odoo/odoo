@@ -1,5 +1,5 @@
 import { isObject } from "./objects";
-import { markup } from "@odoo/owl";
+import { htmlEscape, markup } from "@odoo/owl";
 
 export const nbsp = "\u00a0";
 
@@ -151,22 +151,20 @@ export function odoomark(text) {
 
 /**
  * Returns a markuped version of the input text where
- * the query is highlighted using the input classes and
- * a b tag if it is part of the text
+ * the query is highlighted using the input classes
+ * if it is part of the text.
  *
  * @param {string} query
- * @param {string} text
+ * @param {string | ReturnType<markup>} text
  * @param {string} classes
- * @returns {string}
+ * @returns {string | ReturnType<markup>}
  */
 export function highlightText(query, text, classes) {
     if (!query) {
-        return odoomark(text);
+        return text;
     }
     const regex = new RegExp(`(${escapeRegExp(escape(query))})+(?=(?:[^>]*<[^<]*>)*[^<>]*$)`, "ig");
-    return markup(
-        odoomark(text).toString().replaceAll(regex, `<span class="${classes}">$1</span>`)
-    );
+    return markup(htmlEscape(text).replaceAll(regex, markup`<span class="${classes}">$1</span>`));
 }
 
 /* eslint-disable */

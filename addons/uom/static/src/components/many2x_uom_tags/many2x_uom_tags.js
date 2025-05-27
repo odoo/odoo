@@ -8,7 +8,7 @@ import {
 import { UomAutoComplete } from "@uom/components/uom_autocomplete/uom_autocomplete";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { onWillUpdateProps } from "@odoo/owl";
-import { highlightText } from "@web/core/utils/strings";
+import { highlightText, odoomark } from "@web/core/utils/strings";
 
 export function getProductRelatedModel() {
     const field = this.props.record.fields[this.props.productField];
@@ -82,7 +82,9 @@ export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
     mapRecordToOption(result, request) {
         return {
             value: result.id,
-            label: result.name ? highlightText(request, result.name, "text-primary fw-bold") : _t("Unnamed"),
+            label: result.name
+                ? highlightText(request, odoomark(result.name), "text-primary fw-bold")
+                : _t("Unnamed"),
             displayName: result.name,
             relative_info: result.relative_info,
         };
