@@ -780,8 +780,9 @@ export class HistoryPlugin extends Plugin {
     /**
      * @param { Object } [params]
      * @param { "consumed"|"undo"|"redo" } [params.stepState]
+     * @param {Object} [params.extraStepInfos]
      */
-    addStep({ stepState } = {}) {
+    addStep({ stepState, extraStepInfos } = {}) {
         // @todo @phoenix should we allow to pause the making of a step?
         // if (!this.stepsActive) {
         //     return;
@@ -805,7 +806,7 @@ export class HistoryPlugin extends Plugin {
             return false;
         }
         const stepCommonAncestor = this.getMutationsRoot(currentStep.mutations) || this.editable;
-        this.dispatchTo("normalize_handlers", stepCommonAncestor);
+        this.dispatchTo("normalize_handlers", stepCommonAncestor, stepState);
         this.handleObserverRecords();
         if (currentMutationsCount === currentStep.mutations.length) {
             // If there was no registered mutation during the normalization step,
@@ -820,6 +821,10 @@ export class HistoryPlugin extends Plugin {
         this.steps.push(currentStep);
         // @todo @phoenix add this in the linkzws plugin.
         // this._setLinkZws();
+        this.dispatchTo("before_add_step_handlers");
+        if (extraStepInfos) {
+            currentStep.extraStepInfos = extraStepInfos;
+        }
         this.currentStep = this.processHistoryStep({
             id: this.generateId(),
             selection: {},
@@ -865,7 +870,7 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(revertedStep.id, "consumed");
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
-            this.addStep({ stepState: "undo" });
+            this.addStep({ stepState: "undo", extraStepInfos: revertedStep.extraStepInfos });
             // Consider the last position of the history as an undo.
         }
         this.dispatchTo("post_undo_handlers", revertedStep);
@@ -888,7 +893,7 @@ export class HistoryPlugin extends Plugin {
             this.stepsStates.set(revertedStep.id, "consumed");
             this.revertMutations(revertedStep.mutations, { forNewStep: true });
             this.setSerializedSelection(revertedStep.selection);
-            this.addStep({ stepState: "redo" });
+            this.addStep({ stepState: "redo", extraStepInfos: revertedStep.extraStepInfos });
         }
         this.dispatchTo("post_redo_handlers", revertedStep);
     }
