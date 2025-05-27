@@ -20,7 +20,6 @@ from odoo.exceptions import ValidationError, AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import get_resource_from_path
-from odoo.service.model import get_public_method
 from odoo.tools import _, config, frozendict, SQL
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import file_path, get_diff, ConstantMapping
@@ -1722,9 +1721,8 @@ actual arch.
                         action_name=name, model_name=name_manager.model._name,
                     )
                     self._raise_view_error(msg, node)
-                try:
-                    get_public_method(name_manager.model, name)
-                except (AttributeError, AccessError):
+                # get_public_method(name_manager.model, name) is too slow for this validation, a more naive check is acceptable.
+                if name.startswith('_') or (hasattr(func, '_api_private') and func._api_private):
                     msg = _(
                         "%(method)s on %(model)s is private and cannot be called from a button",
                         method=name, model=name_manager.model._name,
