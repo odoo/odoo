@@ -4,7 +4,7 @@
 {
     'name': 'Saudi Arabia - E-invoicing',
     'icon': '/l10n_sa/static/description/icon.png',
-    'version': '0.1',
+    'version': '0.2',
     'depends': [
         'account_edi_ubl_cii',
         'account_debit_note',
