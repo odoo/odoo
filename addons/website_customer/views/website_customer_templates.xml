@@ -261,6 +261,7 @@
                     <a t-attf-href="/customers" aria-label="Back to references list"><i class="oi oi-chevron-left me-2"/>Back to references</a>
                 </div>
                 <t t-call="website_partner.partner_detail">
+                    <t t-set="contact_details" t-value="True"/>
                     <t t-set="right_column">
                         <div id="right_column"><t t-call="website_customer.references_block"/></div>
                     </t>
