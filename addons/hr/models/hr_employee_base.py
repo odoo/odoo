@@ -44,6 +44,10 @@ class HrEmployeeBase(models.AbstractModel):
         ("other", "Other")], compute="_compute_work_location_name_type")
     user_id = fields.Many2one('res.users', help="")
     share = fields.Boolean(related='user_id.share')
+    category_ids = fields.Many2many(
+        'hr.employee.category', 'employee_category_rel',
+        'employee_id', 'category_id',
+        string='Tags')
     resource_id = fields.Many2one('resource.resource')
     resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
     is_flexible = fields.Boolean(compute='_compute_is_flexible', store=True)
