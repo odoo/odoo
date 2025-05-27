@@ -2087,7 +2087,9 @@ export class PosStore extends WithLazyGetterTrap {
     }
     // There for override to do something before adding partner to current order from partner list
     setPartnerToCurrentOrder(partner) {
-        this.getOrder().setPartner(partner);
+        const order = this.getOrder();
+        order.setPartner(partner);
+        this.addPendingOrder([order.id]);
     }
     async selectPartner(currentOrder = this.getOrder()) {
         // FIXME, find order to refund when we are in the ticketscreen.
