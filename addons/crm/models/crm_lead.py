@@ -12,6 +12,7 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import mail_validation
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.orm.domains import Domain
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import date_utils, email_normalize_all, is_html_empty, groupby, parse_contact_from_email, SQL
@@ -97,6 +98,7 @@ class CrmLead(models.Model):
     _primary_email = 'email_from'
     _check_company_auto = True
     _track_duration_field = 'stage_id'
+    _stage_day_rot_field = 'day_rot'
 
     # Description
     name = fields.Char(
@@ -389,6 +391,23 @@ class CrmLead(models.Model):
             date_create = fields.Datetime.from_string(lead.create_date)
             date_close = fields.Datetime.from_string(lead.date_closed)
             lead.day_close = abs((date_close - date_create).days)
+
+    @api.depends('won_status', 'type', 'stage_id.day_rot')
+    def _compute_rotting(self):
+        super()._compute_rotting()
+
+    def _resource_is_not_rotting_hook(self, resource):
+        if resource.won_status != 'pending' or resource.type != 'opportunity':
+            return True
+        return super()._resource_is_not_rotting_hook(resource)
+
+    def _search_is_rotting(self, operator, value):
+        sup = super()._search_is_rotting(operator, value)
+        dom = [
+            ('won_status', '=', 'pending'),
+            ('type', '=', 'opportunity'),
+        ]
+        return Domain.AND([sup, dom])
 
     @api.depends('partner_id')
     def _compute_name(self):

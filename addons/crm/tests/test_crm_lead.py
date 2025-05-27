@@ -987,6 +987,96 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertFalse(lead.phone_sanitized)
 
+    @users('user_sales_manager')
+    def test_leads_rotting(self):
+        # create a stage with rotting days = 5
+        stages_rot = self.env['crm.stage'].create([
+            {
+                'name': 'Can Rot',
+                'sequence': 10,
+                'day_rot': 5,
+                'is_won': False,
+            }, {
+                'name': 'Can Rot 2',
+                'sequence': 12,
+                'day_rot': 5,
+                'is_won': False,
+            },
+        ])
+        stage_rot = stages_rot[0]
+        stage_rot_2 = stages_rot[1]
+
+        rotten_leads = self.env['crm.lead']
+        clean_leads = self.env['crm.lead']
+        now = datetime(2025, 1, 20, 12, 0, 0)
+        close_past = datetime(2025, 1, 18, 12, 0, 0)
+        past = datetime(2025, 1, 10, 12, 0, 0)
+        last_year = datetime(2024, 1, 20, 12, 0, 0)
+
+        with self.mock_datetime_and_now(past):
+            vals = {
+                'name': 'Opportunity',
+                'type': 'opportunity',
+                'stage_id': stage_rot.id
+            }
+            rotten_leads += self.env['crm.lead'].create([vals, vals, vals, vals, vals, vals])
+
+        with self.mock_datetime_and_now(close_past):
+            clean_leads += self.env['crm.lead'].create({
+                'name': 'Fresh Opportuniy',
+                'type': 'opportunity',
+                'stage_id': stage_rot.id,
+            })
+        with self.mock_datetime_and_now(last_year):
+            clean_leads += self.env['crm.lead'].create({
+                'name': 'Won Opportuniy',
+                'type': 'opportunity',
+                'stage_id': self.stage_gen_won.id,
+            })
+
+        with self.mock_datetime_and_now(now):
+            for lead in rotten_leads:
+                self.assertTrue(lead.is_rotting)
+            for lead in clean_leads:
+                self.assertFalse(lead.is_rotting)
+
+            # assert the following:
+            # edit lead: no longer rotting
+            edited = rotten_leads[0]
+            edited.write({'name': 'Edited Opportunity'})
+            self.assertFalse(edited.is_rotting)
+
+            # send message: no longer rotting
+            lead_send_message = rotten_leads[1]
+            lead_send_message.message_post(body='Heya', message_type='email_outgoing')
+            self.assertFalse(lead_send_message.is_rotting)
+
+            # log note: no longer rotting
+            lead_comment = rotten_leads[2]
+            lead_comment.message_post(body='Heya', message_type='comment')
+            self.assertFalse(lead_comment.is_rotting)
+
+            # create activity and resolve it: no longer rotting
+            lead_done_activity = rotten_leads[3]
+            act = self.env['mail.activity'].create({
+                'activity_type_id': self.activity_type_1.id,
+                'note': 'note',
+                'res_id': lead_done_activity.id,
+                'res_model_id': self.env.ref('crm.model_crm_lead').id,
+            })
+            act.action_done()
+            self.assertFalse(lead_done_activity.is_rotting)
+
+            # change stage: no longer rotting
+            lead_changed_stage = rotten_leads[4]
+            lead_changed_stage.stage_id = stage_rot_2.id
+            self.assertFalse(lead_changed_stage.is_rotting)
+
+            # receive email: still rotting
+            lead_email_received = rotten_leads[5]
+            lead_email_received.message_post(body='Heya', message_type='email')
+            self.assertTrue(lead_email_received.is_rotting)
+
 
 @tagged('lead_internals')
 class TestLeadFormTools(FormatAddressCase):
