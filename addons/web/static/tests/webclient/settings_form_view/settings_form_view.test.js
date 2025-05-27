@@ -647,32 +647,28 @@ test("resIds should contains only 1 id", async () => {
     serverState.lang = "en_US";
     serverState.multiLang = true;
 
-    onRpc("get_installed", () => {
-        return [
-            ["en_US", "English"],
-            ["fr_BE", "French (Belgium)"],
-        ];
-    });
-    onRpc("get_field_translations", () => {
-        return [
-            [
-                {
-                    lang: "en_US",
-                    source: "My little Foo Value",
-                    value: "My little Foo Value",
-                },
-                {
-                    lang: "fr_BE",
-                    source: "My little Foo Value",
-                    value: "Valeur de mon petit Foo",
-                },
-            ],
+    onRpc("get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+    onRpc("get_field_translations", () => [
+        [
             {
-                translation_type: "char",
-                translation_show_source: true,
+                lang: "en_US",
+                source: "My little Foo Value",
+                value: "My little Foo Value",
             },
-        ];
-    });
+            {
+                lang: "fr_BE",
+                source: "My little Foo Value",
+                value: "Valeur de mon petit Foo",
+            },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: true,
+        },
+    ]);
     onRpc("execute", ({ args }) => {
         expect(args[0].length).toBe(1);
         return true;
@@ -1841,6 +1837,30 @@ test("standalone field labels with string inside a settings page", async () => {
                 </SettingsApp>
             </SettingsPage>`;
     expect(compiled.firstChild).toHaveInnerHTML(expectedCompiled);
+});
+
+test("field and artificial label inside a settings page", async () => {
+    ResConfigSettings._fields.count = fields.Integer();
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <setting id="setting_id">
+                        <field name="count" />
+                        <span class="o_form_label">
+                            items
+                        </span>
+                    </setting>
+                </app>
+            </form>
+        `,
+    });
+    expect(".o_field_integer[name=count]").toHaveCount(1);
+    expect("span.o_form_label").toHaveInnerHTML(
+        `<span searchabletext="\n                            items\n                        ">\n                            items\n                        </span>`
+    );
 });
 
 test("highlight Element with inner html/fields", async () => {

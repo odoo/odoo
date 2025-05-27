@@ -14,7 +14,7 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
 import { Domain } from "@web/core/domain";
 import { KanbanMany2ManyTagsAvatarFieldTagsList } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
-import { highlightText } from "@web/core/utils/strings";
+import { highlightText, odoomark } from "@web/core/utils/strings";
 
 
 export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
@@ -51,7 +51,7 @@ export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {
             value: result.id,
             resourceType: result.resource_type,
             colorIndex: result.color,
-            label: highlightText(request, result.display_name, "text-primary fw-bold"),
+            label: highlightText(request, odoomark(result.display_name), "text-primary fw-bold"),
             color: result.color,
         };
     }
