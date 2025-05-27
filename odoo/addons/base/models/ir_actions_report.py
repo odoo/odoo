@@ -512,7 +512,7 @@ class IrActionsReport(models.Model):
         '''Execute wkhtmltopdf as a subprocess in order to convert html given in input into a pdf
         document.
 
-        :param list[str] bodies: The html bodies of the report, one per page.
+        :param Iterable[str] bodies: The html bodies of the report, one per page.
         :param report_ref: report reference that is needed to get report paperformat.
         :param str header: The html header of the report containing all headers.
         :param str footer: The html footer of the report containing all footers.
@@ -578,8 +578,9 @@ class IrActionsReport(models.Model):
                 files_command_args.extend(['--footer-html', foot_file_path])
 
             paths = []
-            for i, body in enumerate(bodies):
-                prefix = '%s%d.' % ('report.body.tmp.', i)
+            body_idx = 0
+            for body_idx, body in enumerate(bodies):
+                prefix = f'report.body.tmp.{body_idx}.'
                 body_file_fd, body_file_path = tempfile.mkstemp(suffix='.html', prefix=prefix)
                 with closing(os.fdopen(body_file_fd, 'wb')) as body_file:
                     # HACK: wkhtmltopdf doesn't like big table at all and the
@@ -609,7 +610,7 @@ class IrActionsReport(models.Model):
                 case 0:
                     pass
                 case 1:
-                    if len(bodies) > 1:
+                    if body_idx:
                         wk_version = _wkhtml().version
                         if '(with patched qt)' not in wk_version:
                             if modules.module.current_test:
