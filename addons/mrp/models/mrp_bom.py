@@ -4,7 +4,7 @@
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, OR
-from odoo.tools import float_round
+from odoo.tools import float_compare
 from odoo.tools.misc import clean_context
 
 from collections import defaultdict
@@ -90,6 +90,8 @@ class MrpBom(models.Model):
         string="Days to prepare Manufacturing Order", default=0,
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
              "Note that security lead times will also be considered when appropriate.")
+    batch_size = fields.Float('Batch Size', default=1.0, digits='Product Unit', help="If set, automatically generated manufacturing orders will never exceed that amount for this product.")
+    enable_batch_size = fields.Boolean(default=False)
 
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
@@ -336,6 +338,14 @@ class MrpBom(models.Model):
                            for pid in (bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids)]
         if self.env['stock.warehouse.orderpoint'].search_count([('product_id', 'in', product_ids)], limit=1):
             raise ValidationError(_("You can not create a kit-type bill of materials for products that have at least one reordering rule."))
+
+    @api.constrains('batch_size')
+    def _check_valid_batch_size(self):
+        if self.filtered(
+            lambda bom: bom.enable_batch_size and
+            float_compare(bom.batch_size, 0.0, precision_rounding=bom.product_uom_id.rounding) <= 0
+        ):
+            raise ValidationError(self.env._("Batch Size must be greater than zero."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_running_mo(self):
