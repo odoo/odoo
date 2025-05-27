@@ -24,6 +24,7 @@
                         <field name="won_status" invisible="1"/>
                         <field name="active" invisible="1"/>
                         <field name="company_id" invisible="1"/>
+                        <field name="is_rotting" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="fa-calendar"
@@ -47,8 +48,20 @@
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active or won_status in ['lost', 'won']"/>
                         <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
                         <widget name="web_ribbon" title="Won" invisible="won_status != 'won'"/>
-                        <div class="oe_title">
-                            <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/></h1>
+                        <div class="oe_title mw-100">
+                            <div class="d-flex justify-content-between align-items-center flex-wrap flex-row-reverse" style="row-gap: 0.8em">
+                                <div class="badge rounded-pill o_crm_lead_rotting_bg fs-3 ms-4" invisible="not is_rotting or day_rotting == 1"
+                                    title="Day count since this lead was last updated">
+                                        Rotting: <field name="day_rotting"/> days
+                                </div>
+                                <div class="badge rounded-pill o_crm_lead_rotting_bg fs-3 ms-4" invisible="not is_rotting or day_rotting != 1"
+                                    title="Day count since this lead was last updated">
+                                        Rotting: <field name="day_rotting"/> day
+                                </div>
+                                <h1 class="flex-grow-1">
+                                    <field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/>
+                                </h1>
+                            </div>
                             <h2 class="row g-0 pb-3 pb-sm-4">
                                 <div class="col-auto pb-2 pb-md-0 w-100 w-sm-auto" invisible="type == 'lead'">
                                     <label for="expected_revenue" class="oe_edit_only"/>
@@ -112,7 +125,6 @@
                                         'default_team_id': team_id,
                                         'default_website': website,
                                         'default_lang': lang_code,
-                                        'show_vat': True
                                     }" invisible="not is_partner_visible"/>
                                 <field name="partner_name"/>
                                 <label for="street" string="Address"/>
@@ -553,6 +565,7 @@
                     <field name="won_status"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'
                         sum_field="expected_revenue" recurring_revenue_sum_field="recurring_revenue_monthly"
+                        rotting_count_field="is_rotting"
                         help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="menu">
@@ -583,7 +596,12 @@
                                     <field name="priority" widget="priority" groups="base.group_user" class="me-2"/>
                                     <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
-                                <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="ms-auto"/>
+                                <div class="ms-auto d-flex">
+                                    <div class="badge rounded-pill o_crm_lead_rotting_bg" invisible="not is_rotting">
+                                        <field name="day_rotting"/>d
+                                    </div>
+                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="ms-2"/>
+                                </div>
                             </footer>
                         </t>
                     </templates>
@@ -990,6 +1008,11 @@
                     <filter string="Won" name="filter_won_status_won" domain="[('won_status', '=', 'won')]"/>
                     <!-- For ongoing: include 'active' as this filter is functional and should filter out archived leads -->
                     <filter string="Ongoing" name="filter_won_status_pending" domain="[('won_status', '=', 'pending'), ('active', '=', True)]"/>
+                    <filter string="Rotting" name="filter_rotting" domain="[
+                        ('won_status', '=', 'pending'),
+                        ('type', '=', 'opportunity'),
+                        ('date_rot', '&lt;=', context_today().strftime('%Y-%m-%d'))
+                    ]"/>
                     <filter string="Lost" name="filter_won_status_lost" domain="[('won_status', '=', 'lost'), ('active', '=', False)]"/>
                     <separator/>
                     <filter invisible="1" string="Overdue Opportunities" name="overdue_opp" domain="['&amp;', ('date_closed', '=', False), ('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>

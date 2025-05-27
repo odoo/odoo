@@ -7,8 +7,9 @@ export class CrmKanbanArchParser extends KanbanArchParser {
      */
     parseProgressBar(progressBar, fields) {
         const result = super.parseProgressBar(...arguments);
-        const attrs = extractAttributes(progressBar, ["recurring_revenue_sum_field"]);
+        const attrs = extractAttributes(progressBar, ["recurring_revenue_sum_field", "rotting_count_field"]);
         result.recurring_revenue_sum_field = fields[attrs.recurring_revenue_sum_field] || false;
+        result.rotting_count_field = fields[attrs.rotting_count_field] || false;
         return result;
     }
 }
