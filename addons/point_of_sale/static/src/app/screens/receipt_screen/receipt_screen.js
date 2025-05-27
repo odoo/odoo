@@ -29,13 +29,9 @@ export class ReceiptScreen extends Component {
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
         this.doFullPrint = useTrackedAsync(() => this.pos.printReceipt());
         this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
-        onMounted(() => {
-            const order = this.pos.getOrder();
-            this.currentOrder.uiState.locked = true;
 
-            if (!this.pos.config.module_pos_restaurant) {
-                this.pos.sendOrderInPreparation(order, { orderDone: true });
-            }
+        onMounted(() => {
+            this.currentOrder.uiState.locked = true;
         });
     }
     actionSendReceiptOnEmail() {

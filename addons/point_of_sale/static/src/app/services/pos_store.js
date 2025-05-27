@@ -153,6 +153,15 @@ export class PosStore extends WithLazyGetterTrap {
             // Sync should be done before websocket connection when going online
             this.syncAllOrdersDebounced();
         });
+
+        this.models["pos.order.line"].addEventListener("update", (event) => {
+            const lineId = event.id;
+            const line = this.models["pos.order.line"].get(lineId);
+
+            if (line && !line.order_id.finalized) {
+                this.addPendingOrder([line.order_id.id]);
+            }
+        });
     }
 
     get firstScreen() {
@@ -472,8 +481,7 @@ export class PosStore extends WithLazyGetterTrap {
                     const orderPresetDate = DateTime.fromISO(order.preset_time);
                     const isSame = DateTime.now().hasSame(orderPresetDate, "day");
                     if (!order.preset_time || isSame) {
-                        await this.sendOrderInPreparation(order, {
-                            cancelled: true,
+                        await this.sendOrderInPreparationUpdateLastChange(order, true, {
                             orderDone: true,
                         });
                     }
@@ -1229,7 +1237,14 @@ export class PosStore extends WithLazyGetterTrap {
         let orders = options.orders || [...orderToCreate, ...orderToUpdate];
 
         // Filter out orders that are already being synced
-        orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+        if (!options.orders) {
+            orders = orders.filter((order) => !this.syncingOrders.has(order.id));
+        }
+
+        orders.forEach((order) => this.syncingOrders.add(order.id));
+        if (orders.length === 0) {
+            return;
+        }
 
         try {
             const orderIdsToDelete = this.getOrderIdsToDelete();
@@ -1239,13 +1254,6 @@ export class PosStore extends WithLazyGetterTrap {
 
             const context = this.getSyncAllOrdersContext(orders, options);
             await this.preSyncAllOrders(orders);
-
-            if (orders.length === 0) {
-                return;
-            }
-
-            // Add order IDs to the syncing set
-            orders.forEach((order) => this.syncingOrders.add(order.id));
 
             // Re-compute all taxes, prices and other information needed for the backend
             for (const order of orders) {
@@ -1290,6 +1298,16 @@ export class PosStore extends WithLazyGetterTrap {
 
             // Remove only synced orders from the pending orders
             orders.forEach((o) => this.removePendingOrder(o));
+
+            // If the order is finalized, we need to send the last change
+            for (const order of newData["pos.order"]) {
+                if (order.finalized && !this.config.module_pos_restaurant) {
+                    await this.sendOrderInPreparationUpdateLastChange(order, false, {
+                        orderDone: true,
+                    });
+                }
+            }
+
             return newData["pos.order"];
         } catch (error) {
             if (options.throw) {
@@ -1618,14 +1636,15 @@ export class PosStore extends WithLazyGetterTrap {
                 console.info("Failed in printing the changes in the order", e);
             }
         }
-        order.updateLastOrderChange();
     }
-    async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
+    async sendOrderInPreparationUpdateLastChange(o, cancelled = false, opts = {}) {
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
             throw new ConnectionLostError();
         }
-        await this.sendOrderInPreparation(o, { cancelled });
+        await this.sendOrderInPreparation(o, { cancelled, ...opts });
+        o.updateLastOrderChange();
+        await this.syncAllOrders();
     }
 
     getOrderData(order, reprint) {

@@ -2009,12 +2009,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_one_attribute_value_scan_barcode', login="pos_user")
 
-    def test_draft_orders_not_syncing(self):
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_draft_orders_not_syncing', login="pos_user")
-        n_draft_order = self.env['pos.order'].search_count([('state', '=', 'draft')], limit=1)
-        self.assertEqual(n_draft_order, 0, 'There should be no draft orders created')
-
     def test_quantity_package_of_non_basic_unit(self):
         pack_of_12_inch = self.env['uom.uom'].create({
             'name': 'Pack of 12_inch',
