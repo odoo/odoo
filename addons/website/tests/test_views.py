@@ -1007,7 +1007,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
                          "copy on write (COW) also copy existing translations")
 
-        self.base_view.update_field_translations('arch_db', {'fr_BE': {'bonjour': 'salut'}})
+        self.base_view.update_field_translations('arch_db', {'fr_BE': {'hello': 'salut'}})
         self.assertEqual(self.base_view.with_context(lang='fr_BE').arch, '<div>salut</div>')
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>bonjour</div>',
                          "updating translation of base view doesn't update specific view")
