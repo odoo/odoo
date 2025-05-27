@@ -64,9 +64,9 @@ class ResPartner(models.Model):
         )
         return bool(sale_order)
 
-    def _can_edit_name(self):
-        """ Can't edit `name` if there is (non draft) issued SO. """
-        return super()._can_edit_name() and not self._has_order(
+    def _can_edit_country(self):
+        """ Can't edit `country_id` if there is (non draft) issued SO. """
+        return super()._can_edit_country() and not self._has_order(
             [
                 ('partner_invoice_id', '=', self.id),
                 ('partner_id', '=', self.id),
