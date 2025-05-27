@@ -1,8 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { animationFrame, queryFirst } from "@odoo/hoot-dom";
-import { mockFetch } from "@odoo/hoot-mock";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 
 defineWebsiteModels();
 
@@ -236,26 +235,32 @@ test("animation=onHover should not be visible when the image has a cors protecte
             <img data-original-id="1" src='/web/image/0-redirect/foo.jpg'>
         </div>
     `);
-    mockFetch((route) => {
-        if (route === "/html_editor/get_image_info") {
-            return {
-                error: null,
-                result: {
-                    attachment: { id: 1 },
-                    original: {
-                        id: 1,
-                        image_src: "/website/static/src/img/snippets_demo/s_text_image.jpg",
-                        mimetype: "image/jpeg",
-                    },
-                },
-            };
-        }
-        if (route === "/website/static/src/img/snippets_demo/s_text_image.jpg") {
-            return;
-        }
-        expect.step(route);
-        throw new Error("simulated cors error");
-    });
+    onRpc(
+        "/*",
+        (req) => {
+            const route = new URL(req.url).pathname;
+            switch (route) {
+                case "/html_editor/get_image_info":
+                    return {
+                        error: null,
+                        result: {
+                            attachment: { id: 1 },
+                            original: {
+                                id: 1,
+                                image_src: "/website/static/src/img/snippets_demo/s_text_image.jpg",
+                                mimetype: "image/jpeg",
+                            },
+                        },
+                    };
+                case "/website/static/src/img/snippets_demo/s_text_image.jpg":
+                    return;
+                default:
+                    expect.step(route);
+                    throw new Error("simulated cors error");
+            }
+        },
+        { pure: true }
+    );
     await contains(":iframe .test-options-target img").click();
 
     await contains(".options-container [data-label='Animation'] .dropdown-toggle").click();

@@ -1,16 +1,15 @@
+import { Builder } from "@html_builder/builder";
 import { expect, test } from "@odoo/hoot";
+import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
 import {
-    defineModels,
     contains,
+    dataURItoBlob,
+    defineModels,
     models,
     onRpc,
     patchWithCleanup,
-    dataURItoBlob,
 } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
-import { animationFrame, click, waitFor } from "@odoo/hoot-dom";
-import { MockResponse } from "@web/../lib/hoot/mock/network";
-import { Builder } from "@html_builder/builder";
 
 defineWebsiteModels();
 
@@ -55,13 +54,10 @@ test("Add image as cover", async () => {
     onRpc(
         "/web/image/hoot.png",
         () => {
-            const mockResponse = new MockResponse({ ok: 200 });
             const base64Image =
                 "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYIIA" +
                 "A".repeat(1000); // converted image won't be used if original is not larger
-            const blob = dataURItoBlob(base64Image);
-            mockResponse.blob = () => blob;
-            return mockResponse;
+            return dataURItoBlob(base64Image);
         },
         { pure: true }
     );
