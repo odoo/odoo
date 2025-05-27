@@ -1007,6 +1007,7 @@ class ResPartner(models.Model):
                 if partner._context.get('show_address'):
                     name = name + "\n" + partner._display_address(without_company=True)
 
+                name = re.sub(r'\s+\n', '\n', name)
                 if partner._context.get('show_vat') and partner.vat:
                     if partner._context.get('show_address'):
                         name = f"{name} \n {partner.vat}"
