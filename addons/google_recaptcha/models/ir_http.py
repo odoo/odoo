@@ -26,7 +26,7 @@ class IrHttp(models.AbstractModel):
     @api.model
     def _add_public_key_to_session_info(self, session_info):
         """Add the ReCaptcha public key to the given session_info object"""
-        config_params = request.env['ir.config_parameter'].sudo()
+        config_params = self.env['ir.config_parameter'].sudo()
         recaptcha_enabled = str2bool(config_params.get_param('enable_recaptcha', default=True))
         public_key = config_params.get_param('recaptcha_public_key')
         if public_key and recaptcha_enabled:
