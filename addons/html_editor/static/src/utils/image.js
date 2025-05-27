@@ -41,11 +41,16 @@ export function getMimetype(image, dataset = image.dataset) {
     return (
         dataset.mimetype ||
         dataset.mimetypeBeforeConversion ||
-        (src &&
-            ((src.endsWith(".png") && "image/png") ||
-                (src.endsWith(".webp") && "image/webp") ||
-                (src.endsWith(".jpg") && "image/jpeg") ||
-                (src.endsWith(".jpeg") && "image/jpeg"))) ||
+        (src && getMimetypeFromSrc(src)) ||
+        null
+    );
+}
+export function getMimetypeFromSrc(src) {
+    return (
+        (src.endsWith(".png") && "image/png") ||
+        (src.endsWith(".webp") && "image/webp") ||
+        (src.endsWith(".jpg") && "image/jpeg") ||
+        (src.endsWith(".jpeg") && "image/jpeg") ||
         null
     );
 }

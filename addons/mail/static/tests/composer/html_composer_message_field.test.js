@@ -30,6 +30,8 @@ import {
     start,
     startServer,
 } from "../mail_test_helpers";
+import { mockImageRequests, onRpcReal } from "@html_editor/../tests/_helpers/image";
+import { waitForNextStep } from "@html_editor/../tests/_helpers/editor";
 
 // Need this hack to use the arch in mountView(...)
 mailModels.MailComposeMessage._views = {};
@@ -96,6 +98,8 @@ test("media dialog: upload", async function () {
     onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => [
         "129a52e1-6bf2-470a-830e-8e368b022e13",
     ]);
+    mockImageRequests();
+    onRpcReal("/web/image/1-a0e63e61/test.jpg");
     await mountView({
         type: "form",
         resId,
@@ -131,9 +135,12 @@ test("media dialog: upload", async function () {
             value: [new File(fileBytes, "test.jpg", { type: "image/jpeg" })],
         })
     );
-    fileInputs.forEach((input) => {
-        manuallyDispatchProgrammaticEvent(input, "change");
+    await waitForNextStep(htmlEditor, () => {
+        fileInputs.forEach((input) => {
+            manuallyDispatchProgrammaticEvent(input, "change");
+        });
     });
+
     expect("[name='attachment_ids'] .o_attachment[title='test.jpg']").toHaveCount(0);
 
     await isUploaded;

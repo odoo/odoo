@@ -1,0 +1,16 @@
+- we need to re-apply processing of the img if there is some attributes (background & shape for instance)
+- That introduce an async task when saving a media in the Media plugin (in `onSaveMediaDialog`)
+- Tests from html_editor break because:
+  - Some routes are not mocked ()
+  - We don't await the task to be finished
+    - That could cause an untederministic race condition (eg. if the call to load the crop assets is done before the test finishes)
+
+- Solutions:
+  1. Check if postprocessing is needed
+    The temporary solution could be to have a check that prevent the
+    asynchronous task to be executed if the image does not need to be
+    postprocess (which is the case in html_builder).
+  2. Mock and await
+    - Mock: mock all the routes that needs to be mocked
+    - await for the next operation in every tests that needs it
+      - ideally all the tests should await for the next operation rather than (await nextAnimationFrame())

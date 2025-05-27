@@ -1,7 +1,8 @@
+import { getMimetypeFromSrc } from "@html_editor/utils/image";
 import { before, globals } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
-function onRpcReal(route) {
+export function onRpcReal(route) {
     onRpc(route, async () => globals.fetch.call(window, route), { pure: true });
 }
 
@@ -34,6 +35,17 @@ export function mockImageRequests() {
             console.warn(`body:`, body);
             const src = body.params.src;
             console.warn(`src:`, src);
+            if (!mockedImgs[src]) {
+                // Character sum
+                const numberHash = (str) => str.split("").reduce((h, c) => h + c.charCodeAt(0), 0);
+                return {
+                    original: {
+                        id: numberHash(src),
+                        mimetype: getMimetypeFromSrc(src),
+                        image_src: src,
+                    },
+                };
+            }
             return {
                 original: Object.assign(mockedImgs[src], { image_src: src }),
             };

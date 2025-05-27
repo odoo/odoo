@@ -244,3 +244,41 @@ export function insertTestHtml(innerHtml) {
     container.innerHTML = innerHtml;
     return container.childNodes;
 }
+
+/**
+ * Wait for the next history step to be added after executing the callback. This
+ * is useful to ensure that the editor has processed the changes made by the
+ * callback before proceeding with further assertions or actions.
+ *
+ * This is used instead of `await animationFrame()` to ensure that a test would
+ * await if there is an asynchronous operation that awaits before doing a step.
+ *
+ * Currently, the html editor does not officially support asynchronous
+ * operations (the html_builder does through the Operation plugin). At the time
+ * when this function was created MediaDialog had an asynchronous call in
+ * `onSaveMediaDialog` and some tests were not waiting for the function to
+ * complete.
+ *
+ * This function can be removed once the html editor officially supports
+ * asynchronous operations.
+ *
+ * @param {Editor} editor - The html editor editor instance.
+ * @param {Function} cb - The callback function to execute before waiting for
+ * the next step.
+ */
+export async function waitForNextStep(editor, cb) {
+    const getHistorySteps = editor.shared.history.getHistorySteps;
+    const currentStepLength = getHistorySteps().length;
+    const promise = new Promise((resolve) => {
+        const check = () => {
+            if (getHistorySteps().length > currentStepLength) {
+                resolve();
+                return;
+            }
+            requestAnimationFrame(check);
+        };
+        requestAnimationFrame(check);
+    });
+    await cb();
+    await promise;
+}
