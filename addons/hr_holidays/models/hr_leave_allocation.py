@@ -131,6 +131,7 @@ class HolidaysAllocation(models.Model):
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]")
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves', string='Time off Taken')
+    virtual_leaves_taken = fields.Float(compute='_compute_leaves', string='Virtual Time off Taken')
     has_accrual_plan = fields.Boolean(compute='_compute_has_accrual_plan', string='Accrual Plan Available')
 
     _sql_constraints = [
@@ -215,11 +216,12 @@ class HolidaysAllocation(models.Model):
     @api.depends('employee_id', 'holiday_status_id')
     def _compute_leaves(self):
         date_from = fields.Date.from_string(self._context['default_date_from']) if 'default_date_from' in self._context else fields.Date.today()
-        employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.holiday_status_id, date_from, ignore_future=True)[0]
+        employee_days_per_allocation = self.employee_id.with_context(no_accrual_cap=True)._get_consumed_leaves(self.holiday_status_id, date_from, ignore_future=True)[0]
         for allocation in self:
             allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
             origin = allocation._origin
             allocation.leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['leaves_taken']
+            allocation.virtual_leaves_taken = employee_days_per_allocation[origin.employee_id][origin.holiday_status_id][origin]['virtual_leaves_taken']
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
@@ -477,6 +479,7 @@ class HolidaysAllocation(models.Model):
             first_level = level_ids[0]
             first_level_start_date = allocation.date_from + get_timedelta(first_level.start_count, first_level.start_type)
             leaves_taken = allocation.leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] else allocation.leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            virtual_leaves_taken = allocation.virtual_leaves_taken if allocation.holiday_status_id.request_unit in ["day", "half_day"] else allocation.virtual_leaves_taken / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
             allocation.already_accrued = already_accrued[allocation.id]
             # first time the plan is run, initialize nextcall and take carryover / level transition into account
             if not allocation.nextcall:
@@ -523,7 +526,7 @@ class HolidaysAllocation(models.Model):
                 if allocation.nextcall < carryover_date < nextcall:
                     nextcall = min(nextcall, carryover_date)
                 if not allocation.already_accrued:
-                    allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, period_end)
+                    allocation._add_days_to_allocation(current_level, current_level_maximum_leave, virtual_leaves_taken, period_start, period_end)
                 # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
                 if allocation.nextcall == carryover_date:
                     if current_level.action_with_unused_accruals in ['lost', 'maximum']:
@@ -583,11 +586,26 @@ class HolidaysAllocation(models.Model):
             return 0
 
         fake_allocation = self.env['hr.leave.allocation'].with_context(default_date_from=accrual_date).new(origin=self)
+        if self.env.context.get('no_accrual_cap'):
+            fake_accrual_plan = self.env['hr.leave.accrual.plan'].new(origin=self.accrual_plan_id)
+            fake_accrual_plan.level_ids.write({"cap_accrued_time": False})
+            fake_allocation.write({'accrual_plan_id': fake_accrual_plan})
         fake_allocation.sudo().with_context(default_date_from=accrual_date)._process_accrual_plans(accrual_date, log=False)
-        if self.holiday_status_id.request_unit in ['hour']:
+
+        time_unit = self.holiday_status_id.request_unit
+        if time_unit in ['hour']:
             res = float_round(fake_allocation.number_of_hours_display - self.number_of_hours_display, precision_digits=2)
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
+
+        future_level_id = self._get_current_accrual_plan_level_id(accrual_date)[0]
+        if future_level_id.cap_accrued_time:
+            future_maximum_leave = future_level_id.maximum_leave
+            if future_level_id.added_value_type != time_unit:
+                conversion_factor = (self.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                future_maximum_leave *= conversion_factor if time_unit in ['hour'] else 1.0 / conversion_factor
+            res = min(res, future_maximum_leave)
+
         fake_allocation.invalidate_recordset()
         return res
 

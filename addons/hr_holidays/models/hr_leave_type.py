@@ -476,6 +476,7 @@ class HolidaysType(models.Model):
                 allocations_with_remaining_leaves = self.env['hr.leave.allocation']
                 for allocation, data in allocations_leaves_consumed[employee][leave_type].items():
                     # We only need the allocation that are valid at the given date
+                    max_leaves = data['max_leaves']
                     if allocation:
                         today = fields.Date.today()
                         if allocation.date_from <= today and (not allocation.date_to or allocation.date_to >= today):
@@ -490,9 +491,13 @@ class HolidaysType(models.Model):
                             continue
                         if allocation.date_to and allocation.date_to < target_date:
                             continue
+                        if allocation.accrual_plan_id:
+                            current_level = allocation._get_current_accrual_plan_level_id(target_date)[0]
+                            if current_level.cap_accrued_time:
+                                max_leaves = min(max_leaves, current_level.maximum_leave)
                     lt_info[1]['remaining_leaves'] += data['remaining_leaves']
                     lt_info[1]['virtual_remaining_leaves'] += data['virtual_remaining_leaves']
-                    lt_info[1]['max_leaves'] += data['max_leaves']
+                    lt_info[1]['max_leaves'] += max_leaves
                     lt_info[1]['accrual_bonus'] += data['accrual_bonus']
                     lt_info[1]['leaves_taken'] += data['leaves_taken']
                     lt_info[1]['virtual_leaves_taken'] += data['virtual_leaves_taken']
