@@ -21,6 +21,63 @@ class TestPartnership(PartnershipCommon):
             "Selling the partnership should assign the pricelist to the partner",
         )
 
+    def test_sell_basic_partnership_with_children_partners(self):
+        partner_with_children = self.env['res.partner'].create({
+            'name': 'Parent Company',
+            'child_ids': [
+                Command.create({'name': 'Child Company 1'}),
+                Command.create({'name': 'Child Company 2'}),
+            ],
+        })
+        for child in partner_with_children.child_ids:
+            sale_order_partnership_with_child = self.env['sale.order'].create({
+                'partner_id': child.id,
+                'order_line': [Command.create({'product_id': self.partnership_product.id})],
+            })
+            sale_order_partnership_with_child.action_confirm()
+            self.assertEqual(
+                child.grade_id,
+                self.partnership_product.grade_id,
+                "Selling the partnership to the child should assign the grade to the child",
+            )
+            self.assertFalse(
+                partner_with_children.grade_id,
+                "Selling the partnership to the child should not assign the grade to the parent",
+            )
+            for c in partner_with_children.child_ids:
+                if c != child:
+                    self.assertFalse(
+                        c.grade_id,
+                        "Selling the partnership to the child should not assign the grade to another child",
+                    )
+            child.grade_id = False
+        sale_order_partnership_with_parent = self.env['sale.order'].create({
+            'partner_id': partner_with_children.id,
+            'order_line': [Command.create({'product_id': self.partnership_product.id})],
+        })
+        sale_order_partnership_with_parent.action_confirm()
+        self.assertEqual(
+            partner_with_children.grade_id,
+            self.partnership_product.grade_id,
+            "Selling the partnership should assign the grade to the partner",
+        )
+        self.assertEqual(
+            partner_with_children.specific_property_product_pricelist,
+            self.partnership_product.grade_id.default_pricelist_id,
+            "Selling the partnership should assign the pricelist to the partner",
+        )
+        for child_partner in partner_with_children.child_ids:
+            self.assertEqual(
+                child_partner.grade_id,
+                self.partnership_product.grade_id,
+                "Selling the partnership should assign the grade to the children of the partner",
+            )
+            self.assertEqual(
+                child_partner.specific_property_product_pricelist,
+                self.partnership_product.grade_id.default_pricelist_id,
+                "Selling the partnership should assign the pricelist to the children of the partner",
+            )
+
     def test_constrains_uniqueness_partnership_grade(self):
         partnership = self.env['product.product'].create({
             'name': 'Partnership',
