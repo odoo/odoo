@@ -245,6 +245,7 @@ class StripeController(http.Controller):
         :return: The content of the domain association file.
         :rtype: str
         """
-        return file_open(
+        with file_open(
             'payment_stripe/static/files/apple-developer-merchantid-domain-association'
-        ).read()
+        ) as f:
+            return f.read()

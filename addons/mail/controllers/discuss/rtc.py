@@ -114,8 +114,10 @@ class RtcController(http.Controller):
         a WorkletGlobalScope, which means that it cannot be added to the
         bundles like other assets.
         """
+        with file_open("mail/static/src/worklets/audio_processor.js", "rb") as f:
+            data = f.read()
         return request.make_response(
-            file_open("mail/static/src/worklets/audio_processor.js", "rb").read(),
+            data,
             headers=[
                 ("Content-Type", "application/javascript"),
                 ("Cache-Control", f"max-age={http.STATIC_CACHE}"),

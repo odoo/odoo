@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-import requests
 import base64
 from odoo import api, fields, models
-from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import file_open
 
 # Format table expressed as width x height in inch.
@@ -16,12 +13,14 @@ ZPL_FORMAT_SIZE = {
     'jewelry': (2.20, 0.50),
 }
 
+
 class ProductLabelLayout(models.TransientModel):
     _inherit = 'product.label.layout'
 
     @api.model
     def _get_zpl_label_placeholder(self):
-        return base64.b64encode(file_open('stock/static/img/zpl_label_placeholder.png', 'rb').read())
+        with file_open('stock/static/img/zpl_label_placeholder.png', 'rb') as f:
+            return base64.b64encode(f.read())
 
     move_ids = fields.Many2many('stock.move')
     move_quantity = fields.Selection([

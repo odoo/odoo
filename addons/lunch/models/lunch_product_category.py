@@ -16,7 +16,8 @@ class LunchProductCategory(models.Model):
 
     @api.model
     def _default_image(self):
-        return base64.b64encode(file_open('lunch/static/img/lunch.png', 'rb').read())
+        with file_open('lunch/static/img/lunch.png', 'rb') as f:
+            return base64.b64encode(f.read())
 
     name = fields.Char('Product Category', required=True, translate=True)
     company_id = fields.Many2one('res.company')

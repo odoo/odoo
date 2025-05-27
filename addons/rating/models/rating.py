@@ -108,9 +108,9 @@ class RatingRating(models.Model):
             image_path = f'rating/static/src/img/{rating._get_rating_image_filename()}'
             rating.rating_image_url = f'/{image_path}'
             try:
-                rating.rating_image = base64.b64encode(
-                    file_open(image_path, 'rb', filter_ext=('.png',)).read())
-            except (IOError, OSError, FileNotFoundError):
+                with file_open(image_path, 'rb', filter_ext=('.png',)) as f:
+                    rating.rating_image = base64.b64encode(f.read())
+            except OSError:
                 rating.rating_image = False
 
     @api.depends('rating')

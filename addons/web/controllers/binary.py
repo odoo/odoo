@@ -327,7 +327,7 @@ class Binary(http.Controller):
         else:
             font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(supported_exts)])
             for filename in font_filenames:
-                font_file = file_open(os.path.join(fonts_directory, filename), 'rb', filter_ext=supported_exts)
-                font = base64.b64encode(font_file.read())
+                with file_open(os.path.join(fonts_directory, filename), 'rb', filter_ext=supported_exts) as font_file:
+                    font = base64.b64encode(font_file.read())
                 fonts.append(font)
         return fonts

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import csv
 
-from odoo.tools import file_open
 from . import models
 from . import wizard
 

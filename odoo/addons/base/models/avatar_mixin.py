@@ -77,7 +77,8 @@ class AvatarMixin(models.AbstractModel):
         return "base/static/img/avatar_grey.png"
 
     def _avatar_get_placeholder(self):
-        return file_open(self._avatar_get_placeholder_path(), 'rb').read()
+        with file_open(self._avatar_get_placeholder_path(), 'rb') as f:
+            return f.read()
 
     def _get_avatar_128_access_token(self):
         """Return a scoped access token for the `avatar_128` field. The token can be
