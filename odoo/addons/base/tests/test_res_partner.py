@@ -1014,6 +1014,14 @@ class TestPartnerAddressCompany(TransactionCase):
         res_bhide = test_partner_bhide.with_context(show_address=1).display_name
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
+        # Check that a child contact having no name shows the formatted display name as {parent_name} \t --{contact_type}--
+        test_partner_invoice = self.env['res.partner'].create({'parent_id': self.test_parent.id, 'type': 'invoice'})
+        self.assertEqual(
+            test_partner_invoice.with_context(formatted_display_name=True).display_name,
+            "GhostStep \t --Invoice--",
+            "Formatted display name should show parent name and type when child contact has no name",
+        )
+
     def test_accessibility_of_company_partner_from_branch(self):
         """ Check accessibility of company partner from branch. """
         company = self.env['res.company'].create({'name': 'company'})
