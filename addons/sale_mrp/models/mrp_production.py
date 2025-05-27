@@ -22,11 +22,11 @@ class MrpProduction(models.Model):
         return (
             self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id |
             self.sale_line_id.order_id |
-            self.procurement_group_id.sale_id)
+            self.procurement_group_id.sale_id | self.move_finished_ids.move_dest_ids.group_id.sale_id)
 
     def action_view_sale_orders(self):
         self.ensure_one()
-        sale_order_ids = self.get_linked_sale_orders().ids
+        sale_order_ids = list(set(self.get_linked_sale_orders().ids))
         action = {
             'res_model': 'sale.order',
             'type': 'ir.actions.act_window',
