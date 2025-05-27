@@ -36,7 +36,6 @@ class TestSaEdiCommon(AccountEdiTestCommon):
             'zip': '42317',
         })
         cls.customer_invoice_journal = cls.env['account.journal'].search([('company_id', '=', cls.company.id), ('type', '=', 'sale')], limit=1)
-        cls.customer_invoice_journal.l10n_sa_serial_number = '123456789'
         cls.partner_us = cls.env['res.partner'].create({
             'name': 'Chichi Lboukla',
             'ref': 'Azure Interior',
