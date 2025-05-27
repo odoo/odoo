@@ -232,7 +232,7 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
         self._assert_node_values(
             root,
             'cac:AdditionalDocumentReference[descendant::*[local-name() = "DocumentType"]]/cbc:DocumentType',
-            'CustomsImportForm',
+            'K2',
         )
         self._assert_node_values(
             root,
@@ -490,6 +490,28 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'cbc:InvoiceTypeCode',
             '02',
             attributes={'listVersionID': '1.1'},
+        )
+
+    def test_11_bill_imports_form(self):
+        """
+        Ensure that when a bill contains a customs number; it is treated as an importation and not exportation.
+        """
+        bill = self.init_invoice(
+            'in_invoice', products=self.product_a
+        )
+        bill.write({
+            'l10n_my_edi_custom_form_reference': 'E12345678912',
+        })
+
+        bill.action_post()
+
+        file, _errors = bill._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+
+        self._assert_node_values(
+            root,
+            'cac:AdditionalDocumentReference[descendant::*[local-name() = "DocumentType"]]/cbc:DocumentType',
+            'CustomsImportForm',
         )
 
     def _assert_node_values(self, root, node_path, text, attributes=None):
