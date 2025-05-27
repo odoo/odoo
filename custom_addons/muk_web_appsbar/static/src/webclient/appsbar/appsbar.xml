@@ -6,7 +6,37 @@
 		<div class="mk_apps_sidebar_panel">
 			<div class="mk_apps_sidebar">
 				<ul class="mk_apps_sidebar_menu">
-				    <t t-foreach="this.appMenuService.getAppsMenuItems()" t-as="app" t-key="app.id">
+					<li class="nav-item">
+						<a 
+							href="/odoo/sales"
+							class="nav-link" 
+							role="menuitem"
+						>
+							<img class="mk_apps_sidebar_icon" src="/sale/static/description/icon.svg"/>
+							<span class="mk_apps_sidebar_name">Ventas</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a 
+							href="/odoo/customers"
+							class="nav-link" 
+							role="menuitem"
+						>
+							<img class="mk_apps_sidebar_icon" src="/contacts/static/description/icon.svg"/>
+							<span class="mk_apps_sidebar_name">Clientes</span>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a 
+							href="/odoo/products"
+							class="nav-link" 
+							role="menuitem"
+						>
+							<img class="mk_apps_sidebar_icon" src="/product/static/description/icon.svg"/>
+							<span class="mk_apps_sidebar_name">Productos</span>
+						</a>
+					</li>
+				    <!-- <t t-foreach="this.appMenuService.getAppsMenuItems()" t-as="app" t-key="app.id">
 			            <li t-attf-class="nav-item {{ app.id === this.appMenuService.getCurrentApp()?.id ? 'active' : '' }}">
 			            	<a 
 			            		t-att-href="app.href"
@@ -32,7 +62,7 @@
 						        </span>
 			            	 </a>
 			            </li>
-			    	</t>
+			    	</t> -->
 				</ul>
 				<div t-if="sidebarImageUrl" class="mk_apps_sidebar_logo p-2">
 					<img class="img-fluid mx-auto" t-att-src="sidebarImageUrl" alt="Logo"/>

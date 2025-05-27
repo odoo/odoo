@@ -30,8 +30,8 @@ class ProductExtension(models.Model):
 
     item_stock = fields.Integer(
         string='Stock',
-        readOnly=True,
-        store=False,
+        readOnly=False,
+        store=True,
         help='Stock de este producto',
         default=0
     )
@@ -49,3 +49,5 @@ class ProductExtension(models.Model):
         return {
         }
     
+    def action_save_product(self):
+        return True
