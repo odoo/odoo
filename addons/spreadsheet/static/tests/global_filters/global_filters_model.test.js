@@ -619,6 +619,29 @@ test("Relational filter default to current user", async function () {
     });
 });
 
+test("Can set a numeric global filter value to 0", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "numeric",
+        label: "Numeric Filter",
+        defaultValue: { operator: "=", targetValue: 1998 },
+    });
+    const [filter] = model.getters.getGlobalFilters();
+    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual({
+        operator: "=",
+        targetValue: 1998,
+    });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: filter.id,
+        value: { operator: "=", targetValue: 0 },
+    });
+    expect(model.getters.getGlobalFilterValue(filter.id)).toEqual({
+        operator: "=",
+        targetValue: 0,
+    });
+});
+
 test("Get active filters with multiple filters", async function () {
     const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, {
@@ -988,6 +1011,33 @@ test("ODOO.FILTER.VALUE text filter", async function () {
         value: { operator: "ilike", strings: ["Hello", "World"] },
     });
     expect(getCellValue(model, "A10")).toBe("Hello, World");
+});
+
+test("ODOO.FILTER.VALUE numeric filter", async function () {
+    const { model } = await createModelWithDataSource();
+    setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Numeric Filter")`);
+    await animationFrame();
+    expect(getCellValue(model, "A10")).toBe("#ERROR");
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "numeric",
+        label: "Numeric Filter",
+    });
+    await animationFrame();
+    expect(getCellValue(model, "A10")).toBe("");
+    const [filter] = model.getters.getGlobalFilters();
+    await setGlobalFilterValue(model, {
+        id: filter.id,
+        value: { operator: ">", targetValue: 1998 },
+    });
+    await animationFrame();
+    expect(getCellValue(model, "A10")).toBe(1998);
+    await setGlobalFilterValue(model, {
+        id: filter.id,
+        value: { operator: "between", minimumValue: 1, maximumValue: 99 },
+    });
+    expect(getCellValue(model, "A10")).toBe(1);
+    expect(getCellValue(model, "B10")).toBe(99);
 });
 
 test("ODOO.FILTER.VALUE date filter", async function () {
@@ -2897,6 +2947,65 @@ for (const operator of ["in", "not in"]) {
     });
 }
 
+test("Can add a numeric filter", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "numeric",
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: "42",
+        value: { operator: "=", targetValue: 1998 },
+    });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual({
+        operator: "=",
+        targetValue: 1998,
+    });
+});
+
+test("Can add a numeric filter with a default value", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "numeric",
+        defaultValue: { operator: "=", targetValue: 1998 },
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    expect(model.getters.getGlobalFilterValue("42")).toEqual({
+        operator: "=",
+        targetValue: 1998,
+    });
+});
+
+test("Check numeric filter domain", async () => {
+    const model = new Model();
+    const filter = {
+        id: "42",
+        label: "test",
+        type: "numeric",
+    };
+    model.dispatch("ADD_GLOBAL_FILTER", { filter });
+    const fieldMatching = { chain: "probability", type: "numeric" };
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual("[]");
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: "42",
+        value: { operator: "=", targetValue: 10 },
+    });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `[("probability", "=", 10)]`
+    );
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: "42",
+        value: { operator: "between", minimumValue: 1, maximumValue: 99 },
+    });
+    expect(model.getters.getGlobalFilterDomain("42", fieldMatching).toString()).toEqual(
+        `["&", ("probability", ">=", 1), ("probability", "<=", 99)]`
+    );
+});
+
 test("Undo/Redo of global filter update", async () => {
     const { model, pivotId } = await createSpreadsheetWithPivot();
     const filter = {
@@ -3045,6 +3154,52 @@ test("Default value of selection filter", () => {
     });
     expect(result.isSuccessful).toBe(false);
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+});
+
+test("Default value of numeric filter", () => {
+    const model = new Model();
+    let result = addGlobalFilterWithoutReload(model, {
+        id: "1",
+        type: "numeric",
+        label: "Default value cannot be a boolean, should be a number",
+        defaultValue: { operator: "=", value: true },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "2",
+        type: "numeric",
+        label: "Default value cannot be a string, should be a number",
+        defaultValue: { operator: "=", value: "default value" },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "2",
+        type: "numeric",
+        label: "Default value cannot be a number inside a string, should be a number",
+        defaultValue: { operator: "=", value: "5" },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "3",
+        type: "numeric",
+        label: "Default value cannot be an empty string",
+        defaultValue: { operator: "=", value: "" },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "4",
+        type: "numeric",
+        label: "Default value is empty (undefined)",
+    });
+    expect(result.isSuccessful).toBe(true);
 });
 
 test("Default value of date filter", () => {
