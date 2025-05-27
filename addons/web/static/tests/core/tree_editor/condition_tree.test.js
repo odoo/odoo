@@ -144,7 +144,7 @@ test("domainFromTree . treeFromDomain", async () => {
         },
         {
             domain: `["!", ("foo", "=", False)]`,
-            result: `[("foo", "!=", False)]`,
+            result: `["!", ("foo", "=", False)]`,
         },
         {
             domain: `[("foo", "=?", False)]`,

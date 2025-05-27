@@ -175,23 +175,20 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
         operator = operator === "in" ? "not_set" : "set";
     }
     const fieldDef = getFieldDef(path);
-    let operatorLabel = getOperatorLabel(operator, fieldDef?.type, negate);
-    switch (operator) {
-        case "=":
-        case "in":
-            operatorLabel = "=";
-            break;
-        case "!=":
-        case "not in":
-            operatorLabel = _t("not =");
-            break;
-        case "any":
-            operatorLabel = ":";
-            break;
-        case "not any":
-            operatorLabel = _t(": not");
-            break;
-    }
+    const operatorLabel = getOperatorLabel(operator, fieldDef?.type, negate, (operator) => {
+        switch (operator) {
+            case "=":
+            case "in":
+                return "=";
+            case "!=":
+            case "not in":
+                return _t("not =");
+            case "any":
+                return ":";
+            case "not any":
+                return _t(": not");
+        }
+    });
 
     const pathDescription = getPathDescription(path);
     const description = {
