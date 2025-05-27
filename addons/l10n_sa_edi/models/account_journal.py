@@ -10,7 +10,10 @@ from requests.exceptions import HTTPError, RequestException
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import file_open
+from odoo.tools.translate import LazyTranslate
 from odoo.tools.urls import urljoin
+
+_lt = LazyTranslate(__name__)
 
 ZATCA_API_URLS = {
     "sandbox": "https://gw-fatoora.zatca.gov.sa/e-invoicing/developer-portal/",
@@ -30,6 +33,8 @@ SANDBOX_AUTH = {
     'binarySecurityToken': "TUlJRDFEQ0NBM21nQXdJQkFnSVRid0FBZTNVQVlWVTM0SS8rNVFBQkFBQjdkVEFLQmdncWhrak9QUVFEQWpCak1SVXdFd1lLQ1pJbWlaUHlMR1FCR1JZRmJHOWpZV3d4RXpBUkJnb0praWFKay9Jc1pBRVpGZ05uYjNZeEZ6QVZCZ29Ka2lhSmsvSXNaQUVaRmdkbGVIUm5ZWHAwTVJ3d0dnWURWUVFERXhOVVUxcEZTVTVXVDBsRFJTMVRkV0pEUVMweE1CNFhEVEl5TURZeE1qRTNOREExTWxvWERUSTBNRFl4TVRFM05EQTFNbG93U1RFTE1Ba0dBMVVFQmhNQ1UwRXhEakFNQmdOVkJBb1RCV0ZuYVd4bE1SWXdGQVlEVlFRTEV3MW9ZWGxoSUhsaFoyaHRiM1Z5TVJJd0VBWURWUVFERXdreE1qY3VNQzR3TGpFd1ZqQVFCZ2NxaGtqT1BRSUJCZ1VyZ1FRQUNnTkNBQVRUQUs5bHJUVmtvOXJrcTZaWWNjOUhEUlpQNGI5UzR6QTRLbTdZWEorc25UVmhMa3pVMEhzbVNYOVVuOGpEaFJUT0hES2FmdDhDL3V1VVk5MzR2dU1ObzRJQ0p6Q0NBaU13Z1lnR0ExVWRFUVNCZ0RCK3BId3dlakViTUJrR0ExVUVCQXdTTVMxb1lYbGhmREl0TWpNMGZETXRNVEV5TVI4d0hRWUtDWkltaVpQeUxHUUJBUXdQTXpBd01EYzFOVGc0TnpBd01EQXpNUTB3Q3dZRFZRUU1EQVF4TVRBd01SRXdEd1lEVlFRYURBaGFZWFJqWVNBeE1qRVlNQllHQTFVRUR3d1BSbTl2WkNCQ2RYTnphVzVsYzNNek1CMEdBMVVkRGdRV0JCU2dtSVdENmJQZmJiS2ttVHdPSlJYdkliSDlIakFmQmdOVkhTTUVHREFXZ0JSMllJejdCcUNzWjFjMW5jK2FyS2NybVRXMUx6Qk9CZ05WSFI4RVJ6QkZNRU9nUWFBL2hqMW9kSFJ3T2k4dmRITjBZM0pzTG5waGRHTmhMbWR2ZGk1ellTOURaWEowUlc1eWIyeHNMMVJUV2tWSlRsWlBTVU5GTFZOMVlrTkJMVEV1WTNKc01JR3RCZ2dyQmdFRkJRY0JBUVNCb0RDQm5UQnVCZ2dyQmdFRkJRY3dBWVppYUhSMGNEb3ZMM1J6ZEdOeWJDNTZZWFJqWVM1bmIzWXVjMkV2UTJWeWRFVnVjbTlzYkM5VVUxcEZhVzUyYjJsalpWTkRRVEV1WlhoMFoyRjZkQzVuYjNZdWJHOWpZV3hmVkZOYVJVbE9WazlKUTBVdFUzVmlRMEV0TVNneEtTNWpjblF3S3dZSUt3WUJCUVVITUFHR0gyaDBkSEE2THk5MGMzUmpjbXd1ZW1GMFkyRXVaMjkyTG5OaEwyOWpjM0F3RGdZRFZSMFBBUUgvQkFRREFnZUFNQjBHQTFVZEpRUVdNQlFHQ0NzR0FRVUZCd01DQmdnckJnRUZCUWNEQXpBbkJna3JCZ0VFQVlJM0ZRb0VHakFZTUFvR0NDc0dBUVVGQndNQ01Bb0dDQ3NHQVFVRkJ3TURNQW9HQ0NxR1NNNDlCQU1DQTBrQU1FWUNJUUNWd0RNY3E2UE8rTWNtc0JYVXovdjFHZGhHcDdycVNhMkF4VEtTdjgzOElBSWhBT0JOREJ0OSszRFNsaWpvVmZ4enJkRGg1MjhXQzM3c21FZG9HV1ZyU3BHMQ==",
     'secret': "Xlj15LyMCgSC66ObnEO/qVPfhSbs3kDTjWnGheYhfSs="
 }
+
+ERROR_MESSAGE = _lt("Something went wrong. Please onboard the journal again.")
 
 
 class AccountJournal(models.Model):
@@ -134,9 +139,10 @@ class AccountJournal(models.Model):
         if any(not self.company_id[f] for f in self._l10n_sa_csr_required_fields()):
             raise UserError(
                 _(
-                    "Please, make sure all the following fields have been correctly set on the Company:%(fields)s",
-                    fields="".join(
-                        "\n - %s" % self.company_id._fields[f].string
+                    "Please set the following on %(company_name)s: %(fields)s",
+                    company_name=self.company_id.name,
+                    fields=", ".join(
+                        self.company_id._fields[f].string
                         for f in self._l10n_sa_csr_required_fields()
                         if not self.company_id[f]
                     ),
@@ -199,8 +205,8 @@ class AccountJournal(models.Model):
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
         if CCSID_data.get('errors') or CCSID_data.get('error'):
-            raise UserError(_("Could not obtain Compliance CSID: %s",
-                              CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']))
+            error = CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']
+            raise UserError(Markup("%s<br/>%s") % (_("Please check the details below and onboard the journal again:"), error))
         cert_id = self.env['certificate.certificate'].sudo().create({
             'name': 'CCSID Certificate',
             'content': b64decode(CCSID_data['binarySecurityToken']),
@@ -221,20 +227,19 @@ class AccountJournal(models.Model):
 
         self_sudo = self.sudo()
 
-        if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id:
-            raise UserError(_("Cannot request a Production CSID before requesting a CCSID first"))
-        elif not self_sudo.l10n_sa_compliance_checks_passed:
-            raise UserError(_("Cannot request a Production CSID before completing the Compliance Checks"))
+        if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id or not self_sudo.l10n_sa_compliance_checks_passed:
+            raise UserError(str(ERROR_MESSAGE))
 
         renew = False
         zatca_format = self.env.ref('l10n_sa_edi.edi_sa_zatca')
 
         if self_sudo.l10n_sa_production_csid_json:
             time_now = zatca_format._l10n_sa_get_zatca_datetime(datetime.now())
-            if zatca_format._l10n_sa_get_zatca_datetime(self_sudo.l10n_sa_production_csid_validity) < time_now:
+            validity_time = self_sudo.l10n_sa_production_csid_validity
+            if zatca_format._l10n_sa_get_zatca_datetime(validity_time) < time_now:
                 renew = True
             else:
-                raise UserError(_("The Production CSID is still valid. You can only renew it once it has expired."))
+                raise UserError(_("The Journal is valid until (%s) and can only be renewed upon expiry.", validity_time))
 
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
@@ -279,9 +284,9 @@ class AccountJournal(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         if self.country_code != 'SA':
-            raise UserError(_("Compliance checks can only be run for companies operating from KSA"))
+            raise UserError(_("Please change the (%s)'s country to Saudi Arabia and try again.", self.company_id.name))
         if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id:
-            raise UserError(_("You need to request the CCSID first before you can proceed"))
+            raise UserError(str(ERROR_MESSAGE))
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         compliance_files = self._l10n_sa_get_compliance_files()
         for fname, fval in compliance_files.items():
@@ -291,14 +296,12 @@ class AccountJournal(models.Model):
             prepared_xml = self._l10n_sa_prepare_compliance_xml(fname, fval, self_sudo.l10n_sa_compliance_csid_certificate_id, digital_signature)
             result = self._l10n_sa_api_compliance_checks(prepared_xml.decode(), CCSID_data)
             if result.get('error'):
-                raise UserError(Markup("<p class='mb-0'>%s <b>%s</b></p>") % (_("Could not complete Compliance Checks for the following file:"), fname))
+                raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
             if result['validationResults']['status'] == 'WARNING':
                 warnings = Markup().join(Markup("<li><b>%(code)s</b>: %(message)s </li>") % e for e in result['validationResults']['warningMessages'])
                 self.l10n_sa_csr_errors = Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (_("Warnings:"), warnings)
             elif result['validationResults']['status'] != 'PASS':
-                errors = Markup().join(Markup("<li><b>%(code)s</b>: %(message)s </li>") % e for e in result['validationResults']['errorMessages'])
-                raise UserError(Markup("<p class='mb-0'>%s <b>%s</b> %s</p>")
-                                % (_("Could not complete Compliance Checks for the following file:"), fname, Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (_("Errors:"), errors)))
+                raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
         self.l10n_sa_compliance_checks_passed = True
 
     def _l10n_sa_prepare_compliance_xml(self, xml_name, xml_raw, certificate, signature):
@@ -392,9 +395,9 @@ class AccountJournal(models.Model):
         """
         self.ensure_one()
         if not otp:
-            raise UserError(_("Please, set a valid OTP to be used for Onboarding"))
+            raise UserError(_("The OTP is invalid. Please try again."))
         if not self.l10n_sa_csr:
-            raise UserError(_("Please, generate a CSR before requesting a CCSID"))
+            raise UserError(str(ERROR_MESSAGE))
         request_data = {
             'body': json.dumps({'csr': self.l10n_sa_csr.decode()}),
             'header': {'OTP': otp}
@@ -508,11 +511,10 @@ class AccountJournal(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         if not self_sudo.l10n_sa_production_csid_json or not self_sudo.l10n_sa_production_csid_certificate_id:
-            raise UserError(_("Please, make a request to obtain the Compliance CSID and Production CSID before sending "
-                            "documents to ZATCA"))
+            raise UserError(str(ERROR_MESSAGE))
         certificate = self_sudo.l10n_sa_production_csid_certificate_id
         if not certificate.is_valid and self.company_id.l10n_sa_api_mode != 'sandbox':
-            raise UserError(_("Production certificate has expired, please renew the PCSID before proceeding"))
+            raise UserError(_("The Journal is not valid anymore. Please Renew it."))
         return json.loads(self_sudo.l10n_sa_production_csid_json), certificate.id
 
     # ====== API Helper Methods =======
