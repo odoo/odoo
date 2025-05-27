@@ -1,3 +1,4 @@
+import base64
 import markupsafe
 import requests
 
@@ -246,13 +247,9 @@ class StockPickingBatch(models.Model):
             'state': 'stock_sent',
             'l10n_ro_edi_stock_load_id': values['l10n_ro_edi_stock_load_id'],
             'l10n_ro_edi_stock_uit': values['l10n_ro_edi_stock_uit'],
+            'attachment_bin': base64.b64encode(values['raw_xml']),
         })
-
-        document.attachment_id = self.env['stock.picking']._l10n_ro_edi_stock_create_attachment({
-            'name': self.name,
-            'res_id': document.id,
-            'raw': values['raw_xml'],
-        })
+        document._set_attachment_name(f"etransport_{(self.name).replace('/', '_')}.xml")
 
         return document
 
@@ -267,12 +264,8 @@ class StockPickingBatch(models.Model):
         })
 
         if 'raw_xml' in values:
-            # when an error is thrown during data validation there will be no 'raw_xml'
-            document.attachment_id = self.env['stock.picking']._l10n_ro_edi_stock_create_attachment({
-                'name': self.name,
-                'res_id': document.id,
-                'raw': values['raw_xml'],
-            })
+            document.attachment_bin = base64.b64encode(values['raw_xml'])
+            document._set_attachment_name(f"etransport_{(self.name).replace('/', '_')}.xml")
 
         return document
 
@@ -283,13 +276,9 @@ class StockPickingBatch(models.Model):
             'state': 'stock_validated',
             'l10n_ro_edi_stock_load_id': values['l10n_ro_edi_stock_load_id'],
             'l10n_ro_edi_stock_uit': values['l10n_ro_edi_stock_uit'],
+            'attachment_bin': base64.b64encode(values['raw_xml']),
         })
-
-        document.attachment_id = self.env['stock.picking']._l10n_ro_edi_stock_create_attachment({
-            'name': self.name,
-            'res_id': document.id,
-            'raw': values['raw_xml'],
-        })
+        document._set_attachment_name(f"etransport_{(self.name).replace('/', '_')}.xml")
 
         return document
 
@@ -337,7 +326,7 @@ class StockPickingBatch(models.Model):
                 document_values |= {
                     'l10n_ro_edi_stock_load_id': last_sent_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': last_sent_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': last_sent_document.attachment_id.raw,
+                    'raw_xml': base64.b64decode(last_sent_document.attachment_bin),
                 }
 
             self._l10n_ro_edi_stock_create_document_stock_sending_failed(document_values)
@@ -349,6 +338,7 @@ class StockPickingBatch(models.Model):
         )
 
         result = ETransportAPI().upload_data(company_id=self.company_id, data=raw_xml)
+        raw_xml = str(raw_xml).encode()
 
         if 'error' in result:
             self._l10n_ro_edi_stock_get_all_documents('stock_sending_failed').unlink()
@@ -372,7 +362,7 @@ class StockPickingBatch(models.Model):
             else:
                 last_validated = self._l10n_ro_edi_stock_get_last_document('stock_validated')
                 uit = last_validated.l10n_ro_edi_stock_uit
-                raw_xml = last_validated.attachment_id.raw
+                raw_xml = base64.b64decode(last_validated.attachment_bin)
 
             self._l10n_ro_edi_stock_create_document_stock_sent({
                 'l10n_ro_edi_stock_load_id': content['index_incarcare'],
@@ -394,7 +384,7 @@ class StockPickingBatch(models.Model):
                     'message': '\n'.join(errors),
                     'l10n_ro_edi_stock_load_id': current_sending_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': current_sending_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': current_sending_document.attachment_id.raw,
+                    'raw_xml': base64.b64decode(current_sending_document.attachment_bin),
                 })
                 continue
 
@@ -410,14 +400,14 @@ class StockPickingBatch(models.Model):
                     'message': result['error'],
                     'l10n_ro_edi_stock_load_id': current_sending_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': current_sending_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': current_sending_document.attachment_id.raw,
+                    'raw_xml': base64.b64decode(current_sending_document.attachment_bin),
                 })
             else:
                 documents_to_delete |= batch._l10n_ro_edi_stock_get_all_documents(('stock_sent', 'stock_sending_failed'))
                 new_document_data = {
                     'l10n_ro_edi_stock_load_id': current_sending_document.l10n_ro_edi_stock_load_id,
                     'l10n_ro_edi_stock_uit': current_sending_document.l10n_ro_edi_stock_uit,
-                    'raw_xml': current_sending_document.attachment_id.raw,
+                    'raw_xml': base64.b64decode(current_sending_document.attachment_bin),
                 }
                 match state := result['content']['stare']:
                     case 'ok':

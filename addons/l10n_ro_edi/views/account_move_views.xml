@@ -25,7 +25,7 @@
                               decoration-warning="state == 'invoice_sent'"
                               decoration-success="state == 'invoice_validated'">
                             <field name="message" column_invisible="1"/>
-                            <field name="attachment_id" column_invisible="1"/>
+                            <field name="attachment_bin" column_invisible="1"/>
                             <field name="datetime"/>
                             <field name="state" widget="account_document_state"/>
                             <field name="key_loading" optional="hide"/>
@@ -37,7 +37,7 @@
                             <button name="action_l10n_ro_edi_download_signature"
                                     type="object"
                                     string="Download"
-                                    invisible="not attachment_id"/>
+                                    invisible="not attachment_bin"/>
                         </list>
                     </field>
                 </page>
