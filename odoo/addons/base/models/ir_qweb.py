@@ -1744,7 +1744,7 @@ class IrQWeb(models.AbstractModel):
         if el.text is not None:
             self._append_text(el.text, compile_context)
         body = []
-        for item in el:
+        for item in list(el):
             if isinstance(item, etree._Comment):
                 if compile_context.get('preserve_comments'):
                     self._append_text(f"<!--{item.text}-->", compile_context)
