@@ -930,8 +930,8 @@ class IrModuleModule(models.Model):
         translation_importer = TranslationImporter(self.env.cr, verbose=False)
 
         for module_name in modules:
-            modpath = get_module_path(module_name, downloaded=imported_module)
-            if not modpath:
+            # we may load files from temporary directories for imported modules
+            if not imported_module and not get_module_path(module_name, display_warning=False):
                 continue
             for lang in langs:
                 env = self.env if imported_module else None
