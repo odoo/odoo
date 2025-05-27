@@ -316,9 +316,13 @@ class SaleOrderLine(models.Model):
         name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():
             product = so_line.product_id
-            parts = (so_line.name or "").split('\n', 2)
+            first_line, _, descr = (so_line.name or "").strip().partition('\n')
+            description_lines = descr.split('\n')
             # if there's a description, use the first line (skipping the product name)
-            description = (parts[1:2] and parts[1]) or product.name if product else parts[0]
+            if product:
+                description = (description_lines and description_lines[0]) or first_line or product.name
+            else:
+                description = first_line
             name = f"{so_line.order_id.name} - {description}"
             additional_name = name_per_id.get(so_line.id)
             if additional_name:
