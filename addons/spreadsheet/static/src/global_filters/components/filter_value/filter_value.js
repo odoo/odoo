@@ -13,6 +13,7 @@ import { TextFilterValue } from "../filter_text_value/filter_text_value";
 import { getFields, ModelNotFoundError } from "@spreadsheet/data_sources/data_source";
 import { BooleanMultiSelector } from "../boolean_multi_selector/boolean_multi_selector";
 import { SelectionFilterValue } from "../selection_filter_value/selection_filter_value";
+import { NumericFilterValue } from "../numeric_filter_value/numeric_filter_value";
 
 const { ValidationMessages } = components;
 
@@ -25,6 +26,7 @@ export class FilterValue extends Component {
         BooleanMultiSelector,
         SelectionFilterValue,
         ValidationMessages,
+        NumericFilterValue,
     };
     static props = {
         filter: Object,
@@ -96,6 +98,10 @@ export class FilterValue extends Component {
             this.clear(id);
             return;
         }
+        this.props.setGlobalFilterValue(id, value);
+    }
+
+    onNumericInput(id, value) {
         this.props.setGlobalFilterValue(id, value);
     }
 
