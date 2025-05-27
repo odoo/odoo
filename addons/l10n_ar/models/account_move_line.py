@@ -37,6 +37,11 @@ class AccountMoveLine(models.Model):
             price_unit = 0.0
             price_net = 0.0
 
+        if invoice._is_refund_invoice():
+            price_unit = -price_unit
+            raw_total = -raw_total
+            price_net = -price_net
+
         return {
             'price_unit': price_unit,
             'price_subtotal': invoice.currency_id.round(raw_total),
