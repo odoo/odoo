@@ -213,7 +213,7 @@
                                     <group string='Status' name="active_group">
                                         <field name="employee_type"/>
                                         <label for="user_id"/>
-                                        <div class="o_row">
+                                        <div class="o_row align-items-center">
                                             <field name="user_id"
                                                 string="Related User"
                                                 help=""
@@ -226,6 +226,9 @@
                                                 name="action_create_user"
                                                 context="{'default_create_employee': True}"
                                                 invisible="user_id"/>
+                                            <span invisible="not user_id or is_user_active">
+                                                (User is Inactive)
+                                            </span>
                                         </div>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
