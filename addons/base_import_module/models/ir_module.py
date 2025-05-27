@@ -15,7 +15,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.modules.module import adapt_version, MANIFEST_NAMES
+from odoo.modules.module import MANIFEST_NAMES, Manifest
 from odoo.release import major_version
 from odoo.tools import convert_csv_import, convert_sql_import, convert_xml_import, exception_to_unicode
 from odoo.tools import file_open, file_open_temporary_directory, ormcache
@@ -73,20 +73,11 @@ class IrModuleModule(models.Model):
         known_mods_names = {m.name: m for m in known_mods}
         installed_mods = [m.name for m in known_mods if m.state == 'installed']
 
-        terp = {}
-        manifest_path = next((opj(path, name) for name in MANIFEST_NAMES if os.path.exists(opj(path, name))), None)
-        if manifest_path:
-            with file_open(manifest_path, 'rb', env=self.env) as f:
-                terp.update(ast.literal_eval(f.read().decode()))
+        terp = Manifest._from_path(path, env=self.env)
         if not terp:
             return False
-        if not terp.get('icon'):
-            icon_path = 'static/description/icon.png'
-            module_icon = module if os.path.exists(opj(path, icon_path)) else 'base'
-            terp['icon'] = opj('/', module_icon, icon_path)
         values = self.get_values_from_terp(terp)
-        if 'version' in terp:
-            values['latest_version'] = adapt_version(terp['version'])
+        values['latest_version'] = terp.version
         if self.env.context.get('data_module'):
             values['module_type'] = 'industries'
 
@@ -279,11 +270,9 @@ class IrModuleModule(models.Model):
                 module_data_files = defaultdict(list)
                 dependencies = defaultdict(list)
                 for mod_name, manifest in manifest_files:
-                    manifest_path = z.extract(manifest, module_dir)
-                    try:
-                        with file_open(manifest_path, 'rb', env=self.env) as f:
-                            terp = ast.literal_eval(f.read().decode())
-                    except Exception:
+                    _manifest_path = z.extract(manifest, module_dir)
+                    terp = Manifest._from_path(opj(module_dir, mod_name), env=self.env)
+                    if not terp:
                         continue
                     files_to_import = terp.get('data', []) + terp.get('init_xml', []) + terp.get('update_xml', [])
                     if with_demo:
@@ -321,7 +310,7 @@ class IrModuleModule(models.Model):
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
                             module=mod_name, error_message=exception_to_unicode(e),
-                        ))
+                        )) from e
         return "", module_names
 
     def module_uninstall(self):
