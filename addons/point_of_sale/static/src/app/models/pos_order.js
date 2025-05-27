@@ -410,7 +410,6 @@ export class PosOrder extends Base {
     }
 
     get_orderline(id) {
-        console.log("get_orderline", id);
         const orderlines = this.lines;
         for (let i = 0; i < orderlines.length; i++) {
             if (orderlines[i].id === id) {
@@ -464,7 +463,6 @@ export class PosOrder extends Base {
     }
 
     get_last_orderline() {
-        console.log("get_last_orderline");
         const orderlines = this.lines;
         return this.lines.at(orderlines.length - 1);
     }
@@ -579,7 +577,6 @@ export class PosOrder extends Base {
     }
 
     get_selected_orderline() {
-    console.log("get_selected_orderline");
         return this.lines.find((line) => line.uuid === this.uiState.selected_orderline_uuid);
     }
 
@@ -590,7 +587,6 @@ export class PosOrder extends Base {
     }
 
     select_orderline(line) {
-    console.log("select_orderline");
         if (line) {
             this.uiState.selected_orderline_uuid = line.uuid;
         } else {
@@ -599,7 +595,6 @@ export class PosOrder extends Base {
     }
 
     deselect_orderline() {
-    console.log("deselect_orderline");
         if (this.uiState.selected_orderline_uuid) {
             this.uiState.selected_orderline_uuid = undefined;
         }

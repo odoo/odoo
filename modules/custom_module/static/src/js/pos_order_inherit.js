@@ -19,6 +19,5 @@ patch(PosOrder.prototype, {
     updateLastOrderChange() {
 
         const res = super.updateLastOrderChange();
-        console.log("done inherited");
     }
 });
