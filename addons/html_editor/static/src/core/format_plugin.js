@@ -157,6 +157,16 @@ export class FormatPlugin extends Plugin {
         intangible_char_for_keyboard_navigation_predicates: (_, char) => char === "\u200b",
     };
 
+    setup() {
+        this.document.querySelectorAll("[placeholder]").forEach((elWithPlaceholder) => {
+            // Elements with only a ZeroWidthSpace as text wont show
+            // their placeholder unless they have oeZwsEmptyInline
+            if (elWithPlaceholder && elWithPlaceholder.textContent === "\u200b") {
+                elWithPlaceholder.setAttribute("data-oe-zws-empty-inline", "");
+            }
+        });
+    }
+
     removeFormat() {
         const traversedNodes = this.dependencies.selection.getTraversedNodes();
         for (const format of Object.keys(formatsSpecs)) {
@@ -453,7 +463,8 @@ export class FormatPlugin extends Plugin {
         );
         if (
             this.lastEmptyInlineElement?.isConnected &&
-            this.lastEmptyInlineElement !== inlineElement
+            this.lastEmptyInlineElement !== inlineElement &&
+            !this.lastEmptyInlineElement.attributes.placeholder
         ) {
             // Remove last empty inline element.
             this.cleanElement(this.lastEmptyInlineElement, { preserveSelection: true });
