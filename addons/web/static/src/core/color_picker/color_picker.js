@@ -3,6 +3,7 @@ import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/cu
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
+import { POSITION_BUS } from "../position/position_hook";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -74,6 +75,13 @@ export class ColorPicker extends Component {
             showGradientPicker: false,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
+        useEffect(
+            () => {
+                // Recompute the positioning of the popover if any.
+                this.env[POSITION_BUS]?.trigger("update");
+            },
+            () => [this.state.activeTab]
+        );
     }
 
     getDefaultTab() {
