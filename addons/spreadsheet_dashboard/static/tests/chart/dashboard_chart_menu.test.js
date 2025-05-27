@@ -3,7 +3,11 @@ import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { components } from "@odoo/o-spreadsheet";
 import { insertChartInSpreadsheet } from "@spreadsheet/../tests/helpers/chart";
-import { createBasicChart } from "@spreadsheet/../tests/helpers/commands";
+import {
+    createBasicChart,
+    createScorecardChart,
+    createGaugeChart,
+} from "@spreadsheet/../tests/helpers/commands";
 import { getBasicData } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { mountSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
@@ -121,6 +125,31 @@ test("Click on chart element in dashboard mode do not redirect twice", async fun
     await click(".o-chart-container canvas", { position: "top-left" });
     await animationFrame();
     expect.verifySteps(["chartMenuRedirect"]);
+});
+
+test("Clicking on a scorecard or gauge redirects to the linked menu id", async function () {
+    mockService("action", {
+        doAction: async (actionRequest) => expect.step(actionRequest),
+    });
+
+    const { model } = await createModelWithDataSource({ serverData });
+    await mountSpreadsheet(model);
+    createScorecardChart(model, "scorecardId");
+    createGaugeChart(model, "gaugeId");
+    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId: "scorecardId", odooMenuId: 2 });
+    model.dispatch("LINK_ODOO_MENU_TO_CHART", { chartId: "gaugeId", odooMenuId: 2 });
+    await animationFrame();
+
+    model.updateMode("dashboard");
+    await animationFrame();
+
+    const figures = document.querySelectorAll(".o-figure");
+
+    await click(figures[0]);
+    expect.verifySteps(["menuAction2"]);
+
+    await click(figures[1]);
+    expect.verifySteps(["menuAction2"]);
 });
 
 test.tags("desktop");
