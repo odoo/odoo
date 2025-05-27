@@ -50,20 +50,18 @@ class StockRule(models.Model):
             if procurement.origin != 'MPS':
                 domain = rule._make_mo_get_domain(procurement, bom)
                 mo = self.env['mrp.production'].sudo().search(domain, limit=1)
-            if not mo:
+            is_batch_size = bom and bom.enable_batch_size
+            if not mo or is_batch_size:
                 procurement_qty = procurement.product_qty
-                batch_size = procurement.values.get('batch_size', procurement_qty)
-                if batch_size <= 0:
-                    batch_size = procurement_qty
+                batch_size = bom.product_uom_id._compute_quantity(bom.batch_size, procurement.product_uom) if is_batch_size else procurement_qty
                 vals = rule._prepare_mo_vals(*procurement, bom)
                 while procurement.product_uom.compare(procurement_qty, 0) > 0:
-                    current_qty = min(procurement_qty, batch_size)
                     new_productions_values_by_company[procurement.company_id.id]['values'].append({
                         **vals,
-                        'product_qty': procurement.product_uom._compute_quantity(current_qty, bom.product_uom_id) if bom else current_qty,
+                        'product_qty': procurement.product_uom._compute_quantity(batch_size, bom.product_uom_id) if bom else procurement_qty,
                     })
                     new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
-                    procurement_qty -= current_qty
+                    procurement_qty -= batch_size
             else:
                 self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
                     'mo_id': mo.id,

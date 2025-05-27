@@ -88,6 +88,8 @@ class MrpBom(models.Model):
         string="Days to prepare Manufacturing Order", default=0,
         help="Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.")
     show_set_bom_button = fields.Boolean(compute="_compute_show_set_bom_button")
+    batch_size = fields.Float('Batch Size', default=1.0, digits='Product Unit', help="All automatically generated manufacturing orders for this product will be of this size.")
+    enable_batch_size = fields.Boolean(default=False)
 
     _qty_positive = models.Constraint(
         'check (product_qty > 0)',
@@ -337,6 +339,11 @@ class MrpBom(models.Model):
                            for pid in (bom.product_id.ids or bom.product_tmpl_id.product_variant_ids.ids)]
         if self.env['stock.warehouse.orderpoint'].search_count([('product_id', 'in', product_ids)], limit=1):
             raise ValidationError(_("You can not create a kit-type bill of materials for products that have at least one reordering rule."))
+
+    @api.constrains('enable_batch_size', 'batch_size')
+    def _check_valid_batch_size(self):
+        if any(bom.enable_batch_size and bom.product_uom_id.compare(bom.batch_size, 0.0) <= 0 for bom in self):
+            raise ValidationError(self.env._("The batch size must be positive!"))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_running_mo(self):
