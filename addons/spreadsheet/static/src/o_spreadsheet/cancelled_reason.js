@@ -6,7 +6,7 @@ export const CommandResult = {
     FilterNotFound: "FilterNotFound",
     InvalidFilterMove: "InvalidFilterMove",
     DuplicatedFilterLabel: "DuplicatedFilterLabel",
-    PivotCacheNotLoaded: "PivotCacheNotLoaded",
+    DataSourceNotValid: "DataSourceNotValid",
     InvalidValueTypeCombination: "InvalidValueTypeCombination",
     ListIdDuplicated: "ListIdDuplicated",
     InvalidNextId: "InvalidNextId",
