@@ -147,10 +147,10 @@ class Task(models.Model):
 
     create_date = fields.Datetime("Created On", readonly=True, index=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
-    date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
+    date_end = fields.Datetime(string='Ending Date', index='btree_not_null', copy=False)
     date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
         help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.")
-    date_deadline = fields.Datetime(string='Deadline', index=True, tracking=True)
+    date_deadline = fields.Datetime(string='Deadline', index='btree_not_null', tracking=True)
 
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
@@ -197,7 +197,7 @@ class Task(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
+    parent_id = fields.Many2one('project.task', string='Parent Task', index='btree_not_null', domain="['!', ('id', 'child_of', id)]", tracking=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count')

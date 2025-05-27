@@ -14,7 +14,7 @@ class TrackVisitor(models.Model):
 
     partner_id = fields.Many2one(
         'res.partner', string='Partner', compute='_compute_partner_id',
-        index=True, ondelete='set null', readonly=False, store=True)
+        index='btree_not_null', ondelete='set null', readonly=False, store=True)
     visitor_id = fields.Many2one(
         'website.visitor', string='Visitor', index=True, ondelete='cascade')
     track_id = fields.Many2one(
