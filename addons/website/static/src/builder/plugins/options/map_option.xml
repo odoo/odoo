@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
+
+<t t-name="website.MapsDescription">
+    <div class="description">
+        Visit us: Our office is located in the northeast of Brussels. TEL (555) 432 2365
+    </div>
+</t>
+
 <t t-name="website.mapOption">
     <BuilderRow label.translate="Address" action="'mapUpdateSrc'" preview="false">
         <BuilderTextInput
@@ -63,7 +70,10 @@
         />
     </BuilderRow>
     <BuilderRow label.translate="Description">
-        <BuilderCheckbox action="'mapDescription'"/>
+        <BuilderCheckbox id="'map_description'" action="'mapDescription'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Description Text" level="1" t-if="isActiveItem('map_description')">
+        <BuilderTextInput action="'mapDescriptionTextValue'"/>
     </BuilderRow>
 </t>
 </templates>
