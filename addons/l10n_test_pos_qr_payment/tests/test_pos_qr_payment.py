@@ -21,7 +21,7 @@ class TestUiSEPA(TestPosQrCommon):
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
 
         # Setup QR Payment method for SEPA
-        qr_payment = cls.env['pos.payment.method'].create({
+        qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "qr_code",
@@ -81,7 +81,7 @@ class TestUiCH(TestPosQrCommon):
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
 
         # Setup QR Payment method for Swiss QR
-        qr_payment = cls.env['pos.payment.method'].create({
+        qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "qr_code",
@@ -141,7 +141,7 @@ class TestUiHK(TestPosQrCommon):
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
 
         # Setup QR Payment method for EMV(FPS)
-        qr_payment = cls.env['pos.payment.method'].create({
+        qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "qr_code",
@@ -196,7 +196,7 @@ class TestUIBR(TestPosQrCommon):
         cls.company_data['default_journal_bank'].write({'bank_account_id': cls.bank_account.id})
 
         # Setup QR Payment method for PIX
-        qr_payment = cls.env['pos.payment.method'].create({
+        qr_payment = cls.env['pos.payment.method'].sudo().create({
             'name': 'QR Code',
             'journal_id': cls.company_data['default_journal_bank'].id,
             'payment_method_type': "qr_code",

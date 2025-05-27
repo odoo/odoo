@@ -90,7 +90,7 @@ export class AddSnippetDialog extends Component {
     }
 
     get iframeDocument() {
-        return this.iframeRef.el.contentDocument;
+        return this.iframeRef.el?.contentDocument;
     }
     /**
      * Gets snippet groups.

@@ -1082,7 +1082,7 @@ class PosSession(models.Model):
             vals.append(self._get_combine_receivable_vals(payment_method, amounts['amount'], amounts['amount_converted']))
         for payment, amounts in split_receivables_pay_later.items():
             vals.append(self._get_split_receivable_vals(payment, amounts['amount'], amounts['amount_converted']))
-        MoveLine.create(vals)
+        data['pay_later_move_lines'] = MoveLine.create(vals)
         return data
 
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
@@ -1292,7 +1292,6 @@ class PosSession(models.Model):
         stock_output_lines = data.get('stock_output_lines')
         payment_method_to_receivable_lines = data.get('payment_method_to_receivable_lines')
         payment_to_receivable_lines = data.get('payment_to_receivable_lines')
-
 
         all_lines = (
               split_cash_statement_lines

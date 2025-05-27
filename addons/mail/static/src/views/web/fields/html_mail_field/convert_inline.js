@@ -1688,7 +1688,8 @@ function _getMatchedCSSRules(node, cssRules) {
         node.mozMatchesSelector ||
         node.msMatchesSelector ||
         node.oMatchesSelector;
-    const styles = cssRules.map((rule) => rule.style).filter(Boolean);
+
+    const styles = cssRules.map((rule) => removeBlacklistedStyles(rule, node)).filter(Boolean);
 
     // Add inline styles at the highest specificity.
     if (node.style.length) {
@@ -1925,4 +1926,28 @@ function _wrap(element, wrapperTag, wrapperClass, wrapperStyle) {
     element.parentElement.insertBefore(wrapper, element);
     wrapper.append(element);
     return wrapper;
+}
+
+function isBlacklistedStyle(node, selector, key) {
+    return (
+        node.matches("table, thead, tbody, tfoot, tr, td, th") &&
+        ["table", "thead", "tbody", "tfoot", "tr", "td", "th"].some((elName) =>
+            selector.includes(elName)
+        ) &&
+        key.includes("color")
+    );
+}
+
+function removeBlacklistedStyles(rule, node) {
+    if (!rule.style) {
+        return rule.style;
+    }
+    const styles = {};
+    for (const [key, value] of Object.entries(rule.style)) {
+        if (isBlacklistedStyle(node, rule.selector, key)) {
+            continue;
+        }
+        styles[key] = value;
+    }
+    return styles;
 }

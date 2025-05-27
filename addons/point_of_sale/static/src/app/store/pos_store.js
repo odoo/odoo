@@ -2214,6 +2214,11 @@ export class PosStore extends Reactive {
     get showSaveOrderButton() {
         return this.isOpenOrderShareable();
     }
+
+    async isSessionDeleted() {
+        const session = await this.data.read("pos.session", [this.session.id]);
+        return session[0] === undefined;
+    }
 }
 
 PosStore.prototype.electronic_payment_interfaces = {};
