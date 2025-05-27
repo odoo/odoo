@@ -514,6 +514,23 @@ class L10nMyEDITestFileGeneration(AccountTestInvoicingCommon):
             'CustomsImportForm',
         )
 
+    def test_12_partner_ref_not_in_party_id(self):
+        """
+        Ensure that when an invoice contains a customs number; it is treated as an importation and not exportation.
+        """
+        invoice = self.init_invoice(
+            'out_invoice', products=self.product_a
+        )
+        invoice.action_post()
+
+        file, _errors = invoice._l10n_my_edi_generate_invoice_xml()
+        root = etree.fromstring(file)
+
+        # There should not be any ID without attribute
+        customer_root = root.xpath('cac:AccountingCustomerParty/cac:Party', namespaces=NS_MAP)[0]
+        node = customer_root.xpath('cac:PartyIdentification/cbc:ID[count(@*)=0]', namespaces=NS_MAP)
+        self.assertEqual(node, [])
+
     def _assert_node_values(self, root, node_path, text, attributes=None):
         node = root.xpath(node_path, namespaces=NS_MAP)
 
