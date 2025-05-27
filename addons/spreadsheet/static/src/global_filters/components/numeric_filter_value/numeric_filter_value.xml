@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet.NumericFilterValue">
+        <input
+            type="text"
+            t-ref="numpadDecimal"
+            class="o_input o-global-filter-numeric-value text-truncate"
+            t-att-value="props.value ?? ''"
+            t-on-change="(e) => this.onChange(e.target.value)"
+            inputmode="decimal"
+        />
+    </t>
+</templates>

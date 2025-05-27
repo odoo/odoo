@@ -109,6 +109,57 @@ test("Value of selection filter", () => {
     expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
 });
 
+test("Value of numeric filter", () => {
+    const model = new Model();
+    addGlobalFilterWithoutReload(model, {
+        id: "1",
+        type: "numeric",
+        label: "Numeric Filter",
+        defaultValue: { operator: "=", targetValue: 10 },
+    });
+
+    let result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: { operator: "=", targetValue: false },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: { operator: "=", targetValue: "value" },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: { operator: "=", targetValue: "5" },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "1",
+        value: { operator: "=", targetValue: "" },
+    });
+    expect(result.isSuccessful).toBe(false);
+    expect(result.reasons).toEqual(["InvalidValueTypeCombination"]);
+
+    result = addGlobalFilterWithoutReload(model, {
+        id: "2",
+        type: "numeric",
+        label: "Default value is a number",
+        defaultValue: { operator: "=", targetValue: 99 },
+    });
+    expect(result.isSuccessful).toBe(true);
+
+    result = setGlobalFilterValueWithoutReload(model, {
+        id: "2",
+    });
+    expect(result.isSuccessful).toBe(true);
+});
+
 test("Value of date filter", () => {
     const model = new Model();
     addGlobalFilterWithoutReload(model, {

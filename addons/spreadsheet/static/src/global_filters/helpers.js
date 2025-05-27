@@ -9,6 +9,7 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import { Registry } from "@spreadsheet/o_spreadsheet/o_spreadsheet";
 import { deepEqual } from "@web/core/utils/objects";
+import { formatList } from "@web/core/l10n/utils";
 
 export const globalFieldMatchingRegistry = new Registry();
 
@@ -229,6 +230,60 @@ const FILTERS_BEHAVIORS = {
         },
     ],
     boolean: [SET_OPERATORS_BEHAVIORS],
+    numeric: [
+        {
+            operators: ["=", "!=", ">", "<"],
+            defaultValue: { targetValue: undefined },
+            validateValue: (filterValue) => isNumericFilterValueValid(filterValue.targetValue),
+            validateDefaultValue: (filterValue) =>
+                isNumericFilterValueValid(filterValue.targetValue),
+            getSearchBarFacetValues: (env, filter, filterValue) => {
+                if (filterValue.targetValue === undefined) {
+                    return [];
+                }
+                return [`${filterValue.targetValue}`];
+            },
+            toDomain(fieldPath, filterValue) {
+                return new Domain([[fieldPath, filterValue.operator, filterValue.targetValue]]);
+            },
+            toCellValue(getters, filter, filterValue) {
+                return {
+                    value: filterValue.targetValue !== undefined ? filterValue.targetValue : "",
+                };
+            },
+        },
+        {
+            operators: ["between"],
+            defaultValue: { minimumValue: undefined, maximumValue: undefined },
+            validateValue: (filterValue) =>
+                isNumericFilterValueValid(filterValue.minimumValue) &&
+                isNumericFilterValueValid(filterValue.maximumValue),
+            validateDefaultValue: (filterValue) =>
+                isNumericFilterValueValid(filterValue.minimumValue) &&
+                isNumericFilterValueValid(filterValue.maximumValue),
+            getSearchBarFacetValues: (env, filter, filterValue) => {
+                if (
+                    filterValue.minimumValue === undefined &&
+                    filterValue.maximumValue === undefined
+                ) {
+                    return [];
+                }
+                return [formatList([filterValue.minimumValue, filterValue.maximumValue])];
+            },
+            toDomain(fieldPath, filterValue) {
+                return new Domain([
+                    [fieldPath, ">=", filterValue.minimumValue],
+                    [fieldPath, "<=", filterValue.maximumValue],
+                ]);
+            },
+            toCellValue(getters, filter, filterValue) {
+                return [
+                    [{ value: filterValue.minimumValue }],
+                    [{ value: filterValue.maximumValue }],
+                ];
+            },
+        },
+    ],
 };
 
 /**
@@ -257,6 +312,14 @@ function isArrayOfStrings(strings) {
         strings.length &&
         strings.every((item) => typeof item === "string")
     );
+}
+
+/**
+ * A numeric filter value is valid if it is a number
+ * @returns {boolean}
+ */
+function isNumericFilterValueValid(value) {
+    return typeof value === "number";
 }
 
 function isArrayOfIds(ids) {

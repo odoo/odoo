@@ -77,7 +77,7 @@ export class FiltersSearchDialog extends Component {
     }
 
     setGlobalFilterValue(node, value) {
-        if (!value && node.globalFilter.type !== "date") {
+        if (value == undefined && node.globalFilter.type !== "date") {
             // preserve the operator.
             node.value = {
                 ...node.value,
