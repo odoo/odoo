@@ -605,3 +605,9 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tip_after_payment')
+
+    def test_customer_alone_saved(self):
+        """
+        Tests that when a customer is set, it will be saved and not be reset even if this is the only thing that changed in the order
+        """
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_customer_alone_saved', login="pos_user")
