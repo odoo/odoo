@@ -4,6 +4,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { Plugin } from "@html_editor/plugin";
 import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
 import { GoogleMapsOption } from "./google_maps_option";
+import { Deferred } from "@odoo/hoot-dom";
 
 /**
  * A `google.maps.places.PlaceResult` object.
@@ -31,6 +32,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
     static shared = [
         "configureGMapsAPI",
         "initializeGoogleMaps",
+        "failedToInitializeGoogleMaps",
         "shouldRefetchApiKey",
         "shouldNotRefetchApiKey",
     ];
@@ -48,6 +50,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
         ],
         so_content_addition_selector: [".s_google_map"],
         builder_actions: this.getActions(),
+        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
     setup() {
@@ -58,6 +61,9 @@ export class GoogleMapsOptionPlugin extends Plugin {
 
         /** @type {Map<Coordinates, Place>} */
         this.gpsMapCache = new Map();
+
+        /** @type {Map<HTMLElement, Deferred} */
+        this.recentlyDroppedSnippetDeferredInit = new Map();
     }
 
     getActions() {
@@ -79,11 +85,29 @@ export class GoogleMapsOptionPlugin extends Plugin {
         };
     }
 
+    async onSnippetDropped({ snippetEl }) {
+        if (snippetEl.matches(".s_google_map")) {
+            const deferredInit = new Deferred();
+            this.recentlyDroppedSnippetDeferredInit.set(snippetEl, deferredInit);
+            this.dependencies.edit_interaction.restartInteractions(snippetEl);
+            const initSuccess = await deferredInit;
+            this.recentlyDroppedSnippetDeferredInit.delete(snippetEl);
+            if (!initSuccess) {
+                return true; // cancel
+            }
+        }
+    }
+
+    failedToInitializeGoogleMaps(editingElement) {
+        this.recentlyDroppedSnippetDeferredInit.get(editingElement)?.resolve(false);
+    }
+
     getMapsAPI() {
         return this.mapsAPI;
     }
 
     async initializeGoogleMaps(editingElement, mapsAPI) {
+        this.recentlyDroppedSnippetDeferredInit.get(editingElement)?.resolve(true);
         if (mapsAPI) {
             this.mapsAPI = mapsAPI;
             this.placesAPI = mapsAPI.places;
