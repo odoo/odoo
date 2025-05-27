@@ -25,12 +25,14 @@ export class BuilderOptionsPlugin extends Plugin {
         "getRemoveDisabledReason",
         "getCloneDisabledReason",
         "getReloadSelector",
+        "setNextTarget",
     ];
     resources = {
-        step_added_handlers: () => this.updateContainers(),
+        before_add_step_handlers: this.onWillAddStep.bind(this),
+        step_added_handlers: this.onStepAdded.bind(this),
+        post_undo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "undo"),
+        post_redo_handlers: (revertedStep) => this.restoreContainers(revertedStep, "redo"),
         clean_for_save_handlers: this.cleanForSave.bind(this),
-        post_undo_handlers: this.restoreContainer.bind(this),
-        post_redo_handlers: this.restoreContainer.bind(this),
         // Resources definitions:
         remove_disabled_reason_providers: [
             // ({ el, reasons }) => {
@@ -100,7 +102,7 @@ export class BuilderOptionsPlugin extends Plugin {
         return null;
     }
 
-    updateContainers(target, { force = false } = {}) {
+    updateContainers(target, { forceUpdate = false } = {}) {
         if (this.dependencies.history.getIsCurrentStepModified()) {
             console.warn(
                 "Should not have any mutations in the current step when you update the container selection"
@@ -118,11 +120,12 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         const newContainers = this.computeContainers(this.target);
-        // Do not update the containers if they did not change or not forced to update.
+        // Do not update the containers if they did not change and are not
+        // forced to update.
         if (
+            !forceUpdate &&
             this.target?.isConnected &&
-            newContainers.length === this.lastContainers.length &&
-            !force
+            newContainers.length === this.lastContainers.length
         ) {
             const previousIds = this.lastContainers.map((c) => c.id);
             const newIds = newContainers.map((c) => c.id);
@@ -148,7 +151,6 @@ export class BuilderOptionsPlugin extends Plugin {
         }
 
         this.lastContainers = newContainers;
-        this.dependencies.history.setStepExtra("optionSelection", this.target);
         this.dispatchTo("change_current_options_containers_listeners", this.lastContainers);
     }
 
@@ -264,21 +266,63 @@ export class BuilderOptionsPlugin extends Plugin {
         }
     }
 
-    restoreContainer(revertedStep) {
-        if (revertedStep && revertedStep.extraStepInfos.optionSelection) {
-            this.updateContainers(revertedStep.extraStepInfos.optionSelection);
+    /**
+     * Activates the containers of the given element. They will be activated
+     * once the current step is added (see `onStepAdded`).
+     *
+     * @param {HTMLElement} targetEl the element to activate
+     */
+    setNextTarget(targetEl) {
+        // Store the next target to activate in the current step.
+        this.dependencies.history.setStepExtra("nextTarget", targetEl);
+    }
+
+    onWillAddStep() {
+        // Store the current target in the current step.
+        this.dependencies.history.setStepExtra("currentTarget", this.target);
+    }
+
+    onStepAdded({ step }) {
+        // If a target is specified, activate its containers, otherwise simply
+        // update them.
+        const nextTargetEl = step.extraStepInfos.nextTarget;
+        if (nextTargetEl) {
+            this.updateContainers(nextTargetEl, { forceUpdate: true });
+        } else {
+            this.updateContainers();
         }
     }
+
+    /**
+     * Restores the containers of the target stored in the reverted step.
+     *
+     * @param {Object} revertedStep the step
+     * @param {String} mode "undo" or "redo"
+     */
+    restoreContainers(revertedStep, mode) {
+        if (revertedStep && revertedStep.extraStepInfos.currentTarget) {
+            let targetEl = revertedStep.extraStepInfos.currentTarget;
+            // If the step was supposed to activate another target, activate
+            // this one instead.
+            if (mode === "redo" && revertedStep.extraStepInfos.nextTarget) {
+                targetEl = revertedStep.extraStepInfos.nextTarget;
+            }
+            this.updateContainers(targetEl, { forceUpdate: true });
+        }
+    }
+
     getRemoveDisabledReason(el) {
         const reasons = [];
         this.dispatchTo("remove_disabled_reason_providers", { el, reasons });
         return reasons.length ? reasons.join(" ") : undefined;
     }
+
     getCloneDisabledReason(el) {
         const reasons = [];
         this.dispatchTo("clone_disabled_reason_providers", { el, reasons });
         return reasons.length ? reasons.join(" ") : undefined;
     }
+
     patchBuilderOptions({ target_name, target_element, method, value }) {
         if (!target_name || !target_element || !method || !value) {
             throw new Error(
