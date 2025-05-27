@@ -19,6 +19,7 @@ Long description of module's purpose
     'data': [
         'views/product_template_extension.xml',
         'views/product_template_hide_fields.xml',
+        'views/product_list_extension.xml',
     ],
 
     'demo': [

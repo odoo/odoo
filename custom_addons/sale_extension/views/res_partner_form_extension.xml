@@ -6,6 +6,13 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
 
+                <xpath expr="//div[@name='warning_tax']" position="before">
+                    <header>
+                        <button string="Guardar" type="object" name="action_save_customer" class="btn-primary"/>
+                        <button string="Import from CSV" type="object" name="action_import_csv" class="btn-secondary"/>
+                    </header>
+                </xpath>
+
                 <xpath expr="//field[@id='individual']" position="attributes">
                     <attribute name="placeholder">Nombre y apellido</attribute>
                 </xpath>
@@ -54,12 +61,6 @@
                             <field name="delivery_country_id" placeholder="Country" class="o_address_country" options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}" on_change="1" can_create="True" can_write="True"/>
                         </div>
 
-                    </div>
-                </xpath>
-                <xpath expr="//group[group/div[@name='delivery_address']]" position="after">
-                    <div class="oe_button_box d-flex justify-content-between" style="margin-top: 10px;">
-                        <button string="Import from CSV" type="object" name="action_import_csv" class="btn-secondary"/>
-                        <button string="Guardar" type="object" name="write" class="btn-primary"/>
                     </div>
                 </xpath>
             </field>

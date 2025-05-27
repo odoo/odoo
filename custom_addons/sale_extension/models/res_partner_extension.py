@@ -36,3 +36,6 @@ class ResPartnerExtension(models.Model):
     def action_import_csv(self):
         return {
         }
+
+    def action_save_customer(self):
+        return True

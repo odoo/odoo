@@ -21,6 +21,14 @@ class SaleOrder(models.Model):
         ('freight_buyer', 'Se entrega en expreso a cargo del comprador'),
     ], string="Forma de entrega")
 
+
+    sale_condition = fields.Selection([
+        ('transfer', 'Transferencia'),
+        ('30_day_check', 'Cheque a 30 días'),
+        ('60_day_check', 'Cheque a 30 / 60 días'),
+        ('90_day_check', 'Cheque a 30 / 60 / 90 días')
+    ], string="Condición de venta")
+
     discount = fields.Float(string="Descuento (%)", default=0.0)
 
     def print_quotation_report(self):
