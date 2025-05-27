@@ -2,7 +2,13 @@
 <odoo>
     <data noupdate="1">
         <function model="account.chart.template" name="try_loading">
-            <value eval="[ref('l10n_hr.l10n_hr_chart_template_rrif')]"/>
+            <value eval="[ref('l10n_hr.l10n_hr_chart_template')]"/>
         </function>
+        <!-- main currency is set to EUR, but enable HRK also for historic needs-->
+        <function model="res.currency" name="write">
+            <value eval="[ref('base.HRK')]"/>
+            <value eval="{'active': True}"/>
+        </function>
+
     </data>
 </odoo>
