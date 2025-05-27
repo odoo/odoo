@@ -156,6 +156,7 @@ class PosSession(models.Model):
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
         fields = self._load_pos_data_fields(self.config_id.id)
+        print("fields",fields)
         data = self.search_read(domain, fields, load=False, limit=1)
         data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
         data[0]['_server_version'] = exp_version()

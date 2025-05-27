@@ -8,6 +8,22 @@ _logger = logging.getLogger(__name__)
 
 class SystemParameterController(http.Controller):
 
+    @http.route('/custom_module/ticketNumber', type='json', auth='public', methods=['POST'])
+    def get_ticket_number_by_order_id(self):
+        data = json.loads(request.httprequest.data)
+        pos_order_model = request.env['pos.order'].sudo()
+
+        if not data['order_id']:
+            count = pos_order_model.get_today_ticket_number()
+            return {'ticket_number': count}
+
+        order = pos_order_model.search([('id', '=', data['order_id'])], limit=1)
+
+        if not order:
+            return {'error': f"Order with ID {data['order_id']} not found."}
+        print("'ticket_number': ",order.ticket_number)
+        return {'ticket_number': order.ticket_number}
+
     @http.route('/custom_module/restaurant_id', type='json', auth='public', methods=['POST'])
     def get_restaurant_id(self):
         restaurant_id = request.env['ir.config_parameter'].sudo().get_param('restaurant_id')
