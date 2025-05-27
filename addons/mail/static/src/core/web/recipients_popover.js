@@ -24,7 +24,7 @@ export class RecipientsPopover extends Component {
     }
 
     get name() {
-        return this.partner.name || _t("Unnamed");
+        return this.partner.name || this.partner.display_name || _t("Unnamed");
     }
 
     get phone() {
@@ -36,7 +36,7 @@ export class RecipientsPopover extends Component {
     }
 
     get fieldNames() {
-        return ["name", "email_normalized", "email", "phone"];
+        return ["name", "email_normalized", "email", "phone", "display_name"];
     }
 
     onClickViewProfile() {
