@@ -1,4 +1,10 @@
-import {clickOnSnippet, insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import {
+    clickOnSnippet,
+    insertSnippet,
+    registerWebsitePreviewTour,
+    clickOnSave,
+    clickOnEditAndWaitEditMode,
+} from "@website/js/tours/tour_utils";
 
 const wallRaceConditionClass = "image_wall_race_condition";
 const preventRaceConditionSteps = [{
@@ -117,4 +123,68 @@ registerWebsitePreviewTour("snippet_images_wall", {
 }, {
     content: "Check layout",
     trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
-}]);
+},
+        {
+            content: "Click on move to previous",
+            trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",
+            run: "click",
+        },
+        {
+            content: "Check if sign is in first column",
+            trigger:
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='4'][data-original-src*='library_image_14'])",
+        },
+        {
+            content: "Enable the Expandable option",
+            trigger: "we-button[data-attribute-name=expandable] we-checkbox",
+            run: "click",
+        },
+        {
+            content: "Set the max visible item count to 5",
+            trigger: "we-input[data-attribute-name=expandableCount] input",
+            run: "edit 5",
+        },
+        ...clickOnSave(),
+        {
+            content: "Check if the last(6th) image is hidden",
+            trigger:
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(:nth-child(2).d-none)",
+        },
+        {
+            content: "Click on show more (expand) button",
+            trigger: ":iframe .s_image_gallery #btn-expand-gallery",
+            run: "click",
+        },
+        {
+            content: "Check if the last(6th) image is visible",
+            trigger:
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(3) :nth-child(2):not(.d-none)",
+        },
+        {
+            content: "Click on hide extra button",
+            trigger: ":iframe .s_image_gallery #btn-collapse-gallery",
+            run: "click",
+        },
+        {
+            content: "Check if the last(6th) image is hidden",
+            trigger:
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(:nth-child(2).d-none)",
+        },
+        ...clickOnEditAndWaitEditMode(),
+        ...clickOnSnippet({
+            id: "s_image_gallery",
+            name: "Images Wall",
+        }),
+        {
+            content: "Disable the Expandable option",
+            trigger: "we-button[data-attribute-name=expandable] we-checkbox",
+            run: "click",
+        },
+        ...clickOnSave(),
+        {
+            content: "Check if the last(6th) image is visible",
+            trigger:
+                ":iframe .s_image_gallery .o_masonry_col:nth-child(3) :nth-child(2):not(.d-none)",
+        },
+    ]
+);
