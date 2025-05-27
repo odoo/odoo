@@ -33,8 +33,8 @@ class LayoutOptionPlugin extends Plugin {
                 applyTo: ":scope > *:has(> .row)",
             }),
         ],
-
         builder_actions: this.getActions(),
+        on_cloned_handlers: this.onCloned.bind(this),
     };
 
     getActions() {
@@ -169,6 +169,14 @@ class LayoutOptionPlugin extends Plugin {
             const hasDesktopOffset = columnEl.className.match(/(^|\s+)offset-lg-[1-9][0-1]?(?!\S)/);
             columnEl.classList.toggle("offset-lg-0", hasMobileOffset && !hasDesktopOffset);
         }
+    }
+
+    onCloned({ cloneEl }) {
+        const cloneElClassList = cloneEl.classList;
+        const offsetClasses = [...cloneElClassList].filter((cls) =>
+            cls.match(/^offset-(lg-)?([0-9]{1,2})$/)
+        );
+        cloneElClassList.remove(...offsetClasses);
     }
 }
 registry.category("website-plugins").add(LayoutOptionPlugin.id, LayoutOptionPlugin);
