@@ -3,6 +3,33 @@
 
 <t t-name="website.CustomersAvatarsOption">
     <!-- Apply global avatars options to ".o_avatar". !-->
+    <BuilderRow label.translate="Avatar Count"
+    tooltip.translate="Number of avatars to display">
+    <BuilderSelect dataAttributeAction="'avatarCount'">
+            <BuilderSelectItem dataAttributeActionValue="'1'" id="'count_1'">1</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'2'" id="'count_2'">2</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'3'" id="'count_3'">3</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'4'" id="'count_4'">4</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'5'" id="'count_5'">5</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Additional #"
+        tooltip.translate="Show an extra avatar with a custom number">
+        <BuilderCheckbox dataAttributeAction="'showAdditional'" dataAttributeActionValue="'true'" id="'show_additional'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Count" level="1"
+        tooltip.translate="Number to display in the additional avatar"
+        t-if="this.isActiveItem('show_additional')">
+        <BuilderNumberInput 
+            dataAttributeAction="'additionalCount'"
+            min="1" 
+            max="9999"
+            step="1"
+            default="15" />
+    </BuilderRow>
+
     <BuilderRow label.translate="Size">
         <BuilderSelect>
             <BuilderSelectItem classAction="'o_avatar_small'">Small</BuilderSelectItem>
