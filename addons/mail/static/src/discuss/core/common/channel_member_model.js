@@ -106,18 +106,27 @@ export class ChannelMember extends Record {
         },
     });
     new_message_separator_ui = null;
+    isTyping = false;
+    is_typing_dt = Record.attr(undefined, {
+        type: "datetime",
+        onUpdate() {
+            browser.clearTimeout(this.typingTimeoutId);
+            if (!this.is_typing_dt) {
+                this.isTyping = false;
+            }
+            if (this.isTyping) {
+                this.typingTimeoutId = browser.setTimeout(
+                    () => (this.isTyping = false),
+                    Store.OTHER_LONG_TYPING
+                );
+            }
+        },
+    });
     threadAsTyping = Record.one("Thread", {
         compute() {
             return this.isTyping ? this.thread : undefined;
         },
         eager: true,
-        onAdd() {
-            browser.clearTimeout(this.typingTimeoutId);
-            this.typingTimeoutId = browser.setTimeout(
-                () => (this.isTyping = false),
-                Store.OTHER_LONG_TYPING
-            );
-        },
         onDelete() {
             browser.clearTimeout(this.typingTimeoutId);
         },
