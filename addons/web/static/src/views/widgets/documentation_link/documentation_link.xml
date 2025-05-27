@@ -7,7 +7,7 @@
                 <span>View Documentation</span>
             </t>
             <t t-else="">
-                <i t-if="props.icon" t-att-class="'fa ' + props.icon"></i>
+                <i t-if="props.icon" class="fa pe-1" t-att-class="props.icon"></i>
                 <span t-esc="props.label"/>
             </t>
         </a>
