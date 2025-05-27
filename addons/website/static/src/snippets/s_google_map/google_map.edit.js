@@ -27,6 +27,12 @@ const GoogleMapEdit = (I) =>
                     "initializeGoogleMaps",
                     [this.el, google.maps]
                 );
+            } else {
+                this.websiteEditService.callShared(
+                    "googleMapsOption",
+                    "failedToInitializeGoogleMaps",
+                    [this.el]
+                );
             }
         }
 
