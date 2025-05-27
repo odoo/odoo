@@ -222,11 +222,34 @@ class TestSaleOrder(SaleCommon):
 
     def test_sol_names(self):
         """Check that the SOL description gets used for the display name."""
+        no_variant_attr = self.env['product.attribute'].create({
+            'name': "Attribute",
+            'create_variant': 'no_variant',
+            'value_ids': [
+                Command.create({'name': "Value 1", 'sequence': 1}),
+                Command.create({'name': "Value 2", 'sequence': 2}),
+            ],
+        })
+        no_variant_product_tmpl = self.env['product.template'].create({
+            'name': "No Variant",
+            'attribute_line_ids': [Command.create({
+                'attribute_id': no_variant_attr.id,
+                'value_ids': no_variant_attr.value_ids.ids,
+            })],
+        })
+        no_variant_product = no_variant_product_tmpl.product_variant_id
+        ptals = no_variant_product_tmpl.valid_product_template_attribute_line_ids
+        ptav1 = next(iter(ptals.product_template_value_ids))
+
         self.sale_order.order_line = [
             Command.create({'is_downpayment': True}),
             Command.create({'display_type': 'line_note', 'name': "Foo\nBar\nBaz"}),
+            Command.create({
+                'product_id': no_variant_product.id,
+                'product_no_variant_attribute_value_ids': ptav1.ids,
+            }),
         ]
-        sol1, sol2, sol3, sol4 = self.sale_order.order_line
+        sol1, sol2, sol3, sol4, sol5 = self.sale_order.order_line
         sol1.name += "\nOK THANK YOU\nGOOD BYE"
 
         self.assertEqual(
@@ -248,6 +271,12 @@ class TestSaleOrder(SaleCommon):
             sol4.display_name,
             f"{self.sale_order.name} - Foo ({self.partner.name})",
             "Multi-line note should display the first line only",
+        )
+        self.assertIn(f"{no_variant_attr.name}: {ptav1.name}", sol5.name.split('\n'))
+        self.assertEqual(
+            sol5.display_name,
+            f"{self.sale_order.name} - {no_variant_product.name} ({self.partner.name})",
+            "Lines with attribute-based descriptions should display the product name",
         )
 
     def test_state_changes(self):
