@@ -240,7 +240,9 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
     old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
     packet = io.BytesIO()
     can = canvas.Canvas(packet)
-    odoo_logo = Image.open(file_open('base/static/img/main_partner-image.png', mode='rb'))
+    with file_open('base/static/img/main_partner-image.png', mode='rb') as f:
+        odoo_logo_file = io.BytesIO(f.read())
+    odoo_logo = Image.open(odoo_logo_file)
     odoo_color = colors.Color(113 / 255, 75 / 255, 103 / 255, 0.8)
 
     for p in range(old_pdf.getNumPages()):
