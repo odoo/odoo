@@ -15,6 +15,9 @@ export const crmKanbanView = {
             if (progressAttributes && progressAttributes.recurring_revenue_sum_field) {
                 res.push(progressAttributes.recurring_revenue_sum_field);
             }
+            if (progressAttributes && progressAttributes.rotting_count_field) {
+                res.push(progressAttributes.rotting_count_field)
+            }
             return res;
         }
     },

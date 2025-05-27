@@ -30,4 +30,14 @@ export class CrmColumnProgress extends ColumnProgress {
         }
         return { ...aggregatedValue, currency };
     }
+    getRottingGroupCount(group) {
+        const rotField = this.props.progressBarState.progressAttributes.rotting_count_field;
+        let rotCount = { title: rotField.string, value: 0};
+        group.list.records.forEach((record ) => {
+            if (record.data[rotField.name]) {
+                rotCount.value++;
+            }
+        })
+        return rotCount;
+    }
 }
