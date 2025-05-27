@@ -306,6 +306,12 @@
     </t>
 </template>
 
+<template id="contact_details" inherit_id="website_crm_partner_assign.partner" name="Contact Details">
+    <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
+        <t t-set="contact_details" t-value="True"/>
+    </xpath>
+</template>
+
 <template id="grade_in_detail" inherit_id="website_partner.partner_detail">
     <xpath expr="//*[@id='partner_name']" position="before">
         <span class="col-lg-12 text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
