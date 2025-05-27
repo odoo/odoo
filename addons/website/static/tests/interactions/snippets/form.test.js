@@ -25,7 +25,7 @@ function checkField(inputEl, isVisible, hasError) {
         : expect(fieldEl).not.toHaveClass("o_has_error");
 }
 
-const formTemplate = `
+const formTemplate = /* html */ `
     <div id="wrapwrap">
         <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form" data-name="Form">
             <div class="container-fluid">
@@ -38,7 +38,7 @@ const formTemplate = `
                                     <span class="s_website_form_mark"> *</span>
                                 </label>
                                 <div class="col-sm">
-                                    <input class="form-control s_website_form_input" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="name" required="1" data-fill-with="name" id="obij2aulqyau"/>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +49,7 @@ const formTemplate = `
                                     <span class="s_website_form_mark"> *</span>
                                 </label>
                                 <div class="col-sm">
-                                    <input class="form-control s_website_form_input" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf"/>
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="email" name="email_from" required="" data-fill-with="email" id="oub62hlfgjwf"/>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +60,7 @@ const formTemplate = `
                                     <span class="s_website_form_mark"> *</span>
                                 </label>
                                 <div class="col-sm">
-                                    <input class="form-control s_website_form_input" type="text" name="subject" required="" id="oqsf4m51acj"/>
+                                    <input class="form-control s_website_form_input o_translatable_attribute" type="text" name="subject" required="" id="oqsf4m51acj"/>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +71,7 @@ const formTemplate = `
                                     <span class="s_website_form_mark"> *</span>
                                 </label>
                                 <div class="col-sm">
-                                    <textarea class="form-control s_website_form_input" name="description" required="1" id="oyeqnysxh10b" rows="3"></textarea>
+                                    <textarea class="form-control s_website_form_input o_translatable_text" name="description" required="1" id="oyeqnysxh10b" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -81,12 +81,12 @@ const formTemplate = `
                                     <span class="s_website_form_label_content"/>
                                 </label>
                                 <div class="col-sm">
-                                    <input type="hidden" class="form-control s_website_form_input" name="email_to" value="info@yourcompany.example.com"/>
+                                    <input type="hidden" class="form-control s_website_form_input o_translatable_attribute" name="email_to" value="info@yourcompany.example.com"/>
                                 </div>
                             </div>
                         </div>
                         <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
-                            <div style="width: 200px;" class="s_website_form_label"/>
+                            <div style="width: 200px;" class="s_website_form_label"></div>
                             <span id="s_website_form_result"></span>
                             <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
                         </div>

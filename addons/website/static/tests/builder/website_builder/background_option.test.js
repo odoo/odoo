@@ -121,8 +121,7 @@ async function dragAndDropBgImage() {
 
     const sectionOverlaySelector = ".overlay .o_overlay_background section";
     await waitFor(sectionOverlaySelector);
-    // TODO wait for HOOT toHaveStyle fix bug
-    // expect(sectionOverlaySelector).not.toHaveStyle("backgroundPosition");
+    expect(sectionOverlaySelector).not.toHaveStyle("background-position", { inline: true });
     const dragActions = await contains(sectionOverlaySelector).drag({
         position: { x: 199, y: 199 },
     });
