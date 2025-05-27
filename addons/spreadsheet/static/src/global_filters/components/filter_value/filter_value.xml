@@ -22,6 +22,26 @@
                 <DateFilterValue value="filterValue"
                                  update.bind="(value) => this.onDateInput(filter.id, value)"/>
             </div>
+            <div t-if="filter.type === 'numeric'" class="w-100 d-flex align-items-center"
+                 t-att-class="filterValue?.operator === 'between' ? 'justify-content-between' : ''">
+                <t t-if="filterValue?.operator === 'between'">
+                    <NumericFilterValue
+                        value="filterValue.minimumValue"
+                        onValueChanged="(value) => this.onMinimumValueNumericInput(filter.id, value)"
+                    />
+                    <i class="fa fa-long-arrow-right mx-2"/>
+                    <NumericFilterValue
+                        value="filterValue.maximumValue"
+                        onValueChanged="(value) => this.onMaximumValueNumericInput(filter.id, value)"
+                    />
+                </t>
+                <t t-else="">
+                    <NumericFilterValue
+                        value="filterValue.targetValue"
+                        onValueChanged="(value) => this.onTargetValueNumericInput(filter.id, value)"
+                    />
+                </t>
+            </div>
             <span t-elif="filter.type === 'relation'" class="w-100">
                 <MultiRecordSelector
                     t-if="isValid"
