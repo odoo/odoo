@@ -185,13 +185,11 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         Additionally, companies registered to use SST (sales & services tax) must provide their SST number.
         Finally, if a supplier is using TTX (tourism tax), once again that number must be provided.
         """
-        # EXTENDS 'account_edi_ubl_cii'
-        vals = super()._get_partner_party_identification_vals_list(partner)
-
-        vals.append({
+        # OVERRIDE 'account_edi_ubl_cii'
+        vals = [{
             'id_attrs': {'schemeID': 'TIN'},
             'id': partner._l10n_my_edi_get_tin_for_myinvois(),
-        })
+        }]
 
         if partner.l10n_my_identification_type and partner.l10n_my_identification_number:
             vals.append({
