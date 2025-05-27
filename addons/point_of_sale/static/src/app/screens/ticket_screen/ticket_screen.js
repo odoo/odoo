@@ -84,20 +84,21 @@ export class TicketScreen extends Component {
         Object.assign(this.state, this.props.stateOverride || {});
 
         onMounted(this.onMounted);
-        onWillStart(async () => {
+        onWillStart(() => {
             if (!this.pos.loadingOrderState) {
-                try {
-                    this.pos.loadingOrderState = true;
-                    await this.pos.getServerOrders();
-                } catch (error) {
-                    if (error instanceof ConnectionLostError) {
-                        Promise.reject(error);
-                        return error;
-                    }
-                    throw error;
-                } finally {
-                    this.pos.loadingOrderState = false;
-                }
+                this.pos.loadingOrderState = true;
+                // Start fetching orders without blocking screen rendering
+                this.pos
+                    .getServerOrders()
+                    .catch((error) => {
+                        if (error instanceof ConnectionLostError) {
+                            return;
+                        }
+                        throw error;
+                    })
+                    .finally(() => {
+                        this.pos.loadingOrderState = false;
+                    });
             }
         });
     }

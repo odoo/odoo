@@ -110,6 +110,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingUp", {
             PaymentScreen.clickValidate(),
 
             Chrome.clickOrders(),
+            TicketScreen.isReady(),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("001"),
             inLeftSide([
@@ -138,6 +139,7 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
             PaymentScreen.clickValidate(),
 
             Chrome.clickOrders(),
+            TicketScreen.isReady(),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("001"),
             inLeftSide([
