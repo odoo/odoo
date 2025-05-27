@@ -7,6 +7,10 @@ function logout() {
             trigger: ".o_user_menu .dropdown-toggle",
             run: "click",
         },
+        // {
+        //     // Wait for the dropdown shown
+        //     trigger: ".o_user_menu .o-dropdown.show",
+        // },
         {
             content: "click the Log out button",
             trigger: ".dropdown-item[data-menu=logout]",

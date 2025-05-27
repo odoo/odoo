@@ -97,9 +97,11 @@ class Home(http.Controller):
 
     @http.route('/web/login', type='http', auth='none', readonly=False)
     def web_login(self, redirect=None, **kw):
+        _logger.info("--------- web_login enter and redirect to %s", redirect)
         ensure_db()
         request.params['login_success'] = False
         if request.httprequest.method == 'GET' and redirect and request.session.uid:
+            _logger.info("--------- web_login redirect %s", redirect)
             return request.redirect(redirect)
 
         # simulate hybrid auth=user/auth=public, despite using auth=none to be able
@@ -107,9 +109,11 @@ class Home(http.Controller):
         if request.env.uid is None:
             if request.session.uid is None:
                 # no user -> auth=public with specific website public user
+                _logger.info("--------- web_login _auth_method_public")
                 request.env["ir.http"]._auth_method_public()
             else:
                 # auth=user
+                _logger.info("--------- web_login update env with auth=user %s", request.session.uid)
                 request.update_env(user=request.session.uid)
 
         values = {k: v for k, v in request.params.items() if k in SIGN_UP_REQUEST_PARAMS}
@@ -141,7 +145,7 @@ class Home(http.Controller):
 
         if not odoo.tools.config['list_db']:
             values['disable_database_manager'] = True
-
+        _logger.info("--------- web_login render web.login template")
         response = request.render('web.login', values)
         response.headers['Cache-Control'] = 'no-cache'
         response.headers['X-Frame-Options'] = 'SAMEORIGIN'

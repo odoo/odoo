@@ -143,9 +143,7 @@ export class Dropdown extends Component {
         this.popover = usePopover(DropdownPopover, {
             animation: false,
             arrow: false,
-            closeOnClickAway: (target) => {
-                return this.popoverCloseOnClickAway(target, activeEl);
-            },
+            closeOnClickAway: (target) => this.popoverCloseOnClickAway(target, activeEl),
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
             env: this.__owl__.childEnv,
             holdOnHover: this.props.holdOnHover,
@@ -335,6 +333,7 @@ export class Dropdown extends Component {
         if (this.target) {
             this.target.ariaExpanded = true;
             this.target.classList.add("show");
+            console.log("------- dropdown opened !");
         }
     }
 
@@ -344,6 +343,7 @@ export class Dropdown extends Component {
         if (this.target) {
             this.target.ariaExpanded = false;
             this.target.classList.remove("show");
+            console.log("------- dropdown closed !");
             this.setTargetDirectionClass(this.defaultDirection);
         }
     }
