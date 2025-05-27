@@ -35,7 +35,11 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
             'group_ids': [Command.link(cls.group_user.id)],
         })
 
-        cls.provider_company_b = cls._prepare_provider(company=cls.company_b)
+        cls.provider = cls.env['payment.provider'].search(
+            [('company_id', '=', cls.company_b.id), ('name', '=', 'Dummy Provider')],
+            limit=1,
+        )
+        cls.provider.state = 'test'
 
     def test_pay_logged_in_another_company(self):
         """User pays for an amount in another company."""
@@ -71,8 +75,8 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
             ]
         }
         validation_values.update({
-            'provider_id': self.provider_company_b.id,
-            'payment_method_id': self.provider_company_b.payment_method_ids[:1].id,
+            'provider_id': self.provider.id,
+            'payment_method_id': self.provider.payment_method_ids[:1].id,
             'token_id': None,
             'flow': 'direct',
             'tokenization_requested': False,
@@ -82,14 +86,14 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         tx_sudo = self._get_tx(processing_values['reference'])
 
         # Tx values == given values
-        self.assertEqual(tx_sudo.provider_id.id, self.provider_company_b.id)
+        self.assertEqual(tx_sudo.provider_id.id, self.provider.id)
         self.assertEqual(tx_sudo.amount, self.amount)
         self.assertEqual(tx_sudo.currency_id.id, self.currency.id)
         self.assertEqual(tx_sudo.partner_id.id, self.user_company_a.partner_id.id)
         self.assertEqual(tx_sudo.reference, self.reference)
         self.assertEqual(tx_sudo.company_id, self.company_b)
         # processing_values == given values
-        self.assertEqual(processing_values['provider_id'], self.provider_company_b.id)
+        self.assertEqual(processing_values['provider_id'], self.provider.id)
         self.assertEqual(processing_values['amount'], self.amount)
         self.assertEqual(processing_values['currency_id'], self.currency.id)
         self.assertEqual(processing_values['partner_id'], self.user_company_a.partner_id.id)
@@ -102,7 +106,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         self.authenticate(self.portal_user.login, self.portal_user.login)
 
         token = self._create_token()
-        token_company_b = self._create_token(provider_id=self.provider_company_b.id)
+        token_company_b = self._create_token(provider_id=self.provider.id)
 
         # A partner should see all his tokens on the /my/payment_method route,
         # even if they are in other companies otherwise he won't ever see them.
