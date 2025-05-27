@@ -19,7 +19,7 @@ class CalendarEvent(models.Model):
             event._message_sms_with_template(
                 template=alarm.sms_template_id,
                 template_fallback=_("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
-                partner_ids=self._sms_get_default_partners().ids,
+                partner_ids=event._sms_get_default_partners().ids,
                 put_in_queue=False
             )
 
