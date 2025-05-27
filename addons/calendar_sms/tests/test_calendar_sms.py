@@ -26,6 +26,13 @@ class TestCalendarSms(TransactionCase, SMSCase):
             'phone': '0488888888',
             'country_id': cls.env.ref('base.be').id,
         })
+
+        cls.partner_phone_3 = cls.env['res.partner'].create({
+            'name': 'Partner With Phone Number',
+            'phone': '0499999999',
+            'country_id': cls.env.ref('base.be').id,
+        })
+
         cls.partner_no_phone = cls.env['res.partner'].create({
             'name': 'Partner With No Phone Number',
             'country_id': cls.env.ref('base.be').id,
@@ -50,8 +57,16 @@ class TestCalendarSms(TransactionCase, SMSCase):
             'stop': now + timedelta(hours=2),
             'alarm_ids': [(4, cls.alarm_1h.id), (4, cls.alarm_24h.id)],
             'attendee_ids': [(0, 0, {'partner_id': cls.partner_phone.id})],
-
         })
+
+        cls.event_1h_dup = cls.env['calendar.event'].create({
+            'name': 'Event in 1h',
+            'start': now + timedelta(hours=1),
+            'stop': now + timedelta(hours=2),
+            'alarm_ids': [(4, cls.alarm_1h.id), (4, cls.alarm_24h.id)],
+            'attendee_ids': [(0, 0, {'partner_id': cls.partner_phone_3.id})],
+        })
+
         cls.event_24h = cls.env['calendar.event'].create({
             'name': 'Event in 24h',
             'start': now + timedelta(hours=24),
@@ -65,6 +80,7 @@ class TestCalendarSms(TransactionCase, SMSCase):
             'body': 'Reminder: Your event is starting in 1 hour!',
             'model_id': cls.env['ir.model']._get('calendar.event').id,
         })
+
         cls.alarm_1h.sms_template_id = cls.sms_template_1h.id
 
         cls.sms_template_24h = cls.env['sms.template'].create({
@@ -93,8 +109,8 @@ class TestCalendarSms(TransactionCase, SMSCase):
             lastcall = fields.Datetime.now() - timedelta(hours=1)
             self.env['calendar.alarm_manager'].with_context(lastcall=lastcall)._send_reminder()
 
-        self.assertEqual(len(self._sms), 2)
+        self.assertEqual(len(self._sms), 3)
         self.assertSMS(self.partner_phone, self.partner_phone.phone_sanitized, 'sent',
-                       content=self.sms_template_1h.body)
+                        content=self.sms_template_1h.body)
         self.assertSMS(self.partner_phone_2, self.partner_phone_2.phone_sanitized, 'sent',
-                       content=self.sms_template_24h.body)
+                        content=self.sms_template_24h.body)
