@@ -18,7 +18,11 @@ import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
  * @param {string} [params.sheetId]
  */
 export function insertListInSpreadsheet(model, params) {
-    const { definition, columns } = generateListDefinition(params.model, params.columns);
+    const { definition, columns } = generateListDefinition(
+        params.model,
+        params.columns,
+        params.actionXmlId
+    );
     const [col, row] = params.position || [0, 0];
 
     model.dispatch("INSERT_ODOO_LIST", {
