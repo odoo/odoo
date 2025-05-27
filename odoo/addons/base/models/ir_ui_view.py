@@ -224,15 +224,13 @@ actual arch.
                 ('xml' in config['dev_mode'] and not view.arch_updated)
             if read_file and view.arch_fs and (view.xml_id or view.key):
                 xml_id = view.xml_id or view.key
-                # It is safe to split on / herebelow because arch_fs is explicitely stored with '/'
                 try:
-                    fullpath = file_path(view.arch_fs)
-                except FileNotFoundError:
+                    # reading the file will raise an OSError if it is unreadable
+                    arch_fs = get_view_arch_from_file(file_path(view.arch_fs, check_exists=False), xml_id)
+                except OSError:
                     _logger.warning("View %s: Full path [%s] cannot be found.", xml_id, view.arch_fs)
                     arch_fs = False
-                    continue
 
-                arch_fs = get_view_arch_from_file(fullpath, xml_id)
                 # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
                 if arch_fs:
                     arch_fs = resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
