@@ -247,3 +247,40 @@ test("many2one with barcode show all records", async () => {
     });
     expect.verifySteps(["vibrate:100"]);
 });
+
+test("should trigger name_search with correct kwargs keys when barcode is scanned", async () => {
+    expect.assertions(3);
+
+    // The product selected (mock) for the barcode scanner
+    const selectedRecordTest = Product._records[0];
+
+    patchWithCleanup(BarcodeScanner, {
+        scanBarcode: async () => selectedRecordTest.barcode,
+    });
+
+    onRpc("product.product", "name_search", (args) => {
+        const expectedKeys = ["name", "domain", "operator", "limit", "context"];
+        const actualKeys = Object.keys(args.kwargs).sort();
+
+        expect(actualKeys).toEqual(expectedKeys.sort(), {
+            message: `name_search called with unexpected or missing keys. Found: ${actualKeys}`,
+        });
+
+        return [[selectedRecordTest.id, selectedRecordTest.name]];
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "sale.order.line",
+        arch: `
+            <form>
+                <field name="product_id" options="{'can_scan_barcode': True}"/>
+            </form>
+        `,
+    });
+
+    expect(".o_barcode").toHaveCount(1);
+
+    await contains(".o_barcode").click();
+    expect.verifySteps(["vibrate:100"]);
+});
