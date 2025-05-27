@@ -24,7 +24,7 @@ import {
  * @property {() => void} unlock allows further positioning updates (triggers an update right away)
  */
 
-const POSITION_BUS = Symbol("position-bus");
+export const POSITION_BUS = Symbol("position-bus");
 
 /**
  * Makes sure that the `popper` element is always
