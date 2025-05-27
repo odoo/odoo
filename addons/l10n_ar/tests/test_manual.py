@@ -357,3 +357,48 @@ class TestManual(common.TestAr):
                 partner_form.l10n_latam_identification_type_id = self.env.ref("l10n_ar.it_dni")
                 partner_form.vat = "test"
         self.assertIn('Only numbers allowed for "DNI"', str(e.exception))
+
+    def test_l10n_ar_get_invoice_totals_for_report_refund_with_same_code(self):
+        """Test _l10n_ar_get_invoice_totals_for_report for refund invoices with ARCA codes that can be used for both invoice and refund"""
+        # Create a credit note with document type 60 that can be used as both invoice and refund
+        doc_60_lp_a = self.env.ref('l10n_ar.dc_a_cvl')
+
+        credit_note = self._create_invoice_from_dict({
+            'ref': 'test_credit_note_refund: Credit note with document type 60 for refund test',
+            "move_type": 'out_refund',
+            "partner_id": self.res_partner_adhoc,
+            "company_id": self.company_ri,
+            "invoice_date": "2021-03-20",
+            "invoice_line_ids": [
+                {'product_id': self.product_iva_21, 'price_unit': 100.0, 'quantity': 1,
+                 'tax_ids': [Command.set([self.tax_21.id])]},
+            ],
+        })
+        credit_note.l10n_latam_document_type_id = doc_60_lp_a
+
+        # Verify this is considered a refund invoice with special ARCA code
+        self.assertTrue(credit_note._l10n_ar_is_refund_invoice())
+
+        # Test the _l10n_ar_get_invoice_totals_for_report method
+        self._assert_tax_totals_summary(credit_note._l10n_ar_get_invoice_totals_for_report(), {
+            'same_tax_base': True,
+            'currency_id': self.currency.id,
+            'base_amount_currency': -100.0,
+            'tax_amount_currency': -21.0,
+            'total_amount_currency': -121.0,
+            'subtotals': [
+                {
+                    'name': "Untaxed Amount",
+                    'base_amount_currency': -100.0,
+                    'tax_amount_currency': -21.0,
+                    'tax_groups': [
+                        {
+                            'id': self.tax_21.tax_group_id.id,
+                            'base_amount_currency': -100.0,
+                            'tax_amount_currency': -21.0,
+                            'display_base_amount_currency': -100.0,
+                        },
+                    ],
+                },
+            ],
+        })
