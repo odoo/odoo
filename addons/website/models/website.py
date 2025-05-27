@@ -323,8 +323,11 @@ class Website(models.Model):
 
     def create_and_redirect_configurator(self):
         self._force()
-        configurator_action_todo = self.env.ref('website.website_configurator_todo')
-        return configurator_action_todo.action_launch()
+        configurator_action_todo = self.env.ref('website.website_configurator_todo', raise_if_not_found=False)
+        if configurator_action_todo:
+            return configurator_action_todo.action_launch()
+        else:
+            raise UserError(_("The configurator action could not be found."))
 
     def _idna_url(self, url):
         return get_base_domain(url.lower(), True).encode('idna').decode('ascii')
