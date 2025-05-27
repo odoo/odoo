@@ -783,6 +783,22 @@ class ResPartner(models.Model):
             [('partner_id', 'child_of', self.commercial_partner_id.id)]
         )
 
+    def write(self, vals):
+        res = super().write(vals)
+        moves_sudo = self.sudo().env['account.move'].search([('partner_id', 'in', self.ids)])
+        if moves_sudo and 'parent_id' in vals:
+            if not self.env.user.has_group('account.group_account_user'):
+                raise UserError(_("You do not have permission to mark this partner as the main commercial partner."))
+            parent_vat = self.env['res.partner'].browse(vals['parent_id']).vat
+            if vals['parent_id'] and {parent_vat} != set(self.mapped('vat')):
+                raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
+
+            self._compute_commercial_partner()
+            for partner in self:
+                moves_sudo.filtered(lambda m: m.partner_id == partner)['commercial_partner_id'] = partner.commercial_partner_id.id
+                partner._message_log(body=_("The commercial partner has been updated for all related accounting entries."))
+        return res
+
     @api.model_create_multi
     def create(self, vals_list):
         search_partner_mode = self.env.context.get('res_partner_search_mode')
