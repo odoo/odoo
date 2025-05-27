@@ -159,6 +159,12 @@
                                                 help="Compute the days required to resupply all components from BoM, by either buying or manufacturing the components and/or subassemblies."
                                                 class="oe_link pt-0"/>
                                     </div>
+                                    <label for="batch_size" invisible="type != 'normal'"/>
+                                    <div class="o_row" invisible="type != 'normal'">
+                                        <field name="enable_batch_size"/>
+                                        <field name="batch_size" class="w-50" invisible="not enable_batch_size" decoration-danger="batch_size &lt;= 0.0"/>
+                                        <field name="product_uom_id" groups="uom.group_uom" readonly="1" invisible="not enable_batch_size"/>
+                                    </div>
                                 </group>
                             </group>
                         </page>
