@@ -225,8 +225,8 @@ class AutomationBulkManual(models.Model):
 
     def update_manual_bulk_location(self):
         """
-        Updates the location of manual products to location_dest_id by creating and validating
-        a new internal transfer.
+        Creates and validates an internal transfer for manual putaway,
+        ensuring that all line items are transferred with the correct qty_done set.
         """
         stock_picking_obj = self.env['stock.picking']
 
@@ -236,16 +236,15 @@ class AutomationBulkManual(models.Model):
         if self.automation_manual != 'manual':
             raise ValidationError(_("This operation is only allowed for manual putaways."))
 
-        # Create an internal transfer (Picking Type: Internal Transfer)
+        # Prepare internal picking (transfer)
         internal_transfer_vals = {
-            'picking_type_id': self.env.ref('stock.picking_type_internal').id,  # Internal Transfer Type
+            'picking_type_id': self.env.ref('stock.picking_type_internal').id,
             'location_id': self.parent_location_id.id,
             'location_dest_id': self.location_dest_id.id,
             'origin': self.name,
             'move_ids_without_package': [],
         }
 
-        # Prepare move lines
         move_lines = []
         for line in self.automation_bulk_manual_putaway_line_ids:
             move_vals = {
@@ -257,32 +256,39 @@ class AutomationBulkManual(models.Model):
                 'location_dest_id': self.location_dest_id.id,
             }
             move_lines.append((0, 0, move_vals))
-
         internal_transfer_vals['move_ids_without_package'] = move_lines
 
         # Create the internal transfer
         internal_transfer = stock_picking_obj.create(internal_transfer_vals)
 
-        # Confirm and reserve quantities
+        # Confirm and assign
         internal_transfer.action_confirm()
         internal_transfer.action_assign()
-        for move in internal_transfer.move_ids_without_package:
-            # move._action_confirm()
-            # move._action_assign()  # Ensure quantities are reserved
-            # move.button_validate()
-            for move_line in move.move_line_ids:
-                move_line.quantity = line.quantity  # Set the quantities as done
 
-        # Validate the transfer
+        # Set qty_done for each move line based on matching putaway line
+        for move in internal_transfer.move_ids_without_package:
+            qty = 0.0
+            for line in self.automation_bulk_manual_putaway_line_ids:
+                if line.product_id.id == move.product_id.id:
+                    qty += line.quantity
+
+            if move.move_line_ids:
+                for move_line in move.move_line_ids:
+                    move_line.quantity = qty
+            else:
+                # If move_line_ids are not created yet
+                move.write({'quantity': qty})
+
+        # Validate the internal transfer
         try:
             internal_transfer.button_validate()
         except ValidationError as e:
-            raise ValidationError(_("Transfer validation failed: %s. Please ensure quantities are reserved." % str(e)))
+            raise ValidationError(_("Transfer validation failed: %s") % str(e))
 
-        # Update the state to 'done'
+        # Post-transfer updates
         self.state = 'done'
         self.location_dest_id.filled = True
-        _logger.info(f"Internal transfer {internal_transfer.name} created and validated for putaway process.")
+        _logger.info(f"Internal transfer {internal_transfer.name} created and validated for putaway.")
 
         return {
             'type': 'ir.actions.act_window',
