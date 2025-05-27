@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from odoo.tests.common import BaseCase
 from odoo.modules.module_graph import ModuleGraph
-from odoo.modules.module import _DEFAULT_MANIFEST
+from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tools import mute_logger
 
 
@@ -26,13 +26,17 @@ class TestGraph(BaseCase):
             ...
         :param expected: expected graph order
         """
-        manifests = {
-            name: {**_DEFAULT_MANIFEST.copy(), **{'depends': depends}}
-            for name, depends in dependency.items()
-        }
+        def make_manifest(name, **kw):
+            if name not in dependency:
+                return None
+            return Manifest(
+                path='/dummy/' + name,
+                manifest_content=dict(_DEFAULT_MANIFEST, author='test', license='LGPL-3', depends=dependency.get(name, [])),
+            )
+
         with (
             patch('odoo.modules.module_graph.ModuleGraph._update_from_database'),
-            patch('odoo.modules.module_graph._get_manifest_cached', lambda name: manifests.get(name, {})),
+            patch('odoo.modules.module_graph.Manifest.for_addon', make_manifest),
             patch('odoo.modules.module_graph.ModuleGraph._imported_modules', {'studio_customization'}),
         ):
             dummy_cr = None
@@ -41,7 +45,7 @@ class TestGraph(BaseCase):
             for modules in modules_list:
                 graph.extend(modules)
 
-            names = list(p.name for p in graph)
+            names = [p.name for p in graph]
             self.assertListEqual(names, expected)
 
     def test_graph_order_1(self):

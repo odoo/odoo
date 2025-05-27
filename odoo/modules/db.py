@@ -9,6 +9,7 @@ from enum import IntEnum
 from psycopg2.extras import Json
 
 import odoo.modules
+import odoo.tools
 
 if typing.TYPE_CHECKING:
     from odoo.sql_db import BaseCursor, Cursor
@@ -43,16 +44,8 @@ def initialize(cr: Cursor) -> None:
     with odoo.tools.misc.file_open(f) as base_sql_file:
         cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
 
-    for i in odoo.modules.get_modules():
-        mod_path = odoo.modules.get_module_path(i)
-        if not mod_path:
-            continue
-
-        # This will raise an exception if no/unreadable descriptor file.
-        info = odoo.modules.get_manifest(i)
-
-        if not info:
-            continue
+    for info in odoo.modules.Manifest.all_addon_manifests():
+        module_name = info.name
         categories = info['category'].split('/')
         category_id = create_categories(cr, categories)
 
@@ -66,7 +59,7 @@ def initialize(cr: Cursor) -> None:
                     category_id, auto_install, state, web, license, application, icon, sequence, summary) \
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
-            info['website'], i, Json({'en_US': info['name']}),
+            info['website'], module_name, Json({'en_US': info['name']}),
             Json({'en_US': info['description']}), category_id,
             info['auto_install'] is not False, state,
             info['web'],
@@ -79,7 +72,7 @@ def initialize(cr: Cursor) -> None:
         cr.execute(
             'INSERT INTO ir_model_data'
             '(name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)',
-            ('module_' + i, 'ir.module.module', 'base', module_id, True),
+            ('module_' + module_name, 'ir.module.module', 'base', module_id, True),
         )
         dependencies = info['depends']
         for d in dependencies:

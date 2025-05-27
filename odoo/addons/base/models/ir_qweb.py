@@ -389,7 +389,7 @@ from psycopg2.extensions import TransactionRollbackError
 from pathlib import Path
 
 from odoo import api, models, tools
-from odoo.modules import get_module_path
+from odoo.modules import Manifest
 from odoo.modules.registry import _REGISTRY_CACHES
 from odoo.tools import config, safe_eval, OrderedSet
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
@@ -657,7 +657,8 @@ class IrQweb(models.AbstractModel):
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
         elif isinstance(template, str) and template.endswith('.xml'):
-            if 'templates' not in Path(file_path(template)).relative_to(get_module_path(Path(template).parts[0])).parts:
+            module_path = Manifest.for_addon(Path(template).parts[0]).path
+            if 'templates' not in Path(file_path(template)).relative_to(module_path).parts:
                 raise ValueError("The templates file %s must be under a subfolder 'templates' of a module", template)
             else:
                 with file_open(template, 'rb', filter_ext=('.xml',)) as file:
