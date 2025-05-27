@@ -295,10 +295,10 @@ class ProductsItemOptionPlugin extends Plugin {
             return Object.entries(ribbon).some(([key, value]) => value !== original[key]);
         });
 
-        const proms = [];
+        const createdRibbonProms = [];
         let createdRibbonIds;
         if (created.length > 0) {
-            proms.push(
+            createdRibbonProms.push(
                 this.services.orm
                     .create(
                         "product.ribbon",
@@ -312,23 +312,7 @@ class ProductsItemOptionPlugin extends Plugin {
                     .then((ids) => (createdRibbonIds = ids))
             );
         }
-
-        for (const ribbon of modified) {
-            const ribbonData = {
-                name: ribbon.name,
-                bg_color: ribbon.bg_color,
-                text_color: ribbon.text_color,
-                position: ribbon.position,
-            };
-            proms.push(this.services.orm.write("product.ribbon", [ribbon.id], ribbonData));
-            this.originalRibbons[ribbon.id] = Object.assign({}, ribbon);
-        }
-
-        if (deletedIds.length > 0) {
-            proms.push(this.services.orm.unlink("product.ribbon", deletedIds));
-        }
-
-        await Promise.all(proms);
+        await Promise.all(createdRibbonProms);
 
         const localToServer = Object.assign(
             this.ribbonsObject,
@@ -344,6 +328,24 @@ class ProductsItemOptionPlugin extends Plugin {
                 },
             }
         );
+        const proms = [];
+        for (const ribbon of modified) {
+            const ribbonData = {
+                name: ribbon.name,
+                bg_color: ribbon.bg_color,
+                text_color: ribbon.text_color,
+                position: ribbon.position,
+            };
+            const serverId = localToServer[ribbon.id]?.id || ribbon.id;
+            proms.push(this.services.orm.write("product.ribbon", [serverId], ribbonData));
+            this.originalRibbons[ribbon.id] = Object.assign({}, ribbon);
+        }
+
+        if (deletedIds.length > 0) {
+            proms.push(this.services.orm.unlink("product.ribbon", deletedIds));
+        }
+
+        await Promise.all(proms);
 
         // Building the final template to ribbon-id map
         const finalTemplateRibbons = this.productTemplatesRibbons.reduce(
@@ -385,9 +387,9 @@ class ProductsItemOptionPlugin extends Plugin {
     _deleteRibbon(editingElement) {
         const ribbonId = parseInt(editingElement.dataset.ribbonId);
         if (this.ribbonsObject[ribbonId]) {
-            this.deletedRibbonClasses += ` ${
+            this.deletedRibbonClasses += `${
                 this.ribbonPositionClasses[this.ribbonsObject[ribbonId].position]
-            }`;
+            } `;
 
             const ribbonIndex = this.ribbons.indexOf(
                 this.ribbons.find((ribbon) => ribbon.id === ribbonId)
