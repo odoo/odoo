@@ -407,6 +407,7 @@ test("no need to define 'isApplied' method for custom action if the widget alrea
 });
 
 test("useDomState callback shouldn't be called when the editingElement is removed", async () => {
+    let editor;
     let count = 0;
     class TestOption extends Component {
         static template = xml`<div class="test_option">test</div>`;
@@ -426,12 +427,26 @@ test("useDomState callback shouldn't be called when the editingElement is remove
         editableOnly: false,
         Component: TestOption,
     });
+    addOption({
+        selector: "*",
+        template: xml`<BuilderButton action="'addTestSnippet'">Add</BuilderButton>`,
+    });
+    addActionOption({
+        addTestSnippet: {
+            apply: ({ editingElement }) => {
+                const testEl = document.createElement("div");
+                testEl.classList.add("s_test", "alert-info");
+                testEl.textContent = "test";
+                editingElement.after(testEl);
+                editor.shared["builder-options"].setNextTarget(testEl);
+            },
+        },
+    });
 
-    const { getEditor } = await setupWebsiteBuilder(`<div></div>`);
-    const editor = getEditor();
-    setContent(editor.editable, '<div class="s_test alert-info">a</div>');
-    editor.shared.history.addStep();
-    await contains(":iframe .s_test").click();
+    const { getEditor } = await setupWebsiteBuilder(`<div class="s_dummy">Hello</div>`);
+    editor = getEditor();
+    await contains(":iframe .s_dummy").click();
+    await contains("[data-action-id='addTestSnippet']").click();
     expect(".options-container .test_option").toHaveCount(1);
     expect.verifySteps(["useDomState 0"]);
 
