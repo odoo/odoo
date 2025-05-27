@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo import Command
 from odoo.tests import tagged
+
 from freezegun import freeze_time
 
 
@@ -66,3 +68,31 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         with self.enter_registry_test_mode():
             self.env.cr.postcommit.run()
         self.assertEqual(self.partner_a.customer_rank, 2)
+
+    def test_manually_write_partner_id(self):
+
+        move_vals = {
+            'move_type': 'out_invoice',
+            'invoice_date': '2025-04-29',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 500.0,
+                'tax_ids': [],
+            })],
+        }
+
+        move = self.env['account.move'].create(move_vals)
+        move.action_post()
+
+        # Initially, move's commercial partner should be partner_a
+        self.assertEqual(move.commercial_partner_id, self.partner_a)
+
+        self.partner_a['parent_id'] = self.partner_b.id
+
+        # Assert accounting move and move lines now use new commercial partner
+        self.assertEqual(move.commercial_partner_id, self.partner_b)
+        self.assertTrue(
+            all(line.partner_id == self.partner_b for line in move.line_ids),
+            "All move lines should be reassigned to the new commercial partner."
+        )
