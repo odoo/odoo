@@ -4,9 +4,8 @@ from glob import glob
 from logging import getLogger
 from werkzeug import urls
 
-import odoo
-import odoo.modules.module  # get_manifest, don't from-import it
 from odoo import api, fields, models, tools
+from odoo.modules import Manifest
 from odoo.tools import misc
 from odoo.tools.constants import ASSET_EXTENSIONS, EXTERNAL_ASSET
 
@@ -187,7 +186,7 @@ class IrAsset(models.Model):
 
         # 2. Process all addons' manifests.
         for addon in addons:
-            for command in odoo.modules.module._get_manifest_cached(addon)['assets'].get(bundle, ()):
+            for command in Manifest.for_addon(addon)['assets'].get(bundle, ()):
                 directive, target, path_def = self._process_command(command)
                 self._process_path(bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
@@ -289,10 +288,10 @@ class IrAsset(models.Model):
         IrModule = self.env['ir.module.module']
 
         def mapper(addon):
-            manif = odoo.modules.module._get_manifest_cached(addon)
+            manif = Manifest.for_addon(addon) or {}
             from_terp = IrModule.get_values_from_terp(manif)
             from_terp['name'] = addon
-            from_terp['depends'] = manif.get('depends', ['base'])
+            from_terp['depends'] = manif.get('depends') or ['base']
             return from_terp
 
         manifs = map(mapper, addons_tuple)
@@ -338,28 +337,25 @@ class IrAsset(models.Model):
         path_def = fs2web(path_def)  # we expect to have all path definition unix style or url style, this is a safety
         path_parts = [part for part in path_def.split('/') if part]
         addon = path_parts[0]
-        addon_manifest = odoo.modules.module._get_manifest_cached(addon)
+        addon_manifest = Manifest.for_addon(addon, display_warning=False)
 
-        safe_path = True
+        safe_path = False
         if addon_manifest:
             if addon not in installed:
                 # Assert that the path is in the installed addons
                 raise Exception(f"Unallowed to fetch files from addon {addon} for file {path_def}")
-            addons_path = addon_manifest['addons_path']
-            full_path = os.path.normpath(os.sep.join([addons_path, *path_parts]))
+            addons_path = addon_manifest.addons_path
+            full_path = os.path.normpath(os.path.join(addons_path, *path_parts))
             # forbid escape from the current addon
             # "/mymodule/../myothermodule" is forbidden
-            static_prefix = os.sep.join([addons_path, addon, 'static', ''])
+            static_prefix = os.path.join(addon_manifest.path, 'static', '')
             if full_path.startswith(static_prefix):
                 paths_with_timestamps = _glob_static_file(full_path)
                 paths = [
                     (fs2web(absolute_path[len(addons_path):]), absolute_path, timestamp)
                     for absolute_path, timestamp in paths_with_timestamps
                 ]
-            else:
-                safe_path = False
-        else:
-            safe_path = False
+                safe_path = True
 
         if not paths and not can_aggregate(path_def):  # http:// or /web/content
             paths = [(path_def, EXTERNAL_ASSET, -1)]

@@ -1,13 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from ast import literal_eval
 from os.path import join as opj
 
-from odoo.modules import get_modules
-from odoo.modules.module import _DEFAULT_MANIFEST, module_manifest, get_module_path
+from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import BaseCase
-from odoo.tools.misc import file_open, file_path
+from odoo.tools.misc import file_path
 
 _logger = logging.getLogger(__name__)
 
@@ -23,33 +21,21 @@ MANIFEST_KEYS = {
 
 class ManifestLinter(BaseCase):
 
-    def _load_manifest(self, module):
-        """Do not rely on odoo/modules/module -> load_manifest
-        as we want to check manifests content, independently of the
-        values from _DEFAULT_MANIFEST added automatically by load_manifest
-        """
-        mod_path = get_module_path(module, downloaded=True)
-        manifest_file = module_manifest(mod_path)
-
-        manifest_data = {}
-        with file_open(manifest_file, mode='r') as f:
-            manifest_data.update(literal_eval(f.read()))
-
-        return manifest_data
-
     def test_manifests(self):
-        for module in get_modules():
-            with self.subTest(module=module):
-                manifest_data = self._load_manifest(module)
-                self._test_manifest_keys(module, manifest_data)
-                self._test_manifest_values(module, manifest_data)
+        for manifest in Manifest.all_addon_manifests():
+            with self.subTest(module=manifest.name):
+                # we want to check the content of the manifest directly without
+                # parsed values
+                self._test_manifest_keys(manifest)
+                self._test_manifest_values(manifest)
 
-    def _test_manifest_keys(self, module, manifest_data):
-        manifest_keys = manifest_data.keys()
+    def _test_manifest_keys(self, manifest_data: Manifest):
+        manifest_keys = manifest_data._manifest_content.keys()
         unknown_keys = manifest_keys - MANIFEST_KEYS
-        self.assertEqual(unknown_keys, set(), f"Unknown manifest keys in module {module!r}. Either there are typos or they must be white listed.")
+        self.assertEqual(unknown_keys, set(), f"Unknown manifest keys in module {manifest_data.name!r}. Either there are typos or they must be white listed.")
 
-    def _test_manifest_values(self, module, manifest_data):
+    def _test_manifest_values(self, manifest_data: Manifest):
+        module = manifest_data.name
         verified_keys = [
             'application', 'auto_install',
             'summary', 'description', 'author',
@@ -62,8 +48,7 @@ class ManifestLinter(BaseCase):
                 "Module %r specific to one single country %r should contain `l10n` in their name.",
                 module, manifest_data['countries'][0])
 
-        for key in manifest_data:
-            value = manifest_data[key]
+        for key, value in manifest_data._manifest_content.items():
             if key in _DEFAULT_MANIFEST:
                 if key in verified_keys:
                     self.assertNotEqual(

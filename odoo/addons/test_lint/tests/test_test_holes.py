@@ -5,7 +5,7 @@ import unittest.mock
 from collections import Counter
 
 from odoo.addons.test_lint.tests.lint_case import LintCase
-from odoo.modules import get_module_path, get_modules
+from odoo.modules import Manifest
 
 
 class InitChecker(ast.NodeVisitor):
@@ -44,9 +44,9 @@ class TestTestHoles(LintCase):
         checker = InitChecker()
 
         errors = []
-        for modroot in map(get_module_path, get_modules()):
+        for manifest in Manifest.all_addon_manifests():
             checker.names.clear()
-            p = checker.path = pathlib.Path(modroot, 'tests')
+            p = checker.path = pathlib.Path(manifest.path, 'tests')
             if not p.exists():
                 continue
 

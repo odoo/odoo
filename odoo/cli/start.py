@@ -5,7 +5,7 @@ import sys
 
 from . import Command
 from .server import main
-from odoo.modules.module import get_module_root, MANIFEST_NAMES
+from odoo.modules.module import Manifest, MANIFEST_NAMES
 from odoo.service.db import _create_empty_database, DatabaseExists
 from odoo.tools import config
 
@@ -33,9 +33,8 @@ class Start(Command):
         if args.path == '.' and os.environ.get('VIRTUAL_ENV'):
             args.path = os.environ.get('VIRTUAL_ENV')
         project_path = os.path.abspath(os.path.expanduser(os.path.expandvars(args.path)))
-        module_root = get_module_root(project_path)
         db_name = None
-        if module_root:
+        if is_path_in_module(project_path):
             # started in a module so we choose this module name for database
             db_name = project_path.split(os.path.sep)[-1]
             # go to the parent's directory of the module root
@@ -70,3 +69,13 @@ class Start(Command):
                    if not to_remove(i, cmdargs)]
 
         main(cmdargs)
+
+
+def is_path_in_module(path):
+    old_path = None
+    while path != old_path:
+        if Manifest._from_path(path):
+            return True
+        old_path = path
+        path, _ = os.path.split(path)
+    return False

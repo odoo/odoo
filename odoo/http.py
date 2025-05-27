@@ -195,7 +195,7 @@ try:
 except ImportError:
     from .tools._vendor.send_file import send_file as _send_file
 
-import odoo
+import odoo.addons
 from .exceptions import UserError, AccessError, AccessDenied
 from .modules import module as module_manager
 from .modules.registry import Registry
@@ -2485,14 +2485,10 @@ class Application:
         system.
         """
         mod2path = {}
-        for addons_path in odoo.addons.__path__:
-            for module in os.listdir(addons_path):
-                manifest = module_manager.get_manifest(module)
-                static_path = opj(addons_path, module, 'static')
-                if (manifest
-                        and (manifest['installable'] or manifest['assets'])
-                        and os.path.isdir(static_path)):
-                    mod2path[module] = static_path
+        for manifest in module_manager.Manifest.all_addon_manifests():
+            static_path = opj(manifest.path, 'static')
+            if (manifest['installable'] or manifest['assets']) and os.path.isdir(static_path):
+                mod2path[manifest.name] = static_path
         return mod2path
 
     def get_static_file(self, url, host=''):

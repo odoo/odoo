@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from hashlib import sha256
-import copy
 import json
 import unittest
 from unittest.mock import patch
@@ -10,7 +9,7 @@ from lxml import etree as ET, html
 from lxml.html import builder as h
 
 from odoo.exceptions import MissingError
-from odoo.modules.module import _DEFAULT_MANIFEST
+from odoo.modules.module import _DEFAULT_MANIFEST, Manifest
 from odoo.tests import common, HttpCase, tagged
 
 
@@ -1654,7 +1653,7 @@ class TestThemeViews(common.TransactionCase):
         main_view.with_context(website_id=website_1.id).arch = '<body>specific</body>'
 
         # 2. Simulate a theme install with a child view of `main_view`
-        patcher = patch('odoo.modules.module._get_manifest_cached', return_value=copy.deepcopy(_DEFAULT_MANIFEST))
+        patcher = patch('odoo.modules.Manifest.for_addon', return_value=Manifest(path='/dummy/test_theme', manifest_content=_DEFAULT_MANIFEST))
         self.startPatcher(patcher)
         test_theme_module = self.env['ir.module.module'].create({'name': 'test_theme'})
         self.env['ir.model.data'].create({
