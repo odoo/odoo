@@ -26,6 +26,13 @@ class TestCalendarSms(SMSCommon):
             'phone': '0488888888',
             'country_id': cls.env.ref('base.be').id,
         })
+
+        cls.partner_phone_3 = cls.env['res.partner'].create({
+            'name': 'Partner With Phone Number',
+            'phone': '0499999999',
+            'country_id': cls.env.ref('base.be').id,
+        })
+
         cls.partner_no_phone = cls.env['res.partner'].create({
             'name': 'Partner With No Phone Number',
             'country_id': cls.env.ref('base.be').id,
@@ -61,6 +68,13 @@ class TestCalendarSms(SMSCommon):
             'partner_ids': [(6, 0, [cls.partner_phone.id])],
         })
 
+        cls.event_1h_dup = cls.event_1h.copy(default={
+            'alarm_ids': [(4, cls.alarm_1h.id), (4, cls.alarm_24h.id)],
+            'partner_ids': [(6, 0, [cls.partner_phone_3.id])],
+        })
+        # for some reason the above is not sufficient
+        cls.event_1h_dup.partner_ids = cls.partner_phone_3
+
         # Adjust event_24h so that the 24-hour alarm falls within the last hour
         cls.event_24h = cls.env['calendar.event'].create({
             'name': 'Event in 24h',
@@ -75,6 +89,7 @@ class TestCalendarSms(SMSCommon):
             'body': 'Reminder: Your event is starting in 1 hour!',
             'model_id': cls.env['ir.model']._get('calendar.event').id,
         })
+
         cls.alarm_1h.sms_template_id = cls.sms_template_1h.id
 
         cls.sms_template_24h = cls.env['sms.template'].create({
@@ -99,8 +114,10 @@ class TestCalendarSms(SMSCommon):
             lastcall = fields.Datetime.now() - timedelta(hours=1)
             self.env['calendar.alarm_manager'].with_context(lastcall=lastcall)._send_reminder()
 
-        self.assertEqual(len(self._sms), 2)
+        self.assertEqual(len(self._sms), 3)
         self.assertSMS(self.partner_phone, self.partner_phone.phone_sanitized, 'pending',
-                       content=self.sms_template_1h.body)
+                        content=self.sms_template_1h.body)
+        self.assertSMS(self.partner_phone_3, self.partner_phone_3.phone_sanitized, 'pending',
+                        content=self.sms_template_1h.body)
         self.assertSMS(self.partner_phone_2, self.partner_phone_2.phone_sanitized, 'pending',
-                       content=self.sms_template_24h.body)
+                        content=self.sms_template_24h.body)
