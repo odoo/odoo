@@ -3,7 +3,7 @@
 
     <t t-name="point_of_sale.TicketScreen">
         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
-        <div class="ticket-screen screen h-100 bg-100">
+        <div class="ticket-screen screen h-100 bg-100" t-att-class="{'loading-orders': this.pos.loadingOrderState}">
             <div class="screen-full-width d-flex w-100 h-100">
                 <t t-set="usePreset" t-value="pos.config.use_presets and pos.models['pos.preset'].length > 1" />
                 <div t-if="!ui.isSmall || pos.ticket_screen_mobile_pane === 'left'" class="rightpane pane-border d-flex flex-column flex-grow-1 w-100 h-100 h-lg-100 pe-lg-0 bg-view border-end overflow-y-auto">

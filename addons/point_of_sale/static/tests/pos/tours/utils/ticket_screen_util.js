@@ -267,3 +267,10 @@ export function noOrderIsThere() {
         trigger: ".ticket-screen:not(:has(.order-row))",
     };
 }
+
+export function isReady() {
+    return {
+        content: "Wait for the Ticket Screen to be ready",
+        trigger: ".ticket-screen:not(.loading-orders)",
+    };
+}
