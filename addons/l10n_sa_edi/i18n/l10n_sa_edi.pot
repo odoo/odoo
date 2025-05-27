@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.4a1+e\n"
+"Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-20 12:24+0000\n"
-"PO-Revision-Date: 2025-06-20 12:24+0000\n"
+"POT-Creation-Date: 2025-07-07 09:20+0000\n"
+"PO-Revision-Date: 2025-07-07 09:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -220,6 +220,11 @@ msgid "Attachment"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_form_inherit
+msgid "Blocking Invoice"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_building_number
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_building_number
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
@@ -270,6 +275,12 @@ msgstr ""
 #. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_certificate_certificate
 msgid "Certificate"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid "Chain Head"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -448,13 +459,6 @@ msgstr ""
 msgid ""
 "Hash of the latest submitted invoice to be used as the Previous Invoice Hash"
 " (KSA-13)"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
-msgid "ICV"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -640,13 +644,6 @@ msgid "Momra License"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
-msgid "N/A"
-msgstr ""
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__nat
 msgid "National ID"
 msgstr ""
@@ -732,15 +729,14 @@ msgid "PCSID Renewal"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
-msgid "PIH"
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__pas
+msgid "Passport ID"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__pas
-msgid "Passport ID"
+#. odoo-python
+#: code:addons/l10n_sa_edi/migrations/0.2/post-migrate.py:0
+msgid "Please Re-Onboard the Journal for a new serial number"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -803,13 +799,6 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid ""
 "Production certificate has expired, please renew the PCSID before proceeding"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
-msgid "QR"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -876,13 +865,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "Server returned an unexpected error: %(error)s"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_account_journal_form
-msgid ""
-"Set a Serial Number for your device\n"
-"                                    <i class=\"fa fa-check text-success ms-1\" invisible=\"not l10n_sa_serial_number\"/>"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -953,6 +935,13 @@ msgid "Tax Invoice"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_edi_chain_head_id
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_move__l10n_sa_edi_chain_head_id
+msgid ""
+"Technical field to know if the chain has been stopped by a previous invoice"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_csr
 msgid ""
 "The Certificate Signing Request that is submitted to the Compliance API"
@@ -996,13 +985,14 @@ msgid "The private key used to generate the CSR and obtain certificates"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_serial_number
-msgid "The serial number of the Taxpayer solution unit. Provided by ZATCA"
+#: model:ir.model,name:l10n_sa_edi.model_account_edi_xml_ubl_21_zatca
+msgid "UBL 2.1 (ZATCA)"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model,name:l10n_sa_edi.model_account_edi_xml_ubl_21_zatca
-msgid "UBL 2.1 (ZATCA)"
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_serial_number
+msgid ""
+"Unique Serial Number automatically filled when the journal is onboarded"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1188,6 +1178,12 @@ msgid "ZATCA chain index"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_edi_chain_head_id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_edi_chain_head_id
+msgid "ZATCA chain stopping move"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid "ZATCA specific settings for Saudi eInvoicing"
 msgstr ""
@@ -1226,9 +1222,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.export_sa_zatca_ubl_extensions
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "urn:oasis:names:specification:ubl:dsig:enveloped:xades"
 msgstr ""
 
@@ -1239,9 +1232,6 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.export_sa_zatca_ubl_extensions
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_CreditNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_DebitNoteType_zatca
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.ubl_21_InvoiceType_zatca
 msgid "urn:oasis:names:specification:ubl:signature:Invoice"
 msgstr ""
 
