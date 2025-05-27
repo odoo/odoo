@@ -503,7 +503,7 @@ class SaleOrderLine(models.Model):
             for line in lines.with_company(company):
                 taxes = None
                 if line.product_id:
-                    taxes = line.product_id.taxes_id._filter_taxes_by_company(company)
+                    taxes = line.product_id.tax_ids._filter_taxes_by_company(company)
                 if not line.product_id or not taxes:
                     # Nothing to map
                     line.tax_ids = False
@@ -561,7 +561,7 @@ class SaleOrderLine(models.Model):
                 price = line._get_display_price()
                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
                     price,
-                    product_taxes=line.product_id.taxes_id.filtered(
+                    product_taxes=line.product_id.tax_ids.filtered(
                         lambda tax: tax.company_id == line.env.company
                     ),
                     fiscal_position=line.order_id.fiscal_position_id,

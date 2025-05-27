@@ -175,7 +175,7 @@ class TestSalePrices(SaleCommon):
                 }),
             ],
             'list_price': 75.0,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         # Specify an extra_price on a variant
@@ -589,7 +589,7 @@ class TestSalePrices(SaleCommon):
 
         self.product.write({
             'lst_price': 115,
-            'taxes_id': [Command.set(tax_a.ids)]
+            'tax_ids': [Command.set(tax_a.ids)]
         })
 
         self.pricelist.write({
@@ -715,19 +715,19 @@ class TestSalePrices(SaleCommon):
         ) = self.env['product.template'].create([{
             'name': "Voiture",
             'list_price': 121,
-            'taxes_id': [Command.set([tax_include_src.id])]
+            'tax_ids': [Command.set([tax_include_src.id])]
         }, {
             'name': "Voiture",
             'list_price': 100,
-            'taxes_id': [Command.set([tax_exclude_src.id])]
+            'tax_ids': [Command.set([tax_exclude_src.id])]
         }, {
             'name': "Voiture",
             'list_price': 100,
-            'taxes_id': [Command.set([tax_fixed_incl.id, tax_exclude_src.id])]
+            'tax_ids': [Command.set([tax_fixed_incl.id, tax_exclude_src.id])]
         }, {
             'name': "Voiture",
             'list_price': 100,
-            'taxes_id': [Command.set([tax_fixed_excl.id, tax_include_src.id])]
+            'tax_ids': [Command.set([tax_fixed_excl.id, tax_include_src.id])]
         }])
 
         # Create the SO with one SO line and apply a pricelist and fiscal position on it
@@ -830,7 +830,7 @@ class TestSalePrices(SaleCommon):
 
         self.product.write({
             'list_price': 121,
-            'taxes_id': [Command.set(tax_include.ids)]
+            'tax_ids': [Command.set(tax_include.ids)]
         })
 
         order.write({
@@ -1029,12 +1029,12 @@ class TestSalePrices(SaleCommon):
         test_product_discount = self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 100.0,
-            'taxes_id': None,
+            'tax_ids': None,
         })
         test_product_incl_discount = self.env['product.product'].create({
             'name': 'Test Product',
             'list_price': 100.0,
-            'taxes_id': None,
+            'tax_ids': None,
         })
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,

@@ -439,7 +439,7 @@ class HrExpense(models.Model):
     def _compute_from_product(self):
         for expense in self:
             expense.product_has_cost = expense.product_id and not expense.company_currency_id.is_zero(expense.product_id.standard_price)
-            expense.product_has_tax = bool(expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id)))
+            expense.product_has_tax = bool(expense.product_id.supplier_tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id)))
 
     @api.depends('product_id.uom_id')
     def _compute_uom_id(self):
@@ -568,7 +568,7 @@ class HrExpense(models.Model):
         for _expense in self.filtered('company_id'):   # Avoid a traceback, the field is required anyway
             expense = _expense.with_company(_expense.company_id)
             # taxes only from the same company
-            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
+            expense.tax_ids = expense.product_id.supplier_tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
 
     @api.depends('total_amount_currency', 'tax_ids')
     def _compute_tax_amount_currency(self):
@@ -1083,7 +1083,7 @@ class HrExpense(models.Model):
             'total_amount_currency': price,
             'product_id': product.id if product else None,
             'product_uom_id': product.uom_id.id,
-            'tax_ids': [Command.set(product.supplier_taxes_id.filtered(lambda r: r.company_id == company).ids)],
+            'tax_ids': [Command.set(product.supplier_tax_ids.filtered(lambda r: r.company_id == company).ids)],
             'quantity': 1,
             'company_id': company.id,
             'currency_id': currency_id.id

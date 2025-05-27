@@ -22,7 +22,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'name': 'Large Desk',
             'is_storable': True,
             'categ_id': cls.stock_account_product_categ.id,
-            'taxes_id': [(6, 0, [])],
+            'tax_ids': [(6, 0, [])],
         })
 
     def _dropship_product1(self):

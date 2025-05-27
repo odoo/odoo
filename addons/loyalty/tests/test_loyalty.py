@@ -21,7 +21,7 @@ class TestLoyalty(TransactionCase):
             'name': 'Test Program',
             'reward_ids': [(0, 0, {})],
         })
-        cls.product = cls.env['product.product'].with_context(default_taxes_id=False).create({
+        cls.product = cls.env['product.product'].with_context(default_tax_ids=False).create({
             'name': "Test Product",
             'type': 'consu',
             'list_price': 20.0,

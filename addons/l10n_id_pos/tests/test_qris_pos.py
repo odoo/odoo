@@ -33,7 +33,7 @@ class TestPosQris(AccountTestInvoicingHttpCommon):
             'name': 'Test Product',
             'available_in_pos': True,
             'list_price': 1000,
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         # Create user.

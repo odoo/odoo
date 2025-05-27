@@ -90,7 +90,7 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     run: "click",
 }, {
     isActive: ["desktop"],
-    trigger: ".o_field_widget[name=taxes_id] input",
+    trigger: ".o_field_widget[name=tax_ids] input",
     content: _t("Focus on customer taxes field."),
     async run(actions) {
         await actions.click();
@@ -521,12 +521,12 @@ stepUtils.autoExpandMoreButtons(),
     run: "click",
 }, {
     isActive: ["desktop"],
-    trigger: ".o_field_widget[name=taxes_id] input",
+    trigger: ".o_field_widget[name=tax_ids] input",
     content: _t("Focus on customer taxes field."),
     async run(actions) {
         await actions.click();
         const e = queryFirst(
-            ".o_field_widget[name=taxes_id] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a"
+            ".o_field_widget[name=tax_ids] .o-autocomplete--dropdown-item:not(.o_m2o_dropdown_option) > a"
         );
         if (e) {
             await actions.click(e);

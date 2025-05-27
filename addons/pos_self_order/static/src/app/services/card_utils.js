@@ -64,7 +64,7 @@ export function getOrderLineValues(
     const values = {
         order_id: currentOrder,
         product_id: product,
-        tax_ids: [...productTemplate.taxes_id],
+        tax_ids: [...productTemplate.tax_ids],
         qty: qty,
         note: customer_note || "",
         price_unit: productPrice.pricelist_price,
@@ -84,7 +84,7 @@ export function getOrderLineValues(
             Object.assign(values, {
                 product_id: productVariant,
                 price_unit: productVariant.lst_price,
-                tax_ids: [...productVariant.taxes_id],
+                tax_ids: [...productVariant.tax_ids],
             });
         }
 
@@ -165,8 +165,8 @@ export function getOrderLineValues(
             "create",
             {
                 product_id: comboItem.combo_item_id.product_id,
-                tax_ids: comboItem.combo_item_id.product_id.taxes_id
-                    ? [...comboItem.combo_item_id.product_id.taxes_id]
+                tax_ids: comboItem.combo_item_id.product_id.tax_ids
+                    ? [...comboItem.combo_item_id.product_id.tax_ids]
                     : [],
                 combo_item_id: comboItem.combo_item_id,
                 price_unit: comboItem.price_unit,

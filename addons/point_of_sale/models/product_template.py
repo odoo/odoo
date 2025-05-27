@@ -84,7 +84,7 @@ class ProductTemplate(models.Model):
     @api.model
     def _load_pos_data_fields(self, config_id):
         return [
-            'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
+            'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'tax_ids', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
             'write_date', 'color', 'pos_sequence', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
             'pos_optional_product_ids'
@@ -196,8 +196,8 @@ class ProductTemplate(models.Model):
 
             product['image_128'] = bool(product['image_128'])
 
-            if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
-                product['taxes_id'] = filter_taxes_on_company(product['taxes_id'], taxes_by_company)
+            if len(taxes_by_company) > 1 and len(product['tax_ids']) > 1:
+                product['tax_ids'] = filter_taxes_on_company(product['tax_ids'], taxes_by_company)
 
             product['_archived_combinations'] = []
             for product_product in self.env['product.product'].with_context(active_test=False).search([('product_tmpl_id', '=', product['id']), ('active', '=', False)]):
@@ -251,7 +251,7 @@ class ProductTemplate(models.Model):
         template_or_variant = product_variant or self.product_variant_id
 
         # Tax related
-        taxes = self.taxes_id.compute_all(price, config.currency_id, quantity, template_or_variant)
+        taxes = self.tax_ids.compute_all(price, config.currency_id, quantity, template_or_variant)
         grouped_taxes = {}
         for tax in taxes['taxes']:
             if tax['id'] in grouped_taxes:

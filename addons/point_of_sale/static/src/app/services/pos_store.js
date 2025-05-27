@@ -779,7 +779,7 @@ export class PosStore extends WithLazyGetterTrap {
             price_unit: 0,
             order_id: this.getOrder(),
             qty: this.getOrder().preset_id?.is_return ? -1 : 1,
-            tax_ids: productTemplate.taxes_id.map((tax) => ["link", tax]),
+            tax_ids: productTemplate.tax_ids.map((tax) => ["link", tax]),
             product_id: productTemplate.product_variant_ids[0],
             ...vals,
         };
@@ -899,10 +899,7 @@ export class PosStore extends WithLazyGetterTrap {
                 "create",
                 {
                     product_id: comboItem.combo_item_id.product_id,
-                    tax_ids: comboItem.combo_item_id.product_id.taxes_id.map((tax) => [
-                        "link",
-                        tax,
-                    ]),
+                    tax_ids: comboItem.combo_item_id.product_id.tax_ids.map((tax) => ["link", tax]),
                     combo_item_id: comboItem.combo_item_id,
                     price_unit: comboItem.price_unit,
                     price_type: "automatic",

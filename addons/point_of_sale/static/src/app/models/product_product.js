@@ -2,8 +2,8 @@ import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 
 // When adding a method to this class, please pay attention to naming.
-// As in the backend, when trying to access taxes_id on product.product,
-// taxes_id will be taken from the template.
+// As in the backend, when trying to access tax_ids on product.product,
+// tax_ids will be taken from the template.
 
 // This means that if you declare a method that exists in the product.template
 // class, it will override this path.

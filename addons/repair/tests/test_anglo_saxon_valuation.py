@@ -47,7 +47,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
     def test_inv_ro_with_auto_fifo_part(self):
         self.fifo_product.standard_price = 100
-        self.fifo_product.taxes_id = False
+        self.fifo_product.tax_ids = False
 
         self._make_in_move(self.fifo_product, unit_cost=10)
         self._make_in_move(self.fifo_product, unit_cost=25)

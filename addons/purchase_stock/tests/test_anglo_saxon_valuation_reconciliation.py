@@ -48,7 +48,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                         'product_uom_id': product.uom_id.id,
                         'price_unit': price_unit,
                         'date_planned': date,
-                        'tax_ids': [(6, 0, product.supplier_taxes_id.ids)] if set_tax else False,
+                        'tax_ids': [(6, 0, product.supplier_tax_ids.ids)] if set_tax else False,
                     })],
                 'date_order': date,
             })
@@ -168,7 +168,7 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         )
 
         test_product = self.test_product_delivery
-        test_product.supplier_taxes_id = [(6, 0, tax_exclude_id.ids)]
+        test_product.supplier_tax_ids = [(6, 0, tax_exclude_id.ids)]
         date_po_and_delivery = '2018-01-01'
 
         purchase_order = self._create_purchase(test_product, date_po_and_delivery, quantity=10000, set_tax=True)
@@ -357,8 +357,8 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
                 "is_storable": True,
                 "default_code": "prda",
                 "categ_id": self.stock_account_product_categ.id,
-                "taxes_id": [(5, 0, 0)],
-                "supplier_taxes_id": [(6, 0, cash_basis_tax_a_third_amount.ids)],
+                "tax_ids": [(5, 0, 0)],
+                "supplier_tax_ids": [(6, 0, cash_basis_tax_a_third_amount.ids)],
                 "lst_price": 100.0,
                 "standard_price": 10.0,
                 "property_account_income_id": self.company_data["default_account_revenue"].id,

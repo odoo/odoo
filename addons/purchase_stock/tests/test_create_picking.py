@@ -119,7 +119,7 @@ class TestCreatePicking(common.TestProductCommon):
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
-            'supplier_taxes_id': [(6, 0, [])],
+            'supplier_tax_ids': [(6, 0, [])],
         })
 
         customer_move = self.env['stock.move'].create({
@@ -633,7 +633,7 @@ class TestCreatePicking(common.TestProductCommon):
             'is_storable': True,
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [(6, 0, [seller.id])],
-            'supplier_taxes_id': [(6, 0, [])],
+            'supplier_tax_ids': [(6, 0, [])],
         })
 
         procurement_group = self.env['procurement.group'].create({

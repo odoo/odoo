@@ -116,7 +116,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'product_id': self.product_a.id,
                 'price_unit': 100,
                 'qty': 1.0,
-                'tax_ids': self.product_a.taxes_id,
+                'tax_ids': self.product_a.tax_ids,
                 'price_subtotal': 85,
                 'price_subtotal_incl': 100,
                 'discount': 0,

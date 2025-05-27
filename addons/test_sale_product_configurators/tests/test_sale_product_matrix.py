@@ -46,7 +46,7 @@ class TestSaleMatrixUi(TestMatrixCommon):
             'name': '15%',
             'amount': 15,
         })
-        self.matrix_template.taxes_id = tax
+        self.matrix_template.tax_ids = tax
         # Also disable all pricelists that could impact the price
         self.env['product.pricelist'].search([]).write({'active': False})
 

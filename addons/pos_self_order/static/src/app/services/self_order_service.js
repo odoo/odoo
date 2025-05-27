@@ -788,7 +788,7 @@ export class SelfOrder extends Reactive {
             ? this.currentOrder.preset_id?.pricelist_id
             : this.config.default_pricelist_id;
         const price = productTemplate.getPrice(pricelist, 1, 0, false, product);
-        let taxes = productTemplate.taxes_id;
+        let taxes = productTemplate.tax_ids;
 
         if (!product) {
             product = productTemplate;

@@ -39,14 +39,14 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
             'name': 'Yummy Burger',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': [Command.set([tax_10_inc.id])],
+            'tax_ids': [Command.set([tax_10_inc.id])],
         })
 
         self.env['product.product'].create({
             'name': 'Taxi Burger',
             'available_in_pos': True,
             'list_price': 10,
-            'taxes_id': [Command.set([tax_10_inc.id, tax_10_excl.id])],
+            'tax_ids': [Command.set([tax_10_inc.id, tax_10_excl.id])],
         })
 
         # With preset location choices
@@ -109,7 +109,7 @@ class TestSelfOrderKiosk(SelfOrderCommonTest):
         product = self.env['product.product'].create({
             'name': "Test Product",
             'list_price': 100,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, test_category.id)],
         })

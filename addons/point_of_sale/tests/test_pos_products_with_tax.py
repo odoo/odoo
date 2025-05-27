@@ -527,7 +527,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
             'name': 'Zero Amount Product',
             'available_in_pos': True,
             'list_price': 0,
-            'taxes_id': [(6, 0, [fixed_tax.id])],
+            'tax_ids': [(6, 0, [fixed_tax.id])],
         })
 
         self.open_new_session()
@@ -548,7 +548,7 @@ class TestPoSProductsWithTax(TestPoSCommon):
         ''' Ensures that a tax is set to used when it is part of some transactions '''
 
         # Call another test that uses product_1
-        tax_pos = self.product1.taxes_id
+        tax_pos = self.product1.tax_ids
         self.assertFalse(tax_pos.is_used)
         self.test_orders_no_invoiced()
         tax_pos.invalidate_model(fnames=['is_used'])
@@ -619,22 +619,22 @@ class TestPoSProductsWithTax(TestPoSCommon):
         product_all_taxes = self.env['product.product'].create({
             'name': 'Product all taxes',
             'available_in_pos': True,
-            'taxes_id': [odoo.Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
+            'tax_ids': [odoo.Command.set((tax_a + tax_b + tax_x + tax_xx).ids)],
         })
         product_no_xx_tax = self.env['product.product'].create({
             'name': 'Product no tax from XX',
             'available_in_pos': True,
-            'taxes_id': [odoo.Command.set((tax_a + tax_b + tax_x).ids)],
+            'tax_ids': [odoo.Command.set((tax_a + tax_b + tax_x).ids)],
         })
         product_no_branch_tax = self.env['product.product'].create({
             'name': 'Product no tax from branch',
             'available_in_pos': True,
-            'taxes_id': [odoo.Command.set((tax_a + tax_b).ids)],
+            'tax_ids': [odoo.Command.set((tax_a + tax_b).ids)],
         })
         product_no_tax = self.env['product.product'].create({
             'name': 'Product no tax',
             'available_in_pos': True,
-            'taxes_id': [],
+            'tax_ids': [],
         })
         # configure a session on Branch XX
         self.xx_bank_journal = self.env['account.journal'].with_company(branch_xx).create({
@@ -668,21 +668,21 @@ class TestPoSProductsWithTax(TestPoSCommon):
         # - Product no tax              => no tax should be set
         pos_data = pos_session.load_data([])
         self.assertEqual(
-            next(iter(filter(lambda p: p['id'] == product_all_taxes.product_tmpl_id.id, pos_data['product.template'])))['taxes_id'],
+            next(iter(filter(lambda p: p['id'] == product_all_taxes.product_tmpl_id.id, pos_data['product.template'])))['tax_ids'],
             tax_xx.ids
         )
         self.assertEqual(
-            next(iter(filter(lambda p: p['id'] == product_no_xx_tax.product_tmpl_id.id, pos_data['product.template'])))['taxes_id'],
+            next(iter(filter(lambda p: p['id'] == product_no_xx_tax.product_tmpl_id.id, pos_data['product.template'])))['tax_ids'],
             tax_x.ids
         )
-        tax_data_no_branch = next(iter(filter(lambda p: p['id'] == product_no_branch_tax.product_tmpl_id.id, pos_data['product.template'])))['taxes_id']
+        tax_data_no_branch = next(iter(filter(lambda p: p['id'] == product_no_branch_tax.product_tmpl_id.id, pos_data['product.template'])))['tax_ids']
         tax_data_no_branch.sort()
         self.assertEqual(
             tax_data_no_branch,
             (tax_a + tax_b).ids
         )
         self.assertEqual(
-            next(iter(filter(lambda p: p['id'] == product_no_tax.product_tmpl_id.id, pos_data['product.template'])))['taxes_id'],
+            next(iter(filter(lambda p: p['id'] == product_no_tax.product_tmpl_id.id, pos_data['product.template'])))['tax_ids'],
             []
         )
 

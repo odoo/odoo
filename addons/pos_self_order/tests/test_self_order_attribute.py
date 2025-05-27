@@ -97,7 +97,7 @@ class TestSelfOrderAttribute(SelfOrderCommonTest):
         chair_product_tmpl = self.env['product.template'].create({
             'name': 'Chair',
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, pos_categ_chairs.id)],
             'attribute_line_ids': [(0, 0, {

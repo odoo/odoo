@@ -39,7 +39,7 @@ class TestPoSSaleL10NBe(TestPointOfSaleHttpCommon):
             'type': 'consu',
             'is_storable': True,
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
 
@@ -107,7 +107,7 @@ class TestPoSSaleL10NBeNormalCompany(TestPointOfSaleHttpCommon):
         self.product_a = self.env['product.product'].create({
             'name': 'Product A',
             'list_price': 10,
-            'taxes_id': False,
+            'tax_ids': False,
             'available_in_pos': True,
         })
 

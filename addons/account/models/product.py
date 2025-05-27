@@ -34,14 +34,14 @@ class ProductCategory(models.Model):
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id',
+    tax_ids = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id',
         string="Sales Taxes",
         help="Default taxes used when selling the product",
         domain=[('type_tax_use', '=', 'sale')],
         default=lambda self: self.env.companies.account_sale_tax_id or self.env.companies.root_id.sudo().account_sale_tax_id,
     )
     tax_string = fields.Char(compute='_compute_tax_string')
-    supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
+    supplier_tax_ids = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id',
         string="Purchase Taxes",
         help="Default taxes used when buying the product",
         domain=[('type_tax_use', '=', 'purchase')],
@@ -88,7 +88,7 @@ class ProductTemplate(models.Model):
             allowed_companies = record.company_id or self.env.companies
             record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
 
-    @api.depends('taxes_id', 'list_price')
+    @api.depends('tax_ids', 'list_price')
     @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:
@@ -96,7 +96,7 @@ class ProductTemplate(models.Model):
 
     def _construct_tax_string(self, price):
         currency = self.currency_id
-        res = self.taxes_id.filtered(lambda t: t.company_id == self.env.company).compute_all(
+        res = self.tax_ids.filtered(lambda t: t.company_id == self.env.company).compute_all(
             price, product=self, partner=self.env['res.partner']
         )
         joined = []
@@ -135,21 +135,21 @@ class ProductTemplate(models.Model):
     @api.onchange('type')
     def _onchange_type(self):
         if self.type == 'combo':
-            self.taxes_id = False
-            self.supplier_taxes_id = False
+            self.tax_ids = False
+            self.supplier_tax_ids = False
         return super()._onchange_type()
 
     def _force_default_sale_tax(self, companies):
         default_customer_taxes = companies.filtered('account_sale_tax_id').account_sale_tax_id
-        for product_grouped_by_tax in self.grouped('taxes_id').values():
-            product_grouped_by_tax.taxes_id += default_customer_taxes
-        self.invalidate_recordset(['taxes_id'])
+        for product_grouped_by_tax in self.grouped('tax_ids').values():
+            product_grouped_by_tax.tax_ids += default_customer_taxes
+        self.invalidate_recordset(['tax_ids'])
 
     def _force_default_purchase_tax(self, companies):
         default_supplier_taxes = companies.filtered('account_purchase_tax_id').account_purchase_tax_id
-        for product_grouped_by_tax in self.grouped('supplier_taxes_id').values():
-            product_grouped_by_tax.supplier_taxes_id += default_supplier_taxes
-        self.invalidate_recordset(['supplier_taxes_id'])
+        for product_grouped_by_tax in self.grouped('supplier_tax_ids').values():
+            product_grouped_by_tax.supplier_tax_ids += default_supplier_taxes
+        self.invalidate_recordset(['supplier_tax_ids'])
 
     def _force_default_tax(self, companies):
         self._force_default_sale_tax(companies)
@@ -170,16 +170,16 @@ class ProductTemplate(models.Model):
     def _get_list_price(self, price):
         """ Get the product sales price from a public price based on taxes defined on the product """
         self.ensure_one()
-        if not self.taxes_id:
+        if not self.tax_ids:
             return super()._get_list_price(price)
-        computed_price = self.taxes_id.compute_all(price, self.currency_id)
+        computed_price = self.tax_ids.compute_all(price, self.currency_id)
         total_included = computed_price["total_included"]
 
         if price == total_included:
             # Tax is configured as price included
             return total_included
         # calculate base from tax
-        included_computed_price = self.taxes_id.with_context(force_price_include=True).compute_all(price, self.currency_id)
+        included_computed_price = self.tax_ids.with_context(force_price_include=True).compute_all(price, self.currency_id)
         return included_computed_price['total_excluded']
 
 
@@ -221,9 +221,9 @@ class ProductProduct(models.Model):
                 return 0.0
         if product_taxes is None:
             if document_type == 'sale':
-                product_taxes = product.taxes_id.filtered(lambda x: x.company_id == company)
+                product_taxes = product.tax_ids.filtered(lambda x: x.company_id == company)
             elif document_type == 'purchase':
-                product_taxes = product.supplier_taxes_id.filtered(lambda x: x.company_id == company)
+                product_taxes = product.supplier_tax_ids.filtered(lambda x: x.company_id == company)
         # Apply unit of measure.
         if product_uom and product.uom_id != product_uom:
             product_price_unit = product.uom_id._compute_price(product_price_unit, product_uom)
@@ -263,7 +263,7 @@ class ProductProduct(models.Model):
             new_taxes=product_taxes_after_fp,
         )
 
-    @api.depends('lst_price', 'product_tmpl_id', 'taxes_id')
+    @api.depends('lst_price', 'product_tmpl_id', 'tax_ids')
     @api.depends_context('company')
     def _compute_tax_string(self):
         for record in self:

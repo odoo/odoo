@@ -48,9 +48,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         taxes = {}
         if company.account_sale_tax_id:
-            taxes.update({'taxes_id': [Command.link(company.account_sale_tax_id.id)]})
+            taxes.update({'tax_ids': [Command.link(company.account_sale_tax_id.id)]})
         if company.account_purchase_tax_id:
-            taxes.update({'supplier_taxes_id': [Command.link(company.account_purchase_tax_id.id)]})
+            taxes.update({'supplier_tax_ids': [Command.link(company.account_purchase_tax_id.id)]})
         if not taxes:
             return {}
         IMD = self.env['ir.model.data'].sudo()

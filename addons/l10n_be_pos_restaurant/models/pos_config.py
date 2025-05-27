@@ -31,7 +31,7 @@ class PosConfig(models.Model):
             if cocktails_category:
                 self.env['product.template'].search([
                     ('pos_categ_ids', 'in', [cocktails_category.id])
-                ]).write({'taxes_id': [(6, 0, [tax_alcohol.id])]})
+                ]).write({'tax_ids': [(6, 0, [tax_alcohol.id])]})
 
     @api.model
     def load_onboarding_restaurant_scenario(self, with_demo_data=True):

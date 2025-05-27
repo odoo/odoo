@@ -40,7 +40,7 @@ class TestEventBoothSaleWData(TestEventBoothSaleCommon, TestSalesCommon):
             }
         ])
 
-        cls.event_booth_product.taxes_id = cls.tax_10
+        cls.event_booth_product.tax_ids = cls.tax_10
 
 
 class TestEventBoothSale(TestEventBoothSaleWData):

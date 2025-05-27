@@ -24,7 +24,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'list_price': 10.0,
             'standard_price': 1.0,
-            'taxes_id': False,
+            'tax_ids': False,
         } for name in ['Basic Kit', 'Finished', 'Component A', 'Component B']])
 
         cls.simple_kit_bom, cls.finished_bom = cls.env['mrp.bom'].create([{

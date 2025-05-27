@@ -443,7 +443,7 @@ export class PosOrderline extends Base {
             this.prepareBaseLineForTaxesComputationExtraValues({
                 price_unit: this.getlstPrice(),
                 quantity: 1,
-                tax_ids: product.taxes_id,
+                tax_ids: product.tax_ids,
             })
         );
         accountTaxHelpers.add_tax_details_in_base_line(baseLine, company);
@@ -494,7 +494,7 @@ export class PosOrderline extends Base {
     getAllPrices(qty = this.getQuantity()) {
         const company = this.company;
         const product = this.getProduct();
-        const taxes = this.tax_ids || product.taxes_id;
+        const taxes = this.tax_ids || product.tax_ids;
         const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
             this,
             this.prepareBaseLineForTaxesComputationExtraValues({
@@ -649,7 +649,7 @@ export class PosOrderline extends Base {
         return [
             ...new Set(
                 getTaxesAfterFiscalPosition(
-                    this.product_id.taxes_id,
+                    this.product_id.tax_ids,
                     this.order_id.fiscal_position_id,
                     this.models
                 )

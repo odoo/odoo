@@ -51,7 +51,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'service_type': 'manual',
             'service_tracking': 'no',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_manual2 = cls.env['product.product'].create({
@@ -65,7 +65,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'service_type': 'manual',
             'service_tracking': 'task_global_project',
             'project_id': cls.project_global.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_manual3 = cls.env['product.product'].create({
@@ -79,7 +79,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'service_type': 'manual',
             'service_tracking': 'task_in_project',
             'project_id': False,  # will create a project
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_manual4 = cls.env['product.product'].create({
@@ -93,7 +93,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'service_type': 'manual',
             'service_tracking': 'project_only',
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         cls.product_delivery_manual5 = cls.env['product.product'].create({
@@ -108,7 +108,7 @@ class TestSaleProjectCommon(TestSaleCommon):
             'service_tracking': 'project_only',
             'project_id': False,
             'project_template_id': cls.project_template.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': cls.account_sale.id,
         })
         price_vals = {

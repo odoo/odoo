@@ -123,7 +123,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Coca-Cola',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'taxes_id': [(6, 0, [])],
+            'tax_ids': [(6, 0, [])],
         })
 
         cls.water_test = cls.env['product.product'].create({
@@ -132,7 +132,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Water',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'taxes_id': [(6, 0, [])],
+            'tax_ids': [(6, 0, [])],
         })
 
         cls.minute_maid_test = cls.env['product.product'].create({
@@ -141,7 +141,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Minute Maid',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id)],
-            'taxes_id': [(6, 0, [])],
+            'tax_ids': [(6, 0, [])],
         })
 
         # multiple categories product
@@ -151,7 +151,7 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
             'name': 'Test Multi Category Product',
             'weight': 0.01,
             'pos_categ_ids': [(4, drinks_category.id), (4, food_category.id)],
-            'taxes_id': [(6, 0, [])],
+            'tax_ids': [(6, 0, [])],
         })
 
         # desk organizer (variant product)
@@ -351,7 +351,7 @@ class TestFrontend(TestFrontendCommon):
                 'available_in_pos': True,
                 'list_price': 10,
                 'pos_categ_ids': [(6, 0, [self.env['pos.category'].search([], limit=1).id])],
-                'taxes_id': False,
+                'tax_ids': False,
             })
 
             attribute = self.env['product.attribute'].create({
@@ -444,7 +444,7 @@ class TestFrontend(TestFrontendCommon):
             'available_in_pos': True,
             'list_price': 10,
             'pos_categ_ids': [(6, 0, [pos_category_1.id])],
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -468,14 +468,14 @@ class TestFrontend(TestFrontendCommon):
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'product_1',
-            'taxes_id': self.tax_sale_a,
+            'tax_ids': self.tax_sale_a,
             'pos_categ_ids': [(4, drinks_category.id)]
         })
         product_2 = self.env['product.product'].create({
             'available_in_pos': True,
             'list_price': 2.20,
             'name': 'product_2',
-            'taxes_id': self.tax_sale_a,
+            'tax_ids': self.tax_sale_a,
             'pos_categ_ids': [(4, drinks_category.id)]
         })
         self.pos_config.is_order_printer = False
@@ -518,7 +518,7 @@ class TestFrontend(TestFrontendCommon):
             'available_in_pos': True,
             'list_price': 10,
             'pos_categ_ids': [(6, 0, [pos_category_1.id])],
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.product_2 = self.env['product.product'].create({
@@ -526,7 +526,7 @@ class TestFrontend(TestFrontendCommon):
             'available_in_pos': True,
             'list_price': 10,
             'pos_categ_ids': [(6, 0, [pos_category_2.id])],
-            'taxes_id': False,
+            'tax_ids': False,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()

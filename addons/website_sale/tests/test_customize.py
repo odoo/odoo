@@ -48,7 +48,7 @@ class TestCustomize(HttpCaseWithUserDemo, HttpCaseWithUserPortal, TestProductCon
         })
 
         tax = cls.env['account.tax'].create({'name': "Test tax", 'amount': 10})
-        product_template.taxes_id = tax
+        product_template.tax_ids = tax
 
         # set a different price on the variants to differentiate them
         product_template_attribute_values = cls.env['product.template.attribute.value'].search([

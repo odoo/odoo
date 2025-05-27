@@ -389,8 +389,8 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
             'standard_price': 200.0,
             'type': 'service',
             'invoice_policy': 'delivery',
-            'taxes_id': self.company_data['default_tax_sale'],
-            'supplier_taxes_id': self.company_data['default_tax_purchase'],
+            'tax_ids': self.company_data['default_tax_sale'],
+            'supplier_tax_ids': self.company_data['default_tax_purchase'],
             'service_to_purchase': True,
             'seller_ids': [Command.create({
                 'partner_id': self.partner_b.id,

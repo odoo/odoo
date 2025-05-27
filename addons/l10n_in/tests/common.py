@@ -88,8 +88,8 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
         # === Products === #
         cls.product_a.write({
             "l10n_in_hsn_code": "111111",
-            'taxes_id': cls.sgst_sale_5,
-            'supplier_taxes_id': cls.sgst_purchase_5,
+            'tax_ids': cls.sgst_sale_5,
+            'supplier_tax_ids': cls.sgst_purchase_5,
         })
 
         cls.product_b.write({
@@ -97,8 +97,8 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
             'lst_price': 1000.0,
             'standard_price': 1000.0,
-            'taxes_id': cls.sgst_sale_5.ids,
-            'supplier_taxes_id': cls.sgst_purchase_5.ids,
+            'tax_ids': cls.sgst_sale_5.ids,
+            'supplier_tax_ids': cls.sgst_purchase_5.ids,
         })
         cls.product_with_cess = cls.env["product.product"].create({
             "name": "product_with_cess",
@@ -107,8 +107,8 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             "standard_price": 800.0,
             "property_account_income_id": cls.company_data["default_account_revenue"].id,
             "property_account_expense_id": cls.company_data["default_account_expense"].id,
-            "taxes_id": [Command.set(cls.gst_with_cess.ids)],
-            "supplier_taxes_id": [Command.set(cls.sgst_purchase_5.ids)],
+            "tax_ids": [Command.set(cls.gst_with_cess.ids)],
+            "supplier_tax_ids": [Command.set(cls.sgst_purchase_5.ids)],
             "l10n_in_hsn_code": "333333",
         })
 

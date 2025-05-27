@@ -286,7 +286,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'service_tracking': 'project_only',
             'project_template_id': project_template2.id,
             'project_id': False,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': self.account_sale.id,
         })
 

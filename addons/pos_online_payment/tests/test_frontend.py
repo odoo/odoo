@@ -125,7 +125,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             'is_storable': True,
             'available_in_pos': True,
             'list_price': 4.8,
-            'taxes_id': False,
+            'tax_ids': False,
             'pos_categ_ids': [(4, pos_categ_misc.id)],
         })
 
@@ -199,7 +199,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
                 'product_id': product.id,
                 'qty': 1,
                 'discount': 0,
-                'tax_ids': [(6, 0, product.taxes_id.ids)],
+                'tax_ids': [(6, 0, product.tax_ids.ids)],
                 'price_unit': product.list_price,
                 'price_subtotal': untax,
                 'price_subtotal_incl': untax + atax,
@@ -249,7 +249,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
     # Code from addons/point_of_sale/tests/test_point_of_sale_flow.py
     def compute_tax(self, product, price, qty=1, taxes=None):
         if not taxes:
-            taxes = product.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id)
+            taxes = product.tax_ids.filtered(lambda t: t.company_id.id == self.env.company.id)
         currency = self.pos_config.currency_id
         res = taxes.compute_all(price, currency, qty, product=product)
         untax = res['total_excluded']

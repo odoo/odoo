@@ -312,7 +312,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
             'service_type': 'timesheet',
             'service_tracking': 'task_global_project',
             'project_id': self.project_global.id,
-            'taxes_id': False,
+            'tax_ids': False,
             'property_account_income_id': self.account_sale.id,
         })
         today = Date.context_today(self.env.user)
