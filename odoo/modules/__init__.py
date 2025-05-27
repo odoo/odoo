@@ -10,9 +10,8 @@ from . import db  # used directly during some migration scripts
 
 from . import module
 from .module import (
+    Manifest,
     adapt_version,
-    check_manifest_dependencies,
-    check_version,
     get_module_path,
     get_modules,
     get_modules_with_version,

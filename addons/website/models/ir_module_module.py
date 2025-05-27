@@ -8,7 +8,7 @@ from odoo import api, fields, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
-from odoo.modules.module import get_manifest
+from odoo.modules import Manifest
 from odoo.tools import escape_psql, split_every, SQL
 
 _logger = logging.getLogger(__name__)
@@ -668,7 +668,7 @@ class IrModuleModule(models.Model):
             return set(items)
 
         create_count = 0
-        manifest = get_manifest(self.name)
+        manifest = Manifest.for_addon(self.name)
 
         # ------------------------------------------------------------
         # Configurator
@@ -740,7 +740,7 @@ class IrModuleModule(models.Model):
     def _generate_primary_page_templates(self):
         """ Generates page templates based on manifest entries. """
         View = self.env['ir.ui.view']
-        manifest = get_manifest(self.name)
+        manifest = Manifest.for_addon(self.name)
         templates = manifest['new_page_templates']
 
         # TODO Find a way to create theme and other module's template patches
