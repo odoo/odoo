@@ -132,12 +132,14 @@ class AccountMove(models.Model):
     def _compute_show_reset_to_draft_button(self):
         """
             Override to hide the Reset to Draft button for ZATCA Invoices that have been successfully submitted
+            in Production mode.
         """
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            # An invoice should only have an index chain if it was successfully submitted without rejection,
-            # or if the submission timed out. In both cases, a user should not be able to reset it to draft.
-            if move.l10n_sa_chain_index:
+            # The "Reset to Draft" button should be hidden in the following cases:
+            # - Invoice has been successfully submitted in Production mode.
+            # - The invoice submission encountered a timed out, regardless of the API mode.
+            if move.l10n_sa_chain_index and (move.company_id.l10n_sa_edi_is_production or not move._l10n_sa_is_in_chain()):
                 move.show_reset_to_draft_button = False
 
     def _l10n_sa_reset_confirmation_datetime(self):
@@ -173,7 +175,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         self.journal_id.l10n_sa_latest_submission_hash = self.env['account.edi.xml.ubl_21.zatca']._l10n_sa_generate_invoice_xml_hash(
             xml_content)
-        bootstrap_cls, title, content = ("success", _("Invoice Successfully Submitted to ZATCA"),
+        bootstrap_cls, title, content = ("success", _("Success: Invoice accepted by ZATCA"),
                                          "" if (not error or not response_data) else response_data)
         attachment = False
         if error:
@@ -188,34 +190,34 @@ class AccountMove(models.Model):
                 'type': 'binary',
                 'mimetype': 'application/xml',
             })
-            bootstrap_cls, title = ("danger", _("Invoice was rejected by ZATCA"))
+            bootstrap_cls, title = ("danger", _("Error: Invoice rejected by ZATCA"))
             error_msg = response_data['error']
             content = Markup("""
-                <p class='mb-0'>
+                <p class='mb-0 mt-1'>
                     %s
                 </p>
                 <hr>
                 <p class='mb-0'>
                     %s
                 </p>
-            """) % (_('The invoice was rejected by ZATCA. Please, check the response below:'), error_msg)
+            """) % (_('Please check the details below and retry after addressing them:'), error_msg)
         if response_data and response_data.get('validationResults', {}).get('warningMessages'):
             status_code = response_data.get('status_code')
-            bootstrap_cls, title = ("warning", _("Invoice was Accepted by ZATCA (with Warnings)"))
+            bootstrap_cls, title = ("warning", _("Warning: Invoice accepted by ZATCA with warnings"))
             content = Markup("""
-                <p class='mb-0'>
+                <p class='mb-0 mt-1'>
                     %s
                 </p>
                 <hr>
                 <p class='mb-0'>
                     <b>%s</b>%s
                 </p>
-            """) % (_('The invoice was accepted by ZATCA, but returned warnings. Please, check the response below:'),
+            """) % (_('Please check the details below:'),
                     f"[{status_code}] " if status_code else "",
                     Markup("<br/>").join([Markup("<b>%s</b> : %s") % (m['code'], m['message']) for m in response_data['validationResults']['warningMessages']]))
         self.message_post(body=Markup("""
                 <div role='alert' class='alert alert-%s'>
-                    <h4 class='alert-heading'>%s</h4>%s
+                    <h4 class='alert-heading my-0'>%s</h4>%s
                 </div>
             """) % (bootstrap_cls, title, content),
             attachment_ids=attachment and [attachment.id] or []
