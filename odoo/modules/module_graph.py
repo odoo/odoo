@@ -11,10 +11,10 @@ import typing
 from odoo.tools import reset_cached_properties, OrderedSet
 from odoo.tools.sql import column_exists
 
-from .module import _get_manifest_cached
+from .module import Manifest
 
 if typing.TYPE_CHECKING:
-    from collections.abc import Collection, Iterable, Iterator
+    from collections.abc import Collection, Iterable, Iterator, Mapping
     from typing import Literal
     from odoo.sql_db import BaseCursor
 
@@ -143,7 +143,10 @@ class ModuleNode:
         self.name: str = name
         # for performance reasons, use the cached value to avoid deepcopy; it is
         # acceptable in this context since we don't modify it
-        self.manifest: dict = _get_manifest_cached(name)
+        manifest = Manifest.for_addon(name)
+        if manifest is not None:
+            manifest.manifest_cached  # parse the manifest now
+        self.manifest: Mapping = manifest or {}
 
         # ir_module_module data                     # column_name
         self.id: int = 0                            # id

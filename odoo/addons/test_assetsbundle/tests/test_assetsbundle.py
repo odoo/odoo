@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import Counter
-from lxml import etree
 import os
 import time
 from unittest import skip
@@ -12,12 +10,11 @@ import pathlib
 import lxml
 import base64
 
-import odoo
+import odoo.modules
 from odoo import api
 from odoo.addons.base.models.assetsbundle import AssetsBundle, XMLAssetError, ANY_UNIQUE
 from odoo.addons.base.models.ir_asset import AssetPaths
 from odoo.addons.base.models.ir_attachment import IrAttachment
-from odoo.modules.module import load_manifest
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
@@ -26,6 +23,7 @@ from odoo.tools.misc import file_path
 GETMTINE = os.path.getmtime
 
 # ruff: noqa: S320
+
 
 class TestAddonPaths(TransactionCase):
     def test_operations(self):
@@ -98,9 +96,11 @@ class TestAddonPaths(TransactionCase):
 
 
 class Manifests(dict):
+    def __init__(self, default):
+        self.defaults = default
+
     def __missing__(self, key):
-        self[key] = load_manifest(key)
-        return self[key]
+        return self.defaults(key)
 
 
 class AddonManifestPatched(TransactionCase):
@@ -108,10 +108,10 @@ class AddonManifestPatched(TransactionCase):
         super().setUp()
 
         self.installed_modules = {'base', 'test_assetsbundle'}
-        self.manifests = Manifests()
+        self.manifests = Manifests(odoo.modules.Manifest.for_addon)
 
         self.patch(self.env.registry, '_init_modules', self.installed_modules)
-        self.patch(odoo.modules.module, '_get_manifest_cached', lambda module: self.manifests[module])
+        self.patch(odoo.modules.Manifest, 'for_addon', lambda module, **kw: self.manifests[module])
 
 
 class FileTouchable(AddonManifestPatched):
