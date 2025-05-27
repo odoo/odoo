@@ -35,7 +35,7 @@ class TestSaEdiCommon(AccountEdiTestCommon):
         cls.company.street = 'Al Amir Mohammed Bin Abdul Aziz Street'
         cls.company.city = 'المدينة المنورة'
         cls.company.zip = '42317'
-        cls.customer_invoice_journal.l10n_sa_serial_number = '123456789'
+        cls.customer_invoice_journal.l10n_sa_edi_serial_number = '123456789'
         cls.partner_us = cls.env['res.partner'].create({
             'name': 'Chichi Lboukla',
             'ref': 'Azure Interior',

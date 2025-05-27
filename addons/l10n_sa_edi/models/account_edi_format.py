@@ -432,7 +432,7 @@ class AccountEdiFormat(models.Model):
         if not company.sudo().l10n_sa_private_key:
             errors.append(
                 _("- No Private Key was generated for company %s. A Private Key is mandatory in order to generate Certificate Signing Requests (CSR).") % company.name)
-        if not journal.l10n_sa_serial_number:
+        if not journal.l10n_sa_edi_serial_number:
             errors.append(
                 _("- No Serial Number was assigned for journal %s. A Serial Number is mandatory in order to generate Certificate Signing Requests (CSR).") % journal.name)
 

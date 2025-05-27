@@ -15,7 +15,7 @@
                     <page name="zatca_einvoicing" string="ZATCA" attrs="{'invisible': ['|', ('country_code', '!=', 'SA'), ('type', '!=', 'sale')]}">
                         <group>
                             <group>
-                                <field name="l10n_sa_serial_number"/>
+                                <field name="l10n_sa_edi_serial_number" readonly="1" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <p groups="base.group_system">
@@ -26,7 +26,7 @@
                                 <li>
                                     Set a Serial Number for your device
                                     <i class="fa fa-check text-success ms-1"
-                                       attrs="{'invisible': [('l10n_sa_serial_number', '=', False)]}"/>
+                                       attrs="{'invisible': [('l10n_sa_edi_serial_number', '=', False)]}"/>
                                 </li>
                                 <li>
                                     Request a Compliance Certificate (CCSID)

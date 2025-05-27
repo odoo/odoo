@@ -85,8 +85,8 @@ class AccountJournal(models.Model):
     l10n_sa_chain_sequence_id = fields.Many2one('ir.sequence', string='ZATCA account.move chain sequence',
                                                 readonly=True, copy=False)
 
-    l10n_sa_serial_number = fields.Char("Serial Number", copy=False,
-                                        help="The serial number of the Taxpayer solution unit. Provided by ZATCA")
+    l10n_sa_edi_serial_number = fields.Char("Serial Number", copy=False,
+                                        help="Unique Serial Number automatically filled when the journal is onboarded")
 
     l10n_sa_latest_submission_hash = fields.Char("Latest Submission Hash", copy=False,
                                                  help="Hash of the latest submitted invoice to be used as the Previous Invoice Hash (KSA-13)")
@@ -117,6 +117,13 @@ class AccountJournal(models.Model):
         stuck_moves = [move for move in move_ids if not move._l10n_sa_is_in_chain()]
         if stuck_moves:
             raise UserError(_("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
+
+    def _l10n_sa_edi_set_csr_fields(self):
+        '''
+            Sets default values for CSR generation fields in Odoo, if their values do not exist
+        '''
+        self.ensure_one()
+        self.l10n_sa_edi_serial_number = next(self._BaseModel__ensure_xml_id())[1]
     # ====== CSR Generation =======
 
     def _l10n_sa_csr_required_fields(self):
@@ -140,8 +147,8 @@ class AccountJournal(models.Model):
             (NameOID.ORGANIZATIONAL_UNIT_NAME, (company_id.vat or '')[:10]),
             # Organization Name
             (NameOID.ORGANIZATION_NAME, company_id.name),
-            # Subject Common Name
-            (NameOID.COMMON_NAME, company_id.name),
+            # Subject Common Name (Short Code - Journal Name - Company Name)
+            (NameOID.COMMON_NAME, "%s-%s-%s" % (self.code, self.name, company_id.name)),
             # Organization Identifier
             (ObjectIdentifier('2.5.4.97'), company_id.vat),
             # State/Province Name
@@ -160,7 +167,7 @@ class AccountJournal(models.Model):
                 # EGS Serial Number. Manufacturer or Solution Provider Name, Model or Version and Serial Number.
                 # To be written in the following format: "1-... |2-... |3-..."
                 x509.NameAttribute(ObjectIdentifier('2.5.4.4'), '1-Odoo|2-%s|3-%s' % (
-                    version_info['server_version_info'][0], self.l10n_sa_serial_number)),
+                    version_info['server_version_info'][0], self.l10n_sa_edi_serial_number)),
                 # Organisation Identifier (UID)
                 x509.NameAttribute(NameOID.USER_ID, company_id.vat),
                 # Invoice Type. 4-digit numerical input using 0 & 1
@@ -236,6 +243,7 @@ class AccountJournal(models.Model):
         # we want to perform sanity checks to ensure that the journal is ready to be onboarded
         # If the check fails, we do not want to revoke the existing PCSID because the user might still need it to post hanging invoices
         self._l10n_sa_api_onboard_sanity_checks()
+        self._l10n_sa_edi_set_csr_fields()
 
         try:
             # If the company does not have a private key, we generate it.
@@ -664,7 +672,7 @@ class AccountJournal(models.Model):
         self.ensure_one()
         self.company_id.l10n_sa_private_key = self.company_id._l10n_sa_generate_private_key()
         self.write({
-            'l10n_sa_serial_number': 'SIDI3-CBMPR-L2D8X-KM0KN-X4ISJ',
+            'l10n_sa_edi_serial_number': 'SIDI3-CBMPR-L2D8X-KM0KN-X4ISJ',
             'l10n_sa_compliance_checks_passed': True,
             'l10n_sa_csr': b'LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQ2NqQ0NBaGNDQVFBd2djRXhDekFKQmdOVkJBWVRBbE5CTVJNd0VRWURWUVFMREFvek1UQXhOelV6T1RjMApNUk13RVFZRFZRUUtEQXBUUVNCRGIyMXdZVzU1TVJNd0VRWURWUVFEREFwVFFTQkRiMjF3WVc1NU1SZ3dGZ1lEClZRUmhEQTh6TVRBeE56VXpPVGMwTURBd01ETXhEekFOQmdOVkJBZ01CbEpwZVdGa2FERklNRVlHQTFVRUJ3dy8KdzVqQ3A4T1o0b0NldzVuaWdLYkRtTUt2dzVuRm9NT1o0b0NndzVqQ3FTRERtTUtudzVuaWdKN0RtZUtBcHNPWgo0b0NndzVuTGhzT1l3ckhEbU1LcE1GWXdFQVlIS29aSXpqMENBUVlGSzRFRUFBb0RRZ0FFN2ZpZWZWQ21HcTlzCmV0OVl4aWdQNzZWUmJxZlh0VWNtTk1VN3FkTlBiSm5NNGh5R1QwanpPcXUrSWNXWW5IelFJYmxJVmsydENPQnQKYjExanY4MGVwcUNCOVRDQjhnWUpLb1pJaHZjTkFRa09NWUhrTUlIaE1DUUdDU3NHQVFRQmdqY1VBZ1FYRXhWUQpVa1ZhUVZSRFFTMURiMlJsTFZOcFoyNXBibWN3Z2JnR0ExVWRFUVNCc0RDQnJhU0JxakNCcHpFME1ESUdBMVVFCkJBd3JNUzFQWkc5dmZESXRNVFY4TXkxVFNVUkpNeTFEUWsxUVVpMU1Na1E0V0MxTFRUQkxUaTFZTkVsVFNqRWYKTUIwR0NnbVNKb21UOGl4a0FRRU1Eek14TURFM05UTTVOelF3TURBd016RU5NQXNHQTFVRURBd0VNVEV3TURFdgpNQzBHQTFVRUdnd21RV3dnUVcxcGNpQk5iMmhoYlcxbFpDQkNhVzRnUVdKa2RXd2dRWHBwZWlCVGRISmxaWFF4CkRqQU1CZ05WQkE4TUJVOTBhR1Z5TUFvR0NDcUdTTTQ5QkFNQ0Ewa0FNRVlDSVFEb3VCeXhZRDRuQ2pUQ2V6TkYKczV6SmlVWW1QZVBRNnFWNDdZemRHeWRla1FJaEFPRjNVTWF4UFZuc29zOTRFMlNkT2JJcTVYYVAvKzlFYWs5TgozMUtWRUkvTQotLS0tLUVORCBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0K',
             'l10n_sa_compliance_csid_json': """{"requestID": 1234567890123, "dispositionMessage": "ISSUED", "binarySecurityToken": "TUlJQ2N6Q0NBaG1nQXdJQkFnSUdBWStWTmxza01Bb0dDQ3FHU000OUJBTUNNQlV4RXpBUkJnTlZCQU1NQ21WSmJuWnZhV05wYm1jd0hoY05NalF3TlRJd01EZzFOVEV6V2hjTk1qa3dOVEU1TWpFd01EQXdXakNCbnpFTE1Ba0dBMVVFQmhNQ1UwRXhFekFSQmdOVkJBc01Dak01T1RrNU9UazVPVGt4RXpBUkJnTlZCQW9NQ2xOQklFTnZiWEJoYm5reEV6QVJCZ05WQkFNTUNsTkJJRU52YlhCaGJua3hHREFXQmdOVkJHRU1Eek01T1RrNU9UazVPVGt3TURBd016RVBNQTBHQTFVRUNBd0dVbWw1WVdSb01TWXdKQVlEVlFRSERCM1lwOW1FMllYWXI5bUsyWWJZcVNEWXA5bUUyWVhaaHRtSTJMSFlxVEJXTUJBR0J5cUdTTTQ5QWdFR0JTdUJCQUFLQTBJQUJOVlB3N0hGNjhUVWtQTkJQb29uT0Y2NnRPMm5IcmxUNlRMcmk3MEpLY1MvYmVMWitoRVE0MmdXdUtYckp5RmxnWm9kUVJzTFQyMEtQZnE0Q3N2YlFJMmpnY3d3Z2Nrd0RBWURWUjBUQVFIL0JBSXdBRENCdUFZRFZSMFJCSUd3TUlHdHBJR3FNSUduTVRRd01nWURWUVFFRENzeExVOWtiMjk4TWkweE5Yd3pMVk5KUkVrekxVTkNUVkJTTFV3eVJEaFlMVXROTUV0T0xWZzBTVk5LTVI4d0hRWUtDWkltaVpQeUxHUUJBUXdQTXprNU9UazVPVGs1T1RBd01EQXpNUTB3Q3dZRFZRUU1EQVF4TVRBd01TOHdMUVlEVlFRYURDWkJiQ0JCYldseUlFMXZhR0Z0YldWa0lFSnBiaUJCWW1SMWJDQkJlbWw2SUZOMGNtVmxkREVPTUF3R0ExVUVEd3dGVDNSb1pYSXdDZ1lJS29aSXpqMEVBd0lEU0FBd1JRSWdTeVhlZExqOUtMVTRUMWFBbVQvL09GZDBGWWxLQnIraFFIeGNDM0c2ajc4Q0lRRGdlNjNsQkVqTU1ETktqTm1pTklaQlBWSnlHRzl5bVJaSHdvUzV5TEQyZXc9PQ==", "secret": "uMpSz85cV0h/e/uqpJ+FaZkdYZ76uoaRYOevGufcup0=", "errors": null}""",
