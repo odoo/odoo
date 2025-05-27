@@ -16,5 +16,9 @@ LQ Modules to easy work on anothers
     # any module necessary for this one to work correctly
     'depends': ['base'],
 
+    'data':[
+        
+    ]
+
 }
 
