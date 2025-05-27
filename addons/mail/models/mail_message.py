@@ -1109,15 +1109,16 @@ class MailMessage(models.Model):
     def _author_to_store(self, store: Store):
         for message in self:
             data = {
-                "author": False,
+                "author_id": False,
+                "author_guest_id": False,
                 "email_from": message.email_from,
             }
             # sudo: mail.message: access to author is allowed
             if guest_author := message.sudo().author_guest_id:
-                data["author"] = Store.One(guest_author, ["avatar_128", "name"])
+                data["author_guest_id"] = Store.One(guest_author, ["avatar_128", "name"])
             # sudo: mail.message: access to author is allowed
             elif author := message.sudo().author_id:
-                data["author"] = Store.One(author, ["avatar_128", "name", "is_company", "user"])
+                data["author_id"] = Store.One(author, ["avatar_128", "name", "is_company", "user"])
             store.add(message, data)
 
     def _extras_to_store(self, store: Store, format_reply):
@@ -1133,7 +1134,8 @@ class MailMessage(models.Model):
         store.add(
             self,
             [
-                Store.One("author_id", [], rename="author"),
+                Store.One("author_id", []),
+                Store.One("author_guest_id", []),
                 "body",
                 "date",
                 "message_type",

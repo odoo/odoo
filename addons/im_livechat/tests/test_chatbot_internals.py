@@ -178,7 +178,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             transfer_message_data = Store(messages[1]).get_result()
             transfer_message_data["mail.message"][0].update(
                 {
-                    "author": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
+                    "author_id": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
                     "body": ["markup", "<p>I will transfer you to a human.</p>"],
                     # thread not renamed yet at this step
                     "default_subject": "Testing Bot",
@@ -189,7 +189,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             joined_message_data = Store(messages[0]).get_result()
             joined_message_data["mail.message"][0].update(
                 {
-                    "author": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
+                    "author_id": {"id": self.chatbot_script.operator_partner_id.id, "type": "partner"},
                     "body": [
                         "markup",
                         (

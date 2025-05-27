@@ -1481,10 +1481,11 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             "mail.message": self._filter_messages_fields(
                                 {
                                     "attachment_ids": [],
-                                    "author": {
+                                    "author_id": {
                                         "id": self.env.user.partner_id.id,
                                         "type": "partner",
                                     },
+                                    "author_guest_id": False,
                                     "body": [
                                         "markup",
                                         "<p>Test Post Performances with multiple inbox ping!</p>",
@@ -1593,10 +1594,11 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             "mail.message": self._filter_messages_fields(
                                 {
                                     "attachment_ids": [],
-                                    "author": {
+                                    "author_id": {
                                         "id": self.env.user.partner_id.id,
                                         "type": "partner",
                                     },
+                                    "author_guest_id": False,
                                     "body": [
                                         "markup",
                                         "<p>Test Post Performances with multiple inbox ping!</p>",

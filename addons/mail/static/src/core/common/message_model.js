@@ -32,7 +32,11 @@ export class Message extends Record {
     }
 
     attachment_ids = fields.Many("ir.attachment", { inverse: "message" });
-    author = fields.One("Persona");
+    author_id = fields.One("Persona");
+    author_guest_id = fields.One("Persona");
+    get author() {
+        return this.author_id || this.author_guest_id;
+    }
     body = fields.Html("");
     call_history_ids = fields.Many("discuss.call.history");
     richBody = fields.Html("", {
