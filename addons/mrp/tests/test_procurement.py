@@ -1040,3 +1040,35 @@ class TestProcurement(TestMrpCommon):
 
         # Check the generated MO
         self.assertEqual(mo.product_qty, 45)
+
+    def test_mo_split_with_batch_size_mto(self):
+        """ Check the MO is split with the correct product_qty when we apply a batch size in BoM
+            and run the procurement using a MTO, MTSO, or replenishment."""
+        self.route_mto.write({'active': True})
+        self.product_4.route_ids = [
+            Command.link(self.route_mto.id),
+            Command.link(self.route_manufacture.id),
+        ]
+        self.bom_1.write({
+            'enable_batch_size': True,
+            'batch_size': 200.0,
+        })
+        procurement_group = self.env['procurement.group'].create({'name': 'batch_size'})
+        self.env['procurement.group'].run([
+            procurement_group.Procurement(
+                self.product_4,
+                300,
+                self.uom_unit,
+                self.customer_location,
+                procurement_group.name,
+                procurement_group.name,
+                self.warehouse_1.company_id,
+                {
+                    'warehouse_id': self.warehouse_1,
+                    'group_id': procurement_group,
+                },
+            ),
+        ])
+        manufacturing_orders = self.env['mrp.production'].search([('product_id', '=', self.product_4.id)])
+        self.assertEqual(len(manufacturing_orders), 2, 'Expected 2 manufacturing orders to be created.')
+        self.assertEqual(manufacturing_orders.mapped('product_qty'), [200.0, 200.0], 'Each manufacturing order should have a quantity of 200.0, as defined by the BoM batch size.')
