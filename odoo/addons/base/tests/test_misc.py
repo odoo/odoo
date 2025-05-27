@@ -233,9 +233,9 @@ class TestRemoveAccents(BaseCase):
 
 class TestAddonsFileAccess(BaseCase):
 
-    def assertCannotAccess(self, path, ExceptionType=OSError, filter_ext=None):
+    def assertCannotAccess(self, path, ExceptionType=OSError, filter_ext=None, check_exists=True):
         with self.assertRaises(ExceptionType):
-            file_path(path, filter_ext=filter_ext)
+            file_path(path, filter_ext=filter_ext, check_exists=check_exists)
 
     def assertCanRead(self, path, needle='', mode='r', filter_ext=None):
         with file_open(path, mode, filter_ext) as f:
@@ -243,7 +243,7 @@ class TestAddonsFileAccess(BaseCase):
 
     def assertCannotRead(self, path, ExceptionType=OSError, filter_ext=None):
         with self.assertRaises(ExceptionType):
-            file_open(path, filter_ext=filter_ext)
+            file_open(path, filter_ext=filter_ext).close()
 
     def test_file_path(self):
         # absolute path
@@ -266,6 +266,10 @@ class TestAddonsFileAccess(BaseCase):
 
         # files in root_path are allowed
         self.assertTrue(file_path('tools/misc.py'))
+
+        # absolute or relative inexisting files are ok
+        self.assertTrue(file_path(config.root_path + '/__inexisting', check_exists=False))
+        self.assertTrue(file_path('base/__inexisting_file', check_exists=False))
 
         # errors when outside addons_paths
         self.assertCannotAccess('/doesnt/exist')
@@ -309,6 +313,10 @@ class TestAddonsFileAccess(BaseCase):
 
         # files in root_path are allowed
         self.assertCanRead('tools/misc.py')
+
+        # absolute or relative inexisting files are ok
+        self.assertCannotRead(config.root_path + '/__inexisting')
+        self.assertCannotRead('base/__inexisting_file')
 
         # errors when outside addons_paths
         self.assertCannotRead('/doesnt/exist')
