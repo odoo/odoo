@@ -282,7 +282,7 @@ class TestPortalFlow(MailCommon, HttpCase):
     def test_portal_access_logged(self):
         """ Check portal behavior when accessing mail/view, notably check token
         support and propagation. """
-        my_discuss_url = f'{self.test_base_url}/my?{url_encode({"subpath": "action-mail.action_discuss"})}'
+        my_url = f'{self.test_base_url}/my'
 
         self.authenticate(self.env.user.login, self.env.user.login)
         for url_name, url, exp_url in [
@@ -294,7 +294,7 @@ class TestPortalFlow(MailCommon, HttpCase):
             # invalid token -> ko -> redirect to my with discuss action (???)
             (
                 "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
-                my_discuss_url,
+                my_url,
             ),
             # std url, no access to record -> redirect to my with subpath being record base portal utl (???)
             (
@@ -304,20 +304,20 @@ class TestPortalFlow(MailCommon, HttpCase):
             # missing tokan -> redirect to my with discuss action (???)
             (
                 'No access record (portal enabled)', self.record_portal_url_base,
-                my_discuss_url,
+                my_url,
             ),
             # not existing -> redirect to my with discuss action (???)
             (
                 'Not existing record (internal)', self.record_internal_url_no_exists,
-                my_discuss_url,
+                my_url,
             ),
             (
                 'Not existing record (portal enabled)', self.record_portal_url_no_exists,
-                my_discuss_url,
+                my_url,
             ),
             (
                 'Not existing model', self.record_url_no_model,
-                my_discuss_url,
+                my_url,
             ),
         ]:
             with self.subTest(name=url_name, url=url):
