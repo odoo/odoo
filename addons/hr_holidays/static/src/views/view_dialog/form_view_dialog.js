@@ -71,9 +71,19 @@ export class TimeOffDialogFormController extends FormController {
     }
 
     async onClick(action) {
-        const args = [this.record.resId];
-        await this.orm.call("hr.leave", action, args);
-        this.save(this.record._changes);
+        await this.save(this.record._changes);
+        await this.action.doActionButton({
+            resModel: 'hr.leave',
+            name: action,
+            context: this.context,
+            type: 'object',
+            resId: this.record.resId,
+        });
+
+        this.action.doAction({
+            'type': 'ir.actions.client',
+            'tag': 'soft_reload',
+        });
     }
 
     deleteRecord() {
