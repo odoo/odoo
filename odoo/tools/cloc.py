@@ -161,8 +161,10 @@ class Cloc(object):
 
     def count_modules(self, env):
         # Exclude standard addons paths
-        exclude_heuristic = [odoo.modules.get_module_path(m, display_warning=False) for m in STANDARD_MODULES]
-        exclude_path = set([os.path.dirname(os.path.realpath(m)) for m in exclude_heuristic if m])
+        exclude_path = {
+            m.addons_path for name in STANDARD_MODULES
+            if (m := odoo.modules.Manifest.for_addon(name, display_warning=False))
+        }
 
         domain = [('state', '=', 'installed')]
         # if base_import_module is present
@@ -171,11 +173,9 @@ class Cloc(object):
         module_list = env['ir.module.module'].search(domain).mapped('name')
 
         for module_name in module_list:
-            module_path = os.path.realpath(odoo.modules.get_module_path(module_name))
-            if module_path:
-                if any(module_path.startswith(i) for i in exclude_path):
-                    continue
-                self.count_path(module_path)
+            manifest = odoo.modules.Manifest.for_addon(module_name)
+            if manifest and manifest.addons_path not in exclude_path:
+                self.count_path(manifest.path)
 
     def count_customization(self, env):
         imported_module_sa = ""
