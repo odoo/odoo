@@ -13,10 +13,10 @@ setupInteractionWhiteList("website.search_bar");
 
 describe.current.tags("interaction_dev");
 
-const searchTemplate = `
+const searchTemplate = /* html */ `
     <form method="get" class="o_searchbar_form s_searchbar_input" action="/website/search" data-snippet="s_searchbar_input">
         <div role="search" class="input-group input-group-lg">
-            <input type="search" name="search" class="search-query form-control oe_search_box" placeholder="Search..."
+            <input type="search" name="search" class="search-query form-control oe_search_box o_translatable_attribute" placeholder="Search..."
                     data-search-type="test"
                     data-limit="3"
                     data-display-image="false"
