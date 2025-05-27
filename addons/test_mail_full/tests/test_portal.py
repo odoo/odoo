@@ -365,11 +365,6 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
             'id': self.record_internal.id,
             'active_id': self.record_internal.id,
         }
-        odoo_portal_params = {
-            'model': self.record_portal._name,
-            'id': self.record_portal.id,
-            'active_id': self.record_portal.id,
-        }
         odoo_read_params = {
             'model': self.record_read._name,
             'id': self.record_read.id,
@@ -382,19 +377,20 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
                 "No access (portal enabled), token", self.record_portal_url_auth,
                 self.portal_web_url_with_token,
             ),
-            # invalid token -> ko -> redirect to login with a redirect with just some mail/view params kept (???)
+            # invalid token -> ko -> redirect to login with redirect to original link, will be rejected after login
             (
                 "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
-                f'{login_url}?redirect=#{url_encode(odoo_portal_params)}',
+                f'{login_url}?{url_encode({"redirect": self.record_portal_url_auth_wrong_token.replace(self.test_base_url, "")})}',
             ),
             # std url, no access to record -> redirect to login, with just some mail/view params kept (???)
             (
                 'No access record (internal)', self.record_internal_url_base,
                 f'{login_url}#{url_encode(odoo_internal_params, sort=True)}',
             ),
+            # std url, no access to record but portal -> redirect to login, original (local) URL kept as redirection post login to try again (even if faulty)
             (
                 'No access record (portal enabled)', self.record_portal_url_base,
-                f'{login_url}?redirect=#{url_encode(odoo_portal_params)}',
+                f'{login_url}?{url_encode({"redirect": self.record_portal_url_base.replace(self.test_base_url, "")})}',
             ),
             (
                 'No access record (portal can read, no customer portal)', self.record_read_url_base,

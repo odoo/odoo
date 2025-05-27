@@ -121,22 +121,11 @@ class MailController(http.Controller):
                 record_action = record_sudo._get_access_action(access_uid=uid)
         else:
             record_action = record_sudo._get_access_action()
-            if suggested_company:
-                cids = [suggested_company.id]
+            # we have an act_url (probably a portal link): we need to retry being logged to check access
             if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
-                url_params = {
-                    'model': model,
-                    'id': res_id,
-                    'active_id': res_id,
-                    'action': record_action.get('id'),
-                }
-                if cids:
-                    url_params['cids'] = cids[0]
-                view_id = record_sudo.get_formview_id()
-                if view_id:
-                    url_params['view_id'] = view_id
-                url = '/web/login?redirect=#%s' % url_encode(url_params)
-                return request.redirect(url)
+                return cls._redirect_to_login_with_mail_view(
+                    model, res_id, access_token=access_token, **kwargs,
+                )
 
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
