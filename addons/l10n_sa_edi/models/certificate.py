@@ -42,7 +42,7 @@ class CertificateCertificate(models.Model):
             # Organization Name
             (NameOID.ORGANIZATION_NAME, company_id.name),
             # Subject Common Name
-            (NameOID.COMMON_NAME, company_id.name),
+            (NameOID.COMMON_NAME, "%s-%s-%s" % (journal.code, journal.name, company_id.name)),
             # Organization Identifier
             (ObjectIdentifier('2.5.4.97'), company_id.vat),
             # State/Province Name
@@ -61,7 +61,7 @@ class CertificateCertificate(models.Model):
                 # EGS Serial Number. Manufacturer or Solution Provider Name, Model or Version and Serial Number.
                 # To be written in the following format: "1-... |2-... |3-..."
                 x509.NameAttribute(ObjectIdentifier('2.5.4.4'), '1-Odoo|2-%s|3-%s' % (
-                    version_info['server_version_info'][0], journal.l10n_sa_serial_number)),
+                    version_info['server_version_info'][0], journal.id)),
                 # Organisation Identifier (UID)
                 x509.NameAttribute(NameOID.USER_ID, company_id.vat),
                 # Invoice Type. 4-digit numerical input using 0 & 1
