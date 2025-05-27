@@ -801,11 +801,11 @@ test("support of connector '!' (mode readonly)", async () => {
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "!=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nany\nof:\nFoo\nnot =\ndef\nFoo\n=\nghi`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nany\nof:\nFoo\nnot =\ndef\nFoo\nnot not =\nghi`,
         },
         {
             domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "!=", "def"), "!", ("foo", "=", "ghi")]`,
-            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nany\nof:\nFoo\n=\ndef\nFoo\n=\nghi`,
+            result: `Match\nall\nof the following rules:\nFoo\nnot =\nabc\nany\nof:\nFoo\nnot not =\ndef\nFoo\n=\nghi`,
         },
     ];
 
@@ -2878,7 +2878,7 @@ test("datetime options (readonly)", async () => {
                 ("datetime.minute_number", "!=", 40),
                 ("datetime.second_number", "!=", 30),
             ]`,
-            text: `Datetime ➔ Time = 15:40:30`,
+            text: `Datetime ➔ Time ➔ Hour not not = 15`, // first line here
         },
         {
             domain: `[
