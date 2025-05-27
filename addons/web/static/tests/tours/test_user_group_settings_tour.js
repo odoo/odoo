@@ -104,7 +104,7 @@ registry.category("web_tour.tours").add("test_user_group_settings", {
             trigger: ".o_list_renderer:contains(marc demo):contains(mitchell admin)",
         },
         {
-            trigger: '.o_data_row:first-child .o_field_cell[name="name"]',
+            trigger: '.o_data_row:contains(Marc Demo) .o_field_cell[name="name"]',
             content: "open users menu",
             run: "click",
         },
