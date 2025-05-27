@@ -92,7 +92,9 @@ class MailController(http.Controller):
         # the record has a window redirection: check access rights
         if uid is not None:
             if not RecordModel.with_user(uid).has_access('read'):
-                return cls._redirect_to_messaging()
+                return cls._redirect_to_generic_fallback(
+                    model, res_id, access_token=access_token, **kwargs,
+                )
             try:
                 # We need here to extend the "allowed_company_ids" to allow a redirection
                 # to any record that the user can access, regardless of currently visible
@@ -117,7 +119,9 @@ class MailController(http.Controller):
                     record_sudo.with_user(uid).with_context(allowed_company_ids=cids).check_access('read')
                     request.future_response.set_cookie('cids', '-'.join([str(cid) for cid in cids]))
             except AccessError:
-                return cls._redirect_to_messaging()
+                return cls._redirect_to_generic_fallback(
+                    model, res_id, access_token=access_token, **kwargs,
+                )
             else:
                 record_action = record_sudo._get_access_action(access_uid=uid)
         else:
