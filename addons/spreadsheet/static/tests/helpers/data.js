@@ -88,7 +88,7 @@ export function getBasicServerData() {
  *
  * @returns { {definition: Object, columns: Array<Object>}}
  */
-export function generateListDefinition(model, columns) {
+export function generateListDefinition(model, columns, actionXmlId) {
     const cols = [];
     for (const name of columns) {
         const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
@@ -109,6 +109,7 @@ export function generateListDefinition(model, columns) {
                 orderBy: [],
             },
             name: "List",
+            actionXmlId,
         },
         columns: cols,
     };
@@ -195,6 +196,16 @@ export class IrModel extends webModels.IrModel {
             id: 55,
             name: "Users",
             model: "res.users",
+        },
+        {
+            id: 56,
+            name: "Currency",
+            model: "res.currency",
+        },
+        {
+            id: 57,
+            name: "Tag",
+            model: "tag",
         },
     ];
 }
