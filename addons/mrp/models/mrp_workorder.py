@@ -8,6 +8,7 @@ import json
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons.resource.models.utils import Intervals, sum_intervals
 from odoo.tools import float_compare, float_round, format_datetime
 
 
@@ -554,9 +555,10 @@ class MrpWorkorder(models.Model):
 
     def _cal_cost(self):
         total = 0
-        for wo in self:
-            duration = sum(wo.time_ids.mapped('duration'))
-            total += (duration / 60.0) * wo.workcenter_id.costs_hour
+        for workorder in self:
+            intervals = Intervals([[t.date_start, t.date_end, t] for t in workorder.time_ids])
+            duration = sum_intervals(intervals)
+            total += duration * workorder.workcenter_id.costs_hour
         return total
 
     @api.model

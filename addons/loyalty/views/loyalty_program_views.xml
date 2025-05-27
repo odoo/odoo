@@ -105,7 +105,10 @@
                             <label for="limit_usage" invisible="program_type in ('gift_card', 'ewallet')"/>
                             <span invisible="program_type in ('gift_card', 'ewallet')">
                                 <field name="limit_usage" class="oe_inline"/>
-                                <span invisible="not limit_usage"> to <field name="max_usage" class="oe_inline"/> usages</span>
+                                <span invisible="not limit_usage">
+                                    to <field name="max_usage" class="oe_inline"/> usages
+                                    <span class="text-muted">(<field name="total_order_count" class="oe_inline" readonly="1"/> used)</span>
+                                </span>
                             </span>
                             <field name="company_id" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>

@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: l10n_it
 #: model:ir.model,name:l10n_it.model_account_chart_template
@@ -49,12 +49,20 @@ msgid ""
 "and professional taxable transactions"
 msgstr ""
 "Operazioni imponibili agricole (art.34 comma 1) e operazioni imponibili "
-"commerciali e professional"
+"commerciali e professionali"
+
+#. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"All our contractual relations will be governed exclusively by Italy law."
+msgstr ""
+"Tutti i nostri rapporti contrattuali saranno regolati esclusivamente dalla "
+"legge italiana."
 
 #. module: l10n_it
 #: model:account.report,name:l10n_it.tax_annual_report_vat
 msgid "Annual Tax Report"
-msgstr "Rapporto fiscale annuale"
+msgstr "Resoconto fiscale annuale"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_comp_fram
@@ -64,7 +72,9 @@ msgstr "Imposta annuale per i piani compilati"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF34_VIII
 msgid "Article operations 7 to 7-septies without right to deduction"
-msgstr "Articolo operazioni da 7 a 7-septies senza diritto a detrazione"
+msgstr ""
+"Operazioni di cui agli articoli da 7 a 7-septies senza diritto alla "
+"detrazione"
 
 #. module: l10n_it
 #: model:account.report.column,name:l10n_it.tax_annual_report_vat_balance_va
@@ -85,9 +95,42 @@ msgid "Balances, carryovers and interest"
 msgstr "Saldi, riporti e interessi"
 
 #. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+"Il testo seguente è fornito a titolo di suggerimento e non comporta alcuna "
+"responsabilità da parte di Odoo S.A."
+
+#. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_dag
 msgid "Business Information"
 msgstr "Informazioni commerciali"
+
+#. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"Certain countries apply withholding at source on the amount of invoices, in "
+"accordance with their internal legislation. Any withholding at source will "
+"be paid by the client to the tax authorities. Under no circumstances can IT "
+"Company become involved in costs related to a country's legislation. The "
+"amount of the invoice will therefore be due to IT Company in its entirety "
+"and does not include any costs relating to the legislation of the country in"
+" which the client is located."
+msgstr ""
+"Alcuni Paesi applicano una ritenuta alla fonte sull'importo delle fatture, "
+"in conformità alla loro legislazione interna. Qualsiasi ritenuta alla fonte "
+"sarà versata dal cliente alle autorità fiscali. In nessun caso IT Company "
+"può essere coinvolta in costi legati alla legislazione di un Paese. "
+"L'importo della fattura sarà pertanto dovuto alla IT Company nella sua "
+"interezza e non include alcun costo relativo alla legislazione del Paese in "
+"cui si trova il cliente."
+
+#. module: l10n_it
+#: model:account.report.line,name:l10n_it.tax_annual_report_line_vari_communi_perd
+msgid "Changes in reporting periodicals"
+msgstr "Variazioni dei periodici di comunicazione"
 
 #. module: l10n_it
 #: model:account.account.tag,name:l10n_it.account_tag_IMPEGNI
@@ -213,6 +256,35 @@ msgid "Goods intended for resale or for the production of goods and services"
 msgstr "Beni destinati alla rivendita o alla produzione di beni e servizi"
 
 #. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"IT Company undertakes to do its best to supply performant services in due "
+"time in accordance with the agreed timeframes. However, none of its "
+"obligations can be considered as being an obligation to achieve results. IT "
+"Company cannot under any circumstances, be required by the client to appear "
+"as a third party in the context of any claim for damages filed against the "
+"client by an end consumer."
+msgstr ""
+"IT Company si impegna a fare del suo meglio per fornire servizi performanti "
+"in tempo utile, secondo le tempistiche concordate. Tuttavia, nessuno dei "
+"suoi obblighi può essere considerato come un obbligo di risultato. IT "
+"Company non può in alcun caso essere chiamata dal cliente a comparire come "
+"terza parte nel contesto di qualsiasi richiesta di risarcimento danni "
+"presentata contro il cliente da un consumatore finale."
+
+#. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"If a payment is still outstanding more than sixty (60) days after the due "
+"payment date, IT Company reserves the right to call on the services of a "
+"debt recovery company. All legal expenses will be payable by the client."
+msgstr ""
+"Se un pagamento è ancora in sospeso dopo più di sessanta (60) giorni dopo la"
+" data di scadenza del pagamento, IT Company si riserva il diritto di "
+"ricorrere ai servizi di una società di recupero crediti. Tutte le spese "
+"legali sono a carico del cliente."
+
+#. module: l10n_it
 #. odoo-python
 #: code:addons/l10n_it/models/account_tax.py:0
 #, python-format
@@ -224,6 +296,17 @@ msgstr ""
 "relativo riferimento legislativo"
 
 #. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"In order for it to be admissible, IT Company must be notified of any claim "
+"by means of a letter sent by recorded delivery to its registered office "
+"within 8 days of the delivery of the goods or the provision of the services."
+msgstr ""
+"Affinché sia ammissibile, IT Company deve essere informata di qualsiasi "
+"reclamo mediante lettera raccomandata inviata alla sua sede legale entro 8 "
+"giorni dalla consegna dei beni o dalla prestazione dei servizi."
+
+#. module: l10n_it
 #: model:ir.model.fields,field_description:l10n_it.field_account_tax__l10n_it_law_reference
 msgid "Law Reference"
 msgstr "Riferimento legislativo"
@@ -231,12 +314,12 @@ msgstr "Riferimento legislativo"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_va5_section_2
 msgid "Management services"
-msgstr ""
+msgstr "Servizi di gestione"
 
 #. module: l10n_it
 #: model:account.report,name:l10n_it.tax_monthly_report_vat
 msgid "Monthly VAT Report"
-msgstr "Periodic Rapporto IVA"
+msgstr "Liquidazione periodica IVA"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF29_II
@@ -268,6 +351,23 @@ msgstr "Altre operazioni"
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF29_IV
 msgid "Other purchases and imports"
 msgstr "Altri acquisti e importazioni"
+
+#. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"Our invoices are payable within 21 working days, unless another payment "
+"timeframe is indicated on either the invoice or the order. In the event of "
+"non-payment by the due date, IT Company reserves the right to request a "
+"fixed interest payment amounting to 10% of the sum remaining due. IT Company"
+" will be authorized to suspend any provision of services without prior "
+"warning in the event of late payment."
+msgstr ""
+"Le nostre fatture sono pagabili entro 21 giorni lavorativi, a meno che non "
+"sia indicato un altro termine di pagamento sulla fattura o sull'ordine. In "
+"caso di mancato pagamento entro la data di scadenza, IT Company si riserva "
+"il diritto di richiedere il pagamento di interessi pari al 10% dell'importo "
+"ancora dovuto. IT Company sarà autorizzata a sospendere qualsiasi fornitura "
+"di servizi senza alcun preavviso in caso di ritardato pagamento."
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_passive_op
@@ -331,6 +431,11 @@ msgid "Risks"
 msgstr "Rischi"
 
 #. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid "STANDARD TERMS AND CONDITIONS OF SALE"
+msgstr "CONDIZIONI GENERALI DI VENDITA"
+
+#. module: l10n_it
 #: model:account.account.tag,name:l10n_it.account_tag_C_PASS
 msgid "Severance pay"
 msgstr "Trattamento di fine rapporto di lavoro subordinato"
@@ -338,7 +443,7 @@ msgstr "Trattamento di fine rapporto di lavoro subordinato"
 #. module: l10n_it
 #: model:account.account.tag,name:l10n_it.account_tag_A_PASS
 msgid "Shareholders' Equity"
-msgstr ""
+msgstr "Capitale proprio"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_passive_op_3c
@@ -370,6 +475,19 @@ msgstr "Imposta"
 #: model:account.report.line,name:l10n_it.tax_report_line_operazione_imponibile
 msgid "Taxable transaction"
 msgstr "Operazione Imponibile"
+
+#. module: l10n_it
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"Il cliente rinuncia esplicitamente ai propri termini e condizioni standard, "
+"anche se questi sono stati redatti successivamente ai presenti termini e "
+"condizioni di vendita standard. Per essere valide, le deroghe devono essere "
+"espressamente concordate in anticipo per iscritto."
 
 #. module: l10n_it
 #: model:account.account.tag,name:l10n_it.account_tag_BENI
@@ -432,7 +550,7 @@ msgstr ""
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_va13
 msgid "VA13 - Transactions carried out with respect to condominiums"
-msgstr ""
+msgstr "VA13 - Operazioni effettuate nei confronti dei condomìni"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_va5
@@ -641,7 +759,7 @@ msgstr "VE35 - Operazioni con applicazione del reverse charge interno"
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_ve35_I
 #: model:account.report.line,name:l10n_it.tax_report_line_ve35_I
 msgid "VE35_I - Total"
-msgstr ""
+msgstr "VE35_I - Totale"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_ve35_ii
@@ -713,7 +831,7 @@ msgstr ""
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_ve37_I
 #: model:account.report.line,name:l10n_it.tax_report_line_ve37_I
 msgid "VE37_I - Total"
-msgstr ""
+msgstr "VE37_I - Totale"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_ve37_ii
@@ -815,27 +933,27 @@ msgstr "Rapporto IVA VF"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF1
 msgid "VF1 - compensation percentage 2%"
-msgstr "VF1 - percentuale di compensazione 2%"
+msgstr "VF1 - Percentuale di compensazione 2%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF10
-msgid "VF10 - compensation percentage 9.5%"
-msgstr "VF10 - percentuale di compensazione 9.5%"
+msgid "VF10 - compensation percentage 8,8%"
+msgstr "VF10 - Percentuale di compensazione 8,8%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF11
 msgid "VF11 - compensation percentage 10%"
-msgstr "VF11 - percentuale di compensazione 10%"
+msgstr "VF11 - Percentuale di compensazione 10%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF12
 msgid "VF12 - compensation percentage 12,3%"
-msgstr "VF12 - percentuale di compensazione 12,3%"
+msgstr "VF12 - Percentuale di compensazione 12,3%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF13
 msgid "VF13 - compensation percentage 22%"
-msgstr "VF13 - percentuale di compensazione 22%"
+msgstr "VF13 - Percentuale di compensazione 22%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF17
@@ -868,7 +986,7 @@ msgstr "VF19 - Acquisti da soggetti che hanno usufruito di regimi agevolati"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF2
 msgid "VF2 - compensation percentage 4%"
-msgstr "VF2 - percentuale di compensazione 4%"
+msgstr "VF2 - Percentuale di compensazione 4%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF20
@@ -947,7 +1065,7 @@ msgstr "VF29 - Distribuzione totale degli acquisti e delle importazioni"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF3
 msgid "VF3 - compensation percentage 5%"
-msgstr "VF3 - percentuale di compensazione 5%"
+msgstr "VF3 - Percentuale di compensazione 5%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF31
@@ -987,67 +1105,67 @@ msgstr "VF38 - Riservato alle imprese agricole miste"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF39
 msgid "VF39 - compensation percentage 2%"
-msgstr "VF39 - percentuale di compensazione 2%"
+msgstr "VF39 - Percentuale di compensazione 2%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF4
-msgid "VF4 - compensation percentage 6.4%"
-msgstr "VF4 - percentuale di compensazione 6.4%"
+msgid "VF4 - compensation percentage 6,4%"
+msgstr "VF4 - Percentuale di compensazione 6,4%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF40
 msgid "VF40 - compensation percentage 4%"
-msgstr "VF40 - percentuale di compensazione 4%"
+msgstr "VF40 - Percentuale di compensazione 4%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF41
 msgid "VF41 - compensation percentage 6.4%"
-msgstr "VF41 - percentuale di compensazione 6.4%"
+msgstr "VF41 - Percentuale di compensazione 6,4%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF42
-msgid "VF42 - compensation percentage 7,3%"
-msgstr "VF42 - percentuale di compensazione 7,3%"
+msgid "VF42 - compensation percentage 7%"
+msgstr "VF42 - Percentuale di compensazione 7%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF43
-msgid "VF43 - compensation percentage 7,5%"
-msgstr "VF43 - percentuale di compensazione 7,5%"
+msgid "VF43 - compensation percentage 7,3%"
+msgstr "VF43 - Percentuale di compensazione 7,3%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF44
-msgid "VF44 - compensation percentage 8,3%"
-msgstr "VF44 - percentuale di compensazione 8,3%"
+msgid "VF44 - compensation percentage 7,5%"
+msgstr "VF44 - Percentuale di compensazione 7,5%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF45
-msgid "VF45 - compensation percentage 8,5%"
-msgstr "VF45 - percentuale di compensazione 8,5%"
+msgid "VF45 - compensation percentage 8,3%"
+msgstr "VF45 - Percentuale di compensazione 8,3%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF46
-msgid "VF46 - compensation percentage 8,8%"
-msgstr "VF46 - percentuale di compensazione 8,8%"
+msgid "VF46 - compensation percentage 8,5%"
+msgstr "VF46 - Percentuale di compensazione 8,5%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF47
 msgid "VF47 - compensation percentage 9.5%"
-msgstr "VF47 - percentuale di compensazione 9.5%"
+msgstr "VF47 - Percentuale di compensazione 9,5%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF48
 msgid "VF48 - compensation percentage 10%"
-msgstr "VF48 - percentuale di compensazione 10%"
+msgstr "VF48 - Percentuale di compensazione 10%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF49
 msgid "VF49 - compensation percentage 12,3%"
-msgstr "VF49 - percentuale di compensazione 12,3%"
+msgstr "VF49 - Percentuale di compensazione 12,3%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF5
-msgid "VF5 - compensation percentage 7,3%"
-msgstr "VF5 - percentuale di compensazione 7,3%"
+msgid "VF5 - compensation percentage 7%"
+msgstr "VF5 - Percentuale di compensazione 7%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF51
@@ -1082,8 +1200,8 @@ msgstr "VF55 - TOTALE IVA ammessa in detrazione"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF6
-msgid "VF6 - compensation percentage 7,5%"
-msgstr ""
+msgid "VF6 - compensation percentage 7,3%"
+msgstr "VF6 - Percentuale di compensazione 7,3%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF62
@@ -1092,8 +1210,8 @@ msgstr "VF62 - Riservato alle aziende agricole"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF7
-msgid "VF7 - compensation percentage 8,3%"
-msgstr ""
+msgid "VF7 - compensation percentage 7,5%"
+msgstr "VF7 - Percentuale di compensazione 7,5%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF70
@@ -1107,13 +1225,13 @@ msgstr "VF71 - IVA ammessa in deduzione"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF8
-msgid "VF8 - compensation percentage 8,5%"
-msgstr ""
+msgid "VF8 - compensation percentage 8,3%"
+msgstr "VF8 - Percentuale di compensazione 8,3%"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_VF9
-msgid "VF9 - compensation percentage 8,8%"
-msgstr ""
+msgid "VF9 - compensation percentage 8,5%"
+msgstr "VF9 - Percentuale di compensazione 8,5%"
 
 #. module: l10n_it
 #: model:account.report,name:l10n_it.tax_annual_report_vat_vh
@@ -1138,7 +1256,7 @@ msgstr "VH11 - Settembre"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh12
 msgid "VH12 - QUARTER III"
-msgstr "VH12 - QUARTO III"
+msgstr "VH12 - TRIMESTRE III"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh13
@@ -1158,7 +1276,7 @@ msgstr "VH15 - Dicembre"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh16
 msgid "VH16 - QUARTER IV"
-msgstr "VH16 - QUARTO IV"
+msgstr "VH16 - TRIMESTRE IV"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh17
@@ -1178,7 +1296,7 @@ msgstr "VH3 - Marzo"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh4
 msgid "VH4 - QUARTER I"
-msgstr "VH4 - QUARTO I"
+msgstr "VH4 - TRIMESTRE I"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh5
@@ -1198,7 +1316,7 @@ msgstr "VH7 - Giugno"
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh8
 msgid "VH8 - QUARTER II"
-msgstr "VH8 - QUARTO II"
+msgstr "VH8 - TRIMESTRE II"
 
 #. module: l10n_it
 #: model:account.report.line,name:l10n_it.tax_annual_report_line_vh9
@@ -1638,14 +1756,14 @@ msgid "Value of production"
 msgstr "Valore della produzione"
 
 #. module: l10n_it
-#: model:account.report.line,name:l10n_it.tax_annual_report_line_vari_communi_perd
-msgid "Changes in reporting periodicals"
-msgstr "Variazioni dei periodici di comunicazione"
+#: model_terms:res.company,invoice_terms_html:l10n_it.demo_company_it
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "È necessario aggiornare il documento per riflettere i T&amp;C."
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n1
 msgid "[N1] Escluse ex art. 15"
-msgstr ""
+msgstr "[N1] Escluse ex art. 15"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n2_1
@@ -1653,42 +1771,45 @@ msgid ""
 "[N2.1] Non soggette ad IVA ai sensi degli artt. Da 7 a 7-septies del DPR "
 "633/72"
 msgstr ""
+"[N2.1] Non soggette ad IVA ai sensi degli artt. Da 7 a 7-septies del DPR "
+"633/72"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n2_2
 msgid "[N2.2] Non soggette - altri casi"
-msgstr ""
+msgstr "[N2.2] Non soggette - altri casi"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n2
 msgid "[N2] Non soggette"
-msgstr ""
+msgstr "[N2] Non soggette"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_1
 msgid "[N3.1] Non imponibili - esportazioni"
-msgstr ""
+msgstr "[N3.1] Non imponibili - esportazioni"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_2
 msgid "[N3.2] Non imponibili - cessioni intracomunitarie"
-msgstr ""
+msgstr "[N3.2] Non imponibili - cessioni intracomunitarie"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_3
 msgid "[N3.3] Non imponibili - cessioni verso San Marino"
-msgstr ""
+msgstr "[N3.3] Non imponibili - cessioni verso San Marino"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_4
 msgid ""
 "[N3.4] Non imponibili - operazioni assimilate alle cessioni all'esportazione"
 msgstr ""
+"[N3.4] Non imponibili - operazioni assimilate alle cessioni all'esportazione"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_5
 msgid "[N3.5] Non imponibili - a seguito di dichiarazioni d'intento"
-msgstr ""
+msgstr "[N3.5] Non imponibili - a seguito di dichiarazioni d'intento"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3_6
@@ -1696,21 +1817,23 @@ msgid ""
 "[N3.6] Non imponibili - altre operazioni che non concorrono alla formazione "
 "del plafond"
 msgstr ""
+"[N3.6] Non imponibili - altre operazioni che non concorrono alla formazione "
+"del plafond"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n3
 msgid "[N3] Non imponibili"
-msgstr ""
+msgstr "[N3] Non imponibili"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n4
 msgid "[N4] Esenti"
-msgstr ""
+msgstr "[N4] Esenti"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n5
 msgid "[N5] Regime del margine / IVA non esposta in fattura"
-msgstr ""
+msgstr "[N5] Regime del margine / IVA non esposta in fattura"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_1
@@ -1718,47 +1841,50 @@ msgid ""
 "[N6.1] Inversione contabile - cessione di rottami e altri materiali di "
 "recupero"
 msgstr ""
+"[N6.1] Inversione contabile - cessione di rottami e altri materiali di "
+"recupero"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_2
 msgid "[N6.2] Inversione contabile - cessione di oro e argento puro"
-msgstr ""
+msgstr "[N6.2] Inversione contabile - cessione di oro e argento puro"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_3
 msgid "[N6.3] Inversione contabile - subappalto nel settore edile"
-msgstr ""
+msgstr "[N6.3] Inversione contabile - subappalto nel settore edile"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_4
 msgid "[N6.4] Inversione contabile - cessione di fabbricati"
-msgstr ""
+msgstr "[N6.4] Inversione contabile - cessione di fabbricati"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_5
 msgid "[N6.5] Inversione contabile - cessione di telefoni cellulari"
-msgstr ""
+msgstr "[N6.5] Inversione contabile - cessione di telefoni cellulari"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_6
 msgid "[N6.6] Inversione contabile - cessione di prodotti elettronici"
-msgstr ""
+msgstr "[N6.6] Inversione contabile - cessione di prodotti elettronici"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_7
 msgid ""
 "[N6.7] Inversione contabile - prestazioni comparto edile esettori connessi"
 msgstr ""
+"[N6.7] Inversione contabile - prestazioni comparto edile esettori connessi"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_8
 msgid "[N6.8] Inversione contabile - operazioni settore energetico"
-msgstr ""
+msgstr "[N6.8] Inversione contabile - operazioni settore energetico"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6_9
 msgid "[N6.9] Inversione contabile - altri casi"
-msgstr ""
+msgstr "[N6.9] Inversione contabile - altri casi"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n6
@@ -1767,6 +1893,9 @@ msgid ""
 "casi di autofatturazione per acquisti extra UE di servizi ovvero per "
 "importazioni di beni nei soli casi previsti)"
 msgstr ""
+"[N6] Inversione contabile (per le operazioni in reverse charge ovvero nei "
+"casi di autofatturazione per acquisti extra UE di servizi ovvero per "
+"importazioni di beni nei soli casi previsti)"
 
 #. module: l10n_it
 #: model:ir.model.fields.selection,name:l10n_it.selection__account_tax__l10n_it_exempt_reason__n7
@@ -1775,3 +1904,6 @@ msgid ""
 "telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, "
 "comma 1 lett. a, b, art. 74-sexies DPR 633/72)"
 msgstr ""
+"[N7] IVA assolta in altro stato UE (prestazione di servizi di "
+"telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, "
+"comma 1 lett. a, b, art. 74-sexies DPR 633/72)"
