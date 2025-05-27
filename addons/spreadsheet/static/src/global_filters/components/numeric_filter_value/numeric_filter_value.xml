@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="spreadsheet.NumericFilterValue">
+        <input type="number"
+            class="o_input o-global-filter-numeric-value text-truncate"
+            t-att-value="props.value ?? ''"
+            t-on-change="(e) => props.onValueChanged(e.target.value)"
+        />
+    </t>
+</templates>

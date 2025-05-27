@@ -78,6 +78,8 @@ export function checkFilterDefaultValueIsValid(filter, defaultValue) {
             return isRelationFilterDefaultValueValid(defaultValue);
         case "boolean":
             return isBooleanFilterValueValid(defaultValue);
+        case "numeric":
+            return isNumericFilterValueValid(defaultValue);
     }
     return false;
 }
@@ -101,6 +103,8 @@ export function checkFilterValueIsValid(filter, value) {
             return isRelationFilterValueValid(value);
         case "boolean":
             return isBooleanFilterValueValid(value);
+        case "numeric":
+            return isNumericFilterValueValid(value);
     }
     return false;
 }
@@ -112,6 +116,14 @@ export function checkFilterValueIsValid(filter, value) {
  */
 function isTextFilterValueValid(value) {
     return Array.isArray(value) && value.every((text) => typeof text === "string");
+}
+
+/**
+ * A numeric filter value is valid if it is a number
+ * @returns {boolean}
+ */
+function isNumericFilterValueValid(value) {
+    return typeof value === "number" || value === "";
 }
 
 /**

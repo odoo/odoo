@@ -95,6 +95,13 @@ declare module "@spreadsheet" {
         domainOfAllowedValues?: DomainListRepr | string;
     }
 
+    export interface NumericGlobalFilter {
+        type: "numeric";
+        id: string;
+        label: string;
+        defaultValue?: number;
+    }
+
     export interface BooleanGlobalFilter {
         type: "boolean";
         id: string;
@@ -102,6 +109,6 @@ declare module "@spreadsheet" {
         defaultValue?: boolean[];
     }
 
-    export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter;
-    export type CmdGlobalFilter = CmdTextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter;
+    export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter | NumericGlobalFilter;
+    export type CmdGlobalFilter = CmdTextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter | NumericGlobalFilter;
 }

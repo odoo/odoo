@@ -55,6 +55,7 @@ export class DashboardSearchBar extends Component {
         switch (filter.type) {
             case "boolean":
             case "text":
+            case "numeric":
                 values = [filterValues];
                 break;
             case "date": {
