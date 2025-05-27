@@ -441,8 +441,7 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                 if not login:
                     path = url_parse(response.url).path
                     self.assertEqual(path, '/web/login')
-                    self.assertTrue('cids' in response.request._cookies)
-                    self.assertEqual(response.request._cookies.get('cids'), str(mc_record.company_id.id))
+                    self.assertNotIn('cids', response.request._cookies)
                 else:
                     user = self.env['res.users'].browse(self.session.uid)
                     self.assertEqual(user.login, login)
@@ -518,23 +517,17 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     self.assertTrue('cids' in response.request._cookies)
                     self.assertEqual(response.request._cookies.get('cids'), str(user_company.id))
 
-        # when being not logged, cids should be added based on
-        # '_get_redirect_suggested_company'
+        # when being not logged, cids should not be added as redirection after
+        # logging will be 'mail/view' again
         for test_record in nothreads:
-            with self.subTest(record_name=test_record.name, user_company=user_company):
+            with self.subTest(record_name=test_record.name):
                 self.authenticate(None, None)
-                self.user_admin.write({'company_id': user_company.id})
                 response = self.url_open(
                     f'/mail/view?model={test_record._name}&res_id={test_record.id}',
                     timeout=15
                 )
                 self.assertEqual(response.status_code, 200)
-
-                if test_record.company_id:
-                    self.assertIn('cids', response.request._cookies)
-                    self.assertEqual(response.request._cookies.get('cids'), str(test_record.company_id.id))
-                else:
-                    self.assertNotIn('cids', response.request._cookies)
+                self.assertNotIn('cids', response.request._cookies)
 
 
 @tagged("-at_install", "post_install", "multi_company", "mail_controller")
