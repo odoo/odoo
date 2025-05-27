@@ -183,7 +183,9 @@ def get_module_path(module: str, downloaded: bool = False, display_warning: bool
             return opj(adp, module)
 
     if downloaded:
-        return opj(tools.config.addons_data_dir, module)
+        path = opj(tools.config.addons_data_dir, module)
+        if os.path.exists(path):
+            return path
     if display_warning:
         _logger.warning('module %s: module not found', module)
     return None
@@ -281,7 +283,7 @@ def load_manifest(module: str, mod_path: str | None = None) -> dict:
     """ Load the module manifest from the file system. """
 
     if not mod_path:
-        mod_path = get_module_path(module, downloaded=True)
+        mod_path = get_module_path(module, downloaded=True, display_warning=False)
     manifest_file = module_manifest(mod_path)
 
     if not manifest_file:
