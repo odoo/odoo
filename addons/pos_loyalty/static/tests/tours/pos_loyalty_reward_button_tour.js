@@ -155,6 +155,22 @@ registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_2", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_loyalty_free_product_rewards_3", {
+    steps: () =>
+        [
+            Dialog.confirm("Open Session"),
+
+            ProductScreen.clickDisplayedProduct("Desk Organizer"),
+            ProductScreen.clickNumpad("6"),
+            PosLoyalty.isRewardButtonHighlighted(true, true),
+            PosLoyalty.claimReward("Desk Organizer x2"),
+            ProductScreen.selectedOrderlineHas("Desk Organizer", "8.00", "40.80"),
+            PosLoyalty.hasRewardLine("Desk Organizer x2", "-10.20", "2.00"),
+            PosLoyalty.orderTotalIs("30.60"),
+            PosLoyalty.finalizeOrder("Cash", "30.60"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("PosLoyaltySpecificDiscountTour", {
     test: true,
     steps: () =>
