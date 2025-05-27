@@ -1000,6 +1000,9 @@ class MrpProduction(models.Model):
                   and not vals.get('date_finished')):
                 # if no value is specified, do take the workorder duration (etc) into account
                 rec.move_finished_ids.write({'date': rec.date_finished})
+            if not rec.move_finished_ids.move_dest_ids and vals.get('move_dest_ids', False):
+                move_dest_id = vals.get('move_dest_ids')
+                rec.move_finished_ids.write({'move_dest_ids': move_dest_id})
         return res
 
     def unlink(self):

@@ -25,6 +25,7 @@ class SaleOrder(models.Model):
         mrp_productions = defaultdict(self.env['mrp.production'].browse)
         for sale, procurement_groups in data:
             mrp_productions[sale.id] |= procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids
+            mrp_productions[sale.id] |= self.env['stock.move'].search([('move_dest_ids', 'in', procurement_groups.stock_move_ids.ids)]).production_id
         for sale_line, production_id in production_order_by_sale_line:
             mrp_productions[sale_line.order_id.id] |= production_id
         for sale in self:
