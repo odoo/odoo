@@ -9,10 +9,12 @@
             <field name="badge_format" position="before">
                 <field name="exhibition_map"/>
             </field>
-            <field name="website_menu" position="after">
-                <label for="booth_menu"/>
-                <field name="booth_menu"/>
-            </field>
+            <xpath expr="//span[@name='website_menu']" position="after">
+                <span name="booth_menu" class="ms-2">
+                    <label for="booth_menu"/>
+                    <field name="booth_menu"/>
+                </span>
+            </xpath>
         </field>
     </record>
 

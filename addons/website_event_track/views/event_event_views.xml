@@ -15,11 +15,15 @@
                     <field name="track_count" string="Tracks" widget="statinfo"/>
                 </button>
             </xpath>
-            <xpath expr="//field[@name='website_menu']" position="after">
-                <label for="website_track" string="Showcase Tracks"/>
-                <field name="website_track"/>
-                <label for="website_track_proposal" string="Allow Track Proposals"/>
-                <field name="website_track_proposal"/>
+            <xpath expr="//span[@name='website_menu']" position="after">
+                <span name="website_track" class="ms-2">
+                    <label for="website_track" string="Showcase Tracks"/>
+                    <field name="website_track"/>
+                </span>
+                <span name="website_track_proposal" class="ms-2">
+                    <label for="website_track_proposal" string="Allow Track Proposals"/>
+                    <field name="website_track_proposal"/>
+                </span>
             </xpath>
         </field>
     </record>
