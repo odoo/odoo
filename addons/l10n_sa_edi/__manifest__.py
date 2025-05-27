@@ -4,7 +4,7 @@
 {
     'name': 'Saudi Arabia - E-invoicing',
     'countries': ['sa'],
-    'version': '0.1',
+    'version': '0.2',
     'depends': [
         'account_edi',
         'account_edi_ubl_cii',
