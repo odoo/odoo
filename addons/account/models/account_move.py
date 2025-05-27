@@ -4330,7 +4330,47 @@ class AccountMove(models.Model):
                 values.update(grouping_key)
             tax_details[grouping_key] = values
 
+<<<<<<< 4b933b8dfafcdc2878961188fd2365c1f5766f5f
         return results
+||||||| 06ec1de2dd8ec5fdb104275cf2bbb3f9f73841da
+                    if currency.is_zero(abs_diff):
+                        break
+
+                    nb_amount_curr_cent = nb_cents_per_tax_values
+                    if nb_extra_cent:
+                        nb_amount_curr_cent += 1
+                        nb_extra_cent -= 1
+
+                    # We can have more than one cent to distribute on a single tax_values.
+                    abs_delta_to_add = min(abs_diff, currency.rounding * nb_amount_curr_cent)
+                    tax_values[key] += diff_sign * abs_delta_to_add
+                    abs_diff -= abs_delta_to_add
+
+        return self.env['account.tax']._aggregate_taxes(
+            to_process,
+            filter_tax_values_to_apply=filter_tax_values_to_apply,
+            grouping_key_generator=grouping_key_generator,
+        )
+=======
+                    if currency.is_zero(abs_diff):
+                        break
+
+                    nb_amount_curr_cent = nb_cents_per_tax_values
+                    if nb_extra_cent:
+                        nb_amount_curr_cent += 1
+                        nb_extra_cent -= 1
+
+                    # We can have more than one cent to distribute on a single tax_values.
+                    abs_delta_to_add = min(abs_diff, currency.rounding * nb_amount_curr_cent)
+                    tax_values[key] += diff_sign * abs_delta_to_add
+                    abs_diff -= abs_delta_to_add
+
+        return self.env['account.tax'].with_company(self.company_id)._aggregate_taxes(
+            to_process,
+            filter_tax_values_to_apply=filter_tax_values_to_apply,
+            grouping_key_generator=grouping_key_generator,
+        )
+>>>>>>> f95820cb3597f2c6c22fcf640c6bea6ca13159b2
 
     def _get_invoice_counterpart_amls_for_early_payment_discount_per_payment_term_line(self):
         """ Helper to get the values to create the counterpart journal items on the register payment wizard and the
@@ -4434,6 +4474,7 @@ class AccountMove(models.Model):
 
                 bases_details[frozendict(grouping_dict)] = base_detail
 
+<<<<<<< 4b933b8dfafcdc2878961188fd2365c1f5766f5f
             # Compute the tax amounts.
             tax_results = AccountTax._prepare_tax_lines(base_lines, self.company_id)
             for tax_line_vals in tax_results['tax_lines_to_add']:
@@ -4443,6 +4484,55 @@ class AccountMove(models.Model):
                         **tax_line_vals,
                         'amount_currency': tax_line_vals['amount_currency'] - tax_amount_without_epd['amount_currency'],
                         'balance': tax_line_vals['balance'] - tax_amount_without_epd['balance'],
+||||||| 06ec1de2dd8ec5fdb104275cf2bbb3f9f73841da
+                # Compute the tax amounts.
+                tax_details_with_epd = self.env['account.tax']._aggregate_taxes(
+                    to_process,
+                    grouping_key_generator=grouping_key_generator,
+                )
+
+                for tax_detail in tax_details_with_epd['tax_details'].values():
+                    tax_amount_without_epd = tax_amounts.get(tax_detail['tax_repartition_line_id'])
+                    if not tax_amount_without_epd:
+                        continue
+
+                    tax_amount_currency = self.currency_id\
+                        .round(self.direction_sign * tax_detail['tax_amount_currency'] - tax_amount_without_epd['amount_currency'])
+                    tax_amount = self.company_currency_id\
+                        .round(self.direction_sign * tax_detail['tax_amount'] - tax_amount_without_epd['balance'])
+
+                    if self.currency_id.is_zero(tax_amount_currency) and self.company_currency_id.is_zero(tax_amount):
+                        continue
+
+                    resulting_delta_tax_details[tax_detail['tax_repartition_line_id']] = {
+                        **tax_detail,
+                        'amount_currency': tax_amount_currency,
+                        'balance': tax_amount,
+=======
+                # Compute the tax amounts.
+                tax_details_with_epd = self.env['account.tax'].with_company(self.company_id)._aggregate_taxes(
+                    to_process,
+                    grouping_key_generator=grouping_key_generator,
+                )
+
+                for tax_detail in tax_details_with_epd['tax_details'].values():
+                    tax_amount_without_epd = tax_amounts.get(tax_detail['tax_repartition_line_id'])
+                    if not tax_amount_without_epd:
+                        continue
+
+                    tax_amount_currency = self.currency_id\
+                        .round(self.direction_sign * tax_detail['tax_amount_currency'] - tax_amount_without_epd['amount_currency'])
+                    tax_amount = self.company_currency_id\
+                        .round(self.direction_sign * tax_detail['tax_amount'] - tax_amount_without_epd['balance'])
+
+                    if self.currency_id.is_zero(tax_amount_currency) and self.company_currency_id.is_zero(tax_amount):
+                        continue
+
+                    resulting_delta_tax_details[tax_detail['tax_repartition_line_id']] = {
+                        **tax_detail,
+                        'amount_currency': tax_amount_currency,
+                        'balance': tax_amount,
+>>>>>>> f95820cb3597f2c6c22fcf640c6bea6ca13159b2
                     }
 
             # Multiply the amount by the percentage
