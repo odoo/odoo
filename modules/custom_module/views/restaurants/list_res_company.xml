@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="res_company_tree_view_inherit" model="ir.ui.view">
-        <field name="name">res.company.tree.view.inherit</field>
+    <record id="res_company_tree" model="ir.ui.view">
+        <field name="name">res.company.list</field>
         <field name="model">res.company</field>
         <field name="inherit_id" ref="base.view_company_tree"/>
-        <field name="arch" type="xml">
-            <xpath expr="//tree" position="inside">
+         <field name="arch" type="xml">
+               <xpath expr="//field[@name='name']" position="after">
                 <field name="menupro_id"/>
             </xpath>
         </field>

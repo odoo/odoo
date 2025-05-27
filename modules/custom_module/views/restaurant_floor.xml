@@ -1,0 +1,26 @@
+<odoo>
+    <record id="view_restaurant_floor_form_inherit" model="ir.ui.view">
+        <field name="name">restaurant.floor.form.inherit</field>
+        <field name="model">restaurant.floor</field>
+        <field name="inherit_id" ref="pos_restaurant.view_restaurant_floor_form"/>
+        <field name="arch" type="xml">
+            <field name="table_ids" position="attributes">
+                <attribute name="widget">one2many</attribute>
+            </field>
+            <xpath expr="//field[@name='table_ids']/list" position="replace">
+                <list string="Tables" editable="bottom">
+                    <field name="table_number" />
+                        <field name="seats" />
+                        <field name="shape" />
+                        <field name="height" optional="hide" />
+                        <field name="width" optional="hide" />
+                        <field name="color" widget="color" optional="hide" />
+                        <field name="active" optional="hide" />
+                        <field name="tag_ids" widget="many2many_tags"/>
+
+
+                </list>
+            </xpath>
+        </field>
+    </record>
+</odoo>
