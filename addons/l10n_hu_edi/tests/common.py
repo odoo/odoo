@@ -133,7 +133,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'l10n_hu_edi_replacement_key': 'abcdefghijklmnop',
         })
     
-    def _create_simple_move(self, move_type='out_invoice', currency=None):
+    def _create_simple_move(self, move_type='out_invoice', currency=None, amount=None):
         journal = self.company_data['default_journal_sale'] if move_type in self.env['account.move'].get_sale_types() else self.company_data['default_journal_purchase']
 
         return self.env['account.move'].create({
@@ -146,16 +146,16 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
-                    'price_unit': 10000.0,
+                    'price_unit': amount or 10000.0,
                     'quantity': 1,
                     'tax_ids': [Command.set(self.tax_vat.ids)],
                 })
             ]
         })
 
-    def create_invoice_simple(self, currency=None):
+    def create_invoice_simple(self, currency=None, amount=None):
         """ Create a really basic invoice - just one line. """
-        return self._create_simple_move(move_type='out_invoice', currency=currency)
+        return self._create_simple_move(move_type='out_invoice', currency=currency, amount=amount)
     
     def create_bill_simple(self, currency=None):
         """ Create a really basic bill - just one line. """
@@ -347,12 +347,40 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
             ]
         })
 
-    def create_reversal(self, invoice, is_modify=False):
+    def create_reversal(self, invoice, is_modify=False, amount=None):
         """ Create a credit note that reverses an invoice. """
         wizard_vals = {'journal_id': invoice.journal_id.id}
         wizard_reverse = self.env['account.move.reversal'].with_context(active_ids=invoice.ids, active_model='account.move').create(wizard_vals)
         wizard_reverse.reverse_moves(is_modify=is_modify)
-        return wizard_reverse.new_move_ids
+        reversal_moves = wizard_reverse.new_move_ids
+        if amount:
+            reversal_moves.invoice_line_ids.write({
+                'price_unit': amount
+            })
+        return reversal_moves
+
+    def create_debit_note(self, invoice, amount=None):
+        """ Create Debit Note """
+        wizard_vals = {
+            'journal_id': invoice.journal_id.id,
+            'copy_lines': True,
+        }
+        move_debit_note_wiz = self.env['account.debit.note'].with_context(active_model="account.move", active_ids=invoice.ids).create(wizard_vals)
+        move_debit_note_wiz.create_debit()
+        debit_note = self.env['account.move'].search([('debit_origin_id', '=', invoice.id)])
+        if amount:
+            debit_note.invoice_line_ids.write({
+                'price_unit': amount
+            })
+        return debit_note
+
+    def register_payment(self, invoice, amount):
+        payment_register = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+            'payment_date': self.today,
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'amount': amount,
+        })
+        payment_register.action_create_payments()
 
     def create_cancel_wizard(self):
         """ Create an invoice, send it, and create a cancellation wizard for it. """
