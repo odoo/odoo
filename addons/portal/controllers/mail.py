@@ -120,6 +120,13 @@ class PortalChatter(http.Controller):
 class MailController(mail.MailController):
 
     @classmethod
+    def _redirect_to_generic_fallback(cls, model, res_id, access_token=None, **kwargs):
+        # Generic fallback for a share user is the customer portal
+        if request.session.uid and request.env.user.share:
+            return request.redirect('/my')
+        return super()._redirect_to_generic_fallback(model, res_id, access_token=access_token, **kwargs)
+
+    @classmethod
     def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
         """ If the current user doesn't have access to the document, but provided
         a valid access token, redirect them to the front-end view.
