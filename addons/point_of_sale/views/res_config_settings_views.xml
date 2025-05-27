@@ -107,13 +107,6 @@
                                                 invisible="not group_cash_rounding"/>
                                     </div>
                                 </setting>
-                                <setting help="Set a maximum difference allowed between the expected and counted money during the closing of the session">
-                                    <field name="pos_set_maximum_difference" />
-                                    <div class="content-group mt16" invisible="not pos_set_maximum_difference">
-                                        <label for="pos_amount_authorized_diff" string="Authorized Difference" class="fw-normal me-1"/>
-                                        <field name="pos_amount_authorized_diff"/>
-                                    </div>
-                                </setting>
                                 <setting id="iface_tipproduct" title="This product is used as reference on customer receipts." string="Tips" help="Accept customer tips or convert their change to a tip" documentation="/applications/sales/point_of_sale/restaurant/tips.html">
                                     <field name="pos_iface_tipproduct"/>
                                     <div class="content-group" invisible="not pos_iface_tipproduct">

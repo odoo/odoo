@@ -98,7 +98,6 @@ class ResConfigSettings(models.TransientModel):
     pos_route_id = fields.Many2one(related='pos_config_id.route_id', readonly=False)
     pos_selectable_categ_ids = fields.Many2many('pos.category', compute='_compute_pos_selectable_categ_ids')
     pos_sequence_id = fields.Many2one(related='pos_config_id.sequence_id')
-    pos_set_maximum_difference = fields.Boolean(related='pos_config_id.set_maximum_difference', readonly=False)
     pos_ship_later = fields.Boolean(related='pos_config_id.ship_later', readonly=False)
     pos_tax_regime_selection = fields.Boolean(related='pos_config_id.tax_regime_selection', readonly=False)
     pos_tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_pos_tip_product_id', readonly=False, store=True)
