@@ -492,6 +492,18 @@ class AccountMove(models.Model):
             for batch in split_every(100, batch_company):
                 self.env['account.move'].union(*batch)._l10n_hu_edi_upload_single_batch(connection)
 
+    def _l10n_hu_edi_get_operation_type(self):
+        base_invoice = self._l10n_hu_get_chain_base()
+        modification_invoices = self._l10n_hu_get_chain_invoices() - base_invoice
+
+        all_invoices_residual_zero = all(invoice.amount_residual == 0 for invoice in modification_invoices)
+
+        if self == base_invoice:
+            return 'CREATE'
+        if base_invoice.amount_residual == 0 and all_invoices_residual_zero:
+            return 'STORNO'
+        return 'MODIFY'
+
     def _l10n_hu_edi_upload_single_batch(self, connection):
         try:
             token_result = connection.do_token_exchange(self.company_id.sudo()._l10n_hu_edi_get_credentials_dict())
@@ -509,19 +521,10 @@ class AccountMove(models.Model):
         for i, invoice in enumerate(self, start=1):
             invoice.l10n_hu_edi_batch_upload_index = i
 
-        def get_operation_type(invoice):
-            operation_type = 'MODIFY'
-            base_invoice = invoice._l10n_hu_get_chain_base()
-            if invoice == base_invoice:
-                operation_type = 'CREATE'
-            elif base_invoice.amount_residual == 0:
-                operation_type = 'STORNO'
-            return operation_type
-
         invoice_operations = [
             {
                 'index': invoice.l10n_hu_edi_batch_upload_index,
-                'operation': get_operation_type(invoice),
+                'operation': invoice._l10n_hu_edi_get_operation_type(),
                 'invoice_data': base64.b64decode(invoice.l10n_hu_edi_attachment),
             }
             for invoice in self
