@@ -1,6 +1,5 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { renderToElement } from "@web/core/utils/render";
 import { Plugin } from "@html_editor/plugin";
 import { GoogleMapsApiKeyDialog } from "./google_maps_api_key_dialog";
 import { GoogleMapsOption } from "./google_maps_option";
@@ -53,7 +52,6 @@ export class GoogleMapsOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         builder_actions: {
             ResetMapColorAction,
-            ShowDescriptionAction,
         },
         // TODO remove when the snippet will have a "Height" option.
         keep_overlay_options: (el) => el.matches(".s_google_map"),
@@ -70,6 +68,18 @@ export class GoogleMapsOptionPlugin extends Plugin {
 
         /** @type {Map<HTMLElement, Deferred} */
         this.recentlyDroppedSnippetDeferredInit = new Map();
+        this.upgradeSnippets();
+    }
+
+    // TODO: Remove this method when data-vxml is reintroduced.
+    upgradeSnippets() {
+        // This is for pages which already existed before the plugin was created.
+        this.document
+            .querySelectorAll(".s_google_map")
+            .forEach((mapSnippetEl) => {
+                mapSnippetEl.classList.add("o_not_editable");
+                mapSnippetEl.dataset.vxml = "001";
+            });
     }
 
     async onSnippetDropped({ snippetEl }) {
@@ -291,18 +301,6 @@ export class ResetMapColorAction extends BuilderAction {
     static id = "resetMapColor";
     apply({ editingElement }) {
         editingElement.dataset.mapColor = "";
-    }
-}
-export class ShowDescriptionAction extends BuilderAction {
-    static id = "showDescription";
-    isApplied({ editingElement }) {
-        return !!editingElement.querySelector(".description");
-    }
-    apply({ editingElement }) {
-        editingElement.append(renderToElement("html_builder.GoogleMapsDescription"));
-    }
-    clean({ editingElement }) {
-        editingElement.querySelector(".description").remove();
     }
 }
 
