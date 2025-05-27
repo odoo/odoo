@@ -272,6 +272,8 @@
                                     <field name="is_storable" column_invisible="True"/>
                                     <field name="has_tracking" column_invisible="True"/>
                                     <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
+                                    <field name="forecast_availability" string="" widget="forecast_widget"
+                                           column_invisible="parent.state in ('cancel', 'done') or parent.picking_type_code not in ['internal', 'outgoing']"/>
                                     <field name="packaging_uom_qty" optional="hide"/>
                                     <field name="packaging_uom_id" optional="hide"/>
                                     <field name="location_final_id" optional="hide" groups="stock.group_stock_multi_locations"/>
@@ -303,8 +305,6 @@
                                     />
                                     <button name="action_show_details" type="object" string="Details" title="Details"
                                             invisible="not show_details_visible"/>
-                                    <field name="forecast_availability" string=""
-                                        column_invisible="parent.state in ('cancel', 'done') or parent.picking_type_code not in ['internal', 'outgoing']" widget="forecast_widget"/>
                                 </list>
                             </field>
                             <field name="id" invisible="1"/>

@@ -161,6 +161,7 @@
                                 <field name="has_tracking" column_invisible="True"/>
                                 <field name="display_assign_serial" column_invisible="True"/>
                                 <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0"/>
+                                <field name="forecast_availability" string="" column_invisible="parent.state == 'done'" widget="forecast_widget"/>
                                 <field name="description_picking" string="Description" optional="hide"/>
                                 <field name="date" optional="hide"/>
                                 <field name="date_deadline" optional="hide"/>
@@ -180,8 +181,6 @@
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"
                                     />
-                                <field name="forecast_availability" string=""
-                                        column_invisible="parent.state == 'done'" widget="forecast_widget"/>
                             </list>
                         </field>
                         <div class="clearfix"/>
