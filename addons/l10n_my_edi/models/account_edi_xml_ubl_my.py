@@ -114,7 +114,9 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
             # Exchange rate information must be provided if applicable
             'tax_exchange_rate': self._l10n_my_edi_get_tax_exchange_rate(invoice),
             'invoice_incoterm_code': invoice.invoice_incoterm_id.code,
-            'custom_form_reference': invoice.l10n_my_edi_custom_form_reference,
+            # Depending on the move type, it will either be about exports (invoices) or imports (bills)
+            'custom_form_reference': invoice.l10n_my_edi_custom_form_reference if document_type_code in {"11", "12", "13", "14"} else None,
+            'export_custom_form_reference': invoice.l10n_my_edi_custom_form_reference if document_type_code in {"01", "02", "03", "04"} else None,
         })
 
         # these are optional, and since we can't have the correct one at the time of generating, we avoid adding them.
