@@ -40,7 +40,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
         # Check for existing module in case the test run on an existing database
         if not self.env['ir.module.module'].search([('name', '=', 'studio_customization')]):
             self.env['ir.module.module'].create({
-                'author': 'Odoo',
+                'author': 'Odoo S.A.',
                 'imported': True,
                 'latest_version': '13.0.1.0.0',
                 'name': 'studio_customization',
@@ -101,7 +101,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
 
     def test_count_qweb_imported_module(self):
         self.env['ir.module.module'].create({
-            'author': 'Odoo',
+            'author': 'Odoo S.A.',
             'imported': True,
             'latest_version': '15.0.1.0.0',
             'name': 'test_imported_module',
@@ -151,6 +151,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
                 ]
             },
             'license': 'LGPL-3',
+            'author': 'Odoo S.A.',
         })
 
         stream = BytesIO()
@@ -168,7 +169,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
 
     def test_exclude_qweb(self):
         self.env['ir.module.module'].create({
-            'author': 'Odoo',
+            'author': 'Odoo S.A.',
             'imported': True,
             'latest_version': '15.0.1.0.0',
             'name': 'test_imported_module',
@@ -200,6 +201,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
                 ]
             },
             'license': 'LGPL-3',
+            'author': 'Odoo S.A.',
         })
 
         stream = BytesIO()
@@ -243,6 +245,7 @@ class TestClocFields(test_cloc.TestClocCustomization):
                     'data/test.xml',
             ],
             'license': 'LGPL-3',
+            'author': 'Odoo S.A.',
         })
 
         stream = BytesIO()
