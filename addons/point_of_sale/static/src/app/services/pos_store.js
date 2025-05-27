@@ -162,6 +162,11 @@ export class PosStore extends WithLazyGetterTrap {
                 Component: DebugWidget,
             });
         }
+
+        window.addEventListener("online", () => {
+            // Sync should be done before websocket connection when going online
+            this.syncAllOrdersDebounced();
+        });
     }
 
     navigate(routeName, routeParams = {}) {
@@ -1384,7 +1389,13 @@ export class PosStore extends WithLazyGetterTrap {
             if (options.throw) {
                 throw error;
             }
-            console.warn("Offline mode active, order will be synced later");
+
+            if (error instanceof ConnectionLostError) {
+                console.warn("Offline mode active, order will be synced later");
+            } else {
+                this.deviceSync.readDataFromServer();
+            }
+
             return error;
         } finally {
             orders.forEach((order) => this.syncingOrders.delete(order.id));
