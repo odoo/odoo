@@ -17,7 +17,7 @@ export class HWPrinter extends BasePrinter {
     }
 
     sendAction(data) {
-        console.log('data',data);
+        //console.log('data',data);
         return rpc(`${this.url}/hw_proxy/default_printer_action`, { data });
     }
 
