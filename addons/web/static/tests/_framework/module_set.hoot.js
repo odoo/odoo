@@ -592,11 +592,12 @@ export async function runTests(options) {
     // Run all test files
     const filteredSuitePaths = new Set(suites.map((s) => s.fullName));
     let currentAddonsKey = "";
-    let lastSuiteName = undefined;
+    let lastSuiteName = null;
     let lastNumberTests = 0;
     for (const moduleName of testModuleNames) {
         if (lastSuiteName) {
             await __gcAndLogMemory(lastSuiteName, lastNumberTests);
+            lastSuiteName = null;
         }
         const suitePath = getSuitePath(moduleName);
         if (!filteredSuitePaths.has(suitePath)) {
