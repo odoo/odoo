@@ -28,7 +28,11 @@ patch(Thread.prototype, {
         this.chatbotTypingMessage = fields.One("mail.message", {
             compute() {
                 if (this.chatbot) {
-                    return { id: -0.1 - this.id, thread: this, author: this.livechat_operator_id };
+                    return {
+                        id: -0.1 - this.id,
+                        thread: this,
+                        author_id: this.livechat_operator_id,
+                    };
                 }
             },
         });
@@ -40,7 +44,7 @@ patch(Thread.prototype, {
                         id: -0.2 - this.id,
                         body: livechatService.options.default_message,
                         thread: this,
-                        author: this.livechat_operator_id,
+                        author_id: this.livechat_operator_id,
                     };
                 }
             },
@@ -119,7 +123,7 @@ patch(Thread.prototype, {
                 );
             }
             const temporaryMsg = this.store["mail.message"].insert({
-                author: this.store.self,
+                author_id: this.store.self,
                 body: await prettifyMessageContent(body, { allowEmojiLoading: false }),
                 id: this.store.getNextTemporaryId(),
                 model: "discuss.channel",
@@ -129,7 +133,7 @@ patch(Thread.prototype, {
             this.messages.push(temporaryMsg);
             this?.chatbot?._simulateTyping(2 ** 31 - 1);
             const thread = await this.store.env.services["im_livechat.livechat"].persist(this);
-            temporaryMsg.author = this.store.self; // Might have been created after persist.
+            temporaryMsg.author_id = this.store.self; // Might have been created after persist.
             if (!thread) {
                 return;
             }

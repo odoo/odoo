@@ -214,14 +214,18 @@ export class MailMessage extends models.ServerModel {
         const ResPartner = this.env["res.partner"];
 
         for (const message of MailMessage.browse(ids)) {
-            const data = { author: false, email_from: message.email_from };
+            const data = {
+                author_id: false,
+                author_guest_id: false,
+                email_from: message.email_from,
+            };
             if (message.author_guest_id) {
-                data.author = mailDataHelpers.Store.one(
+                data.author_guest_id = mailDataHelpers.Store.one(
                     MailGuest.browse(message.author_guest_id),
                     makeKwArgs({ fields: ["avatar_128", "name"] })
                 );
             } else if (message.author_id) {
-                data.author = mailDataHelpers.Store.one(
+                data.author_id = mailDataHelpers.Store.one(
                     ResPartner.browse(message.author_id),
                     makeKwArgs({ fields: ["avatar_128", "is_company", "name", "user"] })
                 );
@@ -502,7 +506,7 @@ export class MailMessage extends models.ServerModel {
 
         for (const message of this.browse(ids)) {
             store.add(this.browse(message.id), {
-                author: mailDataHelpers.Store.one(
+                author_id: mailDataHelpers.Store.one(
                     this.env["res.partner"].browse(message.author_id),
                     makeKwArgs({ only_id: true })
                 ),

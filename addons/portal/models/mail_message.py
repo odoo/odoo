@@ -140,7 +140,7 @@ class MailMessage(models.Model):
             values.update(
                 {
                     "reactions": reaction_groups,
-                    "author": {
+                    "author_id": {
                         "id": message.author_id.id,
                         "name": message.author_id.name,
                         "type": "partner",
