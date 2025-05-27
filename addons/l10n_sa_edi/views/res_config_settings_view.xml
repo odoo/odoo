@@ -6,27 +6,33 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//app[@name='account']/block" position="before">
+            <xpath expr="//app[@name='account']/block" position="after">
                 <field name="country_code" invisible="1"/>
-                <block title="ZATCA E-Invoicing Settings" name="zatca_einvoicing_setting_container" invisible="country_code != 'SA'">
-                    <setting string="ZATCA E-Invoicing Settings" company_dependent="1" help="ZATCA specific settings for Saudi eInvoicing">
+                <block title="Saudi Arabia Electronic Invoicing" name="zatca_einvoicing_setting_container" invisible="country_code != 'SA'">
+                    <setting class="col-lg-12" string="ZATCA API Modes" company_dependent="1">
                         <div class="text-muted">
-                            You can select the API used for submissions down below. There are three modes available: Sandbox, Pre-Production and Production.
-                            Once you have selected the correct API, you can start the Onboarding process by going to the Journals and checking the options under the ZATCA tab.
+                            <div>1. There are three modes available:</div>
+                            <ul class="mb8">
+                                <li><span class="o_form_label">Sandbox</span> - Common pre-configured testing environment</li>
+                                <li><span class="o_form_label">Simulation</span> - Unique testing environment</li>
+                                <li><span class="o_form_label">Production</span> - Live environment</li>
+                            </ul>
+                            <div>2. After selecting the mode, please go to <span class="o_form_label">Journals &gt; Sales Type &gt; ZATCA Tab &gt; Onboard.</span></div>
+                            <div>3. Once the Journal is onboarded, you can begin using the selected mode.</div>
                         </div>
-                        <div class="content-group">
+                        <div class="content-group col-lg-6">
                             <div class="row mt16">
                                 <label for="l10n_sa_api_mode" string="API Mode" class="col-3 o_light_label"/>
                                 <field name="l10n_sa_api_mode" help="Set whether the system should use the Production API"/>
                             </div>
                         </div>
-                        <div class="alert alert-warning mt8" role="alert">
+                        <div class="alert alert-warning mt8 col-lg-6" role="alert" invisible="l10n_sa_api_mode != 'prod'">
                             <h4 class="alert-heading" role="alert">
                                 <i class="fa fa-warning me-2" /> Warning
                             </h4>
-                            Once you change the submission mode to <strong>Production</strong>, you cannot change it anymore.
-                            Be very careful, as any invoice submitted to ZATCA in Production mode will be accounted for
-                            and might lead to <strong>Fines &amp; Penalties</strong>.
+                            Once the mode is set to <strong>Production</strong> and an Invoice has been submitted to ZATCA,
+                            then the API mode cannot be changed. Any invoice submitted in the Production mode will be officially
+                            recorded with ZATCA and considered in the calculation of the VAT Liability.
                         </div>
                     </setting>
                 </block>

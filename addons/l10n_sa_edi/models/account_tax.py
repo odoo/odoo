@@ -39,4 +39,4 @@ class AccountTax(models.Model):
     def _l10n_sa_constrain_is_retention(self):
         for tax in self:
             if tax.amount >= 0 and tax.l10n_sa_is_retention and tax.type_tax_use == 'sale':
-                raise UserError(_("Cannot set a tax to Retention if the amount is greater than or equal 0"))
+                raise UserError(_("The tax is unable to be set as Retention as the Amount is greater than or equal to 0."))

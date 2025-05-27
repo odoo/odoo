@@ -12,8 +12,8 @@ class IrAttachment(models.Model):
         '''
         descr = 'Rejected ZATCA Document not to be deleted - ثيقة ZATCA المرفوضة لا يجوز حذفها'
         for attach in self.filtered(lambda a: a.description == descr and a.res_model == 'account.move'):
-            move = self.env['account.move'].browse(attach.res_id)
-            if move.country_code == "SA":
+            move = self.env['account.move'].browse(attach.res_id).exists()
+            if move and move.country_code == "SA":
                 raise UserError(_("You can't unlink an attachment being an EDI document refused by the government."))
 
     @api.ondelete(at_uninstall=False)
