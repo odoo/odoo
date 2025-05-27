@@ -15,7 +15,7 @@ import {
     onRpc,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
-import { queryFirst } from "@odoo/hoot-dom";
+import { queryAll } from "@odoo/hoot-dom";
 import { ResPartner } from "../../mock_server/mock_models/res_partner";
 
 defineMailModels();
@@ -34,8 +34,9 @@ test("fieldmany2many tags email (edition)", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { name: "gold", email: "coucou@petite.perruche" },
-        { name: "silver", email: "" },
+        { name: "", email: "", type: "invoice" },
     ]);
+    pyEnv["res.partner"].write([partnerId_2], { parent_id: partnerId_1 });
     const messageId = pyEnv["mail.message"].create({ partner_ids: [partnerId_1] });
     onRpc("res.partner", "web_read", (params) => {
         expect(params.kwargs.specification).toInclude("email");
@@ -54,7 +55,9 @@ test("fieldmany2many tags email (edition)", async () => {
     await waitForSteps([]);
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
     await clickFieldDropdown("partner_ids");
-    await clickFieldDropdownItem("partner_ids", "silver");
+    await clickFieldDropdownItem("partner_ids", "gold, Invoice");
+    const tags = queryAll('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0');
+    expect(tags[1].innerText).toBe("gold, Invoice");
     await contains(".o-mail-RecipientsInputTagsListPopover");
     // set the email
     await insertText(".o-mail-RecipientsInputTagsListPopover input", "coucou@petite.perruche");
@@ -62,11 +65,8 @@ test("fieldmany2many tags email (edition)", async () => {
     await contains('.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0', {
         count: 2,
     });
-    const firstTag = queryFirst(
-        '.o_field_many2many_tags_email[name="partner_ids"] .badge.o_tag_color_0'
-    );
-    expect(firstTag.innerText).toBe("gold");
-    expect(firstTag.querySelector(".o_badge_text")).toHaveAttribute(
+    expect(tags[0].innerText).toBe("gold");
+    expect(tags[0].querySelector(".o_badge_text")).toHaveAttribute(
         "title",
         "coucou@petite.perruche"
     );
