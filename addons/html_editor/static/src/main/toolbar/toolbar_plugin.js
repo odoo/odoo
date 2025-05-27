@@ -317,12 +317,21 @@ export class ToolbarPlugin extends Plugin {
 
     getFilteredTargetedNodes() {
         return this.dependencies.selection
+<<<<<<< 2f9dc24851e5b89a2e2cb2fdf7b90b84ed26495f
             .getTargetedNodes()
             .filter(
                 (node) =>
                     this.dependencies.selection.isNodeEditable(node) &&
                     (node.nodeType !== Node.TEXT_NODE ||
                         (node.textContent.trim().length && !isZWS(node)))
+||||||| dea711c68819cb0f618d351f6eb7e5e416f8c2e5
+            .getTraversedNodes()
+            .filter((node) => !isTextNode(node) || (node.textContent !== "\n" && !isZWS(node)));
+=======
+            .getTraversedNodes()
+            .filter(
+                (node) => !isTextNode(node) || (node.textContent.trim().length && !isZWS(node))
+>>>>>>> 1ea5548527881b07fd0b83d6dbee800f36f23804
             );
     }
 

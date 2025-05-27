@@ -795,6 +795,7 @@ test("toolbar items without namespace default to 'expanded'", async () => {
 
 test("toolbar should open with image namespace the selection spans an image and whitespace", async () => {
     const { el } = await setupEditor(`<p>[abc]</p>`);
+<<<<<<< 2f9dc24851e5b89a2e2cb2fdf7b90b84ed26495f
     // Make sure we start with a compact toolbar so we know that at the end when
     // we don't anymore it did in fact change and we're not just lagging behind
     // the DOM.
@@ -811,6 +812,21 @@ test("toolbar should open with image namespace the selection spans an image and 
     );
     await waitFor(".o-we-toolbar[data-namespace='image']");
     expect(queryOne(".o-we-toolbar").dataset.namespace).toBe("image");
+||||||| dea711c68819cb0f618d351f6eb7e5e416f8c2e5
+=======
+    await waitFor(".o-we-toolbar");
+    expect(".o-we-toolbar").toHaveCount(1);
+    expect(queryAll(".o-we-toolbar .btn-group[name='font']").length).toBe(1);
+    expect(queryAll(".o-we-toolbar .btn-group[name='decoration']").length).toBe(1);
+    setContent(
+        el,
+        `<p>[
+            <img>
+        ]</p>`
+    );
+    await animationFrame();
+    await waitFor(".o-we-toolbar");
+>>>>>>> 1ea5548527881b07fd0b83d6dbee800f36f23804
     expect(queryAll(".o-we-toolbar .btn-group[name='font']").length).toBe(0);
     expect(queryAll(".o-we-toolbar .btn-group[name='decoration']").length).toBe(0);
 });
