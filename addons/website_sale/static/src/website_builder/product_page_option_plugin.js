@@ -34,6 +34,21 @@ class ProductPageOptionPlugin extends Plugin {
             ProductRemoveAllExtraImagesAction,
         },
         clean_for_save_handlers: ({ root: el }) => {
+            // TODO the content of this clean_for_save_handlers should probably
+            // be a generic thing for the whole editor.
+
+            // Make sure that if the user removes the whole text of the
+            // breadcrumb, it is restored to the default value.
+            if (
+                // TODO the "placeholder" feature should be reviewed, this is
+                // not a valid HTML attribute.
+                el.getAttribute("placeholder")
+                && el.hasAttribute("data-oe-zws-empty-inline")
+                && /^[\s\u200b]*$/.test(el.textContent)
+            ) {
+                el.textContent = el.getAttribute("placeholder");
+            }
+
             const mainEl = el.querySelector(productPageSelector);
             if (!mainEl) {
                 return;
