@@ -529,7 +529,7 @@ describe("Operation", () => {
         });
     }
 
-    test("handle async actions with commit and preview (separated by running all timers)", async () => {
+    test("handle async actions with commit and preview (2 quick consecutive hovers)", async () => {
         const asyncAction1 = makeAsyncActionItem("asyncAction1");
         const asyncAction2 = makeAsyncActionItem("asyncAction2");
         const asyncAction3 = makeAsyncActionItem("asyncAction3");
@@ -552,9 +552,12 @@ describe("Operation", () => {
 
         await hover("[data-action-id='asyncAction1']");
         await animationFrame();
-        await hover("[data-action-id='asyncAction2']");
-        await animationFrame();
-        await hover("[data-action-id='asyncAction3']");
+        hover("[data-action-id='asyncAction2']");
+        hover("[data-action-id='asyncAction3']");
+        await runAllTimers();
+        // we check here that the action2 load operation has been cancelled by
+        // the action 3.
+        expect.verifySteps(["load asyncAction1", "load asyncAction3"]);
         await animationFrame();
         await contains("[data-action-id='asyncAction3']").click();
         await hover("[data-action-id='action1']");
@@ -565,12 +568,7 @@ describe("Operation", () => {
         asyncAction3.resolve();
         await new Promise((resolve) => setTimeout(resolve, 0));
 
-        expect.verifySteps([
-            "load asyncAction1",
-            "load asyncAction3",
-            "apply asyncAction3",
-            "action1",
-        ]);
+        expect.verifySteps(["load asyncAction3", "apply asyncAction3", "action1"]);
         expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action1");
 
         // If the code is not working properly, hovering on another action at
@@ -581,7 +579,7 @@ describe("Operation", () => {
         expect(":iframe .test-options-target").toHaveInnerHTML("a-asyncAction3-action2");
         expect.verifySteps(["action2"]);
     });
-    test("handle async actions with commit and preview (separated by animation frame)", async () => {
+    test("handle async actions with commit and preview (separated by running all timers)", async () => {
         const asyncAction1 = makeAsyncActionItem("asyncAction1");
         const asyncAction2 = makeAsyncActionItem("asyncAction2");
         const asyncAction3 = makeAsyncActionItem("asyncAction3");
