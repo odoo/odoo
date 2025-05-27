@@ -1,11 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
-import {
-    formatValue,
-    TERM_OPERATORS_NEGATION,
-    toValue,
-} from "@web/core/tree_editor/condition_tree";
-import { sprintf } from "@web/core/utils/strings";
 import { parseExpr } from "@web/core/py_js/py";
+import { formatValue, toValue } from "@web/core/tree_editor/condition_tree";
 import { Select } from "@web/core/tree_editor/tree_editor_components";
 
 const OPERATOR_DESCRIPTIONS = {
@@ -93,18 +88,20 @@ function getOperatorDescription(operator, fieldDefType) {
     return description;
 }
 
-export function getOperatorLabel(operator, fieldDefType, negate = false) {
+export function getOperatorLabel(
+    operator,
+    fieldDefType,
+    negate = false,
+    getDescr = (operator, fieldDefType) => null
+) {
     let label;
     if (typeof operator === "string" && operator in OPERATOR_DESCRIPTIONS) {
-        if (negate && operator in TERM_OPERATORS_NEGATION) {
-            return getOperatorDescription(TERM_OPERATORS_NEGATION[operator], fieldDefType);
-        }
-        label = getOperatorDescription(operator, fieldDefType);
+        label = getDescr(operator, fieldDefType) || getOperatorDescription(operator, fieldDefType);
     } else {
         label = formatValue(operator);
     }
     if (negate) {
-        return sprintf(`not %s`, label);
+        return _t(`not %(operator_label)s`, { operator_label: label });
     }
     return label;
 }
