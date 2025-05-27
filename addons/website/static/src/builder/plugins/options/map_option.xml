@@ -42,7 +42,10 @@
         <BuilderColorPicker styleAction="'background-color'" applyTo="'.s_map_color_filter'"/>
     </BuilderRow>
     <BuilderRow label.translate="Description">
-        <BuilderCheckbox action="'mapDescription'"/>
+        <BuilderCheckbox id="'description'" action="'mapDescription'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Description Text" level="1" t-if="isActiveItem('description')">
+        <BuilderTextInput action="'mapDescriptionTextValue'"/>
     </BuilderRow>
 </t>
 </templates>
