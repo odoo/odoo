@@ -1009,11 +1009,13 @@ class ResPartner(models.Model):
         'show_email', 'show_vat', 'lang', 'formatted_display_name'
     )
     def _compute_display_name(self):
+        type_description = dict(self._fields['type']._description_selection(self.env))
         for partner in self:
             if partner._context.get("formatted_display_name"):
                 name = partner.name or ''
                 if partner.parent_id or partner.company_name:
-                    name = f"{partner.company_name or partner.parent_id.name} \t --{partner.name}--"
+                    name = (f"{partner.company_name or partner.parent_id.name} \t "
+                            f"--{partner.name or type_description.get(partner.type, '')}--")
 
                 if partner._context.get('show_email') and partner.email:
                     name = f"{name} \t --{partner.email}--"
