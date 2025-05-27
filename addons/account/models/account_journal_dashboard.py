@@ -1022,6 +1022,7 @@ class AccountJournal(models.Model):
         action['context'] = context
         action['context'].update({
             'default_journal_id': self.id,
+            'bank_statements_source': self.bank_statements_source,
         })
         domain_type_field = action['res_model'] == 'account.move.line' and 'move_id.move_type' or 'move_type' # The model can be either account.move or account.move.line
 
