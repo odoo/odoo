@@ -1,7 +1,24 @@
 import { registry } from "@web/core/registry";
+import { WORKER_STATE } from "@bus/workers/websocket_worker";
+import { whenReady } from "@odoo/owl";
+import { animationFrame } from "@odoo/hoot-dom";
 
 function logout() {
     return [
+        {
+            trigger: ".o_web_client .o_navbar",
+            async run() {
+                await whenReady();
+                await animationFrame();
+                await new Promise((resolve) => {
+                    const bus = odoo.__WOWL_DEBUG__.root.env.services.bus_service;
+                    bus.addEventListener("connect", resolve, { once: true });
+                    if (bus.workerState === WORKER_STATE.CONNECTED) {
+                        resolve();
+                    }
+                });
+            },
+        },
         {
             content: "check we're logged in",
             trigger: ".o_user_menu .dropdown-toggle",
