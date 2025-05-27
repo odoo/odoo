@@ -14,6 +14,7 @@
             <!-- Back -->
             <div class="page col-6 position-relative p-1">
                 <div class="oe_structure"/>
+<<<<<<< a6368e8a5787f3067d09d79516a2924b3f1207f0
                 <div class="o_event_foldable_badge_back text-center">
                     <t t-if="event.use_barcode">
                         <t t-if="attendee">
@@ -25,6 +26,75 @@
                     </t>
                     <div class="o_event_foldable_badge_barcode_container_top">
                         <img t-attf-src="/report/barcode/QR/{{attendee.barcode if attendee else '12345678901234567890'}}?&amp;width=174&amp;height=174&amp;quiet=0" alt="QR Code"/>
+||||||| a578e11d88229cbed21095e6bd1b83671a58d487
+                <div class="o_event_foldable_badge_ticket_wrapper p-2">
+                    <div class="o_event_foldable_badge_ticket_wrapper_top page">
+                        <h5 class="o_event_foldable_badge_event_name text-odoo fw-bold text-center" t-field="event.name"/>
+                        <div class="text-center o_event_foldable_badge_font_small">
+                            <span itemprop="startDate" t-field="event.date_begin"
+                                t-options='{"widget": "datetime", "date_only": True}'
+                                class="fw-bold"/>
+                            <span itemprop="startDateTime" t-field="event.date_begin"
+                                class="fw-bold"
+                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                            <span class="fa fa-arrow-right o_event_foldable_badge_font_faded"/>
+                            <span t-if="not event.is_one_day"
+                                itemprop="endDate" t-field="event.date_end"
+                                t-options='{"widget": "datetime", "date_only": True}'
+                                class="fw-bold"/>
+                            <span itemprop="endDateTime" t-field="event.date_end"
+                                class="fw-bold"
+                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                        </div>
+                        <div class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
+                            (<span itemprop="timezone" t-out="event.date_tz"/>)
+                        </div>
+                        <div t-if="event.address_id" class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
+                            <t t-call="event.event_report_template_formatted_event_address"/>
+                        </div>
+                        <div class="text-center mt-5 pt-2">
+                            <h2 t-if="attendee" t-field="attendee.name"/>
+                            <h2 t-elif="not attendee"><span>John Doe</span></h2>
+                            <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                            <div t-if="attendee" class="o_event_foldable_badge_font_faded" t-field="attendee.event_ticket_id"/>
+                            <div t-elif="first_ticket" t-out="first_ticket.name"
+                                class="o_event_foldable_badge_font_faded"/>
+                        </div>
+=======
+                <div class="o_event_foldable_badge_ticket_wrapper p-2">
+                    <div class="o_event_foldable_badge_ticket_wrapper_top page">
+                        <h5 class="o_event_foldable_badge_event_name text-odoo fw-bold text-center" t-field="event.name"/>
+                        <div class="text-center o_event_foldable_badge_font_small">
+                            <span itemprop="startDate" t-field="event.date_begin"
+                                t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                                class="fw-bold"/>
+                            <span itemprop="startDateTime" t-field="event.date_begin"
+                                class="fw-bold"
+                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                            <span class="fa fa-arrow-right o_event_foldable_badge_font_faded"/>
+                            <span t-if="not event.is_one_day"
+                                itemprop="endDate" t-field="event.date_end"
+                                t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                                class="fw-bold"/>
+                            <span itemprop="endDateTime" t-field="event.date_end"
+                                class="fw-bold"
+                                t-options='{"widget": "datetime", "time_only": True, "tz_name": event.date_tz, "hide_seconds": True}'/>
+                        </div>
+                        <div class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
+                            (<span itemprop="timezone" t-out="event.date_tz"/>)
+                        </div>
+                        <div t-if="event.address_id" class="o_event_foldable_badge_font_faded o_event_foldable_badge_font_small text-center">
+                            <t t-call="event.event_report_template_formatted_event_address"/>
+                        </div>
+                        <div class="text-center mt-5 pt-2">
+                            <h2 t-if="attendee" t-field="attendee.name"/>
+                            <h2 t-elif="not attendee"><span>John Doe</span></h2>
+                            <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                            <div t-if="attendee" class="o_event_foldable_badge_font_faded" t-field="attendee.event_ticket_id"/>
+                            <div t-elif="first_ticket" t-out="first_ticket.name"
+                                class="o_event_foldable_badge_font_faded"/>
+                        </div>
+>>>>>>> c5dddc64d29b537778d0385e9fa81e8183dcb40d
                     </div>
                     <div class="fs-4 mt-2">
                         <span t-out="attendee.barcode if attendee else '12345678901234567890'"/>
@@ -131,6 +201,7 @@
     <div class="row page">
         <div t-attf-class="o_event_full_page_ticket_container page w-100 #{'o_event_full_page_ticket_responsive_html' if responsive_html else 'o_event_full_page_ticket'}">
             <div class="o_event_full_page_ticket_wrapper">
+<<<<<<< a6368e8a5787f3067d09d79516a2924b3f1207f0
                 <div class="o_event_full_page_ticket_details d-flex">
                     <div class="o_event_full_page_left_details ps-3 pt-4 pb-3 pe-2">
                         <span itemprop="startDate" t-field="event.date_begin"
@@ -152,6 +223,93 @@
                             <div class="col-6 text-end">
                                 <div t-if="attendee" class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_type pe-4" t-field="attendee.event_ticket_id"/>
                                 <div t-elif="first_ticket" t-out="first_ticket.name" class="o_event_full_page_ticket_font_faded pe-4"/>
+||||||| a578e11d88229cbed21095e6bd1b83671a58d487
+                <div class="o_event_full_page_ticket_details row">
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-8 page">
+                                <div class="o_event_full_page_ticket_font_faded">
+                                    Event Ticket For
+                                </div>
+                                <h5 class="o_event_full_page_ticket_event_name text-odoo fw-bold py-0 my-0" t-field="event.name"/>
+                                <span itemprop="startDate" t-field="event.date_begin"
+                                     t-options='{"widget": "datetime", "date_only": True}'
+                                     class="fw-bold"/>
+                                <span itemprop="startDateTime" t-field="event.date_begin"
+                                    class="fw-bold"
+                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
+                                <span class="fa fa-arrow-right o_event_full_page_ticket_font_faded"/>
+                                <span t-if="not event.is_one_day"
+                                    itemprop="endDate" t-field="event.date_end"
+                                    t-options='{"widget": "datetime", "date_only": True}'
+                                    class="fw-bold"/>
+                                <span itemprop="endDateTime" t-field="event.date_end"
+                                    class="fw-bold"
+                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
+                                <span itemprop="timeZone" class="o_event_full_page_ticket_font_faded small">(<t t-out="event.date_tz"/>)</span>
+                                <div t-if="event.address_id" class="o_event_full_page_ticket_font_faded">
+                                    <t t-call="event.event_report_template_formatted_event_address"/>
+                                </div>
+                                <br/>
+                                <h5 t-if="attendee" t-field="attendee.name"></h5>
+                                <h5 t-elif="not attendee"><span>John Doe</span></h5>
+                                <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                                <div t-if="attendee" class="o_event_full_page_ticket_font_faded" t-field="attendee.event_ticket_id"/>
+                                <div t-elif="first_ticket" t-out="first_ticket.name"
+                                    class="o_event_full_page_ticket_font_faded"/>
+                            </div>
+                            <div class="col-4 o_event_full_page_ticket_side_info page">
+                                <span t-if="event.organizer_id.image_128">
+                                    <img t-att-src="image_data_uri(event.organizer_id.image_128)" class="o_event_full_page_ticket_event_logo mb-2"/>
+                                </span>
+                                <div t-if="attendee and attendee.partner_id" class="mb-2 o_event_full_page_ticket_side_info_booked_by">
+                                    <div class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_small_caps fw-bold">Booked By</div>
+                                    <div class="o_event_full_page_ticket_small" t-field="attendee.partner_id"/>
+                                </div>
+=======
+                <div class="o_event_full_page_ticket_details row">
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-8 page">
+                                <div class="o_event_full_page_ticket_font_faded">
+                                    Event Ticket For
+                                </div>
+                                <h5 class="o_event_full_page_ticket_event_name text-odoo fw-bold py-0 my-0" t-field="event.name"/>
+                                <span itemprop="startDate" t-field="event.date_begin"
+                                     t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                                     class="fw-bold"/>
+                                <span itemprop="startDateTime" t-field="event.date_begin"
+                                    class="fw-bold"
+                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
+                                <span class="fa fa-arrow-right o_event_full_page_ticket_font_faded"/>
+                                <span t-if="not event.is_one_day"
+                                    itemprop="endDate" t-field="event.date_end"
+                                    t-options='{"widget": "datetime", "date_only": True, "tz_name": event.date_tz}'
+                                    class="fw-bold"/>
+                                <span itemprop="endDateTime" t-field="event.date_end"
+                                    class="fw-bold"
+                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True, "tz_name": event.date_tz}'/>
+                                <span itemprop="timeZone" class="o_event_full_page_ticket_font_faded small">(<t t-out="event.date_tz"/>)</span>
+                                <div t-if="event.address_id" class="o_event_full_page_ticket_font_faded">
+                                    <t t-call="event.event_report_template_formatted_event_address"/>
+                                </div>
+                                <br/>
+                                <h5 t-if="attendee" t-field="attendee.name"></h5>
+                                <h5 t-elif="not attendee"><span>John Doe</span></h5>
+                                <t t-set="first_ticket" t-value="event.event_ticket_ids[0] if event.event_ticket_ids else None"/>
+                                <div t-if="attendee" class="o_event_full_page_ticket_font_faded" t-field="attendee.event_ticket_id"/>
+                                <div t-elif="first_ticket" t-out="first_ticket.name"
+                                    class="o_event_full_page_ticket_font_faded"/>
+                            </div>
+                            <div class="col-4 o_event_full_page_ticket_side_info page">
+                                <span t-if="event.organizer_id.image_128">
+                                    <img t-att-src="image_data_uri(event.organizer_id.image_128)" class="o_event_full_page_ticket_event_logo mb-2"/>
+                                </span>
+                                <div t-if="attendee and attendee.partner_id" class="mb-2 o_event_full_page_ticket_side_info_booked_by">
+                                    <div class="o_event_full_page_ticket_font_faded o_event_full_page_ticket_small_caps fw-bold">Booked By</div>
+                                    <div class="o_event_full_page_ticket_small" t-field="attendee.partner_id"/>
+                                </div>
+>>>>>>> c5dddc64d29b537778d0385e9fa81e8183dcb40d
                             </div>
                         </div>
                         <div t-if="not responsive_html" class="o_event_full_page_ticket_sponsors_container"></div>
