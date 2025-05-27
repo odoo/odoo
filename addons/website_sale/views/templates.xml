@@ -1900,8 +1900,10 @@
                     <div class="o_wsale_content_contained container d-flex flex-wrap align-items-center py-2 mb-lg-2">
                         <div class="d-flex align-items-center flex-grow-1">
                             <ol class="o_wsale_breadcrumb breadcrumb m-0 p-0">
-                                <li class="o_not_editable breadcrumb-item d-none d-lg-inline-block">
-                                    <a t-att-href="keep(shop_path)">All Products</a>
+                                <li class="breadcrumb-item d-none d-lg-inline-block">
+                                    <a t-att-href="keep(shop_path)">
+                                        <t t-call="website_sale.all_products_link_name"/>
+                                    </a>
                                 </li>
                                 <t t-foreach="category.parents_and_self" t-as="cat">
                                     <li
@@ -1925,7 +1927,9 @@
                                 </li>
                                 <li class="breadcrumb-item d-lg-none">
                                     <a t-att-href="category and keep('%s/category/%s' % (shop_path, slug(cat))) or keep(shop_path)">
-                                        <i class="oi oi-chevron-left me-2" role="img"/><t t-out="category.name or 'All Products'"/>
+                                        <i class="oi oi-chevron-left me-2" role="img"/>
+                                        <t t-if="category.name" t-out="category.name"/>
+                                        <t t-else="" t-call="website_sale.all_products_link_name"/>
                                     </a>
                                 </li>
                             </ol>
@@ -2326,6 +2330,10 @@
         <xpath expr="//a[contains(@t-attf-class, 'o_wsale_product_search_mobile_btn')]" position="attributes">
             <attribute name="t-attf-class" add="d-md-none" remove="d-none" separator=" "/>
         </xpath>
+    </template>
+
+    <template id="all_products_link_name" name="All Products name">
+        <span placeholder="All products">All products</span>
     </template>
 
     <template id="product_accordion" name="Accordion On Product Page">
