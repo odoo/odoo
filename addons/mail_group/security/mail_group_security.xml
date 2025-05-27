@@ -83,7 +83,7 @@
                         ('mail_group_id.access_mode', '=', 'public'),
                         '&amp;',
                             ('mail_group_id.access_mode', '=', 'groups'),
-                            ('mail_group_id.access_group_id', 'in', [g.id for g in user.all_group_ids]),
+                            ('mail_group_id.access_group_id', 'in', user.all_group_ids.ids),
                         '&amp;',
                             ('mail_group_id.access_mode', '=', 'members'),
                             ('mail_group_id.member_partner_ids', 'in', [user.partner_id.id]),
