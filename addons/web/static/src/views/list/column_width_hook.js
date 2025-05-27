@@ -3,7 +3,15 @@ import { useDebounced } from "@web/core/utils/timing";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
-import { useComponent, useEffect, useExternalListener, xml } from "@odoo/owl";
+import {
+    onMounted,
+    onWillUnmount,
+    status,
+    useComponent,
+    useEffect,
+    useExternalListener,
+    xml,
+} from "@odoo/owl";
 
 // This file defines a hook that encapsulates the column width logic of the list view. This logic
 // aims at optimizing the available space between columns and, once computed, at freezing the table
@@ -98,13 +106,16 @@ function computeOptimalDateWidths() {
     const dates = [];
     const datetimes = [];
     const { dateFormat, timeFormat } = localization;
+    const escapedPartsRegex = /('[^']*')/g;
+    const dateFormatWoEscParts = dateFormat.replaceAll(escapedPartsRegex, "");
     // generate a date for each month if date format contains MMMM or MMM (full or abbrev. month)
-    for (let month = 1; month <= (/(?<!')MMM/.test(dateFormat) ? 12 : 1); month++) {
+    for (let month = 1; month <= (/MMM/.test(dateFormatWoEscParts) ? 12 : 1); month++) {
         // generate a date for each day if date format contains cccc or ccc (full or abbrev. day)
-        for (let day = 1; day <= (/(?<!')ccc/.test(dateFormat) ? 7 : 1); day++) {
+        for (let day = 1; day <= (/ccc/.test(dateFormatWoEscParts) ? 7 : 1); day++) {
             dates.push(formatDate(luxon.DateTime.local(2017, month, day)));
             datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 8, 0, 0)));
-            if (/(?<!')a/.test(timeFormat)) {
+            const timeFormatWoEscParts = timeFormat.replaceAll(escapedPartsRegex, "");
+            if (/a/.test(timeFormatWoEscParts)) {
                 // generate a date in the afternoon if time is displayed with AM/PM or equivalent
                 datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 20, 0, 0)));
             }
@@ -436,7 +447,7 @@ export function useMagicColumnWidths(tableRef, getState) {
             ev.preventDefault();
             ev.stopPropagation();
             let delta = ev.clientX - initialX;
-            delta = this.isRTL ? -delta : delta;
+            delta = localization.direction === "rtl" ? -delta : delta;
             const newWidth = Math.max(10, initialWidth + delta);
             const tableDelta = newWidth - initialWidth;
             th.style.width = `${Math.floor(newWidth)}px`;
@@ -490,11 +501,37 @@ export function useMagicColumnWidths(tableRef, getState) {
     // Side effects
     if (renderer.constructor.useMagicColumnWidths) {
         useEffect(forceColumnWidths);
-        const debouncedResizeCallback = useDebounced(() => {
-            resetWidths();
-            forceColumnWidths();
-        }, 200);
-        useExternalListener(window, "resize", debouncedResizeCallback);
+        // Forget computed widths (and potential manual column resize) on window resize
+        useExternalListener(window, "resize", resetWidths);
+        // Listen to width changes on the parent node of the table, to recompute ideal widths
+        // Note: we compute the widths once, directly, and once after parent width stabilization.
+        // The first call is only necessary to avoid an annoying flickering when opening form views
+        // with an x2many list and a chatter (when it is displayed below the form) as it may happen
+        // that the display of chatter messages introduces a vertical scrollbar, thus reducing the
+        // available width.
+        const component = useComponent();
+        let parentWidth;
+        const debouncedForceColumnWidths = useDebounced(
+            () => {
+                if (status(component) !== "destroyed") {
+                    forceColumnWidths();
+                }
+            },
+            200,
+            { immediate: true, trailing: true }
+        );
+        const resizeObserver = new ResizeObserver(() => {
+            const newParentWidth = tableRef.el.parentNode.clientWidth;
+            if (newParentWidth !== parentWidth) {
+                parentWidth = newParentWidth;
+                debouncedForceColumnWidths();
+            }
+        });
+        onMounted(() => {
+            parentWidth = tableRef.el.parentNode.clientWidth;
+            resizeObserver.observe(tableRef.el.parentNode);
+        });
+        onWillUnmount(() => resizeObserver.disconnect());
     }
 
     // API

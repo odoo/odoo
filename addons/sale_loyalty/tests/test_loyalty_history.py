@@ -23,13 +23,21 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
                 'reward_point_amount': 1,
                 'product_ids': [cls.product_A.id],
             })],
-            'reward_ids': [Command.create({
-                'reward_type': 'discount',
-                'discount': 10,
-                'discount_mode': 'percent',
-                'discount_applicability': 'order',
-                'required_points': 1,
-            })],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'discount',
+                    'discount': 10,
+                    'discount_mode': 'percent',
+                    'discount_applicability': 'order',
+                    'required_points': 1,
+                }),
+                Command.create({
+                    'active': False,
+                    'reward_type': 'product',
+                    'reward_product_id': cls.product_B.id,
+                    'required_points': 2,
+                }),
+            ],
         })
         cls.loyalty_card = cls.env['loyalty.card'].create({
             'program_id': cls.loyalty_program.id, 'partner_id': cls.partner_a.id, 'points': 2
@@ -91,3 +99,32 @@ class TestLoyaltyhistory(TestSaleCouponCommon):
         order._action_cancel()
         self.assertEqual(lines_before_cancel - 1, len(self.loyalty_card.history_ids),
                          "History line should be deleted after order cancel")
+
+    def test_loyalty_history_multi_reward(self):
+        """Verify that applying multiple rewards sums up the total points cost."""
+        self.loyalty_card.points = initial_points = 4
+        self.loyalty_program.with_context(active_test=False).reward_ids.active = True
+        order = self.empty_order
+        order.write({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_A.id,
+                    'tax_id': False,
+                }),
+            ],
+        })
+        for reward in self.loyalty_program.reward_ids:
+            order._apply_program_reward(reward, self.loyalty_card)
+        self.assertEqual(len(order.order_line.filtered('reward_id')), 2)
+        self.assertEqual(order.order_line.mapped('points_cost'), [0, 1, 2])
+
+        order.action_confirm()
+        loyalty_history = self.loyalty_card.history_ids
+        self.assertEqual(loyalty_history.issued, 1, "1 point should be rewarded")
+        self.assertEqual(loyalty_history.used, 3, "A total of 3 points should be used")
+        self.assertEqual(
+            self.loyalty_card.points,
+            initial_points + loyalty_history.issued - loyalty_history.used,
+            "Loyalty points should equal initial points + points issued - points used",
+        )

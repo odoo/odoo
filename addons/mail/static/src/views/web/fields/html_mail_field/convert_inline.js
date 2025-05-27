@@ -567,7 +567,7 @@ export function classToStyle(element, cssRules) {
         ) {
             writes.push(() => {
                 node.before(
-                    _createMso(`<table align="center" border="0"
+                    createMso(`<table align="center" border="0"
                     role="presentation" cellpadding="0" cellspacing="0"
                     style="border-radius: 6px; border-collapse: separate !important;">
                         <tbody>
@@ -580,7 +580,7 @@ export function classToStyle(element, cssRules) {
                     `)
                 );
                 node.after(
-                    _createMso(`</td>
+                    createMso(`</td>
                         </tr>
                     </tbody>
                 </table>`)
@@ -668,16 +668,16 @@ function enforceTablesResponsivity(element) {
             td.removeAttribute("width");
             if (index === 0) {
                 div.before(
-                    _createMso(`
+                    createMso(`
                     <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
                         <tr>
                             <td valign="top" style="width: ${width};">`)
                 );
             } else {
-                div.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
+                div.before(createMso(`</td><td valign="top" style="width: ${width};">`));
             }
             if (index === tds.length - 1) {
-                div.after(_createMso(`</td></tr></table>`));
+                div.after(createMso(`</td></tr></table>`));
             }
             index++;
         }
@@ -799,7 +799,7 @@ function enforceImagesResponsivity(element) {
     // Remove the height attribute in card images so they can resize
     // responsively, but leave it for Outlook.
     for (const image of element.querySelectorAll('img[width="100%"][height]')) {
-        image.before(_createMso(image.outerHTML));
+        image.before(createMso(image.outerHTML));
         image.classList.add("mso-hide");
         image.removeAttribute("height");
     }
@@ -830,7 +830,7 @@ export async function toInline(element, cssRules) {
         clone.setAttribute("width", width);
         clone.style.setProperty("width", width + "px");
         clone.style.removeProperty("max-width");
-        image.before(_createMso(clone.outerHTML));
+        image.before(createMso(clone.outerHTML));
         _hideForOutlook(image);
     }
 
@@ -908,7 +908,7 @@ function flattenBackgroundImages(element) {
         const vml = _backgroundImageToVml(backgroundImage);
         if (vml) {
             // Put the Outlook version after the original one in an mso conditional.
-            backgroundImage.after(_createMso(vml));
+            backgroundImage.after(createMso(vml));
             // Hide the original element for Outlook.
             backgroundImage.classList.add("mso-hide");
         }
@@ -1396,7 +1396,7 @@ function responsiveToStaticForOutlook(element) {
             }
         }
         // The opening tag of `outlookTd` is for Outlook.
-        td.before(_createMso(outlookTd.outerHTML.replace("</td>", "")));
+        td.before(createMso(outlookTd.outerHTML.replace("</td>", "")));
         // The opening tag of `td` is for the others.
         _hideForOutlook(td, "opening");
     }
@@ -1596,8 +1596,15 @@ function _createColumnGrid() {
  * @param {string} content
  * @returns {Comment}
  */
-function _createMso(content = "") {
-    return document.createComment(`[if mso]>${content}<![endif]`);
+export function createMso(content = "") {
+    // We remove comments having opposite condition from the one we will insert
+    // We remove comment tags having the same condition
+    const showRegex = /<!--\[if\s+mso\]>([\s\S]*?)<!\[endif\]-->/g;
+    const hideRegex = /<!--\[if\s+!mso\]>([\s\S]*?)<!\[endif\]-->/g;
+    let contentToInsert = content;
+    contentToInsert = contentToInsert.replace(showRegex, (matchedContent, group) => group);
+    contentToInsert = contentToInsert.replace(hideRegex, "");
+    return document.createComment(`[if mso]>${contentToInsert}<![endif]`);
 }
 /**
  * Return a table element, with its default styles and attributes, as well as
@@ -1681,7 +1688,8 @@ function _getMatchedCSSRules(node, cssRules) {
         node.mozMatchesSelector ||
         node.msMatchesSelector ||
         node.oMatchesSelector;
-    const styles = cssRules.map((rule) => rule.style).filter(Boolean);
+
+    const styles = cssRules.map((rule) => removeBlacklistedStyles(rule, node)).filter(Boolean);
 
     // Add inline styles at the highest specificity.
     if (node.style.length) {
@@ -1918,4 +1926,28 @@ function _wrap(element, wrapperTag, wrapperClass, wrapperStyle) {
     element.parentElement.insertBefore(wrapper, element);
     wrapper.append(element);
     return wrapper;
+}
+
+function isBlacklistedStyle(node, selector, key) {
+    return (
+        node.matches("table, thead, tbody, tfoot, tr, td, th") &&
+        ["table", "thead", "tbody", "tfoot", "tr", "td", "th"].some((elName) =>
+            selector.includes(elName)
+        ) &&
+        key.includes("color")
+    );
+}
+
+function removeBlacklistedStyles(rule, node) {
+    if (!rule.style) {
+        return rule.style;
+    }
+    const styles = {};
+    for (const [key, value] of Object.entries(rule.style)) {
+        if (isBlacklistedStyle(node, rule.selector, key)) {
+            continue;
+        }
+        styles[key] = value;
+    }
+    return styles;
 }

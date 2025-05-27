@@ -484,6 +484,39 @@ test(`width computation: date and datetime with fancy formats`, async () => {
     expect(getColumnWidths()).toEqual([40, 325, 170, 265]);
 });
 
+test(`width computation: date and datetime with fancy formats (2)`, async () => {
+    // Those formats contains static parts ("a" not prefixed by "%") which will be escaped when
+    // converted into the luxon format (wrapped into single quotes). The regex that detects patterns
+    // like "MMM" (abrev. month, in letters) must properly ignore those escaped parts. This test
+    // ensures it.
+    defineParams({
+        lang_parameters: {
+            date_format: "%Ya%ba%d",
+            time_format: "%H%M%Sa%p",
+        },
+    });
+    resetDateFieldWidths();
+    after(resetDateFieldWidths);
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="date"/>
+                <field name="datetime"/>
+            </list>`,
+    });
+
+    expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual([
+        "yop",
+        "2017aJana25",
+        "2016aDeca12 115505aAM",
+    ]);
+    expect(getColumnWidths()).toEqual([40, 470, 99, 191]);
+});
+
 test(`width computation: width attribute in arch and overflowing table`, async () => {
     Foo._records[0].text =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
@@ -676,7 +709,7 @@ test(`width computation: x2many, editable list, with invisible modifier on x2man
     expect(columnWidths[1]).toBeGreaterThan(500);
 });
 
-test.todo(`width computation: widths are re-computed on window resize`, async () => {
+test(`width computation: widths are re-computed on window resize`, async () => {
     Foo._records[0].text =
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
         "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
@@ -686,21 +719,42 @@ test.todo(`width computation: widths are re-computed on window resize`, async ()
         resModel: "foo",
         type: "list",
         arch: `
-            <list editable="bottom">
-                <field name="datetime"/>
+            <list>
+                <field name="int_field"/>
                 <field name="text"/>
             </list>
         `,
     });
-    const initialTextWidth = queryRect(`th[data-name="text"]`).width;
-    const selectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
 
-    await resize({ width: queryRect(getFixture()).width / 2 });
-    await animationFrame();
-    const postResizeTextWidth = queryRect(`th[data-name="text"]`).width;
-    const postResizeSelectorWidth = queryRect(`th.o_list_record_selector:eq(0)`).width;
-    expect(postResizeTextWidth).toBeLessThan(initialTextWidth);
-    expect(selectorWidth).toBe(postResizeSelectorWidth);
+    expect(getColumnWidths()).toEqual([40, 80, 680]);
+
+    resize({ width: queryRect(getFixture()).width * 1.2 });
+    await runAllTimers();
+    expect(getColumnWidths()).toEqual([40, 80, 840]);
+});
+
+test(`width computation: widths are re-computed on parent resize`, async () => {
+    Foo._records[0].text =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
+        "Sed blandit, justo nec tincidunt feugiat, mi justo suscipit libero, sit amet tempus " +
+        "ipsum purus bibendum est.";
+
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="int_field"/>
+                <field name="text"/>
+            </list>
+        `,
+    });
+
+    expect(getColumnWidths()).toEqual([40, 80, 680]);
+
+    queryOne(".o_list_renderer").style.width = "600px";
+    await runAllTimers();
+    expect(getColumnWidths()).toEqual([40, 80, 480]);
 });
 
 test(`width computation: button columns don't have a max width`, async () => {

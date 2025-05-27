@@ -29,4 +29,23 @@ describe('Odoo fields', () => {
             contentAfter: `<p><span data-oe-model="product.template" data-oe-id="27" data-oe-field="name" data-oe-type="char" data-oe-expression="product.name" data-oe-xpath="/t[1]/div[1]/h3[2]/span[1]" class="o_editable">[]</span><br></p>`,
         });
     });
+    it('should keep zero-width breaking space for empty inline editable', async () => {
+        testEditor(BasicEditor, {
+            contentBefore: '<div><span class="o_editable" data-oe-field="arch">\u200b</span></div>',
+            stepFunction: async editor => {
+                await editor.cleanForSave();
+                const cleanContent = editor.editable.innerHTML;
+                window.chai.assert.strictEqual(
+                    cleanContent,
+                    '<div><span class="o_editable" data-oe-field="arch" contenteditable="true">\u200b</span></div>'
+                );
+            },
+            contentAfter: '<div><span class="o_editable" data-oe-field="arch" contenteditable="true">\u200b</span></div>',
+        }, {
+            isRootEditable: false,
+            getContentEditableAreas: function (editor) {
+                return [...editor.editable.querySelectorAll('span')];
+            }
+        });
+    });
 });

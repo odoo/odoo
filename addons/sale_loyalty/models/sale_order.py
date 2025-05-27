@@ -2,8 +2,8 @@
 
 import itertools
 import random
-
 from collections import defaultdict
+from functools import partial
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -79,13 +79,13 @@ class SaleOrder(models.Model):
 
     def _add_loyalty_history_lines(self):
         self.ensure_one()
-        points_per_coupon = defaultdict(dict)
+        points_per_coupon = defaultdict(partial(defaultdict, int))
         for coupon_point in self.coupon_point_ids:
             points_per_coupon[coupon_point.coupon_id]['issued'] = coupon_point.points
         for line in self.order_line:
             if not line.coupon_id:
                 continue
-            points_per_coupon[line.coupon_id]['cost'] = line.points_cost
+            points_per_coupon[line.coupon_id]['cost'] += line.points_cost
 
         create_values = []
         base_values = {
@@ -756,6 +756,8 @@ class SaleOrder(models.Model):
         self.ensure_one()
         command_list = []
         for vals, line in zip(reward_vals, old_lines):
+            if vals['product_id'] == line.product_id.id:
+                vals['name'] = line.name  # Preserve custom description
             command_list.append((Command.UPDATE, line.id, vals))
         if len(reward_vals) > len(old_lines):
             command_list.extend((Command.CREATE, 0, vals) for vals in reward_vals[len(old_lines):])

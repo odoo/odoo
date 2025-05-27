@@ -840,7 +840,7 @@ export class PosStore extends Reactive {
                 const weight = await makeAwaitable(this.env.services.dialog, ScaleScreen);
                 if (weight) {
                     values.qty = weight;
-                } else {
+                } else if (weight !== null) {
                     return;
                 }
             } else {
@@ -2213,6 +2213,11 @@ export class PosStore extends Reactive {
 
     get showSaveOrderButton() {
         return this.isOpenOrderShareable();
+    }
+
+    async isSessionDeleted() {
+        const session = await this.data.read("pos.session", [this.session.id]);
+        return session[0] === undefined;
     }
 }
 
