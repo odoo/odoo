@@ -593,6 +593,9 @@
             <field name="inherit_id" ref="account.view_invoice_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <list position="attributes">
+                    <attribute name="class">out_invoice_tree</attribute>
+                </list>
                 <button name="action_force_register_payment" position="before">
                     <button name="action_send_and_print" type="object" string="Send"/>
                 </button>
