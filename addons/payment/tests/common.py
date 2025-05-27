@@ -109,10 +109,8 @@ class PaymentCommon(BaseCommon):
     #=== Utils ===#
 
     @classmethod
-    def _prepare_provider(cls, code='none', company=None, update_values=None, **kwargs):
-        """ Prepare and return the first provider matching the given provider and company.
-
-        If no provider is found in the given company, we duplicate the one from the base company.
+    def _prepare_provider(cls, code, company=None, update_values=None, **kwargs):
+        """ Prepare and return the first active provider matching the given code and company.
 
         All other providers belonging to the same company are disabled to avoid any interferences.
 
@@ -123,6 +121,8 @@ class PaymentCommon(BaseCommon):
         :return: The provider to prepare, if found
         :rtype: recordset of `payment.provider`
         """
+        assert code != 'none', "Code 'none' should not be passed to _prepare_provider"
+
         company = company or cls.env.company
         update_values = update_values or {}
         provider_domain = cls._get_provider_domain(code, **kwargs)
@@ -131,15 +131,8 @@ class PaymentCommon(BaseCommon):
             AND([provider_domain, [('company_id', '=', company.id)]]), limit=1
         )
         if not provider:
-            if code != 'none':
-                base_provider = cls.env['payment.provider'].sudo().search(provider_domain, limit=1)
-            else:
-                base_provider = cls.provider
-            if not base_provider:
-                _logger.error("no payment.provider found for code %s", code)
-                return cls.env['payment.provider']
-            else:
-                provider = base_provider.copy({'company_id': company.id})
+            _logger.error("No payment.provider found for code %s in company %s", code, company.name)
+            return cls.env['payment.provider']
 
         update_values['state'] = 'test'
         provider.write(update_values)
