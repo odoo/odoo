@@ -77,6 +77,5 @@ class MailMessage(models.Model):
             Store.One(
                 "author_id",
                 ["avatar_128", "is_company", "user_livechat_username", "user"],
-                rename="author",
             ),
         )

@@ -35,7 +35,7 @@ export class DiscussCoreCommon {
             const { body, channel_id } = payload;
             const lastMessageId = this.store.getLastMessageId();
             const message = this.store["mail.message"].insert({
-                author: this.store.odoobot,
+                author_id: this.store.odoobot,
                 body: markup(body),
                 id: lastMessageId + 0.01,
                 subtype_id: this.store.mt_note,

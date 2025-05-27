@@ -830,7 +830,12 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            tmpData.author = this.store.self;
+            if (this.store.self.type === "partner") {
+                tmpData.author_id = this.store.self;
+            }
+            if (this.store.self.type === "guest") {
+                tmpData.author_guest_id = this.store.self;
+            }
             if (parentId) {
                 tmpData.parent_id = this.store["mail.message"].get(parentId);
             }
