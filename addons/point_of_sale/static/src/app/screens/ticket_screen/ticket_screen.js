@@ -26,7 +26,6 @@ import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_
 import { BarcodeVideoScanner } from "@web/core/barcode/barcode_video_scanner";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
-import { ConnectionLostError } from "@web/core/network/rpc";
 
 const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
@@ -81,21 +80,9 @@ export class TicketScreen extends Component {
         Object.assign(this.state, this.props.stateOverride || {});
 
         onMounted(this.onMounted);
-        onWillStart(async () => {
-            if (!this.pos.loadingOrderState) {
-                try {
-                    this.pos.loadingOrderState = true;
-                    await this.pos.getServerOrders();
-                } catch (error) {
-                    if (error instanceof ConnectionLostError) {
-                        Promise.reject(error);
-                        return error;
-                    }
-                    throw error;
-                } finally {
-                    this.pos.loadingOrderState = false;
-                }
-            }
+        onWillStart(() => {
+            // Start fetching orders without blocking screen rendering
+            this.pos.getServerOrders();
         });
     }
     onMounted() {
