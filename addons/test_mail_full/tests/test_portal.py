@@ -314,7 +314,7 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
     def test_portal_access_logged(self):
         """ Check portal behavior when accessing mail/view, notably check token
         support and propagation. """
-        my_discuss_url = f'{self.test_base_url}/my#action=mail.action_discuss'
+        my_url = f'{self.test_base_url}/my'
 
         self.authenticate(self.env.user.login, self.env.user.login)
         for url_name, url, exp_url in [
@@ -323,43 +323,43 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
                 "No access (portal enabled), token", self.record_portal_url_auth,
                 self.portal_web_url_with_token,
             ),
-            # invalid token -> ko -> redirect to my with discuss action (???)
+            # invalid token -> ko -> redirect to my
             (
                 "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
-                my_discuss_url,
+                my_url,
             ),
             # std url, read record -> redirect to my with parameters being record portal action parameters (???)
             (
                 'Access record (no customer portal)', self.record_read_url_base,
                 f'{self.test_base_url}/my#{url_encode({"model": self.record_read._name, "id": self.record_read.id, "active_id": self.record_read.id, "cids": self.company_admin.id}, sort=True)}',
             ),
-            # std url, no access to record -> redirect to my with discuss action (???)
+            # std url, no access to record -> redirect to my
             (
                 'No access record (internal)', self.record_internal_url_base,
-                my_discuss_url,
+                my_url,
             ),
-            # missing token -> redirect to my with discuss action (???)
+            # missing token -> redirect to my
             (
                 'No access record (portal enabled)', self.record_portal_url_base,
-                my_discuss_url,
+                my_url,
             ),
             # public_type act_url -> share users are redirected to frontend url
             (
                 "Public with act_url -> frontend url", self.record_public_act_url_base,
                 self.public_act_url_share
             ),
-            # not existing -> redirect to my with discuss action (???)
+            # not existing -> redirect to my
             (
                 'Not existing record (internal)', self.record_internal_url_no_exists,
-                my_discuss_url,
+                my_url,
             ),
             (
                 'Not existing record (portal enabled)', self.record_portal_url_no_exists,
-                my_discuss_url,
+                my_url,
             ),
             (
                 'Not existing model', self.record_url_no_model,
-                my_discuss_url,
+                my_url,
             ),
         ]:
             with self.subTest(name=url_name, url=url):
