@@ -174,6 +174,9 @@
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
         ],
+        'website.inside_builder_style': [
+            'website_sale/static/src/website_builder/**/*.inside.scss',
+        ],
         'web.assets_tests': [
             'website_sale/static/tests/tours/**/*',
             'website_sale/static/src/js/tours/product_configurator_tour_utils.js',

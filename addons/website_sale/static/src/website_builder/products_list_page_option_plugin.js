@@ -1,9 +1,10 @@
-import { ProductsListPageOption } from "@website_sale/website_builder/products_list_page_option";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { BuilderAction } from "@html_builder/core/builder_action";
+import { renderToElement } from "@web/core/utils/render";
+import { ProductsListPageOption } from "@website_sale/website_builder/products_list_page_option";
 
 class ProductsListPageOptionPlugin extends Plugin {
     static id = "productsListPageOptionPlugin";
@@ -20,6 +21,7 @@ class ProductsListPageOptionPlugin extends Plugin {
             },
         ],
         builder_actions: {
+            PreviewTemplateAction,
             SetPpgAction,
             SetPprAction,
             SetGapAction,
@@ -39,6 +41,48 @@ class ProductsListPageOptionPlugin extends Plugin {
     }
 }
 
+class PreviewTemplateAction extends BuilderAction {
+    static id = "previewTemplate";
+
+    apply(...args) {
+        this._previewTemplate(true, ...args);
+    }
+
+    clean(...args) {
+        this._previewTemplate(false, ...args);
+    }
+
+    _previewTemplate(
+        apply,
+        {
+            editingElement,
+            params: { templateId, previewClass, placeBefore, placeAfter, placeExcludeRootClosest },
+            selectableContext,
+        }
+    ) {
+        if (!apply && selectableContext) {
+            return;
+        }
+
+        if (templateId && !editingElement.closest(placeExcludeRootClosest)) {
+            const renderedEl = renderToElement(templateId);
+            if (placeBefore) {
+                for (const el of editingElement.querySelectorAll(placeBefore)) {
+                    el.insertAdjacentElement("beforebegin", renderedEl.cloneNode(true));
+                }
+            }
+            if (placeAfter) {
+                for (const el of editingElement.querySelectorAll(placeAfter)) {
+                    el.insertAdjacentElement("afterend", renderedEl.cloneNode(true));
+                }
+            }
+        }
+
+        if (previewClass) {
+            editingElement.classList.add(...previewClass.split(" "));
+        }
+    }
+}
 export class SetPpgAction extends BuilderAction {
     static id = "setPpg";
     setup() {
