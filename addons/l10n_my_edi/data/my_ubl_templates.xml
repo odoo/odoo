@@ -11,6 +11,10 @@
                 <cac:AdditionalDocumentReference t-if="vals.get('invoice_incoterm_code')">
                     <cbc:ID t-out="vals['invoice_incoterm_code']"/>
                 </cac:AdditionalDocumentReference>
+                <cac:AdditionalDocumentReference t-if="vals.get('export_custom_form_reference')">
+                    <cbc:ID t-out="vals['export_custom_form_reference']"/>
+                    <cbc:DocumentType>K2</cbc:DocumentType>
+                </cac:AdditionalDocumentReference>
             </t>
         </xpath>
         <xpath expr="//*[local-name()='TaxTotal']" position="before">
