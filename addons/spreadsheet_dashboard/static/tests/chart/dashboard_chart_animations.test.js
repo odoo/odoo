@@ -8,6 +8,7 @@ import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
 import { createDashboardActionWithData } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
 import { defineSpreadsheetDashboardModels } from "@spreadsheet_dashboard/../tests/helpers/data";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 
 describe.current.tags("desktop");
 defineSpreadsheetDashboardModels();
@@ -49,14 +50,7 @@ test("Animations are replayed only when chart data changes", async () => {
     const env = await makeSpreadsheetMockEnv();
     const setupModel = new Model({}, { custom: { odooDataProvider: new OdooDataProvider(env) } });
     const chartId = insertChartInSpreadsheet(setupModel);
-    const filter = {
-        id: "filterId",
-        type: "date",
-        label: "Last Year",
-        rangeType: "fixedPeriod",
-        defaultValue: { yearOffset: -1 },
-    };
-    await addGlobalFilter(setupModel, filter, {
+    await addGlobalFilter(setupModel, THIS_YEAR_GLOBAL_FILTER, {
         chart: { [chartId]: { chain: "date", type: "date" } },
     });
 
@@ -65,12 +59,12 @@ test("Animations are replayed only when chart data changes", async () => {
     expect(charts[chartId].config.options.animation).toEqual({ animateRotate: true });
 
     // Change the chart data
-    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "filterId" });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: THIS_YEAR_GLOBAL_FILTER.id });
     await animationFrame();
     expect(charts[chartId].config.options.animation).toEqual({ animateRotate: true });
 
     // Dispatch a command that doesn't change the chart data
-    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: "filterId" });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", { id: THIS_YEAR_GLOBAL_FILTER.id });
     await animationFrame();
     expect(charts[chartId].config.options.animation).toBe(false);
 });
