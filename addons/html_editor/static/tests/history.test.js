@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, pointerDown, pointerUp, press, queryOne } from "@odoo/hoot-dom";
+import { click, pointerDown, pointerUp, press, queryOne, microTick } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -724,5 +724,40 @@ describe("unobserved mutations", () => {
             editor.shared.history.redo();
             expect(p.className).toBe("a c");
         });
+    });
+});
+
+describe("serialization", () => {
+    test("node serialization should not duplicate nodes", async () => {
+        const { editor, el, plugins } = await setupEditor("<p>hello</p>");
+        const p = el.querySelector("p");
+        const textNode = p.firstChild;
+        // Mutation: add strong to p
+        const strong = editor.document.createElement("strong");
+        p.append(strong);
+        // Mutation: remove textNode
+        textNode.remove();
+        // Mutation: add textNode to strong
+        strong.append(textNode);
+
+        await microTick();
+
+        const historyPlugin = plugins.get("history");
+        const mutations = historyPlugin.currentStep.mutations;
+        const idToNode = (id) => historyPlugin.idToNodeMap.get(id);
+
+        expect(mutations.length).toBe(3);
+
+        // Serialized node should not have textNode as child, even though it
+        // current has it as child (otherwise it would duplicate it on unserialization)
+        let { nodeId, children } = mutations[0].node;
+        expect(idToNode(nodeId)).toBe(strong);
+        expect(children.length).toBe(0);
+
+        // 2nd and 3rd mutations: textNode is moved into strong
+        ({ nodeId } = mutations[1].node);
+        expect(idToNode(nodeId)).toBe(textNode);
+        ({ nodeId } = mutations[2].node);
+        expect(idToNode(nodeId)).toBe(textNode);
     });
 });
