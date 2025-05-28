@@ -45,10 +45,7 @@ export class ProductTemplate extends Base {
 
         return {
             ...extraValues,
-            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-                config._product_default_values,
-                this
-            ),
+            product_id: this,
             quantity: 1,
             price_unit: priceUnit,
             tax_ids: taxes,
