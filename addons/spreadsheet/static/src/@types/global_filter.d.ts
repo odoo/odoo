@@ -50,7 +50,7 @@ declare module "@spreadsheet" {
 
     export interface FixedPeriodDateGlobalFilter extends DateGlobalFilterCommon {
         rangeType: "fixedPeriod";
-        defaultValue?: { period?: string; yearOffset?: number };
+        defaultValue?: "this_month" | "this_quarter" | "this_year";
         disabledPeriods?: FixedPeriods[];
     }
 
