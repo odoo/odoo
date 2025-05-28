@@ -17,6 +17,7 @@ import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { uniqueId } from "@web/core/utils/functions";
+import { unique } from "@web/core/utils/arrays";
 
 const granularityToInterval = {
     hour: { hours: 1 },
@@ -58,7 +59,7 @@ export function makeActiveField({
     };
 }
 
-const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
+export const AGGREGATABLE_FIELD_TYPES = ["float", "integer", "monetary"]; // types that can be aggregated in grouped views
 
 export function addFieldDependencies(activeFields, fields, fieldDependencies = []) {
     for (const field of fieldDependencies) {
@@ -265,7 +266,10 @@ export function extractFieldsFromArchInfo({ fieldNodes, widgetNodes }, fields) {
                 activeField.required = "False";
             }
         }
-        if (["many2one", "many2one_reference"].includes(fields[fieldName].type) && fieldNode.views) {
+        if (
+            ["many2one", "many2one_reference"].includes(fields[fieldName].type) &&
+            fieldNode.views
+        ) {
             const viewDescr = fieldNode.views.default;
             activeField.related = extractFieldsFromArchInfo(viewDescr, viewDescr.fields);
         }
@@ -529,9 +533,15 @@ export function parseServerValue(field, value) {
 }
 
 export function getAggregateSpecifications(fields) {
-    return Object.values(fields)
+    const aggregatableFields = Object.values(fields)
         .filter((field) => field.aggregator && AGGREGATABLE_FIELD_TYPES.includes(field.type))
         .map((field) => `${field.name}:${field.aggregator}`);
+    const currencyFields = unique(
+        Object.values(fields)
+            .filter((field) => field.aggregator && field.currency_field)
+            .map((field) => `${field.currency_field}:array_agg_distinct`)
+    );
+    return aggregatableFields.concat(currencyFields);
 }
 
 /**

@@ -134,7 +134,7 @@ class Partner extends models.Model {
             ["ghi", "GHI"],
         ],
     });
-    salary = fields.Monetary({ aggregator: "sum", currency_field: this.currency_id });
+    salary = fields.Monetary({ aggregator: "sum", currency_field: "currency_id" });
     currency_id = fields.Many2one({ relation: "res.currency" });
 
     _records = [
@@ -9423,6 +9423,7 @@ test("progress bar with false aggregate value", async () => {
     expect(".o_kanban_counter:first .o_animated_number").toHaveCount(0);
     expect(".o_kanban_counter:last .o_animated_number").toHaveCount(1);
 
+    expect(".o_kanban_counter:last .o_animated_number").toHaveText("$3,722");
     expect(".o_kanban_counter:first b").toHaveText("—");
     expect(".o_kanban_counter:first b").toHaveAttribute(
         "data-tooltip",

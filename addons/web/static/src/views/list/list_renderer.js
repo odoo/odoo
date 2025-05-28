@@ -16,7 +16,7 @@ import {
     getClassNameFromDecoration,
     getFormattedValue,
 } from "@web/views/utils";
-import { combineModifiers } from "@web/model/relational_model/utils";
+import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
@@ -630,7 +630,7 @@ export class ListRenderer extends Component {
                 continue;
             }
             const type = field.type;
-            if (type !== "integer" && type !== "float" && type !== "monetary") {
+            if (!AGGREGATABLE_FIELD_TYPES.includes(type)) {
                 continue;
             }
             const { attrs, widget } = column;
@@ -652,11 +652,25 @@ export class ListRenderer extends Component {
                     };
                     continue;
                 }
-                currencyId = values[0][currencyField] && values[0][currencyField].id;
+                if (this.props.list.isGrouped) {
+                    currencyId = values.find((v) => v[currencyField]?.length)?.[currencyField][0];
+                } else {
+                    currencyId = values[0][currencyField] && values[0][currencyField].id;
+                }
                 if (currencyId && func) {
-                    const sameCurrency = values.every(
-                        (value) => currencyId === value[currencyField].id
-                    );
+                    let sameCurrency;
+                    if (this.props.list.isGrouped) {
+                        sameCurrency = values.every(
+                            (value) =>
+                                value[currencyField].length === 0 ||
+                                (value[currencyField].length === 1 &&
+                                    currencyId === value[currencyField][0])
+                        );
+                    } else {
+                        sameCurrency = values.every(
+                            (value) => currencyId === value[currencyField].id
+                        );
+                    }
                     if (!sameCurrency) {
                         aggregates[fieldName] = {
                             help: _t("Different currencies cannot be aggregated"),
@@ -685,19 +699,36 @@ export class ListRenderer extends Component {
         return aggregates;
     }
 
-    formatAggregateValue(group, column) {
+    formatGroupAggregate(group, column) {
         const { widget, attrs } = column;
         const field = this.props.list.fields[column.name];
         const aggregateValue = group.aggregates[column.name];
-        if (!(column.name in group.aggregates) || widget === "handle") {
-            return "";
+        if (aggregateValue === false) {
+            return {
+                help: _t("Different currencies cannot be aggregated"),
+                value: "—",
+            };
+        }
+        if (
+            !(column.name in group.aggregates) ||
+            widget === "handle" ||
+            !AGGREGATABLE_FIELD_TYPES.includes(field.type)
+        ) {
+            return {
+                value: "",
+            };
         }
         const formatter = formatters.get(widget, false) || formatters.get(field.type, false);
         const formatOptions = {
             digits: attrs.digits ? JSON.parse(attrs.digits) : field.digits,
             escape: true,
         };
-        return formatter ? formatter(aggregateValue, formatOptions) : aggregateValue;
+        if (field.type === "monetary" || widget === "monetary") {
+            formatOptions.currencyId = group.aggregates[field.currency_field][0];
+        }
+        return {
+            value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
+        };
     }
 
     getGroupLevel(group) {
@@ -953,12 +984,18 @@ export class ListRenderer extends Component {
     // TODO: move this somewhere, compute this only once (same result for each groups actually) ?
     getFirstAggregateIndex(group) {
         return this.columns.findIndex(
-            (col) => col.name in group.aggregates && col.widget !== "handle"
+            (col) =>
+                col.name in group.aggregates &&
+                col.widget !== "handle" &&
+                AGGREGATABLE_FIELD_TYPES.includes(col.fieldType)
         );
     }
     getLastAggregateIndex(group) {
         const reversedColumns = [...this.columns].reverse(); // reverse is destructive
-        const index = reversedColumns.findIndex((col) => col.name in group.aggregates);
+        const index = reversedColumns.findIndex(
+            (col) =>
+                col.name in group.aggregates && AGGREGATABLE_FIELD_TYPES.includes(col.fieldType)
+        );
         return index > -1 ? this.columns.length - index - 1 : -1;
     }
     getAggregateColumns(group) {

@@ -4508,6 +4508,60 @@ test(`aggregates are formatted correctly in grouped lists`, async () => {
     ]);
 });
 
+test(`monetary aggregates in grouped list`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+        groupBy: ["currency_id"],
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    await contains(`.o_group_header:first`).click();
+    await contains(`.o_group_header:last`).click();
+    expect(`.o_group_header:first`).toHaveText("USD (3)\n $ 800.00");
+    expect(`.o_group_header:last`).toHaveText("EUR (1)\n 1,200.00 €");
+    expect(`.o_list_footer .o_list_number span`).toHaveText("—");
+    expect(`.o_list_footer .o_list_number span`).toHaveAttribute(
+        "data-tooltip",
+        "Different currencies cannot be aggregated"
+    );
+});
+
+test(`monetary aggregates in grouped list (different currencies in same group)`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+        groupBy: ["bar"],
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    await contains(`.o_group_header:first`).click();
+    await contains(`.o_group_header:last`).click();
+    expect(`.o_group_header:first`).toHaveText("No (1)\n $ 0.00");
+    expect(`.o_group_header:last`).toHaveText("Yes (3)\n —");
+    expect(`.o_group_header:last .o_list_number span`).toHaveAttribute(
+        "data-tooltip",
+        "Different currencies cannot be aggregated"
+    );
+    expect(`.o_list_footer .o_list_number span`).toHaveText("—");
+    expect(`.o_list_footer .o_list_number span`).toHaveAttribute(
+        "data-tooltip",
+        "Different currencies cannot be aggregated"
+    );
+});
+
 test(`aggregates in grouped lists with buttons`, async () => {
     await mountView({
         resModel: "foo",
@@ -8170,7 +8224,7 @@ test(`list view with nested groups`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_group_name`)).toEqual(["Value 1 (4)", "Value 2 (2)"]);
     expect(`.o_group_name .fa-caret-right`).toHaveCount(2);
-    expect(`.o_group_header:eq(0) span`).toHaveStyle({ "--o-list-group-level": "0" });
+    expect(`.o_group_header:eq(0) span:first`).toHaveStyle({ "--o-list-group-level": "0" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual(["16", "14"]);
 
     // open the first group
@@ -8184,7 +8238,7 @@ test(`list view with nested groups`, async () => {
         "Value 2 (2)",
     ]);
     expect(`.o_group_name:eq(0) .fa-caret-down`).toHaveCount(1);
-    expect(`.o_group_header:eq(1) span`).toHaveStyle({ "--o-list-group-level": "1" });
+    expect(`.o_group_header:eq(1) span:first`).toHaveStyle({ "--o-list-group-level": "1" });
     expect(queryAllTexts(`.o_group_header .o_list_number`)).toEqual([
         "16",
         "-11",
@@ -10114,6 +10168,7 @@ test.tags("desktop");
 test(`editable grouped list with handle widget`, async () => {
     // resequence makes sense on a sequence field, not on arbitrary fields
     Foo._records[0].int_field = 0;
+    Foo._records[0].currency_id = 1;
     Foo._records[1].int_field = 1;
     Foo._records[2].int_field = 2;
     Foo._records[3].int_field = 3;
