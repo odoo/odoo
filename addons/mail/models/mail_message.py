@@ -944,9 +944,20 @@ class MailMessage(models.Model):
         field_names = [
             # sudo: mail.message - reading attachments on accessible message is allowed
             Store.Many("attachment_ids", sort="id", sudo=True),
+            # sudo: mail.message: access to author_guest_id is allowed
+            Store.One("author_guest_id", ["avatar_128", "name"], sudo=True),
+            Store.Attr(
+                "author_id",
+                # sudo: mail.message: access to author_id is allowed
+                value=lambda m: Store.One(
+                    m.sudo().author_id,
+                    ["avatar_128", "is_company", "user", *m._get_store_partner_name_fields()],
+                ),
+            ),
             "body",
             "create_date",
             "date",
+            Store.Attr("email_from", predicate=lambda m: m._get_store_email_from_predicate()),
             "incoming_email_cc",
             "incoming_email_to",
             # sudo: mail.message - reading link preview on accessible message is allowed
@@ -1098,27 +1109,18 @@ class MailMessage(models.Model):
                 )
                 data["trackingValues"] = displayed_tracking_ids._tracking_value_format()
             store.add(message, data)
-        # sudo: mail.message: access to author is allowed
-        self.sudo()._author_to_store(store)
         # Add extras at the end to guarantee order in result. In particular, the parent message
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
         self._extras_to_store(store, format_reply=format_reply)
 
-    def _author_to_store(self, store: Store):
-        for message in self:
-            data = {
-                "author_id": False,
-                "author_guest_id": False,
-                "email_from": message.email_from,
-            }
-            # sudo: mail.message: access to author is allowed
-            if guest_author := message.sudo().author_guest_id:
-                data["author_guest_id"] = Store.One(guest_author, ["avatar_128", "name"])
-            # sudo: mail.message: access to author is allowed
-            elif author := message.sudo().author_id:
-                data["author_id"] = Store.One(author, ["avatar_128", "name", "is_company", "user"])
-            store.add(message, data)
+    def _get_store_email_from_predicate(self):
+        self.ensure_one()
+        return True
+
+    def _get_store_partner_name_fields(self):
+        self.ensure_one()
+        return ["name"]
 
     def _extras_to_store(self, store: Store, format_reply):
         pass

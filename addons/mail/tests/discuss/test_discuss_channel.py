@@ -87,11 +87,11 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "mail.message": self._filter_messages_fields(
                                     {
                                         "attachment_ids": [],
+                                        "author_guest_id": False,
                                         "author_id": {
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
                                         },
-                                        "author_guest_id": False,
                                         "body": [
                                             "markup",
                                             f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',

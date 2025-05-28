@@ -32,7 +32,7 @@ class MailMessage(models.Model):
         super()._to_store(store, [f for f in fields if f != "chatbot_current_step"], **kwargs)
         if "chatbot_current_step" not in fields:
             return
-        channel_messages = self.filtered(lambda message: message.model == "discuss.channel")
+        channel_messages = self.filtered(lambda message: message.channel_id)
         channel_by_message = channel_messages._record_by_message()
         for message in channel_messages.filtered(
             lambda message: channel_by_message[message].channel_type == "livechat"
@@ -61,26 +61,14 @@ class MailMessage(models.Model):
                         message, {"chatbotStep": {"scriptStep": step.id, "message": message.id}}
                     )
 
-    def _author_to_store(self, store: Store):
-        messages_w_author_channel = self.filtered(
-            lambda message: message.author_id
-            and message.model == "discuss.channel"
-            and message.res_id
+    def _get_store_email_from_predicate(self):
+        """Override to ensure that email_from is not set for live chat messages unless necessary."""
+        return super()._get_store_email_from_predicate() and (
+            (not self.author_id and not self.author_guest_id)
+            or self.channel_id.channel_type != "livechat"
         )
-        channel_by_message = messages_w_author_channel._record_by_message()
-        messages_w_author_livechat = messages_w_author_channel.filtered(
-            lambda message: channel_by_message[message].channel_type == "livechat"
-        )
-        super(MailMessage, self - messages_w_author_livechat)._author_to_store(store)
-        store.add(
-            messages_w_author_livechat,
-            Store.One(
-                "author_id",
-                [
-                    "avatar_128",
-                    "is_company",
-                    "user",
-                    *self.env["res.partner"]._get_store_livechat_username_fields(),
-                ],
-            ),
-        )
+
+    def _get_store_partner_name_fields(self):
+        if self.channel_id.channel_type == "livechat":
+            return self.env["res.partner"]._get_store_livechat_username_fields()
+        return super()._get_store_partner_name_fields()

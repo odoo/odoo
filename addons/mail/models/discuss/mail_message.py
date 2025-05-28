@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import api, models, fields
 from odoo.addons.mail.tools.discuss import Store
 
 
@@ -8,6 +8,15 @@ class MailMessage(models.Model):
     _inherit = "mail.message"
 
     call_history_ids = fields.One2many("discuss.call.history", "start_call_message_id")
+    channel_id = fields.Many2one("discuss.channel", compute="_compute_channel_id")
+
+    @api.depends("model", "res_id")
+    def _compute_channel_id(self):
+        for message in self:
+            if message.model == "discuss.channel" and message.res_id:
+                message.channel_id = self.env["discuss.channel"].browse(message.res_id)
+            else:
+                message.channel_id = False
 
     def _to_store_defaults(self):
         return super()._to_store_defaults() + [
@@ -23,14 +32,14 @@ class MailMessage(models.Model):
         if format_reply:
             # sudo: mail.message: access to parent is allowed
             store.add(
-                self.sudo().filtered(lambda message: message.model == "discuss.channel"),
+                self.sudo().filtered(lambda message: message.channel_id),
                 Store.One("parent_id", format_reply=False),
             )
 
     def _bus_channel(self):
         self.ensure_one()
-        if self.model == "discuss.channel" and self.res_id:
-            return self.env["discuss.channel"].browse(self.res_id)._bus_channel()
+        if self.channel_id:
+            return self.channel_id._bus_channel()
         guest = self.env["mail.guest"]._get_guest_from_context()
         if self.env.user._is_public() and guest:
             return guest._bus_channel()
