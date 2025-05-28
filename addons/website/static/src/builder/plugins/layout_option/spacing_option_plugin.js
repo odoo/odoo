@@ -2,45 +2,18 @@ import { Plugin } from "@html_editor/plugin";
 import { isBlock } from "@html_editor/utils/blocks";
 import { registry } from "@web/core/registry";
 import { addBackgroundGrid, setElementToMaxZindex } from "@html_builder/utils/grid_layout_utils";
+import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 
 class SpacingOptionPlugin extends Plugin {
     static id = "SpacingOption";
-    static dependencies = ["builderActions"];
     resources = {
-        builder_actions: this.getActions(),
+        builder_actions: {
+            SetGridSpacingAction,
+        },
         savable_mutation_record_predicates: this.isMutationRecordSavable.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
     };
-
-    getActions() {
-        const builderActions = this.dependencies.builderActions;
-        return {
-            get setGridSpacing() {
-                const styleAction = builderActions.getAction("styleAction");
-                return {
-                    ...styleAction,
-                    apply: (...args) => {
-                        const rowEl = args[0].editingElement;
-                        // Remove the grid preview if any.
-                        let gridPreviewEl = rowEl.querySelector(".o_we_grid_preview");
-                        if (gridPreviewEl) {
-                            gridPreviewEl.remove();
-                        }
-                        // Apply the style action on the grid gaps.
-                        styleAction.apply(...args);
-                        // Add an animated grid preview.
-                        gridPreviewEl = addBackgroundGrid(rowEl, 0);
-                        gridPreviewEl.classList.add("o_we_grid_preview");
-                        setElementToMaxZindex(gridPreviewEl, rowEl);
-                        gridPreviewEl.addEventListener("animationend", () =>
-                            gridPreviewEl.remove()
-                        );
-                    },
-                };
-            },
-        };
-    }
 
     isMutationRecordSavable(record) {
         // Do not consider the grid preview in the history.
@@ -74,3 +47,21 @@ class SpacingOptionPlugin extends Plugin {
 }
 
 registry.category("website-plugins").add(SpacingOptionPlugin.id, SpacingOptionPlugin);
+
+class SetGridSpacingAction extends StyleAction {
+    static id = "setGridSpacing";
+    apply({ editingElement: rowEl }) {
+        // Remove the grid preview if any.
+        let gridPreviewEl = rowEl.querySelector(".o_we_grid_preview");
+        if (gridPreviewEl) {
+            gridPreviewEl.remove();
+        }
+        // Apply the style action on the grid gaps.
+        super.apply(...arguments);
+        // Add an animated grid preview.
+        gridPreviewEl = addBackgroundGrid(rowEl, 0);
+        gridPreviewEl.classList.add("o_we_grid_preview");
+        setElementToMaxZindex(gridPreviewEl, rowEl);
+        gridPreviewEl.addEventListener("animationend", () => gridPreviewEl.remove());
+    }
+}

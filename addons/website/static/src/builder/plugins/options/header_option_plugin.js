@@ -1,6 +1,8 @@
 import {
     getCurrentShadow,
     getDefaultShadow,
+    SetShadowAction,
+    SetShadowModeAction,
     shadowToString,
 } from "@html_builder/plugins/shadow_option_plugin";
 import {
@@ -13,6 +15,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { HeaderBorderOption } from "./header_border_option";
 import { HeaderElementOption } from "./header_element_option";
+import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 
 const [
     HEADER_TEMPLATE,
@@ -38,7 +41,7 @@ export {
 
 class HeaderOptionPlugin extends Plugin {
     static id = "headerOption";
-    static dependencies = ["coreBuilderAction", "customizeWebsite", "shadowOption"];
+    static dependencies = ["customizeWebsite"];
 
     resources = {
         builder_options: [
@@ -87,61 +90,72 @@ class HeaderOptionPlugin extends Plugin {
                 groups: ["website.group_website_designer"],
             }),
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            StyleActionHeaderAction,
+            SetShadowModeHeaderAction,
+            SetShadowHeaderAction,
+        },
     };
+}
 
-    getActions() {
-        const styleAction = this.dependencies.coreBuilderAction.getStyleAction();
-        const { setShadowMode, setShadow } = this.dependencies.shadowOption.getActions();
-        const withCustomHistory = this.dependencies.customizeWebsite.withCustomHistory;
-        return {
-            styleActionHeader: withCustomHistory({
-                ...styleAction,
-                getValue: (...args) => {
-                    const { params } = args[0];
-                    const value = styleAction.getValue(...args);
-                    if (params.mainParam === "border-width") {
-                        return value.replace(/(^|\s)0px/gi, "").trim() || value;
-                    }
-                    return value;
-                },
-                apply: async ({ params, value }) => {
-                    const styleName = params.mainParam;
+class StyleActionHeaderAction extends StyleAction {
+    static id = "styleActionHeader";
+    static dependencies = ["customizeWebsite", "color"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    getValue(...args) {
+        const { params } = args[0];
+        const value = super.getValue(...args);
+        if (params.mainParam === "border-width") {
+            return value.replace(/(^|\s)0px/gi, "").trim() || value;
+        }
+        return value;
+    }
+    async apply({ params, value }) {
+        const styleName = params.mainParam;
 
-                    if (styleName === "border-color") {
-                        return this.dependencies.customizeWebsite.customizeWebsiteColors({
-                            "menu-border-color": value,
-                        });
-                    }
-                    return this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                        [`menu-${styleName}`]: value,
-                    });
-                },
-            }),
-            setShadowModeHeader: withCustomHistory({
-                ...setShadowMode,
-                preview: false,
-                apply: ({ value: shadowMode }) => {
-                    const defaultShadow =
-                        shadowMode === "none" ? "none" : getDefaultShadow(shadowMode);
-                    return this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                        "menu-box-shadow": defaultShadow,
-                    });
-                },
-            }),
-            setShadowHeader: withCustomHistory({
-                ...setShadow,
-                preview: false,
-                apply: ({ editingElement, params: { mainParam: attributeName }, value }) => {
-                    const shadow = getCurrentShadow(editingElement);
-                    shadow[attributeName] = value;
+        if (styleName === "border-color") {
+            return this.dependencies.customizeWebsite.customizeWebsiteColors({
+                "menu-border-color": value,
+            });
+        }
+        return this.dependencies.customizeWebsite.customizeWebsiteVariables({
+            [`menu-${styleName}`]: value,
+        });
+    }
+}
 
-                    return this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                        "menu-box-shadow": shadowToString(shadow),
-                    });
-                },
-            }),
-        };
+class SetShadowModeHeaderAction extends SetShadowModeAction {
+    static id = "setShadowModeHeader";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    async apply({ value: shadowMode }) {
+        const defaultShadow = shadowMode === "none" ? "none" : getDefaultShadow(shadowMode);
+        return this.dependencies.customizeWebsite.customizeWebsiteVariables({
+            "menu-box-shadow": defaultShadow,
+        });
+    }
+}
+
+class SetShadowHeaderAction extends SetShadowAction {
+    static id = "setShadowHeader";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    async apply({ editingElement, params: { mainParam: attributeName }, value }) {
+        const shadow = getCurrentShadow(editingElement);
+        shadow[attributeName] = value;
+
+        return this.dependencies.customizeWebsite.customizeWebsiteVariables({
+            "menu-box-shadow": shadowToString(shadow),
+        });
     }
 }
 

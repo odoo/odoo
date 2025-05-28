@@ -598,7 +598,7 @@ function useOperationWithReload(callApply, reload) {
     return async (...args) => {
         const { editingElement } = args[0][0];
         await Promise.all([callApply(...args), env.editor.shared.savePlugin.save()]);
-        const target = env.editor.shared["builder-options"].getReloadSelector(editingElement);
+        const target = env.editor.shared["builderOptions"].getReloadSelector(editingElement);
         const url = reload.getReloadUrl?.();
         await env.editor.config.reloadEditor({ target, url });
     };
@@ -786,6 +786,7 @@ export function getAllActionsAndOperations(comp) {
 
     function getActionsSpecs(actions, userInputValue) {
         const getAction = comp.env.editor.shared.builderActions.getAction;
+        const overridableMethods = ["apply", "clean", "load", "loadOnClean"];
         const specs = [];
         for (let { actionId, actionParam, actionValue } of actions) {
             const action = getAction(actionId);
@@ -793,16 +794,18 @@ export function getAllActionsAndOperations(comp) {
             // by the user.
             actionValue = actionValue === undefined ? userInputValue : actionValue;
             for (const editingElement of comp.env.getEditingElements()) {
-                specs.push({
+                const spec = {
                     editingElement,
                     actionId,
                     actionParam,
                     actionValue,
-                    apply: action.apply,
-                    clean: action.clean,
-                    load: action.load,
-                    loadOnClean: action.loadOnClean,
-                });
+                };
+                for (const method of overridableMethods) {
+                    if (!action.has || action.has(method)) {
+                        spec[method] = action[method];
+                    }
+                }
+                specs.push(spec);
             }
         }
         return specs;

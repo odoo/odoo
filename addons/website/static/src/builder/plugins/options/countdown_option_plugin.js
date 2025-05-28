@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { before, SNIPPET_SPECIFIC_END } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
@@ -11,34 +12,26 @@ class CountdownOptionPlugin extends Plugin {
             withSequence(before(SNIPPET_SPECIFIC_END), {
                 template: "website.CountdownOption",
                 selector: ".s_countdown",
-                cleanForSave: this.cleanForSave.bind(this),
+                cleanForSave,
             }),
         ],
         so_content_addition_selector: [".s_countdown"],
         builder_actions: {
             // TODO AGAU: update after merging generalized restart interactions
             //  remove this and xml BuilderContext
-            reloadCountdown: {
-                apply: ({ editingElement }) => {
-                    this.dispatchTo("update_interactions", editingElement);
-                },
-            },
-            setEndAction: {
-                apply: this.setEndAction.bind(this),
-                isApplied: this.isEndActionApplied.bind(this),
-            },
-            previewEndMessage: {
-                apply: ({ editingElement }) => this.toggleEndMessagePreview(editingElement, true),
-                clean: ({ editingElement }) => this.toggleEndMessagePreview(editingElement, false),
-                isApplied: this.isEndMessagePreviewed.bind(this),
-            },
-            setLayout: {
-                apply: this.setLayout.bind(this),
-                isApplied: this.isLayoutApplied.bind(this),
-            },
+            ReloadCountdownAction,
+            SetEndActionAction,
+            PreviewEndMessageAction,
+            SetLayoutAction,
         },
     };
+}
 
+function cleanForSave(editingEl) {
+    editingEl.classList.remove("s_countdown_enable_preview");
+}
+class BaseCountdownAction extends BuilderAction {
+    static id = "baseCountdown";
     /**
      * Used to preserve modified end messages through end action changes. This
      * allows the user to test options without losing their progress while in
@@ -49,7 +42,7 @@ class CountdownOptionPlugin extends Plugin {
     editingElEndMessages = new WeakMap();
 
     cleanForSave(editingEl) {
-        editingEl.classList.remove("s_countdown_enable_preview");
+        return cleanForSave(editingEl);
     }
 
     setEndAction({ editingElement, value }) {
@@ -118,6 +111,48 @@ class CountdownOptionPlugin extends Plugin {
 
     toggleEndMessagePreview(editingElement, doShow) {
         editingElement?.classList.toggle("s_countdown_enable_preview", doShow === true);
+    }
+}
+
+// TODO AGAU: update after merging generalized restart interactions
+//  remove this and xml BuilderContext
+class ReloadCountdownAction extends BaseCountdownAction {
+    static id = "reloadCountdown";
+    apply({ editingElement }) {
+        return this.dispatchTo("update_interactions", editingElement);
+    }
+}
+
+class SetEndActionAction extends BaseCountdownAction {
+    static id = "setEndAction";
+    apply(context) {
+        return this.setEndAction(context);
+    }
+    isApplied(context) {
+        return this.isEndActionApplied(context);
+    }
+}
+
+class PreviewEndMessageAction extends BaseCountdownAction {
+    static id = "previewEndMessage";
+    apply({ editingElement }) {
+        return this.toggleEndMessagePreview(editingElement, true);
+    }
+    clean({ editingElement }) {
+        return this.toggleEndMessagePreview(editingElement, false);
+    }
+    isApplied(context) {
+        return this.isEndMessagePreviewed(context);
+    }
+}
+
+class SetLayoutAction extends BaseCountdownAction {
+    static id = "setLayout";
+    apply(context) {
+        return this.setLayout(context);
+    }
+    isApplied(context) {
+        return this.isLayoutApplied(context);
     }
 }
 registry.category("website-plugins").add(CountdownOptionPlugin.id, CountdownOptionPlugin);

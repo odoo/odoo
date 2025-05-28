@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
 import { CONTAINER_WIDTH } from "@website/builder/option_sequence";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 
 class ContentWidthOptionPlugin extends Plugin {
     static id = "contentWidthOption";
@@ -17,27 +18,20 @@ class ContentWidthOptionPlugin extends Plugin {
                     ":scope > .container, :scope > .container-fluid, :scope > .o_container_small",
             }),
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            SetContainerWidthAction,
+        },
     };
+}
 
-    getActions() {
-        const builderActions = this.dependencies.builderActions;
-        const historyPlugin = this.dependencies.history;
-        return {
-            get setContainerWidth() {
-                const classAction = builderActions.getAction("classAction");
-                return {
-                    ...classAction,
-                    apply: (...args) => {
-                        classAction.apply(...args);
-                        // Add/remove the container preview.
-                        const containerEl = args[0].editingElement;
-                        const isPreviewMode = historyPlugin.getIsPreviewing();
-                        containerEl.classList.toggle("o_container_preview", isPreviewMode);
-                    },
-                };
-            },
-        };
+class SetContainerWidthAction extends ClassAction {
+    static id = "setContainerWidth";
+    static dependencies = ["history"];
+    apply({ editingElement }) {
+        super.apply(...arguments);
+        const isPreviewMode = this.dependencies.history.getIsPreviewing();
+        editingElement.classList.toggle("o_container_preview", isPreviewMode);
     }
 }
+
 registry.category("website-plugins").add(ContentWidthOptionPlugin.id, ContentWidthOptionPlugin);

@@ -3,6 +3,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isElementInViewport } from "@html_builder/utils/utils";
 import { isRemovable } from "./remove_plugin";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 const clonableSelector = "a.btn:not(.oe_unremovable)";
 
@@ -13,11 +14,14 @@ export function isClonable(el) {
 
 export class ClonePlugin extends Plugin {
     static id = "clone";
-    static dependencies = ["history", "builder-options"];
+    static dependencies = ["history", "builderOptions"];
     static shared = ["cloneElement"];
 
     resources = {
-        builder_actions: this.getActions(),
+        builder_actions: {
+            // Maybe rename cloneItem ?
+            CloneItemAction,
+        },
         get_overlay_buttons: withSequence(2, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
@@ -40,23 +44,6 @@ export class ClonePlugin extends Plugin {
         this.ignoredAttrs = new Set(this.getResource("system_attributes"));
     }
 
-    getActions() {
-        return {
-            // TODO maybe rename to cloneItem ?
-            addItem: {
-                apply: ({
-                    editingElement,
-                    params: { mainParam: itemSelector },
-                    value: position,
-                }) => {
-                    const itemEl = editingElement.querySelector(itemSelector);
-                    this.cloneElement(itemEl, { position, scrollToClone: true });
-                    this.dependencies.history.addStep();
-                },
-            },
-        };
-    }
-
     getActiveOverlayButtons(target) {
         if (!isClonable(target)) {
             this.overlayTarget = null;
@@ -64,7 +51,7 @@ export class ClonePlugin extends Plugin {
         }
         const buttons = [];
         this.overlayTarget = target;
-        const disabledReason = this.dependencies["builder-options"].getCloneDisabledReason(target);
+        const disabledReason = this.dependencies["builderOptions"].getCloneDisabledReason(target);
         buttons.push({
             class: "o_snippet_clone fa fa-clone",
             title: _t("Duplicate"),
@@ -98,7 +85,7 @@ export class ClonePlugin extends Plugin {
 
         // Update the containers if required.
         if (activateClone) {
-            this.dependencies["builder-options"].updateContainers(cloneEl);
+            this.dependencies["builderOptions"].updateContainers(cloneEl);
         }
 
         // Scroll to the clone if required and if it is not visible.
@@ -121,5 +108,15 @@ export class ClonePlugin extends Plugin {
                 el.removeAttribute(ignoredAttr)
             );
         });
+    }
+}
+
+class CloneItemAction extends BuilderAction {
+    static id = "addItem";
+    static dependencies = ["clone", "history"];
+    apply({ editingElement, params: { mainParam: itemSelector }, value: position }) {
+        const itemEl = editingElement.querySelector(itemSelector);
+        this.dependencies.clone.cloneElement(itemEl, { position, scrollToClone: true });
+        this.dependencies.history.addStep();
     }
 }

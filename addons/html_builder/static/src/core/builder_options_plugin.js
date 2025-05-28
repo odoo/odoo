@@ -6,7 +6,7 @@ import { getElementsWithOption, isElementInViewport } from "@html_builder/utils/
 import { shouldEditableMediaBeEditable } from "@html_builder/utils/utils_css";
 
 export class BuilderOptionsPlugin extends Plugin {
-    static id = "builder-options";
+    static id = "builderOptions";
     static dependencies = [
         "selection",
         "overlay",

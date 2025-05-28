@@ -3,6 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { rpc } from "@web/core/network/rpc";
 import { after, SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 export const FOOTER_TEMPLATE = SNIPPET_SPECIFIC_NEXT;
 export const FOOTER_WIDTH = after(FOOTER_TEMPLATE);
@@ -65,41 +66,7 @@ class FooterOptionPlugin extends Plugin {
             }),
         ],
         builder_actions: {
-            websiteConfigFooter: {
-                reload: {},
-                isApplied: ({ params: { vars } }) => {
-                    for (const [name, value] of Object.entries(vars)) {
-                        if (
-                            !this.dependencies.builderActions
-                                .getAction("customizeWebsiteVariable")
-                                .isApplied({ params: { mainParam: name }, value })
-                        ) {
-                            return false;
-                        }
-                    }
-                    return true;
-                },
-                apply: async ({ params: { vars, view }, selectableContext }) => {
-                    const possibleValues = new Set();
-                    for (const item of selectableContext.items) {
-                        for (const a of item.getActions()) {
-                            if (a.actionId === "websiteConfigFooter") {
-                                possibleValues.add(a.actionParam.view);
-                            }
-                        }
-                    }
-                    await Promise.all([
-                        this.dependencies.customizeWebsite.makeSCSSCusto(
-                            "/website/static/src/scss/options/user_values.scss",
-                            vars
-                        ),
-                        rpc("/website/update_footer_template", {
-                            template_key: view,
-                            possible_values: [...possibleValues],
-                        }),
-                    ]);
-                },
-            },
+            WebsiteConfigFooterAction,
         },
         on_prepare_drag_handlers: this.prepareDrag.bind(this),
     };
@@ -117,6 +84,46 @@ class FooterOptionPlugin extends Plugin {
             };
         }
         return restore;
+    }
+}
+
+class WebsiteConfigFooterAction extends BuilderAction {
+    static id = "websiteConfigFooter";
+    static dependencies = ["builderActions", "customizeWebsite"];
+    setup() {
+        this.reload = {};
+    }
+    isApplied({ params: { vars } }) {
+        for (const [name, value] of Object.entries(vars)) {
+            if (
+                !this.dependencies.builderActions
+                    .getAction("customizeWebsiteVariable")
+                    .isApplied({ params: { mainParam: name }, value })
+            ) {
+                return false;
+            }
+        }
+        return true;
+    }
+    async apply({ params: { vars, view }, selectableContext }) {
+        const possibleValues = new Set();
+        for (const item of selectableContext.items) {
+            for (const a of item.getActions()) {
+                if (a.actionId === "websiteConfigFooter") {
+                    possibleValues.add(a.actionParam.view);
+                }
+            }
+        }
+        await Promise.all([
+            this.dependencies.customizeWebsite.makeSCSSCusto(
+                "/website/static/src/scss/options/user_values.scss",
+                vars
+            ),
+            rpc("/website/update_footer_template", {
+                template_key: view,
+                possible_values: [...possibleValues],
+            }),
+        ]);
     }
 }
 
