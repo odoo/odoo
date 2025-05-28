@@ -1176,7 +1176,7 @@ export class HistoryPlugin extends Plugin {
                 result.attributes[node.attributes[i].name] = node.attributes[i].value;
             }
             for (const child of childrenToSerialize) {
-                if (!nodesToStripFromChildren.has(child.nodeId)) {
+                if (!nodesToStripFromChildren.has(this.nodeToIdMap.get(child))) {
                     const serializedChild = this._serializeNode(child, nodesToStripFromChildren);
                     if (serializedChild) {
                         result.children.push(serializedChild);
