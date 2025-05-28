@@ -23,10 +23,10 @@ class CrmTeamMember(models.Model):
     assignment_max = fields.Integer('Average Leads Capacity (on 30 days)', default=30)
     lead_day_count = fields.Integer(
         'Leads (last 24h)', compute='_compute_lead_day_count',
-        help='Lead assigned to this member this last day (lost one excluded)')
+        help='Number of leads assigned to this member in the last 24 hours (lost leads excluded)')
     lead_month_count = fields.Integer(
         'Leads (30 days)', compute='_compute_lead_month_count',
-        help='Lead assigned to this member those last 30 days')
+        help='Number of leads assigned to this member in the last 30 days')
 
     @api.depends('user_id', 'crm_team_id')
     def _compute_lead_day_count(self):
