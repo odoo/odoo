@@ -109,6 +109,35 @@
             <xpath expr="//group[@name='group_standard_price']" position="after">
                 <field name="product_properties" columns="2"/>
             </xpath>
+            <page name="sales" position="after">
+                <page
+                    string="Sales Price"
+                    name="sales_price"
+                    groups="product.group_product_pricelist"
+                    invisible="not sale_ok"
+                >
+                    <field
+                        name="pricelist_rule_ids"
+                        context="{
+                            'default_product_tmpl_id': id,
+                            'form_view_ref': 'product.product_pricelist_item_product_template_form_view'
+                        }"
+                    >
+                        <list>
+                            <control>
+                                <create name="add_product_price" string="Add a price"/>
+                            </control>
+                            <field name="pricelist_id"/>
+                            <field name="name" string="Applied On"/>
+                            <field name="price"/>
+                            <field name="min_quantity"/>
+                            <field name="date_start" optional="hide"/>
+                            <field name="date_end" optional="hide"/>
+                            <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                        </list>
+                    </field>
+                </page>
+            </page>
         </field>
     </record>
 
