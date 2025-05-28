@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-from odoo import fields
+from odoo import Command, fields
 from odoo.tests import common, new_test_user
-from odoo import Command
+
 
 class TestPrivateReadGroup(common.TransactionCase):
 
@@ -1210,7 +1209,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         with self.assertQueries(["""
             SELECT "test_read_group_related_inherits__base_id__foo_id"."name",
                     COUNT(*)
-            FROM "test_read_group_related_inherits" 
+            FROM "test_read_group_related_inherits"
             LEFT JOIN "test_read_group_related_base" AS "test_read_group_related_inherits__base_id"
                 ON ("test_read_group_related_inherits"."base_id" = "test_read_group_related_inherits__base_id"."id")
             LEFT JOIN "test_read_group_related_foo" AS "test_read_group_related_inherits__base_id__foo_id"
