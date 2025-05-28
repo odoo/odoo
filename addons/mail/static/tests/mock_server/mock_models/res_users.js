@@ -40,7 +40,7 @@ export class ResUsers extends webModels.ResUsers {
         if (!this._is_public(this.env.uid)) {
             const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
             store.add({
-                self: mailDataHelpers.Store.one(
+                self_partner: mailDataHelpers.Store.one(
                     ResPartner.browse(this.env.user.partner_id),
                     makeKwArgs({
                         fields: [
@@ -57,7 +57,7 @@ export class ResUsers extends webModels.ResUsers {
             });
         } else if (this.env.cookie.get("dgid")) {
             store.add({
-                self: mailDataHelpers.Store.one(
+                self_guest: mailDataHelpers.Store.one(
                     MailGuest.browse(this.env.cookie.get("dgid")),
                     makeKwArgs({ fields: ["avatar_128", "name"] })
                 ),
