@@ -3,6 +3,11 @@
     <t t-name="pos_self_order.CartPage">
         <div class="o_self_cart_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
             <div class="d-flex flex-column flex-grow-1 overflow-y-auto pb-0 pb-sm-3 pt-3 py-lg-4" t-ref="scrollContainer">
+                <div class="d-flex justify-content-end px-3">
+                    <button t-if="showCancelButton" t-on-click="() => this.cancelOrder()" class="btn btm-xs btn-secondary" type="button">
+                        <span>Cancel</span>
+                    </button>
+                </div>
                 <div class="container o_self_container mt-auto cart_container">
                     <h1 class="ms-3 ms-sm-0 mb-3 ">Your Order</h1>
                     <div class="order_box d-flex flex-column bg-white px-3 px-kiosk-p-4 rounded-4 border border-light shadow-sm">
@@ -75,12 +80,4 @@
         <PopupTable t-if="this.state.selectTable" selectTable.bind="selectTable" />
         <PresetInfoPopup t-if="this.state.fillInformations" callback.bind="proceedInfos" />
     </t>
-
-    <!--
-         <button
-            t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"
-            type="button"
-            t-on-click="() => this.clickOnLine(line)"
-            class="btn btn-secondary"> <i class="fa fa-pencil"></i></button>
-    -->
 </templates>

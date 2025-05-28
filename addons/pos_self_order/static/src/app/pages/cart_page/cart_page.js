@@ -7,6 +7,9 @@ import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popu
 import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
+import { rpc } from "@web/core/network/rpc";
+import { _t } from "@web/core/l10n/translation";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -15,6 +18,7 @@ export class CartPage extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+        this.dialog = useService("dialog");
         this.router = useService("router");
         this.state = useState({
             selectTable: false,
@@ -25,6 +29,14 @@ export class CartPage extends Component {
         this.scrollShadow = useScrollShadow(useRef("scrollContainer"));
         this.renderer = useService("renderer");
         this.sendReceipt = useTrackedAsync(this._sendReceiptToCustomer.bind(this));
+    }
+
+    get showCancelButton() {
+        return (
+            this.selfOrder.config.self_ordering_mode === "mobile" &&
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            typeof this.selfOrder.currentOrder.id === "number"
+        );
     }
 
     get lines() {
@@ -52,6 +64,25 @@ export class CartPage extends Component {
             ...(line.attribute_value_ids || []),
             ...(line.product_id.product_template_attribute_value_ids || []),
         ];
+    }
+
+    async cancelOrder() {
+        this.dialog.add(CancelPopup, {
+            title: _t("Cancel order"),
+            confirm: async () => {
+                try {
+                    await rpc("/pos-self-order/remove-order", {
+                        access_token: this.selfOrder.access_token,
+                        order_id: this.selfOrder.currentOrder.id,
+                        order_access_token: this.selfOrder.currentOrder.access_token,
+                    });
+                    this.selfOrder.currentOrder.state = "cancel";
+                    this.router.navigate("default");
+                } catch (error) {
+                    this.selfOrder.handleErrorNotification(error);
+                }
+            },
+        });
     }
 
     getLineChangeQty(line) {
