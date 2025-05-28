@@ -8,16 +8,16 @@ export class MessageReactions extends Record {
     content;
     /** @type {number} */
     count;
-    /** @type {number} */
-    sequence;
-    partner_ids = fields.Many("Persona");
-    guest_ids = fields.Many("Persona");
+    guests = fields.Many("Persona");
+    message = fields.One("mail.message");
+    partners = fields.Many("Persona");
     personas = fields.Many("Persona", {
         compute() {
-            return [...this.partner_ids, ...this.guest_ids];
+            return [...this.partners, ...this.guests];
         },
     });
-    message = fields.One("mail.message");
+    /** @type {number} */
+    sequence;
 
     async remove() {
         this.store.insert(
