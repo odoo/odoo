@@ -41,7 +41,7 @@ const commonSteps = [
     },
     {
         trigger: ".modal textarea#message_0",
-        run: "edit Step 2",
+        run: "edit Step 2 && press Tab",
     },
     {
         trigger: ".modal button:contains(Save & New):enabled",

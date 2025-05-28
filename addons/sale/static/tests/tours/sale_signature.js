@@ -1,56 +1,82 @@
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 
+function waitForCanvasToHaveDrawing(canvas) {
+    return new Promise((resolve) => {
+        const context = canvas.getContext("2d");
+        const check = () => {
+            const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+            const pixels = new Uint32Array(imageData.data.buffer);
+
+            const hasDrawing = pixels.some((pixel) => pixel !== 0);
+
+            if (hasDrawing) {
+                clearInterval(timer);
+                resolve();
+            }
+        };
+        const timer = setInterval(check, 100);
+    });
+}
+
 // This tour relies on data created on the Python test.
-registry.category("web_tour.tours").add('sale_signature', {
-    url: '/my/quotes',
+registry.category("web_tour.tours").add("sale_signature", {
+    url: "/my/quotes",
     steps: () => [
-    {
-        content: "open the test SO",
-        trigger: 'a:contains(/^test SO$/)',
-        run: "click",
-    },
-    {
-        content: "click sign",
-        trigger: 'a:contains("Sign")',
-        run: "click",
-    },
-    {
-        content: "check submit is enabled",
-        trigger: '.o_portal_sign_submit:enabled',
-    },
-    {
-        trigger: ".modal .o_web_sign_name_and_signature input:value(Joel Willis)"
-    },
-    {
-        content: "click select style",
-        trigger: '.modal .o_web_sign_auto_select_style button',
-        run: "click",
-    },
-    {
-        content: "click style 4",
-        trigger: ".o-dropdown-item:eq(3)",
-        run: "click",
-    },
-    {
-        content: "click submit",
-        trigger: '.modal .o_portal_sign_submit:enabled',
-        run: "click",
-    },
-    {
-        content: "check it's confirmed",
-        trigger: '#quote_content:contains("Thank You")',
-        run: "click",
-    }, {
-        trigger: '#quote_content',
-        run: function () {
-            redirect("/odoo");
-        },  // Avoid race condition at the end of the tour by returning to the home page.
-    },
-    {
-        trigger: 'nav',
-    }
-]});
+        {
+            content: "open the test SO",
+            trigger: "a:contains(/^test SO$/)",
+            run: "click",
+        },
+        {
+            content: "click sign",
+            trigger: 'a:contains("Sign")',
+            run: "click",
+        },
+        {
+            content: "check submit is enabled",
+            trigger: ".o_portal_sign_submit:enabled",
+        },
+        {
+            trigger: ".modal .o_web_sign_name_and_signature input:value(Joel Willis)",
+        },
+        {
+            trigger: ".modal canvas.o_web_sign_signature",
+            async run(helpers) {
+                await waitForCanvasToHaveDrawing(helpers.anchor);
+            },
+        },
+        {
+            content: "click select style",
+            trigger: ".modal .o_web_sign_auto_select_style button",
+            run: "click",
+        },
+        {
+            content: "click style 4",
+            trigger: ".o-dropdown-item:eq(3)",
+            run: "click",
+        },
+        {
+            content: "click submit",
+            trigger: ".modal .o_portal_sign_submit",
+            run: "clickBeforeUnload",
+        },
+        {
+            content: "check it's confirmed",
+            trigger: '#quote_content:contains("Thank You")',
+            run: "click",
+        },
+        {
+            trigger: "#quote_content",
+            run: function () {
+                redirect("/odoo");
+            }, // Avoid race condition at the end of the tour by returning to the home page.
+        },
+        {
+            trigger: "nav",
+        },
+    ],
+});
 
 registry.category("web_tour.tours").add("sale_signature_without_name", {
     steps: () => [
