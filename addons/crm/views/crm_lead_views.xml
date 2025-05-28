@@ -17,7 +17,7 @@
                             invisible="won_status != 'pending' or not active"/>
                         <field name="stage_id" widget="rotting_statusbar_duration"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
-                            domain="['|', ('team_id', '=', team_id), ('team_id', '=', False)]"
+                            domain="['|', ('team_ids', 'in', team_id), ('team_ids', '=', False)]"
                             invisible="type == 'lead'" readonly="won_status == 'lost' or not active"/>
                     </header>
                     <sheet>

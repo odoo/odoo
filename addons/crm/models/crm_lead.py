@@ -131,7 +131,7 @@ class CrmLead(models.Model):
         'crm.stage', string='Stage', index=True, tracking=True,
         compute='_compute_stage_id', readonly=False, store=True,
         copy=False, group_expand='_read_group_stage_ids', ondelete='restrict',
-        domain="['|', ('team_id', '=', False), ('team_id', '=', team_id)]")
+        domain="['|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]")
     stage_id_color = fields.Integer(string='Stage Color', related="stage_id.color", export_string_translation=False)
     tag_ids = fields.Many2many(
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
@@ -1054,9 +1054,9 @@ class CrmLead(models.Model):
         # - OR ('team_ids', '=', team_id), ('fold', '=', False) if team_id: add team columns that are not folded
         team_id = self.env.context.get('default_team_id')
         if team_id:
-            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_id', '=', False), ('team_id', '=', team_id)]
+            search_domain = ['|', ('id', 'in', stages.ids), '|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]
         else:
-            search_domain = ['|', ('id', 'in', stages.ids), ('team_id', '=', False)]
+            search_domain = ['|', ('id', 'in', stages.ids), ('team_ids', '=', False)]
 
         # perform search
         stage_ids = stages.sudo()._search(search_domain, order=stages._order)
@@ -1079,9 +1079,9 @@ class CrmLead(models.Model):
                 team_ids.add(lead.team_id.id)
         # generate the domain
         if team_ids:
-            search_domain = ['|', ('team_id', '=', False), ('team_id', 'in', list(team_ids))]
+            search_domain = ['|', ('team_ids', '=', False), ('team_ids', 'in', list(team_ids))]
         else:
-            search_domain = [('team_id', '=', False)]
+            search_domain = [('team_ids', '=', False)]
         # AND with the domain in parameter
         if domain:
             search_domain += list(domain)
@@ -1551,7 +1551,7 @@ class CrmLead(models.Model):
 
         # check if the stage is in the stages of the Sales Team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
-            team_stage_ids = self.env['crm.stage'].search(['|', ('team_id', '=', merged_data['team_id']), ('team_id', '=', False)], order='sequence, id')
+            team_stage_ids = self.env['crm.stage'].search(['|', ('team_ids', 'in', merged_data['team_id']), ('team_ids', '=', False)], order='sequence, id')
             if merged_data.get('stage_id') not in team_stage_ids.ids:
                 merged_data['stage_id'] = team_stage_ids[0].id if team_stage_ids else False
 
@@ -2634,7 +2634,7 @@ class CrmLead(models.Model):
         :return: won count, lost count and total count for all records in frequencies
         """
         # TODO : check if we need to handle specific team_id stages [for lost count] (if first stage in sequence is team_specific)
-        first_stage_id = self.env['crm.stage'].search([('team_id', '=', False)], order='sequence, id', limit=1)
+        first_stage_id = self.env['crm.stage'].search([('team_ids', '=', False)], order='sequence, id', limit=1)
         if str(first_stage_id.id) not in team_results.get('stage_id', []):
             return 0, 0, 0
         stage_result = team_results['stage_id'][str(first_stage_id.id)]
