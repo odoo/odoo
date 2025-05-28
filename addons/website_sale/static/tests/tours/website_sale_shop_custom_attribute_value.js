@@ -23,7 +23,7 @@
         run: 'click',
     },
     {
-        trigger: 'button:contains(Proceed to Checkout)',
+        trigger: 'button:contains(Checkout)',
         run: 'click',
         expectUnloadPage: true,
     },
