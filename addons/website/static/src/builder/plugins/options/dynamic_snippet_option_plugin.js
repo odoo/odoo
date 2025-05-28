@@ -35,6 +35,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
             CustomizeTemplateAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        is_unremovable_selector: ".s_dynamic_snippet_title",
     };
     setup() {
         this.dynamicFiltersCache = new Cache(this._fetchDynamicFilters, JSON.stringify);
