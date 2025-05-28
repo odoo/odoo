@@ -1720,7 +1720,7 @@ which leads to stray network requests and inconsistencies."""
         # endGroup, assert, profile, profileEnd, count, timeEnd
     }
 
-    def take_screenshot(self, prefix='sc_'):
+    def take_screenshot(self, prefix='sc_') -> Future[dict]:
         def handler(f):
             try:
                 base_png = f.result(timeout=0)['data']
