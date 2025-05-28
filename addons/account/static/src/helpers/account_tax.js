@@ -12,20 +12,6 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    eval_taxes_computation_prepare_product_values(default_product_values, product) {
-        const product_values = {};
-        for (const [field_name, field_info] of Object.entries(default_product_values)) {
-            product_values[field_name] = product
-                ? product[field_name] || field_info.default_value
-                : field_info.default_value;
-        }
-        return product_values;
-    },
-
-    /**
-     * [!] Mirror of the same method in account_tax.py.
-     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
-     */
      flatten_taxes_and_sort_them(taxes) {
          function sort_key(taxes) {
              return taxes.toSorted((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);

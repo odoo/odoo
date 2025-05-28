@@ -44,10 +44,7 @@ export const getTaxesValues = (
     const baseLine = accountTaxHelpers.prepare_base_line_for_taxes_computation(
         {},
         {
-            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-                productDefaultValues,
-                product
-            ),
+            product_id: product,
             tax_ids: taxes,
             price_unit: priceUnit,
             quantity: quantity,
