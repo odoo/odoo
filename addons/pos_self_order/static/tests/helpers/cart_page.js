@@ -66,3 +66,16 @@ export function checkCombo(comboName, products) {
 
     return steps;
 }
+
+export function cancelOrder() {
+    return [
+        {
+            content: `Click on 'Cancel' button`,
+            trigger: '.order-cart-content .btn:contains("Cancel")',
+        },
+        {
+            content: `Validate cancel popup`,
+            trigger: ".modal-dialog .btn:contains('Cancel Order')",
+        },
+    ];
+}
