@@ -487,6 +487,7 @@ describe("to blockquote", () => {
             focusNode: anchorNode.nextSibling,
             focusOffset: 0,
         });
+        await manuallyDispatchProgrammaticEvent(anchorNode, "click", { detail: 6 });
         await tick();
         expect(getContent(el)).toBe("<p>[abcd]</p><p>Plop</p>");
 
