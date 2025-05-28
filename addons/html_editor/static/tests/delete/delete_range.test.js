@@ -463,7 +463,7 @@ describe("deleteSelection", () => {
                     contentAfter: unformat(
                         `<table><tbody>
                             <tr>
-                                <td>[]<br></td> <td><br></td> <td>c</td> 
+                                <td><p>[]<br></p></td> <td><p><br></p></td> <td>c</td>
                             </tr>
                             <tr>
                                 <td>d</td> <td>e</td> <td>f</td> 
