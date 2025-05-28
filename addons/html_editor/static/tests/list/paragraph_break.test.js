@@ -1,10 +1,17 @@
-import { describe, test } from "@odoo/hoot";
+import { describe, test, before } from "@odoo/hoot";
 import { testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { insertText, splitBlock } from "../_helpers/user_actions";
 
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
+
+before(() => {
+    return document.fonts.add(new FontFace(
+        "Roboto",
+        "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)",
+    )).ready;
+});
 
 describe("Selection collapsed", () => {
     describe("Ordered", () => {
@@ -385,15 +392,16 @@ describe("Selection collapsed", () => {
             test.tags("font-dependent");
             test("should keep the list-style when add li", async () => {
                 await testEditor({
+                    styleContent: "ul { font: 14px Roboto }",
                     contentBefore: unformat(`
-                            <ul style="font-size: 14px; font-family: sans-serif;">
-                                <li style="list-style: cambodian;">a[]</li>
+                            <ul>
+                                <li style="list-style: upper-latin;">a[]</li>
                             </ul>`),
                     stepFunction: splitBlock,
                     contentAfter: unformat(`
-                        <ul style="font-size: 14px; font-family: sans-serif; padding-inline-start: 36px;">
-                            <li style="list-style: cambodian;">a</li>
-                            <li style="list-style: cambodian;">[]<br></li>
+                        <ul>
+                            <li style="list-style: upper-latin;">a</li>
+                            <li style="list-style: upper-latin;">[]<br></li>
                         </ul>`),
                 });
             });
