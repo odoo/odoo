@@ -11,7 +11,7 @@ from odoo.tests import tagged, RecordCapturer
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.mail.tests.common import MailCommon
-from odoo.addons.test_mimetypes.tests.test_guess_mimetypes import contents
+from odoo.addons.test_orm.tests.test_guess_mimetypes import contents
 
 
 class TestAccountInvoiceImportMixin:
