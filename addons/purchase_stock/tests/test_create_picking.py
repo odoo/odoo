@@ -188,6 +188,8 @@ class TestCreatePicking(ProductVariantsCommon):
 
         self.assertEqual(self.product_id_1.uom_id.id, uom_unit.id)
 
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+
         # buy a dozen
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_id
