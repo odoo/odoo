@@ -210,8 +210,8 @@ export function renderTextualSelection(peerInfos) {
         const { anchorNode, anchorOffset, focusNode, focusOffset } = peerSelection;
 
         const peerId = peerInfo.peerId;
-        const focusNodeId = historyPlugin.nodeToIdMap.get(focusNode);
-        const anchorNodeId = historyPlugin.nodeToIdMap.get(anchorNode);
+        const focusNodeId = historyPlugin.nodeMap.getId(focusNode);
+        const anchorNodeId = historyPlugin.nodeMap.getId(anchorNode);
         cursorNodes[focusNodeId] = cursorNodes[focusNodeId] || [];
         cursorNodes[focusNodeId].push({ type: "focus", peerId, offset: focusOffset });
         cursorNodes[anchorNodeId] = cursorNodes[anchorNodeId] || [];
@@ -227,7 +227,7 @@ export function renderTextualSelection(peerInfos) {
     for (const peerInfo of peerInfosList) {
         const historyPlugin = peerInfo.historyPlugin;
         for (const [nodeId, cursorsData] of Object.entries(cursorNodes)) {
-            const node = historyPlugin.idToNodeMap.get(nodeId);
+            const node = historyPlugin.nodeMap.getNode(nodeId);
             for (const cursorData of cursorsData) {
                 const cursorString =
                     cursorData.type === "anchor"

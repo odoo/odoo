@@ -226,7 +226,7 @@ describe("selection", () => {
         await pointerUp(pElement);
         await tick();
         const historyPlugin = plugins.get("history");
-        const nodeId = historyPlugin.nodeToIdMap.get(pElement.firstChild);
+        const nodeId = historyPlugin.nodeMap.getId(pElement.firstChild);
         expect(historyPlugin.currentStep.selection).toEqual({
             anchorNodeId: nodeId,
             anchorOffset: 0,
@@ -883,7 +883,7 @@ describe("serialization", () => {
 
         const historyPlugin = plugins.get("history");
         const mutations = historyPlugin.currentStep.mutations;
-        const idToNode = (id) => historyPlugin.idToNodeMap.get(id);
+        const idToNode = (id) => historyPlugin.nodeMap.getNode(id);
 
         expect(mutations.length).toBe(3);
 
@@ -925,7 +925,7 @@ describe("serialization", () => {
 
         const historyPlugin = plugins.get("history");
         const mutations = historyPlugin.currentStep.mutations;
-        const idToNode = (id) => historyPlugin.idToNodeMap.get(id);
+        const idToNode = (id) => historyPlugin.nodeMap.getNode(id);
 
         expect(mutations.length).toBe(5);
 
@@ -956,6 +956,18 @@ describe("serialization", () => {
         ({ nodeId, children } = mutations[4].node);
         expect(idToNode(nodeId)).toBe(c);
         expect(children.length).toBe(0);
+    });
+
+    test("unserialization of text node should not duplicate an existing one", async () => {
+        const { el, editor, plugins } = await setupEditor(`<p><br></p>`);
+        const historyPlugin = plugins.get("history");
+        const p = el.querySelector("p");
+        const textNode = editor.document.createTextNode("test");
+        p.prepend(textNode);
+        editor.shared.history.addStep();
+        const serializedNode = historyPlugin.serializeNode(textNode);
+        const unserializedTextNode = historyPlugin.unserializeNode(serializedNode);
+        expect(unserializedTextNode).toBe(textNode);
     });
 });
 
