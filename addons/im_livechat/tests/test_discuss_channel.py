@@ -9,11 +9,7 @@ class TestDiscussChannel(TestImLivechatCommon):
             self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_manager"
         )
         data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertTrue(chat.livechat_active)
@@ -24,11 +20,7 @@ class TestDiscussChannel(TestImLivechatCommon):
 
     def test_human_operator_failure_states(self):
         data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertFalse(chat.chatbot_current_step_id)  # assert there is no chatbot
@@ -53,11 +45,7 @@ class TestDiscussChannel(TestImLivechatCommon):
         )
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {
-                "anonymous_name": "Visitor",
-                "chatbot_script_id": chatbot_script.id,
-                "channel_id": self.livechat_channel.id,
-            },
+            {"chatbot_script_id": chatbot_script.id, "channel_id": self.livechat_channel.id},
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertTrue(chat.chatbot_current_step_id)  # assert there is a chatbot

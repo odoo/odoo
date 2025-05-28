@@ -53,7 +53,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
 
     def test_chatbot_steps(self):
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Test Visitor',
             'chatbot_script_id': self.chatbot_script.id,
             'channel_id': self.livechat_channel.id,
         })
@@ -119,7 +118,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {
-                "anonymous_name": "Test Visitor",
                 "channel_id": self.livechat_channel.id,
                 "chatbot_script_id": self.chatbot_script.id,
             },
@@ -144,7 +142,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {
-                "anonymous_name": "Test Visitor",
                 "channel_id": self.livechat_channel.id,
                 "chatbot_script_id": self.chatbot_script.id,
             },
@@ -533,7 +530,6 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {
-                "anonymous_name": "Test Visitor",
                 "chatbot_script_id": self.chatbot_script.id,
                 "channel_id": self.livechat_channel.id,
             },
