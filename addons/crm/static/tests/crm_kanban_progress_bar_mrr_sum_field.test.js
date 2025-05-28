@@ -160,8 +160,9 @@ test("Progressbar: ensure correct MRR sum is displayed if recurring revenues is 
                 </kanban>`,
     });
 
-    // When no values are given in column it should return 0 and counts value if given.
-    expect(queryAllTexts(".o_kanban_counter")).toEqual(["129\n+20", "9\n+0", "21\n+45"], {
+    // When no values are given in column it should return 0 and counts value if given
+    // MRR=0 shouldn't be displayed, however.
+    expect(queryAllTexts(".o_kanban_counter")).toEqual(["129\n+20", "9", "21\n+45"], {
         message: "counter should display the sum of recurring_revenue_monthly values",
     });
 });
