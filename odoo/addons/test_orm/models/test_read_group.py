@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import api, fields, models
 
 
@@ -20,6 +19,7 @@ class Test_Read_GroupAggregateBoolean(models.Model):
     bool_or = fields.Boolean(default=False, aggregator='bool_or')
     bool_array = fields.Boolean(default=False, aggregator='array_agg')
 
+
 class TestReadGroupAggregateMonetaryRelated(models.Model):
     _name = 'test_read_group.aggregate.monetary.related'
     _description = 'To test related currency fields in Monetary aggregates'
@@ -35,6 +35,7 @@ class TestReadGroupAggregateMonetaryRelated(models.Model):
     def _compute_non_stored_currency_id(self):
         for record in self:
             record.non_stored_currency_id = self.env.ref('base.EUR')
+
 
 class Test_Read_GroupAggregateMonetary(models.Model):
     _name = 'test_read_group.aggregate.monetary'
@@ -56,6 +57,7 @@ class Test_Read_GroupAggregateMonetary(models.Model):
     total_in_currency_id = fields.Monetary(currency_field='currency_id')
     total_in_related_stored_currency_id = fields.Monetary(currency_field='related_stored_currency_id')
     total_in_related_non_stored_currency_id = fields.Monetary(currency_field='related_non_stored_currency_id')
+
 
 class Test_Read_GroupAggregate(models.Model):
     _name = 'test_read_group.aggregate'
