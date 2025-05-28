@@ -40,13 +40,6 @@ class PosOrder(models.Model):
     def _load_pos_self_data_domain(self, data):
         return [('id', '=', False)]
 
-    @api.model
-    def remove_from_ui(self, server_ids):
-        order_ids = self.env['pos.order'].browse(server_ids)
-        order_ids.state = 'cancel'
-        self._send_notification(order_ids)
-        return super().remove_from_ui(server_ids)
-
     # @api.model
     # def create(self, orders):
     #     result = super().create(orders)
