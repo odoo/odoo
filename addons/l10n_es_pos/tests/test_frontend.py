@@ -34,8 +34,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.l10n_es_simplified_invoice_journal_id = simp
         # this `limit` value is linked to the `SIMPLIFIED_INVOICE_LIMIT` const in the tour
         self._get_main_company().l10n_es_simplified_invoice_limit = 1000
-        self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour("spanish_pos_tour")
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour("spanish_pos_tour", login="accountman")
         num_of_simp_invoices = self.env['account.move'].search_count([('journal_id', '=', simp.id), ('l10n_es_is_simplified', '=', True)])
         num_of_regular_invoices = get_number_of_regular_invoices() - initial_number_of_regular_invoices
         self.assertEqual(num_of_simp_invoices, 3)
@@ -150,6 +150,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertTrue(len(self.main_pos_config.available_pricelist_ids.ids) > 1)
         self.main_pos_config.l10n_es_simplified_invoice_journal_id = self.main_pos_config.journal_id
         self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_simplified_invoice_not_override_set_pricelist', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_simplified_invoice_not_override_set_pricelist', login="accountman")
         order = self.env['pos.order'].search([('partner_id', '=', self.main_pos_config.simplified_partner_id.id)])
         self.assertNotEqual(order.pricelist_id, self.main_pos_config.simplified_partner_id.property_product_pricelist)
