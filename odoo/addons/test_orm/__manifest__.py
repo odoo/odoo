@@ -7,6 +7,7 @@
     'installable': True,
     'data': [
         'data/test_access_rights_data.xml',
+        'data/test_action_bindings.xml',
         'data/test_orm_data.xml',
         'security/ir.model.access.csv',
         'security/test_access_rights_security.xml',
