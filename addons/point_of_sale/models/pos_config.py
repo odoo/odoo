@@ -110,8 +110,8 @@ class PosConfig(models.Model):
     proxy_ip = fields.Char(string='IP Address', size=45,
         help='The hostname or ip address of the hardware proxy, Will be autodetected if left empty.')
     active = fields.Boolean(default=True)
-    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
-        help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
+    # uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
+    #     help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     sequence_id = fields.Many2one('ir.sequence', string='Order IDs Sequence', readonly=True,
         help="This sequence is automatically created by Odoo but you can change it "
         "to customize the reference numbers of your orders.", copy=False, ondelete='restrict')
@@ -124,7 +124,7 @@ class PosConfig(models.Model):
     number_of_rescue_session = fields.Integer(string="Number of Rescue Session", compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
     last_session_closing_date = fields.Date(compute='_compute_last_session')
-    pos_session_username = fields.Char(compute='_compute_current_session_user')
+    pos_session_username = fields.Char(compute='_compute_current_session')
     pos_session_duration = fields.Char(compute='_compute_current_session')
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session')
     has_active_session = fields.Boolean(compute='_compute_current_session')
@@ -158,7 +158,7 @@ class PosConfig(models.Model):
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods(), copy=False)
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     other_devices = fields.Boolean(string="Other Devices", help="Connect devices to your PoS without an IoT Box.")
-    rounding_method = fields.Many2one('account.cash.rounding', string="Rounding Method")
+    rounding_method = fields.Many2one('account.cash.rounding', string="Cash Rounding Method")
     cash_rounding = fields.Boolean(string="Cash Rounding")
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     ship_later = fields.Boolean(string="Ship Later")
@@ -471,7 +471,6 @@ class PosConfig(models.Model):
                 raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
 
     def _update_preparation_printers_menuitem_visibility(self):
-        print("_update_preparation_printers_menuitem_visibility-----------------------")
         prepa_printers_menuitem = self.env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
         if prepa_printers_menuitem:
             prepa_printers_menuitem.active = self.env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0

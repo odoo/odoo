@@ -18,9 +18,6 @@ class ResCompany(models.Model):
         string='Self-service invoicing',
         default=True,
         help="Print information on the receipt to allow the customer to easily access the invoice anytime, from Odoo's portal.")
-    point_of_sale_ticket_unique_code = fields.Boolean(
-        string='Generate a code on ticket',
-        help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.")
     point_of_sale_ticket_portal_url_display_mode = fields.Selection([
             ('qr_code', 'QR code'),
             ('url', 'URL'),
@@ -39,8 +36,7 @@ class ResCompany(models.Model):
         return [
             'id', 'currency_id', 'email', 'website', 'company_registry', 'vat', 'name', 'phone', 'partner_id',
             'country_id', 'state_id', 'tax_calculation_rounding_method', 'nomenclature_id', 'point_of_sale_use_ticket_qr_code',
-            'point_of_sale_ticket_unique_code', 'point_of_sale_ticket_portal_url_display_mode', 'street', 'city', 'zip',
-            'account_fiscal_country_id',
+            'point_of_sale_ticket_portal_url_display_mode', 'street', 'city', 'zip', 'account_fiscal_country_id',
         ]
 
     @api.constrains('fiscalyear_lock_date', 'tax_lock_date', 'sale_lock_date', 'hard_lock_date')
