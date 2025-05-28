@@ -249,7 +249,7 @@ class Store:
                 if isinstance(field, dict):
                     data.update(field)
                 elif not field.predicate or field.predicate(record):
-                    data[field.rename or field.field_name] = field._get_value(record)
+                    data[field.field_name] = field._get_value(record)
         return records_data
 
     def _get_record_index(self, model_name, values):
@@ -266,10 +266,9 @@ class Store:
         Note: when a static value is given to a recordset, the same value is set on all records.
         """
 
-        def __init__(self, field_name, value=None, *, predicate=None, rename=None, sudo=False):
+        def __init__(self, field_name, value=None, *, predicate=None, sudo=False):
             self.field_name = field_name
             self.predicate = predicate
-            self.rename = rename
             self.sudo = sudo
             self.value = value
 
@@ -291,13 +290,12 @@ class Store:
             as_thread=False,
             only_data=False,
             predicate=None,
-            rename=None,
             sudo=False,
             value=None,
             **kwargs,
         ):
             field_name = records_or_field_names if isinstance(records_or_field_names, str) else None
-            super().__init__(field_name, predicate=predicate, rename=rename, sudo=sudo, value=value)
+            super().__init__(field_name, predicate=predicate, sudo=sudo, value=value)
             assert (
                 not records_or_field_names
                 or isinstance(records_or_field_names, (str, models.Model))
@@ -326,7 +324,6 @@ class Store:
                 "as_thread": self.as_thread,
                 "fields": fields if fields is not None else self.fields,
                 "only_data": self.only_data,
-                "rename": self.rename,
                 **self.kwargs,
             }
             return self.__class__(records, **params)
@@ -346,7 +343,6 @@ class Store:
             as_thread=False,
             only_data=False,
             predicate=None,
-            rename=None,
             sudo=False,
             value=None,
             **kwargs,
@@ -357,7 +353,6 @@ class Store:
                 as_thread=as_thread,
                 only_data=only_data,
                 predicate=predicate,
-                rename=rename,
                 sudo=sudo,
                 value=value,
                 **kwargs,
@@ -396,7 +391,6 @@ class Store:
             as_thread=False,
             only_data=False,
             predicate=None,
-            rename=None,
             sort=None,
             sudo=False,
             value=None,
@@ -408,7 +402,6 @@ class Store:
                 as_thread=as_thread,
                 only_data=only_data,
                 predicate=predicate,
-                rename=rename,
                 sudo=sudo,
                 value=value,
                 **kwargs,
