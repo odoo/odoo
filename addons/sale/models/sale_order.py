@@ -1672,10 +1672,12 @@ class SaleOrder(models.Model):
         return groups
 
     def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
-                                                   force_email_company=False, force_email_lang=False):
+                                                   force_email_company=False, force_email_lang=False,
+                                                   force_record_name=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
-            force_email_company=force_email_company, force_email_lang=force_email_lang
+            force_email_company=force_email_company, force_email_lang=force_email_lang,
+            force_record_name=force_record_name,
         )
         lang_code = render_context.get('lang')
         record = render_context['record']
