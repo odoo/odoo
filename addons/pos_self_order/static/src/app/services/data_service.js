@@ -13,7 +13,7 @@ patch(PosData.prototype, {
         return await rpc(`/pos-self/relations/${parseInt(configId)}`);
     },
     get databaseName() {
-        return `pos-self-order-${odoo.pos_config_id}-${odoo.info?.db}`;
+        return `pos-self-order-${odoo.access_token}`;
     },
     initIndexedDB() {
         return session.data.self_ordering_mode === "mobile"
