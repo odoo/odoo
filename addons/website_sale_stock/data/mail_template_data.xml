@@ -10,35 +10,36 @@
             <field name="use_default_to" eval="False"/>
             <field name="description">Mail sent to customer when a product comes back in
             stock</field>
-            <field name="email_layout_xmlid">mail.mail_notification_light"</field>
             <field name="body_html" type="html">
-                <t t-set="partner_name" t-value="partner in ctx and ctx['partner'].name or 'Customer'"/>
+                <t t-set="partner_name" t-value="partner in ctx and ctx['partner'].name or ''"/>
                 <div id="body">
+                    <img t-if="object.company_id.logo" t-att-src="image_data_uri(object.company_id.logo)" style="display: block; height: 50px; margin: 0 0 16px;" alt="Logo"/>
                     <p>Hello <t t-out="partner_name"/>,</p>
-                    <p>The following product is now available.</p>
-                    <div style="display: flex; justify-content: center; width: 100%;">
-                        <a t-attf-href="#{object.website_url}">
-                            <img t-attf-src="/web/image/product.product/#{object.id}/image_1920"/>
-                        </a>
+                    <p>The product you were waiting for is now back in stock!</p>
+                    <t t-if="not is_html_empty(user.signature)">
+                        <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="user.signature or ''">Mitchell Admin</t></div>
+                    </t>
+                    <div style="margin-bottom: 12px;">
+                        <table width="100%" style="max-width: 590px; border-collapse: collapse;; font-size: 14px;" role="presentation">
+                            <tr>
+                                <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
+                                    <img t-attf-src="/web/image/product.product/#{object.id}/image_1920" style="width: 100px; height: 100px; object-fit: contain;" alt="Product image"/>
+                                </td>
+                                <td style="padding-bottom: 8px; vertical-align: top;">
+                                    <h2 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; color: {{user.company_id.email_secondary_color or '#875A7B'}};"><strong t-out="object.name or ''">Desk Combination</strong></h2>
+                                    <p t-if="object.product_template_attribute_value_ids" style="margin-left: 4px 0;">
+                                        (<t
+                                        t-out="', '.join(object.product_template_attribute_value_ids.mapped('name'))"
+                                        />)
+                                    </p>
+                                    <t t-esc="object.description_ecommerce"/>
+                                </td>
+                                <td width="19%" align="right" style="max-width: 100%; vertical-align: top;">
+                                    <t t-esc="object.list_price" t-options="{'widget': 'monetary', 'display_currency': object.currency_id}"/>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
-                    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
-                        <p t-esc="object.name"/>
-                        <p t-if="object.product_template_attribute_value_ids"
-                           style="margin-left: 0.5em;">
-                            (<t
-                            t-out="', '.join(object.product_template_attribute_value_ids.mapped('name'))"
-                            />)
-                        </p>
-                        <p style="margin-left: 0.5em; margin-right: 0.5em">-</p>
-                        <p t-esc="object.list_price" t-options="{'widget': 'monetary', 'display_currency': object.currency_id}"/>
-                    </div>
-                    <p t-esc="object.description_sale"/>
-                    <div style="display: flex; justify-content: center; width: 100%;">
-                        <a t-attf-href="#{object.website_url}" t-attf-style="background-color: {{object.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
-                            Order Now
-                        </a>
-                    </div>
-                    <p>Regards,</p>
                 </div>
             </field>
         </record>

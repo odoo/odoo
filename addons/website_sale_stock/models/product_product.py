@@ -57,6 +57,7 @@ class ProductProduct(models.Model):
                     partner=partner, lang=partner.lang,
                 ).send_mail(
                     product.id, email_values={'email_to': partner.email_formatted},
+                    email_layout_xmlid='mail.mail_notification_light'
                 )
             product.stock_notification_partner_ids = False
 
