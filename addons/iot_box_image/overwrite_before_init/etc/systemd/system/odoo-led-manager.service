@@ -1,0 +1,14 @@
+[Unit]
+Description=Odoo LED Status Indicator: makes LEDs blink based on Odoo status
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/home/pi/odoo/addons/iot_box_image/configuration/odoo-leds.sh
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
