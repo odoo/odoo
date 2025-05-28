@@ -425,7 +425,7 @@ class PosConfig(models.Model):
             'self_ordering_mode': 'kiosk',
         })
 
-    def _generate_single_qr_code(self, url):
+    def __generate_single_qr_code(self, url):
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -457,14 +457,14 @@ class PosConfig(models.Model):
                 table_data.append({
                     'url': url,
                     'name': f"{table.floor_id.name} - {table.table_number}",
-                    'image': self._generate_single_qr_code(unquote(url)),
+                    'image': self.__generate_single_qr_code(unquote(url)),
                 })
         else:
             url = self._get_self_order_url()
             table_data.append({
                 'url': url,
                 'name': "generic",
-                'image': self._generate_single_qr_code(unquote(url)),
+                'image': self.__generate_single_qr_code(unquote(url)),
             })
 
         zip_buffer = BytesIO()
