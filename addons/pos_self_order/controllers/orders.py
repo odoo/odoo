@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from datetime import timedelta
-from odoo import http, fields
+from odoo import http, fields, _
 from odoo.http import request
 from odoo.tools import float_round
 from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
+from odoo.exceptions import MissingError
+from odoo.tools import consteq
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
@@ -145,6 +147,19 @@ class PosSelfOrderController(http.Controller):
         return {
             'res.partner': partner_sudo.read(partner_sudo._load_pos_data_fields(pos_config.id), load=False),
         }
+
+    @http.route('/pos-self-order/remove-order', auth='public', type='jsonrpc', website=True)
+    def remove_order(self, access_token, order_id, order_access_token):
+        pos_config = self._verify_pos_config(access_token)
+        pos_order = pos_config.env['pos.order'].browse(order_id)
+
+        if not pos_order.exists() or not consteq(pos_order.access_token, order_access_token):
+            raise MissingError(_("Your order does not exist or has been removed"))
+
+        if pos_order.state != 'draft':
+            raise Unauthorized(_("You are not authorized to remove this order"))
+
+        pos_order.remove_from_ui([pos_order.id])
 
     @http.route('/pos-self-order/get-user-data', auth='public', type='jsonrpc', website=True)
     def get_orders_by_access_token(self, access_token, order_access_tokens, table_identifier=None):
