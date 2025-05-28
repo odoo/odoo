@@ -99,7 +99,7 @@ export class AlignPlugin extends Plugin {
                 }
             }
         }
-        if (isAlignmentUpdated) {
+        if (mode && isAlignmentUpdated) {
             this.dependencies.history.addStep();
         }
         this.updateAlignmentParams();
