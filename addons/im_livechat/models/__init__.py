@@ -13,7 +13,6 @@ from . import discuss_channel
 from . import discuss_channel_member
 from . import im_livechat_channel_member_history
 from . import mail_message
-from . import mail_message_reaction
 from . import res_users_settings
 from . import rating_rating
 from . import digest
