@@ -52,7 +52,7 @@ function decreaseProductQuantity(productName) {
         trigger: `
             ${productSelector(productName)}
             td.o_sale_product_configurator_qty
-            button:has(i.fa-minus)
+            button:has(i.oi-minus)
         `,
         run: 'click',
     };
@@ -64,7 +64,7 @@ function increaseProductQuantity(productName) {
         trigger: `
             ${productSelector(productName)}
             td.o_sale_product_configurator_qty
-            button:has(i.fa-plus)
+            button:has(i.oi-plus)
         `,
         run: 'click',
     };
@@ -161,8 +161,9 @@ function selectAndSetCustomAttribute(
 function assertPriceTotal(total) {
     return {
         content: `Assert that the total is ${total}`,
-        trigger:
-            `table.o_sale_product_configurator_table tr>td[colspan="4"] span:contains("${total}")`,
+        trigger: `
+            .o_sale_product_configurator_dialog .o_configurator_price_total:contains("${total}"),
+        `,
     };
 }
 
@@ -171,7 +172,7 @@ function assertProductPrice(productName, price) {
         content: `Assert that ${productName} costs ${price}`,
         trigger: `
             ${productSelector(productName)}
-            td.o_sale_product_configurator_price
+            td.o_sale_product_configurator_qty
             span:contains("${price}")
         `,
     };
@@ -182,7 +183,7 @@ function assertOptionalProductPrice(productName, price) {
         content: `Assert that ${productName} costs ${price}`,
         trigger: `
             ${optionalProductSelector(productName)}
-            td.o_sale_product_configurator_qty
+            td.o_sale_product_configurator_price
             span:contains("${price}")
         `,
     };
@@ -193,7 +194,7 @@ function assertProductPriceInfo(productName, priceInfo) {
         content: `Assert that the price info of ${productName} is ${priceInfo}`,
         trigger: `
             ${productSelector(productName)}
-            td.o_sale_product_configurator_price
+            td.o_sale_product_configurator_qty
             div:contains("${priceInfo}")
         `,
     };
@@ -204,7 +205,7 @@ function assertOptionalProductPriceInfo(productName, priceInfo) {
         content: `Assert that the price info of ${productName} is ${priceInfo}`,
         trigger: `
             ${optionalProductSelector(productName)}
-            td.o_sale_product_configurator_qty
+            td.o_sale_product_configurator_price
             div:contains("${priceInfo}")
         `,
     };

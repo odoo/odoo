@@ -6,6 +6,10 @@
     > :not(caption) > *:last-child > * {
         border-bottom: 0;
     }
+
+    &:where(:not(.o_sale_product_configurator_table_optional)) {
+        margin-bottom: $spacer !important;
+    }
 }
 
 .o_sale_product_configurator_img {
@@ -14,6 +18,12 @@
 
     @include media-breakpoint-up(md) {
         width: 120px;
+    }
+
+    img {
+        aspect-ratio: 1;
+        object-fit: cover;
+        object-position: center;
     }
 }
 

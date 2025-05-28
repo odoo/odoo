@@ -1,5 +1,24 @@
 .o_sale_product_configurator_dialog {
-    // Ensure a minimal border regardless of the theme options
-    --modal-header-border-width: #{$border-width};
-    --modal-footer-border-width: #{$border-width};
+    --modal-border-radius: #{$btn-border-radius};
+    --product-configurator-img-size-lg: 6rem;
+
+    .modal-header .btn.oi-arrow-left {
+        padding-left: 0;
+    }
+
+    .o_wsale_product_configurator_vr {
+        background: $border-color;
+    }
+
+    .o_sale_product_configurator_img {
+        @include media-breakpoint-down(md) {
+            --product-configurator-img-size-sm: 4rem;
+        }
+
+        width: var(--product-configurator-img-size-sm, var(--product-configurator-img-size-lg));
+    }
+
+    .text-muted {
+        color: inherit !important;
+    }
 }

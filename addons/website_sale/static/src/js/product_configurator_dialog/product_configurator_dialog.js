@@ -29,11 +29,7 @@ patch(ProductConfiguratorDialog.prototype, {
             this.createProductUrl = '/website_sale/product_configurator/create_product';
             this.updateCombinationUrl = '/website_sale/product_configurator/update_combination';
             this.getOptionalProductsUrl = '/website_sale/product_configurator/get_optional_products';
-            // To be translated, the title must be repeated here. Indeed, only
-            // translations of "frontend modules" are fetched in the context of
-            // website. The original definition of the title is in "sale", which
-            // is not a frontend module.
-            this.title = _t("Configure your product");
+            this.title = _t("Configure");
         }
 
         useSubEnv({
@@ -59,4 +55,16 @@ patch(ProductConfiguratorDialog.prototype, {
     showShopButtons() {
         return this.props.isFrontend && !this.props.edit;
     },
+
+    get totalMessage() {
+        if (this.env.isFrontend) {
+            // To be translated, the title must be repeated here. Indeed, only
+            // translations of "frontend modules" are fetched in the context of
+            // website. The original definition of the title is in "sale", which
+            // is not a frontend module.
+            return _t("Total: %s", this.getFormattedTotal());
+        }
+        return super.totalMessage(...arguments);
+    },
+
 });

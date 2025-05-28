@@ -145,7 +145,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         trigger: '.product_summary:contains("Color Pants") button:contains("Add to Cart")',
         run: "click",
     },
-        clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'),
+        clickOnElement('Add to cart', 'button[name="website_sale_product_configurator_continue_button"]'),
         tourUtils.goToCart(),
     {
         content: "check product correctly added to cart",

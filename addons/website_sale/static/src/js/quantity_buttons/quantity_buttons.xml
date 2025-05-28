@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="sale.QuantityButtons" t-inherit-mode="extension">
         <div name="quantity_buttons_wrapper" position="attributes">
-            <attribute name="class" add="css_quantity border rounded" separator=" "/>
+            <attribute name="class" add="css_quantity d-inline-flex border border rounded" separator=" "/>
         </div>
         <button name="sale_quantity_button_minus" position="attributes">
             <attribute name="t-attf-class" remove="btn-secondary" add="btn-link text-600" separator=" "/>

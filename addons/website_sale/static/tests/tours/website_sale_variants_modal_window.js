@@ -41,11 +41,11 @@
         },
         {
             trigger:
-                ".modal:contains(configure your product) table.o_sale_product_configurator_table",
+                '.modal:has(table.o_sale_product_configurator_table)',
         },
         {
             content: "Go through the modal window of the product configurator",
-            trigger: ".modal:contains(configure your product) button:contains(Proceed to Checkout)",
+            trigger: 'button:contains("Checkout")',
             run: "click",
             expectUnloadPage: true,
         },

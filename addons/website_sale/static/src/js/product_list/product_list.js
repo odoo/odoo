@@ -7,14 +7,7 @@ patch(ProductList.prototype, {
         super.setup(...arguments);
 
         if (this.env.isFrontend) {
-            this.optionalProductsTitle = _t("Available options");
+            this.optionalProductsTitle = _t("Options");
         }
-    },
-
-    get totalMessage() {
-        if (this.env.isFrontend) {
-            return _t("Total: %s", this.getFormattedTotal());
-        }
-        return super.totalMessage(...arguments);
     },
 });
