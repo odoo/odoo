@@ -58,7 +58,7 @@ class BuilderContainer extends Component {
                 <div class="o_iframe_container">
                     <iframe class="h-100 w-100" t-ref="iframe" t-on-load="onLoad"/>
                     <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
-                        <img alt="phone" src="/html_builder/static/img/phone.png"/>
+                        <img alt="phone" src="/html_builder/static/img/phone.svg"/>
                     </div>
                 </div>
             </div>

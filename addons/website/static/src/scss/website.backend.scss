@@ -92,6 +92,9 @@
     top: 50%;
     height: 92%;
     width: auto;
+    // Width and height of phone.svg. Needed for the builder to recompute values
+    // when switching to mobile preview, otherwise the width is 0 for a moment.
+    aspect-ratio: 368 / 763;
     transform: translate(-50%, -50%);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
                 16px 12px 32px rgba(0, 0, 0, 0.15),
