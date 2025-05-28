@@ -33,13 +33,12 @@ class MailMessageReaction(models.Model):
             data = {
                 "content": content,
                 "count": len(reactions),
-                "sequence": min(reactions.ids),
-                "guest_ids": Store.Many(reactions.guest_id)._get_id(),
-                "partner_ids": Store.Many(reactions.partner_id)._get_id(),
+                "guests": Store.Many(reactions.guest_id, ["avatar_128", "name"]),
                 "message": message_id.id,
+                "partners": Store.Many(reactions.partner_id)._get_id(),
+                "sequence": min(reactions.ids),
             }
             store.add_model_values("MessageReactions", data)
 
     def _persona_to_store(self, store: Store):
-        store.add(self.guest_id, ["avatar_128", "name"])
         store.add(self.partner_id, ["avatar_128", "name"])
