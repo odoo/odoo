@@ -102,9 +102,11 @@
             'stock/static/src/**/*.xml',
             'stock/static/src/**/*.scss',
             ('remove', 'stock/static/src/stock_forecasted/forecasted_graph.*'),
+            ('remove', 'stock/static/src/views/graph/stock_report_graph_view.*'),
         ],
         'web.assets_backend_lazy': [
             'stock/static/src/stock_forecasted/forecasted_graph.*',
+            'stock/static/src/views/graph/stock_report_graph_view.*',
         ],
         'web.assets_frontend': [
             'stock/static/src/scss/stock_traceability_report.scss',
