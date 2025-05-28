@@ -222,9 +222,9 @@
         'ms-n2': isMobileOS and (isAlignedRight and props.asCard or !isAlignedRight and !props.asCard),
         'mt-n3': isMobileOS and props.asCard,
         'mt-n1': isMobileOS and !props.asCard,
-        'px-1 py-0': !isMobileOS,
-        'rounded-start-1': !isMobileOS and isReverse,
-        'rounded-end-1': !isMobileOS and !isReverse,
+        'p-0': !isMobileOS,
+        'rounded-start-1 me-n1': !isMobileOS and isReverse,
+        'rounded-end-1 ms-n1': !isMobileOS and !isReverse,
     }">
         <i class="oi oi-large oi-ellipsis-v" t-att-class="{ 'order-1': props.isInChatWindow, 'fa-fw': isMobileOS }" tabindex="1"/>
     </button>
