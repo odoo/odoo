@@ -1,4 +1,4 @@
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { WebsiteDialog } from "@website/components/dialog/dialog";
 
 // Used to translate the text of `<select/>` options since it should not be
@@ -12,23 +12,25 @@ export class SelectTranslateDialog extends Component {
         close: Function,
     };
     setup() {
-        this.inputEl = useRef("input");
+        this.modifiedOptions = {};
     }
 
-    onInputChange() {
-        const value = this.inputEl.el.value;
-        this.optionEl.textContent = value;
-        this.optionEl.classList.toggle(
-            "oe_translated",
-            value !== this.optionEl.dataset.initialTranslationValue
-        );
+    onInputChange(ev) {
+        const index = ev.target.dataset.index;
+        const value = ev.target.value;
+        this.modifiedOptions[index] = value;
     }
 
-    get optionEl() {
-        return this.props.node;
+    get optionEls() {
+        return this.props.node.querySelectorAll(".o_translation_select_option");
     }
 
     addStepAndClose() {
+        for (const [index, newValue] of Object.entries(this.modifiedOptions)) {
+            const optionEl = this.optionEls[index];
+            optionEl.textContent = newValue;
+            optionEl.classList.add("oe_translated");
+        }
         this.props.addStep();
         this.props.close();
     }
