@@ -772,3 +772,33 @@ class TestProjectPurchaseProfitability(TestProjectProfitabilityCommon, TestPurch
             'billed': 0.0,
             'to_bill': 0.0,
         })
+
+    def test_project_purchase_profitability_without_analytic_distribution(self):
+        purchase_order = self.env['purchase.order'].create({
+            "name": "A purchase order",
+            "partner_id": self.partner_a.id,
+            "order_line": [Command.create({
+                'analytic_distribution': {self.analytic_account.id: 100},
+                'product_id': self.product_order.id,
+            })],
+        })
+        purchase_order.button_confirm()
+
+        vendor_bill = self._create_invoice_for_po(purchase_order)
+        vendor_bill.invoice_line_ids.analytic_distribution = False
+
+        self.assertDictEqual(
+            self.project._get_profitability_items(False)['costs'],
+            {
+                'data': [{
+                    'id': 'purchase_order',
+                    'sequence': self.project._get_profitability_sequence_per_invoice_type()['purchase_order'],
+                    'to_bill': 0.0,
+                    'billed': 0.0,
+                }],
+                'total': {
+                    'to_bill': 0.0,
+                    'billed': 0.0,
+                },
+            },
+        )

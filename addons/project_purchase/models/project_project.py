@@ -156,6 +156,8 @@ class ProjectProject(models.Model):
                     if purchase_line.invoice_lines:
                         for line in purchase_line.invoice_lines:
                             price_subtotal = line.currency_id._convert(line.price_subtotal, self.currency_id, self.company_id)
+                            if not line.analytic_distribution:
+                                continue
                             # an analytic account can appear several time in an analytic distribution with different repartition percentage
                             analytic_contribution = sum(
                                 percentage for ids, percentage in line.analytic_distribution.items()
