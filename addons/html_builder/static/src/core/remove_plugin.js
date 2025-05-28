@@ -1,32 +1,16 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
-import { resizeGrid } from "@html_builder/utils/grid_layout_utils";
 import { getVisibleSibling } from "./move_plugin";
 import { unremovableNodePredicates as deletePluginPredicates } from "@html_editor/core/delete_plugin";
 import { isUnremovableQWebElement as qwebPluginPredicate } from "@html_editor/others/qweb_plugin";
 import { isEditable } from "@html_builder/utils/utils";
-
-// TODO (see forceNoDeleteButton) make a resource in the options plugins to not
-// duplicate some selectors.
-const unremovableSelectors = [
-    ".s_carousel .carousel-item",
-    ".s_quotes_carousel .carousel-item",
-    ".s_carousel_intro .carousel-item",
-    ".o_mega_menu",
-    ".o_mega_menu > section",
-    ".s_dynamic_snippet_title",
-    ".s_table_of_content_navbar_wrap",
-    ".s_table_of_content_main",
-    ".nav-item",
-].join(", ");
 
 const unremovableNodePredicates = [
     (node) => !isEditable(node.parentNode),
     ...deletePluginPredicates,
     qwebPluginPredicate,
     (node) => node.parentNode.matches('[data-oe-type="image"]'),
-    (node) => node.matches(unremovableSelectors),
 ];
 
 export function isRemovable(el) {
@@ -36,22 +20,31 @@ export function isRemovable(el) {
 const layoutElementsSelector = [
     ".o_we_shape",
     ".o_we_bg_filter",
+    // Website only
     ".s_parallax_bg",
     ".o_bg_video_container",
 ].join(",");
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
-    static dependencies = ["history", "builderOptions"];
+    static dependencies = ["builderOptions"];
     resources = {
         get_overlay_buttons: withSequence(3, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
     };
-    static shared = ["removeElement", "removeElementAndUpdateContainers"];
+    static shared = ["removeElement"];
 
     setup() {
         this.overlayTarget = null;
+
+        const unremovableSelectors = [];
+        for (const unremovableSelector of this.getResource("is_unremovable_selector")) {
+            unremovableSelectors.push(unremovableSelector);
+        }
+        if (unremovableSelectors.length) {
+            unremovableNodePredicates.push((node) => node.matches(unremovableSelectors.join(", ")));
+        }
     }
 
     getActiveOverlayButtons(target) {
@@ -62,19 +55,19 @@ export class RemovePlugin extends Plugin {
 
         const buttons = [];
         this.overlayTarget = target;
-        const disabledReason = this.dependencies["builderOptions"].getRemoveDisabledReason(target);
+        const disabledReason = this.dependencies.builderOptions.getRemoveDisabledReason(target);
         buttons.push({
             class: "oe_snippet_remove bg-danger fa fa-trash",
             title: _t("Remove"),
             disabledReason,
             handler: () => {
-                this.removeElementAndUpdateContainers(this.overlayTarget);
+                this.removeElement(this.overlayTarget);
             },
         });
         return buttons;
     }
 
-    isEmptyAndRemovable(el) {
+    isEmptyAndRemovable(el, optionsTargetEls) {
         const childrenEls = [...el.children];
         // Consider a <figure> element as empty if it only contains a
         // <figcaption> element (e.g. when its image has just been
@@ -92,45 +85,55 @@ export class RemovePlugin extends Plugin {
                     el.matches(layoutElementsSelector)
                 ));
 
-        const optionsTargetEls = this.dependencies["builderOptions"]
-            .computeContainers(el)
-            .map((e) => e.element);
-
         return (
             isEmpty &&
             !el.classList.contains("oe_structure") &&
             !el.parentElement.classList.contains("carousel-item") &&
-            // TODO check if ok (parent editable)
             (!optionsTargetEls.includes(el) ||
                 optionsTargetEls.some((targetEl) => targetEl.contains(el))) &&
             isRemovable(el)
         );
     }
 
-    removeElementAndUpdateContainers(el) {
-        const elementToSelect = this.removeElement(el);
-        this.dependencies.history.addStep();
-        this.dependencies["builderOptions"].updateContainers(elementToSelect);
-    }
-
-    removeElement(el) {
-        const elementToSelect = this.removeCurrentTarget(el);
-        this.dispatchTo("after_remove_handlers", el);
-        return elementToSelect;
-    }
-
-    removeCurrentTarget(toRemoveEl) {
+    /**
+     * Removes the given element and updates the containers if needed.
+     *
+     * @param {HTMLElement} toRemoveEl the element to remove
+     * @param {Boolean} [updateContainers=true] true if the option containers
+     *   of the remaining element should be activated.
+     */
+    removeElement(toRemoveEl, updateContainers = true) {
         // Get the elements having options containers.
-        let optionsTargetEls = this.getOptionsContainersElements();
+        const optionTargetEls = this.getOptionsContainersElements().filter((targetEl) =>
+            targetEl.contains(toRemoveEl)
+        );
+        const nextTargetEl = this.removeCurrentTarget(toRemoveEl, optionTargetEls);
+        this.dispatchTo("on_removed_handlers", { removedEl: toRemoveEl, nextTargetEl });
+        if (updateContainers) {
+            this.dependencies.builderOptions.setNextTarget(nextTargetEl);
+        }
+    }
 
-        // TODO invisible element
-        // TODO will_remove_snippet
-        this.dispatchTo("on_remove_handlers", toRemoveEl);
+    /**
+     * Removes the given element from the DOM, as well as its parents when
+     * possible, and returns the element of which the options containers should
+     * be activated afterwards.
+     *
+     * @param {HTMLElement} toRemoveEl the element to remove
+     * @param {Array<HTMLElement>} optionsTargetEls the current option
+     *   containers target elements.
+     * @returns {HTMLElement}
+     */
+    removeCurrentTarget(toRemoveEl, optionsTargetEls) {
+        this.dispatchTo("on_will_remove_handlers", toRemoveEl);
 
+        // Get the parent and the previous and next visible siblings.
         let parentEl = toRemoveEl.parentElement;
         const previousSiblingEl = getVisibleSibling(toRemoveEl, "prev");
         const nextSiblingEl = getVisibleSibling(toRemoveEl, "next");
         if (parentEl.matches(".o_editable:not(body)")) {
+            // If we target the editable, we want to reset the selection to the
+            // body. If the editable has options, we do not want to show them.
             parentEl = parentEl.closest("body");
         }
 
@@ -141,17 +144,11 @@ export class RemovePlugin extends Plugin {
                 tooltip.dispose();
             }
         });
+
         // Remove the element.
         toRemoveEl.remove();
 
-        // Resize the grid, if any, to have the correct row count.
-        // Must be done here and not in a dedicated onRemove method because
-        // onRemove is called before actually removing the element and it
-        // should be the case in order to resize the grid.
-        if (toRemoveEl.classList.contains("o_grid_item")) {
-            resizeGrid(parentEl);
-        }
-
+        // Remove potential last empty text node from the parent.
         if (parentEl) {
             const firstChildEl = parentEl.firstChild;
             if (firstChildEl && !firstChildEl.tagName && firstChildEl.textContent === " ") {
@@ -159,11 +156,10 @@ export class RemovePlugin extends Plugin {
             }
         }
 
-        let nextElementToSelect;
-        if (previousSiblingEl || nextSiblingEl) {
-            // Activate the previous or next visible siblings if any.
-            nextElementToSelect = previousSiblingEl || nextSiblingEl;
-        } else {
+        // Set the sibling as the next element to activate, if any, otherwise
+        // set it as the parent.
+        let nextTargetEl = previousSiblingEl || nextSiblingEl;
+        if (!nextTargetEl) {
             // Remove potential ancestors (like when removing the last column of
             // a snippet).
             while (!optionsTargetEls.includes(parentEl)) {
@@ -176,30 +172,20 @@ export class RemovePlugin extends Plugin {
                 }
                 parentEl = nextParentEl;
             }
-            nextElementToSelect = parentEl;
 
-            optionsTargetEls = this.getOptionsContainersElements();
+            nextTargetEl = parentEl;
+            optionsTargetEls = optionsTargetEls.filter((targetEl) =>
+                targetEl.contains(nextTargetEl)
+            );
             if (this.isEmptyAndRemovable(parentEl, optionsTargetEls)) {
-                nextElementToSelect = this.removeCurrentTarget(parentEl);
+                nextTargetEl = this.removeCurrentTarget(parentEl, optionsTargetEls);
             }
         }
 
-        // TODO is it still necessary ?
-        this.editable
-            .querySelectorAll(".note-control-selection")
-            .forEach((el) => (el.style.display = "none"));
-        this.editable.querySelectorAll(".o_table_handler").forEach((el) => el.remove());
-
-        return nextElementToSelect;
-        // TODO:
-        // - trigger snippet_removed
-        //   - display message in the editor if no snippets,
-        //   - update invisible (already OK (see onChange))
-        //   - update undroppable snippets
-        // - cover update for translation mode
+        return nextTargetEl;
     }
 
     getOptionsContainersElements() {
-        return this.dependencies["builderOptions"].getContainers().map((option) => option.element);
+        return this.dependencies.builderOptions.getContainers().map((option) => option.element);
     }
 }

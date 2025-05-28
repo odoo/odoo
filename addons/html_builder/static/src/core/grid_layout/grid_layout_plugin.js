@@ -32,6 +32,7 @@ export class GridLayoutPlugin extends Plugin {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         on_cloned_handlers: this.onCloned.bind(this),
+        on_removed_handlers: this.onRemoved.bind(this),
         // Drag and drop from sidebar
         on_snippet_preview_handlers: this.onSnippetPreviewOrDropped.bind(this),
         on_snippet_dropped_handlers: this.onSnippetPreviewOrDropped.bind(this),
@@ -91,6 +92,15 @@ export class GridLayoutPlugin extends Plugin {
             const rowEl = cloneEl.parentElement;
             setElementToMaxZindex(cloneEl, rowEl);
             resizeGrid(rowEl);
+        }
+    }
+
+    onRemoved({ nextTargetEl }) {
+        // Resize the grid, if any, to have the correct row count.
+        // If the active element after a removal is a grid item, it means we
+        // potentially removed a sibling grid item.
+        if (nextTargetEl.classList.contains("o_grid_item")) {
+            resizeGrid(nextTargetEl.parentElement);
         }
     }
 
