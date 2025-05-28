@@ -1768,8 +1768,16 @@ export class Model extends Array {
          * @param {ModelRecordGroup} group
          * @param {ModelRecord[]} records
          */
-        const aggregateFields = (group, records) => {
+        const aggregateFields = (group, records, fields) => {
             for (const { fieldName, func, name } of aggregatedFields) {
+                // Don't aggregate monetary fields with different currencies
+                if (fields[fieldName]?.currency_field) {
+                    const currency_ids = records.map((r) => r[fields[fieldName].currency_field]);
+                    if (currency_ids.length && !currency_ids.every((c) => c === currency_ids[0])) {
+                        group[name] = false;
+                        continue;
+                    }
+                }
                 if (["sum", "avg"].includes(func)) {
                     if (!records.length) {
                         group[name] = false;
@@ -1790,6 +1798,8 @@ export class Model extends Array {
                     group[name] = records.some((r) => Boolean(r[fieldName]));
                 } else if (func === "bool_and") {
                     group[name] = records.every((r) => Boolean(r[fieldName]));
+                } else if (func === "array_agg_distinct") {
+                    group[name] = unique(records.map((r) => r[fieldName]));
                 } else {
                     throw new MockServerError(`Aggregate "${func}" not implemented in MockServer`);
                 }
@@ -1826,7 +1836,7 @@ export class Model extends Array {
 
         if (!groupby.length) {
             const group = { __extra_domain: [] };
-            aggregateFields(group, records);
+            aggregateFields(group, records, this._fields);
             return [group];
         }
 
@@ -1957,7 +1967,7 @@ export class Model extends Array {
                     group.__extra_domain = [[fieldName, "=", value], ...group.__extra_domain];
                 }
             }
-            aggregateFields(group, groupRecords);
+            aggregateFields(group, groupRecords, this._fields);
             readGroupResult.push(group);
         }
 

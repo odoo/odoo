@@ -185,6 +185,8 @@ export class SampleServer {
                 group[name] = records.some((r) => Boolean(r[fieldName]));
             } else if (func === "bool_and") {
                 group[name] = records.every((r) => Boolean(r[fieldName]));
+            } else if (func === "array_agg_distinct") {
+                group[name] = unique(records.map((r) => r[fieldName]));
             } else {
                 throw new Error(`Aggregate "${func}" not implemented in SampleServer`);
             }
