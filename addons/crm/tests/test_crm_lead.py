@@ -296,7 +296,7 @@ class TestCRMLead(TestCrmCommon):
         stage_team1_won2 = self.env['crm.stage'].create({
             'name': 'Won2',
             'sequence': 75,
-            'team_id': self.sales_team_1.id,
+            'team_ids': [self.sales_team_1.id],
             'is_won': True,
         })
         won_lead = self.lead_team_1_won.with_env(self.env)
