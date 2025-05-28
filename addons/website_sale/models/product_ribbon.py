@@ -35,6 +35,12 @@ class ProductRibbon(models.Model):
         ],
         required=True,
         default='manual',
+        help=(
+            "Defines how this ribbon is assigned to products:\n"
+            "- Manually: You assign the ribbon manually to products.\n"
+            "- Sale: Automatically applies the ribbon when the product is on sale.\n"
+            "- New: Automatically applies ribbon when the product is created within new period."
+        ),
     )
     new_period = fields.Integer(default=30)
 
@@ -55,4 +61,54 @@ class ProductRibbon(models.Model):
                     )
 
     def _get_css_classes(self):
-        return f'o_{self.style or "ribbon"} o_{self.position or "left"}'
+        css_classes = ""
+        match self.style:
+            case 'ribbon':
+                css_classes += "o_wsale_ribbon"
+            case 'tag':
+                css_classes += "o_wsale_badge"
+
+        match self.position:
+            case 'left':
+                css_classes += " o_left"
+            case 'right':
+                css_classes += " o_right"
+        return css_classes
+
+    def _get_applicable_ribbon(self, product, product_prices):
+        """
+        Returns the ribbon for which the product matches the criteria of automatic assignment.
+        :param product.product product: The product to get the automatic ribbon for.
+        :param function get_product_prices: A lazy loaded funciton to get product's pricing info
+        :return: Ribbon for which given product matches the automatic assign criteria.
+        :rtype: `product.ribbon` recordset.
+        """
+        for ribbon in self:
+            # Check if a discount is applied to the product using a pricelist, comparison price, or
+            # others.
+            is_sale_assign = (
+                ribbon.assign == 'sale'
+                and product_prices
+                and (
+                    # for /shop page
+                    (
+                        'base_price' in product_prices
+                        and (product_prices['base_price'] > product_prices['price_reduce'])
+                    )
+                    # for /product page
+                    or (
+                        "compare_list_price" in product_prices
+                        and product_prices['compare_list_price'] > product_prices['price']
+                    )
+                    or product_prices.get('has_discounted_price')
+                )
+            )
+            # Check if the product is published within the ribbon's new period.
+            is_new_assign = (
+                ribbon.assign == 'new'
+                and ribbon.new_period >= (fields.Datetime.today() - product.publish_date).days
+            )
+
+            if is_sale_assign or is_new_assign:
+                return ribbon
+        return self.env['product.ribbon']

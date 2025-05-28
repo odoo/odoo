@@ -236,10 +236,9 @@
                         class="oe_product_image_img_wrapper d-flex h-100 justify-content-center align-items-center position-absolute"/>
                     <t t-set="bg_color" t-value="ribbon.bg_color"/>
                     <t t-set="text_color" t-value="ribbon.text_color"/>
-                    <t t-set="bg_class" t-value="ribbon._get_css_classes()"/>
                     <span
                         t-att-data-ribbon-id="ribbon.id"
-                        t-attf-class="o_ribbons o_not_editable #{bg_class}"
+                        t-attf-class="o_ribbons o_not_editable #{ribbon._get_css_classes()}"
                         t-attf-style="#{text_color and ('color: %s;' % text_color)} #{bg_color and 'background-color:' + bg_color}"
                         t-out="ribbon.name or ''"
                     />
@@ -630,6 +629,7 @@
                                     t-att-data-default-sort="website.shop_default_sort"
                                     t-att-data-name="grid_block_name"
                                 >
+                                    <t t-set="product_ribbon_map" t-value="products.product_variant_ids.sudo()._get_ribbon(get_product_prices)"/>
                                     <t t-foreach="bins" t-as="tr_product">
                                         <t t-foreach="tr_product" t-as="td_product">
                                             <t t-if="td_product">
@@ -651,7 +651,7 @@
                                                 />
                                                 <t
                                                     t-set="ribbon"
-                                                    t-value="td_product['product'].product_variant_id.sudo()._get_ribbon(template_price_vals)"
+                                                    t-value="product_ribbon_map[td_product['product'].product_variant_id.id]"
                                                 />
                                                 <div
                                                     t-attf-class="oe_product {{col_is_custom_portrait and 'oe_product_custom_portrait'}} {{col_class}} {{col_class_md}} {{col_class_lg}} {{col_is_stretched and 'oe_product_size_stretch'}}"
@@ -3392,11 +3392,10 @@
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
         <t
             t-set="ribbon"
-            t-value="product_variant._get_ribbon(combination_info)"
+            t-value="product_variant.sudo()._get_ribbon(get_product_prices)[product_variant.id]"
         />
         <t t-set="bg_color" t-value="ribbon['bg_color'] or ''"/>
         <t t-set="text_color" t-value="ribbon['text_color']"/>
-        <t t-set="bg_class" t-value="ribbon._get_css_classes()"/>
         <t t-call="website_sale.shop_product_#{website.product_page_image_layout}"/>
     </template>
 
@@ -3411,13 +3410,14 @@
             t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
             class="position-relative d-inline-flex overflow-hidden m-auto w-100"
         >
+            <div>
+                <span
+                    t-attf-class="o_ribbons #{ribbon._get_css_classes()} z-1"
+                    t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                    t-out="ribbon['name'] or ''"
+                    t-att-data-ribbon-id="ribbon['id']"
+                />
             <span
-                t-attf-class="o_ribbons #{ribbon._get_css_classes()} z-1"
-                t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
-                t-out="ribbon['name'] or ''"
-                t-att-data-ribbon-id="ribbon['id']"
-            />
-            <div
                 t-field="product_image.image_1920"
                 name="o_img_with_max_suggested_width"
                 class="d-flex align-items-start justify-content-center w-100 oe_unmovable"
@@ -3429,6 +3429,8 @@
                     'zoom': product_image.can_image_1024_be_zoomed and 'image_1920',
                 }"
             />
+
+            </div>
         </div>
         <div
             t-else=""

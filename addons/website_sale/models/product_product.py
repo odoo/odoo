@@ -422,65 +422,39 @@ class ProductProduct(models.Model):
     # Product Ribbon Methods
     # ---------------------------------------------------------
 
-    def _get_ribbon(self, product_prices):
+    def _get_ribbon(self, get_product_prices):
         """
         Retrieve the appropriate ribbon for the product based on manual or automatic assignment.
 
         This method first checks if a ribbon is manually set If no manual ribbon is set, it returns
         appropriate ribbon based on the priority assigned in product.ribbon.
 
-        :param dict product_prices: A dictionary containing product pricing information.
+        :param function get_product_prices: a lazy function that returns product's pricing info.
         :return: The ribbon that matches the product's criteria or an empty ribbon record.
         :rtype: `product.ribbon` recordset.
         """
         product_ribbon_sudo = self.env['product.ribbon'].sudo()
         if not self:
-            return product_ribbon_sudo
+            return {False: product_ribbon_sudo}
 
-        manually_set_ribbon = self.product_tmpl_id.website_ribbon_id or self.variant_ribbon_id
-        if manually_set_ribbon:
-            return manually_set_ribbon
-
+        product_ribbon_map = {}
         auto_assign_ribbons = product_ribbon_sudo.search([('assign', '!=', 'manual')])
-        for ribbon in auto_assign_ribbons:
-            if self._is_matched_for_ribbon(ribbon, product_prices):
-                return ribbon
-        return product_ribbon_sudo
-
-    def _is_matched_for_ribbon(self, ribbon, product_prices):
-        """
-        Determine if the product matches the criteria of automatic assignment for the given ribbon.
-
-        :param product.ribbon ribbon: The ribbon to check against.
-        :param dict product_prices: A dictionary containing product pricing information.
-        :return: Whether the product matches the ribbon's criteria.
-        :rtype: bool
-        """
-
-        # Check if a discount is applied to the product using a pricelist, comparison price, or
-        # others.
-        is_sale_assign = (
-            ribbon.assign == "sale"
-            and product_prices
-            and (
-                # for /shop page
-                (
-                    "base_price" in product_prices
-                    and (product_prices["base_price"] > product_prices["price_reduce"])
-                )
-                # for /product page
-                or (
-                    "compare_list_price" in product_prices
-                    and product_prices["compare_list_price"] > product_prices["price"]
-                )
-                or product_prices.get("has_discounted_price")
+        for product in self:
+            product_ribbon_map[product.id] = product_ribbon_sudo
+            manually_set_ribbon = (
+                product.product_tmpl_id.website_ribbon_id or product.variant_ribbon_id
             )
-        )
 
-        # Check if the product is published within the ribbon's new period.
-        is_new_assign = (
-            ribbon.assign == "new"
-            and ribbon.new_period >= (fields.Datetime.today() - self.publish_date).days
-        )
+            if manually_set_ribbon:
+                product_ribbon_map[product.id] = manually_set_ribbon
+            else:
+                product_prices = (
+                    get_product_prices(product.product_tmpl_id)
+                    if get_product_prices
+                    else product.product_tmpl_id._get_combination_info()
+                )
+                product_ribbon_map[product.id] = auto_assign_ribbons._get_applicable_ribbon(
+                    product, product_prices,
+                )
 
-        return is_sale_assign or is_new_assign
+        return product_ribbon_map

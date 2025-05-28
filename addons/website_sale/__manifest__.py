@@ -159,7 +159,6 @@
             'website_sale/static/src/website_builder/**/*',
         ],
         'website.assets_wysiwyg': [
-            'website_sale/static/src/js/product_ribbon_mixin.js',
             'website_sale/static/src/scss/website_sale.editor.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
