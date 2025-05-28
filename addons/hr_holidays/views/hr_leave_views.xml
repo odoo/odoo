@@ -501,7 +501,7 @@
             </xpath>
         </field>
     </record>
-
+    <!-- DEPRECATED -->
     <record id="hr_leave_view_calendar" model="ir.ui.view">
         <field name="name">hr.leave.view.calendar</field>
         <field name="model">hr.leave</field>
@@ -820,6 +820,7 @@
         <field name="act_window_id" ref="hr_leave_action_action_approve_department"/>
     </record>
 
+    <!-- DEPRECATED -->
     <record id="view_holiday_pivot" model="ir.ui.view">
         <field name="name">hr.holidays.report_pivot</field>
         <field name="model">hr.leave</field>
@@ -836,6 +837,7 @@
         </field>
     </record>
 
+    <!-- DEPRECATED -->
     <record id="view_holiday_graph" model="ir.ui.view">
         <field name="name">hr.holidays.report_graph</field>
         <field name="model">hr.leave</field>
@@ -852,6 +854,7 @@
         </field>
     </record>
 
+    <!-- DEPRECATED -->
     <record id="view_holiday_list" model="ir.ui.view">
         <field name="name">hr.holidays.report_list</field>
         <field name="model">hr.leave</field>
@@ -868,6 +871,7 @@
         </field>
     </record>
 
+    <!-- DEPRECATED -->
     <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
         <field name="name">Time Off by Employee</field>
         <field name="res_model">hr.leave</field>
@@ -885,6 +889,7 @@
         </field>
     </record>
 
+    <!-- DEPRECATED -->
     <record id="action_window_leave_pivot" model="ir.actions.act_window.view">
         <field name="sequence" eval="4"/>
         <field name="view_mode">pivot</field>
@@ -892,6 +897,7 @@
         <field name="act_window_id" ref="action_hr_available_holidays_report"/>
     </record>
 
+    <!-- DEPRECATED -->
     <record id="action_window_leave_list" model="ir.actions.act_window.view">
         <field name="sequence" eval="5"/>
         <field name="view_mode">list</field>
@@ -899,6 +905,7 @@
         <field name="act_window_id" ref="action_hr_available_holidays_report"/>
     </record>
 
+    <!-- DEPRECATED -->
     <record id="action_window_leave_graph" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>
         <field name="view_mode">graph</field>
