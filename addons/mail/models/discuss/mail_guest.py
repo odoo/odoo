@@ -4,7 +4,7 @@ import pytz
 import uuid
 from datetime import datetime, timedelta
 
-from odoo.tools import consteq
+from odoo.tools import consteq, get_lang
 from odoo import _, api, fields, models
 from odoo.http import request
 from odoo.addons.base.models.res_partner import _tz_get
@@ -65,6 +65,19 @@ class MailGuest(models.Model):
             assert len(guest) <= 1, "Context guest should be empty or a single record."
             return guest.sudo(False).with_context(guest=guest)
         return self.env['mail.guest']
+
+    def _get_or_create_guest(self, *, guest_name, country_code, timezone):
+        if not (guest := self._get_guest_from_context()):
+            guest = self.create(
+                {
+                    "country_id": self.env["res.country"].search([("code", "=", country_code)]).id,
+                    "lang": get_lang(self.env).code,
+                    "name": guest_name,
+                    "timezone": timezone,
+                }
+            )
+            guest._set_auth_cookie()
+        return guest.sudo(False)
 
     def _get_timezone_from_request(self, request):
         timezone = request.cookies.get('tz')

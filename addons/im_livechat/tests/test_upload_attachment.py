@@ -17,7 +17,6 @@ class TestUploadAttachment(HttpCase):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
             {
-                "anonymous_name": "Visitor",
                 "channel_id": livechat_channel.id,
                 "persisted": True,
             },

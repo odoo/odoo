@@ -6,10 +6,8 @@ from odoo import api, models
 class Im_LivechatChannel(models.Model):
     _inherit = 'im_livechat.channel'
 
-    def _get_livechat_discuss_channel_vals(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None):
-        discuss_channel_vals = super()._get_livechat_discuss_channel_vals(
-            anonymous_name, previous_operator_id, chatbot_script, user_id=user_id, country_id=country_id, lang=lang
-        )
+    def _get_livechat_discuss_channel_vals(self, chatbot_script=None, agent=None):
+        discuss_channel_vals = super()._get_livechat_discuss_channel_vals(chatbot_script, agent)
         if not discuss_channel_vals:
             return False
         visitor_sudo = self.env['website.visitor']._get_visitor_from_request()

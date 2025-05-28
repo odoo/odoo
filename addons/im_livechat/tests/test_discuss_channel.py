@@ -10,11 +10,7 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
             self.env, "bob_user", groups="base.group_user,im_livechat.im_livechat_group_manager"
         )
         data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertFalse(chat.livechat_end_dt)
@@ -25,11 +21,7 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
 
     def test_human_operator_failure_states(self):
         data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertFalse(chat.chatbot_current_step_id)  # assert there is no chatbot
@@ -54,11 +46,7 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
         )
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {
-                "anonymous_name": "Visitor",
-                "chatbot_script_id": chatbot_script.id,
-                "channel_id": self.livechat_channel.id,
-            },
+            {"chatbot_script_id": chatbot_script.id, "channel_id": self.livechat_channel.id},
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.assertTrue(chat.chatbot_current_step_id)  # assert there is a chatbot
@@ -82,10 +70,7 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
         """Test that a livechat note is sent to the internal user bus."""
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            {"channel_id": self.livechat_channel.id},
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
@@ -113,10 +98,7 @@ class TestDiscussChannel(TestImLivechatCommon, MailCase):
         """Test that a livechat status is sent to the internal user bus."""
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            {"channel_id": self.livechat_channel.id},
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         with self.assertBus(
