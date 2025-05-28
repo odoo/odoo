@@ -92,7 +92,7 @@ export class AddSnippetDialog extends Component {
     }
 
     get iframeDocument() {
-        return this.iframeRef.el.contentDocument;
+        return this.iframeRef.el?.contentDocument;
     }
     /**
      * Gets snippet groups.
@@ -376,8 +376,6 @@ export class AddSnippetDialog extends Component {
                 rowEl.previousSibling.remove();
             }
         }
-
-        this._updateSnippetContent(this.iframeDocument);
     }
     /**
      * Inserts the style into the iframe's <head>.

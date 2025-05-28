@@ -26,8 +26,10 @@ patch(AddSnippetDialog.prototype, {
     async insertSnippets() {
         await super.insertSnippets();
 
-        // Start preview interactions
-        this.websiteEditService.update(this.iframeDocument.body, "preview");
+        if (this.iframeDocument) {
+            // Start preview interactions
+            this.websiteEditService.update(this.iframeDocument.body, "preview");
+        }
     },
 
     /**
