@@ -81,8 +81,7 @@ patch(PosStore.prototype, {
             sale_order.order_line.map((l) => l.id),
         ]);
 
-        for (let i = 0; i < sale_order.order_line.length; ++i) {
-            const line = sale_order.order_line[i];
+        for (const line of sale_order.order_line) {
             if (line.display_type === "line_note") {
                 if (previousProductLine) {
                     const previousNote = previousProductLine.customer_note;
@@ -119,7 +118,7 @@ patch(PosStore.prototype, {
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
 
-            const converted_line = converted_lines[i];
+            const converted_line = converted_lines.find((l) => l.id === line.id);
             if (
                 newLine.getProduct().tracking !== "none" &&
                 (this.pickingType.use_create_lots || this.pickingType.use_existing_lots) &&
