@@ -44,7 +44,7 @@
                                         <br t-if="not subtitle_last"/>
                                     </t>
                                 </td>
-                                <td t-else=""><span style="font-weight:bold;" t-out="record_name"/><br/></td>
+                                <td t-else=""><span style="font-weight:bold;" t-out="record_name or (message.record_name and message.record_name.replace('/','-')) or ''"/><br/></td>
 
                             </tr>
                         </tbody>

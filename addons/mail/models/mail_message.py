@@ -69,7 +69,7 @@ class MailMessage(models.Model):
     _inherit = ["bus.listener.mixin"]
     _description = 'Message'
     _order = 'id desc'
-    _rec_name = 'record_name'
+    _rec_name = 'subject'
 
     @api.model
     def default_get(self, fields):
@@ -108,7 +108,7 @@ class MailMessage(models.Model):
     # related document
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
-    record_name = fields.Char('Message Record Name') # display_name of the related document
+    record_name = fields.Char('Message Record Name', compute='_compute_record_name', store=False)
     record_alias_domain_id = fields.Many2one('mail.alias.domain', 'Alias Domain', ondelete='set null')
     record_company_id = fields.Many2one('res.company', 'Company', ondelete='set null')
     # characteristics
@@ -204,6 +204,14 @@ class MailMessage(models.Model):
         for message in self:
             plaintext_ct = tools.mail.html_to_inner_content(message.body)
             message.preview = textwrap.shorten(plaintext_ct, 190)
+
+    @api.depends('model', 'res_id')
+    def _compute_record_name(self):
+        free = self.filtered(lambda m: not m.model or not m.res_id or m.model not in self.env)
+        free.record_name = False
+        # sudo here, as it behaves like a m2o -> can read message, can read name_get
+        for message, record in (self - free)._record_by_message().items():
+            message.record_name = record.sudo().display_name
 
     @api.depends('author_id', 'author_guest_id')
     @api.depends_context('guest', 'uid')
@@ -609,8 +617,6 @@ class MailMessage(models.Model):
                 values['message_id'] = self._get_message_id(values)
             if 'reply_to' not in values:
                 values['reply_to'] = self._get_reply_to(values)
-            if 'record_name' not in values and 'default_record_name' not in self.env.context:
-                values['record_name'] = self._get_record_name(values)
 
             if not values.get('attachment_ids'):
                 values['attachment_ids'] = []
@@ -973,6 +979,7 @@ class MailMessage(models.Model):
             "pinned_at",
             # sudo: mail.message - reading reactions on accessible message is allowed
             Store.Attr("reactions", value=lambda m: Store.Many(m.sudo().reaction_ids)),
+            "record_name",  # keep for iOS app
             "res_id",  # keep for iOS app
             "subject",
             # sudo: mail.message.subtype - reading subtype on accessible message is allowed
@@ -1067,21 +1074,17 @@ class MailMessage(models.Model):
             fields.append("starred")
         store.add(self, fields)
         for message in self:
-            # model, res_id, record_name need to be kept for mobile app as iOS app cannot be updated
             record = record_by_message.get(message)
             if record:
-                # sudo: if mentionned in a non accessible thread, user should be able to see the name
-                record_name = record.sudo().display_name
-                default_subject = record_name
                 if hasattr(record, "_message_compute_subject"):
                     # sudo: if mentionned in a non accessible thread, user should be able to see the subject
                     default_subject = record.sudo()._message_compute_subject()
+                else:
+                    default_subject = message.record_name
             else:
-                record_name = False
                 default_subject = False
             data = {
                 "default_subject": default_subject,
-                "record_name": record_name,  # keep for iOS app
                 "scheduledDatetime": scheduled_dt_by_msg_id.get(message.id, False),
                 "thread": Store.One(record, [], as_thread=True),
             }
@@ -1195,16 +1198,6 @@ class MailMessage(models.Model):
                 not msg.attachment_ids and
                 not (msg._has_field_access(msg._fields['tracking_value_ids'], 'read') and msg.tracking_value_ids)
         )
-
-    @api.model
-    def _get_record_name(self, values):
-        """ Return the related document name, using display_name. It is done using
-            SUPERUSER_ID, to be sure to have the record name correctly stored. """
-        model = values.get('model', self.env.context.get('default_model'))
-        res_id = values.get('res_id', self.env.context.get('default_res_id'))
-        if not model or not res_id or model not in self.env:
-            return False
-        return self.env[model].sudo().browse(res_id).display_name
 
     @api.model
     def _get_reply_to(self, values):

@@ -639,7 +639,6 @@ class HrApplicant(models.Model):
                     subject=notification_subject,
                     body=notification_body,
                     email_layout_xmlid="mail.mail_notification_layout",
-                    record_name=applicant.display_name,
                     model_description="Applicant",
                 )
         return applicants
@@ -694,7 +693,6 @@ class HrApplicant(models.Model):
                         subject=notification_subject,
                         body=notification_body,
                         email_layout_xmlid="mail.mail_notification_layout",
-                        record_name=applicant.display_name,
                         model_description="Applicant",
                     )
         return res

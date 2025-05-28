@@ -769,8 +769,8 @@ class ForumPost(models.Model):
             self.ensure_one()
             if not self.can_comment:
                 raise AccessError(_('%d karma required to comment.', self.karma_comment))
-            if not kwargs.get('record_name') and self.parent_id:
-                kwargs['record_name'] = self.parent_id.name
+            if not kwargs.get('force_record_name') and self.parent_id.name:
+                kwargs['force_record_name'] = self.parent_id.name
         return super().message_post(message_type=message_type, **kwargs)
 
     def _notify_thread_by_inbox(self, message, recipients_data, msg_vals=False, **kwargs):

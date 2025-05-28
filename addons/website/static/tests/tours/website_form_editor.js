@@ -10,7 +10,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 
 // Visibility possible values:
 const VISIBLE = 'Always Visible';
-const HIDDEN = 'Hidden';
 const CONDITIONALVISIBILITY = 'Visible only if';
 
 const NB_NON_ESSENTIAL_REQUIRED_FIELDS_IN_DEFAULT_FORM = 2;
@@ -278,8 +277,6 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     },
 
     ...addExistingField('date', 'text', 'Test Date', true),
-
-    ...addExistingField('record_name', 'text', 'Awesome Label', false, {visibility: HIDDEN}),
 
     ...addExistingField('body_html', 'textarea', 'Your Message', true),
 
