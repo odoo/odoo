@@ -1,11 +1,9 @@
-import { closestBlock } from "@html_editor/utils/blocks";
-import { boundariesIn, leftPos, startPos } from "@html_editor/utils/position";
 import { findInSelection } from "@html_editor/utils/selection";
 import { click, manuallyDispatchProgrammaticEvent, press, waitFor } from "@odoo/hoot-dom";
 import { tick } from "@odoo/hoot-mock";
 import { setSelection } from "./selection";
 import { execCommand } from "./userCommands";
-import { isBrowserChrome, isMobileOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 import { isTextNode } from "@html_editor/utils/dom_info";
 
 /** @typedef {import("@html_editor/plugin").Editor} Editor */
@@ -330,14 +328,5 @@ export async function tripleClick(node) {
         // Default prevented, no effects on selection to simulate.
         return;
     }
-    const block = closestBlock(element);
-    let [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(block);
-    // Simulate Chrome's bad behaviour
-    if (isBrowserChrome() && block.nextSibling) {
-        const nextSibling = block.nextSibling;
-        [focusNode, focusOffset] =
-            nextSibling.nodeName === "BR" ? leftPos(nextSibling) : startPos(nextSibling);
-    }
-    setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     await tick();
 }
