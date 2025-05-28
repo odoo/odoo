@@ -2,6 +2,7 @@ from . import (
     test_access_monetary_related,
     test_attributes,
     test_autovacuum,
+    test_bindings,
     test_check_access,
     test_company_checks,
     test_domain,
