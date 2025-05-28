@@ -3,6 +3,7 @@ from . import (
     test_autovacuum,
     test_company_checks,
     test_domain,
+    test_endpoints,
     test_fields,
     test_indexed_translation,
     test_json_field,
