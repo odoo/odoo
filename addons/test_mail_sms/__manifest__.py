@@ -12,7 +12,7 @@ tests independently to functional aspects of other models. """,
     'depends': [
         'mail',
         'sms',
-        'test_performance',
+        'test_orm',
     ],
     'data': [
         'security/ir.model.access.csv',

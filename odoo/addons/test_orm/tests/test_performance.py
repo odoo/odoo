@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-from unittest.mock import patch
 import logging
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
@@ -17,7 +14,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
     @classmethod
     def setUpClass(cls):
-        super(TestPerformance, cls).setUpClass()
+        super().setUpClass()
         cls._load_partners_set()
 
         partner3 = cls.env['res.partner'].search([('name', '=', 'AnalytIQ')], limit=1)
