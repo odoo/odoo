@@ -23,7 +23,7 @@ def format_structured_reference_iso(number):
     The Creditor Reference is an international standard (ISO 11649).
     Example: `123456789` -> `RF18 1234 5678 9`
     """
-    check_digits = mod_97_10.calc_check_digits('{}RF'.format(number))
+    check_digits = mod_97_10.calc_check_digits(f"{number}RF")
     return 'RF{} {}'.format(
         check_digits,
         ' '.join(''.join(x) for x in zip_longest(*[iter(str(number))]*4, fillvalue=''))
