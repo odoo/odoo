@@ -91,19 +91,21 @@ registry.category("web_tour.tours").add("configurator_flow", {
         // Online catalog screen
         {
             content: "Choose a shop page style",
-            trigger: ".theme_preview",
+            trigger: ".o_configurator_screen:contains(online catalog) .theme_preview",
             run: "click",
         },
         // Product page Screen
         {
             content: "Choose a product page style",
-            trigger: ".theme_preview",
+            trigger: ".o_configurator_screen:contains(product page) .theme_preview",
             run: "click",
+        },
+        {
+            trigger: ".o_website_loader_container",
         },
         {
             content: "Wait until the configurator is finished",
             trigger: ".o_website_preview[data-view-xmlid='website.homepage']",
-            timeout: 30000,
         },
         {
             content: "check menu and footer links are correct",
