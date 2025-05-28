@@ -56,7 +56,7 @@ registerThemeHomepageTour('homepage', () => [
     goBackToBlocks(),
     ...insertSnippet(snippets[1]),
     ...insertSnippet(snippets[2]),
-    ...clickOnSnippet(snippets[2], { position: "top" }),
+    ...clickOnSnippet(snippets[2], "top"),
     changeBackgroundColor(),
     goBackToBlocks(),
     ...insertSnippet(snippets[3]),
