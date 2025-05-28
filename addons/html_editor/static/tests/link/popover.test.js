@@ -10,7 +10,6 @@ import {
     select,
     waitFor,
     waitForNone,
-    manuallyDispatchProgrammaticEvent,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
@@ -103,7 +102,7 @@ describe("should open a popover", () => {
         expect(".o-we-linkpopover").toHaveCount(1);
         // click on an uneditable element
         const nodeEl = queryOne("a[contenteditable='false']");
-        manuallyDispatchProgrammaticEvent(nodeEl, "mousedown");
+        setSelection({ anchorNode: nodeEl, anchorOffset: 0 });
         await waitForNone(".o-we-linkpopover", { timeout: 1500 });
         expect(".o-we-linkpopover").toHaveCount(0);
     });
@@ -1071,7 +1070,8 @@ describe("link preview", () => {
     });
     test("test external metadata cached correctly", async () => {
         const title = "Open Source ERP and CRM | Odoo";
-        const description = "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.";
+        const description =
+            "From ERP to CRM, eCommerce and CMS. Download Odoo or use it in the cloud. Grow Your Business.";
         onRpc("/html_editor/link_preview_external", () => {
             expect.step("/html_editor/link_preview_external");
             return {
