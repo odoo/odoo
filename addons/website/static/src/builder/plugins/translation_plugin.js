@@ -224,8 +224,8 @@ export class TranslationPlugin extends Plugin {
                 optionEl.dataset.initialTranslationValue = optionName;
                 optionEl.className = "o_translation_select_option";
                 selectTranslationEl.appendChild(optionEl);
-                this.translateSelectEls.push(optionEl);
             }
+            this.translateSelectEls.push(selectTranslationEl);
             selectEl.before(selectTranslationEl);
         }
     }
@@ -286,9 +286,8 @@ export class TranslationPlugin extends Plugin {
         }
         for (const translateSelectEl of this.translateSelectEls) {
             this.addDomListener(translateSelectEl, "click", (ev) => {
-                const translateSelectEl = ev.target;
                 this.dialogService.add(SelectTranslateDialog, {
-                    node: translateSelectEl,
+                    node: ev.currentTarget,
                     addStep: this.dependencies.history.addStep,
                 });
             });
