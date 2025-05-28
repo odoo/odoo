@@ -52,6 +52,16 @@ class AccountReport(models.Model):
     sequence = fields.Integer(string="Sequence")
     active = fields.Boolean(string="Active", default=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
+    groupby = fields.Char(
+        string="Group By",
+        help="Comma-separated list of fields from account.move.line (Journal Item). \
+            When set, this report will have report lines generating sublines grouped by those keys except when specified on the report line.")
+    user_groupby = fields.Char(
+        string="User Group By",
+        compute='_compute_user_groupby', store=True, readonly=False, precompute=True,
+        help="Comma-separated list of fields from account.move.line (Journal Item). \
+            When set, the report lines will generate sublines grouped by those keys except when specified on the report line.",
+    )
     column_ids = fields.One2many(string="Columns", comodel_name='account.report.column', inverse_name='report_id')
     root_report_id = fields.Many2one(string="Root Report", comodel_name='account.report', index='btree_not_null', help="The report this report is a variant of.")
     variant_report_ids = fields.One2many(string="Variants", comodel_name='account.report', inverse_name='root_report_id')
@@ -230,6 +240,12 @@ class AccountReport(models.Model):
         for report in self:
             report.use_sections = bool(report.section_report_ids)
 
+    @api.depends('groupby')
+    def _compute_user_groupby(self):
+        for report in self:
+            if not report.id and not report.user_groupby:
+                report.user_groupby = report.groupby
+
     @api.constrains('root_report_id')
     def _validate_root_report_id(self):
         for report in self:
@@ -324,6 +340,12 @@ class AccountReport(models.Model):
     def _unlink_if_no_variant(self):
         if self.variant_report_ids:
             raise UserError(_("You can't delete a report that has variants."))
+
+    def _get_groupby(self, options):
+        self.ensure_one()
+        if options['export_mode'] == 'file':
+            return self.groupby
+        return self.user_groupby
 
     def _get_copied_name(self):
         '''Return a copied name of the account.report record by adding the suffix (copy) at the end
