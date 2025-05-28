@@ -60,7 +60,11 @@ export class Store extends BaseStore {
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
     /** This is the current logged partner / guest */
-    self = fields.One("Persona");
+    selfPartner = fields.One("Persona");
+    selfGuest = fields.One("Persona");
+    get self() {
+        return this.selfPartner || this.selfGuest;
+    }
     allChannels = fields.Many("Thread", {
         inverse: "storeAsAllChannels",
         onUpdate() {
@@ -639,7 +643,7 @@ export const storeService = {
          * these values will still be executed immediately. Providing a dummy default is enough to
          * avoid crashes, the actual values being filled at livechat init when they are necessary.
          */
-        store.self ??= { id: -1, type: "guest" };
+        store.selfGuest ??= { id: -1, type: "guest" };
         store.settings ??= {};
         store.initialize();
         store.onStarted();

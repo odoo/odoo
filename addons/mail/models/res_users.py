@@ -328,7 +328,7 @@ class ResUsers(models.Model):
         if not self.env.user._is_public():
             settings = self.env["res.users.settings"]._find_or_create_for_user(self.env.user)
             store.add_global_values(
-                store_self=Store.One(
+                selfPartner=Store.One(
                     self.env.user.partner_id,
                     [
                         "active",
@@ -344,7 +344,7 @@ class ResUsers(models.Model):
                 settings=settings._res_users_settings_format(),
             )
         elif guest := self.env["mail.guest"]._get_guest_from_context():
-            store.add_global_values(store_self=Store.One(guest, ["avatar_128", "name"]))
+            store.add_global_values(selfGuest=Store.One(guest, ["avatar_128", "name"]))
 
     def _init_messaging(self, store: Store):
         self.ensure_one()
