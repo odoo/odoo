@@ -156,6 +156,7 @@ apt-get update
 # This will be modified by a unique password on the first start of Odoo
 password="$(openssl rand -base64 12)"
 echo "pi:${password}" | chpasswd
+chown -R pi:pi "/home/pi/.ssh"  # Ensure pi user has access to its .ssh directory
 
 PKGS_TO_INSTALL="
     chromium-browser \
