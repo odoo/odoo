@@ -220,6 +220,7 @@ export async function waitForChannels(channels, { operation = "add" } = {}) {
     const { env } = MockServer;
     const def = new Deferred();
     let done = false;
+    let failTimeout;
 
     /**
      * @param {boolean} crashOnFail
@@ -262,7 +263,7 @@ export async function waitForChannels(channels, { operation = "add" } = {}) {
 
     await runAllTimers();
 
-    const failTimeout = setTimeout(() => check(true), TIMEOUT);
+    failTimeout = setTimeout(() => check(true), TIMEOUT);
     check(false);
 
     return def;
