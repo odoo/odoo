@@ -5,7 +5,6 @@ import {
     isProtected,
     isProtecting,
     isUnprotecting,
-    previousLeaf,
 } from "@html_editor/utils/dom_info";
 import {
     childNodes,
@@ -16,7 +15,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { Plugin } from "../plugin";
-import { DIRECTIONS, endPos, leftPos, nodeSize, rightPos } from "../utils/position";
+import { DIRECTIONS, leftPos, nodeSize, rightPos } from "../utils/position";
 import {
     getAdjacentCharacter,
     normalizeCursorPosition,
@@ -207,8 +206,6 @@ export class SelectionPlugin extends Plugin {
         this.addDomListener(this.editable, "mousedown", (ev) => {
             if (ev.detail === 2) {
                 this.correctDoubleClick = true;
-            } else if (ev.detail >= 3) {
-                this.correctTripleClick = true;
             }
         });
         this.addDomListener(this.editable, "keydown", (ev) => {
@@ -222,6 +219,11 @@ export class SelectionPlugin extends Plugin {
             ];
             if (handled.includes(getActiveHotkey(ev))) {
                 this.onKeyDownArrows(ev);
+            }
+        });
+        this.addDomListener(this.editable, "click", (ev) => {
+            if (ev.detail % 3 === 0) {
+                this.onTripleClick(ev);
             }
         });
     }
@@ -239,6 +241,18 @@ export class SelectionPlugin extends Plugin {
         this.activeSelection = this.makeActiveSelection();
     }
 
+    onTripleClick() {
+        const selectionData = this.getSelectionData();
+        if (selectionData.documentSelectionIsInEditable) {
+            const { documentSelection } = selectionData;
+            const block = closestBlock(documentSelection.anchorNode);
+            const [anchorNode, anchorOffset] = getDeepestPosition(block, 0);
+            const [focusNode, focusOffset] = getDeepestPosition(block, nodeSize(block));
+            this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
+            return;
+        }
+    }
+
     /**
      * Update the active selection to the current selection in the editor.
      */
@@ -246,14 +260,6 @@ export class SelectionPlugin extends Plugin {
         this.previousActiveSelection = this.activeSelection;
         const selectionData = this.getSelectionData();
         if (selectionData.documentSelectionIsInEditable) {
-            if (this.correctTripleClick) {
-                this.correctTripleClick = false;
-                let { anchorNode, anchorOffset, focusNode, focusOffset } = this.activeSelection;
-                if (focusOffset === 0 && anchorNode !== focusNode) {
-                    [focusNode, focusOffset] = endPos(previousLeaf(focusNode));
-                    return this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
-                }
-            }
             if (this.correctDoubleClick) {
                 this.correctDoubleClick = false;
                 const { anchorNode, anchorOffset, focusNode } = this.activeSelection;
