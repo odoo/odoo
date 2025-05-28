@@ -429,8 +429,8 @@ describe("not collapsed selection", () => {
             },
             contentAfter: unformat(
                 `<table><tbody>
-                        <tr><td>cd</td><td><span class="a">TEST</span>[]</td><td>gh</td></tr>
-                        <tr><td>ij</td><td><br></td><td>mn</td></tr>
+                        <tr><td>cd</td><td><p><span class="a">TEST</span>[]</p></td><td>gh</td></tr>
+                        <tr><td>ij</td><td><p><br></p></td><td>mn</td></tr>
                         <tr><td>op</td><td>qr</td><td>st</td></tr>
                     </tbody></table>`
             ),
