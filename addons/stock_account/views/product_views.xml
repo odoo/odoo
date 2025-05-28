@@ -19,7 +19,7 @@
             <field name="arch" type="xml">
                 <group name="logistics" position="after">
                     <group string="Inventory Valuation">
-                        <field name="property_cost_method" required="True"/>
+                        <field name="property_cost_method" placeholder="Use company default"/>
                         <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
                     </group>
                 </group>
