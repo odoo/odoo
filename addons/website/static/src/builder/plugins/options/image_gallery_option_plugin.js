@@ -3,6 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { ImageGalleryComponent } from "./image_gallery_option";
 import { renderToElement } from "@web/core/utils/render";
+import { updateCarouselIndicators } from "../carousel_option_plugin";
 
 class ImageGalleryOption extends Plugin {
     static id = "imageGalleryOption";
@@ -24,7 +25,8 @@ class ImageGalleryOption extends Plugin {
         ],
         builder_actions: this.getActions(),
         system_classes: ["o_empty_gallery_alert"],
-        on_reorder_items_handlers: this.reorderGalleryItems.bind(this),
+        get_gallery_items_handlers: this.getGalleryItems.bind(this),
+        reorder_items_handlers: this.reorderGalleryItems.bind(this),
         on_remove_handlers: this.onRemove.bind(this),
         after_remove_handlers: this.afterRemove.bind(this),
         on_snippet_dropped_handlers: ({ snippetEl }) => {
@@ -104,54 +106,52 @@ class ImageGalleryOption extends Plugin {
         }
     }
 
-    reorderGalleryItems({ elementToReorder, position, optionName }) {
+    /**
+     * Gets the gallery images to reorder.
+     *
+     * @param {HTMLElement} activeItemEl the current active image
+     * @param {String} optionName
+     * @returns {Array<HTMLElement>}
+     */
+    getGalleryItems(activeItemEl, optionName) {
+        let itemEls = [];
         if (optionName === "GalleryImageList") {
-            const editingGalleryElement = elementToReorder.closest(".s_image_gallery");
+            const galleryEl = activeItemEl.closest(".s_image_gallery");
+            const containerEl = this.getContainer(galleryEl);
+            itemEls = this.getImages(containerEl);
+        }
+        return itemEls;
+    }
 
-            const container = this.getContainer(editingGalleryElement);
+    /**
+     * Updates the DOM with the reordered images.
+     *
+     * @param {HTMLElement} activeItemEl the active item
+     * @param {Array<HTMLElement>} itemEls the reordered elements
+     * @param {String} optionName
+     */
+    reorderGalleryItems(activeItemEl, itemEls, optionName) {
+        if (optionName === "GalleryImageList") {
+            const galleryEl = activeItemEl.closest(".s_image_gallery");
 
-            const itemsEls = this.getImages(container);
-            const oldPosition = itemsEls.indexOf(elementToReorder);
-            if (oldPosition === 0 && position === "prev") {
-                position = "last";
-            } else if (oldPosition === itemsEls.length - 1 && position === "next") {
-                position = "first";
-            }
-            itemsEls.splice(oldPosition, 1);
-            switch (position) {
-                case "first":
-                    itemsEls.unshift(elementToReorder);
-                    break;
-                case "prev":
-                    itemsEls.splice(Math.max(oldPosition - 1, 0), 0, elementToReorder);
-                    break;
-                case "next":
-                    itemsEls.splice(oldPosition + 1, 0, elementToReorder);
-                    break;
-                case "last":
-                    itemsEls.push(elementToReorder);
-                    break;
-            }
+            // Update the content with the new order.
+            itemEls.forEach((img, i) => (img.dataset.index = i));
+            const mode = this.getMode(galleryEl);
+            this.setImages(galleryEl, mode, itemEls);
 
-            const newItemPosition = itemsEls.indexOf(elementToReorder);
-            itemsEls.forEach((img, index) => {
-                img.dataset.index = index;
-            });
-            const mode = this.getMode(editingGalleryElement);
-            this.setImages(editingGalleryElement, mode, itemsEls);
-
+            // Update the active slide if it is a carousel.
             if (mode === "slideshow") {
-                const carouselEl = editingGalleryElement.querySelector(".carousel");
-                const carouselInstance = window.Carousel.getOrCreateInstance(carouselEl, {
-                    ride: false,
-                    pause: true,
+                const newPosition = itemEls.indexOf(activeItemEl);
+                const carouselEl = galleryEl.querySelector(".carousel");
+                const carouselItemEls = carouselEl.querySelectorAll(".carousel-item");
+                carouselItemEls.forEach((itemEl, i) => {
+                    itemEl.classList.toggle("active", i === newPosition);
                 });
+                updateCarouselIndicators(carouselEl, newPosition);
 
-                carouselInstance.to(newItemPosition);
-                const activeImageEl = editingGalleryElement.querySelector(
-                    ".carousel-item.active img"
-                );
-                this.dependencies["builder-options"].updateContainers(activeImageEl);
+                // Activate the active image.
+                const activeImageEl = galleryEl.querySelector(".carousel-item.active img");
+                this.dependencies["builder-options"].setNextTarget(activeImageEl);
             }
         }
     }
