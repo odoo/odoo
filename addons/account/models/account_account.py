@@ -382,6 +382,15 @@ class AccountAccount(models.Model):
         if self._cr.fetchone():
             raise ValidationError(_("You cannot change the type of an account set as Bank Account on a journal to Receivable or Payable."))
 
+    @api.constrains('tax_ids')
+    def _check_tax_ids_from_selected_company_ids(self):
+        for record in self:
+            allowed_company_ids = set(record.company_ids.ids)
+            invalid_taxes = record.sudo().tax_ids.filtered(lambda tax: tax.company_id.id not in allowed_company_ids)
+            if invalid_taxes:
+                tax_names = "\n- " + "\n- ".join(invalid_taxes.mapped('display_name'))
+                raise UserError(_("The following taxes are not allowed for the selected companies:%s") % tax_names)
+
     @api.depends_context('company')
     @api.depends('code_store')
     def _compute_code(self):
