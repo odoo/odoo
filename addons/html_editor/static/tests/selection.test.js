@@ -79,6 +79,20 @@ test("selection on triple click should be contained in the paragraph", async () 
     expect(getContent(el)).toBe("<div><p>[abc]</p><br><br><h2>def</h2></div>");
 });
 
+test.tags("desktop");
+test("correct selection after triple click in multi-line block (1)", async () => {
+    const { el } = await setupEditor("<p>[]abc<br>efg</p>", {});
+    await tripleClick(queryFirst("p").firstChild);
+    expect(getContent(el)).toBe("<p>[abc<br>efg]</p>");
+});
+
+test.tags("desktop");
+test("correct selection after triple click in multi-line block (2)", async () => {
+    const { el } = await setupEditor("<p>block1</p><p>[]block2<br>block2</p><p>block3</p>", {});
+    await tripleClick(queryFirst("p").nextSibling.firstChild); // we triple click inside block2
+    expect(getContent(el)).toBe("<p>block1</p><p>[block2<br>block2]</p><p>block3</p>");
+});
+
 test("fix selection P in the beggining being a direct child of the editable p after selection", async () => {
     const { el } = await setupEditor("<div>a</div>[]<p>b</p>");
     expect(getContent(el)).toBe(`<div class="o-paragraph">a</div><p>[]b</p>`);
