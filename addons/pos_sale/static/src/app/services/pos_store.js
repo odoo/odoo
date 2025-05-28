@@ -258,7 +258,7 @@ patch(PosStore.prototype, {
                 taxes_to_apply,
                 down_payment_line_price,
                 this.config.down_payment_product_id,
-                this.config._product_default_values,
+                {},
                 this.company,
                 this.currency,
                 this.models

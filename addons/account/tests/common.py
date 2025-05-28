@@ -1269,14 +1269,20 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
     # invoice tax_totals_summary
     # -------------------------------------------------------------------------
 
+    def assert_invoice_totals(self, invoice, expected_values):
+        cash_rounding_base_amount_currency = invoice.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
+        expected_amounts = {}
+        if 'base_amount_currency' in expected_values:
+            expected_amounts['amount_untaxed'] = expected_values['base_amount_currency'] + cash_rounding_base_amount_currency
+        if 'tax_amount_currency' in expected_values:
+            expected_amounts['amount_tax'] = expected_values['tax_amount_currency']
+        if 'total_amount_currency' in expected_values:
+            expected_amounts['amount_total'] = expected_values['total_amount_currency']
+        self.assertRecordValues(invoice, [expected_amounts])
+
     def assert_invoice_tax_totals_summary(self, invoice, expected_values, soft_checking=False):
         self._assert_tax_totals_summary(invoice.tax_totals, expected_values, soft_checking=soft_checking)
-        cash_rounding_base_amount_currency = invoice.tax_totals.get('cash_rounding_base_amount_currency', 0.0)
-        self.assertRecordValues(invoice, [{
-            'amount_untaxed': expected_values['base_amount_currency'] + cash_rounding_base_amount_currency,
-            'amount_tax': expected_values['tax_amount_currency'],
-            'amount_total': expected_values['total_amount_currency'],
-        }])
+        self.assert_invoice_totals(invoice, expected_values)
 
 
 class TestAccountMergeCommon(AccountTestInvoicingCommon):
