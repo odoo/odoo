@@ -309,7 +309,7 @@
                     <t t-set="hasDeleteButton" t-value="this.displayDeleteIcon(record)"/>
                     <td class="o_list_record_remove w-print-0 p-print-0 text-center"
                         t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                        t-on-click.stop="hasDeleteButton ? (ev) => this.onRemoveCellClicked(record, ev) : () => {}"
+                        t-on-click.stop="hasDeleteButton ? () => this.debouncedOnDeleteRecord(record) : () => {}"
                         tabindex="-1"
                     >
                         <button class="fa d-print-none"
