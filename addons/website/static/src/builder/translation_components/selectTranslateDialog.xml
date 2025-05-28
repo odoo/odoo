@@ -4,11 +4,16 @@
     <WebsiteDialog close.bind="addStepAndClose"
         title.translate="Translate Selection Option"
         showSecondaryButton="false">
-        <input
-            t-ref="input"
-            type="text" class="form-control my-3"
-            t-att-value="optionEl.textContent or ''"
-            t-on-change="onInputChange"/>
+        <div t-ref="selectTranslateDialog">
+            <t t-foreach="this.props.node" t-as="selectNode" t-key="selectNode.dataset.initialTranslationValue">
+                <input
+                    type="text"
+                    class="form-control my-3 select-translate-input"
+                    t-att-value="selectNode.textContent || ''"
+                    t-on-change="onInputChange"
+                />
+            </t>
+        </div>
     </WebsiteDialog>
 </t>
 
