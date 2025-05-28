@@ -7,6 +7,7 @@ export class Login extends Interaction {
     static selector = ".oe_login_form";
     dynamicContent = {
         _root: { "t-on-submit": this.onSubmit },
+        "button": { "t-on-click": this.onClick },
     };
 
     /**
@@ -27,6 +28,13 @@ export class Login extends Interaction {
                 removeLoadingEffect();
                 oldPreventDefault();
             };
+        }
+    }
+
+    onClick(ev) {
+        let inEditPage = window.self !== window.top; //check if we are inside an iframe
+        if (inEditPage) {
+            ev.preventDefault();
         }
     }
 }
