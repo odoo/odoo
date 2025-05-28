@@ -1,27 +1,33 @@
 import { Plugin } from "@html_editor/plugin";
 
 /**
- * @typedef {Object} BuilderAction
+ * @typedef {Class} BuilderAction
  * @property {string} id
  * @property {Function} apply
  * @property {Function} [isApplied]
  * @property {Function} [clean]
  * @property {() => Promise<any>} [load]
  */
-
 export class BuilderActionsPlugin extends Plugin {
     static id = "builderActions";
     static shared = ["getAction", "applyAction"];
     static dependencies = ["operation", "history"];
-
     setup() {
         this.actions = {};
         for (const actions of this.getResource("builder_actions")) {
-            for (const [actionId, action] of Object.entries(actions)) {
-                if (actionId in this.actions) {
-                    throw new Error(`Duplicate builder action id: ${actionId}`);
+            for (const [actionKey, Action] of Object.entries(actions)) {
+                if (actionKey in this.actions) {
+                    throw new Error(`Duplicate builder action id: ${actionKey}`);
                 }
-                this.actions[actionId] = { id: actionId, ...action };
+                if (Action.constructor.name === "Function") {
+                    const deps = {};
+                    for (const depName of Action.dependencies) {
+                        deps[depName] = this.config.getShared()[depName];
+                    }
+                    this.actions[Action.id] = new Action(this, deps);
+                } else {
+                    this.actions[actionKey] = { id: actionKey, ...Action };
+                }
             }
         }
         Object.freeze(this.actions);

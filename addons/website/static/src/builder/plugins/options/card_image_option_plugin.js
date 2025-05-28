@@ -1,4 +1,5 @@
-import { classAction } from "@html_builder/core/core_builder_action_plugin";
+import { BuilderAction } from "@html_builder/core/builder_action";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
@@ -23,47 +24,21 @@ const imageRelatedStyles = [
 
 class CardImageOptionPlugin extends Plugin {
     static id = "cardImageOption";
-    static dependencies = ["remove", "history", "builder-options"];
+    static dependencies = ["remove", "history", "builderOptions"];
+    static shared = ["adaptRatio"];
     resources = {
         builder_actions: {
-            setCoverImagePosition: {
-                apply: ({ editingElement, params: { mainParam: className } }) => {
-                    const imageEl = editingElement.querySelector(".o_card_img");
-                    imageEl.classList.add(className);
-                    this.adaptRatio(editingElement, className);
-                },
-                clean: ({ editingElement, params: { mainParam: className } }) => {
-                    const imageEl = editingElement.querySelector(".o_card_img");
-                    imageEl.classList.remove(className);
-                },
-            },
-            removeCoverImage: {
-                apply: ({ editingElement }) => {
-                    const imageWrapper = editingElement.querySelector(".o_card_img_wrapper");
-                    const elementToSelect = this.dependencies.remove.removeElement(imageWrapper);
-                    editingElement.classList.remove(...imageRelatedClasses);
-                    imageRelatedStyles.forEach((prop) => editingElement.style.removeProperty(prop));
-                    this.dependencies.history.addStep();
-                    this.dependencies["builder-options"].updateContainers(elementToSelect);
-                },
-            },
-            addCoverImage: {
-                apply: ({ editingElement }) => {
-                    const imageWrapper = renderToElement("website.s_card.imageWrapper");
-                    editingElement.prepend(imageWrapper);
-                    editingElement.classList.add("o_card_img_top");
-                },
-            },
-            alignCoverImage: {
-                apply: ({ editingElement, params: { mainParam: direction } }) => {
-                    const imgWrapper = editingElement.querySelector(".o_card_img_wrapper");
-                    imgWrapper.classList.toggle("o_card_img_adjust_v", direction === "vertical");
-                    imgWrapper.classList.toggle("o_card_img_adjust_h", direction === "horizontal");
-                },
-            },
+            SetCoverImagePositionAction,
+            RemoveCoverImageAction,
+            AddCoverImageAction,
+            AlignCoverImageAction,
         },
     };
 
+    setup() {
+        super.setup();
+        this.classAction = new ClassAction(this);
+    }
     /**
      * Change unsupported ratios to the square ratio when the cover image is
      * positioned horizontally.
@@ -79,13 +54,55 @@ class CardImageOptionPlugin extends Plugin {
             params: { mainParam },
         });
         for (const ratioClasses of ratiosOnlySupportedForTopImage) {
-            if (classAction.isApplied(asMainParam(ratioClasses))) {
-                classAction.clean(asMainParam(ratioClasses));
+            if (this.classAction.isApplied(asMainParam(ratioClasses))) {
+                this.classAction.clean(asMainParam(ratioClasses));
                 // Only square ratio is supported for horizontal image
-                classAction.apply(asMainParam("ratio ratio-1x1"));
+                this.classAction.apply(asMainParam("ratio ratio-1x1"));
                 return;
             }
         }
+    }
+}
+
+class SetCoverImagePositionAction extends BuilderAction {
+    static id = "setCoverImagePosition";
+    static dependencies = ["cardImageOption"];
+    apply({ editingElement, params: { mainParam: className } }) {
+        const imageEl = editingElement.querySelector(".o_card_img");
+        imageEl.classList.add(className);
+        this.dependencies.cardImageOption.adaptRatio(editingElement, className);
+    }
+    clean({ editingElement, params: { mainParam: className } }) {
+        const imageEl = editingElement.querySelector(".o_card_img");
+        imageEl.classList.remove(className);
+    }
+}
+class RemoveCoverImageAction extends BuilderAction {
+    static id = "removeCoverImage";
+    static dependencies = ["history", "builderOptions", "remove"];
+    apply({ editingElement }) {
+        const imageWrapper = editingElement.querySelector(".o_card_img_wrapper");
+        const elementToSelect = this.dependencies.remove.removeElement(imageWrapper);
+        editingElement.classList.remove(...imageRelatedClasses);
+        imageRelatedStyles.forEach((prop) => editingElement.style.removeProperty(prop));
+        this.dependencies.history.addStep();
+        this.dependencies["builderOptions"].updateContainers(elementToSelect);
+    }
+}
+class AddCoverImageAction extends BuilderAction {
+    static id = "addCoverImage";
+    apply({ editingElement }) {
+        const imageWrapper = renderToElement("website.s_card.imageWrapper");
+        editingElement.prepend(imageWrapper);
+        editingElement.classList.add("o_card_img_top");
+    }
+}
+class AlignCoverImageAction extends BuilderAction {
+    static id = "alignCoverImage";
+    apply({ editingElement, params: { mainParam: direction } }) {
+        const imgWrapper = editingElement.querySelector(".o_card_img_wrapper");
+        imgWrapper.classList.toggle("o_card_img_adjust_v", direction === "vertical");
+        imgWrapper.classList.toggle("o_card_img_adjust_h", direction === "horizontal");
     }
 }
 

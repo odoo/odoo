@@ -3,6 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 class EventPageOption extends Plugin {
     static id = "eventPageOption";
@@ -24,32 +25,18 @@ class EventPageOption extends Plugin {
                 groups: ["website.group_website_designer"],
             }),
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            DisplaySubMenuAction,
+        },
     };
+}
 
+class DisplaySubMenuAction extends BuilderAction {
+    static id = "displaySubMenu";
     setup() {
         this.orm = this.services.orm;
         this.currentWebsiteUrl = this.document.location.pathname;
         this.eventId = this.getEventObjectId();
-    }
-
-    getActions() {
-        return {
-            displaySubMenu: {
-                reload: {
-                    getReloadUrl: () => this.eventData["website_url"],
-                },
-                prepare: async () => this.loadEventData(),
-                apply: async () => {
-                    await this.toggleWebsiteMenu("true");
-                    return { reloadUrl: this.eventData["website_url"] };
-                },
-                clean: async () => {
-                    await this.toggleWebsiteMenu("");
-                },
-                isApplied: () => this.eventData["website_menu"],
-            },
-        };
     }
 
     async toggleWebsiteMenu(value) {
@@ -72,6 +59,29 @@ class EventPageOption extends Plugin {
         }
         const objectIds = this.currentWebsiteUrl.match(/\d+(?![-\w])/);
         return parseInt(objectIds[0]) | 0;
+    }
+
+    reload() {
+        return {
+            getReloadUrl: () => this.eventData["website_url"],
+        };
+    }
+
+    async prepare() {
+        return this.loadEventData();
+    }
+
+    async apply() {
+        await this.toggleWebsiteMenu("true");
+        return { reloadUrl: this.plugin.eventData["website_url"] };
+    }
+
+    async clean() {
+        await this.toggleWebsiteMenu("");
+    }
+
+    isApplied() {
+        return this.eventData["website_menu"];
     }
 }
 

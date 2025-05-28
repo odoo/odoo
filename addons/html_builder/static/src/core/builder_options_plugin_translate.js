@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 export class BuilderOptionsPlugin extends Plugin {
-    static id = "builder-options";
+    static id = "builderOptions";
     static shared = ["deactivateContainers", "getTarget"];
 
     deactivateContainers() {}

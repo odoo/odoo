@@ -10,7 +10,7 @@ import { DragAndDropMoveHandle } from "./drag_and_drop_move_handle";
 
 export class DragAndDropPlugin extends Plugin {
     static id = "dragAndDrop";
-    static dependencies = ["dropzone", "history", "operation", "builder-options"];
+    static dependencies = ["dropzone", "history", "operation", "builderOptions"];
     resources = {
         has_overlay_options: { hasOption: (el) => this.isDraggable(el) },
         get_overlay_buttons: withSequence(1, {
@@ -143,7 +143,7 @@ export class DragAndDropPlugin extends Plugin {
                     this.dragState.restoreCallbacks?.forEach((restore) => restore());
                     restoreDragSavePoint();
                     dragAndDropResolve();
-                    this.dependencies["builder-options"].updateContainers(this.overlayTarget);
+                    this.dependencies["builderOptions"].updateContainers(this.overlayTarget);
                 };
 
                 this.dragStarted = true;
@@ -212,7 +212,7 @@ export class DragAndDropPlugin extends Plugin {
 
                 // Remove the dragged element and deactivate the options.
                 this.overlayTarget.remove();
-                this.dependencies["builder-options"].deactivateContainers();
+                this.dependencies["builderOptions"].deactivateContainers();
 
                 // Add the dropzones.
                 dropzoneEls = this.dependencies.dropzone.activateDropzones(selectors, {
@@ -350,7 +350,7 @@ export class DragAndDropPlugin extends Plugin {
                 }
 
                 dragAndDropResolve();
-                this.dependencies["builder-options"].updateContainers(this.overlayTarget);
+                this.dependencies["builderOptions"].updateContainers(this.overlayTarget);
             },
         };
 

@@ -438,7 +438,7 @@ test("useDomState callback shouldn't be called when the editingElement is remove
                 testEl.classList.add("s_test", "alert-info");
                 testEl.textContent = "test";
                 editingElement.after(testEl);
-                editor.shared["builder-options"].setNextTarget(testEl);
+                editor.shared["builderOptions"].setNextTarget(testEl);
             },
         },
     });

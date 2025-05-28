@@ -3,10 +3,10 @@ import { registry } from "@web/core/registry";
 import { GridColumnsOption } from "./grid_column_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { GRID_COLUMNS } from "@website/builder/option_sequence";
+import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 
 export class GridColumnsOptionPlugin extends Plugin {
     static id = "GridColumnsOption";
-    static dependencies = ["builderActions"];
     resources = {
         builder_options: [
             withSequence(GRID_COLUMNS, {
@@ -14,32 +14,27 @@ export class GridColumnsOptionPlugin extends Plugin {
                 selector: ".row:not(.s_col_no_resize) > div",
             }),
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            SetGridColumnsPaddingAction,
+        },
         system_classes: ["o_we_padding_highlight"],
     };
-
-    getActions() {
-        const builderActions = this.dependencies.builderActions;
-        return {
-            get setGridColumnsPadding() {
-                const styleAction = builderActions.getAction("styleAction");
-                const removePaddingPreview = ({ target: editingElement }) => {
-                    editingElement.classList.remove("o_we_padding_highlight");
-                    editingElement.removeEventListener("animationend", removePaddingPreview);
-                };
-                return {
-                    ...styleAction,
-                    apply: (...args) => {
-                        const { editingElement } = args[0];
-                        removePaddingPreview({ target: editingElement });
-                        styleAction.apply(...args);
-                        editingElement.classList.add("o_we_padding_highlight");
-                        editingElement.addEventListener("animationend", removePaddingPreview);
-                    },
-                };
-            },
-        };
-    }
 }
 
 registry.category("website-plugins").add(GridColumnsOptionPlugin.id, GridColumnsOptionPlugin);
+
+const removePaddingPreview = (event) => {
+    const editingElement = event.target;
+    editingElement.classList.remove("o_we_padding_highlight");
+    editingElement.removeEventListener("animationend", removePaddingPreview);
+};
+class SetGridColumnsPaddingAction extends StyleAction {
+    static id = "setGridColumnsPadding";
+    apply(...args) {
+        const { editingElement } = args[0];
+        removePaddingPreview({ target: editingElement });
+        super.apply(...args);
+        editingElement.classList.add("o_we_padding_highlight");
+        editingElement.addEventListener("animationend", removePaddingPreview);
+    }
+}

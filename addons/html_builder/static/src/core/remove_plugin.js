@@ -42,7 +42,7 @@ const layoutElementsSelector = [
 
 export class RemovePlugin extends Plugin {
     static id = "remove";
-    static dependencies = ["history", "builder-options"];
+    static dependencies = ["history", "builderOptions"];
     resources = {
         get_overlay_buttons: withSequence(3, {
             getButtons: this.getActiveOverlayButtons.bind(this),
@@ -62,7 +62,7 @@ export class RemovePlugin extends Plugin {
 
         const buttons = [];
         this.overlayTarget = target;
-        const disabledReason = this.dependencies["builder-options"].getRemoveDisabledReason(target);
+        const disabledReason = this.dependencies["builderOptions"].getRemoveDisabledReason(target);
         buttons.push({
             class: "oe_snippet_remove bg-danger fa fa-trash",
             title: _t("Remove"),
@@ -92,7 +92,7 @@ export class RemovePlugin extends Plugin {
                     el.matches(layoutElementsSelector)
                 ));
 
-        const optionsTargetEls = this.dependencies["builder-options"]
+        const optionsTargetEls = this.dependencies["builderOptions"]
             .computeContainers(el)
             .map((e) => e.element);
 
@@ -110,7 +110,7 @@ export class RemovePlugin extends Plugin {
     removeElementAndUpdateContainers(el) {
         const elementToSelect = this.removeElement(el);
         this.dependencies.history.addStep();
-        this.dependencies["builder-options"].updateContainers(elementToSelect);
+        this.dependencies["builderOptions"].updateContainers(elementToSelect);
     }
 
     removeElement(el) {
@@ -200,6 +200,6 @@ export class RemovePlugin extends Plugin {
     }
 
     getOptionsContainersElements() {
-        return this.dependencies["builder-options"].getContainers().map((option) => option.element);
+        return this.dependencies["builderOptions"].getContainers().map((option) => option.element);
     }
 }

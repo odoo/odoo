@@ -5,11 +5,14 @@ import { ProductPageOption } from "./product_page_option";
 import { rpc } from "@web/core/network/rpc";
 import { isImageCorsProtected } from "@html_editor/utils/image";
 import { TABS } from "@html_editor/main/media/media_dialog/media_dialog";
+import { WebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 export const productPageSelector = "main:has(.o_wsale_product_page)";
 class ProductPageOptionPlugin extends Plugin {
     static id = "productPageOption";
     static dependencies = ["builderActions", "media", "customizeWebsite"];
+    static shared = ["getDisabledOtherZoomViews"];
     resources = {
         builder_options: {
             OptionComponent: ProductPageOption,
@@ -20,7 +23,15 @@ class ProductPageOptionPlugin extends Plugin {
             editableOnly: false,
             title: _t("Product Page"),
         },
-        builder_actions: this.getActions(),
+        builder_actions: {
+            ProductPageImageWidthAction,
+            ProductPageImageLayoutAction,
+            ProductPageImageGridSpacingAction,
+            ProductPageImageGridColumnsAction,
+            ProductReplaceMainImageAction,
+            ProductAddExtraImageAction,
+            ProductRemoveAllExtraImagesAction,
+        },
         clean_for_save_handlers: ({ root: el }) => {
             const mainEl = el.querySelector(productPageSelector);
             if (!mainEl) {
@@ -64,155 +75,119 @@ class ProductPageOptionPlugin extends Plugin {
             this.productPageGrid = mainEl.querySelector("#o-grid-product");
         }
     }
-    getActions() {
-        const plugin = this;
-        const getAction = plugin.dependencies.builderActions.getAction;
-        return {
-            get productPageImageWidth() {
-                const websiteConfigAction = getAction("websiteConfig");
-                return {
-                    ...websiteConfigAction,
-                    id: "productPageImageWidth",
-                    isApplied: ({ editingElement: productDetailMainEl, value }) =>
-                        productDetailMainEl.dataset.image_width === value,
-                    getValue: ({ editingElement: productDetailMainEl }) =>
-                        productDetailMainEl.dataset.image_width,
-                    apply: async ({ value }) => {
-                        if (value === "100_pc") {
-                            const defaultZoomOption = "website_sale.product_picture_magnify_click";
-                            await websiteConfigAction.apply({
-                                params: {
-                                    views: plugin.getDisabledOtherZoomViews(defaultZoomOption),
-                                },
-                            });
-                        }
-                        await rpc("/shop/config/website", { product_page_image_width: value });
-                    },
-                };
+    
+    getZoomLevels() {
+        const hasImages = this.productDetailMain.dataset.image_width != "none";
+        const isFullImage = this.productDetailMain.dataset.image_width == "100_pc";
+        return [
+            {
+                id: "o_wsale_zoom_hover",
+                views: ["website_sale.product_picture_magnify_hover"],
+                label: _t("Magnifier on hover"),
+                visible: hasImages && !isFullImage,
             },
-            get productPageImageLayout() {
-                const websiteConfigAction = getAction("websiteConfig");
-                return {
-                    ...websiteConfigAction,
-                    id: "productPageImageLayout",
-                    isApplied: ({ editingElement: productDetailMainEl, value }) =>
-                        productDetailMainEl.dataset.image_layout === value,
-                    getValue: ({ editingElement: productDetailMainEl }) =>
-                        productDetailMainEl.dataset.image_layout,
-                    apply: async ({ editingElement: productDetailMainEl, value }) => {
-                        const imageWidthOption = productDetailMainEl.dataset.image_width;
-                        let defaultZoomOption =
-                            value === "grid"
-                                ? "website_sale.product_picture_magnify_click"
-                                : "website_sale.product_picture_magnify_hover";
-                        if (
-                            imageWidthOption === "100_pc" &&
-                            defaultZoomOption === "website_sale.product_picture_magnify_hover"
-                        ) {
-                            defaultZoomOption = "website_sale.product_picture_magnify_click";
-                        }
-                        await websiteConfigAction.apply({
-                            params: {
-                                views: plugin.getDisabledOtherZoomViews(defaultZoomOption),
-                            },
-                        });
-                        return rpc("/shop/config/website", { product_page_image_layout: value });
-                    },
-                };
+            {
+                id: "o_wsale_zoom_click",
+                views: ["website_sale.product_picture_magnify_click"],
+                label: _t("Pop-up on Click"),
+                visible: hasImages,
             },
-            productPageImageGridSpacing: {
-                reload: {},
-                getValue: () => {
-                    if (!this.productPageGrid) {
-                        return 0;
-                    }
-                    return {
-                        none: 0,
-                        small: 1,
-                        medium: 2,
-                        big: 3,
-                    }[this.productPageGrid.dataset.image_spacing];
-                },
-                load: async ({ value }) => {
-                    const spacing = {
-                        0: "none",
-                        1: "small",
-                        2: "medium",
-                        3: "big",
-                    }[value];
+            {
+                id: "o_wsale_zoom_both",
+                views: ["website_sale.product_picture_magnify_both"],
+                label: _t("Both"),
+                visible: hasImages && !isFullImage,
+            },
+            {
+                id: "o_wsale_zoom_none",
+                views: [],
+                label: _t("None"),
+                visible: hasImages,
+            },
+        ];
+    }
+    getZoomViews() {
+        const views = [];
+        for (const zoomLevel of this.getZoomLevels()) {
+            views.push(...zoomLevel.views);
+        }
+        return views;
+    }
+    getDisabledOtherZoomViews(keptView) {
+        return this.getZoomViews().map((view) => (view === keptView ? view : `!${view}`));
+    }
+}
 
-                    await rpc("/shop/config/website", {
-                        product_page_image_spacing: spacing,
-                    });
-                    return spacing;
+class ProductPageImageWidthAction extends WebsiteConfigAction {
+    static id = "productPageImageWidth";
+    static dependencies = ["customizeWebsite", "productPageOption"];
+    isApplied({ editingElement: productDetailMainEl, value }) {
+        return productDetailMainEl.dataset.image_width === value;
+    }
+    getValue({ editingElement: productDetailMainEl }) {
+        return productDetailMainEl.dataset.image_width;
+    }
+    async apply({ value }) {
+        if (value === "100_pc") {
+            const defaultZoomOption = "website_sale.product_picture_magnify_click";
+            await super.apply({
+                params: {
+                    views: this.dependencies.productPageOption.getDisabledOtherZoomViews(defaultZoomOption),
                 },
-                apply: ({ loadResult: spacing }) => {
-                    this.productPageGrid.dataset.image_spacing = spacing;
-                },
+            });
+        }
+        await rpc("/shop/config/website", { product_page_image_width: value });
+    }
+}
+class ProductPageImageLayoutAction extends WebsiteConfigAction {
+    static id = "productPageImageLayout";
+    static dependencies = ["customizeWebsite", "productPageOption"];
+    isApplied({ editingElement: productDetailMainEl, value }) {
+        return productDetailMainEl.dataset.image_layout === value;
+    }
+    getValue({ editingElement: productDetailMainEl }) {
+        return productDetailMainEl.dataset.image_layout;
+    }
+    async apply({ editingElement: productDetailMainEl, value }) {
+        const imageWidthOption = productDetailMainEl.dataset.image_width;
+        let defaultZoomOption =
+            value === "grid"
+                ? "website_sale.product_picture_magnify_click"
+                : "website_sale.product_picture_magnify_hover";
+        if (
+            imageWidthOption === "100_pc" &&
+            defaultZoomOption === "website_sale.product_picture_magnify_hover"
+        ) {
+            defaultZoomOption = "website_sale.product_picture_magnify_click";
+        }
+        await super.apply({
+            params: {
+                views: this.dependencies.productPageOption.getDisabledOtherZoomViews(defaultZoomOption),
             },
-            productPageImageGridColumns: {
-                reload: {},
-                isApplied: ({ value }) =>
-                    (parseInt(this.productPageGrid?.dataset.grid_columns) || 1) === value,
-                getValue: () => parseInt(this.productPageGrid?.dataset.grid_columns) || 1,
-                apply: async ({ value }) => {
-                    this.productPageGrid.dataset.grid_columns = value;
-                    await rpc("/shop/config/website", {
-                        product_page_grid_columns: value,
-                    });
-                },
-            },
-            productReplaceMainImage: {
-                apply: ({ editingElement: productDetailMainEl }) => {
-                    // Emulate click on the main image of the carousel.
-                    const image = productDetailMainEl.querySelector(
-                        `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
-                    );
-                    image.dispatchEvent(new Event("dblclick", { bubbles: true }));
-                },
-            },
-            productAddExtraImage: {
-                reload: {},
-                apply: async ({ editingElement: el }) => {
-                    // Prompts the user for images, then saves the new images.
-                    if (this.model === "product.template") {
-                        this.notification.add(
-                            'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants',
-                            { type: "info" }
-                        );
-                    }
-                    await new Promise((resolve) => {
-                        const onClose = this.dependencies.media.openMediaDialog({
-                            addFieldImage: true,
-                            multiImages: true,
-                            noDocuments: true,
-                            noIcons: true,
-                            node: el,
-                            // Kinda hack-ish but the regular save does not get the information we need
-                            save: async (imgEls, selectedMedia, activeTab) => {
-                                if (selectedMedia.length) {
-                                    const type =
-                                        activeTab === TABS["IMAGES"].id ? "image" : "video";
-                                    await this.extraMediaSave(el, type, selectedMedia, imgEls);
-                                }
-                            },
-                        });
-                        onClose.then(resolve);
-                    });
-                },
-            },
-            productRemoveAllExtraImages: {
-                reload: {},
-                apply: async ({ editingElement: el }) =>
-                    // Removes all extra-images from the product.
-                    await rpc(`/shop/product/clear-images`, {
-                        model: this.model,
-                        product_product_id: this.productProductID,
-                        product_template_id: this.productTemplateID,
-                        combination_ids: this.getSelectedVariantValues(el),
-                    }),
-            },
-        };
+        });
+        return rpc("/shop/config/website", { product_page_image_layout: value });
+    }
+}
+
+class BaseProductPageAction extends BuilderAction {
+    static id = "baseProductPage";
+    setup() {
+        this.reload = {};
+        const mainEl = this.document.querySelector(productPageSelector);
+        if (mainEl) {
+            const productProduct = mainEl.querySelector('[data-oe-model="product.product"]');
+            const productTemplate = mainEl.querySelector('[data-oe-model="product.template"]');
+            this.productProductID = productProduct ? productProduct.dataset.oeId : null;
+            this.productTemplateID = productTemplate ? productTemplate.dataset.oeId : null;
+            this.model = "product.template";
+            if (this.productProductID) {
+                this.model = "product.product";
+            }
+            // Different targets
+            this.productDetailMain = mainEl.querySelector("#product_detail_main");
+            this.productPageCarousel = mainEl.querySelector("#o-carousel-product");
+            this.productPageGrid = mainEl.querySelector("#o-grid-product");
+        }
     }
     getSelectedVariantValues(el) {
         const containerEl = el.querySelector(".js_add_cart_variants");
@@ -325,45 +300,105 @@ class ProductPageOptionPlugin extends Plugin {
             ]);
         }
     }
-    getZoomLevels() {
-        const hasImages = this.productDetailMain.dataset.image_width != "none";
-        const isFullImage = this.productDetailMain.dataset.image_width == "100_pc";
-        return [
-            {
-                id: "o_wsale_zoom_hover",
-                views: ["website_sale.product_picture_magnify_hover"],
-                label: _t("Magnifier on hover"),
-                visible: hasImages && !isFullImage,
-            },
-            {
-                id: "o_wsale_zoom_click",
-                views: ["website_sale.product_picture_magnify_click"],
-                label: _t("Pop-up on Click"),
-                visible: hasImages,
-            },
-            {
-                id: "o_wsale_zoom_both",
-                views: ["website_sale.product_picture_magnify_both"],
-                label: _t("Both"),
-                visible: hasImages && !isFullImage,
-            },
-            {
-                id: "o_wsale_zoom_none",
-                views: [],
-                label: _t("None"),
-                visible: hasImages,
-            },
-        ];
-    }
-    getZoomViews() {
-        const views = [];
-        for (const zoomLevel of this.getZoomLevels()) {
-            views.push(...zoomLevel.views);
+}
+class ProductPageImageGridSpacingAction extends BaseProductPageAction {
+    static id = "productPageImageGridSpacing";
+    getValue() {
+        if (!this.productPageGrid) {
+            return 0;
         }
-        return views;
+        return {
+            none: 0,
+            small: 1,
+            medium: 2,
+            big: 3,
+        }[this.productPageGrid.dataset.image_spacing];
     }
-    getDisabledOtherZoomViews(keptView) {
-        return this.getZoomViews().map((view) => (view === keptView ? view : `!${view}`));
+    async load({ value }) {
+        const spacing = {
+            0: "none",
+            1: "small",
+            2: "medium",
+            3: "big",
+        }[value];
+
+        await rpc("/shop/config/website", {
+            product_page_image_spacing: spacing,
+        });
+        return spacing;
+    }
+    apply({ loadResult: spacing }) {
+        this.productPageGrid.dataset.image_spacing = spacing;
+    }
+}
+class ProductPageImageGridColumnsAction extends BaseProductPageAction {
+    static id = "productPageImageGridColumns";
+
+    isApplied({ value }) {
+        return (parseInt(this.productPageGrid?.dataset.grid_columns) || 1) === value;
+    }
+    getValue() {
+        parseInt(this.productPageGrid?.dataset.grid_columns) || 1;
+    }
+    async apply({ value }) {
+        this.productPageGrid.dataset.grid_columns = value;
+        await rpc("/shop/config/website", {
+            product_page_grid_columns: value,
+        });
+    }
+}
+class ProductReplaceMainImageAction extends BaseProductPageAction {
+    static id = "productReplaceMainImage";
+    apply({ editingElement: productDetailMainEl }) {
+        // Emulate click on the main image of the carousel.
+        const image = productDetailMainEl.querySelector(
+            `[data-oe-model="${this.model}"][data-oe-field=image_1920] img`
+        );
+        image.dispatchEvent(new Event("dblclick", { bubbles: true }));
+    }
+}
+
+class ProductAddExtraImageAction extends BaseProductPageAction {
+    static id = "productAddExtraImage";
+    static dependencies = ["media"];
+    async apply({ editingElement: el }) {
+        // Prompts the user for images, then saves the new images.
+        if (this.model === "product.template") {
+            this.services.notification.add(
+                'Pictures will be added to the main image. Use "Instant" attributes to set pictures on each variants',
+                { type: "info" }
+            );
+        }
+        await new Promise((resolve) => {
+            const onClose = this.dependencies.media.openMediaDialog({
+                addFieldImage: true,
+                multiImages: true,
+                noDocuments: true,
+                noIcons: true,
+                node: el,
+                // Kinda hack-ish but the regular save does not get the information we need
+                save: async (imgEls, selectedMedia, activeTab) => {
+                    if (selectedMedia.length) {
+                        const type =
+                            activeTab === TABS["IMAGES"].id ? "image" : "video";
+                        await this.extraMediaSave(el, type, selectedMedia, imgEls);
+                    }
+                },
+            });
+            onClose.then(resolve);
+        });
+    }
+}
+class ProductRemoveAllExtraImagesAction extends BaseProductPageAction {
+    static id = "productRemoveAllExtraImages";
+    async apply({ editingElement: el }) {
+        // Removes all extra-images from the product.
+        await rpc(`/shop/product/clear-images`, {
+            model: this.model,
+            product_product_id: this.productProductID,
+            product_template_id: this.productTemplateID,
+            combination_ids: this.getSelectedVariantValues(el),
+        })
     }
 }
 

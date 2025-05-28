@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -11,95 +12,100 @@ class RatingOptionPlugin extends Plugin {
             selector: ".s_rating",
         },
         so_content_addition_selector: [".s_rating"],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            SetIconsAction,
+            CustomIconAction,
+            ActiveIconsNumberAction,
+            TotalIconsNumberAction,
+        },
     };
-    getActions() {
-        return {
-            setIcons: {
-                apply: ({ editingElement, params: { mainParam: iconParam } }) => {
-                    editingElement.dataset.icon = iconParam;
-                    renderIcons(editingElement);
-                    delete editingElement.dataset.activeCustomIcon;
-                    delete editingElement.dataset.inactiveCustomIcon;
+}
+
+class SetIconsAction extends BuilderAction {
+    static id = "setIcons";
+    apply({ editingElement, params: { mainParam: iconParam } }) {
+        editingElement.dataset.icon = iconParam;
+        renderIcons(editingElement);
+        delete editingElement.dataset.activeCustomIcon;
+        delete editingElement.dataset.inactiveCustomIcon;
+    }
+    isApplied({ editingElement, params: { mainParam: iconParam } }) {
+        return getIconType(editingElement) === iconParam;
+    }
+}
+class CustomIconAction extends BuilderAction {
+    static id = "customIcon";
+    static dependencies = ["media"];
+    async load({ editingElement, params: { mainParam: customParam } }) {
+        return new Promise((resolve) => {
+            const isCustomActive = customParam === "customActiveIcon";
+            const media = document.createElement("i");
+            media.className = isCustomActive
+                ? getActiveCustomIcons(editingElement)
+                : getInactiveCustomIcons(editingElement);
+            const mediaDialogParams = {
+                noImages: true,
+                noDocuments: true,
+                noVideos: true,
+                media,
+                save: (icon) => {
+                    resolve(icon);
                 },
-                isApplied: ({ editingElement, params: { mainParam: iconParam } }) =>
-                    getIconType(editingElement) === iconParam,
-            },
-            customIcon: {
-                load: async ({ editingElement, params: { mainParam: customParam } }) =>
-                    new Promise((resolve) => {
-                        const isCustomActive = customParam === "customActiveIcon";
-                        const media = document.createElement("i");
-                        media.className = isCustomActive
-                            ? getActiveCustomIcons(editingElement)
-                            : getInactiveCustomIcons(editingElement);
-                        const mediaDialogParams = {
-                            noImages: true,
-                            noDocuments: true,
-                            noVideos: true,
-                            media,
-                            save: (icon) => {
-                                resolve(icon);
-                            },
-                        };
-                        const onClose = this.dependencies.media.openMediaDialog(
-                            mediaDialogParams,
-                            this.editable
-                        );
-                        onClose.then(resolve);
-                    }),
-                apply: ({
-                    editingElement,
-                    loadResult: savedIconEl,
-                    params: { mainParam: customParam },
-                }) => {
-                    if (!savedIconEl) {
-                        return;
-                    }
-                    const isCustomActive = customParam === "customActiveIcon";
-                    const customClass = savedIconEl.className;
-                    const activeIconEls = getActiveIcons(editingElement);
-                    const inactiveIconEls = getInactiveIcons(editingElement);
-                    const iconEls = isCustomActive ? activeIconEls : inactiveIconEls;
-                    iconEls.forEach((iconEl) => (iconEl.className = customClass));
-                    const faClassActiveCustomIcons =
-                        activeIconEls.length > 0
-                            ? activeIconEls[0].getAttribute("class")
-                            : customClass;
-                    const faClassInactiveCustomIcons =
-                        inactiveIconEls.length > 0
-                            ? inactiveIconEls[0].getAttribute("class")
-                            : customClass;
-                    editingElement.dataset.activeCustomIcon = faClassActiveCustomIcons;
-                    editingElement.dataset.inactiveCustomIcon = faClassInactiveCustomIcons;
-                    editingElement.dataset.icon = "custom";
-                },
-            },
-            activeIconsNumber: {
-                apply: ({ editingElement, value }) => {
-                    const nbActiveIcons = parseInt(value);
-                    const nbTotalIcons = getAllIcons(editingElement).length;
-                    createIcons({
-                        editingElement: editingElement,
-                        nbActiveIcons: nbActiveIcons,
-                        nbTotalIcons: nbTotalIcons,
-                    });
-                },
-                getValue: ({ editingElement }) => getActiveIcons(editingElement).length,
-            },
-            totalIconsNumber: {
-                apply: ({ editingElement, value }) => {
-                    const nbTotalIcons = Math.max(parseInt(value), 1);
-                    const nbActiveIcons = getActiveIcons(editingElement).length;
-                    createIcons({
-                        editingElement: editingElement,
-                        nbActiveIcons: nbActiveIcons,
-                        nbTotalIcons: nbTotalIcons,
-                    });
-                },
-                getValue: ({ editingElement }) => getAllIcons(editingElement).length,
-            },
-        };
+            };
+            const onClose = this.dependencies.media.openMediaDialog(
+                mediaDialogParams,
+                this.editable
+            );
+            onClose.then(resolve);
+        });
+    }
+    apply({ editingElement, loadResult: savedIconEl, params: { mainParam: customParam } }) {
+        if (!savedIconEl) {
+            return;
+        }
+        const isCustomActive = customParam === "customActiveIcon";
+        const customClass = savedIconEl.className;
+        const activeIconEls = getActiveIcons(editingElement);
+        const inactiveIconEls = getInactiveIcons(editingElement);
+        const iconEls = isCustomActive ? activeIconEls : inactiveIconEls;
+        iconEls.forEach((iconEl) => (iconEl.className = customClass));
+        const faClassActiveCustomIcons =
+            activeIconEls.length > 0 ? activeIconEls[0].getAttribute("class") : customClass;
+        const faClassInactiveCustomIcons =
+            inactiveIconEls.length > 0 ? inactiveIconEls[0].getAttribute("class") : customClass;
+        editingElement.dataset.activeCustomIcon = faClassActiveCustomIcons;
+        editingElement.dataset.inactiveCustomIcon = faClassInactiveCustomIcons;
+        editingElement.dataset.icon = "custom";
+    }
+}
+class ActiveIconsNumberAction extends BuilderAction {
+    static id = "activeIconsNumber";
+    apply({ editingElement, value }) {
+        const nbActiveIcons = parseInt(value);
+        const nbTotalIcons = getAllIcons(editingElement).length;
+        createIcons({
+            editingElement: editingElement,
+            nbActiveIcons: nbActiveIcons,
+            nbTotalIcons: nbTotalIcons,
+        });
+    }
+    getValue({ editingElement }) {
+        return getActiveIcons(editingElement).length;
+    }
+}
+class TotalIconsNumberAction extends BuilderAction {
+    static id = "totalIconsNumber";
+    apply({ editingElement, value }) {
+        const nbTotalIcons = Math.max(parseInt(value), 1);
+        const nbActiveIcons = getActiveIcons(editingElement).length;
+        createIcons({
+            editingElement: editingElement,
+            nbActiveIcons: nbActiveIcons,
+            nbTotalIcons: nbTotalIcons,
+        });
+    }
+    getValue({ editingElement }) {
+        return getAllIcons(editingElement).length;
     }
 }
 

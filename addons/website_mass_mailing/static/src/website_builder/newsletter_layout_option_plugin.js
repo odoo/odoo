@@ -3,6 +3,7 @@ import { NEWSLETTER_SELECT } from "@website_mass_mailing/website_builder/newslet
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class NewsletterLayoutOptionPlugin extends Plugin {
     static id = "newsletterLayoutOptionPlugin";
@@ -17,34 +18,36 @@ export class NewsletterLayoutOptionPlugin extends Plugin {
                     ":scope > .container, :scope > .container-fluid, :scope > .o_container_small",
             }),
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            SelectNewsletterTemplateAction
+        },
     };
-
-    getActions() {
-        const getAction = this.dependencies.builderActions.getAction;
-        return {
-            selectNewsletterTemplate: {
-                prepare: async ({ actionParam }) => {
-                    await getAction("selectTemplate").prepare({ actionParam: actionParam });
-                },
-                isApplied: ({ editingElement, params: { attribute } }) => {
-                    const parentEl = editingElement.parentElement;
-                    return (
-                        (!parentEl.dataset.newsletterTemplate && attribute === "email") ||
-                        parentEl.dataset.newsletterTemplate === attribute
-                    );
-                },
-                apply: (action) => {
-                    getAction("selectTemplate").apply(action);
-                    const parentEl = action.editingElement.parentElement;
-                    parentEl.dataset.newsletterTemplate = action.params.attribute;
-                },
-                clean: (action) => getAction("selectTemplate").clean(action),
-            },
-        };
+}
+class SelectNewsletterTemplateAction extends BuilderAction {
+    static id = "selectNewsletterTemplate";
+    static dependencies = ["builderActions"];
+    setup() {
+        this.getAction = this.dependencies.builderActions.getAction;
+    }
+    async prepare({ actionParam }) {
+        await this.getAction("selectTemplate").prepare({ actionParam: actionParam });
+    }
+    isApplied({ editingElement, params: { attribute } }) {
+        const parentEl = editingElement.parentElement;
+        return (
+            (!parentEl.dataset.newsletterTemplate && attribute === "email") ||
+            parentEl.dataset.newsletterTemplate === attribute
+        );
+    }
+    apply(action) {
+        this.getAction("selectTemplate").apply(action);
+        const parentEl = action.editingElement.parentElement;
+        parentEl.dataset.newsletterTemplate = action.params.attribute;
+    }
+    clean(action) {
+        return this.getAction("selectTemplate").clean(action)
     }
 }
-
 registry
     .category("website-plugins")
     .add(NewsletterLayoutOptionPlugin.id, NewsletterLayoutOptionPlugin);

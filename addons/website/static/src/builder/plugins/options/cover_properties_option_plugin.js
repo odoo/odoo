@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { CoverPropertiesOption } from "@website/builder/plugins/options/cover_properties_option";
-import { classAction } from "@html_builder/core/core_builder_action_plugin";
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { rpc } from "@web/core/network/rpc";
 import { withSequence } from "@html_editor/utils/resource";
 import { COVER_PROPERTIES } from "@website/builder/option_sequence";
@@ -19,68 +19,13 @@ class CoverPropertiesOptionPlugin extends Plugin {
             }),
         ],
         builder_actions: {
-            setCoverBackground: {
-                load: this.loadBackgroundImage.bind(this),
-                isApplied: ({ editingElement, params: { mainParam: setBackground } }) => {
-                    const bg =
-                        editingElement.querySelector(".o_record_cover_image").style.backgroundImage;
-                    return !setBackground === (!bg || bg === "none");
-                },
-                apply: this.applyBackgroundImage.bind(this),
-            },
-            markCoverPropertiesToBeSaved: { apply: this.markCoverPropertiesToBeSaved.bind(this) },
+            SetCoverBackgroundAction,
+            MarkCoverPropertiesToBeSavedAction,
         },
         savable_selectors: "#wrapwrap .o_record_cover_container[data-res-model]",
         before_save_handlers: this.savePendingBackgroundImage.bind(this),
         save_element_handlers: this.saveCoverProperties.bind(this),
     };
-
-    loadBackgroundImage({ params: { mainParam: setBackground } }) {
-        if (!setBackground) {
-            return;
-        }
-        let resultPromise;
-        return this.dependencies.media
-            .openMediaDialog({
-                onlyImages: true,
-                save: (imageEl) => {
-                    resultPromise = (async () => {
-                        const b64ToSave = imageEl.getAttribute("src").startsWith("data:");
-                        return { imageSrc: imageEl.getAttribute("src"), b64ToSave };
-                    })();
-                },
-            })
-            .then(() => resultPromise || { cancel: true });
-    }
-
-    applyBackgroundImage({ editingElement, loadResult: { imageSrc, b64ToSave, cancel } = {} }) {
-        if (cancel) {
-            return;
-        }
-        (imageSrc ? classAction.apply : classAction.clean)({
-            editingElement,
-            params: { mainParam: "o_record_has_cover" },
-        });
-
-        const bgEl = editingElement.querySelector(".o_record_cover_image");
-
-        (b64ToSave ? classAction.apply : classAction.clean)({
-            editingElement: bgEl,
-            params: { mainParam: "o_b64_cover_image_to_save" },
-        });
-
-        this.dependencies.builderActions.getAction("styleAction").apply({
-            editingElement: bgEl,
-            params: { mainParam: "background-image" },
-            value: imageSrc ? `url('${imageSrc}')` : "",
-        });
-
-        this.markCoverPropertiesToBeSaved({ editingElement });
-    }
-
-    markCoverPropertiesToBeSaved({ editingElement }) {
-        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
-    }
 
     async savePendingBackgroundImage(editableEl = this.editable) {
         for (const coverEl of editableEl.querySelectorAll(".o_record_cover_container")) {
@@ -171,6 +116,74 @@ class CoverPropertiesOptionPlugin extends Plugin {
             coverProperties.background_color_style = "";
         }
         return coverProperties;
+    }
+}
+
+class BaseCoverPropertiesAction extends BuilderAction {
+    static id = "baseCoverProperties";
+    markCoverPropertiesToBeSaved({ editingElement }) {
+        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
+    }
+}
+
+class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
+    static id = "setCoverBackground";
+    static dependencies = ["builderActions", "media"];
+    setup() {
+        this.classAction = this.dependencies.builderActions.getAction("classAction");
+        this.styleAction = this.dependencies.builderActions.getAction("styleAction");
+    }
+    load({ params: { mainParam: setBackground } }) {
+        if (!setBackground) {
+            return;
+        }
+        let resultPromise;
+        return this.dependencies.media
+            .openMediaDialog({
+                onlyImages: true,
+                save: (imageEl) => {
+                    resultPromise = (async () => {
+                        const b64ToSave = imageEl.getAttribute("src").startsWith("data:");
+                        return { imageSrc: imageEl.getAttribute("src"), b64ToSave };
+                    })();
+                },
+            })
+            .then(() => resultPromise || { cancel: true });
+    }
+
+    isApplied({ editingElement, params: { mainParam: setBackground } }) {
+        const bg = editingElement.querySelector(".o_record_cover_image").style.backgroundImage;
+        return !setBackground === (!bg || bg === "none");
+    }
+    apply({ editingElement, loadResult: { imageSrc, b64ToSave, cancel } = {} }) {
+        if (cancel) {
+            return;
+        }
+        (imageSrc ? this.classAction.apply : this.classAction.clean)({
+            editingElement,
+            params: { mainParam: "o_record_has_cover" },
+        });
+
+        const bgEl = editingElement.querySelector(".o_record_cover_image");
+
+        (b64ToSave ? this.classAction.apply : this.classAction.clean)({
+            editingElement: bgEl,
+            params: { mainParam: "o_b64_cover_image_to_save" },
+        });
+
+        this.styleAction.apply({
+            editingElement: bgEl,
+            params: { mainParam: "background-image" },
+            value: imageSrc ? `url('${imageSrc}')` : "",
+        });
+
+        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
+    }
+}
+class MarkCoverPropertiesToBeSavedAction extends BaseCoverPropertiesAction {
+    static id = "markCoverPropertiesToBeSaved";
+    apply({ editingElement }) {
+        editingElement.closest(".o_record_cover_container").dataset.coverPropertiesToBeSaved = true;
     }
 }
 

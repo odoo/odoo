@@ -91,7 +91,7 @@ export class OptionsContainer extends BaseOptionComponent {
     }
 
     selectElement() {
-        this.env.editor.shared["builder-options"].updateContainers(this.props.editingElement);
+        this.env.editor.shared["builderOptions"].updateContainers(this.props.editingElement);
     }
 
     toggleOverlayPreview(el, show) {

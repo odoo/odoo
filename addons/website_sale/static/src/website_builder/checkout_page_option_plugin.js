@@ -2,6 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { WebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 
 class CheckoutPageOptionPlugin extends Plugin {
     static id = "checkoutPageOption";
@@ -16,31 +17,25 @@ class CheckoutPageOptionPlugin extends Plugin {
                 groups: ["website.group_website_designer"],
             },
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            SetExtraStepAction,
+        },
     };
-    getActions() {
-        const plugin = this;
-        return {
-            get setExtraStep() {
-                const websiteConfigAction =
-                    plugin.dependencies.builderActions.getAction("websiteConfig");
-                return {
-                    ...websiteConfigAction,
-                    apply: async (...args) => {
-                        await Promise.all([
-                            websiteConfigAction.apply(...args),
-                            rpc("/shop/config/website", { extra_step: "true" }),
-                        ]);
-                    },
-                    clean: async (...args) => {
-                        await Promise.all([
-                            websiteConfigAction.clean(...args),
-                            rpc("/shop/config/website", { extra_step: "false" }),
-                        ]);
-                    },
-                };
-            },
-        };
+}
+
+class SetExtraStepAction extends WebsiteConfigAction {
+    static id = "setExtraStep";
+    async apply(context) {
+        await Promise.all([
+            super.apply(context),
+            rpc("/shop/config/website", { extra_step: "true" }),
+        ]);
+    }
+    async clean(context) {
+        await Promise.all([
+            super.clean(context),
+            rpc("/shop/config/website", { extra_step: "false" }),
+        ]);
     }
 }
 

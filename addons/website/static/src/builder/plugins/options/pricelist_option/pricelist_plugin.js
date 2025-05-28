@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -5,46 +6,45 @@ import { registry } from "@web/core/registry";
 class PriceListPlugin extends Plugin {
     static id = "priceListPlugin";
     resources = {
-        builder_actions: this.getActions(),
+        builder_actions: {
+            TogglePriceListDescriptionAction,
+        },
     };
+}
 
-    getActions() {
-        return {
-            togglePriceListDescription: {
-                isApplied: ({ editingElement, params }) => {
-                    const description = editingElement.querySelector(`.${params.descriptionClass}`);
-                    return description && !description.classList.contains("d-none");
-                },
-                apply: ({ editingElement, params }) => {
-                    const items = editingElement.querySelectorAll(`.${params.itemClass}`);
-                    for (const item of items) {
-                        const description = item.querySelector("." + params.descriptionClass);
-                        if (description) {
-                            description.classList.remove("d-none");
-                        } else {
-                            const descriptionEl = this.document.createElement("p");
-                            descriptionEl.classList.add(
-                                params.descriptionClass,
-                                "d-block",
-                                "pe-5",
-                                "text-muted"
-                            );
-                            descriptionEl.textContent = _t("Add a description here");
-                            item.appendChild(descriptionEl);
-                        }
-                    }
-                },
-                clean: ({ editingElement, params }) => {
-                    const items = editingElement.querySelectorAll(`.${params.itemClass}`);
-                    for (const item of items) {
-                        const description = item.querySelector("." + params.descriptionClass);
-                        if (description) {
-                            description.classList.add("d-none");
-                        }
-                    }
-                },
-            },
-        };
+class TogglePriceListDescriptionAction extends BuilderAction {
+    static id = "togglePriceListDescription";
+    isApplied({ editingElement, params }) {
+        const description = editingElement.querySelector(`.${params.descriptionClass}`);
+        return description && !description.classList.contains("d-none");
+    }
+    apply({ editingElement, params }) {
+        const items = editingElement.querySelectorAll(`.${params.itemClass}`);
+        for (const item of items) {
+            const description = item.querySelector("." + params.descriptionClass);
+            if (description) {
+                description.classList.remove("d-none");
+            } else {
+                const descriptionEl = this.document.createElement("p");
+                descriptionEl.classList.add(
+                    params.descriptionClass,
+                    "d-block",
+                    "pe-5",
+                    "text-muted"
+                );
+                descriptionEl.textContent = _t("Add a description here");
+                item.appendChild(descriptionEl);
+            }
+        }
+    }
+    clean({ editingElement, params }) {
+        const items = editingElement.querySelectorAll(`.${params.itemClass}`);
+        for (const item of items) {
+            const description = item.querySelector("." + params.descriptionClass);
+            if (description) {
+                description.classList.add("d-none");
+            }
+        }
     }
 }
 

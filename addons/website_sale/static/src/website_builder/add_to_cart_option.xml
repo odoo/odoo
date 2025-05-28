@@ -5,7 +5,7 @@
     <BuilderRow label.translate="Product">
         <BuilderMany2One
             id="'product_template_picker_opt'"
-            action="'productToCartAction'"
+            action="'productToCart'"
             model="'product.template'"
             fields="['type', 'product_variant_ids']"
             domain="[['is_published', '=', true], ['sale_ok', '=', true]]"
@@ -13,7 +13,7 @@
     </BuilderRow>
     <BuilderRow label.translate="Variant" level="1" t-if="(this.getItemValueJSON('product_template_picker_opt')?.product_variant_ids.length || 0) > 1">
         <BuilderMany2One
-            action="'variantToCartAction'"
+            action="'variantToCart'"
             model="'product.product'"
             fields=""
             domain="[['product_tmpl_id', '=', this.getItemValueJSON('product_template_picker_opt').id]]"
@@ -21,7 +21,7 @@
         />
     </BuilderRow>
     <BuilderRow label.translate="Action" t-if="this.domState.shouldShowActionChoice">
-        <BuilderSelect action="'addToCartAction'">
+        <BuilderSelect action="'addToCart'">
             <BuilderSelectItem actionParam="addToCartValues.addToCart"><t t-out="addToCartValues.addToCart.label"/></BuilderSelectItem>
             <BuilderSelectItem actionParam="addToCartValues.buyNow"><t t-out="addToCartValues.buyNow.label"/></BuilderSelectItem>
         </BuilderSelect>

@@ -9,7 +9,7 @@ patch(Many2OneOptionPlugin.prototype, {
     getActions() {
         const actions = super.getActions();
         const newApply = (args) => {
-            actions.many2OneAction.apply(args);
+            actions.many2One.apply(args);
             const { editingElement, value } = args;
             const { id } = JSON.parse(value);
             const { oeId, oeField } = editingElement.dataset;
@@ -27,6 +27,6 @@ patch(Many2OneOptionPlugin.prototype, {
                 }
             }
         };
-        return { ...actions, many2OneAction: { ...actions.many2OneAction, apply: newApply } };
+        return { ...actions, many2One: { ...actions.many2One, apply: newApply } };
     },
 });

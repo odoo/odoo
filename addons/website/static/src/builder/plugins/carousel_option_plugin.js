@@ -3,6 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { CarouselItemHeaderMiddleButtons } from "./carousel_item_header_buttons";
 import { renderToElement } from "@web/core/utils/render";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 const carouselWrapperSelector =
     ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper";
@@ -11,8 +12,8 @@ const carouselControlsSelector =
 
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
-    static dependencies = ["clone", "builder-options", "builderActions"];
-    static shared = ["slide", "addSlide", "removeSlide"];
+    static dependencies = ["clone", "builderOptions", "builderActions"];
+    static shared = ["addSlide", "removeSlide", "slideCarousel"];
 
     resources = {
         builder_options: [
@@ -50,7 +51,12 @@ export class CarouselOptionPlugin extends Plugin {
                 ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item",
             getTitleExtraInfo: (editingElement) => this.getTitleExtraInfo(editingElement),
         },
-        builder_actions: this.getActions(),
+        builder_actions: {
+            AddSlideAction,
+            SlideCarouselAction,
+            ToggleControllersAction,
+            ToggleCardImgAction,
+        },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         get_gallery_items_handlers: this.getGalleryItems.bind(this),
@@ -68,64 +74,6 @@ export class CarouselOptionPlugin extends Plugin {
             return Promise.all(proms);
         },
     };
-
-    getActions() {
-        return {
-            addSlide: {
-                preview: false,
-                apply: async ({ editingElement }) => this.addSlide(editingElement),
-            },
-            slideCarousel: {
-                preview: false,
-                withLoadingEffect: false,
-                apply: async ({ editingElement, params: { direction } }) =>
-                    this.slideCarousel(editingElement, direction),
-            },
-            toggleControllers: {
-                apply: ({ editingElement }) => this.toggleControllers(editingElement),
-            },
-            toggleCardImg: {
-                apply: ({ editingElement }) => this.toggleCardImg(editingElement),
-                clean: ({ editingElement: el }) => {
-                    const carouselEl = el.closest(".carousel");
-                    carouselEl.querySelectorAll("figure").forEach((el) => el.remove());
-                },
-                isApplied: ({ editingElement }) => {
-                    const carouselEl = editingElement.closest(".carousel");
-                    const cardImgEl = carouselEl.querySelector(".o_card_img_wrapper");
-                    return !!cardImgEl;
-                },
-            },
-        };
-    }
-
-    /**
-     * Adds a custom class if all controllers are hidden.
-     *
-     * @param {HTMLElement} editingElement the carousel element.
-     */
-    toggleControllers(editingElement) {
-        const carouselEl = editingElement.closest(".carousel");
-        const indicatorsEl = carouselEl.querySelector(".carousel-indicators");
-        const areControllersHidden =
-            carouselEl.classList.contains("s_carousel_arrows_hidden") &&
-            indicatorsEl.classList.contains("s_carousel_indicators_hidden");
-        carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
-    }
-
-    /**
-     * Toggles the card images.
-     *
-     * @param {HTMLElement} editingElement the carousel element.
-     */
-    toggleCardImg(editingElement) {
-        const carouselEl = editingElement.closest(".carousel");
-        const cardEls = carouselEl.querySelectorAll(".card");
-        for (const cardEl of cardEls) {
-            const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
-            cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
-        }
-    }
 
     getTitleExtraInfo(editingElement) {
         const itemEls = [...editingElement.parentElement.children];
@@ -240,7 +188,7 @@ export class CarouselOptionPlugin extends Plugin {
                     activeIndicatorEl.setAttribute("aria-current", "true");
 
                     // Activate the active item.
-                    this.dependencies["builder-options"].setNextTarget(activeItemEl);
+                    this.dependencies["builderOptions"].setNextTarget(activeItemEl);
 
                     resolve();
                 }, 0.2 * slideDuration);
@@ -330,7 +278,7 @@ export class CarouselOptionPlugin extends Plugin {
             updateCarouselIndicators(carouselEl, newPosition);
 
             // Activate the active slide.
-            this.dependencies["builder-options"].setNextTarget(activeItemEl);
+            this.dependencies["builderOptions"].setNextTarget(activeItemEl);
         }
     }
 }
@@ -351,6 +299,59 @@ export function updateCarouselIndicators(carouselEl, newPosition) {
             indicatorEl.setAttribute("aria-current", "true");
         }
     });
+}
+class AddSlideAction extends BuilderAction {
+    static id = "addSlide";
+    static dependencies = ["carouselOption"];
+    setup() {
+        this.preview = false;
+    }
+    async apply({ editingElement }) {
+        return this.dependencies.carouselOption.addSlide(editingElement);
+    }
+}
+class SlideCarouselAction extends BuilderAction {
+    static id = "slideCarousel";
+    static dependencies = ["carouselOption"];
+    setup() {
+        this.preview = false;
+        this.withLoadingEffect = false;
+    }
+    async apply({ editingElement, params: { direction } }) {
+        await this.dependencies.carouselOption.slideCarousel(editingElement, direction);
+    }
+}
+
+class ToggleControllersAction extends BuilderAction {
+    static id = "toggleControllers";
+    apply({ editingElement }) {
+        const carouselEl = editingElement.closest(".carousel");
+        const indicatorsEl = carouselEl.querySelector(".carousel-indicators");
+        const areControllersHidden =
+            carouselEl.classList.contains("s_carousel_arrows_hidden") &&
+            indicatorsEl.classList.contains("s_carousel_indicators_hidden");
+        carouselEl.classList.toggle("s_carousel_controllers_hidden", areControllersHidden);
+    }
+}
+class ToggleCardImgAction extends BuilderAction {
+    static id = "toggleCardImg";
+    apply({ editingElement }) {
+        const carouselEl = editingElement.closest(".carousel");
+        const cardEls = carouselEl.querySelectorAll(".card");
+        for (const cardEl of cardEls) {
+            const imageWrapperEl = renderToElement("website.s_carousel_cards.imageWrapper");
+            cardEl.insertAdjacentElement("afterbegin", imageWrapperEl);
+        }
+    }
+    clean({ editingElement: el }) {
+        const carouselEl = el.closest(".carousel");
+        carouselEl.querySelectorAll("figure").forEach((el) => el.remove());
+    }
+    isApplied({ editingElement }) {
+        const carouselEl = editingElement.closest(".carousel");
+        const cardImgEl = carouselEl.querySelector(".o_card_img_wrapper");
+        return !!cardImgEl;
+    }
 }
 
 registry.category("website-plugins").add(CarouselOptionPlugin.id, CarouselOptionPlugin);

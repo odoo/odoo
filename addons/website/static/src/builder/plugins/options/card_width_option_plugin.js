@@ -1,43 +1,33 @@
-import { classAction } from "@html_builder/core/core_builder_action_plugin";
+import { ClassAction, StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
 class CardWidthOptionPlugin extends Plugin {
     static id = "cardWidthOption";
-    static dependencies = ["builderActions"];
     resources = {
         builder_actions: {
-            p: this,
-            get setCardWidth() {
-                return this.p.getCardWidthAction();
-            },
-            setCardAlignment: {
-                ...classAction,
-                isApplied: (...args) => {
-                    const {
-                        editingElement: el,
-                        params: { mainParam: classNames },
-                    } = args[0];
-                    // Align-left button is active by default
-                    if (classNames === "me-auto") {
-                        return !["mx-auto", "ms-auto"].some((cls) => el.classList.contains(cls));
-                    }
-                    return classAction.isApplied(...args);
-                },
-            },
+            SetCardWidthAction,
+            SetCardAlignmentAction,
         },
     };
-
-    getCardWidthAction() {
-        const styleAction = this.dependencies.builderActions.getAction("styleAction");
-        return {
-            ...styleAction,
-            getValue: (...args) => {
-                const value = styleAction.getValue(...args);
-                return value.includes("%") ? value : "100%";
-            },
-        };
-    }
 }
 
 registry.category("website-plugins").add(CardWidthOptionPlugin.id, CardWidthOptionPlugin);
+
+class SetCardAlignmentAction extends ClassAction {
+    static id = "setCardAlignment";
+    isApplied({ editingElement: el, params: { mainParam: classNames } }) {
+        if (classNames === "me-auto") {
+            return !["mx-auto", "ms-auto"].some((cls) => el.classList.contains(cls));
+        }
+        return super.isApplied(...arguments);
+    }
+}
+
+class SetCardWidthAction extends StyleAction {
+    static id = "setCardWidth";
+    getValue(...args) {
+        const value = super.getValue(...args);
+        return value.includes("%") ? value : "100%";
+    }
+}

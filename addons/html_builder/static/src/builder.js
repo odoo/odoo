@@ -269,7 +269,7 @@ export class Builder extends Component {
         this.setTab(tab);
         // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
         if (tab === "theme" || tab === "blocks") {
-            this.editor.shared["builder-options"].deactivateContainers();
+            this.editor.shared["builderOptions"].deactivateContainers();
         }
     }
 

@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -13,47 +14,49 @@ class MapOptionPlugin extends Plugin {
             },
         ],
         so_content_addition_selector: [".s_map"],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            MapUpdateSrcAction,
+            MapDescriptionAction,
+        },
     };
+}
 
-    getActions() {
-        return {
-            mapUpdateSrc: {
-                apply: ({ editingElement }) => {
-                    const embedded = editingElement.querySelector(".s_map_embedded");
+class MapUpdateSrcAction extends BuilderAction {
+    static id = "mapUpdateSrc";
+    apply({ editingElement }) {
+        const embedded = editingElement.querySelector(".s_map_embedded");
 
-                    if (editingElement.dataset.mapAddress) {
-                        const url = generateGMapLink(editingElement.dataset);
-                        if (url !== embedded.getAttribute("src")) {
-                            embedded.setAttribute("src", url);
-                        }
-                    } else {
-                        embedded.setAttribute("src", "about:blank");
-                    }
-                    embedded.classList.toggle("d-none", !editingElement.dataset.mapAddress);
-                    editingElement
-                        .querySelector(".missing_option_warning")
-                        .classList.toggle("d-none", !!editingElement.dataset.mapAddress);
-                },
-            },
-            mapDescription: {
-                isApplied: ({ editingElement }) =>
-                    editingElement.querySelector(".description") !== null,
-                apply: ({ editingElement }) => {
-                    editingElement.appendChild(
-                        document.createRange().createContextualFragment(
-                            `<div class="description">
-                                <strong>${_t("Visit us:")}</strong>
-                                ${_t("Our office is open Monday – Friday 8:30 a.m. – 4:00 p.m.")}
-                            </div>`
-                        )
-                    );
-                },
-                clean: ({ editingElement }) => {
-                    editingElement.querySelector(".description").remove();
-                },
-            },
-        };
+        if (editingElement.dataset.mapAddress) {
+            const url = generateGMapLink(editingElement.dataset);
+            if (url !== embedded.getAttribute("src")) {
+                embedded.setAttribute("src", url);
+            }
+        } else {
+            embedded.setAttribute("src", "about:blank");
+        }
+        embedded.classList.toggle("d-none", !editingElement.dataset.mapAddress);
+        editingElement
+            .querySelector(".missing_option_warning")
+            .classList.toggle("d-none", !!editingElement.dataset.mapAddress);
+    }
+}
+class MapDescriptionAction extends BuilderAction {
+    static id = "mapDescription";
+    isApplied({ editingElement }) {
+        return editingElement.querySelector(".description") !== null;
+    }
+    apply({ editingElement }) {
+        editingElement.appendChild(
+            document.createRange().createContextualFragment(
+                `<div class="description">
+                    <strong>${_t("Visit us:")}</strong>
+                    ${_t("Our office is open Monday – Friday 8:30 a.m. – 4:00 p.m.")}
+                </div>`
+            )
+        );
+    }
+    clean({ editingElement }) {
+        editingElement.querySelector(".description").remove();
     }
 }
 

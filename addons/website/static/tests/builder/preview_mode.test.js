@@ -5,6 +5,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { addOption, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 defineWebsiteModels();
 
@@ -15,13 +16,7 @@ test("do not update builder if in preview mode", async () => {
         static dependencies = ["history"];
         resources = {
             builder_actions: {
-                customAction: {
-                    apply: ({ editingElement }) => {
-                        editingElement.classList.add("applied");
-                        this.dependencies.history.addStep();
-                    },
-                    isApplied: ({ editingElement }) => editingElement.classList.contains("applied"),
-                },
+                CustomAction,
             },
         };
     }
@@ -40,3 +35,15 @@ test("do not update builder if in preview mode", async () => {
     expect("[data-class-action='b2_class']").not.toBeVisible();
     expect(".o-snippets-top-actions .fa-undo").not.toBeEnabled();
 });
+
+class CustomAction extends BuilderAction {
+    static id = "customAction";
+    static dependencies = ["history"];
+    apply({ editingElement }) {
+        editingElement.classList.add("applied");
+        this.dependencies.history.addStep();
+    }
+    isApplied({ editingElement }) {
+        return editingElement.classList.contains("applied");
+    }
+}

@@ -7,6 +7,7 @@ import {
     queryAllTexts,
     queryFirst,
     runAllTimers,
+    tick,
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -308,6 +309,7 @@ test("revert a preview selected with the keyboard when cancelling with escape", 
     await press("arrowdown");
     expect(".o-dropdown--menu div.o-dropdown-item:contains('0')").toBeFocused();
     await press("escape");
+    await tick();
     expect(":iframe .test").not.toHaveAttribute("data-choice");
 });
 

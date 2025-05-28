@@ -1,7 +1,7 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { click, queryAll, queryOne, queryAllTexts, waitFor } from "@odoo/hoot-dom";
+import { click, queryAll, queryOne, queryAllTexts, tick, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -98,6 +98,7 @@ test("hide title in content with table of content", async () => {
     const sectionOptionContainer = queryAll(".options-container").pop();
     expect(sectionOptionContainer.querySelector("div")).toHaveText("Section");
     await click(sectionOptionContainer.querySelector("[data-action-id='toggleDeviceVisibility']"));
+    await tick();
     expect(queryAllTexts(":iframe .s_table_of_content_navbar a")).toEqual(["Design features"]);
 
     undo(editor);

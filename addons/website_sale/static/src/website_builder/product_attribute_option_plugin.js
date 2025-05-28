@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 class ProductAttributeOptionPlugin extends Plugin {
     static id = "productAttributeOption";
@@ -11,26 +12,33 @@ class ProductAttributeOptionPlugin extends Plugin {
             editableOnly: false,
             reloadTarget: true,
         },
-        builder_actions: this.getActions(),
+        builder_actions: {
+            ProductAttributeDisplayAction,
+        },
     };
-    getActions() {
-        return {
-            productAttributeDisplay: {
-                reload: {},
-                isApplied: ({ editingElement: el, value }) =>
-                    value === this.getProductAttributeDisplay(el),
-                getValue: ({ editingElement: el }) => this.getProductAttributeDisplay(el),
-                apply: async ({ editingElement: el, value }) => {
-                    const attributeID = parseInt(
-                        el.closest("[data-attribute_id]").dataset.attribute_id
-                    );
-                    await rpc("/shop/config/attribute", {
-                        attribute_id: attributeID,
-                        display_type: value,
-                    });
-                },
-            },
-        };
+
+}
+
+class ProductAttributeDisplayAction extends BuilderAction {
+    static id = "productAttributeDisplay";
+
+    setup() {
+        this.reload = {};
+    }
+    isApplied({ editingElement: el, value }) {
+        return value === this.getProductAttributeDisplay(el);
+    }
+    getValue({ editingElement: el }) {
+        return this.getProductAttributeDisplay(el);
+    }
+    async apply({ editingElement: el, value }) {
+        const attributeID = parseInt(
+            el.closest("[data-attribute_id]").dataset.attribute_id
+        );
+        await rpc("/shop/config/attribute", {
+            attribute_id: attributeID,
+            display_type: value,
+        });
     }
     getProductAttributeDisplay(el) {
         return el.closest("[data-attribute_display_type]").dataset.attribute_display_type;
