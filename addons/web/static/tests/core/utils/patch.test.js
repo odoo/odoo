@@ -847,6 +847,84 @@ describe("other", () => {
         expect.verifySteps(["obj"]);
     });
 
+    test("patch with a class", async () => {
+        let instance = new BaseClass();
+        expect.verifySteps(["base.setup"]);
+        instance.fn();
+        expect.verifySteps(["base.fn"]);
+        expect(instance.dynamic).toBe("base");
+        await instance.asyncFn();
+        expect.verifySteps(["base.base"]);
+        BaseClass.staticFn();
+        expect.verifySteps(["base.staticFn"]);
+        expect(BaseClass.staticStr).toBe("base");
+        expect(BaseClass.staticArr).toEqual(["base"]);
+        expect(BaseClass.staticObj).toEqual({ base: "base" });
+        const originalName = BaseClass.name;
+        expect(originalName).toBe("BaseClass");
+
+        const unpatch = patch(class Patch extends BaseClass {
+            static staticStr = super.staticStr + ",patch";
+            static staticObj = { ...super.staticObj, patch: "patch" };
+            static staticArr = [...super.staticArr, "patch"];
+            static staticFn() {
+                super.staticFn();
+                expect.step("patch.staticFn");
+            }
+
+            constructor() {
+                super();
+                expect.step("Cannot apply patch for constructor");
+            }
+
+            get dynamic() {
+                return super.dynamic + ",patch";
+            }
+
+            setup() {
+                super.setup();
+                expect.step("patch.setup");
+            }
+            fn() {
+                super.fn();
+                expect.step("patch.fn");
+            }
+            async asyncFn() {
+                await Promise.resolve();
+                await super.asyncFn();
+                expect.step("patch.asyncFn");
+            }
+        });
+        instance = new BaseClass();
+        expect.verifySteps(["base.setup", "patch.setup"]);
+        instance.fn();
+        expect.verifySteps(["base.fn", "patch.fn"]);
+        expect(instance.dynamic).toBe("base,patch");
+        await instance.asyncFn();
+        expect.verifySteps(["base.base", "patch.asyncFn"]);
+        BaseClass.staticFn();
+        expect.verifySteps(["base.staticFn", "patch.staticFn"]);
+        expect(BaseClass.staticStr).toBe("base,patch");
+        expect(BaseClass.staticArr).toEqual(["base", "patch"]);
+        expect(BaseClass.staticObj).toEqual({ base: "base", patch: "patch" });
+        expect(BaseClass.name).toBe(originalName);
+
+        unpatch();
+        instance = new BaseClass();
+        expect.verifySteps(["base.setup"]);
+        instance.fn();
+        expect.verifySteps(["base.fn"]);
+        expect(instance.dynamic).toBe("base");
+        await instance.asyncFn();
+        expect.verifySteps(["base.base"]);
+        BaseClass.staticFn();
+        expect.verifySteps(["base.staticFn"]);
+        expect(BaseClass.staticStr).toBe("base");
+        expect(BaseClass.staticArr).toEqual(["base"]);
+        expect(BaseClass.staticObj).toEqual({ base: "base" });
+        expect(BaseClass.name).toBe(originalName);
+    });
+
     test("can call a non bound patched method", () => {
         // use case: patching a function on window (e.g. setTimeout)
 
@@ -867,5 +945,21 @@ describe("other", () => {
         const fn = obj.fn; // purposely not bound
         fn();
         expect.verifySteps(["patched", "original"]);
+    });
+
+    test("patch with a symbol", () => {
+        const s = Symbol("SYMBOL");
+
+        const instance = new BaseClass();
+        expect.verifySteps(["base.setup"]);
+        expect(instance[s]).toBe(undefined);
+
+        const unpatch = patch(BaseClass.prototype, {
+            [s]: 1234,
+        });
+        expect(instance[s]).toBe(1234);
+
+        unpatch();
+        expect(instance[s]).toBe(undefined);
     });
 });
