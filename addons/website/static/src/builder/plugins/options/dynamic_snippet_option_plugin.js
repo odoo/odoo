@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Cache } from "@web/core/utils/cache";
 import { DynamicSnippetOption } from "./dynamic_snippet_option";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 export const DYNAMIC_SNIPPET = SNIPPET_SPECIFIC_END;
 
@@ -14,6 +15,7 @@ class DynamicSnippetOptionPlugin extends Plugin {
         "fetchDynamicFilters",
         "fetchDynamicFilterTemplates",
         "setOptionsDefaultValues",
+        "updateTemplate",
     ];
     selector = ".s_dynamic_snippet";
     modelNameFilter = "";
@@ -27,7 +29,11 @@ class DynamicSnippetOptionPlugin extends Plugin {
                 selector: this.selector,
             }),
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            DynamicFilterAction,
+            DynamicFilterTemplateAction,
+            CustomizeTemplateAction,
+        },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
     setup() {
@@ -84,49 +90,6 @@ class DynamicSnippetOptionPlugin extends Plugin {
             this.updateTemplate(snippetEl, defaultFilterTemplate);
         }
     }
-    getActions() {
-        return {
-            dynamicFilter: {
-                isApplied: ({ editingElement: el, params }) =>
-                    parseInt(el.dataset.filterId) === params.id,
-                apply: ({ editingElement: el, params }) => {
-                    el.dataset.filterId = params.id;
-                    if (
-                        !el.dataset.templateKey ||
-                        !el.dataset.templateKey.includes(
-                            `_${params.model_name.replaceAll(".", "_")}_`
-                        )
-                    ) {
-                        // Only if filter's model name changed
-                        this.updateTemplate(el, params.defaultTemplate);
-                    }
-                },
-            },
-            dynamicFilterTemplate: {
-                isApplied: ({ editingElement: el, params }) =>
-                    el.dataset.templateKey === params.key,
-                apply: ({ editingElement: el, params }) => {
-                    this.updateTemplate(el, params);
-                },
-            },
-            customizeTemplate: {
-                isApplied: ({ editingElement: el, params: { mainParam: customDataKey } }) => {
-                    const customData = JSON.parse(el.dataset.customTemplateData);
-                    return customData[customDataKey];
-                },
-                apply: ({ editingElement: el, params: { mainParam: customDataKey }, value }) => {
-                    const customData = JSON.parse(el.dataset.customTemplateData);
-                    customData[customDataKey] = true;
-                    el.dataset.customTemplateData = JSON.stringify(customData);
-                },
-                clean: ({ editingElement: el, params: { mainParam: customDataKey }, value }) => {
-                    const customData = JSON.parse(el.dataset.customTemplateData);
-                    customData[customDataKey] = false;
-                    el.dataset.customTemplateData = JSON.stringify(customData);
-                },
-            },
-        };
-    }
     getTemplateClass(templateKey) {
         return templateKey.replace(/.*\.dynamic_filter_template_/, "s_");
     }
@@ -181,6 +144,51 @@ class DynamicSnippetOptionPlugin extends Plugin {
 export function setDatasetIfUndefined(snippetEl, optionName, value) {
     if (snippetEl.dataset[optionName] === undefined) {
         snippetEl.dataset[optionName] = value;
+    }
+}
+
+class DynamicFilterAction extends BuilderAction {
+    static id = "dynamicFilter";
+    static dependencies = ["dynamicSnippetOption"];
+    isApplied({ editingElement: el, params }) {
+        return parseInt(el.dataset.filterId) === params.id;
+    }
+    apply({ editingElement: el, params }) {
+        el.dataset.filterId = params.id;
+        if (
+            !el.dataset.templateKey ||
+            !el.dataset.templateKey.includes(`_${params.model_name.replaceAll(".", "_")}_`)
+        ) {
+            // Only if filter's model name changed
+            this.dependencies.dynamicSnippetOption.updateTemplate(el, params.defaultTemplate);
+        }
+    }
+}
+class DynamicFilterTemplateAction extends BuilderAction {
+    static id = "dynamicFilterTemplate";
+    static dependencies = ["dynamicSnippetOption"];
+    isApplied({ editingElement: el, params }) {
+        return el.dataset.templateKey === params.key;
+    }
+    apply({ editingElement: el, params }) {
+        this.dependencies.dynamicSnippetOption.updateTemplate(el, params);
+    }
+}
+class CustomizeTemplateAction extends BuilderAction {
+    static id = "customizeTemplate";
+    isApplied({ editingElement: el, params: { mainParam: customDataKey } }) {
+        const customData = JSON.parse(el.dataset.customTemplateData);
+        return customData[customDataKey];
+    }
+    apply({ editingElement: el, params: { mainParam: customDataKey }, value }) {
+        const customData = JSON.parse(el.dataset.customTemplateData);
+        customData[customDataKey] = true;
+        el.dataset.customTemplateData = JSON.stringify(customData);
+    }
+    clean({ editingElement: el, params: { mainParam: customDataKey }, value }) {
+        const customData = JSON.parse(el.dataset.customTemplateData);
+        customData[customDataKey] = false;
+        el.dataset.customTemplateData = JSON.stringify(customData);
     }
 }
 

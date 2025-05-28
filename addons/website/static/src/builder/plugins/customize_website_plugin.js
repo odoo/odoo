@@ -9,6 +9,7 @@ import { isColorGradient, isCSSColor } from "@web/core/utils/colors";
 import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { withSequence } from "@html_editor/utils/resource";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
@@ -25,10 +26,24 @@ export class CustomizeWebsitePlugin extends Plugin {
         "populateCache",
         "loadConfigKey",
         "getConfigKey",
+        "getWebsiteVariableValue",
+        "getPendingThemeRequests",
+        "setPendingThemeRequests",
+        "isPluginDestroyed",
     ];
 
     resources = {
-        builder_actions: this.getActions(),
+        builder_actions: {
+            CustomizeWebsiteVariableAction,
+            CustomizeWebsiteColorAction,
+            SwitchThemeAction,
+            AddLanguageAction,
+            CustomizeBodyBgTypeAction,
+            RemoveFontAction,
+            CustomizeButtonStyleAction,
+            WebsiteConfigAction,
+            SelectTemplateAction,
+        },
         color_combination_getters: withSequence(5, (el, actionParam) => {
             const combination = actionParam.combinationColor;
             if (combination) {
@@ -59,286 +74,11 @@ export class CustomizeWebsitePlugin extends Plugin {
     variablesToCustomize = {};
     colorsToCustomize = {};
     resolves = {};
-    getActions() {
-        return {
-            customizeWebsiteVariable: this.withCustomHistory({
-                isApplied: ({ params: { mainParam: variable } = {}, value }) => {
-                    const currentValue = this.getWebsiteVariableValue(variable);
-                    return currentValue === value;
-                },
-                getValue: ({ params: { mainParam: variable } }) => {
-                    const currentValue = this.getWebsiteVariableValue(variable);
-                    return currentValue;
-                },
-                apply: async ({ params: { mainParam: variable, nullValue = "null" }, value }) => {
-                    await this.customizeWebsiteVariables(
-                        {
-                            [variable]: value,
-                        },
-                        nullValue
-                    );
-                },
-            }),
-            customizeWebsiteColor: this.withCustomHistory({
-                getValue: ({
-                    params: { mainParam: color, colorType, gradientColor, combinationColor },
-                }) => {
-                    const style = this.window.getComputedStyle(this.document.documentElement);
-                    if (gradientColor) {
-                        const gradientValue = this.getWebsiteVariableValue(gradientColor);
-                        if (gradientValue) {
-                            // Pass through style to restore rgb/a which might
-                            // have been lost during SCSS generation process.
-                            // TODO Remove this once colorpicker will be able
-                            // to cope with #rrggbb gradient color elements.
-                            const el = document.createElement("div");
-                            el.style.setProperty("background-image", gradientValue);
-                            return el.style.getPropertyValue("background-image");
-                        }
-                    }
-                    return getCSSVariableValue(color, style);
-                },
-                apply: async ({
-                    params: {
-                        mainParam: color,
-                        colorType,
-                        gradientColor,
-                        combinationColor,
-                        nullValue,
-                    },
-                    value,
-                }) => {
-                    if (gradientColor) {
-                        let colorValue = "";
-                        let gradientValue = "";
-                        if (isColorGradient(value)) {
-                            gradientValue = value;
-                        } else {
-                            colorValue = value;
-                        }
-                        await this.customizeWebsiteColors(
-                            {
-                                [color]: colorValue,
-                            },
-                            { colorType, combinationColor, nullValue }
-                        );
-                        await this.customizeWebsiteVariables({
-                            [gradientColor]: gradientValue || nullValue,
-                        }); // reloads bundles
-                    } else {
-                        await this.customizeWebsiteColors(
-                            { [color]: value },
-                            { colorType, combinationColor, nullValue }
-                        );
-                    }
-                },
-            }),
-            switchTheme: {
-                preview: false,
-                apply: async () => {
-                    const save = await new Promise((resolve) => {
-                        this.services.dialog.add(ConfirmationDialog, {
-                            body: _t(
-                                "Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."
-                            ),
-                            confirm: () => resolve(true),
-                            cancel: () => resolve(false),
-                        });
-                    });
-                    if (!save) {
-                        return;
-                    }
-                    // TODO not reload in savePlugin.save ?
-                    await this.dependencies.savePlugin.save(/* not in translation */);
-                    // TODO doAction in savePlugin.save ?
-                    this.services.action.doAction("website.theme_install_kanban_action", {});
-                },
-            },
-            addLanguage: {
-                preview: false,
-                apply: async () => {
-                    const def = new Deferred();
-                    // Retrieve the website id to check by default the website checkbox in
-                    // the dialog box 'action_view_base_language_install'
-                    const websiteId = this.services.website.currentWebsite.id;
-                    const save = await new Promise((resolve) => {
-                        this.services.dialog.add(ConfirmationDialog, {
-                            body: _t(
-                                "Adding a language requires to leave the editor. This will save all your changes, are you sure you want to proceed?"
-                            ),
-                            confirm: () => resolve(true),
-                            cancel: () => resolve(false),
-                        });
-                    });
-                    if (!save) {
-                        return;
-                    }
-                    this.config.builderSidebar.toggle(false);
-                    await this.dependencies.savePlugin.save(/* not in translation */);
-                    await this.services.action.doAction("base.action_view_base_language_install", {
-                        additionalContext: {
-                            params: {
-                                website_id: websiteId,
-                                url_return: "[lang]",
-                            },
-                        },
-                        onClose: def.resolve,
-                    });
-                    await def;
-                    this.config.builderSidebar.toggle(true);
-                },
-            },
-            customizeBodyBgType: {
-                isApplied: ({ value }) => {
-                    const getAction = this.dependencies.builderActions.getAction;
-                    const currentValue = getAction("customizeBodyBgType").getValue();
-                    // NONE has no extra quote, other values have
-                    return [`'${value}'`, value].includes(currentValue);
-                },
-                getValue: () => {
-                    const bgImage = getComputedStyle(this.document.querySelector("#wrapwrap"))[
-                        "background-image"
-                    ];
-                    if (bgImage === "none") {
-                        return "NONE";
-                    }
-                    const style = this.window.getComputedStyle(this.document.documentElement);
-                    return getCSSVariableValue("body-image-type", style);
-                },
-                load: async ({ editingElement: el, params, value, historyImageSrc }) => {
-                    const getAction = this.dependencies.builderActions.getAction;
-                    const oldValue = getAction("customizeBodyBgType").getValue({ params });
-                    const oldImageSrc = this.getWebsiteVariableValue("body-image");
-                    let imageSrc = "";
-                    if (value === "NONE") {
-                        await this.customizeWebsiteVariables({
-                            "body-image-type": "'image'",
-                            "body-image": "",
-                        });
-                    } else {
-                        imageSrc =
-                            historyImageSrc || (await getAction("replaceBgImage").load({ el }));
-                        if (imageSrc) {
-                            await this.customizeWebsiteVariables({
-                                "body-image-type": `'${value}'`,
-                                "body-image": `'${imageSrc}'`,
-                            });
-                        } else {
-                            imageSrc = NO_IMAGE_SELECTION;
-                        }
-                    }
-                    return { imageSrc, oldImageSrc, oldValue };
-                },
-                apply: ({
-                    editingElement,
-                    params,
-                    value,
-                    loadResult: { imageSrc, oldImageSrc, oldValue },
-                }) => {
-                    if (imageSrc === NO_IMAGE_SELECTION) {
-                        return;
-                    }
-                    const getAction = this.dependencies.builderActions.getAction;
-                    this.dependencies.history.addCustomMutation({
-                        apply: () => {
-                            this.services.ui.block({ delay: 2500 });
-                            getAction("customizeBodyBgType")
-                                .load({ editingElement, params, value, historyImageSrc: imageSrc })
-                                .then(() => {
-                                    this.dispatchTo("trigger_dom_updated");
-                                })
-                                .finally(() => this.services.ui.unblock());
-                        },
-                        revert: () => {
-                            this.services.ui.block({ delay: 2500 });
-                            getAction("customizeBodyBgType")
-                                .load({
-                                    editingElement,
-                                    params,
-                                    value: oldValue,
-                                    historyImageSrc: oldImageSrc,
-                                })
-                                .then(() => {
-                                    this.dispatchTo("trigger_dom_updated");
-                                })
-                                .finally(() => this.services.ui.unblock());
-                        },
-                    });
-                },
-            },
-            removeFont: {
-                preview: false,
-                apply: async ({ params }) => {
-                    // TODO
-                    const getAction = this.dependencies.builderActions.getAction;
-                    await getAction("customizeWebsiteVariable").load({
-                        params: {
-                            mainParam: params.variable,
-                        },
-                    });
-                },
-            },
-            customizeButtonStyle: this.withCustomHistory({
-                preview: false,
-                isApplied: ({ params, value }) => {
-                    const getAction = this.dependencies.builderActions.getAction;
-                    const currentValue = getAction("customizeButtonStyle").getValue({ params });
-                    return currentValue === value;
-                },
-                getValue: ({ params: { mainParam: which } }) => {
-                    const style = this.window.getComputedStyle(this.document.documentElement);
-                    const isOutline = getCSSVariableValue(`btn-${which}-outline`, style);
-                    const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
-                    return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
-                },
-                apply: async ({ params: { mainParam: which, nullValue }, value }) => {
-                    await this.customizeWebsiteVariables(
-                        {
-                            [`btn-${which}-outline`]: value === "outline" ? "true" : "false",
-                            [`btn-${which}-flat`]: value === "flat" ? "true" : "false",
-                        },
-                        nullValue
-                    );
-                },
-            }),
-            websiteConfig: {
-                reload: {},
-                prepare: async ({ actionParam }) => this.loadConfigKey(actionParam),
-                getPriority: ({ params }) => {
-                    const records = [...(params.views || []), ...(params.assets || [])];
-                    return records.length;
-                },
-                isApplied: ({ params }) => {
-                    const records = [...(params.views || []), ...(params.assets || [])];
-                    const configKeysIsApplied = records.every((v) => this.getConfigKey(v));
-                    if (params.checkVars || params.checkVars === undefined) {
-                        return (
-                            configKeysIsApplied &&
-                            Object.entries(params.vars || {}).every(
-                                ([variable, value]) =>
-                                    value === this.getWebsiteVariableValue(variable)
-                            )
-                        );
-                    }
-                    return configKeysIsApplied;
-                },
-                apply: async (action) => this.toggleConfig(action, true),
-                clean: (action) => this.toggleConfig(action, false),
-            },
-            selectTemplate: {
-                prepare: async ({ actionParam }) => {
-                    await this.loadTemplateKey(actionParam.view);
-                },
-                isApplied: ({ editingElement, params: { templateClass } }) => {
-                    if (templateClass) {
-                        return !!editingElement.querySelector(`.${templateClass}`);
-                    }
-                    return true;
-                },
-                apply: async (action) => this.toggleTemplate(action, true),
-                clean: (action) => this.toggleTemplate(action, false),
-            },
-        };
+    getPendingThemeRequests() {
+        return this.pendingThemeRequests;
+    }
+    setPendingThemeRequests(pendingThemeRequests) {
+        this.pendingThemeRequests = pendingThemeRequests;
     }
     getWebsiteVariableValue(variable) {
         const style = this.window.getComputedStyle(this.document.documentElement);
@@ -508,24 +248,305 @@ export class CustomizeWebsitePlugin extends Plugin {
         });
     }
 
-    async toggleConfig(action, apply) {
+    getConfigKey(key) {
+        if (key.startsWith("!")) {
+            return !this.activeRecords[key.substring(1)];
+        }
+        return this.activeRecords[key];
+    }
+
+    withCustomHistory(action) {
+        const applyFn = action.apply.bind(action);
+        action.apply = async (arg) => {
+            const oldValue = action.getValue(arg);
+            const { value } = arg;
+            const blockedApply = (v) => {
+                this.services.ui.block({ delay: 2500 });
+                return applyFn({ ...arg, value: v })
+                    .then(() => {
+                        this.dispatchTo("trigger_dom_updated");
+                    })
+                    .finally(() => this.services.ui.unblock());
+            };
+            await blockedApply(value);
+            this.dependencies.history.addCustomMutation({
+                apply: () => blockedApply(value),
+                revert: () => blockedApply(oldValue),
+            });
+        };
+    }
+
+    async loadTemplateKey(key) {
+        if (!this.getTemplateKey(key)) {
+            // TODO: make a python method that can return several templates at
+            // once and batch the ORM call.
+            this.activeTemplateViews[key] = await this.services.orm.call(
+                "ir.ui.view",
+                "render_public_asset",
+                [`${key}`, {}]
+            );
+        }
+        return this.getTemplateKey(key);
+    }
+    toggleTemplate(action, apply) {
+        if (!apply) {
+            // Empty the container and restore the original content
+            action.editingElement.replaceChildren(this.beforePreviewNodes);
+            this.beforePreviewNodes = null;
+            return;
+        }
+
+        if (!this.beforePreviewNodes) {
+            // We are about to apply a template on non-previewed content,
+            // save that content's nodes.
+            this.beforePreviewNodes = [...action.editingElement.childNodes];
+        }
+
+        // Empty the container and add the template content
+        const templateFragment = parseHTML(this.document, this.getTemplateKey(action.params.view));
+        action.editingElement.replaceChildren(templateFragment.firstElementChild);
+    }
+    getTemplateKey(key) {
+        return this.activeTemplateViews[key];
+    }
+    populateCache(record, value) {
+        if (record.startsWith("!")) {
+            record = record.substring(1);
+        }
+        if (!(record in this.cache)) {
+            this.cache[record] = value;
+        }
+        value.then((resolvedValue) => {
+            this.activeRecords[record] = resolvedValue;
+        });
+    }
+    isPluginDestroyed() {
+        return this.isDestroyed;
+    }
+}
+
+class SwitchThemeAction extends BuilderAction {
+    static id = "switchTheme";
+    static dependencies = ["savePlugin", "action"];
+    setup() {
+        this.preview = false;
+    }
+    async apply() {
+        const save = await new Promise((resolve) => {
+            this.services.dialog.add(ConfirmationDialog, {
+                body: _t(
+                    "Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."
+                ),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        // TODO not reload in savePlugin.save ?
+        await this.dependencies.savePlugin.save(/* not in translation */);
+        // TODO doAction in savePlugin.save ?
+        this.services.action.doAction("website.theme_install_kanban_action", {});
+    }
+}
+
+class AddLanguageAction extends BuilderAction {
+    static id = "addLanguage";
+    static dependencies = ["savePlugin"];
+    setup() {
+        this.preview = false;
+    }
+    async apply() {
+        const def = new Deferred();
+        // Retrieve the website id to check by default the website checkbox in
+        // the dialog box 'action_view_base_language_install'
+        const websiteId = this.services.website.currentWebsite.id;
+        const save = await new Promise((resolve) => {
+            this.services.dialog.add(ConfirmationDialog, {
+                body: _t(
+                    "Adding a language requires to leave the editor. This will save all your changes, are you sure you want to proceed?"
+                ),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        this.config.builderSidebar.toggle(false);
+        await this.dependencies.savePlugin.save(/* not in translation */);
+        await this.services.action.doAction("base.action_view_base_language_install", {
+            additionalContext: {
+                params: {
+                    website_id: websiteId,
+                    url_return: "[lang]",
+                },
+            },
+            onClose: def.resolve,
+        });
+        await def;
+        this.config.builderSidebar.toggle(true);
+    }
+}
+
+class CustomizeBodyBgTypeAction extends BuilderAction {
+    static id = "customizeBodyBgType";
+    static dependencies = ["builderActions", "history", "customizeWebsite"];
+    isApplied({ value }) {
+        const getAction = this.dependencies.builderActions.getAction;
+        const currentValue = getAction("customizeBodyBgType").getValue();
+        // NONE has no extra quote, other values have
+        return [`'${value}'`, value].includes(currentValue);
+    }
+    getValue() {
+        const bgImage = getComputedStyle(this.document.querySelector("#wrapwrap"))[
+            "background-image"
+        ];
+        if (bgImage === "none") {
+            return "NONE";
+        }
+        const style = this.window.getComputedStyle(this.document.documentElement);
+        return getCSSVariableValue("body-image-type", style);
+    }
+    async load({ editingElement: el, params, value, historyImageSrc }) {
+        const getAction = this.dependencies.builderActions.getAction;
+        const oldValue = getAction("customizeBodyBgType").getValue({ params });
+        const oldImageSrc =
+            this.dependencies.customizeWebsite.getWebsiteVariableValue("body-image");
+        let imageSrc = "";
+        if (value === "NONE") {
+            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                "body-image-type": "'image'",
+                "body-image": "",
+            });
+        } else {
+            imageSrc = historyImageSrc || (await getAction("replaceBgImage").load({ el }));
+            if (imageSrc) {
+                await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                    "body-image-type": `'${value}'`,
+                    "body-image": `'${imageSrc}'`,
+                });
+            } else {
+                imageSrc = NO_IMAGE_SELECTION;
+            }
+        }
+        return { imageSrc, oldImageSrc, oldValue };
+    }
+    apply({ editingElement, params, value, loadResult: { imageSrc, oldImageSrc, oldValue } }) {
+        if (imageSrc === NO_IMAGE_SELECTION) {
+            return;
+        }
+        const getAction = this.dependencies.builderActions.getAction;
+        this.dependencies.history.addCustomMutation({
+            apply: () => {
+                this.services.ui.block({ delay: 2500 });
+                getAction("customizeBodyBgType")
+                    .load({ editingElement, params, value, historyImageSrc: imageSrc })
+                    .then(() => {
+                        this.dispatchTo("trigger_dom_updated");
+                    })
+                    .finally(() => this.services.ui.unblock());
+            },
+            revert: () => {
+                this.services.ui.block({ delay: 2500 });
+                getAction("customizeBodyBgType")
+                    .load({
+                        editingElement,
+                        params,
+                        value: oldValue,
+                        historyImageSrc: oldImageSrc,
+                    })
+                    .then(() => {
+                        this.dispatchTo("trigger_dom_updated");
+                    })
+                    .finally(() => this.services.ui.unblock());
+            },
+        });
+    }
+}
+
+class RemoveFontAction extends BuilderAction {
+    static id = "removeFont";
+    static dependencies = ["builderActions"];
+    setup() {
+        this.preview = false;
+    }
+    async apply({ params }) {
+        // TODO
+        const getAction = this.dependencies.builderActions.getAction;
+        await getAction("customizeWebsiteVariable").load({
+            params: {
+                mainParam: params.variable,
+            },
+        });
+    }
+}
+
+export class WebsiteConfigAction extends BuilderAction {
+    static id = "websiteConfig";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.reload = {};
+        this.preview = false;
+    }
+    async prepare({ actionParam }) {
+        return this.dependencies.customizeWebsite.loadConfigKey(actionParam);
+    }
+    getPriority({ params }) {
+        const records = [...(params.views || []), ...(params.assets || [])];
+        return records.length;
+    }
+    isApplied({ params }) {
+        const records = [...(params.views || []), ...(params.assets || [])];
+        const configKeysIsApplied = records.every((v) =>
+            this.dependencies.customizeWebsite.getConfigKey(v)
+        );
+        if (params.checkVars || params.checkVars === undefined) {
+            return (
+                configKeysIsApplied &&
+                Object.entries(params.vars || {}).every(
+                    ([variable, value]) =>
+                        value ===
+                        this.dependencies.customizeWebsite.getWebsiteVariableValue(variable)
+                )
+            );
+        }
+        return configKeysIsApplied;
+    }
+    async apply(action) {
+        return this._toggleConfig(action, true);
+    }
+    clean(action) {
+        return this._toggleConfig(action, false);
+    }
+
+    async _toggleConfig(action, apply) {
         // step 1: enable and disable records
-        const updateViews = this.toggleTheme(action, "views", apply);
-        const updateAssets = this.toggleTheme(action, "assets", apply);
+        const updateViews = this._toggleTheme(action, "views", apply);
+        const updateAssets = this._toggleTheme(action, "assets", apply);
         // step 2: customize vars
         const updateVars =
             !apply && action.params.varsOnClean
-                ? this.customizeWebsiteVariables(action.params.varsOnClean, "null", apply)
+                ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
+                      action.params.varsOnClean,
+                      "null",
+                      apply
+                  )
                 : action.params.vars
-                ? this.customizeWebsiteVariables(action.params.vars, "null", !apply)
+                ? this.dependencies.customizeWebsite.customizeWebsiteVariables(
+                      action.params.vars,
+                      "null",
+                      !apply
+                  )
                 : Promise.resolve();
         await Promise.all([updateViews, updateAssets, updateVars]);
-        if (this.isDestroyed) {
+        if (this.dependencies.customizeWebsite.isPluginDestroyed()) {
             return true;
         }
     }
 
-    async toggleTheme(action, paramName, apply) {
+    async _toggleTheme(action, paramName, apply) {
         if (!action.params[paramName]) {
             return;
         }
@@ -577,8 +598,9 @@ export class CustomizeWebsitePlugin extends Plugin {
                 prepareRecord(record, !apply);
             }
         }
-        return this.customizeThemeData(isViewData, shouldReset, toEnable, toDisable);
+        return this._customizeThemeData(isViewData, shouldReset, toEnable, toDisable);
     }
+
     /**
      * Aggregates all sets of records `toEnable` / `toDisable` according to
      * whether you are enabling/disabling view data and whether it should reset
@@ -591,14 +613,20 @@ export class CustomizeWebsitePlugin extends Plugin {
      * @param {Set<string>} toDisable
      * @returns {Promise} deferred function
      */
-    async customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
+    async _customizeThemeData(isViewData, shouldReset, toEnable, toDisable) {
         const def = new Deferred();
-        this.pendingThemeRequests.push({ isViewData, shouldReset, toEnable, toDisable, def });
+        this.dependencies.customizeWebsite.getPendingThemeRequests().push({
+            isViewData,
+            shouldReset,
+            toEnable,
+            toDisable,
+            def,
+        });
         setTimeout(() => {
             let aggregatedToEnable = new Set();
             let aggregatedToDisable = new Set();
             const defs = [];
-            for (const req of this.pendingThemeRequests) {
+            for (const req of this.dependencies.customizeWebsite.getPendingThemeRequests()) {
                 if (req.isViewData === isViewData && req.shouldReset === shouldReset) {
                     // Synchronize with the last request: if a view was enabled
                     // first and then disabled (or the other way around), the
@@ -611,8 +639,12 @@ export class CustomizeWebsitePlugin extends Plugin {
                     defs.push(req.def);
                 }
             }
-            this.pendingThemeRequests = this.pendingThemeRequests.filter(
-                (req) => req.isViewData !== isViewData || req.shouldReset !== shouldReset
+            this.dependencies.customizeWebsite.setPendingThemeRequests(
+                this.dependencies.customizeWebsite
+                    .getPendingThemeRequests()
+                    .filter(
+                        (req) => req.isViewData !== isViewData || req.shouldReset !== shouldReset
+                    )
             );
             if (!aggregatedToEnable.size && !aggregatedToDisable.size) {
                 defs.map((def) => def.resolve());
@@ -630,78 +662,131 @@ export class CustomizeWebsitePlugin extends Plugin {
         }, 0);
         return def;
     }
+}
 
-    getConfigKey(key) {
-        if (key.startsWith("!")) {
-            return !this.activeRecords[key.substring(1)];
+class SelectTemplateAction extends BuilderAction {
+    static id = "selectTemplate";
+    static dependencies = ["customizeWebsite"];
+    async prepare({ actionParam }) {
+        return await this.dependencies.customizeWebsite.loadTemplateKey(actionParam.view);
+    }
+    isApplied({ editingElement, params: { templateClass } }) {
+        if (templateClass) {
+            return !!editingElement.querySelector(`.${templateClass}`);
         }
-        return this.activeRecords[key];
+        return true;
     }
-    withCustomHistory(action) {
-        const applyFn = action.apply;
-        const apply = async (arg) => {
-            const oldValue = action.getValue(arg);
-            const { value } = arg;
-            const blockedApply = (v) => {
-                this.services.ui.block({ delay: 2500 });
-                return applyFn({ ...arg, value: v })
-                    .then(() => {
-                        this.dispatchTo("trigger_dom_updated");
-                    })
-                    .finally(() => this.services.ui.unblock());
-            };
-            await blockedApply(value);
-            this.dependencies.history.addCustomMutation({
-                apply: () => blockedApply(value),
-                revert: () => blockedApply(oldValue),
-            });
-        };
-        return { preview: false, ...action, apply };
+    async apply(action) {
+        return this.dependencies.customizeWebsite.toggleTemplate(action, true);
     }
+    clean(action) {
+        return this.dependencies.customizeWebsite.toggleTemplate(action, false);
+    }
+}
 
-    async loadTemplateKey(key) {
-        if (!this.getTemplateKey(key)) {
-            // TODO: make a python method that can return several templates at
-            // once and batch the ORM call.
-            this.activeTemplateViews[key] = await this.services.orm.call(
-                "ir.ui.view",
-                "render_public_asset",
-                [`${key}`, {}]
+export class CustomizeWebsiteVariableAction extends BuilderAction {
+    static id = "customizeWebsiteVariable";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    isApplied({ params: { mainParam: variable } = {}, value }) {
+        const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
+        return currentValue === value;
+    }
+    getValue({ params: { mainParam: variable } }) {
+        const currentValue = this.dependencies.customizeWebsite.getWebsiteVariableValue(variable);
+        return currentValue;
+    }
+    async apply({ params: { mainParam: variable, nullValue = "null" }, value }) {
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
+            {
+                [variable]: value,
+            },
+            nullValue
+        );
+    }
+}
+
+class CustomizeWebsiteColorAction extends BuilderAction {
+    static id = "customizeWebsiteColor";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    getValue({ params: { mainParam: color, colorType, gradientColor, combinationColor } }) {
+        const style = this.window.getComputedStyle(this.document.documentElement);
+        if (gradientColor) {
+            const gradientValue =
+                this.dependencies.customizeWebsite.getWebsiteVariableValue(gradientColor);
+            if (gradientValue) {
+                // Pass through style to restore rgb/a which might
+                // have been lost during SCSS generation process.
+                // TODO Remove this once colorpicker will be able
+                // to cope with #rrggbb gradient color elements.
+                const el = document.createElement("div");
+                el.style.setProperty("background-image", gradientValue);
+                return el.style.getPropertyValue("background-image");
+            }
+        }
+        return getCSSVariableValue(color, style);
+    }
+    async apply({
+        params: { mainParam: color, colorType, gradientColor, combinationColor, nullValue },
+        value,
+    }) {
+        if (gradientColor) {
+            let colorValue = "";
+            let gradientValue = "";
+            if (isColorGradient(value)) {
+                gradientValue = value;
+            } else {
+                colorValue = value;
+            }
+            await this.dependencies.customizeWebsite.customizeWebsiteColors(
+                {
+                    [color]: colorValue,
+                },
+                { colorType, combinationColor, nullValue }
+            );
+            await this.dependencies.customizeWebsite.customizeWebsiteVariables({
+                [gradientColor]: gradientValue || nullValue,
+            }); // reloads bundles
+        } else {
+            await this.dependencies.customizeWebsite.customizeWebsiteColors(
+                { [color]: value },
+                { colorType, combinationColor, nullValue }
             );
         }
-        return this.getTemplateKey(key);
     }
-    toggleTemplate(action, apply) {
-        if (!apply) {
-            // Empty the container and restore the original content
-            action.editingElement.replaceChildren(this.beforePreviewNodes);
-            this.beforePreviewNodes = null;
-            return;
-        }
+}
 
-        if (!this.beforePreviewNodes) {
-            // We are about to apply a template on non-previewed content,
-            // save that content's nodes.
-            this.beforePreviewNodes = [...action.editingElement.childNodes];
-        }
-
-        // Empty the container and add the template content
-        const templateFragment = parseHTML(this.document, this.getTemplateKey(action.params.view));
-        action.editingElement.replaceChildren(templateFragment.firstElementChild);
+class CustomizeButtonStyleAction extends BuilderAction {
+    static id = "customizeButtonStyle";
+    static dependencies = ["customizeWebsite"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
     }
-    getTemplateKey(key) {
-        return this.activeTemplateViews[key];
+    isApplied({ params, value }) {
+        return this.getValue({ params }) === value;
     }
-    populateCache(record, value) {
-        if (record.startsWith("!")) {
-            record = record.substring(1);
-        }
-        if (!(record in this.cache)) {
-            this.cache[record] = value;
-        }
-        value.then((resolvedValue) => {
-            this.activeRecords[record] = resolvedValue;
-        });
+    getValue({ params: { mainParam: which } }) {
+        const style = this.window.getComputedStyle(this.document.documentElement);
+        const isOutline = getCSSVariableValue(`btn-${which}-outline`, style);
+        const isFlat = getCSSVariableValue(`btn-${which}-flat`, style);
+        return isFlat === "true" ? "flat" : isOutline === "true" ? "outline" : "fill";
+    }
+    async apply({ params: { mainParam: which, nullValue }, value }) {
+        await this.dependencies.customizeWebsite.customizeWebsiteVariables(
+            {
+                [`btn-${which}-outline`]: value === "outline" ? "true" : "false",
+                [`btn-${which}-flat`]: value === "flat" ? "true" : "false",
+            },
+            nullValue
+        );
     }
 }
 

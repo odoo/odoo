@@ -1,6 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { classAction } from "@html_builder/core/core_builder_action_plugin";
+import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_AWESOME } from "@html_builder/utils/option_sequence";
 
@@ -14,19 +14,19 @@ class FontAwesomeOptionPlugin extends Plugin {
                 exclude: "[data-oe-xpath]",
             }),
         ],
-        builder_actions: this.getActions(),
+        builder_actions: {
+            FaResizeAction,
+        },
     };
+}
 
-    getActions() {
-        return {
-            faResize: {
-                ...classAction,
-                apply: function ({ editingElement }) {
-                    editingElement.classList.remove("fa-1x", "fa-lg");
-                    classAction.apply(...arguments);
-                },
-            },
-        };
+class FaResizeAction extends ClassAction {
+    static id = "faResize";
+    apply(context) {
+        const { editingElement } = context;
+        editingElement.classList.remove("fa-1x", "fa-lg");
+        super.apply(context);
     }
 }
+
 registry.category("website-plugins").add(FontAwesomeOptionPlugin.id, FontAwesomeOptionPlugin);

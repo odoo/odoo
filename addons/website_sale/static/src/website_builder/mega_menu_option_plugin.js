@@ -2,6 +2,7 @@ import { MegaMenuOptionPlugin } from "@website/builder/plugins/options/mega_menu
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 patch(MegaMenuOptionPlugin.prototype, {
     getTemplatePrefix(editingEl, toggle) {
@@ -17,48 +18,49 @@ patch(MegaMenuOptionPlugin.prototype, {
 class WebsiteSaleMegaMenuOptionPlugin extends Plugin {
     static id = "websiteSaleMegaMenuOptionPlugin";
     static dependencies = [
-        "builder-options",
+        "builderOptions",
         "customizeWebsite",
         "history",
         "megaMenuOptionPlugin",
     ];
     resources = {
-        builder_actions: this.getActions(),
+        builder_actions: {
+            ToggleFetchEcomCategoriesAction,
+        },
         dropzone_selector: {
             selector: ".o_mega_menu .nav > .nav-link",
             dropIn: ".o_mega_menu nav",
             dropNear: ".o_mega_menu .nav-link",
         },
     };
+}
 
-    getActions() {
-        return {
-            toggleFetchEcomCategories: {
-                load: async ({ editingElement }) => {
-                    const module = this.dependencies.megaMenuOptionPlugin.getTemplatePrefix(
-                        editingElement,
-                        true
-                    );
-                    const cls = [...editingElement.firstElementChild.classList].find((cls) =>
-                        cls.startsWith("s_mega_menu_")
-                    );
-                    const templateKey = `${module}${cls}`;
-                    await this.dependencies.customizeWebsite.loadTemplateKey(templateKey);
-                    return templateKey;
-                },
-                apply: ({ editingElement, loadResult }) => {
-                    this.dependencies.customizeWebsite.toggleTemplate(
-                        {
-                            editingElement,
-                            params: { view: loadResult },
-                        },
-                        true
-                    );
-                },
+class ToggleFetchEcomCategoriesAction extends BuilderAction {
+    static id = "toggleFetchEcomCategories";
+    static dependencies = ["megaMenuOptionPlugin", "customizeWebsite"];
+    async load({ editingElement }) {
+        const module = this.dependencies.megaMenuOptionPlugin.getTemplatePrefix(
+            editingElement,
+            true
+        );
+        const cls = [...editingElement.firstElementChild.classList].find((cls) =>
+            cls.startsWith("s_mega_menu_")
+        );
+        const templateKey = `${module}${cls}`;
+        await this.dependencies.customizeWebsite.loadTemplateKey(templateKey);
+        return templateKey;
+    }
+    apply({ editingElement, loadResult }) {
+        this.dependencies.customizeWebsite.toggleTemplate(
+            {
+                editingElement,
+                params: { view: loadResult },
             },
-        };
+            true
+        );
     }
 }
+
 registry
     .category("website-plugins")
     .add(WebsiteSaleMegaMenuOptionPlugin.id, WebsiteSaleMegaMenuOptionPlugin);

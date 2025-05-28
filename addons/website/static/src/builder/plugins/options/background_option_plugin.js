@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { withSequence } from "@html_editor/utils/resource";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 function getBgVideoOrParallax(editingElement) {
     // Make sure parallax and video element are considered to be below the
@@ -29,38 +30,13 @@ class WebsiteBackgroundShapeOptionPlugin extends Plugin {
 class WebsiteBackgroundVideoPlugin extends Plugin {
     static id = "websiteBackgroundVideoPlugin";
     static dependencies = ["media"];
+    static shared = ["loadReplaceBackgroundVideo", "applyReplaceBackgroundVideo"];
     resources = {
-        builder_actions: this.getActions(),
+        builder_actions: {
+            ToggleBgVideoAction,
+            ReplaceBgVideoAction,
+        },
     };
-    getActions() {
-        return {
-            toggleBgVideo: {
-                load: this.loadReplaceBackgroundVideo.bind(this),
-                apply: ({ editingElement, params, loadResult }) => {
-                    this.applyReplaceBackgroundVideo({
-                        editingElement: editingElement,
-                        params: params,
-                        loadResult: loadResult,
-                    });
-                    this.dispatchTo("on_bg_image_hide_handlers", editingElement);
-                },
-                isApplied: ({ editingElement }) =>
-                    editingElement.classList.contains("o_background_video"),
-                clean: ({ editingElement }) => {
-                    editingElement.querySelector(":scope > .o_we_bg_filter")?.remove();
-                    this.applyReplaceBackgroundVideo({
-                        editingElement: editingElement,
-                        loadResult: "",
-                        params: { forceClean: true },
-                    });
-                },
-            },
-            replaceBgVideo: {
-                load: this.loadReplaceBackgroundVideo.bind(this),
-                apply: this.applyReplaceBackgroundVideo.bind(this),
-            },
-        };
-    }
     loadReplaceBackgroundVideo() {
         return new Promise((resolve) => {
             const onClose = this.dependencies.media.openMediaDialog({
@@ -106,6 +82,45 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
         }
     }
 }
+
+class ToggleBgVideoAction extends BuilderAction {
+    static id = "toggleBgVideo";
+    static dependencies = ["websiteBackgroundVideoPlugin"];
+    load(context) {
+        return this.dependencies.websiteBackgroundVideoPlugin.loadReplaceBackgroundVideo(context);
+    }
+    apply({ editingElement, params, loadResult }) {
+        this.dependencies.websiteBackgroundVideoPlugin.applyReplaceBackgroundVideo({
+            editingElement: editingElement,
+            params: params,
+            loadResult: loadResult,
+        });
+        this.dispatchTo("on_bg_image_hide_handlers", editingElement);
+    }
+    isApplied({ editingElement }) {
+        return editingElement.classList.contains("o_background_video");
+    }
+    clean({ editingElement }) {
+        editingElement.querySelector(":scope > .o_we_bg_filter")?.remove();
+        this.dependencies.websiteBackgroundVideoPlugin.applyReplaceBackgroundVideo({
+            editingElement: editingElement,
+            loadResult: "",
+            params: { forceClean: true },
+        });
+    }
+}
+
+class ReplaceBgVideoAction extends BuilderAction {
+    static id = "replaceBgVideo";
+    static dependencies = ["websiteBackgroundVideoPlugin"];
+    load(context) {
+        return this.dependencies.websiteBackgroundVideoPlugin.loadReplaceBackgroundVideo(context);
+    }
+    apply(context) {
+        return this.dependencies.websiteBackgroundVideoPlugin.applyReplaceBackgroundVideo(context);
+    }
+}
+
 registry
     .category("website-plugins")
     .add(WebsiteBackgroundVideoPlugin.id, WebsiteBackgroundVideoPlugin);

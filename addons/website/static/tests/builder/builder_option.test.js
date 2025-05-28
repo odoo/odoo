@@ -93,7 +93,7 @@ test("Undo/Redo an action that activates another target restores the old one on 
         customAction: {
             apply: ({ editingElement }) => {
                 editingElement.classList.add("test");
-                editor.shared["builder-options"].setNextTarget(editingElement.nextElementSibling);
+                editor.shared["builderOptions"].setNextTarget(editingElement.nextElementSibling);
             },
         },
     });

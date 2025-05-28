@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { InputConfirmationDialog } from "@html_builder/snippets/input_confirmation_dialog";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
@@ -6,6 +7,7 @@ import { registry } from "@web/core/registry";
 class MailGroupOptionPlugin extends Plugin {
     static id = "mailGroupOption";
     static dependencies = ["builderActions"];
+    static shared = ["createGroup"];
     resources = {
         builder_options: [
             {
@@ -18,41 +20,8 @@ class MailGroupOptionPlugin extends Plugin {
             dropNear: "p, h1, h2, h3, blockquote, .card",
         },
         builder_actions: {
-            mailGroupAction: {
-                apply: ({ editingElement, value }) => {
-                    const { id } = JSON.parse(value);
-
-                    this.dependencies.builderActions
-                        .getAction("dataAttributeAction")
-                        .apply({ editingElement, params: { mainParam: "id" }, value: id });
-                },
-                clean: ({ editingElement }) => {
-                    this.dependencies.builderActions
-                        .getAction("dataAttributeAction")
-                        .clean({ editingElement, params: { mainParam: "id" } });
-                },
-                getValue: ({ editingElement }) => {
-                    const value = {};
-                    const id = this.dependencies.builderActions
-                        .getAction("dataAttributeAction")
-                        .getValue({ editingElement, params: { mainParam: "id" } });
-                    if (!id) {
-                        return;
-                    }
-                    value.id = parseInt(id);
-                    return JSON.stringify(value);
-                },
-            },
-            createMailGroup: {
-                load: ({ editingElement, value }) => this.createGroup(value),
-                apply: ({ editingElement, loadResult: id }) => {
-                    if (id) {
-                        this.dependencies.builderActions
-                            .getAction("mailGroupAction")
-                            .apply({ editingElement, value: JSON.stringify({ id }) });
-                    }
-                },
-            },
+            MailGroupAction,
+            CreateMailGroupAction,
         },
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
@@ -90,6 +59,48 @@ class MailGroupOptionPlugin extends Plugin {
         });
         if (name) {
             return await this.services.orm.create("mail.group", [{ name }]);
+        }
+    }
+}
+
+class MailGroupAction extends BuilderAction {
+    static id = "mailGroupAction"
+    static dependencies = ["builderActions"];
+    apply({ editingElement, value }) {
+        const { id } = JSON.parse(value);
+
+        this.dependencies.builderActions
+            .getAction("dataAttributeAction")
+            .apply({ editingElement, params: { mainParam: "id" }, value: id });
+    }
+    clean({ editingElement }) {
+        this.dependencies.builderActions
+            .getAction("dataAttributeAction")
+            .clean({ editingElement, params: { mainParam: "id" } });
+    }
+    getValue({ editingElement }) {
+        const value = {};
+        const id = this.dependencies.builderActions
+            .getAction("dataAttributeAction")
+            .getValue({ editingElement, params: { mainParam: "id" } });
+        if (!id) {
+            return;
+        }
+        value.id = parseInt(id);
+        return JSON.stringify(value);
+    }
+}
+class CreateMailGroupAction extends BuilderAction {
+    static id = "createMailGroup";
+    static dependencies = ["builderActions", "mailGroupOption"];
+    load({ editingElement, value }) {
+        return this.dependencies.mailGroupOption.createGroup(value);
+    }
+    apply({ editingElement, loadResult: id }) {
+        if (id) {
+            this.dependencies.builderActions
+                .getAction("mailGroupAction")
+                .apply({ editingElement, value: JSON.stringify({ id }) });
         }
     }
 }

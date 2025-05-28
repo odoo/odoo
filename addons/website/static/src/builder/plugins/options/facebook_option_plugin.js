@@ -2,11 +2,11 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 class FacebookOptionPlugin extends Plugin {
     static id = "facebookOption";
     static dependencies = ["history"];
-    closeNotif = () => {};
     resources = {
         builder_options: [
             {
@@ -16,49 +16,8 @@ class FacebookOptionPlugin extends Plugin {
         ],
         so_content_addition_selector: [".o_facebook_page"],
         builder_actions: {
-            dataAttributeListAction: {
-                isApplied: ({ editingElement, params: { mainParam } = {}, value }) =>
-                    (editingElement.dataset[mainParam]?.split(",") || []).includes(value),
-                apply: ({ editingElement, params: { mainParam } = {}, value }) => {
-                    editingElement.dataset[mainParam] = [
-                        ...(editingElement.dataset[mainParam]?.split(",") || []),
-                        value,
-                    ].join(",");
-                },
-                clean: ({ editingElement, params: { mainParam } = {}, value }) => {
-                    editingElement.dataset[mainParam] = (
-                        editingElement.dataset[mainParam]?.split(",") || []
-                    )
-                        .filter((e) => e !== value)
-                        .join(",");
-                },
-            },
-            checkFacebookLinkAction: {
-                apply: ({ editingElement, value }) => {
-                    editingElement.dataset.id = "";
-                    const id = this.idFromFacebookLink(value);
-                    if (id) {
-                        editingElement.dataset.id = id;
-                        this.checkFacebookId(id).then((ok) => {
-                            this.closeNotif();
-                            if (ok) {
-                                this.closeNotif = () => {};
-                            } else {
-                                this.closeNotif = this.services.notification.add(
-                                    _t("We couldn't find the Facebook page"),
-                                    { type: "warning" }
-                                );
-                            }
-                        });
-                    } else {
-                        this.closeNotif();
-                        this.closeNotif = this.services.notification.add(
-                            _t("You didn't provide a valid Facebook link"),
-                            { type: "warning" }
-                        );
-                    }
-                },
-            },
+            DataAttributeListAction,
+            CheckFacebookLinkAction,
         },
         normalize_handlers: this.normalize.bind(this),
     };
@@ -123,7 +82,54 @@ class FacebookOptionPlugin extends Plugin {
         }
         return hasChanged;
     }
+}
 
+class DataAttributeListAction extends BuilderAction {
+    static id = "dataAttributeList";
+    isApplied({ editingElement, params: { mainParam } = {}, value }) {
+        return (editingElement.dataset[mainParam]?.split(",") || []).includes(value);
+    }
+    apply({ editingElement, params: { mainParam } = {}, value }) {
+        editingElement.dataset[mainParam] = [
+            ...(editingElement.dataset[mainParam]?.split(",") || []),
+            value,
+        ].join(",");
+    }
+    clean({ editingElement, params: { mainParam } = {}, value }) {
+        editingElement.dataset[mainParam] = (editingElement.dataset[mainParam]?.split(",") || [])
+            .filter((e) => e !== value)
+            .join(",");
+    }
+}
+class CheckFacebookLinkAction extends BuilderAction {
+    static id = "checkFacebookLink";
+    setup() {
+        this.closeNotif = () => {};
+    }
+    apply({ editingElement, value }) {
+        editingElement.dataset.id = "";
+        const id = this.idFromFacebookLink(value);
+        if (id) {
+            editingElement.dataset.id = id;
+            this.checkFacebookId(id).then((ok) => {
+                this.closeNotif();
+                if (ok) {
+                    this.closeNotif = () => {};
+                } else {
+                    this.closeNotif = this.services.notification.add(
+                        _t("We couldn't find the Facebook page"),
+                        { type: "warning" }
+                    );
+                }
+            });
+        } else {
+            this.closeNotif();
+            this.closeNotif = this.services.notification.add(
+                _t("You didn't provide a valid Facebook link"),
+                { type: "warning" }
+            );
+        }
+    }
     idFromFacebookLink(url) {
         // Patterns matched by the regex (all relate to existing pages,
         // in spite of the URLs containing "profile.php" or "people"):

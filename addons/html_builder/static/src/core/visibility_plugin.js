@@ -5,7 +5,7 @@ import { withSequence } from "@html_editor/utils/resource";
 
 export class VisibilityPlugin extends Plugin {
     static id = "visibility";
-    static dependencies = ["builder-options", "disableSnippets"];
+    static dependencies = ["builderOptions", "disableSnippets"];
     static shared = [
         "toggleTargetVisibility",
         "cleanForSaveVisibility",
@@ -73,9 +73,9 @@ export class VisibilityPlugin extends Plugin {
             });
             if (
                 !show &&
-                invisibleOverrideEl.contains(this.dependencies["builder-options"].getTarget())
+                invisibleOverrideEl.contains(this.dependencies["builderOptions"].getTarget())
             ) {
-                this.dependencies["builder-options"].deactivateContainers();
+                this.dependencies["builderOptions"].deactivateContainers();
             }
         }
     }
@@ -104,7 +104,7 @@ export class VisibilityPlugin extends Plugin {
     onOptionVisibilityUpdate(editingEl, show) {
         const isShown = this.toggleVisibilityStatus({ editingEl, show });
         if (!isShown) {
-            this.dependencies["builder-options"].deactivateContainers();
+            this.dependencies["builderOptions"].deactivateContainers();
         }
         this.config.updateInvisibleElementsPanel();
         this.dependencies.disableSnippets.disableUndroppableSnippets();

@@ -29,7 +29,7 @@ export class CustomizeTab extends Component {
     getCurrentOptionsContainers() {
         const currentOptionsContainers = this.props.currentOptionsContainers;
         if (!currentOptionsContainers.length) {
-            return this.env.editor.shared["builder-options"].getPageContainers();
+            return this.env.editor.shared["builderOptions"].getPageContainers();
         }
         return currentOptionsContainers;
     }

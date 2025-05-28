@@ -4,10 +4,12 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { getCommonAncestor, selectElements } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
+import { BuilderAction } from "@html_builder/core/builder_action";
 
 class InstagramOptionPlugin extends Plugin {
     static id = "instagramOption";
     static dependencies = ["history"];
+    static shared = ["instagramPageNameFromUrl"];
 
     resources = {
         builder_options: [
@@ -17,21 +19,7 @@ class InstagramOptionPlugin extends Plugin {
             }),
         ],
         builder_actions: {
-            instagramPageAction: {
-                getValue: ({ editingElement }) => editingElement.dataset["instagramPage"],
-                apply: ({ editingElement, value }) => {
-                    delete editingElement.dataset.instagramPageIsDefault;
-                    if (value.includes(this.instagramUrlStr)) {
-                        value = this.instagramPageNameFromUrl(value) || "";
-                    }
-                    editingElement.dataset["instagramPage"] = value;
-                    if (value === "") {
-                        this.services.notification.add(_t("The Instagram page name is not valid"), {
-                            type: "warning",
-                        });
-                    }
-                },
-            },
+            InstagramPageAction,
         },
         normalize_handlers: this.normalize.bind(this),
     };
@@ -110,6 +98,26 @@ class InstagramOptionPlugin extends Plugin {
             return;
         }
         return pageName.split("/")[0];
+    }
+}
+
+class InstagramPageAction extends BuilderAction {
+    static id = "instagramPage";
+    static dependencies = ["instagramOption"];
+    getValue({ editingElement }) {
+        return editingElement.dataset["instagramPage"];
+    }
+    apply({ editingElement, value }) {
+        delete editingElement.dataset.instagramPageIsDefault;
+        if (value.includes(this.instagramUrlStr)) {
+            value = this.dependencies.instagramOption.instagramPageNameFromUrl(value) || "";
+        }
+        editingElement.dataset["instagramPage"] = value;
+        if (value === "") {
+            this.services.notification.add(_t("The Instagram page name is not valid"), {
+                type: "warning",
+            });
+        }
     }
 }
 
