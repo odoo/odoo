@@ -121,6 +121,21 @@ test("mobile and desktop option container", async () => {
     expect(".options-container").not.toHaveCount();
 });
 
+test("desktop option undo after override", async () => {
+    const builder = await setupWebsiteBuilder(`
+        <section>test</section>
+    `);
+    await contains(":iframe section").click();
+    await contains(
+        "[data-action-id='toggleDeviceVisibility'][data-action-param='no_desktop']"
+    ).click();
+    expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+    await contains(".o_we_invisible_entry .fa-eye-slash").click();
+    expect(":iframe section").toHaveClass("o_snippet_override_invisible");
+    builder.getEditor().shared.history.undo();
+    expect(":iframe section").not.toHaveClass("o_snippet_override_invisible");
+});
+
 test("keep the option container of a visible snippet even if there are hidden snippet on the page", async () => {
     await setupWebsiteBuilder(`
         <section id="my_el">
