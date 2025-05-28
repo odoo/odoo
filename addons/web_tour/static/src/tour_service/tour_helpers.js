@@ -301,6 +301,22 @@ export class TourHelpers {
     }
 
     /**
+     * Click on selector and wait until beforeUnload event is fired.
+     *
+     * @param {string|Node} selector
+     */
+    async clickBeforeUnload(selector) {
+        this.click(selector);
+        return new Promise((resolve) => {
+            const handler = (event) => {
+                window.removeEventListener("beforeunload", handler);
+                resolve(event);
+            };
+            window.addEventListener("beforeunload", handler);
+        });
+    }
+
+    /**
      * Get Node for **{@link Selector}**
      * @param {Selector} selector
      * @returns {Node}
