@@ -1,19 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import collections
 import unittest
+import collections
 
 from lxml import etree as ET
 from lxml.builder import E
 
-import odoo
 from odoo.tests import common
-from odoo.tools.convert import convert_file, xml_import, _eval_xml
+from odoo.tools.convert import _eval_xml, convert_file, xml_import
 from odoo.tools.misc import file_path
 
 Field = E.field
 Value = E.value
+
 
 class TestEvalXML(common.TransactionCase):
     def eval_xml(self, node, obj=None):
@@ -63,16 +62,16 @@ class TestEvalXML(common.TransactionCase):
                 Value("5", type="int"),
                 Value("4.76", type="float"),
                 Value("None", type="int"),
-                type="list"
+                type="list",
             )),
             ["foo", 5, 4.76, None])
 
     def test_file(self):
-        Obj = collections.namedtuple('Obj', ['module', 'idref'])
-        obj = Obj('test_convert', None)
+        Obj = collections.namedtuple('Obj', ['module', 'idref'])  # noqa: PYI024
+        obj = Obj('test_orm', None)
         self.assertEqual(
             self.eval_xml(Field('test_file.txt', type='file'), obj),
-            'test_convert,test_file.txt')
+            'test_orm,test_file.txt')
 
         with self.assertRaises(IOError):
             self.eval_xml(Field('test_nofile.txt', type='file'), obj)
@@ -257,7 +256,7 @@ class TestEvalXML(common.TransactionCase):
         """
         self.env['res.lang']._activate_lang('fr_FR')
         env_fr = self.env(context=dict(self.env.context, lang='fr_FR'))
-        record = self.env.ref('test_convert.test_translated_field')
+        record = self.env.ref('test_orm.test_translated_field')
 
         # 1. Test xml_import, which is sometimes imported and used directly in addons' code
         # Change the value of the record `name` field
@@ -265,9 +264,9 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(record.name, 'bar')
         # Reset the value to the one from the XML data file,
         # with a lang passed in the environment.
-        filepath = file_path('test_convert/data/test_translated_field/test_model_data.xml')
+        filepath = file_path('test_orm/data/test_translated_field/test_model_data.xml')
         doc = ET.parse(filepath)
-        obj = xml_import(env_fr, 'test_convert', {}, mode='init', xml_filename=filepath)
+        obj = xml_import(env_fr, 'test_orm', {}, mode='init', xml_filename=filepath)
         obj.parse(doc.getroot())
         self.assertEqual(record.with_context(lang=None).name, 'foo')
 
@@ -277,7 +276,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(record.name, 'bar')
         # Reset the value to the one from the XML data file,
         # with a lang passed in the environment.
-        convert_file(env_fr, 'test_convert', 'data/test_translated_field/test_model_data.xml', {})
+        convert_file(env_fr, 'test_orm', 'data/test_translated_field/test_model_data.xml', {})
         self.assertEqual(record.with_context(lang=None).name, 'foo')
 
         # 3. Test convert_file with a CSV
@@ -286,7 +285,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(record.name, 'bar')
         # Reset the value to the one from the XML data file,
         # with a lang passed in the environment.
-        convert_file(env_fr, 'test_convert', 'data/test_translated_field/test_convert.test_model.csv', {})
+        convert_file(env_fr, 'test_orm', 'data/test_translated_field/test_convert.test_model.csv', {})
         self.assertEqual(record.with_context(lang=None).name, 'foo')
 
     @unittest.skip("not tested")
@@ -312,5 +311,5 @@ class TestEvalXML(common.TransactionCase):
                     <t t-out="'text2'"></t>
                 </t>
             </parent>""",
-            "Evaluating an HTML field should give empty nodes instead of self-closing tags"
+            "Evaluating an HTML field should give empty nodes instead of self-closing tags",
         )
