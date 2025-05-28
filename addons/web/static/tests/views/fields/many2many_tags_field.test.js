@@ -326,10 +326,11 @@ test("Many2ManyTagsField in list view on desktop", async () => {
     expect(".o_colorlist").toHaveCount(0);
 
     await contains(".o_list_record_selector:eq(1)").click();
+    expect(".o_data_row_selected").toHaveCount(1);
     await contains(".o_field_many2many_tags .badge :nth-child(1)").click();
-    expect.verifySteps(["selectRecord"]);
+    expect(".o_data_row_selected").toHaveCount(0);
+    expect.verifySteps([]);
     await animationFrame();
-
     expect(".o_colorlist").toHaveCount(0);
 });
 

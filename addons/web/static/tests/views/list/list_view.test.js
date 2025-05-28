@@ -2795,7 +2795,6 @@ test(`editing a record should change same record in other groups when grouped by
     await contains(`.o_group_header:eq(1)`).click(); // open Value 2 group
     expect(queryAllTexts(`.o_list_char`)).toEqual(["yop", "blip", "blip", "yop", "blip"]);
 
-    await contains(`.o_data_row .o_list_record_selector input`).click();
     await contains(`.o_data_row .o_data_cell`).click();
     await contains(`.o_data_row .o_list_char input`).edit("xyz");
     await contains(`.o_list_view`).click();
@@ -10810,7 +10809,7 @@ test(`editable list view: contexts with multiple edit`, async () => {
 });
 
 test.tags("desktop");
-test(`editable list view: single edition with selected records`, async () => {
+test(`list view editable and multi editable: click on row with selected records`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -10819,12 +10818,10 @@ test(`editable list view: single edition with selected records`, async () => {
 
     // Select first record
     await contains(`.o_data_row .o_list_record_selector input`).click();
-
-    // Edit the second
+    expect(".o_data_row_selected").toHaveCount(1);
+    // Click on a cell of the second record
     await contains(`.o_data_row:eq(1) .o_data_cell`).click();
-    await contains(`.o_data_cell input`).edit("oui", { confirm: false });
-    await contains(`.o_list_button_save`).click();
-    expect(queryAllTexts(`.o_data_cell`)).toEqual(["yop", "oui", "gnap", "blip"]);
+    expect(".o_data_row_selected").toHaveCount(2);
 });
 
 test.tags("desktop");
@@ -11345,9 +11342,6 @@ test(`editable list view: mousedown on "Discard", mouseup somewhere else (no mul
         `,
     });
 
-    // select two records
-    await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
-    await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(0)`).click();
     await contains(`.o_data_row [name=foo] input`).edit("oof", { confirm: false });
     await pointerDown(`.o_list_button_discard`);
@@ -11734,10 +11728,11 @@ test(`editable readonly list view: navigation`, async () => {
     await contains(`.o_data_row:eq(2) [name=foo]`).click();
     expect(`.o_selected_row`).toHaveCount(0);
 
-    // Clicking on an unselected record while no row is being edited will open the record
-    expect.verifySteps([]);
+    // Clicking on an unselected record while no row is being edited will select it
+    expect(`.o_data_row_selected`).toHaveCount(2);
     await contains(`.o_data_row:eq(2) [name=foo]`).click();
-    expect.verifySteps([`resId: 3`]);
+    expect(`.o_data_row_selected`).toHaveCount(3);
+    expect.verifySteps([]);
 });
 
 test.tags("desktop");
@@ -11815,8 +11810,10 @@ test(`editable readonly list view: navigation in grouped list`, async () => {
     expect(`.o_selected_row`).toHaveCount(0);
 
     // Click again should select the clicked record
+    expect(`.o_data_row_selected`).toHaveCount(2);
     await contains(`.o_data_row:eq(3) [name=foo]`).click();
-    expect.verifySteps(["resId: 3"]);
+    expect(`.o_data_row_selected`).toHaveCount(3);
+    expect.verifySteps([]);
 });
 
 test.tags("desktop");

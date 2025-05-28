@@ -46,7 +46,6 @@
     .o_list_table {
         --table-bg: #{$o-view-background-color};
 
-
         // We need this to be collapse because we want to add a border on the rows
         // for sale order/invoice lines of type section.
         border-collapse: collapse;
@@ -183,6 +182,10 @@
                     flex-wrap: nowrap !important;
                 }
             }
+        }
+
+        &:has(.o_data_row_selected) {
+            user-select: none;
         }
 
         tfoot {
@@ -388,7 +391,6 @@
         }
 
         .o_data_row.o_selected_row > .o_data_cell {
-
             > .o_field_widget:not(.o_readonly_modifier):not(.o_invisible_modifier) {
                 width: 100%;
                 .o_input {
