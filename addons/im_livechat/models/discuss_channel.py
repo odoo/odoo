@@ -191,8 +191,10 @@ class DiscussChannel(models.Model):
             return [
                 # sudo - res.partner: accessing livechat operator is allowed
                 Store.One(
-                    "livechat_operator_id", ["avatar_128", "user_livechat_username"], sudo=True
-                )
+                    "livechat_operator_id",
+                    ["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()],
+                    sudo=True,
+                ),
             ]
         return super()._field_store_repr(field_name)
 
