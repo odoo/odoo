@@ -27,8 +27,10 @@ class WebClient(WebclientController):
         super()._process_request_for_all(store, name, params)
         if name == "init_livechat":
             partner, guest = request.env["res.partner"]._get_current_persona()
-            if partner or guest:
-                store.add_global_values(store_self=Store.One(partner or guest))
+            if partner:
+                store.add_global_values(self_partner=Store.One(partner))
+            if guest:
+                store.add_global_values(self_guest=Store.One(guest))
             # sudo - im_livechat.channel: allow access to live chat channel to
             # check if operators are available.
             channel = request.env["im_livechat.channel"].sudo().search([("id", "=", params)])
