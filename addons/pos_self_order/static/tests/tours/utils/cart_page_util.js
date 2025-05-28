@@ -115,3 +115,18 @@ export function checkTotalPrice(price) {
         trigger: `.order-price :contains(Total):contains(${price})`,
     };
 }
+
+export function cancelOrder() {
+    return [
+        {
+            content: `Click on 'Cancel' button`,
+            trigger: '.order-cart-content .btn:contains("Cancel")',
+            run: "click",
+        },
+        {
+            content: `Validate cancel popup`,
+            trigger: ".modal-dialog .btn:contains('Cancel Order')",
+            run: "click",
+        },
+    ];
+}

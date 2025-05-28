@@ -5,6 +5,8 @@ import { PopupTable } from "@pos_self_order/app/components/popup_table/popup_tab
 import { _t } from "@web/core/l10n/translation";
 import { OrderWidget } from "@pos_self_order/app/components/order_widget/order_widget";
 import { PresetInfoPopup } from "@pos_self_order/app/components/preset_info_popup/preset_info_popup";
+import { CancelPopup } from "@pos_self_order/app/components/cancel_popup/cancel_popup";
+import { rpc } from "@web/core/network/rpc";
 
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
@@ -13,12 +15,21 @@ export class CartPage extends Component {
 
     setup() {
         this.selfOrder = useSelfOrder();
+        this.dialog = useService("dialog");
         this.router = useService("router");
         this.state = useState({
             selectTable: false,
             fillInformations: false,
             cancelConfirmation: false,
         });
+    }
+
+    get showCancelButton() {
+        return (
+            this.selfOrder.config.self_ordering_mode === "mobile" &&
+            this.selfOrder.config.self_ordering_pay_after === "each" &&
+            typeof this.selfOrder.currentOrder.id === "number"
+        );
     }
 
     get lines() {
@@ -38,6 +49,25 @@ export class CartPage extends Component {
         } else {
             return this.lines;
         }
+    }
+
+    async cancelOrder() {
+        this.dialog.add(CancelPopup, {
+            title: _t("Cancel order"),
+            confirm: async () => {
+                try {
+                    await rpc("/pos-self-order/remove-order", {
+                        access_token: this.selfOrder.access_token,
+                        order_id: this.selfOrder.currentOrder.id,
+                        order_access_token: this.selfOrder.currentOrder.access_token,
+                    });
+                    this.selfOrder.currentOrder.state = "cancel";
+                    this.router.navigate("default");
+                } catch (error) {
+                    this.selfOrder.handleErrorNotification(error);
+                }
+            },
+        });
     }
 
     getLineChangeQty(line) {
