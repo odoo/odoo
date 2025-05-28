@@ -9,11 +9,11 @@ patch(WysiwygAdapterComponent.prototype, {
         await super.init(...arguments);
 
         let ribbons = [];
-        if (this._isProductListPageOrProductPage()) {
+        if (this._isProductListPage()) {
             ribbons = await this.orm.searchRead(
                 'product.ribbon',
-                [['assign', '=', 'manual']],
-                ['id', 'name', 'bg_color', 'text_color', 'position', 'style'],
+                [],
+                ['id', 'name', 'bg_color', 'text_color', 'position'],
             );
         }
         this.ribbons = Object.fromEntries(ribbons.map(ribbon => {
@@ -22,8 +22,7 @@ patch(WysiwygAdapterComponent.prototype, {
         this.originalRibbons = Object.assign({}, this.ribbons);
         this.productTemplatesRibbons = [];
         this.deletedRibbonClasses = '';
-        this.positionClasses = {'left': 'o_left', 'right': 'o_right'};
-        this.styleClasses = {'ribbon': 'o_ribbon', 'tag': 'o_tag'};
+        this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
     },
     /**
      * @override
@@ -43,7 +42,7 @@ patch(WysiwygAdapterComponent.prototype, {
      * @private
      */
     async _saveRibbons() {
-        if (!this._isProductListPageOrProductPage()) {
+        if (!this._isProductListPage()) {
             return;
         }
         const originalIds = Object.keys(this.originalRibbons).map(id => parseInt(id));
@@ -118,14 +117,12 @@ patch(WysiwygAdapterComponent.prototype, {
         return Promise.all(setProductTemplateRibbons);
     },
     /**
-     * Checks whether the current page is the product list or product page.
+     * Checks whether the current page is the product list.
      *
      * @private
      */
-    _isProductListPageOrProductPage() {
-        return (this.options.editable
-        && (this.options.editable.find('#products_grid').length !== 0
-        || this.options.editable.find('#product_detail').length !== 0));
+    _isProductListPage() {
+        return this.options.editable && this.options.editable.find('#products_grid').length !== 0;
     },
 
     //--------------------------------------------------------------------------
@@ -147,11 +144,8 @@ patch(WysiwygAdapterComponent.prototype, {
      */
     _onGetRibbonClasses(ev) {
         const classes = Object.values(this.ribbons).reduce((classes, ribbon) => {
-            return (
-                classes
-                + ` ${this.styleClasses[ribbon.style]} ${this.positionClasses[ribbon.position]}`
-            );
-        }, "") + this.deletedRibbonClasses;
+            return classes + ` ${this.ribbonPositionClasses[ribbon.position]}`;
+        }, '') + this.deletedRibbonClasses;
         ev.data.callback(classes);
     },
     /**
@@ -160,9 +154,9 @@ patch(WysiwygAdapterComponent.prototype, {
      * @private
      */
     _onDeleteRibbon(ev) {
-        const ribbon = this.ribbons[ev.data.id];
-        this.deletedRibbonClasses += ` ${this.styleClasses[ribbon.style]} ${
-            this.positionClasses[ribbon.position]}`;
+        this.deletedRibbonClasses += ` ${
+            this.ribbonPositionClasses[this.ribbons[ev.data.id].position]
+        }`;
         delete this.ribbons[ev.data.id];
     },
     /**
@@ -174,9 +168,7 @@ patch(WysiwygAdapterComponent.prototype, {
         const {ribbon} = ev.data;
         const previousRibbon = this.ribbons[ribbon.id];
         if (previousRibbon) {
-            this.deletedRibbonClasses += ` ${
-                this.styleClasses[previousRibbon.style]
-            } ${this.positionClasses[previousRibbon.position]}`;
+            this.deletedRibbonClasses += ` ${this.ribbonPositionClasses[previousRibbon.position]}`;
         }
         this.ribbons[ribbon.id] = ribbon;
     },

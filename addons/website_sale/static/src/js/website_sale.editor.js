@@ -1,10 +1,12 @@
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
+import { renderToElement } from "@web/core/utils/render";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import options from "@web_editor/js/editor/snippets.options";
 import "@website/js/editor/snippets.options";
 import { useChildSubEnv } from "@odoo/owl";
 import weUtils from '@web_editor/js/common/utils';
-import { productRibbonMixin } from '@website_sale/js/product_ribbon_mixin';
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({
     /**
@@ -189,7 +191,7 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     },
 });
 
-options.registry.WebsiteSaleProductsItem = productRibbonMixin(options.Class.extend({
+options.registry.WebsiteSaleProductsItem = options.Class.extend({
     events: Object.assign({}, options.Class.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
         'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
@@ -201,10 +203,15 @@ options.registry.WebsiteSaleProductsItem = productRibbonMixin(options.Class.exte
      * @override
      */
     willStart: async function () {
+        const _super = this._super.bind(this);
+        this.isLayoutList = this.$target[0].closest('#o_wsale_container').classList.contains('o_wsale_layout_list');
         this.ppr = this.$target.closest('[data-ppr]').data('ppr');
         this.defaultSort = this.$target[0].closest('[data-default-sort]').dataset.defaultSort
         this.productTemplateID = parseInt(this.$target.find('[data-oe-model="product.template"]').data('oe-id'));
-        return this._super(...arguments);
+        this.ribbonPositionClasses = {'left': 'o_ribbon_left', 'right': 'o_ribbon_right'};
+        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
+        this.$ribbon = this.$target.find('.o_ribbon');
+        return _super(...arguments);
     },
     /**
      * @override
@@ -213,12 +220,98 @@ options.registry.WebsiteSaleProductsItem = productRibbonMixin(options.Class.exte
         var listLayoutEnabled = this.$target.closest('#products_grid').hasClass('o_wsale_layout_list');
         this.$el.find('.o_wsale_soptions_menu_sizes')
             .toggleClass('d-none', listLayoutEnabled);
+        // Ribbons may have been edited or deleted in another products' option, need to make sure they're up to date
+        this.rerender = true;
+        this.ribbonEditMode = false;
     },
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    async selectStyle(previewMode, widgetValue, params) {
+        const proms = [this._super(...arguments)];
+        if (params.cssProperty === 'background-color' && params.colorNames.includes(widgetValue)) {
+            // Reset text-color when choosing a background-color class, so it uses the automatic text-color of the class.
+            proms.push(this.selectStyle(previewMode, '', {cssProperty: 'color'}));
+        }
+        await Promise.all(proms);
+        if (!previewMode) {
+            await this._saveRibbon();
+        }
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    async setRibbon(previewMode, widgetValue, params) {
+        if (previewMode === 'reset') {
+            widgetValue = this.prevRibbonId;
+        } else {
+            this.prevRibbonId = this.$target[0].dataset.ribbonId;
+        }
+        if (!previewMode) {
+            this.ribbonEditMode = false;
+        }
+        await this._setRibbon(widgetValue);
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    editRibbon(previewMode, widgetValue, params) {
+        this.ribbonEditMode = !this.ribbonEditMode;
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    async createRibbon(previewMode, widgetValue, params) {
+        await this._setRibbon(false);
+        this.$ribbon.text(_t('Ribbon Name'));
+        this.$ribbon.addClass('o_ribbon_left');
+        this.ribbonEditMode = true;
+        await this._saveRibbon(true);
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    async deleteRibbon(previewMode, widgetValue, params) {
+        const save = await new Promise(resolve => {
+            this.dialog.add(ConfirmationDialog, {
+                body: _t('Are you sure you want to delete this ribbon?'),
+                confirm: () => resolve(true),
+                cancel: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        const {ribbonId} = this.$target[0].dataset;
+        this.trigger_up('delete_ribbon', {id: ribbonId});
+        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
+        this.rerender = true;
+        await this._setRibbon(ribbonId);
+        this.ribbonEditMode = false;
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    async setRibbonName(previewMode, widgetValue, params) {
+        this.$ribbon.text(widgetValue.substring(0, 20)); // The maximum length is 20.
+        if (!previewMode) {
+            await this._saveRibbon();
+        }
+    },
+    /**
+     * @see this.selectClass for params
+     */
+    async setRibbonPosition(previewMode, widgetValue, params) {
+        this.$ribbon[0].className = this.$ribbon[0].className.replace(
+            /o_ribbon_(left|right)/, this.ribbonPositionClasses[widgetValue]
+        );
+        await this._saveRibbon();
+    },
     /**
      * @see this.selectClass for params
      */
@@ -257,10 +350,55 @@ options.registry.WebsiteSaleProductsItem = productRibbonMixin(options.Class.exte
      * @override
      */
     updateUIVisibility: async function () {
+        // TODO: update this once updateUIVisibility can be used to compute visibility
+        // of arbitrary DOM elements and not just widgets.
+        await this._super(...arguments);
+        this.$el.find('[data-name="ribbon_customize_opt"]').toggleClass('d-none', !this.ribbonEditMode);
         this.$el[0].querySelector('.o_wsale_soptions_menu_sizes').classList.toggle('d-none', this.isLayoutList);
         this.$el[0].querySelector('[data-name="o_wsale_change_sequence_widget"]').classList.toggle('d-none', this.isLayoutList);
     },
 
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _renderCustomXML(uiFragment) {
+        const $select = $(uiFragment.querySelector('.o_wsale_ribbon_select'));
+        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
+        const classes = this.$ribbon[0].className;
+        this.$ribbon[0].className = '';
+        const defaultTextColor = window.getComputedStyle(this.$ribbon[0]).color;
+        this.$ribbon[0].className = classes;
+        Object.values(this.ribbons).forEach(ribbon => {
+            $select.append(renderToElement('website_sale.ribbonSelectItem', {
+                ribbon,
+                isLeft: ribbon.position === 'left',
+                textColor: ribbon.text_color || defaultTextColor,
+            }));
+        });
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        const classList = this.$ribbon[0].classList;
+        switch (methodName) {
+            case 'setRibbon':
+                return this.$target.attr('data-ribbon-id') || '';
+            case 'setRibbonName':
+                return this.$ribbon.text();
+            case 'setRibbonPosition': {
+                if (classList.contains('o_ribbon_left')) {
+                    return 'left';
+                }
+                return 'right';
+            }
+        }
+        return this._super(methodName, params);
+    },
     /**
      * @override
      */
@@ -273,6 +411,64 @@ options.registry.WebsiteSaleProductsItem = productRibbonMixin(options.Class.exte
             return isDefaultSortFeatured;
         }
         return this._super(...arguments);
+    },
+    /**
+     * Saves the ribbons.
+     *
+     * @private
+     * @param {Boolean} [isNewRibbon=false]
+     */
+    async _saveRibbon(isNewRibbon = false) {
+        const text = this.$ribbon.text().trim();
+        const ribbon = {
+            'name': text,
+            'bg_color': this.$ribbon[0].style.backgroundColor,
+            'text_color': this.$ribbon[0].style.color,
+            'position': (this.$ribbon.attr('class').includes('o_ribbon_left')) ? 'left' : 'right',
+        };
+        ribbon.id = isNewRibbon ? Date.now() : parseInt(this.$target.closest('.oe_product')[0].dataset.ribbonId);
+        this.trigger_up('set_ribbon', {ribbon: ribbon});
+        this.ribbons = await new Promise(resolve => this.trigger_up('get_ribbons', {callback: resolve}));
+        this.rerender = true;
+        await this._setRibbon(ribbon.id);
+    },
+    /**
+     * Sets the ribbon.
+     *
+     * @private
+     * @param {integer|false} ribbonId
+     */
+    async _setRibbon(ribbonId) {
+        this.$target[0].dataset.ribbonId = ribbonId;
+        this.trigger_up('set_product_ribbon', {
+            templateId: this.productTemplateID,
+            ribbonId: ribbonId || false,
+        });
+        const ribbon = (
+            this.ribbons[ribbonId] ||
+            {name: '', bg_color: '', text_color: '', position: 'left'}
+        );
+        // This option also manages other products' ribbon, therefore we need a
+        // way to access all of them at once. With the content being in an iframe,
+        // this is the simplest way.
+        const $editableDocument = $(this.$target[0].ownerDocument.body);
+        const $ribbons = $editableDocument.find(`[data-ribbon-id="${ribbonId}"] .o_ribbon`);
+        $ribbons.empty().append(ribbon.name);
+        let htmlClasses;
+        this.trigger_up('get_ribbon_classes', {callback: classes => htmlClasses = classes});
+        $ribbons.removeClass(htmlClasses);
+
+        $ribbons.addClass(this.ribbonPositionClasses[ribbon.position]);
+        $ribbons.css('background-color', ribbon.bg_color || '');
+        $ribbons.css('color', ribbon.text_color || '');
+
+        if (!this.ribbons[ribbonId]) {
+            $editableDocument.find(`[data-ribbon-id="${ribbonId}"]`).each((index, product) => delete product.dataset.ribbonId);
+        }
+
+        // The ribbon does not have a savable parent, so we need to trigger the
+        // saving process manually by flagging the ribbon as dirty.
+        this.$ribbon.addClass('o_dirty');
     },
 
     //--------------------------------------------------------------------------
@@ -331,7 +527,7 @@ options.registry.WebsiteSaleProductsItem = productRibbonMixin(options.Class.exte
     _reloadEditable() {
         return this.trigger_up('request_save', {reload: true, optionSelector: `.oe_product:has(span[data-oe-id=${this.productTemplateID}])`});
     }
-}));
+});
 
 // Small override of the MediaDialog to retrieve the attachment ids instead of img elements
 class AttachmentMediaDialog extends MediaDialog {
@@ -359,7 +555,7 @@ options.registry.WebsiteSaleCheckoutPage = options.Class.extend({
     },
 });
 
-options.registry.WebsiteSaleProductPage = productRibbonMixin(options.Class.extend({
+options.registry.WebsiteSaleProductPage = options.Class.extend({
     init() {
         this._super(...arguments);
         this.orm = this.bindService("orm");
@@ -661,7 +857,7 @@ options.registry.WebsiteSaleProductPage = productRibbonMixin(options.Class.exten
         }
         return this._super(widgetName, params);
     }
-}));
+});
 
 options.registry.WebsiteSaleProductAttribute = options.Class.extend({
     /**
