@@ -91,12 +91,6 @@ class ProductTemplate(models.Model):
         ]
 
     def _load_pos_data(self, data):
-        # Add custom fields for 'formula' taxes.
-        fields = set(self._load_pos_data_fields(data['pos.config'][0]['id']))
-        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
-        product_fields = taxes._eval_taxes_computation_prepare_product_fields()
-        fields = list(fields.union(product_fields))
-
         config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         limit_count = config.get_limited_product_count()
         pos_limited_loading = self.env.context.get('pos_limited_loading', True)
@@ -133,8 +127,8 @@ class ProductTemplate(models.Model):
             domain = self._load_pos_data_domain(data)
             products = self._load_product_with_domain(domain)
 
-        data['pos.config'][0]['_product_default_values'] = \
-            self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
+        product_combo = products.filtered(lambda p: p['type'] == 'combo')
+        products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
 
         special_products = config._get_special_products().filtered(
                     lambda product: not product.sudo().company_id
