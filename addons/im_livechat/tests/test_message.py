@@ -79,6 +79,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
             [
                 {
                     "attachment_ids": [],
+                    "author_guest_id": False,
                     "author_id": {
                         "id": self.chatbot_script.operator_partner_id.id,
                         "type": "partner",
@@ -157,6 +158,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 "mail.message": self._filter_messages_fields(
                     {
                         "attachment_ids": [],
+                        "author_guest_id": False,
                         "author_id": {"id": self.users[1].partner_id.id, "type": "partner"},
                         "body": ["markup", message.body],
                         "date": fields.Datetime.to_string(message.date),
@@ -265,6 +267,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                 "mail.message": self._filter_messages_fields(
                                     {
                                         "attachment_ids": [],
+                                        "author_guest_id": False,
                                         "author_id": {
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
