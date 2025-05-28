@@ -33,6 +33,7 @@ export class Builder extends Component {
         closeEditor: { type: Function },
         reloadEditor: { type: Function, optional: true },
         onEditorLoad: { type: Function, optional: true },
+        installSnippetModule: { type: Function, optional: true },
         snippetsName: { type: String },
         toggleMobile: { type: Function },
         overlayRef: { type: Function },
@@ -92,6 +93,8 @@ export class Builder extends Component {
                 closeEditor: async () => {
                     await this.props.closeEditor();
                 },
+                installSnippetModule: async (snippet) =>
+                    this.props.installSnippetModule(snippet, this.save.bind(this)),
                 resources: {
                     trigger_dom_updated: () => {
                         editorBus.trigger("DOM_UPDATED");
@@ -132,7 +135,6 @@ export class Builder extends Component {
         this.props.onEditorLoad(this.editor);
 
         this.snippetModel = useState(useService("html_builder.snippets"));
-        this.snippetModel.registerBeforeReload(this.save.bind(this));
 
         onWillStart(async () => {
             await this.snippetModel.load();
@@ -167,7 +169,6 @@ export class Builder extends Component {
         onWillDestroy(() => {
             this.editor.destroy();
             this.editableEl.removeEventListener("dragstart", this.onDragStart);
-            this.snippetModel.unregisterBeforeReload();
             // actionService.setActionMode("current");
         });
 
@@ -216,6 +217,10 @@ export class Builder extends Component {
     }
 
     async save() {
+        this.editor.shared.operation.next(this._save.bind(this), { withLoadingEffect: false });
+    }
+
+    async _save() {
         this.isSaving = true;
         // TODO: handle the urgent save and the fail of the save operation
         const snippetMenuEl = this.builder_sidebarRef.el;
