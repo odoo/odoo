@@ -254,17 +254,10 @@ class SurveyInvite(models.TransientModel):
         # optional support of default_email_layout_xmlid in context
         email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
         if email_layout_xmlid:
-            template_ctx = {
-                'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.survey_id.title)),
-                'model_description': self.env['ir.model']._get('survey.survey').display_name,
-                'company': self.env.company,
-            }
-            body = self.env['ir.qweb']._render(email_layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
-            if body:
-                mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
-            else:
-                _logger.warning('QWeb template %s not found or is empty when sending survey mails. Sending without layout', email_layout_xmlid)
-
+            mail_values['body_html'] = self._render_encapsulate(
+                email_layout_xmlid, mail_values['body_html'],
+                context_record=self.survey_id,
+            )
         return self.env['mail.mail'].sudo().create(mail_values)
 
     def action_invite(self):

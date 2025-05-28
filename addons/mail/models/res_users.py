@@ -213,11 +213,9 @@ class ResUsers(models.Model):
                 'mail.mail_notification_light',
                 body_html,
                 add_context={
-                    # the 'mail_notification_light' expects a mail.message 'message' context, let's give it one
-                    'message': self.env['mail.message'].sudo().new(dict(body=body_html, record_name=user.name)),
                     'model_description': _('Account'),
-                    'company': user.company_id,
                 },
+                context_record=user,
             )
 
             vals = {
