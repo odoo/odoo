@@ -807,15 +807,7 @@ export class SelfOrder extends Reactive {
         }
 
         // Taxes computation.
-        const taxesData = getTaxesValues(
-            taxes,
-            price,
-            1,
-            product,
-            this.config._product_default_values,
-            this.company,
-            this.currency
-        );
+        const taxesData = getTaxesValues(taxes, price, 1, product, {}, this.company, this.currency);
 
         return { pricelist_price: price, ...taxesData };
     }

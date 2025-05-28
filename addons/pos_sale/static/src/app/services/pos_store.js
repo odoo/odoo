@@ -168,10 +168,7 @@ patch(PosStore.prototype, {
             quantity: soLine.product_uom_qty,
             tax_ids: soLine.tax_ids,
             partner_id: so.partner_id,
-            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-                this.config._product_default_values,
-                soLine.product_id
-            ),
+            product_id: soLine.product_id,
             extra_tax_data: soLine.extra_tax_data,
         };
     },
