@@ -1184,6 +1184,7 @@ class Picking(models.Model):
                 'type': 'ir.actions.client',
                 'tag': 'do_multi_print',
                 'params': {
+                    'noReload': True,
                     'reports': report_actions,
                     'anotherAction': another_action,
                 }

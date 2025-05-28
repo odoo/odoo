@@ -30,7 +30,7 @@ async function doMultiPrint(env, action) {
     } else if (action.params.onClose) {
         // handle special cases such as barcode
         action.params.onClose()
-    } else {
+    } else if (!action.params.noReload) {
         return env.services.action.doAction("reload_context");
     }
 }
