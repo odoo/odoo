@@ -41,7 +41,6 @@ class PopupOptionPlugin extends Plugin {
             SetPopupDelayAction,
         },
         on_cloned_handlers: this.onCloned.bind(this),
-        on_remove_handlers: this.onRemove.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         no_parent_containers: ".s_popup",
     };
@@ -50,16 +49,6 @@ class PopupOptionPlugin extends Plugin {
         if (cloneEl.matches(".s_popup")) {
             this.assignUniqueID(cloneEl);
         }
-    }
-
-    onRemove(el) {
-        this.dependencies.popupVisibilityPlugin.onTargetHide(el);
-        this.dependencies.history.addCustomMutation({
-            apply: () => {},
-            revert: () => {
-                this.dependencies.popupVisibilityPlugin.onTargetShow(el);
-            },
-        });
     }
 
     onSnippetDropped({ snippetEl }) {

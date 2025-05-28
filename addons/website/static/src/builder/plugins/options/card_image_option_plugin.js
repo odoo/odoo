@@ -81,12 +81,11 @@ export class RemoveCoverImageAction extends BuilderAction {
     static id = "removeCoverImage";
     static dependencies = ["history", "builderOptions", "remove"];
     apply({ editingElement }) {
-        const imageWrapper = editingElement.querySelector(".o_card_img_wrapper");
-        const elementToSelect = this.dependencies.remove.removeElement(imageWrapper);
+        const imageWrapperEl = editingElement.querySelector(".o_card_img_wrapper");
+        imageWrapperEl.remove();
+        // Remove the classes and styles linked to the wrapper.
         editingElement.classList.remove(...imageRelatedClasses);
         imageRelatedStyles.forEach((prop) => editingElement.style.removeProperty(prop));
-        this.dependencies.history.addStep();
-        this.dependencies["builderOptions"].updateContainers(elementToSelect);
     }
 }
 export class AddCoverImageAction extends BuilderAction {

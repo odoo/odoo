@@ -7,7 +7,7 @@ export class DisableSnippetsPlugin extends Plugin {
     static dependencies = ["setup_editor_plugin", "dropzone", "dropzone_selector"];
     static shared = ["disableUndroppableSnippets"];
     resources = {
-        after_remove_handlers: this.disableUndroppableSnippets.bind(this),
+        on_removed_handlers: this.disableUndroppableSnippets.bind(this),
         post_undo_handlers: this.disableUndroppableSnippets.bind(this),
         post_redo_handlers: this.disableUndroppableSnippets.bind(this),
         on_mobile_preview_clicked: withSequence(20, this.disableUndroppableSnippets.bind(this)),
