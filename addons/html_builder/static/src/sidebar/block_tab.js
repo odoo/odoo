@@ -59,42 +59,48 @@ export class BlockTab extends Component {
                 const baseSectionEl = snippet.content.cloneNode(true);
                 this.state.ongoingInsertion = true;
                 await new Promise((resolve) => {
-                    this.snippetModel.openSnippetDialog(snippet, {
-                        onSelect: (snippet) => {
-                            snippetEl = snippet.content.cloneNode(true);
+                    this.snippetModel.openSnippetDialog(
+                        snippet,
+                        {
+                            onSelect: (snippet) => {
+                                snippetEl = snippet.content.cloneNode(true);
 
-                            // Add the dropzones corresponding to a section and
-                            // make them invisible.
-                            const selectors = this.shared.dropzone.getSelectors(baseSectionEl);
-                            const dropzoneEls = this.shared.dropzone.activateDropzones(selectors);
-                            this.editable
-                                .querySelectorAll(".oe_drop_zone")
-                                .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
+                                // Add the dropzones corresponding to a section and
+                                // make them invisible.
+                                const selectors = this.shared.dropzone.getSelectors(baseSectionEl);
+                                const dropzoneEls =
+                                    this.shared.dropzone.activateDropzones(selectors);
+                                this.editable
+                                    .querySelectorAll(".oe_drop_zone")
+                                    .forEach((dropzoneEl) => dropzoneEl.classList.add("invisible"));
 
-                            // Find the dropzone closest to the center of the
-                            // viewport and not located in the top quarter of
-                            // the viewport.
-                            const iframeWindow = this.document.defaultView;
-                            const viewPortCenterPoint = {
-                                x: iframeWindow.innerWidth / 2,
-                                y: iframeWindow.innerHeight / 2,
-                            };
-                            const validDropzoneEls = dropzoneEls.filter(
-                                (el) => el.getBoundingClientRect().top >= viewPortCenterPoint.y / 2
-                            );
-                            const closestDropzoneEl =
-                                closest(validDropzoneEls, viewPortCenterPoint) ||
-                                dropzoneEls.at(-1);
+                                // Find the dropzone closest to the center of the
+                                // viewport and not located in the top quarter of
+                                // the viewport.
+                                const iframeWindow = this.document.defaultView;
+                                const viewPortCenterPoint = {
+                                    x: iframeWindow.innerWidth / 2,
+                                    y: iframeWindow.innerHeight / 2,
+                                };
+                                const validDropzoneEls = dropzoneEls.filter(
+                                    (el) =>
+                                        el.getBoundingClientRect().top >= viewPortCenterPoint.y / 2
+                                );
+                                const closestDropzoneEl =
+                                    closest(validDropzoneEls, viewPortCenterPoint) ||
+                                    dropzoneEls.at(-1);
 
-                            // Insert the selected snippet.
-                            closestDropzoneEl.after(snippetEl);
-                            this.shared.dropzone.removeDropzones();
-                            return snippetEl;
+                                // Insert the selected snippet.
+                                closestDropzoneEl.after(snippetEl);
+                                this.shared.dropzone.removeDropzones();
+                                return snippetEl;
+                            },
+                            onClose: () => {
+                                resolve();
+                            },
                         },
-                        onClose: () => {
-                            resolve();
-                        },
-                    });
+                        this.env.editor
+                    );
                 });
 
                 if (snippetEl) {
@@ -129,22 +135,26 @@ export class BlockTab extends Component {
         // Open the snippet dialog.
         let selectedSnippetEl;
         await new Promise((resolve) => {
-            this.snippetModel.openSnippetDialog(snippet, {
-                onSelect: (snippet) => {
-                    selectedSnippetEl = snippet.content.cloneNode(true);
-                    hookEl.replaceWith(selectedSnippetEl);
-                    return selectedSnippetEl;
+            this.snippetModel.openSnippetDialog(
+                snippet,
+                {
+                    onSelect: (snippet) => {
+                        selectedSnippetEl = snippet.content.cloneNode(true);
+                        hookEl.replaceWith(selectedSnippetEl);
+                        return selectedSnippetEl;
+                    },
+                    onClose: () => {
+                        if (!selectedSnippetEl) {
+                            hookEl.remove();
+                        }
+                        this.snippetModel.snippetStructures.forEach(
+                            (snippet) => delete snippet.isExcluded
+                        );
+                        resolve();
+                    },
                 },
-                onClose: () => {
-                    if (!selectedSnippetEl) {
-                        hookEl.remove();
-                    }
-                    this.snippetModel.snippetStructures.forEach(
-                        (snippet) => delete snippet.isExcluded
-                    );
-                    resolve();
-                },
-            });
+                this.env.editor
+            );
         });
 
         if (selectedSnippetEl) {

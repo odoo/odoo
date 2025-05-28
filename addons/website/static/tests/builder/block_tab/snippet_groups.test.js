@@ -70,14 +70,14 @@ test("install an app from snippet group", async () => {
     await setupWebsiteBuilder("<div><p>Text</p></div>", {
         snippets: {
             snippet_groups: [
-                '<div name="A" data-module-id="111" data-oe-thumbnail="a.svg"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
+                '<div name="A" data-module-id="111" data-module-display-name="module_A" data-oe-thumbnail="a.svg"><section class="s_snippet_group" data-snippet="s_snippet_group"></section></div>',
             ],
         },
     });
     await click(`.o-snippets-menu #snippet_groups .o_snippet .btn.o_install_btn`);
     await animationFrame();
     expect(".modal").toHaveCount(1);
-    expect(".modal-body").toHaveText("Do you want to install A App?\nMore info about this app.");
+    expect(".modal-body").toHaveText("Do you want to install module_A App?\nMore info about this app.");
 
     await contains(".modal .btn-primary:contains('Save and Install')").click();
     expect.verifySteps([`button_immediate_install`]);
@@ -91,12 +91,14 @@ test("install an app from snippet structure", async () => {
     const snippetsDescription = () => [
         {
             name: "Test 1",
+            moduleDisplayName: "Test 1 module",
             groupName: "a",
             content: getBasicSection("Yop"),
             moduleId: 111,
         },
         {
             name: "Test 2",
+            moduleDisplayName: "Test 2 module",
             groupName: "a",
             content: getBasicSection("Hello"),
         },
@@ -129,7 +131,7 @@ test("install an app from snippet structure", async () => {
     );
     await animationFrame();
     expect(".o_dialog:not(:has(.o_inactive_modal)) .modal-body").toHaveText(
-        "Do you want to install Test 1 App?\nMore info about this app."
+        "Do you want to install Test 1 module App?\nMore info about this app."
     );
 
     await contains(
