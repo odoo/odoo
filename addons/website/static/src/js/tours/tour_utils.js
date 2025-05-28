@@ -362,7 +362,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
         trigger: ".o_website_preview :iframe .odoo-editor-editable",
         noPrepend: true,
     }];
-    const snippetIDSelector = snippet.id ? `[data-snippet="${snippet.id}"]` : `[data-snippet^="${snippet.customID}"]`;
+    const snippetIDSelector = snippet.id ? `[data-snippet-id="${snippet.id}"]` : `[data-snippet-id^="${snippet.customID}_"]`;
     if (snippet.groupName) {
         insertSnippetSteps.push({
             content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
@@ -374,7 +374,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
             content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
             // FIXME `:not(.d-none)` should obviously not be needed but it seems
             // currently needed when using a tour in user/interactive mode.
-            trigger: `:iframe .o_snippet_preview_wrap > ${snippetIDSelector}:not(.d-none)`,
+            trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
             noPrepend: true,
             tooltipPosition: "top",
             run: "click",
