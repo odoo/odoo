@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+    <data noupdate="1">
+<!--    The schedular action for Recurring  Entries    -->
+        <record id="recurring_template_cron" model="ir.cron">
+            <field name="name">Generate Recurring Entries</field>
+            <field name="model_id" ref="model_account_recurring_payments"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_generate_entries()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+    </data>
+</odoo>

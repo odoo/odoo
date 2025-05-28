@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--Inheriting Account Journal Kanban View-->
+    <record id="account_journal_dashboard_kanban_view" model="ir.ui.view">
+        <field name="name">account.journal.view.kanban.inherit.base.accounting.kit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//kanban/templates//div[@id='dashboard_bank_cash_left']"
+                position="inside">
+                <t t-if="dashboard.number_to_reconcile > 0">
+                    <button class="btn btn-primary"
+                            type="object"
+                            name="action_open_reconcile">
+                        <t t-esc="dashboard.number_to_reconcile"/> to Reconcile
+                    </button>
+                </t>
+                <t t-if="journal_type == 'bank'">
+                    <a name="action_import_wizard" type="object"
+                       class="oe_inline"
+                       groups="account.group_account_invoice">Import
+                    </a>
+                </t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

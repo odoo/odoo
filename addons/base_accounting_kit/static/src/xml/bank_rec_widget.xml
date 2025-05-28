@@ -1,0 +1,33 @@
+<templates>
+    <t t-name="base_accounting_kit.CustomKanbanView" t-inherit="web.KanbanView"
+       owl="1">
+        <xpath expr="//Layout" position="inside">
+            <div class="h-100 form_view_class">
+                <View t-if="state.selectedStLineId"
+                      t-props="prepareFormPropsBankReconcile"
+                      t-key="state.selectedStLineId"/>
+            </div>
+        </xpath>
+    </t>
+    <t t-name="base_accounting_kit.BankRecKanbanRenderer"
+        t-inherit="web.KanbanRenderer" t-inherit-mode="primary" owl="1">
+            <xpath expr="//div[hasclass('o_kanban_renderer')]"
+               position="before">
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_renderer')]"
+               position="attributes">
+                <attribute name="class">o_kanban_renderer o_custom_class</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_custom_class')]"
+                   position="attributes">
+                <attribute name="style">width:30%;</attribute>
+            </xpath>
+    </t>
+    <t t-name="base_accounting_kit.BankReconcileKanbanRecord"
+       t-inherit="web.KanbanRecord" t-inherit-mode="primary" owl="1">
+    </t>
+    <t t-name="base_accounting_kit.AccountMoveLineListController"
+       t-inherit="web.ListView"
+       t-inherit-mode="primary" owl="1">
+    </t>
+</templates>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+<!--        Account payment method Inbound pdc-->
+        <record id="account_payment_method_pdc_in"
+                model="account.payment.method">
+            <field name="name">PDC</field>
+            <field name="code">pdc</field>
+            <field name="payment_type">inbound</field>
+        </record>
+<!--    Outbound pdc    -->
+        <record id="account_payment_method_pdc_out"
+                model="account.payment.method">
+            <field name="name">PDC</field>
+            <field name="code">pdc</field>
+            <field name="payment_type">outbound</field>
+        </record>
+<!--    Decimal precision for account    -->
+        <record forcecreate="True" id="decimal_account"
+                model="decimal.precision">
+            <field name="name">Account</field>
+            <field name="digits" eval="3"/>
+        </record>
+    </data>
+</odoo>

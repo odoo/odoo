@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--Account Report General Ledger Form View-->
+    <record id="account_report_general_ledger_view" model="ir.ui.view">
+        <field name="name">account.report.general.ledger.view.form.inherit.base.accounting.kit</field>
+        <field name="model">account.report.general.ledger</field>
+        <field name="inherit_id" ref="base_accounting_kit.account_report_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="sortby" widget="radio"/>
+                <field name="display_account" widget="radio"/>
+                <field name="initial_balance"/>
+                <newline/>
+            </xpath>
+        </field>
+    </record>
+<!--Action Account Report General Ledger-->
+    <record id="action_account_general_ledger_menu" model="ir.actions.act_window">
+        <field name="name">General Ledger</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">account.report.general.ledger</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_report_general_ledger_view"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="account.model_account_account"/>
+        <field name="binding_type">report</field>
+    </record>
+<!--Menu General Ledger-->
+    <menuitem
+            id="menu_general_ledger"
+            name="General Ledger"
+            sequence="3"
+            parent="base_accounting_kit.account_reports_audit"
+            action="action_account_general_ledger_menu"
+            groups="account.group_account_user,account.group_account_manager"/>
+</odoo>

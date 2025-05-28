@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<!--  Multiple Invoice Layout Form View  -->
+    <record id="multiple_invoice_layout_view_form" model="ir.ui.view">
+        <field name="name">multiple.invoice.layout.view.form</field>
+        <field name="model">multiple.invoice.layout</field>
+        <field name="arch" type="xml">
+            <form class="o_document_layout">
+                <group>
+                    <group class="o_document_layout_company">
+                        <field name="company_id" invisible="1"/>
+                        <field name="journal_id" invisible="1"/>
+                        <field name="multiple_invoice_type"/>
+                        <field name="text_position"  widget="selection"
+                               invisible="multiple_invoice_type != 'text'"
+                               />
+                        <field name="body_text_position"  widget="radio"
+                               invisible="multiple_invoice_type != 'text' or text_position != 'body'"/>
+                        <field name="text_align"  widget="radio" string="Text Align"
+                               invisible="multiple_invoice_type != 'text' or text_position not in ['header', 'footer']"/>
+                    </group>
+                    <div>
+                        <field name="preview" widget="iframe_wrapper" />
+                    </div>
+                </group>
+                <footer>
+                    <button string="Save" class="btn-primary" type="object" name="document_layout_save"/>
+                    <button special="cancel" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+<!--  Action Multiple Invoice Layout  -->
+    <record id="action_multiple_invoice_layout_configurator" model="ir.actions.act_window">
+        <field name="type">ir.actions.act_window</field>
+        <field name="name">Configure Copy layout</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="res_model">multiple.invoice.layout</field>
+        <field name="view_id" ref="base_accounting_kit.multiple_invoice_layout_view_form"/>
+    </record>
+</odoo>

@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="base_accounting_kit.standard">
+        <div t-attf-class="header o_company_#{company.id}_layout"
+             t-att-style="report_header_style">
+            <div class="row">
+                <div class="col-3 mb4">
+                    <img t-if="company.logo"
+                         t-att-src="image_data_uri(company.logo)"
+                         style="max-height: 45px;" alt="Logo"/>
+                    <!--Header-->
+                    <t t-if="mi_type == 'text'">
+                        <t t-if="txt_position == 'header'">
+                            <div class="row">
+                                <div t-if="txt_align == 'left'"
+                                     class="text-left">
+                                    <span t-esc="mi.copy_name"
+                                          style="font-size: 20px; padding-left:25px; white-space:nowrap;"/>
+                                </div>
+                                <div t-if="txt_align == 'center'"
+                                     class="text-center">
+                                    <span t-esc="mi.copy_name" style="font-size: 20px;
+                                    margin-left:340px; margin-right:340px; white-space:nowrap;"/>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+                <div class="col-9 text-right" style="margin-top:22px;"
+                     t-field="company.report_header" name="moto"/>
+            </div>
+            <!--Header-->
+            <t t-if="mi_type == 'text'">
+                <t t-if="txt_position == 'header'">
+                    <div t-if="txt_align == 'right'" class="text-right">
+                        <span t-esc="mi.copy_name" style="font-size: 20px;"/>
+                    </div>
+                </t>
+            </t>
+            <div t-if="company.logo or company.report_header"
+                 class="row zero_min_height">
+                <div class="col-12">
+                    <div style="border-bottom: 1px solid black;"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6" name="company_address">
+                    <span t-if="company.company_details"
+                          t-field="company.company_details"></span>
+                </div>
+            </div>
+            <!--Watermark-->
+            <t t-if="mi_type =='watermark'">
+                <div style="opacity:0.15; font-size:100px; width:85%; text-align:center;top:500px; right:100px; position: fixed; z-index:99; -webkit-transform: rotate(-30deg);">
+                    <t t-esc="mi.copy_name"/>
+                </div>
+            </t>
+        </div>
+
+        <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' if company.layout_background == 'Geometric' else ''}});"
+             t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
+            <t t-out="0"/>
+        </div>
+        <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
+            <div class="text-center" style="border-top: 1px solid black;">
+                <ul class="list-inline mb4">
+                    <div t-field="company.report_footer"/>
+                    <!--Footer-->
+                    <t t-if="mi_type == 'text'">
+                        <t t-if="txt_position == 'footer'">
+                            <div t-if="txt_align == 'right'" class="text-right">
+                                <span t-esc="mi.copy_name"
+                                      style="font-size: 15px;"/>
+                            </div>
+                            <div t-if="txt_align == 'left'" class="text-left">
+                                <span t-esc="mi.copy_name"
+                                      style="font-size: 15px;"/>
+                            </div>
+                            <div t-if="txt_align == 'center'"
+                                 class="text-center;">
+                                <span t-esc="mi.copy_name"
+                                      style="font-size: 15px;"/>
+                            </div>
+
+                        </t>
+                    </t>
+
+                </ul>
+
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page:
+                    <span class="page"/>
+                    /
+                    <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="base_accounting_kit.boxed">
+        <div t-attf-class="header o_company_#{company.id}_layout"
+             t-att-style="report_header_style">
+            <div class="o_boxed_header">
+                <div class="row mb8">
+                    <div class="col-6">
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             alt="Logo"/>
+                        <!--Header-->
+                        <t t-if="mi_type == 'text'">
+                            <t t-if="txt_position == 'header'">
+                                <div t-if="txt_align == 'left'">
+                                    <span t-esc="mi.copy_name"
+                                          style="font-size: 25px; white-space:nowrap;"/>
+                                </div>
+                                <div t-if="txt_align == 'center'"
+                                     class="text-align: center">
+                                    <span t-esc="mi.copy_name" style="font-size: 25px;
+                                margin-left:340px; margin-right:340px; white-space:nowrap;"/>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+
+                    <div class="col-6 text-right mb4">
+                        <h4 class="mt0" t-field="company.report_header"/>
+                        <div name="company_address" class="float-right mb4">
+                            <span t-if="company.company_details"
+                                  t-field="company.company_details"/>
+                            <!--Header-->
+                            <t t-if="mi_type == 'text'">
+                                <t t-if="txt_position == 'header'">
+                                    <div t-if="txt_align == 'right'"
+                                         class="float-right mb4">
+                                        <span t-esc="mi.copy_name"
+                                              style="font-size: 25px;"/>
+                                    </div>
+                                </t>
+                            </t>
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Watermark-->
+            <t t-if="mi_type =='watermark'">
+                <div style="opacity:0.15; font-size:100px; width:85%; text-align:center;top:500px; right:100px; position: fixed; z-index:99; -webkit-transform: rotate(-30deg);">
+                    <t t-esc="mi.copy_name"/>
+                </div>
+            </t>
+        </div>
+
+        <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' }});"
+             t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
+            <t t-out="0"/>
+        </div>
+
+        <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
+            <div class="text-center">
+                <div t-field="company.report_footer"/>
+                <!--Footer-->
+                <t t-if="mi_type == 'text'">
+                    <t t-if="txt_position == 'footer'">
+                        <div t-if="txt_align == 'right'" class="text-right">
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 20px;"/>
+                        </div>
+                        <div t-if="txt_align == 'left'" class="text-left">
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 20px;"/>
+                        </div>
+                        <div t-if="txt_align == 'center'" class="text-center;">
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 20px;"/>
+                        </div>
+                    </t>
+                </t>
+
+                <div t-if="report_type == 'pdf'">
+                    Page:
+                    <span class="page"/>
+                    /
+                    <span class="topage"/>
+                </div>
+            </div>
+        </div>
+
+    </template>
+
+    <template id="base_accounting_kit.bold">
+        <div t-attf-class="header o_company_#{company.id}_layout"
+             t-att-style="report_header_style">
+            <div class="o_clean_header">
+                <div class="row">
+                    <div class="col-6">
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             alt="Logo"/>
+                        <!--Header-->
+                        <t t-if="mi_type == 'text'">
+                            <t t-if="txt_position == 'header'">
+                                <div t-if="txt_align == 'left'">
+                                    <br/>
+                                    <span t-esc="mi.copy_name"
+                                          style="font-size: 20px; padding-left:25px; white-space:nowrap;"/>
+                                </div>
+                                <div t-if="txt_align == 'center'"
+                                     class="text-align: center">
+                                    <br/>
+                                    <span t-esc="mi.copy_name" style="font-size: 20px;
+                                    margin-left:280px; margin-right:280px; white-space:nowrap;"/>
+                                </div>
+                            </t>
+                        </t>
+                    </div>
+                    <div class="col-5 offset-1" name="company_address">
+                        <ul class="list-unstyled">
+                            <strong>
+                                <li t-if="company.name">
+                                    <span t-field="company.name"/>
+                                </li>
+                            </strong>
+                            <li t-if="forced_vat or company.vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>
+                                :
+                                <span t-if="forced_vat" t-esc="forced_vat"/>
+                                <span t-else="" t-field="company.vat"/>
+                            </li>
+                            <li t-if="company.phone">Tel:
+                                <span class="o_force_ltr"
+                                      t-field="company.phone"/>
+                            </li>
+                            <li t-if="company.email">
+                                <span t-field="company.email"/>
+                            </li>
+                            <li t-if="company.website">
+                                <span t-field="company.website"/>
+                            </li>
+                            <!--Header-->
+                            <t t-if="mi_type == 'text'">
+                                <t t-if="txt_position == 'header'">
+                                    <div t-if="txt_align == 'right'">
+                                        <span t-esc="mi.copy_name"
+                                              style="font-size: 20px;"/>
+                                    </div>
+                                </t>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--Watermark-->
+            <t t-if="mi_type =='watermark'">
+                <div style="opacity:0.15; font-size:100px; width:85%; text-align:center;top:500px; right:100px; position: fixed; z-index:99; -webkit-transform: rotate(-30deg);">
+                    <t t-esc="mi.copy_name"/>
+                </div>
+            </t>
+        </div>
+        <div t-attf-class="article o_report_layout_bold o_company_#{company.id}_layout {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' }});"
+             t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-out="0"/>
+        </div>
+        <div t-attf-class="footer o_clean_footer o_company_#{company.id}_layout">
+            <div class="row">
+                <div class="col-4">
+                    <span t-field="company.report_footer"/>
+                    <!--Footer Left-->
+                    <t t-if="mi_type == 'text'">
+                        <t t-if="txt_position == 'footer'">
+                            <div t-if="txt_align == 'left'" class="text-left">
+                                <span t-esc="mi.copy_name"
+                                      style="font-size: 18px; padding-left:25px; white-space:nowrap;"/>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+                <div class="col-4">
+                    <span t-if="company.company_details"
+                          t-field="company.company_details"/>
+                </div>
+                <div class="col-3">
+                    <h5 class="mt0 mb0" t-field="company.report_header"/>
+                    <!--Footer-->
+                    <t t-if="mi_type == 'text'">
+                        <t t-if="txt_position == 'footer'">
+                            <div t-if="txt_align == 'right'" class="text-right">
+                                <span t-esc="mi.copy_name"
+                                      style="font-size: 18px;"/>
+                            </div>
+
+                            <div t-if="txt_align == 'center'"
+                                 class="text-center;">
+                                <span t-esc="mi.copy_name"
+                                      style="font-size: 18px;"/>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+                <div class="col-1">
+                    <ul t-if="report_type == 'pdf'"
+                        class="list-inline pagenumber float-right text-center">
+                        <li class="list-inline-item">
+                            <strong>
+                                <span class="page"/>
+                            </strong>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="base_accounting_kit.striped">
+        <div t-attf-class="o_company_#{company.id}_layout header"
+             t-att-style="report_header_style">
+            <div class="o_background_header">
+                <div class="float-right">
+                    <h3 class="mt0 text-right" t-field="company.report_header"/>
+                </div>
+                <img t-if="company.logo"
+                     t-att-src="image_data_uri(company.logo)" class="float-left"
+                     alt="Logo"/>
+                <div class="float-left company_address">
+                    <span t-if="company.company_details"
+                          t-field="company.company_details"></span>
+                </div>
+                <!--Header-->
+                <t t-if="mi_type == 'text'">
+                    <t t-if="txt_position == 'header'">
+                        <div t-if="txt_align == 'right'" class="text-right"
+                             style="position: relative; top: 50px;">
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 20px;"/>
+                        </div>
+                        <div t-if="txt_align == 'center'" class="text-center">
+                            <br/>
+                            <span t-esc="mi.copy_name" style="font-size: 20px;
+                        margin-left:280px; margin-right:280px; white-space:nowrap;"/>
+                        </div>
+                        <div t-if="txt_align == 'left'" class="text-left"
+                             style="position: fixed; top: 70px; left:20px;">
+                            <br/>
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 20px; white-space:nowrap;"/>
+                        </div>
+                    </t>
+                </t>
+                <div class="clearfix mb8"/>
+            </div>
+            <!--Watermark-->
+            <t t-if="mi_type =='watermark'">
+                <div style="opacity:0.15; font-size:100px; width:85%; text-align:center;top:500px; right:100px; position: fixed; z-index:99; -webkit-transform: rotate(-30deg);">
+                    <t t-esc="mi.copy_name"/>
+                </div>
+            </t>
+        </div>
+        <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_striped {{  'o_layout_background' if company.layout_background in ['Geometric', 'Custom']  else  '' }}"
+             t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8') if company.layout_background_image and company.layout_background == 'Custom' else '/base/static/img/bg_background_template.jpg' }});"
+             t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id"
+             t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-call="web.address_layout"/>
+            <t t-out="0"/>
+        </div>
+        <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
+            <div class="text-center">
+                <ul class="list-inline">
+                    <div t-field="company.report_footer"/>
+                </ul>
+                <!--Footer-->
+                <t t-if="mi_type == 'text'">
+                    <t t-if="txt_position == 'footer'">
+                        <div t-if="txt_align == 'right'" class="text-right">
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 15px;"/>
+                        </div>
+                        <div t-if="txt_align == 'left'" class="text-left">
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 15px;"/>
+                        </div>
+                        <div t-if="txt_align == 'center'" class="text-center;">
+                            <span t-esc="mi.copy_name"
+                                  style="font-size: 15px;"/>
+                        </div>
+                    </t>
+                </t>
+
+                <div t-if="report_type == 'pdf'" class="text-muted">
+                    Page:
+                    <span class="page"/>
+                    of
+                    <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+
+
+    <template id="multiple_invoice_wizard_preview">
+        <t t-call="web.html_preview_container">
+            <t t-call="base_accounting_kit.new_external_layout">
+                <t t-if="mi_type == 'text'">
+                    <t t-if="txt_position == 'body'">
+                        <div t-if="body_txt_position == 'tr'"
+                             style="font-size:25px; text-align:right;">
+                            <span>Sample Name</span>
+                        </div>
+                        <div t-if="body_txt_position == 'tl'"
+                             style="font-size:25px; text-align:left;">
+                            <span>Sample Name</span>
+                        </div>
+                    </t>
+                </t>
+                <div class="pt-5">
+                    <div class="address row">
+                        <div name="address" class="col-md-5 ml-auto">
+                            <address>
+                                <address class="mb-0" itemscope="itemscope"
+                                         itemtype="http://schema.org/Organization">
+                                    <div>
+                                        <span itemprop="name">Deco Addict</span>
+                                    </div>
+                                    <div itemprop="address"
+                                         itemscope="itemscope"
+                                         itemtype="http://schema.org/PostalAddress">
+                                        <div class="d-flex align-items-baseline">
+                                            <span class="w-100 o_force_ltr"
+                                                  itemprop="streetAddress">77
+                                                Santa Barbara
+                                                Rd<br/>Pleasant Hill CA 94523
+                                                <br/>United States
+                                            </span>
+                                        </div>
+                                    </div>
+                                </address>
+                            </address>
+                        </div>
+                    </div>
+                </div>
+                <div class="page">
+                    <h2>
+                        <span>Invoice</span>
+                        <span>INV/2020/07/0003</span>
+                    </h2>
+                    <div id="informations" class="row mt32 mb32">
+                        <div class="col-auto mw-100 mb-2" name="invoice_date">
+                            <strong>Invoice Date:</strong>
+                            <p class="m-0">07/08/2020</p>
+                        </div>
+                        <div class="col-auto mw-100 mb-2" name="due_date">
+                            <strong>Due Date:</strong>
+                            <p class="m-0">08/07/2020</p>
+                        </div>
+                    </div>
+                    <table class="table table-sm o_main_table"
+                           name="invoice_line_table">
+                        <thead>
+                            <tr>
+                                <th name="th_description" class="text-left">
+                                    <span>Description</span>
+                                </th>
+                                <th name="th_quantity" class="text-right">
+                                    <span>Quantity</span>
+                                </th>
+                                <th name="th_priceunit"
+                                    class="text-right d-none d-md-table-cell">
+                                    <span>Unit Price</span>
+                                </th>
+                                <th name="th_taxes"
+                                    class="text-left d-none d-md-table-cell">
+                                    <span>Taxes</span>
+                                </th>
+                                <th name="th_subtotal" class="text-right">
+                                    <span>Amount</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="invoice_tbody">
+                            <tr>
+                                <td name="account_invoice_line_name">
+                                    <span>[FURN_8999] Three-Seat Sofa
+                                        <br/>
+                                        Three Seater Sofa with Lounger in Steel
+                                        Grey Colour
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <span>5.000</span>
+                                </td>
+                                <td class="text-right d-none d-md-table-cell">
+                                    <span class="text-nowrap">1,500.00</span>
+                                </td>
+                                <td class="text-left d-none d-md-table-cell">
+                                    <span id="line_tax_ids">15.00%</span>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap">$
+                                        <span class="oe_currency_value">
+                                            7,500.00
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td name="account_invoice_line_name">
+                                    <span>[FURN_8220] Four Person Desk
+                                        <br/>
+                                        Four person modern office workstation
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <span>5.000</span>
+                                </td>
+                                <td class="text-right d-none d-md-table-cell">
+                                    <span class="text-nowrap">23,500.00</span>
+                                </td>
+                                <td class="text-left d-none d-md-table-cell">
+                                    <span id="line_tax_ids">15.00%</span>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap">$
+                                        <span class="oe_currency_value">
+                                            117,500.00
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="clearfix">
+                        <div id="total" class="row">
+                            <div class="col-sm-7 col-md-6 ml-auto">
+                                <table class="table table-sm"
+                                       style="page-break-inside: avoid;">
+                                    <tbody>
+                                        <tr class="border-black o_subtotal"
+                                            style="">
+                                            <td>
+                                                <strong>Subtotal</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <span>$
+                                                    <span class="oe_currency_value">
+                                                        125,000.00
+                                                    </span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr style="">
+                                            <td>
+                                                <span class="text-nowrap">Tax
+                                                    15%
+                                                </span>
+                                            </td>
+                                            <td class="text-right o_price_total">
+                                                <span class="text-nowrap">$
+                                                    18,750.00
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black o_total">
+                                            <td>
+                                                <strong>Total</strong>
+                                            </td>
+                                            <td class="text-right">
+                                                <span class="text-nowrap">$
+                                                    <span class="oe_currency_value">
+                                                        143,750.00
+                                                    </span>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <p>
+                        Please use the following communication for your payment
+                        :
+                        <b>
+                            <span>
+                                INV/2020/07/0003
+                            </span>
+                        </b>
+                    </p>
+                    <p name="payment_term">
+                        <span>Payment terms: 300 Days</span>
+                    </p>
+                    <t t-if="mi_type == 'text'">
+                        <t t-if="txt_position == 'body'">
+                            <div t-if="body_txt_position == 'br'"
+                                 style="font-size:25px; text-align:right;">
+                                <span>Sample Name</span>
+                            </div>
+                            <div t-if="body_txt_position == 'bl'"
+                                 style="font-size:25px; text-align:left;">
+                                <span>Sample Name</span>
+                            </div>
+
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="new_external_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t t-if="layout" t-call="{{layout}}">
+            <t t-raw="0"/>
+        </t>
+        <t t-else="else" t-call="base_accounting_kit.standard">
+            <t t-raw="0"/>
+        </t>
+    </template>
+</odoo>

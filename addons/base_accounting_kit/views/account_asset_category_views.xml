@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Asset Category Form View -->
+    <record model="ir.ui.view" id="account_asset_category_view_form">
+        <field name="name">account.asset.category.view.form</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <form string="Asset category">
+                <sheet>
+                    <group>
+                        <div class="oe_title">
+                            <label for="name" string="Asset Type"
+                                   class="oe_edit_only"
+                                   invisible="type != 'purchase'"/>
+                            <label for="name" string="Deferred Revenue Type"
+                                   class="oe_edit_only"
+                                   invisible="type in 'purchase'"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Computers"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="type" invisible="1"/>
+                            <field name="company_id" options="{'no_create': True}"/>
+                            <field name="price"/>
+                        </group>
+                        <group string="Journal Entries">
+                            <field name="journal_id"/>
+                            <div>
+                                <label for="account_asset_id" invisible="type != 'purchase'"/>
+                                <label for="account_asset_id" string="Deferred Revenue Account" invisible="type != 'sale'"/>
+                            </div>
+                            <field name="account_asset_id" nolabel="1" invisible="not type"/>
+                            <div>
+                                <label for="account_depreciation_id" invisible="type != 'purchase'"/>
+                                <label for="account_depreciation_id" string="Recognition Income Account" invisible="type != 'sale'"/>
+                            </div>
+                            <field name="account_depreciation_id" nolabel="1" />
+                            <div>
+                                <label for="account_depreciation_expense_id" invisible="type != 'purchase'"/>
+                                <label for="account_depreciation_expense_id" string="Recognition Account" invisible="type != 'sale'"/>
+                            </div>
+                            <field name="account_depreciation_expense_id" nolabel="1"/>
+                            <field name="account_analytic_id"/>
+                        </group>
+                        <group string="Periodicity">
+                            <field name="method_time" string="Time Method Based On" widget="radio" invisible="type != 'purchase'"/>
+                            <field name="method_number" string="Number of Entries"
+                                   invisible="method_time != 'number' and not type"
+                                   required="method_time in 'number'"/>
+                            <label for="method_period" string="One Entry Every"/>
+                            <div>
+                                <field name="method_period" nolabel="1" invisible="not type" class="oe_inline"/>
+                                months
+                            </div>
+                            <field name="method_end"
+                                   required="method_time in 'end'"
+                                   invisible="method_time != 'end'"/>
+                        </group>
+                        <group string="Additional Options">
+                            <field name="open_asset"/>
+                            <field name="group_entries"/>
+                        </group>
+                        <group invisible="type in 'sale'" string="Depreciation Method">
+                            <field name="method" widget="radio"/>
+                            <field name="method_progress_factor"
+                                   invisible="method in 'linear'"
+                                   required="method in 'degressive'"/>
+                            <field name="prorata"
+                                   invisible="method in 'end'"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Asset Category Kanban View -->
+    <record id="account_asset_category_view_kanban" model="ir.ui.view">
+        <field name="name">account.asset.category.view.kanban</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="method"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div class="col-xs-6">
+                                    <strong><span><t t-esc="record.name.value"/></span></strong>
+                                </div>
+                                <div class="col-xs-6 text-right">
+                                    <span class="badge"><strong><t t-esc="record.method.value"/></strong></span>
+                                </div>
+                            </div>
+                            <div> <t t-esc="record.journal_id.value"/></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <!-- Asset Category Tree View -->
+    <record model="ir.ui.view" id="account_asset_category_view_tree">
+        <field name="name">account.asset.category.view.tree</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <list string="Asset category">
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="method"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+    <!-- Asset Category Search View -->
+    <record model="ir.ui.view" id="account_asset_category_view_search">
+        <field name="name">account.asset.category.view.search</field>
+        <field name="model">account.asset.category</field>
+        <field name="arch" type="xml">
+            <search string="Search Asset Category">
+                <filter name="type" string="Sales" domain="[('type','=', 'sale')]" help="Deferred Revenues"/>
+                <filter name="type" string="Purchase" domain="[('type','=', 'purchase')]" help="Assets"/>
+                <field name="name" string="Category"/>
+                <field name="journal_id"/>
+                <group expand="0" string="Group By...">
+                    <filter name="type" string="Type" domain="[]" context="{'group_by':'type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!-- Asset Category Action -->
+    <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal_purchase">
+        <field name="name">Asset Types</field>
+        <field name="res_model">account.asset.category</field>
+        <field name="domain">[('type', '=', 'purchase')]</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="context">{'default_type': 'purchase'}</field>
+    </record>
+    <!-- Asset Category MenuItem -->
+    <menuitem parent="account.account_management_menu"
+              id="menu_action_account_asset_asset_list_normal_purchase"
+              action="action_account_asset_asset_list_normal_purchase"
+              sequence="6"/>
+</odoo>
