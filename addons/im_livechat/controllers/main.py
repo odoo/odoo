@@ -5,9 +5,7 @@ from werkzeug.exceptions import NotFound
 from urllib.parse import urlsplit
 
 from odoo import http, _
-from odoo.exceptions import UserError
 from odoo.http import content_disposition, request
-from odoo.tools import replace_exceptions
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
@@ -78,44 +76,45 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/get_session', methods=["POST"], type="jsonrpc", auth='public')
     @add_guest_to_context
-    def get_session(self, channel_id, anonymous_name, previous_operator_id=None, chatbot_script_id=None, persisted=True):
-        store = Store()
-        user_id = None
-        country_id = None
-        channel = request.env["discuss.channel"]
-        guest = request.env["mail.guest"]
-        # if the user is identifiy (eg: portal user on the frontend), don't use the anonymous name. The user will be added to session.
-        if request.session.uid:
-            user_id = request.env.user.id
-            country_id = request.env.user.country_id.id
-        else:
-            # if geoip, add the country name to the anonymous name
-            if request.geoip.country_code:
-                # get the country of the anonymous person, if any
-                country = request.env['res.country'].sudo().search([('code', '=', request.geoip.country_code)], limit=1)
-                if country:
-                    country_id = country.id
-
-        if previous_operator_id:
-            previous_operator_id = int(previous_operator_id)
-
+    def get_session(self, channel_id, previous_operator_id=None, chatbot_script_id=None, persisted=True):
+        agent = request.env["res.users"]
         chatbot_script = request.env["chatbot.script"]
-        if chatbot_script_id:
-            chatbot_script = request.env['chatbot.script'].sudo().with_context(
-                lang=request.env["chatbot.script"]._get_chatbot_language()
-            ).browse(chatbot_script_id)
-        channel_vals = request.env["im_livechat.channel"].with_context(lang=False).sudo().browse(channel_id)._get_livechat_discuss_channel_vals(
-            anonymous_name,
-            previous_operator_id=previous_operator_id,
-            chatbot_script=chatbot_script,
-            user_id=user_id,
-            country_id=country_id,
-            lang=request.cookies.get('frontend_lang')
+        channel = request.env["discuss.channel"]
+        country = request.env["res.country"]
+        guest = request.env["mail.guest"]
+        store = Store()
+        livechat_channel = (
+            request.env["im_livechat.channel"]
+            .with_context(lang=False)
+            .sudo()
+            .search([("id", "=", channel_id)])
         )
-        if not channel_vals:
+        if not livechat_channel:
+            raise NotFound()
+        if not request.env.user._is_public():
+            country = request.env.user.country_id
+        elif request.geoip.country_code:
+            country = request.env["res.country"].search(
+                [("code", "=", request.geoip.country_code)], limit=1
+            )
+        if chatbot_script_id and chatbot_script_id in livechat_channel.rule_ids.chatbot_script_id.ids:
+            chatbot_script = (
+                request.env["chatbot.script"]
+                .sudo()
+                .with_context(lang=request.env["chatbot.script"]._get_chatbot_language())
+                .search([("id", "=", chatbot_script_id)])
+            )
+        else:
+            agent = livechat_channel._get_operator(
+                previous_operator_id=previous_operator_id,
+                lang=request.cookies.get("frontend_lang"),
+                country_id=country.id,
+            )
+        if not chatbot_script and not agent:
             return False
-        channel_id = -1  # only one temporary thread at a time, id does not matter.
+
         if not persisted:
+            channel_id = -1  # only one temporary thread at a time, id does not matter.
             chatbot_data = None
             if chatbot_script:
                 welcome_steps = chatbot_script._get_welcome_steps()
@@ -125,43 +124,46 @@ class LivechatController(http.Controller):
                 }
                 store.add(chatbot_script)
                 store.add(welcome_steps)
-            operator = request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"])
+            operator_partner = agent.partner_id if agent else chatbot_script.operator_partner_id
             channel_info = {
                 "fetchChannelInfoState": "fetched",
                 "id": channel_id,
                 "isLoaded": True,
                 "livechat_operator_id": Store.One(
-                    operator, self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+                    operator_partner, self.env["discuss.channel"]._store_livechat_operator_id_fields(),
                 ),
-                "name": channel_vals["name"],
                 "scrollUnread": False,
                 "channel_type": "livechat",
                 "chatbot": chatbot_data,
             }
             store.add_model_values("discuss.channel", channel_info)
         else:
+            if request.env.user._is_public():
+                guest = guest.sudo()._get_or_create_guest(
+                    guest_name=self._get_guest_name(),
+                    country_code=request.geoip.country_code,
+                    timezone=request.env["mail.guest"]._get_timezone_from_request(request),
+                )
+                livechat_channel = livechat_channel.with_context(guest=guest)
+                request.update_context(guest=guest)
+            channel_vals = livechat_channel._get_livechat_discuss_channel_vals(
+                chatbot_script=chatbot_script, agent=agent
+            )
+            lang = request.env["res.lang"].search(
+                [("code", "=", request.cookies.get("frontend_lang"))]
+            )
+            channel_vals.update({"country_id": country.id, "livechat_lang_id": lang.id})
             channel = request.env['discuss.channel'].with_context(
-                mail_create_nosubscribe=False,
                 lang=request.env['chatbot.script']._get_chatbot_language()
             ).sudo().create(channel_vals)
             channel_id = channel.id
             if chatbot_script:
                 chatbot_script._post_welcome_steps(channel)
-            with replace_exceptions(UserError, by=NotFound()):
-                # sudo: mail.guest - creating a guest and their member in a dedicated channel created from livechat
-                __, guest = channel.sudo()._find_or_create_persona_for_channel(
-                    guest_name=self._get_guest_name(),
-                    country_code=request.geoip.country_code,
-                    timezone=request.env['mail.guest']._get_timezone_from_request(request),
-                    create_member_params={"livechat_member_type": "visitor"},
-                    post_joined_message=False
-                )
-            channel = channel.with_context(guest=guest)  # a new guest was possibly created
             if not chatbot_script or chatbot_script.operator_partner_id != channel.livechat_operator_id:
                 channel._broadcast([channel.livechat_operator_id.id])
             if guest:
                 store.add_global_values(guest_token=guest.sudo()._format_auth_cookie())
-        request.env["res.users"].with_context(guest=guest)._init_store_data(store)
+        request.env["res.users"]._init_store_data(store)
         # Make sure not to send "isLoaded" value on the guest bus, otherwise it
         # could be overwritten.
         if channel:

@@ -3,12 +3,12 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import Command, fields
-from odoo.tests.common import tagged
+from odoo.tests.common import HttpCase, tagged
 from odoo.addons.mail.tests.common import MailCommon
 
 
 @tagged("post_install", "-at_install")
-class TestLivechatHrHolidays(MailCommon):
+class TestLivechatHrHolidays(HttpCase, MailCommon):
     """Tests for bridge between im_livechat and hr_holidays modules."""
 
     @classmethod
@@ -47,8 +47,6 @@ class TestLivechatHrHolidays(MailCommon):
                 "user_ids": [Command.link(self.user_employee.id)],
             }
         )
-        self.env["discuss.channel"].create(
-            livechat_channel._get_livechat_discuss_channel_vals(anonymous_name="Visitor")
-        )
+        self.make_jsonrpc_request("/im_livechat/get_session", {"channel_id": livechat_channel.id})
         self.assertEqual(self.user_employee.im_status, "leave_online")
         self.assertFalse(livechat_channel.available_operator_ids)

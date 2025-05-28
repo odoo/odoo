@@ -330,7 +330,11 @@ class DiscussChannel(models.Model):
                                 field_name=field_name,
                             )
                         )
-            membership_pids = [cmd[2]['partner_id'] for cmd in membership_ids_cmd if cmd[0] == 0]
+            membership_pids = [
+                cmd[2]["partner_id"]
+                for cmd in membership_ids_cmd
+                if cmd[0] == 0 and "partner_id" in cmd[2]
+            ]
 
             partner_ids_to_add = partner_ids
             # always add current user to new channel to have right values for
@@ -993,20 +997,10 @@ class DiscussChannel(models.Model):
         if not self.env.user._is_public():
             self._add_members(users=self.env.user, post_joined_message=post_joined_message)
         else:
-            guest = self.env["mail.guest"]._get_guest_from_context()
-            if not guest:
-                guest = self.env["mail.guest"].create(
-                    {
-                        "country_id": self.env["res.country"].search([("code", "=", country_code)]).id,
-                        "lang": get_lang(self.env).code,
-                        "name": guest_name,
-                        "timezone": timezone,
-                    }
-                )
-                guest._set_auth_cookie()
-                guest = guest.sudo(False)
-                self = self.with_context(guest=guest)
-            self._add_members(
+            guest = guest._get_or_create_guest(
+                guest_name=guest_name, country_code=country_code, timezone=timezone
+            )
+            self.with_context(guest=guest)._add_members(
                 guests=guest,
                 create_member_params=create_member_params,
                 post_joined_message=post_joined_message,
