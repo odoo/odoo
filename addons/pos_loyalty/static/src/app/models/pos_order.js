@@ -1134,7 +1134,7 @@ patch(PosOrder.prototype, {
                 discountProduct.taxes_id,
                 -Math.min(maxDiscount, discountable),
                 discountProduct,
-                this.config._product_default_values,
+                {},
                 this.company,
                 this.currency,
                 this.models

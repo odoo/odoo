@@ -377,10 +377,7 @@ export class PosOrderline extends Base {
             price_unit: priceUnit,
             discount: discount,
             tax_ids: this.tax_ids,
-            product_id: accountTaxHelpers.eval_taxes_computation_prepare_product_values(
-                this.config._product_default_values,
-                product
-            ),
+            product_id: product,
             ...customValues,
         };
         if (order.fiscal_position_id) {
