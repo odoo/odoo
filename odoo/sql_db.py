@@ -514,7 +514,7 @@ class Cursor(BaseCursor):
         if not self._obj:
             return
 
-        del self.cache
+        self.cache.clear()
 
         # advanced stats only at logging.DEBUG level
         self.print_log()
