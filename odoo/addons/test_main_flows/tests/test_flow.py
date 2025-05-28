@@ -92,7 +92,8 @@ class BaseTestUi(AccountTestMockOnlineSyncCommon):
 
         self.start_tour("/odoo", 'main_flow_tour', login="admin", timeout=180)
 
-@odoo.tests.tagged('post_install', '-at_install')
+
+@odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUi(BaseTestUi):
 
     def test_01_main_flow_tour(self):
@@ -191,7 +192,7 @@ class TestUi(BaseTestUi):
             self.start_tour(f"/odoo/action-{act_window.id}?debug=assets", "test_company_switch_access_error", login="admin", cookies={"cids": current_companies})
 
 
-@odoo.tests.tagged('post_install', '-at_install')
+@odoo.tests.tagged('post_install', '-at_install', 'is_tour')
 class TestUiMobile(BaseTestUi):
 
     browser_size = '375x667'
