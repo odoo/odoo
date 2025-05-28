@@ -3840,7 +3840,8 @@ class AccountMove(models.Model):
             reference will be 'RF67 INV0 0003 7'.
         """
         self.ensure_one()
-        return format_structured_reference_iso(f'{self.journal_id.code}{str(self.id).zfill(6)}')
+        journal_identifier = self.journal_id.code if self.journal_id.code.isascii() else self.journal_id.id
+        return format_structured_reference_iso(f'{journal_identifier}{str(self.id).zfill(6)}')
 
     def _get_invoice_reference_euro_partner(self):
         """ This computes the reference based on the RF Creditor Reference.
@@ -3854,9 +3855,10 @@ class AccountMove(models.Model):
             be used.
         """
         self.ensure_one()
+        journal_identifier = self.journal_id.code if self.journal_id.code.isascii() else self.journal_id.id
         partner_ref = self.partner_id.ref
         partner_ref_nr = re.sub(r'\D', '', partner_ref or '')[-21:] or str(self.partner_id.id)[-21:]
-        partner_ref_nr = f'{self.journal_id.code}{partner_ref_nr}'[-21:]
+        partner_ref_nr = f'{journal_identifier}{partner_ref_nr}'[-21:]
         return format_structured_reference_iso(partner_ref_nr)
 
     def _get_invoice_reference_number_invoice(self):

@@ -8,6 +8,7 @@ from odoo.addons.account.models.account_payment_method import AccountPaymentMeth
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.tests import Form, tagged
 from odoo.exceptions import UserError, ValidationError
+from odoo import fields
 from odoo import Command
 
 
@@ -309,6 +310,47 @@ class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
         })
         self.assertEqual(journal.alias_name, f'test-journal-{company_name}')
         self.assertEqual(journal2.alias_name, f'test-journal-{company_name}-b')
+
+    def test_non_latin_journal_code_payment_reference(self):
+        """ Ensure non-Latin journal codes do not cause errors and payment references are valid """
+        non_latin_code = 'TΠY'
+        latin_code = 'TPY'
+
+        journal_non_latin = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': non_latin_code,
+            'invoice_reference_model': 'euro'
+        })
+        journal_latin = self.env['account.journal'].create({
+            'name': 'Test Journal',
+            'type': 'sale',
+            'code': latin_code,
+            'invoice_reference_model': 'euro'
+        })
+
+        invoice_non_latin = TestAccountJournalAlias.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_a,
+            invoice_date=fields.Date.today(),
+            post=True,
+            products=[self.product_a],
+            journal=journal_non_latin,
+        )
+        invoice_latin = TestAccountJournalAlias.init_invoice(
+            move_type='out_invoice',
+            partner=self.partner_a,
+            invoice_date=fields.Date.today(),
+            post=True,
+            products=[self.product_a],
+            journal=journal_latin,
+        )
+
+        ref_parts_non_latin = invoice_non_latin.payment_reference.split()
+        self.assertEqual(ref_parts_non_latin[1][:3], str(invoice_non_latin.journal_id.id), "The reference should start with " + str(invoice_non_latin.journal_id.id))
+
+        ref_parts_latin = invoice_latin.payment_reference.split()
+        self.assertIn(ref_parts_latin[1][:3], latin_code, f"Expected journal code '{latin_code}' in second part of reference")
 
     def test_use_default_account_from_journal(self):
         """
