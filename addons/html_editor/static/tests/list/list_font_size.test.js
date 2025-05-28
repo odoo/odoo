@@ -1,5 +1,5 @@
 import { testEditor } from "../_helpers/editor";
-import { test } from "@odoo/hoot";
+import { test, before } from "@odoo/hoot";
 import {
     setFontSize,
     splitBlock,
@@ -8,8 +8,16 @@ import {
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 
+before(() => {
+    return document.fonts.add(new FontFace(
+        "Roboto",
+        "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)",
+    )).ready;
+});
+
 test("should apply font-size to completely selected list item", async () => {
     await testEditor({
+        styleContent: ':root { font: 14px Roboto }',
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setFontSize("56px"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
@@ -125,6 +133,7 @@ test("should carry font-size of list item to paragraph (4)", async () => {
 
 test("should keep list item font-size on toggling list twice", async () => {
     await testEditor({
+        styleContent: 'ol { font: 14px Roboto }',
         contentBefore:
             '<ol><li style="font-size: 18px;">[abc</li><li style="font-size: 32px;">def]</li></ol>',
         stepFunction: (editor) => {
@@ -146,6 +155,7 @@ test("should change font-size of a list item", async () => {
 
 test("should change font-size of a list item (2)", async () => {
     await testEditor({
+        styleContent: 'ol { font: 14px Roboto }',
         contentBefore:
             '<ol><li style="font-size: 18px;">[abc</li><li style="font-size: 18px;">ghi]</li></ol>',
         stepFunction: setFontSize("32px"),
@@ -184,7 +194,8 @@ test("should pad list based on font-size", async () => {
 
 test("should pad list based on font-size (2)", async () => {
     await testEditor({
-        contentBefore: `<span style="font-size: 56px;">[a]</span>`,
+        styleContent: 'ol { font: 14px Roboto }',
+        contentBefore: `<span style="font-size: 56px">[a]</span>`,
         stepFunction: toggleOrderedList,
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[]a</li></ol>`,
     });
