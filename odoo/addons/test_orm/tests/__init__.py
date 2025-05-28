@@ -6,6 +6,7 @@ from . import (
     test_check_access,
     test_company_checks,
     test_domain,
+    test_endpoints,
     test_feedback,
     test_fields,
     test_indexed_translation,

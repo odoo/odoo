@@ -1,14 +1,5 @@
-from odoo import models
-from odoo.exceptions import AccessDenied
 from odoo.http import Controller, route
 
-
-class IrHttp(models.AbstractModel):
-    _inherit = 'ir.http'
-
-    @classmethod
-    def _auth_method_thing(cls):
-        raise AccessDenied()
 
 class TestController(Controller):
     # for HTTP endpoints, must allow OPTIONS or werkzeug won't match the route
