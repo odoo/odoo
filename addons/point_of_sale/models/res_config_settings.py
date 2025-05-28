@@ -110,33 +110,46 @@ class ResConfigSettings(models.TransientModel):
     pos_order_edit_tracking = fields.Boolean(related="pos_config_id.order_edit_tracking", readonly=False)
     pos_basic_receipt = fields.Boolean(related='pos_config_id.basic_receipt', readonly=False)
     pos_fallback_nomenclature_id = fields.Many2one(related='pos_config_id.fallback_nomenclature_id', domain="[('id', '!=', barcode_nomenclature_id)]", readonly=False)
-    group_pos_preset = fields.Boolean(string="Presets", implied_group="point_of_sale.group_pos_preset", help="Hide or show the Presets menu in the Point of Sale configuration.")
 
-    def open_payment_method_form(self):
-        bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'pos.payment.method',
-            'views': [(False, 'form')],
-            'target': 'current',
-            'context': {
-                'default_config_ids': self.env.context.get('config_ids', False) or False,
+    def open_pos_payment_methods(self):
+        """
+        Opens the payment methods configuration list view for the selected payment terminal.
+        Create and Open a new payment method if none exists for the selected terminal.
+        """
+        self.ensure_one()
+        existing_pms = self.env['pos.payment.method'].search([
+            ('config_ids', 'in', self.pos_config_id.ids),
+            ('payment_method_type', '=', 'terminal'),
+            ('use_payment_terminal', '=', self.env.context.get('selection')),
+            ('company_id', 'in', self.env.company.id),
+        ])
+        context = {}
+        if not existing_pms:
+            bank_journal_id = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1).id
+            context = {
+                'default_config_ids': self.pos_config_id.ids,
                 'default_payment_method_type': 'terminal',
                 'default_use_payment_terminal': self.env.context.get('selection', False),
-                'default_journal_id': bank_journal.id or False,
+                'default_journal_id': bank_journal_id,
                 'default_name': self.env.context.get('provider_name', False),
             }
+        return {
+            'name': _('Payment Methods'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'pos.payment.method',
+            'views': [[False, 'list'], [False, 'form']] if existing_pms else [[False, 'form']],
+            'target': 'current',
+            'domain': [('id', 'in', existing_pms.ids)] if existing_pms else [],
+            'context': context
         }
 
     @api.model_create_multi
     def create(self, vals_list):
         # STEP: Remove the 'pos' fields from each vals.
-        #   They will be written atomically to `pos_config_id` after the super call.
+        #   They will be written automatically to `pos_config_id` after the super call.
         pos_config_id_to_fields_vals_map = {}
-
         for vals in vals_list:
-            pos_config_id = vals.get('pos_config_id')
-            if pos_config_id:
+            if pos_config_id := vals.get('pos_config_id'):
                 pos_fields_vals = {}
 
                 if vals.get('pos_cash_rounding'):
@@ -144,9 +157,6 @@ class ResConfigSettings(models.TransientModel):
 
                 if vals.get('pos_use_pricelist'):
                     vals['group_product_pricelist'] = True
-
-                if vals.get('pos_use_presets') is not None:
-                    vals["group_pos_preset"] = bool(self.env["pos.config"].search_count([("use_presets", "=", True), ("id", "!=", pos_config_id)])) or vals['pos_use_presets']
 
                 for field in self._fields.values():
                     if field.name == 'pos_config_id':
@@ -191,7 +201,7 @@ class ResConfigSettings(models.TransientModel):
                 ('cash_rounding', '=', True)
             ]).cash_rounding = False
 
-    def action_pos_config_create_new(self):
+    def action_create_new_pos_config(self):
         return {
             'name': _('Create Point of Sale'),
             'view_mode': 'form',
@@ -204,6 +214,7 @@ class ResConfigSettings(models.TransientModel):
 
     def action_pos_printer_dialog(self):
         return {
+            'name': _('Add Printer'),
             'view_mode': 'form',
             'res_model': 'pos.printer',
             'type': 'ir.actions.act_window',
@@ -212,10 +223,7 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def pos_open_ui(self):
-        if self._context.get('pos_config_id'):
-            pos_config_id = self._context['pos_config_id']
-            pos_config = self.env['pos.config'].browse(pos_config_id)
-            return pos_config.open_ui()
+        return self.pos_config_id.open_ui()
 
     @api.model
     def _is_cashdrawer_displayed(self, res_config):
@@ -224,10 +232,8 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('pos_iface_print_via_proxy', 'pos_config_id')
     def _compute_pos_iface_cashdrawer(self):
         for res_config in self:
-            if self._is_cashdrawer_displayed(res_config):
-                res_config.pos_iface_cashdrawer = res_config.pos_config_id.iface_cashdrawer
-            else:
-                res_config.pos_iface_cashdrawer = False
+            res_config.pos_iface_cashdrawer = res_config.pos_config_id.iface_cashdrawer\
+                if self._is_cashdrawer_displayed(res_config) else False
 
     @api.depends('pos_use_pricelist', 'pos_config_id', 'pos_journal_id')
     def _compute_pos_pricelist_id(self):

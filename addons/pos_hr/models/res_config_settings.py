@@ -19,7 +19,7 @@ class ResConfigSettings(models.TransientModel):
         for vals in vals_list:
             pos_config_id = vals.get('pos_config_id')
             if pos_config_id:
-                vals['pos_advanced_employee_ids'] = vals.get('pos_advanced_employee_ids', []) + [[4, emp_id] for emp_id in self.env['pos.config'].browse(pos_config_id)._get_group_pos_manager().user_ids.employee_id.ids]
+                vals['pos_advanced_employee_ids'] = vals.get('pos_advanced_employee_ids', []) + [[4, emp_id] for emp_id in self.env.ref('point_of_sale.group_pos_manager').user_ids.employee_id.ids]
         return super().create(vals_list)
 
     @api.onchange('pos_minimal_employee_ids')

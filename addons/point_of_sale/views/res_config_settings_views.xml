@@ -22,7 +22,7 @@
                     <div style="z-index:1000;" class="position-fixed w-100 bg-white">
                         <setting type="header" string="Point of Sale">
                             <field name="pos_config_id" options="{'no_open': True, 'no_create': True}" title="Settings on this page will apply to this point of sale."/>
-                            <button name="action_pos_config_create_new" type="object" string="+ New Shop" class="btn btn-link"/>
+                            <button name="action_create_new_pos_config" type="object" string="+ New Shop" class="btn btn-link"/>
                         </setting>
                     </div>
 
@@ -35,7 +35,7 @@
                         </div>
                         <div class="o_notification_alert alert alert-warning mt-1 mb-0" invisible="not pos_has_active_session" role="alert">
                             A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
-                            <button class="btn-link" style="padding:0" name="pos_open_ui" type="object" context="{'pos_config_id': pos_config_id}">Click here to close the session</button>
+                            <button class="btn-link" style="padding:0" name="pos_open_ui" type="object">Click here to close the session</button>
                         </div>
                         <div class="o_notification_alert alert alert-warning" invisible="pos_company_has_template or chart_template" role="alert">
                             There is no Chart of Accounts configured on the company. Please go to the invoicing settings to install a Chart of Accounts.
@@ -350,28 +350,28 @@
                                 <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
                                         documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
                                     <field name="module_pos_adyen"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'adyen', 'config_ids': [pos_config_id], 'provider_name': 'Adyen'}" invisible="not module_pos_adyen" />
+                                    <button name="open_pos_payment_methods" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                        context="{'selection': 'adyen', 'provider_name': 'Adyen'}" invisible="not module_pos_adyen" />
                                 </setting>
                                 <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal" documentation="applications/sales/point_of_sale/payment_methods/terminals/stripe.html">
                                     <field name="module_pos_stripe"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'stripe', 'config_ids': [pos_config_id], 'provider_name': 'Stripe'}" invisible="not module_pos_stripe" />
+                                    <button name="open_pos_payment_methods" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                        context="{'selection': 'stripe', 'provider_name': 'Stripe'}" invisible="not module_pos_stripe" />
                                 </setting>
                                 <setting title="The transactions are processed by Viva.com on terminal or tap on phone." string="Viva.com" help="Accept payments with Viva.com on a terminal or tap on phone">
                                     <field name="module_pos_viva_com"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'viva_com', 'config_ids': [pos_config_id], 'provider_name': 'Viva.com'}" invisible="not module_pos_viva_com" />
+                                    <button name="open_pos_payment_methods" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                        context="{'selection': 'viva_com', 'provider_name': 'Viva.com'}" invisible="not module_pos_viva_com" />
                                 </setting>
                                 <setting id="pos_razorpay_setting" title="The transactions are processed by Razorpay. Set your Razorpay credentials on the related payment method." string="Razorpay" help="Accept payments with a Razorpay payment terminal" documentation="/applications/sales/point_of_sale/payment_methods/terminals/razorpay.html">
                                     <field name="module_pos_razorpay"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'razorpay', 'config_ids': [pos_config_id], 'provider_name': 'Razorpay'}" invisible="not module_pos_razorpay" />
+                                    <button name="open_pos_payment_methods" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                        context="{'selection': 'razorpay', 'provider_name': 'Razorpay'}" invisible="not module_pos_razorpay" />
                                 </setting>
                                 <setting title="The transactions are processed by Mercado Pago on terminal" string="Mercado Pago" help="Accept payments with Mercado Pago on a terminal">
                                     <field name="module_pos_mercado_pago"/>
-                                    <button name="open_payment_method_form" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
-                                        context="{'selection': 'mercado_pago', 'config_ids': [pos_config_id], 'provider_name': 'Mercado Pago'}" invisible="not module_pos_mercado_pago" />
+                                    <button name="open_pos_payment_methods" icon="oi-arrow-right" type="object" string="Payment method" class="btn-link"
+                                        context="{'selection': 'mercado_pago', 'provider_name': 'Mercado Pago'}" invisible="not module_pos_mercado_pago" />
                                 </setting>
                             </block>
 

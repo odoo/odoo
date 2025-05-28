@@ -416,7 +416,7 @@ class PosConfig(models.Model):
         pos_configs = super().create(vals_list)
         pos_configs.sudo()._check_modules_to_install()
         pos_configs.sudo()._check_groups_implied()
-        pos_configs._update_preparation_printers_menuitem_visibility()
+        pos_configs._update_menuitems_visibility()
         # If you plan to add something after this, use a new environment. The one above is no longer valid after the modules install.
         return pos_configs
 
@@ -451,14 +451,14 @@ class PosConfig(models.Model):
         self.sudo()._set_fiscal_position()
         self.sudo()._check_modules_to_install()
         self.sudo()._check_groups_implied()
-        if 'is_order_printer' in vals:
-            self._update_preparation_printers_menuitem_visibility()
+        if {'is_order_printer', 'use_presets'} & vals.keys():
+            self._update_menuitems_visibility()
         return result
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them
         sequences_to_delete = self.sequence_id | self.sequence_line_id
-        res = super(PosConfig, self).unlink()
+        res = super().unlink()
         sequences_to_delete.unlink()
         return res
 
@@ -470,10 +470,11 @@ class PosConfig(models.Model):
             else:
                 raise UserError(_('The default tip product is missing. Please manually specify the tip product. (See Tips field.)'))
 
-    def _update_preparation_printers_menuitem_visibility(self):
-        prepa_printers_menuitem = self.env.ref('point_of_sale.menu_pos_preparation_printer', raise_if_not_found=False)
-        if prepa_printers_menuitem:
+    def _update_menuitems_visibility(self):
+        if prepa_printers_menuitem := self.env.ref('point_of_sale.menu_pos_preparation_printer', False):
             prepa_printers_menuitem.active = self.env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
+        if preset_menu := self.env.ref('point_of_sale.menu_pos_preset', False):
+            preset_menu.active = self.env['pos.config'].search_count([('use_presets', '=', True)], limit=1) > 0
 
     def _preprocess_x2many_vals_from_settings_view(self, vals):
         """ From the res.config.settings view, changes in the x2many fields always result to an array of link commands or a single set command.

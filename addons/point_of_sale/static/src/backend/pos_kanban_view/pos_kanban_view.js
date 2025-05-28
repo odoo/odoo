@@ -46,7 +46,10 @@ export class PosKanbanRenderer extends KanbanRenderer {
                 await this.callWithViewUpdate(async () => {
                     let isInstalledWithDemo = false;
                     if (isRestaurant && !this.posState.is_restaurant_installed) {
-                        const isInstalledWithDemo = await this.orm.call("pos.config", "install_pos_restaurant");
+                        isInstalledWithDemo = await this.orm.call(
+                            "pos.config",
+                            "install_pos_restaurant"
+                        );
                     }
                     if (
                         !isInstalledWithDemo ||
