@@ -1108,6 +1108,18 @@ describe('Format', () => {
                 contentAfter: `<p>a<span style="font-size: 18px;"><s><u>[b]</u></s></span>c</p>`,
             });
         });
+        it("should apply font size on top of `font` tag", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("80px"),
+                contentAfter: `<p><span style="font-size: 80px;"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font class="bg-o-color-1 text-black">[abcdefg]</font></p>`,
+                stepFunction: setFontSize("72px"),
+                contentAfter: `<p><span style="font-size: 72px;"><font class="bg-o-color-1 text-black">[abcdefg]</font></span></p>`,
+            });
+        });
     });
 
     describe('setFontSizeClassName', () => {
@@ -1219,6 +1231,18 @@ describe('Format', () => {
                 stepFunction: editor => editor.execCommand('removeFormat'),
                 contentAfter: `<div><h1>[abc</h1><h1>abc</h1><h1>abc]</h1></div>`
 
+            });
+        });
+        it("should remove font size classes and gradient color styles", async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-1-fs"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><span class="display-2-fs"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+                stepFunction: (editor) => editor.execCommand("removeFormat"),
+                contentAfter: `<p>[abcdefg]</p>`,
             });
         });
         it('should remove font-size classes when clearing the format' , async () => {
