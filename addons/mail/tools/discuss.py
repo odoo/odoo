@@ -317,12 +317,12 @@ class Store:
                         target = record.env[res_model].browse(res_id)
             return self._copy_with_records(target)
 
-        def _copy_with_records(self, records, fields=None, **kwargs):
+        def _copy_with_records(self, records):
             """Returns a new relation with the given records instead of the field name."""
             assert self.field_name and self.records is None
             params = {
                 "as_thread": self.as_thread,
-                "fields": fields if fields is not None else self.fields,
+                "fields": self.fields,
                 "only_data": self.only_data,
                 **self.kwargs,
             }
@@ -409,10 +409,10 @@ class Store:
             self.mode = mode
             self.sort = sort
 
-        def _copy_with_records(self, records, fields=None, **kwargs):
-            res = super()._copy_with_records(records, fields, **kwargs)
-            res.mode = kwargs.get("mode", self.mode)
-            res.sort = kwargs.get("sort", self.sort)
+        def _copy_with_records(self, records):
+            res = super()._copy_with_records(records)
+            res.mode = self.mode
+            res.sort = self.sort
             return res
 
         def _add_to_store(self, store: "Store", target, key):
