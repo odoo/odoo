@@ -527,7 +527,6 @@
                                         <label for="product_uom_qty"/>
                                         <div class="o_row" name="ordered_qty">
                                             <field name="product_uom_qty"/>
-                                            <field name="product_uom_id" invisible="1" groups="!uom.group_uom"/>
                                             <field
                                                 name="product_uom_id"
                                                 force_save="1"
@@ -672,7 +671,6 @@
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
                                     column_invisible="parent.state != 'sale'"
                                     optional="show"/>
-                                <field name="product_uom_id" column_invisible="True" groups="!uom.group_uom"/>
                                 <field
                                     name="product_uom_id"
                                     force_save="1"

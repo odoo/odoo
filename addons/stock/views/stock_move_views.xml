@@ -136,7 +136,6 @@
                     <field name="picking_type_entire_packs" invisible="1"/>
                     <field name="display_assign_serial" invisible="1"/>
                     <field name="display_import_lot" invisible="1"/>
-                    <field name="product_uom" invisible="1" groups="!uom.group_uom"/>
                     <field name="picking_code" invisible="1"/>
                     <field name="has_tracking" invisible="1"/>
                     <field name="show_quant" invisible="1"/>
@@ -184,7 +183,6 @@
                     <field name="result_package_id" column_invisible="True"/>
                     <field name="tracking" column_invisible="True"/>
                     <field name="picking_type_id" column_invisible="True"/>
-                    <field name="product_uom_id" column_invisible="True" groups="!uom.group_uom"/>
                     <field name="quant_id"
                         domain="[('product_id', '=', product_id), ('location_id', 'child_of', parent.location_id)]"
                         context="{'default_location_id': location_id, 'default_product_id': product_id, 'search_view_ref': 'stock.quant_search_view', 'list_view_ref': 'stock.view_stock_quant_tree', 'form_view_ref': 'stock.view_stock_quant_form', 'readonly_form': True}"
