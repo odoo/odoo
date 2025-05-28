@@ -41,8 +41,8 @@ class ImageGalleryOption extends Plugin {
         system_classes: ["o_empty_gallery_alert"],
         get_gallery_items_handlers: this.getGalleryItems.bind(this),
         reorder_items_handlers: this.reorderGalleryItems.bind(this),
-        on_remove_handlers: this.onRemove.bind(this),
-        after_remove_handlers: this.afterRemove.bind(this),
+        on_will_remove_handlers: this.onWillRemove.bind(this),
+        on_removed_handlers: this.onRemoved.bind(this),
         on_snippet_dropped_handlers: ({ snippetEl }) => {
             const carousels = snippetEl.querySelectorAll(".s_image_gallery .carousel");
             this.addCarouselListener(carousels);
@@ -388,15 +388,17 @@ class ImageGalleryOption extends Plugin {
         );
     }
 
-    onRemove(elementToRemove) {
-        // If the removed element is an image from a gallery, store the gallery element for afterRemove
-        if (elementToRemove.matches(".s_image_gallery img")) {
-            this.imageRemovedGalleryElement = elementToRemove.closest(".s_image_gallery");
+    onWillRemove(toRemoveEl) {
+        // If the removed element is an image from a gallery, store the gallery
+        // element for `onRemoved`.
+        if (toRemoveEl.matches(".s_image_gallery img")) {
+            this.imageRemovedGalleryElement = toRemoveEl.closest(".s_image_gallery");
         }
     }
 
-    afterRemove(elementRemoved) {
-        // If the removed element is an image from a gallery, relayout the gallery
+    onRemoved() {
+        // If the removed element is an image from a gallery, relayout the
+        // gallery.
         if (this.imageRemovedGalleryElement) {
             const mode = this.getMode(this.imageRemovedGalleryElement);
             const images = this.getImages(this.imageRemovedGalleryElement);
