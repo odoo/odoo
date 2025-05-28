@@ -12,20 +12,25 @@ export class SelectTranslateDialog extends Component {
         close: Function,
     };
     setup() {
-        this.inputEl = useRef("input");
+        this.translateEl = useRef("translateInputs");
     }
 
-    onInputChange() {
-        const value = this.inputEl.el.value;
-        this.optionEl.textContent = value;
-        this.optionEl.classList.toggle(
-            "oe_translated",
-            value !== this.optionEl.dataset.initialTranslationValue
-        );
+    onInputChange(ev) {
+        const index = ev.target.dataset.index;
+        const value = ev.target.value;
+        const optionEl = this.optionEls[index];
+
+        if (optionEl) {
+            optionEl.textContent = value;
+            optionEl.classList.toggle(
+                "oe_translated",
+                value !== optionEl.dataset.initialTranslationValue
+            );
+        }
     }
 
-    get optionEl() {
-        return this.props.node;
+    get optionEls() {
+        return this.props.node.querySelectorAll(".o_translation_select_option");
     }
 
     addStepAndClose() {
