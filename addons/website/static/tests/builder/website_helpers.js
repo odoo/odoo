@@ -388,9 +388,10 @@ export function getSnippetStructure({
     groupName,
     imagePreview = "",
     moduleId = "",
+    moduleDisplayName = "",
 }) {
     keywords = keywords.join(", ");
-    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}"  data-module-id="${moduleId}">${content}</div>`;
+    return `<div name="${name}" data-oe-snippet-id="123" data-o-image-preview="${imagePreview}" data-oe-keywords="${keywords}" data-o-group="${groupName}" data-module-id="${moduleId}" data-module-display-name="${moduleDisplayName}">${content}</div>`;
 }
 
 export function getInnerContent({
