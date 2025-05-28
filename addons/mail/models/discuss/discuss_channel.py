@@ -784,8 +784,10 @@ class DiscussChannel(models.Model):
         self._bus_send("discuss.channel/new_message", payload)
         return rdata
 
-    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False):
-        payload = super()._notify_by_web_push_prepare_payload(message, msg_vals=msg_vals)
+    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False, force_record_name=False):
+        payload = super()._notify_by_web_push_prepare_payload(
+            message, msg_vals=msg_vals, force_record_name=force_record_name,
+        )
         payload['options']['data']['action'] = 'mail.action_discuss'
         record_name = msg_vals['record_name'] if 'record_name' in msg_vals else message.record_name
         author_ids = [msg_vals["author_id"]] if msg_vals.get("author_id") else message.author_id.ids
