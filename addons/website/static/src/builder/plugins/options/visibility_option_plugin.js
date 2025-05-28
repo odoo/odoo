@@ -13,7 +13,6 @@ export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";
 class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
     static dependencies = ["visibility", "websiteSession"];
-    static shared = ["clean", "isApplied"];
     resources = {
         builder_options: [
             withSequence(CONDITIONAL_VISIBILITY, {
@@ -70,38 +69,6 @@ class VisibilityOptionPlugin extends Plugin {
 
     setup() {
         this.optionsAttributes = this.getResource("visibility_selector_parameters");
-    }
-
-    clean(editingElement) {
-        editingElement.classList.remove(
-            "d-none",
-            "d-md-none",
-            "d-lg-none",
-            "o_snippet_mobile_invisible",
-            "o_snippet_desktop_invisible",
-            "o_snippet_override_invisible"
-        );
-        const style = getComputedStyle(editingElement);
-        const display = style["display"];
-        editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
-    }
-
-    isApplied(editingElement, visibilityParam) {
-        const classList = [...editingElement.classList];
-        if (
-            visibilityParam === "no_mobile" &&
-            classList.includes("d-none") &&
-            classList.some((className) => className.match(/^d-(md|lg)-/))
-        ) {
-            return true;
-        }
-        if (
-            visibilityParam === "no_desktop" &&
-            classList.some((className) => className.match(/d-(md|lg)-none/))
-        ) {
-            return true;
-        }
-        return false;
     }
 
     normalizeCSSSelectors(rootEl) {
@@ -212,10 +179,11 @@ export class ForceVisibleAction extends BuilderAction {
 }
 export class ToggleDeviceVisibilityAction extends BuilderAction {
     static id = "toggleDeviceVisibility";
-    static dependencies = ["visibility", "visibilityOption"];
+    static dependencies = ["visibility", "history"];
+
     apply({ editingElement, params: { mainParam: visibility } }) {
         // Clean first as the widget is not part of a group
-        this.dependencies.visibilityOption.clean(editingElement);
+        this.clean({ editingElement });
         const style = getComputedStyle(editingElement);
         if (visibility === "no_desktop") {
             editingElement.classList.add("d-lg-none", "o_snippet_desktop_invisible");
@@ -231,12 +199,47 @@ export class ToggleDeviceVisibilityAction extends BuilderAction {
         const isMobile = this.services.website.context.isMobile;
         const show = visibility !== (isMobile ? "no_mobile" : "no_desktop");
         this.dependencies.visibility.onOptionVisibilityUpdate(editingElement, show);
+        this.dependencies.history.applyCustomMutation({
+            apply: () => {},
+            revert: () => {
+                editingElement.classList.remove("o_snippet_override_invisible");
+            },
+        });
     }
     clean({ editingElement }) {
-        this.dependencies.visibilityOption.clean(editingElement);
+        editingElement.classList.remove(
+            "d-none",
+            "d-md-none",
+            "d-lg-none",
+            "o_snippet_mobile_invisible",
+            "o_snippet_desktop_invisible"
+        );
+        const style = getComputedStyle(editingElement);
+        const display = style["display"];
+        editingElement.classList.remove(`d-md-${display}`, `d-lg-${display}`);
+        this.dependencies.history.applyCustomMutation({
+            apply: () => {
+                editingElement.classList.remove("o_snippet_override_invisible");
+            },
+            revert: () => {},
+        });
     }
-    isApplied({ editingElement, params: { mainParam: visibility } }) {
-        return this.dependencies.visibilityOption.isApplied(editingElement, visibility);
+    isApplied({ editingElement, params: { mainParam: visibilityParam } }) {
+        const classList = [...editingElement.classList];
+        if (
+            visibilityParam === "no_mobile" &&
+            classList.includes("d-none") &&
+            classList.some((className) => className.match(/^d-(md|lg)-/))
+        ) {
+            return true;
+        }
+        if (
+            visibilityParam === "no_desktop" &&
+            classList.some((className) => className.match(/d-(md|lg)-none/))
+        ) {
+            return true;
+        }
+        return false;
     }
 }
 
