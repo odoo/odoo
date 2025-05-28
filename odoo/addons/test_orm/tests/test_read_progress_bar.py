@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tests import common
 from odoo.tools import mute_logger
@@ -9,7 +8,7 @@ class TestReadProgressBar(common.TransactionCase):
     """Test for read_progress_bar"""
 
     def setUp(self):
-        super(TestReadProgressBar, self).setUp()
+        super().setUp()
         self.Model = self.env['res.partner']
 
     def test_read_progress_bar_m2m(self):
@@ -18,7 +17,7 @@ class TestReadProgressBar(common.TransactionCase):
             'field': 'type',
             'colors': {
                 'contact': 'success', 'private': 'danger', 'other': '200',
-            }
+            },
         }
         result = self.env['res.partner'].read_progress_bar([], 'category_id', progressbar)
         # check that it works when grouping by m2m field
@@ -39,7 +38,7 @@ class TestReadProgressBar(common.TransactionCase):
             'colors': {
                 "testWeekGrouping_first": 'success',
                 "testWeekGrouping_second": 'danger',
-            }
+            },
         }
 
         groups = self.Model.with_context(context).formatted_read_group(
