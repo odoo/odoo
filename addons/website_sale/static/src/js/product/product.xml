@@ -9,7 +9,7 @@
         </QuantityButtons>
         <button name="sale_product_configurator_add_button" position="attributes">
             <attribute name="t-if">this.props.can_be_sold</attribute>
-            <attribute name="class" remove="btn-secondary" add="btn-primary" separator=" "/>
+            <attribute name="class" remove="btn-secondary" add="btn-outline-primary" separator=" "/>
         </button>
         <xpath
             expr="//button[@name='sale_product_configurator_add_button']/*[hasclass('fa-plus')]"
@@ -17,18 +17,23 @@
         >
             <attribute name="class" remove="fa-plus" add="fa-shopping-cart" separator=" "/>
         </xpath>
+        <span name="add_button" position="attributes">
+            <attribute name="t-out">'Add to Cart'</attribute>
+        </span>
+
         <button name="sale_product_configurator_add_button" position="after">
             <t t-call="website_sale.not_for_sale"/>
         </button>
-        <t name="sale_product_configurator_price" position="before">
+        <t name="sale_product_configurator_price" position="after">
             <t t-call="website_sale.strikethrough_product_price"/>
         </t>
-        <t name="sale_product_configurator_optional_price" position="before">
+        <t name="sale_product_configurator_optional_price" position="after">
             <t t-call="website_sale.strikethrough_product_price"/>
         </t>
         <xpath
             expr="//div[@name='o_sale_product_configurator_name']//span[hasclass('h5')]"
-            position="attributes">
+            position="attributes"
+        >
             <attribute name="class" remove="h5" add="h6" separator=" "/>
         </xpath>
     </t>
