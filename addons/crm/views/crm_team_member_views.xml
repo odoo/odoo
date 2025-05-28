@@ -45,11 +45,12 @@
                 <notebook>
                     <page string="Lead Assignment" name="lead_assign" invisible="not assignment_enabled">
                         <group>
-                            <div invisible="assignment_optout" colspan="2">
+                            <label for="assignment_max" class="o_form_label text-900" string="Capacity" invisible="assignment_optout"/>
+                            <span invisible="assignment_optout">
                                 <field name="lead_month_count" class="oe_inline"/>
                                 <span> leads assigned the last 30 days out of a maximum of </span>
-                                <field name="assignment_max" class="oe_inline o_field_highlight o_input_6ch"/>
-                            </div>
+                                <field name="assignment_max" class="oe_inline o_field_highlight o_input_6ch border-bottom border-dark"/>
+                            </span>
                             <field name="assignment_optout"/>
                             <field name="assignment_domain_preferred" string="Lead Priority Filter" widget="domain"
                                 options="{'model': 'crm.lead', 'foldable': True}"
