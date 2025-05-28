@@ -63,22 +63,29 @@ class PosOrder(models.Model):
     # OVERRIDES
     # -------------------------------------------------------------------------
 
-    def _process_saved_order(self, draft):
-        if not self.l10n_es_tbai_is_required:
-            return super()._process_saved_order(draft)
+    @api.model_create_multi
+    def create(self, vals_list):
+        pos_orders = super().create(vals_list)
+        if self.l10n_es_tbai_is_required:
+            pos_orders._check_order()
+        return pos_orders
 
-        self.ensure_one()
+    def write(self, vals):
+        order = super().write(vals)
+        for order in self:
+            if order.l10n_es_tbai_is_required:
+                self._check_order()
+        return order
 
-        if not self.to_invoice and self.amount_total > self.company_id.l10n_es_simplified_invoice_limit:
-            raise UserError(self.env._("Please create an invoice for an amount over %s.", self.company_id.l10n_es_simplified_invoice_limit))
-
-        if self.refunded_order_id:
-            if self.to_invoice and not self.refunded_order_id.account_move:
-                raise UserError(self.env._("You cannot invoice a refund whose linked order hasn't been invoiced."))
-            if not self.to_invoice and self.refunded_order_id.account_move:
-                raise UserError(self.env._("Please invoice the refund as the linked order has been invoiced."))
-
-        return super()._process_saved_order(draft)
+    def _check_order(self):
+        for order in self:
+            if not order.to_invoice and order.amount_total > order.company_id.l10n_es_simplified_invoice_limit:
+                raise UserError(self.env._("Please create an invoice for an amount over %s.", self.company_id.l10n_es_simplified_invoice_limit))
+            if order.refunded_order_id:
+                if order.to_invoice and not order.refunded_order_id.account_move:
+                    raise UserError(self.env._("You cannot invoice a refund whose linked order hasn't been invoiced."))
+                if not order.to_invoice and order.refunded_order_id.account_move:
+                    raise UserError(self.env._("Please invoice the refund as the linked order has been invoiced."))
 
     def action_pos_order_paid(self):
         res = super().action_pos_order_paid()

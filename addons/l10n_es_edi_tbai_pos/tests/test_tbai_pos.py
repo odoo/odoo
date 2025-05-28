@@ -68,9 +68,9 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, CommonPosEsEdiTest):
         pos_refund = self.env['pos.order'].browse(refund_action['res_id'])
 
         # An error is raised if the refund is invoiced
-        pos_refund.to_invoice = True
         with self.assertRaises(UserError):
-            self.pay_pos_order(pos_refund)
+            pos_refund.to_invoice = True
+        self.pay_pos_order(pos_refund)
 
         # Now works with the refund not invoiced
         pos_refund.to_invoice = False

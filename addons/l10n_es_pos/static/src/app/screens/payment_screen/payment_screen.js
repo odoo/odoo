@@ -51,14 +51,15 @@ patch(PaymentScreen.prototype, {
         }
         return false;
     },
-    // shouldDownloadInvoice() {
-    //     return this.pos.config.is_spanish
-    //         ? !this.currentOrder.is_l10n_es_simplified_invoice
-    //         : super.shouldDownloadInvoice();
-    // },
+    shouldDownloadInvoice() {
+        return this.pos.config.is_spanish
+            ? !this.currentOrder.is_l10n_es_simplified_invoice
+            : super.shouldDownloadInvoice();
+    },
     async _postPushOrderResolve(order, order_server_ids) {
+        await this.pos.data.read("pos.order", [order.id]);
         if (this.pos.config.is_spanish) {
-            order.invoice_name = order.account_move?.name;;
+            order.invoice_name = order.account_move?.name;
         }
         return super._postPushOrderResolve(...arguments);
     },
