@@ -29,6 +29,7 @@ class NavTabsStyleOptionPlugin extends Plugin {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
+        is_unremovable_selector: ".nav-item",
     };
     isNavItem(el) {
         return el.matches(".nav-item") && !!el.closest(".s_tabs, .s_tabs_images");

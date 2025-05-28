@@ -36,7 +36,7 @@ export class MovePlugin extends Plugin {
             getButtons: this.getActiveOverlayButtons.bind(this),
         }),
         on_cloned_handlers: this.onCloned.bind(this),
-        on_remove_handlers: this.onRemove.bind(this),
+        on_will_remove_handlers: this.onWillRemove.bind(this),
         on_element_dropped_handlers: this.onElementDropped.bind(this),
         is_movable_selector: [
             {
@@ -161,7 +161,7 @@ export class MovePlugin extends Plugin {
         }
     }
 
-    onRemove(toRemoveEl) {
+    onWillRemove(toRemoveEl) {
         if (!this.isMovable(toRemoveEl)) {
             return;
         }
