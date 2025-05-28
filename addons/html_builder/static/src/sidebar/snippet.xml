@@ -18,7 +18,7 @@
             <button
                 t-if="snippet.isInstallable"
                 class="o_install_btn btn btn-success btn-lg position-absolute start-50 bottom-50 translate-middle-x visually-hidden-focusable z-1"
-                t-on-click="() => props.snippetModel.installSnippetModule(snippet)"
+                t-on-click="onClickInstall"
                 >
                 Install
             </button>

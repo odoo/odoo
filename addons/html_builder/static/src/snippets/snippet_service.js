@@ -3,12 +3,12 @@ import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { Reactive } from "@web/core/utils/reactive";
 import { escape } from "@web/core/utils/strings";
+import { redirect } from "@web/core/utils/urls";
 import { AddSnippetDialog } from "./add_snippet_dialog";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { markup } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
-import { redirect } from "@web/core/utils/urls";
 
 export class SnippetModel extends Reactive {
     constructor(services, { snippetsName, context }) {
@@ -17,11 +17,9 @@ export class SnippetModel extends Reactive {
         this.dialog = services.dialog;
         this.notification = services.notification;
         this.snippetsName = snippetsName;
-        this.websiteService = services.website;
         this.uiService = services.ui;
         this.context = context;
         this.loadProm = null;
-        this.beforeReload = null;
 
         this.snippetsByCategory = {
             snippet_groups: [],
@@ -83,57 +81,49 @@ export class SnippetModel extends Reactive {
         return this.snippetsByCategory[category].find((snippet) => snippet.name === name);
     }
 
-    registerBeforeReload(func) {
-        this.beforeReload = func;
+    reloadWebClient() {
+        const currentPath = encodeURIComponent(window.location.pathname);
+        const websiteId = this.context.website_id;
+        redirect(
+            `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
+                websiteId
+            )}&path=${currentPath}&enable_editor=1`
+        );
     }
 
-    unregisterBeforeReload() {
-        this.beforeReload = null;
-    }
-
-    installSnippetModule(snippet) {
-        // TODO: Should be the app name, not the snippet name ... Maybe both ?
-        const bodyText = _t("Do you want to install %s App?", snippet.title);
+    installSnippetModule(snippet, beforeInstall) {
+        const bodyText = _t("Do you want to install %s App?", snippet.moduleDisplayName);
         const linkText = _t("More info about this app.");
         const linkUrl =
             "/odoo/action-base.open_module_tree/" + encodeURIComponent(snippet.moduleId);
 
         this.dialog.add(ConfirmationDialog, {
-            title: _t("Install %s", snippet.title),
-            body: markup`${bodyText}\n<a href="${linkUrl}" target="_blank">${linkText}</a>`,
-            confirm: () => {
-                this.uiService.block();
-                (async () => {
-                    try {
-                        await this.orm.call("ir.module.module", "button_immediate_install", [
-                            [Number(snippet.moduleId)],
-                        ]);
-                        if (this.beforeReload) {
-                            await this.beforeReload();
-                        }
-                        const currentPath = encodeURIComponent(window.location.pathname);
-                        const websiteId = this.websiteService.currentWebsite.id;
-                        redirect(
-                            `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
-                                websiteId
-                            )}&path=${currentPath}&enable_editor=1`
+            title: _t("Install %s", snippet.moduleDisplayName),
+            body: markup`${bodyText}\n<a href="${linkUrl}" target="_blank"><i class="oi oi-arrow-right me-1"></i>${linkText}</a>`,
+            confirm: async () => {
+                this.dialog.closeAll();
+                try {
+                    this.uiService.block();
+                    await beforeInstall();
+                    await this.orm.call("ir.module.module", "button_immediate_install", [
+                        [parseInt(snippet.moduleId)],
+                    ]);
+                    this.reloadWebClient();
+                } catch (e) {
+                    this.uiService.unblock();
+                    if (e instanceof RPCError) {
+                        const message = _t(
+                            "Could not install module %s",
+                            snippet.moduleDisplayName
                         );
-                    } catch (e) {
-                        if (e instanceof RPCError) {
-                            const message = _t("Could not install module %(title)s", {
-                                title: snippet.title,
-                            });
-                            this.notification.add(message, {
-                                type: "danger",
-                                sticky: true,
-                            });
-                            return;
-                        }
-                        throw e;
-                    } finally {
-                        this.uiService.unblock();
+                        this.notification.add(message, {
+                            type: "danger",
+                            sticky: true,
+                        });
+                        return;
                     }
-                })();
+                    throw e;
+                }
             },
             confirmLabel: _t("Save and Install"),
             cancel: () => {},
@@ -149,8 +139,9 @@ export class SnippetModel extends Reactive {
      * @param {Object} - `onSelect` called when a snippet is selected. Must return
      *     an HTMLElement.
      *                 - `onClose` called when the dialog is closed.
+     * @param {Object} editor
      */
-    openSnippetDialog(snippet, { onSelect, onClose }) {
+    openSnippetDialog(snippet, { onSelect, onClose }, editor) {
         this.dialog.add(
             AddSnippetDialog,
             {
@@ -160,6 +151,7 @@ export class SnippetModel extends Reactive {
                     const newSnippetEl = onSelect(...args);
                     this.updateSnippetContent(newSnippetEl);
                 },
+                save: editor.config.save,
             },
             { onClose }
         );
@@ -212,6 +204,7 @@ export class SnippetModel extends Reactive {
                     Object.assign(snippet, {
                         moduleId,
                         isInstallable: !!moduleId,
+                        moduleDisplayName: snippetEl.dataset.moduleDisplayName,
                     });
                 }
                 if (snippetEl.dataset.oeForbidSanitize) {
