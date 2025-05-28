@@ -1,7 +1,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-mock";
 
-import { Deferred, Mutex, KeepLast, Race } from "@web/core/utils/concurrency";
+import { Deferred, Mutex, KeepLast, Race, execSyncOrAsync } from "@web/core/utils/concurrency";
 
 describe.current.tags("headless");
 
@@ -365,5 +365,63 @@ describe("Race", () => {
         await tick();
         expect.verifySteps(["ok (44)"]);
         expect(race.getCurrentProm()).toBe(null);
+    });
+});
+describe("execSyncOrAsync", () => {
+    test("should execute generator with simple values synchronously", async () => {
+        const result = execSyncOrAsync(function* () {
+            const a = yield 1;
+            const b = yield 2;
+            return a + b;
+        });
+        expect(result).toBe(3);
+    });
+    test("should execute generator with promises asynchronously", async () => {
+        const result = execSyncOrAsync(function* () {
+            const a = yield Promise.resolve(1);
+            const b = yield Promise.resolve(2);
+            return a + b;
+        });
+        expect(result instanceof Promise).toBe(true);
+        expect(await result).toBe(3);
+    });
+    test("should execute generator with synchronous and asynchronous value", async () => {
+        const result = execSyncOrAsync(function* () {
+            const a = yield 1;
+            const b = yield Promise.resolve(2);
+            return a + b;
+        });
+        expect(result instanceof Promise).toBe(true);
+        expect(await result).toBe(3);
+    });
+    test("should execute generator with asynchronous and synchronous value", async () => {
+        const result = execSyncOrAsync(function* () {
+            const a = yield Promise.resolve(1);
+            const b = yield 2;
+            return a + b;
+        });
+        expect(result instanceof Promise).toBe(true);
+        expect(await result).toBe(3);
+    });
+    describe("execSyncOrAsync with bind", () => {
+        test("should execute generator with simple values synchronously with bind", async () => {
+            const context = { value: 10 };
+            const result = execSyncOrAsync(function* () {
+                const a = yield this.value + 1;
+                const b = yield this.value + 2;
+                return a + b;
+            }, context);
+            expect(result).toBe(23);
+        });
+        test("should execute generator with promises asynchronously with bind", async () => {
+            const context = { value: 10 };
+            const result = execSyncOrAsync(function* () {
+                const a = yield Promise.resolve(this.value + 1);
+                const b = yield Promise.resolve(this.value + 2);
+                return a + b;
+            }, context);
+            expect(result instanceof Promise).toBe(true);
+            expect(await result).toBe(23);
+        });
     });
 });
