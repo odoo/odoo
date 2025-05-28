@@ -1743,6 +1743,37 @@ test("dropdown menu last element is 'Add Custom Filter'", async () => {
     expect(".o_searchview_autocomplete .o-dropdown-item:last").toHaveText("Add Custom Filter");
 });
 
+test("dropdown menu elements should be 'below' the 'Add Custom Filter' modal", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="foo"/>
+            </search>
+        `,
+    });
+    await editSearch("a");
+    await animationFrame();
+
+    await contains(".o_searchview_autocomplete .o-dropdown-item:last-child").click();
+    await animationFrame();
+
+    expect(".modal").toHaveCount(1);
+    expect(".modal header").toHaveText("Add Custom Filter");
+
+    const modalOverlay = queryFirst(".modal").closest(".o-overlay-item");
+    const dropdownOverlay = queryFirst(".o_searchview_autocomplete").closest(".o-overlay-item");
+
+    const modalOverlayZIndex = Number(getComputedStyle(modalOverlay).zIndex);
+    const dropdownOverlayZIndex = Number(getComputedStyle(dropdownOverlay).zIndex);
+
+    // Assert that the modal's overlay z-index is at least equal to the dropdown's overlay z-index
+    // This is to ensure that the modal appears on top of (in front of) the dropdown
+    expect(modalOverlayZIndex >= dropdownOverlayZIndex).toBe(true);
+});
+
 test("order by count resets when there is no group left", async () => {
     const searchBar = await mountWithSearch(SearchBar, {
         resModel: "partner",
