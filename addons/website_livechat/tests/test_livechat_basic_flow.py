@@ -384,10 +384,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.target_visitor = None
         channel_info = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {
-                "anonymous_name": "whatever",
-                "channel_id": self.livechat_channel.id,
-            },
+            {"channel_id": self.livechat_channel.id},
         )["store_data"]["discuss.channel"][0]
         self.assertEqual(channel_info["livechat_visitor_id"], False)
 

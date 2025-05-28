@@ -55,10 +55,7 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
         self.livechat_base_url = self.livechat_channel.get_base_url()
 
         self.open_chat_url = f"{self.livechat_base_url}/im_livechat/get_session"
-        self.open_chat_params = {'params': {
-            'channel_id': self.livechat_channel.id,
-            'anonymous_name': "Wrong Name"
-        }}
+        self.open_chat_params = {"params": {"channel_id": self.livechat_channel.id}}
 
         self.send_feedback_url = f"{self.livechat_base_url}/im_livechat/feedback"
         self.leave_session_url = f"{self.livechat_base_url}/im_livechat/visitor_leave_session"

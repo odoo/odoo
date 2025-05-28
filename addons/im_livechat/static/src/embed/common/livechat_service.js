@@ -115,7 +115,6 @@ export class LivechatService {
             "/im_livechat/get_session",
             {
                 channel_id: this.options.channel_id,
-                anonymous_name: this.options.default_username ?? _t("Visitor"),
                 chatbot_script_id:
                     originThread?.chatbot?.script.id ??
                     this.store.livechat_rule?.chatbot_script_id?.id,

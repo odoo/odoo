@@ -30,7 +30,6 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         """ Test customer set on lead: not if public, guest if not public """
         # public: should not be set as customer
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Visitor',
             'channel_id': self.livechat_channel.id,
             'persisted': True,
         })
@@ -48,7 +47,6 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.assertFalse(self.env.ref('base.public_user').active)
 
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Visitor',
             'channel_id': self.livechat_channel.id,
             'persisted': True,
         })
@@ -71,7 +69,6 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         # portal: should be set as customer
         self.authenticate("user_portal", "user_portal")
         data = self.make_jsonrpc_request("/im_livechat/get_session", {
-            'anonymous_name': 'Visitor',
             'channel_id': self.livechat_channel.id,
             'persisted': True,
         })
@@ -104,8 +101,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.livechat_channel.user_ids = bob_operator
         self.env["mail.presence"]._update_presence(bob_operator)
         data = self.make_jsonrpc_request(
-            "/im_livechat/get_session",
-            {"anonymous_name": "Visitor", "channel_id": self.livechat_channel.id},
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
         )
         channel = self.env["discuss.channel"].browse(data["channel_id"])
         message = channel.message_post(

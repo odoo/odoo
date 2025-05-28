@@ -3,7 +3,7 @@ import {
     parseRequestParams,
     registerRoute,
 } from "@mail/../tests/mock_server/mail_mock_server";
-import { makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
+import { makeKwArgs } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";
 
@@ -28,67 +28,44 @@ async function get_session(request) {
 
     let {
         channel_id,
-        anonymous_name,
         previous_operator_id,
         persisted,
         context = {},
     } = await parseRequestParams(request);
     previous_operator_id = parseInt(previous_operator_id);
-    let user_id;
-    let country_id;
-    // don't use the anonymous name if the user is logged in
-    if (this.env.user && !ResUsers._is_public(this.env.uid)) {
-        user_id = this.env.user.id;
-        country_id = this.env.user.country_id;
-    } else {
-        // simulate geoip
-        const countryCode = context.mockedCountryCode;
-        if (countryCode) {
-            const country = ResCountry._filter([["code", "=", countryCode]])[0];
-            if (country) {
-                country_id = country.id;
-                anonymous_name = anonymous_name + " (" + country.name + ")";
-            }
-        }
-    }
-    const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(
-        channel_id,
-        anonymous_name,
-        previous_operator_id,
-        user_id,
-        country_id,
-        persisted
-    );
-    if (!channelVals) {
+    const agent = LivechatChannel._get_operator(channel_id, previous_operator_id);
+    if (!agent) {
         return false;
+    }
+    let country_id;
+    if (this.env.user && !ResUsers._is_public(this.env.uid)) {
+        country_id = this.env.user.country_id;
+    } else if (context.mockedCountryCode) {
+        // simulate geoip
+        const country = ResCountry._filter([["code", "=", context.mockedCountryCode]])[0];
+        if (country) {
+            country_id = country.id;
+        }
     }
     if (!persisted) {
         const store = new mailDataHelpers.Store();
         ResUsers._init_store_data(store);
         store.add("discuss.channel", {
             channel_type: "livechat",
-            chatbot_current_step_id: channelVals.chatbot_current_step_id,
             fetchChannelInfoState: "fetched",
             id: -1,
             isLoaded: true,
             livechat_operator_id: mailDataHelpers.Store.one(
-                ResPartner.browse(channelVals.livechat_operator_id),
+                ResPartner.browse(agent.partner_id),
                 makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
-            name: channelVals["name"],
             scrollUnread: false,
-            state: "open",
         });
         return { store_data: store.get_result(), channel_id: -1 };
     }
+    const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(channel_id, agent);
+    channelVals.country_id = country_id;
     const channelId = DiscussChannel.create(channelVals);
-    DiscussChannel._find_or_create_persona_for_channel(channelId, "Visitor");
-    const memberDomain = [["channel_id", "=", channelId]];
-    if (this.env.user && !ResUsers._is_public(this.env.uid)) {
-        memberDomain.push(["partner_id", "=", serverState.partnerId]);
-    } else {
-        memberDomain.push(["guest_id", "!=", false]);
-    }
     const store = new mailDataHelpers.Store();
     ResUsers._init_store_data(store);
     store.add(DiscussChannel.browse(channelId));

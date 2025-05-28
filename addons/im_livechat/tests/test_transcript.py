@@ -9,10 +9,7 @@ class TestImLivechatTranscript(TestImLivechatCommon, HttpCaseWithUserDemo):
     def test_download_transcript(self):
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            {"channel_id": self.livechat_channel.id},
         )
         res = self.url_open(f"/im_livechat/download_transcript/{data['channel_id']}")
         self.assertEqual(res.status_code, 200)
@@ -22,10 +19,7 @@ class TestImLivechatTranscript(TestImLivechatCommon, HttpCaseWithUserDemo):
         self.authenticate("demo", "demo")
         data = self.make_jsonrpc_request(
             "/im_livechat/get_session",
-            {
-                "channel_id": self.livechat_channel.id,
-                "anonymous_name": "Visitor",
-            },
+            {"channel_id": self.livechat_channel.id},
         )
         chat = self.env["discuss.channel"].browse(data["channel_id"])
         self.authenticate(None, None)
