@@ -2,12 +2,6 @@ table.o_sale_product_configurator_table > tbody > tr > td {
     min-width: 50px;
 }
 
-@include media-breakpoint-down(md) {
-    .non_optional_product_row_borders {
-        border-bottom-width: 1px;
-    
-        & > td {
-            border-bottom-width: 0;
-        }
-    }
+.o_sale_optional_products {
+    background: darken($modal-content-bg, 2%);
 }
