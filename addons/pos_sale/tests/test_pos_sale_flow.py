@@ -1233,12 +1233,18 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         sale_order = self.env['sale.order'].create({
             'partner_id': partner_test.id,
-            'order_line': [(0, 0, {
-                'product_id': product.id,
-                'name': product.name,
-                'product_uom_qty': 2,
-                'price_unit': product.lst_price,
-            })],
+            'order_line': [
+                (0, 0, {
+                    'name': 'section line',
+                    'display_type': 'line_section',
+                }),
+                (0, 0, {
+                    'product_id': product.id,
+                    'name': product.name,
+                    'product_uom_qty': 2,
+                    'price_unit': product.lst_price,
+                })
+            ],
         })
         sale_order.action_confirm()
         self.main_pos_config.open_ui()
