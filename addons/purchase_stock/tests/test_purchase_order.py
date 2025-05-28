@@ -708,6 +708,11 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         # one delivery, one receipt
         self.assertEqual(len(po.picking_ids), 1)
         self.assertEqual(po.picking_ids.picking_type_id.code, 'outgoing')
+<<<<<<< 420765c787b33f79ee8814f799de721508858319
+||||||| bf4e51980bf3bdf34b70b7c269f5da06983eb272
+=======
+        po.picking_ids.move_ids.quantity_done = 5
+>>>>>>> c0ce2fcc57274eb41192b118d4611d5930089e6d
         po.picking_ids.button_validate()
         self.assertEqual(po.order_line.qty_received, po.order_line.product_qty)
 

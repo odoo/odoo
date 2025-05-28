@@ -60,7 +60,14 @@ class PurchaseOrderLine(models.Model):
                     if move.state == 'done':
                         if move._is_purchase_return():
                             if not move.origin_returned_move_id or move.to_refund:
+<<<<<<< 420765c787b33f79ee8814f799de721508858319:addons/purchase_stock/models/purchase_order_line.py
                                 total -= move.product_uom._compute_quantity(move.quantity, line.product_uom, rounding_method='HALF-UP')
+||||||| bf4e51980bf3bdf34b70b7c269f5da06983eb272:addons/purchase_stock/models/purchase.py
+                            if move.to_refund:
+                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+=======
+                                total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom, rounding_method='HALF-UP')
+>>>>>>> c0ce2fcc57274eb41192b118d4611d5930089e6d:addons/purchase_stock/models/purchase.py
                         elif move.origin_returned_move_id and move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
                             # Edge case: the dropship is returned to the stock, no to the supplier.
                             # In this case, the received quantity on the PO is set although we didn't
