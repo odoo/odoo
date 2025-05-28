@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    focus,
     isInViewportOf,
     openDiscuss,
     patchUiSize,
@@ -150,6 +151,8 @@ test("remove banner when scrolling to bottom", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 30 });
+    await contains(".o-mail-Composer.o-focused");
+    await focus(".o-mail-Thread");
     await contains(".o-mail-Thread-banner", { text: "50 new messages" });
     await tick(); // wait for the scroll to first unread to complete
     await scroll(".o-mail-Thread", "bottom");
