@@ -135,7 +135,7 @@ class DiscussChannelMember(models.Model):
                 Store.One("country_id", ["code", "name"]),
                 "im_status",
                 "is_public",
-                "user_livechat_username",
+                *self.env["res.partner"]._get_store_livechat_username_fields(),
             ]
             if self.livechat_member_type == "visitor":
                 new_fields += ["offline_since"]

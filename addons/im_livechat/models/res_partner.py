@@ -70,11 +70,12 @@ class ResPartner(models.Model):
         for partner in self:
             partner.livechat_channel_count = livechat_count_by_partner.get(partner, 0)
 
-    def _to_store(self, store: Store, fields, **kwargs):
-        """Override to add name when user_livechat_username is not set."""
-        super()._to_store(store, fields, **kwargs)
-        if "user_livechat_username" in fields:
-            store.add(self.filtered(lambda p: not p.user_livechat_username), "name")
+    def _get_store_livechat_username_fields(self):
+        """Return the fields to be stored for live chat username."""
+        return [
+            Store.Attr("name", predicate=lambda p: not p.user_livechat_username),
+            "user_livechat_username",
+        ]
 
     def _bus_send_history_message(self, channel, page_history):
         message_body = _("No history found")
