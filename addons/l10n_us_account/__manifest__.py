@@ -12,6 +12,7 @@
     'depends': ['l10n_us', 'account'],
     'data': [
         'views/res_bank_views.xml',
+        'data/tax_report.xml',
         'data/uom_data.xml',
     ],
     'installable': True,
