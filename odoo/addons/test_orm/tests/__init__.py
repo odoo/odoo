@@ -6,6 +6,8 @@ from . import (
     test_autovacuum,
     test_check_access,
     test_company_checks,
+    test_convert,
+    test_convert_env,
     test_domain,
     test_fields,
     test_indexed_translation,
