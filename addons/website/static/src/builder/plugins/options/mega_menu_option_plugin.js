@@ -20,6 +20,7 @@ export class MegaMenuOptionPlugin extends Plugin {
             }),
         ],
         save_handlers: this.saveMegaMenuClasses.bind(this),
+        is_unremovable_selector: ".o_mega_menu > section",
     };
 
     getTemplatePrefix() {
