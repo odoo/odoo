@@ -44,9 +44,8 @@ class DiscussChannel(models.Model):
                     Store.One("country_id", ["code"]),
                     "display_name",
                     "history",
-                    "is_connected",
                     Store.One("lang_id", ["name"]),
-                    Store.One("partner_id", [Store.One("country_id", ["code"]), "im_status"]),
+                    Store.One("partner_id", [Store.One("country_id", ["code"])]),
                     Store.One("website_id", ["name"]),
                 ],
                 predicate=lambda channel: channel.livechat_visitor_id
