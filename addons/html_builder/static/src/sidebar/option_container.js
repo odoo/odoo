@@ -117,9 +117,7 @@ export class OptionsContainer extends BaseOptionComponent {
     // Actions of the buttons in the title bar.
     removeElement() {
         this.callOperation(() => {
-            this.env.editor.shared.remove.removeElementAndUpdateContainers(
-                this.props.editingElement
-            );
+            this.env.editor.shared.remove.removeElement(this.props.editingElement);
         });
     }
 
