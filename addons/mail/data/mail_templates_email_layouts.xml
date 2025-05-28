@@ -114,13 +114,13 @@
                     <t t-if="has_button_access">
                         <a t-att-href="button_access['url']">
                             <span style="font-size: 20px; font-weight: bold;">
-                                <t t-out="message.record_name and message.record_name.replace('/','-') or ''"/>
+                                <t t-out="(record_name or message.record_name or '').replace('/','-')"/>
                             </span>
                         </a>
                     </t>
                     <t t-else="">
                         <span style="font-size: 20px; font-weight: bold;">
-                            <t t-out="message.record_name and message.record_name.replace('/','-') or ''"/>
+                            <t t-out="(record_name or message.record_name or '').replace('/','-')"/>
                         </span>
                     </t>
                 </td><td valign="middle" align="right" t-if="company and not company.uses_default_logo">
