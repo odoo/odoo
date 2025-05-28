@@ -115,13 +115,11 @@ class Store:
                 self.add_records_fields(records, fields)
         return self
 
-    def add_global_values(self, store_self=None, **values):
+    def add_global_values(self, **values):
         """Add global values to the store. Global values are stored in the Store singleton
         (mail.store service) in the client side.
 
         Use case: to add global values."""
-        if store_self is not None:
-            self.add_singleton_values("Store", {"self": store_self})
         self.add_singleton_values("Store", values)
         return self
 

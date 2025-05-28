@@ -419,7 +419,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mt_comment": self.env.ref("mail.mt_comment").id,
                 "mt_note": self.env.ref("mail.mt_note").id,
                 "odoobot": {"id": self.user_root.partner_id.id, "type": "partner"},
-                "self": {"id": self.users[0].partner_id.id, "type": "partner"},
+                "self_partner": {"id": self.users[0].partner_id.id, "type": "partner"},
                 "settings": {
                     "channel_notifications": False,
                     "mute_until_dt": False,
