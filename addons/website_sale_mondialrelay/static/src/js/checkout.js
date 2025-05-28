@@ -22,6 +22,18 @@ WebsiteSaleCheckout.include({
     }, WebsiteSaleCheckout.prototype.events),
 
     /**
+     * Do not allow use same as delivery if delivery method mondialrelay or mondialrelay address is
+     * selected.
+     *
+     * @override of `website_sale`
+     */
+    async start() {
+        await this._super(...arguments);
+        this.$('#use_delivery_as_billing_label')?.tooltip();
+        this._adaptUseDeliveryAsBillingToggle();
+    },
+
+    /**
      * Loads Mondial Relay modal when method is selected and disable `use_delivery_as_billing` if
      * not available.
      *
@@ -31,6 +43,10 @@ WebsiteSaleCheckout.include({
         const checkedRadio = ev.currentTarget;
         await this._super(...arguments);
         if (checkedRadio.dataset.isMondialrelay) {
+            if (this.use_delivery_as_billing_toggle?.checked) {
+                // Uncheck use same as delivery and show the billing address row.
+                this.use_delivery_as_billing_toggle.dispatchEvent(new MouseEvent('click'));
+            }
             // Fetch delivery method data.
             const result = await this._setDeliveryMethod(checkedRadio.dataset.dmId);
             // Show mondialrelay modal.
@@ -43,6 +59,7 @@ WebsiteSaleCheckout.include({
                 this.$modal_mondialrelay.modal('show');
             }
         }
+        this._adaptUseDeliveryAsBillingToggle();
     },
 
     /**
@@ -52,25 +69,35 @@ WebsiteSaleCheckout.include({
      * @override of `website_sale`
      */
     async _changeAddress(ev) {
+        const newAddress = ev.currentTarget;
+        if (newAddress.dataset.isMondialrelay && this.use_delivery_as_billing_toggle?.checked) {
+            // Uncheck use same as delivery and show the billing address row.
+            this.use_delivery_as_billing_toggle.dispatchEvent(new MouseEvent('click'));
+        }
         await this._super(...arguments);
-        this._adaptUseBillingAsDelivery();
+        this._adaptUseDeliveryAsBillingToggle();
     },
 
     /**
-     * Disable use same as delivery when a delivery method mondialrelay or mondialrelay address is
+     * Disable use same as delivery when delivery method mondialrelay or mondialrelay address is
      * selected, otherwise enable it.
      *
+     * @private
+     * @return {void}
      */
-    _isUseDeliveryAsBillingDisabled() {
-        const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
-        const selectedDeliveryAddress = this._getSelectedAddress('delivery');
-        const requireSeparateBillingAddress = (
-            checkedRadio?.dataset.isMondialrelay || selectedDeliveryAddress?.dataset.isMondialrelay
-        );
-        this.$('#use_delivery_as_billing_label').tooltip(
-            requireSeparateBillingAddress ? 'enable' : 'disable'
-        );
-        return this._super(...arguments) || requireSeparateBillingAddress;
+    _adaptUseDeliveryAsBillingToggle() {
+        if (this.use_delivery_as_billing_toggle) {
+            const checkedRadio = document.querySelector('input[name="o_delivery_radio"]:checked');
+            const selectedDeliveryAddress = this._getSelectedAddress('delivery');
+            const requireSeparateBillingAddress = (
+                checkedRadio?.dataset.isMondialrelay
+                || selectedDeliveryAddress?.dataset.isMondialrelay
+            );
+            this.use_delivery_as_billing_toggle.disabled = requireSeparateBillingAddress;
+            this.$('#use_delivery_as_billing_label').tooltip(
+                requireSeparateBillingAddress ? 'enable' : 'disable'
+            );
+        }
     },
 
     /**

@@ -965,7 +965,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection := self._check_cart_and_addresses(order_sudo):
             return redirection
 
-        checkout_page_values = {}
+        checkout_page_values = self._prepare_checkout_page_values(order_sudo, **query_params)
 
         can_skip_delivery = True  # Delivery is only needed for deliverable products.
         if order_sudo._has_deliverable_products():
@@ -985,10 +985,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return request.redirect('/shop/confirm_order')
 
         checkout_page_values.update(
-            {
-                **self._prepare_checkout_page_values(order_sudo, **query_params),
-                **request.website._get_checkout_step_values(),
-            }
+            request.website._get_checkout_step_values()
         )
 
         return request.render('website_sale.checkout', checkout_page_values)

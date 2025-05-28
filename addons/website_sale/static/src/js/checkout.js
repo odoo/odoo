@@ -24,7 +24,6 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
         this.use_delivery_as_billing_toggle = document.querySelector('#use_delivery_as_billing');
         this.billingContainer = this.el.querySelector('#billing_container');
         await this._prepareDeliveryMethods();
-        this._adaptUseBillingAsDelivery();
     },
 
     // #=== EVENT HANDLERS ===#
@@ -145,9 +144,6 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
 
         // Show a button to open the location selector if required for the selected delivery method.
         await this._showPickupLocation(checkedRadio);
-
-        // Check
-        this._adaptUseBillingAsDelivery();
     },
 
     /**
@@ -230,37 +226,6 @@ publicWidget.registry.WebsiteSaleCheckout = publicWidget.Widget.extend({
     _highlightAddressCard(card) {
         if (!card) return;
         card.classList.add('bg-primary', 'border', 'border-primary');
-    },
-
-    /**
-     * Enable/disable the `use_billing_as_delivery` checkbox based on
-     * `_isUseDeliveryAsBillingDisabled`. When disabling, uncheck the checkbox to show the billing
-     * address row.
-     *
-     * @private
-     */
-
-    _adaptUseBillingAsDelivery() {
-        if (this.use_delivery_as_billing_toggle) {
-            const disabled = this._isUseDeliveryAsBillingDisabled();
-            if (this.use_delivery_as_billing_toggle?.checked && disabled) {
-                // Uncheck use same as delivery and show the billing address row.
-                this.use_delivery_as_billing_toggle.dispatchEvent(new MouseEvent('click'));
-            }
-            this.use_delivery_as_billing_toggle.disabled = disabled;
-        }
-    },
-
-    /**
-     * Hook method to determine if the "Use delivery address as billing" option should be disabled.
-     * As some delivery methods (like in-store pickup) do not allow the same delivery and billing
-     * addresses.
-     *
-     * @private
-     * @returns {boolean} Whether the `use_billing_as_delivery` checkbox should be disabled.
-     */
-    _isUseDeliveryAsBillingDisabled() {
-        return false;
     },
 
     /**
