@@ -11,7 +11,7 @@ const carouselControlsSelector =
 
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
-    static dependencies = ["clone", "history", "builder-options", "builderActions"];
+    static dependencies = ["clone", "builder-options", "builderActions"];
     static shared = ["slide", "addSlide", "removeSlide"];
 
     resources = {
@@ -53,7 +53,8 @@ export class CarouselOptionPlugin extends Plugin {
         builder_actions: this.getActions(),
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
-        on_reorder_items_handlers: this.reorderCarouselItems.bind(this),
+        get_gallery_items_handlers: this.getGalleryItems.bind(this),
+        reorder_items_handlers: this.reorderCarouselItems.bind(this),
         before_save_handlers: () => {
             const proms = [];
             // Restore all the carousels so their first slide is the active one.
@@ -290,66 +291,66 @@ export class CarouselOptionPlugin extends Plugin {
         });
     }
 
-    reorderCarouselItems({ elementToReorder, position, optionName }) {
+    /**
+     * Gets the carousel items to reorder.
+     *
+     * @param {HTMLElement} activeItemEl the current active item
+     * @param {String} optionName
+     * @returns {Array<HTMLElement>}
+     */
+    getGalleryItems(activeItemEl, optionName) {
+        let itemEls = [];
         if (optionName === "Carousel") {
-            const editingCarouselElement = elementToReorder.closest(".carousel");
-            const itemsEls = [...editingCarouselElement.querySelectorAll(".carousel-item")];
+            const carouselEl = activeItemEl.closest(".carousel");
+            itemEls = [...carouselEl.querySelectorAll(".carousel-item")];
+        }
+        return itemEls;
+    }
 
-            // reorder carousel items
-            const oldPosition = itemsEls.indexOf(elementToReorder);
-            if (oldPosition === 0 && position === "prev") {
-                position = "last";
-            } else if (oldPosition === itemsEls.length - 1 && position === "next") {
-                position = "first";
-            }
-            itemsEls.splice(oldPosition, 1);
-            switch (position) {
-                case "first":
-                    itemsEls.unshift(elementToReorder);
-                    break;
-                case "prev":
-                    itemsEls.splice(Math.max(oldPosition - 1, 0), 0, elementToReorder);
-                    break;
-                case "next":
-                    itemsEls.splice(oldPosition + 1, 0, elementToReorder);
-                    break;
-                case "last":
-                    itemsEls.push(elementToReorder);
-                    break;
-            }
+    /**
+     * Updates the DOM with the reordered carousel items.
+     *
+     * @param {HTMLElement} activeItemEl the active item
+     * @param {Array<HTMLElement>} itemEls the reordered items
+     * @param {String} optionName
+     */
+    reorderCarouselItems(activeItemEl, itemEls, optionName) {
+        if (optionName === "Carousel") {
+            const carouselEl = activeItemEl.closest(".carousel");
 
-            // replace the carousel-inner element by one with reordered carousel items
-            const carouselInnerEl = editingCarouselElement.querySelector(".carousel-inner");
+            // Replace the content with the new slides.
+            const carouselInnerEl = carouselEl.querySelector(".carousel-inner");
             const newCarouselInnerEl = document.createElement("div");
             newCarouselInnerEl.classList.add("carousel-inner");
-            newCarouselInnerEl.append(...itemsEls);
+            newCarouselInnerEl.append(...itemEls);
             carouselInnerEl.replaceWith(newCarouselInnerEl);
 
-            // slide to the reordered target carousel item and update indicators
-            const newItemPosition = itemsEls.indexOf(elementToReorder);
-            editingCarouselElement.classList.remove("slide");
-            const carouselInstance = window.Carousel.getOrCreateInstance(editingCarouselElement, {
-                ride: false,
-                pause: true,
-            });
-            carouselInstance.to(newItemPosition);
-            const indicatorEls = editingCarouselElement.querySelectorAll(
-                ".carousel-indicators > *"
-            );
-            indicatorEls.forEach((indicatorEl, i) => {
-                indicatorEl.classList.toggle("active", i === newItemPosition);
-            });
-            editingCarouselElement.classList.add("slide");
-            // Prevent the carousel from automatically sliding afterwards.
-            carouselInstance["pause"]();
+            // Update the indicators.
+            const newPosition = itemEls.indexOf(activeItemEl);
+            updateCarouselIndicators(carouselEl, newPosition);
 
-            const activeImageEl = editingCarouselElement.querySelector(".carousel-item.active img");
-            this.dependencies.history.addStep();
-            this.dependencies["builder-options"].updateContainers(activeImageEl, {
-                forceUpdate: true,
-            });
+            // Activate the active slide.
+            this.dependencies["builder-options"].setNextTarget(activeItemEl);
         }
     }
+}
+
+/**
+ * Updates the carousel indicators to make the one at the given index be the
+ * active one.
+ *
+ * @param {HTMLElement} carouselEl the carousel element
+ * @param {Number} newPosition the index
+ */
+export function updateCarouselIndicators(carouselEl, newPosition) {
+    const indicatorEls = carouselEl.querySelectorAll(".carousel-indicators > *");
+    indicatorEls.forEach((indicatorEl, i) => {
+        indicatorEl.classList.toggle("active", i === newPosition);
+        indicatorEl.removeAttribute("aria-current");
+        if (i === newPosition) {
+            indicatorEl.setAttribute("aria-current", "true");
+        }
+    });
 }
 
 registry.category("website-plugins").add(CarouselOptionPlugin.id, CarouselOptionPlugin);
