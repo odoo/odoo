@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from psycopg2.errors import UniqueViolation
 
@@ -528,6 +529,34 @@ class TestHrEmployee(TestHrCommon):
         self.assertNotEqual(self.employee.current_version_id, old_version)
         self.assertEqual(self.employee.resource_calendar_id, old_calendar)
         self.assertEqual(self.employee.resource_id.calendar_id, old_calendar)
+
+    def test_flexible_working_hours(self):
+        """
+        Test to verifie that get_unusual_days() return false for flexible work schedule
+        """
+
+        # Creating a flexible working schedule
+        calendar_flex = self.env['resource.calendar'].create([
+            {
+                'tz': "Europe/Brussels",
+                'name': 'flexible hours',
+                'flexible_hours': "True",
+            },
+        ])
+        employeeA = self.env['hr.employee'].create({
+            'name': 'Employee',
+        })
+
+        # Testing employeA on regular working schedule
+        days = employeeA._get_unusual_days(str(datetime(2025, 1, 1)), str(datetime(2025, 12, 31)))
+        self.assertTrue(days)
+        self.assertTrue(days['2025-01-04'])
+
+        # Assigning flexible work hours to employeeA
+        employeeA.resource_calendar_id = calendar_flex.id
+        days = employeeA._get_unusual_days(str(datetime(2025, 1, 1)), str(datetime(2025, 12, 31)))
+        self.assertTrue(days)
+        self.assertFalse(days['2025-01-04'])
 
 
 @tagged('-at_install', 'post_install')
