@@ -309,8 +309,11 @@ export class PosData extends Reactive {
         this.models = models;
         await this.withoutSyncing(this.initData.bind(this));
         this.network.loading = false;
-        this.connectWebSocket("ORDER_PLACED", ({ order_id }) => {
-            this.searchRead("pos.order", [["id", "=", order_id]]);
+        this.connectWebSocket("ORDER_PLACED", ({ order_id, config_id }) => {
+            if (config_id != odoo.pos_config_id) {
+                return;
+            }
+            this.searchRead("pos.order", [["uuid", "=", order_id]]);
         });
         this.connectWebSocket(
             "DATA_CHANGED",

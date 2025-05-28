@@ -49,7 +49,7 @@ class PosSelfOrderController(http.Controller):
             'amount_tax': amount_total - amount_untaxed,
             'amount_total': amount_total,
         })
-        pos_config._notify('ORDER_PLACED', order.id)
+        pos_config._notify('ORDER_PLACED', {"order_id": order.uuid, "config_id": pos_config.id})
         return self._generate_return_values(order, pos_config)
 
     def _get_prefixes(self, device_type):
