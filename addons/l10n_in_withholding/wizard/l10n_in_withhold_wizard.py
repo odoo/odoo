@@ -126,11 +126,6 @@ class L10nInWithholdWizard(models.TransientModel):
                 warnings['lower_move_amount'] = {
                     'message': message
                 }
-            elif wizard.related_payment_id and float_compare(wizard.related_payment_id.amount, sum(line.base for line in wizard.withhold_line_ids), precision_digits=precision) < 0:
-                message = _("The base amount of TDS lines is greater than the untaxed amount of the %s", wizard.type_name)
-                warnings['lower_payment_amount'] = {
-                    'message': message
-                }
             wizard.l10n_in_withholding_warning = warnings
 
     def _get_withhold_type(self):

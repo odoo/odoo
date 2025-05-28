@@ -200,6 +200,9 @@ Featuring
             ('remove', 'website_slides/static/tests/legacy/**/*'),
             ('remove', 'website_slides/static/tests/tours/**/*'),
         ],
+        'portal.assets_chatter': [
+            'website_slides/static/src/chatter/frontend/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }
