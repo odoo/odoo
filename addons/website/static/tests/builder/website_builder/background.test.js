@@ -31,7 +31,7 @@ test("remove parallax changes editing element", async () => {
             <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
         </section>`);
     await contains(":iframe section").click();
-    await contains("[data-label='Parallax'] button.o-dropdown").click();
+    await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
     await contains("[data-action-value='none']").click();
     await contains("[data-label='Position'] .dropdown-toggle").click();
     await contains("[data-action-value='repeat-pattern']").click();
@@ -45,5 +45,5 @@ async function setupWebsiteAndOpenParallaxOptions({ editingElClasses = "" } = {}
         <section ${editingElClass} style="background-image: ${backgroundImageUrl}; width: 500px; height:500px">
         </section>`);
     await contains(":iframe section").click();
-    await contains("[data-label='Parallax'] button.o-dropdown").click();
+    await contains("[data-label='Scroll Effect'] button.o-dropdown").click();
 }
