@@ -1329,7 +1329,6 @@ class ProjectTask(models.Model):
                     partner_ids=partner_ids,
                     email_layout_xmlid='mail.mail_notification_layout',
                     notify_author_mention=False,
-                    record_name=task.display_name,
                )
         return result
 
@@ -1484,7 +1483,6 @@ class ProjectTask(models.Model):
                 subject=_('You have been invited to follow %s', self.display_name),
                 body=assignation_msg,
                 partner_ids=partner.ids,
-                record_name=self.display_name,
                 email_layout_xmlid='mail.mail_notification_layout',
                 model_description=task_model_description,
                 mail_auto_delete=True,
@@ -1515,7 +1513,6 @@ class ProjectTask(models.Model):
                     subject=_('You have been assigned to %s', task.display_name),
                     body=assignation_msg,
                     partner_ids=user.partner_id.ids,
-                    record_name=task.display_name,
                     email_layout_xmlid='mail.mail_notification_layout',
                     model_description=task_model_description,
                     mail_auto_delete=False,

@@ -789,7 +789,7 @@ class DiscussChannel(models.Model):
             message, msg_vals=msg_vals, force_record_name=force_record_name,
         )
         payload['options']['data']['action'] = 'mail.action_discuss'
-        record_name = msg_vals['record_name'] if 'record_name' in msg_vals else message.record_name
+        record_name = force_record_name or message.record_name
         author_ids = [msg_vals["author_id"]] if msg_vals.get("author_id") else message.author_id.ids
         author = self.env["res.partner"].browse(author_ids) or self.env["mail.guest"].browse(
             msg_vals.get("author_guest_id", message.author_guest_id.id)

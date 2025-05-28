@@ -157,7 +157,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.partner_ids)
         self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
         self.assertEqual(composer_form.record_company_id, self.env.company)
-        self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new, 'By default, replies land on same thread')
         self.assertFalse(composer_form.scheduled_date)
@@ -268,7 +267,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.partner_ids)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: batch mode does not precompute alias domain (MC, ...)')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: batch mode does not precompute company environment (MC, ...)')
-        self.assertFalse(composer_form.record_name, 'MailComposer: record name is singleton only')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new, 'By default, replies land on same thread')
         self.assertFalse(composer_form.scheduled_date)
@@ -300,7 +298,6 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.partner_ids[:], self.partner_1)
         self.assertEqual(composer_form.record_alias_domain_id, self.mail_alias_domain)
         self.assertEqual(composer_form.record_company_id, self.env.company)
-        self.assertEqual(composer_form.record_name, self.test_record.name, 'MailComposer: comment mode should compute record name')
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertTrue(composer_form.reply_to_force_new, 'Reply-To on template forces its usage for new thread creation')
         self.assertEqual(literal_eval(composer_form.res_ids), self.test_record.ids)
@@ -337,7 +334,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.notify_skip_followers)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
-        self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertTrue(composer_form.reply_to_force_new, 'Reply-To on template forces its usage for new thread creation')
         self.assertEqual(literal_eval(composer_form.res_ids), self.test_records.ids)
@@ -374,7 +370,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.notify_skip_followers)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: comment in batch mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: comment in batch mode should have void company')
-        self.assertFalse(composer_form.record_name, 'MailComposer: comment in batch mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertTrue(composer_form.reply_to_force_new, 'Reply-To on template forces its usage for new thread creation')
         self.assertFalse(composer_form.res_ids)
@@ -411,7 +406,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.partner_ids[:])
         self.assertFalse(composer_form.record_alias_domain_id)
         self.assertFalse(composer_form.record_company_id)
-        self.assertFalse(composer_form.record_name)
         self.assertEqual(composer_form.reply_to, 'info@test.example.com')
         self.assertTrue(composer_form.reply_to_force_new, 'Reply-To on template forces its usage for new thread creation')
         self.assertFalse(composer_form.res_ids)
@@ -444,7 +438,6 @@ class TestComposerForm(TestMailComposer):
         self.assertEqual(composer_form.model, self.test_records._name)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
-        self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertFalse(composer_form.reply_to)
         self.assertFalse(composer_form.reply_to_force_new)
         self.assertEqual(sorted(literal_eval(composer_form.res_ids)), sorted(self.test_records.ids))
@@ -478,7 +471,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.notify_skip_followers)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
-        self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertTrue(composer_form.reply_to_force_new, 'Reply-To on template forces its usage for new thread creation')
         self.assertEqual(sorted(literal_eval(composer_form.res_ids)), sorted(self.test_records.ids))
@@ -516,7 +508,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.notify_skip_followers)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
-        self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertTrue(composer_form.reply_to_force_new, 'Reply-To on template forces its usage for new thread creation')
         self.assertFalse(composer_form.res_ids)
@@ -554,7 +545,6 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.notify_skip_followers)
         self.assertFalse(composer_form.record_alias_domain_id, 'MailComposer: mass mode should have void alias domain')
         self.assertFalse(composer_form.record_company_id, 'MailComposer: mass mode should have void company')
-        self.assertFalse(composer_form.record_name, 'MailComposer: mass mode should have void record name')
         self.assertEqual(composer_form.reply_to, self.template.reply_to)
         self.assertTrue(composer_form.reply_to_force_new, 'Reply-To on template forces its usage for new thread creation')
         self.assertFalse(composer_form.res_ids)
@@ -864,9 +854,11 @@ class TestComposerInternals(TestMailComposer):
 
     @users('employee')
     def test_mail_composer_content(self):
-        """ Test content management (body, mail_server_id, record_name, scheduled_date,
+        """ Test content management (body, mail_server_id, scheduled_date,
         subject) in both comment and mass mailing mode. Template update is also
-        tested. """
+        tested.
+
+        TDE TODO: add test for record_alias_domain_id and record_company_id """
         template_void = self.template.copy(default={
             'body_html': False,
             'mail_server_id': False,
@@ -899,10 +891,6 @@ class TestComposerInternals(TestMailComposer):
                 # creation values are taken
                 self.assertEqual(composer.body, '<p>Test Body <t t-out="record.name"/></p>')
                 self.assertEqual(composer.mail_server_id, self.mail_server_default)
-                if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.record_name, self.test_record.name)
-                else:
-                    self.assertFalse(composer.record_name)
                 self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                 self.assertEqual(composer.subject, 'My amazing subject for {{ record.name }}')
 
@@ -913,14 +901,12 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.body, f'<p>TemplateBody {self.test_record.name}</p>')
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                    self.assertEqual(composer.record_name, self.test_record.name)
                     self.assertEqual(FieldDatetime.from_string(composer.scheduled_date),
                                      self.reference_now + timedelta(days=2))
                     self.assertEqual(composer.subject, f'TemplateSubject {self.test_record.name}')
                 else:
                     self.assertEqual(composer.body, self.template.body_html)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                    self.assertFalse(composer.record_name)
                     self.assertEqual(composer.scheduled_date, self.template.scheduled_date)
                     self.assertEqual(composer.subject, self.template.subject)
 
@@ -928,13 +914,11 @@ class TestComposerInternals(TestMailComposer):
                 composer.write({
                     'body': '<p>Back to my amazing body <t t-out="record.name"/></p>',
                     'mail_server_id': self.mail_server_default.id,
-                    'record_name': 'Manual update',
                     'scheduled_date': '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                     'subject': 'Back to my amazing subject for {{ record.name }}',
                 })
                 self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
                 self.assertEqual(composer.mail_server_id, self.mail_server_default)
-                self.assertEqual(composer.record_name, 'Manual update')
                 self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                 self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
 
@@ -945,13 +929,11 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
                     self.assertEqual(composer.mail_server_id, self.mail_server_default)
-                    self.assertEqual(composer.record_name, 'Manual update')
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                     self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
                 else:
                     self.assertEqual(composer.body, '<p>Back to my amazing body <t t-out="record.name"/></p>')
                     self.assertEqual(composer.mail_server_id, self.mail_server_default)
-                    self.assertEqual(composer.record_name, 'Manual update')
                     self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                     self.assertEqual(composer.subject, 'Back to my amazing subject for {{ record.name }}')
 
@@ -962,8 +944,6 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment' and not batch:
                     self.assertFalse(composer.body)
                     self.assertFalse(composer.mail_server_id.id)
-                    self.assertEqual(composer.record_name, 'Manual update',
-                                     'MailComposer: record name does not depend on template')
                     self.assertFalse(composer.scheduled_date)
                     self.assertEqual(composer.subject, self.test_record._message_compute_subject())
                     self.assertIn(f'Ticket for {self.test_record.name}', composer.subject,
@@ -971,8 +951,6 @@ class TestComposerInternals(TestMailComposer):
                 else:
                     self.assertFalse(composer.body)
                     self.assertFalse(composer.mail_server_id.id)
-                    self.assertEqual(composer.record_name, 'Manual update',
-                                     'MailComposer: record name does not depend on template')
                     self.assertFalse(composer.scheduled_date)
                     self.assertFalse(composer.subject)
 
@@ -986,13 +964,11 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.body, f'<p>TemplateBody {self.test_record.name}</p>')
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                    self.assertEqual(composer.record_name, self.test_record.name)
                     self.assertEqual(FieldDatetime.from_string(composer.scheduled_date), self.reference_now + timedelta(days=2))
                     self.assertEqual(composer.subject, f'TemplateSubject {self.test_record.name}')
                 else:
                     self.assertEqual(composer.body, self.template.body_html)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                    self.assertFalse(composer.record_name)
                     self.assertEqual(composer.scheduled_date, self.template.scheduled_date)
                     self.assertEqual(composer.subject, self.template.subject)
 
@@ -1006,13 +982,11 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(composer.body, f'<p>TemplateBody {self.test_record.name}</p>')
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                    self.assertEqual(composer.record_name, self.test_record.name)
                     self.assertEqual(FieldDatetime.from_string(composer.scheduled_date), self.reference_now + timedelta(days=2))
                     self.assertEqual(composer.subject, f'TemplateSubject {self.test_record.name}')
                 else:
                     self.assertEqual(composer.body, self.template.body_html)
                     self.assertEqual(composer.mail_server_id, self.template.mail_server_id)
-                    self.assertFalse(composer.record_name)
                     self.assertEqual(composer.scheduled_date, self.template.scheduled_date)
                     self.assertEqual(composer.subject, self.template.subject)
 
@@ -1021,7 +995,6 @@ class TestComposerInternals(TestMailComposer):
                 composer = self.env['mail.compose.message'].with_context(ctx).create({
                     'body': '<p>Test Body</p>',
                     'mail_server_id': False,
-                    'record_name': 'CustomName',
                     'scheduled_date': '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}',
                     'subject': 'My amazing subject',
                 })
@@ -1029,7 +1002,6 @@ class TestComposerInternals(TestMailComposer):
                 # creation values are taken
                 self.assertEqual(composer.body, '<p>Test Body</p>')
                 self.assertEqual(composer.mail_server_id.id, False)
-                self.assertEqual(composer.record_name, 'CustomName')
                 self.assertEqual(composer.scheduled_date, '{{ datetime.datetime(2023, 1, 10, 10, 0, 0) }}')
                 self.assertEqual(composer.subject, 'My amazing subject')
 
@@ -1199,7 +1171,7 @@ class TestComposerInternals(TestMailComposer):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mail_composer_parent(self):
         """ Test specific management in comment mode when having parent_id set:
-        record_name, subject, parent's partners. """
+        subject, parent's partners. """
         parent_subject = "Parent Subject"
         parent = self.test_record.message_post(
             body='Test',
@@ -1217,7 +1189,6 @@ class TestComposerInternals(TestMailComposer):
         self.assertEqual(composer.body, '<p>Test Body</p>')
         self.assertEqual(composer.parent_id, parent)
         self.assertEqual(composer.partner_ids, self.partner_1 + self.partner_2)
-        self.assertEqual(composer.record_name, self.test_record.name)
         self.assertEqual(composer.subject, parent_subject)
 
     @users('user_rendering_restricted')
@@ -1496,7 +1467,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'body': '<p>Test Body</p>',
             'partner_ids': self.env.user.partner_id.ids,
         })._action_send_mail()
-        self.assertEqual(message.record_name, nonthread_record.name)
         self.assertEqual(message.subject, nonthread_record.name)
 
         # custom subject
@@ -1577,7 +1547,6 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertTrue(message.email_add_signature)
         self.assertFalse(message.email_layout_xmlid)
         self.assertEqual(message.message_type, 'comment', 'Mail: default message type with composer is user comment')
-        self.assertEqual(message.record_name, self.test_record.name)
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment', 'Mail: default subtype is comment'))
 
         # tweaks
@@ -1590,14 +1559,12 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             'message_type': 'notification',
             'subtype_id': self.env.ref('mail.mt_note').id,
             'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)],
-            'record_name': 'Custom record name',
         })
         _mail, message = composer._action_send_mail()
         self.assertEqual(message.body, '<p>Test Body 2</p>')
         self.assertFalse(message.email_add_signature)
         self.assertEqual(message.email_layout_xmlid, 'mail.mail_notification_light')
         self.assertEqual(message.message_type, 'notification')
-        self.assertEqual(message.record_name, 'Custom record name')
         self.assertEqual(message.subtype_id, self.env.ref('mail.mt_note'))
 
         # subtype through xml id
