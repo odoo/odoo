@@ -254,8 +254,7 @@ export class HistoryPlugin extends Plugin {
         });
         /** @type { Map<string, "consumed"|"undo"|"redo"> } */
         this.stepsStates = new Map();
-        this.nodeToIdMap = new WeakMap();
-        this.idToNodeMap = new Map();
+        this.nodeMap = new NodeMap();
         /** @type { WeakMap<Node, { attributes: Map<string, string>, classList: Map<string, boolean>, characterData: Map<string, string> }> } */
         this.lastObservedState = new WeakMap();
         this.setNodeId(this.editable);
@@ -266,7 +265,7 @@ export class HistoryPlugin extends Plugin {
      * @returns {Node}
      */
     getNodeById(id) {
-        return this.idToNodeMap.get(id);
+        return this.nodeMap.getNode(id);
     }
     /**
      * Reset the history.
@@ -307,7 +306,7 @@ export class HistoryPlugin extends Plugin {
             mutations: childNodes(this.editable).map((node) => ({
                 type: "add",
                 parentId: "root",
-                id: this.nodeToIdMap.get(node),
+                id: this.nodeMap.getId(node),
                 node: this.serializeNode(node),
                 nextId: null,
             })),
@@ -465,12 +464,11 @@ export class HistoryPlugin extends Plugin {
             const addedNodes = record.addedTrees.flatMap(treeToNodes);
             const removedNodes = record.removedTrees.flatMap(treeToNodes);
             for (const node of [...addedNodes, ...removedNodes]) {
-                if (this.nodeToIdMap.has(node)) {
+                if (this.nodeMap.hasNode(node)) {
                     continue;
                 }
                 const id = node === this.editable ? "root" : this.generateId();
-                this.nodeToIdMap.set(node, id);
-                this.idToNodeMap.set(id, node);
+                this.nodeMap.set(id, node);
             }
         }
     }
@@ -517,12 +515,9 @@ export class HistoryPlugin extends Plugin {
         for (const record of records) {
             if (record.type === "childList" && this.isSameTextContentMutation(record)) {
                 const { addedNodes, removedNodes } = record;
-                const oldId = this.nodeToIdMap.get(removedNodes[0]);
+                const oldId = this.nodeMap.getId(removedNodes[0]);
                 if (oldId) {
-                    this.nodeToIdMap.delete(removedNodes[0]);
-                    this.idToNodeMap.delete(oldId);
-                    this.nodeToIdMap.set(addedNodes[0], oldId);
-                    this.idToNodeMap.set(oldId, addedNodes[0]);
+                    this.nodeMap.set(oldId, addedNodes[0]);
                 }
                 continue;
             }
@@ -863,7 +858,7 @@ export class HistoryPlugin extends Plugin {
                 case "characterData":
                 case "classList":
                 case "attributes": {
-                    const id = this.nodeToIdMap.get(record.target);
+                    const id = this.nodeMap.getId(record.target);
                     this.currentStep.mutations.push({ ...omit(record, "target"), id });
                     break;
                 }
@@ -880,7 +875,7 @@ export class HistoryPlugin extends Plugin {
      * @returns { (HistoryMutationRemove|HistoryMutationAdd)[] }
      */
     splitChildListRecord(record) {
-        const parentId = this.nodeToIdMap.get(record.target);
+        const parentId = this.nodeMap.getId(record.target);
         if (!parentId) {
             throw new Error("Unknown parent node");
         }
@@ -895,9 +890,9 @@ export class HistoryPlugin extends Plugin {
                         : [record.previousSibling, nodeList[index + 1] || record.nextSibling];
                 const [nextId, previousId] = [nextSibling, previousSibling].map((sibling) =>
                     // Preserve undefined and null values
-                    sibling ? this.nodeToIdMap.get(sibling) : sibling
+                    sibling ? this.nodeMap.getId(sibling) : sibling
                 );
-                const id = this.nodeToIdMap.get(node);
+                const id = this.nodeMap.getId(node);
                 const serializedNode = this.serializeTree(tree);
                 return { type, id, parentId, node: serializedNode, nextId, previousId };
             });
@@ -942,11 +937,10 @@ export class HistoryPlugin extends Plugin {
      * @param { Node } node
      */
     setNodeId(node) {
-        let id = this.nodeToIdMap.get(node);
+        let id = this.nodeMap.getId(node);
         if (!id) {
             id = node === this.editable ? "root" : this.generateId();
-            this.nodeToIdMap.set(node, id);
-            this.idToNodeMap.set(id, node);
+            this.nodeMap.set(id, node);
             node = node.firstChild;
             while (node) {
                 this.setNodeId(node);
@@ -1087,7 +1081,7 @@ export class HistoryPlugin extends Plugin {
         if (!selection.anchorNodeId) {
             return;
         }
-        const anchorNode = this.idToNodeMap.get(selection.anchorNodeId);
+        const anchorNode = this.nodeMap.getNode(selection.anchorNodeId);
         if (!anchorNode) {
             return;
         }
@@ -1095,7 +1089,7 @@ export class HistoryPlugin extends Plugin {
             anchorNode,
             anchorOffset: selection.anchorOffset,
         };
-        const focusNode = this.idToNodeMap.get(selection.focusNodeId);
+        const focusNode = this.nodeMap.getNode(selection.focusNodeId);
         if (focusNode) {
             newSelection.focusNode = focusNode;
             newSelection.focusOffset = selection.focusOffset;
@@ -1211,7 +1205,7 @@ export class HistoryPlugin extends Plugin {
                     break;
                 }
                 case "characterData": {
-                    const node = this.idToNodeMap.get(mutation.id);
+                    const node = this.nodeMap.getNode(mutation.id);
                     if (node) {
                         node.textContent = mutation.value;
                     }
@@ -1225,7 +1219,7 @@ export class HistoryPlugin extends Plugin {
                     break;
                 }
                 case "attributes": {
-                    const node = this.idToNodeMap.get(mutation.id);
+                    const node = this.nodeMap.getNode(mutation.id);
                     if (node) {
                         let value = mutation.value;
                         for (const cb of this.getResource("attribute_change_processors")) {
@@ -1260,8 +1254,8 @@ export class HistoryPlugin extends Plugin {
      * @param {HistoryMutationRemove} mutation
      */
     applyRemoveMutation(mutation) {
-        const parent = this.idToNodeMap.get(mutation.parentId);
-        const toRemove = this.idToNodeMap.get(mutation.id);
+        const parent = this.nodeMap.getNode(mutation.parentId);
+        const toRemove = this.nodeMap.getNode(mutation.id);
         if (!toRemove) {
             console.warn("Mutation could not be applied, node to remove is unknown.", mutation);
             return;
@@ -1279,14 +1273,14 @@ export class HistoryPlugin extends Plugin {
     applyAddMutation(mutation) {
         const { id, node, parentId, nextId, previousId } = mutation;
 
-        const toAdd = this.idToNodeMap.get(id) || this.unserializeNode(node);
+        const toAdd = this.nodeMap.getNode(id) || this.unserializeNode(node);
         if (!toAdd) {
             return;
         }
 
         this.setNodeId(toAdd);
 
-        const parent = this.idToNodeMap.get(parentId);
+        const parent = this.nodeMap.getNode(parentId);
         if (!parent) {
             console.warn("Mutation could not be applied, parent node is missing.", mutation);
             return;
@@ -1300,7 +1294,7 @@ export class HistoryPlugin extends Plugin {
             return;
         }
         const isValid = (node) => node?.parentNode === parent;
-        const [previousNode, nextNode] = [previousId, nextId].map((id) => this.idToNodeMap.get(id));
+        const [previousNode, nextNode] = [previousId, nextId].map((id) => this.nodeMap.getNode(id));
         if (isValid(previousNode)) {
             previousNode.after(toAdd);
             return;
@@ -1339,9 +1333,9 @@ export class HistoryPlugin extends Plugin {
      */
     serializeSelection(selection) {
         return {
-            anchorNodeId: this.nodeToIdMap.get(selection.anchorNode),
+            anchorNodeId: this.nodeMap.getId(selection.anchorNode),
             anchorOffset: selection.anchorOffset,
-            focusNodeId: this.nodeToIdMap.get(selection.focusNode),
+            focusNodeId: this.nodeMap.getId(selection.focusNode),
             focusOffset: selection.focusOffset,
         };
     }
@@ -1352,7 +1346,7 @@ export class HistoryPlugin extends Plugin {
      */
     getMutationsRoot(mutations) {
         const nodes = mutations
-            .map((m) => this.idToNodeMap.get(m.parentId || m.id))
+            .map((m) => this.nodeMap.getNode(m.parentId || m.id))
             .filter((node) => this.editable.contains(node));
         let commonAncestor = getCommonAncestor(nodes, this.editable);
         if (commonAncestor?.nodeType === Node.TEXT_NODE) {
@@ -1564,46 +1558,36 @@ export class HistoryPlugin extends Plugin {
         return this.serializeTree(nodeToTree(node));
     }
     /**
-     * Unserialize a node and its children if the collaboration is true.
-     *
-     * TODO: find a solution so that the following issue can never happen:
-     *   If there is already another node in `nodeToIdMap` pointing to the
-     *   current id before executing `this.nodeToIdMap.set(node, id)` in this
-     *   function, there will be 2 different nodes pointing to the same id.
-     *
-     *   2 different nodes for the same id is pretty common:
-     *     Unserializing a text node in `_unserializeNode` always creates
-     *     another (new) node.
-     *
-     *   If mutations concerning both nodes are bundled in the same step, they
-     *   will all be erroneously serialized as if they concern the node which
-     *   had its id set the latest, which is likely to cause issues when
-     *   applying these mutations (undo/redo, collaboration).
+     * Unserialize a node and its children.
      *
      * @param { SerializedNode } node
      * @returns { Node }
      */
     unserializeNode(node) {
-        let [unserializedNode, nodeMap] = this._unserializeNode(node, this.idToNodeMap);
+        let [unserializedNode, newNodesMap] = this._unserializeNode(node, this.nodeMap);
+        if (!unserializedNode) {
+            return null;
+        }
         const fakeNode = this.document.createElement("fake-el");
         fakeNode.appendChild(unserializedNode);
         this.dependencies.sanitize.sanitize(fakeNode, { IN_PLACE: true });
         unserializedNode = fakeNode.firstChild;
-
-        if (unserializedNode) {
-            // Only assing id to the remaining nodes, otherwise the removed
-            // nodes will still be accessible through the idToNodeMap and could
-            // lead to security issues.
-            for (const node of [unserializedNode, ...descendants(unserializedNode)]) {
-                const id = nodeMap.get(node);
-                if (id) {
-                    this.nodeToIdMap.set(node, id);
-                    this.idToNodeMap.set(id, node);
-                }
-            }
-            this.setNodeId(unserializedNode);
-            return unserializedNode;
+        if (!unserializedNode) {
+            return null;
         }
+        // Only assing id to the remaining nodes, otherwise the removed nodes
+        // will still be accessible through the nodeMap and could lead to
+        // security issues.
+        for (const node of [unserializedNode, ...descendants(unserializedNode)]) {
+            if (this.nodeMap.hasNode(node)) {
+                continue;
+            }
+            const id = newNodesMap.get(node);
+            if (id) {
+                this.nodeMap.set(id, node);
+            }
+        }
+        return unserializedNode;
     }
 
     /**
@@ -1612,7 +1596,7 @@ export class HistoryPlugin extends Plugin {
      */
     serializeTree(tree) {
         const node = tree.node;
-        const nodeId = this.nodeToIdMap.get(node);
+        const nodeId = this.nodeMap.getId(node);
         if (!nodeId) {
             return;
         }
@@ -1640,27 +1624,30 @@ export class HistoryPlugin extends Plugin {
     /**
      * Unserialize a node and its children.
      * @param { SerializedNode } serializedNode
-     * @param { Map<Node, number> } _map
-     * @returns { Node, Map<Node, number> }
+     * @param { NodeMap} nodeMap
+     * @param { Map<Node, string> } _map
+     * @returns { [Node, Map<Node, string>] }
      */
-    _unserializeNode(serializedNode, idToNodeMap = new Map(), _map = new Map()) {
-        let node = undefined;
+    _unserializeNode(serializedNode, nodeMap = new NodeMap(), _map = new Map()) {
+        let node = nodeMap.getNode(serializedNode.nodeId);
+        if (node) {
+            return [node, _map];
+        }
         if (serializedNode.nodeType === Node.TEXT_NODE) {
             node = this.document.createTextNode(serializedNode.textValue);
         } else if (serializedNode.nodeType === Node.ELEMENT_NODE) {
-            node = idToNodeMap.get(serializedNode.nodeId);
-            if (node) {
-                return [node, _map];
-            }
             node = this.document.createElement(serializedNode.tagName);
             for (const key in serializedNode.attributes) {
                 node.setAttribute(key, serializedNode.attributes[key]);
             }
-            serializedNode.children.forEach((child) =>
-                node.append(this._unserializeNode(child, idToNodeMap, _map)[0])
+            node.append(
+                ...serializedNode.children
+                    .map((child) => this._unserializeNode(child, nodeMap, _map)[0])
+                    .filter(Boolean)
             );
         } else {
             console.warn("unknown node type");
+            return [null, _map];
         }
         _map.set(node, serializedNode.nodeId);
         return [node, _map];
@@ -1714,4 +1701,42 @@ export function nodeToTree(node) {
  */
 function treeToNodes(tree) {
     return [tree.node, ...tree.children.flatMap(treeToNodes)];
+}
+
+/**
+ * Bidirectional map between IDs (string) and Node objects.
+ */
+class NodeMap {
+    constructor() {
+        // Private properties enclosed in the constructor
+        /** @type {Map<string, Node>} */
+        const idToNodeMap = new Map();
+        /** @type {Map<Node, string>} */
+        const nodeToIdMap = new Map();
+
+        // Public methods
+        /** @type {(id: string, node: Node) => void} */
+        this.set = (id, node) => {
+            if (!id || !node) {
+                throw new Error("Id and Node cannot be nullish");
+            }
+            // Remove old mappings
+            const oldNode = idToNodeMap.get(id);
+            nodeToIdMap.delete(oldNode);
+            const oldId = nodeToIdMap.get(node);
+            idToNodeMap.delete(oldId);
+            // Set new mappings
+            idToNodeMap.set(id, node);
+            nodeToIdMap.set(node, id);
+        };
+
+        /** @type {(id: string) => Node | undefined} */
+        this.getNode = (id) => idToNodeMap.get(id);
+
+        /** @type {(node: Node) => string | undefined} */
+        this.getId = (node) => nodeToIdMap.get(node);
+
+        /** @type {(node: Node) => boolean} */
+        this.hasNode = (node) => nodeToIdMap.has(node);
+    }
 }
