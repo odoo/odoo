@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests.common import TransactionCase, Form, tagged
 
 
@@ -527,3 +528,90 @@ class TestSaleMrpKitBom(TransactionCase):
             if keys[0] in line:
                 keys = keys[1:]
         self.assertFalse(keys, "All keys should be in the report with the defined order")
+
+    def test_sale_price_repartition_on_kit_product(self):
+        """
+        Kit products can be sold as a bundle carring a diffrent price than
+        the sum of its component prices. This test ensures that the bundle
+        price is then distributed proportionally on the components.
+
+        Sale order:
+            - 1 x Compo 1, price 20
+            - 2 x Kit 1 price unit 110 instead of 140:
+                - 1 x Compo 1, price 20
+                - 1 x Give away, price 0
+                - 2 x Kit 2, exploded price 2 x 60 = 120
+            - 3 x Kit 2 price unit 50 instead of 60:
+                - 1 x Compo 1, price 20
+                - 1 x Compo 2, price 40
+        """
+
+        # sale_price is part of the `delivery` module
+        delivery_module = self.env['ir.module.module']._get('delivery')
+        if delivery_module.state != 'installed':
+            self.skipTest('`delivery` is not installed')
+
+        kit_1, kit_2, component_1, component_2, give_away = self.env['product.product'].create([
+            {
+                'name': name,
+                'list_price': price,
+                'type': 'product',
+            } for name, price in [
+                ('Lovely Kit 1', 110.0),
+                ('Lovely Kit 2', 50.0),
+                ('Lovely Comp 1', 20.0),
+                ('Lovely Comp 2', 40.0),
+                ('Give away', 0.0),
+            ]
+        ])
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        for product in [component_1, component_2, give_away]:
+            self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 20)
+        self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': kit_1.product_tmpl_id.id,
+                'product_qty': 1,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({'product_id': component_1.id, 'product_qty': 1}),
+                    Command.create({'product_id': give_away.id, 'product_qty': 1}),
+                    Command.create({'product_id': kit_2.id, 'product_qty': 2}),
+                ],
+            },
+            {
+                'product_tmpl_id': kit_2.product_tmpl_id.id,
+                'product_qty': 1,
+                'type': 'phantom',
+                'bom_line_ids': [
+                    Command.create({'product_id': component_1.id, 'product_qty': 1}),
+                    Command.create({'product_id': component_2.id, 'product_qty': 1}),
+                ],
+            },
+        ])
+        customer = self.env['res.partner'].create({
+            'name': 'customer',
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': customer.id,
+            'order_line': [
+                Command.create({'product_id': component_1.id, 'product_uom_qty': 1.0}),
+                Command.create({'product_id': kit_1.id, 'product_uom_qty': 2.0}),
+                Command.create({'product_id': kit_2.id, 'product_uom_qty': 3.0}),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        for move in delivery.move_ids:
+            move.quantity_done = move.product_uom_qty
+        self.assertEqual(so.order_line.mapped('price_total'), [23, 253, 172.5])
+        self.assertRecordValues(so.picking_ids.move_line_ids.sorted(lambda ml: (ml.move_id.sale_line_id.id, ml.product_id.id)), [
+            {'product_id': component_1.id, 'qty_done': 1.0, 'sale_price': 23.0},  # sol1 direct comp1
+            {'product_id': component_1.id, 'qty_done': 2.0, 'sale_price': 36.14},  # sol2 comp1 from kit 1
+            {'product_id': component_1.id, 'qty_done': 4.0, 'sale_price': 72.29},  # sol2 comp1 from kit 1 > kit 2
+            {'product_id': component_2.id, 'qty_done': 4.0, 'sale_price': 144.57},  # sol2 comp2 from kit 1 > kit 2
+            {'product_id': give_away.id, 'qty_done': 2.0, 'sale_price': 0.0},  # sol2 give away from kit 1
+            {'product_id': component_1.id, 'qty_done': 3.0, 'sale_price': 57.5},  # sol3 comp1 from kit 2
+            {'product_id': component_2.id, 'qty_done': 3.0, 'sale_price': 115.0},  # sol3  comp2 from kit 2
+        ])
+        # check that move sale prices sum up to the total line price
+        self.assertEqual(so.order_line.mapped('price_total'), [sum(ml.sale_price for ml in sol.move_ids.move_line_ids) for sol in so.order_line])
