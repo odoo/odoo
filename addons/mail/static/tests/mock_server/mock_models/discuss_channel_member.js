@@ -112,7 +112,7 @@ export class DiscussChannelMember extends models.ServerModel {
             }
             if ("persona" in fields) {
                 if (member.partner_id) {
-                    data.persona = mailDataHelpers.Store.one(
+                    data.partner_id = mailDataHelpers.Store.one(
                         ResPartner.browse(member.partner_id),
                         makeKwArgs({
                             fields: this._get_store_partner_fields([member.id], fields["persona"]),
@@ -120,7 +120,7 @@ export class DiscussChannelMember extends models.ServerModel {
                     );
                 }
                 if (member.guest_id) {
-                    data.persona = mailDataHelpers.Store.one(
+                    data.guest_id = mailDataHelpers.Store.one(
                         MailGuest.browse(member.guest_id),
                         makeKwArgs({ fields: fields["persona"] })
                     );

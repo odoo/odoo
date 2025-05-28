@@ -161,7 +161,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "fetched_message_id": False,
                                     "id": member.id,
                                     "last_seen_dt": False,
-                                    "persona": {"id": self.test_partner.id, "type": "partner"},
+                                    "partner_id": {"id": self.test_partner.id, "type": "partner"},
                                     "seen_message_id": False,
                                     "channel_id": {"id": channel.id, "model": "discuss.channel"},
                                 },
@@ -207,7 +207,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "fetched_message_id": False,
                                     "id": member.id,
                                     "last_seen_dt": False,
-                                    "persona": {"id": self.test_partner.id, "type": "partner"},
+                                    "partner_id": {"id": self.test_partner.id, "type": "partner"},
                                     "seen_message_id": False,
                                     "channel_id": {"id": channel.id, "model": "discuss.channel"},
                                 }
@@ -427,7 +427,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "message_unread_counter": 0,
                                 "message_unread_counter_bus_id": 0,
                                 "new_message_separator": msg_1.id + 1,
-                                "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                                "partner_id": {"id": self.user_admin.partner_id.id, "type": "partner"},
                                 "channel_id": {
                                     "id": chat.id,
                                     "model": "discuss.channel",
@@ -442,7 +442,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "discuss.channel.member": [
                             {
                                 "id": member.id,
-                                "persona": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                                "partner_id": {"id": self.user_admin.partner_id.id, "type": "partner"},
                                 "seen_message_id": msg_1.id,
                                 "channel_id": {"id": chat.id, "model": "discuss.channel"},
                             },
