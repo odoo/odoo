@@ -232,7 +232,7 @@ class Store:
         if fields is None:
             return []
         if isinstance(fields, dict):
-            fields = list(Store.Attr(key, value) for key, value in fields.items())
+            fields = [Store.Attr(key, value) for key, value in fields.items()]
         if not isinstance(fields, list):
             fields = [fields]
         if hasattr(records, "_field_store_repr"):
