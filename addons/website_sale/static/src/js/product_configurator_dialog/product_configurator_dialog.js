@@ -4,6 +4,7 @@ import {
 } from '@sale/js/product_configurator_dialog/product_configurator_dialog';
 import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
+import { formatCurrency } from "@web/core/currency";
 
 patch(ProductConfiguratorDialog, {
     props: {
@@ -33,7 +34,7 @@ patch(ProductConfiguratorDialog.prototype, {
             // translations of "frontend modules" are fetched in the context of
             // website. The original definition of the title is in "sale", which
             // is not a frontend module.
-            this.title = _t("Configure your product");
+            this.title = _t(" ");
         }
 
         useSubEnv({
@@ -58,5 +59,9 @@ patch(ProductConfiguratorDialog.prototype, {
      */
     showShopButtons() {
         return this.props.isFrontend && !this.props.edit;
+    },
+      get formattedTotal() {
+        const total = this.state.products.reduce((sum, p) => sum + p.price * p.quantity, 0);
+        return `${_t('Total:')} ${formatCurrency(total, this.env.currency.id)}`;
     },
 });

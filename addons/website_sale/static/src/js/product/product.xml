@@ -17,6 +17,10 @@
         >
             <attribute name="class" remove="fa-plus" add="fa-shopping-cart" separator=" "/>
         </xpath>
+        <xpath expr="//td[@name='price']/button[@name='sale_product_configurator_add_button']/span[contains(text(), 'Add')]" position="replace">
+            <span class="ms-2 d-none d-md-inline">Add to Cart</span>
+    </xpath>
+
         <button name="sale_product_configurator_add_button" position="after">
             <t t-call="website_sale.not_for_sale"/>
         </button>

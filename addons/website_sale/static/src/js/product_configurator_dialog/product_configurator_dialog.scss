@@ -1,5 +1,60 @@
 .o_sale_product_configurator_dialog {
-    // Ensure a minimal border regardless of the theme options
-    --modal-header-border-width: #{$border-width};
-    --modal-footer-border-width: #{$border-width};
+  --modal-header-border-width: 0;
+
+  .modal-content {
+    border-radius: $btn-border-radius;
+    overflow-x: hidden;
+  }
+
+  .modal-header {
+    .modal-title {
+      padding: 0;
+      visibility: hidden !important;
+      max-width: 100%;
+    }
+
+    .btn-close {
+      display: none;
+    }
+  }
+
+  .modal-body {
+     padding: 12px 16px 0 16px;
+    overflow-x: hidden !important;
+    max-width: 100%;
+  }
+
+  .modal-footer {
+    padding: 12px 16px 16px 16px;
+  }
+}
+.o_sale_product_configurator_table {
+  border: none !important;
+
+  td,
+  th,
+  thead,
+  tbody,
+  tr {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+[name="o_sale_product_configurator_name"] {
+  span.h6 {
+    color: #714b67;
+    font-weight: 600;
+  }
+}
+
+.o_sale_product_configurator_img {
+  .w-100 {
+    width: 100% !important;
+    border-radius: 0.75rem;
+  }
+}
+
+.product_name_description .text-truncate {
+  white-space: normal;
 }

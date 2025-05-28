@@ -7,11 +7,11 @@
              value template or the attribute line title unless the single attribute value is custom,
              whereas in this case, only the title of the attribute line and the custom value
              template are rendered. -->
-            <div class="d-flex flex-column flex-lg-row gap-2 mb-2">
+            <div class="d-flex align-items-start justify-content-start mb-2 small">
                 <label
                     t-if="showValuesChoice || isSelectedPTAVCustom()"
                     t-out="this.props.attribute.name"
-                    t-attf-class="fw-bold text-break #{this.props.attribute_values.length === 1
+                    t-attf-class="fw-bold text-uppercase mb-0 me-2 #{this.props.attribute_values.length === 1
                         &amp;&amp; hasPTAVCustom() ? '' : 'col-lg-3'}"/>
                 <t t-if="showValuesChoice" t-call="{{getPTAVTemplate()}}"/>
             </div>
@@ -27,7 +27,7 @@
     </t>
     <!-- Attributes value templates -->
     <t t-name="sale.ptav_select">
-        <select class="o_input w-lg-50 flex-grow-1"
+        <select class="form-select form-select-sm w-auto"
             t-on-change="updateSelectedPTAV"
             t-att-name="'ptal-' + this.props.id">
             <option
@@ -41,9 +41,9 @@
         </select>
     </t>
     <t t-name="sale.ptav_radio">
-        <ul class="list-unstyled flex-grow-1 m-0">
+        <ul class="d-flex flex-wrap gap-3 align-items-center list-unstyled mb-0 small">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"
-                class="mb-2">
+                class="mb-0">
                 <div class="form-check">
                     <label
                         class="form-check-label d-inline-flex align-items-center flex-wrap"

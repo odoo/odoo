@@ -4,8 +4,14 @@
         <span name="sale_product_configurator_list_title" position="attributes">
             <attribute name="class" remove="h4" add="h5" separator=" "/>
         </span>
-        <span name="sale_product_configurator_list_total" position="attributes">
-            <attribute name="class" remove="h4" add="h5" separator=" "/>
-        </span>
+        <xpath expr="//span[@name='sale_product_configurator_list_total']" position="replace" />
+        <xpath expr="//thead" position="replace"/>
+        <xpath expr="//table[not(contains(@class, 'o_sale_product_configurator_table_optional'))]" position="after">
+            <div
+                t-if="!this.props.areProductsOptional"
+                class="border-top my-3"
+                style="margin-left: -40px; margin-right: -40px; height: 1px;"
+            />
+        </xpath>
     </t>
 </templates>

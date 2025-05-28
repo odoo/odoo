@@ -137,8 +137,7 @@ function selectAndSetCustomAttribute(
 function assertPriceTotal(total) {
     return {
         content: `Assert that the total is ${total}`,
-        trigger:
-            `table.o_sale_product_configurator_table tr>td[colspan="4"] span:contains("${total}")`,
+        trigger: `.o_sale_product_configurator_dialog span:contains("Total: ${total}")`,
     };
 }
 

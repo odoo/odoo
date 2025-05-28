@@ -30,15 +30,9 @@
         </td>
         <t t-if="!this.props.optional">
             <td
-                name="price"
-                t-if="env.showPrice"
-                class="o_sale_product_configurator_price py-3 px-0 text-end text-md-center d-block d-md-table-cell"
+                class="o_sale_product_configurator_qty py-3 px-0 text-end d-block d-md-table-cell"
             >
                 <t t-call="sale.product_price" name="sale_product_configurator_price"/>
-            </td>
-            <td
-                class="o_sale_product_configurator_qty py-3 px-0 text-end text-md-center d-block d-md-table-cell"
-            >
                 <QuantityButtons
                     t-if="env.showQuantity"
                     quantity="this.props.quantity"
@@ -57,15 +51,10 @@
         </t>
         <t t-else="">
             <td
-                t-if="env.showPrice"
-                class="o_sale_product_configurator_qty py-3 px-0 text-end text-md-center"
+                name="price"
+                class="o_sale_product_configurator_price py-3 px-0 text-end"
             >
                 <t t-call="sale.product_price" name="sale_product_configurator_optional_price"/>
-            </td>
-            <td
-                name="price"
-                class="o_sale_product_configurator_price py-3 px-0 text-end text-md-center"
-            >
                 <button
                     name="sale_product_configurator_add_button"
                     class="btn btn-secondary"
@@ -82,7 +71,7 @@
     <t t-name="sale.product_price">
         <span
             name="sale_product_configurator_formatted_price"
-            class="h5 text-nowrap"
+            class="h5 text-nowrap fw-bold text-end h6 mb-2 d-block"
             t-out="getFormattedPrice()"/>
         <div t-if="this.props.price_info" t-out="this.props.price_info" class="text-muted"/>
     </t>
