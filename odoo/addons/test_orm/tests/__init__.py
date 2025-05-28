@@ -1,6 +1,7 @@
 from . import (
     test_attributes,
     test_autovacuum,
+    test_bindings,
     test_company_checks,
     test_domain,
     test_fields,
