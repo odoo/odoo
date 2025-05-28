@@ -155,6 +155,7 @@ export class FormatPlugin extends Plugin {
 
     removeFormat() {
         const traversedNodes = this.dependencies.selection.getTraversedNodes();
+        this.dispatchTo("remove_format_handlers");
         for (const format of Object.keys(formatsSpecs)) {
             if (
                 !formatsSpecs[format].removeStyle ||
@@ -164,7 +165,6 @@ export class FormatPlugin extends Plugin {
             }
             this._formatSelection(format, { applyStyle: false });
         }
-        this.dispatchTo("remove_format_handlers");
         this.dependencies.history.addStep();
     }
 
