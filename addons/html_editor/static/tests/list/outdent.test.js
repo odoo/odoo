@@ -1,16 +1,24 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, test, before } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { bold, deleteBackward, keydownShiftTab } from "../_helpers/user_actions";
 import { getContent } from "../_helpers/selection";
 
+before(() => {
+    return document.fonts.add(new FontFace(
+        "Roboto",
+        "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)",
+    )).ready;
+});
+
 describe("Regular list", () => {
     test.tags("font-dependent");
     test("should remove the list-style when outdent the list", async () => {
         await testEditor({
+            styleContent: "ul { font: 14px Roboto }",
             contentBefore: unformat(`
                     <ul>
-                        <li style="list-style: cambodian;">
+                        <li style="list-style: upper-latin;">
                             <ul>
                                 <li>a[b]c</li>
                             </ul>
@@ -19,7 +27,7 @@ describe("Regular list", () => {
             stepFunction: keydownShiftTab,
             contentAfter: unformat(`
                     <ul>
-                        <li style="list-style: cambodian;"></li>
+                        <li style="list-style: upper-latin;"></li>
                         <li>a[b]c</li>
                     </ul>`),
         });
