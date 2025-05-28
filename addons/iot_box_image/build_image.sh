@@ -60,6 +60,18 @@ cp -av "${OVERWRITE_FILES_BEFORE_INIT_DIR}"/* "${MOUNT_POINT}"
 # it needs to be performed in the classic filesystem, as 'systemctl' commands are not available in /root_bypass_ramdisks
 sudo systemctl reload NetworkManager
 
+# generate a keypair for the IoT Box
+mkdir -pv ./.ssh
+echo "y" | ssh-keygen -t ed25519 -f ./.ssh/iotbox -N "" -C https://www.odoo.com/app/iot
+# copy the public key to the image
+mkdir -pv "${MOUNT_POINT}/home/pi/.ssh"
+cp -v ./.ssh/iotbox.pub "${MOUNT_POINT}/home/pi/.ssh/authorized_keys"
+
+# ensure the image has the correct permissions
+chmod 700 "${MOUNT_POINT}/home/pi/.ssh"
+chmod 755 "${MOUNT_POINT}/home/pi"
+chmod 600 "${MOUNT_POINT}/home/pi/.ssh/authorized_keys"
+
 # Run initialization script inside /mount_point (the mounted path of the image)
 chroot "${MOUNT_POINT}" /bin/bash -c "/etc/init_image.sh"
 
@@ -85,4 +97,5 @@ rm -rf "${OVERWRITE_FILES_BEFORE_INIT_DIR}/usr"
 rm -rfv "${MOUNT_POINT}"
 losetup -d ${LOOP_IOT}
 
-echo "Image build finished."
+echo ""
+echo "Image build finished, you'll find the private key at './.ssh/iotbox'"
