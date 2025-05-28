@@ -44,7 +44,7 @@ configuratorTourUtils.addOptionalProduct("Conference Chair"),
 configuratorTourUtils.addOptionalProduct("Chair floor protection"),
 configuratorTourUtils.assertPriceTotal("1,228.50"),
 {
-    trigger: 'button:contains(Proceed to Checkout)',
+    trigger: 'button:contains(Go to Checkout)',
     run: 'click',
     expectUnloadPage: true,
 },

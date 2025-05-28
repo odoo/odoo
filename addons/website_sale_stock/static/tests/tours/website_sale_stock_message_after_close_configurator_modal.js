@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add('website_sale_stock_message_after_close_
     },
     {
         content: "Continue shoppping",
-        trigger: 'button:contains(Continue Shopping)',
+        trigger: 'button[name="website_sale_product_configurator_continue_button"]',
         run: 'click',
     }, {
         content: "Check that the stock quantity is displayed and correct after adding to cart",

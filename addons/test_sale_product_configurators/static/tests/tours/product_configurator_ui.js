@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_tour', {
             run: "click",
         },
         {
-            trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) td[name="price"] span:contains("800.40")',
+            trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) span[name="sale_product_configurator_formatted_price"]:contains("800.40")',
         },
         {
             trigger: 'label[style="background-color:#000000"] input:not(:visible)',

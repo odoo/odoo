@@ -3,6 +3,7 @@ import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { ProductList } from "../product_list/product_list";
+import { formatCurrency } from '@web/core/currency';
 
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
@@ -113,6 +114,23 @@ export class ProductConfiguratorDialog extends Component {
             // Use the currency id retrieved from the server if none was provided in the props.
             this.currency.id ??= currency_id;
         });
+    }
+
+    get totalMessage() {
+        return _t("Total: %s", this.getFormattedTotal());
+    }
+
+    /**
+    * Return the total of the product in the list, in the currency of the `sale.order`.
+    *
+    * @return {String} - The sum of all items in the list, in the currency of the `sale.order`.
+    */
+    getFormattedTotal() {
+        const total = (this.state.products || []).reduce(
+            (sum, product) => sum + product.price * product.quantity,
+            0
+        );
+        return formatCurrency(total, this.currency.id);
     }
 
     //--------------------------------------------------------------------------

@@ -40,16 +40,16 @@ registry.category("web_tour.tours").add('sale_product_configurator_pricelist_tou
         ...tourUtils.addProduct("Customizable Desk (TEST)"),
         {
             content: "check price is correct (USD)",
-            trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(3) span:contains("750.00")',
+            trigger: '.o_sale_product_configurator_table tr:has(td>div[name="o_sale_product_configurator_name"] span:contains("Customizable Desk")) span[name="sale_product_configurator_formatted_price"]:contains("750.00")',
         },
         {
             content: "add one more",
-            trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(4)>div>button:has(i.fa-plus)',
+            trigger: '.o_sale_product_configurator_table tr:has(span:contains("Customizable Desk")) td.o_sale_product_configurator_qty button:has(i.oi-plus)',
             run: "click",
         },
         {
             content: "check price for 2",
-            trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(1)>td:nth-child(3) span:contains("600.00")',
+            trigger: '.o_sale_product_configurator_table tr:has(span:contains("Customizable Desk")) td span[name="sale_product_configurator_formatted_price"]:contains("600.00")',
         },
         configuratorTourUtils.addOptionalProduct("Conference Chair (TEST)"),
         configuratorTourUtils.increaseProductQuantity("Conference Chair (TEST)"),
