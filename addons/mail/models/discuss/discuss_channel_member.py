@@ -257,13 +257,13 @@ class DiscussChannelMember(models.Model):
         return [
             # sudo: res.partner - reading partner related to a member is considered acceptable
             Store.Attr(
-                "persona",
+                "partner_id",
                 lambda m: Store.One(m.partner_id.sudo(), m._get_store_partner_fields(fields)),
                 predicate=lambda m: m.partner_id,
             ),
             # sudo: mail.guest - reading guest related to a member is considered acceptable
             Store.Attr(
-                "persona",
+                "guest_id",
                 lambda m: Store.One(m.guest_id.sudo(), m._get_store_guest_fields(fields)),
                 predicate=lambda m: m.guest_id,
             ),

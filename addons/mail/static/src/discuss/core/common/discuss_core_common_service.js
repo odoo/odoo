@@ -50,7 +50,7 @@ export class DiscussCoreCommon {
             this.store["discuss.channel.member"].insert({
                 id,
                 fetched_message_id: { id: last_message_id },
-                persona: { type: "partner", id: partner_id },
+                partner_id: { type: "partner", id: partner_id },
                 thread: { id: channel_id, model: "discuss.channel" },
             });
         });
