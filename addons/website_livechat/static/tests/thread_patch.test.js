@@ -24,7 +24,6 @@ test("Rendering of visitor banner", async () => {
     const visitorId = pyEnv["website.visitor"].create({
         country_id,
         history: "Home → Contact",
-        is_connected: true,
         lang_id,
         website_id,
     });
@@ -50,7 +49,6 @@ test("Rendering of visitor banner", async () => {
             }`
         )}']`
     );
-    await contains(".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     await contains(".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
     await contains(".o-website_livechat-VisitorBanner span", {
         text: `Website Visitor #${visitorId}`,
@@ -69,7 +67,6 @@ test("Livechat with non-logged visitor should show visitor banner", async () => 
         country_id,
         display_name: "Visitor #11",
         history: "Home → Contact",
-        is_connected: true,
         lang_id,
         website_id,
     });
@@ -99,7 +96,6 @@ test("Livechat with logged visitor should show visitor banner", async () => {
         country_id,
         display_name: "Visitor #11",
         history: "Home → Contact",
-        is_connected: true,
         lang_id,
         partner_id,
         website_id,

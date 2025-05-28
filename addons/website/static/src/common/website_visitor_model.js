@@ -13,8 +13,6 @@ export class WebsiteVisitor extends Record {
     country_id = fields.One("res.country");
     /** @type {string} */
     display_name;
-    /** @type {boolean} */
-    is_connected;
     lang_id = fields.One("res.lang");
     partner_id = fields.One("Persona");
     website_id = fields.One("website");

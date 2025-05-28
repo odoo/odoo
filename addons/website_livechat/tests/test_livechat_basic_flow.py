@@ -280,7 +280,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "display_name": f"Website Visitor #{self.visitor.id}",
                         "history": "",
                         "id": self.visitor.id,
-                        "is_connected": True,
                         "lang_id": self.env.ref("base.lang_en").id,
                         "partner_id": False,
                         "website_id": self.env.ref("website.default_website").id,

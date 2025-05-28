@@ -32,7 +32,7 @@ export class WebsiteVisitor extends models.ServerModel {
         const Website = this.env["website"];
 
         for (const visitor of this.browse(ids)) {
-            const [data] = this._read_format(visitor.id, ["display_name", "is_connected"]);
+            const [data] = this._read_format(visitor.id, ["display_name"]);
             data.country_id = mailDataHelpers.Store.one(ResCountry.browse(visitor.country_id));
             data.history = visitor.history;
             data.lang_id = mailDataHelpers.Store.one(ResLang.browse(visitor.lang_id));
