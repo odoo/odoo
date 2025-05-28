@@ -62,6 +62,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
 
         pos_order = self.create_pos_order(current_session, 100.0)
         self.pay_pos_order(pos_order)
+        pos_order.action_pos_order_paid()
 
         self.assertEqual(pos_order.state, 'paid')
         self.assertEqual(pos_order.l10n_es_tbai_state, 'sent')
@@ -92,6 +93,7 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
         # Create and pay a pos order not invoiced
         pos_order = self.create_pos_order(current_session, 100.0)
         self.pay_pos_order(pos_order)
+        pos_order.action_pos_order_paid()
 
         # Create the refund
         refund_action = pos_order.refund()
