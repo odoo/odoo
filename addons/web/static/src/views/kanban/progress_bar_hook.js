@@ -1,4 +1,5 @@
 import { reactive } from "@odoo/owl";
+import { getCurrency } from "@web/core/currency";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -147,6 +148,16 @@ class ProgressBarState {
             }
         }
         value ??= false;
+        if (value && aggregateField.type === "monetary" && aggregateField.currency_field) {
+            const currencyId = group.aggregates[aggregateField.currency_field][0];
+            if (currencyId) {
+                return {
+                    title,
+                    value,
+                    currency: getCurrency(currencyId),
+                };
+            }
+        }
         return { title, value };
     }
 
