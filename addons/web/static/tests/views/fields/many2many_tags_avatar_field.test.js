@@ -169,8 +169,7 @@ test("widget many2many_tags_avatar in list view", async () => {
     await contains(".o_control_panel_main_buttons .o_list_button_save").click();
     expect(".o_data_row:eq(0) .o_field_many2many_tags_avatar .o_avatar img").toHaveCount(2);
 
-    // Select the first row and enter edit mode on the x2many field.
-    await contains(".o_data_row:nth-child(1) .o_list_record_selector input").click();
+    // Edit first row
     await contains(".o_data_row:nth-child(1) .o_data_cell").click();
 
     // Only the first row should have tags with delete buttons.
@@ -191,8 +190,7 @@ test("widget many2many_tags_avatar list view - don't crash on keyboard navigatio
             `,
     });
 
-    // Select the 2nd row and enter edit mode on the x2many field.
-    await contains(".o_data_row:nth-child(2) .o_list_record_selector input").click();
+    // Edit second row
     await contains(".o_data_row:nth-child(2) .o_data_cell").click();
 
     // Pressing left arrow should focus on the right-most (second) tag.

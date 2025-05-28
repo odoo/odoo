@@ -110,6 +110,10 @@ export class StaticList extends DataPoint {
         return this.config.resIds;
     }
 
+    get selection() {
+        return [];
+    }
+
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------

@@ -873,10 +873,6 @@ test("focus tracking on a many2one in a list", async () => {
             </list>`,
     });
 
-    // Select two records
-    await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
-    await contains(".o_data_row:eq(1) .o_list_record_selector input").click();
-
     await contains(".o_data_row .o_data_cell").click();
     expect(".o_data_row .o_data_cell input").toBeFocused();
 
