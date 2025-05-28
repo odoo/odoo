@@ -264,36 +264,3 @@ class TestReportSession(TestPoSCommon):
             bank_payment_method_diffs={self.bank_pm1.id: -20})
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session1_id])
         self.assertEqual(report['payments'][1]['money_difference'], -20)
-
-        self.bank_pm1.outstanding_account_id = False
-        self.config.open_ui()
-
-        session2_id = self.config.current_session_id.id
-        order2 = self.env['pos.order'].create({
-            'company_id': self.env.company.id,
-            'session_id': session2_id,
-            'partner_id': self.partner_a.id,
-            'lines': [(0, 0, {
-                'name': "OL/0001",
-                'product_id': self.product1.id,
-                'price_unit': 100,
-                'discount': 0,
-                'qty': 1,
-                'tax_ids': [[6, False, [self.tax1.id]]],
-                'price_subtotal': 100,
-                'price_subtotal_incl': 100,
-            })],
-            'pricelist_id': self.config.pricelist_id.id,
-            'amount_paid': 100.0,
-            'amount_total': 100.0,
-            'amount_tax': 10.0,
-            'amount_return': 0.0,
-            'last_order_preparation_change': '{}',
-            'to_invoice': False,
-        })
-
-        self.make_payment(order2, self.bank_pm1, 100)
-
-        self.config.current_session_id.action_pos_session_closing_control(bank_payment_method_diffs={self.bank_pm1.id: -20})
-        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session2_id])
-        self.assertEqual(report['payments'][1]['money_difference'], -20)

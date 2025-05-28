@@ -171,9 +171,11 @@ class ReportSaleDetails(models.AbstractModel):
                             payment['count'] = True
                         elif payment['id'] in account_payments.mapped('pos_payment_method_id.id'):
                             account_payment = account_payments.filtered(lambda p: p.pos_payment_method_id.id == payment['id'])
+                            profit_line = account_payment.move_id.line_ids.filtered(lambda l: l.account_id == account_payment.journal_id.profit_account_id)
+                            loss_line = account_payment.move_id.line_ids.filtered(lambda l: l.account_id == account_payment.journal_id.loss_account_id)
                             payment['final_count'] = payment['total']
-                            payment['money_counted'] = sum(account_payment.mapped('amount_signed'))
-                            payment['money_difference'] = payment['money_counted'] - payment['final_count']
+                            payment['money_difference'] = -loss_line.amount_currency if loss_line else profit_line.amount_currency
+                            payment['money_counted'] = sum(account_payment.mapped('amount_signed')) + payment['money_difference']
                             payment['cash_moves'] = []
                             if payment['money_difference'] > 0:
                                 move_name = 'Difference observed during the counting (Profit)'
