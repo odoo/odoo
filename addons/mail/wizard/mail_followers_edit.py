@@ -67,7 +67,6 @@ class MailFollowersEdit(models.TransientModel):
             "email_from": self.env.user.email_formatted,
             "email_layout_xmlid": len(documents) > 1 and "mail.mail_notification_multi_invite" or "mail.mail_notification_invite",
             "model": self.res_model,
-            "record_name": len(documents) == 1 and documents.display_name or "",
             "reply_to": self.env.user.email_formatted,
             "reply_to_force_new": True,
             "subject": len(documents) > 1 and self.env._(

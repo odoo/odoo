@@ -717,12 +717,12 @@ class MailTemplate(models.Model):
 
                 template_ctx = {
                     # message
-                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
+                    'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'])),
                     'subtype': self.env['mail.message.subtype'].sudo(),
                     # record
                     'model_description': model_lang.display_name,
                     'record': record,
-                    'record_name': False,
+                    'record_name': record.display_name,
                     'subtitles': False,
                     # user / environment
                     'company': company,
