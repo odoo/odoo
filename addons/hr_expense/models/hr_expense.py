@@ -1398,16 +1398,6 @@ class HrExpense(models.Model):
         if False in self.mapped('payment_mode'):
             raise UserError(_("Please specify if the expenses were paid by the company, or the employee."))
 
-        missing_email_employees = self.employee_id.filtered(lambda employee: not employee.work_email)
-        if missing_email_employees:
-            action = self.env['ir.actions.actions']._for_xml_id('hr.open_view_employee_list_my')
-            action['domain'] = [('id', 'in', missing_email_employees.ids)]
-            raise RedirectWarning(
-                message=_("The work email of some employees is missing. Please add it on their form."),
-                action=action,
-                button_text=_("Go to employees"),
-             )
-
     def _do_approve(self, check=True):
         if check:
             self._check_can_approve()
