@@ -15,5 +15,6 @@
     'license': 'LGPL-3',
     'data': [
         'data/uom_data.xml',
+        'data/tax_report.xml',
     ],
 }
