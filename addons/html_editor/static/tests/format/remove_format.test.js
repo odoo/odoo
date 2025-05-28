@@ -651,6 +651,19 @@ test("should remove font-size style from multiple sized selected text", async ()
     });
 });
 
+test("should remove font size and color styles", async () => {
+    await testEditor({
+        contentBefore: `<p><span class="display-1-fs"><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: `<p>[abcdefg]</p>`,
+    });
+    await testEditor({
+        contentBefore: `<p><span style="font-size: 10px;"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: `<p>[abcdefg]</p>`,
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await waitFor(".o-we-toolbar");
