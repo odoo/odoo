@@ -1463,7 +1463,7 @@ class TestComposerInternals(TestMailComposer):
                     self.assertEqual(notification_parameters[key], val)
 
 
-@tagged('mail_composer', 'multi_lang', 'multi_company')
+@tagged('mail_composer', 'multi_lang', 'multi_company', 'pipi')
 class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     """ Test global output of composer used in comment mode. Test notably
     notification and emails generated during this process. """
