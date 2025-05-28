@@ -757,6 +757,36 @@ test("SelectCreateDialog: default props, create a record on desktop", async () =
     expect.verifySteps(["onSelected 4"]);
 });
 
+test.tags("desktop");
+test("SelectCreateDialog: click on row once in selection", async () => {
+    Partner._views["list"] = `<list><field name="name"/></list>`;
+    Partner._views["search"] = `
+        <search>
+            <filter name="bar" help="Bar" domain="[('bar', '=', True)]"/>
+        </search>`;
+    await mountWithCleanup(WebClient);
+
+    getService("dialog").add(SelectCreateDialog, {
+        onSelected: (resIds) => expect.step(`onSelected ${resIds}`),
+        resModel: "partner",
+    });
+    await animationFrame();
+
+    expect(".o_dialog").toHaveCount(1);
+    expect(".o_dialog .o_list_view .o_data_row").toHaveCount(3);
+    expect(".o_dialog .o_selection_box").toHaveCount(0);
+
+    await contains(".o_data_row .o_list_record_selector").click();
+    expect(".o_dialog .o_data_row_selected").toHaveCount(1);
+
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    expect(".o_dialog .o_data_row_selected").toHaveCount(2);
+
+    await contains(".o_dialog footer .btn-primary").click();
+    expect(".o_dialog").toHaveCount(0);
+    expect.verifySteps(["onSelected 1,2"]);
+});
+
 test.tags("mobile");
 test("SelectCreateDialog: default props, create a record on mobile", async () => {
     Partner._views["search"] = /* xml */ `

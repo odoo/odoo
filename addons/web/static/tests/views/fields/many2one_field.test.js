@@ -873,10 +873,6 @@ test("focus tracking on a many2one in a list", async () => {
             </list>`,
     });
 
-    // Select two records
-    await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
-    await contains(".o_data_row:eq(1) .o_list_record_selector input").click();
-
     await contains(".o_data_row .o_data_cell").click();
     expect(".o_data_row .o_data_cell input").toBeFocused();
 
@@ -951,12 +947,12 @@ test("empty readonly many2one field", async () => {
 
 test("empty many2one field with no result", async () => {
     patchWithCleanup(Many2XAutocomplete.prototype, {
-        getCreationContext(value){
+        getCreationContext(value) {
             expect(value).toBe("");
             const context = super.getCreationContext(value);
             expect(context[`default_${this.props.nameCreateField}`]).toBe(undefined);
             return context;
-        }
+        },
     });
     class M2O extends models.Model {
         m2o = fields.Many2one({ relation: "m2o" });

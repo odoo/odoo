@@ -250,7 +250,6 @@ test("click on many2one_avatar in an editable list view (editable top)", async (
             </list>`,
     });
 
-    await contains(".o_data_row:eq(0) .o_list_record_selector input").click();
     await contains(".o_data_row .o_data_cell [name='user_id']").click();
     expect(".o_data_row:eq(0)").toHaveClass("o_selected_row");
 

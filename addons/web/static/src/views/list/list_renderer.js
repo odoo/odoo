@@ -96,7 +96,7 @@ export class ListRenderer extends Component {
     static useMagicColumnWidths = true;
     static LONG_TOUCH_THRESHOLD = 400;
     static components = { DropdownItem, Field, ViewButton, CheckBox, Dropdown, Pager, Widget };
-    static defaultProps = { hasSelectors: false, cycleOnTab: true };
+    static defaultProps = { allowSelectors: false, cycleOnTab: true };
     static props = [
         "activeActions?",
         "list",
@@ -608,7 +608,7 @@ export class ListRenderer extends Component {
 
     get aggregates() {
         let values;
-        if (this.props.list.selection && this.props.list.selection.length) {
+        if (this.props.list.selection.length) {
             values = this.props.list.selection.map((r) => r.data);
         } else if (this.props.list.isGrouped) {
             values = this.props.list.groups.map((g) => g.aggregates);
@@ -1109,14 +1109,15 @@ export class ListRenderer extends Component {
         if (ev.target.special_click) {
             return;
         }
-        const recordAfterResequence = async () => {
-            const recordIndex = this.props.list.records.indexOf(record);
-            await this.resequencePromise;
-            // row might have changed record after resequence
-            record = this.props.list.records[recordIndex] || record;
-        };
 
-        if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record)) {
+        const multiEdit = this.props.list.model.multiEdit;
+        const hasSelection = !!this.props.list.selection.length;
+        if (hasSelection && this.canSelectRecord && (!multiEdit || !record.selected)) {
+            this.toggleRecordSelection(record);
+        } else if (
+            (multiEdit && record.selected) ||
+            (this.isInlineEditable(record) && !hasSelection)
+        ) {
             if (record.isInEdition && this.editedRecord === record) {
                 const cell = this.tableRef.el.querySelector(
                     `.o_selected_row td[name='${column.name}']`
@@ -1129,7 +1130,10 @@ export class ListRenderer extends Component {
                 this.focusCell(column);
                 this.cellToFocus = null;
             } else {
-                await recordAfterResequence();
+                const recordIndex = this.props.list.records.indexOf(record);
+                await this.resequencePromise;
+                // row might have changed record after resequence
+                record = this.props.list.records[recordIndex] || record;
                 await this.props.list.enterEditMode(record);
                 this.cellToFocus = { column, record };
                 if (
@@ -2108,7 +2112,7 @@ export class ListRenderer extends Component {
      */
     ignoreEventInSelectionMode(ev) {
         const { list } = this.props;
-        if (this.env.isSmall && list.selection && list.selection.length) {
+        if (this.env.isSmall && list.selection.length) {
             // in selection mode, only selection is allowed.
             ev.stopPropagation();
             ev.preventDefault();
@@ -2121,7 +2125,7 @@ export class ListRenderer extends Component {
      */
     onClickCapture(record, ev) {
         const { list } = this.props;
-        if (this.env.isSmall && list.selection && list.selection.length) {
+        if (this.env.isSmall && list.selection.length) {
             ev.stopPropagation();
             ev.preventDefault();
             this.toggleRecordSelection(record);
