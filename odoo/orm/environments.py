@@ -575,6 +575,9 @@ class Transaction:
         self.field_data_patches.clear()
         self.field_dirty.clear()
         self.tocompute.clear()
+        for env in self.envs:
+            env.cr.cache.clear()
+            break  # all envs of the transaction share the same cursor
 
     def reset(self) -> None:
         """ Reset the transaction.  This clears the transaction, and reassigns
