@@ -2294,10 +2294,6 @@ class MailThread(models.AbstractModel):
         msg_values = dict(msg_kwargs)
         if 'email_add_signature' not in msg_values:
             msg_values['email_add_signature'] = True
-        if not msg_values.get('record_name'):
-            # use sudo as record access is not always granted (notably when replying
-            # a notification) -> final check is done at message creation level
-            msg_values['record_name'] = self.sudo().display_name
         if body_is_html and self.env.user._is_internal():
             _logger.warning("Posting HTML message using body_is_html=True, use a Markup object instead (user: %s)",
                 self.env.user.id)
@@ -2795,7 +2791,6 @@ class MailThread(models.AbstractModel):
             'email_from': email_from,
             # document
             'model': self._name if self else model,
-            'record_name': False,
             'res_id': self.id if self else res_id,
             # content
             'body': escape(body),  # escape if text, keep if markup
@@ -2910,7 +2905,6 @@ class MailThread(models.AbstractModel):
             'model': self._name,
             'record_alias_domain_id': False,
             'record_company_id': False,
-            'record_name': False,
             # content
             'attachment_ids': attachment_ids,
             'message_type': message_type,
@@ -3074,7 +3068,6 @@ class MailThread(models.AbstractModel):
             'partner_ids',
             'record_alias_domain_id',
             'record_company_id',
-            'record_name',
             'reply_to',
             'reply_to_force_new',
             'res_id',
@@ -3647,7 +3640,7 @@ class MailThread(models.AbstractModel):
         # record, model
         if not model_description:
             model_description = record_wlang._get_model_description(msg_vals['model'] if 'model' in msg_vals else message.model)
-        record_name = force_record_name or (msg_vals['record_name'] if 'record_name' in msg_vals else message.record_name)
+        record_name = force_record_name or message.with_context(lang=lang).record_name
 
         # tracking: in case of missing value, perform search (skip only if sure we don't have any)
         check_tracking = msg_vals.get('tracking_value_ids', True) if msg_vals else bool(self)
@@ -3929,13 +3922,13 @@ class MailThread(models.AbstractModel):
         This info will be delivered to a browser device via its recorded endpoint.
         REM: It is having a limit of 4000 bytes (4kb)
 
-       :param str force_record_name: record_name to use instead of being
+        :param str force_record_name: record_name to use instead of being
           related record's display_name;
         """
         msg_vals = msg_vals or {}
         author_id = msg_vals['author_id'] if 'author_id' in msg_vals else message.author_id.id
         model = msg_vals['model'] if 'model' in msg_vals else message.model
-        title = msg_vals['record_name'] if 'record_name' in msg_vals else message.model
+        title = force_record_name or message.record_name
         res_id = msg_vals['res_id'] if 'res_id' in msg_vals else message.res_id
         body = msg_vals['body'] if 'body' in msg_vals else message.body
 
@@ -4587,7 +4580,6 @@ class MailThread(models.AbstractModel):
                 subject=_('You have been assigned to %s', record.display_name),
                 body=assignation_msg,
                 partner_ids=partner_ids,
-                record_name=record.display_name,
                 email_layout_xmlid='mail.mail_notification_layout',
                 model_description=model_description,
             )
