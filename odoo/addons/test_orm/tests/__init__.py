@@ -11,6 +11,7 @@ from . import (
     test_env,
     test_feedback,
     test_fields,
+    test_guess_mimetypes,
     test_html,
     test_indexed_translation,
     test_ir_rules,
