@@ -163,15 +163,29 @@ class MailRenderMixin(models.AbstractModel):
 
     @api.model
     def _render_encapsulate(self, layout_xmlid, html, add_context=None, context_record=None):
+        """ Encapsulate html content (i.e. an email body) in a layout containing
+        more complex html. Used to generate a 'email friendly' content from
+        simple html content.
+
+        Typical usage: encapsulate content in email layouts like 'mail_notification_layout'
+        or 'mail_notification_light'. Also used for digest layouts. This leads
+        to some default rendering values being computed here, often used in those
+        templates. """
         template_ctx = {
             'body': html,
+            'company': context_record['company_id'] if (context_record and 'company_id' in context_record) else self.env.company,
             'record_name': context_record.display_name if context_record else '',
             'model_description': self.env['ir.model']._get(context_record._name).display_name if context_record else False,
-            'company': context_record['company_id'] if (context_record and 'company_id' in context_record) else self.env.company,
             'record': context_record,
         }
         if add_context:
             template_ctx.update(**add_context)
+        # the 'mail_notification_light' expects a mail.message 'message' context, let's give it one
+        if not template_ctx.get('message'):
+            msg_vals = {'body': html}
+            if context_record:
+                msg_vals.update({'model': context_record._name, 'res_id': context_record.id})
+            template_ctx['message'] = self.env['mail.message'].sudo().new(msg_vals)
 
         html = self.env['ir.qweb']._render(layout_xmlid, template_ctx, minimal_qcontext=True, raise_if_not_found=False)
         if not html:
