@@ -14,7 +14,7 @@ export function isMobileView(targetEl) {
     const clientWidth =
         targetEl.ownerDocument.defaultView?.frameElement?.clientWidth ||
         targetEl.ownerDocument.documentElement.clientWidth;
-    return clientWidth && clientWidth < mobileViewThreshold;
+    return !!clientWidth && clientWidth < mobileViewThreshold;
 }
 
 /**

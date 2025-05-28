@@ -56,17 +56,14 @@ export class WebsiteBuilder extends Component {
         this.onKeydownRefresh = this._onKeydownRefresh.bind(this);
 
         onMounted(() => {
-            // You can't wait for rendering because the Builder depends on the page style synchronously.
+            // You can't wait for rendering because the Builder depends on the
+            // page style synchronously.
             effect(
                 (websiteContext) => {
                     if (status(this.component) === "destroyed") {
                         return;
                     }
-                    if (websiteContext.isMobile) {
-                        this.websitePreviewRef.el.classList.add("o_is_mobile");
-                    } else {
-                        this.websitePreviewRef.el.classList.remove("o_is_mobile");
-                    }
+                    this.toggleIsMobile(websiteContext.isMobile);
                 },
                 [this.websiteContext]
             );
@@ -265,6 +262,7 @@ export class WebsiteBuilder extends Component {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
 
+        this.toggleIsMobile(this.websiteContext.isMobile);
         this.preparePublicRootReady();
         this.setupClickListener();
         this.replaceBrowserUrl();
@@ -453,6 +451,12 @@ export class WebsiteBuilder extends Component {
         // Adding the mobile class directly, to not wait for the component
         // re-rendering.
         this.websiteService.context.isMobile = !this.websiteService.context.isMobile;
+    }
+
+    toggleIsMobile(isMobile) {
+        this.websitePreviewRef.el.classList.toggle("o_is_mobile", isMobile);
+        this.websiteContent.el?.contentDocument.documentElement
+            .classList.toggle("o_is_mobile", isMobile);
     }
 
     get aceEditorWidth() {
