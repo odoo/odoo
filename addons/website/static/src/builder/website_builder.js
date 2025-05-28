@@ -2,6 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { BuilderOptionsPlugin } from "@html_builder/core/builder_options_plugin_translate";
 import { CORE_PLUGINS as CORE_BUILDER_PLUGINS } from "@html_builder/core/core_plugins";
 import { DisableSnippetsPlugin } from "@html_builder/core/disable_snippets_plugin_translation";
+import { OperationPlugin } from "@html_builder/core/operation_plugin";
 import { SavePlugin } from "@html_builder/core/save_plugin";
 import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { VisibilityPlugin } from "@html_builder/core/visibility_plugin";
@@ -27,6 +28,7 @@ const TRANSLATION_PLUGINS = [
     TranslationPlugin,
     WebsiteVisibilityPlugin,
     HighlightPlugin,
+    OperationPlugin,
 ];
 
 export class WebsiteBuilder extends Component {
@@ -70,7 +72,7 @@ export class WebsiteBuilder extends Component {
             if (this.editor && !editableEl) {
                 editableEl = closestElement(
                     this.editor.shared.selection.getEditableSelection().anchorNode,
-                    "[data-oe-model]",
+                    "[data-oe-model]"
                 );
             }
             if (!editableEl) {
