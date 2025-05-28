@@ -16,4 +16,7 @@ class MailMessageReaction(models.Model):
             == "livechat"
         )
         super(MailMessageReaction, self - livechat_partner_reactions)._persona_to_store(store)
-        store.add(livechat_partner_reactions.partner_id, fields=["avatar_128", "user_livechat_username"])
+        store.add(
+            livechat_partner_reactions.partner_id,
+            fields=["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()],
+        )
