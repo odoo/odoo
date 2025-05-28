@@ -125,6 +125,11 @@ class ResPartner(models.Model):
             ('9955', "9955 - Swedish VAT number"),
             ('9957', "9957 - French VAT number"),
             ('9959', "9959 - Employer Identification Number (EIN, USA)"),
+            ('AN', "AN - O.F.T.P. (ODETTE File Transfer Protocol)"),
+            ('AQ', "AQ - X.400 address for mail text"),
+            ('AS', "AS - AS2 exchange"),
+            ('AU', "AU - File Transfer Protocol"),
+            ('EM', "EM - Electronic mail"),
         ]
     )
     hide_peppol_fields = fields.Boolean(compute='_compute_hide_peppol_fields')
