@@ -416,6 +416,9 @@ export class WebsiteBuilder extends Component {
     preparePublicRootReady() {
         const deferred = new Deferred();
         this.publicRootReady = deferred;
+        // Note: Public root will reinitialize on reload iframe
+        const topDocument = window.frameElement?.ownerDocument || document;
+        topDocument.body.classList.add("o_public_root_initializing");
         this.websiteContent.el.contentWindow.addEventListener(
             "PUBLIC-ROOT-READY",
             (event) => {

@@ -366,10 +366,15 @@ export const PublicRoot = publicWidget.Widget.extend({
  * been consumed.
  */
 export async function createPublicRoot(RootWidget) {
+    const topDocument = window.frameElement?.ownerDocument || document;
+    topDocument.body.classList.add("o_public_root_initializing");
     await lazyloader.allScriptsLoaded;
     await whenReady();
     const env = makeEnv();
     await startServices(env);
+    env.services["public.interactions"].isReady.then(() => {
+        topDocument.body.classList.remove("o_public_root_initializing");
+    });
     Component.env = env;
     await env.services.public_component.mountComponents();
     const publicRoot = new RootWidget(null, env);

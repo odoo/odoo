@@ -1,3 +1,4 @@
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import {
     addMedia,
     changeOption,
@@ -6,7 +7,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
     changeOptionInPopover,
-} from '@website/js/tours/tour_utils';
+} from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour('snippet_image_gallery', {
     url: '/',
@@ -14,6 +15,7 @@ registerWebsitePreviewTour('snippet_image_gallery', {
 }, () => [
     ...insertSnippet({id: 's_images_wall', name: 'Images Wall', groupName: "Images"}),
     ...clickOnSave(),
+    stepUtils.waitForInteractionsReady(),
     {
         content: 'Click on an image of the Image Wall',
         trigger: ':iframe .s_image_gallery img',

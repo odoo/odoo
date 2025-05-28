@@ -311,6 +311,13 @@ export const stepUtils = {
         };
     },
 
+    waitForInteractionsReady() {
+        return {
+            content: "Wait until interactions are ready",
+            trigger: "body:not(.o_public_root_initializing)",
+        };
+    },
+
     goToUrl(url) {
         return {
             isActive: ["auto"],
