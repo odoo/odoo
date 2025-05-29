@@ -1,0 +1,16 @@
+<odoo>
+    <record id="view_hotel_guest_form" model="ir.ui.view">
+        <field name="name">hotel.guest.form</field>
+        <field name="model">hotel.guest</field>
+        <field name="arch" type="xml">
+            <form string="Hotel Guest">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="contact"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

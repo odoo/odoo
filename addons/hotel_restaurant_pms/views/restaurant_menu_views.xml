@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_restaurant_menu_form" model="ir.ui.view">
+        <field name="name">restaurant.menu.form</field>
+        <field name="model">restaurant.menu</field>
+        <field name="arch" type="xml">
+            <form string="Restaurant Menu">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="price"/>
+                        <field name="stock"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
