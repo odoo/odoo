@@ -27,7 +27,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     @http.route([
         '/jobs',
         '/jobs/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_jobs)
+    ], type='http', auth="public", website=True, sitemap=sitemap_jobs, list_as_editable_page=True)
     def jobs(self, country_id=None, all_countries=False, department_id=None, office_id=None, contract_type_id=None,
              is_remote=False, is_other_department=False, is_untyped=None,  industry_id=None, is_industry_untyped=False,
              noFuzzy=False, page=1, search=None, **kwargs):

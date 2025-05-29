@@ -34,7 +34,7 @@ class AuthSignupHome(Home):
                 return request.redirect_query('/web/login_successful', query={'account_created': True})
         return response
 
-    @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False, captcha='signup')
+    @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False, captcha='signup', list_as_editable_page=True)
     def web_auth_signup(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
@@ -82,7 +82,7 @@ class AuthSignupHome(Home):
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
-    @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False, captcha='password_reset')
+    @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False, captcha='password_reset', list_as_editable_page=True)
     def web_auth_reset_password(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 

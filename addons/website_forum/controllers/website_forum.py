@@ -67,7 +67,7 @@ class WebsiteForum(WebsiteProfile):
     # Forum
     # --------------------------------------------------
 
-    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=True, readonly=True)
+    @http.route(['/forum'], type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_editable_page=True)
     def forum(self, **kwargs):
         domain = request.website.website_domain()
         forums = request.env['forum.forum'].search(domain)

@@ -58,7 +58,7 @@ class WebsiteCustomer(GoogleMap):
         '/customers/industry/<model("res.partner.industry"):industry>/page/<int:page>',
         '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>',
         '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_industry)
+    ], type='http', auth="public", website=True, sitemap=sitemap_industry, list_as_editable_page=True)
     def customers(self, country=None, industry=None, page=0, **post):
         Tag = request.env['res.partner.tag']
         Partner = request.env['res.partner']

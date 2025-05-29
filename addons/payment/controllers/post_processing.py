@@ -23,7 +23,7 @@ class PaymentPostProcessing(http.Controller):
 
     MONITORED_TX_ID_KEY = '__payment_monitored_tx_id__'
 
-    @http.route('/payment/status', type='http', auth='public', website=True, sitemap=False)
+    @http.route('/payment/status', type='http', auth='public', website=True, sitemap=False, list_as_editable_page=True)
     def display_status(self, **kwargs):
         """ Fetch the transaction and display it on the payment status page.
 
