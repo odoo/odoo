@@ -18,6 +18,16 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import { renderToElement } from "@web/core/utils/render";
 import { delay } from "@odoo/hoot-dom";
 import * as TextInputPopup from "@point_of_sale/../tests/generic_helpers/text_input_popup_util";
+<<<<<<< 53b17a8a7c967245cc8ee7a0dc4cfba113ac56bb
+||||||| da97daf41b7efebcd23e9fd2c2bdceada9c50e56
+import { generatePreparationReceiptElement } from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
+=======
+import {
+    generatePreparationChanges,
+    generatePreparationReceiptElement,
+} from "@point_of_sale/../tests/pos/tours/utils/preparation_receipt_util";
+import { renderToElement } from "@web/core/utils/render";
+>>>>>>> f63ac7f6348436b2764f9187004c717e6c09630d
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
 
@@ -433,6 +443,31 @@ registry.category("web_tour.tours").add("PreparationPrinterContent", {
                     }
                     if (rendered.innerHTML.includes("DUPLICATA!")) {
                         throw new Error("DUPLICATA! should not be present in printed receipt");
+                    }
+                },
+            },
+            Chrome.clickPlanButton(),
+            FloorScreen.clickTable("2"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ...ProductScreen.clickSelectedLine("Water"),
+            ProductScreen.addInternalNote("To Serve"),
+            {
+                content: "Check if order preparation contains 'To Serve' order level internal note",
+                trigger: "body",
+                run: async () => {
+                    const changes = generatePreparationChanges();
+                    const rendered = renderToElement("point_of_sale.OrderChangeReceipt", {
+                        data: changes.orderData,
+                    });
+
+                    if (!rendered.innerHTML.includes("INTERNAL NOTE")) {
+                        throw new Error("'INTERNAL NOTE' not found in printed receipt");
+                    }
+                    if (!rendered.innerHTML.includes("To Serve")) {
+                        throw new Error("To Serve not found in printed receipt");
+                    }
+                    if (rendered.innerHTML.includes("colorIndex")) {
+                        throw new Error("colorIndex should not be displayed in printed receipt");
                     }
                 },
             },
