@@ -1,5 +1,6 @@
 import {
     changeOption,
+    changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
@@ -7,6 +8,9 @@ import {
     goBackToBlocks,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import { queryOne } from "@odoo/hoot-dom";
+
+window.queryOne = queryOne;
 
 const snippets = [
     {
@@ -54,30 +58,25 @@ registerWebsitePreviewTour('conditional_visibility_1', {
 }, () => [
 ...insertSnippet(snippets[0]),
 ...clickOnSnippet(snippets[0]),
-changeOption('ConditionalVisibility', 'we-toggler'),
-{
-    content: 'click on conditional visibility',
-    trigger: '[data-name="visibility_conditional"]',
-    run: 'click',
-},
+...changeOptionInPopover("Text - Image", "Visibility", "Conditionally"),
 {
     content: 'click on utm medium toggler',
-    trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-toggler',
+    trigger: '[data-label="visibilityValueUtmMedium"] button.dropdown-toggle:contains("Choose a record...")',
     run: 'click',
 },
 {
-    trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-selection-items .o_we_m2o_search input',
+    trigger: '.o_popover input',
     content: 'Search for Email',
     run: "edit Email",
 },
 {
-    trigger: '[data-save-attribute="visibilityValueUtmMedium"] we-selection-items [data-add-record="Email"]',
+    trigger: ".o_popover .o-dropdown-item:contains('Email')",
     content: 'click on Email',
     run: 'click',
 },
 ...clickOnSave(),
 {
-    trigger: ".o_website_preview:only-child",
+    trigger: ".o_website_preview",
 },
 {
     content: 'Check if the rule was applied',
@@ -112,12 +111,15 @@ checkEyeIcon("Text - Image", true),
 ...insertSnippet(snippets[1]),
 // Click on the "Banner" snippet.
 ...clickOnSnippet(snippets[1]),
-changeOption("ConditionalVisibility", "we-toggler"),
-changeOption("ConditionalVisibility", '[data-name="visibility_conditional"]'),
 checkEyeIcon("Banner", true),
+...changeOptionInPopover("Banner", "Visibility", "[data-action-id='forceVisible']"),
 goBackToBlocks(),
 // Drag a "Popup" snippet on the website.
 ...insertSnippet(snippets[2]),
+{
+    content: "Wait for the popup to display",
+    trigger: ":iframe .s_popup .modal_shown",
+},
 {
     content: "Toggle the visibility of the popup",
     trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
@@ -129,15 +131,18 @@ checkEyeIcon("Popup", false),
     trigger: ":iframe #wrapwrap footer",
     run: "click",
 },
-changeOption("HideFooter", "we-checkbox"),
+{
+    content: "Click on Page Visibility",
+    trigger: "[data-container-title='Footer'] [data-label='Page Visibility'] [data-action-id='setPageWebsiteDirty'] .form-check-input",
+    run: "click",
+},
 checkEyeIcon("Footer", false),
 {
     content: "Click on Header",
     trigger: ":iframe #wrapwrap header",
     run: "click",
 },
-changeOption("TopMenuVisibility", "we-toggler"),
-changeOption("TopMenuVisibility", '[data-visibility="hidden"]'),
+...changeOptionInPopover("Header", "Header Position", "[data-action-value='hidden']"),
 checkEyeIcon("Header", false),
 {
     content: "Toggle the visibility of the Banner snippet",
@@ -159,7 +164,7 @@ registerWebsitePreviewTour("conditional_visibility_4", {
 ...clickOnSnippet(snippets[0]),
 {
     content: "Click on the 'move down' option",
-    trigger: ":iframe we-button.o_we_user_value_widget.fa-angle-down",
+    trigger: ".o_overlay_options button.fa-angle-down",
     run: "click",
 },
 ...checkEyesIconAfterSave(),
@@ -180,7 +185,7 @@ registerWebsitePreviewTour("conditional_visibility_4", {
 ...clickOnSnippet(snippets[1]),
 {
     content: "Drag the 'Banner' snippet to the end of the page",
-    trigger: ":iframe .o_overlay_move_options .o_move_handle",
+    trigger: ".o_overlay_options button.o_move_handle",
     run: "drag_and_drop :iframe #wrapwrap footer",
 },
 ...checkEyesIconAfterSave(false),
@@ -209,7 +214,12 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ":iframe .s_text_image img",
         run: "click",
     },
-    changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
+    // changeOption("Column", "Visibility", "[data-action-id='toggleDeviceVisibility']"),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Column'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
     {
         content: "Check that the Column has been added in the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Column')",
@@ -219,10 +229,15 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         trigger: ":iframe .s_text_image",
         run: "click",
     },
-    changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_desktop"]'),
+    // changeOption("Text - Image", "Visibility", "[data-action-id='toggleDeviceVisibility']"),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Text - Image'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
     {
         content: "Check that the 'Text - Image' is the parent of 'Column' in the 'Invisible Elements' panel",
-        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel_1:contains('Column')",
+        trigger: ".o_we_invisible_el_panel .o_we_invisible_root_parent.o_we_invisible_entry:contains('Text - Image') + ul .o_we_invisible_entry.o_we_sublevel:contains('Column')",
     },
     {
         content: "Click on the 'Text - Image' entry on the 'Invisible Elements' panel",
@@ -233,7 +248,12 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         content: "Check that the snippet is visible on the website",
         trigger: ":iframe .s_text_image.o_snippet_desktop_invisible.o_snippet_override_invisible",
     },
-    changeOption("ConditionalVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Text - Image'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
+    // changeOption("Text - Image", "Visibility", "[data-action-id='toggleDeviceVisibility']"),
     {
         content: "Check that the 'Text - Image' has been removed from the 'Invisible Elements' panel",
         trigger: ".o_we_invisible_el_panel:not(.o_we_invisible_entry:contains('Text - Image'))",
@@ -247,14 +267,19 @@ registerWebsitePreviewTour("conditional_visibility_5", {
         content: "Check that the column is visible on the website",
         trigger: ":iframe .s_text_image .row > .o_snippet_desktop_invisible.o_snippet_override_invisible",
     },
-    changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    // changeOption("DeviceVisibility", 'we-button[data-toggle-device-visibility="no_mobile"]'),
+    {
+        content: "Change visibility of the 'Text - Image' snippet",
+        trigger: "[data-container-title='Column'] [data-label='Visibility'] button[data-action-id='toggleDeviceVisibility']",
+        run: "click",
+    },
     {
         content: "Check that the column has been removed from the 'Invisible Elements' panel",
-        trigger: "#oe_snippets:not(:has(.o_we_invisible_entry:contains('Column')))",
+        trigger: ".o-snippets-menu:not(:has(.o_we_invisible_entry:contains('Column')))",
     },
     {
         content: "Activate mobile preview",
-        trigger: ".o_we_website_top_actions button[data-action='mobile']",
+        trigger: ".o-snippets-top-actions button[data-action='mobile']",
         run: "click",
     },
     {
