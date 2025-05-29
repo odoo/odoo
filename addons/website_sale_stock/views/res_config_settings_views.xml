@@ -6,8 +6,12 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//setting[@id='comparator_option_setting']" position="after">
-                <setting id="product_availability_setting" string="Inventory Defaults" help="How to display products having low quantities (on hand - reserved)">
+            <setting id="automatic_invoice_generation_setting" position="after">
+                <setting
+                    string="Inventory Defaults"
+                    id="product_availability_setting"
+                    info="This setting is common to all websites."
+                >
                     <div class="content-group">
                         <div class="row mt16"
                             id="website_warehouse_setting"
@@ -28,25 +32,20 @@
                             </div>
                         </div>
                         <div class="content-group">
-                            <div class="row"
-                                id="show_availability_setting"
-                                title="Default visibility for custom messages.">
-                                <div class="col-12">
-                                    <label for="default_show_availability" string="Show Available Qty" class="p-0 col-4 o_light_label mt-2"/>
-                                    <field name="default_show_availability" class="w-auto"/>
-                                    <label for="default_available_threshold" string="only if below" class="o_light_label" invisible="not default_show_availability"/>
-                                    <field
-                                        name="default_available_threshold"
-                                        class="w-25"
-                                        digits="[42, 0]"
-                                        invisible="not default_show_availability"
-                                    />
-                                </div>
-                            </div>
+                            <label for="default_show_availability" string="Show Available Quantity" class="p-0 col-4 o_light_label mt-2"/>
+                            <field name="default_show_availability" class="w-auto"/>
+                            <label for="default_available_threshold" string="only if below" class="o_light_label" invisible="not default_show_availability"/>
+                            <field
+                                name="default_available_threshold"
+                                style="width: 30px;"
+                                digits="[42, 0]"
+                                invisible="not default_show_availability"
+                            />
+                            <span invisible="not default_show_availability">units</span>
                         </div>
                     </div>
                 </setting>
-            </xpath>
+            </setting>
         </field>
     </record>
 

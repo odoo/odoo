@@ -8,12 +8,12 @@
         <field name="arch" type="xml">
             <!-- TODO TDE there are two div with website_settings id in the website settings view -->
             <xpath expr="//block[@id='website_settings']" position="inside">
-                <setting id="events_app_setting" groups="base.group_no_one">
-                    <label for="events_app_name" string="Events PWA"/>
-                    <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
-                    <div class="text-muted">
-                        Name of your website's Events Progressive Web Application
-                    </div>
+                <setting
+                    id="events_app_setting"
+                    string="Events PWA"
+                    groups="base.group_no_one"
+                    help="Name of your website's Events Progressive Web Application"
+                >
                     <div class="content-group">
                         <div class="row mt16">
                             <label class="col-lg-3 o_light_label" string="Name" for="events_app_name"/>

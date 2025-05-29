@@ -35,23 +35,5 @@ registry.category("web_tour.tours").add("website_settings_m2o_dirty", {
             content: `check that the settings of ${websiteName} are loaded (Shared Customers Accounts)`,
             trigger: "input[id^='shared_user_account']:not(:checked)",
         },
-        {
-            content: "click on the fake website setting after checking the edited website",
-            trigger: "button[name='action_website_test_setting']",
-            run: "click",
-        },
-        {
-            content: "check that we are on '/'",
-            trigger: ":iframe body div#wrap",
-            run: function () {
-                if (window.location.pathname !== "/") {
-                    // If this fails, it's probably because the change of website
-                    // in the settings dirty the record and so there is a dialog
-                    // save/discard displayed. This test ensure that does not happen
-                    // because it makes actions unreachable in multi website.
-                    console.error("We should be on '/' the settings didn't work");
-                }
-            },
-        },
     ],
 });

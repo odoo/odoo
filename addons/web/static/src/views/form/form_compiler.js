@@ -587,6 +587,7 @@ export class FormCompiler extends ViewCompiler {
      */
     compileSetting(el, params) {
         const setting = createElement(params.componentName || "Setting", {
+            info: toStringExpression(el.getAttribute("info") || ""),
             title: toStringExpression(el.getAttribute("title") || ""),
             help: toStringExpression(el.getAttribute("help") || ""),
             companyDependent: el.getAttribute("company_dependent") === "1" || "false",
