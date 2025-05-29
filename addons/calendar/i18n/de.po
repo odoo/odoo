@@ -274,7 +274,7 @@ msgstr ""
 "                        So können Sie teilnehmen:\n"
 "                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Mit Odoo Dialog</t>\n"
 "                        <t t-else=\"\"> Per Klick auf folgenden Link</t><br>\n"
-"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.meinunternehmen.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
@@ -477,7 +477,7 @@ msgstr ""
 "                        So können Sie teilnehmen:\n"
 "                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Mit Odoo Dialog</t>\n"
 "                        <t t-else=\"\"> Per Klick auf</t><br>\n"
-"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.meinunternehmen.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
@@ -628,7 +628,7 @@ msgstr ""
 "                                Wie Sie beitreten:\n"
 "                                <t t-if=\"object.get_base_url() in object.videocall_location\"> Mit Odoo Dialog beitreten</t>\n"
 "                                <t t-else=\"\"> Beitreten über</t><br>\n"
-"                                <a t-att-href=\"object.videocall_location\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                                <a t-att-href=\"object.videocall_location\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.meinunternehmen.com/calendar/join_videocall/xyz</a>\n"
 "                            </li>\n"
 "                        </t>\n"
 "                        <t t-if=\"object.location\">\n"
@@ -827,7 +827,7 @@ msgstr ""
 "                        So können Sie teilnehmen:\n"
 "                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Mit Odoo Dialog</t>\n"
 "                        <t t-else=\"\"> Per Klick auf</t><br>\n"
-"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mycompany.com/calendar/join_videocall/xyz</a>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.meinunternehmen.com/calendar/join_videocall/xyz</a>\n"
 "                    </li>\n"
 "                </t>\n"
 "                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
@@ -1621,7 +1621,7 @@ msgstr "Alle %(interval)s Tage für %(count)s Veranstaltungen"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Days until %(until)s"
-msgstr "Alle %(interval)s Tage bis %(bis)s"
+msgstr "Alle %(interval)s Tage bis %(until)s"
 
 #. module: calendar
 #. odoo-python
@@ -1710,7 +1710,7 @@ msgstr "Alle %(interval)s Jahre für %(count)s Veranstaltungen"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(interval)s Years until %(until)s"
-msgstr "Alle %(interval)s Jahre bis %(bis)s"
+msgstr "Alle %(interval)s Jahre bis %(until)s"
 
 #. module: calendar
 #. odoo-python
