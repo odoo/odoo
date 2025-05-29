@@ -321,6 +321,25 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">مرحباً <t t-out=\"client_name\">اسم العميل</t>،</t>\n"
+"                        <t t-else=\"\">مرحباً،</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>شكراً لشرائكم من <t t-out=\"store_name\">اسم المتجر</t>!</div>\n"
+"                    <div>ستجد في المرفقات إيصال مشترياتك بتاريخ <span><t t-out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d MMMM&quot;,                          lang_code=lg) or ''\">التاريخ</t> <t t-out=\"format_time(time=object.date_order, tz=tz, time_format='short',                          lang_code=lg)\">اليوم</t>.</span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>مع أطيب التحيات،</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">اسم المتجر</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_pos_kanban
@@ -2540,7 +2559,7 @@ msgstr "العميل مطلوب"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Customer address is required"
-msgstr ""
+msgstr "عنوان العميل مطلوب "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4382,7 +4401,7 @@ msgstr "اسم الدفعة "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Lot/Serial number(s) required for"
-msgstr ""
+msgstr "الرقم التسلسلي/رقم المجموعة مطلوب لـ "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
@@ -4583,7 +4602,7 @@ msgstr "خبز متعدد الحبوب "
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_invoice
 msgid "Multiple order invoice creation"
-msgstr ""
+msgstr "إنشاء فواتير لعدة طلبات "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -4741,7 +4760,7 @@ msgstr "لم يتم العثور على تهيئة لنقطة البيع "
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "No Point of Sale"
-msgstr ""
+msgstr "لا توجد نقطة بيع "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6035,7 +6054,7 @@ msgstr "مجموعة مستخدمي نقطة البيع"
 #. module: point_of_sale
 #: model:mail.template,name:point_of_sale.email_template_pos_receipt
 msgid "Point of Sale: Receipt"
-msgstr ""
+msgstr "نقطة البيع: الإيصال "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
@@ -6678,7 +6697,7 @@ msgstr "الكمية:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Quickly refresh essential data."
-msgstr ""
+msgstr "قم بتحديث البيانات الأساسية بكل سهولة. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8948,7 +8967,7 @@ msgstr "إجمالي السعر غير شامل الضريبة: "
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/product_info_popup/product_info_popup.xml:0
 msgid "Total Price incl. Tax:"
-msgstr ""
+msgstr "إجمالي السعر شامل الضريبة: "
 
 #. module: point_of_sale
 #. odoo-javascript

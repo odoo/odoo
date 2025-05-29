@@ -787,6 +787,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزي <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        شركراً لإتمامك لعملية الدفع.\n"
+"        إليك إيصال الدفع <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> الذي تبلغ قيمته\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <br/><br/>\n"
+"        مع تحيات،\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -4027,7 +4043,7 @@ msgstr "فاتورة ملغاة"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Credit Note"
-msgstr ""
+msgstr "الإشعار الدائن الشكلي الملغي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6686,7 +6702,7 @@ msgstr "مسودة الدفع"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Credit Note"
-msgstr ""
+msgstr "مسودة الإشعار الدائن الشكلي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -7952,7 +7968,7 @@ msgstr "دفعات جماعية "
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Group Payments Number Sequence"
-msgstr ""
+msgstr "تسلسل رقم المدفوعات المجمعة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
@@ -10978,7 +10994,7 @@ msgstr "المنتجات غير القابلة للخصم "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product_total
 msgid "Non Deductible Products Total"
-msgstr ""
+msgstr "إجمالي المنتجات غير القابلة للخصم "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_tax
@@ -12695,7 +12711,7 @@ msgstr "فاتورة المورّد الشكلية "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Credit Note"
-msgstr ""
+msgstr "الإشعار الدائن الشكلي للمورّد "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
@@ -19182,7 +19198,7 @@ msgstr "مجال العلامة"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "tax_src_id"
-msgstr ""
+msgstr "tax_src_id"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form

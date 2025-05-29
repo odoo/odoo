@@ -243,6 +243,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزنا <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        إليك طلب عرض السعر في المرفقات <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            مع المرجع: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <br/><br/>\n"
+"        مع أطيب التحيات،\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_partner_kanban_view
@@ -660,7 +682,7 @@ msgstr "الكل"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Days to Order"
-msgstr ""
+msgstr "كافة الأيام حتى الطلب "
 
 #. module: purchase
 #. odoo-javascript
@@ -678,13 +700,13 @@ msgstr "كافة طلبات عروض الأسعار المتأخرة "
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Late Receipt RFQs"
-msgstr ""
+msgstr "كافة إيصالات طلبات عروض الأسعار المتأخرة "
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "All Not Acknowledged RFQs"
-msgstr ""
+msgstr "كافة طلبات عروض الأسعار غير المؤكدة بعد "
 
 #. module: purchase
 #. odoo-javascript
@@ -1847,13 +1869,13 @@ msgstr "طلبات عروض الأسعار المتأخرة "
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Late Receipt RFQs"
-msgstr ""
+msgstr "إيصالات طلبات عروض الأسعار المتأخرة الخاصة بي "
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My Not Acknowledged RFQs"
-msgstr ""
+msgstr "طلبات عروض الأسعار غير المؤكدة بعد الخاصة بي "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2311,7 +2333,7 @@ msgstr "بنود فاتورة الشراء "
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Purchase Comparison for %s"
-msgstr ""
+msgstr "مقارنة الشراء لـ %s "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
