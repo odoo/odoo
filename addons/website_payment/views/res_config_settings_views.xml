@@ -10,8 +10,8 @@
                 <block title="Shop - Payment" id="div_website_payment">
                     <setting
                         id="website_payment"
-                        string="Activate Payments"
-                        help="Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
+                        string="Configure Payments"
+                        help="Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges."
                         documentation="/applications/finance/payment_providers.html"
                     >
                         <div class="content-group">
@@ -20,18 +20,17 @@
                                 <field name="is_stripe_supported_country" invisible="1"/>
                                 <div class="oe_inline"
                                      invisible="not is_stripe_supported_country">
-                                    <button string="Activate Stripe" name="action_activate_stripe" type="object" class="btn-primary"/>
+                                    <button string="Configure Stripe" name="action_activate_stripe" type="object" class="btn-primary"/>
                                 </div>
                                 <div class="oe_inline"
                                      title="Stripe Connect is not available in your country, please use another payment provider."
                                      invisible="is_stripe_supported_country">
-                                    <button string="Activate Stripe" class="btn-primary" disabled=""/>
+                                    <button string="Configure Stripe" class="btn-primary" disabled=""/>
                                 </div>
                                 <button type="action"
                                         name="%(payment.action_payment_provider)d"
-                                        string="View Alternatives"
-                                        class="btn-link oe_inline"
-                                        icon="oi-arrow-right"
+                                        string="Find a provider"
+                                        class="btn-secondary oe_inline"
                                 />
                             </div>
                             <div invisible="providers_state != 'other_than_paypal'">
@@ -43,9 +42,8 @@
                                 </button>
                                 <button type="action"
                                         name="%(payment.action_payment_provider)d"
-                                        string="View other providers "
-                                        class="btn-link col-auto"
-                                        icon="oi-arrow-right"
+                                        string="Find a provider"
+                                        class="btn-secondary col-auto"
                                 />
                             </div>
                         </div>

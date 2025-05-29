@@ -163,7 +163,7 @@ class Website(models.Model):
 
     prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
 
-    enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source")
+    enabled_gmc_src = fields.Boolean(string="Google Merchant Center")
 
     currency_id = fields.Many2one(
         string="Default Currency",

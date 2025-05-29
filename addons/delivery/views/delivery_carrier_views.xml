@@ -225,4 +225,12 @@
         parent="sale.menu_sales_config"
         sequence="4"/>
 
+    <record id="action_install_more_provider" model="ir.actions.server">
+        <field name="name">Install More Providers</field>
+        <field name="model_id" ref="delivery.model_delivery_carrier"/>
+        <field name="binding_model_id" ref="delivery.model_delivery_carrier"/>
+        <field name="state">code</field>
+        <field name="code">action = env['delivery.carrier'].install_more_provider()</field>
+    </record>
+
 </odoo>
