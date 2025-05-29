@@ -16,7 +16,7 @@ from psycopg2.extras import Json as PsycopgJson
 from odoo.exceptions import AccessError, MissingError
 from odoo.tools import Query, SQL, sql
 from odoo.tools.constants import PREFETCH_MAX
-from odoo.tools.misc import SENTINEL, OrderedSet, ReadonlyDict, Sentinel, unique
+from odoo.tools.misc import SENTINEL, ReadonlyDict, Sentinel, unique
 
 from .domains import NEGATIVE_CONDITION_OPERATORS, Domain
 from .utils import COLLECTION_TYPES, SQL_OPERATORS, SUPERUSER_ID, expand_ids
@@ -428,7 +428,8 @@ class Field(typing.Generic[T]):
         attrs['model_name'] = model_class._name
         attrs['name'] = name
         attrs['_module'] = modules[-1] if modules else None
-        attrs['_modules'] = tuple(OrderedSet(modules))
+        # the following is faster than calling unique or using OrderedSet
+        attrs['_modules'] = tuple(unique(modules) if len(modules) > 1 else modules)
 
         # initialize ``self`` with ``attrs``
         if name == 'state':
