@@ -198,7 +198,8 @@ export class LinkPopover extends Component {
             this.state.label,
             this.classes,
             this.customStyles,
-            this.state.linkTarget
+            this.state.linkTarget,
+            this.state.attachmentId
         );
         this.updateDocumentState();
     }
@@ -210,7 +211,8 @@ export class LinkPopover extends Component {
             this.state.label,
             this.classes,
             this.customStyles,
-            this.state.linkTarget
+            this.state.linkTarget,
+            this.state.attachmentId
         );
     }
     applyDeducedUrl() {
@@ -499,6 +501,7 @@ export class LinkPopover extends Component {
         this.props.onUpload?.(attachment);
         this.state.url = getURL(attachment, { download: true, unique: true, accessToken: true });
         this.state.label ||= attachment.name;
+        this.state.attachmentId = attachment.id;
         this.onChange();
     }
 

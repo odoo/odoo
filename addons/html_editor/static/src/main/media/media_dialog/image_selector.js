@@ -430,6 +430,7 @@ export class ImageSelector extends FileSelector {
                 }
                 imageEl.src = src;
                 imageEl.alt = attachment.description || "";
+                imageEl.dataset.attachmentId = attachment.id;
                 return imageEl;
             })
         );
