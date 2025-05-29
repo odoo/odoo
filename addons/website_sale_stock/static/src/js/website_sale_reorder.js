@@ -23,22 +23,32 @@ patch(ReorderDialog.prototype, {
 
     stockCheckCombinationInfo(product) {
         // Products that should have a max quantity available should be limited by default.
-        if (product.combinationInfo.allow_out_of_stock_order || ! product.is_storable) {
+        // For non-combo products, skip if they allow out-of-stock orders or are non-storable.
+        // For combo products, skip only if all selected items meet the same conditions.
+        const productsToConsider = product.selected_combo_items.length
+            ? product.selected_combo_items : [product];
+        if (productsToConsider.every(
+                product => product.combinationInfo.allow_out_of_stock_order || !product.is_storable
+        )) {
             return;
         }
-        product.max_quantity_available = product.combinationInfo.free_qty;
+        product.max_quantity_available = Math.min(
+            ...productsToConsider.filter(
+                product => !product.combinationInfo.allow_out_of_stock_order && product.is_storable
+            ).map(product => product.combinationInfo.free_qty)
+        );
         if (!product.max_quantity_available) {
             product.add_to_cart_allowed = false;
         }
-        if (product.max_quantity_available < product.qty) {
+        if (product.max_quantity_available < product.quantity) {
             product.qty_warning = _t(
                 "You ask for %(quantity1)s Units but only %(quantity2)s are available.",
                 {
-                    quantity1: product.qty.toFixed(1),
+                    quantity1: product.quantity.toFixed(1),
                     quantity2: product.max_quantity_available.toFixed(1),
                 }
             );
-            product.qty = product.max_quantity_available;
+            product.quantity = product.max_quantity_available;
             product.stock_warning = true;
         } else if (product.combinationInfo.cart_qty) {
             product.qty_warning = _t(
