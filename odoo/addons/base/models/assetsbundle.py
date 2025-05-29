@@ -13,13 +13,6 @@ from subprocess import Popen, PIPE
 from lxml import etree
 from rjsmin import jsmin as rjsmin
 
-try:
-    import sass as libsass
-except ImportError:
-    # If the `sass` python library isn't found, we fallback on the
-    # `sassc` executable in the path.
-    libsass = None
-
 from odoo import release
 from odoo.api import SUPERUSER_ID
 from odoo.http import request
@@ -1047,7 +1040,9 @@ class ScssStylesheetAsset(PreprocessedCSS):
     output_style = 'expanded'
 
     def compile(self, source):
-        if libsass is None:
+        try:
+            import sass as libsass  # noqa: PLC0415
+        except ModuleNotFoundError:
             return super().compile(source)
 
         def scss_importer(path, *args):
