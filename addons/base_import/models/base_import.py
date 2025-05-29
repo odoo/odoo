@@ -22,41 +22,6 @@ import psycopg2
 import requests
 from PIL import Image
 
-try:
-    import xlrd
-except ImportError:
-    xlrd = xlsx = None
-else:
-    try:
-        from xlrd import xlsx
-    except ImportError:
-        xlsx = None
-    else:
-        from lxml import etree
-        # xlrd.xlsx supports defusedxml, defusedxml's etree interface is broken
-        # (missing ElementTree and thus ElementTree.iter) which causes a fallback to
-        # Element.getiterator(), triggering a warning before 3.9 and an error from 3.9.
-        #
-        # Historically we had defusedxml installed because zeep had a hard dep on
-        # it. They have dropped it as of 4.1.0 which we now require (since 18.0),
-        # but keep this patch for now as Odoo might get updated in a legacy env
-        # which still has defused.
-        #
-        # Directly instruct xlsx to use lxml as we have a hard dependency on that.
-        xlsx.ET = etree
-        xlsx.ET_has_iterparse = True
-        xlsx.Element_has_iter = True
-
-try:
-    from . import odf_ods_reader
-except ImportError:
-    odf_ods_reader = None
-
-try:
-    from openpyxl import load_workbook
-except ImportError:
-    load_workbook = None
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import (
@@ -83,20 +48,11 @@ BOM_MAP = {
     'utf-32be': codecs.BOM_UTF32_BE,
 }
 
-FILE_TYPE_DICT = {
-    'text/csv': ('csv', True, None),
-    'application/vnd.ms-excel': ('xls', xlrd, 'xlrd'),
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': (
-        'xlsx',
-        load_workbook or xlsx,
-        # if xlrd 2.x then xlsx is not available, so don't suggest it
-        'openpyxl' if xlrd and parse_version(xlrd.__VERSION__) >= parse_version("2.0") else 'openpyxl or xlrd >= 1.0.0 < 2.0',
-    ),
-    'application/vnd.oasis.opendocument.spreadsheet': ('ods', odf_ods_reader, 'odfpy')
-}
-EXTENSIONS = {
-    '.' + ext: handler
-    for mime, (ext, handler, req) in FILE_TYPE_DICT.items()
+MIMETYPE_TO_READER = {
+    'text/csv': 'csv',
+    'application/vnd.ms-excel': 'xls',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+    'application/vnd.oasis.opendocument.spreadsheet': 'ods',
 }
 
 
@@ -415,55 +371,58 @@ class Base_ImportImport(models.TransientModel):
         :param dict options: reading options (quoting, separator, ...)
         """
         self.ensure_one()
-        e = None
+
         # guess mimetype from file content
         mimetype = guess_mimetype(self.file or b'')
-        (file_extension, handler, req) = FILE_TYPE_DICT.get(mimetype, (None, None, None))
-        if handler:
-            try:
-                return getattr(self, '_read_' + file_extension)(options)
-            except (ImportValidationError, ValueError):
-                raise
-            except Exception as exc:  # noqa: BLE001
-                e = read_file_failed(exc, f"Unable to read file {self.file_name or '<unknown>'!r} as {file_extension!r} (guessed using mimetype {mimetype!r}).")
-
-        # try reading with user-provided mimetype
-        (file_extension, handler2, req2) = FILE_TYPE_DICT.get(self.file_type, (None, None, None))
-        if handler2 and handler2 != handler:
-            try:
-                return getattr(self, '_read_' + file_extension)(options)
-            except (ImportValidationError, ValueError):
-                raise
-            except Exception as exc:  # noqa: BLE001
-                e = read_file_failed(exc, f"Unable to read file {self.file_name or '<unknown>'!r} as {file_extension!r} (decided from user-provided mimetype {self.file_type!r}).")
-
+        extensions_to_try = [
+            (MIMETYPE_TO_READER.get(mimetype), f"guessed using mimetype {mimetype!r}"),
+            (MIMETYPE_TO_READER.get(self.file_type), f"decided from user-provided mimetype {self.file_type!r}"),
+        ]
         # fallback on file extensions as mime types can be unreliable (e.g.
         # software setting incorrect mime types, or non-installed software
         # leading to browser not sending mime types)
         if self.file_name:
             _stem, ext = os.path.splitext(self.file_name)
-            if (h := EXTENSIONS.get(ext)) and h != handler and h != handler2:
-                try:
-                    return getattr(self, '_read_' + ext[1:])(options)
-                except (ImportValidationError, ValueError):
-                    raise
-                except Exception as exc:  # noqa: BLE001
-                    e = read_file_failed(exc, f"Unable to read file {self.file_name!r} as {file_extension!r} (decided from file extension {ext!r}).")
+            extensions_to_try.append((ext.removeprefix('.'), f"decided from file extension {ext!r}"))
+
+        e = None
+        requires = None
+        tried_extensions = set()
+        for file_extension, guess_message in extensions_to_try:
+            if not file_extension or file_extension in tried_extensions:
+                continue
+            tried_extensions.add(file_extension)
+            try:
+                handler = getattr(self, '_read_' + file_extension, None)
+                if callable(handler):
+                    return handler(options)
+            except ImportError as exc:
+                # exc.name_from attribute is present as of python 3.12
+                requires = str(getattr(exc, 'name_from', None) or exc.name)
+                if file_extension == 'xlsx':
+                    # if xlrd 2.x then xlrd.xlsx is not available
+                    requires = 'openpyxl or xlrd >= 1.0.0 < 2.0'
+            except (ImportValidationError, ValueError):
+                raise
+            except Exception as exc:  # noqa: BLE001
+                e = read_file_failed(exc, f"Unable to read file {self.file_name or '<unknown>'!r} as {file_extension!r} ({guess_message}).")
 
         if e is not None:
             raise e
 
-        if req2 or req:
-            raise UserError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=req2 or req))
+        if requires:
+            raise UserError(_("Unable to load \"{extension}\" file: requires Python module \"{modname}\"").format(extension=file_extension, modname=requires))
         raise UserError(_("Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX").format(self.file_type))
 
     def _read_xls(self, options):
+        import xlrd  # noqa: PLC0415
         book = xlrd.open_workbook(file_contents=self.file or b'')
         sheets = options['sheets'] = book.sheet_names()
         sheet = options['sheet'] = options.get('sheet') or sheets[0]
         return self._read_xls_book(book, sheet)
 
     def _read_xls_book(self, book, sheet_name):
+        import xlrd  # noqa: PLC0415
         sheet = book.sheet_by_name(sheet_name)
         rows = []
         # emulate Sheet.get_rows for pre-0.9.4
@@ -506,12 +465,17 @@ class Base_ImportImport(models.TransientModel):
 
     # use the same method for xlsx and xls files
     def _read_xlsx(self, options):
-        if xlsx:
-            return self._read_xls(options)
+        try:
+            from xlrd import xlsx  # noqa: F401, PLC0415
+            if xlsx:
+                return self._read_xls(options)
+        except ImportError:
+            pass
 
-        import openpyxl.cell.cell as types
+        import openpyxl  # noqa: PLC0415
+        import openpyxl.cell.cell as types  # noqa: PLC0415
         import openpyxl.styles.numbers as styles  # noqa: PLC0415
-        book = load_workbook(io.BytesIO(self.file or b''), data_only=True)
+        book = openpyxl.load_workbook(io.BytesIO(self.file or b''), data_only=True)
         sheets = options['sheets'] = book.sheetnames
         sheet_name = options['sheet'] = options.get('sheet') or sheets[0]
         sheet = book[sheet_name]
@@ -549,6 +513,7 @@ class Base_ImportImport(models.TransientModel):
         return sheet.max_row, rows
 
     def _read_ods(self, options):
+        from . import odf_ods_reader  # noqa: PLC0415
         doc = odf_ods_reader.ODSReader(file=io.BytesIO(self.file or b''))
         sheets = options['sheets'] = list(doc.SHEETS.keys())
         sheet = options['sheet'] = options.get('sheet') or sheets[0]
