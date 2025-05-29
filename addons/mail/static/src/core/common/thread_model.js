@@ -8,6 +8,7 @@ import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { pyToJsLocale } from "@web/core/l10n/utils";
 import { Deferred } from "@web/core/utils/concurrency";
+import { parseLocal } from "@web/core/utils/misc";
 
 /**
  * @typedef SuggestedRecipient
@@ -388,9 +389,9 @@ export class Thread extends Record {
             return this.custom_channel_name || this.chatPartner.nameOrDisplayName;
         }
         if (this.type === "group" && !this.name) {
+            const userLang = parseLocal(this._store.env.services["user"].lang);
             const listFormatter = new Intl.ListFormat(
-                this._store.env.services["user"].lang &&
-                    pyToJsLocale(this._store.env.services["user"].lang),
+                userLang && pyToJsLocale(userLang),
                 { type: "conjunction", style: "long" }
             );
             return listFormatter.format(

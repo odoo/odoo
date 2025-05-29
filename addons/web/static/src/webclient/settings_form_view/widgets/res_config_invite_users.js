@@ -7,6 +7,7 @@ import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, useState, onWillStart } from "@odoo/owl";
+import { parseLocal } from "@web/core/utils/misc";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 class ResConfigInviteUsers extends Component {
@@ -64,7 +65,7 @@ class ResConfigInviteUsers extends Component {
         }
         if (invalidEmails.length) {
             const errorMessage = (() => {
-                const listFormatter = new Intl.ListFormat(pyToJsLocale(this.user.lang), {
+                const listFormatter = new Intl.ListFormat(pyToJsLocale(parseLocal(this.user.lang)), {
                     type: "conjunction",
                     style: "long",
                 });

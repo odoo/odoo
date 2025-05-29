@@ -27,3 +27,15 @@ export function markEventHandled(ev, markName) {
     }
     eventHandledWeakMap.get(ev).push(markName);
 }
+/**
+ * Returns the valid locale code or defaults to "en-US" if invalid.
+ *
+ * @param {string} locale
+ */
+export function parseLocal(locale) {
+    try {
+        return new Intl.Locale(locale) && locale;
+    } catch {
+        return "en-US";
+    }
+}

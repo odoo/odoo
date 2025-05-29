@@ -1502,7 +1502,7 @@
         const cacheKey = locale + JSON.stringify(options);
         let formatter = intlCache.get(cacheKey);
         if (!formatter) {
-            formatter = new Intl.NumberFormat(locale, options);
+            formatter = new Intl.NumberFormat(parseLocal(locale), options);
             intlCache.set(cacheKey, formatter);
         }
         return formatter;
@@ -1510,7 +1510,15 @@
     function formatNumber(num, locale, options) {
         return getNumberFormat(locale, options).format(num);
     }
-  
+
+    function parseLocal(locale) {
+      try {
+          return new Intl.Locale(locale) && locale;
+      } catch {
+          return "en-US";
+      }
+    }
+
     const formatters = {
      values (value) {
             return isArray(value) ?  value : '' + value;

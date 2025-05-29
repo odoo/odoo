@@ -1687,12 +1687,12 @@ Docs & License: https://fullcalendar.io/
         extendedSettings = __assign({}, extendedSettings); // copy
         sanitizeSettings(standardDateProps, extendedSettings);
         standardDateProps.timeZone = 'UTC'; // we leverage the only guaranteed timeZone for our UTC markers
-        var normalFormat = new Intl.DateTimeFormat(context.locale.codes, standardDateProps);
+        var normalFormat = new Intl.DateTimeFormat(parseLocal(context.locale.codes), standardDateProps);
         var zeroFormat; // needed?
         if (extendedSettings.omitZeroMinute) {
             var zeroProps = __assign({}, standardDateProps);
             delete zeroProps.minute; // seconds and ms were already considered in sanitizeSettings
-            zeroFormat = new Intl.DateTimeFormat(context.locale.codes, zeroProps);
+            zeroFormat = new Intl.DateTimeFormat(parseLocal(context.locale.codes), zeroProps);
         }
         return function (date) {
             var marker = date.marker;
@@ -4649,9 +4649,17 @@ Docs & License: https://fullcalendar.io/
             codeArg: codeArg,
             codes: codes,
             week: week,
-            simpleNumberFormat: new Intl.NumberFormat(codeArg),
+            simpleNumberFormat: new Intl.NumberFormat(parseLocal(codeArg)),
             options: merged
         };
+    }
+
+    function parseLocal(locale) {
+      try {
+        return new Intl.Locale(locale) && locale;
+      } catch {
+        return "en-US";
+      }
     }
 
     var OptionsManager = /** @class */ (function () {

@@ -33,6 +33,7 @@ import { useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { parseLocal } from "@web/core/utils/misc";
 
 export const DELAY_FOR_SPINNER = 1000;
 
@@ -244,9 +245,9 @@ export class Chatter extends Component {
                     partner.email || _t("no email address")
                 )}">${escape(text)}</span>`;
             });
+        const userLang = parseLocal(this.store.env.services["user"].lang);
         const formatter = new Intl.ListFormat(
-            this.store.env.services["user"].lang &&
-                pyToJsLocale(this.store.env.services["user"].lang),
+            userLang && pyToJsLocale(userLang),
             { type: "unit" }
         );
         if (this.state.thread && this.state.thread.recipients.length > 5) {
