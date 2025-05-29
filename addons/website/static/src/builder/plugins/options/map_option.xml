@@ -69,11 +69,25 @@
             max="5"
         />
     </BuilderRow>
+    <t t-call="website.MapDescriptionOption"/>
+</t>
+
+<t t-name="website.MapDescriptionOption">
     <BuilderRow label.translate="Description">
         <BuilderCheckbox id="'map_description'" action="'mapDescription'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description Text" level="1" t-if="isActiveItem('map_description')">
-        <BuilderTextInput action="'mapDescriptionTextValue'"/>
-    </BuilderRow>
+    <t t-if="isActiveItem('map_description')">
+        <BuilderRow label.translate="Description Text" level="1">
+            <BuilderTextInput action="'mapDescriptionTextValue'"/>
+        </BuilderRow>
+        <BuilderContext applyTo="'.description'">
+            <BuilderRow label.translate="Text Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom']" styleAction="'color'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Background Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom', 'gradient']" styleAction="'background-color'"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
 </t>
 </templates>

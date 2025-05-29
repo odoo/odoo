@@ -62,12 +62,7 @@
     <BuilderRow label.translate="Zoom" preview="false">
         <BuilderNumberInput dataAttributeAction="'mapZoom'" default="12" step="1" min="0" max="22"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description" preview="false">
-        <BuilderCheckbox id="'google_maps_description'" action="'mapDescription'"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Description Text" level="1" t-if="isActiveItem('google_maps_description')">
-        <BuilderTextInput action="'mapDescriptionTextValue'"/>
-    </BuilderRow>
+    <t t-call="website.MapDescriptionOption"/>
 </t>
 
 </templates>
