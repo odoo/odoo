@@ -178,7 +178,7 @@ class CustomerPortal(Controller):
             request.session['portal_counters'] = cache
         return res
 
-    @route(['/my', '/my/home'], type='http', auth="user", website=True)
+    @route(['/my', '/my/home'], type='http', auth="user", website=True, list_as_editable_page=True)
     def home(self, **kw):
         values = self._prepare_portal_layout_values()
         values.update(self._prepare_home_portal_values([]))

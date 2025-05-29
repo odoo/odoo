@@ -335,7 +335,7 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.CHANNEL MAIN / SEARCH
     # --------------------------------------------------
 
-    @http.route('/slides', type='http', auth="public", website=True, sitemap=True, readonly=True)
+    @http.route('/slides', type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_editable_page=True)
     def slides_channel_home(self, **post):
         """ Home page for eLearning platform. Is mainly a container page, does not allow search / filter. """
         channels_all = tools.lazy(lambda: request.env['slide.channel'].search(request.website.website_domain() & Domain('is_visible', '=', True)))

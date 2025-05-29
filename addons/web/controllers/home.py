@@ -105,7 +105,7 @@ class Home(http.Controller):
     def _login_redirect(self, uid, redirect=None):
         return _get_login_redirect_url(uid, redirect)
 
-    @http.route('/web/login', type='http', auth='none', readonly=False)
+    @http.route('/web/login', type='http', auth='none', readonly=False, list_as_editable_page=True)
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
