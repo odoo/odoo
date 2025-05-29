@@ -19,6 +19,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_it_document_type',
         store=True,
         readonly=False,
+        copy=False,
     )
 
     def _auto_init(self):

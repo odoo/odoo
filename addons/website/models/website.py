@@ -11,6 +11,7 @@ import re
 import requests
 import threading
 
+from datetime import datetime
 from lxml import etree, html
 from psycopg2 import sql
 from werkzeug import urls
@@ -1324,8 +1325,12 @@ class Website(models.Model):
             record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
             if page.view_id and page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
-            if page['write_date']:
-                record['lastmod'] = page['write_date'].date()
+            last_updated_date = max(
+                [d for d in (page.write_date, page.view_id.write_date) if isinstance(d, datetime)],
+                default=None,
+            )
+            if last_updated_date:
+                record['lastmod'] = last_updated_date.date()
             yield record
 
         # ==== CONTROLLERS ====

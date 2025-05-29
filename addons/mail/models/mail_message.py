@@ -968,7 +968,6 @@ class Message(models.Model):
                 [("subject", "ilike", search_term)],
                 [("subtype_id.description", "ilike", search_term)],
             ])])
-            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
             res["count"] = self.search_count(domain)
         if around:
             messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
