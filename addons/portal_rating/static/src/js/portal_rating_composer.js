@@ -36,7 +36,6 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             'csrf_token': odoo.csrf_token,
             'user_id': user.userId,
         }, options, {});
-        this.options.send_button_label = this.options.default_message_id ? _t("Update review") : _t("Post review");
 
         return def;
     },
@@ -83,6 +82,8 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             this._composer.destroy();
         }
 
+        // Change the text of send button
+        this.options.send_button_label = this.options.default_message_id ? _t("Update review") : _t("Post review");
         // Instantiate the "Portal Composer" widget and insert it into the modal
         this._composer = new PortalComposer(this, this.options);
         return this._composer.appendTo(this.$('.o_rating_popup_composer_modal .o_portal_chatter_composer')).then(() => {

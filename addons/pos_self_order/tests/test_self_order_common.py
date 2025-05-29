@@ -36,6 +36,11 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, "")
         self.start_tour(self_route, "self_order_is_open_consultation")
 
+    def test_self_order_pos_landing_page_carousel(self):
+        for mode in ("mobile", "consultation", "kiosk"):
+            self.pos_config.write({"self_ordering_mode": mode})
+            self.start_tour(self.pos_config._get_self_order_route(), "self_order_landing_page_carousel")
+
     def test_self_order_pos_closed(self):
         """
         Verify than when the pos is closed and self ordering is set to mobile, consultation or kiosk,

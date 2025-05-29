@@ -26,6 +26,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_type': 'liability_current',
                 'reconcile': False,
             },
+            'l10n_ng_withholding_payable': {
+                'name': _("Withholding Tax Payable"),
+                'code': '252003',
+                'account_type': 'liability_payable',
+                'reconcile': True,
+                'non_trade': True,
+            },
         }
 
     @template('ng')

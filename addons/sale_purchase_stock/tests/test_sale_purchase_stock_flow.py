@@ -427,3 +427,91 @@ class TestSalePurchaseStockFlow(TransactionCase):
             groupby=['date:day', 'product_id'],
         )
         self.assertEqual(forecasted_qty[0]['product_qty'], 0)
+
+    def test_picking_partner_with_several_so_and_same_supplier(self):
+        """
+        2-steps reception, 2-steps delivery. Three types of product: Coss-docks,
+        MTO and MTS. All three based on the same supplier. One SO for each
+        product, with different customers. Ensure that the partner of all
+        transfers (from supplier to customers) is correct.
+        Note: This test is only working thanks to an ICP. That way, the day we
+        remove that parameter, we will have to make sure that the below use case
+        is correctly working
+        """
+        self.env['ir.config_parameter'].sudo().set_param('purchase_stock.split_po', '1')
+
+        self.warehouse.write({
+            'delivery_steps': 'pick_ship',
+            'reception_steps': 'two_steps',
+        })
+        self.warehouse.crossdock_route_id.product_selectable = True
+
+        mts_product, xd_product = self.env['product.product'].create([{
+            'name': 'MTS Product',
+            'is_storable': True,
+            'seller_ids': [Command.create({'partner_id': self.vendor.id})],
+            'route_ids': [Command.link(self.buy_route.id)],
+        }, {
+            'name': 'XD Product',
+            'is_storable': True,
+            'seller_ids': [Command.create({'partner_id': self.vendor.id})],
+            'route_ids': [Command.link(self.warehouse.crossdock_route_id.id), Command.link(self.buy_route.id)],
+        }])
+        products = xd_product | self.mto_product | mts_product
+
+        xd_customer, mto_customer, mts_customer = self.env['res.partner'].create([{
+            'name': name
+        } for name in [
+            'SuperCustomer XD',
+            'SuperCustomer MTO',
+            'SuperCustomer MTS',
+        ]])
+
+        sale_orders = self.env['sale.order'].create([{
+            'partner_id': customer.id,
+            'warehouse_id': self.warehouse.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+            })]
+        } for customer, product in [
+            (xd_customer, xd_product),
+            (mto_customer, self.mto_product),
+            (mts_customer, mts_product),
+        ]])
+        sale_orders.action_confirm()
+
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', '=', mts_product.id)], limit=1)
+        orderpoint.action_replenish()
+
+        purchase_orders = self.env['purchase.order'].search([('product_id', 'in', products.ids)], order="id")
+        purchase_orders.button_confirm()
+
+        receipts = purchase_orders.picking_ids
+        self.assertEqual(receipts[0].partner_id, self.vendor)
+        self.assertEqual(receipts[0].move_ids.product_id, xd_product)
+        self.assertEqual(receipts[1].partner_id, self.vendor)
+        self.assertEqual(receipts[1].move_ids.product_id, self.mto_product | mts_product)
+
+        receipts.button_validate()
+        internals = receipts._get_next_transfers()
+        self.assertEqual(internals[0].partner_id, xd_customer)
+        self.assertEqual(internals[0].move_ids.product_id, xd_product)
+        self.assertFalse(internals[1].partner_id)
+        self.assertEqual(internals[1].move_ids.product_id, self.mto_product | mts_product)
+
+        internals.button_validate()
+        picks = receipts._get_next_transfers()
+        self.assertEqual(picks[0].partner_id, xd_customer)
+        self.assertEqual(picks[0].move_ids.product_id, xd_product)
+        self.assertFalse(picks[1].partner_id)
+        self.assertEqual(picks[1].move_ids.product_id, self.mto_product | mts_product)
+
+        picks.button_validate()
+        shippings = sale_orders.picking_ids - receipts - picks
+        xd_shipping = shippings.filtered(lambda p: p.partner_id == xd_customer)
+        mto_shipping = shippings.filtered(lambda p: p.partner_id == mto_customer)
+        mts_shipping = shippings.filtered(lambda p: p.partner_id == mts_customer)
+        self.assertEqual(xd_shipping.move_ids.product_id, xd_product)
+        self.assertEqual(mto_shipping.move_ids.product_id, self.mto_product)
+        self.assertEqual(mts_shipping.move_ids.product_id, mts_product)

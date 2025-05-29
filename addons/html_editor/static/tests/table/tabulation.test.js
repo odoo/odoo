@@ -5,6 +5,60 @@ import { unformat } from "../_helpers/format";
 
 describe("move selection with tab/shift+tab", () => {
     describe("tab", () => {
+        test("should move cursor to the next th", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>[]ab</th>
+                                <th>cd</th>
+                                <th>ef</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("Tab"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>ab</th>
+                                <th>cd[]</th>
+                                <th>ef</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
+        test("should move cursor to the next td", async () => {
+            await testEditor({
+                contentBefore: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>[]ab</th>
+                                <td>cd</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+                stepFunction: async () => press("Tab"),
+                contentAfter: unformat(`
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>ab</th>
+                                <td>cd[]</td>
+                                <td>ef</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `),
+            });
+        });
         test("should move cursor to the end of next cell", async () => {
             await testEditor({
                 contentBefore: unformat(`

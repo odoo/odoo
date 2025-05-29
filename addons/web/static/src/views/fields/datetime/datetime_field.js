@@ -419,7 +419,7 @@ export const dateTimeField = {
         showTime: exprToBoolean(options.show_time ?? true),
     }),
     supportedTypes: ["datetime"],
-    listViewWidth: ({ options }) =>
+    listViewWidth: ({ options = {} }) =>
         exprToBoolean(options.show_time ?? true) ? FIELD_WIDTHS.datetime : FIELD_WIDTHS.date,
 };
 
@@ -451,7 +451,7 @@ export const dateRangeField = {
         },
     ],
     supportedTypes: ["date", "datetime"],
-    listViewWidth: ({ type, options }) => {
+    listViewWidth: ({ type, options = {} }) => {
         let width;
         if (type === "datetime" && exprToBoolean(options.show_time ?? true)) {
             width = FIELD_WIDTHS.datetime;
