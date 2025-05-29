@@ -18,7 +18,12 @@
     <p style="margin: 0px; padding: 0px; font-size: 13px;">
         Dear
         <t t-if="object.partner_id.parent_id">
-            <t t-out="object.partner_id.name or ''">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+            <t t-if="object.partner_id.name">
+                <t t-out="object.partner_id.name">Brandon Freeman</t> (<t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>),
+            </t>
+            <t t-else="">
+                <t t-out="object.partner_id.parent_id.name or ''">Azure Interior</t>,
+            </t>
         </t>
         <t t-else="">
             <t t-out="object.partner_id.name or ''">Brandon Freeman</t>,
