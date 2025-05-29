@@ -6,6 +6,7 @@ import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field
 import { MentionPlugin } from "./mention_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { SIGNATURE_CLASS } from "@html_editor/main/signature_plugin";
+import { fillEmpty } from "@html_editor/utils/dom";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
@@ -27,6 +28,17 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 const textValue = elContent.innerText.replace(/(\t|\n)+/g, "\n");
                 elContent.remove();
                 ev.detail.onSaveContent(textValue, emailAddSignature);
+            });
+            useBus(this.env.fullComposerBus, "ATTACHMENT_REMOVED", (ev) => {
+                const attachmentElements = this.editor.editable.querySelectorAll(
+                    `[data-attachment-id="${ev.detail.id}"]`
+                );
+                attachmentElements.forEach((element) => {
+                    const parent = element.parentElement;
+                    element.remove();
+                    fillEmpty(parent);
+                });
+                this.editor.shared.history.addStep();
             });
         }
     }

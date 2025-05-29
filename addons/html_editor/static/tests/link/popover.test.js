@@ -1154,7 +1154,7 @@ describe("upload file via link popover", () => {
         await animationFrame();
         // Created link has the correct href and label
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            `<p><a href="${expectedUrl}">file.txt[]</a></p>`
+            `<p><a href="${expectedUrl}" data-attachment-id="1">file.txt[]</a></p>`
         );
     });
 
