@@ -127,7 +127,7 @@ msgstr "%(refunded_order)s PALAUTUS"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "%(title)s %(product_name)s with %(taxes)s"
-msgstr ""
+msgstr "%(title)s %(product_name)s ja %(taxes)s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3042,7 +3042,7 @@ msgstr "Tyhjä tilaus"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Enable Time Slots"
-msgstr ""
+msgstr "Ota vapaat ajat käyttöön"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -3303,7 +3303,7 @@ msgstr "Tuotteen täydellinen nimi"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Full Synchronization:"
-msgstr ""
+msgstr "Täysi synkronointi:"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__invoice_status__invoiced
@@ -4151,7 +4151,7 @@ msgstr "Rajoitettu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Limited Synchronization:"
-msgstr ""
+msgstr "Rajoitettu synkronointi:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__manual_discount
@@ -5035,7 +5035,7 @@ msgstr "Tilaustunnuksien järjestys"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_preset_form
 msgid "Order Limit"
-msgstr ""
+msgstr "Tilausten raja"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__sequence_line_id
@@ -6498,7 +6498,7 @@ msgstr "Määrä:"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Quickly refresh essential data."
-msgstr ""
+msgstr "Päivitä tärkeät tiedot nopeasti."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6707,7 +6707,7 @@ msgstr "Aiheeseen liittyvä istunto: %(link)s"
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 msgid "Reload Data"
-msgstr ""
+msgstr "Lataa tiedot uudelleen"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
@@ -6719,6 +6719,8 @@ msgstr "Lataa kassavalikko uudelleen"
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "Reload all data (may take longer depending on the amount of data)."
 msgstr ""
+"Lataa kaikki tiedot uudelleen (voi kestää kauemmin tietojen määrästä "
+"riippuen)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8491,6 +8493,8 @@ msgid ""
 "This order has already been paid. You cannot set it back to draft or edit "
 "it."
 msgstr ""
+"Tämä tilaus on jo maksettu. Et voi asettaa sitä luonnokseksi tai muokata "
+"sitä."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9322,7 +9326,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/sync_popup/sync_popup.xml:0
 msgid "You can update it by selecting one of the following options:"
-msgstr ""
+msgstr "Voit päivittää sen valitsemalla jonkin seuraavista vaihtoehdoista:"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9388,6 +9392,7 @@ msgstr "Et voi poistaa kassakategoriaa, kun istunto on vielä avoinna."
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "You cannot delete a preset that is linked to a POS configuration."
 msgstr ""
+"Et voi poistaa esiasetusta, joka on liitetty Kassajärjestelmän kokoonpanoon."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9396,12 +9401,15 @@ msgid ""
 "You cannot delete a rounding method that is used in a Point of Sale "
 "configuration."
 msgstr ""
+"Et voi poistaa pyöristyssääntöä, jota käytetään Kassajärjestelmän "
+"kokoonpanossa."
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/ir_sequence.py:0
 msgid "You cannot delete a sequence used in an active session: %s"
 msgstr ""
+"Et voi poistaa järjestystä, jota käytetään aktiivisessa istunnossa: %s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -9594,7 +9602,7 @@ msgstr "alennus"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/orderline/orderline.xml:0
 msgid "discount off on"
-msgstr ""
+msgstr "alennus tuotteesta"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_view_form_normalized_pos
