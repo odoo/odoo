@@ -201,4 +201,7 @@ register("test_systray_not_reditor_not_tester", () => [
     ...cannotAddNewContent(),
     ...canViewInBackEnd(),
     ...cannotEdit(),
+    {
+        trigger: ":iframe main:contains(test model)",
+    },
 ]);

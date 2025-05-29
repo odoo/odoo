@@ -232,7 +232,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
         livechat_channel_vals = {"name": "support", "user_ids": [Command.link(self.users[0].id)]}
         im_livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_vals)
         # make available for livechat (ignore leave)
-        self.env["bus.presence"].create({"user_id": self.users[0].id, "status": "online"})
+        self.env["bus.presence"].sudo().create({"user_id": self.users[0].id, "status": "online"})
         self.authenticate(self.env.user.login, self.env.user.login)
         channel = self.env["discuss.channel"].browse(
             self.make_jsonrpc_request(
@@ -272,7 +272,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                             "id": self.env.user.partner_id.id,
                                             "type": "partner",
                                         },
-                                        "body": '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>Good service</div>',
+                                        "body": '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>\nGood service</div>',
                                         "create_date": fields.Datetime.to_string(
                                             message.create_date
                                         ),

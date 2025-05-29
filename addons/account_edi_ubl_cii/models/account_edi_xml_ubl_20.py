@@ -41,6 +41,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
 
     def _get_partner_party_identification_vals_list(self, partner):
+        if partner.ref:
+            return [{'id': partner.ref}]
         return []
 
     def _get_partner_address_vals(self, partner):
@@ -89,6 +91,17 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'electronic_mail': partner.email,
         }
 
+    def _get_partner_person_vals(self, partner):
+        """
+        This is optional and meant to be overridden when required under the form:
+        {
+            'first_name': str,
+            'family_name': str,
+        }.
+        Should return a dict.
+        """
+        return {}
+
     def _get_partner_party_vals(self, partner, role):
         return {
             'partner': partner,
@@ -98,6 +111,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'party_tax_scheme_vals': self._get_partner_party_tax_scheme_vals_list(partner.commercial_partner_id, role),
             'party_legal_entity_vals': self._get_partner_party_legal_entity_vals_list(partner.commercial_partner_id),
             'contact_vals': self._get_partner_contact_vals(partner),
+            'person_vals': self._get_partner_person_vals(partner),
         }
 
     def _get_invoice_period_vals_list(self, invoice):
@@ -337,6 +351,20 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 }],
             })
         return vals_list
+
+    def _get_pricing_exchange_rate_vals_list(self, invoice):
+        """ To be overridden if needed to fill the PricingExchangeRate node.
+
+        This is used when the currency of the 'Exchange' (e.g.: an invoice) is not the same as the Document currency.
+
+        If used, it should return a list of dict, following this format: [{
+            'source_currency_code': str,  (required)
+            'target_currency_code': str,  (required)
+            'calculation_rate': float,
+            'date': date,
+        }]
+        """
+        return []
 
     def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         """ Method used to fill the cac:{Invoice,CreditNote,DebitNote}Line>cac:AllowanceCharge node.
@@ -604,6 +632,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'InvoiceType_template': 'account_edi_ubl_cii.ubl_20_InvoiceType',
             'CreditNoteType_template': 'account_edi_ubl_cii.ubl_20_CreditNoteType',
             'DebitNoteType_template': 'account_edi_ubl_cii.ubl_20_DebitNoteType',
+            'ExchangeRateType_template': 'account_edi_ubl_cii.ubl_20_ExchangeRateType',
 
             'vals': {
                 'ubl_version_id': 2.0,
@@ -637,6 +666,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 ),
                 'line_vals': invoice_line_vals_list,
                 'currency_dp': self._get_currency_decimal_places(invoice.currency_id),  # currency decimal places
+                'pricing_exchange_rate_vals_list': self._get_pricing_exchange_rate_vals_list(invoice),
             },
         }
 
@@ -698,6 +728,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree) or
                     self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree),
             'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
+            'street': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:StreetName', tree),
+            'street2': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:AdditionalStreetName', tree),
+            'city': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CityName', tree),
+            'zip_code': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:PostalZone', tree),
         }
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):

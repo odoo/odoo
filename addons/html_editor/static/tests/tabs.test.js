@@ -62,6 +62,96 @@ describe("insert tabulation", () => {
         });
     });
 
+    test("tab should not be colored when inserting tab at the beginning of a text having background color", async () => {
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit: `<p>${oeTab(
+                TAB_WIDTH,
+                false
+            )}<font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+            contentAfter: `<p>${oeTab(
+                TAB_WIDTH
+            )}<font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+        });
+    });
+
+    test("tab should not be colored when inserting tab at the beginning of a text having background color (2)", async () => {
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255,255,0);">\u200B[]</font></p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit: `<p>${oeTab(
+                TAB_WIDTH,
+                false
+            )}<font style="background-color: rgb(255,255,0);">\u200B[]</font></p>`,
+            contentAfter: `<p>${oeTab(
+                TAB_WIDTH
+            )}<font style="background-color: rgb(255,255,0);">\u200B[]</font></p>`,
+        });
+    });
+
+    test("tabs should not be colored when inserting multiple tabs at the beginning of a text having background color", async () => {
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+            stepFunction: async (editor) => {
+                await keydownTab(editor);
+                await keydownTab(editor);
+            },
+            contentAfterEdit: `<p>${oeTab(TAB_WIDTH, false)}${oeTab(
+                TAB_WIDTH,
+                false
+            )}<font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+            contentAfter: `<p>${oeTab(TAB_WIDTH)}${oeTab(
+                TAB_WIDTH
+            )}<font style="background-color: rgb(255,255,0);">[]ab</font></p>`,
+        });
+    });
+
+    test("tab should be colored when inserting a tab in the middle of text having background color", async () => {
+        const expectedTabWidth = TAB_WIDTH - getCharWidth("p", "a");
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255,255,0);">a[]b</font></p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit: `<p><font style="background-color: rgb(255,255,0);">a${oeTab(
+                expectedTabWidth,
+                false
+            )}[]b</font></p>`,
+            contentAfter: `<p><font style="background-color: rgb(255,255,0);">a${oeTab(
+                expectedTabWidth
+            )}[]b</font></p>`,
+        });
+    });
+
+    test("tab should be colored when inserting a tab in the middle of text having background color (2)", async () => {
+        const expectedTabWidth = TAB_WIDTH - (getCharWidth("p", "a") + getCharWidth("p", "b"));
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255,255,0);">ab<strong>[]cd</strong></font></p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit: `<p><font style="background-color: rgb(255,255,0);">ab${oeTab(
+                expectedTabWidth,
+                false
+            )}<strong>[]cd</strong></font></p>`,
+            contentAfter: `<p><font style="background-color: rgb(255,255,0);">ab${oeTab(
+                expectedTabWidth
+            )}<strong>[]cd</strong></font></p>`,
+        });
+    });
+
+    test("tab should be colored when inserting a tab in the end of text having background color", async () => {
+        const expectedTabWidth = TAB_WIDTH - (getCharWidth("p", "a") + getCharWidth("p", "b"));
+        await testTabulation({
+            contentBefore: `<p><font style="background-color: rgb(255,255,0);">ab[]</font></p>`,
+            stepFunction: keydownTab,
+            contentAfterEdit: `<p><font style="background-color: rgb(255,255,0);">ab${oeTab(
+                expectedTabWidth,
+                false
+            )}[]</font></p>`,
+            contentAfter: `<p><font style="background-color: rgb(255,255,0);">ab${oeTab(
+                expectedTabWidth
+            )}[]</font></p>`,
+        });
+    });
+
     test("should insert tab characters at the beginning of two separate paragraphs", async () => {
         await testTabulation({
             contentBefore: `<p>a[b</p>` + `<p>c]d</p>`,

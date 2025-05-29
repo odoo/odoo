@@ -1,4 +1,4 @@
-export function getDomainDisplayedOperators(fieldDef) {
+export function getDomainDisplayedOperators(fieldDef, params = {}) {
     if (!fieldDef) {
         fieldDef = {};
     }
@@ -37,7 +37,18 @@ export function getDomainDisplayedOperators(fieldDef) {
             ];
         case "date":
         case "datetime":
-            return ["=", "!=", ">", ">=", "<", "<=", "between", "within", "set", "not_set"];
+            return [
+                "=",
+                "!=",
+                ">",
+                ">=",
+                "<",
+                "<=",
+                "between",
+                ...("allowExpressions" in params && !params.allowExpressions ? [] : ["within"]),
+                "set",
+                "not_set",
+            ];
         case "integer":
         case "float":
         case "monetary":

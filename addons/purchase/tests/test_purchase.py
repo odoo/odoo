@@ -448,7 +448,7 @@ class TestPurchase(AccountTestInvoicingCommon):
         purchase_order_coco = po_form.save()
         self.assertEqual(purchase_order_coco.order_line.price_unit, currency_rate.rate * product.standard_price, "Value shouldn't be rounded 🍫")
         self.assertEqual(purchase_order_coco.amount_total_cc, round(purchase_order_coco.amount_total / currency_rate.rate, 2), "Company Total should be 0.14$, since 1$ = 0.5🍫")
-
+        self.assertEqual(purchase_order_coco.tax_totals['amount_total_cc'], "($\xa00.14)")
         #check if the correct currency is set on the purchase order by comparing the expected price and actual price
 
         company_a = self.company_data['company']
@@ -492,6 +492,10 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         self.assertEqual(order_b.order_line.price_unit, 10.0, 'The price unit should be 10.0')
         self.assertEqual(order_b.amount_total_cc, order_b.amount_total, 'Company Total should be 10.0$')
+
+        # since the order currency matches the company currency we don't want to redisplay the total amount
+        with self.assertRaises(KeyError):
+            order_b.tax_totals['amount_total_cc']
 
     def test_discount_and_price_update_on_quantity_change(self):
         """ Purchase order line price and discount should update accordingly based on quantity
@@ -942,3 +946,38 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(po.amount_untaxed, 15.0)
         po.company_id = company_a.id
         self.assertEqual(po.amount_untaxed, 10.0)
+
+    def test_bill_in_purchase_matching_individual(self):
+        """
+        Tests that if the vendor is an individual with a company, the bill will still appear when
+        using the purchase matching button on a vendor bill
+        """
+        company_partner = self.env['res.partner'].create({
+            'name': 'Small Company',
+            'company_type': 'company',
+        })
+        self.partner_a.parent_id = company_partner
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'product_qty': 1,
+                'price_unit': 100,
+            })]
+        })
+        purchase_order.button_confirm()
+        vendor_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100,
+            })]
+        })
+        self.env['purchase.order.line'].flush_model()
+        result = vendor_bill.action_purchase_matching()
+        matching_records = self.env['purchase.bill.line.match'].search(result['domain'])
+        self.assertEqual(len(matching_records), 2)
+        self.assertEqual(matching_records.account_move_id, vendor_bill)
+        self.assertEqual(matching_records.purchase_order_id, purchase_order)

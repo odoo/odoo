@@ -26,7 +26,14 @@ patch(PaymentScreen.prototype, {
                     return false;
                 }
                 if (!order.partner_id) {
+                    const setPricelist =
+                        this.pos.config.pricelist_id?.id != order.pricelist_id?.id
+                            ? order.pricelist_id.id
+                            : false;
                     order.set_partner(this.pos.config.simplified_partner_id);
+                    if (setPricelist) {
+                        order.set_pricelist(setPricelist);
+                    }
                 }
             }
         }

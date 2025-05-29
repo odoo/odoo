@@ -248,3 +248,39 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
         self.assertEqual(len(entries), 4, 'Leaves should have 1 entry per type')
         self.assertEqual((paid_leave_entry.date_stop - paid_leave_entry.date_start).seconds, 3600)
         self.assertEqual((unpaid_leave_entry.date_stop - unpaid_leave_entry.date_start).seconds, 3600)
+
+    def test_create_work_entry_for_flexible_employee_leave(self):
+        entry_type_paid = self.env['hr.work.entry.type'].create([
+            {'name': 'Paid leave', 'code': 'PAID', 'is_leave': True},
+        ])
+
+        leave_type_paid = self.env['hr.leave.type'].create({
+            'name': 'Paid leave type',
+            'requires_allocation': 'no',
+            'request_unit': 'hour',
+            'work_entry_type_id': entry_type_paid.id,
+        })
+
+        flex_40h_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'hours_per_day': 8.0,
+            'flexible_hours': True,
+        })
+
+        self.jules_emp.resource_calendar_id = flex_40h_calendar
+        self.jules_emp.contract_id.resource_calendar_id = flex_40h_calendar
+
+        leave_paid = self.env['hr.leave'].create({
+            'name': 'Paid leave',
+            'employee_id': self.jules_emp.id,
+            'holiday_status_id': leave_type_paid.id,
+            'request_date_from': datetime(2024, 9, 10),
+            'request_date_to': datetime(2024, 9, 13),
+        })
+        leave_paid.with_user(SUPERUSER_ID).action_validate()
+
+        entries = self.jules_emp.contract_id.generate_work_entries(date(2024, 9, 9), date(2024, 9, 14))
+        paid_leave_entry = entries.filtered_domain([('work_entry_type_id', '=', entry_type_paid.id)])
+
+        self.assertEqual(paid_leave_entry.duration, 32, "The duration of the work entry for flexible employee should "
+                                                        "be number of days * hours per day")

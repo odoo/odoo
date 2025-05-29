@@ -346,7 +346,11 @@ class ChatbotScriptStep(models.Model):
                 posted_message = discuss_channel._chatbot_post_message(self.chatbot_script_id, plaintext2html(self.message))
 
             # next, add the human_operator to the channel and post a "Operator joined the channel" notification
-            discuss_channel.with_user(human_operator).sudo().add_members(human_operator.partner_id.ids, open_chat_window=True)
+            discuss_channel.sudo()._add_members(
+                users=human_operator,
+                inviting_partner=self.chatbot_script_id.operator_partner_id,
+                open_chat_window=True,
+            )
 
             # finally, rename the channel to include the operator's name
             discuss_channel.sudo().name = ' '.join([

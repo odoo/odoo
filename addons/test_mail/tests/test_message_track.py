@@ -917,6 +917,31 @@ class TestTrackingInternals(MailCommon):
         )
 
     @users('employee')
+    def test_unlinked_model(self):
+        """ Fields from obsolete models with tracking values can be unlinked without error. """
+        record = self.record.with_env(self.env)
+        record.write({'email_from': 'new_value'})  # create a tracking value
+        self.flush_tracking()
+        self.assertTracking(
+            record.message_ids[0],
+            [('email_from', 'char', False, 'new_value')],
+            strict=True,
+        )
+
+        fields_to_remove = self.env['ir.model.fields'].sudo().search([
+            ('model', '=', 'mail.test.ticket'),
+        ])
+
+        # Simulate a registry without the model, which is what we have if we
+        # update a module with the model code removed
+        model = self.env.registry.models.pop('mail.test.ticket')
+        try:
+            fields_to_remove.with_context(_force_unlink=True).unlink()
+        finally:
+            # Restore model to prevent registry errors after test
+            self.env.registry.models['mail.test.ticket'] = model
+
+    @users('employee')
     def test_unlinked_field(self):
         """ Check that removing a field removes its tracking values. """
         record = self.record.with_env(self.env)

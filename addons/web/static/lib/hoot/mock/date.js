@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { getTimeOffset, isTimeFreezed, resetTimeOffset } from "@web/../lib/hoot-dom/helpers/time";
+import { getTimeOffset, isTimeFrozen, resetTimeOffset } from "@web/../lib/hoot-dom/helpers/time";
 import { createMock, HootError, isNil } from "../hoot_utils";
 
 /**
@@ -29,26 +29,27 @@ const { DateTimeFormat, Locale } = Intl;
 /**
  * @param {Date} baseDate
  */
-const computeTimeZoneOffset = (baseDate) => {
+function computeTimeZoneOffset(baseDate) {
     const utcDate = new Date(baseDate.toLocaleString(DEFAULT_LOCALE, { timeZone: "UTC" }));
     const tzDate = new Date(baseDate.toLocaleString(DEFAULT_LOCALE, { timeZone: timeZoneName }));
-    return (utcDate - tzDate) / 60_000; // in minutes
-};
+    return (utcDate - tzDate) / 60000; // in minutes
+}
 
 /**
  * @param {number} id
  */
-const getDateParams = () => [
-    ...dateParams.slice(0, -1),
-    dateParams.at(-1) + getTimeStampDiff() + getTimeOffset(),
-];
+function getDateParams() {
+    return [...dateParams.slice(0, -1), dateParams.at(-1) + getTimeStampDiff() + getTimeOffset()];
+}
 
-const getTimeStampDiff = () => (isTimeFreezed() ? 0 : $now() - dateTimeStamp);
+function getTimeStampDiff() {
+    return isTimeFrozen() ? 0 : $now() - dateTimeStamp;
+}
 
 /**
  * @param {string | DateSpecs} dateSpecs
  */
-const parseDateParams = (dateSpecs) => {
+function parseDateParams(dateSpecs) {
     /** @type {DateSpecs} */
     const specs =
         (typeof dateSpecs === "string" ? dateSpecs.match(DATE_REGEX)?.groups : dateSpecs) || {};
@@ -61,22 +62,22 @@ const parseDateParams = (dateSpecs) => {
         specs.second ?? DEFAULT_DATE[5],
         specs.millisecond ?? DEFAULT_DATE[6],
     ].map(Number);
-};
+}
 
 /**
  * @param {typeof dateParams} newDateParams
  */
-const setDateParams = (newDateParams) => {
+function setDateParams(newDateParams) {
     dateParams = newDateParams;
     dateTimeStamp = $now();
 
     resetTimeOffset();
-};
+}
 
 /**
  * @param {string | number | null | undefined} tz
  */
-const setTimeZone = (tz) => {
+function setTimeZone(tz) {
     if (typeof tz === "string") {
         if (!tz.includes("/")) {
             throw new HootError(`invalid time zone: must be in the format <Country/...Location>`);
@@ -98,7 +99,7 @@ const setTimeZone = (tz) => {
     for (const callback of timeZoneChangeCallbacks) {
         callback(tz ?? DEFAULT_TIMEZONE_NAME);
     }
-};
+}
 
 class MockDateTimeFormat extends DateTimeFormat {
     constructor(locales, options) {

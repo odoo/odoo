@@ -20,7 +20,7 @@ patch(PosStore.prototype, {
                 action: () =>
                     this.dialog.closeAll() &&
                     this.config.module_pos_restaurant &&
-                    this.mainScreen.component.name !== "PaymentScreen" &&
+                    !["LoginScreen", "PaymentScreen"].includes(this.mainScreen.component.name) &&
                     this.showScreen("FloorScreen"),
             },
         ];
@@ -159,12 +159,18 @@ patch(PosStore.prototype, {
     //@override
     add_new_order() {
         const order = super.add_new_order(...arguments);
-        this.addPendingOrder([order.id]);
+        if (this.config.module_pos_restaurant) {
+            this.addPendingOrder([order.id]);
+        }
         return order;
     },
     async addLineToCurrentOrder(vals, opts = {}, configure = true) {
-        if (this.config.module_pos_restaurant && !this.get_order().uiState.booked) {
-            this.get_order().setBooked(true);
+        if (this.config.module_pos_restaurant) {
+            const order = this.get_order();
+            this.addPendingOrder([order.id]);
+            if (!this.get_order().uiState.booked) {
+                this.get_order().setBooked(true);
+            }
         }
         return super.addLineToCurrentOrder(vals, opts, configure);
     },
@@ -192,12 +198,9 @@ patch(PosStore.prototype, {
     async setTable(table, orderUuid = null) {
         this.deviceSync.readDataFromServer();
         this.selectedTable = table;
-
-        const tableOrders = table.orders;
-
-        let currentOrder = tableOrders.find((order) =>
-            orderUuid ? order.uuid === orderUuid : !order.finalized
-        );
+        let currentOrder = table
+            ? table.orders.find((o) => o.uuid === orderUuid || !o.finalized)
+            : null;
 
         if (currentOrder) {
             this.set_order(currentOrder);

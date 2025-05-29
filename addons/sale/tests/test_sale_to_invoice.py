@@ -535,8 +535,8 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_invoice_combo_product(self):
         """ Test creating an invoice for a SO with a combo product. """
-        product_a = self._create_product(name="Horse-meat burger")
-        product_b = self._create_product(name="French fries")
+        product_a = self._create_product(name="Horse-meat burger", invoice_policy='delivery')
+        product_b = self._create_product(name="French fries", invoice_policy='delivery')
         combo_a = self.env['product.combo'].create({
             'name': "Burger",
             'combo_item_ids': [
@@ -585,6 +585,22 @@ class TestSaleToInvoice(TestSaleCommon):
 
         # Confirm the SO
         sale_order.action_confirm()
+
+        self.assertEqual(sale_order.order_line.mapped('qty_to_invoice'), [0.0, 0.0, 0.0])
+        deliverables = sale_order.order_line.filtered(
+            lambda sol: sol.product_id.invoice_policy == 'delivery'
+        )
+        self.assertEqual(
+            deliverables,
+            sale_order.order_line.linked_line_ids,
+            "Only combo item lines should be invoiced on delivery.",
+        )
+        deliverables.qty_delivered = 3
+        self.assertEqual(
+            sale_order.order_line.mapped('qty_to_invoice'),
+            [3.0, 3.0, 3.0],
+            "Delivering the combo items lines should update the combo product line as well.",
+        )
 
         # Context
         self.context = {
@@ -1293,3 +1309,29 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(credit_note.invoice_line_ids), 2)
         # so the credit note cannot be considered a reversal of the invoice
         self.assertFalse(credit_note.reversed_entry_id)
+
+    def test_refund_salesteam(self):
+        """Check that salesperson & sales team doesn't change when creating a refund."""
+        salesperson = self.user
+        team1 = self.company_data['default_sale_team']
+        team2 = team1.copy({'name': "Team 2"})
+        team1.member_ids = salesperson
+        self.sale_order.write({
+            'user_id': salesperson,
+            'team_id': team2.id,
+        })
+
+        # Set all prices to negative values to force a refund
+        self.sale_order.order_line.price_unit = -10
+        self.sale_order.action_confirm()
+        invoice = self.sale_order._create_invoices(final=True)
+
+        self.assertEqual(invoice.move_type, 'out_refund')
+        self.assertEqual(
+            invoice.invoice_user_id, salesperson,
+            "Invoice salesperson should be the same as the order's salesperson",
+        )
+        self.assertEqual(
+            invoice.team_id, team2,
+            "Invoice team should be the same as the order's team",
+        )

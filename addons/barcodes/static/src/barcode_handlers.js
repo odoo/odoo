@@ -29,7 +29,6 @@ function updatePager(position) {
         return;
     }
     new Macro({
-        checkDelay: 16,
         name: "updating pager",
         timeout: 1000,
         steps: [

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, _
+from odoo.exceptions import ValidationError
 from odoo.addons.account.models.chart_template import template
 
 
@@ -32,9 +33,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'country_id': self.env['res.country'].search([('code', '=', 'AR')]).id,
                 'tax_calculation_rounding_method': 'round_globally',
             })
-            # set CUIT identification type (which is the argentinean vat) in the created company partner instead of
-            # the default VAT type.
-            company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
+
+            current_identification_type = company.partner_id.l10n_latam_identification_type_id
+            try:
+                # set CUIT identification type (which is the argentinean vat) in the created company partner instead of
+                # the default VAT type.
+                company.partner_id.l10n_latam_identification_type_id = self.env.ref('l10n_ar.it_cuit')
+            except ValidationError:
+                # put back previous value if we could not validate the CUIT
+                company.partner_id.l10n_latam_identification_type_id = current_identification_type
 
         res = super()._load(template_code, company, install_demo,force_create)
 

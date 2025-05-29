@@ -107,6 +107,14 @@ export class RtcSession extends Record {
     videoStreams = new Map();
     /** @type {string} */
     mainVideoStreamType;
+    /**
+     * Represents the sequence of the last valid connection with that session. This can be used to
+     * compare connection attempts (if they follow the last valid connection) and to validate information
+     * (if they match the sequence).
+     *
+     *  @type {number}
+     */
+    sequence = 0;
     // RTC stats
     connectionState;
     localCandidateType;

@@ -66,8 +66,12 @@ class SaleOrderLine(models.Model):
                         continue
                     moves = order_line.move_ids.filtered(lambda m: m.state == 'done' and not m.scrapped)
                     filters = {
-                        'incoming_moves': lambda m: m.location_dest_id.usage in ['customer', 'transit'] and (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
-                        'outgoing_moves': lambda m: m.location_dest_id.usage != 'customer' and m.to_refund
+                        # in/out perspective w/ respect to moves is flipped for sale order document
+                        'incoming_moves': lambda m:
+                            m._is_outgoing() and
+                            (not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)),
+                        'outgoing_moves': lambda m:
+                            m._is_incoming() and m.to_refund,
                     }
                     order_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
                     qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
@@ -123,10 +127,15 @@ class SaleOrderLine(models.Model):
         sorted_moves = self.move_ids.sorted('id')
         triggering_rule_ids = []
         seen_wh_ids = set()
+        seen_bom_id = set()
         for move in sorted_moves:
-            if move.warehouse_id.id not in seen_wh_ids:
+            if move.bom_line_id.bom_id.id in seen_bom_id:
+                triggering_rule_ids.append(move.rule_id.id)
+            elif move.warehouse_id.id not in seen_wh_ids:
                 triggering_rule_ids.append(move.rule_id.id)
                 seen_wh_ids.add(move.warehouse_id.id)
+                if move.bom_line_id and move.bom_line_id.bom_id.type == 'phantom':
+                    seen_bom_id.add(move.bom_line_id.bom_id.id)
 
         return {
             'incoming_moves': lambda m: (

@@ -16,7 +16,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         cls.main_pos_config.write({"module_pos_hr": True})
 
         # Admin employee
-        admin = cls.env.ref("hr.employee_admin").sudo().copy({
+        cls.admin = cls.env.ref("hr.employee_admin").sudo().copy({
             "company_id": cls.env.company.id,
             "user_id": cls.pos_admin.id,
             "name": "Mitchell Admin",
@@ -24,7 +24,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         })
 
         # User employee
-        emp1 = cls.env['hr.employee'].create({
+        cls.emp1 = cls.env['hr.employee'].create({
             'name': 'Test Employee 1',
             "company_id": cls.env.company.id,
         })
@@ -35,24 +35,24 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
             name="Pos Employee1",
             email="emp1_user@pos.com",
         )
-        emp1.write({"name": "Pos Employee1", "pin": "2580", "user_id": emp1_user.id})
+        cls.emp1.write({"name": "Pos Employee1", "pin": "2580", "user_id": emp1_user.id})
 
         # Non-user employee
-        emp2 = cls.env['hr.employee'].create({
+        cls.emp2 = cls.env['hr.employee'].create({
             'name': 'Test Employee 2',
             "company_id": cls.env.company.id,
         })
-        emp2.write({"name": "Pos Employee2", "pin": "1234"})
-        (admin + emp1 + emp2).company_id = cls.env.company
+        cls.emp2.write({"name": "Pos Employee2", "pin": "1234"})
+        (cls.admin + cls.emp1 + cls.emp2).company_id = cls.env.company
 
-        emp3 = cls.env['hr.employee'].create({
+        cls.emp3 = cls.env['hr.employee'].create({
             'name': 'Test Employee 3',
             "user_id": cls.pos_user.id,
             "company_id": cls.env.company.id,
         })
 
         cls.main_pos_config.write({
-            'basic_employee_ids': [Command.link(emp1.id), Command.link(emp2.id), Command.link(emp3.id)]
+            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)]
         })
 
 
@@ -63,6 +63,9 @@ class TestUi(TestPosHrHttpCommon):
             "groups_id": [
                 (4, self.env.ref('account.group_account_invoice').id)
             ]
+        })
+        self.main_pos_config.update({
+            'advanced_employee_ids': [(6, 0, self.admin.ids)],
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour("PosHrTour", login="pos_admin")
@@ -90,10 +93,31 @@ class TestUi(TestPosHrHttpCommon):
 
     def test_basic_user_cannot_close_session(self):
         # open a session, the /pos/ui controller will redirect to it
+        self.main_pos_config.advanced_employee_ids = []
+        self.main_pos_config.basic_employee_ids = [
+            Command.link(self.emp3.id),
+        ]
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
             "CashierCannotClose",
+            login="pos_user",
+        )
+
+    def test_basic_user_can_change_price(self):
+        self.main_pos_config.advanced_employee_ids = []
+        self.main_pos_config.basic_employee_ids = [
+            Command.link(self.emp3.id),
+            Command.link(self.admin.id)
+        ]
+        self.main_pos_config.write({
+            "restrict_price_control": False,
+        })
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_basic_user_can_change_price",
             login="pos_user",
         )

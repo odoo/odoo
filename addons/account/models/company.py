@@ -37,6 +37,12 @@ PEPPOL_DEFAULT_COUNTRIES = [
     'FR', 'GR', 'IE', 'IS', 'IT', 'LT', 'LU', 'LV', 'MT', 'NL',
     'NO', 'PL', 'PT', 'RO', 'SE', 'SI',
 ]
+
+# List of countries where Peppol footnote will be added when sending by mail.
+PEPPOL_MAILING_COUNTRIES = [
+    'BE', 'LU', 'NL', 'SE', 'NO',
+]
+
 # List of countries where Peppol is accessible.
 PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
     'AD', 'AL',  'BA', 'BG', 'GB', 'HR', 'HU', 'LI', 'MC', 'ME',
@@ -390,7 +396,10 @@ class ResCompany(models.Model):
     @api.depends('hard_lock_date')
     def _compute_user_hard_lock_date(self):
         for company in self:
-            company.user_hard_lock_date = max(c.hard_lock_date or date.min for c in company.sudo().parent_ids)
+            company.user_hard_lock_date = max(
+                c.hard_lock_date or date.min
+                for c in company.with_context(active_test=False).sudo().parent_ids
+            )
 
     def _initiate_account_onboardings(self):
         account_onboarding_routes = [

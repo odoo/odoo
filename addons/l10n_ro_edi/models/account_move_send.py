@@ -47,24 +47,30 @@ class AccountMoveSend(models.AbstractModel):
 
         for invoice, invoice_data in invoices_data.items():
             if 'ro_edi' in invoice_data['extra_edis']:
+                build_errors = None
                 if invoice_data.get('ubl_cii_xml_attachment_values'):
                     xml_data = invoice_data['ubl_cii_xml_attachment_values']['raw']
                 elif invoice.l10n_ro_edi_document_ids:
                     # If a document is on the invoice but the invoice's l10n_ro_edi_state is False,
                     # this means that the previously sent XML are invalid and have to be rebuilt
                     xml_data, build_errors = self.env['account.edi.xml.ubl_ro']._export_invoice(invoice)
-                    if build_errors:
-                        invoice_data['error'] = {
-                            'error_title': _("Error when rebuilding the CIUS-RO E-Factura XML"),
-                            'errors': build_errors,
-                        }
-                        continue
                 elif invoice.ubl_cii_xml_id:
                     xml_data = invoice.ubl_cii_xml_id.raw
                 else:
-                    xml_data = None
+                    xml_data, build_errors = self.env['account.edi.xml.ubl_ro']._export_invoice(invoice)
+
+                if build_errors:
+                    invoice_data['error'] = {
+                        'error_title': _("Error when building the CIUS-RO E-Factura XML"),
+                        'errors': build_errors,
+                    }
+                    continue
 
                 invoice._l10n_ro_edi_send_invoice(xml_data)
+
+                if self._can_commit():
+                    self.env.cr.commit()
+
                 active_document = invoice.l10n_ro_edi_document_ids.sorted()[0]
 
                 if active_document.state == 'invoice_sending_failed':

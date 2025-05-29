@@ -1,7 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 
-const { DateTime } = luxon;
-
 export default class IndexedDB {
     constructor(dbName, dbVersion, dbStores) {
         this.db = null;
@@ -61,9 +59,7 @@ export default class IndexedDB {
                         delete alreadyExists.write_date;
                     }
 
-                    if (!alreadyExists || JSON.stringify(alreadyExists) !== JSON.stringify(data)) {
-                        arrData[idx].write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
-                    } else {
+                    if (alreadyExists && JSON.stringify(alreadyExists) === JSON.stringify(data)) {
                         delete arrData[idx];
                     }
                 }
@@ -84,9 +80,7 @@ export default class IndexedDB {
             });
         });
 
-        return Promise.allSettled(promises).then((results) => {
-            return results;
-        });
+        return Promise.allSettled(promises).then((results) => results);
     }
     getNewTransaction(dbStore) {
         try {
@@ -140,15 +134,15 @@ export default class IndexedDB {
                 })
         );
 
-        return Promise.allSettled(promises).then((results) => {
-            return results.reduce((acc, result) => {
+        return Promise.allSettled(promises).then((results) =>
+            results.reduce((acc, result) => {
                 if (result.status === "fulfilled") {
                     return { ...acc, ...result.value };
                 } else {
                     return acc;
                 }
-            }, {});
-        });
+            }, {})
+        );
     }
 
     delete(storeName, uuids) {

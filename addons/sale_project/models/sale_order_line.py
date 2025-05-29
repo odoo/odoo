@@ -271,6 +271,9 @@ class SaleOrderLine(models.Model):
             title = self.product_id.name
             description = '<br/>'.join(sale_line_name_parts)
         else:
+            if len(sale_line_name_parts) > 1 and sale_line_name_parts[1]:
+                # if there's multiple lines, skip the product name part
+                sale_line_name_parts.pop(0)
             title = sale_line_name_parts[0]
             description = '<br/>'.join(sale_line_name_parts[1:])
 
@@ -394,7 +397,7 @@ class SaleOrderLine(models.Model):
                 project = map_sol_project.get(so_line.id) or so_line.order_id.project_id
                 if project and so_line.product_uom_qty > 0:
                     so_line._timesheet_create_task(project)
-                else:
+                elif not project:
                     raise UserError(_(
                         "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
                         "The following product need a project in which to put its task: %(product_name)s",

@@ -748,6 +748,54 @@ describe("link preview", () => {
         await waitFor(".o-we-linkpopover");
         expect.verifySteps([]);
     });
+    test("should use cached metadata even if protocol changes", async () => {
+        onRpc("/html_editor/link_preview_internal", () => {
+            expect.step("/html_editor/link_preview_internal");
+            return {
+                description: markup("<p>Protocol Testing</p>"),
+                link_preview_name: "Internal Page | Test",
+            };
+        });
+
+        const currentProtocol = window.location.protocol;
+        onRpc("/odoo/cachetest/8", (mockRequest) => {
+            const urlProtocol = new URL(mockRequest.url).protocol;
+            expect(urlProtocol).toBe(currentProtocol);
+            return new Response("", { status: 200 });
+        });
+
+        const { editor } = await setupEditor(`<p>abc[]</p>`);
+        await insertText(editor, "/link");
+        await animationFrame();
+        await click(".o-we-command-name:first");
+
+        const wrongProtocol = currentProtocol === "https:" ? "http:" : "https:";
+        const testUrl = `${wrongProtocol}//${window.location.host}/odoo/cachetest/8`;
+
+        await contains(".o-we-linkpopover input.o_we_href_input_link").fill(testUrl);
+        await animationFrame();
+        expect.verifySteps(["/html_editor/link_preview_internal"]);
+        expect(".o_we_url_link").toHaveText("Internal Page | Test");
+
+        const pNode = queryOne("p");
+        setSelection({
+            anchorNode: pNode,
+            anchorOffset: 1,
+            focusNode: pNode,
+            focusOffset: 1,
+        });
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+
+        const linkNode = queryOne("a");
+        setSelection({
+            anchorNode: linkNode,
+            anchorOffset: 1,
+            focusNode: linkNode,
+            focusOffset: 1,
+        });
+        await waitFor(".o-we-linkpopover");
+        expect.verifySteps([]);
+    });
     test("test external metadata cached correctly", async () => {
         onRpc("/html_editor/link_preview_external", () => {
             expect.step("/html_editor/link_preview_external");

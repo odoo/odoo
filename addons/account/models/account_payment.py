@@ -46,6 +46,7 @@ class AccountPayment(models.Model):
         required=True,
         default='draft',
         compute='_compute_state', store=True, readonly=False,
+        tracking=True,
         copy=False,
     )
     is_reconciled = fields.Boolean(string="Is Reconciled", store=True,
@@ -386,7 +387,7 @@ class AccountPayment(models.Model):
             # default customer payment method logic
             partner = payment.partner_id
             payment_type = payment.payment_type if payment.payment_type in ('inbound', 'outbound') else None
-            if partner or payment_type:
+            if not bool(payment._origin) and (partner or payment_type):
                 field_name = f'property_{payment_type}_payment_method_line_id'
                 default_payment_method_line = payment.partner_id.with_company(payment.company_id)[field_name]
                 journal = default_payment_method_line.journal_id
@@ -395,10 +396,11 @@ class AccountPayment(models.Model):
                     continue
 
             company = payment.company_id or self.env.company
-            payment.journal_id = self.env['account.journal'].search([
-                *self.env['account.journal']._check_company_domain(company),
-                ('type', 'in', ['bank', 'cash', 'credit']),
-            ], limit=1)
+            if not payment.journal_id or company != payment.journal_id.company_id:
+                payment.journal_id = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(company),
+                    ('type', 'in', ['bank', 'cash', 'credit']),
+                ], limit=1)
 
     @api.depends('journal_id')
     def _compute_company_id(self):
@@ -416,7 +418,7 @@ class AccountPayment(models.Model):
                 liquidity, _counterpart, _writeoff = payment._seek_for_lines()
                 payment.state = (
                     'paid'
-                    if move.currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) else
+                    if move.company_currency_id.is_zero(sum(liquidity.mapped('amount_residual'))) or not liquidity.account_id.reconcile else
                     'in_process'
                 )
             if payment.state == 'in_process' and payment.invoice_ids and all(invoice.payment_state == 'paid' for invoice in payment.invoice_ids):
@@ -980,11 +982,13 @@ class AccountPayment(models.Model):
             pay.move_id \
                 .with_context(skip_invoice_sync=True) \
                 .write({
+                'name': '/',  # Set the name to '/' to allow it to be changed
                 'date': pay.date,
                 'partner_id': pay.partner_id.id,
                 'currency_id': pay.currency_id.id,
                 'partner_bank_id': pay.partner_bank_id.id,
                 'line_ids': line_ids_commands,
+                'journal_id': pay.journal_id.id,
             })
 
     @api.model

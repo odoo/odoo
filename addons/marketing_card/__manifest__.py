@@ -24,6 +24,9 @@
         'web.assets_backend': [
             'marketing_card/static/src/scss/*',
         ],
+        'web_editor.backend_assets_wysiwyg': [
+            'marketing_card/static/src/scss/mass_mailing.scss'
+        ],
     },
     'application': True,
     'installable': True,

@@ -16,6 +16,7 @@ export class LinkPopover extends Component {
         getExternalMetaData: Function,
         getAttachmentMetadata: Function,
         isImage: Boolean,
+        LinkPopoverState: Object,
         type: String,
         recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
@@ -52,7 +53,7 @@ export class LinkPopover extends Component {
         this.uploadService = useService("uploadLocalFiles");
 
         this.state = useState({
-            editing: this.props.linkEl.href ? false : true,
+            editing: this.props.LinkPopoverState.editing,
             url: this.props.linkEl.href || "",
             label: cleanZWChars(this.props.linkEl.textContent),
             previewIcon: {

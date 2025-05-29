@@ -1,8 +1,27 @@
+import { PropertiesField } from "@web/views/fields/properties/properties_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { PropertiesField } from "@web/views/fields/properties/properties_field";
 import { WebClient } from "@web/webclient/webclient";
 
+import { expect, getFixture, test } from "@odoo/hoot";
+import {
+    click,
+    edit,
+    press,
+    queryAll,
+    queryAllTexts,
+    queryAllValues,
+    queryAttribute,
+    queryFirst,
+    select,
+    waitFor,
+} from "@odoo/hoot-dom";
+import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
+import {
+    getPickerApplyButton,
+    getPickerCell,
+    getTimePickers,
+} from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickCancel,
     clickSave,
@@ -18,25 +37,6 @@ import {
     toggleActionMenu,
     toggleMenuItem,
 } from "@web/../tests/web_test_helpers";
-import {
-    getTimePickers,
-    getPickerApplyButton,
-    getPickerCell,
-} from "@web/../tests/core/datetime/datetime_test_helpers";
-import {
-    click,
-    edit,
-    press,
-    queryAll,
-    queryAllTexts,
-    queryAllValues,
-    queryAttribute,
-    queryFirst,
-    select,
-    waitFor,
-} from "@odoo/hoot-dom";
-import { getFixture, expect, test } from "@odoo/hoot";
-import { animationFrame, mockDate, runAllTimers } from "@odoo/hoot-mock";
 
 async function closePopover() {
     // Close the popover by clicking outside
@@ -1909,6 +1909,25 @@ test("properties: form view and falsy domain, properties are empty", async () =>
     expect(".o_test_properties_not_empty").toHaveCount(1);
 });
 
+test("properties: discard changes", async () => {
+    onRpc("has_access", () => true);
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <field name="company_id"/>
+                <field name="properties" widget="properties"/>
+            </form>`,
+    });
+    expect(".o_property_field:first-child input").toHaveValue("char value");
+    await contains(".o_property_field:first-child input").edit("char updated");
+    expect(".o_property_field:first-child input").toHaveValue("char updated");
+    await clickCancel();
+    expect(".o_property_field:first-child input").toHaveValue("char value");
+});
+
 // ---------------------------------------------------
 // Test the properties groups
 // ---------------------------------------------------
@@ -2506,7 +2525,8 @@ test("new property, change record, change property type", async () => {
     expect(".o_property_field .o_property_field_value input").toHaveValue("0");
 });
 
-test.tags("desktop")("properties: moving single property to 2nd group in auto split mode", async () => {
+test.tags("desktop");
+test("properties: moving single property to 2nd group in auto split mode", async () => {
     await makePropertiesGroupView([false]);
     const { moveTo, drop } = await contains(getPropertyHandleElement("property_1"), {
         visible: false,
@@ -2523,7 +2543,8 @@ test.tags("desktop")("properties: moving single property to 2nd group in auto sp
     ]);
 });
 
-test.tags("desktop")("properties: moving single property to 1st group", async () => {
+test.tags("desktop");
+test("properties: moving single property to 1st group", async () => {
     await makePropertiesGroupView([true, true, false]);
 
     await contains(getPropertyHandleElement("property_3"), {
@@ -2538,7 +2559,8 @@ test.tags("desktop")("properties: moving single property to 1st group", async ()
     ]);
 });
 
-test.tags("desktop")("properties: split, moving property from 2nd group to 1st", async () => {
+test.tags("desktop");
+test("properties: split, moving property from 2nd group to 1st", async () => {
     await makePropertiesGroupView([true, false, false]);
 
     await contains(getPropertyHandleElement("property_3"), {
@@ -2554,7 +2576,8 @@ test.tags("desktop")("properties: split, moving property from 2nd group to 1st",
     ]);
 });
 
-test.tags("desktop")("properties: split, moving property from 1st group to 2nd", async () => {
+test.tags("desktop");
+test("properties: split, moving property from 1st group to 2nd", async () => {
     await makePropertiesGroupView([true, false, false, false, false, false]);
 
     await contains(getPropertyHandleElement("property_3"), {

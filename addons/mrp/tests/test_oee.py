@@ -21,6 +21,7 @@ class TestOee(TestMrpCommon):
     def test_wrokcenter_oee(self):
         """  Test case workcenter oee. """
         day = datetime.date(datetime.today())
+        self.workcenter_1.resource_calendar_id.leave_ids.unlink()
         # Make the test work the weekend. It will fails due to workcenter working hours.
         if day.weekday() in (5, 6):
             day -= timedelta(days=2)

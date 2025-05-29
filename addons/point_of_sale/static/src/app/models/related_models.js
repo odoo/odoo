@@ -258,12 +258,9 @@ export class Base {
                         })
                         .filter((s) => s);
 
-                    if (
-                        this.models.commands[params.model].unlink.has(name) ||
-                        this.models.commands[params.model].delete.has(name)
-                    ) {
-                        const unlinks = this.models.commands[params.model].unlink.get(name);
-                        const deletes = this.models.commands[params.model].delete.get(name);
+                    const unlinks = this.getCommand("unlink", name);
+                    const deletes = this.getCommand("delete", name);
+                    if (unlinks || deletes) {
                         for (const id of unlinks || []) {
                             serializedDataOrm[name].push([3, id]);
                         }
@@ -271,8 +268,8 @@ export class Base {
                             serializedDataOrm[name].push([2, id]);
                         }
                         if (clear) {
-                            this.models.commands[params.model].unlink.delete(name);
-                            this.models.commands[params.model].delete.delete(name);
+                            this.deleteCommand("unlink", name);
+                            this.deleteCommand("delete", name);
                         }
                     }
                 } else {
@@ -297,6 +294,40 @@ export class Base {
     }
     get raw() {
         return this.baseData[this.id];
+    }
+    getCommand(command, fieldName) {
+        const key = `${fieldName}_${this.id}`;
+        if (this.models.commands[this.model.modelName][command].has(key)) {
+            return this.models.commands[this.model.modelName][command].get(key);
+        }
+    }
+    deleteCommand(command, fieldName = "") {
+        if (command === "delete" || command === "unlink") {
+            const key = `${fieldName}_${this.id}`;
+            if (this.models.commands[this.model.modelName][command].has(key)) {
+                this.models.commands[this.model.modelName][command].delete(key);
+            }
+        } else if (command === "update") {
+            if (this.models.commands[this.model.modelName][command].has(this.id)) {
+                this.models.commands[this.model.modelName][command].delete(this.id);
+            }
+        }
+    }
+    clearCommands() {
+        this.deleteCommand("update");
+        for (const [name, params] of Object.entries(this.model.modelFields)) {
+            if (
+                !params.dummy &&
+                X2MANY_TYPES.has(params.type) &&
+                this._dynamicModels.includes(params.relation)
+            ) {
+                this.deleteCommand("unlink", name);
+                this.deleteCommand("delete", name);
+                for (const record of [...this[name]]) {
+                    record.clearCommands();
+                }
+            }
+        }
     }
 }
 
@@ -664,7 +695,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         if (typeof record.id === "number" && !opts.silent) {
-            commands[model].update.add(record.id);
+            addToCommand(model, "update", record.id);
         }
     }
 
@@ -673,10 +704,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         const fields = getFields(model);
         const handleCommand = (inverse, field, record, backend = false) => {
             if (inverse && !inverse.dummy && !opts.silent && typeof id === "number") {
-                const modelCommands = commands[field.relation];
-                const map = backend ? modelCommands.delete : modelCommands.unlink;
-                const oldVal = map.get(inverse.name);
-                map.set(inverse.name, [...(oldVal || []), record.id]);
+                addToCommand(
+                    field.relation,
+                    backend ? "delete" : "unlink",
+                    id,
+                    inverse.name,
+                    record[field.name].id
+                );
             }
         };
 
@@ -711,6 +745,26 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         return id;
     }
 
+    function addToCommand(model, command, recordId, fieldName, inverseId) {
+        if (!(model in commands)) {
+            throw new Error(`Model ${model} not found`);
+        }
+        if (!(command in commands[model])) {
+            throw new Error(`Command ${command} not found`);
+        }
+        if (typeof recordId !== "number") {
+            return;
+        }
+        const modelCommand = commands[model][command];
+        if (["delete", "unlink"].includes(command)) {
+            const key = `${fieldName}_${inverseId}`;
+            const oldVal = modelCommand.get(key);
+            modelCommand.set(key, [...(oldVal || []), recordId]);
+        } else if (command === "update") {
+            modelCommand.add(recordId);
+        }
+    }
+
     function createCRUD(model, fields) {
         return {
             // We need to read these object from this to keep
@@ -720,7 +774,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 return records;
             },
             get orderedRecords() {
-                return Array.from(records[model].values());
+                return Array.from(this.records[model].values());
             },
             get indexedRecords() {
                 return indexedRecords;

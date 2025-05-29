@@ -243,7 +243,7 @@ export class WebsocketWorker {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.debugModeByClient.set(client, debug);
             this.isDebug = [...this.debugModeByClient.values()].some(Boolean);
-            this.sendToClient(client, "update_state", this.state);
+            this.sendToClient(client, "worker_state_updated", this.state);
             this.sendToClient(client, "initialized");
             return;
         }
@@ -265,7 +265,7 @@ export class WebsocketWorker {
             }
             this.channelsByClient.forEach((_, key) => this.channelsByClient.set(key, []));
         }
-        this.sendToClient(client, "update_state", this.state);
+        this.sendToClient(client, "worker_state_updated", this.state);
         this.sendToClient(client, "initialized");
         if (!this.active) {
             this.sendToClient(client, "outdated");
@@ -396,6 +396,9 @@ export class WebsocketWorker {
         this.connectTimeout = null;
         this.isReconnecting = false;
         this.firstSubscribeDeferred.then(() => {
+            if (!this.websocket) {
+                return;
+            }
             this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
             this.messageWaitQueue = [];
         });
@@ -480,8 +483,14 @@ export class WebsocketWorker {
         this.connectRetryDelay = this.INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
         this.lastChannelSubscription = null;
+        const shouldBroadcastClose =
+            this.websocket && this.websocket.readyState !== WebSocket.CLOSED;
         this.websocket?.close();
         this._removeWebsocketListeners();
+        this.websocket = null;
+        if (shouldBroadcastClose) {
+            this.broadcast("disconnect", { code: WEBSOCKET_CLOSE_CODES.CLEAN });
+        }
     }
 
     /**

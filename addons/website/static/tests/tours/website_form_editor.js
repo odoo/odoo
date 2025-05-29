@@ -143,7 +143,6 @@ const addExistingField = function (name, type, label, required, display) {
 registerWebsitePreviewTour("website_form_editor_tour", {
     url: '/',
     edition: true,
-    checkDelay: 100,
 }, () => [
     // Drop a form builder snippet and configure it
     {

@@ -27,7 +27,6 @@ class AccountAnalyticLine(models.Model):
             self.env['sale.order.line']._sellable_lines_domain(),
             self.env['sale.order.line']._domain_sale_line_service(),
             [
-                ('qty_delivered_method', 'in', ['analytic', 'timesheet']),
                 ('order_partner_id.commercial_partner_id', '=', unquote('commercial_partner_id')),
             ],
         ])

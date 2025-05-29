@@ -16,7 +16,7 @@ class ProductUoM(models.Model):
             ('HOUR', 'Hour'),
             ('MINUTE', 'Minute'),
             ('MONTH', 'Month'),
-            ('LITRE', 'Litre'),
+            ('LITER', 'Liter'),
             ('KILOMETER', 'Kilometer'),
             ('CUBIC_METER', 'Cubic meter'),
             ('METER', 'Meter'),

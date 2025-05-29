@@ -32,7 +32,7 @@ class AccountMove(models.Model):
     l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
     l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
 
-    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment', 'state')
+    @api.depends('partner_id', 'partner_id.l10n_in_gst_treatment')
     def _compute_l10n_in_gst_treatment(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
         for record in indian_invoice:
@@ -68,7 +68,7 @@ class AccountMove(models.Model):
             else:
                 move.l10n_in_state_id = False
 
-    @api.depends('l10n_in_state_id')
+    @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
 
         def _get_fiscal_state(move, foreign_state):
@@ -237,17 +237,6 @@ class AccountMove(models.Model):
 
     def _l10n_in_get_hsn_summary_table(self):
         self.ensure_one()
+        base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
         display_uom = self.env.user.has_group('uom.group_uom')
-
-        base_lines = []
-        for line in self.invoice_line_ids.filtered(lambda x: x.display_type == 'product'):
-            base_lines.append({
-                'l10n_in_hsn_code': line.l10n_in_hsn_code,
-                'quantity': line.quantity,
-                'price_unit': line.price_unit,
-                'discount': line.discount or 0.0,
-                'product': line.product_id,
-                'uom': line.product_uom_id,
-                'taxes_data': line.tax_ids,
-            })
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)

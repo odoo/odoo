@@ -4,8 +4,10 @@ from odoo import Command
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
 from odoo.addons.website_sale_loyalty.controllers.delivery import WebsiteSaleLoyaltyDelivery
 
 
@@ -194,3 +196,29 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
         with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
             result = self.Controller.shop_set_delivery_method(self.normal_delivery2.id)
         self.assertEqual(result['delivery_discount_minor_amount'], -600)
+
+    def test_express_checkout_does_not_count_delivery_discount_in_payment_values(self):
+        """Test that the amount to pay does not include the free delivery amount in express
+        checkout."""
+        program = self.env['loyalty.program'].sudo().create({
+            'name': 'Discount delivery',
+            'program_type': 'promo_code',
+            'rule_ids': [Command.create({
+                'code': "FREE",
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'shipping',
+                'discount_max_amount': 2.0,
+            })]
+        })
+        amount_without_delivery = payment_utils.to_minor_currency_units(
+            self.cart.amount_total, self.cart.currency_id
+        )
+        self.cart.set_delivery_line(self.normal_delivery, self.normal_delivery.fixed_price)
+        self.cart._try_apply_code("FREE")
+        self.cart._apply_program_reward(program.reward_ids, program.coupon_ids)
+        with MockRequest(self.env, sale_order_id=self.cart.id, website=self.website):
+            payment_values = WebsiteSale()._get_express_shop_payment_values(self.cart)
+
+        self.assertEqual(payment_values['minor_amount'], amount_without_delivery)

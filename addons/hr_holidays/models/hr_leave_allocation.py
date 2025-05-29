@@ -6,7 +6,6 @@ from datetime import datetime, date, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
-from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.addons.hr_holidays.models.hr_leave import get_employee_from_context
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.float_utils import float_round
@@ -43,12 +42,6 @@ class HolidaysAllocation(models.Model):
             ]
         return domain
 
-    def _default_employee_id(self):
-        employee = self.env.user.employee_id or self.env['hr.employee'].search(self._domain_employee_id(), limit=1)
-        if not employee:
-            raise UserError(_("This company does not have any employees."))
-        return employee
-
     name = fields.Char(
         string='Description',
         compute='_compute_description',
@@ -74,7 +67,7 @@ class HolidaysAllocation(models.Model):
         domain=_domain_holiday_status_id,
         default=_default_holiday_status_id)
     employee_id = fields.Many2one(
-        'hr.employee', string='Employee', default=_default_employee_id,
+        'hr.employee', string='Employee', default=lambda self: self.env.user.employee_id,
         index=True, ondelete="restrict", required=True, tracking=True, domain=_domain_employee_id)
     employee_company_id = fields.Many2one(related='employee_id.company_id', readonly=True, store=True)
     active_employee = fields.Boolean('Active Employee', related='employee_id.active', readonly=True)
@@ -665,6 +658,7 @@ class HolidaysAllocation(models.Model):
             if not allocation.lastcall:
                 if not current_level:
                     allocation.lastcall = today
+                    allocation.actual_lastcall = allocation.lastcall
                     continue
                 allocation.lastcall = max(
                     current_level._get_previous_date(today),

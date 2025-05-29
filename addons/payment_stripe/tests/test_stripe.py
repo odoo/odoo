@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import unittest
 from unittest.mock import patch
 
 from werkzeug.urls import url_encode, url_join
@@ -8,6 +9,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.http_common import PaymentHttpCommon
+from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe.controllers.main import StripeController
 from odoo.addons.payment_stripe.tests.common import StripeCommon
 
@@ -122,6 +124,11 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     def test_onboarding_action_redirect_to_url(self):
         """ Test that the action generate and return an URL when the provider is disabled. """
+        if country := self.env['res.country'].search([('code', 'in', list(const.SUPPORTED_COUNTRIES))], limit=1):
+            self.env.company.country_id = country
+        else:
+            raise unittest.SkipTest("Unable to find a country supported by both odoo and stripe")
+
         with patch.object(
             type(self.env['payment.provider']), '_stripe_fetch_or_create_connected_account',
             return_value={'id': 'dummy'},

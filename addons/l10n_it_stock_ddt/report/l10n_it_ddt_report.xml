@@ -128,7 +128,7 @@
                                     </td>
                                     <td>
                                         <t t-if="move.sale_line_id">
-                                            <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxinc * move.quantity"/>
+                                            <t t-set="lst_price" t-value="move.sale_line_id.price_reduce_taxexcl * move.quantity + move.sale_line_id.price_tax"/>
                                         </t>
                                         <t t-else="">
                                             <t t-set="lst_price" t-value="move.product_id.lst_price * move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)"/>

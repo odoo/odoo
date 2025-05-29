@@ -2,7 +2,7 @@ from collections import defaultdict
 from markupsafe import Markup
 
 from odoo import _, api, models, modules, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -36,7 +36,7 @@ class AccountMoveSend(models.AbstractModel):
         return {edi_key for edi_key, edi_vals in extra_edis.items() if edi_vals['is_applicable'](move)}
 
     @api.model
-    def _get_default_invoice_edi_format(self, move) -> str:
+    def _get_default_invoice_edi_format(self, move, **kwargs) -> str:
         """ By default, we generate the EDI format set on partner. """
         return move.partner_id.with_company(move.company_id).invoice_edi_format
 
@@ -58,22 +58,29 @@ class AccountMoveSend(models.AbstractModel):
 
         vals = {
             'sending_methods': get_setting('sending_methods', default_value={self._get_default_sending_method(move)}) or {},
-            'invoice_edi_format': get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move)),
             'extra_edis': get_setting('extra_edis', default_value=self._get_default_extra_edis(move)) or {},
             'pdf_report': get_setting('pdf_report') or self._get_default_pdf_report_id(move),
             'author_user_id': get_setting('author_user_id', from_cron=from_cron) or self.env.user.id,
             'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,
         }
+        vals['invoice_edi_format'] = get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move, sending_methods=vals['sending_methods']))
         if 'email' in vals['sending_methods']:
             mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
             mail_lang = get_setting('mail_lang') or self._get_default_mail_lang(move, mail_template)
+            mail_attachments_widget = self._get_default_mail_attachments_widget(
+                move,
+                mail_template,
+                invoice_edi_format=vals['invoice_edi_format'],
+                extra_edis=vals['extra_edis'],
+                pdf_report=vals['pdf_report'],
+            )
             vals.update({
                 'mail_template': mail_template,
                 'mail_lang': mail_lang,
                 'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
                 'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
                 'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
-                'mail_attachments_widget': get_setting('mail_attachments_widget', default_value=self._get_default_mail_attachments_widget(move, mail_template, extra_edis=vals['extra_edis'], pdf_report=vals['pdf_report'])),
+                'mail_attachments_widget': get_setting('mail_attachments_widget', default_value=mail_attachments_widget),
             })
         return vals
 
@@ -161,14 +168,14 @@ class AccountMoveSend(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_default_mail_attachments_widget(self, move, mail_template, extra_edis=None, pdf_report=None):
-        return self._get_placeholder_mail_attachments_data(move, extra_edis=extra_edis) \
+    def _get_default_mail_attachments_widget(self, move, mail_template, invoice_edi_format=None, extra_edis=None, pdf_report=None):
+        return self._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis) \
             + self._get_placeholder_mail_template_dynamic_attachments_data(move, mail_template, pdf_report=pdf_report) \
             + self._get_invoice_extra_attachments_data(move) \
             + self._get_mail_template_attachments_data(mail_template)
 
     @api.model
-    def _get_placeholder_mail_attachments_data(self, move, extra_edis=None):
+    def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None):
         """ Returns all the placeholder data.
         Should be extended to add placeholder based on the sending method.
         :param: move:       The current move.
@@ -301,8 +308,10 @@ class AccountMoveSend(models.AbstractModel):
         return True
 
     @api.model
-    def _is_applicable_to_move(self, method, move):
+    def _is_applicable_to_move(self, method, move, **move_data):
         """ TO OVERRIDE - """
+        if method == 'email' and 'mail_partner_ids' in move_data:
+            return bool(move_data['mail_partner_ids'])
         return True
 
     @api.model
@@ -331,6 +340,8 @@ class AccountMoveSend(models.AbstractModel):
 
             content, report_type = self.env['ir.actions.report'].with_company(company_id)._pre_render_qweb_pdf(pdf_report.report_name, res_ids=ids)
             content_by_id = self.env['ir.actions.report']._get_splitted_report(pdf_report.report_name, content, report_type)
+            if len(content_by_id) == 1 and False in content_by_id:
+                raise ValidationError(_("Cannot identify the invoices in the generated PDF: %s", ids))
 
             for invoice, invoice_data in group_invoices_data.items():
                 invoice_data['pdf_attachment_values'] = {
@@ -411,7 +422,7 @@ class AccountMoveSend(models.AbstractModel):
         to_send_mail = {
             move: move_data
             for move, move_data in moves_data.items()
-            if 'email' in move_data['sending_methods'] and self._is_applicable_to_move('email', move)
+            if 'email' in move_data['sending_methods'] and self._is_applicable_to_move('email', move, **move_data)
         }
         self._send_mails(to_send_mail)
 

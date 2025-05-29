@@ -4,7 +4,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/tours/utils/receipt_scre
 import * as combo from "@point_of_sale/../tests/tours/utils/combo_popup_util";
 import * as Dialog from "@point_of_sale/../tests/tours/utils/dialog_util";
 import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
-import { inLeftSide } from "@point_of_sale/../tests/tours/utils/common";
+import { inLeftSide, scan_barcode } from "@point_of_sale/../tests/tours/utils/common";
 import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
 import * as Numpad from "@point_of_sale/../tests/tours/utils/numpad_util";
@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("ProductComboPriceTaxIncludedTour", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ...ProductScreen.clickDisplayedProduct("Office Combo"),
+            scan_barcode("SuperCombo"),
             combo.select("Combo Product 3"),
             combo.isConfirmationButtonDisabled(),
             combo.select("Combo Product 9"),
@@ -143,6 +143,33 @@ registry.category("web_tour.tours").add("ProductComboChangeFP", {
             ]),
             ProductScreen.totalAmountIs("50.00"),
             inLeftSide(Order.hasTax("2.38")),
+            ProductScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("ProductComboChangePricelist", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 2"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "6.67"),
+                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "14.66"),
+                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "26.00"),
+            ]),
+            ProductScreen.totalAmountIs("47.33"),
+            ProductScreen.clickPriceList("sale 10%"),
+            inLeftSide([
+                ...ProductScreen.orderLineHas("Combo Product 2", "1.0", "6.00"),
+                ...ProductScreen.orderLineHas("Combo Product 4", "1.0", "13.20"),
+                ...ProductScreen.orderLineHas("Combo Product 6", "1.0", "23.40"),
+            ]),
+            ProductScreen.totalAmountIs("42.60"),
             ProductScreen.isShown(),
         ].flat(),
 });

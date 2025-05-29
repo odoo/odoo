@@ -317,6 +317,16 @@ export class PaletteSelectionScreen extends Component {
         if (logoSelectInput.files.length === 1) {
             const previousLogoAttachmentId = this.state.logoAttachmentId;
             const file = logoSelectInput.files[0];
+            if (file.size > 2500000) {
+                this.notification.add(
+                    _t("The logo is too large. Please upload a logo smaller than 2.5 MB."),
+                    {
+                        title: file.name,
+                        type: "warning",
+                    }
+                );
+                return;
+            }
             const data = await getDataURLFromFile(file);
             const attachment = await rpc('/web_editor/attachment/add_data', {
                 'name': 'logo',
@@ -744,6 +754,12 @@ export class Configurator extends Component {
 
             await store.start(() => this.getInitialState());
             this.updateStorage(store);
+            if (store.redirect_url) {
+                // If redirect_url exists, it means configurator_done is already
+                // true, so we can skip the configurator flow.
+                this.clearStorage();
+                await this.action.doAction(store.redirect_url);
+            }
             if (!store.industries) {
                 await this.skipConfigurator();
             }
@@ -791,6 +807,7 @@ export class Configurator extends Component {
         const r = {
             industries: results.industries,
             logo: results.logo ? 'data:image/png;base64,' + results.logo : false,
+            redirect_url: results.redirect_url,
         };
         r.industries = r.industries.map((industry, index) => ({
             ...industry,

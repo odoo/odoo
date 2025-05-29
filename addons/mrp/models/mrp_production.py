@@ -394,7 +394,7 @@ class MrpProduction(models.Model):
         for production in self:
             bom = production.bom_id
             if bom and (
-                not production.product_id or bom.product_tmpl_id != production.product_tmpl_id
+                not production.product_id or bom.product_tmpl_id != production.product_id.product_tmpl_id
                 or bom.product_id and bom.product_id != production.product_id
             ):
                 production.product_id = bom.product_id or bom.product_tmpl_id.product_variant_id
@@ -768,6 +768,7 @@ class MrpProduction(models.Model):
 
     @api.depends('product_id', 'bom_id', 'product_qty', 'product_uom_id', 'location_dest_id', 'date_finished', 'move_dest_ids', 'never_product_template_attribute_value_ids')
     def _compute_move_finished_ids(self):
+        production_with_move_finished_ids_to_unlink_ids = OrderedSet()
         for production in self:
             if production.state != 'draft':
                 updated_values = {}
@@ -780,9 +781,15 @@ class MrpProduction(models.Model):
                         Command.update(m.id, updated_values) for m in production.move_finished_ids
                     ]
                 continue
-            # delete to remove existing moves from database and clear to remove new records
-            production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
-            production.move_finished_ids = [Command.clear()]
+            production_with_move_finished_ids_to_unlink_ids.add(production.id)
+
+        production_with_move_finished_ids_to_unlink = self.browse(production_with_move_finished_ids_to_unlink_ids)
+
+        # delete to remove existing moves from database and clear to remove new records
+        production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.delete(m) for m in production_with_move_finished_ids_to_unlink.move_finished_ids.ids]
+        production_with_move_finished_ids_to_unlink.move_finished_ids = [Command.clear()]
+
+        for production in production_with_move_finished_ids_to_unlink:
             if production.product_id:
                 production.with_context(never_attribute_ids=production.never_product_template_attribute_value_ids)._create_update_move_finished()
             else:
@@ -1772,7 +1779,7 @@ class MrpProduction(models.Model):
             return name
         seq_back = "-" + "0" * (SIZE_BACK_ORDER_NUMERING - 1 - int(math.log10(sequence))) + str(sequence)
         regex = re.compile(r"-\d+$")
-        if regex.search(name) and sequence > 1:
+        if regex.search(name) and (max(self.procurement_group_id.mrp_production_ids.mapped("backorder_sequence")) > 1 or sequence > 1):
             return regex.sub(seq_back, name)
         return name + seq_back
 

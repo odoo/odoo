@@ -354,8 +354,22 @@ msgstr "La fecha en que inicia la validez del certificado (UTC)"
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr "El tamaño de la clave debe ser de al menos 512 bytes."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
 msgid "The private key could not be loaded."
 msgstr "No se ha podido cargar la clave privada."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
+msgstr ""
+"El exponente público debe ser 65537 (o 3 para ser compatibe con versiones "
+"anteriores)."
 
 #. module: certificate
 #. odoo-python

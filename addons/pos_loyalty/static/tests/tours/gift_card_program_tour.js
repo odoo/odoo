@@ -155,3 +155,22 @@ registry.category("web_tour.tours").add("test_gift_card_no_date", {
             PosLoyalty.finalizeOrder("Cash", "42"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_physical_gift_card_invoiced", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.addOrderline("Gift Card", "1", "50", "50"),
+            PosLoyalty.createManualGiftCard("test-card-1234", 125),
+            ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
+            PosLoyalty.orderTotalIs("125"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});

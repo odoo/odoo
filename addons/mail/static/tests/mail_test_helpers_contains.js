@@ -3,11 +3,19 @@
 import { __debug__, after, afterEach, expect, getFixture } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
 import { Deferred, tick } from "@odoo/hoot-mock";
-import { asyncStep, waitForSteps } from "@web/../tests/web_test_helpers";
 import { isMacOS } from "@web/core/browser/feature_detection";
 import { isVisible } from "@web/core/utils/ui";
-export const step = asyncStep;
-export const assertSteps = waitForSteps;
+
+/**
+ * Use `expect.step` instead
+ * @deprecated
+ */
+export const step = expect.step;
+/**
+ * Use `expect.waitForSteps` instead
+ * @deprecated
+ */
+export const assertSteps = expect.waitForSteps;
 
 /** @param {EventInit} [args] */
 const mapBubblingEvent = (args) => ({ ...args, bubbles: true });

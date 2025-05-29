@@ -1,12 +1,25 @@
 /** @odoo-module */
 
-import { describe, expect, test } from "@odoo/hoot";
+import { after, describe, expect, test } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
-import { watchListeners } from "@odoo/hoot-mock";
 import { EventBus } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
+import { watchListeners } from "@odoo/hoot-mock";
 
 describe(parseUrl(import.meta.url), () => {
+    class TestBus extends EventBus {
+        addEventListener(type) {
+            expect.step(`addEventListener:${type}`);
+            return super.addEventListener(...arguments);
+        }
+
+        removeEventListener() {
+            throw new Error("Cannot remove event listeners");
+        }
+    }
+
+    let testBus;
+
     test("elementFromPoint and elementsFromPoint should be mocked", async () => {
         await mountForTest(/* xml */ `
             <div class="oui" style="position: absolute; left: 10px; top: 10px; width: 250px; height: 250px;">
@@ -33,33 +46,24 @@ describe(parseUrl(import.meta.url), () => {
         expect(document.elementsFromPoint(9, 9)).toEqual([document.body, document.documentElement]);
     });
 
-    test("event listeners are properly removed", async () => {
-        class MyBus extends EventBus {
-            addEventListener(type) {
-                expect.step(`add ${type}`);
-                return super.addEventListener(...arguments);
-            }
-
-            removeEventListener() {
-                throw new Error("Cannot remove event listeners");
-            }
-        }
-
-        const unwatchListeners = watchListeners();
-
-        const bus = new MyBus();
+    // ! WARNING: the following 2 tests need to be run sequentially to work, as they
+    // ! attempt to test the in-between-tests event listeners cleanup.
+    test("event listeners are properly removed: setup", async () => {
         const callback = () => expect.step("callback");
+
+        testBus = new TestBus();
 
         expect.verifySteps([]);
 
-        bus.addEventListener("some-event", callback);
-        bus.trigger("some-event");
+        after(watchListeners());
 
-        expect.verifySteps(["add some-event", "callback"]);
+        testBus.addEventListener("some-event", callback);
+        testBus.trigger("some-event");
 
-        unwatchListeners();
-
-        bus.trigger("some-event");
+        expect.verifySteps(["addEventListener:some-event", "callback"]);
+    });
+    test("event listeners are properly removed: check", async () => {
+        testBus.trigger("some-event");
 
         expect.verifySteps([]);
     });

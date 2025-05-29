@@ -12,7 +12,7 @@
                         <span class="modal-body o_self_order_main_desc fs-3 p-4 ps-5 overflow-auto" t-out="props.product.public_description" />
                         <div class="modal-footer d-flex flex-row-reverse justify-content-between align-items-center">
                             <button type="button" class="btn btn-primary" t-on-click.stop="() => this.addToCartAndClose()">Add to Cart</button>
-                            <div t-if="!props.product.isCombo() and !props.product.isConfigurable() > 0" class="o_self_order_incr_button btn-group " role="group" aria-label="Quantity select" >
+                            <div t-if="!props.product.isCombo() and !props.product.isConfigurable() > 0 and !props.isComboLine" class="o_self_order_incr_button btn-group " role="group" aria-label="Quantity select" >
                                 <button type="button"
                                     t-on-click = "() => this.changeQuantity(false)"
                                     class="btn btn-secondary"><span class="fs-2 lh-1 fa-fw d-inline-block">－</span></button>

@@ -56,7 +56,7 @@ class StockMove(models.Model):
             layers |= layers.stock_valuation_layer_ids
             if self.product_id.lot_valuated:
                 layers_by_lot = layers.grouped('lot_id')
-                prices = {}
+                prices = defaultdict(lambda: 0)
                 for lot, stock_layers in layers_by_lot.items():
                     qty = sum(stock_layers.mapped("quantity"))
                     val = sum(stock_layers.mapped("value"))
@@ -93,7 +93,7 @@ class StockMove(models.Model):
         move_out_ids = set()
         locations_should_be_valued = (self.move_line_ids.location_id | self.move_line_ids.location_dest_id).filtered(lambda l: l._should_be_valued())
         for record in self:
-            for move_line in self.move_line_ids:
+            for move_line in record.move_line_ids:
                 if move_line._should_exclude_for_valuation() or not move_line.picked:
                     continue
                 if move_line.location_id not in locations_should_be_valued and move_line.location_dest_id in locations_should_be_valued:
@@ -241,9 +241,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             else:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             if float_is_zero(sum(quantities.values()), precision_rounding=move.product_id.uom_id.rounding):
                 continue
 
@@ -287,9 +285,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             elif move.product_id.lot_valuated:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             else:
                 quantities[self.env['stock.lot']] += move.product_qty
 
@@ -375,7 +371,7 @@ class StockMove(models.Model):
         stock_valuation_layers._validate_accounting_entries()
         stock_valuation_layers._validate_analytic_accounting_entries()
 
-        valued_moves['out'].filtered(lambda m: m.product_id.lot_valuated)._product_price_update_after_done()
+        valued_moves['out'].filtered(lambda m: m.product_id.lot_valuated).sudo()._product_price_update_after_done()
 
         stock_valuation_layers._check_company()
 
@@ -424,7 +420,7 @@ class StockMove(models.Model):
                 quantity_by_lot[forced_qty[0]] += forced_qty[1]
             else:
                 for valued_move_line in valued_move_lines:
-                    quantity_by_lot[valued_move_line.lot_id] += valued_move_line.product_uom_id._compute_quantity(valued_move_line.quantity, move.product_id.uom_id)
+                    quantity_by_lot[valued_move_line.lot_id] += valued_move_line.quantity_product_uom
 
             qty = sum(quantity_by_lot.values())
             move_cost = move._get_price_unit()
@@ -512,9 +508,7 @@ class StockMove(models.Model):
                 quantities[forced_quantity[0]] += forced_quantity[1]
             else:
                 for line in lines:
-                    quantities[line.lot_id] += line.product_uom_id._compute_quantity(
-                        line.quantity, move.product_id.uom_id
-                    )
+                    quantities[line.lot_id] += line.quantity_product_uom
             if move.product_id.lot_valuated:
                 unit_cost = {lot: lot.standard_price for lot in move.lot_ids}
             else:

@@ -42,18 +42,19 @@
 # Marko Happonen <marko.happonen@sprintit.fi>, 2024
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2024
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2024
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Joakim Weckman, 2025
 # Konsta Aavaranta, 2025
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
+# Thomas Becquevort, 2025
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
 # Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"POT-Creation-Date: 2025-05-23 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -1420,6 +1421,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+msgstr "<strong class=\"d-block mt-3\">Toimitusosoite</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Välisumma</strong>"
 
@@ -1485,11 +1491,6 @@ msgstr "<strong>Viite</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>Toimitusosoite</strong>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source</strong>"
 msgstr "<strong>Lähde</strong>"
 
@@ -1523,6 +1524,15 @@ msgstr "<strong>Yhteensä</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_account_kanban
 msgid "<strong>Type: </strong>"
 msgstr "<strong> Tyyppi: </strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid ""
+"<strong>Warning:</strong> Once the Audit Trail is enabled, it cannot be "
+"disabled again if there are any existing journal items."
+msgstr ""
+"<strong>Varoitus:</strong> Kun kirjausketju on otettu käyttöön, sitä ei voi "
+"poistaa käytöstä, jos yhtäkään päiväkirjamerkintöjä on olemassa."
 
 #. module: account
 #. odoo-python
@@ -1559,6 +1569,16 @@ msgstr ""
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "A bank account can belong to only one journal."
 msgstr "Pankkitili voidaan liittää vain yhteen päiväkirjaan."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/res_partner_bank.py:0
+msgid ""
+"A bank account with Account Number %(number)s already exists for Partner "
+"%(partner)s, but is archived. Please unarchive it instead."
+msgstr ""
+"Pakkitili ja tilinumero %(number)s ovat jo olemassa Kumppanilla %(partner)s,"
+" mutta ne on arkistoitu. Ole hyvä ja poista niiden arkistointi."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -3551,8 +3571,8 @@ msgstr "Tilinumero"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
-msgid "Bank Account %(link)s with number %(number)s deleted"
-msgstr "Pankkitili %(link)s, jonka numero on %(number)s poistetaan"
+msgid "Bank Account %(link)s with number %(number)s archived"
+msgstr "Pankkitili %(link)s ja tilinumero %(number)s ovat arkistoitu"
 
 #. module: account
 #. odoo-python
@@ -4153,6 +4173,12 @@ msgstr ""
 "-moottoria"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_send.py:0
+msgid "Cannot identify the invoices in the generated PDF: %s"
+msgstr "Luodun PDF:n laskuja ei voitu tunnistaa: %s"
+
+#. module: account
 #: model:account.account,name:account.1_capital
 msgid "Capital"
 msgstr "Pääoma"
@@ -4641,6 +4667,11 @@ msgid "Commercial Entity"
 msgstr "Kaupallinen yksikkö"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__commercial_partner_country
+msgid "Commercial Partner Country"
+msgstr "Kaupallisen kumppanin maa"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
 msgstr "Viitetyyppi"
@@ -4754,7 +4785,7 @@ msgstr "Yrityksen verotusmaakoodi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__company_registry_placeholder
 msgid "Company Registry Placeholder"
-msgstr "Yritysrekisterin paikkamerkki"
+msgstr "Yritysrekisteritiedon placeholder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
@@ -7116,6 +7147,9 @@ msgid ""
 "country %(country_name)s. You should probably update your localization app "
 "first."
 msgstr ""
+"Tapahtui virhe ladattaessa lokalisointia: puuttuva verotunniste %(tag_name)s"
+" maan %(country_name)s kohdalla. Sinun tulee todennäköisesti päivittää "
+"lokalisointisovellus ensin."
 
 #. module: account
 #. odoo-python
@@ -7772,7 +7806,7 @@ msgstr "Otsikosta"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 msgid "From last fiscal year"
-msgstr ""
+msgstr "Viimeiseltä tilikaudelta"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_tax_period
@@ -9018,7 +9052,7 @@ msgstr "Avoimet kredit debet työkalu"
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices
 msgid "Invoice PDF"
-msgstr ""
+msgstr "Laskun PDF"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
@@ -9458,6 +9492,12 @@ msgstr "Jokin riippuvuutena oleva sulkeva siirto odottaa että se kirjataan"
 #: code:addons/account/models/account_move.py:0
 msgid "It was previously '%(previous)s' and it is now '%(current)s'."
 msgstr "Oli aiemmin '%(previous)s' ja on nyt '%(current)s'."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "Items With Missing Analytic Distribution"
+msgstr "Tuotteet, joilla ei ole laskentakohdetta"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -11325,6 +11365,12 @@ msgid "One or more invoices couldn't be processed."
 msgstr "Yhtä tai useampaa laskua ei voitu käsitellä."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "One or more lines require a 100% analytic distribution."
+msgstr "Yksi tai useampi rivi edellyttää 100% laskentakohteen."
+
+#. module: account
 #: model:ir.ui.menu,name:account.root_payment_menu
 msgid "Online Payments"
 msgstr "Verkkomaksut"
@@ -11822,7 +11868,7 @@ msgstr "Kumppani"
 #: model:ir.model.fields,field_description:account.field_res_partner__partner_company_registry_placeholder
 #: model:ir.model.fields,field_description:account.field_res_users__partner_company_registry_placeholder
 msgid "Partner Company Registry Placeholder"
-msgstr ""
+msgstr "Kumppaniyrityksen yritysrekisteritiedon placeholder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -13756,6 +13802,12 @@ msgstr "Turvatunnus"
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.xml:0
 msgid "See all activities"
 msgstr "Näytä kaikki toiminnot"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+msgid "See items"
+msgstr "Katso kohdat"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_distribution_model__product_categ_id
@@ -16657,7 +16709,7 @@ msgstr "Tätä asetusta ei voi muuttaa laskun luomisen jälkeen."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This specific error occurred during the import:"
-msgstr "Tämä tietty virhe tapahtui tuonnin aikana:"
+msgstr "Tämä virhe tapahtui tuonnin aikana:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17981,6 +18033,11 @@ msgid "Wrong credit or debit value in accounting entry!"
 msgstr "Väärä hyvitys- tai veloitusarvo kirjanpitomerkinnässä!"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+msgid "XML format"
+msgstr "XML-formaatti"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
 msgid "Yearly"
 msgstr "Vuosittainen"
@@ -18572,7 +18629,7 @@ msgstr "Et voi rekisteröidä maksuja sekalaisia merkintöjä varten."
 #. odoo-python
 #: code:addons/account/models/mail_message.py:0
 msgid "You cannot remove parts of the audit trail."
-msgstr ""
+msgstr "Et voi poistaa osia kirjausketjusta"
 
 #. module: account
 #. odoo-python

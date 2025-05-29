@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-10 13:22+0000\n"
+"POT-Creation-Date: 2025-05-23 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -894,9 +894,9 @@ msgid ""
 "preferences, adding any necessary payment information, and selecting the "
 "initial features or modules you wish to use."
 msgstr ""
-"<br/>온보딩 프로세스는 <b>계정 생성</b>으로부터 시작됩니다. 이 단계에서는 이메일 주소 또는 소셜 미디어 계정을 사용하여 "
-"플랫폼에 가입해야 합니다. 계정을 만들면 계정을 활성화할 수 있는 링크가 포함된 확인 이메일을 받게 됩니다. 활성화가 완료되면 기본 설정"
-" 설정, 필요한 결제 정보 입력, 사용하려는 초기 기능 또는 모듈 선택 등 프로필을 완성하라는 안내를 받게 됩니다."
+"<br/>온보딩 프로세스는 <b>계정을 생성</b>하는 것부터 시작됩니다. 이 단계에서는 이메일 주소 또는 소셜 미디어 계정을 이용하여 "
+"플랫폼에 가입합니다. 계정을 생성한 후에는 계정을 활성화할 수 있는 링크가 포함된 확인 이메일을 받게 됩니다. 계정 활성화가 완료되면 "
+"기본 설정 설정, 필수 결제 정보 입력, 사용하고자 하는 초기 기능 또는 모듈 선택 등 프로필을 작성을 하도록 안내를 받게 됩니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -2735,12 +2735,12 @@ msgstr "이후"
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Alert"
-msgstr "경고"
+msgstr "주의"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Alerts"
-msgstr "경고"
+msgstr "주의"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
@@ -7394,7 +7394,6 @@ msgstr "제목 1"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
-#: code:addons/website/static/src/xml/website.editor.xml:0
 msgid "Headings"
 msgstr "제목"
 
@@ -7404,36 +7403,26 @@ msgid "Headings 1"
 msgstr "제목 1"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 2"
 msgstr "제목 2"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 3"
 msgstr "제목 3"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 4"
 msgstr "제목 4"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 5"
 msgstr "제목 5"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Headings 6"
 msgstr "제목 6"
@@ -9154,8 +9143,6 @@ msgid "Linkedin"
 msgstr "링크드인"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Links"
 msgstr "링크"
@@ -9968,7 +9955,7 @@ msgstr "매장에서 직접 수령하고 싶으십니까? 가까운 매장을 �
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "Network Advertising Initiative opt-out page"
-msgstr "Network Advertising Initiative 옵트 아웃 페이지"
+msgstr "Network Advertising Initiative 탈퇴 페이지"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
@@ -11379,12 +11366,6 @@ msgid "Primary"
 msgstr "기본"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Primary Buttons"
-msgstr "기본 버튼 색상"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Primary Style"
 msgstr "기본 스타일"
@@ -11584,6 +11565,11 @@ msgstr "펄스"
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Punchy Image"
 msgstr "펀치 이미지"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website__domain_punycode
+msgid "Punycode Domain"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -12369,12 +12355,6 @@ msgid "Secondary"
 msgstr "2차"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
-msgid "Secondary Buttons"
-msgstr "추가 버튼 색상"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Secondary Style"
 msgstr "2차 스타일"
@@ -12808,7 +12788,7 @@ msgstr "사이즈"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "Skip and start from scratch"
-msgstr "건너뛰고 처음부터 다시 시작"
+msgstr "건너뛰고 처음부터 시작하기"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -13460,8 +13440,6 @@ msgid "Test your robots.txt with Google Search Console"
 msgstr "Google Search 콘솔로 robots.txt를 테스트하세요"
 
 #. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.grid_layout_options
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -13668,6 +13646,12 @@ msgstr "검색할 수 있는 최대 레코드 수의 한도입니다."
 #: code:addons/website/models/website_snippet_filter.py:0
 msgid "The limit must be between 1 and 16."
 msgstr "제한값은 1에서 16 사이여야 합니다."
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/configurator/configurator.js:0
+msgid "The logo is too large. Please upload a logo smaller than 2.5 MB."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -14459,12 +14443,12 @@ msgid ""
 "        308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)\n"
 "    "
 msgstr ""
-"리디렉션/다시 쓰기 유형 :\n"
+"리디렉션/재작성 유형 :\n"
 "\n"
-"        301 영구적으로 이동 : 브라우저가 새 URL을 캐시에 보관합니다.\n"
-"302 일시적으로 이동 : 브라우저가 새 URL을 캐시에 보관하지 않고 다음 번에 새유형 URL을 다시 묻습니다. \n"
-"404 찾을 수 없음 : 특정 페이지/컨트롤러를 제거하려는 경우 (예: 전자 상거래가 설치되어 있지만 특정 웹 사이트에서 /shop을 원하지 않는 경우)\n"
-"308 리디렉션/다시쓰기 : 새로운 URL로 컨트롤러의 이름을 바꾸려면. (예: /shop-> /garden - 두 URL 모두 액세스 할 수 있지만 /shop은 자동으로 /garden으로 리디렉션됩니다)"
+"        301 영구 이동 : 브라우저가 새 URL을 캐시에 저장합니다.\n"
+"302 임시 이동 : 브라우저가 새 URL을 캐시에 저장하지 않고 다음 요청 시 새 URL을 다시 요청합니다. \n"
+"404 찾을 수 없음 : 특정 페이지 또는 컨트롤러를 제거하려는 경우에 해당합니다 (예: 이커머스가 설치되어 있으나 특정 웹사이트에서 /shop 페이지를 사용하지 않으려는 경우).\n"
+"308 리디렉션/재작성 : 새 URL로 컨트롤러의 이름을 변경하려는 경우에 해당합니다 (예: /shop-> /garden - 두 가지 URL에 모두 액세스 할 수 있지만 /shop은 자동으로 /garden으로 리디렉션됩니다)."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__name_slugified
@@ -15066,7 +15050,7 @@ msgstr "방문자가 웹사이트에 방문하여 기록을 확인하고 참여�
 #: model_terms:ir.ui.view,arch_db:website.s_badge_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Warning"
-msgstr "경고"
+msgstr "주의"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_controller_page__warning_info
@@ -15851,12 +15835,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website__social_twitter
 msgid "X Account"
 msgstr "X 계정"
-
-#. module: website
-#. odoo-javascript
-#: code:addons/website/static/src/xml/website_form_editor.xml:0
-msgid "Yes"
-msgstr "예"
 
 #. module: website
 #. odoo-javascript

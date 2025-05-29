@@ -6,14 +6,16 @@
 # Wil Odoo, 2024
 # Tereza Mokrá, 2024
 # Ondřej Klein, 2024
+# Chris Podivinsky, 2025
+# Radim Bílý, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:41+0000\n"
+"POT-Creation-Date: 2025-04-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:42+0000\n"
-"Last-Translator: Ondřej Klein, 2024\n"
+"Last-Translator: Radim Bílý, 2025\n"
 "Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +42,7 @@ msgstr ""
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__stock_notification_partner_ids
 msgid "Back in stock Notifications"
-msgstr ""
+msgstr "Notifikace zpětného naskladnění"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
@@ -58,12 +60,12 @@ msgstr "Pokračovat v prodeji"
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__allow_out_of_stock_order
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__allow_out_of_stock_order
 msgid "Continue selling when out-of-stock"
-msgstr ""
+msgstr "Pokračovat v prodeji i když není skladem"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "Dear Customer,"
-msgstr ""
+msgstr "Vážený zákazníku,"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -100,7 +102,7 @@ msgstr "Neplatný email"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "Invalid email"
-msgstr ""
+msgstr "Neplatný email"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
@@ -140,7 +142,7 @@ msgstr "Vyprodáno "
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__out_of_stock_message
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__out_of_stock_message
 msgid "Out-of-Stock Message"
-msgstr ""
+msgstr "Zpráva o nedostupnosti zboží na skladě"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -150,6 +152,11 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: website_sale_stock
+#: model:ir.model,name:website_sale_stock.model_product_combo
+msgid "Product Combo"
+msgstr "Kombinovaný produkt"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product Variant"
 msgstr "Produktová varianta"
@@ -157,7 +164,7 @@ msgstr "Produktová varianta"
 #. module: website_sale_stock
 #: model:ir.actions.server,name:website_sale_stock.ir_cron_send_availability_email_ir_actions_server
 msgid "Product: send email regarding products availability"
-msgstr ""
+msgstr "Produkt: odeslat email ohledně dostupnosti produktu"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
@@ -191,14 +198,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__available_threshold
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__available_threshold
 msgid "Show Threshold"
-msgstr ""
+msgstr "Zobrazit prahovou hodnotu (threshold)"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_template__show_availability
 #: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__show_availability
 msgid "Show availability Qty"
-msgstr ""
+msgstr "Zobrazit dostupné zboží"
 
 #. module: website_sale_stock
 #. odoo-python
@@ -213,19 +220,19 @@ msgstr ""
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.availability_email_body
 msgid "The following product is now available."
-msgstr ""
+msgstr "Následující produkt je nyní dostupný."
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "The item has not been added to your cart since it is not available."
-msgstr ""
+msgstr "Produkt nebyl přidán do košíku, protože není dostupný."
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/product_product.py:0
 msgid "The product '%(product_name)s' is now available"
-msgstr ""
+msgstr "Produkt \"%(product_name)s\" je nyní dostupný"
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -266,6 +273,7 @@ msgstr "Webová stránka"
 #: model:ir.model.fields,help:website_sale_stock.field_stock_picking__website_id
 msgid "Website where this order has been placed, for eCommerce orders."
 msgstr ""
+"Webová stránka, ze které objednávka pochází (pro eCommerce objednávky)."
 
 #. module: website_sale_stock
 #. odoo-javascript
@@ -277,13 +285,13 @@ msgstr "Už jste přidali"
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 msgid "You already added all the available product in your cart."
-msgstr ""
+msgstr "Veškeré dostupné množství produktu již bylo přidáno do košíku."
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "You already have %s Units in your cart."
-msgstr ""
+msgstr "Už máte %s jednotek ve svém košíku."
 
 #. module: website_sale_stock
 #. odoo-python
@@ -292,18 +300,22 @@ msgid ""
 "You ask for %(desired_qty)s %(product_name)s but only %(new_qty)s is "
 "available"
 msgstr ""
+"Chcete přidat %(desired_qty)s produktu %(product_name)s, ale dostupné je "
+"pouze%(new_qty)s"
 
 #. module: website_sale_stock
 #. odoo-python
 #: code:addons/website_sale_stock/models/sale_order.py:0
 msgid "You ask for %(desired_qty)s products but only %(new_qty)s is available"
 msgstr ""
+"Chcete přidat %(desired_qty)s produktů, ale dostupné je pouze %(new_qty)s"
 
 #. module: website_sale_stock
 #. odoo-javascript
 #: code:addons/website_sale_stock/static/src/js/website_sale_reorder.js:0
 msgid "You ask for %(quantity1)s Units but only %(quantity2)s are available."
 msgstr ""
+"Chcete přidat %(quantity1)s jednotek, ale dostupných je pouze %(quantity2)s."
 
 #. module: website_sale_stock
 #. odoo-javascript

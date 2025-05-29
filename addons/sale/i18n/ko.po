@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Daye Jeong, 2025
-# Sarah Park, 2025
 # Wil Odoo, 2025
+# Sarah Park, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-05-23 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -983,6 +983,11 @@ msgstr "<span>경고: 이 주문서는 다음 문서와 중복될 수 있습니�
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+msgstr "<strong class=\"d-block mt-3\">배송지 주소</strong>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">소계</strong>"
@@ -1001,11 +1006,6 @@ msgstr "<strong>재정 위치 참고 사항 :</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
 msgstr "<strong>영업사원</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>배송지 주소</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1454,7 +1454,7 @@ msgstr "문서 참조 기준"
 #: model_terms:ir.actions.act_window,help:sale.action_quotations
 #: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
 msgid "Beat competitors with stunning quotations!"
-msgstr "멋진 견적서로 경쟁사를 이겨보세요!"
+msgstr "경쟁사들과의 차별화되는 매력적인 견적서를 만들어보세요!"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__sale_line_warn__block
@@ -1473,7 +1473,7 @@ msgstr "본문 내용은 서식과 동일합니다"
 msgid ""
 "Boost sales with online payments or signatures, upsells, and a great "
 "customer portal."
-msgstr "온라인 결제 또는 서명, 상향 판매 기회, 강력한 고객 포털을 통해 매출을 향상시키세요."
+msgstr "매출 증대와 직결되는 온라인 결제, 전자 서명, 업셀링 및 강력한 고객 포털을 활용해보세요."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1576,13 +1576,13 @@ msgid ""
 msgstr ""
 "청구서를 생성할 수 없습니다. 청구서를 발행할 품목이 없습니다.\n"
 "\n"
-"문제 해결을 위해서는 다음을 확인하세요.\n"
-"   • 청구서 발행 전에 품목이 배송되었는지 확인하세요.\n"
-"   • 해당 품목에 대한 청구서 발행 정책이 올바르게 설정되었는지 확인하세요.\n"
+"문제 해결을 위해 다음을 확인하세요:\n"
+"   • 청구서 발행 전에 품목 출고 여부를 확인하세요.\n"
+"   • 해당 품목에 청구서 발행 정책이 정확하게 설정되었는지 확인하세요.\n"
 "\n"
-"대신 주문 수량 기준으로 청구서를 발행하려면 다음을 확인하세요.\n"
-"   • 소모품이나 보관 가능 품목의 경우에는, 품목을 열어서 '일반 정보' 탭으로 이동하여 '청구서 발행 정책'의 '납품 수량'을 '주문 수량'으로 변경하세요.\n"
-"   • 서비스 (및 기타 품목)의 경우에는, '청구서 발행 정책'을 '선불/고정 가격'으로 변경하세요.\n"
+"주문 수량을 기준으로 청구서를 다시 발행하려면 다음을 확인하세요:\n"
+"   • 소모품이나 보관 가능 품목의 경우, 품목 '일반 정보' 탭으로 이동하여 '청구서 발행 정책'의 '납품 수량'을 '주문 수량'으로 변경하세요.\n"
+"   • 서비스(및 기타 품목)의 경우, '청구서 발행 정책'을 '선불/고정 가격'으로 변경하세요.\n"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3001,7 +3001,7 @@ msgstr "고객이 로그인하여 문서를 볼 수 있도록 허용합니다."
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
-msgstr "몇 번의 클릭만으로 멋진 견적서를 생성해봅시다."
+msgstr "완벽한 견적서를 클릭 몇 번으로 완성해 보세요."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
@@ -4463,12 +4463,12 @@ msgstr "매출 : 공급가액 합계"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Salesperson"
-msgstr "영업사원"
+msgstr "영업 담당자"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_salespeople
 msgid "Salespersons"
-msgstr "영업담당자"
+msgstr "영업 담당자"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4790,6 +4790,11 @@ msgid ""
 "Sum of transactions made in through the online payment form that are in the "
 "state 'done' or 'authorized' and linked to this order."
 msgstr "온라인 결제 양식을 통해 완료된 거래 중 '완료' 또는 '승인됨' 상태이며 이 주문과 연결된 거래의 총 금액입니다."
+
+#. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "시스템 매개 변수"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids

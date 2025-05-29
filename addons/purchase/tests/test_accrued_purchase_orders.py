@@ -181,3 +181,26 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'account_id': self.alt_exp_account.id, 'debit': 0.0, 'credit': 1000.0},
             {'account_id': self.account_revenue.id, 'debit': 6000.0, 'credit': 0.0},
         ])
+    
+    def test_error_when_different_currencies_accrued(self):
+        """
+        Tests that if two Purchase Orders with different currencies are selected for Accrued Expense Entry, 
+        a UserError is raised.
+        """
+        purchase_orders = self.env['purchase.order'].create([
+            {
+                'partner_id': self.partner_a.id,
+                'currency_id': self.company_data['currency'].id,
+            }, 
+            {
+                'partner_id': self.partner_a.id,
+                'currency_id': self.other_currency.id,
+            }
+        ])
+        purchase_orders.button_confirm()
+        accrued_wizard = self.env['account.accrued.orders.wizard'].with_context(
+            active_model='purchase.order',
+            active_ids=purchase_orders.ids,
+        ).new()
+        with self.assertRaises(UserError, msg="An error should be raised if two different currencies are used for Accrued Expense Entry."):
+            accrued_wizard._compute_move_vals()

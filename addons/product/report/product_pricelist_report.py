@@ -41,6 +41,7 @@ class ProductPricelistReport(models.AbstractModel):
             'pricelist': pricelist,
             'products': products_data,
             'quantities': quantities,
+            'docs': pricelist,
         }
 
     def _get_product_data(self, is_product_tmpl, product, pricelist, quantities):

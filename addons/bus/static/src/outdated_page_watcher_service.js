@@ -1,5 +1,4 @@
 import { browser } from "@web/core/browser/browser";
-import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
@@ -16,41 +15,50 @@ export class OutdatedPageWatcherService {
      */
     setup(env, { bus_service, multi_tab, notification }) {
         this.notification = notification;
-        const vacuumInfo = multi_tab.getSharedValue("bus.autovacuum_info");
-        this.lastAutovacuumDt = vacuumInfo ? deserializeDateTime(vacuumInfo.lastcall) : null;
-        this.nextAutovacuumDt = vacuumInfo ? deserializeDateTime(vacuumInfo.nextcall) : null;
+        this.multi_tab = multi_tab;
+        this.lastNotificationId = multi_tab.getSharedValue("last_notification_id");
+        /** @deprecated */
         this.lastDisconnectDt = null;
         this.closeNotificationFn;
-        bus_service.addEventListener("disconnect", () => (this.lastDisconnectDt = DateTime.now()));
-        bus_service.addEventListener("reconnect", async () => {
-            if (!multi_tab.isOnMainTab() || !this.lastDisconnectDt) {
-                return;
+        let wasBusAlreadyConnected;
+        bus_service.addEventListener(
+            "worker_state_updated",
+            ({ detail: state }) => {
+                wasBusAlreadyConnected = state !== "IDLE";
+            },
+            { once: true }
+        );
+        bus_service.addEventListener("disconnect", () => {
+            this.lastNotificationId = multi_tab.getSharedValue("last_notification_id");
+            this.lastDisconnectDt = DateTime.now();
+        });
+        bus_service.addEventListener("connect", async () => {
+            if (wasBusAlreadyConnected) {
+                this.checkHasMissedNotifications();
             }
-            if (!this.lastAutovacuumDt || DateTime.now() >= this.nextAutovacuumDt) {
-                const { lastcall, nextcall } = await rpc(
-                    "/bus/get_autovacuum_info",
-                    {},
-                    { silent: true }
-                );
-                this.lastAutovacuumDt = deserializeDateTime(lastcall);
-                this.nextAutovacuumDt = deserializeDateTime(nextcall);
-                multi_tab.setSharedValue("bus.autovacuum_info", { lastcall, nextcall });
-            }
-            if (this.lastDisconnectDt <= this.lastAutovacuumDt) {
+            wasBusAlreadyConnected = true;
+        });
+        bus_service.addEventListener("reconnect", () => this.checkHasMissedNotifications());
+        multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key } }) => {
+            if (key === "bus.has_missed_notifications") {
                 this.showOutdatedPageNotification();
             }
         });
-        multi_tab.bus.addEventListener("shared_value_updated", ({ detail: { key, newValue } }) => {
-            if (key !== "bus.autovacuum_info") {
-                return;
-            }
-            const infos = JSON.parse(newValue);
-            this.lastAutovacuumDt = deserializeDateTime(infos.lastcall);
-            this.nextAutovacuumDt = deserializeDateTime(infos.nextcall);
-            if (this.lastDisconnectDt <= this.lastAutovacuumDt) {
-                this.showOutdatedPageNotification();
-            }
-        });
+    }
+
+    async checkHasMissedNotifications() {
+        if (!this.multi_tab.isOnMainTab() || !this.lastNotificationId) {
+            return;
+        }
+        const hasMissedNotifications = await rpc(
+            "/bus/has_missed_notifications",
+            { last_notification_id: this.lastNotificationId },
+            { silent: true }
+        );
+        if (hasMissedNotifications) {
+            this.showOutdatedPageNotification();
+            this.multi_tab.setSharedValue("bus.has_missed_notifications", Date.now());
+        }
     }
 
     showOutdatedPageNotification() {

@@ -2350,10 +2350,10 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
 "품목의 현재 수량입니다.\n"
-"재고 공간이 하나인 경우에는 이 공간 또는 하위 공간에 저장된 상품을 포함합니다.\n"
-"창고가 하나인 경우에는 이 창고의 재고 공간 또는 그 하위 재고 공간에 저장된 품목을 포함합니다.\n"
-"이 상점의 창고 또는 그 하위의 재고 공간에 보관합니다.\n"
-"그렇지 않으면 '내부' 유형의 모든 저장 공간에 저장된 품목이 포함됩니다."
+"재고 위치가 하나 뿐인 경우, 해당 위치 또는 하위 위치에 보관된 품목이 모두 포함됩니다.\n"
+"창고가 하나 뿐인 경우에는, 해당 창고의 재고 위치 또는 하위 재고 위치에 보관된 품목이 모두 포함됩니다.\n"
+"상점의 창고 재고 위치 또는 그 하위의 재고 위치에 모두 보관됩니다.\n"
+"그 외에는 '내부' 유형인 모든 보관 위치에 보관되어 있는 품목이 모두 포함됩니다."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -5372,9 +5372,9 @@ msgid ""
 "to appear as a third party in the context of any claim for damages filed "
 "against the client by an end consumer."
 msgstr ""
-"My Company (Chicago)는 합의된 기간에 따라 적시에 성능 기준에 맞는 서비스를 제공하기 위해 최선을 다할 것을 약속합니다."
-" 그러나 이러한 의무 중 어떤 것도 결과를 달성하기 위한 의무 사항으로 간주될 수 없습니다. My Company (Chicago)는 어떤"
-" 상황에서도 최종 소비자가 고객에게 제기한 손해 배상 청구와 관련하여 고객이 당사를 제3자 업체로 표시되도록 할 수 없습니다."
+"My Company(Chicago)는 합의된 기간 내 적시에 성실히 서비스를 제공하여 성과를 달성하기 위해 최선을 다할 것을 약속합니다."
+" 단, 상기 사항 중 어떠한 의무도 결과 달성을 보장하는 의무 사항으로 간주될 수 없습니다. My Company(Chicago)는 어떤 "
+"상황에서도 최종 소비자가 고객에게 제기한 손해배상 청구와 관련하여 고객이 당사를 제3자 업체로 표시하도록 요구할 수 없습니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
@@ -6002,9 +6002,9 @@ msgid ""
 "My Company (Chicago) will be authorized to suspend any provision of services"
 " without prior warning in the event of late payment."
 msgstr ""
-"청구서나 주문서에 다른 지불 기간이 명시되어 있지 않는 한, 당사의 청구서는 영업일 기준 21일 이내에 지불하도록 되어 있습니다. "
-"기한일까지 결제가 완료되지 않은 경우 My Company (Chicago)는 미납금의 10%에 해당하는 고정 이자를 요청할 권한을 "
-"가집니다. 또한 My Company (Chicago)는 연체 시 사전 경고 없이 서비스 제공을 중단할 권한이 있습니다."
+"당사의 청구 대금은 청구서 또는 주문서에 별도의 지급 기간이 명시되어 있지 않는 한, 영업일 기준으로 21일 이내에 지급되어야 합니다. "
+"만약 기한일까지 결제가 완료되지 않은 경우 My Company(Chicago)는 미납 금액의 10%에 해당하는 고정 이자를 청구할 권한을"
+" 보유합니다. 또한 My Company(Chicago)는 연체 발생 시 사전 통지 없이 서비스 제공을 중단할 권한을 보유합니다."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__out_type_id
@@ -8185,13 +8185,13 @@ msgid ""
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting).\n"
 "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product."
 msgstr ""
-"모든 품목 카테고리에 적용할 수 있는 표준화된 제거 전략을 수립합니다:\n"
+"본 품목 카테고리의 출처 위치와 무관하게 적용할 수 있는 구체적인 제거 전략을 수립합니다:\n"
 "\n"
 "FIFO: 가장 먼저 입고된 제품/로트부터 우선적으로 출고됩니다.\n"
 "LIFO: 가장 최근에 입고된 제품/로트가 우선적으로 출고됩니다.\n"
-"가장 가까운 위치: 대상 위치에서 가장 가까운 곳에 위치한 제품/로트가 우선적으로 출고됩니다.\n"
-"FEFO: 만료일이 가장 가까운 제품/로트가 우선적으로 출고되며, '만료일' 설정이 활성화된 경우에 한하여 적용됩니다.\n"
-"최소 패키지: FIFO를 활용하되 여러 패키지에 동일한 제품이 포함된 경우 단위 수가 가장 적은 패키지의 우선순위를 지정합니다."
+"가장 가까운 위치: 대상 위치에서 가장 근접한 곳에 위치한 제품/로트가 우선적으로 출고됩니다.\n"
+"FEFO: 유통기한이 가장 임박한 제품/로트가 우선적으로 출고됩니다 ('유통기한' 설정이 활성화된 경우에 한하여 적용).\n"
+"최소 패키지: FIFO 방식으로 처리하되, 여러 패키지에 동일한 제품이 포함된 경우 단위 수가 가장 패키지 수량이 적은 경우 우선적으로 출고됩니다."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10352,7 +10352,7 @@ msgstr "폐기 수량 부족 경고"
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__warning
 msgid "Warning"
-msgstr "경고"
+msgstr "주의"
 
 #. module: stock
 #. odoo-python
@@ -10386,7 +10386,7 @@ msgstr "경고: 원본 위치 변경"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Warnings"
-msgstr "경고"
+msgstr "주의"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_warning_stock

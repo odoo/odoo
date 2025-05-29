@@ -481,12 +481,12 @@ export class TablePlugin extends Plugin {
      */
     shiftCursorToTableCell(shiftIndex) {
         const sel = this.dependencies.selection.getEditableSelection();
-        const currentTd = closestElement(sel.anchorNode, "td");
+        const currentTd = closestElement(sel.anchorNode, "td, th");
         const closestTable = closestElement(currentTd, "table");
         if (!currentTd || !closestTable) {
             return false;
         }
-        const tds = [...closestTable.querySelectorAll("td")];
+        const tds = [...closestTable.querySelectorAll("td, th")];
         const cursorDestination = tds[tds.findIndex((td) => currentTd === td) + shiftIndex];
         if (!cursorDestination) {
             return false;
@@ -603,6 +603,7 @@ export class TablePlugin extends Plugin {
     }
 
     onMouseup(ev) {
+        delete this._mouseMovePositionWhenAllContentsSelected;
         this._currentMouseState = ev.type;
         this.editable.removeEventListener("mousemove", this.onMousemove);
     }
@@ -638,8 +639,6 @@ export class TablePlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
-        const docSelection = this.document.getSelection();
-        const range = docSelection.rangeCount && docSelection.getRangeAt(0);
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
         if (startTd && startTd === endTd && !isProtected(startTd) && !isProtecting(startTd)) {
@@ -650,10 +649,12 @@ export class TablePlugin extends Plugin {
                 .every((child) => selectedNodes.includes(child));
             if (areCellContentsFullySelected) {
                 const SENSITIVITY = 5;
-                const rangeRect = range.getBoundingClientRect();
+                if (!this._mouseMovePositionWhenAllContentsSelected) {
+                    this._mouseMovePositionWhenAllContentsSelected = [ev.clientX, ev.clientY];
+                }
                 const isMovingAwayFromSelection =
-                    ev.clientX > rangeRect.x + rangeRect.width + SENSITIVITY || // moving right
-                    ev.clientX < rangeRect.x - SENSITIVITY; // moving left
+                    Math.abs(ev.clientX - this._mouseMovePositionWhenAllContentsSelected[0]) >=
+                    SENSITIVITY;
                 if (isMovingAwayFromSelection) {
                     // A cell is fully selected and the mouse is moving away
                     // from the selection, within said cell -> select the cell.

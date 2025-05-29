@@ -1,4 +1,5 @@
 from functools import wraps
+from lxml import etree
 from types import SimpleNamespace
 
 from odoo import models
@@ -104,7 +105,28 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return [taxes_vals['base_line']]
 
     def _get_payment_method_code(self, invoice):
-        return PAYMENT_CODES_MAP[invoice.company_id.l10n_jo_edi_taxpayer_type]['receivable']
+        return PAYMENT_CODES_MAP.get(invoice.company_id.l10n_jo_edi_taxpayer_type, {}).get('receivable', '')
+
+    def _get_line_edi_id(self, line, default_id):
+        if not line.is_refund:  # in case it's invoice not credit note
+            return default_id
+
+        refund_move = line.move_id
+        invoice_move = refund_move.reversed_entry_id
+        invoice_lines = invoice_move.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
+        n = len(invoice_lines)
+
+        line_id = -1
+        for invoice_line_id, invoice_line in enumerate(invoice_lines, 1):
+            if line.product_id == invoice_line.product_id \
+                    and line.name == invoice_line.name \
+                    and line.price_unit == invoice_line.price_unit:
+                line_id = invoice_line_id
+                break
+        if line_id == -1:
+            line_id = n + default_id
+
+        return line_id
 
     ########################################################
     # overriding vals methods of account_edi_xml_ubl_20 file
@@ -117,8 +139,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_partner_party_identification_vals_list(self, partner):
         return [{
-            'id_attrs': {'schemeID': 'TN' if not partner.country_code or partner.country_code == 'JO' else 'PN'},
-            'id': partner.vat if partner.vat and partner.vat != '/' else '',
+            'id_attrs': {'schemeID': 'TN' if partner.country_code == 'JO' else 'PN'},
+            'id': partner.vat if partner.vat and partner.vat != '/' else 'NO_VAT',
         }]
 
     def _get_partner_address_vals(self, partner):
@@ -163,7 +185,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return [{
                 'payment_means_code': 10,
                 'payment_means_code_attrs': {'listID': "UN/ECE 4461"},
-                'instruction_note': invoice.ref.replace('/', '_') if invoice.ref else '',
+                'instruction_note': (invoice.ref or '').replace('/', '_'),
             }]
         else:
             return []
@@ -207,7 +229,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
         product = line.product_id
-        description = line.name and line.name.replace('\n', ', ')
+        description = (line.name or '').replace('\n', ', ')
         return {
             'name': product.name or description,
         }
@@ -279,7 +301,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return {
             'currency': JO_CURRENCY,
             'currency_dp': self._get_currency_decimal_places(),
-            'id': line_id + 1,
+            'id': self._get_line_edi_id(line, default_id=line_id + 1),
             'line_quantity': line.quantity,
             'line_quantity_attrs': {'unitCode': self._get_uom_unece_code()},
             'line_extension_amount': self._get_line_taxable_amount(self._extract_base_lines(taxes_vals)[0]),
@@ -313,11 +335,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         if amount is None:
             return None
 
-        def get_decimal_places(number):
-            return len(f'{float(number)}'.split('.')[1])
-
         rounded_amount = float_repr(self._round_max_dp(amount), JO_MAX_DP).rstrip('0').rstrip('.')
-        decimal_places = get_decimal_places(rounded_amount)
+        decimal_places = len(rounded_amount.split('.')[1]) if '.' in rounded_amount else 0
         if decimal_places < precision_digits:
             rounded_amount = float_repr(float(rounded_amount), precision_digits)
         return rounded_amount
@@ -367,7 +386,7 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
             return {}
 
         return {
-            'id': invoice.reversed_entry_id.name.replace('/', '_'),
+            'id': (invoice.reversed_entry_id.name or '').replace('/', '_'),
             'uuid': invoice.reversed_entry_id.l10n_jo_edi_uuid,
             'document_description': self.format_float(abs(invoice.reversed_entry_id.amount_total_signed), self._get_currency_decimal_places()),
         }
@@ -426,3 +445,17 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         })
 
         return vals
+
+    def _export_invoice(self, invoice):
+        # EXTENDS account.edi.xml.ubl_21
+        # _export_invoice normally cleans up the xml to remove empty nodes.
+        # However, in the JO UBL version, we always want the PartyIdentification with ID nodes, even if empty.
+        # We'll replace the empty value by a dummy one so that the node doesn't get cleaned up and remove its content after the file generation.
+        xml, errors = super()._export_invoice(invoice)
+        xml_root = etree.fromstring(xml)
+        party_identification_id_elements = xml_root.findall('.//cac:PartyIdentification/cbc:ID', namespaces=xml_root.nsmap)
+        for element in party_identification_id_elements:
+            if element.text == 'NO_VAT':
+                element.text = ''
+        # method='html' is used to keep the element un-shortened ("<a></a>" instead of <a/>)
+        return etree.tostring(xml_root, method='html'), errors

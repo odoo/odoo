@@ -191,7 +191,11 @@ export class DomPlugin extends Plugin {
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>.
-        if (container.childElementCount === 1 && shouldUnwrap(container.firstChild)) {
+        if (
+            container.childElementCount === 1 &&
+            (this.dependencies.baseContainer.isCandidateForBaseContainer(container.firstChild) ||
+                shouldUnwrap(container.firstChild))
+        ) {
             const nodeToUnwrap = container.firstElementChild;
             container.replaceChildren(...childNodes(nodeToUnwrap));
         } else if (container.childElementCount > 1) {
@@ -552,6 +556,11 @@ export class DomPlugin extends Plugin {
             this.copyAttributes(newCandidate, baseContainer);
             newCandidate = baseContainer;
         }
+        const { commonAncestorContainer } = this.dependencies.selection.getEditableSelection();
+        // Clean before preserving cursors otherwise the saved cursors might
+        // reference a node that will be removed when setTagName eventually
+        // calls clean of its own.
+        this.dispatchTo("clean_handlers", closestElement(commonAncestorContainer));
         const cursors = this.dependencies.selection.preserveSelection();
         const selectedBlocks = [...this.dependencies.selection.getTraversedBlocks()];
         const deepestSelectedBlocks = selectedBlocks.filter(

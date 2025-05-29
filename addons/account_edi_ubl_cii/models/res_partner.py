@@ -189,11 +189,6 @@ class ResPartner(models.Model):
         # because we need to extend depends in l10n modules
         return ['country_code', 'vat', 'company_registry']
 
-    @api.depends(lambda self: self._peppol_eas_endpoint_depends())
-    def _compute_invoice_edi_format(self):
-        # EXTENDS 'account' - add depends
-        super()._compute_invoice_edi_format()
-
     @api.depends_context('company')
     @api.depends('invoice_edi_format')
     def _compute_is_ubl_format(self):

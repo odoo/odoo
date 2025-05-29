@@ -28,6 +28,10 @@ registerWebsitePreviewTour("website_media_dialog_undraw", {
     content: "Check that the media library is available",
     trigger: '.o_select_media_dialog:has(.o_we_search_select option[value="media-library"])',
 },
+{
+    content: "Ensure all images are loaded to avoid CORS is misconfigured on the API server, image will be treated as non-dynamic.",
+    trigger: ".modal .o_load_done_msg",
+},
 ]);
 
 registerWebsitePreviewTour("website_media_dialog_external_library", {

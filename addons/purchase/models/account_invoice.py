@@ -141,7 +141,7 @@ class AccountMove(models.Model):
             'name': _("Purchase Matching"),
             'res_model': 'purchase.bill.line.match',
             'domain': [
-                ('partner_id', '=', self.partner_id.id),
+                ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
                 ('company_id', 'in', self.env.company.ids),
                 ('account_move_id', 'in', [self.id, False]),
             ],
@@ -413,7 +413,7 @@ class AccountMove(models.Model):
                     # We have an invoice from an EDI document, so we try to match individual invoice lines with
                     # individual purchase order lines from referenced purchase orders.
                     matching_po_lines, matching_inv_lines = self._find_matching_po_and_inv_lines(
-                        po_lines, self.line_ids, timeout)
+                        po_lines, self.invoice_line_ids, timeout)
 
                     if matching_po_lines:
                         # We found a subset of purchase order lines that match a subset of the vendor bill lines.

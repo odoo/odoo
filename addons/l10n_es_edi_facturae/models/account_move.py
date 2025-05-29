@@ -275,12 +275,13 @@ class AccountMove(models.Model):
         receiver_transaction_reference = (
             line.sale_line_ids.order_id.client_order_ref[:20]
             if 'sale_line_ids' in line._fields and line.sale_line_ids.order_id.client_order_ref
-            else False
+            else invoice_ref
         )
 
         xml_values = {
             'ReceiverTransactionReference': receiver_transaction_reference,
             'FileReference': invoice_ref,
+            'ReceiverContractReference': invoice_ref,
             'FileDate': fields.Date.context_today(self),
             'ItemDescription': line.name,
             'Quantity': line.quantity,

@@ -655,6 +655,23 @@ registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_cash_rounding_up_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("product_a", "1"),
+            ProductScreen.addOrderline("product_b", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("179"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("2 0 0"),
+
+            PaymentScreen.changeIs("21"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_cash_rounding_only_cash_method_with_change", {
     steps: () =>
         [

@@ -316,7 +316,7 @@ class ResPartner(models.Model):
         tin1 = self.__check_tin1_ro_natural_persons.match(vat)
         if tin1:
             return True
-        tin2 = self.__check_tin1_ro_natural_persons.match(vat)
+        tin2 = self.__check_tin2_ro_natural_persons.match(vat)
         if tin2:
             return True
         # Check the vat number
@@ -325,6 +325,13 @@ class ResPartner(models.Model):
     __check_tin_hu_individual_re = re.compile(r'^8\d{9}$')
     __check_tin_hu_companies_re = re.compile(r'^\d{8}-?[1-5]-?\d{2}$')
     __check_tin_hu_european_re = re.compile(r'^\d{8}$')
+
+    def check_vat_gr(self, vat):
+        """ Allows some custom test VAT number to be valid to allow testing Greece EDI. """
+        greece_test_vats = ('047747270', '047747210', '047747220', '117747270', '127747270')
+        if vat in greece_test_vats:
+            return True
+        return stdnum.util.get_cc_module('gr', 'vat').is_valid(vat)
 
     def check_vat_hu(self, vat):
         """

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-05-23 18:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -421,7 +421,7 @@ msgstr ""
 "            Vielen Dank für Ihr Vertrauen!\n"
 "        </t>\n"
 "        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
-"            ist ausstehend. Sie wird bestätigt, sobald wir die Zahlung erhalten haben.\n"
+"            ist ausstehend. Er wird bestätigt, sobald wir die Zahlung erhalten haben.\n"
 "            <t t-if=\"object.reference\">\n"
 "                Ihre Zahlungsreferenz lautet <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
@@ -989,6 +989,11 @@ msgstr "<span>Warnung: Dieser Auftrag könnte ein Duplikat sein von</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
+msgstr "<strong class=\"d-block mt-3\">Versandadresse</strong>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"mr16\">Subtotal</strong>"
 msgstr "<strong class=\"mr16\">Zwischensumme</strong>"
@@ -1007,11 +1012,6 @@ msgstr "<strong>Anmerkung zur Steuerposition:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Salesperson</strong>"
 msgstr "<strong>Ansprechpartner</strong>"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "<strong>Shipping Address</strong>"
-msgstr "<strong>Versandadresse</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4919,6 +4919,11 @@ msgstr ""
 "Bestellung verknüpft sind."
 
 #. module: sale
+#: model:ir.model,name:sale.model_ir_config_parameter
+msgid "System Parameter"
+msgstr "Systemparameter"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
 #: model:ir.ui.menu,name:sale.menu_tag_config
 msgid "Tags"
@@ -5157,7 +5162,7 @@ msgid ""
 "choices."
 msgstr ""
 "Die Anzahl der ausgewählten Kombi-Artikel muss mit der Anzahl der "
-"verfügbaren Kombimöglichkeiten übereinstimmen."
+"verfügbaren Kombi-Möglichkeiten übereinstimmen."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

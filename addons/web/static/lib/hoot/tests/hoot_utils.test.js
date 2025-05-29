@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { describe, expect, test } from "@odoo/hoot";
-import { isIterable, isRegExpFilter } from "@web/../lib/hoot-dom/hoot_dom_utils";
+import { isIterable } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import {
     deepEqual,
     formatHumanReadable,
@@ -10,6 +10,7 @@ import {
     levenshtein,
     lookup,
     match,
+    parseQuery,
     title,
     toExplicitString,
 } from "../hoot_utils";
@@ -17,20 +18,89 @@ import { parseUrl } from "./local_helpers";
 
 describe(parseUrl(import.meta.url), () => {
     test("deepEqual", () => {
-        expect(deepEqual(true, true)).toBe(true);
-        expect(deepEqual(false, false)).toBe(true);
-        expect(deepEqual(null, null)).toBe(true);
-        expect(deepEqual(new Date(0), new Date(0))).toBe(true);
-        expect(deepEqual({ b: 2, a: 1 }, { a: 1, b: 2 })).toBe(true);
-        expect(deepEqual({ o: { a: [{ b: 1 }] } }, { o: { a: [{ b: 1 }] } })).toBe(true);
-        expect(deepEqual(Symbol.for("a"), Symbol.for("a"))).toBe(true);
-        expect(deepEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+        const recursive = {};
+        recursive.self = recursive;
 
-        expect(deepEqual(true, false)).toBe(false);
-        expect(deepEqual(null, undefined)).toBe(false);
-        expect(deepEqual([1, 2, 3], [3, 1, 2])).toBe(false);
-        expect(deepEqual(new Date(0), new Date(1_000))).toBe(false);
-        expect(deepEqual({ [Symbol("a")]: 1 }, { [Symbol("a")]: 1 })).toBe(false);
+        const TRUTHY_CASES = [
+            [true, true],
+            [false, false],
+            [null, null],
+            [recursive, recursive],
+            [new Date(0), new Date(0)],
+            [
+                { b: 2, a: 1 },
+                { a: 1, b: 2 },
+            ],
+            [{ o: { a: [{ b: 1 }] } }, { o: { a: [{ b: 1 }] } }],
+            [Symbol.for("a"), Symbol.for("a")],
+            [document.createElement("div"), document.createElement("div")],
+            [
+                [1, 2, 3],
+                [1, 2, 3],
+            ],
+        ];
+        const FALSY_CASES = [
+            [true, false],
+            [null, undefined],
+            [recursive, { ...recursive, a: 1 }],
+            [
+                [1, 2, 3],
+                [3, 1, 2],
+            ],
+            [new Date(0), new Date(1_000)],
+            [{ a: new Date(0) }, { a: 0 }],
+            [document.createElement("a"), document.createElement("div")],
+            [{ [Symbol("a")]: 1 }, { [Symbol("a")]: 1 }],
+        ];
+        const TRUTHY_IF_UNORDERED_CASES = [
+            [
+                [1, "2", 3],
+                ["2", 3, 1],
+            ],
+            [
+                [1, { a: [4, 2] }, "3"],
+                [{ a: [2, 4] }, "3", 1],
+            ],
+            [
+                new Set([
+                    "abc",
+                    new Map([
+                        ["b", 2],
+                        ["a", 1],
+                    ]),
+                ]),
+                new Set([
+                    new Map([
+                        ["a", 1],
+                        ["b", 2],
+                    ]),
+                    "abc",
+                ]),
+            ],
+        ];
+
+        expect.assertions(
+            TRUTHY_CASES.length + FALSY_CASES.length + TRUTHY_IF_UNORDERED_CASES.length * 2
+        );
+
+        for (const [a, b] of TRUTHY_CASES) {
+            expect(deepEqual(a, b)).toBe(true, {
+                message: (_, r) => [a, r`==`, b],
+            });
+        }
+        for (const [a, b] of FALSY_CASES) {
+            expect(deepEqual(a, b)).toBe(false, {
+                message: (_, r) => [a, r`!=`, b],
+            });
+        }
+        for (const [a, b] of TRUTHY_IF_UNORDERED_CASES) {
+            expect(deepEqual(a, b)).toBe(false, {
+                message: (_, r) => [a, r`!=`, b],
+            });
+            expect(deepEqual(a, b, { ignoreOrder: true })).toBe(true, {
+                message: (_, r) => [a, r`==`, b, r`(unordered))`],
+            });
+        }
     });
 
     test("formatHumanReadable", () => {
@@ -145,14 +215,6 @@ describe(parseUrl(import.meta.url), () => {
         expect(isIterable({})).toBe(false);
     });
 
-    test("isRegExpFilter", () => {
-        expect(isRegExpFilter("/abc/")).toBe(true);
-        expect(isRegExpFilter("/abc/i")).toBe(true);
-
-        expect(isRegExpFilter("/abc")).toBe(false);
-        expect(isRegExpFilter("abc/")).toBe(false);
-    });
-
     test("levenshtein", () => {
         expect(levenshtein("abc", "abc")).toBe(0);
         expect(levenshtein("abc", "àbc ")).toBe(2);
@@ -160,10 +222,76 @@ describe(parseUrl(import.meta.url), () => {
         expect(levenshtein("abc", "adc")).toBe(1);
     });
 
-    test("lookup", () => {
-        const list = [{ key: "bababa" }, { key: "baaab" }, { key: "cccbccb" }];
-        expect(lookup("aaa", list)).toEqual([{ key: "baaab" }, { key: "bababa" }]);
-        expect(lookup(/.b$/, list)).toEqual([{ key: "baaab" }, { key: "cccbccb" }]);
+    test("parseQuery & lookup", () => {
+        /**
+         * @param {string} query
+         * @param {string[]} itemsList
+         * @param {string} [property]
+         */
+        const expectQuery = (query, itemsList, property = "key") => {
+            const keyedItems = itemsList.map((item) => ({ [property]: item }));
+            const result = lookup(parseQuery(query), keyedItems);
+            return {
+                /**
+                 * @param {string[]} expected
+                 */
+                toEqual: (expected) =>
+                    expect(result).toEqual(
+                        expected.map((item) => ({ [property]: item })),
+                        { message: (_, r) => [r`query`, query, r`should match`, expected] }
+                    ),
+            };
+        };
+
+        const list = [
+            "Frodo",
+            "Sam",
+            "Merry",
+            "Pippin",
+            "Frodo Sam",
+            "Merry Pippin",
+            "Frodo Sam Merry Pippin",
+        ];
+
+        // Error handling
+        expect(() => parseQuery()).toThrow();
+        expect(() => lookup()).toThrow();
+        expect(() => lookup("a", [{ key: "a" }])).toThrow();
+        expect(() => lookup(parseQuery("a"))).toThrow();
+
+        // Empty query and/or empty lists
+        expectQuery("", []).toEqual([]);
+        expectQuery("", ["bababa", "baaab", "cccbccb"]).toEqual(["bababa", "baaab", "cccbccb"]);
+        expectQuery("aaa", []).toEqual([]);
+
+        // Regex
+        expectQuery(`/.b$/`, ["bababa", "baaab", "cccbccB"]).toEqual(["baaab"]);
+        expectQuery(`/.b$/i`, ["bababa", "baaab", "cccbccB"]).toEqual(["baaab", "cccbccB"]);
+
+        // Exact match
+        expectQuery(`"aaa"`, ["bababa", "baaab", "cccbccb"]).toEqual(["baaab"]);
+        expectQuery(`"sam"`, list).toEqual([]);
+        expectQuery(`"Sam"`, list).toEqual(["Sam", "Frodo Sam", "Frodo Sam Merry Pippin"]);
+        expectQuery(`"Sam" "Frodo"`, list).toEqual(["Frodo Sam", "Frodo Sam Merry Pippin"]);
+        expectQuery(`"Frodo Sam"`, list).toEqual(["Frodo Sam", "Frodo Sam Merry Pippin"]);
+        expectQuery(`"FrodoSam"`, list).toEqual([]);
+        expectQuery(`"Frodo  Sam"`, list).toEqual([]);
+        expectQuery(`"Sam" -"Frodo"`, list).toEqual(["Sam"]);
+
+        // Partial (fuzzy) match
+        expectQuery(`aaa`, ["bababa", "baaab", "cccbccb"]).toEqual(["baaab", "bababa"]);
+        expectQuery(`aaa -bbb`, ["bababa", "baaab", "cccbccb"]).toEqual(["baaab"]);
+        expectQuery(`-aaa`, ["bababa", "baaab", "cccbccb"]).toEqual(["cccbccb"]);
+        expectQuery(`frosapip`, list).toEqual(["Frodo Sam Merry Pippin"]);
+        expectQuery(`-s fro`, list).toEqual(["Frodo"]);
+        expectQuery(` FR  SAPI `, list).toEqual(["Frodo Sam Merry Pippin"]);
+
+        // Mixed queries
+        expectQuery(`"Sam" fro pip`, list).toEqual(["Frodo Sam Merry Pippin"]);
+        expectQuery(`fro"Sam"pip`, list).toEqual(["Frodo Sam Merry Pippin"]);
+        expectQuery(`-"Frodo" s`, list).toEqual(["Sam"]);
+        expectQuery(`"Merry" -p`, list).toEqual(["Merry"]);
+        expectQuery(`"rry" -s`, list).toEqual(["Merry", "Merry Pippin"]);
     });
 
     test("match", () => {

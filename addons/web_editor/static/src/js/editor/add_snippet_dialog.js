@@ -90,7 +90,7 @@ export class AddSnippetDialog extends Component {
     }
 
     get iframeDocument() {
-        return this.iframeRef.el.contentDocument;
+        return this.iframeRef.el?.contentDocument;
     }
     /**
      * Gets snippet groups.
@@ -244,6 +244,7 @@ export class AddSnippetDialog extends Component {
                 if (snippet.installable) {
                     snippetPreviewWrapEl.classList.add("o_snippet_preview_install");
                     clonedSnippetEl.dataset.moduleId = snippet.moduleId;
+                    clonedSnippetEl.dataset.moduleDisplayName = snippet.moduleDisplayName;
                     const installBtnEl = document.createElement("button");
                     installBtnEl.classList.add("o_snippet_preview_install_btn", "btn", "text-white", "rounded-1", "mx-auto", "p-2", "bottom-50");
                     installBtnEl.innerText = _t("Install %s", snippet.displayName);
@@ -397,7 +398,7 @@ export class AddSnippetDialog extends Component {
         const snippetKey = parseInt(ev.currentTarget.dataset.snippetKey);
         const moduleId = parseInt(selectedSnippetEl?.dataset.moduleId);
         if (moduleId) {
-            this.props.installModule(moduleId, selectedSnippetEl.dataset.name);
+            this.props.installModule(moduleId, selectedSnippetEl.dataset.moduleDisplayName);
         } else {
             selectedSnippetEl = this.props.snippets.get(snippetKey);
             selectedSnippetEl = selectedSnippetEl.baseBody.cloneNode(true);

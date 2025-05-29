@@ -4,7 +4,6 @@ from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.res_partner import _tz_get
 
-from odoo.osv import expression
 
 class LeaveReportCalendar(models.Model):
     _name = "hr.leave.report.calendar"
@@ -12,7 +11,7 @@ class LeaveReportCalendar(models.Model):
     _auto = False
     _order = "start_datetime DESC, employee_id"
 
-    name = fields.Char(string='Name', readonly=True, compute="_compute_name", search="_search_name")
+    name = fields.Char(string='Name', readonly=True, compute="_compute_name")
     start_datetime = fields.Datetime(string='From', readonly=True)
     stop_datetime = fields.Datetime(string='To', readonly=True)
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
@@ -100,13 +99,6 @@ class LeaveReportCalendar(models.Model):
                 leave.name += f" {leave.leave_id.holiday_status_id.name}"
             # Include the time off duration.
             leave.name += f": {leave.sudo().leave_id.duration_display}"
-
-    def _search_name(self, operator, value):
-        query = self.env['hr.leave.report.calendar'].sudo()._search([('leave_id.duration_display', operator, value)])
-        domain = ['|', ('employee_id.name', operator, value), ('id', 'in', query)]
-        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
-            domain = expression.OR([domain , [('leave_id.holiday_status_id.name', operator, value)]])
-        return domain
 
     @api.depends('leave_manager_id')
     def _compute_is_manager(self):

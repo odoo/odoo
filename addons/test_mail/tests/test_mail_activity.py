@@ -12,6 +12,7 @@ import pytz
 import random
 
 from odoo import fields, exceptions, tests
+from odoo.addons.mail.models.mail_activity import MailActivity
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tests import Form, HttpCase, users
@@ -772,6 +773,31 @@ class TestActivityMixin(TestActivityCommon):
         with self.with_user('employee'):
             record = self.env['mail.test.activity'].search([('my_activity_date_deadline', '=', date_today)])
             self.assertEqual(test_record_1, record)
+
+    @users('employee')
+    def test_record_unlink(self):
+        test_record = self.test_record.with_user(self.env.user)
+        act1 = test_record.activity_schedule(summary='Active')
+        act2 = test_record.activity_schedule(summary='Archived', active=False)
+        test_record.unlink()
+        self.assertFalse((act1 + act2).exists(), 'Removing records should remove activities, even archived')
+
+    @users('employee')
+    def test_record_unlinked_orphan_activities(self):
+        """Test the fix preventing error on corrupted database where activities without related record are present."""
+        self.env.ref("test_mail.mail_act_test_todo").sudo().keep_done = True
+        test_record = self.env['mail.test.activity'].with_context(
+            self._test_context).create({'name': 'Test'}).with_user(self.user_employee)
+        act = test_record.activity_schedule("test_mail.mail_act_test_todo", summary='Orphan activity')
+        act.action_done()
+        # Delete the record while preventing the cascade deletion of the activity to simulate a corrupted database
+        with patch.object(MailActivity, 'unlink', lambda self: None):
+            test_record.unlink()
+        self.assertTrue(act.exists())
+        self.assertFalse(act.active)
+        self.assertFalse(test_record.exists())
+        self.assertFalse(self.env['mail.activity'].with_user(self.user_admin).with_context(active_test=False).search(
+            [('active', '=', False)]))
 
 
 @tests.tagged("mail_activity")

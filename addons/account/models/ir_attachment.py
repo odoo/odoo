@@ -158,6 +158,7 @@ class IrAttachment(models.Model):
             for supported_format in supported_formats:
                 if supported_format['check'](attachment):
                     to_process += supported_format['decoder'](attachment.name, attachment.raw)
+                    break
 
         to_process.sort(key=lambda x: x['sort_weight'])
 

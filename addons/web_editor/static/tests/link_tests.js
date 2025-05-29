@@ -94,7 +94,7 @@ QUnit.module(
             editor.clean();
             assert.strictEqual(
                 editable.innerHTML,
-                `<p><a href="#" target="_blank">#</a><br></p>`
+                `<p><a class="o_translate_inline" href="#" target="_blank">#</a><br></p>`
             );
         });
 
@@ -114,7 +114,7 @@ QUnit.module(
             editor.clean();
             assert.strictEqual(
                 editable.innerHTML,
-                `<p><a href="#" target="_blank">#</a><br></p>`
+                `<p><a class="o_translate_inline" href="#" target="_blank">#</a><br></p>`
             );
         });
 
@@ -138,7 +138,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>H<a href="#" target="_blank">el</a>lo</p>`
+                    `<p>H<a class="o_translate_inline" href="#" target="_blank">el</a>lo</p>`
                 );
             }
         );
@@ -191,7 +191,7 @@ QUnit.module(
             editor.clean();
             assert.strictEqual(
                 editable.innerHTML,
-                `<p><a href="#" target="_blank">Hello</a></p>`
+                `<p><a class="o_translate_inline" href="#" target="_blank">Hello</a></p>`
             );
         });
 
@@ -212,7 +212,7 @@ QUnit.module(
             editor.clean();
             assert.strictEqual(
                 editable.innerHTML,
-                `<p>H<a href="#" target="_blank">el</a>lo</p>`
+                `<p>H<a class="o_translate_inline" href="#" target="_blank">el</a>lo</p>`
             );
         });
 
@@ -235,7 +235,7 @@ QUnit.module(
             editor.clean();
             assert.strictEqual(
                 editable.innerHTML,
-                `<p><a href="#" target="_blank">#</a><br></p>`
+                `<p><a class="o_translate_inline" href="#" target="_blank">#</a><br></p>`
             );
         });
 
@@ -265,7 +265,7 @@ QUnit.module(
             editor.clean();
             assert.strictEqual(
                 editable.innerHTML,
-                `<p>a <a href="#" target="_blank">link</a>&nbsp;&nbsp;b</p>`
+                `<p>a <a class="o_translate_inline" href="#" target="_blank">link</a>&nbsp;&nbsp;b</p>`
             );
         });
 
@@ -290,7 +290,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>a<a href="#" target="_blank">#</a>Db</p>`
+                    `<p>a<a class="o_translate_inline" href="#" target="_blank">#</a>Db</p>`
                 );
             }
         );
@@ -318,7 +318,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>a<a href="#" target="_blank">#</a>EDb</p>`
+                    `<p>a<a class="o_translate_inline" href="#" target="_blank">#</a>EDb</p>`
                 );
             }
         );
@@ -347,7 +347,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>ab<a href="#" target="_blank">link</a>E</p><p><br></p>`
+                    `<p>ab<a class="o_translate_inline" href="#" target="_blank">link</a>E</p><p><br></p>`
                 );
             }
         );
@@ -378,7 +378,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>a<a href="#" target="_blank">link</a>E</p><p>Db</p>`
+                    `<p>a<a class="o_translate_inline" href="#" target="_blank">link</a>E</p><p>Db</p>`
                 );
             }
         );
@@ -408,7 +408,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>a<a href="#" target="_blank">link</a>E<br>b</p>`
+                    `<p>a<a class="o_translate_inline" href="#" target="_blank">link</a>E<br>b</p>`
                 );
             }
         );
@@ -439,7 +439,7 @@ QUnit.module(
                 editor.clean();
                 assert.strictEqual(
                     editable.innerHTML,
-                    `<p>a<a href="#" target="_blank">link</a>E<br>Db</p>`
+                    `<p>a<a class="o_translate_inline" href="#" target="_blank">link</a>E<br>Db</p>`
                 );
             }
         );

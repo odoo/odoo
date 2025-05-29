@@ -43,6 +43,7 @@ QUnit.test(
         env.services.bus_service.start();
         await assertSteps(["update_presence"]);
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+            presence_status: "offline",
             im_status: "offline",
             partner_id: pyEnv.currentPartner.id,
         });
@@ -58,6 +59,7 @@ QUnit.test("update presence if IM status changes to away while this device is on
     env.services.bus_service.start();
     await assertSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: pyEnv.currentPartner.id,
     });
@@ -76,6 +78,7 @@ QUnit.test(
         env.services.bus_service.start();
         await assertSteps(["update_presence"]);
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+            presence_status: "away",
             im_status: "away",
             partner_id: pyEnv.currentPartner.id,
         });
@@ -92,6 +95,7 @@ QUnit.test("do not update presence if other user's IM status changes to away", a
     env.services.bus_service.start();
     await assertSteps(["update_presence"]);
     pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "bus.bus/im_status_updated", {
+        presence_status: "away",
         im_status: "away",
         partner_id: pyEnv.publicPartnerId,
     });

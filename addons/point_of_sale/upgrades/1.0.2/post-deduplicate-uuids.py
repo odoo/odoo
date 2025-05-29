@@ -18,17 +18,18 @@ def migrate(cr, version):
     - pos_payment
     """
     def deduplicate_uuids(table):
-        cr.execute(
-            f"""
-                SELECT UNNEST(ARRAY_AGG(id))
-                  FROM {table}
-              GROUP BY uuid
-                HAVING COUNT(*) > 1
-            """
-        )
-
-        all_ids = [r[0] for r in cr.fetchall()]
-        for ids in cr.split_for_in_conditions(all_ids):
+        query = f"""
+        SELECT UNNEST(ARRAY_AGG(id))
+          FROM {table}
+         WHERE uuid IS NOT NULL
+         GROUP BY uuid
+        HAVING COUNT(*) > 1
+        """
+        while True:
+            cr.execute(query)
+            if not cr.rowcount:
+                break
+            ids = tuple(r[0] for r in cr.fetchmany(10000))
             cr.execute(
                 f"UPDATE {table} SET uuid = (%s::json)->>(id::text) WHERE id IN %s",
                 [Json({id_: str(uuid.uuid4()) for id_ in ids}), ids]

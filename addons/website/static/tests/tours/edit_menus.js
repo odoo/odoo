@@ -10,7 +10,6 @@ import {
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('edit_menus', {
-    checkDelay: 100,
     url: '/',
 }, () => [
     // Add a megamenu item from the menu.
@@ -250,10 +249,9 @@ registerWebsitePreviewTour('edit_menus', {
         content: "Drag Mega at the top",
         trigger: '.oe_menu_editor li:contains("Megaaaaa!") .fa-bars',
         run(helpers) {
-            return helpers.drag_and_drop('.oe_menu_editor li:contains("Home")', {
-                position: {
-                    y: 27,
-                    left: 5,
+            return helpers.drag_and_drop(".oe_menu_editor li:contains('Home') .fa-bars", {
+                position : {
+                    top: 20,
                 },
                 relative: true,
             });

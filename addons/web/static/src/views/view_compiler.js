@@ -268,6 +268,9 @@ export class ViewCompiler {
             return createTextNode(node.nodeValue);
         }
 
+        if (node.hasAttribute("t-translation")) {
+            node.removeAttribute("t-translation");
+        }
         this.validateNode(node);
         let invisible;
         if (evalInvisible) {

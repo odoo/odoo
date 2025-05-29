@@ -2,8 +2,9 @@ import { expect, test } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { em, span } from "../_helpers/tags";
-import { italic, tripleClick } from "../_helpers/user_actions";
+import { italic, tripleClick, simulateArrowKeyPress } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
+import { tick } from "@odoo/hoot-mock";
 
 test("should make a few characters italic", async () => {
     await testEditor({
@@ -110,6 +111,18 @@ test("should not format non-editable text (italic)", async () => {
     });
 });
 
+test("should remove empty italic tag when changing selection", async () => {
+    const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+    italic(editor);
+    await tick();
+    expect(getContent(el)).toBe(`<p>ab${em("[]\u200B", "first")}cd</p>`);
+
+    await simulateArrowKeyPress(editor, "ArrowLeft");
+    await tick(); // await selectionchange
+    expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
+});
+
 test("should make a few characters italic inside table (italic)", async () => {
     await testEditor({
         contentBefore: unformat(`
@@ -131,8 +144,7 @@ test("should make a few characters italic inside table (italic)", async () => {
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
         stepFunction: italic,
         contentAfterEdit: unformat(`
             <table class="table table-bordered o_table o_selected_table">
@@ -153,7 +165,6 @@ test("should make a few characters italic inside table (italic)", async () => {
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
     });
 });

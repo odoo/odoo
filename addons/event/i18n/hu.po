@@ -9,11 +9,13 @@
 # Ákos Nagy <akos.nagy@oregional.hu>, 2024
 # Tamás Németh <ntomasz81@gmail.com>, 2024
 # Gergő Kertész <gergo.kertesz@maxflow.hu>, 2024
-# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2024
 # Martin Trigaux, 2024
 # Tamás Dombos, 2024
 # gezza <geza.nagy@oregional.hu>, 2024
 # krnkris, 2025
+# Valics Lehel, 2025
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2025
+# Eiler Attila, 2025
 # 
 msgid ""
 msgstr ""
@@ -21,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-27 13:03+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: krnkris, 2025\n"
+"Last-Translator: Eiler Attila, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +70,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(start_date)s to %(end_date)s"
-msgstr ""
+msgstr "%(start_date)s - %(end_date)s"
 
 #. module: event
 #. odoo-python
@@ -1438,7 +1440,7 @@ msgstr "Lefoglalva"
 #: model:ir.model.fields,field_description:event.field_event_registration__partner_id
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__partner_id
 msgid "Booked by"
-msgstr ""
+msgstr "Foglalta"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_booth
@@ -2805,7 +2807,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_tree
@@ -3199,7 +3201,7 @@ msgstr "Beszerzés, Értékesítés, Pénzügyi könyvelés."
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "QR Code"
-msgstr ""
+msgstr "QR kód"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question_answer__question_id
@@ -4053,6 +4055,10 @@ msgid ""
 "Attended: registrations for which the attendee attended the event\n"
 "Cancelled: registrations cancelled manually"
 msgstr ""
+"Meg nem erősített: függőben lévő, intézkedésre váró regisztrációk (speciális eset, nevezetesen értékesítés státusszal)\n"
+"Regisztrált: a vevő által foglaltnak tekintett regisztrációk\n"
+"Részt vett: olyan regisztrációk, amelyek esetében a résztvevő részt vett az eseményen\n"
+"Törölt: manuálisan törölt regisztrációk."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4086,7 +4092,7 @@ msgstr "Események a mai naptól"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Upcoming/Running"
-msgstr ""
+msgstr "Jövőbeni/Futó"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode

@@ -4,7 +4,7 @@
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/argentina.html',
     'countries': ['ar'],
     'icon': '/base/static/img/country_flags/ar.png',
-    'version': '3.6',
+    'version': "3.7",
     'description': """
 Functional
 ----------

@@ -8,6 +8,7 @@ import { ensureArray } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { formatDate, formatDateTime } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
+import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 
 /**
  * @typedef {luxon.DateTime} DateTime
@@ -418,6 +419,8 @@ export const dateTimeField = {
         showTime: exprToBoolean(options.show_time ?? true),
     }),
     supportedTypes: ["datetime"],
+    listViewWidth: ({ options = {} }) =>
+        exprToBoolean(options.show_time ?? true) ? FIELD_WIDTHS.datetime : FIELD_WIDTHS.date,
 };
 
 export const dateRangeField = {
@@ -448,7 +451,15 @@ export const dateRangeField = {
         },
     ],
     supportedTypes: ["date", "datetime"],
-    listViewWidth: ({ type }) => (type === "datetime" ? 294 : 180),
+    listViewWidth: ({ type, options = {} }) => {
+        let width;
+        if (type === "datetime" && exprToBoolean(options.show_time ?? true)) {
+            width = FIELD_WIDTHS.datetime;
+        } else {
+            width = FIELD_WIDTHS.date;
+        }
+        return 2 * width + 30; // 30px for the arrow and the gaps
+    },
     isValid: (record, fieldname, fieldInfo) => {
         if (fieldInfo.widget === "daterange") {
             if (

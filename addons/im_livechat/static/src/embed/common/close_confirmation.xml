@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="im_livechat.CloseConfirmation">
         <div
-            class="o-livechat-CloseConfirmation z-1 bg-black-50 position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
+            class="o-livechat-CloseConfirmation bg-black-50 position-absolute w-100 h-100 d-flex justify-content-center align-items-center"
             t-on-keydown.capture.stop="onKeydown"
             t-on-click.stop="() => this.props.onCloseConfirmationDialog()"
             t-ref="root"

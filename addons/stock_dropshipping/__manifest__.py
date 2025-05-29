@@ -30,6 +30,7 @@ internal transfer document is needed.
     'demo': [
         'data/stock_dropshipping_demo.xml',
     ],
+    'uninstall_hook': "uninstall_hook",
     'installable': True,
     'license': 'LGPL-3',
 }

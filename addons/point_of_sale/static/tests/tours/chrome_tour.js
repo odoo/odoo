@@ -7,9 +7,9 @@ import * as Chrome from "@point_of_sale/../tests/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/tours/utils/common";
 import { registry } from "@web/core/registry";
 import { inLeftSide, negateStep } from "@point_of_sale/../tests/tours/utils/common";
+import * as Order from "@point_of_sale/../tests/tours/utils/generic_components/order_widget_util";
 
 registry.category("web_tour.tours").add("ChromeTour", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -115,7 +115,6 @@ registry.category("web_tour.tours").add("ChromeTour", {
 });
 
 registry.category("web_tour.tours").add("OrderModificationAfterValidationError", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -138,7 +137,6 @@ registry.category("web_tour.tours").add("OrderModificationAfterValidationError",
 });
 
 registry.category("web_tour.tours").add("SearchMoreCustomer", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -152,7 +150,6 @@ registry.category("web_tour.tours").add("SearchMoreCustomer", {
 });
 
 registry.category("web_tour.tours").add("test_tracking_number_closing_session", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -175,7 +172,6 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
 });
 
 registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -190,7 +186,6 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
 });
 
 registry.category("web_tour.tours").add("test_limited_categories", {
-    checkDelay: 50,
     steps: () =>
         [
             Chrome.startPoS(),
@@ -204,5 +199,28 @@ registry.category("web_tour.tours").add("test_limited_categories", {
             ProductScreen.clickSubcategory("Child 2"),
             ProductScreen.productIsDisplayed("Product 1").map(negateStep),
             ProductScreen.productIsDisplayed("Product 2"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("CustomerNoteIsPresentAfterRefresh", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1.0", "5.10"),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
+                ...ProductScreen.addCustomerNote("Test customer note"),
+                ...Order.hasLine({
+                    customerNote: "Test customer note",
+                }),
+            ]),
+            Utils.refresh(),
+            inLeftSide([
+                { ...ProductScreen.clickLine("Desk Organizer")[0], isActive: ["mobile"] },
+                ...Order.hasLine({
+                    customerNote: "Test customer note",
+                }),
+            ]),
         ].flat(),
 });

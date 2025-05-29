@@ -905,8 +905,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             return values
 
         values['cart_quantity'] = order.cart_quantity
+
+        # Values for express checkout
         values['minor_amount'] = payment_utils.to_minor_currency_units(
-            order.amount_total, order.currency_id
+            order._get_amount_total_excluding_delivery(), order.currency_id
         )
         values['amount'] = order.amount_total
 
@@ -1237,7 +1239,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         """
         order_sudo = request.website.sale_get_order()
         if redirection := self._check_cart(order_sudo):
-            return redirection
+            return json.dumps({'redirectUrl': redirection.location})
 
         partner_sudo, address_type = self._prepare_address_update(
             order_sudo, partner_id=partner_id and int(partner_id), address_type=address_type
@@ -1312,7 +1314,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         self._handle_extra_form_data(extra_form_data, address_values)
 
         return json.dumps({
-            'successUrl': callback,
+            'redirectUrl': callback,
         })
 
     def _prepare_address_update(self, order_sudo, partner_id=None, address_type=None):
@@ -1586,6 +1588,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         :return: The route to redirect the customer to.
         :rtype: str
         """
+        # TODO: remove me in master with call site, not used in standard codebase anymore.
         return ''
 
     def _handle_extra_form_data(self, extra_form_data, address_values):
@@ -1658,7 +1661,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if shipping_address:
             #in order to not override shippig address, it's checked separately from shipping option
             self._include_country_and_state_in_address(shipping_address)
-            shipping_address, _side_values = self._parse_form_data(billing_address)
+            shipping_address, _side_values = self._parse_form_data(shipping_address)
 
             if order_sudo.partner_shipping_id.name.endswith(order_sudo.name):
                 # The existing partner was created by `process_express_checkout_delivery_choice`, it
@@ -1824,8 +1827,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         )
         payment_form_values.update({
             'payment_access_token': payment_form_values.pop('access_token'),  # Rename the key.
+            # Do not include delivery related lines
             'minor_amount': payment_utils.to_minor_currency_units(
-                order.amount_total, order.currency_id
+                order._get_amount_total_excluding_delivery(), order.currency_id
             ),
             'merchant_name': request.website.name,
             'transaction_route': f'/shop/payment/transaction/{order.id}',
@@ -1833,6 +1837,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'landing_route': '/shop/payment/validate',
             'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
             'shipping_info_required': order._has_deliverable_products(),
+            # Todo: remove in master
             'delivery_amount': payment_utils.to_minor_currency_units(
                 order.order_line.filtered(lambda l: l.is_delivery).price_total, order.currency_id
             ),

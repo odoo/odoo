@@ -29,4 +29,19 @@ export class StateFileModel extends FileModel {
             });
         }
     }
+
+    /**
+     * For embedded files stored without an `id` (i.e. demo data or old
+     * knowledge embedded files converted from "Knowledge Behavior"), allow
+     * direct usage of the file `url` as an `urlRoute` for the fileViewer and
+     * download attempts.
+     *
+     * @override
+     */
+    get urlRoute() {
+        if (this.isUrl && !this.id) {
+            return this.url;
+        }
+        return super.urlRoute;
+    }
 }

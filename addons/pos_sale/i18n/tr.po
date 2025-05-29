@@ -15,6 +15,7 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
 # Umur Akın <umura@projetgrup.com>, 2024
 # Halil, 2024
+# Deniz Guvener_Odoo <degu@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-09-25 08:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Halil, 2024\n"
+"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,29 +46,31 @@ msgstr "<span style=\"margin: 0px 5px;\">:</span>"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "A new order has been created."
-msgstr ""
+msgstr "Yeni bir sipariş oluşturuldu."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "POS'ta ödenecek tutar"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
 msgstr ""
+"Çifte ödemeyi veya çifte faturalandırmayı önlemek için POS'ta ödenecek kalan"
+" tutar."
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Apply a down payment (fixed amount)"
-msgstr ""
+msgstr "Peşinat uygulayın (sabit tutar)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Apply a down payment (percentage)"
-msgstr ""
+msgstr "Ön ödeme uygulayın (yüzde)"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
@@ -125,18 +128,20 @@ msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Peşinat (referns: %(order_reference)s şu tarihte: \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Due balance: %s"
-msgstr ""
+msgstr "Vadesi gelen bakiye: %s"
 
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
 msgid "Error amount too high"
-msgstr ""
+msgstr "Hata sayısı çok yüksek"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
@@ -155,6 +160,8 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Görünüşe göre satış noktanızda bir peşinat ürünü yapılandırmamışsınız. Bir "
+"tane seçmek için satış noktası yapılandırmanıza gidebilirsiniz."
 
 #. module: pos_sale
 #. odoo-python
@@ -193,7 +200,7 @@ msgstr "Açık Oturumlar"
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
 msgid "Optional Products:"
-msgstr ""
+msgstr "Opsiyonel Ürünler:"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
@@ -391,6 +398,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Satış uygulamsından<br/>\n"
+"                                aktarıldı"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -398,6 +407,8 @@ msgid ""
 "Transferred<br/>\n"
 "                                to POS"
 msgstr ""
+"POS uygulamasına<br/>\n"
+"                                aktarıldı"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -412,8 +423,9 @@ msgid ""
 "You have tried to charge a down payment of %s but only %s remains to be "
 "paid, %s will be applied to the purchase order line."
 msgstr ""
-"%s peşinat ödemesi almaya çalıştınız, ancak yalnızca %s ödenmesi kaldı %s "
-"satınalma siparişi satırına uygulanacak."
+"%s tutarında bir peşinat tahsil etmeye çalıştınız, ancak geriye kalan "
+"ödenecek tutar yalnızca %s, %s tutarı satın alma siparişi satırına "
+"uygulanacaktır."
 
 #. module: pos_sale
 #. odoo-javascript

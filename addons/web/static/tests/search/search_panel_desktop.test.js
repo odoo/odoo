@@ -2978,3 +2978,32 @@ test("search panel width is kept when switching between controllers", async () =
     await getService("action").switchView("kanban");
     expect(queryFirst(".o_search_panel").offsetWidth).toBe(newWidth);
 });
+
+test("search panel with sample data", async (assert) => {
+    Partner._records = [];
+    Partner._views = {
+        ...Partner._views,
+        [["kanban", false]]: /* xml */ `
+        <kanban sample="1">
+            <templates>
+                <div t-name="card" class="oe_kanban_global_click">
+                    <field name="foo"/>
+                </div>
+            </templates>
+        </kanban>`,
+        [["list", false]]: /* xml */ `
+        <list sample="1">
+            <field name="foo"/>
+        </list>`,
+    };
+
+    onRpc("has_group", () => true);
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    
+    await getService("action").switchView("kanban");
+    expect(getComputedStyle(queryAll(`.o_search_panel_filter_value:eq(0) input`)[0]).pointerEvents).toEqual('auto');
+
+    await getService("action").switchView("list");
+    expect(getComputedStyle(queryAll(`.o_search_panel_filter_value:eq(0) input`)[0]).pointerEvents).toEqual('auto');
+});

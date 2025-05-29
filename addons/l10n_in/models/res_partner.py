@@ -57,22 +57,6 @@ class ResPartner(models.Model):
         for partner in self:
             partner.display_pan_warning = partner.vat and partner.l10n_in_pan and partner.l10n_in_pan != partner.vat[2:12]
 
-    @api.onchange('company_type')
-    def onchange_company_type(self):
-        res = super().onchange_company_type()
-        if self.country_id and self.country_id.code == 'IN':
-            self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
-
-    @api.onchange('country_id')
-    def _onchange_country_id(self):
-        res = super()._onchange_country_id()
-        if self.country_id and self.country_id.code != 'IN':
-            self.l10n_in_gst_treatment = 'overseas'
-        elif self.country_id and self.country_id.code == 'IN':
-            self.l10n_in_gst_treatment = (self.company_type == 'company') and 'regular' or 'consumer'
-        return res
-
     @api.onchange('vat')
     def onchange_vat(self):
         if self.vat and self.check_vat_in(self.vat):
@@ -100,8 +84,9 @@ class ResPartner(models.Model):
     @api.model
     def _l10n_in_get_partner_vals_by_vat(self, vat):
         partner_data = self.enrich_by_gst(vat)
-        partner_data.pop('domain', None)
-        partner_data.pop('unspsc_codes', None)
+        for fname in list(partner_data.keys()):
+            if fname not in self.env['res.partner']._fields:
+                partner_data.pop(fname, None)
         partner_data.update({
             'country_id': partner_data.get('country_id', {}).get('id'),
             'state_id': partner_data.get('state_id', {}).get('id'),
@@ -114,3 +99,5 @@ class ResPartner(models.Model):
         self.ensure_one()
         state_id = self.env['res.country.state'].search([('l10n_in_tin', '=', self.vat[:2])], limit=1)
         self.state_id = state_id
+        if self.ref_company_ids:
+            self.ref_company_ids._update_l10n_in_fiscal_position()

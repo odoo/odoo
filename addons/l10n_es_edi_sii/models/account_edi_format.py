@@ -1,62 +1,19 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
+import json
+import math
 from collections import defaultdict
-from urllib3.util.ssl_ import create_urllib3_context
-from urllib3.contrib.pyopenssl import inject_into_urllib3
-from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 
-from odoo import fields, models, _
+import requests
+
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import html_escape, zeep
 from odoo.tools.float_utils import float_round
 
-import base64
-import math
-import json
-import requests
-
+from odoo.addons.certificate.tools import CertificateAdapter
 
 # Custom patches to perform the WSDL requests.
 # Avoid failure on servers where the DH key is too small
 EUSKADI_CIPHERS = "DEFAULT:!DH"
-
-
-class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
-    """ An adapter to block DH ciphers which may not work for the tax agencies called"""
-
-    def init_poolmanager(self, *args, **kwargs):
-        # OVERRIDE
-        inject_into_urllib3()
-        kwargs['ssl_context'] = create_urllib3_context(ciphers=EUSKADI_CIPHERS)
-        return super().init_poolmanager(*args, **kwargs)
-
-    def cert_verify(self, conn, url, verify, cert):
-        # OVERRIDE
-        # The last parameter is only used by the super method to check if the file exists.
-        # In our case, cert is an odoo record 'certificate.certificate' so not a path to a file.
-        # By putting 'None' as last parameter, we ensure the check about TLS configuration is
-        # still made without checking temporary files exist.
-        super().cert_verify(conn, url, verify, None)
-        conn.cert_file = cert
-        conn.key_file = None
-
-    def get_connection(self, url, proxies=None):
-        # OVERRIDE
-        # Patch the OpenSSLContext to decode the certificate in-memory.
-        conn = super().get_connection(url, proxies=proxies)
-        context = conn.conn_kw['ssl_context']
-
-        def patched_load_cert_chain(l10n_es_odoo_certificate, keyfile=None, password=None):
-            certificate = l10n_es_odoo_certificate
-            cert_obj = load_certificate(FILETYPE_PEM, base64.b64decode(certificate.sudo().pem_certificate))
-            pkey_obj = load_privatekey(FILETYPE_PEM, base64.b64decode(certificate.sudo().private_key_id.pem_key))
-
-            context._ctx.use_certificate(cert_obj)
-            context._ctx.use_privatekey(pkey_obj)
-
-        context.load_cert_chain = patched_load_cert_chain
-
-        return conn
 
 
 class AccountEdiFormat(models.Model):
@@ -102,7 +59,11 @@ class AccountEdiFormat(models.Model):
         # Detect for which is the main tax for 'recargo'. Since only a single combination tax + recargo is allowed
         # on the same invoice, this can be deduced globally.
 
-        recargo_tax_details = defaultdict(list)  # Mapping between main tax and recargo tax details
+        # Mapping between main tax and recargo tax details
+        # structure: {("l10n_es_type" of the main tax, amount of the main tax): {'tax_amount': float, 'applied_tax_amount': float}}
+        # dict of keys: tuple ("l10n_es_type" of the main tax, amount of the main tax)
+        #       values: dict of float
+        recargo_tax_details = defaultdict(lambda: defaultdict(float))
         for base_line in tax_details['base_lines']:
             line = base_line['record']
             taxes = line.tax_ids.flatten_taxes_hierarchy()
@@ -110,16 +71,17 @@ class AccountEdiFormat(models.Model):
             if recargo_tax and taxes:
                 recargo_main_tax = taxes.filtered(lambda x: x.l10n_es_type in ('sujeto', 'sujeto_isp'))[:1]
                 aggregated_values = tax_details['tax_details_per_record'][line]
-                if not recargo_tax_details.get(recargo_main_tax):
-                    recargo_tax_details[recargo_main_tax.l10n_es_type, recargo_main_tax.amount] = next(iter(
-                        values
-                        for values in aggregated_values['tax_details'].values()
-                        if (
-                            values['grouping_key']
-                            and values['grouping_key']['l10n_es_type'] == recargo_tax.l10n_es_type
-                            and values['grouping_key']['applied_tax_amount'] == recargo_tax.amount
-                        )
-                    ))
+                recargo_values = next(iter(
+                    values
+                    for values in aggregated_values['tax_details'].values()
+                    if (
+                        values['grouping_key']
+                        and values['grouping_key']['l10n_es_type'] == recargo_tax.l10n_es_type
+                        and values['grouping_key']['applied_tax_amount'] == recargo_tax.amount
+                    )
+                ))
+                recargo_tax_details[recargo_main_tax.l10n_es_type, recargo_main_tax.amount]['tax_amount'] += recargo_values['tax_amount']
+                recargo_tax_details[recargo_main_tax.l10n_es_type, recargo_main_tax.amount]['applied_tax_amount'] = recargo_values['applied_tax_amount']
 
         tax_amount_deductible = 0.0
         tax_amount_retention = 0.0
@@ -506,7 +468,7 @@ class AccountEdiFormat(models.Model):
 
         session = requests.Session()
         session.cert = company.l10n_es_sii_certificate_id
-        session.mount('https://', PatchedHTTPAdapter())
+        session.mount('https://', CertificateAdapter(ciphers=EUSKADI_CIPHERS))
 
         client = zeep.Client(connection_vals['url'], operation_timeout=60, timeout=60, session=session)
 

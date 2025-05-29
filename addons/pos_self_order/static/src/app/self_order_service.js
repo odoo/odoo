@@ -13,7 +13,12 @@ import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
-import { constructFullProductName, deduceUrl } from "@point_of_sale/utils";
+import {
+    constructFullProductName,
+    deduceUrl,
+    random5Chars,
+    computeProductPricelistCache,
+} from "@point_of_sale/utils";
 import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 import {
     getTaxesAfterFiscalPosition,
@@ -192,6 +197,7 @@ export class SelfOrder extends Reactive {
             note: customer_note || "",
             price_unit: product.lst_price,
             price_extra: 0,
+            price_type: "original",
         };
 
         if (Object.entries(selectedValues).length > 0) {
@@ -294,7 +300,7 @@ export class SelfOrder extends Reactive {
 
         if (lineToMerge) {
             lineToMerge.setDirty();
-            lineToMerge.qty += newLine.qty;
+            lineToMerge.set_quantity(lineToMerge.qty + newLine.qty);
             newLine.delete();
         } else {
             newLine.setDirty();
@@ -395,11 +401,13 @@ export class SelfOrder extends Reactive {
 
         const newOrder = this.models["pos.order"].create({
             company_id: this.company,
+            ticket_code: random5Chars(),
             session_id: this.session,
             config_id: this.config,
             fiscal_position_id: fiscalPosition,
         });
         this.selectedOrderUuid = newOrder.uuid;
+        newOrder.set_pricelist(this.config.pricelist_id);
 
         return this.models["pos.order"].getBy("uuid", this.selectedOrderUuid);
     }
@@ -420,7 +428,11 @@ export class SelfOrder extends Reactive {
             const productTmplIds = new Set();
             this.productByCategIds[category_id] = this.productByCategIds[category_id].filter(
                 (p) => {
-                    if (!isSpecialProduct(p) && !productTmplIds.has(p.raw.product_tmpl_id)) {
+                    if (
+                        !isSpecialProduct(p) &&
+                        p.self_order_available &&
+                        !productTmplIds.has(p.raw.product_tmpl_id)
+                    ) {
                         productTmplIds.add(p.raw.product_tmpl_id);
                         p.available_in_pos = false;
                         return true;
@@ -429,6 +441,9 @@ export class SelfOrder extends Reactive {
                 }
             );
         }
+
+        computeProductPricelistCache(this);
+
         const productWoCat = this.models["product.product"].filter(
             (p) => p.pos_categ_ids.length === 0 && !isSpecialProduct(p)
         );
@@ -741,10 +756,6 @@ export class SelfOrder extends Reactive {
             type: "success",
         });
         this.router.navigate("default");
-    }
-
-    updateOrderFromServer(order) {
-        this.currentOrder.updateDataFromServer(order);
     }
 
     isOrder() {

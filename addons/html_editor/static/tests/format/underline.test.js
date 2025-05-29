@@ -1,9 +1,16 @@
 import { describe, expect, test } from "@odoo/hoot";
+import { tick } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { getContent } from "../_helpers/selection";
 import { em, s, span, u } from "../_helpers/tags";
-import { insertText, italic, tripleClick, underline } from "../_helpers/user_actions";
+import {
+    insertText,
+    italic,
+    simulateArrowKeyPress,
+    tripleClick,
+    underline,
+} from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 
 test("should make a few characters underline", async () => {
@@ -133,8 +140,7 @@ test("should make a few characters underline inside table (underline)", async ()
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
         stepFunction: underline,
         contentAfterEdit: unformat(`
             <table class="table table-bordered o_table o_selected_table">
@@ -155,8 +161,7 @@ test("should make a few characters underline inside table (underline)", async ()
                         <td><p><br></p></td>
                     </tr>
                 </tbody>
-            </table>`
-        ),
+            </table>`),
     });
 });
 
@@ -336,5 +341,17 @@ describe("with italic", () => {
             },
             contentAfter: `<p>ab${u(em(`cd`))}${em(`A${u(`B`)}C[]`)}${u(em(`ef`))}</p>`,
         });
+    });
+
+    test("should remove empty underline tag when changing selection", async () => {
+        const { editor, el } = await setupEditor("<p>ab[]cd</p>");
+
+        underline(editor);
+        await tick();
+        expect(getContent(el)).toBe(`<p>ab${u("[]\u200B", "first")}cd</p>`);
+
+        await simulateArrowKeyPress(editor, "ArrowLeft");
+        await tick(); // await selectionchange
+        expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
     });
 });

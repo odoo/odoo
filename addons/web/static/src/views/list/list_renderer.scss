@@ -499,6 +499,7 @@
                 $-focus-bg: rgba(var(--#{$variable-prefix}emphasis-color-rgb), #{$table-hover-bg-factor * 2});
 
                 --#{$variable-prefix}table-accent-bg: #{$-focus-bg};
+                --#{$variable-prefix}table-striped-bg: #{$-focus-bg};
             }
         }
 
@@ -522,6 +523,10 @@
                 visibility: hidden;
             }
         }
+    }
+
+    .o_data_row.o_dragged {
+        display: flex;
     }
 
     .o_optional_columns_dropdown .dropdown-item .o-checkbox .text-truncate {

@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged, common, Form
 from odoo.tools import float_compare, float_is_zero
 
@@ -479,6 +479,26 @@ class TestRepair(common.TransactionCase):
         ], limit=1)
         self.assertEqual(repair.move_ids[0].location_dest_id, location_dest_id)
 
+    def test_no_recompute_location_when_change_user_after_confirm(self):
+        user1 = self.env['res.users'].create({
+            'name': 'A User',
+            'login': 'a_user',
+            'email': 'a@user.com',
+        })
+        repair_order = self._create_simple_repair_order()
+        repair_order.location_id = self.stock_location_14
+        repair_order.recycle_location_id = self.stock_location_14
+        repair_order.action_validate()
+        repair_order.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+        repair_order.action_repair_start()
+        repair_order.action_repair_end()
+        with Form(repair_order) as ro_form:
+            ro_form.user_id = user1
+        self.assertEqual(repair_order.location_id, self.stock_location_14)
+        self.assertEqual(repair_order.recycle_location_id, self.stock_location_14)
+
     def test_purchase_price_so_create_from_repair(self):
         """
         Test that the purchase price is correctly set on the SO line,
@@ -861,3 +881,88 @@ class TestRepair(common.TransactionCase):
         self.assertFalse(move.repair_id)
         self.assertEqual(move.location_id, self.stock_warehouse.lot_stock_id)
         self.assertEqual(move.location_dest_id, self.stock_location_14)
+
+    def test_open_and_create_repair_from_lot(self):
+        """
+        Test that the repair order can be opened from the lot and that it is created correctly.
+        """
+        sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_storable_serial.id})
+        action = sn_1.action_lot_open_repairs()
+        context = action.get('context')
+        tracked_product_repair_line = self.env['product.product'].create({
+            'name': 'Test Product',
+            'is_storable': True,
+            'tracking': 'serial',
+        })
+        tracked_product_sn = self.env['stock.lot'].create({'name': 'tracked_product_sn1', 'product_id': tracked_product_repair_line.id})
+        repair_order = self.env['repair.order'].with_context(context).create({
+            'product_id': self.product_storable_serial.id,
+            'product_uom': self.product_storable_serial.uom_id.id,
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'lot_id': sn_1.id,
+            'picking_type_id': self.stock_warehouse.repair_type_id.id,
+        })
+        repair_order.with_context(context).move_ids = [Command.create({
+            'product_id': tracked_product_repair_line.id,
+            'product_uom_qty': 1.0,
+            'repair_line_type': 'add',
+            'lot_ids': [(4, tracked_product_sn.id)],
+            'quantity': 1.0,
+        })]
+        self.assertEqual(repair_order.lot_id, sn_1)
+        # duplicate the move and check that the link to the repair order is not copied
+        copied_move = repair_order.move_ids.copy()
+        self.assertFalse(copied_move.repair_id)
+
+    def test_missing_production_location_raises_user_error(self):
+        """
+        Test that a missing production location raises a UserError when creating a warehouse.
+        """
+        company = Form(self.env['res.company'])
+        company.name = "ELCT Co."
+        company = company.save()
+        # mimic missing production location with intentional misconfiguration
+        prod_location = self.env['stock.location'].search([('usage', '=', 'production'), ('company_id', '=', company.id)], limit=1)
+        if prod_location:
+            prod_location.usage = "internal"
+        with self.assertRaises(UserError):
+            self.env['stock.warehouse'].create({
+                'name': 'ELCT',
+                'code': 'ET',
+                'company_id': company.id,
+            })
+
+    def test_add_product_from_catalog(self):
+        """Check that only consumable products are available in the catalog."""
+        catalog_action = self.repair0.action_add_from_catalog()
+        domain = catalog_action.get('domain')
+        self.assertEqual(self.product_service_order_repair.type, 'service')
+        self.assertEqual(self.product_consu_order_repair.type, 'consu')
+        self.assertTrue(self.product_consu_order_repair.filtered_domain(domain))
+        self.assertFalse(self.product_service_order_repair.filtered_domain(domain))
+
+    def test_copy_repair_product_with_different_groups(self):
+        """
+            This test checks if the product can be copied with users that don't have access on the Inventory app
+        """
+        product_templ = self.env['product.template'].create({
+            'name': "Repair Consumable",
+            'type': 'consu',
+            'create_repair': True,
+        })
+        mitchell_user = self.env['res.users'].create({
+            'name': "Mitchell not Admin",
+            'login': "m_user",
+            'email': "m@user.com",
+            'groups_id': [Command.set(self.env.ref('sales_team.group_sale_manager').ids)],
+        })
+        product_templ.invalidate_recordset(['create_repair'])
+        with self.assertRaises(AccessError):
+            product_templ.with_user(mitchell_user).create_repair
+        copied_without_access = product_templ.with_user(mitchell_user).copy()
+        mitchell_user.write({
+            'groups_id': [Command.link(self.env.ref('stock.group_stock_user').id)]
+        })
+        self.assertFalse(copied_without_access.create_repair)
+        copied_with_access = product_templ.copy().with_user(mitchell_user)
+        self.assertTrue(copied_with_access.create_repair)

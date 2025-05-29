@@ -15,7 +15,7 @@ describe('Tabs', () => {
     const oeTab =  (size, contenteditable = true) => (
         `<span class="oe-tabs"` +
             (contenteditable ? '' : ' contenteditable="false"') +
-            (size ?` style="width: ${size}px;"` : '') +
+            (size ?` style="width: ${size}px; tab-size: ${size}px;"` : '') +
         `>\u0009</span>\u200B`
     );
     describe('insert tabulation', () => {
@@ -547,6 +547,25 @@ describe('Tabs', () => {
                 contentBefore: `<p><font style="background-color: rgb(255,255,0);">${oeTab()}a[]b</font></p>`,
                 stepFunction: editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: true }),
                 contentAfter: `<p><font style="background-color: rgb(255,255,0);">a[]b</font></p>`,
+            });
+        });
+    });
+
+    describe("Selection", () => {
+        it("should move to the previous character", async () => {
+            const TAB = (size) => `<span class="oe-tabs" style="width: ${size}px; tab-size: ${size}px;">\u0009</span>`;
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>ab[]</p>`,
+                stepFunction: async (editor) => {
+                    await triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: false });
+                    const event = await triggerEvent(editor.editable, 'keydown', { key: 'ArrowLeft' });
+                    if (event.defaultPrevented) {
+                        throw "Should handover the arrow left event to the browser";
+                    }
+                },
+                contentAfter: `<p>ab${TAB(24.8906)}[]\u200B</p>`,
+                // content after browser move the selection will be
+                // `<p>ab[]${oeTab(24.8906)}</p>`
             });
         });
     });

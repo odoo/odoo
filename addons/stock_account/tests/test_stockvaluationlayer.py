@@ -675,6 +675,40 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertAlmostEqual(self.product1.value_svl, 25.33)
         self.assertEqual(self.product1.quantity_svl, 2)
 
+    def test_inventory_adjustment_valuation_with_lot(self):
+        """
+        Check the new stock valuation layers created to counter balance
+        a move history change.
+        """
+        product_lot = self.product1
+        product_lot.write({'tracking': 'lot', 'standard_price': 5.0})
+        product_lot.categ_id.property_cost_method = 'average'
+        self.env['stock.quant'].create({
+            'location_id':  self.ref('stock.stock_location_stock'),
+            'product_id': product_lot.id,
+            'inventory_quantity_auto_apply': 10.0,
+            'lot_id': False,
+        }).with_context(inventory_mode=True)._set_inventory_quantity()
+        initial_svl = self.env['stock.valuation.layer'].search([('product_id', '=', product_lot.id)])
+        self.assertRecordValues(initial_svl, [
+            {'quantity': 10.0, 'value': 50.0},
+        ])
+        lot = self.env['stock.lot'].create({
+            'product_id': product_lot.id,
+            'name': 'LOT007',
+        })
+        sml = self.env['stock.move.line'].search([('product_id', '=', product_lot.id)], limit=1)
+        sml.write({
+            'quantity': 3.0,
+            'lot_id': lot.id,
+        })
+        svl = self.env['stock.valuation.layer'].search([('product_id', '=', product_lot.id)])
+        self.assertRecordValues(svl.sorted('quantity'), [
+            {'quantity': -10, 'value': -50},
+            {'quantity': 3, 'value': 15},
+            {'quantity': 10, 'value': 50},
+        ])
+
 
 class TestStockValuationFIFO(TestStockValuationCommon):
     @classmethod

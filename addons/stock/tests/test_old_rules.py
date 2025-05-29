@@ -605,3 +605,39 @@ class TestOldRules(TestStockCommon):
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
         self.assertEqual(picking_pick.origin, False)
+
+    def test_propagate_cancel_in_pull_setup(self):
+        """
+        Check the cancellation propagation in pull set ups.
+        """
+        # create a procurement group
+        procurement_group0 = self.env['procurement.group'].create({})
+        product1 = self.env['product.product'].create({
+            'name': 'test_procurement_cancel_propagation',
+            'is_storable': True,
+        })
+        pick_pack_ship_route = self.warehouse_3_steps.delivery_route_id
+        pick_rule = pick_pack_ship_route.rule_ids.filtered(lambda rule: rule.picking_type_id == self.warehouse_3_steps.pick_type_id)
+        pack_rule = pick_pack_ship_route.rule_ids.filtered(lambda rule:  rule.picking_type_id == self.warehouse_3_steps.pack_type_id)
+        (pick_rule | pack_rule).propagate_cancel = True
+        ship_rule = pick_pack_ship_route.rule_ids - (pick_rule | pack_rule)
+        self.env['procurement.group'].run([
+            procurement_group0.Procurement(
+                product1,
+                1.0,
+                product1.uom_id,
+                ship_rule.location_dest_id,
+                'test_mtso_mts_1',
+                'test_mtso_mts_1',
+                self.warehouse_3_steps.company_id,
+                {
+                    'warehouse_id': self.warehouse_3_steps,
+                    'group_id': procurement_group0,
+                }
+            ),
+        ])
+        move_chain = self.env['stock.move'].search([('product_id', '=', product1.id)])
+        self.assertEqual(len(move_chain), 3)
+        pick_move = move_chain.filtered(lambda m: m.picking_type_id == self.warehouse_3_steps.pick_type_id)
+        pick_move.picking_id.action_cancel()
+        self.assertEqual(move_chain.mapped('state'), ['cancel', 'cancel', 'cancel'])

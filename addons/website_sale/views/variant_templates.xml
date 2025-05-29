@@ -153,7 +153,7 @@
                 style="white-space: nowrap;"
                 t-options='{
                     "widget": "monetary",
-                    "display_currency": (pricelist or product.env.company).currency_id
+                    "display_currency": (website.pricelist_id or product.env.company).currency_id
                 }'/>
         </span>
     </template>

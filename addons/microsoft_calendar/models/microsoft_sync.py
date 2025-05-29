@@ -140,9 +140,7 @@ class MicrosoftSync(models.AbstractModel):
         for record in new_records:
             values = record._microsoft_values(self._get_microsoft_synced_fields())
             sender_user = record._get_event_user_m()
-            # Prevent current user to synchronize new events of non-synchronized users, otherwise the event
-            # ownership will be lost in Outlook and it will block the future event sync for the original owner.
-            if record.user_id and record.user_id != self.env.user and sender_user == self.env.user:
+            if record._is_microsoft_insertion_blocked(sender_user):
                 continue
             if isinstance(values, dict):
                 record._microsoft_insert(values)
@@ -521,3 +519,13 @@ class MicrosoftSync(models.AbstractModel):
         """
         self.ensure_one()
         return True
+
+    def _is_microsoft_insertion_blocked(self, sender_user):
+        """
+        Returns True if the record insertion to Microsoft should be blocked.
+        This is a necessary step for ensuring data match between Odoo and Microsoft,
+        as it prevents attendees to synchronize new records on behalf of the owners,
+        otherwise the event ownership would be lost in Outlook and it would block the
+        future record synchronization for the original owner.
+        """
+        raise NotImplementedError()

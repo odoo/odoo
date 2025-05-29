@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import hmac
+import json
 import logging
 import pprint
 
@@ -16,6 +17,7 @@ _logger = logging.getLogger(__name__)
 
 class FlutterwaveController(http.Controller):
     _return_url = '/payment/flutterwave/return'
+    _auth_return_url = '/payment/flutterwave/auth_return'
     _webhook_url = '/payment/flutterwave/webhook'
 
     @http.route(_return_url, type='http', methods=['GET'], auth='public')
@@ -34,6 +36,15 @@ class FlutterwaveController(http.Controller):
 
         # Redirect the user to the status page.
         return request.redirect('/payment/status')
+
+    @http.route(_auth_return_url, type='http', methods=['GET'], auth='public')
+    def flutterwave_return_from_authorization(self, response):
+        """ Process the response sent by Flutterwave after authorization.
+
+        :param str response: The stringified JSON response.
+        """
+        data = json.loads(response)
+        return self.flutterwave_return_from_checkout(**data)
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def flutterwave_webhook(self):

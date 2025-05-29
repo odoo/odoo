@@ -4,13 +4,13 @@
 # See https://docs.adyen.com/api-explorer/#/CheckoutService/v70/overview for Checkout API
 # See https://docs.adyen.com/api-explorer/#/Recurring/v68/overview for Recurring API
 API_ENDPOINT_VERSIONS = {
-    '/disable': 68,                 # Recurring API
-    '/paymentMethods': 70,          # Checkout API
-    '/payments': 70,                # Checkout API
-    '/payments/details': 70,        # Checkout API
-    '/payments/{}/cancels': 70,     # Checkout API
-    '/payments/{}/captures': 70,    # Checkout API
-    '/payments/{}/refunds': 70,     # Checkout API
+    '/disable': 68,                 # Recurring API; unused - to remove
+    '/paymentMethods': 71,          # Checkout API
+    '/payments': 71,                # Checkout API
+    '/payments/details': 71,        # Checkout API
+    '/payments/{}/cancels': 71,     # Checkout API
+    '/payments/{}/captures': 71,    # Checkout API
+    '/payments/{}/refunds': 71,     # Checkout API
 }
 
 # Adyen-specific mapping of currency codes in ISO 4217 format to the number of decimals.

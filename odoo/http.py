@@ -311,8 +311,21 @@ class SessionExpiredException(Exception):
     pass
 
 
-def content_disposition(filename):
-    return "attachment; filename*=UTF-8''{}".format(
+def content_disposition(filename, disposition_type='attachment'):
+    """
+    Craft a ``Content-Disposition`` header, see :rfc:`6266`.
+
+    :param filename: The name of the file, should that file be saved on
+        disk by the browser.
+    :param disposition_type: Tell the browser what to do with the file,
+        either ``"attachment"`` to save the file on disk,
+        either ``"inline"`` to display the file.
+    """
+    if disposition_type not in ('attachment', 'inline'):
+        e = f"Invalid disposition_type: {disposition_type!r}"
+        raise ValueError(e)
+    return "{}; filename*=UTF-8''{}".format(
+        disposition_type,
         url_quote(filename, safe='', unsafe='()<>@,;:"/[]?={}\\*\'%') # RFC6266
     )
 
@@ -878,6 +891,7 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
 # =========================================================
 
 _base64_urlsafe_re = re.compile(r'^[A-Za-z0-9_-]{84}$')
+_session_identifier_re = re.compile(r'^[A-Za-z0-9_-]{42}$')
 
 
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
@@ -953,10 +967,10 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
     def delete_from_identifiers(self, identifiers):
         files_to_unlink = []
         for identifier in identifiers:
-            # Avoid to remove a session if less than 42 chars.
+            # Avoid to remove a session if it does not match an identifier.
             # This prevent malicious user to delete sessions from a different
-            # database by specifying a ``res.device.log`` with only 2 characters.
-            if len(identifier) < 42:
+            # database by specifying a custom ``res.device.log``.
+            if not _session_identifier_re.match(identifier):
                 continue
             normalized_path = os.path.normpath(os.path.join(self.path, identifier[:2], identifier + '*'))
             if normalized_path.startswith(self.path):
@@ -1276,7 +1290,7 @@ class HTTPRequest:
     def __init__(self, environ):
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
-        httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableOrderedMultiDict
+        httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
         httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
 
@@ -1675,7 +1689,7 @@ class Request:
                         profile_session=self.session.profile_session,
                         collectors=self.session.profile_collectors,
                         params=self.session.profile_params,
-                    )
+                    )._get_cm_proxy()
                 except Exception:
                     _logger.exception("Failure during Profiler creation")
                     self.session.profile_session = None
@@ -2210,7 +2224,7 @@ class JsonRPCDispatcher(Dispatcher):
         response = {'jsonrpc': '2.0', 'id': self.request_id}
         if error is not None:
             response['error'] = error
-        else:
+        if result is not None:
             response['result'] = result
 
         return self.request.make_json_response(response)

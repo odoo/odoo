@@ -5,7 +5,6 @@ import * as tourUtils from '@website_sale/js/tours/tour_utils';
 
 
 registry.category("web_tour.tours").add('autocomplete_tour', {
-    checkDelay: 100,
     url: '/shop', // /shop/address is redirected if no sales order
     steps: () => [
     ...tourUtils.addToCart({productName: "A test product"}),

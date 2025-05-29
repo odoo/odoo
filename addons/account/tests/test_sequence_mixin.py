@@ -10,7 +10,7 @@ from freezegun import freeze_time
 from functools import reduce
 import json
 import psycopg2
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 
 class TestSequenceMixinCommon(AccountTestInvoicingCommon):
@@ -749,6 +749,17 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         move2.journal_id = move2.journal_id
         self.assertEqual(move2.name, 'MISC/25-26/10/0002')
 
+    def test_limit_savepoint(self):
+        with patch.object(self.env.cr, 'savepoint', Mock(wraps=self.env.cr.savepoint)) as mock:
+            self.create_move(date='2020-01-01', post=True)
+        mock.assert_called_once()
+        with patch.object(self.env.cr, 'savepoint', Mock(wraps=self.env.cr.savepoint)) as mock:
+            self.create_move(date='2020-01-01', post=True)
+        mock.assert_not_called()
+        with patch.object(self.env.cr, 'savepoint', Mock(wraps=self.env.cr.savepoint)) as mock:
+            self.create_move(date='2021-01-01', post=True)
+        mock.assert_called_once()
+
 @tagged('post_install', '-at_install')
 class TestSequenceGaps(TestSequenceMixinCommon):
     @classmethod
@@ -941,6 +952,9 @@ class TestSequenceMixinConcurrency(TransactionCase):
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', 'CT/2016/01/0002', 'CT/2016/01/0003'])
         self.assertEqual(moves.mapped('sequence_prefix'), ['CT/2016/01/', 'CT/2016/01/', 'CT/2016/01/'])
         self.assertEqual(moves.mapped('sequence_number'), [1, 2, 3])
+        self.assertEqual(moves.mapped('made_sequence_gap'), [False, False, False])
+        for line in moves.line_ids:
+            self.assertEqual(line.move_name, line.move_id.name)
 
     def test_sequence_concurency_no_useless_lock(self):
         """Do not lock needlessly when the sequence is not computed"""

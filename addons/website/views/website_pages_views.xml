@@ -133,7 +133,7 @@
                             title="Home page of the current website"/>
                         <field name="name" />
                     </div>
-                    <div t-if="record.website_id.value" class="text-truncate fw-bold text-muted">
+                    <div t-if="record.website_id.value" class="text-truncate fw-bold text-muted" groups="website.group_multi_website">
                         <i class="fa fa-globe me-1" title="Website"/>
                         <field name="website_id" groups="website.group_multi_website"/>
                     </div>

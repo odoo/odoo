@@ -9,15 +9,22 @@ from odoo.tools import mute_logger
 
 from unittest.mock import patch
 
+
 @tagged('post_install', '-at_install')
 class TestLoyalty(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
         cls.program = cls.env['loyalty.program'].create({
             'name': 'Test Program',
             'reward_ids': [(0, 0, {})],
+        })
+        cls.product = cls.env['product.product'].with_context(default_taxes_id=False).create({
+            'name': "Test Product",
+            'type': 'consu',
+            'list_price': 20.0,
         })
 
     def test_loyalty_program_default_values(self):
@@ -167,11 +174,7 @@ class TestLoyalty(TransactionCase):
     def test_prevent_archiving_product_linked_to_active_loyalty_reward(self):
         self.program.program_type = 'promotion'
         self.program.flush_recordset()
-        product = self.env['product.product'].with_context(default_taxes_id=False).create({
-            'name': 'Test Product',
-            'type': 'consu',
-            'list_price': 20.0,
-        })
+        product = self.product
         reward = self.env['loyalty.reward'].create({
             'program_id': self.program.id,
             'discount_line_product_id': product.id,
@@ -184,18 +187,32 @@ class TestLoyalty(TransactionCase):
         self.program.action_archive()
         product.action_archive()
 
+    def test_prevent_archiving_product_used_for_discount_reward(self):
+        """
+        Ensure products cannot be archived while they have a specific program active.
+        """
+        self.program.write({
+            'name': f"50% Discount on {self.product.name}",
+            'program_type': 'promotion',
+            'reward_ids': [Command.create({
+                'discount': 50.0,
+                'discount_applicability': 'specific',
+                'discount_product_ids': self.product.ids,
+            })],
+        })
+        with self.assertRaises(ValidationError):
+            self.product.action_archive()
+        self.program.action_archive()
+        self.product.action_archive()
+        self.assertFalse(self.product.active)
+
     def test_prevent_archiving_product_when_archiving_program(self):
         """
         Test prevent archiving a product when archiving a "Buy X Get Y" program.
         We just have to archive the free product that has been created while creating
         the program itself not the product we already had before.
         """
-        product = self.env['product.product'].with_context(default_taxes_id=False).create({
-            'name': 'Test Product',
-            'type': 'consu',
-            'list_price': 20.0,
-        })
-
+        product = self.product
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Test Program',
             'program_type': 'buy_x_get_y',
@@ -259,11 +276,8 @@ class TestLoyalty(TransactionCase):
 
     def test_card_description_on_tag_change(self):
         product_tag = self.env['product.tag'].create({'name': 'Multiple Products'})
-        product1 = self.env['product.product'].create({
-            'name': 'Test Product',
-            'list_price': 20.0,
-            'product_tag_ids': product_tag,
-        })
+        product1 = self.product
+        product1.product_tag_ids = product_tag
         self.env['product.product'].create({
             'name': 'Test Product 2',
             'list_price': 30.0,

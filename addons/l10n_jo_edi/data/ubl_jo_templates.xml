@@ -59,7 +59,7 @@
         <xpath expr="//*[local-name()='Price']//*[local-name()='BaseQuantity']" position="after">
             <cac:AllowanceCharge
                 xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
-                t-foreach="vals['allowance_charge_vals']" t-as="foreach_vals">
+                t-foreach="price_vals['allowance_charge_vals']" t-as="foreach_vals">
                 <t t-call="{{AllowanceChargeType_template}}">
                     <t t-set="vals" t-value="foreach_vals"/>
                 </t>
@@ -68,7 +68,7 @@
 
         <xpath expr="//*[local-name()='Price']//*[local-name()='PriceAmount']" position="attributes">
             <attribute name="t-out">
-                format_float(vals['price_amount'], vals['product_price_dp'])
+                format_float(price_vals['price_amount'], price_vals['product_price_dp'])
             </attribute>
         </xpath>
     </template>

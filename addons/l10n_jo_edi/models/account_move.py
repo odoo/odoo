@@ -22,6 +22,7 @@ class AccountMove(models.Model):
     l10n_jo_edi_state = fields.Selection(
         selection=[('to_send', 'To Send'), ('sent', 'Sent')],
         string="JoFotara State",
+        tracking=True,
         copy=False)
     l10n_jo_edi_error = fields.Text(
         string="JoFotara Error",
@@ -49,6 +50,7 @@ class AccountMove(models.Model):
         depends=["l10n_jo_edi_xml_attachment_file"],
         help="Jordan: e-invoice XML.",
     )
+    reversed_entry_id = fields.Many2one(tracking=True)
 
     @api.depends("country_code", "move_type")
     def _compute_l10n_jo_edi_is_needed(self):
@@ -70,10 +72,14 @@ class AccountMove(models.Model):
             if invoice.l10n_jo_edi_is_needed and not invoice.l10n_jo_edi_uuid:
                 invoice.l10n_jo_edi_uuid = uuid.uuid4()
 
+    @api.depends("state", "l10n_jo_edi_is_needed")
     def _compute_l10n_jo_edi_computed_xml(self):
         for invoice in self:
-            xml_content = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
-            invoice.l10n_jo_edi_computed_xml = base64.b64encode(xml_content)
+            if invoice.state == 'posted' and invoice.l10n_jo_edi_is_needed:
+                xml_content = self.env['account.edi.xml.ubl_21.jo']._export_invoice(invoice)[0]
+                invoice.l10n_jo_edi_computed_xml = base64.b64encode(xml_content)
+            else:
+                invoice.l10n_jo_edi_computed_xml = False
 
     def download_l10n_jo_edi_computed_xml(self):
         if error_message := self._l10n_jo_validate_config() or self._l10n_jo_validate_fields():
@@ -147,7 +153,7 @@ class AccountMove(models.Model):
         try:
             response = requests.post(JOFOTARA_URL, json=params, headers=headers, timeout=50)
         except requests.exceptions.Timeout:
-            return _("Request time out! Please try again.")
+            return _("Request timeout! Please try again.")
         except requests.exceptions.RequestException as e:
             return _("Invalid request: %s", e)
 
@@ -195,6 +201,9 @@ class AccountMove(models.Model):
 
         supplier = self.company_id.partner_id.commercial_partner_id
         error_msg += has_non_digit_vat(supplier, 'supplier')
+
+        if self.move_type == 'out_refund' and not self.reversed_entry_id:
+            error_msg += _('Please use "Reversal of" to link this credit note with an Invoice\n')
 
         if any(
             line.display_type not in ('line_note', 'line_section')

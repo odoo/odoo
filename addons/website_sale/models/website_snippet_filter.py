@@ -184,10 +184,13 @@ class WebsiteSnippetFilter(models.Model):
                     domain,
                     [('id', 'in', product_ids)],
                 ])
+                filtered_ids = set(self.env['product.product']._search(domain, limit=limit))
+                # `search` will not keep the order of tracked products; however, we want to keep
+                # that order (latest viewed first).
                 products = self.env['product.product'].with_context(
-                    display_default_code=False,
-                    add2cart_rerender=True,
-                ).search(domain, limit=limit)
+                    display_default_code=False, add2cart_rerender=True,
+                ).browse([product_id for product_id in product_ids if product_id in filtered_ids])
+
         return products
 
     def _get_products_recently_sold_with(
@@ -260,8 +263,6 @@ class WebsiteSnippetFilter(models.Model):
             else:
                 included_products = alternative_products.product_variant_ids
             products = included_products - excluded_products
-            if website.prevent_zero_price_sale:
-                products = products.filtered(lambda p: p._get_contextual_price())
             if products:
                 domain = expression.AND([
                     domain,

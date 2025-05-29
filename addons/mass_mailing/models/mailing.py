@@ -378,7 +378,8 @@ class MassMailing(models.Model):
 
     @api.depends('email_from', 'mail_server_id')
     def _compute_warning_message(self):
-        for mailing in self:
+        self.warning_message = False
+        for mailing in self.filtered(lambda mailing: mailing.mailing_type == "mail"):
             mail_server = mailing.mail_server_id
             if mail_server and not mail_server._match_from_filter(mailing.email_from, mail_server.from_filter):
                 mailing.warning_message = _(
@@ -1094,7 +1095,7 @@ class MassMailing(models.Model):
                 'auto_delete_keep_log': mailing.reply_to_mode == 'update',
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing._prepend_preview(mailing.body_html, mailing.preview),
+                'body': mailing._prepend_preview(mailing.body_html or '', mailing.preview),
                 'composition_mode': 'mass_mail',
                 'email_from': mailing.email_from,
                 'mail_server_id': mailing.mail_server_id.id,

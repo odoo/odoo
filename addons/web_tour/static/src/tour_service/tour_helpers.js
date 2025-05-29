@@ -59,7 +59,11 @@ export class TourHelpers {
      */
     async click(selector) {
         const element = this._get_action_element(selector);
-        await hoot.click(element);
+        // FIXME: should always target interactive element, but some tour steps are
+        // targetting elements affected by 'pointer-events: none' for some reason.
+        // This option should ultimately disappear, with all affected cased fixed
+        // individually (no common cause found during a quick investigation).
+        await hoot.click(element, { interactive: false });
     }
 
     /**
@@ -98,9 +102,10 @@ export class TourHelpers {
             options = { position: "top", relative: true };
         }
         const dragEffectDelay = async () => {
-            await new Promise((resolve) => requestAnimationFrame(resolve));
-            await new Promise((resolve) => setTimeout(resolve, this.delay));
+            await hoot.animationFrame();
+            await hoot.delay(this.delay);
         };
+
         const element = this.anchor;
         const { drop, moveTo } = await hoot.drag(element);
         await dragEffectDelay();
@@ -114,7 +119,7 @@ export class TourHelpers {
         await dragEffectDelay();
         const target = await hoot.waitFor(selector, {
             visible: true,
-            timeout: 500,
+            timeout: 1000,
         });
         await moveTo(target, options);
         await dragEffectDelay();

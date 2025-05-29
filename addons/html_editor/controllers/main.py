@@ -329,7 +329,6 @@ class HTML_Editor(http.Controller):
         if is_image:
             format_error_msg = _("Uploaded image's format is not supported. Try with: %s", ', '.join(SUPPORTED_IMAGE_MIMETYPES.values()))
             try:
-                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
                 mimetype = guess_mimetype(data)
                 if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
                     return {'error': format_error_msg}
@@ -339,11 +338,10 @@ class HTML_Editor(http.Controller):
                         str(uuid.uuid4())[:6],
                         SUPPORTED_IMAGE_MIMETYPES[mimetype],
                     )
-            except UserError:
-                # considered as an image by the browser file input, but not
-                # recognized as such by PIL, eg .webp
-                return {'error': format_error_msg}
-            except ValueError as e:
+                data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+            except (ValueError, UserError) as e:
+                # When UserError thrown, browser considers file input an
+                # image but not recognized as such by PIL, eg .webp
                 return {'error': e.args[0]}
 
         self._clean_context()
@@ -364,6 +362,7 @@ class HTML_Editor(http.Controller):
         """
         self._clean_context()
         attachment = request.env['ir.attachment'].browse(attachment.id)
+
         fields = {
             'original_id': attachment.id,
             'datas': data,
@@ -371,6 +370,7 @@ class HTML_Editor(http.Controller):
             'res_model': res_model or 'ir.ui.view',
             'mimetype': mimetype or attachment.mimetype,
             'name': name or attachment.name,
+            'res_id': 0,
         }
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0
@@ -378,11 +378,27 @@ class HTML_Editor(http.Controller):
             fields['res_id'] = res_id
         if fields['mimetype'] == 'image/webp':
             fields['name'] = re.sub(r'\.(jpe?g|png)$', '.webp', fields['name'], flags=re.I)
+
         existing_attachment = get_existing_attachment(request.env['ir.attachment'], fields)
         if existing_attachment and not existing_attachment.url:
             attachment = existing_attachment
         else:
-            attachment = attachment.copy(fields)
+            # Restricted editors can handle attachments related to records to
+            # which they have access.
+            # Would user be able to read fields of original record?
+            if attachment.res_model and attachment.res_id:
+                request.env[attachment.res_model].browse(attachment.res_id).check_access('read')
+
+            # Would user be able to write fields of target record?
+            # Rights check works with res_id=0 because browse(0) returns an
+            # empty record set.
+            request.env[fields['res_model']].browse(fields['res_id']).check_access('write')
+
+            # Sudo and SUPERUSER_ID because restricted editor will not be able
+            # to copy the record and the mimetype will be forced to plain text.
+            attachment = attachment.with_user(SUPERUSER_ID).sudo().copy(fields)
+            attachment = attachment.with_user(request.env.user.id).sudo(False)
+
         if alt_data:
             for size, per_type in alt_data.items():
                 reference_id = attachment.id
@@ -405,6 +421,7 @@ class HTML_Editor(http.Controller):
                         'res_model': 'ir.attachment',
                         'mimetype': 'image/jpeg',
                     }])
+
         if attachment.url:
             # Don't keep url if modifying static attachment because static images
             # are only served from disk and don't fallback to attachments.
@@ -417,8 +434,10 @@ class HTML_Editor(http.Controller):
                 url_fragments = attachment.url.split('/')
                 url_fragments.insert(-1, str(attachment.id))
                 attachment.url = '/'.join(url_fragments)
+
         if attachment.public:
             return attachment.image_src
+
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
 
@@ -588,7 +607,7 @@ class HTML_Editor(http.Controller):
                 action = request.env[action_type].browse(action.id)
 
                 model = request.env[action.res_model].with_context(context)
-                
+
             record = model.browse(record_id)
 
             result = {}

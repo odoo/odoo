@@ -25,6 +25,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {import("@odoo/hoot-dom").DragHelpers} DragHelpers
+ * @typedef {import("@odoo/hoot-dom").DragOptions} DragOptions
  * @typedef {import("@odoo/hoot-dom").FillOptions} FillOptions
  * @typedef {import("@odoo/hoot-dom").InputValue} InputValue
  * @typedef {import("@odoo/hoot-dom").KeyStrokes} KeyStrokes
@@ -33,7 +34,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
  * @typedef {import("@odoo/hoot-dom").QueryOptions} QueryOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target
  *
- * @typedef {PointerOptions & {
+ * @typedef {DragOptions & {
  *  initialPointerMoveDistance?: number;
  *  pointerDownDuration: number;
  * }} DragAndDropOptions
@@ -238,7 +239,7 @@ export function contains(target, options) {
         /**
          * @param {Target} target
          * @param {DragAndDropOptions} [dropOptions]
-         * @param {PointerOptions} [dragOptions]
+         * @param {DragOptions} [dragOptions]
          */
         dragAndDrop: async (target, dropOptions, dragOptions) => {
             consumeContains();
@@ -320,7 +321,8 @@ export function contains(target, options) {
          */
         scroll: async (position) => {
             consumeContains();
-            await scroll(nodePromise, position);
+            // disable "scrollable" check
+            await scroll(nodePromise, position, { scrollable: false, ...options });
             await animationFrame();
         },
         /**
@@ -329,6 +331,16 @@ export function contains(target, options) {
         select: async (value) => {
             consumeContains();
             await select(value, { target: nodePromise });
+            await animationFrame();
+        },
+        /**
+         * @param {InputValue} value
+         */
+        selectDropdownItem: async (value) => {
+            consumeContains();
+            await callClick(click, queryOne(".dropdown-toggle", { root: await nodePromise }));
+            const item = await waitFor(`.dropdown-item:contains(${value})`);
+            await callClick(click, item);
             await animationFrame();
         },
         /**

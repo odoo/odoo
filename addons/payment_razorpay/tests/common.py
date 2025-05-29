@@ -34,11 +34,23 @@ class RazorpayCommon(PaymentCommon):
             'id': cls.payment_id,
             'description': cls.reference,
             'status': 'captured',
+            'method': 'upi',
+        }
+        cls.payment_fail_data = {
+            'id': 'pay_987',
+            'description': cls.reference,
+            'status': 'failed',
+            'method': 'netbanking',
         }
         cls.tokenize_payment_data = {
             **cls.payment_data,
             'customer_id': cls.customer_id,
             'token_id': cls.token_id,
+        }
+        cls.payment_pending_data = {
+            'id': cls.payment_id,
+            'description': cls.reference,
+            'status': 'pending',
         }
         cls.refund_data = {
             'id': cls.refund_id,

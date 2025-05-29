@@ -37,7 +37,6 @@
 //-----------------------------------------------------------------------------
 
 const {
-    Boolean,
     navigator: { userAgent: $userAgent },
     Object: { assign: $assign },
     RegExp,
@@ -48,7 +47,34 @@ const {
 // Internal
 //-----------------------------------------------------------------------------
 
-const R_REGEX_PATTERN = /^\/(.*)\/([dgimsuvy]+)?$/;
+/**
+ * @template {(...args: any[]) => any} T
+ * @param {InteractionType} type
+ * @param {T} fn
+ * @param {string} name
+ * @returns {T}
+ */
+const makeInteractorFn = (type, fn, name) =>
+    ({
+        [name](...args) {
+            const result = fn(...args);
+            if (result instanceof Promise) {
+                for (let i = 0; i < args.length; i++) {
+                    if (args[i] instanceof Promise) {
+                        // Get promise result for async arguments if possible
+                        args[i].then((result) => (args[i] = result));
+                    }
+                }
+                return result.then((promiseResult) =>
+                    dispatchInteraction(type, name, args, promiseResult)
+                );
+            } else {
+                return dispatchInteraction(type, name, args, result);
+            }
+        },
+    }[name]);
+
+const DEBUG_NAMESPACE = "hoot";
 
 const interactionBus = new EventTarget();
 
@@ -87,25 +113,18 @@ export function dispatchInteraction(type, name, args, returnValue) {
     return returnValue;
 }
 
-const makeInteractorFn = (type, fn, name) =>
-    ({
-        [name](...args) {
-            const result = fn(...args);
-            if (result instanceof Promise) {
-                for (let i = 0; i < args.length; i++) {
-                    if (args[i] instanceof Promise) {
-                        // Get promise result for async arguments if possible
-                        args[i].then((result) => (args[i] = result));
-                    }
-                }
-                return result.then((promiseResult) =>
-                    dispatchInteraction(type, name, args, promiseResult)
-                );
-            } else {
-                return dispatchInteraction(type, name, args, result);
-            }
-        },
-    }[name]);
+/**
+ * @param  {...any} helpers
+ */
+export function exposeHelpers(...helpers) {
+    let nameSpaceIndex = 1;
+    let nameSpace = DEBUG_NAMESPACE;
+    while (nameSpace in globalThis) {
+        nameSpace = `${DEBUG_NAMESPACE}${nameSpaceIndex++}`;
+    }
+    globalThis[nameSpace] = new HootDebugHelpers(...helpers);
+    return nameSpace;
+}
 
 /**
  * @template {(...args: any[]) => any} T
@@ -150,15 +169,7 @@ export function isFirefox() {
  * @returns {V extends Iterable<T> ? true : false}
  */
 export function isIterable(object) {
-    return Boolean(object && typeof object === "object" && object[Symbol.iterator]);
-}
-
-/**
- * @param {string} filter
- * @returns {boolean}
- */
-export function isRegExpFilter(filter) {
-    return R_REGEX_PATTERN.test(filter);
+    return !!(object && typeof object === "object" && object[Symbol.iterator]);
 }
 
 /**
@@ -167,10 +178,10 @@ export function isRegExpFilter(filter) {
  * @returns {string | RegExp}
  */
 export function parseRegExp(value, options) {
-    const regexParams = value.match(R_REGEX_PATTERN);
+    const regexParams = value.match(R_REGEX);
     if (regexParams) {
-        const unified = regexParams[1].replace(/\s+/g, "\\s+");
-        const flag = regexParams[2] || "i";
+        const unified = regexParams[1].replace(R_WHITE_SPACE, "\\s+");
+        const flag = regexParams[2];
         try {
             return new RegExp(unified, flag);
         } catch (error) {
@@ -201,6 +212,25 @@ export function toSelector(node, options) {
     }
 }
 
-export class HootDomError extends Error {
-    name = "HootDomError";
+export class HootDebugHelpers {
+    get $() {
+        return this.queryFirst;
+    }
+
+    get $$() {
+        return this.queryAll;
+    }
+
+    /**
+     * @param  {...any} helpers
+     */
+    constructor(...helpers) {
+        $assign(this, ...helpers);
+    }
 }
+
+export const REGEX_MARKER = "/";
+
+// Common regular expressions
+export const R_REGEX = new RegExp(`^${REGEX_MARKER}(.*)${REGEX_MARKER}([dgimsuvy]+)?$`);
+export const R_WHITE_SPACE = /\s+/g;

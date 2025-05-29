@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-19 20:37+0000\n"
+"POT-Creation-Date: 2025-05-07 20:37+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -3003,7 +3003,7 @@ msgstr "Walley"
 #: code:addons/payment/models/payment_method.py:0
 #: code:addons/payment/models/payment_provider.py:0
 msgid "Warning"
-msgstr "경고"
+msgstr "주의"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__warning_message
@@ -3081,6 +3081,12 @@ msgid ""
 "You cannot change the company of a payment provider with existing "
 "transactions."
 msgstr "기존 거래가 있는 경우 결제 서비스 공급업체와 연결된 회사를 변경할 수 없습니다."
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_method.py:0
+msgid "You cannot delete the default payment method."
+msgstr "기본 결제 수단은 삭제할 수 없습니다."
 
 #. module: payment
 #. odoo-python

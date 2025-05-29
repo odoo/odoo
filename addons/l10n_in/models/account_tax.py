@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import api, fields, models
 from odoo.tools import frozendict
 
@@ -36,87 +38,86 @@ class AccountTax(models.Model):
     # HSN SUMMARY
     # -------------------------------------------------------------------------
 
+    def _prepare_base_line_for_taxes_computation(self, record, **kwargs):
+        # EXTENDS 'account'
+        results = super()._prepare_base_line_for_taxes_computation(record, **kwargs)
+        results['l10n_in_hsn_code'] = self._get_base_line_field_value_from_record(record, 'l10n_in_hsn_code', kwargs, False)
+        return results
+
     @api.model
     def _l10n_in_get_hsn_summary_table(self, base_lines, display_uom):
-        results_map = {}
         l10n_in_tax_types = set()
-        for base_line in base_lines:
-            l10n_in_hsn_code = base_line['l10n_in_hsn_code']
-            if not l10n_in_hsn_code:
-                continue
+        items_map = defaultdict(lambda: {
+            'quantity': 0.0,
+            'amount_untaxed': 0.0,
+            'tax_amount_igst': 0.0,
+            'tax_amount_cgst': 0.0,
+            'tax_amount_sgst': 0.0,
+            'tax_amount_cess': 0.0,
+        })
 
-            price_unit = base_line['price_unit']
-            discount = base_line['discount']
-            quantity = base_line['quantity']
-            product = base_line['product']
-            uom = base_line['uom']
-            taxes = base_line['taxes_data']
-
-            final_price_unit = price_unit * (1 - (discount / 100))
-
-            # Compute the taxes.
-            taxes_computation = taxes._get_tax_details(
-                final_price_unit,
-                quantity,
-                rounding_method='round_per_line',
-                product=product,
-            )
-            # Rate.
+        def get_base_line_grouping_key(base_line):
             unique_taxes_data = set(
                 tax_data['tax']
-                for tax_data in taxes_computation['taxes_data']
+                for tax_data in base_line['tax_details']['taxes_data']
                 if tax_data['tax']['l10n_in_tax_type'] in ('igst', 'cgst', 'sgst')
             )
             rate = sum(tax.amount for tax in unique_taxes_data)
 
-            key = frozendict({
-                'l10n_in_hsn_code': l10n_in_hsn_code,
+            return {
+                'l10n_in_hsn_code': base_line['l10n_in_hsn_code'],
+                'uom_name': base_line['product_uom_id'].name,
                 'rate': rate,
-                'uom_name': uom.name,
-            })
-
-            if key in results_map:
-                values = results_map[key]
-                values['quantity'] += quantity
-                values['amount_untaxed'] += taxes_computation['total_excluded']
-            else:
-                results_map[key] = {
-                    **key,
-                    'quantity': quantity,
-                    'amount_untaxed': taxes_computation['total_excluded'],
-                    'tax_amounts': {
-                        'igst': 0.0,
-                        'cgst': 0.0,
-                        'sgst': 0.0,
-                        'cess': 0.0,
-                    },
-                }
-
-            for tax_data in taxes_computation['taxes_data']:
-                l10n_in_tax_type = tax_data['tax'].l10n_in_tax_type
-                if l10n_in_tax_type:
-                    results_map[key]['tax_amounts'][l10n_in_tax_type] += tax_data['tax_amount']
-                    l10n_in_tax_types.add(l10n_in_tax_type)
-
-        items = [
-            {
-                'l10n_in_hsn_code': value['l10n_in_hsn_code'],
-                'uom_name': value['uom_name'],
-                'rate': value['rate'],
-                'quantity': value['quantity'],
-                'amount_untaxed': value['amount_untaxed'],
-                'tax_amount_igst': value['tax_amounts']['igst'],
-                'tax_amount_cgst': value['tax_amounts']['cgst'],
-                'tax_amount_sgst': value['tax_amounts']['sgst'],
-                'tax_amount_cess': value['tax_amounts']['cess'],
             }
-            for value in results_map.values()
-        ]
+
+        # quantity / amount_untaxed.
+        for base_line in base_lines:
+            key = frozendict(get_base_line_grouping_key(base_line))
+            if not key['l10n_in_hsn_code']:
+                continue
+
+            item = items_map[key]
+            item['quantity'] += base_line['quantity']
+            item['amount_untaxed'] += (
+                base_line['tax_details']['total_excluded_currency']
+                + base_line['tax_details']['delta_total_excluded_currency']
+            )
+
+        # Tax amounts.
+        def grouping_function(base_line, tax_data):
+            return {
+                **get_base_line_grouping_key(base_line),
+                'l10n_in_tax_type': tax_data['tax'].l10n_in_tax_type,
+            }
+
+        base_lines_aggregated_values = self._aggregate_base_lines_tax_details(base_lines, grouping_function)
+        values_per_grouping_key = self._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
+        for grouping_key, values in values_per_grouping_key.items():
+            if (
+                not grouping_key
+                or not grouping_key['l10n_in_hsn_code']
+                or not grouping_key['l10n_in_tax_type']
+            ):
+                continue
+
+            key = frozendict({
+                'l10n_in_hsn_code': grouping_key['l10n_in_hsn_code'],
+                'rate': grouping_key['rate'],
+                'uom_name': grouping_key['uom_name'],
+            })
+            item = items_map[key]
+            l10n_in_tax_type = grouping_key['l10n_in_tax_type']
+            item[f'tax_amount_{l10n_in_tax_type}'] += values['tax_amount_currency']
+            l10n_in_tax_types.add(l10n_in_tax_type)
+
         return {
             'has_igst': 'igst' in l10n_in_tax_types,
             'has_gst': bool({'cgst', 'sgst'} & l10n_in_tax_types),
             'has_cess': 'cess' in l10n_in_tax_types,
             'nb_columns': 5 + len(l10n_in_tax_types),
             'display_uom': display_uom,
-            'items': items,
+            'items': [
+                key | values
+                for key, values in items_map.items()
+            ],
         }

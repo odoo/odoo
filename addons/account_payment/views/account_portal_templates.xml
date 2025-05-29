@@ -81,20 +81,21 @@
         </xpath>
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="after">
             <td class="d-none d-lg-table-cell text-center">
-                <span
-                    t-if="invoice_data['installment_state'] in ('next', 'overdue')"
-                    t-attf-class="{{'text-danger' if invoice_data['installment_state'] == 'overdue' else ''}}"
-                    t-out="invoice_data['next_amount_to_pay']"
-                    t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"
-                />
-                <small
-                    t-if="invoice_data['installment_state'] == 'next'"
-                    class="o_portal_invoice_due_date"
-                    t-att-datetime="invoice_data['next_due_date']"
-                />
-                <small t-if="invoice_data['installment_state'] == 'overdue'" class="text-danger">
-                    overdue
-                </small>
+                <t t-if="invoice_data.get('installment_state', False) in ('next', 'overdue')">
+                    <span
+                        t-attf-class="{{'text-danger' if invoice_data['installment_state'] == 'overdue' else ''}}"
+                        t-out="invoice_data['next_amount_to_pay']"
+                        t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id}"
+                    />
+                    <small
+                        t-if="invoice_data['installment_state'] == 'next'"
+                        class="o_portal_invoice_due_date"
+                        t-att-datetime="invoice_data['next_due_date']"
+                    />
+                    <small t-if="invoice_data['installment_state'] == 'overdue'" class="text-danger">
+                        overdue
+                    </small>
+                </t>
             </td>
             <td class="text-center">
                 <a t-if="invoice._has_to_be_paid()"
@@ -276,9 +277,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="alert alert-warning text-center" role="alert">
-                            This invoice has already been paid.
-                        </div>
+                        <div class="alert alert-warning text-center" role="alert" t-out="invoice._get_online_payment_error()"/>
                     </div>
                 </div>
             </div>

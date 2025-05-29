@@ -284,15 +284,15 @@ class EventMailScheduler(models.Model):
                     ("scheduler_id", "=", self.id),
                     ("mail_sent", "=", True),
                 ])
-                self.mail_count_done = total_sent
+                scheduler.mail_count_done = total_sent
             elif scheduler.last_registration_id:
                 total_sent = self.env["event.registration"].search_count([
                     ("id", "<=", self.last_registration_id.id),
                     ("event_id", "=", self.event_id.id),
                     ("state", "not in", ["draft", "cancel"]),
                 ])
-                self.mail_count_done = total_sent
-                self.mail_done = total_sent >= self.event_id.seats_taken
+                scheduler.mail_count_done = total_sent
+                scheduler.mail_done = total_sent >= self.event_id.seats_taken
             else:
                 scheduler.mail_count_done = 0
                 scheduler.mail_done = False

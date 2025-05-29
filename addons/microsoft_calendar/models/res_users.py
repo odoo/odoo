@@ -40,28 +40,10 @@ class User(models.Model):
 
     def _refresh_microsoft_calendar_token(self, service='calendar'):
         self.ensure_one()
-        ICP_sudo = self.env['ir.config_parameter'].sudo()
-        client_id = self.env['microsoft.service']._get_microsoft_client_id('calendar')
-        client_secret = microsoft_service._get_microsoft_client_secret(ICP_sudo, 'calendar')
-
-        if not client_id or not client_secret:
-            raise UserError(_("The account for the Outlook Calendar service is not configured."))
-
-        headers = {"content-type": "application/x-www-form-urlencoded"}
-        data = {
-            'refresh_token': self.sudo().microsoft_calendar_rtoken,
-            'client_id': client_id,
-            'client_secret': client_secret,
-            'grant_type': 'refresh_token',
-        }
-
         try:
-            dummy, response, dummy = self.env['microsoft.service']._do_request(
-                microsoft_service.DEFAULT_MICROSOFT_TOKEN_ENDPOINT, params=data, headers=headers, method='POST', preuri=''
-            )
-            ttl = response.get('expires_in')
+            access_token, ttl = self.env['microsoft.service']._refresh_microsoft_token('calendar', self.sudo().microsoft_calendar_rtoken)
             self.sudo().write({
-                'microsoft_calendar_token': response.get('access_token'),
+                'microsoft_calendar_token': access_token,
                 'microsoft_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
             })
         except requests.HTTPError as error:
@@ -100,6 +82,11 @@ class User(models.Model):
         self.sudo().microsoft_last_sync_date = fields.datetime.now()
         if self._get_microsoft_sync_status() != "sync_active":
             return False
+
+        # Set the first synchronization date as an ICP parameter before writing the variable
+        # 'microsoft_calendar_sync_token' below, so we identify the first synchronization.
+        self._set_ICP_first_synchronization_date(fields.Datetime.now())
+
         calendar_service = self.env["calendar.event"]._get_microsoft_service()
         full_sync = not bool(self.sudo().microsoft_calendar_sync_token)
         with microsoft_calendar_token(self) as token:
@@ -180,3 +167,24 @@ class User(models.Model):
                 sync_status = 'sync_stopped'
         res['microsoft_calendar'] = sync_status
         return res
+
+    def _set_ICP_first_synchronization_date(self, now):
+        """
+        Set the first synchronization date as an ICP parameter when applicable (param not defined yet
+        and calendar never synchronized before). This parameter is used for not synchronizing previously
+        created Odoo events and thus avoid spamming invitations for those events.
+        """
+        ICP = self.env['ir.config_parameter'].sudo()
+        first_synchronization_date = ICP.get_param('microsoft_calendar.sync.first_synchronization_date')
+
+        if not first_synchronization_date:
+            # Check if any calendar has synchronized before by checking the user's tokens.
+            any_calendar_synchronized = self.env['res.users'].sudo().search_count(
+                domain=[('microsoft_calendar_sync_token', '!=', False)],
+                limit=1
+            )
+
+            # Check if any user synchronized its calendar before by saving the date token.
+            # Add one minute of time diff for avoiding write time delay conflicts with the next sync methods.
+            if not any_calendar_synchronized:
+                ICP.set_param('microsoft_calendar.sync.first_synchronization_date', now - timedelta(minutes=1))

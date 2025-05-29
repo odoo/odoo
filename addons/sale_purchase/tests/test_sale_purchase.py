@@ -321,7 +321,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         })
         sale_order.action_confirm()
         pol = sale_order._get_purchase_orders().order_line
-        self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
+        self.assertEqual(pol.name, f"{self.service_purchase_1.display_name}\n\n{product_attribute.name}: {product_attribute_value.name}: {custom_value}")
 
     def test_service_to_purchase_multi_company(self):
         """Test the service to purchase in a multi-company environment
@@ -375,3 +375,36 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         # FIXME: same sudo issue as above
         order2.sudo().with_company(company_2).action_confirm()
         self.assertTrue(order2.purchase_order_count)
+
+    def test_service_to_purchase_branch_tax_propagation(self):
+        """
+        Ensure that SO/PO of a branch can use root company's taxes
+        """
+        branch = self.env['res.company'].create({
+            'name': "Branch Company",
+            'parent_id': self.env.company.id,
+        })
+        self.env.user.company_id = branch
+        service_product = self.env['product.product'].create({
+            'name': "Branch Out-sourced Service",
+            'standard_price': 200.0,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'taxes_id': self.company_data['default_tax_sale'],
+            'supplier_taxes_id': self.company_data['default_tax_purchase'],
+            'service_to_purchase': True,
+            'seller_ids': [Command.create({
+                'partner_id': self.partner_b.id,
+                'min_qty': 1,
+                'price': 100,
+            })],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': service_product.id,
+            })],
+        })
+        self.assertEqual(so.order_line.tax_id, self.company_data['default_tax_sale'])
+        so.action_confirm()
+        self.assertEqual(so.order_line.purchase_line_ids.taxes_id, self.company_data['default_tax_purchase'])

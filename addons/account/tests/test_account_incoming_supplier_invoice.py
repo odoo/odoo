@@ -48,7 +48,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         self.attachment_number += 1
         return self.env['ir.attachment'].create({
             'name': f"attachment_{self.attachment_number}",
-            'raw': '<test/>',
+            'raw': "<?xml version='1.0' encoding='UTF-8'?><test/>",
             'mimetype': 'application/xml',
         })
 
@@ -281,7 +281,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         following_partners = invoice.message_follower_ids.mapped('partner_id')
         self.assertEqual(following_partners, self.env.user.partner_id | self.internal_user.partner_id)
 
-    def test_extend_with_attachments_multi_pdf(self):
+    def test_extend_with_attachments(self):
         self._disable_ocr(self.company_data['company'])
         pdf1 = self._create_dummy_pdf_attachment()
         pdf2 = self._create_dummy_pdf_attachment()
@@ -289,6 +289,8 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         gif2 = self._create_dummy_gif_attachment()
         xml1 = self._create_dummy_xml_attachment()
         xml2 = self._create_dummy_xml_attachment()
+        xlsx = self._create_dummy_xlsx_attachment()
+        docx = self._create_dummy_docx_attachment()
         with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({pdf1: 1, pdf2: 1}, origin='chatter')
             self.assertEqual(decoded_files, {pdf1.name})
@@ -349,13 +351,15 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon):
         with self.with_success_decoder() as decoded_files, self.with_simulated_embedded_xml(pdf1):
             self._assert_extend_with_attachments({pdf1: 1, xml1: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {xml1.name})
-
-    def test_extend_with_attachments_document_formats(self):
-        xlsx = self._create_dummy_xlsx_attachment()
-        docx = self._create_dummy_docx_attachment()
         with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({xlsx: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {xlsx.name})
         with self.with_success_decoder() as decoded_files:
             self._assert_extend_with_attachments({docx: 1}, origin='mail_alias')
             self.assertEqual(decoded_files, {docx.name})
+        with self.with_success_decoder() as decoded_files:
+            self._assert_extend_with_attachments({pdf1: 1, docx: 1}, origin='mail_alias')
+            self.assertEqual(decoded_files, {pdf1.name})
+        with self.with_success_decoder() as decoded_files:
+            self._assert_extend_with_attachments({xml1: 1, pdf1: 1, docx: 1}, origin='mail_alias')
+            self.assertEqual(decoded_files, {xml1.name})

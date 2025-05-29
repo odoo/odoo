@@ -91,9 +91,11 @@ class PeppolSettingsButtons extends Component {
         });
     }
 
-    deregister() {
+    async deregister() {
         if (this.ediMode === 'demo' || !['sender', 'smp_registration', 'receiver'].includes(this.proxyState)) {
-            this._callConfigMethod("button_deregister_peppol_participant");
+            await this._callConfigMethod("button_deregister_peppol_participant");
+            // Discard any changes
+            this.props.record._discard();
         } else if (['sender', 'smp_registration', 'receiver'].includes(this.proxyState)) {
             this.showConfirmation(
                 "This will delete your Peppol registration.",
