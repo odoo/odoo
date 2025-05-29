@@ -55,6 +55,8 @@ class EventRegistration(models.Model):
     phone = fields.Char(string='Phone', compute='_compute_phone', readonly=False, store=True, tracking=4)
     company_name = fields.Char(
         string='Company Name', compute='_compute_company_name', readonly=False, store=True, tracking=5)
+    parent_id = fields.Many2one('event.registration')
+    child_ids = fields.One2many('event.registration', 'parent_id')
     # organization
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
@@ -271,6 +273,32 @@ class EventRegistration(models.Model):
             values['phone'] = self._phone_format(number=values['phone'], country=related_country) or values['phone']
 
         registrations = super().create(vals_list)
+
+        email_question = self.env['event.question'].sudo().search([
+            ('event_id', 'in', registrations.mapped('event_id.id')),
+            ('question_type', '=', 'email'),
+        ], limit=1)
+
+        should_set_parent = (
+            email_question.once_per_order or not email_question.is_mandatory_answer
+            or (self.env.user.login != 'public' and not any(q.question_type == 'email' for q in registrations.event_id.sudo().question_ids))
+        )
+
+        if registrations and should_set_parent:
+            parent_registration = next(
+                (reg for reg in registrations if any(
+                    answer.question_id == email_question and answer.value_text_box
+                    for answer in reg.registration_answer_ids
+                )),
+                registrations[0]  # fallback
+            )
+
+            registrations.write({'parent_id': parent_registration.id})
+            parent_registration._update_mail_schedulers()
+
+            if email_question.once_per_order or email_question.is_mandatory_answer:
+                return registrations
+
         registrations._update_mail_schedulers()
         return registrations
 

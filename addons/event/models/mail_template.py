@@ -26,3 +26,14 @@ class MailTemplate(models.Model):
         self.env['event.mail'].sudo().search([domain]).unlink()
         self.env['event.type.mail'].sudo().search([domain]).unlink()
         return res
+
+    def _render_report_qweb_pdf(self, report, res_id):
+        """
+        Overriding the function here to send multiple tickets in a single pdf
+        """
+        if self.model == 'event.registration':
+            registrations = self.env['event.registration'].browse(res_id)
+            child_ids = registrations.child_ids.ids
+            if child_ids:
+                return self.env['ir.actions.report']._render_qweb_pdf(report, child_ids)
+        return super()._render_report_qweb_pdf(report, res_id)

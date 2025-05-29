@@ -150,6 +150,14 @@ class EventRegistration(models.Model):
         res = super()._compute_field_value(field)
         confirmed = unconfirmed.filtered(lambda reg: reg.state == 'open')
         if confirmed:
+            parent_registration = confirmed.child_ids.filtered(lambda registration: registration.child_ids)
+            email_question = self.env['event.question'].sudo().search([
+                ('event_id', '=', confirmed.event_id.id),
+                ('question_type', '=', 'email'),
+            ])
+            if email_question.once_per_order or email_question.is_mandatory_answer:
+                parent_registration._update_mail_schedulers()
+                return res
             confirmed._update_mail_schedulers()
         return res
 
