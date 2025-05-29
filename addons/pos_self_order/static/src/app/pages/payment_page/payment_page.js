@@ -28,10 +28,6 @@ export class PaymentPage extends Component {
         });
     }
 
-    get showFooterBtn() {
-        return this.selfOrder.paymentError || this.state.selection;
-    }
-
     selectMethod(methodId) {
         this.state.selection = false;
         this.state.paymentMethodId = methodId;

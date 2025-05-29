@@ -48,8 +48,7 @@ patch(ProductScreen.prototype, {
         return this.pos.categoryCount.slice(0, 3);
     },
     async submitOrder() {
-        await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
-        this.pos.addPendingOrder([this.currentOrder.id]);
+        await this.pos.sendOrderInPreparation(this.currentOrder);
         const page = this.pos.defaultPage;
         this.pos.navigate(page.page, page.params);
     },

@@ -9,17 +9,12 @@ import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
-import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 
 registry.category("web_tour.tours").add("TicketScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            OfflineUtil.setOfflineMode(),
-            Chrome.clickOrders(),
-            Dialog.confirm("Continue with limited functionality"),
-            OfflineUtil.setOnlineMode(),
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1", "3"),
             Chrome.clickOrders(),
@@ -206,6 +201,7 @@ registry.category("web_tour.tours").add("LotRefundTour", {
             ReceiptScreen.clickNextOrder(),
             ...ProductScreen.clickRefund(),
             TicketScreen.selectOrder("001"),
+            ProductScreen.clickLine("Product A"),
             ProductScreen.clickNumpad("1"),
             TicketScreen.toRefundTextContains("To Refund: 1"),
             TicketScreen.confirmRefund(),

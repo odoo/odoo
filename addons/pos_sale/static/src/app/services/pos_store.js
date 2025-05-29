@@ -93,13 +93,12 @@ patch(PosStore.prototype, {
                 continue;
             }
 
-            if (line.is_downpayment) {
-                line.product_id = this.config.down_payment_product_id;
-            }
-
+            const product_id = line.is_downpayment
+                ? this.config.down_payment_product_id
+                : line.product_id;
             const newLineValues = {
-                product_tmpl_id: line.product_id?.product_tmpl_id,
-                product_id: line.product_id,
+                product_tmpl_id: product_id?.product_tmpl_id,
+                product_id: product_id,
                 qty: line.product_uom_qty,
                 price_unit: line.price_unit,
                 price_type: "automatic",
@@ -145,7 +144,7 @@ patch(PosStore.prototype, {
             newLine.setUnitPrice(line.price_unit);
             newLine.setDiscount(line.discount);
 
-            const product_unit = line.product_id.uom_id;
+            const product_unit = product_id.uom_id;
             if (product_unit && !product_unit.is_pos_groupable) {
                 let remaining_quantity = newLine.qty;
                 newLineValues.product_id = newLine.product_id;

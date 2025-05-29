@@ -104,7 +104,7 @@
                     'floor-grid': pos.isEditMode, 
                     'bg-view': !activeFloor?.background_color
                 }"
-                t-attf-style="background-color: rgba({{this._getColors()[activeFloor?.background_color]}},.75)">
+                t-attf-style="background-color: {{activeFloor?.background_color}}">
                 <div t-on-click="onClickFloorMap" t-on-touchstart="_onPinchStart" t-on-touchmove="_onPinchMove" t-on-touchend="_onPinchEnd"
                     t-attf-class="floor-map position-relative w-100 h-100"
                     t-ref="floor-map-ref"
@@ -121,7 +121,8 @@
                             <span>Oops! No tables available.<br/>Add a new table to get started.</span>
                         </div>
                         <div t-else="" t-ref="map" t-att-class="{'floor-kanban d-grid gap-1 p-2': isKanban, 'h-100': !isKanban, 'h-50 h-sm-auto overflow-y-auto': isKanban and this.pos.tableSelectorState}">
-                           <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" >
+                           <!-- <t t-foreach="activeTables.sort((a,b)=>a.id-b.id)" t-as="table" t-key="table.id" > -->
+                           <t t-foreach="activeTables" t-as="table" t-key="table.id" >
                                 <t t-set="isOccupied" t-value="pos.tableHasOrders(table)"/>
                                 <t t-set="isIntersecting" t-value="state.potentialLink?.child?.id === table.id"/>
                                 <t t-set="isIntersected" t-value="state.potentialLink?.parent?.id === table.id"/>

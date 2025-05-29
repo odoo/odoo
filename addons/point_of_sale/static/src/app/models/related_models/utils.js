@@ -105,18 +105,20 @@ export class AggregatedUpdates {
     }
 
     /**
-     * Iterates over all updated records, fires the update event (unless silenced), and marks the records as dirty.
+     * Iterates over all updated records, fires the update event (unless silenced).
      *
      * @param {Object} opts - Options for controlling the update behavior.
      * @param {string[]} [opts.silentModels=[]] - List of model names to exclude from triggering update events.
      */
     fireEventAndDirty(opts = {}) {
-        const { silentModels = [] } = opts;
         for (const [record, fields] of this.updates) {
-            if (!silentModels.includes(record.model.name)) {
-                record.model.triggerEvents("update", { id: record.id, fields: [...fields] });
-            }
-            record._markDirty();
+            record.model.triggerEvents("update", {
+                id: record.id,
+                fields: [...fields],
+                vals: Object.fromEntries(
+                    [...fields].map((fieldName) => [fieldName, record[fieldName]])
+                ),
+            });
         }
     }
 

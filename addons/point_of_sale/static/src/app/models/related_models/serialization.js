@@ -53,10 +53,7 @@ const deepSerialization = (
                         continue;
                     }
 
-                    if (typeof childRecord.id === "number" && childRecord._dirty) {
-                        toUpdate.push(childRecord);
-                        childRecord._dirty = false;
-                    } else if (typeof childRecord.id !== "number") {
+                    if (typeof childRecord.id !== "number") {
                         toCreate.push(childRecord);
                     }
                     serialized[relatedModel][childRecord.uuid] = childRecord.uuid;
@@ -166,8 +163,6 @@ const deepSerialization = (
         const [res, key, getValue] = stack.pop();
         res[key] = getValue();
     }
-
-    record._dirty = false;
 
     // Cleanup: remove empty entries from uuidMapping.
     for (const key in uuidMapping) {

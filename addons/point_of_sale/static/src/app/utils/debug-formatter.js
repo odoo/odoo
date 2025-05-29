@@ -111,7 +111,6 @@ function formatBaseInstance(obj) {
         blocks.push(createSubObjectBlock("[uiState]", toRaw(obj.uiState)));
     }
     const dismissFields = new Set([
-        "_dirty",
         "model",
         "models",
         "uiState",
@@ -123,7 +122,6 @@ function formatBaseInstance(obj) {
     if (debugObject) {
         blocks.push(createSubObjectBlock("[other props]", debugObject));
     }
-    // blocks.push(createSubBlock("(dirty)", obj._dirty));
     // blocks.push(createSubObjectBlock("[model]", obj.model));
     return blocks;
 }

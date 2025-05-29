@@ -44,15 +44,12 @@ class PosOrder(models.Model):
                 invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
         return invoice_vals
 
-    @api.model
-    def sync_from_ui(self, orders):
-        data = super().sync_from_ui(orders)
-        if len(orders) == 0:
-            return data
-
+    def write(self, vals):
+        if 'crm_team_id' in vals:
+            vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team
+        res = super().write(vals)
         AccountTax = self.env['account.tax']
-        pos_orders = self.browse([o['id'] for o in data["pos.order"]])
-        for pos_order in pos_orders:
+        for pos_order in [order for order in self if order.state == 'paid']:
             # TODO: the way to retrieve the sale order in not consistent... is it a bad code or intended?
             used_pos_lines = pos_order.lines.sale_order_origin_id.order_line.pos_order_line_ids
             downpayment_pos_order_lines = pos_order.lines.filtered(lambda line: (
@@ -113,8 +110,7 @@ class PosOrder(models.Model):
                 else:
                     # We make sure that the original picking still has the correct quantity reserved
                     picking.action_assign()
-
-        return data
+        return res
 
     def action_view_sale_order(self):
         self.ensure_one()
@@ -136,19 +132,6 @@ class PosOrder(models.Model):
         ])
         return fields
 
-    def _prepare_order_line(self, order_line):
-        order_line = super()._prepare_order_line(order_line)
-        if order_line.get('sale_order_origin_id'):
-            order_line['sale_order_origin_id'] = {
-                'id': order_line['sale_order_origin_id'][0],
-                'name': order_line['sale_order_origin_id'][1],
-            }
-        if order_line.get('sale_order_line_id'):
-            order_line['sale_order_line_id'] = {
-                'id': order_line['sale_order_line_id'][0],
-            }
-        return order_line
-
     def _get_invoice_lines_values(self, line_values, pos_line, move_type):
         inv_line_vals = super()._get_invoice_lines_values(line_values, pos_line, move_type)
 
@@ -158,11 +141,6 @@ class PosOrder(models.Model):
             origin_line._set_analytic_distribution(inv_line_vals)
 
         return inv_line_vals
-
-    def write(self, vals):
-        if 'crm_team_id' in vals:
-            vals['crm_team_id'] = vals['crm_team_id'] if vals.get('crm_team_id') else self.session_id.crm_team_id.id
-        return super().write(vals)
 
 
 class PosOrderLine(models.Model):

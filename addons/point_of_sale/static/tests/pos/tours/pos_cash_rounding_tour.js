@@ -711,6 +711,7 @@ registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
             ReceiptScreen.receiptToPayAmountIs("15.70"),
             ReceiptScreen.receiptChangeAmountIs("4.30"),
             ReceiptScreen.clickNextOrder(),
+            Chrome.endTour(),
         ].flat(),
 });
 

@@ -2,7 +2,7 @@
 
 
 {
-    'name': 'POS - Restaurant Loyality',
+    'name': 'POS - Restaurant Loyalty',
     'version': '1.0',
     'category': 'Sales/Point of Sale',
     'sequence': 6,
@@ -11,6 +11,7 @@
 This module correct some behaviors when both module are installed.
 """,
     'depends': ['pos_restaurant', 'pos_loyalty'],
+    # 'installable': True,
     'installable': True,
     'auto_install': True,
     'assets': {

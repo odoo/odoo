@@ -228,39 +228,37 @@ patch(ProductScreen.prototype, {
                     { simpleChoice: {}, textAnswer: {} }
                 );
                 // This will throw an error on creation if not possible (python constraint)
-                this.pos.models["event.registration"].create({
+                const eventRegistraton = this.pos.models["event.registration"].create({
                     ...userData,
                     event_id: event,
                     event_ticket_id: ticket,
                     event_slot_id: slotSelected,
                     pos_order_line_id: line,
                     partner_id: this.pos.getOrder().partner_id,
-                    registration_answer_ids: Object.entries({
-                        ...textAnswer,
-                        ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
+                });
+
+                // TODO: Remove redundant field `registration_answer_choice_ids`; data can be derived from `registration_answer_ids` using a domain.
+                Object.entries({
+                    ...textAnswer,
+                    ...globalTextAnswer,
+                }).forEach(([questionId, answer]) => {
+                    this.pos.models["event.registration.answer"].create({
+                        registration_id: eventRegistraton.id,
+                        question_id: this.pos.models["event.question"].get(parseInt(questionId)),
+                        value_text_box: answer,
+                    });
+                });
+                Object.entries({
+                    ...simpleChoice,
+                    ...globalSimpleChoice,
+                }).forEach(([questionId, answer]) => {
+                    this.pos.models["event.registration.answer"].create({
+                        registration_id: eventRegistraton.id,
+                        question_id: this.pos.models["event.question"].get(parseInt(questionId)),
+                        value_answer_id: this.pos.models["event.question.answer"].get(
+                            parseInt(answer)
+                        ),
+                    });
                 });
             }
         }

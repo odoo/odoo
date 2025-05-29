@@ -48,20 +48,34 @@ class PaymentTransaction(models.Model):
                     if not payment_method:
                         raise ValidationError(_('The POS online payment (tx.id=%d) could not be saved correctly because the online payment method could not be found', tx.id))
 
-                pos_order.add_payment({
-                    'amount': tx.amount,
-                    'payment_date': tx.last_state_change,
-                    'payment_method_id': payment_method.id,
-                    'online_account_payment_id': tx.payment_id.id,
-                    'pos_order_id': pos_order.id,
-                })
                 tx.payment_id.update({
                     'pos_payment_method_id': payment_method.id,
                     'pos_order_id': pos_order.id,
                     'pos_session_id': pos_order.session_id.id,
                 })
+
+                payment_data = {
+                    'amount': tx.amount,
+                    'payment_date': tx.last_state_change,
+                    'payment_method_id': payment_method.id,
+                    'online_account_payment_id': tx.payment_id.id,
+                    'pos_order_id': pos_order.id,
+                    'payment_status': 'done',
+                }
+                # Since the payment is already created on the frontend when a payment method is selected,
+                # we only need to update the existing payment. Create a new payment only if the payment method
+                # is not available—this can happen in test cases where payment methods are created only from the backend.
+                online_payment = pos_order.payment_ids.filtered(lambda p: p.payment_method_id.id == payment_method.id and p.pos_order_id.id == pos_order.id and p.payment_status != 'done')
+                if not online_payment:
+                    pos_order.add_payment(payment_data)
+                else:
+                    online_payment.write(payment_data)
+                    paid_amount = pos_order.amount_paid + pos_order._compute_amount_paid()
+                    pos_order.write({'amount_paid': paid_amount})
+
                 if pos_order.state == 'draft' and pos_order._is_pos_order_paid():
-                    pos_order._process_saved_order(False)
+                    pos_order.write({'state': 'paid'})
+
                 # The bus communication is only protected by the name of the channel.
                 # Therefore, no sensitive information is sent through it, only a
                 # notification to invite the local browser to do a safe RPC to

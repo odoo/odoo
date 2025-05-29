@@ -86,68 +86,44 @@ class PosOrder(models.Model):
         coupon_data = {int(k): v for k, v in coupon_data.items()}
 
         self._check_existing_loyalty_cards(coupon_data)
-        # Map negative id to newly created ids.
-        coupon_new_id_map = {k: k for k in coupon_data.keys() if k > 0}
 
-        # Create the coupons that were awarded by the order.
-        coupons_to_create = {k: v for k, v in coupon_data.items() if k < 0 and not v.get('giftCardId')}
-        coupon_create_vals = [{
-            'program_id': p['program_id'],
-            'partner_id': get_partner_id(p.get('partner_id', False)),
-            'code': p.get('code') or p.get('barcode') or self.env['loyalty.card']._generate_code(),
-            'points': 0,
-            'expiration_date': p.get('date_to', False),
-            'source_pos_order_id': self.id,
-            'expiration_date': p.get('expiration_date')
-        } for p in coupons_to_create.values()]
-
-        # Pos users don't have the create permission
-        new_coupons = self.env['loyalty.card'].with_context(action_no_send_mail=True).sudo().create(coupon_create_vals)
-
-        # We update the gift card that we sold when the gift_card_settings = 'scan_use'.
-        gift_cards_to_update = [v for v in coupon_data.values() if v.get('giftCardId')]
-        updated_gift_cards = self.env['loyalty.card']
-        for coupon_vals in gift_cards_to_update:
-            gift_card = self.env['loyalty.card'].browse(coupon_vals.get('giftCardId'))
-            gift_card.write({
-                'points': coupon_vals['points'],
-                'source_pos_order_id': self.id,
+        # Update the coupons sold and used in the order
+        loyalty_cards_to_update = coupon_data.values()
+        updated_loyalty_cards = self.env['loyalty.card']
+        for coupon_vals in loyalty_cards_to_update:
+            loyalty_card = self.env['loyalty.card'].browse(coupon_vals.get('coupon_id'))
+            if not loyalty_card.exists():
+                continue
+            loyalty_card.write({
+                'points': loyalty_card.points + coupon_vals['points'],
+                'source_pos_order_id': self.id if coupon_vals['points'] >= 0 and not loyalty_card.source_pos_order_id else loyalty_card.source_pos_order_id,
                 'partner_id': get_partner_id(coupon_vals.get('partner_id', False)),
+                'expiration_date': coupon_vals.get('expiration_date', False),
             })
-            updated_gift_cards |= gift_card
-
-        # Map the newly created coupons
-        for old_id, new_id in zip(coupons_to_create.keys(), new_coupons):
-            coupon_new_id_map[new_id.id] = old_id
+            # Update the coupon code if it is a physical gift card coupon
+            if coupon_vals.get('barcode') and coupon_vals.get('manual'):
+                loyalty_card.write({
+                    'code': coupon_vals['barcode'],
+                })
+            updated_loyalty_cards |= loyalty_card
 
         # We need a sudo here because this can trigger `_compute_order_count` that require access to `sale.order.line`
-        all_coupons = self.env['loyalty.card'].sudo().browse(coupon_new_id_map.keys()).exists()
-        lines_per_reward_code = defaultdict(lambda: self.env['pos.order.line'])
-        for line in self.lines:
-            if not line.reward_identifier_code:
-                continue
-            lines_per_reward_code[line.reward_identifier_code] |= line
-        for coupon in all_coupons:
-            if coupon.id in coupon_new_id_map:
-                # Coupon existed previously, update amount of points.
-                coupon.points += coupon_data[coupon_new_id_map[coupon.id]]['points']
-            for reward_code in coupon_data[coupon_new_id_map[coupon.id]].get('line_codes', []):
-                lines_per_reward_code[reward_code].coupon_id = coupon
-        # Send creation email
-        new_coupons.with_context(action_no_send_mail=False)._send_creation_communication()
+        all_coupons = self.env['loyalty.card'].sudo().browse(updated_loyalty_cards.ids).exists()
+
         # Reports per program
         report_per_program = {}
         coupon_per_report = defaultdict(list)
         # Important to include the updated gift cards so that it can be printed. Check coupon_report.
-        for coupon in new_coupons | updated_gift_cards:
+        printReportCards = updated_loyalty_cards.filtered(lambda c: coupon_data[c.id]['points'] > 0)
+        for coupon in printReportCards:
             if coupon.program_id not in report_per_program:
-                report_per_program[coupon.program_id] = coupon.program_id.communication_plan_ids.\
+                report_per_program[coupon.program_id.id] = coupon.program_id.communication_plan_ids.\
                     filtered(lambda c: c.trigger == 'create').pos_report_print_id
-            for report in report_per_program[coupon.program_id]:
+            for report in report_per_program.get(coupon.program_id.id):
                 coupon_per_report[report.id].append(coupon.id)
         return {
             'coupon_updates': [{
-                'old_id': coupon_new_id_map[coupon.id],
+                'old_id': coupon.id,
                 'id': coupon.id,
                 'points': coupon.points,
                 'code': coupon.code,
@@ -162,7 +138,7 @@ class PosOrder(models.Model):
                 'program_name': coupon.program_id.name,
                 'expiration_date': coupon.expiration_date,
                 'code': coupon.code,
-            } for coupon in new_coupons if (
+            } for coupon in updated_loyalty_cards if (
                 coupon.program_id.applies_on == 'future'
                 # Don't send the coupon code for the gift card and ewallet programs.
                 # It should not be printed in the ticket.

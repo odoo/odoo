@@ -9,13 +9,14 @@ patch(PosStore.prototype, {
             // Therefore, no sensitive information is sent through it, only a
             // notification to invite the local browser to do a safe RPC to
             // the server to check the new state of the order.
+            const updatedOrder = await this.data.read("pos.order", [id]);
             const order = this.models["pos.order"].find((o) => o.id == id);
-            const updatedOrder = await this.data.read("pos.order", [id])[0];
-            if (updatedOrder) {
-                order.state = updatedOrder.state;
+
+            if (updatedOrder[0]) {
+                order.state = updatedOrder[0].state;
             }
-            if (this.getOrder()?.id === id) {
-                this.updateOnlinePaymentsDataWithServer(this.getOrder(), false);
+            if (order.id === id) {
+                this.updateOnlinePaymentsDataWithServer(order, false);
             }
         });
     },
@@ -38,7 +39,11 @@ patch(PosStore.prototype, {
         if (!opData) {
             return false;
         }
-        if (opData.id !== order.id) {
+        let order_id = order.id;
+        if (order_id === order.uuid) {
+            order_id = this.data.mapUuidToId(order_id);
+        }
+        if (opData.id !== order_id) {
             console.error("Called processOnlinePaymentsDataFromServer on the wrong order.");
         }
         if ("paid_order" in opData) {

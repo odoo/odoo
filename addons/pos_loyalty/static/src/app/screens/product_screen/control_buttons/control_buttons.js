@@ -63,7 +63,6 @@ patch(ControlButtons.prototype, {
                     {
                         product_id: selectedProgram.trigger_product_ids[0],
                         product_tmpl_id: selectedProgram.trigger_product_ids[0].product_tmpl_id,
-                        _e_wallet_program_id: selectedProgram,
                         price_unit: -orderTotal,
                     },
                     {}

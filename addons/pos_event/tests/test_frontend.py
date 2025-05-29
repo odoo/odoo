@@ -77,7 +77,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             "iface_available_categ_ids": [(6, 0, [self.event_category.id])],
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingEventInPos', login="pos_user")
+        self.start_pos_tour('SellingEventInPos')
 
         order = self.env['pos.order'].search([], order='id desc', limit=1)
         event_registration = order.lines[0].event_registration_ids
@@ -127,9 +127,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(slot_2.seats_available, 2)
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'SellingMultiSlotEventInPos', login="pos_user")
+        self.start_pos_tour('SellingMultiSlotEventInPos')
 
-        order = self.env['pos.order'].search([], order='id desc', limit=1)
+        # Here, an extra order has been created at the end of the tour
+        order = self.env['pos.order'].search([('state', '!=', 'draft')])
         self.assertEqual(len(order.lines), 1)
 
         registrations = order.lines.event_registration_ids

@@ -603,7 +603,6 @@ export class SelfOrder extends Reactive {
                 this.currentOrder.delete();
                 uuid = result["pos.order"][0].uuid;
             }
-            this.data.synchronizeLocalDataInIndexedDB();
 
             if (this.config.self_ordering_pay_after === "each") {
                 this.selectedOrderUuid = null;
@@ -674,34 +673,6 @@ export class SelfOrder extends Reactive {
         }
     }
 
-    changeOrderState(access_token, state) {
-        const order = this.orders.filter((o) => o.access_token === access_token);
-        let message = _t("Your order status has been changed");
-
-        if (order.length === 0) {
-            this.handleErrorNotification(new Error("Warning, no order with this access_token"));
-        } else if (order.length !== 1) {
-            this.handleErrorNotification(
-                new Error("Warning, two orders with the same access_token")
-            );
-        } else {
-            order[0].state = state;
-        }
-
-        if (state === "paid") {
-            this.selectedOrderUuid = null;
-            message = _t("Your order has been paid");
-        } else if (state === "cancel") {
-            this.selectedOrderUuid = null;
-            message = _t("Your order has been cancelled");
-        }
-
-        this.notification.add(message, {
-            type: "success",
-        });
-        this.router.navigate("default");
-    }
-
     isOrder() {
         if (!this.currentOrder || !this.currentOrder.lines.length) {
             this.router.navigate("default");
@@ -723,7 +694,6 @@ export class SelfOrder extends Reactive {
                 cleanOrders = true;
             } else if (error?.data?.name === "odoo.exceptions.UserError") {
                 message = error.data.message;
-                this.resetTableIdentifier();
             }
         } else if (error instanceof ConnectionLostError) {
             message = _t("Connection lost, please try again later");
@@ -824,9 +794,6 @@ export class SelfOrder extends Reactive {
 
     isTaxesIncludedInPrice() {
         return this.config.iface_tax_included === "total";
-    }
-    getLinePrice(line) {
-        return this.config.iface_tax_included ? line.price_subtotal_incl : line.price_subtotal;
     }
     getSelectedAttributes(line) {
         const attributeValues = line.attribute_value_ids;

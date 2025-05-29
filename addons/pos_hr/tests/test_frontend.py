@@ -74,8 +74,7 @@ class TestUi(TestPosHrHttpCommon):
         # open a session, the /pos/ui controller will redirect to it
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
-        self.start_tour(
-            "/pos/ui/%d" % self.main_pos_config.id,
+        self.start_pos_tour(
             "CashierStayLogged",
             login="pos_admin",
         )
@@ -85,8 +84,7 @@ class TestUi(TestPosHrHttpCommon):
         self.product_a.available_in_pos = True
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
-        self.start_tour(
-            "/pos/ui/%d" % self.main_pos_config.id,
+        self.start_pos_tour(
             "CashierCanSeeProductInfo",
             login="pos_admin",
         )
@@ -99,8 +97,7 @@ class TestUi(TestPosHrHttpCommon):
         ]
         self.main_pos_config.with_user(self.pos_admin).open_ui()
 
-        self.start_tour(
-            "/pos/ui/%d" % self.main_pos_config.id,
+        self.start_pos_tour(
             "CashierCannotClose",
             login="pos_user",
         )

@@ -5,32 +5,6 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrderline, {
     extraFields: {
         ...(PosOrderline.extraFields || {}),
-        _e_wallet_program_id: {
-            model: "pos.order.line",
-            name: "_e_wallet_program_id",
-            relation: "loyalty.program",
-            type: "many2one",
-            local: true,
-        },
-        gift_code: {
-            model: "pos.order.line",
-            name: "gift_code",
-            type: "char",
-            local: true,
-        },
-        _gift_barcode: {
-            model: "pos.order.line",
-            name: "_gift_barcode",
-            type: "char",
-            local: true,
-        },
-        _gift_card_id: {
-            model: "pos.order.line",
-            name: "_gift_card_id",
-            relation: "loyalty.card",
-            type: "many2one",
-            local: true,
-        },
         _reward_product_id: {
             model: "pos.order.line",
             name: "_reward_product_id",
@@ -42,25 +16,30 @@ patch(PosOrderline, {
 });
 
 patch(PosOrderline.prototype, {
+    initState() {
+        super.initState();
+        this.uiState = {
+            ...this.uiState,
+            programType: null,
+            giftCode: null,
+            eWalletId: null,
+            giftCardExpirationDate: null,
+        };
+    },
     setOptions(options) {
         if (options.eWalletGiftCardProgram) {
-            this._e_wallet_program_id = options.eWalletGiftCardProgram;
-        }
-        if (options.giftBarcode) {
-            this._gift_barcode = options.giftBarcode;
-        }
-        if (options.giftCardId) {
-            this._gift_card_id = options.giftCardId;
+            this.uiState.eWalletId = options.eWalletGiftCardProgram.id;
+            this.uiState.programType = options.eWalletGiftCardProgram.program_type;
         }
         return super.setOptions(...arguments);
     },
     getEWalletGiftCardProgramType() {
-        return this._e_wallet_program_id && this._e_wallet_program_id.program_type;
+        return this.uiState.programType;
     },
     ignoreLoyaltyPoints({ program }) {
         return (
             ["gift_card", "ewallet"].includes(program.program_type) &&
-            this._e_wallet_program_id?.id !== program.id
+            this.uiState.eWalletId !== program.id
         );
     },
     isGiftCardOrEWalletReward() {

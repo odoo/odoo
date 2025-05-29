@@ -42,8 +42,7 @@ class PosSelfAdyenController(PosAdyenController):
                 'ticket': '',
                 'pos_order_id': order.id
             })
-            order.action_pos_order_paid()
-            order._send_order()
+            order.state = "paid"
 
         if order.config_id.self_ordering_mode == 'kiosk':
             order.config_id._notify('PAYMENT_STATUS', {

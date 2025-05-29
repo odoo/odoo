@@ -22,12 +22,9 @@ patch(PaymentScreen.prototype, {
         return super.nextPage;
     },
     async afterOrderValidation(suggestToSync = true) {
-        const changedTables = this.currentOrder?.table_id?.children?.map((table) => table.id);
         // After the order has been validated the tables have no reason to be merged anymore.
-        if (changedTables?.length) {
-            this.pos.data.write("restaurant.table", changedTables, { parent_id: null });
-        }
-        return await super.afterOrderValidation(...arguments);
+        this.currentOrder?.table_id?.children?.forEach?.((t) => (t.parent_id = null));
+        return await super.afterOrderValidation();
     },
     async validateOrder(isForceValidate) {
         if (this.pos.config.module_pos_restaurant && this.pos.getOrder().hasChange) {
@@ -40,7 +37,7 @@ patch(PaymentScreen.prototype, {
                 cancelLabel: _t("Discard"),
             });
             if (confirmed) {
-                await this.pos.sendOrderInPreparationUpdateLastChange(this.currentOrder);
+                await this.pos.sendOrderInPreparation(this.currentOrder);
             }
         }
         await super.validateOrder(...arguments);

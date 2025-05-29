@@ -57,11 +57,9 @@ patch(PaymentScreen.prototype, {
             : super.shouldDownloadInvoice();
     },
     async _postPushOrderResolve(order, order_server_ids) {
+        await this.pos.data.read("pos.order", [order.id]);
         if (this.pos.config.is_spanish) {
-            const invoiceName = await this.pos.data.call("pos.order", "get_invoice_name", [
-                order_server_ids,
-            ]);
-            order.invoice_name = invoiceName;
+            order.invoice_name = order.account_move?.name;
         }
         return super._postPushOrderResolve(...arguments);
     },
