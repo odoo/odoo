@@ -173,6 +173,7 @@ class SaleOrder(models.Model):
                     'state': order.partner_id.state_id.name if order.partner_id.state_id else '',
                     'country': order.partner_id.country_id.name if order.partner_id.country_id else '',
                     'zip': order.partner_id.zip,
+                    'discrete_pick':order.discrete_pick,
                 }
                 logger.info(f"Generated data to release: {data_to_send}")
                 logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
