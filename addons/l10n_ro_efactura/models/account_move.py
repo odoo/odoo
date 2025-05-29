@@ -13,6 +13,7 @@ class AccountMove(models.Model):
     l10n_ro_edi_state = fields.Selection(
         selection=[
             ('invoice_sending', 'Sent'),
+            ('invoice_sending_failed', 'Error'),
             ('invoice_sent', 'Validated'),
         ],
         string='E-Factura Status',
