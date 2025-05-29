@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
 
     invoice_mail_template_id = fields.Many2one(
         comodel_name='mail.template',
-        string="Invoice Email Template",
+        string="Email Template",
         domain=[('model', '=', 'account.move')],
         config_parameter='sale.default_invoice_email_template',
         help="Email sent to the customer once the invoice is available.",

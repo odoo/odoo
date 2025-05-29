@@ -12,7 +12,6 @@ This module allow your customer to choose a Point Relais® and use it as shippin
     'data': [
         'views/delivery_carrier_views.xml',
         'views/delivery_form_templates.xml',
-        'views/res_config_settings_views.xml',
         'views/templates.xml',
     ],
     'assets': {

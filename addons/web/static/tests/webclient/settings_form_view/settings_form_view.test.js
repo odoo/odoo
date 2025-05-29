@@ -110,7 +110,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
                         <button name="nameAction" type="object" string="Button" class="btn btn-link"/>
                     </setting>
                     <block title="Title of group Bar">
-                        <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
+                        <setting help="this is bar" info="this is bar info" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
                             <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
@@ -122,7 +122,7 @@ test("change setting on nav bar click in base settings on desktop", async () => 
                         </setting>
                     </block>
                     <block title="Title of group Foo">
-                        <setting help="this is foo" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
+                        <setting help="this is foo" info="this is foo info" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
                             <field name="foo"/>
                         </setting>
                         <setting string="Personalize setting" help="this is full personalize setting">
@@ -163,6 +163,14 @@ test("change setting on nav bar click in base settings on desktop", async () => 
     expect(".o_searchview input").toBeFocused({ message: "searchview input should be focused" });
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
     expect(".o_setting_box a").toHaveCount(2);
+    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute(
+        "title",
+        "this is bar info"
+    );
+    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute(
+        "title",
+        "this is foo info"
+    );
     expect(".o_setting_box a:eq(0)").toHaveAttribute(
         "href",
         "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
@@ -259,7 +267,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
                         <button name="nameAction" type="object" string="Button" class="btn btn-link"/>
                     </setting>
                     <block title="Title of group Bar">
-                        <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
+                        <setting help="this is bar" info="this is bar info" documentation="/applications/technical/web/settings/this_is_a_test.html">
                             <field name="bar"/>
                             <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
                         </setting>
@@ -271,7 +279,7 @@ test("change setting on nav bar click in base settings on mobile", async () => {
                         </setting>
                     </block>
                     <block title="Title of group Foo">
-                        <setting help="this is foo" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
+                        <setting help="this is foo" info="this is foo info" documentation="https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_another_test.html">
                             <field name="foo"/>
                         </setting>
                         <setting string="Personalize setting" help="this is full personalize setting">
@@ -311,6 +319,14 @@ test("change setting on nav bar click in base settings on mobile", async () => {
     expect(".o_form_editable").not.toHaveClass("o_form_nosheet");
     expect(".app_settings_block:not(.d-none) .app_settings_header").toHaveCount(1);
     expect(".o_setting_box a").toHaveCount(2);
+    expect(".o_setting_box span.fa:eq(0)").toHaveAttribute(
+        "title",
+        "this is bar info"
+    );
+    expect(".o_setting_box span.fa:eq(1)").toHaveAttribute(
+        "title",
+        "this is foo info"
+    );
     expect(".o_setting_box a:eq(0)").toHaveAttribute(
         "href",
         "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
@@ -1860,7 +1876,7 @@ test("standalone field labels with string inside a settings page", async () => {
     const expectedCompiled = /* xml */ `
             <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]" anchors="[{&quot;app&quot;:&quot;crm&quot;,&quot;settingId&quot;:&quot;setting_id&quot;}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`${MOCK_IMAGE}\`" selectedTab="settings.selectedTab">
-                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" id="\`setting_id\`" string="\`\`" addLabel="true">
+                    <SearchableSetting info="\`\`" title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" id="\`setting_id\`" string="\`\`" addLabel="true">
                         <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name_0'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" readonly="__comp__.props.readonly"/>
                     </SearchableSetting>

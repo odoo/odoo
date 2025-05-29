@@ -12,6 +12,9 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='payment.provider',
         compute='_compute_active_provider_id',
     )
+    has_enabled_provider = fields.Boolean(
+        string="Has Enabled Provider", compute='_compute_has_enabled_provider'
+    )
     onboarding_payment_module = fields.Selection(
         string="Onboarding Payment Module",
         selection=[
@@ -28,18 +31,33 @@ class ResConfigSettings(models.TransientModel):
     def _compute_active_provider_id(self):
         for config in self:
             active_providers_domain = config._get_active_providers_domain()
-            if active_providers := self.env['payment.provider'].search(active_providers_domain):
+            if active_providers := self.env['payment.provider'].search(
+                active_providers_domain, limit=1
+            ):
                 config.active_provider_id = active_providers[0]
             else:
                 config.active_provider_id = None
 
-    def _get_active_providers_domain(self):
-        """Return the domain to search for active (enabled or test) providers.
+    @api.depends('company_id')
+    def _compute_has_enabled_provider(self):
+        for config in self:
+            enabled_providers_domain = config._get_active_providers_domain(enabled_only=True)
+            config.has_enabled_provider = bool(
+                self.env['payment.provider'].search(enabled_providers_domain, limit=1)
+            )
 
+    def _get_active_providers_domain(self, enabled_only=False):
+        """Return the domain to search for active providers.
+
+        :param bool enabled_only: Whether only enabled providers should be considered active.
         :return: The active providers domain.
         :rtype: Domain
         """
-        return Domain('state', '!=', 'disabled')
+        company_domain = self.env['payment.provider']._check_company_domain(self.company_id)
+        if enabled_only:
+            return company_domain & Domain('state', '=', 'enabled')
+        else:
+            return company_domain & Domain('state', '!=', 'disabled')
 
     @api.depends('company_id.currency_id', 'company_id.country_id.is_stripe_supported_country')
     def _compute_onboarding_payment_module(self):

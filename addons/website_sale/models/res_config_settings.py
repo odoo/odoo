@@ -23,12 +23,8 @@ class ResConfigSettings(models.TransientModel):
     )
 
     # Modules
-    module_account = fields.Boolean("Invoicing")
-    module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
     module_website_sale_autocomplete = fields.Boolean("Address Autocomplete")
-    module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
     module_website_sale_collect = fields.Boolean("Click & Collect")
-    module_website_sale_wishlist = fields.Boolean("Wishlists")
 
     # Website-dependent settings
     add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
@@ -64,14 +60,17 @@ class ResConfigSettings(models.TransientModel):
         related='website_id.show_line_subtotals_tax_selection',
         readonly=False,
     )
+    confirmation_email_template_id = fields.Many2one(
+        related='website_id.confirmation_email_template_id', readonly=False
+    )
 
     # Additional settings
     account_on_checkout = fields.Selection(
         string="Customer Accounts",
         selection=[
             ("optional", "Optional"),
-            ("disabled", "Disabled (buy as guest)"),
-            ("mandatory", "Mandatory (no guest checkout)"),
+            ("disabled", "Disabled"),
+            ("mandatory", "Mandatory"),
         ],
         compute="_compute_account_on_checkout",
         inverse="_inverse_account_on_checkout",
@@ -83,12 +82,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
 
-    enabled_extra_checkout_step = fields.Boolean(string="Extra Step During Checkout",
-                                                 compute='_compute_checkout_process_steps', readonly=False, store=True)
-    enabled_buy_now_button = fields.Boolean(string="Buy Now",
-                                            compute='_compute_checkout_process_steps', readonly=False, store=True)
     enabled_gmc_src = fields.Boolean(
-        string="Google Merchant Center Data Source",
+        string="Google Merchant Center",
         related='website_id.enabled_gmc_src',
         readonly=False,
     )
@@ -100,22 +95,6 @@ class ResConfigSettings(models.TransientModel):
     def _compute_account_on_checkout(self):
         for record in self:
             record.account_on_checkout = record.website_id.account_on_checkout or 'disabled'
-
-    @api.depends('website_id')
-    def _compute_checkout_process_steps(self):
-        """
-        Computing the extra info step and buy now settings when changing
-        the website in the res.config.settings page to show the correct value
-        in the checkbox.
-        """
-        for record in self:
-            website = record.with_context(website_id=record.website_id.id).website_id
-            record.enabled_extra_checkout_step = website.is_view_active(
-                'website_sale.extra_info'
-            )
-            record.enabled_buy_now_button = website.is_view_active(
-                'website_sale.product_buy_now'
-            )
 
     @api.depends('website_domain')
     def _compute_gmc_xml_url(self):
@@ -135,22 +114,10 @@ class ResConfigSettings(models.TransientModel):
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
 
-    #=== CRUD METHODS ===#
-
-    def set_values(self):
-        super().set_values()
-        if self.website_id:
-            website = self.with_context(website_id=self.website_id.id).website_id
-            extra_step_view = website.viewref('website_sale.extra_info')
-            extra_step = website._get_checkout_step('/shop/extra_info')
-            buy_now_view = website.viewref('website_sale.product_buy_now')
-
-            if extra_step_view.active != self.enabled_extra_checkout_step:
-                extra_step_view.active = extra_step.is_published = self.enabled_extra_checkout_step
-            if buy_now_view.active != self.enabled_buy_now_button:
-                buy_now_view.active = self.enabled_buy_now_button
-
     #=== ACTION METHODS ===#
+
+    def action_view_delivery_provider_modules(self):
+        return self.env['delivery.carrier'].install_more_provider()
 
     @api.readonly
     def action_open_abandoned_cart_mail_template(self):

@@ -11,6 +11,7 @@ export class Setting extends Component {
     };
     static props = {
         id: { type: String, optional: 1 },
+        info: { type: String, optional: 1 },
         title: { type: String, optional: 1 },
         fieldId: { type: String, optional: 1 },
         help: { type: String, optional: 1 },
