@@ -75,6 +75,12 @@
     <BuilderRow label.translate="Description Text" level="1" t-if="isActiveItem('google_maps_description')">
         <BuilderTextInput action="'googleMapDescriptionTextValue'"/>
     </BuilderRow>
+    <BuilderRow label.translate="Text Color" level="1" t-if="isActiveItem('google_maps_description')" >
+        <BuilderColorPicker enabledTabs="['custom']" applyTo="'.description'" styleAction="'color'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Background Color" level="1" t-if="isActiveItem('google_maps_description')" >
+        <BuilderColorPicker enabledTabs="['custom', 'gradient']" applyTo="'.description'" styleAction="'background-color'"/>
+    </BuilderRow>
 </t>
 
 </templates>

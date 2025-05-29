@@ -47,5 +47,11 @@
     <BuilderRow label.translate="Description Text" level="1" t-if="isActiveItem('description')">
         <BuilderTextInput action="'mapDescriptionTextValue'"/>
     </BuilderRow>
+    <BuilderRow label.translate="Text Color" level="1" t-if="isActiveItem('description')" >
+        <BuilderColorPicker enabledTabs="['custom']" applyTo="'.description'" styleAction="'color'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Background Color" level="1" t-if="isActiveItem('description')" >
+        <BuilderColorPicker enabledTabs="['custom', 'gradient']" applyTo="'.description'" styleAction="'background-color'"/>
+    </BuilderRow>
 </t>
 </templates>
