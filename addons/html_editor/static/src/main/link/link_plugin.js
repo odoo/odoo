@@ -518,8 +518,11 @@ export class LinkPlugin extends Plugin {
                     ...props,
                     isImage: false,
                     linkEl: this.linkElement,
-                    onApply: (url, label, classes) => {
+                    onApply: (url, label, classes, attachmentId) => {
                         this.linkElement.href = url;
+                        if (attachmentId) {
+                            this.linkElement.dataset.attachmentId = attachmentId;
+                        }
                         if (cleanZWChars(this.linkElement.innerText) === label) {
                             this.overlay.close();
                             this.dependencies.selection.setSelection(

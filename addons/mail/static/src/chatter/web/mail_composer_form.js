@@ -11,14 +11,13 @@ export class MailComposerFormController extends formView.Controller {
         ...formView.Controller.props,
         fullComposerBus: { type: EventBus, optional: true },
     };
+    static defaultProps = { fullComposerBus: new EventBus() };
     setup() {
         super.setup();
         toRaw(this.env.dialogData).model = "mail.compose.message";
-        if (this.props.fullComposerBus) {
-            useSubEnv({
-                fullComposerBus: this.props.fullComposerBus,
-            });
-        }
+        useSubEnv({
+            fullComposerBus: this.props.fullComposerBus,
+        });
     }
 }
 
