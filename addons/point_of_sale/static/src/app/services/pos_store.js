@@ -1664,7 +1664,7 @@ export class PosStore extends WithLazyGetterTrap {
             tracking_number: order.tracking_number,
             preset_name: order.preset_id?.name || "",
             employee_name: order.employee_id?.name || order.user_id?.name,
-            internal_note: order.internal_note,
+            internal_note: this.getStrNotes(order.internal_note),
             general_customer_note: order.general_customer_note,
             changes: {
                 title: "",
@@ -1745,7 +1745,7 @@ export class PosStore extends WithLazyGetterTrap {
             }
 
             if (orderChange.internal_note || orderChange.general_customer_note) {
-                orderData.changes = {};
+                orderData.changes = { title: "", data: [] };
                 const result = await this.printOrderChanges(orderData, printer);
                 if (!result.successful) {
                     unsuccedPrints.push(printer.config.name);
