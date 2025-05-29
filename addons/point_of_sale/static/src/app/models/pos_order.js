@@ -693,7 +693,8 @@ export class PosOrder extends Base {
                         orderLine.getAllPrices().priceWithTax;
                     if (
                         orderLine.displayDiscountPolicy() === "without_discount" &&
-                        !(orderLine.price_type === "manual")
+                        !(orderLine.price_type === "manual") &&
+                        orderLine.discount == 0
                     ) {
                         sum +=
                             (orderLine.getTaxedlstUnitPrice() -
