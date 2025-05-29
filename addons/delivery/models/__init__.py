@@ -3,6 +3,7 @@
 from . import delivery_carrier
 from . import delivery_price_rule
 from . import delivery_zip_prefix
+from . import ir_module_module
 from . import payment_transaction
 from . import payment_provider
 from . import product_category

@@ -44,6 +44,15 @@ class Website(models.Model):
         except ValueError:
             return False
 
+    def _default_confirmation_email_template(self):
+        template_id = self.env['ir.config_parameter'].sudo().get_param(
+            'sale.default_confirmation_template'
+        )
+        default_template = template_id and self.env['mail.template'].browse(int(template_id))
+        if default_template.exists():
+            return default_template
+        return self.env.ref('sale.mail_template_sale_confirmation', raise_if_not_found=False)
+
     #=== FIELDS ===#
 
     salesperson_id = fields.Many2one(
@@ -73,7 +82,6 @@ class Website(models.Model):
         selection=[
             ('stay', "Stay on Product Page"),
             ('go_to_cart', "Go to cart"),
-            ('force_dialog', "Let the user decide (dialog)"),
         ],
         default='stay',
     )
@@ -239,7 +247,7 @@ class Website(models.Model):
 
     prevent_zero_price_sale = fields.Boolean(string="Hide 'Add To Cart' when price = 0")
 
-    enabled_gmc_src = fields.Boolean(string="Google Merchant Center Data Source")
+    enabled_gmc_src = fields.Boolean(string="Google Merchant Center")
 
     currency_id = fields.Many2one(
         string="Default Currency",
@@ -250,6 +258,11 @@ class Website(models.Model):
         string="Price list available for this Ecommerce/Website",
         comodel_name='product.pricelist',
         compute="_compute_pricelist_ids",
+    )
+    confirmation_email_template_id = fields.Many2one(
+        comodel_name='mail.template',
+        domain=[('model', '=', 'sale.order')],
+        default=_default_confirmation_email_template,
     )
 
     _check_gmc_ecommerce_access = models.Constraint(

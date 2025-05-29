@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, models
 from odoo.fields import Domain
 
 
@@ -9,11 +9,19 @@ class ResConfigSettings(models.TransientModel):
 
     # === COMPUTE METHODS === #
 
-    def _get_active_providers_domain(self):
+    @api.depends('company_id', 'website_id')
+    def _compute_active_provider_id(self):
+        return super()._compute_active_provider_id()
+
+    @api.depends('company_id', 'website_id')
+    def _compute_has_enabled_provider(self):
+        return super()._compute_has_enabled_provider()
+
+    def _get_active_providers_domain(self, *args, **kwargs):
         """Override of `payment` to only return providers compatible with the current website."""
         self.ensure_one()
         return Domain.AND([
-            super()._get_active_providers_domain(),
+            super()._get_active_providers_domain(*args, **kwargs),
             ['|', ('website_id', '=', False), ('website_id', '=', self.website_id.id)],
         ])
 
