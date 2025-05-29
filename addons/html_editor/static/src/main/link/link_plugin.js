@@ -394,7 +394,7 @@ export class LinkPlugin extends Plugin {
         const selectionTextContent = selection?.textContent();
         const isImage = !!findInSelection(selection, "img");
 
-        const applyCallback = (url, label, classes) => {
+        const applyCallback = (url, label, classes, attachmentId) => {
             if (this.linkInDocument && isImage) {
                 if (url) {
                     this.linkInDocument.href = url;
@@ -451,6 +451,9 @@ export class LinkPlugin extends Plugin {
                     cursorsToRestore = null;
                     this.dependencies.dom.insert(link);
                 }
+            }
+            if (attachmentId) {
+                this.linkInDocument.dataset.attachmentId = attachmentId;
             }
             this.closeLinkTools(cursorsToRestore);
             this.dependencies.selection.focusEditable();
