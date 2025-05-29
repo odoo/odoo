@@ -12,6 +12,9 @@ from odoo.http import request
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
 from odoo.tools import sql
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class WebsiteBlog(http.Controller):
@@ -171,7 +174,7 @@ class WebsiteBlog(http.Controller):
         '''/blog/<model("blog.blog"):blog>/page/<int:page>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
-    ], type='http', auth="public", website=True, sitemap=True)
+    ], type='http', auth="public", website=True, sitemap=True, list_as_website_content=_lt("Blogs"))
     def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
         blogs = tools.lazy(lambda: Blog.search(request.website.website_domain(), order="sequence"))

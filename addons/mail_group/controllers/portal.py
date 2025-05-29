@@ -10,7 +10,10 @@ from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request, Response
 from odoo.tools import consteq
+from odoo.tools.translate import LazyTranslate
 from odoo.tools.misc import get_lang
+
+_lt = LazyTranslate(__name__)
 
 
 class PortalMailGroup(http.Controller):
@@ -57,7 +60,7 @@ class PortalMailGroup(http.Controller):
     # MAIN PAGE
     # ------------------------------------------------------------
 
-    @http.route('/groups', type='http', auth='public', sitemap=True, website=True)
+    @http.route('/groups', type='http', auth='public', sitemap=True, website=True, list_as_website_content=_lt("Groups"))
     def groups_index(self, email='', **kw):
         """View of the group lists. Allow the users to subscribe and unsubscribe."""
         if kw.get('group_id') and kw.get('token'):

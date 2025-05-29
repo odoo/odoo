@@ -13,6 +13,9 @@ from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import email_normalize, escape_psql
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class WebsiteHrRecruitment(WebsiteForm):
@@ -25,7 +28,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     @http.route([
         '/jobs',
         '/jobs/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_jobs)
+    ], type='http', auth="public", website=True, sitemap=sitemap_jobs, list_as_website_content=_lt("Jobs"))
     def jobs(self, country_id=None, all_countries=False, department_id=None, office_id=None, contract_type_id=None,
              is_remote=False, is_other_department=False, is_untyped=None,  industry_id=None, is_industry_untyped=False,
              noFuzzy=False, page=1, search=None, **kwargs):

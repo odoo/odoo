@@ -11,6 +11,9 @@ from odoo import SUPERUSER_ID, _, http
 from odoo.exceptions import AccessDenied, AccessError, MissingError, UserError, ValidationError
 from odoo.http import Controller, content_disposition, request, route
 from odoo.tools import clean_context, consteq, single_email_re, str2bool
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 # --------------------------------------------------
 # Misc tools
@@ -178,7 +181,7 @@ class CustomerPortal(Controller):
             request.session['portal_counters'] = cache
         return res
 
-    @route(['/my', '/my/home'], type='http', auth="user", website=True)
+    @route(['/my', '/my/home'], type='http', auth="user", website=True, list_as_website_content=_lt("User Dashboard"))
     def home(self, **kw):
         values = self._prepare_portal_layout_values()
         values.update(self._prepare_home_portal_values([]))

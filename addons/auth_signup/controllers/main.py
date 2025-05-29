@@ -10,9 +10,11 @@ from odoo.addons.web.controllers.home import ensure_db, Home, SIGN_UP_REQUEST_PA
 from odoo.addons.web.models.res_users import SKIP_CAPTCHA_LOGIN
 from odoo.addons.base_setup.controllers.main import BaseSetup
 from odoo.exceptions import UserError
+from odoo.tools.translate import LazyTranslate
 from odoo.http import request
 from markupsafe import Markup
 
+_lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 LOGIN_SUCCESSFUL_PARAMS.add('account_created')
@@ -34,7 +36,7 @@ class AuthSignupHome(Home):
                 return request.redirect_query('/web/login_successful', query={'account_created': True})
         return response
 
-    @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False, captcha='signup')
+    @http.route('/web/signup', type='http', auth='public', website=True, sitemap=False, captcha='signup', list_as_website_content=_lt("Sign Up"))
     def web_auth_signup(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 
@@ -82,7 +84,7 @@ class AuthSignupHome(Home):
         response.headers['Content-Security-Policy'] = "frame-ancestors 'self'"
         return response
 
-    @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False, captcha='password_reset')
+    @http.route('/web/reset_password', type='http', auth='public', website=True, sitemap=False, captcha='password_reset', list_as_website_content=_lt("Reset Password"))
     def web_auth_reset_password(self, *args, **kw):
         qcontext = self.get_auth_signup_qcontext()
 

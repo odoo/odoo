@@ -17,7 +17,9 @@ from odoo.exceptions import AccessError, ValidationError, UserError, MissingErro
 from odoo.fields import Domain
 from odoo.http import request, Response
 from odoo.tools import consteq, email_normalize_all
+from odoo.tools.translate import LazyTranslate
 
+_lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 
@@ -335,7 +337,7 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.CHANNEL MAIN / SEARCH
     # --------------------------------------------------
 
-    @http.route('/slides', type='http', auth="public", website=True, sitemap=True, readonly=True)
+    @http.route('/slides', type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_website_content=_lt("eLearning"))
     def slides_channel_home(self, **post):
         """ Home page for eLearning platform. Is mainly a container page, does not allow search / filter. """
         channels_all = tools.lazy(lambda: request.env['slide.channel'].search(request.website.website_domain() & Domain('is_visible', '=', True)))
