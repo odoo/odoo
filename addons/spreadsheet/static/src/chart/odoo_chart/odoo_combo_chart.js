@@ -21,12 +21,14 @@ export class OdooComboChart extends OdooChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.axesDesign = definition.axesDesign;
+        this.hideDataMarkers = definition.hideDataMarkers;
     }
 
     getDefinition() {
         return {
             ...super.getDefinition(),
             axesDesign: this.axesDesign,
+            hideDataMarkers: this.hideDataMarkers,
         };
     }
 
