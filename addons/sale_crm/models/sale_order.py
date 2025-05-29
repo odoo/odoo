@@ -12,4 +12,4 @@ class SaleOrder(models.Model):
         domain="[('type', '=', 'opportunity'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
 
     def action_confirm(self):
-        return super(SaleOrder, self.with_context({k:v for k,v in self._context.items() if k != 'default_tag_ids'})).action_confirm()
+        return super(SaleOrder, self.with_context({k: v for k, v in self._context.items() if k not in ['default_tag_ids', 'default_user_id']})).action_confirm()
