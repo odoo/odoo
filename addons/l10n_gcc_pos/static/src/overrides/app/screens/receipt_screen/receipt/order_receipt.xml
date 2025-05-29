@@ -19,7 +19,7 @@
         </xpath>
         <xpath expr="//div[@t-esc='props.data.cashier']/.." position="after">
             <div t-if="props.data.is_gcc_country" t-translation="off">
-                <div>Served by / خدم بواسطة <t t-esc="props.data.cashier"/></div>
+                <div>Served by / خدم بواسطة <t t-esc="props.data.gcc_cashier"/></div>
             </div>
         </xpath>
     </t>
