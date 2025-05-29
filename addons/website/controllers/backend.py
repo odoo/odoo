@@ -73,3 +73,11 @@ class WebsiteBackend(http.Controller):
             'nbInstalled': total_features - len(features_not_installed)
         }
         return features_info
+
+    @http.route('/website/set_default_social_image', type='jsonrpc', auth='user', readonly=True)
+    def set_default_social_image(self, website_id, data):
+        website = request.env['website'].browse(website_id)
+        if not website or not website.exists():
+            return {'error': 'Website not found'}
+        website.sudo().write({'social_default_image': data})
+        return {'status': 'ok'}

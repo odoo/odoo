@@ -225,4 +225,34 @@
         parent="sale.menu_sales_config"
         sequence="4"/>
 
+    <record id="action_install_more_provider" model="ir.actions.server">
+        <field name="name">Install More Providers</field>
+        <field name="model_id" ref="delivery.model_delivery_carrier"/>
+        <field name="binding_model_id" ref="delivery.model_delivery_carrier"/>
+        <field name="state">code</field>
+        <field name="code">action = env['delivery.carrier'].install_more_provider()</field>
+    </record>
+
+    <record id="delivery_provider_kanban_view" model="ir.ui.view">
+        <field name="name">delivery.provider.view.kanban.inherit</field>
+        <field name="model">ir.module.module</field>
+        <field name="inherit_id" ref="base.module_view_kanban"/>
+        <field name="mode">extension</field>
+        <field name="arch" type="xml">
+            <button name="button_immediate_install" position="after">
+                <button
+                    invisible="state != 'installed'"
+                    name="action_view_delivery_methods"
+                    type="object"
+                    class="btn btn-primary btn-sm"
+                >
+                    Delivery Methods
+                </button>
+            </button>
+            <a id="module_info" position="attributes">
+                <attribute name="class">d-none</attribute>
+            </a>
+        </field>
+    </record>
+
 </odoo>

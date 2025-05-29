@@ -152,7 +152,11 @@ class DeliveryCarrier(models.Model):
         exclude_apps = ['delivery_barcode', 'delivery_stock_picking_batch', 'delivery_iot']
         return {
             'name': _('New Providers'),
-            'view_mode': 'kanban,form',
+            'views': [
+                (self.env.ref('delivery.delivery_provider_kanban_view').id, 'kanban'),
+                (self.env.ref('delivery.delivery_provider_list_view').id, 'list'),
+            ],
+            'view_mode': 'kanban,list',
             'res_model': 'ir.module.module',
             'domain': [['name', '=like', 'delivery_%'], ['name', 'not in', exclude_apps]],
             'type': 'ir.actions.act_window',
