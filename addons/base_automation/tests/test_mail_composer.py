@@ -38,6 +38,7 @@ class TestMailFullComposer(MailCommon, HttpCase):
             "login": "nadu",
             "partner_id": user_partner.id
         })
+        partner.message_subscribe(partner_ids=[self.user_admin.partner_id.id])
         with self.mock_mail_app():
             self.start_tour(
                 f"/odoo/res.partner/{partner.id}",
