@@ -26,9 +26,7 @@ from odoo.http import request
 from odoo.tools import OrderedSet, misc, profiler
 from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
 from odoo.tools.json import scriptsafe as json
-from odoo.tools.js_transpiler import is_odoo_module, transpile_javascript
 from odoo.tools.misc import file_open, file_path
-from odoo.tools.sourcemap_generator import SourceMapGenerator
 
 _logger = logging.getLogger(__name__)
 
@@ -356,6 +354,7 @@ class AssetsBundle(object):
 
         :return ir.attachment representing the un-minified content of the bundleJS
         """
+        from odoo.tools.sourcemap_generator import SourceMapGenerator  # noqa: PLC0415
         sourcemap_attachment = self.get_attachments('js.map') \
                         or self.save_attachment('js.map', '')
         generator = SourceMapGenerator(
@@ -542,6 +541,7 @@ css_error_message {
         :param content_import_rules: string containing all the @import rules to put at the beginning of the bundle
         :return ir.attachment representing the un-minified content of the bundleCSS
         """
+        from odoo.tools.sourcemap_generator import SourceMapGenerator  # noqa: PLC0415
         sourcemap_attachment = self.get_attachments('css.map') \
                                 or self.save_attachment('css.map', '')
         debug_asset_url = self.get_asset_url(unique='debug')
@@ -821,6 +821,7 @@ class JavascriptAsset(WebAsset):
     @property
     def is_transpiled(self):
         if self._is_transpiled is None:
+            from odoo.tools.js_transpiler import is_odoo_module  # noqa: PLC0415
             self._is_transpiled = bool(is_odoo_module(self.url, super().content))
         return self._is_transpiled
 
@@ -829,6 +830,7 @@ class JavascriptAsset(WebAsset):
         content = super().content
         if self.is_transpiled:
             if not self._converted_content:
+                from odoo.tools.js_transpiler import transpile_javascript  # noqa: PLC0415
                 self._converted_content = transpile_javascript(self.url, content)
             return self._converted_content
         return content
