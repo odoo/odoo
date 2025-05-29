@@ -593,7 +593,7 @@ test("replace an image with a caption", async () => {
         contentAfter: unformat(
             `<p><br></p>
             <figure>
-                <img src="/web/static/img/logo2.png" alt="" class="img img-fluid o_we_custom_image">
+                <img src="/web/static/img/logo2.png" alt="" data-attachment-id="1" class="img img-fluid o_we_custom_image">
                 <figcaption>Hello</figcaption>
             </figure>
             <h1>[]Heading</h1>`
