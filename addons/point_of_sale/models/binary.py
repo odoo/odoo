@@ -1,3 +1,5 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import http
 from odoo.http import request
 from odoo.addons.web.controllers.binary import Binary

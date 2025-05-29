@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby, starmap
@@ -26,7 +27,6 @@ class PosSession(models.Model):
     ]
 
     company_id = fields.Many2one('res.company', related='config_id.company_id', string="Company", readonly=True)
-
     config_id = fields.Many2one(
         'pos.config', string='Point of Sale',
         required=True,
@@ -42,20 +42,16 @@ class PosSession(models.Model):
     currency_id = fields.Many2one('res.currency', related='config_id.currency_id', string="Currency", readonly=False)
     start_at = fields.Datetime(string='Opening Date', readonly=True)
     stop_at = fields.Datetime(string='Closing Date', readonly=True, copy=False)
-
     state = fields.Selection(
         POS_SESSION_STATE, string='Status',
         required=True, readonly=True,
         index=True, copy=False, default='opening_control')
-
     order_seq_id = fields.Many2one('ir.sequence', string='Order Sequence', readonly=True, copy=False, help='Used to generate the OOOO part of the pos_reference field of the pos.order model.')
     login_number_seq_id = fields.Many2one('ir.sequence', string='Login Number Sequence', readonly=True, copy=False, help='Determines the number of times the UI is opened. It is used as proxy to the identity of the device where the UI is opened. And as such, it is the LL part of the pos_reference field of the pos.order model.')
-
     opening_notes = fields.Text(string="Opening Notes")
     closing_notes = fields.Text(string="Closing Notes")
     cash_control = fields.Boolean(compute='_compute_cash_control', string='Has Cash Control')
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_journal', string='Cash Journal', store=True)
-
     cash_register_balance_end_real = fields.Monetary(
         string="Ending Balance",
         readonly=True)
@@ -72,10 +68,8 @@ class PosSession(models.Model):
         string='Before Closing Difference',
         help="Difference between the theoretical closing balance and the real closing balance.",
         readonly=True)
-
     # Total Cash In/Out
     cash_real_transaction = fields.Monetary(string='Transaction', readonly=True)
-
     order_ids = fields.One2many('pos.order', 'session_id', string='Orders')
     order_count = fields.Integer(compute='_compute_order_count')
     statement_line_ids = fields.One2many('account.bank.statement.line', 'pos_session_id', string='Cash Lines', readonly=True)

@@ -1,6 +1,8 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
-from datetime import datetime, timedelta
+from datetime import timedelta
 from collections import defaultdict
 
 

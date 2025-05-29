@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, api, fields, models
+
+from odoo import api, fields, models, _
 
 
 class ResPartner(models.Model):
@@ -11,6 +12,7 @@ class ResPartner(models.Model):
         help="The number of point of sales orders related to this customer",
         groups="point_of_sale.group_pos_user",
     )
+    # TODO: need to remove pos_order_ids field as it is not used anymore
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
     pos_contact_address = fields.Char('PoS Address', compute='_compute_pos_contact_address')
     invoice_emails = fields.Char(compute='_compute_invoice_emails', readonly=True)
@@ -108,6 +110,7 @@ class ResPartner(models.Model):
         '''
         This function returns an action that displays the pos orders from partner.
         '''
+        self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
         if self.is_company:
             action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
