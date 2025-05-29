@@ -6,13 +6,16 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.json import scriptsafe as json_safe
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
 
+_lt = LazyTranslate(__name__)
+
 
 class PaymentPortal(payment_portal.PaymentPortal):
-    @http.route('/donation/pay', type='http', methods=['GET', 'POST'], auth='public', website=True, sitemap=False)
+    @http.route('/donation/pay', type='http', methods=['GET', 'POST'], auth='public', website=True, sitemap=False, list_as_website_content=_lt("Donation Payment"))
     def donation_pay(self, **kwargs):
         """ Behaves like PaymentPortal.payment_pay but for donation
 

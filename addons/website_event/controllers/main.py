@@ -12,7 +12,10 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
 from odoo.tools import lazy
+from odoo.tools.translate import LazyTranslate
 from odoo.exceptions import UserError, ValidationError
+
+_lt = LazyTranslate(__name__)
 
 
 class WebsiteEventController(http.Controller):
@@ -39,7 +42,7 @@ class WebsiteEventController(http.Controller):
             'country': post.get('country'),
         }
 
-    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>', '/event/tags/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=sitemap_event)
+    @http.route(['/event', '/event/page/<int:page>', '/events', '/events/page/<int:page>', '/event/tags/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=sitemap_event, list_as_website_content=_lt("Events"))
     def events(self, page=1, slug_tags=None, **searches):
         if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)

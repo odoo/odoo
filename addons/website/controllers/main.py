@@ -26,6 +26,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request, SessionExpiredException
 from odoo.tools import OrderedSet, escape_psql, html_escape as escape, py_to_js_locale
+from odoo.tools.translate import LazyTranslate
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.base.models.ir_qweb import QWebException
 from odoo.addons.portal.controllers.portal import pager as portal_pager
@@ -35,6 +36,7 @@ from odoo.addons.web.controllers.session import Session
 from odoo.addons.website.tools import get_base_domain
 from odoo.tools.json import scriptsafe as json
 
+_lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
 
 # Completely arbitrary limits
@@ -334,7 +336,7 @@ class Website(Home):
         if not qs or qs.lower() in '/website/info':
             yield {'loc': '/website/info'}
 
-    @http.route('/website/info', type='http', auth="public", website=True, sitemap=sitemap_website_info, readonly=True)
+    @http.route('/website/info', type='http', auth="public", website=True, sitemap=sitemap_website_info, readonly=True, list_as_website_content=_lt("Website Information"))
     def website_info(self, **kwargs):
         Module = request.env['ir.module.module'].sudo()
         apps = Module.search([('state', '=', 'installed'), ('application', '=', True)])

@@ -411,6 +411,12 @@
             parent="menu_reporting"
             action="website.ir_actions_server_website_analytics"/>
 
+        <menuitem id="menu_website_technical_pages"
+            parent="menu_content"
+            name="Technical Pages"
+            sequence="90"
+            action="action_website_technical_pages"/>
+
         <!-- Configurator actions -->
         <record id="website_configurator" model="ir.actions.client">
             <field name="name">Website Configurator</field>

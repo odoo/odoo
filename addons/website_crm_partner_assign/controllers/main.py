@@ -13,7 +13,9 @@ from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partner.controllers.main import WebsitePartnerPage
 from odoo.fields import Domain
 
-from odoo.tools.translate import _
+from odoo.tools.translate import _, LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class WebsiteAccount(CustomerPortal):
@@ -367,7 +369,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage, GoogleMap):
 
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>',
         '/partners/grade/<model("res.partner.grade"):grade>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True)
+    ], type='http', auth="public", website=True, sitemap=sitemap_partners, readonly=True, list_as_website_content=_lt("Partners"))
     def partners(self, country=None, grade=None, page=0, **post):
         values = self._get_partners_values(
             country=country,

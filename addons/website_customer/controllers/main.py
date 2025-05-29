@@ -6,8 +6,10 @@ import werkzeug.urls
 from odoo import http
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
-from odoo.tools.translate import _
+from odoo.tools.translate import _, LazyTranslate
 from odoo.http import request
+
+_lt = LazyTranslate(__name__)
 
 
 class WebsiteCustomer(GoogleMap):
@@ -58,7 +60,7 @@ class WebsiteCustomer(GoogleMap):
         '/customers/industry/<model("res.partner.industry"):industry>/page/<int:page>',
         '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>',
         '/customers/industry/<model("res.partner.industry"):industry>/country/<model("res.country"):country>/page/<int:page>',
-    ], type='http', auth="public", website=True, sitemap=sitemap_industry)
+    ], type='http', auth="public", website=True, sitemap=sitemap_industry, list_as_website_content=_lt("Customers"))
     def customers(self, country=None, industry=None, page=0, **post):
         Tag = request.env['res.partner.tag']
         Partner = request.env['res.partner']
