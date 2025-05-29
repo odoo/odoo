@@ -130,3 +130,10 @@ class ResConfigSettings(models.TransientModel):
                 'views': [[self.env.ref('base.view_company_form').id, 'form']],
             }
             raise RedirectWarning(_("Please set a valid GST number on company."), action, _("Go to Company"))
+
+    def reload_template(self):
+        super().reload_template()
+        if self.country_code == 'IN':
+            branch_companies = self.company_id.child_ids
+            if branch_companies:
+                branch_companies._update_l10n_in_fiscal_position()
