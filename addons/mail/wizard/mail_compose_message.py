@@ -250,6 +250,7 @@ class MailComposer(models.TransientModel):
         the composer. Reports will be generated at sending time.
 
         When template is removed, attachments are reset. """
+        IrAttachment = self.env['ir.attachment']
         for composer in self:
             res_ids = composer._evaluate_res_ids() or [0]
             if (composer.template_id.attachment_ids and
@@ -261,11 +262,22 @@ class MailComposer(models.TransientModel):
                     ('attachment_ids', 'attachments'),
                 )[res_ids[0]]
                 attachment_ids = rendered_values.get('attachment_ids') or []
+                if attachment_ids:
+                    # Make and use copy of the template attachments, so when
+                    # it's removed from the composer it won't also delete the
+                    # attachment from the template/
+                    attachment_ids = IrAttachment.create([{
+                        'name': attachment.name,
+                        'datas': attachment.datas,
+                        'res_model': 'mail.compose.message',
+                        'res_id': 0,
+                        'type': 'binary',    # override default_type from context, possibly meant for another model!
+                    } for attachment in IrAttachment.browse(attachment_ids)]).ids
                 # transform attachments into attachment_ids; not attached to the
                 # document because this will be done further in the posting
                 # process, allowing to clean database if email not send
                 if rendered_values.get('attachments'):
-                    attachment_ids += self.env['ir.attachment'].create([
+                    attachment_ids += IrAttachment.create([
                         {'name': attach_fname,
                          'datas': attach_datas,
                          'res_model': 'mail.compose.message',
