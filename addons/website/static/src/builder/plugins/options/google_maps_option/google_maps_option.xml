@@ -72,9 +72,19 @@
     <BuilderRow label.translate="Description" preview="false">
         <BuilderCheckbox id="'google_maps_description'" action="'showDescription'"/>
     </BuilderRow>
-    <BuilderRow label.translate="Description Text" level="1" t-if="isActiveItem('google_maps_description')">
-        <BuilderTextInput action="'googleMapDescriptionTextValue'"/>
-    </BuilderRow>
+    <t t-if="isActiveItem('google_maps_description')">
+        <BuilderRow label.translate="Description Text" level="1">
+            <BuilderTextInput action="'googleMapDescriptionTextValue'"/>
+        </BuilderRow>
+        <BuilderContext applyTo="'.description'">
+            <BuilderRow label.translate="Text Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom']" styleAction="'color'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Background Color" level="1">
+                <BuilderColorPicker enabledTabs="['custom', 'gradient']" styleAction="'background-color'"/>
+            </BuilderRow>
+        </BuilderContext>
+    </t>
 </t>
 
 </templates>
