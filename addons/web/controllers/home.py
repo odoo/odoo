@@ -12,14 +12,14 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.service import security
 from odoo.tools.misc import hmac
-from odoo.tools.translate import _
+from odoo.tools.translate import _, LazyTranslate
 from .utils import (
     ensure_db,
     _get_login_redirect_url,
     is_user_internal,
 )
 
-
+_lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
 
 
@@ -105,7 +105,7 @@ class Home(http.Controller):
     def _login_redirect(self, uid, redirect=None):
         return _get_login_redirect_url(uid, redirect)
 
-    @http.route('/web/login', type='http', auth='none', readonly=False)
+    @http.route('/web/login', type='http', auth='none', readonly=False, list_as_website_content=_lt("Login"))
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False

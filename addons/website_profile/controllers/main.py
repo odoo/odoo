@@ -12,6 +12,9 @@ from operator import itemgetter
 from odoo import _, fields, http, tools
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.tools.translate import LazyTranslate
+
+_lt = LazyTranslate(__name__)
 
 
 class WebsiteProfile(http.Controller):
@@ -160,7 +163,7 @@ class WebsiteProfile(http.Controller):
         })
         return values
 
-    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True, readonly=True)
+    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_website_content=_lt("Ranks and Badges"))
     def view_ranks_badges(self, **kwargs):
         values = self._prepare_ranks_badges_values(**kwargs)
         return request.render("website_profile.rank_badge_main", values)
@@ -182,7 +185,7 @@ class WebsiteProfile(http.Controller):
         return user_values
 
     @http.route(['/profile/users',
-                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=True, readonly=True)
+                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_website_content=_lt("User Profiles"))
     def view_all_users_page(self, page=1, **kwargs):
         User = request.env['res.users']
         dom = [('karma', '>', 1), ('website_published', '=', True)]

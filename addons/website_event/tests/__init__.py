@@ -7,3 +7,4 @@ from . import test_event_menus
 from . import test_event_visitor
 from . import test_fuzzy
 from . import test_website_event
+from . import test_website_event_technical_page
