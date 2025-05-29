@@ -138,6 +138,19 @@ msgid ""
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                    سيتم إرسال الرسالة كرسالة نصية قصيرة إلى مستلمي القالب\n"
+"                                    ولن تظهر في سجل الرسائل.\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != 'note'\">\n"
+"                                    لن يتم إرسال الرسائل القصيرة، بل سيتم نشرها فقط\n"
+"                                    كملاحظة داخلية في سجل الرسائل.\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != 'comment'\">\n"
+"                                    سيتم إرسال الرسائل النصية القصيرة كرسالة نصية قصيرة إلى مستلمي\n"
+"                                    القالب وسيتم نشره أيضاً كملاحظة داخلية\n"
+"                                     في سجل الرسائل.\n"
+"                                </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1010,7 +1023,7 @@ msgstr "الرسائل النصية القصيرة (دون ملاحظة) "
 #. odoo-javascript
 #: code:addons/sms/static/src/thread/message_patch.js:0
 msgid "SMS Account"
-msgstr ""
+msgstr "حساب الرسائل النصية القصيرة "
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone

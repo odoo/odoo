@@ -1855,6 +1855,8 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"여러 개의 시간대로 슬롯을 설정하세요. 커뮤니케이션, 최대 참석자 수, 최대 티켓 등록 수 항목은 전체 행사가 아닌 각 시간대별로 "
+"지정되어 있습니다."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1977,6 +1979,8 @@ msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 msgstr ""
+"<span invisible=\"not is_multi_slots\">슬롯당</span>\n"
+"                                     참석자 수"
 
 #. module: event
 #. odoo-javascript
@@ -4040,7 +4044,7 @@ msgstr "슬롯 메일 스케줄러"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "슬롯 선택은 여러 개의 슬롯이 지정되어 있는 행사에서 필수입니다."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
@@ -4542,7 +4546,7 @@ msgstr "예정/진행중"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "등록 제한을 변경할까요?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode

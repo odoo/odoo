@@ -6,8 +6,8 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2025
 # Martin Trigaux, 2025
 # Jan Zorko, 2025
-# Aleš Pipan, 2025
 # Wil Odoo, 2025
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4738,7 +4738,7 @@ msgstr " Ima E-poštni naslovi na črni listi ?"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
 msgid "Has Mail Thread"
-msgstr ""
+msgstr "Ima nit pošte"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_message_search
@@ -8067,7 +8067,7 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_ir_actions_server__update_path
 #: model:ir.model.fields,help:mail.field_ir_cron__update_path
 msgid "Path to the field to update, e.g. 'partner_id.name'"
-msgstr ""
+msgstr "Pot do polja, ki ga želite posodobiti, npr. 'partner_id.name'"
 
 #. module: mail
 #. odoo-javascript
@@ -9665,6 +9665,8 @@ msgid ""
 "Server replied with following exception:\n"
 " %s"
 msgstr ""
+"Strežnik je odgovoril z naslednjo izjemo:\n"
+" %s"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -9864,7 +9866,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
 msgid "Specific User"
-msgstr ""
+msgstr "Določen uporabnik"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__link_field_id
@@ -9873,6 +9875,8 @@ msgid ""
 "Specify a field used to link the newly created record on the record used by "
 "the server action."
 msgstr ""
+"Določite polje, ki se uporablja za povezavo novo ustvarjenega zapisa z "
+"zapisom, ki ga uporablja dejanje strežnika."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_plan__res_model
@@ -9890,6 +9894,8 @@ msgid ""
 "Specify which kind of record should be created. Set this field only to "
 "specify a different model than the base model."
 msgstr ""
+"Določite, katero vrsto zapisa naj bo ustvarjeno. To polje nastavite le, če "
+"želite določiti drugačen model od osnovnega modela."
 
 #. module: mail
 #. odoo-javascript
@@ -10197,7 +10203,7 @@ msgstr "Tehnično"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.xml:0
 msgid "Technical Settings"
-msgstr ""
+msgstr "Tehnične nastavitve"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__initial_res_model
@@ -10581,7 +10587,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "Strežnika \"%s\" ni mogoče uporabiti, ker je arhivirano."
 
 #. module: mail
 #. odoo-javascript
@@ -10862,7 +10868,7 @@ msgstr ""
 #: model:mail.activity.type,name:mail.mail_activity_data_todo
 #: model:mail.activity.type,summary:mail.mail_activity_data_todo
 msgid "To-Do"
-msgstr ""
+msgstr "Opravilo"
 
 #. module: mail
 #. odoo-javascript
@@ -11118,6 +11124,15 @@ msgid ""
 "- 'Send Webhook Notification': send a POST request to an external system, also known as a Webhook\n"
 "- 'Multi Actions': define an action that triggers several other server actions\n"
 msgstr ""
+"Vrsta dejanja strežnika. Na voljo so naslednje vrednosti:\n"
+"- 'Posodobi zapis': posodobi vrednosti zapisa\n"
+"- 'Ustvari dejavnost': ustvari dejavnost (Razprava)\n"
+"- 'Pošlji e-pošto': objavi sporočilo, opombo ali pošlji e-pošto (Razprava)\n"
+"- 'Pošlji SMS': pošiljanje SMS-ov, beleženje v dokumentih (SMS) - 'Dodaj/odstrani sledilce': dodajanje ali odstranjevanje sledilcev zapisu (Razprava)\n"
+"- 'Ustvari zapis': ustvari nov zapis z novimi vrednostmi\n"
+"- 'Izvedi kodo': blok kode Python, ki bo izveden\n"
+"- »Pošlji obvestilo o spletnem kavlju«: pošlji zahtevo POST zunanjemu sistemu, znanemu tudi kot Webhook\n"
+"- »Več dejanj«: določite dejanje, ki sproži več drugih dejanj strežnika\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__activity_exception_decoration
@@ -11143,7 +11158,7 @@ msgstr "URL"
 #: model:ir.model.fields,help:mail.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,help:mail.field_ir_cron__webhook_url
 msgid "URL to send the POST request to."
-msgstr ""
+msgstr "URL, na katerega se pošlje zahteva POST."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__uuid
@@ -11548,7 +11563,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_tree
 msgid "User Settings"
-msgstr ""
+msgstr "Uporabniške nastavitve"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users_settings_volumes
@@ -11668,7 +11683,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__evaluation_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__evaluation_type
 msgid "Value Type"
-msgstr ""
+msgstr "Vrsta vrednosti"
 
 #. module: mail
 #. odoo-javascript
@@ -11855,7 +11870,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,field_description:mail.field_ir_cron__webhook_url
 msgid "Webhook URL"
-msgstr ""
+msgstr "Webhook URL"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
@@ -11900,6 +11915,9 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
+"Pri tiskanju dokumentov in izvozu/uvozu podatkov se časovne vrednosti izračunajo glede na ta časovni pas.\n"
+"Če časovni pas ni nastavljen, se uporablja UTC (koordinirani univerzalni čas).\n"
+"Anywhere else, time values are computed according to the time offset of your web client."
 
 #. module: mail
 #. odoo-python

@@ -1384,7 +1384,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Alamat Pengiriman</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -11961,7 +11961,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
 msgid "Owner's Current Account"
-msgstr ""
+msgstr "Akun Pemilik Saat Ini"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13172,7 +13172,7 @@ msgstr "Baris-Baris yang Direkonsiliasi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_excluding_exchange_diff_ids
 msgid "Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Baris-Baris yang Direkonsiliasi Kecuali Perbedaan Nilai Tukar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -16077,6 +16077,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"Model rekonsiliasi hanya akan diterapkan saat label baris statement, rincian transaksi atau nota cocok dengan yang berikut:\n"
+"        * Memiliki: Baris satement harus memilki string ini (tidak sensitif huruf kapital).\n"
+"        * Tidak Memiliki: Penolakan dari \"Contain\".\n"
+"        * Match Regex: Definisikan expression reguler Anda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount

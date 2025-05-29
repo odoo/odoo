@@ -60,19 +60,19 @@ msgstr "%(event_name)s - Inscription de %(attendee_name)s"
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s (%(count)s places restantes)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (Sold out)"
-msgstr ""
+msgstr "%(slot_name)s (Complet)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s : il manque %(count)s place(s)"
 
 #. module: event
 #. odoo-python
@@ -208,7 +208,7 @@ msgstr "<i class=\"fa fa-building\" title=\"Société du participant\"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"Créneau\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -1715,6 +1715,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"Un créneau ne peut pas être planifié en dehors de la plage horaire de l'événement.\n"
+"\n"
+"Événement :\t\t%(event_start)s - %(event_end)s\n"
+"Créneau :\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1723,12 +1727,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"L'heure de fin d'un créneau doit être postérieure à son heure de début.\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "Un créneau horaire doit être compris entre 0:00 et 23:59."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1862,6 +1868,10 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Autoriser plusieurs créneaux horaires. Les communications, le nombre maximum"
+" de participants et le nombre maximum d'enregistrements de tickets sont "
+"définis pour chaque créneau horaire plutôt que pour l'ensemble de "
+"l'événement."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1984,6 +1994,8 @@ msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 msgstr ""
+"Participants\n"
+"                                    <span invisible=\"not is_multi_slots\"> par créneau</span>"
 
 #. module: event
 #. odoo-javascript
@@ -2745,7 +2757,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "Exprimé dans le fuseau horaire de l'événement."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2786,6 +2798,10 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"Pour chaque événement, vous pouvez définir un nombre maximal d'inscriptions "
+"(nombre de participants) ; au-delà de ce nombre, les inscriptions ne sont "
+"pas acceptées. Si l'événement comporte plusieurs créneaux, ce maximum "
+"s'applique par créneau."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -3029,6 +3045,9 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"Indique quand la communication est envoyée. Si l'événement comporte "
+"plusieurs créneaux, l'intervalle est lié à chaque créneau plutôt qu'à "
+"l'événement dans son ensemble."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3051,7 +3070,7 @@ msgstr "Intervalle"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "Choix d'événement / créneau invalide"
 
 #. module: event
 #. odoo-python
@@ -3073,7 +3092,7 @@ msgstr "Est disponible"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "Événement avec créneaux multiples"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -3094,7 +3113,7 @@ msgstr "Est un abonné"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Avec créneaux multiples"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -3308,7 +3327,7 @@ msgstr "E-mail envoyé"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "E-mail créneau"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3366,7 +3385,7 @@ msgstr "Nombre maximal de places"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "Maximum par créneau"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -3395,7 +3414,7 @@ msgstr "Mois"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "Créneaux multiples"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4070,7 +4089,7 @@ msgstr "Paramètres"
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
-"Afficher tous les enregistrements dont la date de la prochaine activité est "
+"Afficher tous les enregistrements dont la prochaine date d'activité est "
 "dépassée"
 
 #. module: event
@@ -4084,18 +4103,20 @@ msgstr "Créneau"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "Planificateur d'e-mails créneau"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
 msgstr ""
+"Le choix du créneau est obligatoire pour les événements à créneaux "
+"multiples."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "Communication basée sur le créneau"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -4109,7 +4130,7 @@ msgstr "Créneaux"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "Nombre de créneaux"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -4309,6 +4330,8 @@ msgid ""
 "The following slots cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Les créneaux suivants ne peuvent pas être supprimés car ils ont une ou plusieurs inscriptions associées :\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -4337,6 +4360,8 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and"
 " the extra registrations will remain."
 msgstr ""
+"Si le nombre d'inscriptions dépasse cette limite, l'événement sera complet "
+"et les inscriptions supplémentaires resteront en attente."
 
 #. module: event
 #. odoo-python
@@ -4345,6 +4370,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"Il n’y a pas assez de places disponibles pour %(event_name)s :\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -4368,6 +4395,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"Ces événements ne peuvent pas avoir de créneaux planifiés en dehors de leur plage horaire :\n"
+"%(event_names)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -4513,7 +4542,7 @@ msgstr "Total des participants"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "Total des inscriptions"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4606,7 +4635,7 @@ msgstr "À venir/En cours"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "Mettre à jour la limite des inscriptions ?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -4719,7 +4748,7 @@ msgstr "S'il n'y a pas de places disponibles pour ce ticket."
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "Indique si les places pour ce créneau sont complètes."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form

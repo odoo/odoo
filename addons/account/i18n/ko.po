@@ -1366,7 +1366,7 @@ msgstr "<span>경고: 이 문서는 다음 문서와 중복될 수 있습니다:
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong class=\"d-block mt-3\">Shipping Address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">배송지 주소</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -3371,6 +3371,8 @@ msgid ""
 "journal entry or journal item are logged. You can then not delete those "
 "records anymore"
 msgstr ""
+"전표 항목과 관련된 내용을 수정할 경우, 계정, 파트너, 전표 또는 전표에 대한 변경 사항이 기록됩니다. 그러면 해당 레코드는 더 이상 "
+"삭제할 수 없습니다."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3713,7 +3715,7 @@ msgstr "은행 계좌"
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
 msgid "Bank Account %(link)s with number %(number)s archived"
-msgstr ""
+msgstr "은행 계좌 %(link)s %(number)s 번호가 보관되었습니다."
 
 #. module: account
 #. odoo-python
@@ -7122,7 +7124,7 @@ msgstr "설명 추가하기"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Enter an email to get notified"
-msgstr ""
+msgstr "알림을 받으려면 이메일을 입력하세요."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -7220,6 +7222,8 @@ msgid ""
 "Error while creating XML:\n"
 "- %s"
 msgstr ""
+"XML 생성 중 오류 발생: \n"
+"- %s"
 
 #. module: account
 #. odoo-python
@@ -7438,7 +7442,7 @@ msgstr "이 구분 항목에서 생성된 계정 작업에 적용할 계수로, 
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Failed to parse cross_report id or xml_id"
-msgstr ""
+msgstr "cross_report_id 또는 xml_id 를 구문 분석에 실패했습니다."
 
 #. module: account
 #. odoo-python
@@ -9313,7 +9317,7 @@ msgstr "해당 결제 내역과 조정이 완료된 전표에 대한 청구서�
 #. module: account
 #: model:res.groups,comment:account.group_account_invoice
 msgid "Invoices, payments and basic invoice reporting."
-msgstr ""
+msgstr "청구서, 결제 및 기본 청구서 보고서입니다."
 
 #. module: account
 #. odoo-python
@@ -11102,7 +11106,7 @@ msgstr "할 일 없음"
 #. module: account
 #: model:mail.template,description:account.mail_template_einvoice_notification
 msgid "Notification email for newly received eInvoices"
-msgstr ""
+msgstr "새로 수신된 전자 청구서 관련 이메일 알림"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -11667,7 +11671,7 @@ msgstr "해당 세금이 품목 및 청구서에 적용되는 가격에 포함�
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
 msgid "Owner's Current Account"
-msgstr ""
+msgstr "소유자 현재 계정"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -12806,7 +12810,7 @@ msgstr "자금 수령"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
 msgid "Receive an email for incoming electronic invoices."
-msgstr ""
+msgstr "수신된 전자 청구서에 대한 이메일을 받습니다."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
@@ -12870,7 +12874,7 @@ msgstr "조정 항목"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_excluding_exchange_diff_ids
 msgid "Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "환율 차이를 제외한 조정 행"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -15105,7 +15109,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "The account %(name)s (%(code)s) is archived."
-msgstr ""
+msgstr "%(name)s (%(code)s) 계정이 보관되었습니다."
 
 #. module: account
 #. odoo-python
@@ -15661,6 +15665,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"조정 모델은 명세서 행 라벨, 거래 세부 정보 또는 메모가 다음과 일치하는 경우에 한해서만 적용됩니다:\n"
+"        * 포함: 명세서 행에 반드시 해당 문자열이 포함되어야 합니다(대소문자 구분 없음)\n"
+"        * 미포함: \"포함\"과 반대되는 경우\n"
+"        * 정규식 매칭: 나만의 정규식 지정"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
@@ -18178,13 +18186,13 @@ msgstr "문서 게시가 완료된 경우에는 유형을 변경할 수 없습�
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use an archived account."
-msgstr ""
+msgstr "보관된 계정은 사용할 수 없습니다."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "You cannot use cross report on itself"
-msgstr ""
+msgstr "교차 보고서는 자체적으로 사용할 수 없습니다."
 
 #. module: account
 #. odoo-python

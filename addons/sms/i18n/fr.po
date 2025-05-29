@@ -138,6 +138,19 @@ msgid ""
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                    Le message sera envoyé par SMS aux destinataires du modèle\n"
+"                                    et n’apparaîtra pas dans l’historique de messagerie.\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != 'note'\">\n"
+"                                     Le SMS ne sera pas envoyé, il sera uniquement publié comme une\n"
+"                                    note interne dans l’historique de messagerie.\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != 'comment'\">\n"
+"                                    Le SMS sera envoyé aux destinataires du modèle et sera aussi publié\n"
+"                                    comme une note interne\n"
+"                                    dans l’historique de messagerie.\n"
+"                                </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1013,7 +1026,7 @@ msgstr "SMS (sans note)"
 #. odoo-javascript
 #: code:addons/sms/static/src/thread/message_patch.js:0
 msgid "SMS Account"
-msgstr ""
+msgstr "Compte SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone

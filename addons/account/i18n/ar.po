@@ -278,7 +278,7 @@ msgstr "%s، أو / إذا لم يكن منطبقاً "
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s, or not applicable"
-msgstr ""
+msgstr "%s، أو غير منطبق "
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -801,6 +801,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عزيزي <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        شركراً لإتمامك لعملية الدفع.\n"
+"        إليك إيصال الدفع <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> الذي تبلغ قيمته\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
+"        <br/><br/>\n"
+"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
+"        <br/><br/>\n"
+"        مع تحيات،\n"
+"        <t t-if=\"not is_html_empty(user.signature)\" data-o-mail-quote-container=\"1\">\n"
+"            <br/><br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1015,6 +1031,9 @@ msgid ""
 "                                    Taxes\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                    الضرائب\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4276,7 +4295,7 @@ msgstr "فاتورة ملغاة"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Cancelled Proforma Credit Note"
-msgstr ""
+msgstr "الإشعار الدائن الشكلي الملغي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -6507,7 +6526,7 @@ msgstr "عرض حقول الألقاب "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__display_alternative_taxes_field
 msgid "Display Alternative Taxes Field"
-msgstr ""
+msgstr "عرض حقل الضرائب البديل "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -6864,7 +6883,7 @@ msgstr "مسودة الدفع"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Draft Proforma Credit Note"
-msgstr ""
+msgstr "مسودة الإشعار الدائن الشكلي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -7989,7 +8008,7 @@ msgstr "من آخر سنة مالية "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__previous_return_period
 msgid "From previous return period"
-msgstr ""
+msgstr "من فترة الإقرار السابقة "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__from_fiscalyear
@@ -8159,7 +8178,7 @@ msgstr "دفعات جماعية "
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Group Payments Number Sequence"
-msgstr ""
+msgstr "تسلسل رقم المدفوعات المجمعة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
@@ -10942,7 +10961,7 @@ msgstr "جديد"
 #. module: account
 #: model:mail.template,subject:account.mail_template_einvoice_notification
 msgid "New Electronic Invoices Received"
-msgstr ""
+msgstr "تم استلام فواتير إلكترونية جديدة "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_name
@@ -11068,7 +11087,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_moves_email_preview
 msgid "No journal entries selected"
-msgstr ""
+msgstr "لم يتم تحديد أي قيود من عناصر اليومية "
 
 #. module: account
 #. odoo-python
@@ -11104,7 +11123,7 @@ msgstr "المنتجات غير القابلة للخصم "
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product_total
 msgid "Non Deductible Products Total"
-msgstr ""
+msgstr "إجمالي المنتجات غير القابلة للخصم "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_tax
@@ -11817,7 +11836,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
 msgid "Owner's Current Account"
-msgstr ""
+msgstr "حساب المالك الحالي "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11827,7 +11846,7 @@ msgstr "حسابات الربح والخسارة "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "PAY IN A FLASH!"
-msgstr ""
+msgstr "تمكن من الدفع بسرعة البرق! "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -12744,7 +12763,7 @@ msgstr "فاتورة المورّد الشكلية "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Proforma Vendor Credit Note"
-msgstr ""
+msgstr "الإشعار الدائن الشكلي للمورّد "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_inbound_payment_method_line_id
@@ -14290,7 +14309,7 @@ msgstr "إظهار أزرار الفواتير الإلكترونية "
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__show_refresh_out_einvoices_status_button
 msgid "Show E-Invoice Status Buttons"
-msgstr ""
+msgstr "إظهار أزرار حالات الفواتير الإلكترونية "
 
 #. module: account
 #: model:res.groups,name:account.group_account_user

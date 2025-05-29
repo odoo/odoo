@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2025
-# Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
+# Malaz Abuidris <msea@odoo.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-23 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,13 +103,13 @@ msgstr "%(author name)s من %(channel name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "%(author)s started a call."
-msgstr ""
+msgstr "قام %(author)s ببدء مكالمة. "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(caller)s started a call"
-msgstr ""
+msgstr "قام %(caller)s ببدء مكالمة. "
 
 #. module: mail
 #. odoo-javascript
@@ -276,7 +276,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 msgid "%(partner)s <%(email)s> (ID %(id)s)"
-msgstr ""
+msgstr "%(partner)s <%(email)s> (المعرّف %(id)s) "
 
 #. module: mail
 #. odoo-javascript
@@ -452,7 +452,7 @@ msgstr ",<br/><br/>"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "---------- Forwarded message ----------"
-msgstr ""
+msgstr "---------- رسالة معاد توجيهها ----------"
 
 #. module: mail
 #. odoo-javascript
@@ -612,6 +612,18 @@ msgid ""
 "                                        notifying all followers. It will appear in the messaging history.\n"
 "                                    </span>"
 msgstr ""
+"<span invisible=\"mail_post_method != 'email'\">\n"
+"                                        سيتم إرسال الرسالة كرسالة بريد إلكتروني إلى مستلمي\n"
+"                                        القالب ولن يظهر في سجل الرسائل.\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'note'\">\n"
+"                                        سيتم نشر الرسالة كملاحظة داخلية مرئية للداخلية\n"
+"                                        المستخدمين في سجل الرسائل.\n"
+"                                    </span>\n"
+"                                    <span invisible=\"mail_post_method != 'comment'\">\n"
+"                                        سيتم نشر الرسالة كرسالة مسجلة،\n"
+"                                        لتنبيه لجميع المتابعين. وسوف تظهر في سجل الرسائل.\n"
+"                                    </span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -619,6 +631,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Browser:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    المتصفح:</span> "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -626,6 +640,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Date:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    التاريخ:</span> "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -640,6 +656,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Location:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    الموقع:</span> "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
@@ -647,6 +665,8 @@ msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Platform:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    المنصة:</span> "
 
 #. module: mail
 #: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
@@ -4668,7 +4688,7 @@ msgstr "للأمام"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Forward Message"
-msgstr ""
+msgstr "إعادة توجيه الرسالة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4896,7 +4916,7 @@ msgstr "يحتوي على رسالة "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
 msgid "Has Warning"
-msgstr ""
+msgstr "يحتوي على تحذير "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -5658,7 +5678,7 @@ msgstr "رابط URL للدعوة "
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Invitation to follow %(document_model)s."
-msgstr ""
+msgstr "دعوة لمتابعة %(document_model)s. "
 
 #. module: mail
 #. odoo-python
@@ -5927,7 +5947,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
-msgstr ""
+msgstr "احتفظ بسجل المكالمات "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6346,7 +6366,7 @@ msgstr "نشاط البريد"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule_line
 msgid "Mail Activity Schedule Line"
-msgstr ""
+msgstr "بند جدول أنشطة البريد الإلكتروني "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_activity_type_id
@@ -9960,7 +9980,7 @@ msgstr "تم تقصير كود اللغة المستخدَم كالهدف في �
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
-msgstr ""
+msgstr "إظهار كافة الأنشطة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__show_notified_bcc
@@ -9978,7 +9998,7 @@ msgstr "إظهار المتابعين"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show My Activities"
-msgstr ""
+msgstr "إظهار أنشطتي "
 
 #. module: mail
 #. odoo-javascript

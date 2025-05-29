@@ -55,6 +55,9 @@ msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,             such as pulling trailers, boats, or other vehicles."
 msgstr ""
+"Attache remorque : un dispositif fixé au châssis d’un véhicule pour le "
+"remorquage,             comme pour tirer des remorques, bateaux ou autres "
+"véhicules."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__trailer_hook
@@ -62,6 +65,9 @@ msgid ""
 "A trailer hitch is a device attached to a vehicle's chassis for towing "
 "purposes,            such as pulling trailers, boats, or other vehicles."
 msgstr ""
+"Attache remorque : un dispositif fixé au châssis d’un véhicule pour le "
+"remorquage,            comme pour tirer des remorques, bateaux ou autres "
+"véhicules."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_needaction
@@ -151,7 +157,7 @@ msgstr "Tous les véhicules"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__awd
 msgid "All-Wheel Drive (AWD)"
-msgstr ""
+msgstr "Traction intégrale (AWD)"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -302,7 +308,7 @@ msgstr "Emissions de CO2 du véhicule"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__default_co2
 msgid "CO₂ Emissions"
-msgstr ""
+msgstr "Émissions de CO₂"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_send_mail__can_edit_body
@@ -408,7 +414,7 @@ msgstr "Résilié"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_emission_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_emission_unit
 msgid "Co2 Emission Unit"
-msgstr ""
+msgstr "Unité d’émission de CO₂"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
@@ -745,7 +751,7 @@ msgstr "Déclassé"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__drive_type
 msgid "Drive Type"
-msgstr ""
+msgstr "Type de traction"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__driver_id
@@ -818,7 +824,7 @@ msgstr "Assistance électrique"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
 msgid "Emission Standard"
-msgstr ""
+msgstr "Norme d’émission"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__co2_standard
@@ -826,6 +832,8 @@ msgid ""
 "Emission Standard specifies the regulatory test procedure             or "
 "guideline under which a vehicle's emissions are measured."
 msgstr ""
+"La norme d’émission définit la procédure réglementaire             ou la "
+"directive selon laquelle les émissions d’un véhicule sont mesurées."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_model__co2_standard
@@ -833,6 +841,8 @@ msgid ""
 "Emission Standard specifies the regulatory test procedure or             "
 "guideline under which a vehicle's emissions are measured."
 msgstr ""
+"La norme d’émission définit la procédure réglementaire ou             la "
+"directive selon laquelle les émissions d’un véhicule sont mesurées."
 
 #. module: fleet
 #. odoo-python
@@ -925,7 +935,7 @@ msgstr "Gestionnaire du parc automobile"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer_report
 msgid "Fleet Odometer Analysis Report"
-msgstr ""
+msgstr "Rapport d’analyse compteur kilométrique parc automobile"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -965,7 +975,7 @@ msgstr "Icône Font Awesome par ex. fa-tasks"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__4wd
 msgid "Four-Wheel Drive (4WD)"
-msgstr ""
+msgstr "Traction quatre roues motrices (4WD)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__frame_size
@@ -975,7 +985,7 @@ msgstr "Dimension du châssis"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__fwd
 msgid "Front-Wheel Drive (FWD)"
-msgstr ""
+msgstr "Traction avant (FWD)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost_report__fuel_type
@@ -1063,7 +1073,7 @@ msgstr "Nombre de chevaux"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__power_unit__horsepower
 msgid "Horsepower (hp)"
-msgstr ""
+msgstr "Puissance (ch)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__horsepower_tax
@@ -1312,7 +1322,7 @@ msgstr "E-mail au conducteur"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Make Vehicle Available"
-msgstr ""
+msgstr "Rendre le véhicule disponible"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
@@ -1334,6 +1344,7 @@ msgstr "Gérez efficacement les coûts réels des véhicules avec Odoo."
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_reporting_action
 msgid "Manage efficiently your vehicle Odometers with Odoo."
 msgstr ""
+"Gérez efficacement les compteurs kilométriques de vos véhicules avec Odoo."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__manual
@@ -1375,7 +1386,7 @@ msgstr "Messages"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_odometer_report__mileage_delta
 msgid "Mileage Delta"
-msgstr ""
+msgstr "Écart kilométrique"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__model_id
@@ -1539,7 +1550,7 @@ msgstr "Pas de données à analyser"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_reporting_action
 msgid "No data for odometer analysis"
-msgstr ""
+msgstr "Pas de données pour l’analyse du compteur kilométrique"
 
 #. module: fleet
 #. odoo-python
@@ -1575,7 +1586,7 @@ msgstr "Nombre d'actions"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__doors
 msgid "Number of Doors"
-msgstr ""
+msgstr "Nombre de portes"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__doors
@@ -1621,7 +1632,7 @@ msgstr "Odomètre"
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_reporting_action
 msgid "Odometer Analysis"
-msgstr ""
+msgstr "Analyse compteur kilométrique"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_view_form
@@ -1632,7 +1643,7 @@ msgstr "Relevés kilométriques"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Odometer Report"
-msgstr ""
+msgstr "Rapport compteur kilométrique"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__odometer_unit
@@ -1769,7 +1780,7 @@ msgstr "Plage"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__range_unit
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__range_unit
 msgid "Range Unit"
-msgstr ""
+msgstr "Unité de plage"
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_action
@@ -1779,7 +1790,7 @@ msgstr "Prêt à gérer votre parc automobile plus efficacement ?"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__drive_type__rwd
 msgid "Rear-Wheel Drive (RWD)"
-msgstr ""
+msgstr "Traction arrière (RWD)"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__cost_generated
@@ -1854,7 +1865,7 @@ msgstr "Enregistrer comme un nouveau modèle"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__seats
 msgid "Seating Capacity"
-msgstr ""
+msgstr "Nombre de places"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_send_mail_view_form
@@ -1949,6 +1960,8 @@ msgid ""
 "Specifies the total number of doors, including the truck and hatch doors, if"
 " applicable."
 msgstr ""
+"Spécifie le nombre total de portes, y compris les portes de coffre et de "
+"capot si applicable."
 
 #. module: fleet
 #. odoo-python
@@ -2077,6 +2090,8 @@ msgstr ""
 msgid ""
 "This will allow this vehicle to be selectable for the Salary Configurator"
 msgstr ""
+"Cela permettra à ce véhicule d’être sélectionné dans le configurateur de "
+"salaire."
 
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_to_order
@@ -2211,7 +2226,7 @@ msgstr "Nom du véhicule"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_odometer_report_view_graph
 msgid "Vehicle Odometer Timeline"
-msgstr ""
+msgstr "Chronologie du compteur kilométrique du véhicule"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__vehicle_properties_definition
@@ -2400,19 +2415,19 @@ msgstr "par ex. Tesla"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "eg. WLTP, Euro 6, or EPA, ..."
-msgstr ""
+msgstr "Par exemple : WLTP, Euro 6 ou EPA..."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__co2_emission_unit__g/km
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__co2_emission_unit__g/km
 msgid "g/km"
-msgstr ""
+msgstr "g/km"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__co2_emission_unit__g/mi
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__co2_emission_unit__g/mi
 msgid "g/mi"
-msgstr ""
+msgstr "g/mi"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__power_unit__power

@@ -327,6 +327,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or 'customer'\">براندن فريمان</t>،<br/><br/>\n"
+"    شكراً لتواصلك معنا. نحن نُقدِّر اهتمامك بمنتجاتنا/خدماتنا.<br/>\n"
+"    يقوم فريقنا بمراجعة استفسارك وسيقومون بالرد عليك في أقرب وقت ممكن.<br/>\n"
+"    إذا كانت لديك أي أسئلة أو استفسارات أخرى في الوقت الحالي، لا تتردد في التواصل معنا. تسرنا مساعدتك.<br/><br/>\n"
+"    شكراً لتعاونك.<br/>\n"
+"    مع أطيب التحيات،\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -3453,7 +3466,7 @@ msgstr "المشروع: %(project_name)s "
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s, Stage: %(stage_name)s"
-msgstr ""
+msgstr "المشروع: %(project_name)s، المرحلة: %(stage_name)s "
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -4378,7 +4391,7 @@ msgstr "تم إلغاء المهمة "
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Task converted to template"
-msgstr ""
+msgstr "تم تحويل المهمة إلى قالب "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -5253,7 +5266,7 @@ msgstr "هل ترغب في إلغاء أرشفة كافة المهام المو�
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
-msgstr ""
+msgstr "اكتب اسم المهمة "
 
 #. module: project
 #. odoo-javascript

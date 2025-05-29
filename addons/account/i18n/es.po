@@ -6754,7 +6754,7 @@ msgstr "Mostrar pestaña de mapeo"
 #: model:ir.model.fields,field_description:account.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_pdf_report_id
@@ -12012,7 +12012,7 @@ msgstr ""
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
 msgid "Owner's Current Account"
-msgstr ""
+msgstr "Cuenta corriente del propietario"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -13232,7 +13232,7 @@ msgstr "Líneas conciliadas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__reconciled_lines_excluding_exchange_diff_ids
 msgid "Reconciled Lines Excluding Exchange Diff"
-msgstr ""
+msgstr "Líneas conciliadas sin incluir la diferencia de cambio"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -16166,6 +16166,10 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"El modelo de conciliación solo será aplicado cuando la etiqueta de la línea del extracto, los detalles de la transacción o la nota coincidan con lo siguiente: \n"
+"        * Contiene: el tipo de transacción de la proposición debe contener esta cadena (no distingue mayúsculas y minúsculas).\n"
+"        * No contiene: negación de \"Contiene\".\n"
+"        * Expresión regular de coincidencia: defina su propia expresión regular. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
