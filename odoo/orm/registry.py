@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import functools
+import gc
 import inspect
 import logging
 import os
@@ -160,6 +161,13 @@ class Registry(Mapping[str, type["BaseModel"]]):
             registry.setup_signaling()
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
+            if upgrade_modules or install_modules:
+                update_module = True
+            gc_reset = lambda: None  # noqa: E731
+            if not update_module:
+                if gc.isenabled():
+                    gc_reset = gc.enable
+                    gc.disable()
             try:
                 if new_db_demo is None:
                     new_db_demo = config['with_demo']
@@ -173,6 +181,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             except Exception:
                 reset_modules_state(db_name)
                 raise
+            finally:
+                gc_reset()
         except Exception:
             _logger.error('Failed to load registry')
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
