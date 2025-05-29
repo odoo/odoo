@@ -22,7 +22,9 @@
                             invisible="state in ('done', 'cancel')"
                     />
                 </xpath>
-
+                <xpath expr="//field[@name='batch_id']" position="before">
+                    <field name="discrete_pick"/>
+                </xpath>
                 <xpath expr="//field[@name='move_ids_without_package']//tree//field[@name='product_uom_qty']" position="after">
                     <field name="pc_container_code"/>
                     <field name="packed" optional="hide" column_invisible="parent.state=='draft'"/>
