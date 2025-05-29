@@ -2401,7 +2401,7 @@ class MailThread(models.AbstractModel):
         """ Ease tweaking attachment creation when processing them in posting
         process. Mainly meant for stable version, to be cleaned when reaching
         master. """
-        return self.env['ir.attachment'].sudo().create(values_list)
+        return self.env['ir.attachment'].sudo().with_context(no_document=True).create(values_list)
 
     def _process_attachments_for_template_post(self, mail_template):
         """ Model specific management of attachments used with template attachments
