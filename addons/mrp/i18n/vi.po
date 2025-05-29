@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Thi Huong Nguyen, 2025
+# Duy BQ <duybq86@gmail.com>, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-14 20:46+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2025\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,7 +65,7 @@ msgstr "Khi có đủ tất cả thành phần"
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_count
 msgid "# Bill of Material"
-msgstr "# Danh mục vật tư"
+msgstr "# Định mức nguyên liệu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
@@ -605,8 +606,7 @@ msgstr "Một lệnh sản xuất đã hoàn tất hoặc đã bị hủy."
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
-"Một sản phẩm có danh mục vật tư kiểu bộ kit không thể có quy tắc tái đặt "
-"hàng. "
+"Một sản phẩm có định mức kiểu bộ kit không thể có quy tắc tái đặt hàng. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_rule__action
@@ -676,9 +676,9 @@ msgid ""
 "finished products as well. Without this option you only do: A + B = C. With "
 "the option: A + B = C + D."
 msgstr ""
-"Thêm phụ phẩm vào danh mục vật tư. Tuỳ chọn này cũng có thể được sử dụng để "
-"lấy các thành phẩm. Nếu không có tuỳ chọn này, bạn chỉ có thể sản xuất: A + "
-"B = C. Nhưng với tuỳ chọn này bạn có thể sản xuất: A + B = C + D."
+"Thêm phụ phẩm vào  định mức. Tuỳ chọn này cũng có thể được sử dụng để lấy "
+"các thành phẩm. Nếu không có tuỳ chọn này, bạn chỉ có thể sản xuất: A + B = "
+"C. Nhưng với tuỳ chọn này bạn có thể sản xuất: A + B = C + D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -1088,22 +1088,22 @@ msgstr "Trước"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Bill of Material"
-msgstr "Danh mục vật tư"
+msgstr "Định mực nguyên liệu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "Bill of Material Line"
-msgstr "Dòng danh mục vật tư"
+msgstr "Chi tiết định mức"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
 msgid "Bill of Material line"
-msgstr "Dòng danh mục vật tư"
+msgstr "Chi tiết định mức"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__mo_bom_id
 msgid "Bill of Material used on the Production Order"
-msgstr "Danh mục vật tư được sử dụng cho lệnh sản xuất"
+msgstr "Định mực nguyên liệu được sử dụng cho lệnh sản xuất"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_open_bom
@@ -1117,13 +1117,13 @@ msgstr "Danh mục vật tư được sử dụng cho lệnh sản xuất"
 #: model_terms:ir.ui.view,arch_db:mrp.product_template_form_view_bom_button
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Bill of Materials"
-msgstr "Danh mục vật tư"
+msgstr "Định mực nguyên liệu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 msgid "Bills of Materials"
-msgstr "Danh mục vật tư"
+msgstr "Định mực nguyên liệu"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__bom_id
@@ -1133,8 +1133,8 @@ msgid ""
 "Bills of Materials, also called recipes, are used to autocomplete components"
 " and work order instructions."
 msgstr ""
-"Danh mục vật tư, còn được gọi là công thức, được sử dụng để tự động hoàn "
-"thiện các thành phần và hướng dẫn cho công đoạn sản xuất."
+"Định mực nguyên liệu, còn được gọi là công thức, được sử dụng để tự động "
+"hoàn thiện các thành phần và hướng dẫn cho công đoạn sản xuất."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1143,7 +1143,7 @@ msgid ""
 "                materials used to make a finished product; through a manufacturing\n"
 "                order or a pack of products."
 msgstr ""
-"Danh mục vật tư cho phép bạn xác định danh sách các nguyên liệu thô\n"
+"Định mực nguyên liệu cho phép bạn xác định danh sách các nguyên liệu thô\n"
 "                cần thiết để sản xuất một thành phẩm; thông qua lệnh sản xuất\n"
 "                hoặc gói sản phẩm."
 
@@ -1981,7 +1981,7 @@ msgid ""
 "                bill of materials and manufacturing orders."
 msgstr ""
 "Xác định thành phần và thành phẩm bạn muốn dùng trong\n"
-"                danh mục vật tư và lệnh sản xuất."
+"                 định mức và lệnh sản xuất."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__resource_calendar_id
@@ -2735,7 +2735,7 @@ msgstr "(Các) lệnh chuyển hàng bị ảnh hưởng"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "Import Template for Bills of Materials"
-msgstr "Nhập mẫu danh mục vật tư"
+msgstr "Nhập mẫu  định mức vật tư"
 
 #. module: mrp
 #. odoo-python
@@ -3029,7 +3029,7 @@ msgid ""
 "Select Bill of Materials to visualise this document as a product attachment when this product is in a bill of material."
 msgstr ""
 "Để ẩn nếu tài liệu chỉ có thể truy cập được trên biểu mẫu sản phẩm.\n"
-"Chọn Danh mục vật tư để trực quan hóa tài liệu này dưới dạng tệp đính kèm sản phẩm khi sản phẩm này nằm trong danh mục vật tư."
+"Chọn Định mực nguyên liệu để trực quan hóa tài liệu này dưới dạng tệp đính kèm sản phẩm khi sản phẩm này nằm trong định mức nguyên liệu."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
@@ -3430,7 +3430,7 @@ msgid ""
 "            * Ready: The material is available to start the production.\n"
 "            * Waiting: The material is not available to start the production.\n"
 msgstr ""
-"Trạng thái sẵn sàng sản xuất của MO này, theo cấu hình danh mục vật tư:\n"
+"Trạng thái sẵn sàng sản xuất của MO này, theo cấu hình định mức nguyên liệu:\n"
 "            * Sẵn sàng: Vật liệu đã có sẵn để bắt đầu sản xuất.\n"
 "            * Đang chờ: Vật liệu chưa có sẵn để bắt đầu sản xuất.\n"
 
@@ -3615,7 +3615,7 @@ msgstr "Không có đơn hàng tách kiện"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "No bill of materials found. Let's create one!"
-msgstr "Không có danh mục vật tư. Hãy tạo mới!"
+msgstr "Không có định mức nguyên liệu. Hãy tạo mới!"
 
 #. module: mrp
 #. odoo-javascript
@@ -3702,8 +3702,9 @@ msgid ""
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
 "Lưu ý rằng (các) khu vực sản xuất được lưu trữ: '%s' vẫn được liên kết với "
-"danh mục vật tư đang hoạt động, điều đó có nghĩa là vẫn có thể lập kế hoạch "
-"hoạt động cho chúng. Để tránh trường hợp này, bạn nên xoá khu vực sản xuất. "
+"định mức nguyên liệu đang hoạt động, điều đó có nghĩa là vẫn có thể lập kế "
+"hoạch hoạt động cho chúng. Để tránh trường hợp này, bạn nên xoá khu vực sản "
+"xuất. "
 
 #. module: mrp
 #. odoo-python
@@ -3712,8 +3713,8 @@ msgid ""
 "Note that product(s): '%s' is/are still linked to active Bill of Materials, "
 "which means that the product can still be used on it/them."
 msgstr ""
-"Lưu ý rằng (các) sản phẩm: '%s' vẫn được liên kết với danh mục vật tư đang "
-"hoạt động, điều này có nghĩa là sản phẩm vẫn có thể được sử dụng."
+"Lưu ý rằng (các) sản phẩm: '%s' vẫn được liên kết với định mức nguyên liệu "
+"đang hoạt động, điều này có nghĩa là sản phẩm vẫn có thể được sử dụng."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
@@ -3844,7 +3845,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Only manufacturing orders with a Bill of Materials can be %s."
-msgstr "Chỉ các lệnh sản xuất có danh mục vật tư mới có thể là %s."
+msgstr "Chỉ các lệnh sản xuất có định mức nguyên liệu mới có thể là %s."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -4980,7 +4981,7 @@ msgstr "Tìm kiếm"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "Search Bill Of Material"
-msgstr "Tìm kiếm danh mục vật tư"
+msgstr "Tìm kiếm định mức nguyên liệu"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5582,7 +5583,7 @@ msgid ""
 msgstr ""
 "Sản phẩm đã được sử dụng ít nhất một lần, việc chỉnh sửa cấu trúc của nó có "
 "thể dẫn đến các trường hợp ngoài ý muốn. Thay vào đó, bạn nên lưu trữ sản "
-"phẩm và tạo một sản phẩm mới với danh mục vật tư mới."
+"phẩm và tạo một sản phẩm mới với định mức nguyên liệu mới."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_reported_from_previous_wo
@@ -6513,7 +6514,7 @@ msgid ""
 msgstr ""
 "Hoạt động công đoạn cho phép bạn tạo và quản lý hoạt động sản xuất mà khu "
 "vực sản xuất cần thực hiện theo để sản xuất sản phẩm. Hoạt động được đính "
-"kèm với danh mục vật tư chỉ ra những thành phần cần cho sản xuất. "
+"kèm với định mức nguyên liệu chỉ ra những thành phần cần cho sản xuất. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -6564,7 +6565,7 @@ msgid ""
 "                    Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
 "Công đoạn là các hoạt động thành phần của một lệnh sản xuất. \n"
-"                    Các hoạt động được nêu rõ trong danh mục vật tư hoặc thêm trực tiếp vào lệnh sản xuất. "
+"                    Các hoạt động được nêu rõ trong định mức nguyên liệu hoặc thêm trực tiếp vào lệnh sản xuất. "
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6576,7 +6577,7 @@ msgid ""
 "            Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
 "Công đoạn là các hoạt động thành phần của một lệnh sản xuất. \n"
-"                    Các hoạt động được nêu rõ trong danh mục vật tư hoặc thêm trực tiếp vào lệnh sản xuất. "
+"                    Các hoạt động được nêu rõ trong định mức nguyên liệu hoặc thêm trực tiếp vào lệnh sản xuất. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6693,8 +6694,8 @@ msgid ""
 "You can not create a kit-type bill of materials for products that have at "
 "least one reordering rule."
 msgstr ""
-"Bạn không thể tạo danh mục vật tư kiểu bộ kit cho sản phẩm có ít nhất một "
-"quy tắc tái đặt hàng. "
+"Bạn không thể tạo định mức nguyên liệu kiểu bộ kit cho sản phẩm có ít nhất "
+"một quy tắc tái đặt hàng. "
 
 #. module: mrp
 #. odoo-python
@@ -6703,7 +6704,7 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
-"Bạn không thể xoá danh mục vật tư có lệnh sản xuất đang chạy.\n"
+"Bạn không thể xoá định mức nguyên liệu có lệnh sản xuất đang chạy.\n"
 "Vui lòng đóng hoặc huỷ lệnh sản xuất trước."
 
 #. module: mrp
@@ -6750,7 +6751,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "You cannot create a new Bill of Material from here."
-msgstr "Bạn không thể tạo danh mục vật tư mới từ đây. "
+msgstr "Bạn không thể tạo định mức nguyên liệu mới ở đây. "
 
 #. module: mrp
 #. odoo-python
