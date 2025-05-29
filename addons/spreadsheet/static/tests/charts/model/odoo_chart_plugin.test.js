@@ -176,6 +176,7 @@ test("Odoo line chart runtime loads the data", async () => {
                 tension: 0,
                 fill: false,
                 pointBackgroundColor: "#4EA7F2",
+                pointRadius: 3,
                 yAxisID: "y",
                 hidden: undefined,
             },
