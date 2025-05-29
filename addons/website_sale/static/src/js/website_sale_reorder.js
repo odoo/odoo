@@ -79,7 +79,7 @@ export class ReorderDialog extends Component {
     get total() {
         return this.content.products.reduce((total, product) => {
             if (product.add_to_cart_allowed) {
-                total += product.combinationInfo.price * product.qty;
+                total += product.combinationInfo.price * product.quantity;
             }
             return total;
         }, 0);
@@ -90,11 +90,22 @@ export class ReorderDialog extends Component {
     }
 
     async loadProductCombinationInfo(product) {
+        for (const comboItem of product.selected_combo_items) {
+            comboItem.combinationInfo = await rpc("/website_sale/get_combination_info", {
+                product_template_id: comboItem.product_template_id,
+                product_id: comboItem.product_id,
+                combination: comboItem.combination,
+                add_qty: comboItem.quantity,
+                context: {
+                    website_sale_no_images: true,
+                },
+            });
+        }
         product.combinationInfo = await rpc("/website_sale/get_combination_info", {
             product_template_id: product.product_template_id,
             product_id: product.product_id,
             combination: product.combination,
-            add_qty: product.qty,
+            add_qty: product.quantity,
             context: {
                 website_sale_no_images: true,
             },
@@ -110,8 +121,8 @@ export class ReorderDialog extends Component {
 
     changeProductQty(product, newQty) {
         const productNewQty = Math.max(0, newQty);
-        const qtyChanged = productNewQty !== product.qty;
-        product.qty = productNewQty;
+        const qtyChanged = productNewQty !== product.quantity;
+        product.quantity = productNewQty;
         this.render(true);
         if (!qtyChanged) {
             return;
@@ -120,7 +131,7 @@ export class ReorderDialog extends Component {
     }
 
     onChangeProductQtyInput(ev, product) {
-        const newQty = parseFloat(ev.target.value) || product.qty;
+        const newQty = parseFloat(ev.target.value) || product.quantity;
         this.changeProductQty(product, newQty);
     }
 
@@ -160,9 +171,10 @@ export class ReorderDialog extends Component {
             await this.cart.add({
                 productTemplateId: product.product_template_id,
                 productId: product.product_id,
-                quantity: product.qty,
+                quantity: product.quantity,
                 productCustomAttributeValues: product.product_custom_attribute_values,
                 noVariantAttributeValues: product.no_variant_attribute_value_ids,
+                linked_products: product.selected_combo_items,
             }, {
                 isBuyNow: true,
                 redirectToCart: false,
