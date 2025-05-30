@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add("self_combo_selector", {
         ]),
         Utils.clickBtn("Checkout"),
         {
-            trigger: '.btn:contains("＋")',
+            trigger: ".btn .oi-plus",
             run: "click",
         },
         ...CartPage.checkCombo("Office Combo", [
@@ -46,7 +46,7 @@ registry.category("web_tour.tours").add("self_combo_selector", {
                 attributes: [],
             },
         ]),
-        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Order"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
     ],
@@ -63,7 +63,7 @@ registry.category("web_tour.tours").add("self_combo_selector_category", {
             },
         ]),
         Utils.clickBtn("Checkout"),
-        Utils.clickBtn("Pay"),
+        Utils.clickBtn("Order"),
         Utils.clickBtn("Ok"),
         Utils.checkIsNoBtn("Order Now"),
     ],

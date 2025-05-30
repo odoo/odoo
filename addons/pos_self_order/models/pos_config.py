@@ -99,13 +99,13 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self._prepare_self_order_splash_screen(vals_list)
+        self._prepare_self_order_splash_screen(vals_list, is_new=True)
         pos_config_ids = super().create(vals_list)
         pos_config_ids._prepare_self_order_custom_btn()
         return pos_config_ids
 
     @api.model
-    def _prepare_self_order_splash_screen(self, vals_list):
+    def _prepare_self_order_splash_screen(self, vals_list, is_new=False):
         for vals in vals_list:
             if not vals.get('self_ordering_mode'):
                 return True
@@ -118,7 +118,7 @@ class PosConfig(models.Model):
                     'type': 'binary',
                 }) for image_name in ['landing_01.jpg', 'landing_02.jpg', 'landing_03.jpg']]
 
-            if not vals.get('self_ordering_image_background_ids'):
+            if is_new and not vals.get('self_ordering_image_background_ids'):
                 vals['self_ordering_image_background_ids'] = [(0, 0, {
                     'name': "background.jpg",
                     'datas': base64.b64encode(file_open(opj("pos_self_order/static/img", "kiosk_background.jpg"), "rb").read()),
@@ -273,7 +273,7 @@ class PosConfig(models.Model):
         return ['pos.session', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.payment', 'pos.payment.method', 'res.partner',
             'res.currency', 'pos.category', 'product.template', 'product.product', 'product.combo', 'product.combo.item', 'res.company', 'account.tax',
             'account.tax.group', 'pos.printer', 'res.country', 'product.pricelist', 'product.pricelist.item', 'account.fiscal.position',
-            'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value',
+            'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos.printer', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
             'res.country', 'res.country.state', 'mail.template']
 

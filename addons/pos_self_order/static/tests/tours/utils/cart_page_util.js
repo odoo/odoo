@@ -60,18 +60,10 @@ export function fillInput(inputPlaceholder, value) {
     };
 }
 
-export function checkProduct(name, price, quantity) {
+export function checkProduct(name, price, quantity = "1") {
     return {
         content: `Check product card with ${name} and ${price}`,
-        trigger: `.product-card-item:has(strong:contains("${name}")):has(div:contains("${quantity}")):has(div .o-so-tabular-nums:contains("${price}"))`,
-        run: "click",
-    };
-}
-
-export function checkKioskProduct(name, price) {
-    return {
-        content: `Check product card with ${name} and ${price}`,
-        trigger: `.product-item:has(div:contains("${name}")):has(div .o-so-tabular-nums:contains("${price}"))`,
+        trigger: `.product-cart-item:has(div:contains("${name}")):has(div:contains("${quantity}")):has(div .o-so-tabular-nums:contains("${price}"))`,
         run: "click",
     };
 }
@@ -81,7 +73,7 @@ export function checkAttribute(productName, attributes) {
     let attributeStringReadable = "";
 
     for (const attr of attributes) {
-        attributeString += `div:contains("${attr.name} : ${attr.value}") +`;
+        attributeString += `div:contains("${attr.name}: ${attr.value}") +`;
         attributeStringReadable = ` ${attr.name} : ${attr.value},`;
     }
 
@@ -90,7 +82,7 @@ export function checkAttribute(productName, attributes) {
 
     return {
         content: `Check product card with ${productName} and ${attributeStringReadable}`,
-        trigger: `.product-card-item div:contains("${productName}") + div ${attributeString}`,
+        trigger: `.product-cart-item div:contains("${productName}"):has(${attributeString})`,
         run: "click",
     };
 }
@@ -99,7 +91,7 @@ export function checkCombo(comboName, products) {
     const steps = [];
 
     for (const product of products) {
-        let step = `.product-card-item div:contains("${comboName}"):has(div div.small div:contains(${product.product}))`;
+        let step = `.product-cart-item div:contains("${comboName}"):has(div:contains(${product.product}))`;
 
         if (product.attributes.length > 0) {
             for (const attr of product.attributes) {

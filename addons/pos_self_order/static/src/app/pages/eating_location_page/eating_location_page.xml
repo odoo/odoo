@@ -1,62 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve" >
     <t t-name="pos_self_order.EatingLocationPage">
-        <t t-if="selfOrder.kioskMode">
-            <div class="o_kiosk_eating_location_box d-flex flex-column flex-grow-1 overflow-y-auto o_kiosk_background o_kiosk_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
-                <div class="scroll_container d-flex flex-column flex-grow-1 overflow-y-auto justify-content-center my-auto">
-                    <div class="title-container text-center mt-4">
-                        <h1 class="px-5 header">Where do you want to eat?</h1>
-                    </div>
-                    <div class="o_kiosk_container d-grid gap-4 justify-content-center w-100 p-3 overflow-y-auto" t-att-class="{'o_kiosk_container_small': presets.length === 3}">
-                        <button 
+        <div class="o_self_eating_location_box d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
+            <div class="d-flex flex-column flex-grow-1 overflow-y-auto" t-ref="scrollContainer">
+               <div class="container o_self_container my-auto">
+                   <h1 class="text-center mt-4">Where do you want to eat?</h1>
+                   <div class="grid py-3 py-lg-4 gap-3 gap-sm-4 ">
+                       <article
                             t-foreach="presets"
                             t-as="preset" t-key="preset.id"
                             t-on-click="() => this.selectPreset(preset)"
                             role="button"
-                            class="preset_btn btn btn-light btn-lg d-flex flex-column align-items-center w-100 p-0 border border-light shadow-sm overflow-hidden"
-                            t-att-class="{'justify-content-center': !preset.has_image}">
+                            class="preset_btn fs-2 fw-medium g-col-12 g-col-sm-6 d-flex flex-row-inverse flex-sm-column  align-items-center w-100 border border-light shadow-sm overflow-hidden bg-white rounded cursor-pointer rounded-4"
+                            t-att-class="{'justify-content-center': !preset.has_image, 'g-col-md-6': presets.length &lt; 3, 'g-col-md-4': presets.length &gt; 2 }">
                             <t t-if="preset.has_image">
-                                <div class="img_container w-100 ratio ratio-1x1">
-                                    <img class="w-100 h-100 object-fit-cover" t-attf-src="/web/image/pos.preset/#{preset.id}/image_512?unique=#{preset.write_date} "/>
+                                <div class="img_container flex-shrink-0 w-25 w-sm-100 ratio ratio-1x1">
+                                    <img class="object-fit-cover" t-attf-src="/web/image/pos.preset/#{preset.id}/image_512?unique=#{preset.write_date} "/>
                                 </div>
-                                <span class="py-3" t-esc="preset.name"/>
                             </t>
-                            <t t-else="">
-                                <span class="py-5" t-esc="preset.name"/>
-                            </t>
-                        </button>
-                    </div>
+                           <span class="px-3 py-3 fw-bold"  t-esc="preset.name"/>
+                       </article>
+                   </div>
                 </div>
+            </div>
 
-                <div class="d-flex justify-content-between align-items-center position-relative p-2 p-md-3">
+            <div class="o_self_footer py-3" t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+                <div class="container o_self_container d-flex justify-content-between align-items-center position-relative" >
                     <button class="btn btn-lg btn-light btn-back border-light" t-on-click="()=>this.onClickBack()">
                         <i class="oi oi-chevron-left d-md-none" />
                         <span class="d-none d-md-inline">Back</span>
                     </button>
-                    <KioskLanguageSelector/>
+                    <LanguageSelector/>
                 </div>
             </div>
-        </t>
-        <t t-else="">
-            <div class="o_self_eating_location d-flex flex-column align-items-center flex-grow-1 bg-300 bg-gradient overflow-y-auto text-center">
-                <h1 class="pt-3 m-0">Choose your eating location</h1>
-                <div class="container d-flex flex-wrap align-items-center justify-content-center gap-3 my-auto">
-                    <button t-foreach="presets"
-                        t-as="preset" t-key="preset.id"
-                        t-on-click="() => this.selectPreset(preset)"
-                        role="button"
-                        class="o_self_eating_location_box btn btn-light">
-                        <img t-if="preset.image_128" t-att-src="'data:image/png;base64,' + preset.image_128" />
-                        <span class="fs-3" t-esc="preset.name"/>
-                    </button>
-                </div>
-            </div>
-            <div class="page-buttons p-3 bg-view border-top text-center">
-                <button class="btn btn-secondary btn-lg" t-on-click="()=>this.onClickBack()">
-                    <i class="oi oi-chevron-left"/>
-                    Back
-                </button>
-            </div>
-        </t>
+
+        </div>
     </t>
 </templates>

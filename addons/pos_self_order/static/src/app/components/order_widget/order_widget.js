@@ -37,17 +37,16 @@ export class OrderWidget extends Component {
     get buttonToShow() {
         const currentPage = this.router.activeSlot;
         const payAfter = this.selfOrder.config.self_ordering_pay_after;
-        const kioskPayment = this.selfOrder.models["pos.payment.method"].getAll();
+
         const isNoLine = this.selfOrder.currentOrder.lines.length === 0;
         const hasNotAllLinesSent = this.selfOrder.currentOrder.unsentLines;
-        const isMobilePayment = kioskPayment.find((p) => p.is_mobile_payment);
 
         let label = "";
         let disabled = false;
 
         if (currentPage === "product_list") {
             label = _t("Checkout");
-            disabled = isNoLine || hasNotAllLinesSent.length == 0;
+            disabled = isNoLine || hasNotAllLinesSent.length === 0;
         } else if (
             payAfter === "meal" &&
             Object.keys(this.selfOrder.currentOrder.changes).length > 0
@@ -55,8 +54,7 @@ export class OrderWidget extends Component {
             label = _t("Order");
             disabled = isNoLine;
         } else {
-            label = kioskPayment ? _t("Pay") : _t("Order");
-            disabled = !kioskPayment && !isMobilePayment;
+            label = this.selfOrder.hasPaymentMethod() ? _t("Pay") : _t("Order");
         }
 
         return { label, disabled };
@@ -85,7 +83,6 @@ export class OrderWidget extends Component {
     shouldGoBack() {
         const order = this.selfOrder.currentOrder;
         return (
-            this.selfOrder.displayCategoryPage() ||
             Object.keys(order.changes).length === 0 ||
             this.router.activeSlot === "cart" ||
             order.lines.length === 0
@@ -96,13 +93,19 @@ export class OrderWidget extends Component {
         const back = this.shouldGoBack();
         return {
             name: back ? _t("Back") : _t("Cancel"),
-            icon: back ? "fa fa-arrow-left btn-back" : "btn-close btn-cancel",
+            icon: back ? "oi oi-chevron-left btn-back" : "btn-close btn-cancel",
         };
     }
 
     onClickleftButton() {
+        const currentPage = this.router.activeSlot;
         if (this.shouldGoBack()) {
-            this.router.back();
+            if (currentPage === "product_list") {
+                const targetPage = this.selfOrder.hasPresets() ? "location" : "default";
+                this.router.navigate(targetPage);
+            } else {
+                this.router.back();
+            }
             return;
         }
 

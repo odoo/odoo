@@ -45,7 +45,7 @@ export function openLanguageSelector() {
 export function openKioskLanguageSelector() {
     return {
         content: `Click on language selector`,
-        trigger: `.o_kiosk_language_selector`,
+        trigger: `.o_self_language_selector`,
         run: "click",
     };
 }
@@ -60,7 +60,7 @@ export function changeKioskLanguage(language) {
         },
         {
             content: `Check that the language changed`,
-            trigger: `.o_kiosk_language_selector:contains(${language})`,
+            trigger: `.o_self_language_selector:contains(${language})`,
         },
     ];
 }
@@ -84,7 +84,7 @@ export function increaseComboItemQty(productName, qty) {
     const steps = [
         {
             content: `Check product name`,
-            trigger: `.o_kiosk_product_box span:contains("${productName}")`,
+            trigger: `.combo_product_box span:contains("${productName}")`,
         },
     ];
 
@@ -92,7 +92,7 @@ export function increaseComboItemQty(productName, qty) {
         steps.push(
             {
                 content: `Verify the quantity of "${productName}" is updated to ${i}.`,
-                trigger: `.item_qty_container h2:contains("${i}")`,
+                trigger: `.item_qty_container .o-so-tabular-nums:contains("${i}")`,
             },
             {
                 content: `Increase the quantity of "${productName}" by clicking the "+" button.`,

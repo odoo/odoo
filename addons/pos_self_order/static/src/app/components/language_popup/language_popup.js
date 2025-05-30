@@ -21,6 +21,11 @@ export class LanguagePopup extends Component {
     }
 
     onClickLanguage(language) {
+        if (language === this.currentLanguage) {
+            this.props.close();
+            return;
+        }
+
         cookie.set("frontend_lang", language.code);
 
         const currentUrl = new URL(window.location.href);

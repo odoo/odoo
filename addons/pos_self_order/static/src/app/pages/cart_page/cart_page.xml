@@ -1,98 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.CartPage">
-        <div class="order-cart-content d-flex flex-column flex-grow-1 justify-content-between overflow-y-auto">
-            <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 p-3 w-100 bg-view border-bottom overflow-x-auto z-1">
-                <h1 class="mb-0 fw-bolder text-nowrap">Your Order</h1>
-            </div>
-            <div class="order-content flex-grow-1 overflow-auto pb-4">
-                <t t-foreach="linesToDisplay" t-as="line" t-key="line.uuid">
-                    <div t-if="!line.combo_parent_id" class="product-card-item py-2 py-lg-4 px-3 bg-view border-bottom">
-                        <t t-set="product" t-value="line.product_id"/>
-                        <div class="product-wrapper d-flex align-items-start gap-2 gap-lg-3">
-                            <div class="product-info d-flex flex-column gap-2 flex-grow-1">
-                                <div>
-                                    <span t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"><t t-esc="line.qty" />x </span>
-                                    <strong t-esc="line.product_id.display_name"/>
+        <div class="o_self_cart_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade" t-attf-style="background-image:#{selfOrder.kioskBackgroundImage};background-size: cover; background-position: center;">
+            <div class="d-flex flex-column flex-grow-1 overflow-y-auto pb-0 pb-sm-3 pt-3 py-lg-4" t-ref="scrollContainer">
+                <div class="container o_self_container mt-auto cart_container">
+                    <h1 class="ms-3 ms-sm-0 mb-3 ">Your Order</h1>
+                    <div class="order_box d-flex flex-column bg-white px-3 px-kiosk-p-4 rounded-4 border border-light shadow-sm">
+                        <t t-foreach="lines" t-as="line" t-key="line.uuid">
+                            <t t-set="display_change_quantity" t-value="Object.keys(selfOrder.currentOrder.changes).length &gt; 0"/>
+                            <div t-attf-class="product-cart-item d-flex align-items-center py-3 py-kiosk-p-4 {{!line_last ? 'border-bottom border-medium' : ''}}">
+                                <t t-set="product" t-value="line.product_id"/>
+                                <div class="product_img w-25 me-3 me-kiosk-p-4 ratio ratio-1x1 align-self-start">
+                                    <img class="object-fit-cover rounded-4" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                 </div>
-                                <div t-if="line.attribute_value_ids?.length > 0 || line.combo_line_ids.length > 0" class="d-flex align-items-start gap-2 gap-md-3 my-2">
-                                    <button
-                                        t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"
-                                        type="button"
-                                        t-on-click="() => this.clickOnLine(line)"
-                                        class="btn btn-secondary"> <i class="fa fa-pencil"></i></button>
-
-                                    <div class="vr"/>
-
-                                    <div class="small">
-                                        <div t-if="line.combo_line_ids.length === 0" class="product-info d-flex flex-column flex-grow-1 text-muted">
-                                            <div t-foreach="line.attribute_value_ids" t-as="attrVal" t-key="attrVal.id">
-                                                - <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />
+                                <div class="w-100" >
+                                    <div class="text-break fs-4 fw-bold "><span t-if="!display_change_quantity" class="fw-normal"><t t-esc="line.qty"/>x </span><t t-esc="product.name"/></div>
+                                    <t t-set="attribute_ids" t-value="getAttributes(line)"/>
+                                    <div t-if="attribute_ids.length > 0 || line.combo_line_ids.length > 0" class="border-start mt-2">
+                                        <t t-if="attribute_ids.length > 0" >
+                                            <div t-foreach="attribute_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted">
+                                                <t t-esc="attrVal.attribute_id.name" />:
+                                                <t t-esc="attrVal.name" />
+                                                <t t-set="custom_value" t-value="getCustomValue(line, attrVal)"/>
+                                                <t t-if="custom_value">: <t t-esc="custom_value" /></t>
                                             </div>
-                                        </div>
-                                        <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="text-muted">
-                                            - <span t-esc="cline.product_id.display_name" /> <span t-if="cline.price_subtotal_incl">(<t t-esc="selfOrder.formatMonetary(cline.price_subtotal_incl)"/>)</span>
-                                            <div class="product-info d-flex flex-column flex-grow-1 ms-3">
-                                                <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id">
-                                                    - <span t-esc="attrVal.attribute_id.name" /> : <span t-esc="attrVal.name" />
-                                                </div>
+                                        </t>
+                                        <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="ps-3 mb-2">
+                                            <t t-set="c_qty" t-value="cline.qty / line.qty"/>
+                                            <span t-if="(c_qty &gt; 1)"><t t-esc="c_qty"/>x </span>
+                                            <t t-esc="cline.product_id.name"/>
+                                            <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted">
+                                                <t t-esc="attrVal.attribute_id.name" />:
+                                                <t t-esc="attrVal.name" />
+                                                <t t-set="custom_value" t-value="getCustomValue(cline, attrVal)"/>
+                                                <t t-if="custom_value">: <t t-esc="custom_value" /></t>
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="d-flex w-100 justify-content-between align-items-center mt-3 mt-md-4">
+                                        <!-- Quantity -->
+                                        <div t-if="display_change_quantity" class="btn-group" >
+                                            <button
+                                                    t-if="canDeleteLine(line) &amp;&amp; getLineChangeQty(line) > 1"
+                                                    type="button"
+                                                    t-on-click= "() => this.changeQuantity(line, false)"
+                                                    class="btn btn-secondary py-1 px-2"><i class="oi oi-minus fa-fw"/></button>
+                                            <button
+                                                    t-else=""
+                                                    type="button"
+                                                    t-on-click= "(e) => this.removeLine(line,e)"
+                                                    class="btn btn-secondary py-1 px-2"><i class="fa fa-trash-o fa-fw"/></button>
+                                            <div class="o-so-tabular-nums fs-4 d-flex align-items-center m-0 px-4 py-2 text-bg-secondary fw-bolder" t-esc="getLineChangeQty(line)"/>
+                                            <button type="button"
+                                                    t-on-click = "() => this.changeQuantity(line, true)"
+                                                    class="btn btn-secondary py-1 px-2"><i class="oi oi-plus fa-fw"/></button>
+                                        </div>
+                                        <div t-else=""/>
+                                        <div class="fs-4 fw-bold line-price mb-0 o-so-tabular-nums fw-bold text-primary" t-esc="selfOrder.formatMonetary(getPrice(line))"/>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="o_self_order_item_card_image_wrapper flex-shrink-0 ratio ratio-1x1">
-                                <img
-                                    class="o_self_order_item_card_image w-100 w-100 rounded bg-view"
-                                    t-attf-src="/web/image/product.product/{{ line.product_id.id}}/image_512"
-                                    alt="Product image"
-                                    loading="lazy"
-                                    onerror="this.remove()"/>
-                            </div>
-                        </div>
-                        <div class="product-controllers d-flex flex-wrap flex-grow-1 align-items-center justify-content-between mt-2">
-                            <div>
-                                <div t-if="Object.keys(selfOrder.currentOrder.changes).length > 0" class="btn-group">
-                                    <button
-                                        t-if="canDeleteLine(line) &amp;&amp; getLineChangeQty(line) > 1"
-                                        type="button"
-                                        t-on-click= "() => this.changeQuantity(line, false)"
-                                        t-attf-class="btn btn-secondary px-3"><span class="fs-2 fa-fw d-inline-block">－</span></button>
-                                    <button
-                                        t-else=""
-                                        type="button"
-                                        t-on-click= "() => this.removeLine(line)"
-                                        t-attf-class="btn btn-secondary px-3"><i class="fa fa-fw fa-trash-o"/></button>
-
-                                    <div class="o-so-tabular-nums d-flex align-items-center fw-bold px-2 px-md-3 text-bg-200" t-esc="getLineChangeQty(line)"/>
-                                    <button type="button"
-                                        t-on-click = "() => this.changeQuantity(line, true)"
-                                        class="btn btn-secondary px-3"><span class="fs-2 fa-fw d-inline-block">＋</span></button>
-                                </div>
-                            </div>
-                            <div class="line-price o-so-tabular-nums" t-esc="selfOrder.formatMonetary(getPrice(line))"/>
-                        </div>
-                    </div>
-                </t>
-                <t t-set="optProducts" t-value="optionalProducts"/>
-                <div t-if="optProducts.length" class="upsale-content border-top bg-view mt-2 px-3 py-4 py-md-5">
-                    <h2 class="mb-5">Want to add something ?</h2>
-                    <div class="upsale-product row justify-content-between justify-content-md-start row-cols-sm-2 row-cols-md-4 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 mb-1">
-                        <t t-foreach="optProducts" t-as="product" t-key="product.id">
-                            <ProductCard productTemplate="product" />
                         </t>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="order-price d-flex-column flex-grow-0">
-            <div class="absolute-content-price d-flex flex-column flex-grow-0 justify-content-center py-2 py-lg-3 px-3 border-bottom border-top bg-view text-end lh-sm">
-                <p class="o-so-tabular-nums mb-0 fw-bolder">Total: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalWithTax())" /></p>
-                <p class="o-so-tabular-nums mb-0 text-muted">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalTax())" /></p>
+            <div class="o_self_footer border-top border-bottom bg-white py-2 py-lg-3" t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+                <div class="container o_self_container order-price d-flex flex-column gap-0 gap-lg-1 align-items-end px-md-4" >
+                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalWithTax())" /></span></div>
+                    <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="displayTaxes">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.getTotalTax())" /></div>
+                 </div>
             </div>
             <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>
         </div>
         <PopupTable t-if="this.state.selectTable" selectTable.bind="selectTable" />
         <PresetInfoPopup t-if="this.state.fillInformations" callback.bind="proceedInfos" />
     </t>
+
+    <!--
+         <button
+            t-if="Object.keys(selfOrder.currentOrder.changes).length === 0"
+            type="button"
+            t-on-click="() => this.clickOnLine(line)"
+            class="btn btn-secondary"> <i class="fa fa-pencil"></i></button>
+    -->
 </templates>

@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductPage">
-        <div class="d-flex flex-column bg-view flex-grow-1 h-100">
-            <div class="d-flex align-items-center flex-shrink-0 justify-content-between gap-3 px-3 py-2 w-100 bg-view border-bottom overflow-x-auto z-1">
-                <button class="btn btn-secondary btn-lg px-3 text-nowrap" t-on-click="() => router.back()">
-                    <i class="oi oi-chevron-left" aria-hidden="true"/><span class="ms-2 d-none d-md-inline">Discard</span>
-                </button>
-                <h1 class="mb-0 text-nowrap"><strong t-esc="productTemplate.name"/> options</h1>
-                <span class="d-none d-md-inline px-5"/> <!-- Spacer -->
+        <div class="o_self_product_page d-flex flex-column vh-100 overflow-hidden o_self_background o_self_fade">
+            <t t-set="product" t-value="productTemplate"/>
+
+            <!-- Header -->
+            <div class="o_self_product_page_header text-bg-primary " t-att-class="{'o_self_shadow_top': scrollShadow.top}">
+                <div class="container o_self_container py-3 d-flex align-items-center position-relative" >
+                    <button class="btn btn-link btn-lg d-inline-flex align-items-center gap-2 p-0 text-reset" t-on-click="() => this.goBack()">
+                        <i class="oi oi-close fa-fw" aria-hidden="true"/>
+                        <span  t-att-class="{'invisible': state.showStickyTitle}">Discard</span>
+                    </button>
+                    <div class="o_self_product_name position-absolute fw-bold fs-2 text-truncate text-center" t-att-class="{'d-none': !state.showStickyTitle}"   >
+                         <t t-esc="product.name" />
+                    </div>
+                </div>
             </div>
 
-            <div class="pos_self_order_product_page_content d-flex flex-column flex-grow-1 overflow-y-auto">
-                <div class="o_so_product_details d-flex flex-row align-items-start p-3 gap-3">
-                    <div class="o_so_product_details_image ratio ratio-1x1 w-25 flex-shrink-0">
-                        <div class="placeholder-glow">
-                            <div class="placeholder w-100 h-100 bg-300 rounded"/>
+            <!-- Scroll -->
+            <div class="d-flex flex-column overflow-y-auto h-100 position-relative" t-ref="scrollContainer">
+               <div class="flex-grow-1">
+                    <div class="py-3 text-bg-primary">
+                        <div class="container o_self_container ">
+                             <!-- Name & Image -->
+                            <div class="d-flex flex-column align-items-center">
+                                <h1 class="mt-kiosk-p-3 mb-3 text-reset" t-esc="product.name" t-ref="productName"/>
+                                <div class="o_self_product_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
+                                    <img class="rounded-4" t-attf-src="/web/image/product.template/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                </div>
+                            </div>
                         </div>
-                        <img
-                            class="o_self_order_item_card_image w-100 rounded"
-                            t-attf-src="/web/image/product.template/{{ productTemplate.id }}/image_512"
-                            alt="Product image"
-                            loading="lazy"
-                            onerror="this.remove()"/>
                     </div>
-                    <div class="o_so_product_details_description">
-                        <h2 t-esc="productTemplate.name"/>
-                        <small t-if="productTemplate.public_description"
-                            class="o_self_order_main_desc d-block mb-3 text-muted"
-                            t-out="productTemplate.productDescriptionMarkup"
-                        />
-                        <span class="fs-3" t-esc="selfOrder.formatMonetary(selfOrder.getProductDisplayPrice(productTemplate))"/>
-                    </div>
-                </div>
-                <AttributeSelection
-                    t-if="productTemplate.attribute_line_ids.length"
-                    productTemplate="productTemplate"/>
+
+                    <!-- Attributes -->
+                    <div class="container o_self_container o_self_product_page_attributes">
+                        <div class="d-flex flex-column z-0">
+                            <div class="mt-3 mt-kiosk-p-4 mb-2" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
+                            <AttributeSelection t-if="productTemplate.attribute_line_ids.length" productTemplate="productTemplate" />
+                         </div>
+                   </div>
+               </div>
+                 <div  t-if="showQtyButtons and selfOrder.ordering" class="d-flex container o_self_container justify-content-end pt-0 py-3">
+                     <t t-call="pos_self_order.QuantityWidget" />
+                 </div>
             </div>
 
-            <div t-if="showQtyButtons and selfOrder.ordering" class="p-3 text-end">
-                <div class="o_self_order_incr_button btn-group " role="group" aria-label="Quantity select">
-                    <button type="button"
-                        t-on-click = "() => this.changeQuantity(false)"
-                        t-attf-class="{{ !this.env.editable ? 'disabled' : '' }} btn btn-secondary btn-lg"><span class="fs-2 lh-1 fa-fw d-inline-block">－</span></button>
-                    <div class="o-so-tabular-nums d-flex align-items-center px-3 text-bg-200" t-esc="state.qty"/>
-                    <button type="button"
-                        t-on-click = "() => this.changeQuantity(true)"
-                        class="btn btn-secondary btn-lg"><span class="fs-2 lh-1 fa-fw d-inline-block">＋</span></button>
+            <!-- Footer -->
+            <div class="o_self_footer bg-white border-top py-3"  t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
+                <div class="container o_self_container ">
+                    <div  t-if="isArchivedCombination()" class="alert alert-warning text-center mb-3">
+                        This combination does not exist.
+                    </div>
+                   <div class="d-flex justify-content-between align-items-center  gap-2 gap-md-5">
+                        <div class="ms-auto text-start">
+                            <h4 class="d-none d-sm-block text-muted opacity-75 mb-1">Selection</h4>
+                            <div class="fs-2 fw-bold o-so-tabular-nums mx-2 text-primary" t-esc="selfOrder.formatMonetary(getProductPrice())" />
+                        </div>
+                        <button t-if="selfOrder.ordering" class="btn btn-lg btn-primary text-truncate ps-auto" t-on-click="addToCart" t-att-disabled="!this.isAddToCartEnabled()" >
+                            <span>Add to cart</span>
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-            <div t-if="showQtyButtons and !props.onValidate" class="page-buttons d-flex p-3 gap-3 bg-view border-top"
-                t-att-class="(isArchivedCombination() ? 'justify-content-between': 'justify-content-end')">
-                <div t-if="isArchivedCombination() and this.isEveryValueSelected()" class="alert alert-warning m-0">
-                    This combination does not exist.
-                </div>
-                <button
-                    t-if="showQtyButtons and !props.onValidate and selfOrder.ordering"
-                    class="btn btn-primary btn-lg"
-                    t-att-disabled="!this.isEveryValueSelected() or isArchivedCombination()"
-                    t-on-click="addToCart">
-                    Add to cart
-                </button>
             </div>
         </div>
     </t>
