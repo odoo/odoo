@@ -86,9 +86,9 @@ export function useSquareSelection() {
     }
 
     function pointerDown(ev) {
-        const eventElement = ev.target.closest(".fc-event");
+        const avoidElement = ev.target.closest(".fc-event, .fc-more-cell, .fc-more-popover");
         const targetElement = ev.target.closest(".fc-day:not(.fc-col-header-cell)");
-        if (eventElement || !targetElement) {
+        if (avoidElement || !targetElement) {
             return;
         }
         document.activeElement?.blur(); // Force blur on activeElement to force update value

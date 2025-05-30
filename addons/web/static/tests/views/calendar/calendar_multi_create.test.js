@@ -690,3 +690,53 @@ test("multi_create: test popover in all mode", async () => {
     await animationFrame();
     expect(".o_popover").toHaveCount(1);
 });
+
+test.tags("desktop");
+test("multi_create: avoid trigger add/del event on specific element", async () => {
+    function makeEvents(numberOfEvent) {
+        return [...Array(numberOfEvent).keys()].map((i) => ({
+            id: i,
+            name: `event ${i}`,
+            date_start: "2019-03-13",
+            type: 1,
+            user_id: 1,
+        }));
+    }
+    Event._records = makeEvents(6);
+
+    onRpc("event", "create", ({ args: [records] }) => {
+        for (const record of records) {
+            expect.step(`${record.name}_${record.date_start}`);
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+    });
+
+    await click(".fc-event[data-event-id='1']");
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(1);
+
+    await click(".o_calendar_button_today");
+    await runAllTimers();
+    await animationFrame();
+    expect(".o_popover").toHaveCount(0);
+
+    await click(".fc-more-cell a");
+    await animationFrame();
+    expect(".fc-more-popover").toHaveCount(1);
+    expect.verifySteps([]);
+
+    await click(".fc-popover-title");
+    await animationFrame();
+    expect(".fc-more-popover").toHaveCount(1);
+    expect.verifySteps([]);
+
+    await click(".fc-popover-close");
+    await animationFrame();
+    expect(".fc-more-popover").toHaveCount(0);
+    expect.verifySteps([]);
+});
