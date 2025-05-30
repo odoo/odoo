@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, destroy, expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { click, edit, queryOne } from "@odoo/hoot-dom";
-import { Command, mountView, MockServer, onRpc } from "@web/../tests/web_test_helpers";
+import { Command, mountView, MockServer, mockService, onRpc } from "@web/../tests/web_test_helpers";
 
 import { defineProjectModels, ProjectTask } from "./project_models";
 
@@ -110,8 +110,9 @@ beforeEach(() => {
         `,
         form: `
             <form>
-                <field name="child_ids" widget="subtasks_one2many">
-                    <list editable="bottom">
+                <field name="parent_id"/>
+                <field name="child_ids" context="{'default_parent_id': id}" widget="subtasks_one2many">
+                    <list editable="bottom" open_form_view="True">
                         <field name="project_id" widget="project"/>
                         <field name="name"/>
                     </list>
@@ -312,4 +313,33 @@ test("project.task (kanban): check subtask creation when input is empty", async 
     expect(".o_notification_bar").toHaveClass("bg-danger", {
         message: "The notification bar should have type 'danger'.",
     });
+});
+
+test("project.task: Parent id is set when creating new task from subtask form's 'View' button", async () => {
+    mockService("action", {
+        doAction(params) {
+            return mountView({
+                resModel: params.res_model,
+                resId: params.res_id,
+                type: "form",
+                context: params.context,
+            });
+        },
+    });
+
+    const taskFormView = await mountView({
+        resModel: "project.task",
+        resId: 1,
+        type: "form",
+    });
+    await click("tbody .o_data_row:nth-child(1) .o_list_record_open_form_view button.btn-link");
+    // Destroying this view for sanicity of display
+    destroy(taskFormView);
+    await animationFrame();
+
+    await click(".o_form_view .o_form_button_create");
+    await animationFrame();
+    expect("div[name='parent_id'] input").toHaveValue(
+        MockServer.current._models[ProjectTask._name].find((rec) => rec.id === 1).name
+    );
 });
