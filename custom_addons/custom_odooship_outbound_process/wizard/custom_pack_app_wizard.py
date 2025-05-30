@@ -473,7 +473,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         instead of the wizard header.
         """
         for record in self:
-            record.show_package_box_in_lines = len(record.picking_ids) > 1
+            record.show_package_box_in_lines = len(record.sale_order_ids) > 1
 
     def _auto_select_package_box_type(self):
         """
