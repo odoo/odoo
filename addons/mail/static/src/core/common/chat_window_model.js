@@ -16,6 +16,24 @@ export class ChatWindow extends Record {
     fromMessagingMenu = false;
     hubAsOpened = fields.One("ChatHub", { inverse: "opened" });
     hubAsFolded = fields.One("ChatHub", { inverse: "folded" });
+    hubAsCanShowOpened = fields.One("ChatHub", {
+        inverse: "canShowOpened",
+        /** @this {import("models").ChatWindow} */
+        compute() {
+            if (this.canShow && this.hubAsOpened) {
+                return this.store.chatHub;
+            }
+        },
+    });
+    hubAsCanShowFolded = fields.One("ChatHub", {
+        inverse: "canShowFolded",
+        /** @this {import("models").ChatWindow} */
+        compute() {
+            if (this.canShow && this.hubAsFolded) {
+                return this.store.chatHub;
+            }
+        },
+    });
 
     get displayName() {
         return this.thread?.displayName;
@@ -23,6 +41,16 @@ export class ChatWindow extends Record {
 
     get isOpen() {
         return Boolean(this.hubAsOpened);
+    }
+
+    canShow = fields.Attr(true, {
+        compute() {
+            return this.computeCanShow();
+        },
+    });
+
+    computeCanShow() {
+        return !this.store.discuss?.isActive || this.store.env.services.ui.isSmall;
     }
 
     async close(options = {}) {

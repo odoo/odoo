@@ -103,16 +103,19 @@ export class ChatHub extends Component {
         return counter;
     }
 
+    /** @deprecated */
     get displayConversations() {
-        return this.chatHub.opened.length + this.chatHub.folded.length > 0 && !this.chatHub.compact;
+        return this.chatHub.showConversations && !this.chatHub.compact;
     }
 
+    /** @deprecated */
     get isShown() {
         return true;
     }
 
+    /** @deprecated */
     shouldDisplayChatWindow(cw) {
-        return this.isShown || this.ui.isSmall;
+        return cw.canShow;
     }
 
     expand() {
