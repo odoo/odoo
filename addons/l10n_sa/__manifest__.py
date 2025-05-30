@@ -34,6 +34,7 @@ Activates:
         'views/report_invoice.xml',
         'wizard/account_debit_note.xml',
         'wizard/account_move_reversal_views.xml',
+        'views/report_templates_views.xml'
     ],
     'demo': [
         'demo/demo_company.xml',

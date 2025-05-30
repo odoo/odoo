@@ -6,7 +6,7 @@
 
             <!--    Add Currency Exchange rate if different currency than SAR    -->
             <xpath expr="//div[@name='exchange_rate']/.." position="attributes">
-                <attribute name="class">d-none</attribute>
+                <attribute name="t-att-class">'d-none' if o.company_id.country_id.code == 'SA' else ''</attribute>
             </xpath>
             <xpath expr="//div[hasclass('clearfix')]" position="after">
                 <table t-if="o.company_id.country_id.code == 'SA' and o.currency_id != o.company_id.currency_id"
