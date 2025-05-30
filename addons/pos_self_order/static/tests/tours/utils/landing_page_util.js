@@ -61,10 +61,9 @@ export function checkCarouselAutoPlaying() {
     return {
         content: `Check that the slideshow is working`,
         trigger: `.carousel-item.active`,
-        timeout: 5600,
         async run() {
             const firstSlideHtml = document.querySelector(".carousel-item.active")?.outerHTML;
-            await delay(5000);
+            await delay(150);
             const currentSlideHtml = document.querySelector(".carousel-item.active")?.outerHTML;
             if (firstSlideHtml === currentSlideHtml) {
                 throw new Error(
