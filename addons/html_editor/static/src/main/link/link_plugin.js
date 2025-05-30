@@ -300,6 +300,7 @@ export class LinkPlugin extends Plugin {
         this.getAttachmentMetadata = memoize((url) =>
             fetchAttachmentMetaData(url, this.services.orm)
         );
+        this.LinkPopoverState = { editing: false };
         this.newlyInsertedLinks = new Set();
     }
 
@@ -396,6 +397,7 @@ export class LinkPlugin extends Plugin {
      */
     openLinkTools(linkElement, type) {
         this.currentOverlay.close();
+        this.LinkPopoverState.editing = false;
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
@@ -565,6 +567,7 @@ export class LinkPlugin extends Plugin {
             canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
+            LinkPopoverState: this.LinkPopoverState,
             showReplaceTitleBanner: this.newlyInsertedLinks.has(linkElement),
             allowCustomStyle: this.config.allowCustomStyle,
             allowTargetBlank: this.config.allowTargetBlank,
@@ -572,6 +575,9 @@ export class LinkPlugin extends Plugin {
 
         const popover = this.getActivePopover(linkElement);
         this.currentOverlay = popover.overlay;
+        if (!linkElement.href) {
+            this.LinkPopoverState.editing = true;
+        }
         this.currentOverlay.open({ props: popover.getProps(props) });
         if (this.linkInDocument) {
             if (this.newlyInsertedLinks.has(this.linkInDocument)) {
