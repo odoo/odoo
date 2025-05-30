@@ -27,13 +27,11 @@
                     <field name="rating_count"/>
                     <templates>
                         <t t-name="menu">
-                            <div class="container">
-                                <a type="object" name="action_view_rating" class="dropdown-item" role="menuitem">Ratings</a>
-                                <a type="open" class="dropdown-item" role="menuitem">
-                                    <span groups="im_livechat.im_livechat_group_manager">Configure Channel</span>
-                                    <span groups="!im_livechat.im_livechat_group_manager">View Channel</span>
-                                </a>
-                            </div>
+                            <a type="object" name="action_view_rating" class="dropdown-item" role="menuitem">Ratings</a>
+                            <a type="open" class="dropdown-item" role="menuitem">
+                                <span groups="im_livechat.im_livechat_group_manager">Configure Channel</span>
+                                <span groups="!im_livechat.im_livechat_group_manager">View Channel</span>
+                            </a>
                         </t>
                         <t t-name="card" class="p-0 row g-0">
                             <aside t-if="record.image_128.raw_value" class="ps-4 col-3" t-att-class="{'o-livechat-ChannelKanban-highlighted': record.available_operator_ids.raw_value.length > 0}">
@@ -45,7 +43,7 @@
                                         <field name="name" class="fs-4" style="word-wrap: break-word;"/>
                                         <p class="fst-italic fs-5"><field name="nbr_channel"/> Sessions</p>
                                     </div>
-                                    <div>
+                                    <div class="pe-1">
                                         <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-primary">Leave</button>
                                         <button t-else="" name="action_join" type="object" class="btn btn-secondary" groups="im_livechat.im_livechat_group_user">Join</button>
                                     </div>
