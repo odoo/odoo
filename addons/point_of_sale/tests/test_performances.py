@@ -1,19 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from unittest import skipIf
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 
 from odoo.cli.populate import Populate
 from odoo.tests.common import tagged
-from odoo.tools import mute_logger, config
+from odoo.tools import mute_logger
 
 _logger = logging.getLogger(__name__)
 
 
-@skipIf('pos_performance' not in config['test_tags'], "This test is intended for local performance testing of POS with a large dataset.")
-@tagged('pos_performance', 'post_install', '-at_install')
+@tagged('-standard', 'pos_performance', '-at_install', 'post_install')
 class TestPosPerformance(TestPointOfSaleHttpCommon):
     """
     These tests are designed for local performance testing only and will be skipped
