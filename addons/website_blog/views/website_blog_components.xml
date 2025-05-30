@@ -139,28 +139,38 @@
     <div t-attf-class="o_not_editable align-items-center position-relative #{additionnal_classes or ''}">
         <div t-if="blog_post.author_avatar"
              t-field="blog_post.author_avatar"
-             style="line-height:1"
-             t-options='{"widget": "image", "class": "rounded-circle " + "o_wblog_author_avatar me-1" if hide_date else  "o_wblog_author_avatar_date me-2"}' />
-        <div t-att-class="not hide_date and 'small fw-bold'" style="line-height:1">
-            <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
-            <span t-else="" t-esc="blog_post.author_name"/>
-            <small t-if="not hide_date" t-field="blog_post.post_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
+             t-options='{"widget": "image", "class": "o_wblog_author_avatar o_avatar me-2 rounded-circle"}' />
+        <div class="small lh-sm">
+            <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}' class="fw-bold"/>
+            <span t-else="" t-esc="blog_post.author_name" class="fw-bold"/>
+            <span t-if="not hide_date" t-field="blog_post.post_date" t-options="{'format': 'long', 'date_only': 'true'}"/>
         </div>
+    </div>
+</template>
+
+<!-- ======   Template: Share post   ==========================================
+============================================================================ -->
+<template id="post_share">
+    <div class="o_wblog_social_links d-flex gap-2 flex-wrap o_not_editable">
+        <t t-set="classes" t-translation="off">d-flex align-items-center justify-content-center rounded-circle text-bg-light text-decoration-none</t>
+        <a href="#" aria-label="Share this blog post on Facebook" title="Share on Facebook" t-attf-class="o_facebook #{classes}"><i class="fa fa-lg fa-facebook-square"/></a>
+        <a href="#" aria-label="Share this blog post on X" title="Share on X" t-attf-class="o_twitter #{classes}"><i class="fa fa-lg fa-twitter" aria-label="X" title="X"/></a>
+        <a href="#" aria-label="Share this blog post on LinkedIn" title="Share on LinkedIn" t-attf-class="o_linkedin #{classes}"><i class="fa fa-lg fa-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
     </div>
 </template>
 
 <!-- ======   Template: Post Breadcrumbs   =====================================
 ============================================================================ -->
 <template id="post_breadcrumbs">
-    <nav aria-label="breadcrumb" t-attf-class="breadcrumb flex-nowrap py-0 px-0 css_editable_mode_hidden #{additionnal_classes or ''}">
-        <li t-if="len(blogs) &gt; 1" class="breadcrumb-item d-none d-lg-inline"><a href="/blog">All Blogs</a></li>
-        <li class="breadcrumb-item">
+    <ol t-attf-class="breadcrumb my-4 p-0 #{opt_blog_regular_cover and 'mt-0' or ''}">
+        <li t-if="len(blogs) &gt; 1" class="o_not_editable breadcrumb-item d-none d-lg-inline-block"><a href="/blog">All Blogs</a></li>
+        <li class="o_not_editable breadcrumb-item">
             <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}">
                 <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="blog.name"/>
             </a>
         </li>
         <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-out="blog_post.name"/></li>
-    </nav>
+    </ol>
 </template>
 
 <!--  Template: Blog Post Information-->
@@ -286,11 +296,11 @@ Display a sidebar beside the post content.
 
 
 <!-- (Option) Post Sidebar: Author avatar -->
-<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="True" priority="1">
+<template id="opt_blog_post_author_avatar_display" name="Author" inherit_id="website_blog.blog_post_sidebar" active="False" priority="1">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <t t-call="website_blog.post_author">
-                <t t-set="additionnal_classes" t-value="'h5 d-flex align-items-center'"/>
+                <t t-set="additionnal_classes" t-value="'d-flex align-items-center'"/>
             </t>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_2"/>
@@ -298,19 +308,14 @@ Display a sidebar beside the post content.
 </template>
 
 <!-- (Option) Post Sidebar: Share Links Display -->
-<template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="True" priority="2">
+<template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="False" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Share this post</h6>
+                <h6 class="mb-3 fw-bold">Share this post</h6>
             </div>
 
-            <div class="o_wblog_social_links d-flex flex-wrap mx-n1 o_not_editable">
-                <t t-set="classes" t-translation="off">bg-100 border mx-1 mb-2 rounded-circle d-flex align-items-center justify-content-center text-decoration-none</t>
-                <a href="#" aria-label="Facebook" title="Share on Facebook" t-attf-class="o_facebook #{classes}"><i class="fa fa-facebook-square text-facebook"/></a>
-                <a href="#" aria-label="Twitter" title="Share on X" t-attf-class="o_twitter #{classes}"><i class="fa fa-twitter text-twitter" aria-label="X" title="X"/></a>
-                <a href="#" aria-label="LinkedIn" title="Share on LinkedIn" t-attf-class="o_linkedin #{classes}"><i class="fa fa-linkedin text-linkedin" aria-label="LinkedIn" title="LinkedIn"/></a>
-            </div>
+            <t t-call="website_blog.post_share"/>
         </div>
 
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_3"/>
@@ -322,15 +327,13 @@ Display a sidebar beside the post content.
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Tags</h6>
+                <h6 class="mb-3 fw-bold">Tags</h6>
             </div>
-            <t t-if="blog_post.tag_ids">
-                <div class="h5">
-                    <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                        <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
-                    </t>
-                </div>
-            </t>
+            <div t-if="blog_post.tag_ids" class="d-flex flex-wrap gap-1">
+                <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                    <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-esc="one_tag.name"/>
+                </t>
+            </div>
             <t t-else="">
                 <div class="mb-4 bg-100 py-2 px-3 border" groups="website.group_website_designer">
                     <h6 class="text-muted o_not_editable"><em>No tags defined</em></h6>
@@ -348,7 +351,7 @@ Display a sidebar beside the post content.
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div t-if="len(blogs) > 1" class="o_wblog_sidebar_block pb-5">
             <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Our blogs</h6>
+                <h6 class="mb-3 fw-bold">Our blogs</h6>
             </div>
             <ul class="list-unstyled">
                 <li t-foreach="blogs" t-as="nav_blog" class="mb-2">
@@ -365,7 +368,7 @@ Display a sidebar beside the post content.
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
         <div class="o_wblog_sidebar_block pb-5">
             <div>
-                <h6 class="text-uppercase pb-3 mb-4 border-bottom fw-bold">Archive</h6>
+                <h6 class="mb-3 fw-bold">Archive</h6>
             </div>
             <t t-call="website_blog.date_selector"/>
         </div>

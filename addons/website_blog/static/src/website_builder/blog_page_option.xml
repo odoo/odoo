@@ -5,13 +5,13 @@
     <BuilderContext action="'websiteConfig'">
         <BuilderRow label.translate="Layout">
             <BuilderSelect>
-                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_regular_cover']}">Title Above Cover</BuilderSelectItem>
+                <BuilderSelectItem id="'regular_cover'" actionParam="{views: ['website_blog.opt_blog_post_regular_cover']}">Title Above Cover</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_split_cover']}">Split Cover</BuilderSelectItem>
                 <BuilderSelectItem actionParam="{views: []}">Title Inside Cover</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-
-        <BuilderRow label.translate="Increase Readability" level="1">
-            <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_readable']}"/>
+        <BuilderRow label.translate="Full Width" level="1">
+            <BuilderCheckbox t-if="this.isActiveItem('regular_cover')" actionParam="{views: ['website_blog.opt_blog_post_full_width_cover']}"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Sidebar">
