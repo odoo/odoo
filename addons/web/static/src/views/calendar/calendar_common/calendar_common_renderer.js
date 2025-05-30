@@ -4,6 +4,7 @@ import { localization } from "@web/core/l10n/localization";
 import { is24HourFormat } from "@web/core/l10n/time";
 import { useBus } from "@web/core/utils/hooks";
 import { renderToFragment, renderToString } from "@web/core/utils/render";
+import { useDebounced } from "@web/core/utils/timing";
 import { makeWeekColumn } from "@web/views/calendar/calendar_common/calendar_common_week_column";
 import { CalendarCommonPopover } from "@web/views/calendar/calendar_common/calendar_common_popover";
 import { convertRecordToEvent, getColor } from "@web/views/calendar/utils";
@@ -11,7 +12,7 @@ import { useCalendarPopover } from "@web/views/calendar/hooks/calendar_popover_h
 import { useFullCalendar } from "@web/views/calendar/hooks/full_calendar_hook";
 import { useSquareSelection } from "@web/views/calendar/hooks/square_selection_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 
 const SCALE_TO_FC_VIEW = {
     day: "timeGridDay",
@@ -72,6 +73,17 @@ export class CalendarCommonRenderer extends Component {
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
 
+        const fullCalendarRenderDebounced = useDebounced(() => this.fc.api.render(), 100, {
+            immediate: true,
+        });
+        const fullCalendarResizeObserver = new ResizeObserver(fullCalendarRenderDebounced);
+        useEffect(
+            (el) => {
+                fullCalendarResizeObserver.observe(el);
+                return () => fullCalendarResizeObserver.unobserve(el);
+            },
+            () => [this.fc.el]
+        );
         useSquareSelection();
     }
 
