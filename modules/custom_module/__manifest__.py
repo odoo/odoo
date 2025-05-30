@@ -59,7 +59,6 @@
                 'custom_module/static/src/js/pos_store_inherit.js',
                 'custom_module/static/src/js/pos_order_inherit.js',
                 'custom_module/static/src/js/floor_screen_inherit.js',
-
                 'custom_module/static/src/js/pos_order_inherit.js',
                 'custom_module/static/src/js/hw_printer_inherited.js',
             ],
