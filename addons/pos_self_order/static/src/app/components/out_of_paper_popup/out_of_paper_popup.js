@@ -1,15 +1,19 @@
-import { Component } from "@odoo/owl";
+import { Component, onWillUnmount } from "@odoo/owl";
 
 export class OutOfPaperPopup extends Component {
     static template = "pos_self_order.OutOfPaperPopup";
     static props = {
-        title: String,
+        trackingNumber: String,
         close: Function,
     };
 
     setup() {
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             this.props.close();
         }, 10000);
+
+        onWillUnmount(() => {
+            clearTimeout(timeout);
+        });
     }
 }
