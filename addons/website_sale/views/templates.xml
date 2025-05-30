@@ -3006,7 +3006,10 @@
                         'o_img_ratio_2_3' if is_view_active('website_sale.products_thumb_2_3') else
                         '')
             ">
-                <h4 class="mb-3">Order summary</h4>
+                <div class="d-flex align-items-center mb-3">
+                    <h4 class="mb-0">Order summary</h4>
+                    <div t-call="website_sale.quick_reorder_button" class="ms-3 border-start ps-2"/>
+                </div>
                 <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
                     <t t-if="abandoned_proceed">
                         <p>Your previous cart has already been completed.</p>
@@ -3031,6 +3034,151 @@
                 <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
             </div>
         </t>
+    </template>
+
+    <template id="quick_reorder_button">
+        <!-- TODO SHRM: Make title translatable -->
+        <t
+            t-set="quick_reorder_button_title"
+            t-value="'Login to reorder' if request.website.is_public_user()
+                     else 'No previous products available for reorder.' if not order_history
+                     else ''"
+        />
+        <span t-att-title="quick_reorder_button_title">
+            <button
+                id="quick_reorder_button"
+                type="button"
+                class="btn btn-sm btn-link"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#quick_reorder_sidebar"
+                aria-controls="quick_reorder_sidebar"
+                t-att-disabled="not order_history"
+            >
+                <i class="fa fa-rotate-left me-2"/>Quick reorder
+            </button>
+        </span>
+        <t t-call="website_sale.quick_reorder_sidebar"/>
+    </template>
+
+    <template id="quick_reorder_sidebar">
+        <div
+            id="quick_reorder_sidebar"
+            class="offcanvas offcanvas-end"
+            aria-labelledby="quick_reorder_sidebar"
+        >
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Quick reorder</h5>
+                <button
+                    type="button"
+                    class="btn-close text-reset"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                />
+            </div>
+            <div class="offcanvas-body">
+                <!-- Parent element needed for proper JS side rendering -->
+                <t t-if="order_history" t-call="website_sale.quick_reorder_history"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="quick_reorder_history">
+        <div
+            class="o_wsale_quick_reorder_line_group ps-sm-3"
+            t-foreach="order_history"
+            t-as="order_line_group"
+        >
+            <div class="o_wsale_quick_reorder_group_content d-flex gap-3 w-100 position-relative">
+                <div
+                    class="o_dot_line d-none d-sm-block position-absolute top-0 bottom-0 mb-1 border-start"
+                />
+                <span
+                    class="o_dot d-none d-sm-block position-absolute translate-middle-x text-o-color-1"
+                />
+                <div class="w-100 ps-sm-4">
+                    <h6 t-out="order_line_group['label']" class="mt-1 mb-3 text-muted"/>
+                    <div
+                        t-foreach="order_line_group['lines']"
+                        t-as="order_line"
+                        t-att-class="'o_wsale_quick_reorder_line d-flex flex-column flex-sm-row justify-content-between gap-3 '
+                                      + ('align-items-start' if order_line.product_type == 'combo' else '')"
+                    >
+                        <div
+                            t-att-class="'d-flex gap-2 ' + ('align-items-start' if order_line.product_type == 'combo' else 'align-items-center')"
+                        >
+                            <div class="o_cart_product_image">
+                                <div
+                                    t-field="order_line.product_id.image_128"
+                                    t-options="{
+                                        'widget': 'image',
+                                        'qweb_img_responsive': False,
+                                        'class': 'border rounded',
+                                    }"
+                                />
+                            </div>
+                            <div
+                                class="d-flex flex-column align-items-start justify-content-center flex-grow-1 h-100"
+                            >
+                                <div>
+                                    <h6
+                                        t-out="order_line.name_short"
+                                        t-att-class="'small ' + ('mb-2' if order_line.product_type == 'combo' else 'mb-0')"
+                                    />
+                                    <ul
+                                        t-if="order_line.product_type == 'combo'" class="list-group"
+                                    >
+                                        <t
+                                            t-foreach="order_line.linked_line_ids"
+                                            t-as="combo_item_line"
+                                            t-call="website_sale.cart_combo_item_line"
+                                        />
+                                    </ul>
+                                </div>
+                                <small
+                                    t-if="order_line.product_template_id._has_multiple_uoms()"
+                                    t-out="order_line.product_uom_id.name"
+                                    class="badge mt-1 bg-light"
+                                />
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center ms-auto gap-2">
+                            <t
+                                t-set="combination_info"
+                                t-value="order_line.product_id._get_combination_info_variant()"
+                            />
+                            <small
+                                t-out="combination_info['price'] * order_line.product_uom_qty"
+                                t-options="{
+                                    'widget': 'monetary',
+                                    'display_currency': website.currency_id,
+                                }"
+                                class="o_wsale_quick_reorder_product_price"
+                                style="white-space: nowrap;"
+                            />
+                            <input
+                                type="text"
+                                t-att-value="int(order_line.product_uom_qty)"
+                                class="o_wsale_quick_reorder_qty_input form-control text-center"
+                                t-att-data-price-unit="combination_info['price']"
+                                t-att-data-currency-digits="combination_info['currency'].decimal_places"
+                            />
+                            <button
+                                type="button"
+                                title="Press 'Enter' to add to cart"
+                                class="o_wsale_quick_reorder_product_button btn btn-outline-primary"
+                                t-att-data-quantity="order_line.product_uom_qty"
+                                t-att-data-product-id="order_line.product_id.id"
+                                t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
+                                t-att-data-product-type="order_line.product_id.type"
+                                t-att-data-selected-combo-items="json.dumps(order_line._get_selected_combo_items())"
+                            >
+                                <i class="fa fa-cart-plus"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </template>
 
     <!-- Deactivatable through the website editor. -->
@@ -3522,22 +3670,10 @@
                         <!-- Short Checkout Summary displayed on /cart | Right Column -->
                         <div
                             t-if="show_shorter_cart_summary"
-                            class="offset-xxl-1 col-lg-5 col-xxl-4"
+                            class="o_wsale_shorter_cart_summary offset-xxl-1 col-lg-5 col-xxl-4"
                         >
-                            <div
-                                t-if="website_sale_order and website_sale_order.website_order_line"
-                                class="o_total_card card sticky-lg-top"
-                            >
-                                <div class="card-body p-0 p-lg-4" name="o_cart_total_card_body">
-                                    <t t-call="website_sale.total">
-                                        <t
-                                            t-set="_cart_total_classes"
-                                            t-valuef="o_checkout_cart_total pt-2 pt-lg-0"
-                                        />
-                                    </t>
-                                    <t t-call="website_sale.navigation_buttons"/>
-                                </div>
-                            </div>
+                            <!-- Parent element needed for proper JS side rendering -->
+                            <t t-call="website_sale.shorter_cart_summary"/>
                         </div>
                         <!-- Full Checkout Summary displayed on all checkout pages | Right Column -->
                         <div
@@ -3632,6 +3768,23 @@
                 <t t-out="oe_structure"/>
             </div>
         </t>
+    </template>
+
+    <template id="website_sale.shorter_cart_summary">
+        <div
+            t-if="website_sale_order and website_sale_order.website_order_line"
+            class="o_total_card card sticky-lg-top"
+        >
+            <div class="card-body p-0 p-lg-4" name="o_cart_total_card_body">
+                <t t-call="website_sale.total">
+                    <t
+                        t-set="_cart_total_classes"
+                        t-valuef="o_checkout_cart_total pt-2 pt-lg-0"
+                    />
+                </t>
+                <t t-call="website_sale.navigation_buttons"/>
+            </div>
+        </div>
     </template>
 
     <!-- Called in `website_sale.checkout_layout` and `website_sale.confirmation`. -->

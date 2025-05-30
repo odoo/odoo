@@ -72,10 +72,12 @@ export class CartLine extends Interaction {
         );
 
         const cart = this.el.closest('#shop_cart');
-        // `updateCartNavBar` regenerates the cart lines, so we need to stop and start interactions
-        // to make sure the regenerated lines are properly handled.
+        // `updateCartNavBar` regenerates the cart lines and `updateQuickReorderSidebar`
+        // regenerates the quick reorder products, so we need to stop and start interactions
+        // to make sure the regenerated cart lines and reorder products are properly handled.
         this.services['public.interactions'].stopInteractions(cart);
         wSaleUtils.updateCartNavBar(data);
+        wSaleUtils.updateQuickReorderSidebar(data);
         this.services['public.interactions'].startInteractions(cart);
         wSaleUtils.showWarning(data.warning);
         // Propagate the change to the express checkout forms.
