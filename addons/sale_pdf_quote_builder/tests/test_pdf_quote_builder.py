@@ -220,7 +220,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         if 'website' not in self.env:
             self.skipTest("Module `website` not found")
         else:
-            from odoo.addons.website.tools import MockRequest  # noqa: PLC0415
+            from odoo.addons.http_routing.tests.common import MockRequest  # noqa: PLC0415
 
         # Upload document without Sale Order Template
         with (
@@ -249,7 +249,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         if 'website' not in self.env:
             self.skipTest("Module `website` not found")
         else:
-            from odoo.addons.website.tools import MockRequest  # noqa: PLC0415
+            from odoo.addons.http_routing.tests.common import MockRequest  # noqa: PLC0415
 
         # Upload a document for a Sale Order Template without company id
         self.empty_order_template.company_id = False

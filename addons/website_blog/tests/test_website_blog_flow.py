@@ -3,7 +3,7 @@ import json
 
 from odoo.exceptions import UserError
 from odoo.tests.common import users, HttpCase, tagged
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.mail.controllers.thread import ThreadController
 

@@ -4,7 +4,7 @@ from lxml import html
 from unittest.mock import patch
 
 from odoo.addons.website.controllers.main import Website
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.fields import Command
 from odoo.http import root
 from odoo.tests import common, HttpCase, tagged

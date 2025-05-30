@@ -1,9 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+
+from odoo.fields import Command
 from odoo.tests import HttpCase
 from odoo.tools import file_open
-from odoo.fields import Command
 
 
 class HttpCaseWithWebsiteUser(HttpCase):

@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 from odoo.http import request
 from odoo.tests import tagged
 
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tests.test_fuzzy import TestAutoComplete
-from odoo.addons.website.tools import MockRequest
 
 
 @tagged('-at_install', 'post_install')

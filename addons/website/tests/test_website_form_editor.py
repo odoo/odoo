@@ -6,7 +6,7 @@ from unittest.mock import patch
 from odoo.http import request
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 from odoo.addons.website.controllers.form import WebsiteForm
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests.common import tagged, TransactionCase
 import unittest
 

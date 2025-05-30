@@ -2,7 +2,7 @@
 import json
 
 from odoo import Command
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import tagged
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 

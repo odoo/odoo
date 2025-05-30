@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 
 import odoo.tests
 
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.exceptions import UserError
 from odoo.http import root
 from odoo.tools import mute_logger
