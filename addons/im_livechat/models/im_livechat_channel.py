@@ -5,7 +5,7 @@ import random
 import re
 
 from odoo import api, Command, fields, models, _
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 from odoo.addons.mail.tools.discuss import Store
 
@@ -446,8 +446,9 @@ class Im_LivechatChannelRule(models.Model):
     _description = 'Livechat Channel Rules'
     _order = 'sequence asc'
 
-    regex_url = fields.Char('URL Regex',
-        help="Regular expression specifying the web pages this rule will be applied on.")
+    regex_url = fields.Char("URL Regex", required=True, default="/",
+        help="Regular expression specifying the web pages this rule will be applied on.",
+    )
     action = fields.Selection([
         ('display_button', 'Show'),
         ('display_button_and_text', 'Show with notification'),
@@ -476,6 +477,12 @@ class Im_LivechatChannelRule(models.Model):
         help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.")
     sequence = fields.Integer('Matching order', default=10,
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.")
+
+    @api.constrains('regex_url')
+    def _check_regex_url_required(self):
+        for rules in self:
+            if not rules.regex_url:
+                raise ValidationError(_("The URL regex is required"))
 
     def match_rule(self, channel_id, url, country_id=False):
         """ determine if a rule of the given channel matches with the given url
