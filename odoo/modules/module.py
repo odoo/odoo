@@ -217,15 +217,23 @@ class Manifest(Mapping[str, typing.Any]):
     def icon(self) -> str:
         return get_module_icon(self.name)
 
+    @functools.cached_property
+    def static_path(self) -> str | None:
+        static_path = opj(self.path, 'static')
+        manifest = self.manifest_cached
+        if (manifest['installable'] or manifest['assets']) and os.path.isdir(static_path):
+            return static_path
+        return None
+
     def __getitem__(self, key: str):
-        if key in ('description', 'icon', 'addons_path', 'version'):
+        if key in ('description', 'icon', 'addons_path', 'version', 'static_path'):
             return getattr(self, key)
         return copy.deepcopy(self.manifest_cached[key])
 
     def __iter__(self):
         manifest = self.manifest_cached
         yield from manifest
-        for key in ('description', 'icon', 'addons_path', 'version'):
+        for key in ('description', 'icon', 'addons_path', 'version', 'static_path'):
             if key not in manifest:
                 yield key
 
