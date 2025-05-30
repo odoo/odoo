@@ -4,11 +4,6 @@ import csv
 import io
 import json
 
-try:
-    import xlsxwriter
-except ImportError:
-    xlsxwriter = None
-
 from odoo import _
 from odoo.http import Controller, request, route, content_disposition
 
@@ -59,6 +54,7 @@ class ProductPricelistExportController(Controller):
 
     def _generate_xlsx(self, pricelist_name, quantities, products, headers):
         buffer = io.BytesIO()
+        import xlsxwriter  # noqa: PLC0415
         workbook = xlsxwriter.Workbook(buffer, {'in_memory': True})
         worksheet = workbook.add_worksheet()
         worksheet.write_row(0, 0, headers)

@@ -10,10 +10,6 @@ import operator
 from collections import defaultdict, OrderedDict
 
 from werkzeug.exceptions import InternalServerError
-try:
-    import xlsxwriter
-except ImportError:
-    xlsxwriter = None
 
 from odoo import http
 from odoo.exceptions import UserError
@@ -167,6 +163,7 @@ class GroupsTreeNode:
 class ExportXlsxWriter:
 
     def __init__(self, fields, columns_headers, row_count):
+        import xlsxwriter  # noqa: PLC0415
         self.fields = fields
         self.columns_headers = columns_headers
         self.output = io.BytesIO()
@@ -294,8 +291,13 @@ class Export(http.Controller):
         :returns: for each export format, a pair of identifier and printable name
         :rtype: [(str, str)]
         """
+        try:
+            import xlsxwriter  # noqa: F401, PLC0415
+            xlsx_error = None
+        except ModuleNotFoundError:
+            xlsx_error = "XlsxWriter 0.9.3 required"
         return [
-            {'tag': 'xlsx', 'label': 'XLSX', 'error': None if xlsxwriter else "XlsxWriter 0.9.3 required"},
+            {'tag': 'xlsx', 'label': 'XLSX', 'error': xlsx_error},
             {'tag': 'csv', 'label': 'CSV'},
         ]
 
