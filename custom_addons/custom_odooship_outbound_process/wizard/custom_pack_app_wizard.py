@@ -138,7 +138,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         # Find ALL pickings related to any scanned tote
         pickings = self.env["stock.picking"].search([
-            ("current_state", "=", "pick"),
             ("move_ids_without_package.pc_container_code", "in", tote_codes),
             ("site_code_id", "=", self.site_code_id.id),
         ])
@@ -150,44 +149,45 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         is_discrete = bool(discrete_sale_ids)
 
         if is_discrete:
+            # Get all discrete picks (for each SO), regardless of state
             for sale_id in discrete_sale_ids:
-                # Picks in 'pick' state (these must have totes scanned)
-                all_discrete_picks_in_pick = self.env["stock.picking"].search([
+                all_discrete_picks = self.env["stock.picking"].search([
                     ("sale_id", "=", sale_id),
                     ("discrete_pick", "=", True),
-                    ("current_state", "=", "pick"),
                     ("site_code_id", "=", self.site_code_id.id),
                 ])
-                # Picks NOT in 'pick' state (inform the user)
-                all_discrete_picks_not_pick = self.env["stock.picking"].search([
-                    ("sale_id", "=", sale_id),
-                    ("discrete_pick", "=", True),
-                    ("current_state", "!=", "pick"),
-                    ("site_code_id", "=", self.site_code_id.id),
-                ])
-                all_totes = set(all_discrete_picks_in_pick.mapped("move_ids_without_package.pc_container_code"))
+                picks_in_pick = all_discrete_picks.filtered(lambda p: p.current_state == "pick")
+                picks_not_in_pick = all_discrete_picks.filtered(lambda p: p.current_state != "pick")
+
+                # If ANY discrete pick for this SO is not in pick state, block and show a message
+                if picks_not_in_pick:
+                    msg_lines = []
+                    for pick in picks_not_in_pick:
+                        totes = pick.move_ids_without_package.mapped("pc_container_code")
+                        msg_lines.append(
+                            f"Pick: {pick.name} is not yet picked (state: {pick.current_state}). Totes: {', '.join([t or '-' for t in totes])}"
+                        )
+                    raise ValidationError(
+                        "This is a Discrete Pick order. All discrete picks for this order must be in 'Pick' state before packing.\n\n" +
+                        "\n".join(msg_lines)
+                    )
+                # Now ALL are in pick state, so enforce all totes are scanned
+                all_totes = set(picks_in_pick.mapped("move_ids_without_package.pc_container_code"))
                 scanned_totes = set(tote_codes)
                 missing = all_totes - scanned_totes
                 if missing:
                     picks_and_totes = []
-                    for pick in all_discrete_picks_in_pick:
+                    for pick in picks_in_pick:
                         totes = pick.move_ids_without_package.mapped("pc_container_code")
                         picks_and_totes.append(
                             f"Pick: {pick.name} - Tote(s): {', '.join([t or '-' for t in totes])}"
                         )
-                    extra_msg = ""
-                    if all_discrete_picks_not_pick:
-                        extra_picks = [
-                            f"Pick: {pick.name} (state: {pick.current_state})"
-                            for pick in all_discrete_picks_not_pick
-                        ]
-                        extra_msg = "\n\nNote: The following discrete picks for this order are not yet ready for picking:\n%s" % "\n".join(
-                            extra_picks)
                     raise ValidationError(
-                        "This pick is a Discrete Pick. Please scan the following tote(s) together:\n\n%s%s"
-                        % ("\n".join(picks_and_totes), extra_msg)
+                        "This is a Discrete Pick order. You must scan all totes for these picks together:\n\n%s"
+                        % ("\n".join(picks_and_totes))
                     )
-            pickings_to_load = pickings
+            # All checks passed, proceed
+            pickings_to_load = pickings.filtered(lambda p: p.current_state == "pick")
             totes_to_load = tote_codes
 
         else:
