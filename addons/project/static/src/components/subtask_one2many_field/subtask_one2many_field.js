@@ -15,6 +15,7 @@ export class SubtaskOne2ManyField extends X2ManyField {
             this.props.context,
             "active_test",
             "default_project_id",
+            "default_parent_id",
             "propagate_not_active"
         );
     }
