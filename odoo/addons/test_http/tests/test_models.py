@@ -1,15 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from http import HTTPStatus
 
-import markupsafe
-
 import odoo.http
 from odoo.tests import tagged
-from odoo.tests.common import new_test_user, Like
+from odoo.tests.common import Like, new_test_user
 from odoo.tools import mute_logger
-from odoo.addons.test_http.utils import HtmlTokenizer
 
 from .test_common import TestHttpBase
+from odoo.addons.test_http.utils import HtmlTokenizer
 
 
 @tagged('post_install', '-at_install')
@@ -70,8 +68,8 @@ class TestHttpModels(TestHttpBase):
         with self.assertLogs("odoo.http", level="WARNING") as logs:
             res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
         self.assertEqual(res.status_code, 400)
-        self.assertIn(markupsafe.escape("The goa'uld destroyed the gate"), res.text)
-        self.assertEqual(logs.output, ["WARNING:odoo.http:The goa'uld destroyed the gate"])
+        self.assertIn("The goauld destroyed the gate", res.text)
+        self.assertEqual(logs.output, ["WARNING:odoo.http:The goauld destroyed the gate"])
 
     def test_models4_stargate_setname(self):
         milky_way = self.env.ref('test_http.milky_way')
