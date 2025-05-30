@@ -140,6 +140,15 @@ class AccountReconcileModel(models.Model):
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id', copy=True)
 
+    @api.constrains('match_label', 'match_label_param')
+    def _check_match_label_param(self):
+        for record in self:
+            if record.match_label == 'match_regex':
+                try:
+                    re.compile(record.match_label_param)
+                except re.error:
+                    raise UserError(_('The regex is not valid'))
+
     @api.depends('mapped_partner_id', 'match_label', 'match_partner_ids', 'trigger')
     def _compute_can_be_proposed(self):
         for model in self:
