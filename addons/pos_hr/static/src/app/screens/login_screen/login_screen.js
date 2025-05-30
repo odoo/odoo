@@ -32,8 +32,17 @@ patch(LoginScreen.prototype, {
             this.pos.login = false;
         });
     },
-    async selectCashier(pin = false, login = false, list = false) {
-        return await this.cashierSelector(pin, login, list);
+    /**
+     * Select a cashier from a list.
+     *
+     * @param {boolean} pin - Whether a PIN is required.
+     * @param {boolean} login - Flag to indicate if it's triggered during login.
+     * @param {boolean} list - Works as a flag to show all employees (used when clicking on the navbar).
+     * @param {Array} resourceList - List of available planning resources; shown upfront.
+     *                               Remaining employees will appear under "More..." (from module pos_planning).
+     */
+    async selectCashier(pin = false, login = false, list = false, resourceList = []) {
+        return await this.cashierSelector(pin, login, list, resourceList);
     },
     unlockRegister() {
         this.pos.login = true;
