@@ -1,6 +1,6 @@
 from lxml.builder import E
 
-from odoo import fields, models, api, Command
+from odoo import Command, api, fields, models
 
 
 class TtuProduct(models.Model):
@@ -24,10 +24,11 @@ class TtuRoot(models.Model):
     def _get_produced_qty(self):
         for r in self:
             r.qty_produced = sum(r.mapped('move_finished_ids.move_line_ids.qty_done'))
+
     @api.onchange('qty_producing')
     def _onchange_producing(self):
         production_move = self.move_finished_ids.filtered(
-            lambda move: move.product_id == self.product_id
+            lambda move: move.product_id == self.product_id,
         )
         if not production_move:
             # Happens when opening the mo?
@@ -68,8 +69,8 @@ class TtuRoot(models.Model):
                     E.field(name='product_id', invisible='1'),
                     E.field(name='move_id', invisible='1'),
                     E.field(name='id', invisible='1'),
-                )
-            )
+                ),
+            ),
         )
 
         t = E.form(
@@ -93,10 +94,10 @@ class TtuChild(models.Model):
     _description = 'ttu.child'
 
     product_id = fields.Many2one('ttu.product')
-    unit_factor = fields.Integer(default=1, required=True) # should be computed but we can ignore that
+    unit_factor = fields.Integer(default=1, required=True)  # should be computed but we can ignore that
     quantity_done = fields.Integer(
         compute='_quantity_done_compute',
-        inverse='_quantity_done_set'
+        inverse='_quantity_done_set',
     )
 
     root_raw_id = fields.Many2one('ttu.root')
@@ -150,7 +151,7 @@ class TtuChild(models.Model):
                 move_lines[0].qty_done = quantity_done
             else:
                 # Bypass the error if we're trying to write the same value.
-                ml_quantity_done = sum(l.qty_done for l in move_lines)
+                ml_quantity_done = sum(line.qty_done for line in move_lines)
                 assert quantity_done == ml_quantity_done, "Cannot set the done quantity from this stock move, work directly with the move lines."
 
 
