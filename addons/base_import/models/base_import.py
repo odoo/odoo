@@ -1607,7 +1607,11 @@ class Base_ImportImport(models.TransientModel):
                 # merge data if necessary
                 if field_type in CONCAT_SEPARATOR_IMPORT:
                     separator = CONCAT_SEPARATOR_IMPORT[field_type]
-                    new_record.append(separator.join(record[idx] for idx in indexes if record[idx]))
+                    if field_type == 'char' and field.trim:
+                        # Trim trailing whitespaces before joining
+                        new_record.append(separator.join(record[idx].strip() for idx in indexes if record[idx]))
+                    else:
+                        new_record.append(separator.join(record[idx] for idx in indexes if record[idx]))
                 else:
                     new_record.append(record[indexes[0]])
 
