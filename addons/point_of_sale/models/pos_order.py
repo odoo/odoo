@@ -1662,16 +1662,12 @@ class PosOrderLine(models.Model):
         return [line._prepare_base_line_for_taxes_computation() for line in self]
 
     def unlink(self):
-        print('unlink hereeeeeeeee')
         for line in self:
-            print('in unlink', line.order_id.config_id.order_edit_tracking)
             if line.order_id.config_id.order_edit_tracking:
-                print('in unlink',line.order_id.config_id.order_edit_tracking)
                 line.order_id.has_deleted_line = True
                 body = _("%(product_name)s: Deleted line (quantity: %(qty)s)", product_name=line.full_product_name, qty=line.qty)
                 line.order_id._post_chatter_message(body)
         res = super().unlink()
-        print('res',res)
         return res
 
     def _get_discount_amount(self):

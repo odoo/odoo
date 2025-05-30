@@ -1591,7 +1591,6 @@ export class PosStore extends Reactive {
     }
 
     async printChanges(order, orderChange) {
-        console.log("printChanges");
         const unsuccedPrints = [];
         const isPartOfCombo = (line) =>
             line.isCombo || this.models["product.product"].get(line.product_id).type == "combo";
@@ -2096,6 +2095,7 @@ export class PosStore extends Reactive {
     }
 
     getReceiptHeaderData(order) {
+        console.log("order",order);
         return {
             company: this.company,
             cashier: _t("Served by %s", order?.getCashierName() || this.get_cashier()?.name),
