@@ -1,4 +1,5 @@
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
+import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
@@ -13,10 +14,14 @@ registry.category("web_tour.tours").add("PosRestaurantRewardStay", {
             FloorScreen.clickTable("5"),
             ProductScreen.clickDisplayedProduct("Water"),
             PosLoyalty.hasRewardLine("10% on your order", "-0.22", "1"),
+            ProductScreen.totalAmountIs("1.98"),
             Chrome.clickPlanButton(),
             Chrome.clickBtn("second floor"),
             Chrome.clickBtn("main floor"),
             FloorScreen.clickTable("5"),
             PosLoyalty.hasRewardLine("10% on your order", "-0.22", "1"),
+            PosLoyalty.finalizeOrder("Cash", "2", false),
+            Dialog.confirm(),
+            ReceiptScreen.isShown(),
         ].flat(),
 });
