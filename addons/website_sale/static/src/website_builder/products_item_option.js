@@ -28,10 +28,15 @@ export class ProductsItemOption extends BaseOptionComponent {
 
             // need to display "re-order" option only if shop_default_sort is 'website_sequence asc'
             this.displayReOrder = this.defaultSort[0].shop_default_sort === "website_sequence asc";
+
+            // If /shop page layout is list, do not display Size option
+            this.displaySizeOption = !this.env.getEditingElement().closest("#o_wsale_container").classList.contains("o_wsale_layout_list");
         });
 
         onMounted(() => {
-            this.addClassToTableCells(this.state.itemSize.x, this.state.itemSize.y, "selected");
+            if (this.displaySizeOption) {
+                this.addClassToTableCells(this.state.itemSize.x, this.state.itemSize.y, "selected");
+            }
         });
     }
 
