@@ -20,10 +20,19 @@ class StockMoveLine(models.Model):
         return res
 
     def write(self, vals):
-        for move_line in self:
-            if vals.get('lot_id') and move_line.move_id.is_subcontract and move_line.location_id.is_subcontracting_location:
-                # Update related subcontracted production to keep consistency between production and reception.
-                subcontracted_production = move_line.move_id._get_subcontract_production().filtered(lambda p: p.state not in ('done', 'cancel') and move_line.lot_id.id in p.lot_producing_ids.ids)
-                if subcontracted_production:
-                    subcontracted_production.lot_producing_ids = [vals['lot_id']]
-        return super().write(vals)
+        res = super().write(vals)
+        if not self.env.context.get('mrp_subcontracting') and ('quantity' in vals or 'lot_id' in vals):
+            self.move_id.filtered(lambda m: m.is_subcontract)._sync_subcontracting_productions()
+        return res
+
+    def unlink(self):
+        moves_to_sync = self.move_id.filtered(lambda m: m.is_subcontract)
+        res = super().unlink()
+        moves_to_sync._sync_subcontracting_productions()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res.move_id.filtered(lambda m: m.is_subcontract)._sync_subcontracting_productions()
+        return res

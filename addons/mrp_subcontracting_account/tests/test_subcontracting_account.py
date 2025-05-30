@@ -302,9 +302,6 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         picking_receipt.action_confirm()
         picking_receipt.do_unreserve()
 
-        # We should be able to call the 'record_components' button
-        self.assertTrue(picking_receipt.display_action_record_components)
-
         lot_comp2 = self.env['stock.lot'].create({
             'name': 'lot_comp2',
             'product_id': self.comp2.id,
@@ -321,19 +318,32 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
                 'product_id': self.comp1.id,
             }))
 
-        for i in range(todo_nb):
-            action = picking_receipt.action_record_components()
-            mo = self.env['mrp.production'].browse(action['res_id'])
-            mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
-            mo_form.lot_producing_ids.set(serials_finished[i])
-            with mo_form.move_line_raw_ids.edit(0) as ml:
-                self.assertEqual(ml.product_id, self.comp1)
-                ml.lot_id = serials_comp1[i]
-            with mo_form.move_line_raw_ids.edit(1) as ml:
-                self.assertEqual(ml.product_id, self.comp2)
-                ml.lot_id = lot_comp2
-            mo = mo_form.save()
-            mo.subcontracting_record_component()
+        action = picking_receipt.move_ids.action_show_details()
+        with Form(picking_receipt.move_ids.with_context(action['context']), view=action['view_id']) as move_form:
+            for serial in serials_finished:
+                with move_form.move_line_ids.new() as move_line:
+                    move_line.lot_id = serial
+                    move_line.picked = True
+                    move_line.quantity = 1
+            move_form.save()
+
+        for mo, compo_1_serial in zip(picking_receipt._get_subcontract_production(), serials_comp1):
+            action = mo.move_raw_ids[0].action_show_details()
+            with Form(mo.move_raw_ids[0].with_context(action['context']), view=action['view_id']) as move_form:
+                with move_form.move_line_ids.new() as move_line:
+                    self.assertEqual(move_line.product_id, self.comp1)
+                    move_line.lot_id = compo_1_serial
+                    move_line.picked = True
+                    move_line.quantity = 1
+                move_form.save()
+            action = mo.move_raw_ids[1].action_show_details()
+            with Form(mo.move_raw_ids[1].with_context(action['context']), view=action['view_id']) as move_form:
+                with move_form.move_line_ids.new() as move_line:
+                    self.assertEqual(move_line.product_id, self.comp2)
+                    move_line.lot_id = lot_comp2
+                    move_line.picked = True
+                    move_line.quantity = 1
+                move_form.save()
 
         # We should not be able to call the 'record_components' button
         picking_receipt.move_ids.picked = True
@@ -372,17 +382,23 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         receipt.action_confirm()
 
         for qty_producing in (5, 3, 2):
-            action = receipt.action_record_components()
-            mo = self.env['mrp.production'].browse(action['res_id'])
-            mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
-            mo_form.qty_producing = qty_producing
-            with mo_form.move_line_raw_ids.edit(0) as ml:
-                ml.lot_id = lot01
-            with mo_form.move_line_raw_ids.edit(1) as ml:
-                ml.lot_id = lot02
-            mo = mo_form.save()
-            mo.subcontracting_record_component()
-
+            receipt_form = Form(receipt)
+            with receipt_form.move_ids_without_package.edit(0) as move:
+                move.quantity = qty_producing
+            receipt_form.save()
+            mo = receipt._get_subcontract_production()
+            action = mo.move_raw_ids[0].action_show_details()
+            with Form(mo.move_raw_ids[0].with_context(action['context']), view=action['view_id']) as move_form:
+                with move_form.move_line_ids.new() as move_line:
+                    move_line.lot_id = lot01
+                    move_line.quantity = qty_producing
+                move_form.save()
+            action = mo.move_raw_ids[1].action_show_details()
+            with Form(mo.move_raw_ids[1].with_context(action['context']), view=action['view_id']) as move_form:
+                with move_form.move_line_ids.new() as move_line:
+                    move_line.lot_id = lot02
+                    move_line.quantity = qty_producing
+                move_form.save()
             action = receipt.button_validate()
             if isinstance(action, dict):
                 Form.from_action(self.env, action).save().process()

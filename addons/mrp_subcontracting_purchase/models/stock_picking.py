@@ -40,6 +40,6 @@ class StockPicking(models.Model):
         return moves_subcontracted.purchase_line_id.order_id
 
     def _get_subcontract_mo_confirmation_ctx(self):
-        return {
-            'po_to_notify': self.move_ids.purchase_line_id.order_id,
-        }
+        res = super()._get_subcontract_mo_confirmation_ctx()
+        res['po_to_notify'] = self.move_ids.purchase_line_id.order_id
+        return res
