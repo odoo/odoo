@@ -102,6 +102,7 @@ class AccountBankStatement(models.Model):
         comodel_name='ir.attachment',
         string="Attachments",
     )
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
 
     _journal_id_date_desc_id_desc_idx = models.Index("(journal_id, date DESC, id DESC)")
     _first_line_index_idx = models.Index("(journal_id, first_line_index)")

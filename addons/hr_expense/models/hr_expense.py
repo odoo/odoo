@@ -118,6 +118,7 @@ class HrExpense(models.Model):
         domain=[('res_model', '=', 'hr.expense')],
         string="Attachments",
     )
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
     state = fields.Selection(
         selection=[
             # Pre-Approval states
