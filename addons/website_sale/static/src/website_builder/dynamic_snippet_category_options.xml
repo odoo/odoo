@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_sale.DynamicSnippetCategoryOptions" name="Category List">
+        <BuilderRow label.translate="Columns">
+            <BuilderRange dataAttributeAction="'columns'" default="'2'" min="2" max="5" step="1"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Size">
+            <BuilderSelect dataAttributeAction="'size'" default="'small'">
+                <BuilderSelectItem dataAttributeActionValue="'small'">Small</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'medium'">Medium</BuilderSelectItem>
+                <BuilderSelectItem dataAttributeActionValue="'large'">Large</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Alignment">
+            <BuilderButtonGroup dataAttributeAction="'alignment'" default="'left'">
+                <BuilderButton dataAttributeActionValue="'left'">
+                    <i class="fa fa-fw fa-align-left"/>
+                </BuilderButton>
+                <BuilderButton dataAttributeActionValue="'center'">
+                    <i class="fa fa-fw fa-align-center"/>
+                </BuilderButton>
+                <BuilderButton dataAttributeActionValue="'right'">
+                    <i class="fa fa-fw fa-align-right"/>
+                </BuilderButton>
+            </BuilderButtonGroup>
+        </BuilderRow>
+        <BuilderRow label.translate="Filters">
+            <BuilderSelect dataAttributeAction="'filterId'">
+                <BuilderSelectItem dataAttributeActionValue="'0'" label.translate="All Categories">
+                    All Categories
+                </BuilderSelectItem>
+                <t t-foreach="this.state.categories" t-as="category" t-key="category.id">
+                    <BuilderSelectItem
+                        dataAttributeActionValue="`${category.id}`"
+                        label="category.name"
+                        t-out="category.name"
+                    />
+                </t>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow
+            label.translate="All Products" dataAttributeAction="'allProducts'" default="'true'"
+        >
+            <BuilderCheckbox
+                dataAttributeActionValue="'true'"
+                preview="false"
+            />
+        </BuilderRow>
+        <BuilderRow label.translate="Button">
+            <BuilderTextInput dataAttributeAction="'button'"/>
+        </BuilderRow>
+    </t>
+    <t t-name="website_sale.dynamicSnippetCategoryItemOptions" name="Category">
+        <BuilderRow label.translate="Media">
+	        <BuilderButton
+                className="'w-100'" type="'success'" action="'setCategoryImage'"
+            >
+                Replace
+            </BuilderButton>
+	    </BuilderRow>
+    </t>
+</templates>

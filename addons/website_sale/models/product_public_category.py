@@ -23,6 +23,7 @@ class ProductPublicCategory(models.Model):
         return 10000
 
     name = fields.Char(required=True, translate=True)
+    cover_image = fields.Image(string="Cover Image")
     sequence = fields.Integer(default=_default_sequence, index=True)
 
     parent_id = fields.Many2one(
@@ -66,10 +67,6 @@ class ProductPublicCategory(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
         translate=html_translate,
-    )
-
-    cover_image = fields.Image(
-        string="Cover Image"
     )
 
     # === COMPUTE METHODS === #
@@ -154,7 +151,7 @@ class ProductPublicCategory(models.Model):
     @api.model
     def get_snippet_categories(self):
         """
-        Return categories that are to be displayed in category list snippet.
+        Return categories to be displayed in category list snippet.
         :rtype: dict
         :return: list of dictionaries with the following structure:
             {
@@ -162,16 +159,12 @@ class ProductPublicCategory(models.Model):
                 'name': string,
             }
         """
-        result = []
         allowed_categories = self.search([('has_published_products', '=', True)])
-        for category in allowed_categories:
-            num_child_categories = len(category.child_id & allowed_categories)
-            result.append({
-                'id': category.id,
-                'name': self.env._(
-                    "%(name)s (%(children)d)",
-                    name=category.name,
-                    children=num_child_categories,
-                ) if num_child_categories else category.name,
-            })
-        return result
+        return [{
+            'id': category.id,
+            'name': self.env._(
+                "%(name)s (%(children)d)",
+                name=category.name,
+                children=len(children),
+            ) if (children := category.child_id & allowed_categories) else category.name,
+        } for category in allowed_categories if not category.parent_id]
