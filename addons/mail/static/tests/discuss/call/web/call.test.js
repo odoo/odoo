@@ -63,7 +63,7 @@ test.skip("show Push-to-Talk button on mobile", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    await click("[title='Start a Call']");
+    await click("[title='Start Call']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");

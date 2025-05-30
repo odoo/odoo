@@ -46,9 +46,10 @@ test("from the discuss app", async () => {
     await click("[title='Join HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],
     });
-    await click("[title='Leave Channel']", {
+    await click("[title='Chat Actions']", {
         parent: [".o-mail-DiscussSidebarChannel", { text: "Visitor" }],
     });
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button:contains(Leave Conversation)");
     await click("[title='Leave HR']", {
         parent: [".o-mail-DiscussSidebarCategory-livechat", { text: "HR" }],

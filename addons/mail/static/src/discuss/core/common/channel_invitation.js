@@ -37,7 +37,10 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
         });
-        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
+        this.debouncedFetchPartnersToInvite = useDebounced(
+            this.fetchPartnersToInvite.bind(this),
+            250
+        );
         onWillStart(() => {
             if (this.store.self.type === "partner") {
                 this.fetchPartnersToInvite();
@@ -178,7 +181,7 @@ export class ChannelInvitation extends Component {
             return "";
         }
         if (this.props.thread.channel_type === "channel") {
-            return _t("Invite to Channel");
+            return _t("Invite");
         } else if (this.props.thread.channel_type === "group") {
             return _t("Invite to Group Chat");
         } else if (this.props.thread.channel_type === "chat") {

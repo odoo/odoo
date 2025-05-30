@@ -163,6 +163,10 @@ export class MessagingMenu extends Component {
             this.store.discuss.thread = undefined;
         }
     }
+
+    canUnpinItem(thread) {
+        return thread.canUnpin && thread.message_unread_counter === 0;
+    }
 }
 
 registry

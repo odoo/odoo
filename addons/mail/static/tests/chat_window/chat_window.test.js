@@ -177,8 +177,8 @@ test("chat window: basic rendering", async () => {
     await contains(".o-mail-ChatWindow-header", { text: "General" });
     await contains(".o-mail-ChatWindow-header .o-mail-ChatWindow-threadAvatar");
     await contains(".o-mail-ChatWindow-command", { count: 5 });
-    await contains("[title='Start a Call']");
-    await contains("[title='Start a Video Call']");
+    await contains("[title='Start Call']");
+    await contains("[title='Start Video Call']");
     await contains("[title='Open Actions Menu']");
     await contains("[title='Fold']");
     await contains("[title*='Close Chat Window']");

@@ -247,9 +247,8 @@ test("sidebar: basic chat rendering", async () => {
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await contains(".o-mail-DiscussSidebarChannel img[alt='Thread Image']");
-    await contains(
-        ".o-mail-DiscussSidebarChannel .o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']"
-    );
+    await click("[title='Chat Actions']");
+    await contains(".o-dropdown-item:contains('Unpin Conversation')");
     await contains(".o-mail-DiscussSidebarChannel .badge", { count: 0 });
 });
 
@@ -284,9 +283,8 @@ test("sidebar: open channel and leave it", async () => {
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "General" });
     await waitForSteps([]);
-    await click("[title='Leave Channel']", {
-        parent: [".o-mail-DiscussSidebarChannel.o-active", { text: "General" }],
-    });
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
     await contains(".o-mail-Discuss-threadName", { value: "Inbox" });
@@ -1065,7 +1063,8 @@ test("Can unpin chat channel", async () => {
     await start();
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Mitchell Admin" });
-    await click(".o-mail-DiscussSidebarChannel [title='Unpin Conversation']");
+    await click("[title='Chat Actions']");
+    await click(".o-dropdown-item:contains('Unpin Conversation')");
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "Mitchell Admin" });
 });
 
@@ -1085,7 +1084,8 @@ test("Can leave channel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await click("[title='Leave Channel']");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await click("button", { text: "Leave Conversation" });
     await contains(".o-mail-DiscussSidebarChannel", { count: 0, text: "General" });
 });
@@ -1099,7 +1099,8 @@ test("Do no channel_info after unpin", async () => {
     // ensure onRpc is at least set up properly (because then it is asserted negatively)
     await waitStoreFetch("discuss.channel");
     await openDiscuss(channelId);
-    await click(".o-mail-DiscussSidebarChannel-commands [title='Unpin Conversation']");
+    await click("[title='Chat Actions']");
+    await click(".o-dropdown-item:contains('Advanced Settings')");
     rpc("/mail/message/post", {
         thread_id: channelId,
         thread_model: "discuss.channel",
@@ -1154,9 +1155,8 @@ test("Unpinning channel closes its chat window", async () => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { text: "Sales" });
     await openDiscuss();
-    await click("[title='Leave Channel']", {
-        parent: [".o-mail-DiscussSidebarChannel", { text: "Sales" }],
-    });
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await openFormView("discuss.channel");
     await contains(".o-mail-ChatWindow", { count: 0, text: "Sales" });
 });
