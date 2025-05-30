@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="resource_calendar_leaves_list_l10n_ch_hr_holidays" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.list.l10n_ch_hr_holidays</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="inherit_id" ref="hr_holidays.resource_calendar_leaves_tree_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_to']" position="after">
+                <field name="work_address_id" context="{'show_address': 1}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
