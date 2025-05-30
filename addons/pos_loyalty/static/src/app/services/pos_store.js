@@ -678,7 +678,7 @@ patch(PosStore.prototype, {
      *   - This way, we don't need to remember the lines linked to negative coupon ids and relink them after pushing the order.
      */
     async preSyncAllOrders(orders) {
-        await super.preSyncAllOrders(orders);
+        const result = await super.preSyncAllOrders(orders);
 
         for (const order of orders) {
             Object.assign(
@@ -702,6 +702,7 @@ patch(PosStore.prototype, {
                 }, {})
             );
         }
+        return result;
     },
     postSyncAllOrders(orders) {
         super.postSyncAllOrders(orders);
