@@ -39,11 +39,11 @@ class HrEmployee(models.Model):
         compute='_compute_total_overtime', compute_sudo=True,
         groups="hr_attendance.group_hr_attendance_kiosk,hr_attendance.group_hr_attendance,hr.group_hr_user")
 
-    @api.depends('overtime_ids.duration', 'attendance_ids')
+    @api.depends('overtime_ids.duration_real', 'attendance_ids')
     def _compute_total_overtime(self):
         for employee in self:
             if employee.company_id.hr_attendance_overtime:
-                employee.total_overtime = float_round(sum(employee.overtime_ids.mapped('duration')), 2)
+                employee.total_overtime = float_round(sum(employee.overtime_ids.mapped('duration_real')), 2)
             else:
                 employee.total_overtime = 0
 
@@ -173,7 +173,7 @@ class HrEmployee(models.Model):
         action_message['total_overtime'] = employee.total_overtime
         # Overtime have an unique constraint on the day, no need for limit=1
         action_message['overtime_today'] = self.env['hr.attendance.overtime'].sudo().search([
-            ('employee_id', '=', employee.id), ('date', '=', fields.Date.context_today(self)), ('adjustment', '=', False)]).duration or 0
+            ('employee_id', '=', employee.id), ('date', '=', fields.Date.context_today(self)), ('adjustment', '=', False)]).duration_real or 0
         return {'action': action_message}
 
     def _attendance_action_change(self):

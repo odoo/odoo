@@ -45,6 +45,7 @@ class HolidaysAllocation(models.Model):
                         'date': allocation.date_from,
                         'adjustment': True,
                         'duration': -1 * duration,
+                        'duration_real': -1 * duration,
                     })
         return res
 
@@ -57,10 +58,11 @@ class HolidaysAllocation(models.Model):
         for allocation in self.sudo().filtered('overtime_id'):
             employee = allocation.employee_id
             duration = allocation.number_of_hours_display
-            overtime_duration = allocation.overtime_id.sudo().duration
+            overtime_duration = allocation.overtime_id.sudo().duration_real
             if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
+                allocation.overtime_id.sudo().duration_real = -1 * duration
                 allocation.overtime_id.sudo().duration = -1 * duration
         return res
 
@@ -76,7 +78,8 @@ class HolidaysAllocation(models.Model):
                 'employee_id': allocation.employee_id.id,
                 'date': allocation.date_from,
                 'adjustment': True,
-                'duration': -1 * allocation.number_of_hours_display
+                'duration': -1 * allocation.number_of_hours_display,
+                'duration_real': -1 * allocation.number_of_hours_display,
             })
             allocation.sudo().overtime_id = overtime.id
         return res

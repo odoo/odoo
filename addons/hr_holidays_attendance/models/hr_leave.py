@@ -41,10 +41,11 @@ class HRLeave(models.Model):
                 continue
             employee = leave.employee_id
             duration = leave.number_of_hours_display
-            overtime_duration = leave.overtime_id.sudo().duration
+            overtime_duration = leave.overtime_id.sudo().duration_real
             if overtime_duration != -1 * duration:
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this leave.'))
+                leave.overtime_id.sudo().duration_real = -1 * duration
                 leave.overtime_id.sudo().duration = -1 * duration
         return res
 
@@ -65,6 +66,7 @@ class HRLeave(models.Model):
                     'date': leave.date_from,
                     'adjustment': True,
                     'duration': -1 * duration,
+                    'duration_real': -1 * duration,
                 })
 
     def action_draft(self):
