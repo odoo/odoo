@@ -379,7 +379,7 @@ describe("Link creation", () => {
                 "http://test.test/"
             );
             expect(cleanLinkArtifacts(getContent(el))).toBe(
-                '<p><a href="http://test.test/" class="btn btn-fill-primary">http://test.test/[]</a></p>'
+                '<p><a href="http://test.test/" class="btn btn-primary">http://test.test/[]</a></p>'
             );
         });
         test("Should keep http protocol on valid http url", async () => {
@@ -748,7 +748,7 @@ describe("Link formatting in the popover", () => {
         await click('select[name="link_type"');
         await select("primary");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com/" class="btn btn-fill-primary">link2</a></p>'
+            '<p><a href="http://test.com/" class="btn btn-primary">link2</a></p>'
         );
     });
     test("after changing the link format, the link should be updated (2)", async () => {
@@ -764,7 +764,7 @@ describe("Link formatting in the popover", () => {
         await click('select[name="link_type"');
         await select("primary");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com/" class="btn btn-fill-primary">link2</a></p>'
+            '<p><a href="http://test.com/" class="btn btn-primary">link2</a></p>'
         );
     });
     test("after changing the link format, the link should be updated (3)", async () => {
@@ -780,7 +780,7 @@ describe("Link formatting in the popover", () => {
         await click('select[name="link_type"');
         await select("primary");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com/" class="random-css-class text-muted btn btn-fill-primary">link2</a></p>'
+            '<p><a href="http://test.com/" class="random-css-class text-muted btn btn-primary">link2</a></p>'
         );
     });
     test("after applying the link format, the link's format should be updated", async () => {
@@ -795,7 +795,7 @@ describe("Link formatting in the popover", () => {
 
         await click(".o_we_apply_link");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com/" class="btn btn-fill-secondary">link2[]</a></p>'
+            '<p><a href="http://test.com/" class="btn btn-secondary">link2[]</a></p>'
         );
     });
     test("clicking the discard button should revert the link format", async () => {
@@ -806,7 +806,7 @@ describe("Link formatting in the popover", () => {
         await click('select[name="link_type"]');
         await select("secondary");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="http://test.com/" class="btn btn-fill-secondary">link2</a></p>'
+            '<p><a href="http://test.com/" class="btn btn-secondary">link2</a></p>'
         );
         await click(".o_we_discard_link");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
@@ -839,7 +839,7 @@ describe("Link formatting in the popover", () => {
         await click('select[name="link_type"]');
         await select("secondary");
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="#" class="btn btn-fill-secondary">link1</a></p>'
+            '<p><a href="#" class="btn btn-secondary">link1</a></p>'
         );
         await click(".o_we_discard_link");
         expect(cleanLinkArtifacts(getContent(el))).toBe("<p>[link1]</p>");
