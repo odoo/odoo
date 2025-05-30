@@ -11,11 +11,12 @@ export class SubtaskOne2ManyField extends X2ManyField {
     };
 
     getFormActionContext() {
+        const defaultValueKeys = Object.keys(this.props.context).filter((key) => key.startsWith('default_'));
         return pick(
             this.props.context,
             "active_test",
-            "default_project_id",
-            "propagate_not_active"
+            "propagate_not_active",
+            ...defaultValueKeys,
         );
     }
 }
