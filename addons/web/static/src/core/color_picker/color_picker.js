@@ -54,6 +54,7 @@ export class ColorPicker extends Component {
         applyColorResetPreview: Function,
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
+        showRgbaField: { type: Boolean, optional: true },
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
         className: { type: String, optional: true },
@@ -61,6 +62,7 @@ export class ColorPicker extends Component {
     static defaultProps = {
         close: () => {},
         enabledTabs: ["solid", "gradient", "custom"],
+        showRgbaField: false,
     };
 
     setup() {
