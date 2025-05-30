@@ -154,7 +154,7 @@ class TestSaleMrpKitBom(BaseCommon):
         purchase_price = line.product_id.with_company(line.company_id)._compute_average_price(0, line.product_uom_qty, line.move_ids)
         self.assertEqual(purchase_price, 92, "The purchase price must be the total cost of the components multiplied by their unit of measure")
 
-    def test_sale_mrp_kit_sale_price(self):
+    def test_sale_mrp_kit_sale_price_with_different_uoms(self):
         """Check the total sale price of a KIT:
             # BoM of Kit A:
                 # - BoM Type: Kit
@@ -176,16 +176,17 @@ class TestSaleMrpKitBom(BaseCommon):
         })
 
         self.kit_product = self._create_product('Kit Product', 'product', 1.00)
+        self.kit_product.product_tmpl_id.list_price = 200  # 230 with taxes
         # Creating components
         self.component_a = self._create_product('Component A', 'product', 1.00)
-        self.component_a.uom_id = self.env.ref('uom.product_uom_meter').id
-        self.component_a.product_tmpl_id.list_price = 8
+        self.component_a.uom_id = self.env.ref('uom.product_uom_cm').id
+        self.component_a.product_tmpl_id.list_price = 0.08
         self.component_b = self._create_product('Component B', 'product', 1.00)
         self.component_b.product_tmpl_id.list_price = 5
 
         location_id = self.warehouse.lot_stock_id.id
         self.env["stock.quant"].with_context(inventory_mode=True).create([
-            {"product_id": self.component_a.id, "inventory_quantity": 10, "location_id": location_id},
+            {"product_id": self.component_a.id, "inventory_quantity": 1000, "location_id": location_id},
             {"product_id": self.component_b.id, "inventory_quantity": 24, "location_id": location_id},
         ]).action_apply_inventory()
 
@@ -222,7 +223,8 @@ class TestSaleMrpKitBom(BaseCommon):
         so.action_confirm()
         so.picking_ids._action_done()
         move_lines = so.picking_ids.move_ids.move_line_ids
-        self.assertEqual(move_lines.mapped("sale_price"), [80, 120], 'wrong shipping value')
+        self.assertEqual(move_lines.mapped("sale_price"), [92, 138], 'wrong shipping value')
+        self.assertEqual(sum(move_lines.mapped("sale_price")), so.order_line.price_total)
 
     def test_qty_delivered_with_bom(self):
         """Check the quantity delivered, when a bom line has a non integer quantity"""
