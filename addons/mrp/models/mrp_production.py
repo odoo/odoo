@@ -1532,7 +1532,7 @@ class MrpProduction(models.Model):
         workorder_to_confirm = self.env['mrp.workorder'].browse(sorted(workorder_ids_to_confirm))
 
         move_raws_to_adjust._adjust_procure_method()
-        moves_to_confirm._action_confirm(merge=False)
+        moves_to_confirm._action_confirm(merge=False, create_proc=not self.env.context.get('no_procurement'))
         workorder_to_confirm._action_confirm()
         workorder_to_confirm._set_cost_mode()
         # run scheduler for moves forecasted to not have enough in stock
@@ -1849,7 +1849,7 @@ class MrpProduction(models.Model):
             'orderpoint_id': self.orderpoint_id.id,
         }
 
-    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False, skip_procurement=True):
         """ Splits productions into productions smaller quantities to produce, i.e. creates
         its backorders.
 
@@ -1934,7 +1934,7 @@ class MrpProduction(models.Model):
                 move_to_backorder_moves[move] = self.env['stock.move']
                 unit_factor = move.product_uom_qty / initial_qty_by_production[production]
                 initial_move_vals = move.copy_data(move._get_backorder_move_vals())[0]
-                move.with_context(do_not_unreserve=True, no_procurement=True).product_uom_qty = production.product_qty * unit_factor
+                move.with_context(do_not_unreserve=True, no_procurement=skip_procurement).product_uom_qty = production.product_qty * unit_factor
 
                 for backorder in production_to_backorders[production]:
                     move_vals = dict(

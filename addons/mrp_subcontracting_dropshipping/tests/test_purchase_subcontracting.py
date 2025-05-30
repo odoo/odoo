@@ -550,20 +550,14 @@ class TestSubcontractingDropshippingPortal(TestSubcontractingPortal):
         # check that the dropship is linked to the subcontracted MO
         self.assertEqual(po_dropship_subcontractor.picking_ids.picking_type_id, self.env.company.dropship_subcontractor_pick_type_id)
         self.assertEqual(po_dropship_subcontractor.picking_ids, subcontracted_mo.picking_ids)
-
         # check that your subcontractor is able to modify the lot of the finished product
         action = subcontracted_mo.incoming_picking.with_user(self.portal_user).with_context(is_subcontracting_portal=True).move_ids.action_show_details()
-        mo = self.env['mrp.production'].with_user(self.portal_user).browse(action['res_id'])
-        mo_form = Form(mo.with_context(action['context']), view=action['view_id'])
+        move = po.picking_ids[0].move_ids.with_user(self.portal_user)
+        move_form = Form(move.with_context(action['context']), view=action['view_id'])
         # Registering components for the first manufactured product
-        mo_form.lot_producing_ids.set(finished_serial)
-        mo = mo_form.save()
-        mo.subcontracting_record_component()
-        self.assertRecordValues(mo, [{
-            'qty_producing': 1.0, 'lot_producing_ids': [finished_serial.id], 'state': 'to_close',
-        }])
-        # Check that the initial MO has been splitted in 2
-        self.assertTrue("-001" in mo.name)
-        self.assertRecordValues(mo.procurement_group_id.mrp_production_ids - mo, [{
-            'qty_producing': 1.0, 'lot_producing_ids': [], 'state': 'to_close',
+        with move_form.move_line_ids.edit(0) as ml:
+            ml.lot_id = finished_serial
+        move_form.save()
+        self.assertRecordValues(move._get_subcontract_production()[0], [{
+            'qty_producing': 0.0, 'lot_producing_ids': finished_serial.ids, 'state': 'confirmed',
         }])

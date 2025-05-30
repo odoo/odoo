@@ -12,24 +12,6 @@ from dateutil.relativedelta import relativedelta
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
-    display_action_record_components = fields.Selection(
-        [('hide', 'Hide'), ('facultative', 'Facultative'), ('mandatory', 'Mandatory')],
-        compute='_compute_display_action_record_components')
-
-    @api.depends('state', 'move_ids')
-    def _compute_display_action_record_components(self):
-        self.display_action_record_components = 'hide'
-        for picking in self:
-            # Hide if not encoding state or it is not a subcontracting picking
-            if picking.state in ('draft', 'cancel', 'done') or not picking._is_subcontract():
-                continue
-            subcontracted_moves = picking.move_ids.filtered(lambda m: m.is_subcontract)
-            if subcontracted_moves._subcontrating_should_be_record():
-                picking.display_action_record_components = 'mandatory'
-                continue
-            if subcontracted_moves._subcontrating_can_be_record():
-                picking.display_action_record_components = 'facultative'
-
     @api.depends('picking_type_id', 'partner_id')
     def _compute_location_id(self):
         super()._compute_location_id()
@@ -48,76 +30,25 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
-        for move in self.move_ids:
-            if not move.is_subcontract:
-                continue
-            # Auto set qty_producing/lot_producing_ids of MO wasn't recorded
-            # manually (if the flexible + record_component or has tracked component)
-            productions = move._get_subcontract_production()
-            recorded_productions = productions.filtered(lambda p: p._has_been_recorded())
-            recorded_qty = sum(recorded_productions.mapped('qty_producing'))
-            sm_done_qty = sum(productions._get_subcontract_move().filtered(lambda m: m.picked).mapped('quantity'))
-            rounding = self.env['decimal.precision'].precision_get('Product Unit')
-            if float_compare(move.product_uom_qty, move.quantity, precision_digits=rounding) > 0 and self.env.context.get('cancel_backorder'):
-                move._update_subcontract_order_qty(move.quantity)
-            if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
-                continue
-            production = productions - recorded_productions
-            if not production:
-                continue
-            if len(production) > 1:
-                raise UserError(_("There shouldn't be multiple productions to record for the same subcontracted move."))
-            # Manage additional quantities
-            quantity_done_move = move.product_uom._compute_quantity(move.quantity, production.product_uom_id)
-            if production.product_uom_id.compare(production.product_qty, quantity_done_move) == -1:
-                change_qty = self.env['change.production.qty'].create({
-                    'mo_id': production.id,
-                    'product_qty': quantity_done_move
-                })
-                change_qty.with_context(skip_activity=True).change_prod_qty()
-            # Create backorder MO for each move lines
-            amounts = [move_line.quantity for move_line in move.move_line_ids]
-            len_amounts = len(amounts)
-            productions = production._split_productions({production: amounts}, set_consumed_qty=True)
-            productions.move_finished_ids.move_line_ids.write({'quantity': 0})
-            for production, move_line in zip(productions, move.move_line_ids):
-                if move_line.lot_id:
-                    production.lot_producing_ids = move_line.lot_id.ids
-                production.qty_producing = production.product_qty
-                production._set_qty_producing()
-            productions[:len_amounts].subcontracting_has_been_recorded = True
-
         for picking in self:
-            productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
-            productions_to_done._subcontract_sanity_check()
-            if not productions_to_done:
-                continue
-            productions_to_done = productions_to_done.sudo()
-            production_ids_backorder = []
-            if not self.env.context.get('cancel_backorder'):
-                production_ids_backorder = productions_to_done.filtered(lambda mo: mo.state == "progress").ids
-            productions_to_done.with_context(mo_ids_to_backorder=production_ids_backorder).button_mark_done()
+            productions_to_done = picking._get_subcontract_production().sudo()
+            productions_to_done.button_mark_done()
             # For concistency, set the date on production move before the date
             # on picking. (Traceability report + Product Moves menu item)
-            minimum_date = min(picking.move_line_ids.mapped('date'))
             production_moves = productions_to_done.move_raw_ids | productions_to_done.move_finished_ids
-            production_moves.write({'date': minimum_date - timedelta(seconds=1)})
-            production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
+            if production_moves:
+                minimum_date = min(picking.move_line_ids.mapped('date'))
+                production_moves.write({'date': minimum_date - timedelta(seconds=1)})
+                production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
 
         return res
 
-    def action_record_components(self):
-        self.ensure_one()
-        move_subcontracted = self.move_ids.filtered(lambda m: m.is_subcontract)
-        for move in move_subcontracted:
-            production = move._subcontrating_should_be_record()
-            if production:
-                return move._action_record_components()
-        for move in move_subcontracted:
-            production = move._subcontrating_can_be_record()
-            if production:
-                return move._action_record_components()
-        raise UserError(_("Nothing to record"))
+    @api.depends('move_ids.is_subcontract', 'move_ids.has_tracking')
+    def _compute_show_lots_text(self):
+        super()._compute_show_lots_text()
+        for picking in self:
+            if any(move.is_subcontract and move.has_tracking != 'none' for move in picking.move_ids):
+                picking.show_lots_text = False
 
     # -------------------------------------------------------------------------
     # Subcontract helpers
@@ -161,6 +92,9 @@ class StockPicking(models.Model):
         return vals
 
     def _get_subcontract_mo_confirmation_ctx(self):
+        if self._is_subcontract() and not self.env.context.get('cancel_backorder', True):
+            # Do not trigger rules on raw moves when creating backorder for a subcontract receipt.
+            return {'no_procurement': True}
         return {}  # To override in mrp_subcontracting_purchase
 
     def _subcontracted_produce(self, subcontract_details):
@@ -168,8 +102,18 @@ class StockPicking(models.Model):
         group_move = defaultdict(list)
         group_by_company = defaultdict(list)
         for move, bom in subcontract_details:
-            # do not create extra production for move that have their quantity updated
             if move.move_orig_ids.production_id:
+                # Magic spicy sauce for the backorder case:
+                # To ensure correct splitting of the component moves of the SBC MO, we will invoke a split of the SBC
+                # MO here directly and then link the backorder MO to the backorder move.
+                # If we would just run _subcontracted_produce as usual for the newly created SBC receipt move, any
+                # reservations of raw component moves of the SBC MO would not be preserved properly (for example when
+                # using resupply subcontractor on order)
+                production_to_split = move.move_orig_ids[0].production_id
+                original_qty = move.move_orig_ids[0].product_qty
+                move.move_orig_ids = False
+                _, new_mo = production_to_split.with_context(allow_more=True)._split_productions({production_to_split: [original_qty, move.product_qty]})
+                new_mo.move_finished_ids.move_dest_ids = move
                 continue
             quantity = move.product_qty or move.quantity
             if move.product_uom.compare(quantity, 0) <= 0:
@@ -188,7 +132,11 @@ class StockPicking(models.Model):
             all_mo.update(grouped_mo.ids)
 
         all_mo = self.env['mrp.production'].browse(sorted(all_mo))
-        all_mo.with_context(self._get_subcontract_mo_confirmation_ctx()).action_confirm()
+        ctx = self._get_subcontract_mo_confirmation_ctx()
+        all_mo.with_context(ctx).action_confirm()
+        if ctx.get('no_procurement'):
+            # Make sure to check availability to the backorder
+            all_mo.action_assign()
 
         for mo in all_mo:
             move = group_move[mo.procurement_group_id.id][0]

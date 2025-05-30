@@ -204,7 +204,7 @@ class StockMove(models.Model):
     @api.depends('product_id', 'product_id.uom_id', 'product_id.uom_ids', 'product_id.seller_ids', 'product_id.seller_ids.product_uom_id')
     def _compute_allowed_uom_ids(self):
         for move in self:
-            move.allowed_uom_ids = move.product_id.uom_id | move.product_id.uom_ids | move.product_id.seller_ids.product_uom_id
+            move.allowed_uom_ids = move.product_id.uom_id | move.product_id.uom_ids | move.sudo().product_id.seller_ids.product_uom_id
 
     @api.depends('product_id')
     def _compute_product_uom(self):
@@ -958,7 +958,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             raise ValidationError(_("The number of Serial Numbers to generate must be greater than zero."))
         lot_names = self.env['stock.lot'].generate_lot_names(next_serial, count)
         field_data = [{'lot_name': lot_name['lot_name'], 'quantity': 1} for lot_name in lot_names]
-        if self.picking_type_id.use_existing_lots:
+        if self.picking_type_id.use_existing_lots or self.env.context.get('force_lot_m2o'):
             self._create_lot_ids_from_move_line_vals(field_data, self.product_id.id, self.company_id.id)
         move_lines_commands = self._generate_serial_move_line_commands(field_data)
         self.move_line_ids = move_lines_commands
@@ -967,14 +967,14 @@ Please change the quantity done or the rounding precision in your settings.""",
     def _create_lot_ids_from_move_line_vals(self, vals_list, product_id, company_id=False):
         """ This method will search or create the lot_id from the lot_name and set it in the vals_list
         """
-        lot_names = {vals['lot_name'] for vals in vals_list if vals.get('lot_name')}
+        lot_names = [vals['lot_name'] for vals in vals_list if vals.get('lot_name')]
         lot_ids = self.env['stock.lot'].search([
             ('product_id', '=', product_id),
             '|', ('company_id', '=', company_id), ('company_id', '=', False),
             ('name', 'in', list(lot_names)),
         ])
-
-        lot_names -= set(lot_ids.mapped('name'))  # lot_names not found to create
+        lot_id_names = set(lot_ids.mapped('name'))
+        lot_names = [lot_name for lot_name in lot_names if lot_name not in lot_id_names]  # lot_names not found to create
         lots_to_create_vals = [
             {'product_id': product_id, 'name': lot_name}
             for lot_name in lot_names
@@ -1079,7 +1079,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                             })
         if default_vals.get('picking_type_id'):
             picking_type = self.env['stock.picking.type'].browse(default_vals['picking_type_id'])
-            if picking_type.use_existing_lots:
+            if picking_type.use_existing_lots or context_data.get('force_lot_m2o'):
                 self._create_lot_ids_from_move_line_vals(
                     vals_list, default_vals['product_id'], default_vals['company_id']
                 )

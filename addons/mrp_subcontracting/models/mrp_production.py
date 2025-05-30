@@ -63,44 +63,37 @@ class MrpProduction(models.Model):
                 res &= super(MrpProduction, production).write({**vals, 'date_start': date_start_map[production]})
             return res
 
-        return super().write(vals)
+        old_lots = [mo.lot_producing_ids for mo in self]
+        if self.env.context.get('mrp_subcontracting') and 'product_qty' in vals:
+            for mo in self:
+                self.sudo().env['change.production.qty'].with_context(skip_activity=True, mrp_subcontracting=False).create([{
+                    'mo_id': mo.id,
+                    'product_qty': vals['product_qty'],
+                }]).change_prod_qty()
+                mo.action_assign()
+
+        res = super().write(vals)
+
+        if self.env.context.get('mrp_subcontracting') and ('product_qty' in vals or 'lot_producing_ids' in vals):
+            for mo, old_lot in zip(self, old_lots):
+                sbc_move = mo._get_subcontract_move()
+                if not sbc_move:
+                    continue
+                if mo.product_tracking in ('lot', 'serial'):
+                    sbc_move_lines = sbc_move.move_line_ids.filtered(lambda m: m.lot_id == old_lot)
+                    sbc_move_line = sbc_move_lines[0]
+                    sbc_move_line.quantity = mo.product_qty
+                    sbc_move_line.lot_id = mo.lot_producing_ids
+                    sbc_move_lines[1:].unlink()
+                else:
+                    sbc_move.quantity = mo.product_qty
+
+        return res
 
     def action_merge(self):
         if any(production._get_subcontract_move() for production in self):
             raise ValidationError(_("Subcontracted manufacturing orders cannot be merged."))
         return super().action_merge()
-
-    def subcontracting_record_component(self):
-        self.ensure_one()
-        self.move_raw_ids.picked = True
-        if not self._get_subcontract_move():
-            raise UserError(_("This MO isn't related to a subcontracted move"))
-        if self.product_uom_id.is_zero(self.qty_producing):
-            return {'type': 'ir.actions.act_window_close'}
-
-        if self.move_raw_ids and not any(self.move_raw_ids.mapped('quantity')):
-            raise UserError(_("You must indicate a non-zero amount consumed for at least one of your components"))
-        consumption_issues = self._get_consumption_issues()
-        if consumption_issues:
-            return self._action_generate_consumption_wizard(consumption_issues)
-        self.sudo()._update_finished_move()  # Portal user may need sudo rights to update pickings
-        self.subcontracting_has_been_recorded = True
-
-        quantity_issues = self._get_quantity_produced_issues()
-        if quantity_issues:
-            backorder = self.sudo()._split_productions()[1:]
-            # No qty to consume to avoid propagate additional move
-            # TODO avoid : stock move created in backorder with 0 as qty
-            backorder.move_raw_ids.filtered(lambda m: m.additional).product_uom_qty = 0.0
-
-            backorder.qty_producing = backorder.product_qty
-            backorder._set_qty_producing()
-
-            self.product_qty = self.qty_producing
-            action = self._get_subcontract_move().filtered(lambda m: m.state not in ('done', 'cancel'))._action_record_components()
-            action['res_id'] = backorder.id
-            return action
-        return {'type': 'ir.actions.act_window_close'}
 
     def pre_button_mark_done(self):
         if self._get_subcontract_move():
@@ -110,73 +103,11 @@ class MrpProduction(models.Model):
     def _should_postpone_date_finished(self, date_finished):
         return super()._should_postpone_date_finished(date_finished) and not self._get_subcontract_move()
 
-    def _update_finished_move(self):
-        """ After producing, set the move line on the subcontract picking. """
-        self.ensure_one()
-        subcontract_move_id = self._get_subcontract_move().filtered(lambda m: m.state not in ('done', 'cancel'))
-        if subcontract_move_id:
-            quantity = self.qty_producing
-            if self.lot_producing_ids:
-                move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and ml.lot_id in self.lot_producing_ids or not ml.lot_id)
-            else:
-                move_lines = subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked and not ml.lot_id)
-            # Update reservation and quantity done
-            for ml, lot_id in zip(move_lines, self.lot_producing_ids or ([self.env['stock.lot']] * len(move_lines))):
-                rounding = ml.product_uom_id.rounding
-                if float_compare(quantity, 0, precision_rounding=rounding) <= 0:
-                    break
-                quantity_to_process = min(quantity, ml.quantity)
-                quantity -= quantity_to_process
-
-                # on which lot of finished product
-                if float_compare(quantity_to_process, ml.quantity, precision_rounding=rounding) >= 0:
-                    ml.write({
-                        'quantity': quantity_to_process,
-                        'picked': True,
-                        'lot_id': lot_id.id,
-                    })
-                else:
-                    ml.write({
-                        'quantity': quantity_to_process,
-                        'picked': True,
-                        'lot_id': lot_id.id,
-                    })
-
-            if self.product_uom_id.compare(quantity, 0) > 0:
-                self.env['stock.move.line'].create({
-                    'move_id': subcontract_move_id.id,
-                    'picking_id': subcontract_move_id.picking_id.id,
-                    'product_id': self.product_id.id,
-                    'location_id': subcontract_move_id.location_id.id,
-                    'location_dest_id': subcontract_move_id.location_dest_id.id,
-                    'product_uom_id': self.product_uom_id.id,
-                    'quantity': quantity,
-                    'picked': True,
-                    'lot_id': self.lot_producing_ids and self.lot_producing_ids[:1].id,
-                })
-            if not self._get_quantity_to_backorder():
-                subcontract_move_id.move_line_ids.filtered(lambda ml: not ml.picked).unlink()
-                subcontract_move_id._recompute_state()
-
-    def _subcontracting_filter_to_done(self):
-        """ Filter subcontracting production where composant is already recorded and should be consider to be validate """
-        def filter_in(mo):
-            if mo.state in ('done', 'cancel'):
-                return False
-            if not mo.subcontracting_has_been_recorded:
-                return False
-            return True
-
-        return self.filtered(filter_in)
-
     def _has_been_recorded(self):
         self.ensure_one()
         if self.state in ('cancel', 'done'):
             return True
         return self.subcontracting_has_been_recorded
-
-    def _has_tracked_component(self):
-        return any(m.has_tracking != 'none' for m in self.move_raw_ids)
 
     def _has_workorders(self):
         if self.subcontractor_id:
@@ -190,11 +121,19 @@ class MrpProduction(models.Model):
     def _get_writeable_fields_portal_user(self):
         return ['move_line_raw_ids', 'lot_producing_ids', 'subcontracting_has_been_recorded', 'qty_producing', 'product_qty']
 
-    def _subcontract_sanity_check(self):
-        for production in self:
-            if production.product_tracking != 'none' and not self.lot_producing_ids:
-                raise UserError(_('You must enter a serial number for %s', production.product_id.name))
-            for sml in production.move_raw_ids.move_line_ids:
-                if sml.tracking != 'none' and not sml.lot_id:
-                    raise UserError(_('You must enter a serial number for each line of %s', sml.product_id.display_name))
-        return True
+    def action_split_subcontracting(self):
+        self.ensure_one()
+        if not self.lot_producing_ids:
+            raise UserError(_("Please set a lot/serial for the currently opened subcontracting MO first."))
+        move = self._get_subcontract_move()
+        if not move:
+            return False
+        empty_line = move.move_line_ids.filtered(lambda l: not l.lot_id)
+        if not empty_line:
+            move.move_line_ids.create({
+                'product_id': move.product_id.id,
+                'move_id': move.id,
+                'quantity': 1,
+                'lot_id': False,
+            })
+        return move.action_show_subcontract_details(lot_id=False)
