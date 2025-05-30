@@ -12,20 +12,16 @@
                 <LandingPage />
             </t>
             <t t-set-slot="product_list" route="`/pos-self/${selfOrder.config.id}/products`">
-                <ProductListPage t-if="!selfOrder.kioskMode" />
-                <KioskProductListPage t-else="" />
+                <ProductListPage />
             </t>
             <t t-set-slot="product" route="`/pos-self/${selfOrder.config.id}/product/{int:id}`" t-slot-scope="url">
-                <ProductPage productTemplate="selfOrder.models['product.template'].get(url.id)"  t-if="!selfOrder.kioskMode" />
-                <KioskProductPage  t-else="" productTemplate="selfOrder.models['product.template'].get(url.id)"   />
+                <ProductPage  productTemplate="selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="combo_selection" route="`/pos-self/${selfOrder.config.id}/combo-selection/{int:id}`" t-slot-scope="url">
-                <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" t-if="!selfOrder.kioskMode" />
-                <KioskComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" t-else="" />
+                <ComboPage productTemplate="selfOrder.models['product.template'].get(url.id)" />
             </t>
             <t t-set-slot="cart" route="`/pos-self/${selfOrder.config.id}/cart`">
-                <CartPage t-if="!selfOrder.kioskMode"/>
-                <KioskCartPage t-else=""/>
+                <CartPage/>
             </t>
             <t t-set-slot="payment" route="`/pos-self/${selfOrder.config.id}/payment`">
                 <PaymentPage />
@@ -35,9 +31,6 @@
             </t>
             <t t-set-slot="location" route="`/pos-self/${selfOrder.config.id}/location`">
                 <EatingLocationPage />
-            </t>
-             <t t-set-slot="category_list" route="`/pos-self/${selfOrder.config.id}/category`">
-                <KioskCategoryListPage />
             </t>
             <t t-set-slot="stand_number" route="`/pos-self/${selfOrder.config.id}/stand_number`">
                 <StandNumberPage />

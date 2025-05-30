@@ -110,9 +110,10 @@ export function getOrderLineValues(
         );
 
         if (Object.values(customValues).length > 0) {
-            values.custom_attribute_value_ids = Object.values(customValues)
-                .filter((c) => c.custom_value !== "")
-                .map((c) => ["create", c]);
+            values.custom_attribute_value_ids = Object.values(customValues).map((c) => [
+                "create",
+                c,
+            ]);
         }
     }
 

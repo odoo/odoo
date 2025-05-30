@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductInfoPopup">
+        <div class="o_dialog" t-att-id="id">
+
+            <div role="dialog" class="modal d-block" tabindex="-1"  >
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down" role="document" >
+                    <div class="modal-content" t-on-click.stop="" >
+                        <div class="modal-header border-0 pb-0 pb-2">
+                            <button type="button" class="btn-close" t-on-click.stop="() => this.props.close()"/>
+                        </div>
+                        <t t-set="product" t-value="props.productTemplate"/>
+
+                        <div class="modal-body px-3 px-sm-4 pt-0" t-ref="scrollContainer">
+                            <h2 t-esc="product.name" class="mb-3"/>
+                            <div t-if="product.public_description" >
+                                <t t-out="product.productDescriptionMarkup"/>
+                            </div>
+                            <div class="mt-3">
+                                <t t-foreach="product.product_tag_ids" t-as="tag" t-key="tag.id" class="mt-3">
+                                      <div class="d-flex align-items-start" t-att-class="{'mb-3': !tag_last}">
+                                           <div t-if="tag.has_image" class="flex-shrink-0 ratio ratio-1x1"  t-attf-style="width:30px">
+                                                <img class="object-fit-cover rounded-circle" t-attf-src="/web/image/product.tag/{{tag.id}}/image?unique=#{tag.write_date}"/>
+                                           </div>
+                                           <div t-else="" class="flex-shrink-0 rounded-circle" t-attf-style="width:30px;height:30px; background-color: {{tag.color}};"/>
+                                           <div class="ms-2">
+                                                <div class="fs-4 fw-bold" style="line-height: 30px" t-esc="tag.name"/>
+                                                <div t-if="tag.pos_description">
+                                                    <t t-out="tag.posDescriptionMarkup"/>
+                                                </div>
+                                           </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer d-none d-sm-flex justify-content-center border-0"  t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom }">
+                            <button type="button" class="btn btn-primary" t-on-click.stop="() => this.props.close()">Close</button>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
