@@ -2047,7 +2047,9 @@ class Request:
         """ Serve a static file from the file system. """
         module, _, path = self.httprequest.path[1:].partition('/static/')
         try:
-            directory = root.statics[module]
+            directory = root.static_path(module)
+            if not directory:
+                raise NotFound(f'Module "{module}" not found.\n')
             filepath = werkzeug.security.safe_join(directory, path)
             debug = (
                 'assets' in self.session.debug and
@@ -2059,8 +2061,6 @@ class Request:
             )
             root.set_csp(res)
             return res
-        except KeyError:
-            raise NotFound(f'Module "{module}" not found.\n')
         except OSError:  # cover both missing file and invalid permissions
             raise NotFound(f'File "{path}" not found in module {module}.\n')
 
@@ -2464,18 +2464,19 @@ class Application:
         from odoo.service.server import load_server_wide_modules  # noqa: PLC0415
         load_server_wide_modules()
 
-    @functools.cached_property
-    def statics(self):
+    @functools.lru_cache(10_000)
+    def static_path(self, module_name: str) -> str | None:
         """
         Map module names to their absolute ``static`` path on the file
         system.
         """
-        mod2path = {}
-        for module in module_manager.Manifest.all_addon_manifests():
-            static_path = opj(module.path, 'static')
-            if (module['installable'] or module['assets']) and os.path.isdir(static_path):
-                mod2path[module.name] = static_path
-        return mod2path
+        manifest = module_manager.Manifest.for_addon(module_name, display_warning=False)
+        if manifest is None:
+            return None
+        static_path = opj(manifest.path, 'static')
+        if (manifest['installable'] or manifest['assets']) and os.path.isdir(static_path):
+            return static_path
+        return None
 
     def get_static_file(self, url, host=''):
         """
@@ -2499,11 +2500,15 @@ class Application:
         if ((netloc and netloc != host) or (path_netloc and path_netloc != host)):
             return None
 
-        if (module not in self.statics or static != 'static' or not resource):
+        if not (static == 'static' and resource):
+            return None
+
+        static_path = self.static_path(module)
+        if not static_path:
             return None
 
         try:
-            return file_path(f'{module}/static/{resource}')
+            return file_path(opj(static_path, resource))
         except FileNotFoundError:
             return None
 
