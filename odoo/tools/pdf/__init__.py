@@ -10,20 +10,10 @@ from logging import getLogger
 from zlib import compress, decompress, decompressobj
 
 from PIL import Image, PdfImagePlugin
-from reportlab.lib import colors
-from reportlab.lib.units import cm
-from reportlab.lib.utils import ImageReader
-from reportlab.pdfgen import canvas
 
 from odoo.tools.arabic_reshaper import reshape
 from odoo.tools.parse_version import parse_version
-from odoo.tools.misc import file_open
-
-try:
-    import fontTools
-    from fontTools.ttLib import TTFont
-except ImportError:
-    TTFont = None
+from odoo.tools.misc import file_open, SENTINEL
 
 # ----------------------------------------------------------
 # PyPDF2 hack
@@ -227,15 +217,22 @@ def to_pdf_stream(attachment) -> io.BytesIO:
     _logger.warning("mimetype (%s) not recognized for %s", attachment.mimetype, attachment)
 
 
-def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
+def add_banner(pdf_stream, text=None, logo=False, thickness=SENTINEL):
     """ Add a banner on a PDF in the upper right corner, with Odoo's logo (optionally).
 
     :param pdf_stream (BytesIO):    The PDF stream where the banner will be applied.
     :param text (str):              The text to be displayed.
     :param logo (bool):             Whether to display Odoo's logo in the banner.
-    :param thickness (float):       The thickness of the banner in pixels.
+    :param thickness (float):       The thickness of the banner in pixels (default: 2cm).
     :return (BytesIO):              The modified PDF stream.
     """
+    from reportlab.lib import colors  # noqa: PLC0415
+    from reportlab.lib.utils import ImageReader  # noqa: PLC0415
+    from reportlab.pdfgen import canvas  # noqa: PLC0415
+
+    if thickness is SENTINEL:
+        from reportlab.lib.units import cm  # noqa: PLC0415
+        thickness = 2 * cm
 
     old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
     packet = io.BytesIO()
@@ -509,7 +506,11 @@ class OdooPdfFileWriter(PdfFileWriter):
 
         # PDF/A needs the glyphs width array embedded in the pdf to be consistent with the ones from the font file.
         # But it seems like it is not the case when exporting from wkhtmltopdf.
-        if TTFont:
+        try:
+            import fontTools.ttLib  # noqa: PLC0415
+        except ImportError:
+            _logger.warning('The fonttools package is not installed. Generated PDF may not be PDF/A compliant.')
+        else:
             fonts = {}
             # First browse through all the pages of the pdf file, to get a reference to all the fonts used in the PDF.
             for page in pages:
@@ -523,7 +524,7 @@ class OdooPdfFileWriter(PdfFileWriter):
             for font in fonts.values():
                 font_file = font['/FontDescriptor']['/FontFile2']
                 stream = io.BytesIO(decompress(font_file._data))
-                ttfont = TTFont(stream)
+                ttfont = fontTools.ttLib.TTFont(stream)
                 font_upm = ttfont['head'].unitsPerEm
                 if parse_version(fontTools.__version__) < parse_version('4.37.2'):
                     glyphs = ttfont.getGlyphSet()._hmtx.metrics
@@ -536,8 +537,6 @@ class OdooPdfFileWriter(PdfFileWriter):
 
                 font[NameObject('/W')] = ArrayObject([NumberObject(1), ArrayObject(glyph_widths)])
                 stream.close()
-        else:
-            _logger.warning('The fonttools package is not installed. Generated PDF may not be PDF/A compliant.')
 
         outlines = self._root_object['/Outlines'].getObject()
         outlines[NameObject('/Count')] = NumberObject(1)
