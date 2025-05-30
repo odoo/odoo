@@ -361,3 +361,17 @@ class ResUsers(models.Model):
             'res_model': 'res.partner',
             'view_mode': 'form',
         }
+
+    def get_formview_action(self, access_uid=None):
+        """ Override this method in order to redirect many2one towards the full user form view
+        incase the user is ERP manager and the request coming from employee form."""
+
+        res = super().get_formview_action(access_uid=access_uid)
+        user = self.env.user
+        if access_uid:
+            user = self.env['res.users'].browse(access_uid).sudo()
+
+        if self.env.context.get('default_create_employee_id') and user.has_group('base.group_erp_manager'):
+            res['views'] = [(self.env.ref('base.view_users_form').id, 'form')]
+
+        return res
