@@ -85,6 +85,16 @@
                                     </t>
                                 </select>
                             </div>
+                            <div class="input-group mb-1">
+                                <label>Shape</label>
+                                <select name="link_style_shape" class="form-select form-select-sm link-style" t-model="state.buttonShape" t-on-change="onChange">
+                                    <t t-foreach="this.buttonShapeData" t-as="buttonShapeData" t-key="buttonShapeData.shape">
+                                        <option t-att-value="buttonShapeData.shape" t-att-selected="state.buttonShape === buttonShapeData.shape">
+                                            <span t-out="buttonShapeData.label"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
                         </t>
                         <t t-if="props.allowTargetBlank">
                             <t t-if="state.isDocument">

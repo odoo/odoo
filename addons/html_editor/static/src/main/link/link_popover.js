@@ -62,6 +62,15 @@ export class LinkPopover extends Component {
         { style: "dotted", label: "┄┄┄" },
         { style: "double", label: "═══" },
     ];
+    buttonShapeData = [
+        { shape: "", label: "Default" },
+        { shape: "rounded-circle", label: "Default + Rounded" },
+        { shape: "outline", label: "Outline" },
+        { shape: "outline rounded-circle", label: "Outline + Rounded" },
+        { shape: "fill", label: "Fill" },
+        { shape: "fill rounded-circle", label: "Fill + Rounded" },
+        { shape: "flat", label: "Flat" },
+    ];
     setup() {
         this.ui = useService("ui");
         this.notificationService = useService("notification");
@@ -98,6 +107,7 @@ export class LinkPopover extends Component {
             directDownload: true,
             isDocument: false,
             buttonSize: this.props.linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
+            buttonShape: this.getButtonShape(),
             customBorderSize: computedStyle.borderWidth.replace("px", "") || "1",
             customBorderStyle: computedStyle.borderStyle || "solid",
             isImage: this.props.isImage,
@@ -345,6 +355,34 @@ export class LinkPopover extends Component {
             return deduceURLfromText(text, this.props.linkElement) || "";
         }
     }
+    getButtonShape() {
+        const shapeToRegex = (shape) => {
+            const parts = shape.trim().split(/\s+/);
+            const regexParts = parts.map((cls) => {
+                if (["outline", "fill"].includes(cls)) {
+                    cls = `btn-${cls}`;
+                }
+                return `(?=.*\\b${cls}\\b)`;
+            });
+            return { regex: new RegExp(regexParts.join("")), nbParts: parts.length };
+        };
+        // If multiple shapes match, prefer the one with more specificity.
+        let shapeMatched = "";
+        let matchScore = 0;
+        for (const { shape } of this.buttonShapeData) {
+            if (!shape) {
+                continue;
+            }
+            const { regex, nbParts } = shapeToRegex(shape);
+            if (regex.test(this.props.linkElement.className)) {
+                if (matchScore < nbParts) {
+                    matchScore = nbParts;
+                    shapeMatched = shape;
+                }
+            }
+        }
+        return shapeMatched;
+    }
     /**
      * link preview in the popover
      */
@@ -459,17 +497,25 @@ export class LinkPopover extends Component {
 
     get classes() {
         let classes = [...this.props.linkElement.classList]
-            .filter((value) => !value.match(/btn(-[a-z0-9]+)*/))
+            .filter((value) => !value.match(/^(btn.*|rounded-circle|flat)$/))
             .join(" ");
 
+        let stylePrefix = "";
+        if (this.state.type === "custom") {
+            if (this.state.buttonSize) {
+                classes += ` btn-${this.state.buttonSize}`;
+            }
+            if (this.state.buttonShape) {
+                const buttonShape = this.state.buttonShape.split(" ");
+                if (["outline", "fill"].includes(buttonShape[0])) {
+                    stylePrefix = `${buttonShape[0]}-`;
+                }
+                classes += ` ${buttonShape.slice(stylePrefix ? 1 : 0).join(" ")}`;
+            }
+        }
         if (this.state.type) {
-            classes += ` btn btn-fill-${this.state.type}`;
+            classes += ` btn btn-${stylePrefix}${this.state.type}`;
         }
-
-        if (this.state.buttonSize) {
-            classes += ` btn-${this.state.buttonSize}`;
-        }
-
         return classes.trim();
     }
 

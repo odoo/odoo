@@ -60,7 +60,7 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Wait content of iframe is loaded",
         trigger: ":iframe main:contains(enhance your)",
     },
-    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-fill-secondary"),
+    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         content: "Verify that the popup opens after clicked the button.",
         trigger: ":iframe .s_popup .modal[id='Win-%2420'].show",
@@ -99,7 +99,7 @@ registerWebsitePreviewTour("snippet_popup_display_on_click", {
         content: "Wait form is patched",
         trigger: ":iframe form#contactus_form input[name=company]:value(yourcompany)",
     },
-    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-fill-secondary"),
+    clickOnElement("text image snippet button", ":iframe .s_text_image .btn-secondary"),
     {
         trigger: ":iframe [data-view-xmlid='website.homepage']",
     },
