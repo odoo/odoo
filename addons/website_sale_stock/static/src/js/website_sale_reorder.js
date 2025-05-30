@@ -41,12 +41,8 @@ patch(ReorderDialog.prototype, {
             product.add_to_cart_allowed = false;
         }
         if (product.max_quantity_available < product.quantity) {
-            product.qty_warning = _t(
-                "You ask for %(quantity1)s Units but only %(quantity2)s are available.",
-                {
-                    quantity1: product.quantity.toFixed(1),
-                    quantity2: product.max_quantity_available.toFixed(1),
-                }
+            product.qty_warning = this.getStockWarning(
+                product.quantity.toFixed(1), product.max_quantity_available.toFixed(1),
             );
             product.quantity = product.max_quantity_available;
             product.stock_warning = true;
@@ -68,17 +64,20 @@ patch(ReorderDialog.prototype, {
         return super.getWarningForProduct(...arguments);
     },
 
+    getStockWarning(desired_qty, free_qty) {
+        return _t(
+            "You requested %(desired_qty)s Units, but only %(free_qty)s are available in stock.",
+            {desired_qty, free_qty},
+        );
+    },
+
     /**
      * @override
      */
     changeProductQty(product, newQty) {
         if (product.max_quantity_available && newQty > product.max_quantity_available) {
-            product.qty_warning = _t(
-                "You ask for %(quantity1)s Units but only %(quantity2)s are available.",
-                {
-                    quantity1: newQty.toFixed(1),
-                    quantity2: product.max_quantity_available.toFixed(1),
-                }
+            product.qty_warning = this.getStockWarning(
+                newQty.toFixed(1), product.max_quantity_available.toFixed(1),
             );
             product.stock_warning = true;
             newQty = product.max_quantity_available;

@@ -31,3 +31,11 @@ class WebsiteCheckoutStep(models.Model):
             [allowed_steps_domain, [('sequence', '<', self.sequence)]]
         )
         return self.search(previous_step_domain, order='sequence DESC', limit=1)
+
+    def _get_previous_checkout_steps(self, allowed_steps_domain):
+        """Get all the steps prior to `self` according to `sequence`."""
+
+        return self.search(
+            Domain.AND([allowed_steps_domain, [('sequence', '<', self.sequence)]]),
+            order='sequence',
+        )

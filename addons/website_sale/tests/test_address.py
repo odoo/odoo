@@ -7,43 +7,18 @@ from werkzeug.exceptions import Forbidden
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.website_sale.controllers.main import WebsiteSale
-from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+from odoo.addons.website_sale.tests.common_checkout import CheckoutCommon
+from odoo.addons.website_sale.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install')
-class TestCheckoutAddress(WebsiteSaleCommon):
+class TestCheckoutAddress(CheckoutCommon):
     """Test the address management part of the checkout process:
 
     * address creation (/shop/address)
     * address update (/shop/address)
     * address choice (/shop/checkout)
     """
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.country_id = cls.country_be.id
-        cls.user_portal = cls._create_new_portal_user()
-        cls.user_internal = cls._create_new_internal_user()
-        cls.user_internal.partner_id.company_id = cls.env.company
-
-    def setUp(self):
-        super().setUp()
-        self.WebsiteSaleController = WebsiteSale()
-        self.default_address_values = {
-            'name': 'a res.partner address',
-            'email': 'email@email.email',
-            'street': 'ooo',
-            'city': 'ooo',
-            'zip': '1200',
-            'country_id': self.country_id,
-            'phone': '+333333333333333',
-            'address_type': 'delivery',
-        }
-        self.default_billing_address_values = dict(
-            self.default_address_values, address_type='billing',
-        )
 
     def _get_last_address(self, partner):
         """ Useful to retrieve the last created address (shipping or billing) """
@@ -508,31 +483,6 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             )
             self.assertEqual(so.partner_shipping_id, shipping)
             self.assertEqual(so.partner_invoice_id, invoicing)
-
-            # Using invalid addresses --> change and the customer is forced to update the address
-            self.WebsiteSaleController.shop_update_address(
-                partner_id=bad_invoicing.id, address_type='billing')
-            self.assertEqual(so.partner_invoice_id, bad_invoicing)
-            redirection = self.WebsiteSaleController._check_addresses(so)
-            self.assertTrue(redirection is not None)
-            self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_invoicing.id}&address_type=billing')
-
-            # reset to valid one
-            self.WebsiteSaleController.shop_update_address(
-                partner_id=invoicing.id, address_type='billing',
-            )
-
-            self.WebsiteSaleController.shop_update_address(
-                partner_id=bad_shipping.id, address_type='delivery')
-            self.assertEqual(so.partner_shipping_id, bad_shipping)
-            redirection = self.WebsiteSaleController._check_addresses(so)
-            self.assertTrue(redirection is not None)
-            self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_shipping.id}&address_type=delivery')
-
-            # reset to valid one
-            self.WebsiteSaleController.shop_update_address(
-                partner_id=shipping.id, address_type='delivery',
-            )
 
             # Using commercial partner address
             self.WebsiteSaleController.shop_update_address(

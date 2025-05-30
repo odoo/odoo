@@ -3,7 +3,6 @@
 import json
 
 from odoo import models
-from odoo.exceptions import ValidationError
 from odoo.http import request
 
 
@@ -89,18 +88,25 @@ class SaleOrder(models.Model):
             return self.warehouse_id.id
         return super()._get_shop_warehouse_id()
 
-    def _check_cart_is_ready_to_be_paid(self):
-        """ Override of `website_sale` to check if all products are in stock in the selected
-        warehouse. """
-        if (
-            self._has_deliverable_products()
-            and self.carrier_id.delivery_type == 'in_store'
-            and not self._is_in_stock(self.warehouse_id.id)
+    def _is_cart_ready_to_confirm(self):
+        """Override of `website_sale` to includes errors if no pickup location is selected."""
+        if self.carrier_id.delivery_type == 'in_store' and not self._has_deliverable_products():
+            if not self.pickup_location_data:
+                self.shop_warning = self.env._("Please choose a store to collect your order.")
+                return False
+        return super()._is_cart_ready_to_confirm()
+
+    def _is_cart_ready_to_be_paid(self):
+        """Override of `website_sale` to ensure the cart is available in the selected store no
+        even if out of stock orders are allowed."""
+        if self.carrier_id.delivery_type == 'in_store' and not self._is_in_stock(
+            self.warehouse_id.id,
         ):
-            raise ValidationError(self.env._(
+            self.shop_warning = self.env._(
                 "Some products are not available in the selected store."
-            ))
-        return super()._check_cart_is_ready_to_be_paid()
+            )
+            return False
+        return super()._is_cart_ready_to_be_paid()
 
     # === TOOLING ===#
 

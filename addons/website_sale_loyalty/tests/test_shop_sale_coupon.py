@@ -424,7 +424,13 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             self.assertEqual(order.amount_total, 90.0, "The coupon is not applied.")
 
             # Apply the coupon again
-            WebsiteSaleController.pricelist(promo=self.coupon.code)
+            redirection = WebsiteSaleController.pricelist(promo=self.coupon.code)
+            self.assertEqual(redirection.status_code, 303, 'SEE OTHER')
+            self.assertEqual(redirection.location, '/shop/cart')
+
+        with MockRequest(
+            self.env, website=self.website, sale_order_id=order.id, path='/shop/cart',
+        ) as request:
             Cart().cart()
             error_msg = request.session.get('error_promo_code')
 

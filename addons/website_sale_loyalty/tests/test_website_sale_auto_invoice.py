@@ -35,6 +35,7 @@ class TestWebsiteSaleAutoInvoice(WebsiteSaleCommon):
         # Apply discount
         self.cart._try_apply_code("100code")
         self.cart._apply_program_reward(program.reward_ids, program.coupon_ids)
+        self.cart._set_delivery_method(self.free_delivery)
 
         with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
             Controller.shop_payment_validate()

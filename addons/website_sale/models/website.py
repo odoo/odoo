@@ -781,6 +781,16 @@ class Website(models.Model):
             ('step_href', '=', href),
         ], limit=1)
 
+    def _get_next_checkout_step(self, href):
+        return self._get_checkout_step(
+            href
+        )._get_next_checkout_step(self._get_allowed_steps_domain())
+
+    def _get_previous_checkout_steps(self, href):
+        return self._get_checkout_step(
+            href
+        )._get_previous_checkout_steps(self._get_allowed_steps_domain())
+
     def _get_allowed_steps_domain(self):
         return [
             ('website_id', '=', self.id),

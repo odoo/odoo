@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -41,8 +40,8 @@ class SaleOrder(models.Model):
                         order_line._set_shop_warning_stock(total_cart_qty, available_qty)
                     else:
                         self.shop_warning = self.env._(
-                            "You ask for %(desired_qty)s products but only %(available_qty)s is"
-                            " available.",
+                            "You requested %(desired_qty)s products, but only %(available_qty)s are"
+                            " available in stock.",
                             desired_qty=total_cart_qty, available_qty=available_qty
                         )
                     returned_warning = order_line.shop_warning or self.shop_warning
@@ -113,15 +112,22 @@ class SaleOrder(models.Model):
         """Get all the lines of the current order with the given product."""
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
-    def _check_cart_is_ready_to_be_paid(self):
-        values = [
-            line.shop_warning
-            for line in self.order_line
-            if not line._check_availability()
-        ]
-        if values:
-            raise ValidationError(' '.join(values))
-        return super()._check_cart_is_ready_to_be_paid()
+    def _is_cart_ready_to_be_paid(self):
+        """Override of `website_sale` to stop the user if there is not enough stock for some order
+        lines."""
+        if self._has_deliverable_products() and not self._check_stock():
+            self.shop_warning = self.env._(
+                "Unfortunately, there is no longer enough stock to fulfill your order.\n"
+                "Please update your cart. We apologize for any inconvenience caused."
+            )
+            return False
+        return super()._is_cart_ready_to_be_paid()
+
+    def _check_stock(self):
+        """Whether all the order lines are available on the current website."""
+        self.ensure_one()
+        # Uses list comprehension to ensure all the shop warnings are updated.
+        return all([sol._check_availability() for sol in self.order_line])  # noqa: C419
 
     def _filter_can_send_abandoned_cart_mail(self):
         """Filter sale orders on their product availability."""
