@@ -89,7 +89,18 @@ class PackDeliveryReceiptWizard(models.TransientModel):
     confirm_pack_warning = fields.Boolean(string="User Confirmed Pack Warning", default=False)
     show_message = fields.Boolean(string="Show Message", default=False)
     message_text = fields.Text(string="Display Message")
+    sale_order_ids = fields.Many2many(
+        'sale.order',
+        string='Sale Order Numbers',
+        compute='_compute_sale_order_ids',
+        store=False,
+        help="Auto-fetched from selected pickings."
+    )
 
+    @api.depends('picking_ids')
+    def _compute_sale_order_ids(self):
+        for wizard in self:
+            wizard.sale_order_ids = wizard.picking_ids.mapped('sale_id')
 
     @api.model
     def default_get(self, fields):
@@ -108,54 +119,16 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             raise ValidationError(_("No active Pack App record found. Please open this wizard from the Pack App."))
         return res
 
-    # def update_remaining_packed_qty(self):
-    #     """Update remaining_packed_qty on stock moves based on packed wizard lines."""
-    #     self.ensure_one()
-    #     for line in self.line_ids.filtered(lambda l: l.scanned and l.picking_id and l.product_id):
-    #         move = self.env['stock.move'].search([
-    #             ('picking_id', '=', line.picking_id.id),
-    #             ('product_id', '=', line.product_id.id),
-    #         ], limit=1)
-    #         if move:
-    #             move.remaining_packed_qty = max(0.0, move.remaining_packed_qty - line.quantity)
-
-    # def update_remaining_packed_qty(self):
-    #     """Update remaining_packed_qty on stock moves and qty_delivered on sale lines."""
-    #     self.ensure_one()
-    #
-    #     # Group by picking+product to prevent duplicate updates
-    #     grouped = {}
-    #     for line in self.line_ids.filtered(lambda l: l.scanned and l.picking_id and l.product_id):
-    #         key = (line.picking_id.id, line.product_id.id)
-    #         grouped.setdefault(key, []).append(line)
-    #
-    #     for (picking_id, product_id), lines in grouped.items():
-    #         total_qty = sum(line.quantity for line in lines)
-    #
-    #         # Update stock move
-    #         move = self.env['stock.move'].search([
-    #             ('picking_id', '=', picking_id),
-    #             ('product_id', '=', product_id),
-    #         ], limit=1)
-    #         if move:
-    #             move.remaining_packed_qty = max(0.0, move.remaining_packed_qty - total_qty)
-    #
-    #         # Update sale.order.line
-    #         sale_order = lines[0].sale_order_id
-    #         if sale_order:
-    #             sol = sale_order.order_line.filtered(lambda l: l.product_id.id == product_id)
-    #             if sol:
-    #                 sol[0].qty_delivered += total_qty
 
     @api.depends('line_ids')
     def _compute_total_line_items(self):
         for wizard in self:
             wizard.total_line_items = len(wizard.line_ids)
 
+
     @api.onchange("pc_container_code_ids")
     def _onchange_pc_container_code_ids(self):
         self.ensure_one()
-
         self.picking_ids = [(5, 0, 0)]
         self.line_ids = [(5, 0, 0)]
 
@@ -164,6 +137,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         tote_codes = _tote_codes(self)
 
+        # Find ALL pickings related to any scanned tote
         pickings = self.env["stock.picking"].search([
             ("current_state", "=", "pick"),
             ("move_ids_without_package.pc_container_code", "in", tote_codes),
@@ -172,35 +146,71 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not pickings:
             raise ValidationError("No pickings found for the scanned tote(s).")
 
-        self.picking_ids = [(6, 0, pickings.ids)]
+        # --------- DISCRETE PICK LOGIC ---------
+        discrete_sale_ids = pickings.filtered(lambda p: getattr(p, "discrete_pick", False)).mapped("sale_id").ids
+        is_discrete = bool(discrete_sale_ids)
 
-        #  Validate all totes per picking are scanned
-        for picking in pickings:
-            all_totes_in_pick = picking.move_ids_without_package.mapped('pc_container_code')
-            scanned_totes = set(tote_codes)
-            expected_totes = set(all_totes_in_pick)
+        if is_discrete:
+            # --- Discrete picks: scan all totes for all discrete pickings of that SO
+            for sale_id in discrete_sale_ids:
+                all_discrete_picks = self.env["stock.picking"].search([
+                    ("sale_id", "=", sale_id),
+                    ("discrete_pick", "=", True),
+                    ("current_state", "=", "pick"),
+                    ("site_code_id", "=", self.site_code_id.id),
+                ])
+                all_totes = set(all_discrete_picks.mapped("move_ids_without_package.pc_container_code"))
+                scanned_totes = set(tote_codes)
+                missing = all_totes - scanned_totes
+                if missing:
+                    picks_and_totes = []
+                    for pick in all_discrete_picks:
+                        totes = pick.move_ids_without_package.mapped("pc_container_code")
+                        picks_and_totes.append(
+                            f"Pick: {pick.name} - Tote(s): {', '.join([t or '-' for t in totes])}"
+                        )
+                    raise ValidationError(
+                        "This pick is a Discrete Pick. Please scan the following tote(s) together:\n\n%s"
+                        % ("\n".join(picks_and_totes))
+                    )
+            pickings_to_load = pickings
+            totes_to_load = tote_codes
 
-            missing_totes = expected_totes - scanned_totes
-            if missing_totes:
-                raise ValidationError((
-                    "You must scan all tote(s) for Picking '%s'.\n\n"
-                    "Missing tote(s): %s\n\n"
-                    "Please scan them before continuing."
-                ) % (picking.name, ", ".join(str(tote) for tote in missing_totes if tote)))
+        else:
+            # --- Non-discrete picks (normal pickings): if any selected picking has >1 tote, force scanning all totes!
+            for picking in pickings:
+                totes_on_pick = set(picking.move_ids_without_package.mapped("pc_container_code"))
+                scanned_totes = set(tote_codes) & totes_on_pick  # Only count scanned totes that belong to this picking
+                if len(totes_on_pick) > 1 and scanned_totes != totes_on_pick:
+                    raise ValidationError(
+                        "This order has multiple totes:\n%s\n\n"
+                        "You must scan ALL totes for this order before proceeding.\n\nMissing: %s"
+                        % (
+                            ', '.join([t or '-' for t in totes_on_pick]),
+                            ', '.join([t for t in (totes_on_pick - scanned_totes)])
+                        )
+                    )
+            pickings_to_load = pickings
+            totes_to_load = None  # All lines for picking, since all totes are scanned
+
+        self.picking_ids = [(6, 0, pickings_to_load.ids)]
 
         vals_list = []
-        for picking in pickings:
+        for picking in pickings_to_load:
             incoterm = picking.sale_id.packaging_source_type if picking.sale_id else False
             pkg_id = self._get_package_box_id(
                 picking.tenant_code_id.id,
                 picking.site_code_id.id,
                 incoterm
             )
-
-            for mv in picking.move_ids_without_package.filtered(lambda m: m.pc_container_code in tote_codes):
+            if is_discrete:
+                # For discrete, only lines from the scanned totes
+                moves = picking.move_ids_without_package.filtered(lambda m: m.pc_container_code in tote_codes)
+            else:
+                # For normal pick, load all lines for that picking (since we've forced all totes scanned)
+                moves = picking.move_ids_without_package
+            for mv in moves:
                 qty_to_create = int(round(mv.remaining_qty or 0))
-
-                # Always create one line per unit, regardless of single/multi pick
                 for _ in range(qty_to_create):
                     vals_list.append({
                         "wizard_id": self.id,
@@ -214,12 +224,11 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "sale_order_id": picking.sale_id.id,
                         "package_box_type_id": pkg_id,
                     })
-
         if vals_list:
             self.line_ids = [(0, 0, v) for v in vals_list]
 
-        # recalc counters / tenant
         self._compute_fields_based_on_picking_ids()
+
 
     def _get_package_box_id(self, tenant_id, site_id, incoterm):
         """
@@ -257,7 +266,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if default_box:
             return default_box.id
 
-        # 3) nothing found → stop the process
         raise ValidationError(_(
             "No package-box configuration found for this tenant/site. "
             "Please create a default package type before continuing."
@@ -265,7 +273,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
     @api.onchange("scanned_sku")
     def _onchange_scanned_sku(self):
-        """Handle scanned SKU using barcode, default_code, multi-barcode AND validate by tenant + pick."""
         self.ensure_one()
         self.message_text = False
         self.show_message = False
@@ -282,7 +289,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         valid_move_products = self.env['stock.move'].search([
             ('picking_id', 'in', pick_ids)
         ]).mapped('product_id')
-
         valid_product_ids = set(valid_move_products.ids)
 
         # 1. Search product by barcode or default_code WITH tenant match
@@ -312,6 +318,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 "Scanned product '%s' is not included in the current picking(s).") % product.display_name)
 
         sku = product.default_code
+        # --- FIX: Define matching_lines here ---
         matching_lines = self.line_ids.filtered(lambda l: l.product_id == product)
         if not matching_lines:
             _logger.warning(f"Scanned SKU '{sku}' does not match any line in this wizard.")
@@ -322,7 +329,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         )
         if not line:
             raise ValidationError(_("All units of SKU '%s' have already been scanned.") % sku)
-
         line = line[0]
 
         if line.api_payload_attempted:
@@ -332,58 +338,16 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         if not line.product_package_number:
             line.product_package_number = self.next_package_number
 
-        # MULTI-PICK
-        if len(self.picking_ids) > 1:
+        # ====== BRANCH ON SALES ORDER COUNT ======
+        so_count = len(set(self.line_ids.mapped('sale_order_id.id')))
+        if so_count > 1:
+            # MULTI-PICK LOGIC
             sale = line.picking_id.sale_id
-            if sale and sale.message_code and not self.show_message:
-                msg = self.env['custom.message.configuration'].search([
-                    ('message_code', '=', sale.message_code)
-                ], limit=1)
-                if msg:
-                    self.show_message = True
-                    self.message_text = "Sale Order Number: %s\nMessage: %s" % (sale.name, msg.description)
+            if sale and not self.show_message:
+                # Optionally display messages here
+                pass
 
-            if self.site_code_id.name == "SHIPEROOALTONA" and self.tenant_code_id.name == "STONEHIVE":
-                _logger.info("[LEGACY] Triggering legacy multi-pick payload...")
-                if any(l.api_payload_success for l in self.line_ids):
-                    _logger.info("[LEGACY] Payload already sent — skipping.")
-                    return
-
-                line.scanned = True
-                line.quantity = 1
-                line.remaining_quantity = 0
-                line.available_quantity = 1
-                line.line_added = True
-
-                try:
-                    payload = self._prepare_old_logic_payload_multi_picks()
-                    is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
-                    api_url = (
-                        "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/orders"
-                        if is_prod else
-                        "https://int-shiperooconnect-dev.automation.shiperoo.com/api/orders"
-                    )
-                    self.send_payload_to_api(api_url, payload)
-
-                    for l in self.line_ids:
-                        l.api_payload_success = True
-                        l.line_added = True
-                        l.scanned = True
-                        l.quantity = 1
-                        l.remaining_quantity = 0
-
-                    return {
-                        'warning': {
-                            'title': _("Success"),
-                            'message': _("Legacy label printed successfully."),
-                            'type': 'notification'
-                        }
-                    }
-                except Exception as e:
-                    _logger.error(f"[LEGACY] Payload failed: {str(e)}")
-                    raise UserError(_("Legacy label failed:\n%s") % str(e))
-
-            # MULTI-PICK - OneTraker
+            # Multi-pick: trigger payload for just this line's SO
             config = self.get_onetraker_config()
             try:
                 success = self.send_payload_to_onetraker(self.env, line.picking_id, [line], config)
@@ -399,26 +363,26 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "product_package_number": line.product_package_number or self.next_package_number
                     })
             except Exception as e:
-                raise UserError(_("Error while sending label for SKU %s:\n%s") % (sku, str(e)))
+                raise UserError(_("Error while sending label for Order %s:\n%s") % (sale, str(e)))
 
-        else:  # SINGLE PICK
+        else:
+            # SINGLE PICK LOGIC (all lines are for one SO)
             sale = line.picking_id.sale_id
-            if sale and sale.message_code and not self.show_message:
-                msg = self.env['custom.message.configuration'].search([
-                    ('message_code', '=', sale.message_code)
-                ], limit=1)
-                if msg:
-                    self.show_message = True
-                    self.message_text = "Sale Order Number: %s\nMessage: %s" % (sale.name, msg.description)
+            if sale and not self.show_message:
+                # Optionally display messages here
+                pass
 
             line.quantity = 1
             line.available_quantity = 1
             line.remaining_quantity = 0
             line.line_added = True
             line.scanned = True
+            # Don't send the payload immediately here (unless that's your single-pick flow)
+            # For single pick, payload usually sent on 'Pack' button or final scan
 
         self.last_scanned_line_id = line
         self.scanned_sku = False
+
 
     def get_onetraker_config(self):
         is_prod = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
@@ -773,7 +737,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             picking_orders.setdefault(line.picking_id.id, []).append(line)
 
         # Handle single pick separately
-        if len(self.picking_ids) <= 1:
+        sale_order_ids = set(self.picking_ids.mapped('sale_id.id'))
+        if len(sale_order_ids) == 1:
             if self.single_pick_payload_sent:
                 _logger.warning(f"[SKIP] Single-pick payload already sent for wizard {self.id}")
                 raise UserError(_("Payload already sent for this pick. Please refresh."))
@@ -805,7 +770,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         """
         self.ensure_one()
 
-        if not self.picking_ids or len(self.picking_ids) != 1:
+        sale_order_ids = set(self.picking_ids.mapped('sale_id.id'))
+        if len(sale_order_ids) != 1:
             raise ValidationError("This method should only be called for a single picking.")
 
         picking = self.picking_ids[0]
@@ -1511,6 +1477,12 @@ class PackDeliveryReceiptWizardLine(models.TransientModel):
     api_payload_attempted = fields.Boolean(string="Payload Attempted", default=False, store=True)
     line_added = fields.Boolean(string='Line Added', compute='_compute_line_added', store=True)
     scanned = fields.Boolean(string="Scanned", default=False, store=True)
+    manual_pick_number_id = fields.Many2one(
+        'stock.picking',
+        string='Manual Pick Number',
+        domain="[('id', 'in', picking_ids)]",  # Only show available picks
+        help="Assign to a specific pick when consolidating discrete picks.",
+    )
 
     @api.depends(
         "api_payload_success",  # multi-pick: payload sent
