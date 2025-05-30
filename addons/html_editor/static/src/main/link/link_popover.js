@@ -20,6 +20,7 @@ export class LinkPopover extends Component {
         getAttachmentMetadata: Function,
         isImage: Boolean,
         type: String,
+        LinkPopoverState: Object,
         recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
         canUpload: { type: Boolean, optional: true },
@@ -48,7 +49,7 @@ export class LinkPopover extends Component {
             textContent === this.props.linkElement.href ||
             textContent + "/" === this.props.linkElement.href;
         this.state = useState({
-            editing: this.props.linkElement.href ? false : true,
+            editing: this.props.LinkPopoverState.editing,
             url: this.props.linkElement.href || "",
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
