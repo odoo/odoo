@@ -7,6 +7,7 @@ import {
     insertSnippet,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 registerWebsitePreviewTour('snippet_translation', {
     url: '/',
@@ -36,6 +37,7 @@ registerWebsitePreviewTour('snippet_translation', {
 registerWebsitePreviewTour('snippet_translation_changing_lang', {
     url: '/',
 }, () => [
+    stepUtils.waitIframeIsReady(),
     {
         content: "Open dropdown language selector",
         trigger: ':iframe .js_language_selector button',
