@@ -311,6 +311,11 @@ class MrpWorkorder(models.Model):
             if self.env.context.get('prefix_product'):
                 wo.display_name = f"{wo.product_id.name} - {wo.production_id.name} - {wo.name}"
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
+        if any(wo.state == 'done' for wo in self):
+            raise UserError(self.env._('Cannot delete a work order in done state.'))
+
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
         (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
@@ -331,13 +336,11 @@ class MrpWorkorder(models.Model):
         for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
             order.is_produced = order.production_id.product_uom_id.compare(order.qty_produced, order.qty_production) >= 0
 
-    @api.depends('operation_id', 'workcenter_id', 'qty_producing', 'qty_production')
+    @api.depends('operation_id', 'workcenter_id', 'qty_produced', 'qty_production')
     def _compute_duration_expected(self):
         for workorder in self:
-            # Recompute the duration expected if the qty_producing has been changed:
-            # compare with the origin record if it happens during an onchange
-            if workorder.state not in ['done', 'cancel'] and (workorder.qty_producing != workorder.qty_production
-                or (workorder._origin != workorder and workorder._origin.qty_producing and workorder.qty_producing != workorder._origin.qty_producing)):
+            # Recompute expected duration when the qty_producing differs from the qty_production:
+            if workorder.qty_producing != workorder.qty_production:
                 workorder.duration_expected = workorder._get_duration_expected()
 
     @api.depends('time_ids.duration', 'qty_produced')
@@ -799,7 +802,7 @@ class MrpWorkorder(models.Model):
             else:
                 qty_ratio = 1
             return setup + cleanup + duration_expected_working * qty_ratio * ratio * 100.0 / self.workcenter_id.time_efficiency
-        qty_production = self.qty_producing or self.qty_production
+        qty_production = self.qty_produced or self.qty_production
         cycle_number = float_round(qty_production / capacity, precision_digits=0, rounding_method='UP')
         if alternative_workcenter:
             # TODO : find a better alternative : the settings of workcenter can change
