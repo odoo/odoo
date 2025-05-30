@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.QuantityWidget">
+        <div class="o_self_quantity_widget btn-group user-select-none" role="group" aria-label="Quantity select">
+            <button type="button"
+                    t-on-click="() => this.changeQuantity(false)"
+                    t-attf-class="{{ state.qty &gt; 1 ? '' : 'disabled' }} btn btn-light border">
+                    <i class="oi oi-minus fa-fw"/>
+            </button>
+            <div class="o-so-tabular-nums py-2 m-0 px-4 h-100 border-top border-bottom text-bg-light fs-3 fw-bold" t-esc="state.qty"/>
+            <button type="button"
+                    t-on-click="() => this.changeQuantity(true)"
+                    class="btn btn-light border">
+                    <i class="oi oi-plus fa-fw"/>
+            </button>
+        </div>
+    </t>
+</templates>

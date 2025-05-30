@@ -8,6 +8,7 @@ from . import pos_restaurant
 from . import pos_payment_method
 from . import pos_self_order_custom_link
 from . import product_product
+from . import product_tag
 from . import res_config_settings
 from . import pos_session
 from . import pos_load_mixin

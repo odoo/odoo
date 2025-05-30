@@ -1,6 +1,7 @@
-import { Component } from "@odoo/owl";
+import { Component, useRef } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
+import { useScrollShadow } from "../../utils/scroll_shadow_hook";
 
 export class EatingLocationPage extends Component {
     static template = "pos_self_order.EatingLocationPage";
@@ -9,6 +10,8 @@ export class EatingLocationPage extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         this.router = useService("router");
+        this.scrollContainerRef = useRef("scrollContainer");
+        this.scrollShadow = useScrollShadow(this.scrollContainerRef);
     }
 
     onClickBack() {
@@ -18,10 +21,6 @@ export class EatingLocationPage extends Component {
     selectPreset(preset) {
         this.selfOrder.currentOrder.setPreset(preset);
         this.selfOrder.currentTable = null;
-        if (this.selfOrder.displayCategoryPage()) {
-            this.router.navigate("category_list");
-            return;
-        }
         this.router.navigate("product_list");
     }
 
