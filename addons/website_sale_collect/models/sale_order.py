@@ -81,32 +81,38 @@ class SaleOrder(models.Model):
                 zip_code = None  # Reset the zip code to skip the `assert` in the `super` call.
         return super()._get_pickup_locations(zip_code=zip_code, country=country, **kwargs)
 
-    def _get_shop_warehouse_id(self):
-        """Override of `website_sale_stock` to consider the chosen warehouse."""
-        self.ensure_one()
-        if self.carrier_id.delivery_type == 'in_store':
-            return self.warehouse_id.id
-        return super()._get_shop_warehouse_id()
-
     def _is_cart_ready_to_confirm(self):
-        """Override of `website_sale` to includes errors if no pickup location is selected."""
-        if self.carrier_id.delivery_type == 'in_store' and not self._has_deliverable_products():
+        """Override of `website_sale` to includes errors if no pickup location is selected and to
+        ensure the cart is available in the selected store no even if out of stock orders are
+        allowed."""
+        if not self._has_deliverable_products():
+            return super()._is_cart_ready_to_confirm()
+
+        if self.carrier_id.delivery_type == 'in_store':
             if not self.pickup_location_data:
                 self.shop_warning = self.env._("Please choose a store to collect your order.")
                 return False
-        return super()._is_cart_ready_to_confirm()
+            # `_is_cart_ready_for_checkout` checks for all the available in-store warehouse, we must
+            # now check for the selected warehouse.
+            if not self._is_in_stock(self.warehouse_id.id):
+                self.shop_warning = self.env._(
+                    "Some products are not available in the selected store."
+                )
+                return False
 
-    def _is_cart_ready_to_be_paid(self):
-        """Override of `website_sale` to ensure the cart is available in the selected store no
-        even if out of stock orders are allowed."""
-        if self.carrier_id.delivery_type == 'in_store' and not self._is_in_stock(
-            self.warehouse_id.id,
+        # If `shop_wh_id` is not False, limit the cart availability to the shop warehouse. False
+        # indicates the website uses any warehouse, including in-store warehouses, which is already
+        # checked in `_is_cart_ready_for_checkout`.
+        elif (shop_wh_id := self._get_shop_warehouse_id()) and not self._is_in_stock(
+            shop_wh_id, allow_out_of_stock=True,
         ):
             self.shop_warning = self.env._(
-                "Some products are not available in the selected store."
+                "Unfortunately, we can not deliver this order with the selected delivery"
+                " method. Please update your choice and try again."
             )
             return False
-        return super()._is_cart_ready_to_be_paid()
+
+        return super()._is_cart_ready_to_confirm()
 
     # === TOOLING ===#
 
@@ -131,26 +137,30 @@ class SaleOrder(models.Model):
 
         return {'default_pickup_locations': default_pickup_locations}
 
-    def _is_in_stock(self, wh_id):
+    def _is_in_stock(self, wh_id, allow_out_of_stock=False):
         """ Check whether all storable products of the cart are in stock in the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
+        :param bool allow_out_of_stock: Wheter `product.allow_out_of_stock_order` should be taken
+            into account or not.
         :return: Whether all storable products are in stock.
         :rtype: bool
         """
-        return not self._get_unavailable_order_lines(wh_id)
+        return not self._get_unavailable_order_lines(wh_id, allow_out_of_stock=allow_out_of_stock)
 
-    def _get_unavailable_order_lines(self, wh_id):
+    def _get_unavailable_order_lines(self, wh_id, allow_out_of_stock=False):
         """ Return the order lines with unavailable products for the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
+        :param bool allow_out_of_stock: Wheter `product.allow_out_of_stock_order` should be taken
+            into account or not.
         :return: The order lines with unavailable products.
         :rtype: sale.order.line
         """
         unavailable_order_lines = self.env['sale.order.line']
-        for ol in self.order_line:
-            if ol.is_storable:
-                product = ol.product_id
+        for ol in self.order_line.filtered('is_storable'):
+            product = ol.product_id
+            if not (allow_out_of_stock and product.allow_out_of_stock_order):
                 cart_qty = self._get_cart_qty(product.id)
                 free_qty = product.with_context(warehouse_id=wh_id).free_qty
                 if cart_qty > free_qty:
@@ -158,14 +168,20 @@ class SaleOrder(models.Model):
                     unavailable_order_lines |= ol
         return unavailable_order_lines
 
-    def _verify_updated_quantity(self, order_line, product_id, new_qty, uom_id, **kwargs):
-        """ Override of `website_sale_stock` to skip the verification when click and collect
-        is activated. The quantity is verified later. """
-        product = self.env['product.product'].browse(product_id)
-        if (
-            product.is_storable
-            and not product.allow_out_of_stock_order
-            and self.website_id.in_store_dm_id
-        ):
-            return new_qty, ''
-        return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
+    def _can_be_delivered(self, dm):
+        """Whether the order can be delivered using the given delivery method.
+
+        In-store deliveries need to ensure stock is available even if `allow_out_of_stock` is
+        enabled as a customers can pick-up their order at any moment without leaving time to refill
+        the sotck.
+
+        :param delivery.carrier dm: The delivery method to use to check for stock availability.
+        :rtype: bool
+        """
+        self.ensure_one()
+        if not self._has_deliverable_products():
+            return True
+
+        if dm.delivery_type == 'in_store':
+            return any(self._is_in_stock(wh_id) for wh_id in dm.warehouse_ids.ids)
+        return self._is_in_stock(self._get_shop_warehouse_id(), allow_out_of_stock=True)

@@ -38,6 +38,12 @@ class SaleOrderLine(models.Model):
         return min(max_quantities, default=None)
 
     def _check_availability(self):
+        """Whether the current order line is available on the website.
+
+        Note: self.ensure_one()
+
+        :rtype: bool
+        """
         self.ensure_one()
         if self.product_id.is_storable and not self.product_id.allow_out_of_stock_order:
             cart_qty, avl_qty = self.order_id._get_cart_and_free_qty(self.product_id)

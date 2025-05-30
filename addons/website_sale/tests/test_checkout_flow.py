@@ -9,15 +9,15 @@ from odoo.addons.website_sale.tests.common_checkout import CheckoutCommon
 @tagged('post_install', '-at_install')
 class TestCheckoutFlow(CheckoutCommon):
 
-    def setUp(self):
-        super().setUp()
-        self.default_address_values.pop('address_type')
-        self.partner_shipping, self.partner_invoice = self.env['res.partner'].create([
-            dict(self.default_address_values, type='delivery'),
-            dict(self.default_address_values, type='delivery'),
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner_shipping, cls.partner_invoice = cls.env['res.partner'].create([
+            dict(cls.default_address_values, type='delivery'),
+            dict(cls.default_address_values, type='invoice'),
         ])
-        self.cart.partner_shipping_id = self.partner_shipping
-        self.cart.partner_invoice_id = self.partner_invoice
+        cls.cart.partner_shipping_id = cls.partner_shipping
+        cls.cart.partner_invoice_id = cls.partner_invoice
 
     def test_shop_warnings_are_cleared_after_being_displayed(self):
         self.authenticate_with_cart(None, None)

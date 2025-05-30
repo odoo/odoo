@@ -74,7 +74,7 @@ class SaleOrder(models.Model):
         return self._get_cart_qty(product.id), self._get_free_qty(product)
 
     def _get_free_qty(self, product):
-        return product.with_context(warehouse_id=self._get_shop_warehouse_id()).free_qty
+        return self.website_id._get_product_available_qty(product)
 
     def _get_shop_warehouse_id(self):
         """Return the warehouse to use for shop availability checks.
@@ -112,7 +112,7 @@ class SaleOrder(models.Model):
         """Get all the lines of the current order with the given product."""
         return self.order_line.filtered(lambda sol: sol.product_id.id == product_id)
 
-    def _is_cart_ready_to_be_paid(self):
+    def _is_cart_ready_for_checkout(self):
         """Override of `website_sale` to stop the user if there is not enough stock for some order
         lines."""
         if self._has_deliverable_products() and not self._check_stock():
@@ -121,7 +121,7 @@ class SaleOrder(models.Model):
                 "Please update your cart. We apologize for any inconvenience caused."
             )
             return False
-        return super()._is_cart_ready_to_be_paid()
+        return super()._is_cart_ready_for_checkout()
 
     def _check_stock(self):
         """Whether all the order lines are available on the current website."""
@@ -131,12 +131,4 @@ class SaleOrder(models.Model):
 
     def _filter_can_send_abandoned_cart_mail(self):
         """Filter sale orders on their product availability."""
-        return super()._filter_can_send_abandoned_cart_mail().filtered(
-            lambda so: so._all_product_available()
-        )
-
-    def _all_product_available(self):
-        self.ensure_one()
-        if not (lines := self.order_line):
-            return True
-        return not any(product._is_sold_out() for product in lines.product_id)
+        return super()._filter_can_send_abandoned_cart_mail().filtered(lambda so: so._check_stock())

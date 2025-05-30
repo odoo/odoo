@@ -83,4 +83,13 @@
         </div>
     </template>
 
+    <template id="delivery_method_availability_badge" inherit_id="website_sale.delivery_method">
+        <label class="o_delivery_carrier_label" position="after">
+            <span t-if="order._can_be_delivered(dm)" class="s_badge badge text-bg-success m-0">
+                Available
+            </span>
+            <span t-else="" class="s_badge badge text-bg-danger m-0">Not available</span>
+        </label>
+    </template>
+
 </odoo>
