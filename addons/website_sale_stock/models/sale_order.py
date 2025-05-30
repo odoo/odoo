@@ -54,9 +54,10 @@ class SaleOrder(models.Model):
                     )
                     returned_warning = self.shop_warning
                 else:
-                    returned_warning = self.env._(
+                    self.shop_warning = self.env._(
                         "The item has not been added to your cart since it is not available."
                     )
+                    returned_warning = self.shop_warning
                 return allowed_line_qty, returned_warning
         return super()._verify_updated_quantity(order_line, product_id, new_qty, uom_id, **kwargs)
 

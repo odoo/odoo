@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from odoo import fields
@@ -62,6 +63,7 @@ class Cart(PaymentPortal):
 
         values.update(request.website._get_checkout_step_values())
         values.update(self._cart_values(**post))
+        values.update(self.quick_reorder())
         return request.render('website_sale.cart', values)
 
     def _get_express_shop_payment_values(self, order, **kwargs):
@@ -287,6 +289,20 @@ class Cart(PaymentPortal):
                 'website_sale_order': order_sudo,
             }
         )
+        orders = self.quick_reorder()
+        if orders.get('orders'):
+            values['website_sale.quick_reorder_products'] = request.env['ir.ui.view']._render_template(
+                'website_sale.quick_reorder_products', {
+                    'website_sale_order': order_sudo,
+                    'orders': orders['orders'],
+                }
+            )
+            values['website_sale.quick_reorder'] = request.env['ir.ui.view']._render_template(
+                'website_sale.quick_reorder', {
+                    'website_sale_order': order_sudo,
+                    'orders': orders['orders'],
+                }
+            )
         return values
 
     @route(
@@ -309,6 +325,50 @@ class Cart(PaymentPortal):
     )
     def clear_cart(self):
         request.cart.order_line.unlink()
+
+    @route(
+        route='/shop/cart/quick/add',
+        type='jsonrpc',
+        auth='user',
+        methods=['POST'],
+        website=True
+    )
+    def quick_add(
+        self,
+        product_template_id,
+        product_id,
+        quantity=1.0,
+        **kwargs,
+    ):
+        values = self.add_to_cart(
+            product_template_id=product_template_id,
+            product_id=product_id,
+            quantity=quantity,
+            **kwargs,
+        )
+        order_sudo = request.cart
+        orders = self.quick_reorder()
+        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
+            'website_sale.cart_lines', {
+                'website_sale_order': order_sudo,
+                'date': fields.Date.today(),
+                'suggested_products': order_sudo._cart_accessories()
+            }
+        )
+        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+            'website_sale.total', {
+                'website_sale_order': order_sudo,
+            }
+        )
+        if orders.get('orders'):
+            values['website_sale.quick_reorder_products'] = request.env['ir.ui.view']._render_template(
+                'website_sale.quick_reorder_products', {
+                    'website_sale_order': order_sudo,
+                    'orders': orders['orders'],
+                }
+            )
+        values['cart_ready'] = order_sudo._is_cart_ready()
+        return values
 
     def _get_cart_notification_information(self, order, line_ids):
         """ Get the information about the sales order lines to show in the notification.
@@ -403,3 +463,64 @@ class Cart(PaymentPortal):
             infos['uom_name'] = line.product_uom_id.name
 
         return infos
+
+    def quick_reorder(self):
+        sale_orders = request.env["sale.order"].sudo().search(
+                [
+                    ("partner_id", "=", request.env.user.partner_id.id),
+                    ("state", "=", "sale"),
+                    ("website_id", "=", request.website.id),
+                ],
+                order="date_order desc",
+                limit=10,
+            )
+        cart_lines = list(request.cart.order_line) if request.cart else []
+        today = datetime.today().date()
+        already_accounted_lines = []
+        orders = {}
+
+        def same_combo(line1, line2):
+            return set(line1.linked_line_ids.mapped('product_id').ids) == \
+                set(line2.linked_line_ids.mapped('product_id').ids)
+
+        for order in sale_orders:
+            valid_lines = []
+            for line in order.order_line:
+                product_id = line.product_id.id
+                is_combo = line.product_type == 'combo'
+                if (
+                    line.linked_line_id.product_type == 'combo'
+                    or not line._is_sellable()
+                    or (
+                        request.website.prevent_zero_price_sale
+                        and line.product_id._get_combination_info_variant()['price'] == 0
+                    )
+                ):
+                    continue
+
+                if any(
+                    l.product_id.id == product_id and (not is_combo or same_combo(line, l))
+                    for l in cart_lines + already_accounted_lines
+                ):
+                    continue
+
+                already_accounted_lines.append(line)
+                valid_lines.append(line)
+
+            if not valid_lines:
+                continue
+
+            days_ago = (today - order.date_order.date()).days
+            label = (
+                "Today" if days_ago == 0
+                else "Yesterday" if days_ago == 1
+                else f"{days_ago} days ago"
+            )
+            orders.setdefault(label, []).extend(valid_lines)
+
+        return {
+            'orders': [
+                {'label': label, 'lines': lines}
+                for label, lines in orders.items()
+            ]
+        }
