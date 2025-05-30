@@ -938,6 +938,7 @@
             <field name="res_model_id" ref="sale.model_sale_order"/>
             <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Schedule phone meeting with client</field>
             <field name="create_uid" ref="base.user_demo"/>
             <field name="user_id" ref="base.user_demo"/>
         </record>
