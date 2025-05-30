@@ -1262,18 +1262,21 @@ Andrew</p>]]></field>
             <field name="res_model_id" ref="crm.model_crm_lead"/>
             <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Call to renew service contract</field>
         </record>
         <record id="activity_9" model="mail.activity">
             <field name="res_id" ref="crm.crm_case_21" />
             <field name="res_model_id" ref="crm.model_crm_lead"/>
             <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=4)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Discuss project progress by phone</field>
         </record>
         <record id="activity_10" model="mail.activity">
             <field name="res_id" ref="crm.crm_case_22" />
             <field name="res_model_id" ref="crm.model_crm_lead"/>
             <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=-2)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Email invoice to customer</field>
             <field name="create_uid" ref="base.user_admin"/>
             <field name="user_id" ref="base.user_admin"/>
         </record>
@@ -1282,6 +1285,7 @@ Andrew</p>]]></field>
             <field name="res_model_id" ref="crm.model_crm_lead"/>
             <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Send welcome email to customer</field>
             <field name="create_uid" ref="base.user_admin"/>
             <field name="user_id" ref="base.user_admin"/>
         </record>
@@ -1290,6 +1294,7 @@ Andrew</p>]]></field>
             <field name="res_model_id" ref="crm.model_crm_lead"/>
             <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
             <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Confirm order by email</field>
             <field name="create_uid" ref="base.user_admin"/>
             <field name="user_id" ref="base.user_admin"/>
         </record>

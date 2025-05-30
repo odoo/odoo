@@ -641,6 +641,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'res_model_id': 'account.model_account_move',
                 'activity_type_id': 'mail.mail_activity_data_call',
                 'date_deadline': fields.Datetime.today().strftime('%Y-%m-%d %H:%M'),
+                'summary': 'Follow up on missed call',
                 'create_uid': 'base.user_admin',
                 'user_id': 'base.user_admin',
             },
