@@ -73,8 +73,11 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         trigger: "body .o_overlay_options .oe_snippet_remove",
         run: "click",
     },
-    toggleBackdrop("Popup"), // show Popup backdrop
+    // toggleBackdrop("Popup"), // show Popup backdrop
+    // checkScrollbar(true),
     checkScrollbar(true),
+    toggleBackdrop("Popup"), // show Popup backdrop
+    checkScrollbar(false),
     {
         content: "Close the Popup that has now backdrop.",
         trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
@@ -87,8 +90,11 @@ registerWebsitePreviewTour("snippet_popup_and_scrollbar", {
         run: "click",
     },
     checkScrollbar(true),
-    toggleBackdrop("Cookies Bar"), // show Cookies Bar backdrop
-    toggleBackdrop("Cookies Bar"), // hide Cookies Bar backdrop
+    toggleBackdrop(), // show Cookies Bar backdrop
+    checkScrollbar(false),
+    toggleBackdrop(), // hide Cookies Bar backdrop
+    // toggleBackdrop("Cookies Bar"), // show Cookies Bar backdrop
+    // toggleBackdrop("Cookies Bar"), // hide Cookies Bar backdrop
     checkScrollbar(true),
     {
         content: "Open the Popup that has backdrop.",
