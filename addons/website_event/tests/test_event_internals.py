@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo.fields import Datetime as FieldsDatetime
 from odoo.tests.common import users
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.addons.event.tests.common import EventCase
 

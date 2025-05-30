@@ -4,7 +4,7 @@ from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install')

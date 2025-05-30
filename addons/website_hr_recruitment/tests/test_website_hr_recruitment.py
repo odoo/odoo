@@ -6,7 +6,7 @@ import odoo.tests
 from odoo.tools import html2plaintext
 import unittest
 
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_hr_recruitment.controllers.main import WebsiteHrRecruitment
 
 @odoo.tests.tagged('post_install', '-at_install')

@@ -5,7 +5,7 @@ from lxml import html
 from unittest.mock import Mock, patch
 from werkzeug.urls import url_parse
 
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import common
 
 

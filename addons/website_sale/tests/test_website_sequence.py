@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import SQL
 
 from odoo.addons.base.tests.common import BaseCommon
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 
 
 @tagged('post_install', '-at_install')
