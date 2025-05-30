@@ -57,6 +57,19 @@ class SaleOrderLine(models.Model):
             self.price_unit, self.currency_id, 1, self.product_id, self.order_partner_id,
         )[tax_display]
 
+    def _get_selected_combo_items(self):
+        if self.product_id.type == 'combo':
+            return [{
+                'id': linked_line.combo_item_id.id,
+                'no_variant_ptav_ids': linked_line.product_no_variant_attribute_value_ids.ids,
+                'custom_ptavs': [{
+                    'id': pcav.custom_product_template_attribute_value_id.id,
+                    'value': pcav.custom_value,
+                } for pcav in linked_line.product_custom_attribute_value_ids]
+            } for linked_line in self.linked_line_ids]
+
+        return None
+
     def _get_displayed_quantity(self):
         rounded_uom_qty = round(self.product_uom_qty,
                                 self.env['decimal.precision'].precision_get('Product Unit'))

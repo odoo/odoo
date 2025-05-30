@@ -62,34 +62,8 @@ class Cart(PaymentPortal):
 
         values.update(request.website._get_checkout_step_values())
         values.update(self._cart_values(**post))
+        values.update(self._prepare_order_history())
         return request.render('website_sale.cart', values)
-
-    def _get_express_shop_payment_values(self, order, **kwargs):
-        payment_form_values = CustomerPortal._get_payment_values(
-            self, order, website_id=request.website.id, is_express_checkout=True
-        )
-        payment_form_values.update({
-            'payment_access_token': payment_form_values.pop('access_token'),  # Rename the key.
-            # Do not include delivery related lines
-            'minor_amount': payment_utils.to_minor_currency_units(
-                order._get_amount_total_excluding_delivery(), order.currency_id
-            ),
-            'merchant_name': request.website.name,
-            'transaction_route': f'/shop/payment/transaction/{order.id}',
-            'express_checkout_route': WebsiteSale._express_checkout_route,
-            'landing_route': '/shop/payment/validate',
-            'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
-            'shipping_info_required': order._has_deliverable_products(),
-            # Todo: remove in master
-            'delivery_amount': payment_utils.to_minor_currency_units(
-                order.amount_total - order._compute_amount_total_without_delivery(),
-                order.currency_id,
-            ),
-            'shipping_address_update_route': WebsiteSale._express_checkout_delivery_route,
-        })
-        if request.website.is_public_user():
-            payment_form_values['partner_id'] = -1
-        return payment_form_values
 
     def _cart_values(self, **post):
         """
@@ -243,6 +217,65 @@ class Cart(PaymentPortal):
         }
 
     @route(
+        route='/shop/cart/quick_add', type='jsonrpc', auth='user', methods=['POST'], website=True
+    )
+    def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
+        values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
+
+        IrUiView = request.env['ir.ui.view']
+        order_sudo = request.cart
+        values['website_sale.cart_lines'] = IrUiView._render_template(
+            'website_sale.cart_lines', {
+                'website_sale_order': order_sudo,
+                'date': fields.Date.today(),
+                'suggested_products': order_sudo._cart_accessories(),
+            }
+        )
+        values['website_sale.shorter_cart_summary'] = IrUiView._render_template(
+            'website_sale.shorter_cart_summary', {
+                'website_sale_order': order_sudo,
+                'show_shorter_cart_summary': True,
+                **self._get_express_shop_payment_values(order_sudo),
+                **request.website._get_checkout_step_values(),
+            }
+        )
+        values['website_sale.quick_reorder_history'] = IrUiView._render_template(
+            'website_sale.quick_reorder_history', {
+                'website_sale_order': order_sudo,
+                **self._prepare_order_history(),
+            }
+        )
+        values['cart_ready'] = order_sudo._is_cart_ready()
+        return values
+
+    def _get_express_shop_payment_values(self, order, **kwargs):
+        payment_form_values = CustomerPortal._get_payment_values(
+            self, order, website_id=request.website.id, is_express_checkout=True
+        )
+        payment_form_values.update({
+            'payment_access_token': payment_form_values.pop('access_token'),  # Rename the key.
+            # Do not include delivery related lines
+            'minor_amount': payment_utils.to_minor_currency_units(
+                order._get_amount_total_excluding_delivery(), order.currency_id
+            ),
+            'merchant_name': request.website.name,
+            'transaction_route': f'/shop/payment/transaction/{order.id}',
+            'express_checkout_route': WebsiteSale._express_checkout_route,
+            'landing_route': '/shop/payment/validate',
+            'payment_method_unknown_id': request.env.ref('payment.payment_method_unknown').id,
+            'shipping_info_required': order._has_deliverable_products(),
+            # Todo: remove in master
+            'delivery_amount': payment_utils.to_minor_currency_units(
+                order.amount_total - order._compute_amount_total_without_delivery(),
+                order.currency_id,
+            ),
+            'shipping_address_update_route': WebsiteSale._express_checkout_delivery_route,
+        })
+        if request.website.is_public_user():
+            payment_form_values['partner_id'] = -1
+        return payment_form_values
+
+    @route(
         route='/shop/cart/update',
         type='jsonrpc',
         auth='public',
@@ -263,6 +296,7 @@ class Cart(PaymentPortal):
         """
         order_sudo = request.cart
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
+        IrUiView = request.env['ir.ui.view']
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
@@ -282,19 +316,103 @@ class Cart(PaymentPortal):
                 order_sudo.amount_total, order_sudo.currency_id
             )
         ) or 0.0
-        values['website_sale.cart_lines'] = request.env['ir.ui.view']._render_template(
+        values['website_sale.cart_lines'] = IrUiView._render_template(
             'website_sale.cart_lines', {
                 'website_sale_order': order_sudo,
                 'date': fields.Date.today(),
                 'suggested_products': order_sudo._cart_accessories()
             }
         )
-        values['website_sale.total'] = request.env['ir.ui.view']._render_template(
+        values['website_sale.total'] = IrUiView._render_template(
             'website_sale.total', {
                 'website_sale_order': order_sudo,
             }
         )
+        values['website_sale.quick_reorder_history'] = IrUiView._render_template(
+            'website_sale.quick_reorder_history', {
+                'website_sale_order': order_sudo,
+                **self._prepare_order_history(),
+            }
+        )
         return values
+
+    def _prepare_order_history(self):
+        """Prepare the order history of the current user.
+
+        The valid order lines of the last 10 confirmed orders are considered and grouped by date. An
+        order line is not valid if:
+
+        - Its product is already in the cart.
+        - It's a combo parent line.
+        - It has an unsellable product.
+        - It has a zero-priced product (if the website blocks them).
+        - It has an already seen product (duplicate or identical combo).
+
+        The dates are represented by labels like "Today", "Yesterday", or "X days ago".
+
+        :return: The order history, in the format
+                 {'order_history': [{'label': str, 'lines': SaleOrderLine}, ...]}.
+        :rtype: dict
+        """
+        def is_same_combo(line1_, line2_):
+            """Check if two combo lines have the same linked product combination."""
+            return line1_.linked_line_ids.product_id.ids == line2_.linked_line_ids.product_id.ids
+
+        # Get the last 10 confirmed orders from the current website user.
+        previous_orders_lines_sudo = request.env['sale.order'].sudo().search(
+            [
+                ('partner_id', '=', request.env.user.partner_id.id),
+                ('state', '=', 'sale'),
+                ('website_id', '=', request.website.id),
+            ],
+            order='date_order desc',
+            limit=10,
+        ).order_line
+
+        # Prepare the order history.
+        SaleOrderLineSudo = request.env['sale.order.line'].sudo()
+        cart_lines_sudo = request.cart.order_line if request.cart else SaleOrderLineSudo
+        seen_lines_sudo = SaleOrderLineSudo
+        lines_per_order_date = {}
+        for line_sudo in previous_orders_lines_sudo:
+            # Ignore lines that are combo parents, unsellable, or zero-priced.
+            product_id = line_sudo.product_id.id
+            if (
+                line_sudo.linked_line_id.product_type == 'combo'
+                or not line_sudo._is_sellable()
+                or (
+                    request.website.prevent_zero_price_sale
+                    and line_sudo.product_id._get_combination_info_variant()['price'] == 0
+                )
+            ):
+                continue
+
+            # Ignore lines that are already in the cart or have already been seen.
+            is_combo = line_sudo.product_type == 'combo'
+            if any(
+                l.product_id.id == product_id and (not is_combo or is_same_combo(line_sudo, l))
+                for l in cart_lines_sudo + seen_lines_sudo
+            ):
+                continue
+            seen_lines_sudo |= line_sudo
+
+            # Group lines by date.
+            days_ago = (fields.Date.today() - line_sudo.order_id.date_order.date()).days
+            if days_ago == 0:
+                line_group_label = self.env._("Today")
+            elif days_ago == 1:
+                line_group_label = self.env._("Yesterday")
+            else:
+                line_group_label = self.env._("%s days ago", days_ago)
+            lines_per_order_date.setdefault(line_group_label, SaleOrderLineSudo)
+            lines_per_order_date[line_group_label] |= line_sudo
+
+        # Flatten the line groups to get the final order history.
+        return {
+            'order_history': [
+                {'label': label, 'lines': lines} for label, lines in lines_per_order_date.items()
+            ]
+        }
 
     @route(
         route='/shop/cart/quantity',
