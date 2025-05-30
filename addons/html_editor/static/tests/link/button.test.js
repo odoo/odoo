@@ -141,14 +141,14 @@ describe("Custom button style", () => {
         await animationFrame();
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="#" class="btn btn-fill-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello</a></p>'
+            '<p><a href="#" class="btn btn-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello</a></p>'
         );
 
         await click(".o_we_apply_link");
         await animationFrame();
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="#" class="btn btn-fill-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello[]</a></p>'
+            '<p><a href="#" class="btn btn-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello[]</a></p>'
         );
     });
 

@@ -58,6 +58,15 @@ export class LinkPopover extends Component {
         { style: "dotted", label: "┄┄┄" },
         { style: "double", label: "═══" },
     ];
+    buttonShapeData = [
+        { shape: "", label: "Default" },
+        { shape: "rounded-circle", label: "Default + Rounded" },
+        { shape: "outline", label: "Outline" },
+        { shape: "outline rounded-circle", label: "Outline + Rounded" },
+        { shape: "fill", label: "Fill" },
+        { shape: "fill rounded-circle", label: "Fill + Rounded" },
+        { shape: "flat", label: "Flat" },
+    ];
     setup() {
         this.ui = useService("ui");
         this.notificationService = useService("notification");
@@ -91,6 +100,14 @@ export class LinkPopover extends Component {
                 "",
             linkTarget: this.props.linkElement.target === "_blank" ? "_blank" : "",
             buttonSize: this.props.linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
+            buttonShape: [
+                /btn-fill-/i.test(this.props.linkElement.className) && "fill",
+                /btn-outline-/i.test(this.props.linkElement.className) && "outline",
+                /\brounded-circle\b/.test(this.props.linkElement.className) && "rounded-circle",
+                /\bflat\b/.test(this.props.linkElement.className) && "flat",
+            ]
+                .filter(Boolean)
+                .join(" "),
             customBorderSize: computedStyle.borderWidth.replace("px", "") || "1",
             customBorderStyle: computedStyle.borderStyle || "solid",
             isImage: this.props.isImage,
@@ -414,17 +431,25 @@ export class LinkPopover extends Component {
 
     get classes() {
         let classes = [...this.props.linkElement.classList]
-            .filter((value) => !value.match(/btn(-[a-z0-9]+)*/))
+            .filter((value) => !value.match(/^(btn.*|rounded-circle|flat)$/))
             .join(" ");
 
+        let stylePrefix = "";
+        if (this.state.type === "custom") {
+            if (this.state.buttonSize) {
+                classes += ` btn-${this.state.buttonSize}`;
+            }
+            if (this.state.buttonShape) {
+                const buttonShape = this.state.buttonShape.split(" ");
+                if (["outline", "fill"].includes(buttonShape[0])) {
+                    stylePrefix = `${buttonShape[0]}-`;
+                }
+                classes += ` ${buttonShape.slice(stylePrefix ? 1 : 0).join(" ")}`;
+            }
+        }
         if (this.state.type) {
-            classes += ` btn btn-fill-${this.state.type}`;
+            classes += ` btn btn-${stylePrefix}${this.state.type}`;
         }
-
-        if (this.state.buttonSize) {
-            classes += ` btn-${this.state.buttonSize}`;
-        }
-
         return classes.trim();
     }
 
