@@ -48,6 +48,8 @@ export class ChatHub extends Record {
             }
         },
     });
+    canShowOpened = fields.Many("ChatWindow");
+    canShowFolded = fields.Many("ChatWindow");
     /** From left to right. Right-most will actually be folded */
     opened = fields.Many("ChatWindow", {
         inverse: "hubAsOpened",
@@ -143,6 +145,12 @@ export class ChatHub extends Record {
             })
         );
     }
+
+    showConversations = fields.Attr(false, {
+        compute() {
+            return this.canShowOpened.length + this.canShowFolded.length > 0;
+        },
+    });
 }
 
 ChatHub.register();
