@@ -6,7 +6,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selection_popup_util";
+import * as CashierSelectionPopup from "@pos_hr/../tests/tours/utils/cashier_selection_popup_util";
 import * as BackendUtils from "@point_of_sale/../tests/pos/tours/utils/backend_utils";
 import * as Utils from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
@@ -18,10 +18,10 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Pos Employee1"),
-            SelectionPopup.has("Pos Employee2"),
-            SelectionPopup.has("Mitchell Admin"),
-            SelectionPopup.has("Pos Employee1", { run: "click" }),
+            CashierSelectionPopup.has("Pos Employee1"),
+            CashierSelectionPopup.has("Pos Employee2"),
+            CashierSelectionPopup.has("Mitchell Admin"),
+            CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
             NumberPopup.enterValue("25"),
             NumberPopup.isShown("••"),
             NumberPopup.enterValue("81"),
@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
             // after trying to close the number popup, the error popup should be shown
             // successfully confirming the dialog would imply that the error popup is actually shown
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Pos Employee1", { run: "click" }),
+            CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
 
             NumberPopup.enterValue("25"),
             NumberPopup.isShown("••"),
@@ -40,9 +40,9 @@ registry.category("web_tour.tours").add("PosHrTour", {
             Dialog.confirm("Open Register"),
             ProductScreen.isShown(),
             PosHr.clickCashierName(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             PosHr.clickCashierName(),
-            SelectionPopup.has("Pos Employee2", { run: "click" }),
+            CashierSelectionPopup.has("Pos Employee2", { run: "click" }),
             NumberPopup.enterValue("12"),
             NumberPopup.isShown("••"),
             NumberPopup.enterValue("34"),
@@ -74,7 +74,7 @@ registry.category("web_tour.tours").add("PosHrTour", {
 
             // order for admin
             PosHr.clickCashierName(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Pad", "1", "8"),
             ProductScreen.totalAmountIs("8.0"),
@@ -93,10 +93,10 @@ registry.category("web_tour.tours").add("CashierStayLogged", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Pos Employee1"),
-            SelectionPopup.has("Pos Employee2"),
-            SelectionPopup.has("Mitchell Admin"),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Pos Employee1"),
+            CashierSelectionPopup.has("Pos Employee2"),
+            CashierSelectionPopup.has("Mitchell Admin"),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             PosHr.refreshPage(),
             ProductScreen.isShown(),
@@ -113,7 +113,7 @@ registry.category("web_tour.tours").add("CashierCanSeeProductInfo", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             ProductScreen.clickInfoProduct("product_a", [Dialog.confirm("Close")]),
             Dialog.isNot(),
@@ -126,14 +126,14 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
             Dialog.confirm("Open Register"),
             Chrome.clickMenuButton(),
             {
                 trigger: negate(`span.dropdown-item:contains("Close Register")`),
             },
             PosHr.clickCashierName(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Chrome.clickMenuButton(),
             {
                 trigger: `span.dropdown-item:contains("Close Register")`,
@@ -147,7 +147,7 @@ registry.category("web_tour.tours").add("test_basic_user_can_change_price", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Desk Pad", "1", "10", "10"),
         ].flat(),
@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             Chrome.clickMenuOption("Backend", { expectUnloadPage: true }),
             BackendUtils.editShopConfiguration("Shop"),
@@ -180,7 +180,7 @@ registry.category("web_tour.tours").add("test_change_on_rights_reflected_directl
             Chrome.clickBtn("Unlock Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            Utils.negateStep(...SelectionPopup.has("Pos Employee1")),
+            CashierSelectionPopup.hasNot("Pos Employee1"),
         ].flat(),
 });
 
@@ -190,7 +190,7 @@ registry.category("web_tour.tours").add("test_minimal_employee_refund", {
             Chrome.clickBtn("Unlock Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Minimal Employee", { run: "click" }),
+            CashierSelectionPopup.has("Minimal Employee", { run: "click" }),
             Chrome.clickOrders(),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("001"),
@@ -198,7 +198,7 @@ registry.category("web_tour.tours").add("test_minimal_employee_refund", {
                 trigger: negate(".subpads"),
             },
             PosHr.clickCashierName(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.selectOrder("001"),
             {
@@ -213,13 +213,13 @@ registry.category("web_tour.tours").add("test_cashier_changed_in_receipt", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("product_a", "1"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PosHr.clickCashierName(),
-            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
             PaymentScreen.clickValidate(),
             ReceiptScreen.cashierNameExists("Test"), // Test Employee 3 (Take the first word)
             ReceiptScreen.clickNextOrder(),
@@ -232,7 +232,7 @@ registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
             Chrome.clickBtn("Open Register"),
             PosHr.loginScreenIsShown(),
             PosHr.clickLoginButton(),
-            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             Dialog.confirm("Open Register"),
             ProductScreen.clickInfoProduct("product_a"),
             {
@@ -240,14 +240,14 @@ registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
             },
             Dialog.confirm("Close"),
             PosHr.clickCashierName(),
-            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
             ProductScreen.clickInfoProduct("product_a"),
             {
                 trigger: ".section-financials :contains('Margin')",
             },
             Dialog.confirm("Close"),
             PosHr.clickCashierName(),
-            SelectionPopup.has("Test Employee 4", { run: "click" }),
+            CashierSelectionPopup.has("Test Employee 4", { run: "click" }),
             ProductScreen.clickInfoProduct("product_a"),
             Utils.negateStep({
                 trigger: ".section-financials :contains('Margin')",
