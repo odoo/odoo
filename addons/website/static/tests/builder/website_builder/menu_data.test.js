@@ -162,6 +162,9 @@ describe("EditMenuDialog", () => {
             get currentWebsite() {
                 return {
                     id: 1,
+                    default_lang_id: {
+                        code: "en_US",
+                    },
                     metadata: {
                         lang: "en_EN",
                     },

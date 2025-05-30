@@ -18,6 +18,9 @@ const websiteServiceInTranslateMode = {
             translatable: true,
             defaultLangName: "English (US)",
         },
+        default_lang_id: {
+            code: "en_US",
+        },
     },
     // Minimal context to avoid crashes.
     context: { showNewContentModal: false },
@@ -38,6 +41,9 @@ test("systray in translate mode", async () => {
                     langName: " Français (BE)",
                     translatable: true,
                     defaultLangName: "English (US)",
+                },
+                default_lang_id: {
+                    code: "en_US",
                 },
             };
         },

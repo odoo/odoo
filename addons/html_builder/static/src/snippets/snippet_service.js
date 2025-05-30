@@ -398,7 +398,7 @@ registry.category("services").add("html_builder.snippets", {
     start(env, { orm, dialog, website }) {
         const services = { orm, dialog, website };
         const context = {
-            lang: website.currentWebsite?.metadata.lang,
+            lang: website.currentWebsite?.default_lang_id.code,
             user_lang: user.context.lang,
         };
 
