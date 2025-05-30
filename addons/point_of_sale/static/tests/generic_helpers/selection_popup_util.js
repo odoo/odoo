@@ -1,3 +1,5 @@
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
+
 export function has(item, { run = () => {} } = {}) {
     return [
         {
@@ -6,4 +8,8 @@ export function has(item, { run = () => {} } = {}) {
             run,
         },
     ];
+}
+export function hasNot(item) {
+    const step = has(item)[0];
+    return [{ ...step, trigger: negate(step.trigger) }];
 }
