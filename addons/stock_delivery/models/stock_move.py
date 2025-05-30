@@ -93,7 +93,6 @@ class StockMoveLine(models.Model):
                 tax_results = base_line['tax_details']
                 move_line.sale_price = sale_line_id.currency_id.round(tax_results['raw_total_included_currency'])
             else:
-                # For kits, use the regular unit price
                 unit_price = move_line.product_id.list_price
                 qty = move_line.uom_id._compute_quantity(move_line.quantity, move_line.product_id.uom_id)
                 move_line.sale_price = unit_price * qty
