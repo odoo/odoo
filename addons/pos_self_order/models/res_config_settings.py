@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import qrcode
 import qrcode.image.svg
 import zipfile
@@ -10,11 +8,6 @@ from odoo.exceptions import ValidationError
 from odoo.tools.misc import split_every
 from odoo.osv.expression import AND
 from werkzeug.urls import url_unquote
-
-try:
-    import xlsxwriter
-except ImportError:
-    xlsxwriter = None
 
 
 class ResConfigSettings(models.TransientModel):
@@ -103,6 +96,7 @@ class ResConfigSettings(models.TransientModel):
         }
 
     def _generate_excel(self, rows, headers):
+        import xlsxwriter  # noqa: PLC0415
         with BytesIO() as buffer:
             with xlsxwriter.Workbook(buffer, {'in_memory': True}) as workbook:
                 worksheet = workbook.add_worksheet()
