@@ -37,3 +37,34 @@ class StockMoveLine(models.Model):
         for move in self:
             if not move.packed and move.released_manual:
                 raise ValidationError("This item has already been delivered manually and cannot be unpacked.")
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        res._ensure_pc_barcode_config()
+        return res
+
+    def write(self, vals):
+        result = super().write(vals)
+        self._ensure_pc_barcode_config()
+        return result
+
+    def _ensure_pc_barcode_config(self):
+        BarcodeConfig = self.env['pc.container.barcode.configuration']
+        for move in self:
+            # Only if code and picking are set
+            if move.pc_container_code and move.picking_id:
+                picking = move.picking_id
+                if picking.site_code_id:
+                    code = move.pc_container_code.strip()
+                    exists = BarcodeConfig.search([
+                        ('name', '=', code),
+                        ('site_code_id', '=', picking.site_code_id.id)
+                    ], limit=1)
+                    if not exists:
+                        BarcodeConfig.create({
+                            'name': code,
+                            'site_code_id': picking.site_code_id.id,
+                            'warehouse_id': picking.warehouse_id.id,
+                        })
+
