@@ -103,7 +103,7 @@
                     defaultColor="this.state.currentCustomColor"
                     onColorSelect.bind="(color) => this.applyColor(color.hex)"
                     onColorPreview.bind="onColorPreview"
-                    showRgbaField="false"
+                    showRgbaField="props.showRgbaField"
                     noTransparency="props.noTransparency" />
             </div>
         </t>
