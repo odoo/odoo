@@ -11,13 +11,13 @@
                             </div>
                             <div class="mt-4 text-center">
                                 <h1>Session Inactive</h1>
-                                <span class="text-muted">It seems there hasn't been any activity on this kiosk. Would you like to continue?</span>
+                                <span class="text-muted">Would you like to continue?</span>
                                 <div class="display-1 my-3 pb-3 fw-bold text-center text-danger">
                                     <t t-esc="this.state.time"/>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-center w-100">
-                                <button type="button" class="btn btn-lg btn-primary popup_button" t-on-click="() => this.props.close()">Continue</button>
+                                <button type="button" class="btn btn-primary btn-lg popup_button" t-on-click="() => this.props.close()">Continue</button>
                             </div>
                         </div>
                     </div>
