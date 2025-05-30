@@ -27,6 +27,10 @@ class PosPaymentMethod(models.Model):
 
         super(PosPaymentMethod, self - opm)._compute_type()
 
+    @api.onchange('is_online_payment')
+    def _onchange_is_online_payment(self):
+        self.payment_method_type = 'none'
+
     def _get_online_payment_providers(self, pos_config_id=False, error_if_invalid=True):
         self.ensure_one()
         providers_sudo = self.sudo().online_payment_provider_ids
