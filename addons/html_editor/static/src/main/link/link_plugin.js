@@ -293,6 +293,7 @@ export class LinkPlugin extends Plugin {
         this.getAttachmentMetadata = memoize((url) =>
             fetchAttachmentMetaData(url, this.services.orm)
         );
+        this.LinkPopoverState = { editing: false };
     }
 
     destroy() {
@@ -375,6 +376,7 @@ export class LinkPlugin extends Plugin {
      */
     openLinkTools(linkElement, type) {
         this.overlay.close();
+        this.LinkPopoverState.editing = false;
         if (!this.isLinkAllowedOnSelection()) {
             return this.services.notification.add(
                 _t("Unable to create a link on the current selection."),
@@ -512,7 +514,11 @@ export class LinkPlugin extends Plugin {
             canUpload: this.config.allowFile,
             onUpload: this.config.onAttachmentChange,
             type: this.type || "",
+            LinkPopoverState: this.LinkPopoverState,
         };
+        if (!linkElement.href) {
+            this.LinkPopoverState.editing = true;
+        }
         this.overlay.open({ props });
     }
     /**
