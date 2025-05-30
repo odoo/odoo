@@ -63,6 +63,7 @@ class TestModuleManifest(BaseCase):
             'post_load': '',
             'pre_init_hook': '',
             'sequence': 100,
+            'static_path': None,
             'summary': '',
             'test': [],
             'update_xml': [],
