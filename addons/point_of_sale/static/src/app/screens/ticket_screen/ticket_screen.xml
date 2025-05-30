@@ -152,9 +152,9 @@
                             <t t-set="line" t-value="scope.line" />
                             <Orderline line="line" t-on-click="() => this.onClickOrderline(line)" class="{'selected': line.id === _selectedOrderlineId}">
                                 <t t-set="toRefundDetail" t-value="line.order_id?.uiState?.lineToRefund?.[line.uuid]" />
-                                <li t-if="!pos.isProductQtyZero(line.refunded_qty)"
+                                <li t-if="!pos.isProductQtyZero(line.refundedQty)"
                                     class="info refund-note mt-1">
-                                    <strong t-esc="env.utils.formatProductQty(line.refunded_qty)" />
+                                    <strong t-esc="env.utils.formatProductQty(line.refundedQty)" />
                                     <span> Refunded</span>
                                 </li>
                                 <li t-if="!pos.isProductQtyZero(toRefundDetail?.qty)" class="info to-refund-highlight refund-note mt-1 fw-bold text-primary">
