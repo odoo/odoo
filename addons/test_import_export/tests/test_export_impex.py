@@ -122,26 +122,12 @@ class test_decimal_field(CreatorCase):
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class test_string_field(CreatorCase):
-    model_name = 'export.string.bounded'
-
-    def test_empty(self):
-        self.assertEqual(self.export(""), [['']])
-
-    def test_within_bounds(self):
-        self.assertEqual(self.export("foobar"), [["foobar"]])
-
-    def test_out_of_bounds(self):
-        self.assertEqual(self.export("C for Sinking, Java for Drinking, Smalltalk for Thinking. ...and Power to the Penguin!"), [["C for Sinking, J"]])
-
-
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class test_unbound_string_field(CreatorCase):
     model_name = 'export.string'
 
     def test_empty(self):
         self.assertEqual(self.export(""), [['']])
 
-    def test_small(self):
+    def test_within_bounds(self):
         self.assertEqual(self.export("foobar"), [["foobar"]])
 
     def test_big(self):

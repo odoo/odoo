@@ -84,20 +84,12 @@ class ExportDecimal(models.Model):
     value = fields.Float(digits=(16, 3))
 
 
-class ExportStringBounded(models.Model):
-    _name = 'export.string.bounded'
-    _description = 'Export: string.bounded'
-    _inherit = ['export.generic']
-
-    value = fields.Char(size=16)
-
-
 class ExportStringRequired(models.Model):
     _name = 'export.string.required'
     _description = 'Export: string.required'
     _inherit = ['export.generic']
 
-    value = fields.Char(size=None, required=True)
+    value = fields.Char(required=True)
 
 
 class ExportString(models.Model):
@@ -105,7 +97,7 @@ class ExportString(models.Model):
     _description = 'Export: string'
     _inherit = ['export.generic']
 
-    value = fields.Char(size=None)
+    value = fields.Char()
 
 
 class ExportDate(models.Model):

@@ -28,7 +28,7 @@ if typing.TYPE_CHECKING:
 class BaseString(Field[str | typing.Literal[False]]):
     """ Abstract class for string fields. """
     translate: bool | Callable[[Callable[[str], str | None], str], str] = False  # whether the field is translated
-    size = None                         # maximum size of values (deprecated)
+    size = None  # maximum length for the UI
     is_text = True
     falsy_value = ''
 
@@ -136,7 +136,6 @@ class BaseString(Field[str | typing.Literal[False]]):
             return converted
 
         value = value.decode() if isinstance(value, bytes) else str(value)
-        value = value[:self.size]
         if validate:
             return self._validated_cache_value(value, records.env)
         return value
@@ -498,7 +497,7 @@ class Char(BaseString):
     """ Basic string field, can be length-limited, usually displayed as a
     single-line string in clients.
 
-    :param int size: the maximum size of values stored for that field
+    :param int size: the maximum length in the UI
 
     :param bool trim: states whether the value is trimmed or not (by default,
         ``True``). Note that the trim operation is applied by both the server code and the web client
@@ -517,23 +516,12 @@ class Char(BaseString):
     """
     type = 'char'
     trim: bool = True                   # whether value is trimmed (only by web client and base_import)
-
-    def _setup_attrs__(self, model_class, name):
-        super()._setup_attrs__(model_class, name)
-        assert self.size is None or isinstance(self.size, int), \
-            "Char field %s with non-integer size %r" % (self, self.size)
-
-    @property
-    def _column_type(self):
-        size = self.size
-        assert size is None or type(size) is int, "size must be an integer"
-        return ('varchar', f'varchar({size})' if size and size > 0 else 'varchar')
+    _column_type = ('varchar', 'varchar')
 
     def update_db_column(self, model, column):
         if (
-            column and self.column_type[0] == 'varchar' and
-            column['udt_name'] == 'varchar' and column['character_maximum_length'] and
-            (self.size is None or column['character_maximum_length'] < self.size)
+            column and self.column_type[0] == 'varchar'
+            and column['udt_name'] == 'varchar' and column['character_maximum_length']
         ):
             # the column's varchar size does not match self.size; convert it
             sql.convert_column(model.env.cr, model._table, self.name, self.stored_sql_column_type)
@@ -562,8 +550,8 @@ class Char(BaseString):
 
 
 class Text(BaseString):
-    """ Very similar to :class:`Char` but used for longer contents, does not
-    have a size and usually displayed as a multiline text box.
+    """ Very similar to :class:`Char` but used for longer contents usually
+    displayed as a multiline text box.
 
     :param translate: enable the translation of the field's values; use
         ``translate=True`` to translate field values as a whole; ``translate``
