@@ -15,6 +15,7 @@ import {
 
 import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { notificationService } from "@web/core/notifications/notification_service";
+import { markup } from "@odoo/owl";
 
 class Event extends models.Model {
     name = fields.Char();
@@ -129,7 +130,7 @@ class Event extends models.Model {
         "form,multi_create_form": `
             <form>
                 <group>
-                    <field name="name"/>
+                    <field name="name" required="1"/>
                     <field name="type"/>
                 </group>
             </form>
@@ -739,4 +740,43 @@ test("multi_create: avoid trigger add/del event on specific element", async () =
     await animationFrame();
     expect(".fc-more-popover").toHaveCount(0);
     expect.verifySteps([]);
+});
+
+test.tags("desktop");
+test("multi_create: test required attribute in form", async () => {
+    patchWithCleanup(notificationService, {
+        start: () => ({
+            add: (message) => {
+                expect.step(message);
+            },
+        }),
+    });
+
+    onRpc("event", "create", ({ args: [records] }) => {
+        for (const record of records) {
+            expect.step(`${record.name}_${record.date_start}`);
+        }
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+    });
+
+    const { drop } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    await animationFrame();
+    await drop();
+    await animationFrame();
+    expect(".o_calendar_sidebar_container .o_form_view [name='name']").toHaveClass(
+        "o_required_modifier"
+    );
+    expect.verifySteps([markup("<ul><li>Name</li></ul>")]);
+
+    await click(".o_calendar_sidebar_container .o_form_view [name='name'] input");
+    await edit("Test required");
+    const { drop: dropOk } = await contains(".fc-day[data-date='2019-03-04']").drag();
+    await animationFrame();
+    await dropOk();
+    await animationFrame();
+    expect.verifySteps(["Test required_2019-03-04", "Test required_2019-03-04"]);
 });

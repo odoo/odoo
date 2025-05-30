@@ -118,7 +118,9 @@ export function useSquareSelection() {
             drawHighlight();
             return;
         }
-        await onSquareSelection(state.currentSelectionElement);
+        if (state.currentSelectionElement.length > 0) {
+            await onSquareSelection(state.currentSelectionElement);
+        }
         clearState();
         drawHighlight();
     }
