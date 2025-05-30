@@ -461,7 +461,7 @@ class Char(BaseString):
     :param int size: the maximum size of values stored for that field
 
     :param bool trim: states whether the value is trimmed or not (by default,
-        ``True``). Note that the trim operation is applied only by the web client.
+        ``True``). Note that the trim operation is applied by both the server code and the web client.
 
     :param translate: enable the translation of the field's values; use
         ``translate=True`` to translate field values as a whole; ``translate``
@@ -471,7 +471,7 @@ class Char(BaseString):
     :type translate: bool or callable
     """
     type = 'char'
-    trim: bool = True                   # whether value is trimmed (only by web client)
+    trim: bool = True                   # whether value is trimmed (by server code and web client)
 
     def _setup_attrs__(self, model_class, name):
         super()._setup_attrs__(model_class, name)
