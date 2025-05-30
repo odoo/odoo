@@ -125,7 +125,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         for wizard in self:
             wizard.total_line_items = len(wizard.line_ids)
 
-
     @api.onchange("pc_container_code_ids")
     def _onchange_pc_container_code_ids(self):
         self.ensure_one()
@@ -151,27 +150,42 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         is_discrete = bool(discrete_sale_ids)
 
         if is_discrete:
-            # --- Discrete picks: scan all totes for all discrete pickings of that SO
             for sale_id in discrete_sale_ids:
-                all_discrete_picks = self.env["stock.picking"].search([
+                # Picks in 'pick' state (these must have totes scanned)
+                all_discrete_picks_in_pick = self.env["stock.picking"].search([
                     ("sale_id", "=", sale_id),
                     ("discrete_pick", "=", True),
                     ("current_state", "=", "pick"),
                     ("site_code_id", "=", self.site_code_id.id),
                 ])
-                all_totes = set(all_discrete_picks.mapped("move_ids_without_package.pc_container_code"))
+                # Picks NOT in 'pick' state (inform the user)
+                all_discrete_picks_not_pick = self.env["stock.picking"].search([
+                    ("sale_id", "=", sale_id),
+                    ("discrete_pick", "=", True),
+                    ("current_state", "!=", "pick"),
+                    ("site_code_id", "=", self.site_code_id.id),
+                ])
+                all_totes = set(all_discrete_picks_in_pick.mapped("move_ids_without_package.pc_container_code"))
                 scanned_totes = set(tote_codes)
                 missing = all_totes - scanned_totes
                 if missing:
                     picks_and_totes = []
-                    for pick in all_discrete_picks:
+                    for pick in all_discrete_picks_in_pick:
                         totes = pick.move_ids_without_package.mapped("pc_container_code")
                         picks_and_totes.append(
                             f"Pick: {pick.name} - Tote(s): {', '.join([t or '-' for t in totes])}"
                         )
+                    extra_msg = ""
+                    if all_discrete_picks_not_pick:
+                        extra_picks = [
+                            f"Pick: {pick.name} (state: {pick.current_state})"
+                            for pick in all_discrete_picks_not_pick
+                        ]
+                        extra_msg = "\n\nNote: The following discrete picks for this order are not yet ready for picking:\n%s" % "\n".join(
+                            extra_picks)
                     raise ValidationError(
-                        "This pick is a Discrete Pick. Please scan the following tote(s) together:\n\n%s"
-                        % ("\n".join(picks_and_totes))
+                        "This pick is a Discrete Pick. Please scan the following tote(s) together:\n\n%s%s"
+                        % ("\n".join(picks_and_totes), extra_msg)
                     )
             pickings_to_load = pickings
             totes_to_load = tote_codes
@@ -228,7 +242,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             self.line_ids = [(0, 0, v) for v in vals_list]
 
         self._compute_fields_based_on_picking_ids()
-
 
     def _get_package_box_id(self, tenant_id, site_id, incoterm):
         """
