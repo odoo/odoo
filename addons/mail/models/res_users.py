@@ -53,10 +53,11 @@ class Users(models.Model):
         self.filtered_domain([('share', '=', True), ('notification_type', '=', 'inbox')]).notification_type = 'email'
 
     def _inverse_notification_type(self):
-        inbox_group = self.env.ref('mail.group_mail_notification_type_inbox')
-        inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
-        inbox_users.write({"groups_id": [Command.link(inbox_group.id)]})
-        (self - inbox_users).write({"groups_id": [Command.unlink(inbox_group.id)]})
+        inbox_group = self.env.ref('mail.group_mail_notification_type_inbox', raise_if_not_found=False)
+        if inbox_group:
+            inbox_users = self.filtered(lambda user: user.notification_type == 'inbox')
+            inbox_users.write({"groups_id": [Command.link(inbox_group.id)]})
+            (self - inbox_users).write({"groups_id": [Command.unlink(inbox_group.id)]})
 
     # ------------------------------------------------------------
     # CRUD
