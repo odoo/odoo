@@ -313,6 +313,11 @@ class MrpWorkorder(models.Model):
             if self.env.context.get('prefix_product'):
                 wo.display_name = f"{wo.product_id.name} - {wo.production_id.name} - {wo.name}"
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
+        if any(wo.state == 'done' for wo in self):
+            raise UserError(self.env._('Cannot delete a work order in done state.'))
+
     def unlink(self):
         # Removes references to workorder to avoid Validation Error
         (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})

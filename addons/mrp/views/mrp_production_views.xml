@@ -476,7 +476,7 @@
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
                             <field name="workorder_ids"
                                 context="{'list_view_ref': 'mrp.mrp_production_workorder_tree_editable_view_mo_form', 'from_manufacturing_order': True}"
-                                options="{'create': [('id', '!=', False), ('state', '!=', 'done')]}"
+                                options="{'create': [('id', '!=', False), ('state', 'not in', ['done', 'cancel'])], 'delete': [('state', 'not in', ['done', 'cancel'])]}"
                                 />
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
