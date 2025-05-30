@@ -228,7 +228,7 @@ export class PosOrderline extends Base {
 
         if (this.refunded_orderline_id?.uuid in allLineToRefundUuids) {
             const refundDetails = allLineToRefundUuids[this.refunded_orderline_id.uuid];
-            const maxQtyToRefund = refundDetails.line.qty - refundDetails.line.refunded_qty;
+            const maxQtyToRefund = refundDetails.line.qty - refundDetails.line.refundedQty;
             if (quant > 0) {
                 return {
                     title: _t("Positive quantity not allowed"),
@@ -726,6 +726,14 @@ export class PosOrderline extends Base {
     }
     get canBeRemoved() {
         return this.product_id.uom_id.isZero(this.qty);
+    }
+    get refundedQty() {
+        return (
+            this.refund_orderline_ids?.reduce(
+                (acc, line) => (line.order_id.state !== "cancel" ? acc - line.qty : acc),
+                0
+            ) || 0
+        );
     }
 }
 
