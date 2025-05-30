@@ -101,7 +101,7 @@ registry.category("web_tour.tours").add("SplitBillScreenTour2", {
             SplitBillScreen.clickButton("Split"),
             ProductScreen.totalAmountIs("4.0"),
             Chrome.clickOrders(),
-            TicketScreen.selectOrder("2B"),
+            TicketScreen.selectOrder("002"),
             TicketScreen.loadSelectedOrder(),
             Order.hasLine({ productName: "Coca-Cola", quantity: "1" }),
             Order.hasLine({ productName: "Water", quantity: "1" }),
