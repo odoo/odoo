@@ -9,10 +9,15 @@ export function clickDiscard() {
         run: "click",
     };
 }
-export function selectOrder(orderName) {
+/**
+ * Selects an order based on its tracking number.
+ * @param {string} orderTrackingNumber.
+ *
+ **/
+export function selectOrder(orderTrackingNumber) {
     return [
         {
-            trigger: `.ticket-screen .order-row:contains("${orderName}")`,
+            trigger: `.ticket-screen .order-row[order-tracking-number="${orderTrackingNumber}"]`,
             run: "click",
         },
     ];
