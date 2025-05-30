@@ -119,6 +119,7 @@ export class BuilderColorPicker extends Component {
                 applyColorResetPreview: onPreviewRevert,
                 getUsedCustomColors: this.props.getUsedCustomColors,
                 colorPrefix: "color-prefix-",
+                showRgbaField: true,
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,
             },
