@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import json
@@ -10,7 +9,6 @@ import tempfile
 import unittest
 from ast import literal_eval
 from collections import OrderedDict
-from collections.abc import Iterable
 from contextlib import closing, ExitStack
 from itertools import islice
 from urllib.parse import urlparse
@@ -19,8 +17,6 @@ import lxml.html
 from PIL import Image, ImageFile
 from lxml import etree
 from markupsafe import Markup
-from reportlab.graphics.barcode import createBarcodeDrawing
-from reportlab.pdfbase.pdfmetrics import getFont, TypeFace
 
 from odoo import api, fields, models, modules, tools, _
 from odoo.exceptions import UserError, AccessError, RedirectWarning
@@ -28,7 +24,7 @@ from odoo.fields import Domain
 from odoo.service import security
 from odoo.http import request, root
 from odoo.tools import config, is_html_empty, parse_version, split_every
-from odoo.tools.barcode import check_barcode_encoding
+from odoo.tools.barcode import check_barcode_encoding, createBarcodeDrawing, get_barcode_font
 from odoo.tools.misc import find_in_path
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
 from odoo.tools.safe_eval import safe_eval, time
@@ -37,25 +33,6 @@ from odoo.tools.safe_eval import safe_eval, time
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 _logger = logging.getLogger(__name__)
-
-# A lock occurs when the user wants to print a report having multiple barcode while the server is
-# started in threaded-mode. The reason is that reportlab has to build a cache of the T1 fonts
-# before rendering a barcode (done in a C extension) and this part is not thread safe. We attempt
-# here to init the T1 fonts cache at the start-up of Odoo so that rendering of barcode in multiple
-# thread does not lock the server.
-_DEFAULT_BARCODE_FONT = 'Courier'
-try:
-    available = TypeFace(_DEFAULT_BARCODE_FONT).findT1File()
-    if not available:
-        substitution_font = 'NimbusMonoPS-Regular'
-        fnt = getFont(substitution_font)
-        if fnt:
-            _DEFAULT_BARCODE_FONT = substitution_font
-            fnt.ascent = 629
-            fnt.descent = -157
-    createBarcodeDrawing('Code128', value='foo', format='png', width=100, height=100, humanReadable=1, fontName=_DEFAULT_BARCODE_FONT).asString('png')
-except Exception:
-    pass
 
 
 def _get_wkhtmltopdf_bin():
@@ -694,7 +671,7 @@ class IrActionsReport(models.Model):
         kwargs = {k: validator(kwargs.get(k, v)) for k, (v, validator) in defaults.items()}
         kwargs['humanReadable'] = kwargs.pop('humanreadable')
         if kwargs['humanReadable']:
-            kwargs['fontName'] = _DEFAULT_BARCODE_FONT
+            kwargs['fontName'] = get_barcode_font()
 
         if barcode_type == 'UPCA' and len(value) in (11, 12, 13):
             barcode_type = 'EAN13'
