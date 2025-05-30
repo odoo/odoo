@@ -676,6 +676,19 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await contains(".o-mail-Composer-input", { value: "XDU for the win !" });
 });
 
+test("don't show chat hub options when discuss is open", async () => {
+    const pyEnv = await startServer();
+    pyEnv["discuss.channel"].create({});
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    await contains(".o-mail-ChatWindow");
+    await contains(".o-mail-ChatHub [title='Chat Options']");
+    await openDiscuss();
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-mail-ChatHub [title='Chat Options']", { count: 0 });
+});
+
 test("chat window: scroll conservation on toggle discuss", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
