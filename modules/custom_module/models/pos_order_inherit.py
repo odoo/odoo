@@ -14,7 +14,6 @@ class PosOrder(models.Model):
     origine = fields.Char(string='Origine')
     ticket_number = fields.Integer(string='Ticket Number', help='Ticket number for the order')
 
-
     @api.model
     def sync_from_ui(self, orders):
         result = super().sync_from_ui(orders)
@@ -31,7 +30,7 @@ class PosOrder(models.Model):
     def _sync_to_menupro(self, order):
         restaurant_id = self.env['ir.config_parameter'].sudo().get_param('restaurant_id')
         odoo_secret_key = tools.config.get("odoo_secret_key")
-        api_url = "https://api.finance.visto.group//orders/order/upsert"
+        api_url = "https://api.finance.visto.group/orders/order/upsert"
 
         if not restaurant_id or not odoo_secret_key:
             _logger.error("Secret key or restaurant ID not configured. Skipped sync to menupro")
@@ -157,7 +156,6 @@ class PosOrder(models.Model):
         except Exception as e:
             _logger.error("Error preparing API payload: %s", str(e))
             raise
-
 
     def get_today_ticket_number(self):
         """Get the count of orders made today (ignoring time)"""
