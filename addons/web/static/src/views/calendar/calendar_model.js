@@ -243,6 +243,14 @@ export class CalendarModel extends Model {
      * @returns {Promise<*>}
      */
     async multiCreateRecords(dates) {
+        // Check required attribute of fields in form view
+        const isValid = await this.data.multiCreateRecord.checkValidity({
+            displayNotification: true,
+        });
+        if (!isValid) {
+            return;
+        }
+
         const records = [];
         const values = await this.data.multiCreateRecord.getChanges();
         const timeRange = this.data.multiCreateTimeRange;
