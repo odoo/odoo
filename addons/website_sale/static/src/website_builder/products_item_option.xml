@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website_sale.ProductsItemOptionPlugin">
-        <div class="o_wsale_soptions_menu_sizes">
+        <div t-if="this.displaySizeOption" class="o_wsale_soptions_menu_sizes">
             <BuilderRow label.translate="Size">
                 <BuilderButtonGroup action="'setItemSize'">
                     <table t-ref="table" t-on-mouseenter="_onTableMouseEnter" t-on-mouseleave="_onTableMouseLeave">
