@@ -4,7 +4,7 @@
     <t t-name="pos_hr.CashierSelectionPopup">
         <Dialog title.translate="Select Cashier" footer="false"  size="'md'" bodyClass="'d-flex flex-column gap-2'">
 
-            <div class="d-flex justify-content-between align-items-center btn btn-outline-secondary active p-2 p-sm-3 border-transparent cursor-default text-start"
+            <div class="cashier-selection-item d-flex justify-content-between align-items-center btn btn-outline-secondary active p-2 p-sm-3 border-transparent cursor-default text-start"
                  t-on-click="() => this.props.close()" t-if="props.currentCashier">
                 <t t-set="cashier" t-value="props.currentCashier"/>
                 <div class="d-flex align-items-center ">
@@ -13,6 +13,9 @@
                     </div>
                     <div class="d-flex flex-column">
                         <span class="fs-4 fw-bold current-cashier-name" t-out="cashier.name"/>
+                        <span t-if="cashier.subtitle" class="employee-subtitle fs-6 text-muted">
+                            <t t-esc="cashier.subtitle"/>
+                        </span>
                     </div>
                 </div>
                 <div class="d-flex align-items-center ms-1">
@@ -22,8 +25,8 @@
                 </div>
             </div>
 
-            <button t-foreach="props.employees" t-as="employee" t-key="employee.id"
-                    class="selection-item d-flex align-items-center justify-content-between btn btn-outline-secondary p-2 p-sm-3 text-start"
+            <button t-foreach="displayableOptions" t-as="employee" t-key="employee.id"
+                    class="cashier-selection-item d-flex align-items-center justify-content-between btn btn-outline-secondary p-2 p-sm-3 text-start"
                     t-on-click="() => this.selectEmployee(employee)">
                 <div class="d-flex align-items-center">
                     <div class="ratio ratio-1x1 me-2 me-sm-3" style="width: 40px">
@@ -31,9 +34,20 @@
                     </div>
                     <div class="d-flex flex-column">
                         <span class="fs-4 fw-bold" t-out="employee.name"/>
+                        <span t-if="employee.subtitle" class="employee-subtitle fs-6 text-muted">
+                            <t t-esc="employee.subtitle"/>
+                        </span>
                     </div>
                 </div>
                 <i class="oi oi-chevron-right"/>
+            </button>
+            <button
+                t-if="state.visibleOptions !== 0"
+                class="cashier-selection-item d-flex align-items-center justify-content-between btn btn-outline-secondary p-2 p-sm-3 text-start"
+                t-on-click="() => this.state.visibleOptions = 0">
+                <div class="d-flex flex-column">
+                    <span>More...</span>
+                </div>
             </button>
 
         </Dialog>
