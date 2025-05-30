@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
+import importlib.util
 import logging
 import xml.dom.minidom
 import zipfile
@@ -10,12 +10,7 @@ from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 
-try:
-    from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-    from pdfminer.converter import TextConverter
-    from pdfminer.pdfpage import PDFPage
-except ImportError:
-    PDFResourceManager = PDFPageInterpreter = TextConverter = PDFPage = None
+if not importlib.util.find_spec('pdfminer'):
     _logger.warning("Attachment indexation of PDF documents is unavailable because the 'pdfminer' Python library cannot be found on the system. "
                     "You may install it from https://pypi.org/project/pdfminer.six/ (e.g. `pip3 install pdfminer.six`)")
 
@@ -104,24 +99,28 @@ class IrAttachment(models.Model):
 
     def _index_pdf(self, bin_data):
         '''Index PDF documents'''
-        if PDFResourceManager is None:
-            return
-        buf = u""
-        if bin_data.startswith(b'%PDF-'):
-            f = io.BytesIO(bin_data)
-            try:
-                resource_manager = PDFResourceManager()
-                with io.StringIO() as content, TextConverter(resource_manager, content) as device:
-                    logging.getLogger("pdfminer").setLevel(logging.CRITICAL)
-                    interpreter = PDFPageInterpreter(resource_manager, device)
+        if not bin_data.startswith(b'%PDF-'):
+            return ""
+        try:
+            from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter  # noqa: PLC0415
+            from pdfminer.converter import TextConverter  # noqa: PLC0415
+            from pdfminer.pdfpage import PDFPage  # noqa: PLC0415
+            logging.getLogger("pdfminer").setLevel(logging.CRITICAL)
+        except ImportError:
+            # warned already during init of module
+            return ""
+        f = io.BytesIO(bin_data)
+        try:
+            resource_manager = PDFResourceManager()
+            with io.StringIO() as content, TextConverter(resource_manager, content) as device:
+                interpreter = PDFPageInterpreter(resource_manager, device)
 
-                    for page in PDFPage.get_pages(f):
-                        interpreter.process_page(page)
+                for page in PDFPage.get_pages(f):
+                    interpreter.process_page(page)
 
-                    buf = content.getvalue()
-            except Exception:
-                pass
-        return buf
+                return content.getvalue()
+        except Exception:  # noqa: BLE001
+            return ""
 
     @api.model
     def _index(self, bin_data, mimetype, checksum=None):
