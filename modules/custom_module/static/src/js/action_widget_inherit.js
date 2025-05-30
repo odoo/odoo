@@ -4,7 +4,6 @@ import { patch } from "@web/core/utils/patch";
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 
 
-// Fonction pour désactiver les interactions sur les anciennes lignes de commande
 const disableInteractionOnOldOrders = (orderLines, isAdmin) => {
     orderLines.forEach(line => {
         if (!isAdmin && line.classList.contains("orderline") && !line.classList.contains("text-success")) {
@@ -39,7 +38,7 @@ patch(ActionpadWidget.prototype, {
         try {
             const pos = this.pos;
             const currentUser = pos.cashier;
-            const isAdmin = currentUser.role === "admin" || currentUser.role === "manager";
+            const isAdmin = currentUser._role === "admin" || currentUser._role === "manager";
             setTimeout(() => {
                 if (!isAdmin) {
                     if(!checkForChanges()){
@@ -82,12 +81,7 @@ patch(ActionpadWidget.prototype, {
 
 
     async submitOrder() {
-         this.currentOrder.get_orderlines().forEach((line) => {
-            line.locked = true;
-            console.log(`🔒 Line with product ${line.product_id?.display_name || line.product_id} is now locked.`);
-        });
         const res = await super.submitOrder();
-        console.log('resssssssss',res);
         this.pos.showScreen("FloorScreen");
         return res
     },

@@ -105,11 +105,29 @@ patch(PosStore.prototype, {
         return result;
     },
     async addLineToOrder(vals, order, opts = {}, configure = true) {
-        console.log("🟨 addLineToOrder called with vals:", vals);
-        console.log("🟨 Initial opts:", opts);
-        console.log("🔒 Check order isLocked ->", order.isLocked());
+        const lines = order.last_order_preparation_change?.lines || {};
+        const productId = vals.product_id?.id || vals.product_id;
+        const isAdmin = order.employee_id._role === "admin" || order.employee_id._role === "manager";
 
-        let merge = true;
+        let merge;
+
+        if (!isAdmin) {
+            merge = !Object.values(lines).some(line => line.product_id === productId);
+
+            if (!merge) {
+                const hasChangedLine = order
+                    .get_orderlines()
+                    .some(line => line.product_id.id === productId && line.uiState?.hasChange);
+                if (hasChangedLine) {
+                    merge = true;
+                }
+            }
+        } else {
+            merge = true;
+        }
+
+        console.log("merge =", merge);
+
         order.assert_editable();
 
         const options = {
@@ -326,25 +344,8 @@ patch(PosStore.prototype, {
             values.price_unit = price;
         }
 
-        // === CUSTOM LOCK LOGIC STARTS HERE ===
-        console.log("🔍 Checking for existing lines...");
-
-        // TOUJOURS forcer la création d'une nouvelle ligne - pas de merge
-        console.log("🆕 Forcing new line creation - no merge allowed");
-        merge = true; // Empêcher tout merge avec les lignes existantes
-
-        // === CUSTOM LOCK LOGIC ENDS HERE ===
-
         const line = this.data.models["pos.order.line"].create({ ...values, order_id: order });
         line.setOptions(options);
-
-        // Si la commande est verrouillée, marquer la nouvelle ligne
-        if (order.isLocked()) {
-            console.log("🔒 Marking new line as created after lock");
-            line.created_after_lock = true;
-            line.locked = true; // Optionnel : verrouiller immédiatement
-        }
-
         this.selectOrderLine(order, line);
         if (configure) {
             this.numberBuffer.reset();
@@ -356,29 +357,22 @@ patch(PosStore.prototype, {
                 setQuantity: options.quantity === undefined,
             });
         }
-        console.log("selected order lines",selectedOrderline);
 
         let to_merge_orderline;
         for (const curLine of order.lines) {
             if (curLine.id !== line.id) {
-                // Modification : ne pas merger avec des lignes verrouillées
-                console.log("curLine",curLine.isLocked());
-                if (curLine.can_be_merged_with(line) && merge !== false && !curLine.locked) {
+                if (curLine.can_be_merged_with(line) && merge !== false) {
                     to_merge_orderline = curLine;
-                    console.log("🔄 Will merge with existing unlocked line");
                 }
             }
         }
-
 
         if (to_merge_orderline) {
             to_merge_orderline.merge(line);
             line.delete();
             this.selectOrderLine(order, to_merge_orderline);
-            console.log("✅ Successfully merged with existing line");
         } else if (!selectedOrderline) {
             this.selectOrderLine(order, order.get_last_orderline());
-            console.log("🆕 Created new line (no merge possible)");
         }
 
         if (product.tracking === "serial") {
@@ -408,6 +402,7 @@ patch(PosStore.prototype, {
         // FIXME: If merged with another line, this returned object is useless.
         return line;
     },
+
 
 
     async showLoginScreen() {

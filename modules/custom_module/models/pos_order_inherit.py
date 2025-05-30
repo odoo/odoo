@@ -14,6 +14,7 @@ class PosOrder(models.Model):
     origine = fields.Char(string='Origine')
     ticket_number = fields.Integer(string='Ticket Number', help='Ticket number for the order')
 
+
     @api.model
     def sync_from_ui(self, orders):
         result = super().sync_from_ui(orders)
@@ -105,7 +106,6 @@ class PosOrder(models.Model):
                     "menupro_id": order_data.get('menupro_id', False),
                     "status": "validate",
                     "menupro_fee": 0.5,
-                    "origine": order_data.get('origine', 'desktop'),
                     "ticketNumber": int(order_data.get('pos_reference', '0-0-0').split('-')[-1]),
                     "state": order_data.get('state', 'draft')
                 }
@@ -156,6 +156,7 @@ class PosOrder(models.Model):
         except Exception as e:
             _logger.error("Error preparing API payload: %s", str(e))
             raise
+
 
     def get_today_ticket_number(self):
         """Get the count of orders made today (ignoring time)"""

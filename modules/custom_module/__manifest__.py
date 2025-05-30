@@ -60,8 +60,6 @@
                 'custom_module/static/src/js/floor_screen_inherit.js',
                 'custom_module/static/src/xml/receipt_header.xml',
                 'custom_module/static/src/js/pos_order_inherit.js',
-                 'custom_module/static/src/js/pos_order_line_inherit.js',
-                'custom_module/static/src/js/product_screen_inherit.js',
                 'custom_module/static/src/js/action_widget_inherit.js',
                 'custom_module/static/src/js/hw_printer_inherited.js',
                 'custom_module/static/src/xml/pos_discount_control_buttons_inherit.xml',
