@@ -809,16 +809,20 @@ class AccountMove(models.Model):
             move.payment_reference = move._get_invoice_computed_reference()
         self._inverse_payment_reference()
 
+    def _get_accounting_date_source(self):
+        self.ensure_one()
+        return self.invoice_date or self.date
+
     @api.depends('invoice_date', 'company_id', 'move_type')
     def _compute_date(self):
         for move in self:
-            if not move.invoice_date or not move.is_invoice(include_receipts=True):
+            accounting_date = move._get_accounting_date_source()
+            if not accounting_date or not move.is_invoice(include_receipts=True):
                 if not move.date:
                     move.date = fields.Date.context_today(self)
                 continue
-            accounting_date = move.invoice_date
             if not move.is_sale_document(include_receipts=True):
-                accounting_date = move._get_accounting_date(move.invoice_date, move._affect_tax_report())
+                accounting_date = move._get_accounting_date(accounting_date, move._affect_tax_report())
             if accounting_date and accounting_date != move.date:
                 move.date = accounting_date
                 # _affect_tax_report may trigger premature recompute of line_ids.date
@@ -5293,7 +5297,7 @@ class AccountMove(models.Model):
             affects_tax_report = move._affect_tax_report()
             lock_dates = move._get_violated_lock_dates(move.date, affects_tax_report)
             if lock_dates:
-                move.date = move._get_accounting_date(move.invoice_date or move.date, affects_tax_report, lock_dates=lock_dates)
+                move.date = move._get_accounting_date(move._get_accounting_date_source(), affects_tax_report, lock_dates=lock_dates)
 
         # Create the analytic lines in batch is faster as it leads to less cache invalidation.
         to_post.line_ids._create_analytic_lines()
