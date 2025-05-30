@@ -11,7 +11,6 @@ class AccountJournal(models.Model):
         self.filtered(
             lambda j: j.is_nilvera_journal and
                       j.l10n_tr_nilvera_api_key and
-                      j.l10n_tr_nilvera_api_key.raw_value and
                       j.type == 'purchase'
         ).show_fetch_in_einvoices_button = True
 
@@ -21,7 +20,6 @@ class AccountJournal(models.Model):
         super()._compute_show_refresh_out_einvoices_status_button()
         self.filtered(
             lambda j: j.l10n_tr_nilvera_api_key and
-                      j.l10n_tr_nilvera_api_key.raw_value and
                       j.type == 'sale'
         ).show_refresh_out_einvoices_status_button = True
 
