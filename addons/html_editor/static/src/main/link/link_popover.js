@@ -171,7 +171,7 @@ export class LinkPopover extends Component {
         });
         const onPointerDown = (ev) => {
             if (!this.state.url) {
-                this.onClickRemove();
+                this.props.onDiscard();
             } else if (
                 this.editingWrapper?.el &&
                 !this.state.isImage &&
