@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models
+from odoo import api, models, tools
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import lazy
 
@@ -32,3 +33,15 @@ class IrHttp(models.AbstractModel):
         request.cart = lazy(request.website._get_and_cache_current_cart)
         request.fiscal_position = lazy(request.website._get_and_cache_current_fiscal_position)
         request.pricelist = lazy(request.website._get_and_cache_current_pricelist)
+
+    @api.model
+    @tools.ormcache('path', 'website_id')
+    def url_unrewrite(self, path, website_id):
+        """Returns the opposite of `url_rewrite`. Note that this method does not support query
+        params inside the path.
+        """
+        return self.env['website.rewrite'].sudo().search(Domain([
+            ('redirect_type', '=', '308'),
+            ('url_to', '=', path),
+            ('website_id', 'in', [False, website_id]),
+        ]), limit=1).url_from or path

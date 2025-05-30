@@ -461,7 +461,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
             'sale_ok': True,
             'website_published': True,
         })
-        with MockRequest(self.env(user=user), website=website) as request:
+        with MockRequest(self.env(user=user), website=website, path='/shop/cart') as request:
             self.WebsiteSaleCartController.add_to_cart(
                 product_template_id=product.product_tmpl_id,
                 product_id=product.id,
@@ -489,7 +489,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         # Arrange
         user = self.public_user
         website = self.website.with_user(user)
-        with MockRequest(self.env(user=user), website=website) as request:
+        with MockRequest(self.env(user=user), website=website, path='/shop/cart') as request:
             order = request.website._create_cart()
             order.order_line = [
                 Command.create({
@@ -518,7 +518,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
         self.carrier.country_ids = [Command.set((2,))]
         self.product.type = 'consu'
         with (
-            MockRequest(website.env, website=website) as request,
+            MockRequest(website.env, website=website, path='/shop/checkout') as request,
             patch(
                 'odoo.addons.website_sale.models.sale_order.SaleOrder._get_preferred_delivery_method',
                 return_value=self.env['delivery.carrier'],

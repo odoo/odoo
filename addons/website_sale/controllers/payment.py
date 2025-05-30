@@ -52,7 +52,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been cancelled."))
 
-        order_sudo._check_cart_is_ready_to_be_paid()
+        # Ensure the cart is still valid before proceeding any further.
+        if not order_sudo._is_cart_ready_to_be_paid():
+            raise ValidationError(_(
+                "Your cart is not ready to be paid, please verify previous steps.\n%s",
+                order_sudo.shop_warning,
+            ))
 
         self._validate_transaction_kwargs(kwargs)
         kwargs.update({

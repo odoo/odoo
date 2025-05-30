@@ -47,12 +47,11 @@
                 </a>
             </p>
         </div>
-        <t t-if='website_sale_order'>
-            <div t-if='website_sale_order._get_shop_warning(clear=False)' class="alert alert-warning js_cart_lines" role="alert">
-                <strong>Warning!</strong>
-                <div t-out="website_sale_order._get_shop_warning()" class="text-prewrap"/>
-            </div>
-        </t>
+        <t
+            t-if="website_sale_order in shop_warnings"
+            t-call="website_sale.block_warning"
+            warning_key="website_sale_order"
+        />
         <div id="cart_products"
              t-if="website_sale_order and website_sale_order.website_order_line"
              class="js_cart_lines d-flex flex-column mb32">
@@ -193,16 +192,12 @@
                     t-att-data-product-id="line.product_id.id"
                     t-att-value="line._get_displayed_quantity()"
                 />
-                <t t-if="line._get_shop_warning(clear=False)">
-                    <a href="#" class="btn btn-link">
-                        <i
-                            class="fa fa-warning text-warning"
-                            t-att-title="line._get_shop_warning()"
-                            role="img"
-                            aria-label="Warning"
-                        />
-                    </a>
-                </t>
+                <a t-if="line in shop_warnings" href="#" class="btn btn-link">
+                    <t
+                        t-call="website_sale.inline_warning"
+                        warning_key="line"
+                    />
+                </a>
                 <a
                     t-else=""
                     href="#"
@@ -214,13 +209,27 @@
                 </a>
             </t>
             <t t-else="">
+                <t
+                    t-if="line in shop_warnings"
+                    t-call="website_sale.inline_warning"
+                    warning_key="line"
+                    classes="'d-none d-md-block pe-1 align-self-center'"
+                />
+                <t t-set="displayed_qty" t-value="line._get_displayed_quantity()"/>
                 <input
                     type="text"
-                    class="js_quantity quantity form-control text-start text-md-end text-md-end border-0 p-0 shadow-none mw-100"
+                    class="js_quantity quantity form-control text-start text-md-end border-0 p-0 shadow-none mw-100"
                     t-att-data-line-id="line.id"
                     t-att-data-product-id="line.product_id.id"
-                    t-att-value="line._get_displayed_quantity()"
+                    t-att-value="displayed_qty"
                     readonly="True"
+                    t-att-size="len(str(displayed_qty))"
+                />
+                <t
+                    t-if="line in shop_warnings"
+                    t-call="website_sale.inline_warning"
+                    warning_key="line"
+                    classes="'d-md-none ps-1 align-self-center'"
                 />
             </t>
         </div>

@@ -1,11 +1,12 @@
 /* global Stripe */
 
-import { patch } from '@web/core/utils/patch';
-import { _t } from '@web/core/l10n/translation';
-import { rpc } from '@web/core/network/rpc';
-import { redirect } from '@web/core/utils/urls';
 import { ExpressCheckout } from '@payment/interactions/express_checkout';
 import { StripeOptions } from '@payment_stripe/interactions/stripe_options';
+import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { _t } from '@web/core/l10n/translation';
+import { rpc } from '@web/core/network/rpc';
+import { patch } from '@web/core/utils/patch';
+import { redirect } from '@web/core/utils/urls';
 
 patch(ExpressCheckout.prototype, {
     /**
@@ -84,7 +85,7 @@ patch(ExpressCheckout.prototype, {
         this.stripePaymentRequests.push(paymentRequest);
         const paymentRequestButton = stripeJS.elements().create('paymentRequestButton', {
             paymentRequest: paymentRequest,
-            style: {paymentRequestButton: {type: 'buy'}},
+            style: { paymentRequestButton: { type: 'buy' } },
         });
 
         // Check the availability of the Payment Request API first.
@@ -136,11 +137,19 @@ patch(ExpressCheckout.prototype, {
             const { client_secret } = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'],
                 this._prepareTransactionRouteParams(providerData.providerId),
-            ));
+            ).catch(error => {
+                ev.complete('fail');
+                this.call('dialog', 'add', ConfirmationDialog, {
+                    title: _t("Payment failed"),
+                    body: error.data.message || "",
+                });
+                return {};
+            }));
+            if (!client_secret) return;
             // Confirm the PaymentIntent without handling eventual next actions (e.g. 3DS).
             const { paymentIntent, error: confirmError } = await this.waitFor(
                 stripeJS.confirmCardPayment(
-                    client_secret, {payment_method: ev.paymentMethod.id}, {handleActions: false}
+                    client_secret, { payment_method: ev.paymentMethod.id }, { handleActions: false }
                 )
             );
             if (confirmError) {
@@ -180,14 +189,14 @@ patch(ExpressCheckout.prototype, {
                 const { delivery_methods, delivery_discount_minor_amount, adjusted_minor_amount } = availableCarriersData;
                 this.paymentContext['minorAmount'] = adjusted_minor_amount;
                 if (delivery_methods.length === 0) {
-                    ev.updateWith({status: 'invalid_shipping_address'});
+                    ev.updateWith({ status: 'invalid_shipping_address' });
                 } else {
                     ev.updateWith({
                         status: 'success',
                         shippingOptions: delivery_methods.map(carrier => ({
                             id: String(carrier.id),
                             label: carrier.name,
-                            detail: carrier.description ? carrier.description:'',
+                            detail: carrier.description ? carrier.description : '',
                             amount: carrier.minorAmount,
                         })),
                         ...this._getOrderDetails(

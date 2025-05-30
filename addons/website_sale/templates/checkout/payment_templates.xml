@@ -29,7 +29,10 @@
             </div>
             <div class="oe_structure clearfix" id="oe_structure_website_sale_payment_1"/>
 
-            <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
+            <div
+                t-if="not shop_warnings and website_sale_order.amount_total"
+                name="website_sale_non_free_cart"
+            >
                 <div id="payment_method" class="o_not_editable mb-3">
                     <t t-call="payment.form"/>
                 </div>

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SaleOrder(models.Model):
@@ -125,3 +125,36 @@ class SaleOrder(models.Model):
         return super()._filter_can_send_abandoned_cart_mail().filtered(
             lambda so: all(ticket.sale_available for ticket in so.order_line.event_ticket_id),
         )
+
+    def _is_cart_ready_for_checkout(self):
+        """Override of `website_sale` to check if the user is trying to order a ticket that is no
+        longer available."""
+        ready = super()._is_cart_ready_for_checkout()
+        if not (ready and self.order_line.event_id):
+            return ready
+
+        # Check that there are enough seats available per ticket.
+        registration_domain = [
+            ('sale_order_id', '=', self.id),
+            ('event_ticket_id', '!=', False),
+            ('state', '!=', 'cancel'),
+        ]
+        registrations_per_event = self.env['event.registration'].sudo()._read_group(
+            registration_domain, ['event_id'], ['id:recordset'],
+        )
+        errors = []
+        for event, registrations in registrations_per_event:
+            count_per_slot_ticket = self.env['event.registration'].sudo()._read_group(
+                [('id', 'in', registrations.ids)],
+                ['event_slot_id', 'event_ticket_id'],
+                ['__count'],
+            )
+            try:
+                event._verify_seats_availability(count_per_slot_ticket)
+            except ValidationError as e:
+                errors.append(str(e))
+
+        if errors:
+            # The error messages already inform the customer about which ticket is unavailable.
+            self.shop_warning = "\n".join(errors)
+        return not errors

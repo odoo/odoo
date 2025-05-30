@@ -1,25 +1,28 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
-from odoo.exceptions import ValidationError
+from odoo import models
 
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    def _check_cart_is_ready_to_be_paid(self):
+    def _is_cart_ready_for_payment(self):
+        """Override of `website_sale` to check that Point Relais® is used with the correct delivery
+        method, and vice versa."""
         if (
             self.partner_shipping_id.is_mondialrelay and self.delivery_set
             and self.carrier_id and not self.carrier_id.is_mondialrelay
         ):
-            raise ValidationError(_(
+            self.shop_warning = self.env._(
                 "Point Relais® can only be used with the delivery method Mondial Relay."
-            ))
-        elif not self.partner_shipping_id.is_mondialrelay and self.carrier_id.is_mondialrelay:
-            raise ValidationError(_(
+            )
+            return False
+        if not self.partner_shipping_id.is_mondialrelay and self.carrier_id.is_mondialrelay:
+            self.shop_warning = self.env._(
                 "Delivery method Mondial Relay can only ship to Point Relais®."
-            ))
-        return super()._check_cart_is_ready_to_be_paid()
+            )
+            return False
+        return super()._is_cart_ready_for_payment()
 
     def _compute_partner_shipping_id(self):
         super()._compute_partner_shipping_id()

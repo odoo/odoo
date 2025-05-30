@@ -62,7 +62,7 @@
                 </t>
                 <t t-else="">
                     <a role="button" name="website_sale_main_button"
-                        t-attf-class="btn btn-primary #{not website_sale_order._is_cart_ready() and 'disabled'} w-100"
+                        t-attf-class="btn btn-primary #{shop_warnings and 'disabled'} w-100"
                         t-att-href="next_website_checkout_step_href">
                         <span t-field="next_website_checkout_step.main_button_label"/>
                         <i class="fa fa-angle-right ms-2 fw-light"/>
@@ -178,6 +178,7 @@
         <!-- Checkout context (non exhaustive):
             - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
+            - shop_warnings: A dict mapping order or order lines to a warning message.
         -->
         <t t-call="website.layout"
             no_footer="True if show_footer is None else not show_footer"
@@ -189,6 +190,7 @@
                 t-set="show_mobile_cart_summary"
                 t-value="True if show_mobile_cart_summary is None else show_mobile_cart_summary"
             />
+            <t t-set="shop_warnings" t-value="shop_warnings or {}"/>
             <div id="wrap" class="d-flex flex-column flex-grow-1">
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">
@@ -364,12 +366,10 @@
                                     />
                                     <span class="o_cart_item_count badge bg-secondary position-absolute top-0 start-100 translate-middle">
                                         <t t-out="int(line.product_uom_qty)" />
-                                        <i
-                                            t-if="line._get_shop_warning(clear=False)"
-                                            class="fa fa-warning"
-                                            role="img"
-                                            t-att-title="line._get_shop_warning()"
-                                            aria-label="Warning"
+                                        <t
+                                            t-if="line in shop_warnings"
+                                            t-call="website_sale.inline_warning"
+                                            warning_key="line"
                                         />
                                     </span>
                                 </div>
@@ -394,12 +394,11 @@
                     </tbody>
                 </table>
             </div>
-            <t t-if='website_sale_order'>
-                <t t-set='warning' t-value='website_sale_order._get_shop_warning(clear=False)' />
-                <div t-if='warning' class="alert alert-warning" role="alert">
-                    <strong>Warning!</strong> <t t-out='website_sale_order._get_shop_warning()'/>
-                </div>
-            </t>
+            <t
+                t-if="website_sale_order in shop_warnings"
+                t-call="website_sale.block_warning"
+                warning_key="website_sale_order"
+            />
         </div>
     </template>
 
@@ -505,6 +504,41 @@
                 </t>
             </t>
         </tbody>
+    </template>
+
+    <!--
+        Helper view to display a warning referenced by a given `warning_key` in
+        `shop_warnings`.
+
+        Params:
+            - `warning_key`: The warning key possibly in `shop_warnings`.
+            - `classes`: Additionnal styling classes.
+    -->
+    <template id="block_warning">
+        <div
+            t-attf-class="alert alert-warning js_cart_lines #{classes}"
+            role="alert"
+        >
+            <strong>Warning!</strong>
+            <div t-out="shop_warnings[warning_key]" class="text-prewrap"/>
+        </div>
+    </template>
+
+    <!--
+        Helper view to display an inline warning referenced by a given `warning_key` in
+        `shop_warnings`.
+
+        Params:
+            - `warning_key`: The warning key possibly in `shop_warnings`.
+            - `classes`: Additionnal styling classes.
+    -->
+    <template id="inline_warning">
+        <i
+            t-attf-class="fa fa-warning #{classes}"
+            t-att-title="shop_warnings[warning_key]"
+            role="img"
+            aria-label="Warning"
+        />
     </template>
 
 </odoo>

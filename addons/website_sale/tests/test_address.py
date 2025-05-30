@@ -515,7 +515,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.WebsiteSaleController.shop_update_address(
                 partner_id=bad_invoicing.id, address_type='billing')
             self.assertEqual(so.partner_invoice_id, bad_invoicing)
-            redirection = self.WebsiteSaleController._check_addresses(so)
+            redirection = self.WebsiteSaleController._check_shop_address_step_ready(so)
             self.assertTrue(redirection is not None)
             self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_invoicing.id}&address_type=billing')
 
@@ -527,7 +527,7 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             self.WebsiteSaleController.shop_update_address(
                 partner_id=bad_shipping.id, address_type='delivery')
             self.assertEqual(so.partner_shipping_id, bad_shipping)
-            redirection = self.WebsiteSaleController._check_addresses(so)
+            redirection = self.WebsiteSaleController._check_shop_address_step_ready(so)
             self.assertTrue(redirection is not None)
             self.assertEqual(redirection.location, f'/shop/address?partner_id={bad_shipping.id}&address_type=delivery')
 

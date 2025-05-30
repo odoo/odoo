@@ -37,7 +37,7 @@
                             t-out="' (' + order_line.product_uom_id.name + ')'"
                         />
                     </div>
-                    <div t-out="order_line._get_shop_warning()"/>
+                    <div t-out="shop_warnings.get(order_line, '')"/>
                     <div
                         name="o_wsale_unavailable_line_button_container"
                         class="mt-2 mt-md-1 d-flex align-items-center gap-2"
@@ -138,6 +138,14 @@
             <attribute name="t-att-data-delivery-method-id">dm.id</attribute>
             <attribute name="t-att-data-delivery-method-type">dm.delivery_type</attribute>
         </button>
+    </template>
+
+    <template id="delivery_method_availability_badge" inherit_id="website_sale.delivery_method">
+        <span name="o_delivery_method_name" position="after">
+            <span t-if="not order._can_be_delivered(dm)" class="badge text-bg-danger ms-1">
+                Not available
+            </span>
+        </span>
     </template>
 
 </odoo>

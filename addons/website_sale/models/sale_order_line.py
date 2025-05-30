@@ -42,13 +42,6 @@ class SaleOrderLine(models.Model):
             return fields.Datetime.now()
         return super()._get_order_date()
 
-    def _get_shop_warning(self, clear=True):
-        self.ensure_one()
-        warn = self.shop_warning
-        if clear:
-            self.shop_warning = ''
-        return warn
-
     def _get_displayed_unit_price(self):
         show_tax = self.order_id.website_id.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'

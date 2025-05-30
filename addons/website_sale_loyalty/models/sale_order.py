@@ -258,6 +258,21 @@ class SaleOrder(models.Model):
             lambda sol: not sol.is_reward_line
         )
 
+    def _is_cart_ready_for_checkout(self):
+        """Override of `website_sale` to ensure rewards are up to date before checkout."""
+        if not any(line.is_reward_line for line in self.order_line):
+            return super()._is_cart_ready_for_checkout()
+
+        initial_amount = self.amount_total
+        self._update_programs_and_rewards()
+        if self.currency_id.compare_amounts(self.amount_total, initial_amount):
+            self.shop_warning = self.env._(
+                "Applied rewards have changed or expired.\n"
+                "Please review your cart and try again."
+            )
+            return False
+        return super()._is_cart_ready_for_checkout()
+
     def _recompute_cart(self):
         """Recompute cart with loyalty programs and rewards applied."""
         self._update_programs_and_rewards()
