@@ -1,8 +1,8 @@
 from odoo import models, fields, api, tools
 import requests
 import logging
-from datetime import datetime
 import json
+from datetime import datetime
 
 _logger = logging.getLogger(__name__)
 
@@ -12,6 +12,7 @@ class PosOrder(models.Model):
 
     menupro_id = fields.Char(string='MenuPro ID')
     origine = fields.Char(string='Origine')
+    ticket_number = fields.Integer(string='Ticket Number', help='Ticket number for the order')
 
     @api.model
     def sync_from_ui(self, orders):
@@ -20,13 +21,16 @@ class PosOrder(models.Model):
         created_orders = result.get('pos.order', {})
         for order in created_orders:
             self._sync_to_menupro(order)
+            # Generate a ticket_number
+            if 'ticket_number' not in order:
+                order['ticket_number'] = self.get_today_ticket_number()
         return result
 
     @api.model
     def _sync_to_menupro(self, order):
         restaurant_id = self.env['ir.config_parameter'].sudo().get_param('restaurant_id')
         odoo_secret_key = tools.config.get("odoo_secret_key")
-        api_url = "https://api.finance.visto.group//orders/order/upsert"
+        api_url = "https://api.finance.visto.group/orders/order/upsert"
 
         if not restaurant_id or not odoo_secret_key:
             _logger.error("Secret key or restaurant ID not configured. Skipped sync to menupro")
@@ -101,6 +105,7 @@ class PosOrder(models.Model):
                     "menupro_id": order_data.get('menupro_id', False),
                     "status": "validate",
                     "menupro_fee": 0.5,
+                    "origine": order_data.get('origine', 'desktop'),
                     "ticketNumber": int(order_data.get('pos_reference', '0-0-0').split('-')[-1]),
                     "state": order_data.get('state', 'draft')
                 }
@@ -151,3 +156,19 @@ class PosOrder(models.Model):
         except Exception as e:
             _logger.error("Error preparing API payload: %s", str(e))
             raise
+
+    def get_today_ticket_number(self):
+        """Get the count of orders made today (ignoring time)"""
+        today = fields.Date.today()
+        # Search for orders where the date part of date_order matches today
+        orders_today = self.search_count([
+            ('date_order', '>=', fields.Datetime.to_string(datetime.combine(today, datetime.min.time()))),
+            ('date_order', '<=', fields.Datetime.to_string(datetime.combine(today, datetime.max.time()))),
+        ])
+        return orders_today + 1
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            vals['ticket_number'] = self.get_today_ticket_number()
+        return super().create(vals_list)

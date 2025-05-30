@@ -8,7 +8,8 @@ class HrEmployee(models.Model):
         'hr_employee_floor_rel',
         'employee_id',
         'floor_id',
-        string='Floors autorisés'
+        string='Floors autorisés',
+        groups="point_of_sale.group_pos_user"
     )
 
     def _load_pos_data_fields(self, pos_config_id):
