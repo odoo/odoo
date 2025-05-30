@@ -245,7 +245,7 @@ export class TicketScreen extends Component {
                 return this.numberBuffer.reset();
             }
 
-            const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refunded_qty;
+            const refundableQty = toRefundDetail.line.qty - toRefundDetail.line.refundedQty;
             if (refundableQty <= 0) {
                 return this.numberBuffer.reset();
             }
@@ -583,7 +583,7 @@ export class TicketScreen extends Component {
             return false;
         }
         const theOrderline = orderlines[0];
-        const refundableQty = theOrderline.getQuantity() - theOrderline.refunded_qty;
+        const refundableQty = theOrderline.getQuantity() - theOrderline.refundedQty;
         return this.pos.isProductQtyZero(refundableQty - 1);
     }
     _prepareAutoRefundOnOrder(order) {
@@ -801,7 +801,11 @@ export class TicketScreen extends Component {
             .filter((orderInfo) => {
                 const order = this.pos.models["pos.order"].get(orderInfo[0]);
 
-                if (order && parseDateTime(orderInfo[1]) > order.date_order) {
+                if (
+                    order &&
+                    parseDateTime(orderInfo[1], { tz: "UTC" }).setZone("local").ts >
+                        order.date_order.ts
+                ) {
                     return true;
                 }
 
