@@ -12,18 +12,7 @@ const DiscussSidebarChannelPatch = {
         super.setup();
         this.actionService = useService("action");
     },
-    get commands() {
-        const commands = super.commands;
-        if (this.thread.channel_type === "channel") {
-            commands.push({
-                onSelect: () => this.openSettings(),
-                label: _t("Channel settings"),
-                icon: "fa fa-cog",
-                sequence: 10,
-            });
-        }
-        return commands;
-    },
+    /** @deprecated */
     openSettings() {
         if (this.thread.channel_type === "channel") {
             this.actionService.doAction({

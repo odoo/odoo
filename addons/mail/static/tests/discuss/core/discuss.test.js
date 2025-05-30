@@ -79,6 +79,7 @@ test("bus subscription is refreshed when channel is left", async () => {
     await waitForSteps(["subscribe"]);
     await openDiscuss();
     await waitForSteps([]);
-    await click("[title='Leave Channel']");
+    await click("[title='Channel Actions']");
+    await click(".o-dropdown-item:contains('Leave Channel')");
     await waitForSteps(["subscribe"]);
 });

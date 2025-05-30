@@ -179,6 +179,11 @@ function transformAction(component, id, action) {
                 ? action.panelOuterClass(component)
                 : action.panelOuterClass;
         },
+        /**
+         * - In action definition: indicate whether the action is elligible as partition actions. @see useThreadActions::partition
+         * - While action is being used: indicate that the action is being used as a partitioned action.
+         */
+        partition: action.partition ?? true,
         /** Determines whether this is a popover linked to this action. */
         popover: null,
         /** Determines the order of this action (smaller first). */
@@ -197,6 +202,13 @@ function transformAction(component, id, action) {
                 ? action.sequenceQuick(component)
                 : action.sequenceQuick;
         },
+        /**
+         * - In action definition: indicate whether the action is elligible as sidebar actions. @see useThreadActions::sidebarActions
+         * - While action is being used: indicate that the action is being used as a sidebar action.
+         */
+        sidebar: action.sidebar ?? action.sidebarSequence ?? false,
+        sidebarSequence: action.sidebarSequence,
+        sidebarSequenceGroup: action.sidebarSequenceGroup,
         /** Component setup to execute when this action is registered. */
         setup: action.setup,
         /** Text for the button of this action */
@@ -215,6 +227,10 @@ export const threadActionsInternal = {
     },
 };
 
+function makeContextualAction(action, ctx) {
+    return Object.assign(Object.create(action), ctx);
+}
+
 export function useThreadActions() {
     const component = useComponent();
     const transformedActions = threadActionsRegistry
@@ -228,11 +244,32 @@ export function useThreadActions() {
     const state = useState({
         get actions() {
             return transformedActions
-                .filter((action) => action.condition)
+                .filter((action) => action.condition && action.sequence !== undefined)
+                .map((action) => makeContextualAction(action, { partition: false, sidebar: false }))
                 .sort((a1, a2) => a1.sequence - a2.sequence);
         },
+        get sidebarActions() {
+            const actions = transformedActions
+                .filter((action) => action.condition && action.sidebarSequence !== undefined)
+                .sort((action1, action2) => action1.sidebarSequence - action2.sidebarSequence)
+                .map((action) => makeContextualAction(action, { partition: false, sidebar: true }));
+            const groups = {};
+            for (const a of actions) {
+                if (!(a.sidebarSequenceGroup in groups)) {
+                    groups[a.sidebarSequenceGroup] = [];
+                }
+                groups[a.sidebarSequenceGroup].push(a);
+            }
+            const sortedGroups = Object.entries(groups).sort(([g1, g2]) => g1 - g2);
+            for (const [, actions] of sortedGroups) {
+                actions.sort((a1, a2) => a1.sidebarSequence - a2.sidebarSequence);
+            }
+            return sortedGroups.map(([g1, actions]) => actions);
+        },
         get partition() {
-            const actions = transformedActions.filter((action) => action.condition);
+            const actions = transformedActions
+                .filter((action) => action.condition && action.partition)
+                .map((action) => makeContextualAction(action, { partition: true, sidebar: false }));
             const quick = actions
                 .filter((a) => a.sequenceQuick)
                 .sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
@@ -252,7 +289,7 @@ export function useThreadActions() {
             }
             const group = sortedGroups.map(([groupId, actions]) => actions);
             const other = actions
-                .filter((a) => !a.sequenceQuick & !a.sequenceGroup)
+                .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
                 .sort((a1, a2) => a1.sequence - a2.sequence);
             return { quick, group, other };
         },
