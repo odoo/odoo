@@ -59,7 +59,7 @@
         'views/snippets/snippets.xml',
         'views/snippets/s_add_to_cart.xml',
         'views/snippets/s_dynamic_snippet_products.xml',
-        'views/snippets/s_dynamic_category_snippet.xml',
+        'views/snippets/s_dynamic_snippet_categories.xml',
         'views/snippets/s_dynamic_snippet_products_preview_data.xml',
         'views/snippets/s_mega_menu/big_icons_subtitles.xml',
         'views/snippets/s_mega_menu/cards.xml',
@@ -80,7 +80,7 @@
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'website_sale/static/src/xml/category_snippet_templates.xml',
+            'website_sale/static/src/xml/snippet_category_templates.xml',
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/**/*.js',
             ('remove', 'website_sale/static/src/snippets/**/000.js'),
@@ -89,7 +89,7 @@
             'website_sale/static/src/scss/website_sale.scss',
             'website_sale/static/src/scss/website_sale_frontend.scss',
             'website_sale/static/src/scss/website_sale_delivery.scss',
-            'website_sale/static/src/snippets/s_dynamic_category_snippet/000.scss',
+            'website_sale/static/src/snippets/s_dynamic_snippet_categories/000.scss',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
 
@@ -165,7 +165,6 @@
             'website_sale/static/src/scss/website_sale.editor.scss',
             'website_sale/static/src/snippets/s_dynamic_snippet_products/options.js',
             'website_sale/static/src/snippets/s_add_to_cart/options.js',
-            'website_sale/static/src/snippets/s_dynamic_category_snippet/options.js',
             'website_sale/static/src/js/website_sale.editor.js',
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/js/editor/snippets.options.js',

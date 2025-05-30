@@ -4,11 +4,13 @@
     <t t-name="website_sale.dynamic_filter_template_categories">
         <t t-foreach="data" t-as="category" t-key="category.id">
             <div
-                class="o_not_editable category_item rounded position-relative"
+                class="category_item rounded position-relative oe_unremovable oe_unmovable"
                 t-att-data-category-id="category.id"
-                t-attf-style="grid-row: span {{height}};"
+                t-attf-style="grid-row: span {{size}};"
+                contenteditable="false"
             >
                 <img
+                    loading="lazy"
                     t-attf-src="/web/image/product.public.category/{{category.id}}/cover_image"
                     alt="Category Image"
                     class="s_category_image img-fluid position-absolute w-100 h-100"
@@ -18,7 +20,7 @@
                     <a
                         role="button"
                         t-attf-href="/shop/category/{{category.id}}"
-                        class="btn btn-primary align-self-start"
+                        class="btn btn-primary align-self-start oe_unremovable"
                         t-out="buttonText"
                     />
                 </div>
