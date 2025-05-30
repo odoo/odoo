@@ -65,6 +65,17 @@ export function defineWebsiteModels() {
     defineMailModels();
     defineModels([Website, IrUiView]);
     onRpc("/website/theme_customize_data_get", () => []);
+    onRpc("website", "web_search_read", () => ({
+        length: 1,
+        records: [
+            {
+                id: 1,
+                default_lang_id: {
+                    code: "en_US",
+                },
+            },
+        ],
+    }));
 }
 
 /**
@@ -474,6 +485,9 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
                     defaultLangName: "English (US)",
                 },
                 id: 1,
+                default_lang_id: {
+                    code: "en_US",
+                },
             };
         },
     });

@@ -271,7 +271,17 @@ export const websiteService = {
                 ]);
             },
             async fetchWebsites() {
-                websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name', 'language_ids']))];
+                websites = (
+                    await orm.webSearchRead("website", [], {
+                        specification: {
+                            domain: {},
+                            id: {},
+                            name: {},
+                            language_ids: {},
+                            default_lang_id: { fields: { code: {} } },
+                        },
+                    })
+                ).records;
             },
             async loadWysiwyg() {
                 await ensureJQuery();
