@@ -29,6 +29,10 @@ export class SMLX2ManyField extends X2ManyField {
         });
     }
 
+    get quantListViewShowOnHandOnly(){
+        return true; // To override in mrp_subcontracting
+    }
+
     async onAdd({ context, editable } = {}) {
         if (!this.props.record.data.show_quant) {
             return super.onAdd(...arguments);
@@ -40,7 +44,7 @@ export class SMLX2ManyField extends X2ManyField {
             ...context,
             single_product: true,
             list_view_ref: "stock.view_stock_quant_tree_simple",
-            search_default_on_hand: true,
+            search_default_on_hand: this.quantListViewShowOnHandOnly,
             search_default_in_stock: true,
         };
         const productName = this.props.record.data.product_id.display_name;
