@@ -26,6 +26,7 @@ export class LinkPopover extends Component {
         isImage: Boolean,
         showReplaceTitleBanner: Boolean,
         type: String,
+        LinkPopoverState: Object,
         recordInfo: Object,
         canEdit: { type: Boolean, optional: true },
         canUpload: { type: Boolean, optional: true },
@@ -70,7 +71,7 @@ export class LinkPopover extends Component {
             this.props.linkElement
         );
         this.state = useState({
-            editing: this.props.linkElement.href ? false : true,
+            editing: this.props.LinkPopoverState.editing,
             url: this.props.linkElement.href || "",
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
