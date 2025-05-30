@@ -615,6 +615,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 (req) => req.isViewData !== isViewData || req.shouldReset !== shouldReset
             );
             if (!aggregatedToEnable.size && !aggregatedToDisable.size) {
+                defs.map((def) => def.resolve());
                 return;
             } else {
                 rpc("/website/theme_customize_data", {
