@@ -66,6 +66,7 @@ export function defineWebsiteModels() {
     defineModels([Website, IrUiView]);
     before(() => {
         onRpc("/website/theme_customize_data_get", () => []);
+        onRpc("/websites/data", () => [{ id: 1 }]);
     });
 }
 
