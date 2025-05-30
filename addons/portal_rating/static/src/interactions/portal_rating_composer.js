@@ -13,7 +13,27 @@ import { user } from "@web/core/user";
 export class RatingPopupComposer extends Interaction {
     static selector = ".o_rating_popup_composer";
 
+    dynamicSelectors = {
+        ...this.dynamicSelectors,
+        _btn: () => document.querySelector(".o_rating_popup_composer_btn"),
+        _btn_label: () =>
+            document.querySelector(".o_rating_popup_composer_btn .o_rating_popup_composer_text"),
+    };
+
+    dynamicContent = {
+        _root: {
+            "t-att-data-override_edit_message_id": () => this.documentId,
+        },
+        _btn: {
+            "t-att-class": () => ({ "d-none": !this.isBtnDisplayed }),
+        },
+        _btn_label: {
+            "t-out": () => this.btnLabel,
+        },
+    };
+
     setup() {
+        this.isBtnDisplayed = false;
         const options = this.el.dataset;
         this.rating_avg = Math.round(options["rating_avg"] * 100) / 100 || 0.0;
         this.rating_count = options["rating_count"] || 0.0;
@@ -29,6 +49,15 @@ export class RatingPopupComposer extends Interaction {
             "reloadRatingPopupComposer": this.onReloadRatingPopupComposer.bind(this),
         }, options, {});
         this.options.send_button_label = this.options.default_message_id ? _t("Update review") : _t("Post review");
+        // When the review is emptied in the chatter, display the button as it cannot be edited in the chatter anymore.
+        this.deleteMessageEvent = "WEBSITE_SLIDES:CHANNEL_DELETE_MESSAGE";
+        this.deleteMessageListener = ({ detail }) => {
+            if (detail.id === this.documentId) {
+                this.isBtnDisplayed = true;
+                this.updateContent();
+            }
+        };
+        this.env.bus.addEventListener(this.deleteMessageEvent, this.deleteMessageListener);
     }
 
     start() {
@@ -78,13 +107,15 @@ export class RatingPopupComposer extends Interaction {
         this.composerEl = this.renderAt("portal.Composer", { widget: {options: this.env.portalComposerOptions }}, locationEl, "afterend")[0];
         delete this.env.portalComposerOptions;
         locationEl.remove();
-        // Change the text of the button
-        this.el.querySelector(".o_rating_popup_composer_text").textContent =
-            options.is_fullscreen
-                ? _t("Review")
-                : options.default_message_id
-                    ? _t("Edit Review")
-                    : _t("Add Review");
+        this.documentId = options.default_message_id;
+        this.isBtnDisplayed =
+            options.is_fullscreen || !options.default_message_id || options.default_message === "";
+        this.btnLabel = options.is_fullscreen
+            ? _t("Review")
+            : options.default_message_id
+            ? _t("Edit Review")
+            : _t("Add Review");
+        this.updateContent();
     }
 
     /**
@@ -119,6 +150,10 @@ export class RatingPopupComposer extends Interaction {
         };
         Object.assign(data, defaultOptions);
         this.options = Object.assign(this.options, data);
+    }
+
+    destroy() {
+        this.env.bus.removeEventListener(this.deleteMessageEvent, this.deleteMessageListener);
     }
 }
 

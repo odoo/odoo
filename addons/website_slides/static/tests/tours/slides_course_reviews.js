@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 import { registry } from "@web/core/registry";
 
 /**
@@ -22,7 +24,8 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             // If it fails here, it means the log note is considered as a review
-            trigger: "span:contains(Add Review)",
+            content: "Add review",
+            trigger: ".o_rating_popup_composer_btn",
             run: "click",
         },
         {
@@ -34,11 +37,32 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "body:not(:has(.modal.show))",
+            trigger: ".o_wslides_course_header_nav_review",
+            run() {
+                const a = document.querySelector("a[id=review-tab]");
+                if (a.textContent !== "Reviews (1)") {
+                    throw Error("Text should be 'Reviews (1)'.")
+                }
+                a.click();
+            },
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message-textContent:contains(Great course!)",
         },
         {
             // If it fails here, it means the system is allowing you to add another review.
-            trigger: "span:contains(Edit Review)",
+            content: "The button to add or edit review is hidden.",
+            trigger: ".o_rating_popup_composer_btn:not(:visible)",
+        },
+        {
+            content: "Display contextual menu of the rating message",
+            trigger: "#chatterRoot:shadow .o-mail-Message-textContent:contains(Great course!)",
+            run: "click",
+        },
+        {
+            content: 'Click on "edit" action of the contextual menu of the rating message',
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message-textContent:contains(Great course!) button[name='edit']",
             run: "click",
         },
         {
@@ -51,7 +75,7 @@ registry.category("web_tour.tours").add("course_reviews", {
         },
         {
             content: "Reload page (fetch message)",
-            trigger: "body:not(:has(.modal.show))",
+            trigger: "#chatterRoot:shadow .o-mail-Chatter",
             run() {
                 location.reload();
             },
@@ -69,7 +93,12 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍')",
+            content: "Open the Emoji picker",
+            trigger: "#chatterRoot:shadow .o-mail-QuickReactionMenu-emojiPicker",
+            run: "click",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-Emoji[data-codepoints='😃']",
             run: "click",
         },
         {
