@@ -14,20 +14,20 @@
                      t-att-id) and each template needs to define a div element. -->
                 <div class="oe_structure" id="oe_structure_website_sale_payment_2"/>
             </t>
-            <div class="col-12" t-if="errors">
+            <div class="col-12" t-if="shop_warnings">
                 <t t-set="hide_payment_button" t-value="True"/>
-                <t t-foreach="errors" t-as="error">
-                    <div class="alert alert-danger" t-if="error" role="alert">
-                        <h4>
-                            <t t-out="error[0]" />
-                        </h4>
-                        <t t-out="error[1]" />
-                    </div>
-                </t>
+                <t
+                    t-if="order in shop_warnings"
+                    t-call="website_sale.block_warning"
+                    warning_key="order"
+                />
             </div>
             <div class="oe_structure clearfix" id="oe_structure_website_sale_payment_1"/>
 
-            <div t-if="not errors and website_sale_order.amount_total" name="website_sale_non_free_cart">
+            <div
+                t-if="not shop_warnings and website_sale_order.amount_total"
+                name="website_sale_non_free_cart"
+            >
                 <div id="payment_method" class="o_not_editable mb-3">
                     <t t-call="payment.form"/>
                 </div>

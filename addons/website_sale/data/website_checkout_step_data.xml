@@ -17,6 +17,13 @@
         <field name="back_button_label">Back to address</field>
     </record>
 
+    <record id="website_sale.checkout_step_address" model="website.checkout.step">
+        <field name="name">Address</field>
+        <field name="sequence">125</field>
+        <field name="step_href">/shop/address</field>
+        <field name="parent_id" ref="checkout_step_delivery"/>
+    </record>
+
     <record id="website_sale.checkout_step_extra" model="website.checkout.step">
         <field name="name">Extra Info</field>
         <field name="sequence">500</field>

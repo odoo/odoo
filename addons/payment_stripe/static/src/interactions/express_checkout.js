@@ -1,11 +1,12 @@
 /* global Stripe */
 
-import { patch } from '@web/core/utils/patch';
-import { _t } from '@web/core/l10n/translation';
-import { rpc } from '@web/core/network/rpc';
-import { redirect } from '@web/core/utils/urls';
 import { ExpressCheckout } from '@payment/interactions/express_checkout';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
+import { ConfirmationDialog } from '@web/core/confirmation_dialog/confirmation_dialog';
+import { _t } from '@web/core/l10n/translation';
+import { rpc } from '@web/core/network/rpc';
+import { patch } from '@web/core/utils/patch';
+import { redirect } from '@web/core/utils/urls';
 
 patch(ExpressCheckout.prototype, {
     /**
@@ -136,7 +137,15 @@ patch(ExpressCheckout.prototype, {
             const { client_secret } = await this.waitFor(rpc(
                 this.paymentContext['transactionRoute'],
                 this._prepareTransactionRouteParams(providerData.providerId),
-            ));
+            ).catch(error => {
+                ev.complete('fail');
+                this.call('dialog', 'add', ConfirmationDialog, {
+                    title: _t("Payment failed"),
+                    body: error.data.message || "",
+                });
+                return {};
+            }));
+            if (!client_secret) return;
             // Confirm the PaymentIntent without handling eventual next actions (e.g. 3DS).
             const { paymentIntent, error: confirmError } = await this.waitFor(
                 stripeJS.confirmCardPayment(

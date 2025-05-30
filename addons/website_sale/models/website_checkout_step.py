@@ -15,6 +15,8 @@ class WebsiteCheckoutStep(models.Model):
     main_button_label = fields.Char(translate=True)
     back_button_label = fields.Char(translate=True)
     website_id = fields.Many2one('website', ondelete='cascade')
+    # Note: Only a single level of hierarchy is supported.
+    parent_id = fields.Many2one('website.checkout.step')
 
     def _get_next_checkout_step(self, allowed_steps_domain):
         """ Get the next step in the checkout flow based on the sequence."""
@@ -26,8 +28,12 @@ class WebsiteCheckoutStep(models.Model):
 
     def _get_previous_checkout_step(self, allowed_steps_domain):
         """ Get the previous step in the checkout flow based on the sequence."""
+        return self._get_previous_checkout_steps(allowed_steps_domain, limit=1)
+
+    def _get_previous_checkout_steps(self, allowed_steps_domain, limit=None):
+        """ Get the previous steps in the checkout flow based on the sequence."""
 
         previous_step_domain = Domain.AND(
             [allowed_steps_domain, [('sequence', '<', self.sequence)]]
         )
-        return self.search(previous_step_domain, order='sequence DESC', limit=1)
+        return self.search(previous_step_domain, order='sequence DESC', limit=limit)
