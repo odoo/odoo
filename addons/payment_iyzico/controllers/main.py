@@ -23,7 +23,17 @@ class IyzicoController(http.Controller):
         :param dict data: The notification data.
         """
         _logger.info("Notification received from Iyzico with data:\n%s", pprint.pformat(data))
+        self._verify_and_handle_notification_data(data)
 
+        return request.redirect('/payment/status')
+
+    @staticmethod
+    def _verify_and_handle_notification_data(data):
+        """ Verify and process the notification data sent by Iyzico.
+
+        :param dict data: The notification data.
+        :return: None
+        """
         try:
             tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                 'iyzico', data
@@ -36,14 +46,14 @@ class IyzicoController(http.Controller):
                     'token': data.get('token'),
                 },
             )
-
             _logger.info(
                 "Response of Iyzico Checkout form Retrive request:\n%s",
                 pprint.pformat(cf_response)
             )
+
             if cf_response.get('paymentStatus') != 'FAILURE':
                 # Check the integrity of the notification
-                self._verify_notification_signature(cf_response, tx_sudo)
+                IyzicoController._verify_notification_signature(cf_response, tx_sudo)
 
                 # Handle the notification data.
                 tx_sudo._handle_notification_data('iyzico', cf_response)
@@ -52,8 +62,6 @@ class IyzicoController(http.Controller):
                 # data to verify signature.
         except ValidationError:
             _logger.exception("Unable to handle notification data; skipping to acknowledge.")
-
-        return request.redirect('/payment/status')
 
     @staticmethod
     def _verify_notification_signature(notification_data, tx_sudo):
