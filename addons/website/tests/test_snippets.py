@@ -5,9 +5,8 @@ from lxml import html
 from werkzeug.urls import url_encode
 
 from odoo.tests import HttpCase, tagged
-from odoo.addons.website.tools import MockRequest, create_image_attachment
-from odoo.tests.common import HOST
-from odoo.tools import config
+from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.addons.website.tools import create_image_attachment
 import unittest
 
 _logger = logging.getLogger(__name__)

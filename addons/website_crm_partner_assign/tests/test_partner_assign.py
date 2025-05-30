@@ -12,7 +12,7 @@ from odoo.tools import mute_logger
 from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.website.tools import MockRequest
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_crm_partner_assign.controllers.main import (
     WebsiteAccount,
     WebsiteCrmPartnerAssign,
