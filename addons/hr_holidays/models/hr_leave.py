@@ -709,6 +709,14 @@ class HolidaysRequest(models.Model):
                 continue
             if holiday.employee_id:
                 leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
+                allocation_exists = self.env['hr.leave.allocation'].search_count([
+                    ('employee_id', '=', holiday.employee_id.id),
+                    ('holiday_status_id', '=', holiday.holiday_status_id.id),
+                    ('state', '=', 'validate')
+                ], limit=1)
+                if not allocation_exists:
+                    raise ValidationError(_('You do not have any allocation for this time off type.\n'
+                                            'Please request an allocation before submitting your time off request.'))
                 if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1\
                         or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
                     raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
