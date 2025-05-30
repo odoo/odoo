@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import io
 import re
-import xlwt
-import xlsxwriter
 
 from odoo.tools.misc import format_date
 
@@ -24,28 +22,27 @@ COLUMN_HEADER_MAP = {
 }
 
 
-def write_row(self, row, col, data):
-    for token in data:
-        self.write(row, col, token)
-        col += 1
-
-
-xlwt.Worksheet.write_row = write_row
-
-
 def _export_bir_2307(sheet_title, moves, file_format='xlsx'):
     output = io.BytesIO()
     if file_format == 'xls':
+        import xlwt  # noqa: PLC0415
         workbook = xlwt.Workbook(encoding='utf-8')
         worksheet = workbook.add_sheet(sheet_title)
+
+        def write_row(row, col, data):
+            for token in data:
+                worksheet.write(row, col, token)
+                col += 1
     else:
+        import xlsxwriter  # noqa: PLC0415
         workbook = xlsxwriter.Workbook(output, {
             'in_memory': True,
             'strings_to_formulas': False,  # As we need to give a default value when using formulas, we need to handle them manually so this is not needed.
         })
         worksheet = workbook.add_worksheet(sheet_title)
+        write_row = worksheet.write_row
 
-    worksheet.write_row(0, 0, list(COLUMN_HEADER_MAP.keys()))
+    write_row(0, 0, list(COLUMN_HEADER_MAP.keys()))
     worksheet_row = 1
     for move in moves:
         partner = move.partner_id
@@ -72,7 +69,7 @@ def _export_bir_2307(sheet_title, moves, file_format='xlsx'):
                 values['price_subtotal'] = tax_detail['base_amount']
                 values['amount'] = abs(tax.amount)
                 values['tax_amount'] = abs(tax_detail['tax_amount'])
-                worksheet.write_row(worksheet_row, 0, [values[field] for field in COLUMN_HEADER_MAP.values()])
+                write_row(worksheet_row, 0, [values[field] for field in COLUMN_HEADER_MAP.values()])
                 worksheet_row += 1
 
     if file_format == 'xls':
