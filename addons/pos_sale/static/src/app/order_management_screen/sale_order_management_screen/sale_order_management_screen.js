@@ -192,13 +192,18 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         continue;
                     }
 
+                    let taxIds = orderFiscalPos ? undefined : line.tax_id;
+                    if (line.product_id[0] === this.pos.config.down_payment_product_id[0]) {
+                        taxIds = line.tax_id;
+                    }
+
                     const line_values = {
                         pos: this.pos,
                         order: this.pos.get_order(),
                         product: this.pos.db.get_product_by_id(line.product_id[0]),
                         description: line.name,
                         price: line.price_unit,
-                        tax_ids: orderFiscalPos ? undefined : line.tax_id,
+                        tax_ids: taxIds,
                         price_manually_set: false,
                         price_type: "automatic",
                         sale_order_origin_id: clickedOrder,
