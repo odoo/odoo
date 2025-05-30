@@ -43,6 +43,74 @@ class PaymentTransaction(models.Model):
         }
         return rendering_values
 
+    def _iyzico_checkoutform_initialize(self):
+        """" Intialize checkout form request and return Iyzico payment page url.
+
+        :return: Payment page url.
+        :rtype: str
+        """
+        payload = self._iyzico_prepare_checkoutform_initialize_payload()
+        _logger.info(
+            "Sending 'CF Initialize' request for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(payload)
+        )
+        transaction_data = self.provider_id._iyzico_make_request(
+            '/payment/iyzipos/checkoutform/initialize/auth/ecom',
+            payload=payload,
+        )
+        _logger.info(
+            "Response of 'CF Initialize' request for transaction with reference %s:\n%s",
+            self.reference, pprint.pformat(transaction_data)
+        )
+
+        # Temporary store token to fetch transaction in the callback
+        self.provider_reference = transaction_data.get('token')
+
+        return transaction_data.get('paymentPageUrl')
+
+    def _iyzico_prepare_checkoutform_initialize_payload(self):
+        """ Create payload for the checkoutform initialize request based on the transaction values.
+
+        :return: The request payload.
+        :rtype: dict
+        """
+        base_url = self.provider_id.get_base_url()
+        first_name, last_name = payment_utils.split_partner_name(self.partner_name)
+        return {
+            'basketId': self.reference,
+            # Dummy basket item as it is required in iyzico
+            'basketItems': [{
+                'id': 'Dummy ItemID',
+                'price': self.amount,
+                'name': 'Dummy Product',
+                'category1': 'Dummy Category',
+                'itemType': "VIRTUAL",
+            }],
+            'billingAddress': {
+                'address': self.partner_address,
+                'contactName': self.partner_name,
+                'city': self.partner_city,
+                'country': self.partner_country_id.name,
+            },
+            'buyer': {
+                'id': self.id,
+                'name': first_name,
+                'surname': last_name,
+                'identityNumber': f'{first_name}_{self.partner_id.id}',
+                'email': self.partner_email,
+                'registrationAddress': self.partner_address,
+                'city': self.partner_city,
+                'country': self.partner_country_id.name,
+                'ip': self.id,
+            },
+            'callbackUrl': urls.url_join(base_url, IyzicoController._return_url),
+            'conversationId': self.reference,
+            'currency': self.currency_id.name,
+            'locale': self.env.lang == 'tr_TR' and 'tr' or 'en',
+            "paidPrice": self.amount,
+            'price': self.amount,
+        }
+
     def _get_tx_from_notification_data(self, provider_code, notification_data):
         """ Override of `payment` to find the transaction based on Iyzico data.
 
@@ -118,59 +186,3 @@ class PaymentTransaction(models.Model):
                 status, self.reference
             )
             self._set_error("Iyzico: " + self.env._("Unknown status code: %s", status))
-
-    def _iyzico_checkoutform_initialize(self):
-        base_url = self.provider_id.get_base_url()
-        first_name, last_name = payment_utils.split_partner_name(self.partner_name)
-        payload = {
-            'basketId': self.reference,
-            # Dummy basket item as it is required in iyzico
-            'basketItems': [{
-                'id': 'Dummy ItemID',
-                'price': self.amount,
-                'name': 'Dummy Product',
-                'category1': 'Dummy Category',
-                'itemType': "VIRTUAL",
-            }],
-            'billingAddress': {
-                'address': self.partner_address,
-                'contactName': self.partner_name,
-                'city': self.partner_city,
-                'country': self.partner_country_id.name,
-            },
-            'buyer': {
-                'id': self.id,
-                'name': first_name,
-                'surname': last_name,
-                'identityNumber': f'{first_name}_{self.partner_id.id}',
-                'email': self.partner_email,
-                'registrationAddress': self.partner_address,
-                'city': self.partner_city,
-                'country': self.partner_country_id.name,
-                'ip': self.id,
-            },
-            'callbackUrl': urls.url_join(base_url, IyzicoController._return_url),
-            'conversationId': self.reference,
-            'currency': self.currency_id.name,
-            'locale': self.env.lang == 'tr_TR' and 'tr' or 'en',
-            "paidPrice": self.amount,
-            'price': self.amount,
-        }
-
-        _logger.info(
-            "Sending 'CF Initialize' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(payload)
-        )
-        transaction_data = self.provider_id._iyzico_make_request(
-            '/payment/iyzipos/checkoutform/initialize/auth/ecom',
-            payload=payload,
-        )
-        _logger.info(
-            "Response of 'CF Initialize' request for transaction with reference %s:\n%s",
-            self.reference, pprint.pformat(transaction_data)
-        )
-
-        # Temporary store token to fetch transaction in the callback
-        self.provider_reference = transaction_data.get('token')
-
-        return transaction_data.get('paymentPageUrl')
