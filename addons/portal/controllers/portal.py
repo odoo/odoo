@@ -637,7 +637,7 @@ class CustomerPortal(Controller):
             name_change = (
                 'name' in address_values
                 and partner_sudo.name
-                and address_values['name'] != partner_sudo.name
+                and address_values['name'] != partner_sudo.name.strip()
             )
             country_change = (
                 'country_id' in address_values
