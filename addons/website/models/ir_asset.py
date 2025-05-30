@@ -57,6 +57,11 @@ class IrAsset(models.Model):
             return self.filtered(lambda asset: not asset.website_id)
 
         most_specific_assets = self.env['ir.asset']
+        specific_assets_keys = set()
+        for asset_check in self:
+            if asset_check.website_id == current_website:
+                specific_assets_keys.add(asset_check.key)
+
         for asset in self:
             if asset.website_id == current_website:
                 # specific asset: add it if it's for the current website and ignore
@@ -66,9 +71,9 @@ class IrAsset(models.Model):
                 # no key: added either way
                 if not asset.key:
                     most_specific_assets += asset
-                # generic asset: add it iff for the current website, there is no
+                # generic asset: add it only if, for the current website, there is no
                 # specific asset for this asset (based on the same `key` attribute)
-                elif not any(asset.key == asset2.key and asset2.website_id == current_website for asset2 in self):
+                elif asset.key not in specific_assets_keys:
                     most_specific_assets += asset
 
         return most_specific_assets
