@@ -106,6 +106,7 @@ class PosOrder(models.Model):
                     "menupro_id": order_data.get('menupro_id', False),
                     "status": "validate",
                     "menupro_fee": 0.5,
+                    "origine": order_data.get('origine', 'desktop'),
                     "ticketNumber": int(order_data.get('pos_reference', '0-0-0').split('-')[-1]),
                     "state": order_data.get('state', 'draft')
                 }
