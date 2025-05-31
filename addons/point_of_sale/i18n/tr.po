@@ -14,12 +14,12 @@
 # Gökhan Yüksel <yg_yuksel@hotmail.com>, 2024
 # gezgin biri <gezginbiri@hotmail.com>, 2024
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2024
+# Sinem Cil, 2024
 # Saban Yildiz <sabany@projetgrup.com>, 2024
 # Cem Uygur <cemuygur.beb@gmail.com>, 2024
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2024
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
 # Ayhan Kızıltan, 2024
-# Sinem Cil, 2024
 # Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2024
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2024
 # Ferat Tnc <hnghos@gmail.com>, 2024
@@ -527,8 +527,8 @@ msgid ""
 "A session is a period of time, usually one day, during which you sell "
 "through the Point of Sale."
 msgstr ""
-"Oturum, Satış Noktası üzerinden satış yaptığınız genellikle bir günlük bir "
-"zaman dilimidir."
+"Oturum, Satış Noktası üzerinden satış yaptığınız, genellikle bir gün "
+"uzunluğunda bir zaman dilimidir."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -537,7 +537,7 @@ msgid ""
 "A session is currently opened for this PoS. Some settings can only be "
 "changed after the session is closed."
 msgstr ""
-"Şu anda bu PoS için bir oturum açılmıştır. Bazı ayarlar yalnızca oturum "
+"Bu PoS için bir oturum açılmış durumdadır. Bazı ayarlar ancak oturum "
 "kapatıldıktan sonra değiştirilebilir."
 
 #. module: point_of_sale
@@ -875,8 +875,8 @@ msgid ""
 "All payment methods must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"Eğer ayarlanmamışsa, tüm ödeme yöntemleri Satış Yevmiyesindeki ya da şirket "
-"para birimi ile aynı olmalı."
+"Tüm ödeme yöntemleri, Satış Günlüğü ile aynı para biriminde veya "
+"ayarlanmamışsa şirket para biriminde olmalıdır."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
@@ -2637,7 +2637,7 @@ msgid ""
 "Defines the name of the payment method that will be displayed in the Point "
 "of Sale when the payments are selected."
 msgstr ""
-"Ödemeler seçildiğinde Satış Noktası'nda görüntülenecek ödeme yönteminin "
+"Ödemeler seçildiğinde Satış Noktasında görüntülenecek olan ödeme yönteminin "
 "adını tanımlar."
 
 #. module: point_of_sale
@@ -3224,8 +3224,8 @@ msgid ""
 "Forces to set a customer when using this payment method and splits the "
 "journal entries for each customer. It could slow down the closing process."
 msgstr ""
-"Bu ödeme yöntemini kullanırken bir müşteri belirlemeye zorlar ve yevmiye "
-"kayıtlarını her müşteri için böler. Kapanış sürecini yavaşlatabilir."
+"Bu ödeme yöntemi kullanılırken bir müşteri ayarlamaya zorlar ve her müşteri "
+"için yevmiye kayıtlarını böler. Kapanış sürecini yavaşlatabilir."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3529,9 +3529,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Tüm ürünleri bir kerede teslim ederseniz, teslimat siparişi en büyük ürün "
-"teslim süresine göre planlanacaktır. Aksi takdirde, en kısasına "
-"dayanacaktır."
+"Tüm ürünleri tek seferde teslim ederseniz teslimat siparişi en uzun ürün "
+"teslim süresine göre planlanacaktır. Aksi takdirde, en kısa süre esas "
+"alınacaktır."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -3598,9 +3598,9 @@ msgid ""
 "                Invocing/Accounting app will create Bank and Cash payment\n"
 "                methods automatically."
 msgstr ""
-"Genel Ayarlar'dan hesap planının yüklenmesi\n"
-"                Faturalama/Muhasebe uygulaması Banka ve Nakit ödeme oluşturur\n"
-"                yöntemleri otomatik olarak."
+"Faturalama/Muhasebe uygulamalarının Genel Ayarlarından\n"
+"                hesap planının yüklenmesi, Banka ve Nakit ödeme yöntemlerini\n"
+"                otomatik olarak oluşturacaktır."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -3971,7 +3971,7 @@ msgid ""
 "Overrides the company's receivable account (for Point of Sale) used in the journal entries."
 msgstr ""
 "Şirket ayarından varsayılan hesabı kullanmak için boş bırakın.\n"
-"Şirketin yevmiye kayıtlarında kullanılan alacak hesabını (Satış Noktası için) geçersiz kılar."
+"Yevmiye kayıtlarında kullanılan şirketin alacak hesabını (Satış Noktası için) geçersiz kılar."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
@@ -4113,7 +4113,7 @@ msgid ""
 "the certificate of your IoT Box."
 msgstr ""
 "IoT Box v18.12 veya üstünü kullandığınızdan emin olun. IoT Kutunuzun "
-"sertifikasını kabul etmek için %siçiçe dizinlere gidin."
+"sertifikasını kabul etmek için %söğesine gidin ."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4630,8 +4630,8 @@ msgid ""
 "Only a negative quantity is allowed for this refund line. Click on +/- to "
 "modify the quantity to be refunded."
 msgstr ""
-"Bu iade satırı için yalnızca negatif bir miktara izin verilir. İade edilecek"
-" miktarı değiştirmek için +/- üzerine tıklayın."
+"Bu iade satırı için yalnızca negatif miktarlara izin verilir. İade edilecek "
+"miktarı değiştirmek için +/- üzerine tıklayın."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5370,8 +5370,8 @@ msgid ""
 "Please go on the %s journal and define a Loss Account. This account will be "
 "used to record cash difference."
 msgstr ""
-"Lütfen %s yevmiyesine gidin ve bir Kayıp Hesabı tanımlayın. Bu hesap, nakit "
-"farkını kaydetmek için kullanılacaktır."
+"Lütfen %s yevmiye defterine gidin ve bir Zarar Hesabı tanımlayın. Bu hesap, "
+"nakit farkını kaydetmek için kullanılacaktır."
 
 #. module: point_of_sale
 #. odoo-python
@@ -5380,8 +5380,8 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
-"Lütfen %s yevmiyesine gidin ve bir Kar Hesabı tanımlayın. Bu hesap, nakit "
-"farkını kaydetmek için kullanılacaktır."
+"Lütfen %s yevmiye defterine gidin ve bir Zarar Hesabı tanımlayın. Bu hesap, "
+"nakit farkını kaydetmek için kullanılacaktır."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6261,7 +6261,7 @@ msgstr "SEBEP"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 msgid "REFUNDED:"
-msgstr ""
+msgstr "İADE EDİLEN:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__rating_ids
@@ -6644,7 +6644,7 @@ msgstr "SMS Etkin"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/navbar/sale_details_button/sales_detail_report.xml:0
 msgid "SOLD:"
-msgstr ""
+msgstr "SATILAN:"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
@@ -7691,8 +7691,8 @@ msgid ""
 "The invoice journal must be in the same currency as the Sales Journal or the"
 " company currency if that is not set."
 msgstr ""
-"Fatura yevmiyesi, eğer para birimi ayarlanmamışsa, Satış Yevmiyesi ya da "
-"şirket para birimi ile aynı olmak zorundadır."
+"Fatura günlüğü, Satış Günlüğü ile aynı para biriminde veya bunun "
+"ayarlanmamış olduğu durumda şirket para biriminde olmalıdır."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7771,9 +7771,9 @@ msgid ""
 "selected category trees. If no category is specified, all available products"
 " will be shown"
 msgstr ""
-"Satış noktası, yalnızca seçilen kategori ağaçlarından birinde bulunan "
-"ürünleri görüntüler. Herhangi bir kategori belirtilmezse, mevcut tüm ürünler"
-" gösterilir"
+"Satış noktası yalnızca seçilen kategori ağaçlarından birine dahil olan "
+"ürünleri gösterecektir. Herhangi bir kategori belirtilmediği takdirde mevcut"
+" tüm ürünler gösterilecektir"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_account_bank_statement_line__reversed_pos_order_id
@@ -7797,8 +7797,8 @@ msgid ""
 "The pricelist used if no customer is selected or if the customer has no Sale"
 " Pricelist configured if any."
 msgstr ""
-"Hiçbir müşteri seçilmemişse veya müşterinin yapılandırılmış Satış Fiyat "
-"Listesi yoksa bu fiyat listesi kullanılır."
+"Hiçbir müşterinin seçilmemiş olduğu veya müşterinin yapılandırılmış bir "
+"Satış Fiyat Listesinin olmadığı durumlarda kullanılan fiyat listesi."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -7989,7 +7989,7 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
-"Oturumda hala taslak halinde siparişler var. Oturumu doğrulamak için aşağıdaki siparişleri ödeyin veya iptal edin:\n"
+"Oturumda hala taslak durumunda olan siparişler var. Oturumu doğrulamak için aşağıdaki siparişleri ödeyin veya iptal edin:\n"
 "%s"
 
 #. module: point_of_sale
@@ -7999,9 +7999,9 @@ msgid ""
 "There is a difference between the amounts to post and the amounts of the "
 "orders, it is probably caused by taxes or accounting configurations changes."
 msgstr ""
-"Deftere nakledilecek tutarlar ile siparişlerin tutarları arasında bir fark "
-"vardır, muhtemelen vergilerden veya muhasebe yapılandırmalarındaki "
-"değişikliklerden kaynaklanır."
+"Gönderilecek tutarlar ile siparişlerin tutarları arasında bir fark var, "
+"muhtemelen vergilerden veya muhasebe yapılandırma değişikliklerinden "
+"kaynaklanıyor."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8016,8 +8016,8 @@ msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
 "invoicing settings to install a Chart of Accounts."
 msgstr ""
-"Şirkette yapılandırılmış bir Hesap Planı yoktur. Bir Hesap Planı yüklemek "
-"için lütfen faturalandırma ayarlarına gidin."
+"Şirket üzerinde yapılandırılmış bir Hesap Planı yok. Hesap Planı yüklemek "
+"için lütfen faturalama ayarlarına gidin."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8100,8 +8100,8 @@ msgid ""
 "This field is there to pass the id of the pos manager group to the point of "
 "sale client."
 msgstr ""
-"Bu alan pos yönetim grubunun kimliğini satış noktası müşterisine iletmek "
-"için vardır."
+"Bu alan, PoS yöneticisi grubunun kimliğini satış noktası istemcisine iletmek"
+" için kullanılmaktadır."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_user_id
@@ -8160,8 +8160,8 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr ""
-"Bu siparişte zaten %s için iade satırları var. Onunla ilişkili müşteriyi "
-"değiştiremeyiz. Yeni müşteri için yeni bir sipariş oluşturun."
+"Bu siparişte zaten %s için iade satırları var. Bununla ilişkili olan "
+"müşteriyi değiştiremeyiz. Yeni müşteri için yeni bir sipariş oluşturun."
 
 #. module: point_of_sale
 #. odoo-python
@@ -8201,8 +8201,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders lines."
 msgstr ""
-"Bu satır Odoo tarafından otomatik olarak oluşturulur ancak sipariş "
-"satırlarınızın referans numaralarının özelleştirmek için bunu "
+"Bu diziliş Odoo tarafından otomatik olarak oluşturulur, ancak sipariş "
+"satırlarınızın referans numaralarını özelleştirmek amacıyla "
 "değiştirebilirsiniz."
 
 #. module: point_of_sale
@@ -8212,8 +8212,8 @@ msgid ""
 "This sequence is automatically created by Odoo but you can change it to "
 "customize the reference numbers of your orders."
 msgstr ""
-"Sıralama Odoo tarafından otomatik olarak oluşturulmaktadır ancak "
-"siparişlerinizin referans numaralarını özelleştirmek için "
+"Bu diziliş Odoo tarafından otomatik olarak oluşturulur, ancak "
+"siparişlerinizin referans numaralarını özelleştirmek amacıyla "
 "değiştirebilirsiniz."
 
 #. module: point_of_sale
@@ -8499,7 +8499,7 @@ msgid ""
 "%s"
 msgstr ""
 "Oturum kapatılamıyor ve doğrulanamıyor.\n"
-"Lütfen aşağıdaki vergilerin her yeniden bölümleme satırında karşılık gelen vergi hesabını ayarlayın: \n"
+"Lütfen aşağıdaki vergilerin her bir yeniden bölümleme satırında ilgili vergi hesabını ayarlayın: \n"
 "%s"
 
 #. module: point_of_sale
@@ -8915,8 +8915,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
-"Seri/lot numaralı ürünleri satmaya çalışıyorsunuz, ancak bazıları ayarlanmamış.\n"
-"Yine de devam etmek ister misin?"
+"Seri/parti numarasına sahip ürünler satmaya çalışıyorsunuz ancak bazıları ayarlanmamış.\n"
+"Yine de devam etmek ister misiniz?"
 
 #. module: point_of_sale
 #. odoo-python

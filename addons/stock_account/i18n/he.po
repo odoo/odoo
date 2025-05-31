@@ -41,6 +41,8 @@ msgid ""
 "\n"
 "Affected valuation layers: %s"
 msgstr ""
+"\n"
+"השפיע על שכבות הערכת שווי מלאי:%s"
 
 #. module: stock_account
 #. odoo-python
@@ -89,7 +91,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b> הגדר חשבונות כניסה\\יציאה על</b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -163,12 +165,12 @@ msgstr "ערך מוסף"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__added_value
 msgid "Added value"
-msgstr ""
+msgstr "ערך מוסף "
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.action_revalue_layers
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "התאם הערכת שווי"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -203,7 +205,7 @@ msgstr "אוטומטי"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
 msgid "Automatic Stock Accounting"
-msgstr ""
+msgstr "הנהלת חשבונות של מלאי אוטומטית "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -265,7 +267,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Choose a date to get the valuation at that date"
-msgstr ""
+msgstr "בחר תאריך כדי להעריך את המלאי בתאריך זה"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
@@ -367,7 +369,7 @@ msgstr "מטבע"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_quantity_svl
 msgid "Current Quantity"
-msgstr ""
+msgstr "כמות נוכחית"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__current_value_svl
@@ -451,7 +453,7 @@ msgstr "מזהה"
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 msgid "If checked, the valuation will be specific by Lot/Serial number."
-msgstr ""
+msgstr "אם מסומן, ההערכה מחדש תהיה ספציפית לאצווה\\מספר סידורי."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -536,7 +538,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot value manually modified (from %(old)s to %(new)s)"
-msgstr ""
+msgstr "ערך אצווה שונה (מ- %(old)s ל-%(new)s)"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_lot
@@ -553,13 +555,13 @@ msgstr "מס' אצווה/ סידורי"
 #. odoo-python
 #: code:addons/stock_account/models/stock_lot.py:0
 msgid "Lot/Serial number Revaluation"
-msgstr ""
+msgstr "הערכה מחדש של אצווה\\מספר סידורי"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move_line.py:0
 msgid "Lot/Serial number is mandatory for product valuated by lot"
-msgstr ""
+msgstr "אצווה\\מספר סידורי הם חובה על מנת לבצע הערכה למוצר לפי אצווה"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -575,7 +577,7 @@ msgstr "ידני"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "Manual Stock Valuation: %s."
-msgstr ""
+msgstr "הערכת שווי מלאי ידנית:%s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
@@ -598,13 +600,13 @@ msgstr "ערך חדש"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__new_value_by_qty
 msgid "New value by quantity"
-msgstr ""
+msgstr "ערך חדש לפי כמות"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "No Reason Given"
-msgstr ""
+msgstr "ללא סיבה"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -702,7 +704,7 @@ msgstr "סיבה"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason of the revaluation"
-msgstr ""
+msgstr "סיבה להערכה מחדש"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__warehouse_id
@@ -717,12 +719,12 @@ msgstr "מזהה"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__lot_id
 msgid "Related lot/serial number"
-msgstr ""
+msgstr "אצווה\\מספר סידורי קשורים"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
 msgid "Related product"
-msgstr ""
+msgstr "מוצר קשור"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -743,12 +745,12 @@ msgstr "החזר שורת ליקוט"
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "Revaluation of %s"
-msgstr ""
+msgstr "הערכה שווי של %s"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr ""
+msgstr "הערכה מחדש"
 
 #. module: stock_account
 #. odoo-python
@@ -885,13 +887,13 @@ msgstr ""
 msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
-msgstr ""
+msgstr "הפעולה יוצרת פקודת יומן, ואין לך את ההרשאות המתאימות לכך."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr ""
+msgstr "הערך המוסף אינו משפיע על הערכת שווי המלאי"
 
 #. module: stock_account
 #. odoo-python
@@ -926,7 +928,7 @@ msgstr "שורות התנועה אין במצב עקבי: הן אינן חולק
 #: code:addons/stock_account/models/product.py:0
 msgid ""
 "The stock accounts should be set in order to use the automatic valuation."
-msgstr ""
+msgstr "הערכת שווי אוטומטית מחייבת הגדרה של חשבונות המלאי."
 
 #. module: stock_account
 #. odoo-python
@@ -973,7 +975,7 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Total Moved Quantity"
-msgstr ""
+msgstr "סה\"כ כמות שהועברה"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -1041,7 +1043,7 @@ msgstr "עדכן כמויות ב- הזמנת לקוח / הזמנת רכש"
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 msgid "Updating lot valuation for product %s."
-msgstr ""
+msgstr "מעדכן הערכת שווי של אצווה למוצר %s."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
@@ -1087,7 +1089,7 @@ msgstr "מטבע הערכת שווי"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuation Layers"
-msgstr ""
+msgstr "שכבות הערכת שווי"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -1098,13 +1100,13 @@ msgstr "דוח הערכת שווי"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 msgid "Valuation at Date"
-msgstr ""
+msgstr "הערכת שווי בתאריך"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,field_description:stock_account.field_product_template__lot_valuated
 msgid "Valuation by Lot/Serial number"
-msgstr ""
+msgstr "הערכת שווי לפי אצווה\\מספר סידורי"
 
 #. module: stock_account
 #. odoo-python
@@ -1119,7 +1121,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
 msgid "Valuations layers being adjusted"
-msgstr ""
+msgstr "שכבות הערכת מלאי עוברות התאמה"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__value
@@ -1186,13 +1188,13 @@ msgstr ""
 #: code:addons/stock_account/models/stock_lot.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust the valuation of a layer with zero quantity"
-msgstr ""
+msgstr "לא ניתן לבצע התאמה בשכבת הערכת שווי עם כמות אפס"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot adjust valuation without a product"
-msgstr ""
+msgstr "לא ניתן לבצע הערכת שווי ללא מוצר"
 
 #. module: stock_account
 #. odoo-python
@@ -1200,7 +1202,7 @@ msgstr ""
 msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
-msgstr ""
+msgstr "אינך יכול לשנות שיטת התמחור של מוצר שמוערך ע\"י אצווה\\מספר סידורי."
 
 #. module: stock_account
 #. odoo-python
@@ -1214,19 +1216,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue a product with a standard cost method."
-msgstr ""
+msgstr "לא ניתן להעריך מחדש מוצר עם שיטת עלות סטנדרטית."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue a product with an empty or negative stock."
-msgstr ""
+msgstr "לא ניתן להעריך מחדש מוצר עם מלאי ריק או שלילי."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 msgid "You cannot revalue multiple products at once"
-msgstr ""
+msgstr "לא ניתן להעריך מחדש מספר מוצרים בו זמנית"
 
 #. module: stock_account
 #. odoo-python
@@ -1303,7 +1305,7 @@ msgstr "ל"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "מיקומים"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -1313,4 +1315,4 @@ msgstr "יחידות"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_graph
 msgid "valuation graph"
-msgstr ""
+msgstr "גרף הערכת שווי"

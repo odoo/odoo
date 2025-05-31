@@ -239,7 +239,8 @@
                                             </td>
                                             <td>
                                                 <t t-if="doc.vehicle_no" t-out="doc.vehicle_no"/>
-                                                <t t-else="" t-out="doc.transportation_doc_no"/><t t-out="doc.transportation_doc_date"/>
+                                                <t t-else="" t-out="doc.transportation_doc_no"/>
+                                                &amp; <t t-out="doc.transportation_doc_date"/>
                                             </td>
                                             <td>
                                                 <t t-out="generate_json['fromPlace']"/>

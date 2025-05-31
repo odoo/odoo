@@ -1054,9 +1054,9 @@ class MrpProduction(models.Model):
             action['domain'] = [('id', 'in', self.picking_ids.ids)]
         elif self.picking_ids:
             action['res_id'] = self.picking_ids.id
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
-            if 'views' in action:
-                action['views'] += [(state, view) for state, view in action['views'] if view != 'form']
+            picking_form = self.env.ref('stock.view_picking_form', False)
+            picking_form_view = [(picking_form and picking_form.id or False, 'form')]
+            action['views'] = picking_form_view + [(state, view) for state, view in action.get('views', []) if view != 'form']
         action['context'] = dict(self._context, default_origin=self.name)
         return action
 
@@ -1279,7 +1279,7 @@ class MrpProduction(models.Model):
 
             new_qty = float_round((self.qty_producing - self.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
             move._set_quantity_done(new_qty)
-            if not move.manual_consumption or pick_manual_consumption_moves:
+            if (not move.manual_consumption or pick_manual_consumption_moves) and move.quantity:
                 move.picked = True
 
     def _should_postpone_date_finished(self, date_finished):

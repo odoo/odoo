@@ -253,12 +253,33 @@ export class Message extends Record {
         return this.date || DateTime.now();
     }
 
+    /**
+     * Get the effective persona performing actions on this message.
+     * Priority order: logged-in user, portal partner (token-authenticated), guest.
+     *
+     * @returns {import("models").Persona}
+     */
+    get effectiveSelf() {
+        return this.thread?.effectiveSelf ?? this.store.self;
+    }
+
+    /**
+     * Get the current user's active identities.These identities include both
+     * the cookie-authenticated persona and the partner authenticated with the
+     * portal token in the context of the related thread.
+     *
+     * @returns {import("models").Persona[]}
+     */
+    get selves() {
+        return this.thread?.selves ?? [this.store.self];
+    }
+
     get datetimeShort() {
         return this.datetime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
     }
 
     get isSelfMentioned() {
-        return this.store.self.in(this.recipients);
+        return this.selves.some((s) => s.in(this.recipients));
     }
 
     get isHighlightedFromMention() {
@@ -270,7 +291,7 @@ export class Message extends Record {
             if (!this.author) {
                 return false;
             }
-            return this.author.eq(this.store.self);
+            return this.author.in(this.selves);
         },
     });
 

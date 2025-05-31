@@ -16,20 +16,23 @@ class TestClaimReward(TransactionCaseWithUserPortal):
         super().setUpClass()
 
         cls.WebsiteSaleController = WebsiteSale()
-        cls.website = cls.env.ref('website.default_website')
+        cls.website = cls.env.ref('website.default_website').with_user(cls.user_portal)
+
+        cls.env['product.pricelist'].search([]).action_archive()
 
         tag = cls.env['product.tag'].create({
             'name': 'multi reward',
         })
-
         cls.product1, cls.product2 = cls.env['product.product'].create([
             {
             'name': 'Test Product',
             'list_price': 10.0,
+            'taxes_id': False,
             'product_tag_ids': tag,
         }, {
             'name': 'Test Product 2',
             'list_price': 20.0,
+            'taxes_id': False,
             'product_tag_ids': tag,
         }])
 
@@ -105,7 +108,7 @@ class TestClaimReward(TransactionCaseWithUserPortal):
     def test_apply_coupon_with_multiple_rewards(self):
         discount_reward = self.coupon_program.reward_ids.filtered('discount')
 
-        with MockRequest(self.env, website=self.website, sale_order_id=self.cart.id):
+        with MockRequest(self.website.env, website=self.website, sale_order_id=self.cart.id):
             self.WebsiteSaleController.pricelist(promo=self.coupon.code)
             self.assertFalse(self.cart.order_line.reward_id)
 

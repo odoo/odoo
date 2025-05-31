@@ -74,6 +74,7 @@ export class Persona extends Record {
         eager: true,
         inverse: "imStatusTrackedPersonas",
     });
+    signature = Record.attr("", { html: true });
     /** @type {'partner' | 'guest'} */
     type;
     /** @type {string} */
