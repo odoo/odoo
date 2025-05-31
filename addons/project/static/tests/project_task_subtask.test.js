@@ -313,3 +313,24 @@ test("project.task (kanban): check subtask creation when input is empty", async 
         message: "The notification bar should have type 'danger'.",
     });
 });
+
+test("project.project (form): check subtask delete confirmation dialog can be reopened again", async () => {
+    await mountView({
+        resModel: "project.task",
+        resId: 5,
+        type: "form",
+    });
+    expect(`.o_list_record_remove`).toHaveCount(1);
+    await click(".o_list_record_remove");
+    await animationFrame();
+    expect(`.modal-footer .btn-primary:contains(Ok)`).toHaveCount(1, {
+        message: "Delete action should be visible",
+    });
+    await click(".modal-footer .btn-secondary");
+    await animationFrame();
+    await click(".o_list_record_remove");
+    await animationFrame();
+    expect(`.modal-footer .btn-primary:contains(Ok)`).toHaveCount(1, {
+        message: "Delete action should be visible on reopening the dialog",
+    });
+});

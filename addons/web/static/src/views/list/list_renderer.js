@@ -8,7 +8,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
-import { debounce } from "@web/core/utils/timing";
+import { useDebounced } from "@web/core/utils/timing";
 import { getTabableElements } from "@web/core/utils/ui";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
@@ -125,10 +125,10 @@ export class ListRenderer extends Component {
         this.groupByButtons = this.props.archInfo.groupBy.buttons;
         useExternalListener(document, "click", this.onGlobalClick.bind(this));
         this.tableRef = useRef("table");
-        this.debouncedOnDeleteRecord = debounce(
+        this.debouncedOnDeleteRecord = useDebounced(
             this.onDeleteRecord.bind(this),
             300,
-            { leading: true, trailing: false }
+            { immediate: true }
         );
 
         this.longTouchTimer = null;
