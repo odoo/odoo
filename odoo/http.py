@@ -126,11 +126,12 @@ route_wrapper, closure of the http.route decorator
 endpoint
   The @route(...) decorated controller method.
 """
+from __future__ import annotations
 
 import odoo.init  # import first for core setup
 
 import base64
-import collections.abc
+import collections
 import contextlib
 import functools
 import glob
@@ -146,8 +147,10 @@ import re
 import threading
 import time
 import traceback
+import typing
 import warnings
 from abc import ABC, abstractmethod
+from collections.abc import Callable, Mapping, MutableMapping
 from datetime import datetime, timedelta
 from hashlib import sha512
 from io import BytesIO
@@ -166,9 +169,9 @@ except ImportError:
     geoip2 = None
 
 try:
-    import maxminddb
+    from maxminddb import InvalidDatabaseError as MaxminddbInvalidDatabaseError
 except ImportError:
-    maxminddb = None
+    MaxminddbInvalidDatabaseError = OSError
 
 import psycopg2
 import werkzeug.datastructures
@@ -176,6 +179,7 @@ import werkzeug.exceptions
 import werkzeug.local
 import werkzeug.routing
 import werkzeug.security
+import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 from werkzeug.urls import URL, url_parse, url_encode, url_quote
@@ -195,11 +199,10 @@ try:
 except ImportError:
     from .tools._vendor.send_file import send_file as _send_file
 
-import odoo.addons
 from .exceptions import UserError, AccessError, AccessDenied
 from .modules import module as module_manager
 from .modules.registry import Registry
-from .service import security, model as service_model
+from .service import db as service_db, security, model as service_model
 from .service.server import thread_local
 from .tools import (config, consteq, file_path, get_lang, json_default,
                     parse_version, profiler, unique, exception_to_unicode)
@@ -209,6 +212,15 @@ from .tools.misc import submap, real_time
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection, Iterable, Iterator, Sequence
+    from wsgiref.types import WSGIEnvironment, StartResponse
+    from .orm.types import BaseModel, Environment, Self
+    from .sql_db import BaseCursor
+
+    HTTPMethods = typing.Literal['GET', 'POST', 'HEAD', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
+    HeaderType = Mapping[str, str | Iterable[str]] | Iterable[tuple[str, str]]
 
 _logger = logging.getLogger(__name__)
 
@@ -229,8 +241,9 @@ CSRF_TOKEN_SALT = 60 * 60 * 24 * 365
 # The default lang to use when the browser doesn't specify it
 DEFAULT_LANG = 'en_US'
 
+
 # The dictionary to initialise a new session with.
-def get_default_session():
+def get_default_session() -> dict[str, typing.Any]:
     return {
         'context': {},  # 'lang': request.default_lang()  # must be set at runtime
         'db': None,
@@ -240,6 +253,7 @@ def get_default_session():
         'session_token': None,
         '_trace': [],
     }
+
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024  # 128MiB
 
@@ -314,7 +328,7 @@ class SessionExpiredException(Exception):
     pass
 
 
-def content_disposition(filename, disposition_type='attachment'):
+def content_disposition(filename: str, disposition_type: typing.Literal['attachment', 'inline'] = 'attachment') -> str:
     """
     Craft a ``Content-Disposition`` header, see :rfc:`6266`.
 
@@ -333,34 +347,32 @@ def content_disposition(filename, disposition_type='attachment'):
     )
 
 
-def db_list(force=False, host=None):
+def db_list(force: bool = False, host: str | None = None) -> list[str]:
     """
     Get the list of available databases.
 
-    :param bool force: See :func:`~odoo.service.db.list_dbs`:
+    :param force: See :func:`~odoo.service.db.list_dbs`:
     :param host: The Host used to replace %h and %d in the dbfilters
         regexp. Taken from the current request when omitted.
     :returns: the list of available databases
-    :rtype: List[str]
     """
     try:
-        dbs = odoo.service.db.list_dbs(force)
+        dbs = service_db.list_dbs(force)
     except psycopg2.OperationalError:
         return []
     return db_filter(dbs, host)
 
 
-def db_filter(dbs, host=None):
+def db_filter(dbs: Iterable[str], host: str | None = None) -> list[str]:
     """
     Return the subset of ``dbs`` that match the dbfilter or the dbname
     server configuration. In case neither are configured, return ``dbs``
     as-is.
 
-    :param Iterable[str] dbs: The list of database names to filter.
+    :param dbs: The list of database names to filter.
     :param host: The Host used to replace %h and %d in the dbfilters
         regexp. Taken from the current request when omitted.
     :returns: The original list filtered.
-    :rtype: List[str]
     """
 
     if config['dbfilter']:
@@ -372,8 +384,7 @@ def db_filter(dbs, host=None):
         if host is None:
             host = request.httprequest.environ.get('HTTP_HOST', '')
         host = host.partition(':')[0]
-        if host.startswith('www.'):
-            host = host[4:]
+        host = host.removeprefix('www.')
         domain = host.partition('.')[0]
 
         dbfilter_re = re.compile(
@@ -389,15 +400,14 @@ def db_filter(dbs, host=None):
     return list(dbs)
 
 
-def dispatch_rpc(service_name, method, params):
+def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any]) -> typing.Any:
     """
     Perform a RPC call.
 
-    :param str service_name: either "common", "db" or "object".
-    :param str method: the method name of the given service to execute
+    :param service_name: either "common", "db" or "object".
+    :param method: the method name of the given service to execute
     :param Mapping params: the keyword arguments for method call
     :return: the return value of the called method
-    :rtype: Any
     """
     rpc_dispatchers = {
         'common': odoo.service.common.dispatch,
@@ -413,7 +423,7 @@ def dispatch_rpc(service_name, method, params):
         return dispatch(method, params)
 
 
-def get_session_max_inactivity(env):
+def get_session_max_inactivity(env: Environment | None) -> int:
     if not env or env.cr.closed:
         return SESSION_LIFETIME
 
@@ -426,11 +436,11 @@ def get_session_max_inactivity(env):
         return SESSION_LIFETIME
 
 
-def is_cors_preflight(request, endpoint):
-    return request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False)
+def is_cors_preflight(request: Request, endpoint: Endpoint) -> bool:
+    return bool(request.httprequest.method == 'OPTIONS' and endpoint.routing.get('cors', False))
 
 
-def serialize_exception(exception):
+def serialize_exception(exception: Exception) -> dict[str, typing.Any]:
     name = type(exception).__name__
     module = type(exception).__module__
 
@@ -463,21 +473,21 @@ class Stream:
     dedicated constructors is discouraged.
     """
 
-    type: str = ''  # 'data' or 'path' or 'url'
-    data = None
-    path = None
+    type: typing.Literal['data', 'path', 'url']
+    data: bytes | None = None
+    path: str | None = None
     url = None
 
-    mimetype = None
-    as_attachment = False
-    download_name = None
+    mimetype: str | None = None
+    as_attachment: bool = False
+    download_name: str | None = None
     conditional = True
-    etag = True
-    last_modified = None
+    etag: str | typing.Literal[True] = True
+    last_modified: float | None = None
     max_age = None
-    immutable = False
-    size = None
-    public = False
+    immutable: bool = False
+    size: int | None = None
+    public: bool = False
 
     def __init__(self, **kwargs):
         # Remove class methods from the instances
@@ -487,7 +497,7 @@ class Stream:
         assert getattr(self, self.type, None) is not None, f"Missing attribute {self.type!r} to Stream"
 
     @classmethod
-    def from_path(cls, path, filter_ext=('',), public=False):
+    def from_path(cls, path: str, filter_ext: tuple[str, ...] = (), public: bool = False) -> Self:
         """
         Create a :class:`~Stream`: from an addon resource.
 
@@ -512,7 +522,7 @@ class Stream:
         )
 
     @classmethod
-    def from_binary_field(cls, record, field_name):
+    def from_binary_field(cls, record: BaseModel, field_name: str) -> Self:
         """ Create a :class:`~Stream`: from a binary field. """
         data_b64 = record[field_name]
         data = base64.b64decode(data_b64) if data_b64 else b''
@@ -525,34 +535,36 @@ class Stream:
             public=record.env.user._is_public()  # good enough
         )
 
-    def read(self):
+    def read(self) -> bytes:
         """ Get the stream content as bytes. """
         if self.type == 'url':
             raise ValueError("Cannot read an URL")
 
         if self.type == 'data':
+            assert self.data is not None
             return self.data
 
+        assert self.path is not None, "Missing path to read Stream"
         with open(self.path, 'rb') as file:
             return file.read()
 
     def get_response(
         self,
-        as_attachment=None,
-        immutable=None,
-        content_security_policy="default-src 'none'",
-        **send_file_kwargs
-    ):
+        as_attachment: bool | None = None,
+        immutable: bool | None = None,
+        content_security_policy: str | None = "default-src 'none'",
+        **send_file_kwargs,
+    ) -> Response:
         """
         Create the corresponding :class:`~Response` for the current stream.
 
-        :param bool|None as_attachment: Indicate to the browser that it
+        :param as_attachment: Indicate to the browser that it
             should offer to save the file instead of displaying it.
-        :param bool|None immutable: Add the ``immutable`` directive to
+        :param immutable: Add the ``immutable`` directive to
             the ``Cache-Control`` response header, allowing intermediary
             proxies to aggressively cache the response. This option also
             set the ``max-age`` directive to 1 year.
-        :param str|None content_security_policy: Optional value for the
+        :param content_security_policy: Optional value for the
             ``Content-Security-Policy`` (CSP) header. This header is
             used by browsers to allow/restrict the downloaded resource
             to itself perform new http requests. By default CSP is set
@@ -604,6 +616,7 @@ class Stream:
                 # yet werkzeug gives the length of the file. This makes
                 # NGINX wait for content that'll never arrive.
                 res.headers['Content-Length'] = '0'
+        assert isinstance(res, Response)
 
         res.headers['X-Content-Type-Options'] = 'nosniff'
 
@@ -660,7 +673,7 @@ class Controller:
             def greeting(self):
                 return super().handler()
     """
-    children_classes = collections.defaultdict(list)  # indexed by module
+    children_classes = collections.defaultdict[str, list[type]](list)  # indexed by module
 
     @classmethod
     def __init_subclass__(cls):
@@ -671,11 +684,47 @@ class Controller:
             Controller.children_classes[module].append(cls)
 
     @property
-    def env(self):
+    def env(self) -> Environment | None:
         return request.env if request else None
 
 
-def route(route=None, **routing):
+if typing.TYPE_CHECKING:
+
+    class RoutingOpts(typing.TypedDict, total=False):
+        """Common attributes on the route() function."""
+        routes: typing.NotRequired[Sequence[str]]
+        methods: typing.NotRequired[Sequence[HTTPMethods] | None]
+        type: typing.NotRequired[str]
+        auth: typing.NotRequired[str]
+        cors: typing.NotRequired[str]
+        csrf: typing.NotRequired[bool]
+        readonly: typing.NotRequired[bool | Callable[[typing.Any, werkzeug.routing.Rule, typing.Any], bool]]  # controller, rule, args
+        handle_params_access_error: typing.NotRequired[Callable[[Exception], Response | HTTPException]]
+        captcha: typing.NotRequired[str]
+        save_session: typing.NotRequired[bool]
+
+    class Endpoint(typing.Protocol):
+        """The resulting function serving as the endpoint of a werkzeug rule."""
+        __name__: str
+        routing: RoutingOpts
+        original_routing: RoutingOpts
+        original_endpoint: Callable
+
+        def __call__(self, *args, **kwds) -> Response:
+            ...
+
+    # unpack available as of python 3.12, this is why it is in the TYPE_CHECKING
+    @typing.overload
+    def route(
+        route: str | Sequence[str] | None = None,
+        **routing: typing.Unpack[RoutingOpts],
+    ): ...
+
+
+def route(
+    route: str | Sequence[str] | None = None,
+    **opts,
+):
     """
     Decorate a controller method in order to route incoming requests
     matching the given URL and options to the decorated method.
@@ -729,7 +778,9 @@ def route(route=None, **routing):
         on the http response and save dirty session on disk. ``False``
         by default for ``auth='bearer'``. ``True`` by default otherwise.
     """
-    def decorator(endpoint):
+    routing: RoutingOpts = opts  # type: ignore[assignment]
+
+    def decorator(endpoint: Callable[..., Response | typing.Any]) -> Endpoint:
         fname = f"<function {endpoint.__module__}.{endpoint.__name__}>"
 
         # Sanitize the routing
@@ -740,11 +791,11 @@ def route(route=None, **routing):
                 stacklevel=3,
             )
             routing['type'] = 'jsonrpc'
-        assert routing.get('type', 'http') in _dispatchers.keys(), \
+        assert routing.get('type', 'http') in _dispatchers, \
             f"@route(type={routing['type']!r}) is not one of {_dispatchers.keys()}"
         if route:
             routing['routes'] = [route] if isinstance(route, str) else route
-        wrong = routing.pop('method', None)
+        wrong = routing.pop('method', None)  # type: ignore
         if wrong is not None:
             _logger.warning("%s defined with invalid routing parameter 'method', assuming 'methods'", fname)
             routing['methods'] = wrong
@@ -769,7 +820,7 @@ def route(route=None, **routing):
     return decorator
 
 
-def _generate_routing_rules(modules, nodb_only, converters=None):
+def _generate_routing_rules(modules: Collection[str], nodb_only: bool, converters=None) -> Iterator[tuple[str, Endpoint]]:
     """
     Two-fold algorithm used to (1) determine which method in the
     controller inheritance tree should bind to what URL with respect to
@@ -835,7 +886,7 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
             if not any(map(is_method_a_route, type(ctrl).mro())):
                 continue
 
-            merged_routing = {
+            merged_routing: RoutingOpts = {
                 # 'type': 'http',  # set below
                 'auth': 'user',
                 'methods': None,
@@ -868,14 +919,14 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                 # to `original_routing` and `original_endpoint`, assign
                 # the merged routing ONLY on the duplicated function to
                 # ensure method's immutability.
-                endpoint = functools.partial(method)
+                endpoint: Endpoint = functools.partial(method)
                 functools.update_wrapper(endpoint, method)
                 endpoint.routing = merged_routing
 
                 yield (url, endpoint)
 
 
-def _check_and_complete_route_definition(controller_cls, submethod, merged_routing):
+def _check_and_complete_route_definition(controller_cls: type[Controller], submethod: Endpoint, merged_routing: RoutingOpts) -> None:
     """Verify and complete the route definition.
 
     * Ensure 'type' is defined on each method's own routing.
@@ -917,7 +968,7 @@ _session_identifier_re = re.compile(r'^[A-Za-z0-9_-]{42}$')
 
 class FilesystemSessionStore(sessions.FilesystemSessionStore):
     """ Place where to load and save session objects. """
-    def get_session_filename(self, sid):
+    def get_session_filename(self, sid: str) -> str:
         # scatter sessions across 4096 (64^2) directories
         if not self.is_valid_key(sid):
             raise ValueError(f'Invalid session id {sid!r}')
@@ -926,7 +977,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session_path = os.path.join(dirname, sid)
         return session_path
 
-    def save(self, session):
+    def save(self, session: Session):
         session_path = self.get_session_filename(session.sid)
         dirname = os.path.dirname(session_path)
         if not os.path.isdir(dirname):
@@ -947,7 +998,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 os.rename(old_path, session_path)
         return super().get(sid)
 
-    def rotate(self, session, env):
+    def rotate(self, session: Session, env: Environment | None) -> None:
         self.delete(session)
         session.sid = self.generate_key()
         if session.uid and env:
@@ -955,7 +1006,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.should_rotate = False
         self.save(session)
 
-    def vacuum(self, max_lifetime=SESSION_LIFETIME):
+    def vacuum(self, max_lifetime: int = SESSION_LIFETIME) -> None:
         threshold = time.time() - max_lifetime
         for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
             path = os.path.join(root.session_store.path, fname)
@@ -963,7 +1014,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 if os.path.getmtime(path) < threshold:
                     os.unlink(path)
 
-    def generate_key(self, salt=None):
+    def generate_key(self, salt=None) -> str:
         # The generated key is case sensitive (base64) and the length is 84 chars.
         # In the worst-case scenario, i.e. in an insensitive filesystem (NTFS for example)
         # taking into account the proportion of characters in the pool and a length
@@ -982,16 +1033,14 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         hash_key = sha512(key).digest()[:-1]  # prevent base64 padding
         return base64.urlsafe_b64encode(hash_key).decode('utf-8')
 
-    def is_valid_key(self, key):
+    def is_valid_key(self, key: str) -> bool:
         return _base64_urlsafe_re.match(key) is not None
 
-    def get_missing_session_identifiers(self, identifiers):
+    def get_missing_session_identifiers(self, identifiers: Iterable[str]) -> set[str]:
         """
             :param identifiers: session identifiers whose file existence must be checked
                                 identifiers are a part session sid (first 42 chars)
-            :type identifiers: iterable
             :return: the identifiers which are not present on the filesystem
-            :rtype: set
 
             Note 1:
             Working with identifiers 42 characters long means that
@@ -1022,7 +1071,7 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 identifiers.difference_update(sf.name[:42] for sf in session_files)
         return identifiers
 
-    def delete_from_identifiers(self, identifiers):
+    def delete_from_identifiers(self, identifiers: Iterable[str]) -> None:
         files_to_unlink = []
         for identifier in identifiers:
             # Avoid to remove a session if it does not match an identifier.
@@ -1038,18 +1087,23 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
                 os.unlink(fn)
 
 
-class Session(collections.abc.MutableMapping):
+class Session(MutableMapping[str, typing.Any]):
     """ Structure containing data persisted across requests. """
-    __slots__ = ('can_save', '_Session__data', 'is_dirty', 'is_new',
-                 'should_rotate', 'sid')
+    __slots__ = (
+        '_Session__data',
+        'can_save',
+        'is_dirty',
+        'is_new',
+        'should_rotate',
+        'sid',
+    )
 
-    def __init__(self, data, sid, new=False):
-        self.can_save = True
-        self.__data = {}
-        self.update(data)
-        self.is_dirty = False
+    def __init__(self, data: dict, sid, new: bool = False):
+        self.can_save: bool = True
+        self.__data = dict(data)
+        self.is_dirty: bool = False
         self.is_new = new
-        self.should_rotate = False
+        self.should_rotate: bool = False
         self.sid = sid
 
     def __getitem__(self, item):
@@ -1087,11 +1141,11 @@ class Session(collections.abc.MutableMapping):
         self['uid'] = uid
 
     @property
-    def db(self):
+    def db(self) -> str | None:
         return self.get('db')
 
     @db.setter
-    def db(self, db):
+    def db(self, db: str | None):
         self['db'] = db
 
     @property
@@ -1129,7 +1183,7 @@ class Session(collections.abc.MutableMapping):
     #
     # Session methods
     #
-    def authenticate(self, env, credential):
+    def authenticate(self, env: Environment, credential: dict) -> dict:
         """
         Authenticate the current user with the given db, login and
         credential. If successful, store the authentication parameters in
@@ -1170,7 +1224,7 @@ class Session(collections.abc.MutableMapping):
 
         return auth_info
 
-    def finalize(self, env):
+    def finalize(self, env: Environment) -> None:
         """
         Finalizes a partial session, should be called on MFA validation
         to convert a partial / pre-session into a logged-in one.
@@ -1190,7 +1244,7 @@ class Session(collections.abc.MutableMapping):
             'session_token': env.user._compute_session_token(self.sid),
         })
 
-    def logout(self, keep_db=False):
+    def logout(self, keep_db: bool = False) -> None:
         db = self.db if keep_db else get_default_session()['db']  # None
         debug = self.debug
         self.clear()
@@ -1198,13 +1252,13 @@ class Session(collections.abc.MutableMapping):
         self.context['lang'] = request.default_lang() if request else DEFAULT_LANG
         self.should_rotate = True
 
-        if request and request.env:
+        if request and request.env is not None:
             request.env['ir.http']._post_logout()
 
-    def touch(self):
+    def touch(self) -> None:
         self.is_dirty = True
 
-    def update_trace(self, request):
+    def update_trace(self, request: Request) -> dict[str, typing.Any] | None:
         """
             :return: dict if a device log has to be inserted, ``None`` otherwise
         """
@@ -1216,7 +1270,7 @@ class Session(collections.abc.MutableMapping):
             # be abused by unprivileged users. Such sessions will of course still be
             # subject to all other auditing mechanisms (server logs, web proxy logs,
             # metadata tracking on modified records, etc.)
-            return
+            return None
 
         user_agent = request.httprequest.user_agent
         platform = user_agent.platform
@@ -1230,7 +1284,7 @@ class Session(collections.abc.MutableMapping):
                     trace['last_activity'] = now
                     self.is_dirty = True
                     return trace
-                return
+                return None
         new_trace = {
             'platform': platform,
             'browser': browser,
@@ -1247,7 +1301,7 @@ class Session(collections.abc.MutableMapping):
 # GeoIP
 # =========================================================
 
-class GeoIP(collections.abc.Mapping):
+class GeoIP(Mapping):
     """
     Ip Geolocalization utility, determine information such as the
     country or the timezone of the user based on their IP Address.
@@ -1274,14 +1328,14 @@ class GeoIP(collections.abc.Mapping):
         'FR'
     """
 
-    def __init__(self, ip):
+    def __init__(self, ip: str):
         self.ip = ip
 
     @functools.cached_property
     def _city_record(self):
         try:
             return root.geoip_city_db.city(self.ip)
-        except (OSError, maxminddb.InvalidDatabaseError):
+        except (OSError, MaxminddbInvalidDatabaseError):
             return GEOIP_EMPTY_CITY
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_CITY
@@ -1294,7 +1348,7 @@ class GeoIP(collections.abc.Mapping):
             return self._city_record
         try:
             return root.geoip_country_db.country(self.ip)
-        except (OSError, maxminddb.InvalidDatabaseError):
+        except (OSError, MaxminddbInvalidDatabaseError):
             return self._city_record
         except geoip2.errors.AddressNotFoundError:
             return GEOIP_EMPTY_COUNTRY
@@ -1356,20 +1410,22 @@ class GeoIP(collections.abc.Mapping):
 # =========================================================
 
 # Thread local global request object
-_request_stack = werkzeug.local.LocalStack()
-request = _request_stack()
+_request_stack: werkzeug.local.LocalStack[Request] = werkzeug.local.LocalStack()
+request: Request = _request_stack()  # type: ignore[assignment]
+
 
 @contextlib.contextmanager
-def borrow_request():
+def borrow_request() -> Iterator[Request]:
     """ Get the current request and unexpose it from the local stack. """
     req = _request_stack.pop()
+    assert req is not None
     try:
         yield req
     finally:
         _request_stack.push(req)
 
 
-def make_request_wrap_methods(attr):
+def _make_request_wrap_methods(attr):
     def getter(self):
         return getattr(self._HTTPRequest__wrapped, attr)
 
@@ -1379,8 +1435,14 @@ def make_request_wrap_methods(attr):
     return getter, setter
 
 
-class HTTPRequest:
-    def __init__(self, environ):
+if typing.TYPE_CHECKING:
+    _HTTPRequest = werkzeug.wrappers.Request
+else:
+    _HTTPRequest = object
+
+
+class HTTPRequest(_HTTPRequest):
+    def __init__(self, environ: WSGIEnvironment):
         httprequest = werkzeug.wrappers.Request(environ)
         httprequest.user_agent_class = UserAgent  # use vendored userAgent since it will be removed in 2.1
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
@@ -1411,7 +1473,7 @@ HTTPREQUEST_ATTRIBUTES = [
     'trusted_hosts', 'url', 'url_charset', 'url_root', 'user_agent', 'values',
 ]
 for attr in HTTPREQUEST_ATTRIBUTES:
-    setattr(HTTPRequest, attr, property(*make_request_wrap_methods(attr)))
+    setattr(HTTPRequest, attr, property(*_make_request_wrap_methods(attr)))
 
 
 class _Response(werkzeug.wrappers.Response):
@@ -1421,9 +1483,9 @@ class _Response(werkzeug.wrappers.Response):
     this class's constructor can take the following additional
     parameters for QWeb Lazy Rendering.
 
-    :param str template: template to render
-    :param dict qcontext: Rendering context to use
-    :param int uid: User id to use for the ir.ui.view render call,
+    :param template: template to render
+    :param qcontext: Rendering context to use
+    :param uid: User id to use for the ir.ui.view render call,
         ``None`` to use the request's user (the default)
 
     these attributes are available as parameters on the Response object
@@ -1434,25 +1496,23 @@ class _Response(werkzeug.wrappers.Response):
     """
     default_mimetype = 'text/html'
 
-    def __init__(self, *args, **kw):
-        template = kw.pop('template', None)
-        qcontext = kw.pop('qcontext', None)
-        uid = kw.pop('uid', None)
+    def __init__(self, *args, template: str | None = None, qcontext: dict | None = None, uid: int | None = None, **kw):
         super().__init__(*args, **kw)
         self.set_default(template, qcontext, uid)
 
     @classmethod
-    def load(cls, result, fname="<function>"):
+    def load(
+        cls,
+        result: Response | werkzeug.wrappers.Response | werkzeug.exceptions.HTTPException | bytes | str | None,
+        fname: str = "<function>",
+    ) -> Response:
         """
         Convert the return value of an endpoint into a Response.
 
         :param result: The endpoint return value to load the Response from.
-        :type result: Union[Response, werkzeug.wrappers.BaseResponse,
-            werkzeug.exceptions.HTTPException, str, bytes, NoneType]
-        :param str fname: The endpoint function name wherefrom the
+        :param fname: The endpoint function name wherefrom the
             result emanated, used for logging.
         :returns: The created :class:`~odoo.http.Response`.
-        :rtype: Response
         :raises TypeError: When ``result`` type is none of the above-
             mentioned type.
         """
@@ -1464,7 +1524,7 @@ class _Response(werkzeug.wrappers.Response):
             raise result
 
         if isinstance(result, werkzeug.wrappers.Response):
-            response = cls.force_type(result)
+            response: _Response = cls.force_type(result)
             response.set_default()
             return response
 
@@ -1473,22 +1533,22 @@ class _Response(werkzeug.wrappers.Response):
 
         raise TypeError(f"{fname} returns an invalid value: {result}")
 
-    def set_default(self, template=None, qcontext=None, uid=None):
+    def set_default(self, template: str | None = None, qcontext: dict | None = None, uid: int | None = None) -> None:
         self.template = template
         self.qcontext = qcontext or dict()
         self.qcontext['response_template'] = self.template
         self.uid = uid
 
     @property
-    def is_qweb(self):
+    def is_qweb(self) -> bool:
         return self.template is not None
 
-    def render(self):
+    def render(self) -> typing.Any:
         """ Renders the Response's template, returns the result. """
         self.qcontext['request'] = request
         return request.env["ir.ui.view"]._render_template(self.template, self.qcontext)
 
-    def flatten(self):
+    def flatten(self) -> None:
         """
         Forces the rendering of the response's template, sets the result
         as response body and unsets :attr:`.template`
@@ -1512,136 +1572,133 @@ class _Response(werkzeug.wrappers.Response):
         super().set_cookie(key, value=value, max_age=max_age, expires=expires, path=path, domain=domain, secure=secure, httponly=httponly, samesite=samesite)
 
 
-class Headers(Proxy):
-    _wrapped__ = werkzeug.datastructures.Headers
+if typing.TYPE_CHECKING:
+    Response = _Response
+else:
+    class Headers(Proxy):
+        _wrapped__ = werkzeug.datastructures.Headers
 
-    __getitem__ = ProxyFunc()
-    __repr__ = ProxyFunc(str)
-    __setitem__ = ProxyFunc(None)
-    __str__ = ProxyFunc(str)
-    __contains__ = ProxyFunc(bool)
-    add = ProxyFunc(None)
-    add_header = ProxyFunc(None)
-    clear = ProxyFunc(None)
-    copy = ProxyFunc(lambda v: Headers(v))  # noqa: PLW0108
-    extend = ProxyFunc(None)
-    get = ProxyFunc()
-    get_all = ProxyFunc()
-    getlist = ProxyFunc()
-    items = ProxyFunc()
-    keys = ProxyFunc()
-    pop = ProxyFunc()
-    popitem = ProxyFunc()
-    remove = ProxyFunc(None)
-    set = ProxyFunc(None)
-    setdefault = ProxyFunc()
-    setlist = ProxyFunc(None)
-    setlistdefault = ProxyFunc()
-    to_wsgi_list = ProxyFunc()
-    update = ProxyFunc(None)
-    values = ProxyFunc()
+        __getitem__ = ProxyFunc()
+        __repr__ = ProxyFunc(str)
+        __setitem__ = ProxyFunc(None)
+        __str__ = ProxyFunc(str)
+        __contains__ = ProxyFunc(bool)
+        add = ProxyFunc(None)
+        add_header = ProxyFunc(None)
+        clear = ProxyFunc(None)
+        copy = ProxyFunc(lambda v: Headers(v))  # noqa: PLW0108
+        extend = ProxyFunc(None)
+        get = ProxyFunc()
+        get_all = ProxyFunc()
+        getlist = ProxyFunc()
+        items = ProxyFunc()
+        keys = ProxyFunc()
+        pop = ProxyFunc()
+        popitem = ProxyFunc()
+        remove = ProxyFunc(None)
+        set = ProxyFunc(None)
+        setdefault = ProxyFunc()
+        setlist = ProxyFunc(None)
+        setlistdefault = ProxyFunc()
+        to_wsgi_list = ProxyFunc()
+        update = ProxyFunc(None)
+        values = ProxyFunc()
 
+    class ResponseCacheControl(Proxy):
+        _wrapped__ = werkzeug.datastructures.ResponseCacheControl
 
-class ResponseCacheControl(Proxy):
-    _wrapped__ = werkzeug.datastructures.ResponseCacheControl
+        __getitem__ = ProxyFunc()
+        __setitem__ = ProxyFunc(None)
+        immutable = ProxyAttr(bool)
+        max_age = ProxyAttr(int)
+        must_revalidate = ProxyAttr(bool)
+        no_cache = ProxyAttr(bool)
+        no_store = ProxyAttr(bool)
+        no_transform = ProxyAttr(bool)
+        public = ProxyAttr(bool)
+        private = ProxyAttr(bool)
+        proxy_revalidate = ProxyAttr(bool)
+        s_maxage = ProxyAttr(int)
+        pop = ProxyFunc()
 
-    __getitem__ = ProxyFunc()
-    __setitem__ = ProxyFunc(None)
-    immutable = ProxyAttr(bool)
-    max_age = ProxyAttr(int)
-    must_revalidate = ProxyAttr(bool)
-    no_cache = ProxyAttr(bool)
-    no_store = ProxyAttr(bool)
-    no_transform = ProxyAttr(bool)
-    public = ProxyAttr(bool)
-    private = ProxyAttr(bool)
-    proxy_revalidate = ProxyAttr(bool)
-    s_maxage = ProxyAttr(int)
-    pop = ProxyFunc()
+    class ResponseStream(Proxy):
+        _wrapped__ = werkzeug.wrappers.ResponseStream
 
+        write = ProxyFunc(int)
+        writelines = ProxyFunc(None)
+        tell = ProxyFunc(int)
 
-class ResponseStream(Proxy):
-    _wrapped__ = werkzeug.wrappers.ResponseStream
+    class Response(Proxy):
+        _wrapped__ = _Response
 
-    write = ProxyFunc(int)
-    writelines = ProxyFunc(None)
-    tell = ProxyFunc(int)
+        # werkzeug.wrappers.Response attributes
+        __call__ = ProxyFunc()
+        add_etag = ProxyFunc(None)
+        age = ProxyAttr()
+        autocorrect_location_header = ProxyAttr(bool)
+        cache_control = ProxyAttr(ResponseCacheControl)
+        call_on_close = ProxyFunc()
+        charset = ProxyAttr(str)
+        content_encoding = ProxyAttr(str)
+        content_length = ProxyAttr(int)
+        content_location = ProxyAttr(str)
+        content_md5 = ProxyAttr(str)
+        content_type = ProxyAttr(str)
+        data = ProxyAttr()
+        default_mimetype = ProxyAttr(str)
+        default_status = ProxyAttr(int)
+        delete_cookie = ProxyFunc(None)
+        direct_passthrough = ProxyAttr(bool)
+        expires = ProxyAttr()
+        force_type = ProxyFunc(lambda v: Response(v))  # noqa: PLW0108
+        freeze = ProxyFunc(None)
+        get_data = ProxyFunc()
+        get_etag = ProxyFunc()
+        get_json = ProxyFunc()
+        headers = ProxyAttr(Headers)
+        is_json = ProxyAttr(bool)
+        is_sequence = ProxyAttr(bool)
+        is_streamed = ProxyAttr(bool)
+        iter_encoded = ProxyFunc()
+        json = ProxyAttr()
+        last_modified = ProxyAttr()
+        location = ProxyAttr(str)
+        make_conditional = ProxyFunc(lambda v: Response(v))  # noqa: PLW0108
+        make_sequence = ProxyFunc(None)
+        max_cookie_size = ProxyAttr(int)
+        mimetype = ProxyAttr(str)
+        response = ProxyAttr()
+        retry_after = ProxyAttr()
+        set_cookie = ProxyFunc(None)
+        set_data = ProxyFunc(None)
+        set_etag = ProxyFunc(None)
+        status = ProxyAttr(str)
+        status_code = ProxyAttr(int)
+        stream = ProxyAttr(ResponseStream)
 
+        # odoo.http._response attributes
+        load = ProxyFunc()
+        set_default = ProxyFunc(None)
+        qcontext = ProxyAttr()
+        template = ProxyAttr(str)
+        is_qweb = ProxyAttr(bool)
+        render = ProxyFunc()
+        flatten = ProxyFunc(None)
 
-class Response(Proxy):
-    _wrapped__ = _Response
+        def __init__(self, *args, **kwargs):
+            response = args[0] if len(args) == 1 and isinstance(args[0], _Response) else _Response(*args, **kwargs)
+            super().__init__(response)
+            if 'set_cookie' in response.__dict__:
+                self.__dict__['set_cookie'] = response.__dict__['set_cookie']
 
-    # werkzeug.wrappers.Response attributes
-    __call__ = ProxyFunc()
-    add_etag = ProxyFunc(None)
-    age = ProxyAttr()
-    autocorrect_location_header = ProxyAttr(bool)
-    cache_control = ProxyAttr(ResponseCacheControl)
-    call_on_close = ProxyFunc()
-    charset = ProxyAttr(str)
-    content_encoding = ProxyAttr(str)
-    content_length = ProxyAttr(int)
-    content_location = ProxyAttr(str)
-    content_md5 = ProxyAttr(str)
-    content_type = ProxyAttr(str)
-    data = ProxyAttr()
-    default_mimetype = ProxyAttr(str)
-    default_status = ProxyAttr(int)
-    delete_cookie = ProxyFunc(None)
-    direct_passthrough = ProxyAttr(bool)
-    expires = ProxyAttr()
-    force_type = ProxyFunc(lambda v: Response(v))  # noqa: PLW0108
-    freeze = ProxyFunc(None)
-    get_data = ProxyFunc()
-    get_etag = ProxyFunc()
-    get_json = ProxyFunc()
-    headers = ProxyAttr(Headers)
-    is_json = ProxyAttr(bool)
-    is_sequence = ProxyAttr(bool)
-    is_streamed = ProxyAttr(bool)
-    iter_encoded = ProxyFunc()
-    json = ProxyAttr()
-    last_modified = ProxyAttr()
-    location = ProxyAttr(str)
-    make_conditional = ProxyFunc(lambda v: Response(v))  # noqa: PLW0108
-    make_sequence = ProxyFunc(None)
-    max_cookie_size = ProxyAttr(int)
-    mimetype = ProxyAttr(str)
-    response = ProxyAttr()
-    retry_after = ProxyAttr()
-    set_cookie = ProxyFunc(None)
-    set_data = ProxyFunc(None)
-    set_etag = ProxyFunc(None)
-    status = ProxyAttr(str)
-    status_code = ProxyAttr(int)
-    stream = ProxyAttr(ResponseStream)
+    werkzeug_abort = werkzeug.exceptions.abort
 
-    # odoo.http._response attributes
-    load = ProxyFunc()
-    set_default = ProxyFunc(None)
-    qcontext = ProxyAttr()
-    template = ProxyAttr(str)
-    is_qweb = ProxyAttr(bool)
-    render = ProxyFunc()
-    flatten = ProxyFunc(None)
+    def abort(status, *args, **kwargs):
+        if isinstance(status, Response):
+            status = status._wrapped__
+        werkzeug_abort(status, *args, **kwargs)
 
-    def __init__(self, *args, **kwargs):
-        response = args[0] if len(args) == 1 and isinstance(args[0], _Response) else _Response(*args, **kwargs)
-        super().__init__(response)
-        if 'set_cookie' in response.__dict__:
-            self.__dict__['set_cookie'] = response.__dict__['set_cookie']
-
-
-werkzeug_abort = werkzeug.exceptions.abort
-
-
-def abort(status, *args, **kwargs):
-    if isinstance(status, Response):
-        status = status._wrapped__
-    werkzeug_abort(status, *args, **kwargs)
-
-
-werkzeug.exceptions.abort = abort
+    werkzeug.exceptions.abort = abort
 
 
 class FutureResponse:
@@ -1676,24 +1733,26 @@ class Request:
     parameters, session utilities and request dispatching logic.
     """
 
-    def __init__(self, httprequest):
+    def __init__(self, httprequest: HTTPRequest):
         self.httprequest = httprequest
         self.future_response = FutureResponse()
         self.dispatcher = _dispatchers['http'](self)  # until we match
-        #self.params = {}  # set by the Dispatcher
+        self.geoip = GeoIP(httprequest.remote_addr or '')
 
-        self.geoip = GeoIP(httprequest.remote_addr)
-        self.registry = None
-        self.env = None
+        # set by _serve_db
+        self.registry: Registry | None = None
+        self.env: Environment | None = None
+        # set by the Dispatcher
+        self.params: Mapping | None = None
 
-    def _post_init(self):
+    def _post_init(self) -> None:
         self.session, self.db = self._get_session_and_dbname()
         self._post_init = None
 
-    def _get_session_and_dbname(self):
+    def _get_session_and_dbname(self) -> tuple[Session, str | None]:
         sid = self.httprequest._session_id__
         if not sid or not root.session_store.is_valid_key(sid):
-            session = root.session_store.new()
+            session: Session = root.session_store.new()
         else:
             session = root.session_store.get(sid)
             session.sid = sid  # in case the session was not persisted
@@ -1730,8 +1789,9 @@ class Request:
         session.is_dirty = False
         return session, dbname
 
-    def _open_registry(self):
+    def _open_registry(self) -> tuple[Registry, BaseCursor]:
         try:
+            assert self.db, "Missing database"
             registry = Registry(self.db)
             cr_readonly = registry.cursor(readonly=True)
             registry = registry.check_signaling(cr_readonly)
@@ -1742,7 +1802,7 @@ class Request:
     # =====================================================
     # Getters and setters
     # =====================================================
-    def update_env(self, user=None, context=None, su=None):
+    def update_env(self, user: int | BaseModel | None = None, context: dict | None = None, su: bool | None = None) -> None:
         """ Update the environment of the current request.
 
         :param user: optional user/user id to change the current user
@@ -1755,7 +1815,7 @@ class Request:
         self.env.transaction.default_env = self.env
         threading.current_thread().uid = self.env.uid
 
-    def update_context(self, **overrides):
+    def update_context(self, **overrides) -> None:
         """
         Override the environment context of the current request with the
         values of ``overrides``. To replace the entire context, please
@@ -1795,7 +1855,7 @@ class Request:
     _cr = cr
 
     @functools.cached_property
-    def best_lang(self):
+    def best_lang(self) -> str | None:
         lang = self.httprequest.accept_languages.best
         if not lang:
             return None
@@ -1813,23 +1873,22 @@ class Request:
     @functools.cached_property
     def cookies(self):
         cookies = werkzeug.datastructures.MultiDict(self.httprequest.cookies)
-        if self.registry:
+        if self.registry is not None:
             self.registry['ir.http']._sanitize_cookies(cookies)
         return werkzeug.datastructures.ImmutableMultiDict(cookies)
 
     # =====================================================
     # Helpers
     # =====================================================
-    def csrf_token(self, time_limit=None):
+    def csrf_token(self, time_limit: int | None = None) -> str:
         """
         Generates and returns a CSRF token for the current session
 
-        :param Optional[int] time_limit: the CSRF token should only be
+        :param time_limit: the CSRF token should only be
             valid for the specified duration (in second), by default
             48h, ``None`` for the token to be valid as long as the
             current user's session is.
         :returns: ASCII token string
-        :rtype: str
         """
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         if not secret:
@@ -1842,13 +1901,12 @@ class Request:
         hm = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return f'{hm}o{max_ts}'
 
-    def validate_csrf(self, csrf):
+    def validate_csrf(self, csrf: str) -> bool:
         """
-        Is the given csrf token valid ?
+        Is the given csrf token valid?
 
-        :param str csrf: The token to validate.
+        :param csrf: The token to validate.
         :returns: ``True`` when valid, ``False`` when not.
-        :rtype: bool
         """
         if not csrf:
             return False
@@ -1870,25 +1928,23 @@ class Request:
         hm_expected = hmac.new(secret.encode('ascii'), msg, hashlib.sha1).hexdigest()
         return consteq(hm, hm_expected)
 
-    def default_context(self):
+    def default_context(self) -> dict:
         return dict(get_default_session()['context'], lang=self.default_lang())
 
-    def default_lang(self):
+    def default_lang(self) -> str:
         """Returns default user language according to request specification
 
         :returns: Preferred language if specified or 'en_US'
-        :rtype: str
         """
         return self.best_lang or DEFAULT_LANG
 
-    def get_http_params(self):
+    def get_http_params(self) -> dict:
         """
         Extract key=value pairs from the query string and the forms
         present in the body (both application/x-www-form-urlencoded and
         multipart/form-data).
 
         :returns: The merged key-value pairs.
-        :rtype: dict
         """
         params = {
             **self.httprequest.args,
@@ -1933,11 +1989,16 @@ class Request:
 
         return contextlib.nullcontext()
 
-    def _inject_future_response(self, response):
+    def _inject_future_response(self, response: Response) -> Response:
         response.headers.extend(self.future_response.headers)
         return response
 
-    def make_response(self, data, headers=None, cookies=None, status=200):
+    def make_response(self,
+        data: str,
+        headers: HeaderType | None = None,
+        cookies: Mapping | None = None,
+        status: int = 200,
+    ) -> Response:
         """ Helper for non-HTML responses, or HTML responses with custom
         response headers or cookies.
 
@@ -1946,13 +2007,11 @@ class Request:
         complete response object, or the returned data will not be correctly
         interpreted by the clients.
 
-        :param str data: response body
-        :param int status: http status code
+        :param data: response body
+        :param status: http status code
         :param headers: HTTP headers to set on the response
-        :type headers: ``[(name, value)]``
-        :param collections.abc.Mapping cookies: cookies to set on the client
+        :param cookies: cookies to set on the client
         :returns: a response object.
-        :rtype: :class:`~odoo.http.Response`
         """
         response = Response(data, status=status, headers=headers)
         if cookies:
@@ -1960,15 +2019,20 @@ class Request:
                 response.set_cookie(k, v)
         return response
 
-    def make_json_response(self, data, headers=None, cookies=None, status=200):
+    def make_json_response(
+        self,
+        data: typing.Any,
+        headers: HeaderType | None = None,
+        cookies: Mapping | None = None,
+        status: int = 200,
+    ) -> Response:
         """ Helper for JSON responses, it json-serializes ``data`` and
         sets the Content-Type header accordingly if none is provided.
 
         :param data: the data that will be json-serialized into the response body
-        :param int status: http status code
-        :param List[(str, str)] headers: HTTP headers to set on the response
-        :param collections.abc.Mapping cookies: cookies to set on the client
-        :rtype: :class:`~odoo.http.Response`
+        :param status: http status code
+        :param headers: HTTP headers to set on the response
+        :param cookies: cookies to set on the client
         """
         data = json.dumps(data, ensure_ascii=False, default=json_default)
 
@@ -1979,14 +2043,14 @@ class Request:
 
         return self.make_response(data, headers.to_wsgi_list(), cookies, status)
 
-    def not_found(self, description=None):
+    def not_found(self, description: str | None = None) -> NotFound:
         """ Shortcut for a `HTTP 404
         <http://tools.ietf.org/html/rfc7231#section-6.5.4>`_ (Not Found)
         response
         """
         return NotFound(description)
 
-    def redirect(self, location, code=303, local=True):
+    def redirect(self, location: URL | str, code: int = 303, local: bool = True) -> Response:
         # compatibility, Werkzeug support URL as location
         if isinstance(location, URL):
             location = location.to_url()
@@ -1996,30 +2060,30 @@ class Request:
             return self.env['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
 
-    def redirect_query(self, location, query=None, code=303, local=True):
+    def redirect_query(self, location: str, query: dict | None = None, code: int = 303, local: bool = True) -> Response:
         if query:
             location += '?' + url_encode(query)
         return self.redirect(location, code=code, local=local)
 
-    def render(self, template, qcontext=None, lazy=True, **kw):
+    def render(self, template: str, qcontext: dict | None = None, lazy: bool = True, **kw) -> Response:
         """ Lazy render of a QWeb template.
 
         The actual rendering of the given template will occur at then end of
         the dispatching. Meanwhile, the template and/or qcontext can be
         altered or even replaced by a static response.
 
-        :param str template: template to render
-        :param dict qcontext: Rendering context to use
-        :param bool lazy: whether the template rendering should be deferred
+        :param template: template to render
+        :param qcontext: Rendering context to use
+        :param lazy: whether the template rendering should be deferred
                           until the last possible moment
-        :param dict kw: forwarded to werkzeug's Response object
+        :param kw: forwarded to werkzeug's Response object
         """
         response = Response(template=template, qcontext=qcontext, **kw)
         if not lazy:
             return response.render()
         return response
 
-    def reroute(self, path, query_string=None):
+    def reroute(self, path: str | bytes, query_string=None) -> None:
         """
         Rewrite the current request URL using the new path and query
         string. This act as a light redirection, it does not return a
@@ -2045,7 +2109,7 @@ class Request:
         threading.current_thread().url = httprequest.url
         self.httprequest = httprequest
 
-    def _save_session(self, env=None):
+    def _save_session(self, env: Environment | None = None) -> None:
         """
         Save a modified session on disk.
 
@@ -2074,10 +2138,11 @@ class Request:
                 httponly=True
             )
 
-    def _set_request_dispatcher(self, rule):
-        routing = rule.endpoint.routing
+    def _set_request_dispatcher(self, rule: werkzeug.routing.Rule):
+        endpoint: Endpoint = rule.endpoint  # type: ignore
+        routing = endpoint.routing
         dispatcher_cls = _dispatchers[routing['type']]
-        if (not is_cors_preflight(self, rule.endpoint)
+        if (not is_cors_preflight(self, endpoint)
             and not dispatcher_cls.is_compatible_with(self)):
             compatible_dispatchers = [
                 disp.routing_type
@@ -2096,7 +2161,7 @@ class Request:
     # =====================================================
     # Routing
     # =====================================================
-    def _serve_static(self):
+    def _serve_static(self) -> Response:
         """ Serve a static file from the file system. """
         module, _, path = self.httprequest.path[1:].partition('/static/')
         try:
@@ -2117,7 +2182,7 @@ class Request:
         except OSError:  # cover both missing file and invalid permissions
             raise NotFound(f'File "{path}" not found in module {module}.\n')
 
-    def _serve_nodb(self):
+    def _serve_nodb(self) -> Response:
         """
         Dispatch the request to its matching controller in a
         database-free environment.
@@ -2126,11 +2191,12 @@ class Request:
         rule, args = router.match(return_rule=True)
         self._set_request_dispatcher(rule)
         self.dispatcher.pre_dispatch(rule, args)
-        response = self.dispatcher.dispatch(rule.endpoint, args)
+        endpoint: Endpoint = rule.endpoint  # type: ignore
+        response = self.dispatcher.dispatch(endpoint, args)
         self.dispatcher.post_dispatch(response)
         return response
 
-    def _serve_db(self):
+    def _serve_db(self) -> Response:
         """
         Prepare the user session and load the ORM before forwarding the
         request to ``_serve_ir_http``.
@@ -2163,15 +2229,16 @@ class Request:
 
         # a controller endpoint matched -> dispatch it the request
         self._set_request_dispatcher(rule)
-        readonly = rule.endpoint.routing['readonly']
+        endpoint: Endpoint = rule.endpoint  # type: ignore
+        readonly = endpoint.routing['readonly']
         if callable(readonly):
-            readonly = readonly(rule.endpoint.func.__self__, rule, args)
+            readonly = readonly(endpoint.func.__self__, rule, args)
         return self._transactioning(
             functools.partial(self._serve_ir_http, rule, args),
             readonly=readonly,
         )
 
-    def _serve_ir_http_fallback(self, not_found):
+    def _serve_ir_http_fallback(self, not_found: NotFound) -> Response:
         """
         Called when no controller match the request path. Delegate to
         ``ir.http._serve_fallback`` to give modules the opportunity to
@@ -2190,18 +2257,19 @@ class Request:
         no_fallback.error_response = self.registry['ir.http']._handle_error(no_fallback)
         raise no_fallback
 
-    def _serve_ir_http(self, rule, args):
+    def _serve_ir_http(self, rule: werkzeug.routing.Rule, args) -> Response:
         """
         Called when a controller match the request path. Delegate to
         ``ir.http`` to serve a response.
         """
-        self.registry['ir.http']._authenticate(rule.endpoint)
+        endpoint: Endpoint = rule.endpoint  # type: ignore
+        self.registry['ir.http']._authenticate(endpoint)
         self.registry['ir.http']._pre_dispatch(rule, args)
-        response = self.dispatcher.dispatch(rule.endpoint, args)
+        response = self.dispatcher.dispatch(endpoint, args)
         self.registry['ir.http']._post_dispatch(response)
         return response
 
-    def _transactioning(self, func, readonly):
+    def _transactioning(self, func, readonly: bool):
         """
         Call ``func`` within a new SQL transaction.
 
@@ -2253,36 +2321,38 @@ class Request:
 # Core type-specialized dispatchers
 # =========================================================
 
-_dispatchers = {}
+_dispatchers: dict[str, type[Dispatcher]] = {}
+
 
 class Dispatcher(ABC):
     routing_type: str
-    mimetypes: collections.abc.Collection[str] = ()
+    mimetypes: Collection[str] = ()
 
     @classmethod
     def __init_subclass__(cls):
         super().__init_subclass__()
         _dispatchers[cls.routing_type] = cls
 
-    def __init__(self, request):
+    def __init__(self, request: Request):
         self.request = request
 
     @classmethod
     @abstractmethod
-    def is_compatible_with(cls, request):
+    def is_compatible_with(cls, request: Request) -> bool:
         """
         Determine if the current request is compatible with this
         dispatcher.
         """
 
-    def pre_dispatch(self, rule, args):
+    def pre_dispatch(self, rule: werkzeug.routing.Rule, args):
         """
         Prepare the system before dispatching the request to its
         controller. This method is often overridden in ir.http to
         extract some info from the request query-string or headers and
         to save them in the session or in the context.
         """
-        routing = rule.endpoint.routing
+        endpoint: Endpoint = rule.endpoint  # type: ignore
+        routing = endpoint.routing
         self.request.session.can_save &= routing.get('save_session', True)
 
         set_header = self.request.future_response.headers.set
@@ -2307,7 +2377,7 @@ class Dispatcher(ABC):
             self.request.httprequest.max_content_length = max_content_length
 
     @abstractmethod
-    def dispatch(self, endpoint, args):
+    def dispatch(self, endpoint: Endpoint, args) -> Response:
         """
         Extract the params from the request's body and call the
         endpoint. While it is preferred to override ir.http._pre_dispatch
@@ -2315,7 +2385,7 @@ class Dispatcher(ABC):
         a tight control over the dispatching.
         """
 
-    def post_dispatch(self, response):
+    def post_dispatch(self, response: Response):
         """
         Manipulate the HTTP response to inject various headers, also
         save the session when it is dirty.
@@ -2325,7 +2395,7 @@ class Dispatcher(ABC):
         root.set_csp(response)
 
     @abstractmethod
-    def handle_error(self, exc: Exception) -> collections.abc.Callable:
+    def handle_error(self, exc: Exception) -> Response | HTTPException:
         """
         Transform the exception into a valid HTTP response. Called upon
         any exception while serving a request.
@@ -2370,7 +2440,7 @@ class HttpDispatcher(Dispatcher):
         else:
             return endpoint(**self.request.params)
 
-    def handle_error(self, exc: Exception) -> collections.abc.Callable:
+    def handle_error(self, exc):
         """
         Handle any exception that occurred while dispatching a request
         to a `type='http'` route. Also handle exceptions that occurred
@@ -2379,7 +2449,7 @@ class HttpDispatcher(Dispatcher):
         json.
 
         :param Exception exc: the exception that occurred.
-        :returns: a WSGI application
+        :returns: a WSGI response
         """
         if isinstance(exc, SessionExpiredException):
             session = self.request.session
@@ -2464,7 +2534,7 @@ class JsonRPCDispatcher(Dispatcher):
             result = endpoint(**self.request.params)
         return self._response(result)
 
-    def handle_error(self, exc: Exception) -> collections.abc.Callable:
+    def handle_error(self, exc):
         """
         Handle any exception that occurred while dispatching a request to
         a `type='jsonrpc'` route. Also handle exceptions that occurred when
@@ -2472,7 +2542,7 @@ class JsonRPCDispatcher(Dispatcher):
         be delivered and that the request ``Content-Type`` was json.
 
         :param exc: the exception that occurred.
-        :returns: a WSGI application
+        :returns: a WSGI response
         """
         error = {
             'code': 0,  # we don't care of this code
@@ -2506,7 +2576,7 @@ class Application:
     """ Odoo WSGI application """
     # See also: https://www.python.org/dev/peps/pep-3333
 
-    def initialize(self):
+    def initialize(self) -> None:
         """
         Initialize the application.
 
@@ -2525,7 +2595,7 @@ class Application:
         manifest = module_manager.Manifest.for_addon(module_name, display_warning=False)
         return manifest.static_path if manifest is not None else None
 
-    def get_static_file(self, url, host=''):
+    def get_static_file(self, url: str, host: str = '') -> str | None:
         """
         Get the full-path of the file if the url resolves to a local
         static file, otherwise return None.
@@ -2578,7 +2648,7 @@ class Application:
         _logger.debug('HTTP sessions stored in: %s', path)
         return FilesystemSessionStore(path, session_class=Session, renew_missing=True)
 
-    def get_db_router(self, db):
+    def get_db_router(self, db: str | None) -> werkzeug.routing.Map:
         if not db:
             return self.nodb_routing_map
         return request.env['ir.http'].routing_map()
@@ -2587,7 +2657,7 @@ class Application:
     def geoip_city_db(self):
         try:
             return geoip2.database.Reader(config['geoip_city_db'])
-        except (OSError, maxminddb.InvalidDatabaseError):
+        except (OSError, MaxminddbInvalidDatabaseError):
             _logger.debug(
                 "Couldn't load Geoip City file at %s. IP Resolver disabled.",
                 config['geoip_city_db'], exc_info=True
@@ -2598,11 +2668,11 @@ class Application:
     def geoip_country_db(self):
         try:
             return geoip2.database.Reader(config['geoip_country_db'])
-        except (OSError, maxminddb.InvalidDatabaseError) as exc:
+        except (OSError, MaxminddbInvalidDatabaseError) as exc:
             _logger.debug("Couldn't load Geoip Country file (%s). Fallbacks on Geoip City.", exc,)
             raise
 
-    def set_csp(self, response):
+    def set_csp(self, response: Response) -> None:
         headers = response.headers
         headers['X-Content-Type-Options'] = 'nosniff'
 
@@ -2614,7 +2684,7 @@ class Application:
 
         headers['Content-Security-Policy'] = "default-src 'none'"
 
-    def __call__(self, environ, start_response):
+    def __call__(self, environ: WSGIEnvironment, start_response: StartResponse) -> Iterable[bytes]:
         """
         WSGI application entry point.
 
@@ -2636,7 +2706,7 @@ class Application:
             del current_thread.uid
         thread_local.rpc_model_method = ''
 
-        if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
+        if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
@@ -2693,7 +2763,7 @@ class Application:
                 elif isinstance(exc, (UserError, AccessError)):
                     _logger.warning(exc)
                 else:
-                    _logger.error("Exception during request handling.", exc_info=True)
+                    _logger.exception("Exception during request handling.")
 
                 # Ensure there is always a WSGI handler attached to the exception.
                 if not hasattr(exc, 'error_response'):
