@@ -35,137 +35,143 @@ class SaleOrder(models.Model):
 
         for order in self:
             logger.info(f"Processing order: {order.name}")
-            all_products_available = True
             products_data = []
+            all_products_available = True
 
-            # Fetch picking records for the current order
+            # Get relevant picking records (exclude canceled)
             picking_records = self.env['stock.picking'].search([
                 ('origin', '=', order.name),
-                ('state', '!=', 'cancel')  # Exclude canceled pickings
+                ('state', '!=', 'cancel')
             ])
-            # Filter only "pick" type pickings
             pick_only_picking_records = picking_records.filtered(
                 lambda p: 'Pick' in p.picking_type_id.name
             )
+
+            # Prevent release if any picking is in 'confirmed' (waiting) state
             waiting_pickings = pick_only_picking_records.filtered(lambda p: p.state == 'confirmed')
             if waiting_pickings:
                 pick_names = ', '.join(waiting_pickings.mapped('name'))
                 raise ValidationError(
-                    f"Cannot release order {order.name}: Picking {pick_names} are in 'waiting' state.")
+                    f"Cannot release order {order.name}: Picking(s) {pick_names} are in 'waiting' state."
+                )
+
+            # Prevent release if any picking line is not assigned (fully reserved)
+            not_fully_assigned_moves = pick_only_picking_records.mapped('move_ids_without_package').filtered(
+                lambda move: move.state != 'assigned'
+            )
+            if not_fully_assigned_moves:
+                move_msgs = []
+                for move in not_fully_assigned_moves:
+                    reserved = getattr(move, 'quantity_reserved', move.quantity)
+                    move_msgs.append(
+                        f"{move.product_id.display_name} in picking {move.picking_id.name} "
+                        f"(State: {move.state}, Reserved: {reserved}, Needed: {move.product_uom_qty})"
+                    )
+                raise ValidationError(
+                    "Cannot release order %s: The following picking lines are not fully assigned/reserved:\n%s" %
+                    (order.name, '\n'.join(move_msgs))
+                )
 
             for line in order.order_line:
                 product_qty = line.product_uom_qty
                 product = line.product_id
-
-                # Search for the product using its default_code
                 product_default_code = product.default_code
-                available_qty = product.qty_available
-
-                # Fetch the stock location using the stock.quant model
-                location_quant = self.env['stock.quant'].search([
-                    ('product_id', '=', product.id),
-                    ('location_id.usage', '=', 'internal')
-                ], limit=1)
 
                 location_name = "Unknown"
+                manual_location_names = []
                 location_system = "Unknown"
-                manual_location_names = []  # To store manual locations if applicable
-                manual_locations_fulfilled_qty = 0  # Track total fulfilled quantity from manual locations
 
-                if location_quant:
-                    location_name = location_quant.location_id.name
-                    location_system = location_quant.location_id.system_type
+                found_in_all_required_picks = True
 
-                logger.info(
-                    '----------------------------------------------------------------------------------------------------')
-                logger.info(
-                    f"Checking product {product.name} (Default Code: {product_default_code}): Ordered {product_qty}, Available {available_qty}")
+                # For each picking, check if product is available
+                relevant_picks = pick_only_picking_records
+                if getattr(order, 'discrete_pick', False):
+                    # For discrete pick, only check pickings where this product is present
+                    relevant_picks = pick_only_picking_records.filtered(
+                        lambda p: product in p.move_ids.mapped('product_id')
+                    )
 
-                # Check quantity in source location
-                product_available_in_source = False
-                for picking in pick_only_picking_records:
+                manual_locations_fulfilled_qty = 0  # Track manual child fulfillment per product
+
+                for picking in relevant_picks:
+                    required_qty = product_qty
                     source_location = picking.location_id
+
+                    # Get base location and system (set once)
+                    if location_name == "Unknown":
+                        location_name = source_location.name
+                        location_system = getattr(source_location, 'system_type', "Unknown")
+
+                    # Check in source location
                     source_quant = self.env['stock.quant'].search([
                         ('product_id', '=', product.id),
                         ('location_id', '=', source_location.id)
                     ], limit=1)
+                    fulfilled_qty = source_quant.quantity if source_quant else 0
 
-                    # If product is manual, check child locations if not available in the source location
-                    if not source_quant or source_quant.quantity < product_qty:
-                        if product.automation_manual_product == 'manual':
-                            child_locations = self.env['stock.location'].search([
-                                ('id', 'child_of', source_location.id),
-                                ('usage', '=', 'internal')
-                            ], order="id asc")  # Sort to prioritize child of child locations
-
-                            for child_location in child_locations:
-                                if manual_locations_fulfilled_qty >= product_qty:
-                                    break
-
-                                child_quant = self.env['stock.quant'].search([
-                                    ('product_id', '=', product.id),
-                                    ('location_id', '=', child_location.id)
-                                ], limit=1)
-
-                                if child_quant and child_quant.quantity > 0:
-                                    fulfilled_qty = min(
-                                        product_qty - manual_locations_fulfilled_qty, child_quant.quantity)
-                                    manual_locations_fulfilled_qty += fulfilled_qty
-                                    manual_location_names.append(
-                                        f"{child_location.name} (Fulfilled: {fulfilled_qty})")
-
-                            if manual_locations_fulfilled_qty >= product_qty:
-                                product_available_in_source = True
+                    # If manual and not enough, check child locations
+                    if fulfilled_qty < required_qty and getattr(product, 'automation_manual_product', '') == 'manual':
+                        child_locations = self.env['stock.location'].search([
+                            ('id', 'child_of', source_location.id),
+                            ('usage', '=', 'internal')
+                        ], order="id asc")
+                        for child_location in child_locations:
+                            if manual_locations_fulfilled_qty >= required_qty:
                                 break
-                    elif source_quant.quantity >= product_qty:
-                        product_available_in_source = True
-                        break
+                            child_quant = self.env['stock.quant'].search([
+                                ('product_id', '=', product.id),
+                                ('location_id', '=', child_location.id)
+                            ], limit=1)
+                            if child_quant and child_quant.quantity > 0:
+                                add_qty = min(required_qty - manual_locations_fulfilled_qty, child_quant.quantity)
+                                manual_locations_fulfilled_qty += add_qty
+                                manual_location_names.append(f"{child_location.name} (Fulfilled: {add_qty})")
 
-                if not product_available_in_source:
-                    message = (
-                        f"Insufficient quantity for product {product.name} in source or child locations for order {order.name}."
-                    )
-                    logger.warning(message)
-                    raise ValidationError(message)
+                        fulfilled_qty += manual_locations_fulfilled_qty
+
+                    if fulfilled_qty < required_qty:
+                        logger.warning(
+                            f"Product {product.name} not available in picking {picking.name} "
+                            f"(needed {required_qty}, found {fulfilled_qty})."
+                        )
+                        found_in_all_required_picks = False
+                        break  # Don't need to check other pickings, already failed
+
+                if not found_in_all_required_picks:
                     all_products_available = False
-                    break
+                    raise ValidationError(
+                        f"Cannot release order {order.name}: "
+                        f"Product '{product.name}' does not have enough stock in all required pickings."
+                    )
 
-                # Collect pickings that include the product
+                # Prepare picklist info (as in your existing logic)
                 product_pickings = pick_only_picking_records.filtered(
                     lambda p: product.id in p.move_ids.mapped('product_id').ids
                 ).mapped('name')
-
                 if not product_pickings:
-                    logger.warning(f"No picklist found for product {product.name} in order {order.name}.")
-                    product_pickings = ["No picklist"]  # Fallback value
+                    product_pickings = ["No picklist"]
                 elif len(product_pickings) > 1:
-                    logger.warning(
-                        f"Multiple picklists found for product {product.name} in order {order.name}. Using the first one.")
-                    product_pickings = product_pickings[:1]  # Take only the first picklist
+                    product_pickings = product_pickings[:1]
 
-                # Collect data to be sent to the external system
                 products_data.append({
                     'default_code': product_default_code,
                     'product_name': product.name,
                     'quantity': product_qty,
-                    # 'location': f"{location_name} (Automation)" if not manual_location_names else
-                    #             f"{location_name} (Manual), {', '.join(manual_location_names)} (Manual)",
-                    'location': 'Automation',
+                    'location': f"{location_name} (Automation)" if not manual_location_names else
+                    f"{location_name} (Manual), {', '.join(manual_location_names)} (Manual)",
                     'system': location_system,
-                    'product_class': product.automation_manual_product,
-                    'picklist': product_pickings[0] if product_pickings else "No picklist",
+                    'product_class': getattr(product, 'automation_manual_product', ''),
+                    'picklist': product_pickings[0],
                 })
                 logger.debug(f"Product data for {product.name}: {products_data[-1]}")
 
-            # Proceed with the release process
+            # --- Proceed if all products available in all picks ---
             if all_products_available:
                 order.is_released = 'released'
-                # Prepare data to send to external system
                 data_to_send = {
                     'order_number': order.name,
                     'products': products_data,
-                    'tenant_code':order.tenant_code_id.name,
-                    # 'shipping_address' : f"{order.partner_id.name},{order.partner_id.street or ''}",
+                    'tenant_code': order.tenant_code_id.name,
                     'name': order.partner_id.name,
                     'street1': order.partner_id.street,
                     'street2': order.partner_id.street2,
@@ -173,20 +179,16 @@ class SaleOrder(models.Model):
                     'state': order.partner_id.state_id.name if order.partner_id.state_id else '',
                     'country': order.partner_id.country_id.name if order.partner_id.country_id else '',
                     'zip': order.partner_id.zip,
-                    'discrete_pick':order.discrete_pick,
+                    'discrete_pick': getattr(order, 'discrete_pick', False),
                 }
                 logger.info(f"Generated data to release: {data_to_send}")
-                logger.debug(f"Data to be sent for order {order.name}: {data_to_send}")
                 is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env')
-                # Send data to external API based on env
                 release_url = (
                     "https://shiperoo-connect-int.prod.automation.shiperoo.com/api/odoo_release"
                     if is_production == 'True'
                     else "https://shiperooconnect-dev.automation.shiperoo.com/api/odoo_release"
                 )
-                headers = {
-                    "Content-Type": "application/json"
-                }
+                headers = {"Content-Type": "application/json"}
                 response = requests.post(release_url, json=data_to_send, headers=headers)
                 if response.status_code == 200:
                     logger.info(f"Order {order.name} data successfully sent to external system.")
@@ -197,3 +199,4 @@ class SaleOrder(models.Model):
             else:
                 order.is_released = 'unreleased'
             logger.info(f"Order {order.name} released: {order.is_released}")
+
