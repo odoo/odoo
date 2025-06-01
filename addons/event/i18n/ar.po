@@ -60,7 +60,7 @@ msgstr "%(event_name)s - التسجيل لـ %(attendee_name)s "
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s (%(count)s مقاعد متبقية) "
 
 #. module: event
 #. odoo-python
@@ -72,7 +72,7 @@ msgstr "%(slot_name)s (نفدت الكمية) "
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: ينقصها %(count)s مقاعد "
 
 #. module: event
 #. odoo-python
@@ -206,7 +206,7 @@ msgstr "<i class=\"fa fa-building\" title=\"شركة الحاضر \"/>"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"الخانة الزمنية \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -1860,6 +1860,8 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"السماح بفترات زمنية متعددة. يتم تحديد الاتصالات والحد الأقصى لعدد الحاضرين "
+"والحد الأقصى لعدد التذاكر المسجلة لكل فترة زمنية بدلاً من الفعالية بأكملها. "
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -2783,6 +2785,9 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"لكل فعالية، يمكنك تحديد حد أقصى للمقاعد المحجوزة (عدد الحاضرين)، بحيث لا "
+"يُقبل حجز عدد أكبر منه. إذا كانت الفعالية تحتوي على عدة فترات زمنية، يتم "
+"تطبيق هذا العدد الأقصى لكل فترة زمنية. "
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -3021,6 +3026,8 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"يشير إلى وقت التواصل. إذا كانت الفعالية تضمن عدة فترات زمنية، فإن الفاصل "
+"الزمني يرتبط بكل فترة زمنية عوضاً عن الفعالية بأكملها. "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form

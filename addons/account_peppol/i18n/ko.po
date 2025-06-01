@@ -415,6 +415,8 @@ msgid ""
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
+"메시지가 보장된 전달 요구 사항에 따라 발송되었으나 신뢰성 모듈은 재전송 시도에도 불구하고 메시지가 제대로 전달되었는지 확인하지 "
+"못하였습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1316,6 +1318,7 @@ msgid ""
 " is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
+"MSH는 외부 페이로드 참조를 확인할 수 없습니다(예: PartInfo/href URI로 식별되는 ebMS 메시지에 들어있지 않은 부분)"
 
 #. module: account_peppol
 #. odoo-python
@@ -1443,6 +1446,8 @@ msgid ""
 "the MSH is not compatible with the expected content, based on the associated"
 " P-Mode."
 msgstr ""
+"MSH에서 예상되는 ebMS 헤더 또는 다른 헤더(예: 안정성, 보안성)는 연결된 P-모드를 기준으로 하는 예상 콘텐츠와 호환되지 "
+"않습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1763,7 +1768,7 @@ msgstr "크레딧이 부족합니다."
 msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
-msgstr ""
+msgstr "오늘 전송 가능한 문서 한도에 도달했습니다. 나중에 다시 시도하세요. 한도를 늘리려면 고객 지원팀에 문의하세요."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1845,7 +1850,7 @@ msgstr "by Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via Peppol"
-msgstr ""
+msgstr "Peppol을 통해 전송 불가"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -1855,7 +1860,7 @@ msgstr "PEPPOL을 통해 전송"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
-msgstr ""
+msgstr "청구서 전송, 다만 이 건은"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
