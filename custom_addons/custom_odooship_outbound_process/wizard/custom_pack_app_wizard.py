@@ -149,7 +149,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         is_discrete = bool(discrete_sale_ids)
 
         if is_discrete:
-            # Get all discrete picks (for each SO), regardless of state
             for sale_id in discrete_sale_ids:
                 all_discrete_picks = self.env["stock.picking"].search([
                     ("sale_id", "=", sale_id),
@@ -158,8 +157,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ])
                 picks_in_pick = all_discrete_picks.filtered(lambda p: p.current_state == "pick")
                 picks_not_in_pick = all_discrete_picks.filtered(lambda p: p.current_state != "pick")
-
-                # If ANY discrete pick for this SO is not in pick state, block and show a message
                 if picks_not_in_pick:
                     msg_lines = []
                     for pick in picks_not_in_pick:
@@ -171,7 +168,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "This is a Discrete Pick order. All discrete picks for this order must be in 'Pick' state before packing.\n\n" +
                         "\n".join(msg_lines)
                     )
-                # Now ALL are in pick state, so enforce all totes are scanned
                 all_totes = set(picks_in_pick.mapped("move_ids_without_package.pc_container_code"))
                 scanned_totes = set(tote_codes)
                 missing = all_totes - scanned_totes
@@ -186,15 +182,12 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                         "This is a Discrete Pick order. You must scan all totes for these picks together:\n\n%s"
                         % ("\n".join(picks_and_totes))
                     )
-            # All checks passed, proceed
             pickings_to_load = pickings.filtered(lambda p: p.current_state == "pick")
             totes_to_load = tote_codes
-
         else:
-            # --- Non-discrete picks (normal pickings): if any selected picking has >1 tote, force scanning all totes!
             for picking in pickings:
                 totes_on_pick = set(picking.move_ids_without_package.mapped("pc_container_code"))
-                scanned_totes = set(tote_codes) & totes_on_pick  # Only count scanned totes that belong to this picking
+                scanned_totes = set(tote_codes) & totes_on_pick
                 if len(totes_on_pick) > 1 and scanned_totes != totes_on_pick:
                     raise ValidationError(
                         "This order has multiple totes:\n%s\n\n"
@@ -204,8 +197,15 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                             ', '.join([t for t in (totes_on_pick - scanned_totes)])
                         )
                     )
-            pickings_to_load = pickings
-            totes_to_load = None  # All lines for picking, since all totes are scanned
+            pickings_to_load = pickings.filtered(lambda p: p.current_state == "pick")
+            totes_to_load = None
+
+        # --------- Validation: Raise if NO picks in "pick" state ---------
+        if not pickings_to_load:
+            raise ValidationError(
+                "No pickings in 'pick' state found for the scanned tote(s).\n"
+                "Make sure the picking(s) are ready (in 'pick' state) before packing."
+            )
 
         self.picking_ids = [(6, 0, pickings_to_load.ids)]
 
@@ -218,10 +218,8 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 incoterm
             )
             if is_discrete:
-                # For discrete, only lines from the scanned totes
                 moves = picking.move_ids_without_package.filtered(lambda m: m.pc_container_code in tote_codes)
             else:
-                # For normal pick, load all lines for that picking (since we've forced all totes scanned)
                 moves = picking.move_ids_without_package
             for mv in moves:
                 qty_to_create = int(round(mv.remaining_qty or 0))
