@@ -5,26 +5,21 @@
 # Translators:
 # Wil Odoo, 2025
 # Manon Rondou, 2025
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 20:36+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Manon Rondou, 2025\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2025\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
-msgid ", Guests:"
-msgstr ", gasten:"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -219,8 +214,6 @@ msgid "Bill"
 msgstr "Leveranciersfactuur"
 
 #. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/bill_screen/bill_screen.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_printbill
 msgid "Bill Printing"
 msgstr "Rekening afdrukken"
@@ -1014,12 +1007,6 @@ msgstr "Aardappelen met tijm"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/bill_screen/bill_screen.xml:0
-msgid "Print"
-msgstr "Afdrukken"
-
-#. module: pos_restaurant
-#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "Pro forma receipt"
 msgstr "Proformabon"
@@ -1275,10 +1262,21 @@ msgstr "Schakel naar zaalweergave"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
-#: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
 msgstr "Tafel"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
+msgid "Table %(number)s"
+msgstr "Tafel %(number)s"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
+msgid "Table %(number)s, Guests: %(count)s"
+msgstr "Tafel %(number)s, Gasten: %(count)s"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant_appointment

@@ -35,12 +35,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s ob%(time_start)s do\n"
+" %(date_end)s ob%(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s ob (%(start)s do%(end)s) (%(timezone)s)"
 
 #. module: calendar
 #. odoo-python
@@ -172,6 +174,120 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"/>\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object.event_id and object.event_id.appointment_type_id\"/>\n"
+"    <t t-set=\"customer\" t-value=\"object.event_id.find_partner_customer()\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"/>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/>\n"
+"     <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"\n"
+"    <p>\n"
+"        Živjo<t t-out=\"object.common_name or ''\">Tomaž</t>,<br/><br/>\n"
+"        <t t-if=\"is_online and target_responsible\">\n"
+"            <t t-if=\"customer\">\n"
+"                Datum vašega sestanka z <t t-out=\"customer.name or ''\">Jasmino Kosmač</t> je bil posodobljen.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Vaš termin je bil posodobljen.\n"
+"            </t>\n"
+"            Sestanek <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Načrtujte predstavitev </strong> je zdaj predviden za\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2025 ob (11:00:00 do 11:30:00) (Europa/Ljubljana)</t>\n"
+"        </t>\n"
+"        <t t-elif=\"is_online and target_customer\">\n"
+"            Datum vašega sestanka z <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Katjo Dolenc</t> je bil posodobljen.\n"
+"            Sestanek <strong t-out=\"object.event_id.appointment_type_id.name or ''\"/> je zdaj predviden za\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2025 od (11:00:00 do 11:30:00) (Europa/Slovenija)</t>.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Datum sestanka je bil posodobljen.\n"
+"            Sestanek <strong t-out=\"object.event_id.name or ''\">Nadaljnje ukrepanje za predlog projekta </strong> ki ga je ustvarila<t t-out=\"object.event_id.user_id.partner_id.name or ''\">Katja Dolenc</t> je zdaj predviden za\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 od (11:00:00 do 11:30:00) (Europa/Ljubljana)</t>.\n"
+"        </t>\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Sprejmite</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Zavrnite</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Vpogled</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or &quot;&quot;\">Torek</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or &quot;&quot;\">Maja 2025</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                 <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or &quot;&quot;\">ob 11:00 uri</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                            (<t t-out=\"object.mail_tz or ''\">Europa/Ljubljana</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Podrobnosti dogodka </strong></p>\n"
+"            <ul>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>Lokacija: <t t-out=\"object.event_id.location or ''\">Ljubljana</t>\n"
+"                        <a target=\"_blank\" t-if=\"not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">(Poglejte zemljevid)</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>Kdaj: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Vsak teden, za 3 dogodke </t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>Tranjanje: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0 ur 30 minut</t></li>\n"
+"                </t>\n"
+"                <li>Udeleženci\n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background: {{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Tomaž Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">Vi</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        Kako se pridružiti:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Pridružite se Odoo Debati</t>\n"
+"                        <t t-else=\"\"> Pridružite se na</t><br/>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mojepodjetje.si/koledar/pridružitev_videoklic/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>Opis dogodka:\n"
+"                    <t t-out=\"object.event_id.description\">Interni sestanek za razpravo o novih cenah izdelkov in storitev. </t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Hvala,\n"
+"    <t t-if=\"object.event_id.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.event_id.user_id.signature or ''\" data-o-mail-quote=\"1\">Tomaž Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_delete_event
@@ -236,6 +352,65 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"/>\n"
+"                    <t t-set=\"event_name\" t-value=\"object.name or ''\"/>\n"
+"                    <t t-set=\"start_date\" t-value=\"object.start or ''\"/>\n"
+"                    <t t-set=\"end_date\" t-value=\"object.stop or ''\"/>\n"
+"                    <t t-set=\"event_organizer\" t-value=\"object.user_id.name or ''\"/>\n"
+"                    <div>\n"
+"                        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n"
+"                            <tr>\n"
+"                                <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                                    <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) \">Torek</t>\n"
+"                                    </div>\n"
+"                                    <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">4</t>\n"
+"                                    </div>\n"
+"                                    <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)\">maja 2025</t>\n"
+"                                    </div>\n"
+"                                    <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                                        <t t-if=\"not object.allday\">\n"
+"                                            <div>\n"
+"                                                <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 uri</t>\n"
+"                                            </div>\n"
+"                                            <t t-if=\"mail_tz\">\n"
+"                                                <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                                                    (<t t-out=\"mail_tz\"> Europa/Ljubljanja</t>)\n"
+"                                                </div>\n"
+"                                            </t>\n"
+"                                        </t>\n"
+"                                    </div>\n"
+"                                </td>\n"
+"                                <td width=\"20px;\"/>\n"
+"                                <td style=\"padding-top: 5px;\">\n"
+"                                    <p>\n"
+"                                        <strong>Ta dogodek je bil preklican in odstranjen iz vašega koledarja. </strong>\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        S tem vas obveščamo, da je dogodek<strong><t t-out=\"event_name\"/></strong>\n"
+"                                        načrtovan od <strong><t t-out=\"start_date or ''\"/></strong>\n"
+"                                        do <strong><t t-out=\"end_date or ''\"/></strong>\n"
+"                                        je bilo izbrisan.\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        Organizator: <strong><t t-out=\"event_organizer\"/></strong>\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        Če imate kakršna koli vprašanja ali pomisleke, nas prosim kontaktirajte.\n"
+"                                    </p>\n"
+"                                    <p>\n"
+"                                        Lep pozdrav,<br/>\n"
+"                                        <strong>Ekipa Koledarja </strong>\n"
+"                                    </p>\n"
+"                                </td>\n"
+"                            </tr>\n"
+"                        </table>\n"
+"                    </div>\n"
+"                </div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_invitation
@@ -345,6 +520,110 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"/>\n"
+"    <t t-set=\"customer\" t-value=\" object.event_id.find_partner_customer()\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.event_id.partner_id\"/>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"\n"
+"    <p>\n"
+"        Pozdravljeni v<t t-out=\"object.common_name or ''\">Leseni kotiček</t>,<br/><br/>\n"
+"\n"
+"        <t t-if=\"not target_responsible\">\n"
+"            <t t-if=\"not object.event_id.user_id.active\">\n"
+"                Stranka vas je povabila na <strong t-out=\"object.event_id.name or ''\">Follow-up for Predlog projekta</strong> sestanek.\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Katja Dolenc</t> vas je povabila na <strong t-out=\"object.event_id.name or ''\">Nadaljnje ukrepanje za predlog projekta </strong> sestanek.\n"
+"            </t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Vaš sestanek <strong t-out=\"object.event_id.name or ''\">Nadaljnje ukrepanje za predlog projekta </strong> je rezervirano.\n"
+"        </t>\n"
+"\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/meeting/accept?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Sprejmite</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/decline?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Zavrnite</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{object.access_token}}&amp;id={{object.event_id.id}}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">Pogled</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='EEEE', lang_code=object.env.lang) or ''\">Torek</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='MMMM y', lang_code=object.env.lang) or ''\">maja 2025</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold ; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format='short', lang_code=object.env.lang) or ''\">11:00 uri</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                            (<t t-out=\"object.mail_tz or ''\">Europa/Ljubljana</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Podrobnosti dogodka </strong></p>\n"
+"            <ul>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>Lokacija: <t t-out=\"object.event_id.location or ''\">Ljubljana</t>\n"
+"                        <a target=\"_blank\" t-if=\"not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">(Ogled zemljevida)</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>Kdaj: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Vsak teden, za 3 dogodke </t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>Trajanje: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0 ur 30 minut</t></li>\n"
+"                </t>\n"
+"                <li>Udeleženci \n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Tomaž Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">Vi</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        Kako se pridružiti:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Pridružite se Odoo Debati</t>\n"
+"                        <t t-else=\"\"> Pridružite se na</t><br/>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mojepodjetje.si/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>Opis dogodka:\n"
+"                    <t t-out=\"object.event_id.description\">Interni sestanek za razpravo o novih cenah izdelkov in storitev. </t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Hvala,\n"
+"    <t t-if=\"object.event_id.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.event_id.user_id.signature or ''\" data-o-mail-quote=\"1\">Tomaž Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_update
@@ -430,6 +709,87 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"/>\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object and object.appointment_type_id\"/>\n"
+"    <t t-set=\"target_responsible\" t-value=\"object.partner_id == object.partner_id\"/>\n"
+"    <t t-set=\"target_customer\" t-value=\"object.partner_id == customer\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <t t-set=\"mail_tz\" t-value=\"object._get_mail_tz() or ctx.get('mail_tz')\"/>\n"
+"    <div>\n"
+"        <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n"
+"            <tr>\n"
+"                <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"                    <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='EEEE', lang_code=object.env.lang) \">Torek</t>\n"
+"                    </div>\n"
+"                    <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='d', lang_code=object.env.lang)\">4</t>\n"
+"                    </div>\n"
+"                    <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                        <t t-out=\"format_datetime(dt=object.start, tz=mail_tz if not object.allday else None, dt_format='MMMM y', lang_code=object.env.lang)\">maja 2025</t>\n"
+"                    </div>\n"
+"                    <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                        <t t-if=\"not object.allday\">\n"
+"                            <div>\n"
+"                                <t t-out=\"format_time(time=object.start, tz=mail_tz, time_format='short', lang_code=object.env.lang)\">11:00 uri</t>\n"
+"                            </div>\n"
+"                            <t t-if=\"mail_tz\">\n"
+"                                <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                                    (<t t-out=\"mail_tz\"> Europa/Ljubljana</t>)\n"
+"                                </div>\n"
+"                            </t>\n"
+"                        </t>\n"
+"                    </div>\n"
+"                </td>\n"
+"                <td width=\"20px;\"/>\n"
+"                <td style=\"padding-top: 5px;\">\n"
+"                    <p>\n"
+"                        <strong>Podrobnosti dogodka </strong>\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <t t-if=\"not is_html_empty(object.description)\">\n"
+"                            <li>Opis:\n"
+"                            <t t-out=\"object.description\">Interni sestanek za razpravo o novih cenah izdelkov in storitev. </t></li>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.videocall_location\">\n"
+"                            <li>\n"
+"                                Kako se pridružiti:\n"
+"                                <t t-if=\"object.get_base_url() in object.videocall_location\"> Pridružite se Odoo Debato</t>\n"
+"                                <t t-else=\"\"> Pridružite se na</t><br/>\n"
+"                                <a t-att-href=\"object.videocall_location\" target=\"_blank\" t-out=\"object.videocall_location or ''\">www.mojepodjetje.si/calendar/join_videocall/xyz</a>\n"
+"                            </li>\n"
+"                        </t>\n"
+"                        <t t-if=\"object.location\">\n"
+"                            <li>Lokacija: <t t-out=\"object.location or ''\">Ljubljana</t>\n"
+"                                <a target=\"_blank\" t-if=\"not is_online or is_online and object.location != object.appointment_type_id.location_id.name\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.location}}\">(Ogled zemljevida)</a>\n"
+"                            </li>\n"
+"                        </t>\n"
+"                        <t t-if=\"recurrent\">\n"
+"                            <li>Kdaj: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Vsak teden, za 3 dogodke\n"
+"</t></li>\n"
+"                        </t>\n"
+"                        <t t-if=\"not object.allday and object.duration\">\n"
+"                            <li>Trajanje:\n"
+"                                <t t-out=\"('%dH%02d' % (object.duration,round(object.duration*60)%60))\">0 ur 30 minut</t>\n"
+"                            </li>\n"
+"                        </t>\n"
+"                    </ul>\n"
+"                </td>\n"
+"            </tr>\n"
+"        </table>\n"
+"    </div>\n"
+"    <div class=\"user_input\">\n"
+"        <hr/>\n"
+"        <p placeholder=\"Enter your message here\"><br/></p>\n"
+"\n"
+"    </div>\n"
+"    <t t-if=\"object.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.user_id.signature or ''\" data-o-mail-quote=\"1\">Tomaž Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_reminder
@@ -525,6 +885,96 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"colors\" t-value=\"{'needsAction': 'grey', 'accepted': 'green', 'tentative': '#FFFF00', 'declined': 'red'}\"/>\n"
+"    <t t-set=\"is_online\" t-value=\"'appointment_type_id' in object.event_id and object.event_id.appointment_type_id\"/>\n"
+"    <t t-set=\"recurrent\" t-value=\"object.recurrence_id and not ctx.get('calendar_template_ignore_recurrence')\"/>\n"
+"    <p>\n"
+"        Pozdravljeni <t t-out=\"object.common_name or ''\">Pohištvo Gemini </t>,<br/><br/>\n"
+"        To je opomnik za spodnji dogodek:\n"
+"    </p>\n"
+"    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/accept?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Sprejmite</a>\n"
+"        <a t-attf-href=\"/calendar/{{ 'recurrence' if recurrent else 'meeting' }}/decline?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Zavrnite</a>\n"
+"        <a t-attf-href=\"/calendar/meeting/view?token={{ object.access_token }}&amp;id={{ object.event_id.id }}\" style=\"padding: 5px 10px; color: #FFFFFF; text-decoration: none; background-color: #875A7B; border: 1px solid #875A7B; border-radius: 3px\">\n"
+"            Ogled</a>\n"
+"    </div>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n"
+"        <td width=\"130px;\" style=\"min-width: 130px;\">\n"
+"            <div style=\"border-top-start-radius: 3px; border-top-end-radius: 3px; font-size: 12px; border-collapse: separate; text-align: center; font-weight: bold; color: #ffffff; min-height: 18px; background-color: #875A7B; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=&quot;EEEE&quot;, lang_code=object.env.lang) or &quot;&quot;\">Torek</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 48px; min-height: auto; font-weight: bold; text-align: center; color: #5F5F5F; background-color: #F8F8F8; border: 1px solid #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format='d', lang_code=object.env.lang) or ''\">4</t>\n"
+"            </div>\n"
+"            <div style=\"font-size: 12px; text-align: center; font-weight: bold; color: #ffffff; background-color: #875A7B;\">\n"
+"                <t t-out=\"format_datetime(dt=object.event_id.start, tz=object.mail_tz if not object.event_id.allday else None, dt_format=&quot;MMMM y&quot;, lang_code=object.env.lang) or &quot;&quot;\">maja 2025</t>\n"
+"            </div>\n"
+"            <div style=\"border-collapse: separate; color: #5F5F5F; text-align: center; font-size: 12px; border-bottom-end-radius: 3px; font-weight: bold; border: 1px solid #875A7B; border-bottom-start-radius: 3px;\">\n"
+"                <t t-if=\"not object.event_id.allday\">\n"
+"                    <div>\n"
+"                        <t t-out=\"format_time(time=object.event_id.start, tz=object.mail_tz, time_format=&quot;short&quot;, lang_code=object.env.lang) or &quot;&quot;\">11:00 uri</t>\n"
+"                    </div>\n"
+"                    <t t-if=\"object.mail_tz\">\n"
+"                        <div style=\"font-size: 10px; font-weight: normal\">\n"
+"                            (<t t-out=\"object.mail_tz or ''\">Europa/Ljubljana</t>)\n"
+"                        </div>\n"
+"                    </t>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"        <td width=\"20px;\"/>\n"
+"        <td style=\"padding-top: 5px;\">\n"
+"            <p><strong>Podrobnosti dogodka </strong></p>\n"
+"            <ul>\n"
+"                <t t-if=\"object.event_id.location\">\n"
+"                    <li>Lokacija: <t t-out=\"object.event_id.location or ''\">Ljubljana</t>\n"
+"                        <a target=\"_blank\" t-if=\"not is_online or is_online and object.event_id.location != object.event_id.appointment_type_id.location_id.name\" t-attf-href=\"http://maps.google.com/maps?oi=map&amp;q={{object.event_id.location}}\">(Ogled zemljevida)</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"recurrent\">\n"
+"                    <li>Kdaj: <t t-out=\"object.recurrence_id.get_recurrence_name()\">Vsak teden, za 3 dogodke</t></li>\n"
+"                </t>\n"
+"                <t t-if=\"not object.event_id.allday and object.event_id.duration\">\n"
+"                    <li>Trajanje: <t t-out=\"('%dH%02d' % (object.event_id.duration,round(object.event_id.duration*60)%60)) or ''\">0 ur 30 minut</t></li>\n"
+"                </t>\n"
+"                <li>Udeleženci\n"
+"                <ul>\n"
+"                    <li t-foreach=\"object.event_id.attendee_ids\" t-as=\"attendee\">\n"
+"                        <div t-attf-style=\"display: inline-block; border-radius: 50%; width: 10px; height: 10px; background:{{ colors.get(attendee.state) or 'white' }};\"> </div>\n"
+"                        <t t-if=\"attendee.common_name != object.common_name\">\n"
+"                            <span style=\"margin-left:5px\" t-out=\"attendee.common_name or ''\">Tomaž Admin</span>\n"
+"                        </t>\n"
+"                        <t t-else=\"\">\n"
+"                            <span style=\"margin-left:5px\">Vi</span>\n"
+"                        </t>\n"
+"                    </li>\n"
+"                </ul></li>\n"
+"                <t t-if=\"object.event_id.videocall_location\">\n"
+"                    <li>\n"
+"                        Kako se pridružiti:\n"
+"                        <t t-if=\"object.get_base_url() in object.event_id.videocall_location\"> Pridružite se Odoo Debato</t>\n"
+"                        <t t-else=\"\"> Pridružite se na</t><br/>\n"
+"                        <a t-att-href=\"object.event_id.videocall_location\" target=\"_blank\" t-out=\"object.event_id.videocall_location or ''\">www.mojepodjetje.si/calendar/join_videocall/xyz</a>\n"
+"                    </li>\n"
+"                </t>\n"
+"                <t t-if=\"not is_html_empty(object.event_id.description)\">\n"
+"                    <li>Opis dogodka:\n"
+"                    <t t-out=\"object.event_id.description\">Interni sestanek za razpravo o novih cenah izdelkov in storitev. </t></li>\n"
+"                </t>\n"
+"            </ul>\n"
+"        </td>\n"
+"    </tr></table>\n"
+"    <br/>\n"
+"    Hvala,\n"
+"    <t t-if=\"object.event_id.user_id.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"object.event_id.user_id.signature or ''\" data-o-mail-quote=\"1\">Tomaž Admin</t></div>\n"
+"    </t>\n"
+"</div>\n"
+"            "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_partner_kanban_view
@@ -532,22 +982,24 @@ msgid ""
 "<i class=\"fa fa-calendar me-1\" aria-label=\"Meetings\" role=\"img\" "
 "title=\"Meetings\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar me-1\" aria-label=\"Meetings\" role=\"img\" "
+"title=\"Meetings\"/>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"fa fa-plus\"/> <span>Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/> <span>Odoo srečanje</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span class=\"fa fa-plus\"/><span> Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/><span> Odoo srečanje</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"fa fa-times\"/><span> Clear meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-times\"/><span> Počisti sestanek</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -556,32 +1008,35 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Ponovi naprej</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Google Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Google Koledar</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "<span class=\"me-1 o_form_label\">Outlook Calendar</span>"
-msgstr ""
+msgstr "<span class=\"me-1 o_form_label\">Outlook Koledar</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"oi oi-arrow-right\"/><span> Join video call</span>"
-msgstr ""
+msgstr "<span class=\"oi oi-arrow-right\"/><span> Pridruži se video klicu</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> ali </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span> Attendees</span>"
-msgstr ""
+msgstr "<span> Udeleženci </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -591,7 +1046,7 @@ msgstr "<span> ure</span>"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "<span>Are you sure you want to delete this event? <br/></span>"
-msgstr ""
+msgstr "<span>Ali ste prepričani, da želite izbrisati ta dogodek?<br/></span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -603,7 +1058,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Uporabnik ne more imeti istega stika dvakrat."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -613,7 +1068,7 @@ msgstr "Sprejmi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
-msgstr ""
+msgstr "Sprejeto število"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -653,7 +1108,7 @@ msgstr "Aktivnost"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Mešanje aktivnosti"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
@@ -663,22 +1118,22 @@ msgstr "Tip aktivnosti"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_schedule
 msgid "Activity schedule plan Wizard"
-msgstr ""
+msgstr "Čarovnik za načrtovanje urnika dejavnosti"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Add attendees..."
-msgstr ""
+msgstr "Dodaj udeležence ..."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Add description"
-msgstr ""
+msgstr "Dodaj opis"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Add title"
-msgstr ""
+msgstr "Dodaj naslov"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
@@ -689,7 +1144,7 @@ msgstr "Dodatno sporočilo"
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__body
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
-msgstr ""
+msgstr "Dodatno sporočilo, ki bi bilo poslano z obvestilom za opomnik"
 
 #. module: calendar
 #. odoo-javascript
@@ -736,12 +1191,12 @@ msgstr "Udeleženci"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
-msgstr ""
+msgstr "Število udeležencev"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
 msgid "Attending?"
-msgstr ""
+msgstr "Se udeležujete?"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
@@ -757,7 +1212,7 @@ msgstr "Razpoložljivo/Zasedeno"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
 msgid "Awaiting Count"
-msgstr ""
+msgstr "Čakajoče štetje"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -788,7 +1243,7 @@ msgstr "Po dnevih"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "Adijo, ta zapis!"
 
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.calendar_event_menu
@@ -818,7 +1273,7 @@ msgstr "Informacije o udeležencih koledarja"
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_form_view_calendar_default_privacy
 msgid "Calendar Default Privacy"
-msgstr ""
+msgstr "Privzeta zasebnost koledarja"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -830,7 +1285,7 @@ msgstr "Dogodek v koledarju"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filters"
-msgstr ""
+msgstr "Filtri koledarja"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -845,27 +1300,27 @@ msgstr "Koledarski sestanek"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_popover_delete_wizard
 msgid "Calendar Popover Delete Wizard"
-msgstr ""
+msgstr "Čarovnik za brisanje koledarja Popover"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_provider_config
 msgid "Calendar Provider Configuration Wizard"
-msgstr ""
+msgstr "Čarovnik za konfiguracijo ponudnika koledarja"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
 msgid "Calendar Settings"
-msgstr ""
+msgstr "Nastavitve koledarja"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_changedate
 msgid "Calendar: Date Updated"
-msgstr ""
+msgstr "Koledar: Datum posodobitve"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_delete_event
 msgid "Calendar: Event Deleted"
-msgstr ""
+msgstr "Koledar: Dogodek izbrisan"
 
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
@@ -880,7 +1335,7 @@ msgstr "Koledar: Posodobitev dogodkov"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "Koledar: Vabilo na sestanek"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
@@ -904,6 +1359,8 @@ msgid ""
 "Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
+"Preverite, ali je organizator sam v dogodku, tj. ali je organizator edini, ki ni zavrnil\n"
+"        dogodek (le če organizator ni edini udeleženec)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
@@ -921,6 +1378,8 @@ msgid ""
 "Choose what to do with other events in the recurrence. Updating All Events "
 "is not allowed when dates or time is modified"
 msgstr ""
+"Izberite, kaj želite storiti z drugimi dogodki v ponavljanju. Posodabljanje "
+"vseh dogodkov ni dovoljeno, ko so datumi ali čas spremenjeni."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1018,7 +1477,7 @@ msgstr "Ustvarjeno"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_attendee
 msgid "Current Attendee"
-msgstr ""
+msgstr "Trenutni udeleženec"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__rrule_type_ui__custom
@@ -1075,7 +1534,7 @@ msgstr "Zavrni"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
 msgid "Declined Count"
-msgstr ""
+msgstr "Zavrnjeno število"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1085,12 +1544,13 @@ msgstr "Privzeto"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Default Privacy"
-msgstr ""
+msgstr "Privzeta zasebnost"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_res_users_settings__calendar_default_privacy
 msgid "Default privacy setting for whom the calendar events will be visible."
 msgstr ""
+"Privzeta nastavitev zasebnosti, ki jo bo imelo mogoče videti v koledarju."
 
 #. module: calendar
 #. odoo-javascript
@@ -1107,32 +1567,32 @@ msgstr "Izbriši"
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_popover_delete_view
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Delete Event"
-msgstr ""
+msgstr "Izbriši dogodek"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__all
 msgid "Delete all the events"
-msgstr ""
+msgstr "Izbriši vse dogodke"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
 msgid "Delete this and following events"
-msgstr ""
+msgstr "Izbriši ta in naslednje dogodke"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
 msgid "Delete this event"
-msgstr ""
+msgstr "Izbriši ta dogodek"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_delete_event
 msgid "Deleted event: {{ object.name }}"
-msgstr ""
+msgstr "Izbrisan dogodek: {{ object.name }}"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Describe your meeting"
-msgstr ""
+msgstr "Opišite svoj sestanek"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1159,7 +1619,7 @@ msgstr "Razprave"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
 msgid "Discuss Channel"
-msgstr ""
+msgstr "Razprava o kanalu"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
@@ -1205,7 +1665,7 @@ msgstr "Naziv modela dokumenta"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__dtstart
 msgid "Dtstart"
-msgstr ""
+msgstr "Začetek Dt"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__duration
@@ -1221,13 +1681,13 @@ msgstr "Trajanje v minutah"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "EMAIL"
-msgstr ""
+msgstr "E-POŠTA"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Edit Recurrent event"
-msgstr ""
+msgstr "Urejanje ponavljajočega se dogodka"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1243,12 +1703,12 @@ msgstr "E-pošta"
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_1
 msgid "Email - 3 Hours"
-msgstr ""
+msgstr "E-pošta - 3 ure"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_mail_2
 msgid "Email - 6 Hours"
-msgstr ""
+msgstr "E-pošta - 6 ur"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
@@ -1285,17 +1745,17 @@ msgstr "Alarm za dogodek"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
-msgstr ""
+msgstr "Upravitelj alarmov dogodkov"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_event_delete_wizard
 msgid "Event Cancel Wizard"
-msgstr ""
+msgstr "Čarovnik za preklic dogodka"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event_type
 msgid "Event Meeting Type"
-msgstr ""
+msgstr "Vrsta dogodka in sestanka"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_recurrence
@@ -1421,7 +1881,7 @@ msgstr "Najprej določite datum povabila."
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__follow_recurrence
 msgid "Follow Recurrence"
-msgstr ""
+msgstr "Sledi ponavljanju"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_follower_ids
@@ -1467,7 +1927,7 @@ msgstr "Petek"
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.res_config_settings_view_form
@@ -1477,22 +1937,22 @@ msgstr "Google koledar"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Google Calendar icon"
-msgstr ""
+msgstr "Google Ikona koledarja"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_id
 msgid "Google Client_id"
-msgstr ""
+msgstr "Google Client_id"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_client_secret
 msgid "Google Client_key"
-msgstr ""
+msgstr "Google Client_key"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__cal_sync_paused
 msgid "Google Synchronization Paused"
-msgstr ""
+msgstr "Google Sinhronizacija začasno ustavljena"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1560,6 +2020,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
+"Če je čas prikazan kot »zaseden«, bo ta dogodek viden drugim osebam s polno         informacijami ali preprosto napisano »zasedeno«, odvisno od zasebnosti. Uporabite to možnost, da obvestite druge ljudi         da v tem obdobju niste dosegljivi.\n"
+" Če je dogodek prikazan kot »brezplačen«, drugi uporabniki to vedo,         da ste v tem obdobju na voljo."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1590,7 +2052,7 @@ msgstr "Podrobnosti povabila"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_invitation
 msgid "Invitation email to new attendees"
-msgstr ""
+msgstr "Vabilo novim udeležencem po e-pošti"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1625,7 +2087,7 @@ msgstr "Ali je dogodek izpostavljen"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_organizer_alone
 msgid "Is the Organizer Alone"
-msgstr ""
+msgstr "Je organizator sam"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
@@ -1700,14 +2162,14 @@ msgstr "Predloga za e-pošto"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__mail_tz
 msgid "Mail Tz"
-msgstr ""
+msgstr "Pošta Tz"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 msgid "Maybe"
-msgstr ""
+msgstr "Mogoče"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -1735,7 +2197,7 @@ msgstr "Tipi sestankov"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
 msgid "Meeting URL"
-msgstr ""
+msgstr "Sestanek URL"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__event_id
@@ -1767,7 +2229,7 @@ msgstr "Sporočila"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
 msgid "Microsoft Outlook icon"
-msgstr ""
+msgstr "Microsoft Outlook ikona"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__minutes
@@ -1811,7 +2273,7 @@ msgstr "Meseci"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/calendar_form/calendar_quick_create.xml:0
 msgid "More Options"
-msgstr ""
+msgstr "Več možnosti"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1858,18 +2320,18 @@ msgstr "Ne pridem."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr ""
+msgstr "Še ni povratnih informacij"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
 msgid "No meetings found. Let's schedule one!"
-msgstr ""
+msgstr "Ni najdenih sestankov. Načrtujmo enega!"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 msgid "No, keep it"
-msgstr ""
+msgstr "Ne, obdrži"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1911,7 +2373,7 @@ msgstr "Obvestila, poslana vsem udeležencem, da jih opomnijo na sestanek."
 #: code:addons/calendar/models/calendar_alarm.py:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__notify_responsible
 msgid "Notify Responsible"
-msgstr ""
+msgstr "Obvesti odgovorno osebo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_needaction_counter
@@ -1958,7 +2420,7 @@ msgstr "Spletni sestanek"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Only Internal Users"
-msgstr ""
+msgstr "Samo interni uporabniki"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__confidential
@@ -2012,17 +2474,17 @@ msgstr "Outlookov koledar"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
 msgid "Outlook Client Id"
-msgstr ""
+msgstr "Outlook Client Id"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Outlook Client Skrivnost"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_sync_paused
 msgid "Outlook Synchronization Paused"
-msgstr ""
+msgstr "Outlook Synchronization Zaustavljeno"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_ids
@@ -2037,7 +2499,7 @@ msgstr "Podatki uporabnika v povezavi s partnerjem"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
 msgid "People to whom this event will be visible."
-msgstr ""
+msgstr "Osebe, ki jim bo ta dogodek viden."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__phone
@@ -2126,7 +2588,7 @@ msgstr "Ponovi"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__interval
 msgid "Repeat On"
-msgstr ""
+msgstr "Ponavljanje vklopljeno"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__until
@@ -2184,7 +2646,7 @@ msgstr "Sobota"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_id
 msgid "Scheduled by"
-msgstr ""
+msgstr "Načrtoval/a"
 
 #. module: calendar
 #. odoo-python
@@ -2192,7 +2654,7 @@ msgstr ""
 msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
-msgstr ""
+msgstr "Načrtovanje dejavnosti s koledarjem ni mogoče za več kot en zapis."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2213,7 +2675,7 @@ msgstr "Izberite udeležence..."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Send Email to attendees"
-msgstr ""
+msgstr "Pošlji e-pošto udeležencem"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2228,17 +2690,17 @@ msgstr "Pošlji pošto"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
 msgid "Send and delete"
-msgstr ""
+msgstr "Pošlji in izbriši"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
 msgid "Sent to all attendees if a reminder is set"
-msgstr ""
+msgstr "Sent to all attendees if a reminder is setPošlji in izbriši"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_changedate
 msgid "Sent to all attendees if the schedule change"
-msgstr ""
+msgstr "Poslano vsem udeležencem, če se urnik spremeni"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.calendar_settings_action
@@ -2249,7 +2711,7 @@ msgstr "Nastavitve"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__should_show_status
 msgid "Should Show Status"
-msgstr ""
+msgstr "Prikaži stanje"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__show_as
@@ -2306,7 +2768,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Stop synchro"
-msgstr ""
+msgstr "Ustavi sinhronizacijo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_popover_delete_wizard__subject
@@ -2336,13 +2798,13 @@ msgstr "Nedelja"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchro is paused"
-msgstr ""
+msgstr "Sinhronizacija je zaustavljena"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 msgid "Synchronize with"
-msgstr ""
+msgstr "Sinhroniziraj z"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -2369,17 +2831,17 @@ msgstr "Ključne besede"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
 msgid "Template used to render mail reminder content."
-msgstr ""
+msgstr "Predloga, ki se uporablja za upodabljanje vsebine opomnika po pošti."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Tentative"
-msgstr ""
+msgstr "Okvirno"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__tentative_count
 msgid "Tentative Count"
-msgstr ""
+msgstr "Okvirno štetje"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2393,6 +2855,9 @@ msgid ""
 "            other applications such as the employee leaves or the business\n"
 "            opportunities."
 msgstr ""
+"Koledar si zaposleni delijo in je popolnoma integriran z\n"
+"            drugimi aplikacijami, kot so odhodi zaposlenih ali priložnosti\n"
+"            podjetja."
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
@@ -2406,6 +2871,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"Končni datum in ura ne smeta biti pred začetnim datumom in uro.\n"
+"Sestanek “%(name)s” se začne %(start_time)s in konča ob %(end_time)s"
 
 #. module: calendar
 #. odoo-python
@@ -2414,24 +2881,26 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"Končni datum ne more biti pred začetnim datumom.\n"
+"Sestanek “%(name)s” se začne %(start_date)s in konča ob %(end_date)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "The interval cannot be negative."
-msgstr ""
+msgstr "Interval ne more biti negativen."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "The number of repetitions cannot be negative."
-msgstr ""
+msgstr "Število ponovitev ne sme biti negativno."
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "There are no attendees on these events"
-msgstr ""
+msgstr "Na teh dogodkih ni udeležencev"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -2444,7 +2913,7 @@ msgstr "Tretji"
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 msgid "This and following events"
-msgstr ""
+msgstr "Ta in naslednji dogodki"
 
 #. module: calendar
 #. odoo-javascript
@@ -2474,7 +2943,7 @@ msgstr "Časovni pas"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
 msgid "Timezone used for displaying time in the mail template"
-msgstr ""
+msgstr "Časovni pas, ki se uporablja za prikaz časa v predlogi e-pošte"
 
 #. module: calendar
 #. odoo-python
@@ -2508,7 +2977,7 @@ msgstr "Tip"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr ""
+msgstr "Ponavljanja s »tem dogodkom« ni mogoče shraniti"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2529,12 +2998,12 @@ msgstr "Do"
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_update
 msgid "Used to manually notifiy attendees"
-msgstr ""
+msgstr "Uporablja se za ročno obveščanje udeležencev"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
 msgid "Used to manually notify attendees"
-msgstr ""
+msgstr "Uporablja se za ročno obveščanje udeležencev"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users
@@ -2544,7 +3013,7 @@ msgstr "Uporabnik"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_can_edit
 msgid "User Can Edit"
-msgstr ""
+msgstr "Uporabnik lahko ureja"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_users_settings
@@ -2554,13 +3023,13 @@ msgstr "Uporabniške nastavitve"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
-msgstr ""
+msgstr "Vir videoklica"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Videocall URL"
-msgstr ""
+msgstr "Videoklic URL"
 
 #. module: calendar
 #. odoo-javascript
@@ -2627,6 +3096,8 @@ msgid ""
 "You are not allowed to change the calendar default privacy of another user "
 "due to privacy constraints."
 msgstr ""
+"Zaradi omejitev zasebnosti ne smete spreminjati privzetih nastavitev "
+"zasebnosti koledarja drugega uporabnika."
 
 #. module: calendar
 #. odoo-python
@@ -2650,30 +3121,30 @@ msgstr "Izbrati morate vsaj en dan v tednu."
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_renderer.xml:0
 msgid "You're alone in this meeting"
-msgstr ""
+msgstr "Na tem sestanku si sam/a"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr ""
+msgstr "sprejeto"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "attendees"
-msgstr ""
+msgstr "udeleženci"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "awaiting"
-msgstr ""
+msgstr "čaka"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
-msgstr ""
+msgstr "zavrnjeno"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -2683,52 +3154,52 @@ msgstr "npr. Poslovno srečanje"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2023"
-msgstr ""
+msgstr "npr.: 31/12/2024"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "maybe,"
-msgstr ""
+msgstr "mogoče,"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/attendee_tags_list.xml:0
 msgid "no email"
-msgstr ""
+msgstr "brez e-pošte"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "no,"
-msgstr ""
+msgstr "brez,"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee.xml:0
 msgid "props.placeholder"
-msgstr ""
+msgstr "props.placeholder"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "uncertain"
-msgstr ""
+msgstr "negotov"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "yes,"
-msgstr ""
+msgstr "da,"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} - Opomnik"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
 msgid "{{ object.event_id.name }}: Date updated"
-msgstr ""
+msgstr "{{ object.event_id.name }}: Datum posodobitve"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
-msgstr ""
+msgstr "{{object.name}}: Posodobitev dogodka"

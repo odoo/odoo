@@ -489,6 +489,11 @@ msgid ""
 "                            </select>\n"
 "                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>Warning:</b> Temporal mode will merge all samples.<br/>It can lead to partially invalid result in case of concurrent profiles.<br/>Use with caution </span>"
 msgstr ""
+"<select class=\"form-select\" name=\"profile_aggregation_mode\" id=\"profile_aggregation_mode\">\n"
+"                                <option value=\"tabs\">مفصول (واحد لكل علامة تبويب)</option>\n"
+"                                <option value=\"temporal\">مؤقَّت (تجريبي)</option>\n"
+"                            </select>\n"
+"                            <span id=\"temporal_warning\" class=\"alert alert-warning\" style=\"display:none\"><b>تحذير:</b> سيؤدي الوضع التجريبي إلى دمج كافة العينات.<br/>يمكن أن يؤدي إلى نتيجة غير صالحة جزئياً في حالة الملفات الشخصية المتزامنة.<br/>كن حذراً عند استخدامه </span> "
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview

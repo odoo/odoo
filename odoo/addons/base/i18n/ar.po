@@ -26535,6 +26535,8 @@ msgid ""
 "Group-restricted fields cannot be included in webhook payloads, as it could allow any user to accidentally leak sensitive information. You will have to remove the following fields from the webhook payload:\n"
 "%(restricted_fields)s"
 msgstr ""
+"لا يمكن أن تشمل الحقول الخاصة بالمجموعات فقط في مدفوعات webhook، حيث إنها قد تؤدي إلى السماح للمستخدم بتسريب المعلومات الحساسة عن طريق الخطأ. ستضطر إلى إزالة الحقول التالية من مدفوعات webhook:\n"
+" %(restricted_fields)s "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -42235,6 +42237,9 @@ msgid ""
 " You can't traverse non-relational fields (even in the quantum realm). Make "
 "sure only the last field in the path is non-relational."
 msgstr ""
+"يحتوي مسار الحقل '%(searched_field)s' على حقل غير علائقي (%(current_field)s)"
+" وهو ليس الحقل الأخير في المسار. لا يمكنك تجاوز الحقول غير العلائقية (حتى في"
+" العالم الكمي). تأكد من أن الحقل الأخير في المسار هو الوحيد الغير علائقي. "
 
 #. module: base
 #. odoo-python
