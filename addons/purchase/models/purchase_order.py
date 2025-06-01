@@ -146,7 +146,29 @@ class PurchaseOrder(models.Model):
 
     mail_reminder_confirmed = fields.Boolean("Reminder Confirmed", default=False, readonly=True, copy=False, help="True if the reminder email is confirmed by the vendor.")
     mail_reception_confirmed = fields.Boolean("Reception Confirmed", default=False, readonly=True, copy=False, help="True if PO reception is confirmed by the vendor.")
+    
+            # Campo técnico para búsqueda de productos dentro de líneas de orden DavidY
+    order_line_name_search = fields.Char(
+        string='Producto en líneas',
+        compute='_compute_order_line_names',
+        search='_search_order_line_name_search'
+    )
 
+    def _compute_order_line_names(self):
+        for record in self:
+            names = record.order_line.mapped('name')
+            record.order_line_name_search = ', '.join(names)
+
+    @api.model
+    def _search_order_line_name_search(self, operator, value):
+        if not value:
+            return []
+        orders = self.search([
+            ('order_line.name', operator, value)
+        ])
+        return [('id', 'in', orders.ids)]
+        #fin de campo tecnico DavidY
+    
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email')
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email')
 
