@@ -9,6 +9,7 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2023
 # Martin Trigaux, 2023
 # laznikd <laznik@mentis.si>, 2023
+# Aleš Pipan, 2025
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:55+0000\n"
 "PO-Revision-Date: 2023-10-26 23:09+0000\n"
-"Last-Translator: laznikd <laznik@mentis.si>, 2023\n"
+"Last-Translator: Aleš Pipan, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +56,7 @@ msgstr ""
 #: code:addons/base_install_request/models/ir_module_module.py:0
 #, python-format
 msgid "Activation Request of \"%s\""
-msgstr ""
+msgstr "Zahteva za aktivacijo \"%s\""
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__body_html
@@ -83,7 +84,7 @@ msgstr "Ustvarjeno"
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__module_ids
 msgid "Depending Apps"
-msgstr ""
+msgstr "Odvisne aplikacije"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__display_name
@@ -100,7 +101,7 @@ msgstr "ID"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "Install App"
-msgstr ""
+msgstr "Namestite aplikacijo"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__write_uid
@@ -117,7 +118,7 @@ msgstr "Zadnjič posodobljeno"
 #. module: base_install_request
 #: model:mail.template,name:base_install_request.mail_template_base_install_request
 msgid "Mail: Install Request"
-msgstr ""
+msgstr "Pošta: Zahteva za namestitev"
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_ir_module_module
@@ -129,44 +130,44 @@ msgstr "Modul"
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr ""
+msgstr "Zahteva za aktivacijo modula"
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
 msgid "Module Activation Request for \"{{ object.module_id.shortdesc }}\""
-msgstr ""
+msgstr "Zahteva za aktivacijo modula za \"{{ object.module_id.shortdesc }}\""
 
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr ""
+msgstr "Pregled aktivacije modula"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
 msgid "Modules Description"
-msgstr ""
+msgstr "Opis modulov"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "No extra cost, this application is free."
-msgstr ""
+msgstr "Brez dodatnih stroškov, ta aplikacija je brezplačna."
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "No module selected."
-msgstr ""
+msgstr "Ni izbran noben modul."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr ""
+msgstr "Zahteva za dostop"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr ""
+msgstr "Zahteva za aktivacijo"
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
@@ -177,14 +178,14 @@ msgstr "Pošlji na:"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_description
 msgid "The following apps will be installed:"
-msgstr ""
+msgstr "Nameščene bodo naslednje aplikacije:"
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "The module is already installed."
-msgstr ""
+msgstr "Modul je že nameščen."
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -192,6 +193,9 @@ msgid ""
 "This app is included in your subscription. It's free to activate, but only "
 "an administrator can do it. Fill this form to send an activation request."
 msgstr ""
+"Ta aplikacija je vključena v vašo naročnino. Aktivacija je brezplačna, "
+"vendar jo lahko izvede le skrbnik. Izpolnite ta obrazec, da pošljete zahtevo"
+" za aktivacijo."
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id
@@ -201,19 +205,19 @@ msgstr "Uporabnik"
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Why do you need this module?"
-msgstr ""
+msgstr "Zakaj potrebujete ta modul?"
 
 #. module: base_install_request
 #: model:ir.actions.act_window,name:base_install_request.action_base_module_install_review
 msgid "You are about to install an extra application"
-msgstr ""
+msgstr "Namestili boste dodatno aplikacijo"
 
 #. module: base_install_request
 #. odoo-python
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "Your request has been successfully sent"
-msgstr ""
+msgstr "Vaša zahteva je bila uspešno poslana"
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -221,3 +225,5 @@ msgid ""
 "e.g. I'd like to use the SMS Marketing module to organize the promotion of "
 "our internal events, and exhibitions. I need access for 3 people of my team."
 msgstr ""
+"Npr. rad bi uporabil modul SMS Marketing za organizacijo promocije naših "
+"internih dogodkov in razstav. Potrebujem dostop za 3 osebe iz moje ekipe."

@@ -1023,7 +1023,7 @@ msgstr "וריאנטים של עץ המוצר"
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
-msgstr ""
+msgstr "ווריאנטים של המוצר מעץ המוצר הנדרשים ליישום שורה זו."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
@@ -1052,7 +1052,7 @@ msgstr "הוראת ייצור חוזרת "
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Backorder MO's"
-msgstr ""
+msgstr "הזמנה חוזרת של הוראות ייצור"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__backorder_sequence
@@ -1064,6 +1064,7 @@ msgstr "רצף הזמנה חוזרת"
 msgid ""
 "Backorder sequence, if equals to 0 means there is not related backorder"
 msgstr ""
+"רצף הזמנות חוזרות אם הערך שווה ל-0, המשמעות היא שאין הזמנה חוזרת  קשורה."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__barcode
@@ -1350,7 +1351,7 @@ msgstr "הקיבולת צריכה להיות מספר חיובי."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
 msgid "Carried Quantity"
-msgstr ""
+msgstr "כמות מועברת"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_uom_category_id
@@ -1501,7 +1502,7 @@ msgstr "מיקום הרכיבים"
 #: model:ir.model.fields,help:mrp.field_mrp_production__priority
 msgid ""
 "Components will be reserved first for the MO with the highest priorities."
-msgstr ""
+msgstr "שמירת רכיבים תתבצע תחילה לפי סדר עדיפויות של הוראות הייצור."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1739,6 +1740,8 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"צור ואשר הוראות ייצור מספר ימים מראש, כדי לאפשר מספיק זמן להשלמת רכיבים או לייצור מוצרים חצי-גמורים.\n"
+"שים לב שגם זמני ביטחון יילקחו בחשבון, כאשר הדבר רלוונטי."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1884,6 +1887,7 @@ msgstr "תאריך לפי חודש"
 msgid ""
 "Date you expect to finish production or actual date you finished production."
 msgstr ""
+"התאריך שבו אתה מצפה לסיים את הייצור או התאריך שבו סיימת את הייצור בפועל."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__date_start
@@ -1891,6 +1895,7 @@ msgstr ""
 msgid ""
 "Date you plan to start production or date you actually started production."
 msgstr ""
+"התאריך שבו אתה מתכנן להתחיל את הייצור או התאריך שבו התחלת את הייצור בפועל."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -1942,6 +1947,10 @@ msgid ""
 " be multiplied by two. However, note that both time before and after "
 "production will only be counted once."
 msgstr ""
+" מספר ברירת מחדל של יחידות (ביחידת המידה של המוצר) שניתן לייצר במקביל (בו-"
+"זמנית) במרכז עבודה זה. לדוגמה: אם הקיבולת היא 5 ויש צורך לייצר 10 יחידות, "
+"זמן הפעולה המופיע בעץ מוצר יוכפל פי שתיים. עם זאת, יש לשים לב שזמן ההכנה "
+"לפני הייצור והזמן לאחר הייצור ייספרו רק פעם אחת."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_consumption_warning_line__product_uom_id
@@ -2070,7 +2079,7 @@ msgstr "הצג קיצור דרך של מספר סידורי בתנועות "
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Displays the consumed Lot/Serial Numbers."
-msgstr ""
+msgstr "הצגה של מספרי אצווה/סידוריים שנעשה בהם שימוש."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2705,6 +2714,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the production "
 "order of a MO when it is done."
 msgstr ""
+"אם תיבה זו מסומנת, Odoo תדפיס באופן אוטומטי את פקודת הייצור של הוראת הייצור "
+"כאשר היא תושלם."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
@@ -2764,7 +2775,7 @@ msgstr "בתהליך"
 #: code:addons/mrp/report/mrp_report_mo_overview.py:0
 #, python-format
 msgid "In Transit"
-msgstr ""
+msgstr "בהעברה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
@@ -3018,7 +3029,7 @@ msgstr "עזוב"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
 msgid "Line of issue consumption"
-msgstr ""
+msgstr "שורת צריכת רכיבים"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
@@ -3028,7 +3039,7 @@ msgstr "מיקום"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr ""
+msgstr "המיקום שבו נמצא המוצר שברצונך לפרק."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -3045,7 +3056,7 @@ msgstr "מיקום בו המערכת תאחסן מוצרים גמורים."
 msgid ""
 "Location where you want to send the components resulting from the unbuild "
 "order."
-msgstr ""
+msgstr "מיקום אליו ברצונך לשלוח את הרכיבים הנוצרים מהוראת הפירוק."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -3111,7 +3122,7 @@ msgstr "נמוך"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder_line__mrp_production_backorder_id
 msgid "MO Backorder"
-msgstr ""
+msgstr "הזמנה חוזרת של הוראת ייצור"
 
 #. module: mrp
 #. odoo-javascript
@@ -3578,7 +3589,7 @@ msgstr "ללא הזמנה חוזרת"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
 msgid "No bill of materials found. Let's create one!"
-msgstr ""
+msgstr "לא נמצא עץ מוצר. בוא ניצור אחד!"
 
 #. module: mrp
 #. odoo-javascript
@@ -3739,7 +3750,7 @@ msgstr "מספר הודעות עם שגיאת משלוח"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter_capacity__capacity
 msgid "Number of pieces that can be produced in parallel for this product."
-msgstr ""
+msgstr "מספר היחידות שניתן לייצר במקביל עבור מוצר זה."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -3780,7 +3791,7 @@ msgstr "במלאי"
 #, python-format
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
-msgstr ""
+msgstr "רק הוראות ייצור במצב טיוטה או מאושרת יכולות להיות %s."
 
 #. module: mrp
 #. odoo-python
@@ -4887,7 +4898,7 @@ msgstr "תאריך מתוזמן"
 #, python-format
 msgid ""
 "Scheduled before the previous work order, planned from %(start)s to %(end)s"
-msgstr ""
+msgstr "מתוזמן לפני הוראת העבודה הקודמת, מתוכנן מ-%(start)s עד%(end)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -5162,6 +5173,9 @@ msgid ""
 "\n"
 "It’d be a shame to waste all that progress, right?"
 msgstr ""
+"כמה פקודות עבודה כבר הושלמו, ולכן אינך יכול לבטל את תכנון הוראת הייצור הזו.\n"
+"\n"
+"יהיה חבל לבזבז את כל ההתקדמות הזאת, נכון?"
 
 #. module: mrp
 #. odoo-python
@@ -5444,7 +5458,7 @@ msgstr "שדה טכני לבדוק אם ניתן להציג את כפתור \"י
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
-msgstr ""
+msgstr "שדה טכני לבדיקה אם ניתן להציג את כפתור הייצור."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5464,7 +5478,7 @@ msgstr "טקסט"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr ""
+msgstr "עץ המוצר עודכן מאז יצירת הוראת הייצור ."
 
 #. module: mrp
 #. odoo-python
@@ -5616,6 +5630,7 @@ msgid ""
 "The serial number %(number)s used for component %(component)s has already "
 "been consumed"
 msgstr ""
+"המספר הסידורי %(number)s שנעשה בו שימוש עבור הרכיב %(component)sכבר נצרך."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_tag_tag_name_unique
@@ -5799,6 +5814,8 @@ msgid ""
 "Time in minutes:- In manual mode, time used- In automatic mode, supposed "
 "first time when there aren't any work orders yet"
 msgstr ""
+"זמן בדקות: -במצב ידני, הזמן שנעשה בו שימוש במצב אוטומטי, הזמן המשוער הראשוני"
+" כאשר עדיין אין הוראות עבודה"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tz
@@ -6549,6 +6566,9 @@ msgid ""
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
 msgstr ""
+"פעולות הוראת עבודה מאפשרות לך ליצור ולנהל את פעולות הייצור שיש לבצע במרכזי "
+"העבודה שלך על מנת לייצר מוצר. פעולות אלו קשורות לעצי המוצר אשר מגדירים את "
+"הרכיבים הנדרשים."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -6736,7 +6756,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can only merge manufacturing orders of identical products with same BoM."
-msgstr ""
+msgstr "ניתן למזג פקודות ייצור רק של מוצרים זהים עם עצי מוצרים זהים."
 
 #. module: mrp
 #. odoo-python
@@ -6745,7 +6765,7 @@ msgstr ""
 msgid ""
 "You can only merge manufacturing orders with no additional components or by-"
 "products."
-msgstr ""
+msgstr "ניתן למזג הוראות ייצור רק אם אין רכיבים נוספים או תוצרי לוואי."
 
 #. module: mrp
 #. odoo-python
