@@ -1289,8 +1289,7 @@ class Many2many(_RelationalMulti):
 
         # make the query for the lines
         domain = self.get_comodel_domain(records)
-        query = comodel._where_calc(domain)
-        comodel._apply_ir_rules(query, 'read')
+        query = comodel._search(domain)
         query.order = comodel._order_to_sql(comodel._order, query)
 
         # join with many2many relation table
