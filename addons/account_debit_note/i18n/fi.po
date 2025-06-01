@@ -28,7 +28,7 @@ msgstr "<span class=\"o_stat_text\">Veloituslaskut</span>"
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
 msgid "Add Debit Note wizard"
-msgstr "Lisää veloituslasku ohjatulla toiminnolla"
+msgstr "Lisää ohjattu veloituslasku toiminto"
 
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
@@ -41,8 +41,8 @@ msgid ""
 "Check this box if you don't want to share the same sequence for invoices and"
 " debit notes made from this journal"
 msgstr ""
-"Rastita tämä, jos et halua, että tästä lehdestä tehdyille laskuille ja "
-"veloitusilmoituksille käytetään samaa järjestystä"
+"Valitse tämä, jos et halua, että tästä kirjanpidon päiväkirjasta tehdyille "
+"laskuille ja veloituslaskuille käytetään samaa järjestystä"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__copy_lines
@@ -115,7 +115,8 @@ msgstr "ID"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr "Mikäli tyhjä, käytetään sen kirjauskansiota veloituksen kirjaamiseen."
+msgstr ""
+"Mikäli tyhjä, käytetään sen kirjanpitovientiä veloituksen kirjaamiseen."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -129,12 +130,12 @@ msgstr ""
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_journal
 msgid "Journal"
-msgstr "Päiväkirja"
+msgstr "Kirjanpidon päiväkirja"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
 msgid "Journal Entry"
-msgstr "Päiväkirjan kirjaus"
+msgstr "Päiväkirjavienti"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
@@ -191,7 +192,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr "Tähän laskuun luodut veloituslaskut"
+msgstr "Tälle laskulle luodut veloituslaskut"
 
 #. module: account_debit_note
 #. odoo-python
@@ -202,7 +203,7 @@ msgstr "Veloituslasku luotiin kohteesta %s"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
 msgid "Use Specific Journal"
-msgstr "Käytä erityistä päiväkirjaa"
+msgstr "Käytä tiettyä päiväkirjaa"
 
 #. module: account_debit_note
 #. odoo-python
@@ -218,7 +219,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 msgid "You can only debit posted moves."
-msgstr "Veloituslaskuja voi luoda vain kirjauksista."
+msgstr "Veloituslaskuja voi luoda vain kirjatuista siirroista."
 
 #. module: account_debit_note
 #. odoo-python
@@ -227,5 +228,4 @@ msgid ""
 "You can't make a debit note for an invoice that is already linked to a debit"
 " note."
 msgstr ""
-"Et voi tehdä veloitusilmoitusta laskulle, joka on jo linkitetty "
-"veloitusilmoitukseen."
+"Et voi tehdä veloitulaskua laskulle, joka on jo linkitetty veloituslaskuun."
