@@ -1359,9 +1359,11 @@ class PurchaseOrderLine(models.Model):
         price_unit = self._convert_to_tax_base_line_dict()['price_unit']
         if self.taxes_id:
             qty = self.product_qty or 1
-            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
-            price_unit = self.taxes_id.with_context(round=False).compute_all(price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id)['total_void']
-            price_unit = price_unit / qty
+            total_void = self.taxes_id.with_context(round=False).compute_all(price_unit, currency=self.order_id.currency_id, quantity=qty, product=self.product_id)['total_void']
+            rounding_error = price_unit * qty - total_void
+            if rounding_error:
+                total_void += rounding_error
+            price_unit = total_void / qty
         if self.product_uom.id != self.product_id.uom_id.id:
             price_unit *= self.product_uom.factor / self.product_id.uom_id.factor
         return price_unit
