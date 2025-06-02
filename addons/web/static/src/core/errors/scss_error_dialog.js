@@ -39,7 +39,7 @@ const scssErrorNotificationService = {
                     );
                     notification.add(message, {
                         title: _t("Style error"),
-                        sticky: true,
+                        autocloseDelay: 0,
                         type: "danger",
                     });
                     console.log(

@@ -14,7 +14,6 @@ import { reactive } from "@odoo/owl";
  * @property {string} [title]
  * @property {number} [autocloseDelay=4000]
  * @property {"warning" | "danger" | "success" | "info"} [type]
- * @property {boolean} [sticky=false]
  * @property {string} [className]
  * @property {function(): void} [onClose]
  * @property {NotificationButton[]} [buttons]

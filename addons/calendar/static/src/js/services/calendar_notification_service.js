@@ -37,7 +37,7 @@ export const calendarNotificationService = {
                     const notificationRemove = notification.add(notif.message, {
                         title: notif.title,
                         type: "warning",
-                        sticky: true,
+                        autocloseDelay: 0,
                         onClose: () => {
                             displayedNotifications.delete(key);
                         },

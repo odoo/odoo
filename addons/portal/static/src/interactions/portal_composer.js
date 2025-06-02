@@ -115,7 +115,7 @@ export class PortalComposer extends Interaction {
                     if (error instanceof RPCError) {
                         this.services.notification.add(
                             _t("Could not save file <strong>%s</strong>", escape(file.name)),
-                            { type: "warning", sticky: true }
+                            { type: "warning", autocloseDelay: 0 }
                         );
                         resolve();
                     }

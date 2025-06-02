@@ -499,9 +499,8 @@ export class Record extends DataPoint {
                 this
             );
             this._closeInvalidFieldsNotification = this.model.notification.add(
-                markup(`<ul>${items.join("")}</ul>`),
+                markup(`Invalid fields:<br/><ul>${items.join("")}</ul>`),
                 {
-                    title: _t("Invalid fields: "),
                     type: "danger",
                 }
             );
@@ -1130,7 +1129,7 @@ export class Record extends DataPoint {
                             `Heads up! Your recent changes are too large to save automatically. Please click the <i class="fa fa-cloud-upload fa-fw"></i> button now to ensure your work is saved before you exit this tab.`
                         )
                     ),
-                    { sticky: true }
+                    { autocloseDelay: 0 }
                 );
             }
             return succeeded;

@@ -2432,7 +2432,7 @@ test("quick create record validation: stays open when invalid", async () => {
     expect(".o_kanban_group:first-child .o_kanban_quick_create").toHaveCount(1);
     expect("[name=display_name]").toHaveClass("o_field_invalid");
     expect(".o_notification_manager .o_notification").toHaveCount(1);
-    expect(".o_notification").toHaveText("Invalid fields:\nDisplay Name");
+    expect(".o_notification").toHaveText("Invalid field: Display Name");
 });
 
 test.tags("desktop");

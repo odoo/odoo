@@ -125,7 +125,7 @@ export class SnippetModel extends Reactive {
                             });
                             this.notification.add(message, {
                                 type: "danger",
-                                sticky: true,
+                                autocloseDelay: 0,
                             });
                             return;
                         }

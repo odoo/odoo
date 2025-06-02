@@ -626,13 +626,12 @@ export class RelationalModel extends Model {
             throw e;
         }
         if (response.warning) {
-            const { type, title, message, className, sticky } = response.warning;
+            const { type, title, message, className } = response.warning;
             if (type === "dialog") {
                 this.dialog.add(WarningDialog, { title, message });
             } else {
                 this.notification.add(message, {
                     className,
-                    sticky,
                     title,
                     type: "warning",
                 });

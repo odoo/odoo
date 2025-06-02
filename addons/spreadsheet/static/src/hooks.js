@@ -138,7 +138,7 @@ export function useSpreadsheetNotificationStore() {
     function notifyUser(notification) {
         notifications.add(notification.text, {
             type: notification.type,
-            sticky: notification.sticky,
+            autocloseDelay: notification.sticky ? 0 : undefined,
         });
     }
 

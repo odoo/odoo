@@ -98,8 +98,7 @@ test("FloatTimeField with invalid value", async () => {
 
     await contains(".o_field_float_time[name=qux] input").edit("blabla");
     await clickSave();
-    expect(".o_notification_title").toHaveText("Invalid fields:");
-    expect(".o_notification_content").toHaveInnerHTML("<ul><li>Qux</li></ul>");
+    expect(".o_notification_content").toHaveInnerHTML("Invalid fields:<br><ul><li>Qux</li></ul>");
     expect(".o_notification_bar").toHaveClass("bg-danger");
     expect(".o_field_float_time[name=qux]").toHaveClass("o_field_invalid");
 

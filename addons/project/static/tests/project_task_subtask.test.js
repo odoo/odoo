@@ -303,11 +303,8 @@ test("project.task (kanban): check subtask creation when input is empty", async 
     expect(".subtask_create_input input").toHaveClass("o_field_invalid", {
         message: "input field should be displayed as invalid",
     });
-    expect(".o_notification_content").toHaveInnerHTML("<ul><li>Display Name</li></ul>", {
+    expect(".o_notification_content").toHaveInnerHTML("Invalid fields:<br/><ul><li>Display Name</li></ul>", {
         message: "The content of the notification should contain 'Display Name'.",
-    });
-    expect(".o_notification_title").toHaveText("Invalid fields:", {
-        message: "The notification title should be 'Invalid fields'.",
     });
     expect(".o_notification_bar").toHaveClass("bg-danger", {
         message: "The notification bar should have type 'danger'.",

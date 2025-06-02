@@ -10,10 +10,8 @@ registry.category("web_tour.tours").add("css_error_tour", {
         {
             trigger: "body",
             run: () => {
-                const title = document.body.querySelector(
-                    ".o_notification .o_notification_title"
-                ).innerText;
-                if (!title.includes("Style error")) {
+                const content = document.body.querySelector(".o_notification").innerText;
+                if (!content.includes("The style compilation failed.")) {
                     console.error("should contain a Style error notification");
                 }
             },
@@ -31,10 +29,8 @@ registry.category("web_tour.tours").add("css_error_tour_frontend", {
         {
             trigger: "body",
             run: () => {
-                const title = document.body.querySelector(
-                    ".o_notification .o_notification_title"
-                ).innerText;
-                if (!title.includes("Style error")) {
+                const content = document.body.querySelector(".o_notification").innerText;
+                if (!content.includes("The style compilation failed.")) {
                     console.error("should contain a Style error notification");
                 }
             },

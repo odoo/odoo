@@ -75,7 +75,7 @@ FullCalendar.DayGrid = (function (exports, core, internal$1, preact) {
                 sections.push({
                     type: 'footer',
                     key: 'footer',
-                    isSticky: true,
+                    isautocloseDelay: 0,
                     chunks: [{
                             key: 'main',
                             content: internal$1.renderScrollShim,

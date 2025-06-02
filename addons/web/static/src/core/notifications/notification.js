@@ -14,6 +14,7 @@ export class Notification extends Component {
                 );
             },
         },
+        title: { type: [String, Boolean, { toString: Function }], optional: true },
         type: {
             type: String,
             optional: true,

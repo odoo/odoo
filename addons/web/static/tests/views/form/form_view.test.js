@@ -5991,8 +5991,7 @@ test(`empty required fields cannot be saved`, async () => {
     expect(`label.o_form_label`).toHaveClass("o_field_invalid");
     expect(`.o_field_widget[name=foo]`).toHaveClass("o_field_invalid");
     expect(`.o_notification`).toHaveCount(1);
-    expect(`.o_notification_title`).toHaveText("Invalid fields:");
-    expect(queryFirst(`.o_notification_content`).innerHTML).toBe("<ul><li>Foo</li></ul>");
+    expect(queryFirst(`.o_notification_content`).innerHTML).toBe("Invalid fields:<br><ul><li>Foo</li></ul>");
     expect(`.o_notification_bar`).toHaveClass("bg-danger");
 
     await contains(`.o_field_widget[name=foo] input`).edit("tralala");
@@ -6080,11 +6079,10 @@ test(`display a notificaton if onchange result is a warning with type notificati
     onRpc("onchange", () => ({
         value: { int_field: 10 },
         warning: {
-            title: "Warning",
             message: "You must first select a partner",
             type: "notification",
             className: "abc",
-            sticky: true,
+            autocloseDelay: 0,
         },
     }));
     await mountView({
@@ -6099,7 +6097,6 @@ test(`display a notificaton if onchange result is a warning with type notificati
     expect(`.o_field_widget[name=int_field] input`).toHaveValue("10");
     expect(`.o_notification`).toHaveCount(1);
     expect(`.o_notification`).toHaveClass("abc");
-    expect(`.o_notification_title`).toHaveText("Warning");
     expect(`.o_notification_content`).toHaveText("You must first select a partner");
 });
 
@@ -12242,8 +12239,8 @@ test(`an empty json object does not pass the required check`, async () => {
     mockService("notification", {
         add(message, params) {
             expect.step("notification");
-            expect(message.toString()).toBe("<ul><li>json_field</li></ul>");
-            expect(params).toEqual({ title: "Invalid fields: ", type: "danger" });
+            expect(message.toString()).toBe("Invalid fields:<br/><ul><li>json_field</li></ul>");
+            expect(params).toEqual({ type: "danger" });
         },
     });
 
@@ -12617,7 +12614,7 @@ test(`do not perform button action for records with invalid datas`, async () => 
     });
     mockService("notification", {
         add: (message) => {
-            expect.step(`Pop Up: Invalid Field: ${message}`);
+            expect.step(`Pop Up: ${message}`);
         },
     });
     defineActions([
@@ -12656,7 +12653,7 @@ test(`do not perform button action for records with invalid datas`, async () => 
     // the action should not be called thanks to the `_checkValidity`
     expect.verifySteps([
         "Check/prepare record datas",
-        "Pop Up: Invalid Field: <ul><li>Foo</li></ul>",
+        "Pop Up: Invalid fields:<br/><ul><li>Foo</li></ul>",
     ]);
     // Edit the required field
     await contains(`.o_input`).edit("Foo Value");

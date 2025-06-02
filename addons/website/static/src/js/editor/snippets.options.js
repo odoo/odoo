@@ -802,7 +802,7 @@ const GPSPicker = InputUserValueWidget.extend({
 
         this.notification.add(
             _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
-            { type: 'danger', sticky: true }
+            { type: 'danger', autocloseDelay: 0 }
         );
         this.trigger_up('gmap_api_request', {
             editableMode: true,

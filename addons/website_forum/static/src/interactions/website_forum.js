@@ -179,7 +179,6 @@ export class WebsiteForum extends Interaction {
     displayAccessDeniedNotification(message) {
         this.services.notification.add(message, {
             title: _t("Access Denied"),
-            sticky: false,
             type: "warning",
         });
     }
@@ -268,7 +267,6 @@ export class WebsiteForum extends Interaction {
         }
         this.services.notification.add(message, {
             type: "warning",
-            sticky: false,
             title: _t("Karma Error"),
         });
     }
@@ -493,7 +491,6 @@ export class WebsiteForum extends Interaction {
                 }).catch((error) => {
                     this.services.notification.add(error.data.message, {
                         title: _t("Karma Error"),
-                        sticky: false,
                         type: "warning",
                     });
                 });

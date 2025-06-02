@@ -91,13 +91,11 @@ export class SelectLotPopup extends Component {
         if (this.state.values.some((item) => item.text == lot.currentInput)) {
             return this.notification.add(_t("The Lot/Serial number is already added."), {
                 type: "warning",
-                sticky: false,
             });
         }
         if (!lot.create || !this.props.customInput) {
             return this.notification.add(_t("The Lot/Serial number is not valid"), {
                 type: "warning",
-                sticky: false,
             });
         }
         const newItem = lot.currentInput

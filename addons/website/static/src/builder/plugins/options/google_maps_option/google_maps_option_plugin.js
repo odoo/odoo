@@ -278,7 +278,7 @@ export class GoogleMapsOptionPlugin extends Plugin {
                 _t(
                     "A Google Maps error occurred. Make sure to read the key configuration popup carefully."
                 ),
-                { type: "danger", sticky: true }
+                { type: "danger", autocloseDelay: 0 }
             );
             // Try again: invalidate the API key then restart interactions.
             this.orm

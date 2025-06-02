@@ -525,7 +525,7 @@ export class WebsiteSnippetsMenu extends weSnippetEditor.SnippetsMenu {
             } else {
                 this.notification.add(
                     _t("Cannot apply this option on current text selection. Try clearing the format and try again."),
-                    { type: 'danger', sticky: true }
+                    { type: 'danger', autocloseDelay: 0 }
                 );
             }
             return false;

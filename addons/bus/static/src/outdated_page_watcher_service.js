@@ -65,7 +65,7 @@ export class OutdatedPageWatcherService {
             {
                 title: _t("The page is out of date"),
                 type: "warning",
-                sticky: true,
+                autocloseDelay: 0,
                 buttons: [
                     {
                         name: _t("Refresh"),

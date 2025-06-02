@@ -483,7 +483,6 @@ export function checkAndNotifySEO(seo_data, OptimizeSEODialog, services) {
         if (message) {
             const closeNotification = services.notification.add(message, {
                 type: "warning",
-                sticky: false,
                 buttons: [
                     {
                         name: _t("Optimize SEO"),

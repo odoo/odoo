@@ -210,8 +210,8 @@ export class ImageSelector extends FileSelector {
                     "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
                 ),
                 {
-                    title: _t("Error"),
-                    sticky: true,
+                    type: "danger",
+                    autocloseDelay: 0,
                 }
             );
             return resolve();
@@ -347,8 +347,8 @@ export class ImageSelector extends FileSelector {
                     "You can not replace a field by this image. If you want to use this image, first save it on your computer and then upload it here."
                 ),
                 {
-                    title: _t("Error"),
-                    sticky: true,
+                    type: "danger",
+                    autocloseDelay: 0,
                 }
             );
             return;
