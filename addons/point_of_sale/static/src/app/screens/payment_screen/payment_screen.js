@@ -398,7 +398,6 @@ export class PaymentScreen extends Component {
         let nextPage = this.nextPage;
         let switchScreen = true;
 
-        this.currentOrder.uiState.locked = true;
         if (!this.pos.config.module_pos_restaurant) {
             this.pos.sendOrderInPreparation(this.currentOrder, { orderDone: true });
         }
