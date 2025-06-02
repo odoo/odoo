@@ -35,12 +35,13 @@ export class UrlAutoComplete extends Component {
     get sources() {
         return [
             {
-                optionSlot: "option",
                 options: async (term) => {
                     const makeItem = (item) => ({
                         cssClass: "ui-autocomplete-item",
+                        data: item,
                         label: item.label,
                         onSelect: this.onSelect.bind(this, item.value),
+                        slotName: "item",
                     });
 
                     if (term[0] === "#") {
@@ -70,6 +71,7 @@ export class UrlAutoComplete extends Component {
                                 cssClass: "ui-autocomplete-category",
                                 data: { separator: true },
                                 label: other.title,
+                                slotName: "category",
                             });
                             for (const page of other.values) {
                                 choices.push(makeItem(page));

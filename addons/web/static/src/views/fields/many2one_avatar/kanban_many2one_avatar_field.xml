@@ -9,10 +9,10 @@
                     <img t-attf-src="/web/image/{{relation}}/{{props.record.data[props.name].id}}/avatar_128" class="rounded"/>
                 </span>
             </t>
-            <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+            <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
                 <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-                    <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
-                    <t t-out="autoCompleteItemScope.label"/>
+                    <img class="rounded me-1" t-attf-src="/web/image/{{relation}}/{{recordItemScope.data.record.id}}/avatar_128"/>
+                    <t t-out="recordItemScope.label"/>
                 </span>
             </t>
         </KanbanMany2One>

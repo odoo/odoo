@@ -296,7 +296,6 @@ export class Many2XAutocomplete extends Component {
         return {
             placeholder: _t("Loading..."),
             options: this.loadOptionsSource.bind(this),
-            optionSlot: this.props.slots?.autoCompleteItem ? "option" : undefined,
         };
     }
 
@@ -353,6 +352,7 @@ export class Many2XAutocomplete extends Component {
             data: { record },
             label: label ? highlightText(request, label, "text-primary fw-bold") : _t("Unnamed"),
             onSelect: () => this.props.update([record]),
+            slotName: "recordItem",
         };
     }
 
@@ -389,6 +389,7 @@ export class Many2XAutocomplete extends Component {
                         this.props.searchThreshold > 1
                             ? _t("Start typing %s characters", this.props.searchThreshold)
                             : _t("Start typing..."),
+                    slotName: "startTypingItem",
                 });
             }
         } else {
@@ -403,6 +404,7 @@ export class Many2XAutocomplete extends Component {
                 options.push({
                     cssClass: "o_m2o_no_result",
                     label: _t("No records"),
+                    slotName: "noRecordsItem",
                 });
             }
         }
@@ -424,6 +426,7 @@ export class Many2XAutocomplete extends Component {
                             this.onQuickCreateError(e, request);
                         }
                     },
+                    slotName: "createItem",
                 });
             }
 
@@ -432,6 +435,7 @@ export class Many2XAutocomplete extends Component {
                     cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create_edit",
                     label: _t("Create and edit..."),
                     onSelect: slowCreate,
+                    slotName: "createEditItem",
                 });
             }
         } else if (canCreateEdit && !addSearchMore) {
@@ -439,6 +443,7 @@ export class Many2XAutocomplete extends Component {
                 cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_create_new",
                 label: _t("Create..."),
                 onSelect: slowCreate,
+                slotName: "createEditItem",
             });
         }
 
@@ -447,6 +452,7 @@ export class Many2XAutocomplete extends Component {
                 cssClass: "o_m2o_dropdown_option o_m2o_dropdown_option_search_more",
                 label: this.SearchMoreButtonLabel,
                 onSelect: this.onSearchMore.bind(this, request),
+                slotName: "searchMoreItem",
             });
         }
 

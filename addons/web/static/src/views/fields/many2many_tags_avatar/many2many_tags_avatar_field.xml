@@ -23,7 +23,7 @@
                     isToMany="true"
                     specification="specification"
                 >
-                    <t t-set-slot="autoCompleteItem" t-slot-scope="autoCompleteItemScope">
+                    <t t-set-slot="recordItem" t-slot-scope="recordItemScope">
                         <t t-call="{{ constructor.optionTemplate }}"/>
                     </t>
                 </Many2XAutocomplete>
@@ -33,9 +33,9 @@
 
     <t t-name="web.Many2ManyTagsAvatarField.option">
         <span class="o_avatar_many2x_autocomplete o_avatar d-flex align-items-center">
-            <img t-if="autoCompleteItemScope.record.id" class="rounded me-1"
-                t-attf-src="/web/image/{{relation}}/{{autoCompleteItemScope.record.id}}/avatar_128"/>
-            <span t-att-class="{ 'fw-bold': isSelected(autoCompleteItemScope.record) }" t-out="autoCompleteItemScope.label"/>
+            <img t-if="recordItemScope.data.record.id" class="rounded me-1"
+                t-attf-src="/web/image/{{relation}}/{{recordItemScope.data.record.id}}/avatar_128"/>
+            <span t-att-class="{ 'fw-bold': isSelected(recordItemScope.data.record) }" t-out="recordItemScope.label"/>
         </span>
     </t>
 

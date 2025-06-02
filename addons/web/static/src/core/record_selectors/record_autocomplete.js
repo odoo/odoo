@@ -33,7 +33,6 @@ export class RecordAutocomplete extends Component {
             {
                 placeholder: _t("Loading..."),
                 options: this.loadOptionsSource.bind(this),
-                optionSlot: this.props.slots?.autoCompleteItem ? "option" : undefined,
             },
         ];
     }
@@ -63,6 +62,7 @@ export class RecordAutocomplete extends Component {
             },
             label,
             onSelect: () => this.props.update([id]),
+            slotName: "recordItem",
         }));
         if (SEARCH_LIMIT < nameGets.length) {
             options.push({

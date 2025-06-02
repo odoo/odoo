@@ -71,11 +71,13 @@ export class AddressAutoComplete extends CharField {
                         suggestions.results = suggestions.results.map((result) => ({
                             label: result.formatted_address,
                             onSelect: () => this.selectAddressProposition(result),
+                            slotName: "option",
                         }));
                         if (suggestions.results.length) {
                             suggestions.results.push({
-                                label: "&#160;",
                                 cssClass: "pe-none o-google-credits",
+                                label: "&#160;",
+                                slotName: "option",
                             });
                         }
                         return suggestions.results;
@@ -83,7 +85,6 @@ export class AddressAutoComplete extends CharField {
                         return [];
                     }
                 },
-                optionSlot: "option",
                 placeholder: _t("Searching for addresses..."),
             },
         ];
