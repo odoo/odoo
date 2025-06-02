@@ -15,6 +15,7 @@ This is a bridge module that adds multi-website support for payment providers.
     ],
     'data': [
         'data/mail_templates.xml',
+        'data/payment_transaction_data.xml',
         'views/payment_form_templates.xml',
         'views/payment_provider.xml',
         'views/res_config_settings_views.xml',
@@ -35,11 +36,15 @@ This is a bridge module that adds multi-website support for payment providers.
             ('remove', 'website_payment/static/src/snippets/**/*.edit.js'),
             ('remove', 'website_payment/static/src/snippets/**/options.js'),
         ],
+        'web.assets_backend': [
+            'website_payment/static/src/js/website_payment_transaction_editor.js'
+        ],
         'website.assets_edit_frontend': [
             'website_payment/static/src/**/*.edit.js',
         ],
         'web.assets_tests': [
             'website_payment/static/tests/tours/donation.js',
+            'website_payment/static/tests/tours/donation_form_custom_fields.js',
         ],
         'web.assets_unit_tests': [
             'website_payment/static/tests/builder/**/*',

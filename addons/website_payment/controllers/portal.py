@@ -41,11 +41,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
         use_public_partner = request.env.user._is_public() or not partner_id
         if use_public_partner:
             details = kwargs['partner_details']
-            if not details.get('name'):
+            if not details.get('partner_name'):
                 raise ValidationError(_('Name is required.'))
-            if not details.get('email'):
+            if not details.get('partner_email'):
                 raise ValidationError(_('Email is required.'))
-            if not details.get('country_id'):
+            if not details.get('partner_country_id'):
                 raise ValidationError(_('Country is required.'))
             partner_id = request.website.user_id.partner_id.id
             del kwargs['partner_details']
@@ -62,13 +62,23 @@ class PaymentPortal(payment_portal.PaymentPortal):
         )
         tx_sudo.is_donation = True
         if use_public_partner:
-            tx_sudo.update({
-                'partner_name': details['name'],
-                'partner_email': details['email'],
-                'partner_country_id': int(details['country_id']),
-            })
+            fields = tx_sudo._fields
+            extra_fields = {}
+            for key, value in details.items():
+                # Find matching field key
+                match_key = f'partner_{key}' if f'partner_{key}' in fields else key
+                if match_key in fields:
+                    # Type conversion for specific fields
+                    if key.endswith('_id'):
+                        tx_sudo.update({match_key: int(value)})
+                    else:
+                        tx_sudo.update({match_key: value})
+                else:
+                    extra_fields[key] = value
+            if extra_fields:
+                tx_sudo.extra_fields = extra_fields
         elif not tx_sudo.partner_country_id:
-            tx_sudo.partner_country_id = int(kwargs['partner_details']['country_id'])
+            tx_sudo.partner_country_id = int(kwargs['partner_details']['partner_country_id'])
         # the user can change the donation amount on the payment page,
         # therefor we need to recompute the access_token
         access_token = payment_utils.generate_access_token(
