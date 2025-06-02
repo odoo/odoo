@@ -32,14 +32,13 @@
     </BuilderRow>
     <BuilderRow label.translate="Display">
         <BuilderSelect dataAttributeAction="'display'" preview="false">
-            <BuilderSelectItem dataAttributeActionValue="'afterDelay'" id="'show_delay'">Delay</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'mouseExit'">On Exit</BuilderSelectItem>
-            <BuilderSelectItem dataAttributeActionValue="'onClick'" id="'onclick_opt'" action="'copyAnchor'">On Click (via link)</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'afterDelay'" id="'show_delay'" title.translate="Automatically opens the pop-up if the user stays on a page longer than the specified time.">Delay</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'mouseExit'" title.translate="Pop-up appears when a user is about to leave the website.">On Exit</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'onClick'" id="'onclick_opt'" action="'copyAnchor'" title.translate="Use the generated link to open the pop-up.">On Click (via link)</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow level="1" label.translate="Delay">
         <BuilderNumberInput t-if="isActiveItem('show_delay')"
-                tooltip.translate="Automatically opens the pop-up if the user stays on a page longer than the specified time."
                 action="'setPopupDelay'" unit="'s'" saveUnit="''"/>
     </BuilderRow>
     <BuilderRow label.translate="Hide For" t-if="!isActiveItem('onclick_opt')">
