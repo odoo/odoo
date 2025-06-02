@@ -1,0 +1,54 @@
+<odoo>
+    <template id="gallery_detail_template" name="Galería Detalle de Álbum">
+        <t t-call="website.layout">
+            <div id="splash-loader">
+                <div class="splash-wrapper">
+                    <div class="splash-spinner"></div>
+                </div>
+            </div>
+            <t t-if="album">
+                <t t-set="hide_sidebar" t-value="True"/>
+                <div class="content_container">
+                    <div class="gallery_container">
+                        <h1 class="gallery_title">
+                            <t t-esc="album.name"/>
+                        </h1>
+                        <p class="gallery_subtitle" t-if="album.description">
+                            <t t-esc="album.description"/>
+                        </p>
+                        <hr/>
+                        <div class="masonry-gallery">
+                            <t t-if="photos">
+                                <t t-foreach="photos" t-as="photo">
+                                    <t t-if="photo.is_video and photo.video_file">
+                                        <video autoplay="autoplay" muted="muted" controls="controls"
+             class="img img-fluid"
+             style="width: 100%; height: auto;"
+             t-att-src="'/web/content/website.gallery.photo/%d/video_file/%s' % (photo.id, photo.video_filename or 'video.mp4')">
+      </video>
+                                    </t>
+                                    <t t-if="photo.image_1920">
+                                        <div class="masonry-item">
+                                            <a t-attf-href="/web/image/website.gallery.photo/#{photo.id}/image_1920"
+                                               t-att-title="photo.name"
+                                               data-bs-toggle="lightbox"
+                                               t-att-data-gallery="'gallery-' + str(album.id)">
+                                                <img t-att-src="image_data_uri(photo.image_512)" class="img img-fluid" t-att-alt="photo.name"/>
+                                            </a>
+                                            <p class="photo-description" t-if="photo.name">
+                                                <t t-esc="photo.name"/>
+                                            </p>
+                                        </div>
+                                    </t>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <p>Este álbum no tiene fotos todavía.</p>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

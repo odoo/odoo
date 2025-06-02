@@ -142,7 +142,7 @@
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
         <ol t-if="page_name != 'home'" class="o_portal_submenu breadcrumb mb-0 flex-grow-1 px-0">
-            <li class="breadcrumb-item ms-1"><a href="/my/home" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
+            <li class="breadcrumb-item ms-1"><a href="/my/profile" aria-label="Home" title="Home"><i class="fa fa-home"/></a></li>
             <li t-if="page_name == 'my_details'" class="breadcrumb-item">Details</li>
         </ol>
     </template>
@@ -746,7 +746,7 @@
 
     <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
         <xpath expr="//*[@id='o_logout_divider']" position="before">
-            <a href="/my/home" role="menuitem" class="dropdown-item ps-3">
+            <a href="/my/profile" role="menuitem" class="dropdown-item ps-3">
                 <i class="fa fa-fw fa-id-card-o me-1 small text-primary text-primary-emphasis"/> My Account
             </a>
         </xpath>

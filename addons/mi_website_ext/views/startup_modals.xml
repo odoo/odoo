@@ -1,0 +1,80 @@
+<odoo>
+    <template id="terms_and_conditions_modal" name="Modal de Términos y Condiciones">
+        <div id="terms_modal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Aviso sobre nuestros comunicados internos</h5>
+                    </div>
+                    <div class="modal-body" style="max-height: 60vh; overflow-y: auto;">
+                        <p>La comunicación efectiva entre Cal Engineering Solutions y sus empleados es fundamental para garantizar un entorno de trabajo informado, eficiente y conforme a las normativas internas y externas. En este sentido, la Dirección de Recursos Humanos (en adelante, "RR.HH.") utilizará este canal de comunicación</p>
+                        <p>Es una condición obligatoria para todos los empleados de la Empresa leer y comprender los mensajes y comunicados emitidos por RR.HH. de manera oportuna. Estos mensajes pueden contener información crítica y relevante relacionada con:</p>
+                        <div>
+                            <ul>
+                                <li>
+                                    <strong>Políticas y procedimientos de la Empresa:</strong> Actualizaciones, modificaciones o nuevas implementaciones de normativas internas que rigen la relación laboral.
+                                </li>
+                                <li>
+                                    <strong>Beneficios y compensaciones:</strong> Información sobre planes de salud, vacaciones, bonificaciones, cambios salariales y otros aspectos relacionados con la remuneración y los beneficios laborales.
+                                </li>
+                                <li>
+                                    <strong>Capacitación y desarrollo:</strong> Anuncios de programas de formación, oportunidades de crecimiento profesional y convocatorias a cursos o talleres relevantes para el desempeño del puesto.
+                                </li>
+                                <li>
+                                    <strong>Seguridad y salud laboral:</strong> Comunicados sobre protocolos de seguridad, prevención de riesgos laborales y cualquier información relacionada con el bienestar de los empleados en el entorno de trabajo.
+                                </li>
+                                <li>
+                                    <strong>Eventos y actividades de la Empresa:</strong> Invitaciones a reuniones, eventos corporativos, celebraciones o cualquier otra actividad organizada por la Empresa.
+                                </li>
+                                <li>
+                                    <strong>Información legal y regulatoria:</strong> Comunicados sobre cambios en la legislación laboral, normativas gubernamentales y cualquier otra información legal relevante para la relación laboral.
+                                </li>
+                                <li>
+                                    <strong>Solicitudes de información o documentación:</strong> Requerimientos por parte de RR.HH. para la entrega de documentos, la participación en encuestas o la actualización de datos personales.
+                                </li>
+                                <p>Cualquier otra información que RR.HH. considere relevante para el conocimiento y cumplimiento por parte de los empleados.</p>
+                            </ul>
+                        </div>
+                        <p>
+                            <strong>Responsabilidad del Empleado:</strong>
+                        </p>
+                        <p>Cada empleado es responsable de:</p>
+                        <div>
+                            <ul>
+                                <li>Revisar regularmente los canales de comunicación designados por la Empresa para recibir mensajes de RR.HH.</li>
+                                <li>Leer cuidadosamente y comprender el contenido de todos los comunicados emitidos por RR.HH.</li>
+                                <li>Tomar las acciones necesarias que se indiquen en los mensajes (por ejemplo, responder a una solicitud, inscribirse en un programa, acusar recibo de un documento).</li>
+                                <li>Consultar con RR.HH. en caso de tener alguna duda o requerir aclaración sobre el contenido de un comunicado.</li>
+                                <li>Mantener actualizados sus datos de contacto para garantizar la recepción efectiva de las comunicaciones.</li>
+                                <li>El incumplimiento de la obligación de leer y comprender los mensajes de RR.HH. puede acarrear consecuencias, incluyendo la falta de conocimiento de políticas importantes, la pérdida de oportunidades o beneficios, o incluso medidas disciplinarias en caso de incumplimiento de normativas o solicitudes directas.</li>
+                                <li>Al aceptar estos términos y condiciones usted reconoce y acepta la importancia de mantenerse informado a través de las comunicaciones de Recursos Humanos y se compromete a cumplir con la obligación de leer y comprender dichos mensajes de manera oportuna y diligente.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="accept_terms_btn" type="button" class="accept-button">Confirmo que leí los términos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <template id="announcements_modal" name="Modal de Anuncios">
+         <div id="announcement_popup_modal" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Anuncios</h5>
+                    </div>
+                    <div class="modal-body">
+                        <ul id="popup_announcement_list" class="list-group list-group-flush">
+                            <li class="list-group-item">Cargando anuncios...</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="accept-button" id="confirm_all_read_btn" data-bs-dismiss="modal">Confirmo que los leí</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

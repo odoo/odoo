@@ -1,0 +1,32 @@
+<odoo>
+    <template id="sidebar_fragment_announcements" name="Fragment Sidebar Announcements">
+        <div class="announcements-section" id="portal_sidebar_announcements">
+            <h3>Anuncios
+                <img src="/mi_website_ext/static/src/img/alert.svg"
+                                    alt="Grupo" />
+            </h3>
+            <div class="announcements-panel">
+                <t t-if="recent_announcements">
+                    <t t-foreach="recent_announcements" t-as="announcement">
+                        <div class="announcement-item">
+                            <span class="read-check-placeholder me-2">
+                                <i class="fa fa-check text-success" t-if="announcement.id in read_announcement_ids"/>
+                            </span>
+                            <a t-att-href="announcement.website_url or '#'"
+                               class="js_read_tracker"
+                               t-att-class="'is-read' if announcement.id in read_announcement_ids else ''"
+                               t-att-data-res-model="'website.publication'"
+                               t-att-data-res-id="announcement.id">
+                                <t t-esc="announcement.name"/>
+                            </a>
+                            <i class="fa fa-info-circle announcement-icon" aria-hidden="true"></i>
+                        </div>
+                    </t>
+                </t>
+                <t t-else="">
+                    <p class="no_announce">No hay anuncios recientes.</p>
+                </t>
+            </div>
+        </div>
+    </template>
+</odoo>

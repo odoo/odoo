@@ -1,415 +1,498 @@
 <odoo>
-    <template id="custom_sidebar" name="Custom Sidebar" inherit_id="website.layout">
+    <template id="custom_sidebar" name="Home" inherit_id="website.layout">
         <xpath expr="//head" position="inside">
-            <link rel="stylesheet" type="text/css" href="/mi_website_ext/static/src/css/sidebar.css" />
+            <link rel="stylesheet" type="text/css" href="/mi_website_ext/static/src/css/sidebar.css" crossOrigin="anonymous"/>
             <link rel="stylesheet" type="text/css"
-                href="/mi_website_ext/static/src/css/tooltip_styles.css" />
-            <link rel="preconnect" href="https://fonts.googleapis.com" />
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+                href="/mi_website_ext/static/src/css/tooltip_styles.css" crossOrigin="anonymous"/>
+            <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
             <link
                 href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&amp;family=Rubik:ital,wght@0,300..900;1,300..900&amp;display=swap"
-                rel="stylesheet" />
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"
-            ></script>
+                rel="stylesheet" crossOrigin="anonymous"/>
         </xpath>
         <xpath expr="//main" position="before">
             <t t-if="not hide_sidebar is defined">
                 <t t-set="current_path" t-value="request.httprequest.path" />
-                <t t-set="hide_sidebar"
-                    t-value="current_path in ['/blogs', '/galeria', '/news', '/task', '/policy', '/birthday_single', '/birthday_all', '/announce', '/activity', '/activity_all', '/anniversary', '/anniversary_all', '/program', '/intern_all']" />
-            </t>
+                <t t-set="exact_paths" t-value="[
+            '/blogs', '/galeria', '/news', '/task', '/policy', 
+            '/birthday_all', '/activity_all', '/anniversary_all', '/intern_all', '/my/profile'
+        ]"/>
+                <t t-set="prefix_paths" t-value="[
+            '/birthday_single/', 
+            '/anniversary/', 
+            '/activity/',
+            '/announce/',
+            '/program/',
+            '/news_detail/',
+            '/blog/',
+            '/gallery/album/'
 
+        ]"/>
+                <t t-set="hide_sidebar"
+           t-value="current_path in exact_paths or any(current_path.startswith(p) for p in prefix_paths)" />
+    </t>
+            <!--<div style="position: fixed; top: 60px; left: 10px; background: yellow; color: black; padding: 10px; z-index: 9999; border: 2px solid red; font-size: 14px; font-weight: bold;">
+        DEBUGGER: La variable 'hide_sidebar' es:
+                <t t-esc="hide_sidebar"/>
+            </div>-->
             <t t-if="request.website and request.session.uid and not hide_sidebar">
                 <t t-set="user" t-value="request.env.user" />
-                <div class="three-column-layout">
-
-                    <div class="notification-column">
-                        <div class="access-card">
-                            <div class="card-title">
-                                <h3>Accesos</h3>
+                <div t-attf-class="company-theme-wrapper company-#{request.env.user.company_id.id}">
+                    <div t-attf-class="company-theme-wrapper company-theme-#{request.env.user.company_id.id}">
+                        <div class="three-column-layout">
+                            <div id="splash-loader">
+                                <div class="splash-wrapper">
+                                    <div class="splash-spinner"></div>
+                                </div>
                             </div>
-                            <div class="card-items">
-                                <a href="/blogs">
-                                    <img src="/mi_website_ext/static/src/img/Group.svg" alt="Grupo" />
-                                    <p>Blog</p>
-                                </a>
-                            </div>
-                            <div class="card-items">
-                                <a href="/galeria">
-                                    <img src="/mi_website_ext/static/src/img/Gallery.svg"
+                            <t t-call="mi_website_ext.terms_and_conditions_modal"/>
+                            <t t-call="mi_website_ext.announcements_modal"/>
+                            <div class="notification-column">
+                                <div class="access-card">
+                                    <div class="card-title">
+                                        <h3>Accesos</h3>
+                                    </div>
+                                    <div class="card-items">
+                                        <a href="/blogs">
+                                            <img src="/mi_website_ext/static/src/img/Group.svg" alt="Grupo" />
+                                            <p>Blog</p>
+                                        </a>
+                                    </div>
+                                    <div class="card-items">
+                                        <a href="/galeria">
+                                            <img src="/mi_website_ext/static/src/img/Gallery.svg"
                                         alt="Grupo" />
-                                    <p>Galeria</p>
-                                </a>
-                            </div>
-                            <div class="card-items">
-                                <a href="/program">
-                                    <img src="/mi_website_ext/static/src/img/News.svg" alt="Grupo" />
-                                    <p>Noticias</p>
-                                </a>
-                            </div>
-                            <div class="card-items">
-                                <a href="/policy">
-                                    <img src="/mi_website_ext/static/src/img/Policy.svg" alt="Grupo" />
-                                    <p>Politicas y reglamentos</p>
-                                </a>
-                            </div>
-                            <hr class="divider" />
-                            <button class="notify-button">Notificar <img
-                                    src="/mi_website_ext/static/src/img/Sick.svg" alt="Grupo" /></button>
-                        </div>
-                        <div class="benefits-card">
-                            <div class="card-title">
-                                <h3>Mis beneficios</h3>
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/SEMM.svg" alt="Grupo"
+                                            <p>Galería</p>
+                                        </a>
+                                    </div>
+                                    <div class="card-items">
+                                        <a href="/news">
+                                            <img src="/mi_website_ext/static/src/img/News.svg" alt="Grupo" />
+                                            <p>Noticias</p>
+                                        </a>
+                                    </div>
+                                    <div class="card-items">
+                                        <a href="/policy">
+                                            <img src="/mi_website_ext/static/src/img/Policy.svg" alt="Grupo" />
+                                            <p>Políticas y Reglamentos</p>
+                                        </a>
+                                    </div>
+                                    <div class="card-items">
+                                        <a href="/mi_website_ext/static/src/pdf/Intranet_manual_v1.pdf" download="Manual_Usuario.pdf">
+                                            <img src="/mi_website_ext/static/src/img/Manual.png" alt="Grupo" />
+                                            <p>Manual</p>
+                                        </a>
+                                    </div>
+                                    <hr class="divider" />
+                                    <div class="card-items-button">
+                                        <button class="notify-button emergency-button" title="Notificar Ausencia">
+                                            <img src="/mi_website_ext/static/src/img/Sick.svg" alt="Notificar ausencia" class="sick-img" />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="benefits-card">
+                                    <div class="card-title">
+                                        <h3>Mis beneficios</h3>
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/SEMM.svg" alt="Grupo"
                                     class="tooltip-img"
                                     data-tooltip-title="Servicio SEMM"
                                     data-tooltip-text="Cobertura contra accidentes."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/SEMM.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Glasses.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Glasses.svg" alt="Grupo"
+                                     t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 180 else ' locked-benefit')"
                                     data-tooltip-title="Financia tus lentes"
                                     data-tooltip-text="Financiamos la compra de tus lentes en Óptica Visual Point."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Glasses.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Gymsix.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Gymsix.svg" alt="Grupo"
+                                     t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 180 else ' locked-benefit')"
                                     data-tooltip-title="Descuento en el gym"
                                     data-tooltip-text="¡Lo lograste cumples 6 meses, recibes un descuento en tu plan del Gym! Nosotros cubrimos el mantenimiento."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Gymsix.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Pluxeesix.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Pluxeesix.svg" alt="Grupo"
+                                    t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 180 else ' locked-benefit')"
                                     data-tooltip-title="Pluxee"
                                     data-tooltip-text="¡Felicidades! Cumpliste 6 meses. Recibes un vale de $25."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeesix.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Gymfull.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Gymfull.svg" alt="Grupo"
+                                    t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 365 else ' locked-benefit')"
                                     data-tooltip-title="Membresia full gym"
                                     data-tooltip-text="¡Asi se hace! Cumpliste un año, ahora cubrimos los gastos de tu membrecía full en tu gym."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Gymfull.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Parking.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Parking.svg" alt="Grupo"
+                                    t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 365 else ' locked-benefit')"
                                     data-tooltip-title="Parking gratis"
                                     data-tooltip-text="Tu auto te ha acompañado, así que ahora no te preocupes, ahora tu parking es gratis mientras trabajas."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Parking.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Pluxeeyear.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Pluxeeyear.svg" alt="Grupo"
+                                    t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 365 else ' locked-benefit')"
                                     data-tooltip-title="Pluxee"
                                     data-tooltip-text="¡Felicidades! Como premio por tu perseverancia al cumplir un año. Ahora recibes un vale de $50."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeeyear.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Pluxeeyearhalf.svg"
-                                    alt="Grupo" class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Pluxeeyearhalf.svg"
+                                    alt="Grupo" t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 547 else ' locked-benefit')"
                                     data-tooltip-title="Vale Pluxee"
                                     data-tooltip-text="¡Wao que rápido se va el tiempo! Ya tienes año y medio con nosotros para celebrarlo ahora recibes un vale de $75."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeeyearhalf.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Pluxeetwoyear.svg"
-                                    alt="Grupo" class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Pluxeetwoyear.svg"
+                                    alt="Grupo" t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 730 else ' locked-benefit')"
                                     data-tooltip-title="Vale Pluxee"
                                     data-tooltip-text="¡Te felicitamos por alcanzar este hito! Eres una parte importante de nuestro equipo, por eso ahora recibes un vale de $100."
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Pluxeetwoyear.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Insurance.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Insurance.svg" alt="Grupo"
+                                    t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 730 else ' locked-benefit')"
                                     data-tooltip-title="Seguro de vida"
                                     data-tooltip-text="Descripción corta de la cobertura del seguro de vida?"
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Insurance.svg" />
-                            </div>
-                            <div class="card-items2">
-                                <img src="/mi_website_ext/static/src/img/Medical.svg" alt="Grupo"
-                                    class="tooltip-img"
+                                    </div>
+                                    <div class="card-items2">
+                                        <img src="/mi_website_ext/static/src/img/Medical.svg" alt="Grupo"
+                                    t-att-class="'tooltip-img' + ('' if user.x_days_in_company >= 730 else ' locked-benefit')"
                                     data-tooltip-title="Seguro medico"
                                     data-tooltip-text="Descripción corta de la cobertura del seguro medico?"
                                     data-tooltip-icon="/mi_website_ext/static/src/img/Medical.svg" />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="info-column">
-                        <div class="news-card">
-                            <div class="special-new-title">
-                                <h4>🫦¡Noticia!🫦</h4>
-                            </div>
-                            <div class="special-new-p">
-                                <p>Felicitaciones en este dia a Fernando por el nacimiento de su
-                                    hijo, le deseamos lo mejor.
-                                    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-                                    aaaaaaaaaaaaaaaaaaaaaaaaaa</p>
-                            </div>
-                        </div>
-                        <div class="info-cards">
-                            <!--This
+                            <div class="info-column">
+                                <t t-set="latest_special_event" t-value="request.env['website.publication'].sudo().search([
+        ('publication_type', '=', 'special_event'),
+        ('is_published', '=', True),
+    ], limit=1, order='publish_date desc')"/>
+                                <t t-if="latest_special_event">
+                                    <div class="news-card">
+                                        <div class="special-new-title">
+                                            <h4>
+                                                <t t-esc="latest_special_event.name"/>
+                                            </h4>
+                                        </div>
+                                        <div class="special-new-p">
+                                            <div t-field="latest_special_event.content_html"/>
+                                </div>
+                                    </div>
+                                </t>
+                                <div class="info-cards">
+                                    <!--This
                             is the 1st column-->
-                            <div class="column1">
-                                <!--Welcmome
+                                    <div class="column1">
+                                        <!--Welcmome
                                 card-->
-                                <div class="welcome-card">
-                                    <div class="welcome-title">
-                                        <h3>Bienvenido a la familia Calengs</h3>
-                                        <img src="/mi_website_ext/static/src/img/Welcome.svg"
-                                            alt="Grupo" />
-                                    </div>
-                                    <div class="welcome-body">
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
+                                        <t t-set="current_month_qweb" t-value="datetime.datetime.now().month"/>
+                                        <t t-set="current_year_qweb" t-value="datetime.datetime.now().year"/>
+                                        <t t-set="today_date_obj_qweb" t-value="datetime.date.today()"/>
+                                        <t t-set="all_active_employees_for_welcome" t-value="request.env['hr.employee'].sudo().search([
+            ('active', '=', True),
+            ('company_id', '=', request.website.company_id.id)
+        ])"/>
+                                        <t t-set="new_hires_this_month_list" t-value="[]"/>
+                                        <t t-foreach="all_active_employees_for_welcome" t-as="employee_new_hire">
+                                            <t t-set="contract_for_hire_date" t-value="request.env['hr.contract'].sudo().search([
+                ('employee_id', '=', employee_new_hire.id),
+                ('date_start', '!=', False),
+                ('date_start', '&lt;=', today_date_obj_qweb) 
+            ], order='date_start asc', limit=1)"/>
+                                            <t t-if="contract_for_hire_date and contract_for_hire_date.date_start">
+                                                <t t-set="hire_date_val" t-value="contract_for_hire_date.date_start"/>
+                                                <t t-if="hire_date_val.month == current_month_qweb and hire_date_val.year == current_year_qweb">
+                                                    <t t-set="user_of_new_hire" t-value="employee_new_hire.user_id"/>
+                                                    <t t-set="new_hires_this_month_list" t-value="new_hires_this_month_list + [{
+        'employee_obj': employee_new_hire,      
+        'user_obj': user_of_new_hire,          
+        'employee_name': employee_new_hire.name,
+        'employee_id_for_url': employee_new_hire.id,
+        'hire_date_obj': hire_date_val,
+        'company_name': employee_new_hire.company_id.name if employee_new_hire.company_id else (user_of_new_hire.company_id.name if user_of_new_hire and user_of_new_hire.company_id else 'Calteks')
+    }]"/>
+</t>
+                                            </t>
+                                        </t>
+                                        <t t-set="sorted_new_hires_list" t-value="sorted(new_hires_this_month_list, key=lambda x: x['hire_date_obj'].day)"/>
+                                        <t t-if="sorted_new_hires_list">
+                                            <div class="welcome-card">
+                                                <div class="welcome-title">
+                                                    <h3>
+                                                        <t t-if="len(sorted_new_hires_list) == 1">Bienvenido</t>
+                                                        <t t-else="">Bienvenidos</t>
+    a la familia Calengs
+                                                    </h3>
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img src="/mi_website_ext/static/src/img/Welcome.svg" alt="Grupo" />
+                                                    </t>
+                                                    <t t-if="user.company_id.id == 2">
+                                                        <img src="/mi_website_ext/static/src/img/Welcome2.svg" alt="Grupo" />
+                                                    </t>
+                                                </div>
+                                                <div class="welcome-body">
+                                                    <t t-foreach="sorted_new_hires_list" t-as="new_hire_data_item">
+                                                        <t t-set="employee_to_show" t-value="new_hire_data_item['employee_obj']"/>
+                                                        <t t-set="user_for_img" t-value="new_hire_data_item['user_obj']"/>
+                                                        <div class="person">
+                                                            <t t-if="user_for_img and user_for_img.image_128">
+                                                                <img t-att-src="image_data_uri(user_for_img.image_128)" class="miniuser" t-att-alt="employee_to_show.name"/>
+                                                            </t>
+                                                            <t t-elif="employee_to_show.image_128">
+                                                                <img t-att-src="image_data_uri(employee_to_show.image_128)" class="miniuser" t-att-alt="employee_to_show.name"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" class="miniuser" t-att-alt="employee_to_show.name"/>
+                                                            </t>
+                                                            <div class="personinfo">
+                                                                <h4>
+                                                                    <t t-esc="new_hire_data_item['employee_name']"/>
+                                                                </h4>
+                                                                <p>
+                                                                    <t t-esc="new_hire_data_item['employee_obj'].department_id.name"/>
+                                                                </p>
+                                                                <p>
+                                                                    <t t-esc="new_hire_data_item['company_name']"/>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </t>
+                                                </div>
+                                                <hr class="divider" />
                                             </div>
-                                        </div>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
-                                            </div>
-                                        </div>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr class="divider" />
-                                </div>
-
-                                <!--Birthday
+                                        </t>
+                                        <!--Birthday
                                 card-->
-                                <div class="birthday-card">
-                                    <div class="birthday-title">
-                                        <h3>Cumpleaños del mes</h3>
-                                        <img src="/mi_website_ext/static/src/img/Cake.svg"
-                                            alt="Grupo" />
+                                        <t t-set="current_month"
+                                            t-value="datetime.datetime.now().month" />
+                                        <t t-set="current_year"
+                                            t-value="datetime.datetime.now().year" />
+                                        <t t-set="birthday_employees"
+                                            t-value="request.env['hr.employee'].sudo().search([
+            ('birthday', '!=', False)
+        ])" />
+                                        <t t-set="employees_this_month" t-value="[]" />
+                                        <t t-foreach="birthday_employees" t-as="employee">
+                                            <t
+                                                t-if="employee.birthday and employee.birthday.month == current_month">
+                                                <t t-set="employees_this_month"
+                                                    t-value="employees_this_month + [employee]" />
+                                            </t>
+                                        </t>
+                                        <t t-set="sorted_employees"
+                                            t-value="sorted(employees_this_month, key=lambda e: e.birthday.day if e.birthday else 99)" />
+                                        <t t-if="sorted_employees">
+                                            <div class="birthday-card">
+                                                <div class="birthday-title">
+                                                    <h3>Cumpleaños del mes</h3>
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/birthday.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/birthday2.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                </div>
+                                                <div class="birthday-body">
+                                                    <t t-foreach="sorted_employees" t-as="employee">
+                                                        <a class="person" t-att-href="'/birthday_single/%s' % employee.id">
+                                                            <t
+                                                        t-if="employee.user_id and employee.user_id.image_128">
+                                                                <img
+                                                            t-att-src="image_data_uri(employee.user_id.image_128)"
+                                                            class="miniuser"
+                                                            t-att-alt="employee.name" />
+                                                            </t>
+                                                            <t t-elif="employee.image_128">
+                                                                <img
+                                                            t-att-src="image_data_uri(employee.image_128)"
+                                                            class="miniuser"
+                                                            t-att-alt="employee.name" />
+                                                            </t>
+                                                            <t t-else="">
+                                                                <img
+                                                            src="/mi_website_ext/static/src/img/imagetester.jpg"
+                                                            class="miniuser"
+                                                            t-att-alt="employee.name" />
+                                                            </t>
+                                                            <div class="personinfo">
+                                                                <h4>
+                                                                    <t t-esc="employee.name" />
+                                                                </h4>
+                                                                <p>
+                                                                    <span t-field="employee.birthday"
+                                                                t-options='{"format": "d MMMM"}' />
+                                                                </p>
+                                                            </div>
+                                                        </a>
+                                                    </t>
+                                                </div>
+                                                <hr class="divider" />
+                                            </div>
+                                        </t>
                                     </div>
-                                    <div class="birthday-body">
-                                        <a class="person" href="/birthday_single">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
-                                            </div>
-                                        </a>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
-                                            </div>
-                                        </div>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr class="divider" />
-                                    <div class="all-birthday">
-                                        <a href="/birthday_all">Todos los cumpleaños <i
-                                                class="fa fa-long-arrow-right"></i></a>
-                                    </div>
-                                </div>
-
-                                <!--Winner
-                                card-->
-                                <div class="winner-card">
-                                    <div class="winner-title">
-                                        <h3>Ganadores del mes</h3>
-                                        <img src="/mi_website_ext/static/src/img/Win.svg"
-                                            alt="Grupo" />
-                                    </div>
-                                    <div class="winner-body1">
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>180 puntos</p>
-                                                <p>Calteks</p>
-                                            </div>
-                                            <img src="/mi_website_ext/static/src/img/Trophy.svg"
-                                                alt="Grupo" class="trophy" />
-                                        </div>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>180 puntos</p>
-                                                <p>Calteks</p>
-                                            </div>
-                                            <img src="/mi_website_ext/static/src/img/Trophy.svg"
-                                                alt="Grupo" />
-                                        </div>
-                                    </div>
-                                    <hr class="divider" />
-                                    <div class="winner-body2">
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>180 puntos</p>
-                                            </div>
-                                        </div>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>180 puntos</p>
-                                            </div>
-                                        </div>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>180 puntos</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!--This
+                                    <!--This
                             is the 2do column-->
-                            <div class="column2">
-                                <!--This
+                                    <div class="column2">
+                                        <!--This
                                 is the pha=rase card-->
-                                <div class="phrase-card">
-                                    <div class="phrase">
-                                        <h3>"No siempre todo lo que vemos es realmente lo que es."</h3>
-                                    </div>
-                                    <div class="author">
-                                        <h4>Paul Dawnson</h4>
-                                        <p>Fisico y matematico</p>
-                                    </div>
-                                </div>
-
-                                <!--This
+                                        <t t-set="latest_phrase" t-value="request.env['website.publication'].sudo().search([
+        ('publication_type', '=', 'phrase'),
+        ('is_published', '=', True),
+    ], limit=1, order='publish_date desc')"/>
+                                        <t t-if="latest_phrase">
+                                            <div class="phrase-card">
+                                                <div class="phrase">
+                                                    <h3>"
+                                                        <t t-esc="latest_phrase.name"/>"
+                                                    </h3>
+                                                </div>
+                                                <div class="author">
+                                                    <h4>
+                                                        <t t-esc="latest_phrase.author_name"/>
+                                                    </h4>
+                                                    <p>
+                                                        <t t-esc="latest_phrase.author_description"/>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <!--This
                                 is the activity card-->
-                                <div class="activity-card">
-                                    <div class="activity-title">
-                                        <h3>Actividades del mes</h3>
-                                        <img src="/mi_website_ext/static/src/img/Gift.svg"
-                                            alt="Grupo" />
-                                    </div>
-                                    <div class="activity-body">
-                                        <div class="activity-list">
-                                            <a class="activity-item" href="/activity">
-                                                <img
-                                                    src="/mi_website_ext/static/src/img/imagetester.jpg" />
-                                                <h3>Dia del trabajador</h3>
-                                                <p>01 de mayo</p>
-                                            </a>
-                                            <a class="activity-item" href="/activity">
-                                                <img
-                                                    src="/mi_website_ext/static/src/img/imagetester.jpg" />
-                                                <h3>Dia del trabajador</h3>
-                                                <p>01 de mayo</p>
-                                            </a>
-                                            <a class="activity-item" href="/activity">
-                                                <img
-                                                    src="/mi_website_ext/static/src/img/imagetester.jpg" />
-                                                <h3>Dia del trabajador</h3>
-                                                <p>01 de mayo</p>
-                                            </a>
-                                        </div>
-                                        <hr class="divider" />
-                                    </div>
-                                    <div class="all-activity">
-                                        <a href="/activity_all">Todas las actividades <i
-                                                class="fa fa-long-arrow-right"></i></a>
-                                    </div>
-                                </div>
-
-                                <!--This
+                                        <t t-set="recent_activities" t-value="request.env['website.publication'].sudo().search([
+            ('publication_type', '=', 'activity'),
+            ('is_published', '=', True),
+        ], order='publish_date desc')"/>
+                                        <t t-if="recent_activities">
+                                            <div class="activity-card">
+                                                <div class="activity-title">
+                                                    <h3>Actividades</h3>
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img src="/mi_website_ext/static/src/img/Activity.svg" alt="Grupo" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img src="/mi_website_ext/static/src/img/Activity2.svg" alt="Grupo" />
+                                                    </t>
+                                                </div>
+                                                <div class="activity-body">
+                                                    <div class="activity-list">
+                                                        <t t-foreach="recent_activities" t-as="activity">
+                                                            <a class="activity-item" t-att-href="activity.website_url or '#'">
+                                                                <t t-if="activity.image_1920">
+                                                                    <img t-att-src="image_data_uri(activity.image_1920)" t-att-alt="activity.name"/>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="activity.name"/>
+                                                                </t>
+                                                                <h3>
+                                                                    <t t-esc="activity.name"/>
+                                                                </h3>
+                                                                <p>
+                                                                    <span t-field="activity.publish_date" t-options='{"format": "d MMMM"}'/>
+                                                                </p>
+                                                            </a>
+                                                        </t>
+                                                    </div>
+                                                    <hr class="divider" />
+                                                </div>
+                                            </div>
+                                        </t>
+                                        <!--This
                                 is the anniversary card-->
-                                <div class="anniversary-card">
-                                    <div class="anniversary-title">
-                                        <h3>Aniversarios del mes</h3>
-                                        <img src="/mi_website_ext/static/src/img/Time.svg"
-                                            alt="Grupo" />
-                                    </div>
-                                    <div class="anniversary-body">
-                                        <a class="person" href="/anniversary">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
+                                        <t t-set="current_month_qweb" t-value="datetime.datetime.now().month"/>
+                                        <t t-set="current_year_qweb" t-value="datetime.datetime.now().year"/>
+                                        <t t-set="today_date_obj_qweb" t-value="datetime.date.today()"/>
+                                        <t t-set="all_active_employees" t-value="request.env['hr.employee'].sudo().search([
+            ('active', '=', True),
+            ('company_id', '=', request.website.company_id.id)
+        ])"/>
+                                        <t t-set="anniversary_display_list_final" t-value="[]"/>
+                                        <t t-foreach="all_active_employees" t-as="employee_in_loop">
+                                            <t t-set="first_contract_loop" t-value="request.env['hr.contract'].sudo().search([
+                ('employee_id', '=', employee_in_loop.id),
+                ('date_start', '!=', False),
+                ('date_start', '&lt;=', today_date_obj_qweb)
+            ], order='date_start asc', limit=1)"/>
+                                            <t t-if="first_contract_loop and first_contract_loop.date_start">
+                                                <t t-set="hire_date_loop" t-value="first_contract_loop.date_start"/>
+                                                <t t-if="hire_date_loop.month == current_month_qweb and current_year_qweb > hire_date_loop.year">
+                                                    <t t-set="years_in_company_loop" t-value="current_year_qweb - hire_date_loop.year"/>
+                                                    <t t-set="user_of_employee_loop" t-value="employee_in_loop.user_id"/>
+                                                    <t t-set="anniversary_display_list_final" t-value="anniversary_display_list_final + [{
+                        'employee_obj': employee_in_loop,  
+                        'user_obj': user_of_employee_loop, 
+                        'hire_date_obj': hire_date_loop,
+                        'years_in_company_val': years_in_company_loop
+                    }]"/>
+                </t>
+                                            </t>
+                                        </t>
+                                        <t t-set="sorted_anniversary_list_final" t-value="sorted(anniversary_display_list_final, key=lambda x: x['hire_date_obj'].day)"/>
+                                        <t t-if="sorted_anniversary_list_final">
+                                            <div class="anniversary-card">
+                                                <div class="anniversary-title">
+                                                    <h3>Aniversarios del mes</h3>
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img src="/mi_website_ext/static/src/img/Time.svg" alt="Grupo" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img src="/mi_website_ext/static/src/img/Time2.svg" alt="Grupo" />
+                                                    </t>
+                                                </div>
+                                                <div class="anniversary-body">
+                                                    <t t-foreach="sorted_anniversary_list_final" t-as="anniversary_item_data">
+                                                        <t t-set="employee_to_display" t-value="anniversary_item_data['employee_obj']"/>
+                                                        <t t-set="user_for_image" t-value="anniversary_item_data['user_obj']"/>
+                                                        <a class="person" t-att-href="'/anniversary/%s' % employee_to_display.id">
+                                                            <t t-if="user_for_image and user_for_image.image_128">
+                                                                <img t-att-src="image_data_uri(user_for_image.image_128)" class="miniuser" t-att-alt="employee_to_display.name"/>
+                                                            </t>
+                                                            <t t-elif="employee_to_display.image_128">
+                                                                <img t-att-src="image_data_uri(employee_to_display.image_128)" class="miniuser" t-att-alt="employee_to_display.name"/>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <img src="/mi_website_ext/static/src/img/imagetester.jpg" class="miniuser" t-att-alt="employee_to_display.name"/>
+                                                            </t>
+                                                            <div class="personinfo">
+                                                                <h4>
+                                                                    <t t-esc="employee_to_display.name"/>
+                                                                </h4>
+                                                                <p>
+                                                                    <t t-esc="anniversary_item_data['years_in_company_val']"/>
+                                                                    <t t-if="anniversary_item_data['years_in_company_val'] == 1">año</t>
+                                                                    <t t-else="">años</t>
+                                                                            en la empresa
+                                                                </p>
+                                                                <p t-if="employee_to_display.company_id">
+                                                                    <t t-esc="employee_to_display.company_id.name"/>
+                                                                </p>
+                                                            </div>
+                                                        </a>
+                                                    </t>
+                                                </div>
+                                                <hr class="divider" />
                                             </div>
-                                        </a>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
-                                            </div>
-                                        </div>
-                                        <div class="person">
-                                            <img
-                                                src="/mi_website_ext/static/src/img/imagetester.jpg"
-                                                class="miniuser" />
-                                            <div class="personinfo">
-                                                <h4>Yanitza Aguirre</h4>
-                                                <p>Calteks</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <hr class="divider" />
-                                    <div class="all-anniversary">
-                                        <a href="/anniversary_all">Todos los aniversarios <i
-                                                class="fa fa-long-arrow-right"></i></a>
-                                    </div>
-                                </div>
-                                <!--This
+                                        </t>
+                                        <!--This
                                 is the prog.
                                  ram card-->
-                                <div class="program-card">
+                                        <!-- <div
+                                    class="program-card">
                                     <div class="program-title">
                                         <h3>Programa de reconocimiento interno</h3>
-                                        <img src="/mi_website_ext/static/src/img/Gift.svg"
+                                        <img src="/mi_website_ext/static/src/img/Reconocimiento.svg"
                                             alt="Grupo" />
                                     </div>
                                     <div class="program-subtitle">
@@ -447,129 +530,231 @@
                                     <hr class="divider" />
                                     <div class="all-program">
                                         <a href="/intern_all">Conoce todos los postulados y postula
-                                            a tu compañero <i
-                                                class="fa fa-long-arrow-right"></i></a>
+                                            a tu compañero
+                                            <i
+                                                class="fa fa-long-arrow-right"></i>
+                                        </a>
+                                    </div>
+                                </div>-->
                                     </div>
                                 </div>
+                                <!--Winner
+                                card-->
+                                <t t-set="monthly_winners" t-value="request.env['website.publication'].sudo().search([
+    ('publication_type', '=', 'winner'),
+    ('is_published', '=', True),
+    ('publish_date', '&gt;=', datetime.date.today().strftime('%Y-%m-01')),
+    ('publish_date', '&lt;=', (datetime.date.today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d')),
+], limit=5, order='winner_score desc')"/>
+                                <t t-if="monthly_winners">
+                                    <div class="winner-card">
+                                        <div class="winner-title">
+                                            <h3>Ganadores del mes</h3>
+                                            <t t-if="user.company_id.id == 1">
+                                                <img src="/mi_website_ext/static/src/img/Win.svg" alt="Grupo" />
+                                            </t>
+                                            <t t-elif="user.company_id.id == 2">
+                                                <img src="/mi_website_ext/static/src/img/Win2.svg" alt="Grupo" />
+                                            </t>
+                                        </div>
+                                        <div class="winner-body1">
+                                            <t t-foreach="monthly_winners" t-as="winner_pub">
+                                                <div class="person">
+                                                    <t t-if="winner_pub.employee_id">
+                                                        <img t-att-src="image_data_uri(winner_pub.employee_id.image_128)" class="miniuser" t-att-alt="winner_pub.employee_id.name"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <img src="/mi_website_ext/static/src/img/imagetester.jpg" class="miniuser" />
+                                                    </t>
+                                                    <div class="personinfo">
+                                                        <h4>
+                                                            <t t-esc="winner_pub.employee_id.name if winner_pub.employee_id else winner_pub.name"/>
+                                                        </h4>
+                                                        <p>
+                                                            <t t-esc="winner_pub.winner_score"/> puntos
+                                                        </p>
+                                                        <p t-if="winner_pub.employee_id.company_id">
+                                                            <t t-esc="winner_pub.employee_id.company_id.name"/>
+                                                        </p>
+                                                    </div>
+                                                    <t t-if="user.company_id.id == 1">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                    <t t-elif="user.company_id.id == 2">
+                                                        <img t-att-src="'/mi_website_ext/static/src/img/Trophy2.svg'"
+                                        alt="Sol" />
+                                                    </t>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
                             </div>
-                        </div>
-                    </div>
-
-
-                    <aside class="custom-sidebar">
-                        <!-- Perfil -->
-                        <div class="profile-section">
-                            <div class="avatar-section">
-                                <img
-                                    t-att-src="'/web/image/res.users/' + str(user.id) + '/image_128'"
+                            <div class="sidebar_column">
+                                <aside class="custom-sidebar">
+                                    <!-- Perfil -->
+                                    <div class="profile-section">
+                                        <div class="avatar-section">
+                                            <img
+                                    t-att-src="'/web/image/res.users/' + str(user.id) + '/image_512'"
                                     alt="Avatar" class="avatar" />
-                            </div>
-                            <h2 class="name">
-
-                                <t t-esc="user.name" />
-                            </h2>
-                            <div class="position-group">
-                                <p class="position"><!--<t
-                                t-esc="user.job_title"/> | <t t-esc="user.company_id"/>--> Electrical Engineer | Calengs Panama</p>
-                                <p class="department">Departamento de TI</p>
-                            </div>
-                            <hr class="divider" />
-                            <div class="badge-area">
-                                <div class="badge-title">
-                                    <h3>Mis Logros</h3>
-                                </div>
-                                <div class="badge_section">
-                                    <img src="/mi_website_ext/static/src/img/Firstplace.svg"
+                                        </div>
+                                        <h2 class="name">
+                                            <t t-esc="user.name" />
+                                        </h2>
+                                        <div class="position-group">
+                                            <p class="position">
+                                                <t t-if="user.employee_id and user.employee_id.job_id">
+                                                    <t t-esc="user.employee_id.job_id.name" />
+                                    </t>
+                                                <t t-elif="user.job_title">
+                                                    <t t-esc="user.job_title" />
+                                    </t>
+                                                <t t-else="">
+                                        Puesto no definido
+                                    </t>
+                                                <t t-if="user.company_id"> |
+                                                    <t t-esc="user.company_id.name" />
+                                    </t>
+                                            </p>
+                                            <p class="department">
+                                                <t t-if="user.employee_id and user.employee_id.department_id">
+                                                    <t t-esc="user.employee_id.department_id.name" />
+                                    </t>
+                                                <t t-else="">
+                                        Departamento no asignado
+                                    </t>
+                                            </p>
+                                        </div>
+                                        <hr class="divider" />
+                                        <!--
+                                    <div class="badge-area">
+                                        <div class="badge-title">
+                                            <h3>Mis Logros</h3>
+                                        </div>
+                                        <div class="badge_section">
+                                            <img src="/mi_website_ext/static/src/img/Firstplace.svg"
                                         alt="Grupo" />
-                                    <img src="/mi_website_ext/static/src/img/Collector.svg"
+                                            <img src="/mi_website_ext/static/src/img/Collector.svg"
                                         alt="Grupo" />
-                                    <img src="/mi_website_ext/static/src/img/Informative.svg"
+                                            <img src="/mi_website_ext/static/src/img/Informative.svg"
                                         alt="Grupo" />
-                                    <img src="/mi_website_ext/static/src/img/Firstplace2.svg"
-                                        alt="Grupo" />
-                                </div>
-                                <a class="badge_editor">Ver mis logros</a>
+                                        </div>
+                                        <a class="badge_editor">Ver mis logros</a>
+                                    </div>
+                                    -->
+                                        <div class="btn-section">
+                                            <a class="btn-time" href="https://odoo.calengs.com/odoo/my-time-off">Maneja tu tiempo</a>
+                                        </div>
+                                        <!-- <div class="btn-section">
+                                <a class="btn-soli" href="http://44.220.161.53:8069/odoo/time-off">Solicitar carta</a>
                             </div>
-
-                            <div class="btn-section">
-                                <button class="btn-time">Maneja tu tiempo</button>
-                            </div>
-                        </div>
-
-                        <!-- Cards -->
-                        <div class="cards-section">
-                            <div class="card">
-                                <h4>Días para vacaciones</h4>
-                                <div class="card-content">
-                                    <p class="vacation_text">264</p>
-                                    <img t-att-src="'/mi_website_ext/static/src/img/sun.png'"
+                            -->
+                                    </div>
+                                    <!-- Cards -->
+                                    <div class="cards-section">
+                                        <div class="card">
+                                            <h4>Días para vacaciones</h4>
+                                            <div class="card-content">
+                                                <p class="vacation_text">
+                                                    <t t-esc="user.x_days_until_vacation_display" />
+                                                </p>
+                                                <t t-if="user.company_id.id == 1">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/vacation.svg'"
                                         alt="Sol" />
-                                </div>
-                            </div>
-                            <div class="card">
-                                <h4>Permiso disponible</h4>
-                                <div class="card-content">
-                                    <p class="permiso_text">6H</p>
-                                    <img t-att-src="'/mi_website_ext/static/src/img/sun.png'"
+                                                </t>
+                                                <t t-elif="user.company_id.id == 2">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/vacation2.svg'"
                                         alt="Sol" />
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Anuncios -->
-                        <div class="announcements-section">
-                            <h3>Anuncios <img src="/mi_website_ext/static/src/img/Announce.svg"
+                                                </t>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <h4>Horas de permiso disponible</h4>
+                                            <div class="card-content2">
+                                                <p class="permiso_text">
+                                                    <t t-esc="user.x_available_remunerated_permission_hours" />
+                                                </p>
+                                                <t t-if="user.company_id.id == 1">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/Hours.svg'"
+                                        alt="Sol" />
+                                                </t>
+                                                <t t-elif="user.company_id.id == 2">
+                                                    <img t-att-src="'/mi_website_ext/static/src/img/Hours2.svg'"
+                                        alt="Sol" />
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Anuncios -->
+                                    <div class="announcements-section" id="portal_sidebar_announcements">
+                                        <h3>Anuncios
+                                            <img src="/mi_website_ext/static/src/img/alert.svg"
                                     alt="Grupo" />
-                            </h3>
-                            <div class="announcements-panel">
-                                <div class="announcement-item">
-                                    <input type="checkbox" class="announcement-checkbox" />
-                                    <a href="/announce">Feriados de Abril</a>
-                                    <i class="fa fa-info-circle announcement-icon"
-                                        aria-hidden="true"></i>
-                                </div>
-                                <div class="announcement-item">
-                                    <input type="checkbox" class="announcement-checkbox" />
-                                    <a href="/announce">Ordenen los cubiculos</a>
-                                    <i class="fa fa-info-circle announcement-icon"
-                                        aria-hidden="true"></i>
-                                </div>
-                                <div class="announcement-item">
-                                    <input type="checkbox" class="announcement-checkbox" />
-                                    <a href="/announce">Mensaje que se debe leer</a>
-                                    <i class="fa fa-info-circle announcement-icon"
-                                        aria-hidden="true"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Calendario -->
-                        <div class="calendar-section">
-                            <h3>Tus próximas actividades <img
+                                        </h3>
+                                        <div class="announcements-panel">
+                                            <t t-set="recent_announcements" t-value="request.env['website.publication'].sudo().search([
+        ('publication_type', '=', 'announce'),
+        ('is_published', '=', True),
+    ], limit=5, order='publish_date desc')"/>
+                                            <t t-set="read_logs" t-value="request.env['publication.view.log'].sudo().search([
+            ('user_id', '=', request.env.user.id),
+            ('res_model', '=', 'website.publication'),
+            ('res_id', 'in', recent_announcements.ids)
+        ])"/>
+                                            <t t-set="read_announcement_ids" t-value="read_logs.mapped('res_id')"/>
+                                            <t t-if="recent_announcements">
+                                                <t t-foreach="recent_announcements" t-as="announcement">
+                                                    <div class="announcement-item">
+                                                        <span class="read-check-placeholder me-2">
+                                                            <i class="fa fa-check text-success" t-if="announcement.id in read_announcement_ids"/>
+                                                        </span>
+                                                        <a t-att-href="announcement.website_url or '#'"
+                                            class="js_read_tracker"
+                       t-att-class="'is-read' if announcement.id in read_announcement_ids else ''"
+                       t-att-data-res-model="'website.publication'"
+                       t-att-data-res-id="announcement.id">
+                                                            <t t-esc="announcement.name"/>
+                                                        </a>
+                                                        <i class="fa fa-info-circle announcement-icon" aria-hidden="true"></i>
+                                                    </div>
+                                                </t>
+                                            </t>
+                                            <t t-else="">
+                                                <p class="no_announce">No hay anuncios recientes.</p>
+                                            </t>
+                                        </div>
+                                    </div>
+                                    <!-- Calendario -->
+                                    <!--<div class="calendar-section">
+                            <h3>Tus próximas actividades
+                                <img
                                     src="/mi_website_ext/static/src/img/Announce.svg"
                                     alt="Grupo" />
                             </h3>
-                            <div class="calendar-placeholder">
-                                <p>[Calendario aquí]</p>
+                             <div id="sidebar_calendar_container"></div>
+                        </div>-->
+                                    <!-- Redes Sociales -->
+                                    <div class="social-section">
+                                        <h4>Sigue nuestras redes</h4>
+                                        <div class="social-buttons">
+                                            <t t-if="request.env.user.company_id.id == 1">
+                                                <a href="https://pa.linkedin.com/company/calengssa" target="_blank">
+                                                    <i class="fa fa-linkedin linkedin" />
+                                                </a>
+                                            </t>
+                                            <t t-else="">
+                                                <a href="https://www.linkedin.com/company/cal-technology-solutions?trk=similar-pages" target="_blank">
+                                                    <i class="fa fa-linkedin linkedin" />
+                                                </a>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </aside>
                             </div>
                         </div>
-
-                        <!-- Redes Sociales -->
-                        <div class="social-section">
-                            <h4>Sigue nuestras redes</h4>
-                            <div class="social-buttons">
-                                <button>
-                                    <i class="fa fa-linkedin linkedin" />
-                                </button>
-                                <button>
-                                    <i class="fa fa-facebook facebook" />
-                                </button>
-                                <button>
-                                    <i class="fa fa-instagram instagram instagram" />
-                                </button>
-                            </div>
-                        </div>
-                    </aside>
+                    </div>
                 </div>
             </t>
         </xpath>
