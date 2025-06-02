@@ -158,7 +158,7 @@ class MailController(http.Controller):
 
         if cids:
             url_params['cids'] = ','.join([str(cid) for cid in cids])
-        url = '/web?#%s' % url_encode(url_params)
+        url = '/web?#%s' % url_encode(url_params, sort=True)
         return request.redirect(url)
 
     @http.route('/mail/view', type='http', auth='public')
