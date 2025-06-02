@@ -296,7 +296,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
         )
 
 
-@tagged('-at_install', 'post_install', 'multi_company')
+@tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
 
     @classmethod
@@ -408,7 +408,7 @@ class TestMultiCompanyRedirect(TestMailCommon, HttpCase):
                     self.assertNotIn('cids', decoded_fragment)
 
 
-@tagged("-at_install", "post_install", "multi_company")
+@tagged("-at_install", "post_install", "multi_company", "mail_controller")
 class TestMultiCompanyThreadData(TestMailCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
