@@ -60,6 +60,10 @@ class TestProductAttributeValue(HttpCase, SaleCommon):
         if self.env['ir.module.module']._get('sale_management').state != 'installed':
             self.skipTest("Sale App is not installed, Sale menu is not accessible.")
 
+        # Make sure variants are enabled (needed for menu access)
+        group_variant = self.env.ref('product.group_product_variant')
+        self.group_user.implied_ids = [Command.link(group_variant.id)]
+
         self.product_template.attribute_line_ids.update({'value_ids': [Command.set([self.a1.id])]})
         self.assertEqual(
             self.order_line.product_no_variant_attribute_value_ids.product_attribute_value_id,
