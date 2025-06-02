@@ -306,7 +306,7 @@ class TestMultiCompanySetup(TestMailMCCommon):
         )
 
 
-@tagged('-at_install', 'post_install', 'multi_company')
+@tagged('-at_install', 'post_install', 'multi_company', 'mail_controller')
 class TestMultiCompanyRedirect(MailCommon, HttpCase):
 
     def test_redirect_to_records(self):
@@ -413,8 +413,9 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                     self.assertNotIn('cids', decoded_fragment)
 
 
-@tagged("-at_install", "post_install", "multi_company")
+@tagged("-at_install", "post_install", "multi_company", "mail_controller")
 class TestMultiCompanyThreadData(MailCommon, HttpCase):
+
     def test_mail_thread_data_follower(self):
         partner_portal = self.env["res.partner"].create(
             {"company_id": self.company_3.id, "name": "portal partner"}
