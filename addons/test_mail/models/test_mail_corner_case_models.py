@@ -247,6 +247,18 @@ class MailTestMultiCompanyWithActivity(models.Model):
     company_id = fields.Many2one("res.company")
 
 
+class MailTestMultiCompanyWithActivityRead(models.Model):
+    """ This model can be used in multi company tests with activity
+    and supporting posting even if the user has no write access. """
+    _name = "mail.test.multi.company.with.activity.read"
+    _description = "Test Multi Company Mail With Activity"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _mail_post_access = 'read'
+
+    name = fields.Char()
+    company_id = fields.Many2one("res.company")
+
+
 class MailTestNothread(models.Model):
     """ Models not inheriting from mail.thread but using some cross models
     capabilities of mail. """

@@ -289,6 +289,15 @@ patch(Chatter.prototype, {
         return _t("Unfollow");
     },
 
+    get isChatterMessagingDisabled() {
+        const thread = this.state.thread;
+        return (
+            !thread.hasWriteAccess &&
+            !(thread.hasReadAccess && thread.canPostOnReadonly) &&
+            this.props.threadId
+        );
+    },
+
     changeThread(threadModel, threadId) {
         super.changeThread(...arguments);
         this.attachmentUploader.thread = this.state.thread;

@@ -21,7 +21,7 @@ import { mail_data } from "@mail/../tests/mock_server/mail_mock_server";
 describe.current.tags("desktop");
 defineTestMailModels();
 
-test("Send message button activation (access rights dependent)", async () => {
+test("Messaging buttons activation (access rights dependent)", async () => {
     const pyEnv = await startServer();
     registerArchs({
         "mail.test.multi.company,false,form": `
@@ -34,11 +34,27 @@ test("Send message button activation (access rights dependent)", async () => {
         `,
         "mail.test.multi.company.read,false,form": `
             <form string="Simple">
-                    <sheet>
-                        <field name="name"/>
-                    </sheet>
-                    <chatter/>
-                </form>
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>
+        `,
+        "mail.test.multi.company.with.activity,false,form": `
+            <form string="Simple">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>
+        `,
+        "mail.test.multi.company.with.activity.read,false,form": `
+            <form string="Simple">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <chatter/>
+            </form>
         `,
     });
     let userAccess = {};
@@ -54,11 +70,8 @@ test("Send message button activation (access rights dependent)", async () => {
         },
     });
     await start();
-    const simpleId = pyEnv["mail.test.multi.company"].create({ name: "Test MC Simple" });
-    const simpleMcId = pyEnv["mail.test.multi.company.read"].create({
-        name: "Test MC Readonly",
-    });
-    async function assertSendButton(
+    async function assertChatterButton(
+        textArr,
         enabled,
         msg,
         model = null,
@@ -71,47 +84,51 @@ test("Send message button activation (access rights dependent)", async () => {
         if (resId) {
             await waitStoreFetch("mail.thread");
         }
-        if (enabled) {
-            await contains(".o-mail-Chatter-topbar button:enabled", { text: "Send message" });
-        } else {
-            await contains(".o-mail-Chatter-topbar button:disabled", { text: "Send message" });
+        for (const text of textArr) {
+            if (enabled) {
+                await contains(`.o-mail-Chatter-topbar button:enabled:text(${text})`);
+            } else {
+                await contains(`.o-mail-Chatter-topbar button:disabled:text(${text})`);
+            }
         }
     }
-    await assertSendButton(
-        true,
-        "Record, all rights",
-        "mail.test.multi.company",
-        simpleId,
-        true,
-        true
-    );
-    await assertSendButton(
-        true,
-        "Record, all rights",
-        "mail.test.multi.company.read",
-        simpleId,
-        true,
-        true
-    );
-    await assertSendButton(
-        false,
-        "Record, no write access",
-        "mail.test.multi.company",
-        simpleId,
-        true
-    );
-    await assertSendButton(
-        true,
-        "Record, read access but model accept post with read only access",
-        "mail.test.multi.company.read",
-        simpleMcId,
-        true
-    );
-    await assertSendButton(false, "Record, no rights", "mail.test.multi.company", simpleId);
-    await assertSendButton(false, "Record, no rights", "mail.test.multi.company.read", simpleMcId);
-    // Note that rights have no impact on send button for draft record (chatter.isTemporary=true)
-    await assertSendButton(true, "Draft record", "mail.test.multi.company");
-    await assertSendButton(true, "Draft record", "mail.test.multi.company.read");
+
+    const models = [
+        ["mail.test.multi.company", "mail.test.multi.company.read", ["Send message", "Log note"]],
+        [
+            "mail.test.multi.company.with.activity",
+            "mail.test.multi.company.with.activity.read",
+            ["Activity"],
+        ],
+    ];
+    for (const [modelSimple, modelReadonly, textsToFind] of models) {
+        const simpleId = pyEnv[modelSimple].create({
+            name: "Test MC Simple",
+        });
+        const simpleMcId = pyEnv[modelReadonly].create({
+            name: "Test MC Readonly",
+        });
+        const params = [
+            [true, "Record, all rights", modelSimple, simpleId, true, true],
+            [true, "Record, all rights", modelReadonly, simpleId, true, true],
+            [false, "Record, no write access", modelSimple, simpleId, true],
+            [
+                true,
+                "Record, read access but model accept post with read only access",
+                modelReadonly,
+                simpleMcId,
+                true,
+            ],
+            [false, "Record, no rights", modelSimple, simpleId],
+            [false, "Record, no rights", modelReadonly, simpleMcId],
+            // Note that rights have no impact on send button for draft record (chatter.isTemporary=true)
+            [true, "Draft record", modelSimple],
+            [true, "Draft record", modelReadonly],
+        ];
+        for (const [enabled, description, model, resId, read = false, write = false] of params) {
+            await assertChatterButton(textsToFind, enabled, description, model, resId, read, write);
+        }
+    }
 });
 
 test("basic chatter rendering with a model without activities", async () => {
