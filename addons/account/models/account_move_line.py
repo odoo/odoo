@@ -1272,6 +1272,8 @@ class AccountMoveLine(models.Model):
         return True
 
     def _check_reconciliation(self):
+        if self.env.su:
+            return
         for line in self:
             if line.matched_debit_ids or line.matched_credit_ids:
                 raise UserError(_("You cannot do this modification on a reconciled journal entry. "

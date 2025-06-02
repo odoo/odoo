@@ -790,8 +790,6 @@ class ResPartner(models.Model):
         res = super().write(vals)
         moves_sudo = self.sudo().env['account.move'].search([('partner_id', 'in', self.ids)])
         if moves_sudo and 'parent_id' in vals:
-            if not self.env.user.has_group('account.group_account_user'):
-                raise UserError(_("You do not have permission to mark this partner as the main commercial partner."))
             parent_vat = self.env['res.partner'].browse(vals['parent_id']).vat
             if vals['parent_id'] and {parent_vat} != set(self.mapped('vat')):
                 raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))

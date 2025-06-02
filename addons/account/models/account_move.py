@@ -2384,7 +2384,7 @@ class AccountMove(models.Model):
                 tax=False,
                 hard=True,
             )
-            if violated_lock_dates:
+            if not self.env.su and violated_lock_dates:
                 message = _("You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s.",
                             lock_date_info=self.env['res.company']._format_lock_dates(violated_lock_dates))
                 raise UserError(message)
