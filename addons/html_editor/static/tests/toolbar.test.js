@@ -1209,6 +1209,27 @@ describe("toolbar open and close on user interaction", () => {
             await advanceTime(500);
             expect(".o-we-toolbar").toHaveCount(1);
         });
+
+        test("toolbar should not move on click toolbar button", async () => {
+            const { el } = await setupEditor(
+                `<p style="padding-top: 100px">aaaaaaaaaaaaa [test] bbbbbbbbbbbbb</p>`
+            );
+            await animationFrame();
+            expect(".o-we-toolbar").toHaveCount(1);
+
+            const overlay = queryOne(".o-we-toolbar").parentElement;
+            const position = {
+                top: overlay.style.top,
+                left: overlay.style.left,
+            };
+
+            await contains(".o-we-toolbar button[name='bold']").click();
+            expect(getContent(el)).toBe(
+                `<p style="padding-top: 100px">aaaaaaaaaaaaa <strong>[test]</strong> bbbbbbbbbbbbb</p>`
+            );
+            expect({ top: overlay.style.top, left: overlay.style.left }).toEqual(position);
+            expect(overlay.style.visibility).toBe("visible");
+        });
     });
 
     describe("keyboard", () => {
