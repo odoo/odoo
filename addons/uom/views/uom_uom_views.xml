@@ -5,6 +5,7 @@
         <field name="model">uom.uom</field>
         <field name="arch" type="xml">
             <list string="Units &amp; Packagings">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="relative_factor" invisible="relative_factor == 1 and not relative_uom_id" digits="[12, 3]"/>
                 <field name="relative_uom_id"/>
