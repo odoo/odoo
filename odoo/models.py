@@ -6595,6 +6595,8 @@ class BaseModel(metaclass=MetaModel):
                         # so that negations are applied on the result of 'any' instead
                         # of on the mapped value
                         key, comparator, value = fname, 'any', [(rest, comparator, value)]
+                    if field.type == 'properties':
+                        key = fname
                 else:
                     field = self._fields[key]
                     if key == 'id':
@@ -6666,6 +6668,9 @@ class BaseModel(metaclass=MetaModel):
                             data = data and data.ids or [False]
                     elif field.type in ('date', 'datetime'):
                         data = [Datetime.to_datetime(d) for d in data]
+
+                    if field and field.type == 'properties':
+                        data = data and [v for k, v in data[0].items() if k == rest]
 
                     if comparator == '=':
                         ok = value in data
