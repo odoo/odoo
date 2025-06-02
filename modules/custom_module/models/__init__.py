@@ -12,3 +12,4 @@ from . import hr_employee_inherit
 from . import pos_config_inherit
 from . import pos_session_inherit
 from . import res_config_settings
+from . import pos_order_line_inherit

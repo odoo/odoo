@@ -7,6 +7,8 @@ _logger = logging.getLogger(__name__)
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
+    menupro_id = fields.Char(string='Menu Pro ID')
+
 
     line_status = fields.Selection(
         selection=[

@@ -4,6 +4,7 @@ import logging
 import json
 from datetime import datetime
 
+
 _logger = logging.getLogger(__name__)
 
 
@@ -18,7 +19,6 @@ class PosOrder(models.Model):
     @api.model
     def sync_from_ui(self, orders):
         result = super().sync_from_ui(orders)
-
         created_orders = result.get('pos.order', {})
         for order in created_orders:
             self._sync_to_menupro(order)
