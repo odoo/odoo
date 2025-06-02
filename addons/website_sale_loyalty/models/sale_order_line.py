@@ -17,6 +17,10 @@ class SaleOrderLine(models.Model):
         # Hide discount lines from website_order_line, see `order._compute_website_order_line`
         return self.reward_id.reward_type != 'discount' and super()._show_in_cart()
 
+    def _is_reorder_allowed(self):
+        # Hide all types of rewards from reorder
+        return not self.reward_id and super()._is_reorder_allowed()
+
     def unlink(self):
         if self.env.context.get('website_sale_loyalty_delete', False):
             disabled_rewards_per_order = defaultdict(lambda: self.env['loyalty.reward'])
