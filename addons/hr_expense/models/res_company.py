@@ -23,5 +23,5 @@ class ResCompany(models.Model):
         "account.payment.method.line",
         string="Payment methods available for expenses paid by company",
         check_company=True,
-        domain="[('payment_type', '=', 'outbound'), ('journal_id', '!=', False)]",
+        domain="[('payment_type', '=', 'outbound'), ('journal_id', '!=', False), ('journal_id.active', '=', True)]",
     )

@@ -30,7 +30,8 @@ patch(MockServer.prototype, {
                     newValue,
                     fname,
                     trackedFieldNamesToField[fname],
-                    model
+                    model,
+                    record
                 );
                 if (tracking) {
                     trackingValueIds.push(tracking);

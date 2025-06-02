@@ -3220,7 +3220,8 @@ class AccountMove(models.Model):
                         success = decoder(invoice, file_data, new)
 
                         if success or file_data['attachment'].mimetype in ALLOWED_MIMETYPES:
-                            invoice._link_bill_origin_to_purchase_orders(timeout=4)
+                            if not extend_with_existing_lines:
+                                invoice._link_bill_origin_to_purchase_orders(timeout=4)
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)

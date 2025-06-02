@@ -43,7 +43,8 @@ patch(MockServer.prototype, {
         newValue,
         fieldName,
         field,
-        modelName
+        modelName,
+        record
     ) {
         let isTracked = true;
         const irField = this.models["ir.model.fields"].records.find(
@@ -71,10 +72,17 @@ patch(MockServer.prototype, {
                 values["old_value_integer"] = initialValue ? 1 : 0;
                 values["new_value_integer"] = newValue ? 1 : 0;
                 break;
-            case "monetary":
+            case "monetary": {
                 values[`old_value_float`] = initialValue;
                 values[`new_value_float`] = newValue;
+                let currencyField = field.currency_field;
+                // see get_currency_field in python fields
+                if (!currencyField && "currency_id" in record) {
+                    currencyField = "currency_id";
+                }
+                values[`currency_id`] = record[currencyField];
                 break;
+            }
             case "selection":
                 values["old_value_char"] = initialValue;
                 values["new_value_char"] = newValue;
@@ -113,9 +121,13 @@ patch(MockServer.prototype, {
                 fieldName: irField.name,
                 fieldType: irField.ttype,
                 newValue: {
+                    currencyId: tracking.currency_id,
+                    floatPrecision: this.models[irField.model].fields[irField.name].digits,
                     value: this._mockMailTrackingValue_FormatDisplayValue(tracking, "new"),
                 },
                 oldValue: {
+                    currencyId: tracking.currency_id,
+                    floatPrecision: this.models[irField.model].fields[irField.name].digits,
                     value: this._mockMailTrackingValue_FormatDisplayValue(tracking, "old"),
                 },
             };
