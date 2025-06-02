@@ -27,3 +27,10 @@ class TestFrontend(TestFrontendCommon):
         })
 
         self.start_pos_tour('test_devices_synchronization')
+
+    def test_synchronisation_of_orders(self):
+        """ Test order synchronization with order data using the notify_synchronisation method.
+            First, an ongoing order is created on the server, and verify its presence in the POS UI.
+            Then, the order is paid from the server, and confirm if the order state is updated correctly.
+        """
+        self.start_pos_tour("OrderSynchronisationTour")

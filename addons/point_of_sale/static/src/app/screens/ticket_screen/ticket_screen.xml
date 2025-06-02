@@ -39,7 +39,7 @@
                                     <t t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                         <tr class="order-row" t-attf-class="{{ isHighlighted(order) ? 'highlight active': '' }}"
                                             t-att-orderUuid="order.uuid"
-                                            t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                            t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() => order.finalized ? ()=>{} : this._setOrder(order)" >
                                             <td>
                                                 <div class="fs-6 fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
                                                 <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
@@ -93,7 +93,7 @@
                             </table>
                             <t t-if="ui.isSmall" t-foreach="_filteredOrderList" t-as="order" t-key="order.uuid">
                                 <div class="mobileOrderList order-row d-flex flex-row ps-1" t-attf-class="{{ isHighlighted(order) ? 'highlight': '' }}"
-                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.uiState.locked ? ()=>{} : this._setOrder(order)" >
+                                    t-on-click="() => this.onClickOrder(order)" t-on-dblclick="() =>  order.finalized ? ()=>{} : this._setOrder(order)" >
                                     <div class="p-2">
                                             <div class="fw-bolder"><t t-esc="this.pos.getDate(order.date_order)"></t></div>
                                             <div class="small text-muted"><t t-esc="this.pos.getTime(order.date_order)"></t></div>
