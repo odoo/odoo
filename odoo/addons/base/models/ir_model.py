@@ -15,7 +15,7 @@ from psycopg2.extras import Json
 from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
+from odoo.tools import frozendict, reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
 from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 from odoo.tools.translate import _, LazyTranslate
 
@@ -1311,7 +1311,6 @@ class IrModelFields(models.Model):
         return name.startswith('x_')
 
     @api.model
-    @tools.ormcache_context('model_name', keys=('lang',))
     def get_field_string(self, model_name):
         """ Return the translation of fields strings in the context's language.
         Note that the result contains the available translations only.
@@ -1319,11 +1318,12 @@ class IrModelFields(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' strings as a dictionary `{field_name: field_string}`
         """
-        fields = self.sudo().search([('model', '=', model_name)])
-        return {field.name: field.field_description for field in fields}
+        return {
+            field_name: values['field_description']
+            for field_name, values in self._get_fields_cached(model_name).items()
+        }
 
     @api.model
-    @tools.ormcache_context('model_name', keys=('lang',))
     def get_field_help(self, model_name):
         """ Return the translation of fields help in the context's language.
         Note that the result contains the available translations only.
@@ -1331,11 +1331,12 @@ class IrModelFields(models.Model):
         :param model_name: the name of a model
         :return: the model's fields' help as a dictionary `{field_name: field_help}`
         """
-        fields = self.sudo().search([('model', '=', model_name)])
-        return {field.name: field.help for field in fields}
+        return {
+            field_name: values['help']
+            for field_name, values in self._get_fields_cached(model_name).items()
+        }
 
     @api.model
-    @tools.ormcache_context('model_name', 'field_name', keys=('lang',))
     def get_field_selection(self, model_name, field_name):
         """ Return the translation of a field's selection in the context's language.
         Note that the result contains the available translations only.
@@ -1344,8 +1345,31 @@ class IrModelFields(models.Model):
         :param field_name: the name of the field
         :return: the fields' selection as a list
         """
-        field = self._get(model_name, field_name)
-        return [(sel.value, sel.name) for sel in field.selection_ids]
+        return self._get_fields_cached(model_name).get(field_name, {}).get('selection', [])
+
+    @api.model
+    @tools.ormcache_context('model_name', keys=('lang',))
+    def _get_fields_cached(self, model_name):
+        """ Return the translated information of all model field's in the context's language.
+        Note that the result contains the available translations only.
+
+        :param model_name: the name of the field's model
+        :return: {field_name: {id, help, field_description, [selection]}}
+        """
+        fields = self.sudo().browse(self._get_ids(model_name).values())
+        result = {
+            field.name: {
+                'id': field.id,
+                'help': field.help,
+                'field_description': field.field_description,
+            }
+            for field in fields
+        }
+        for field in fields.filtered(lambda field: field.ttype == 'selection'):
+            result[field.name]['selection'] = [
+                (sel.value, sel.name) for sel in field.selection_ids
+            ]
+        return frozendict(result)
 
 
 class IrModelInherit(models.Model):
