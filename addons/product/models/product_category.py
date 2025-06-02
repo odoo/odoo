@@ -14,7 +14,7 @@ class ProductCategory(models.Model):
     _rec_name = 'complete_name'
     _order = 'complete_name'
 
-    name = fields.Char('Name', index='trigram', required=True)
+    name = fields.Char('Name', index='trigram', required=True, translate=True)
     complete_name = fields.Char(
         'Complete Name', compute='_compute_complete_name', recursive=True,
         store=True)
