@@ -73,7 +73,7 @@ export class CalendarCommonRenderer extends Component {
             this.fc.api.scrollToTime(`${luxon.DateTime.local().hour - 2}:00:00`)
         );
 
-        const fullCalendarRenderDebounced = useDebounced(() => this.fc.api.render(), 100, {
+        const fullCalendarRenderDebounced = useDebounced(() => this.fc.api.updateSize(), 100, {
             immediate: true,
         });
         const fullCalendarResizeObserver = new ResizeObserver(fullCalendarRenderDebounced);
