@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { clamp } from "@web/core/utils/numbers";
+import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
 
 export const QUARTERS = {
@@ -204,7 +204,7 @@ export function toGeneratorId(unit, offset) {
 
 function getMonthPeriodOptions(referenceMoment, optionsParams) {
     const { startYear, endYear, startMonth, endMonth } = optionsParams;
-    return [...Array(endMonth - startMonth + 1).keys()]
+    return range(endMonth - startMonth + 1)
         .map((i) => {
             const monthOffset = startMonth + i;
             const date = referenceMoment.plus({
@@ -235,7 +235,7 @@ function getQuarterPeriodOptions(optionsParams) {
 
 function getYearPeriodOptions(referenceMoment, optionsParams) {
     const { startYear, endYear } = optionsParams;
-    return [...Array(endYear - startYear + 1).keys()]
+    return range(endYear - startYear + 1)
         .map((i) => {
             const offset = startYear + i;
             const date = referenceMoment.plus({ years: offset });

@@ -18,6 +18,7 @@ import {
 } from "../mail_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -295,11 +296,7 @@ test("More than 7 actually folded chat windows shows a 'hidden' chat bubble menu
 
 test("Can close all chat windows at once", async () => {
     const pyEnv = await startServer();
-    const channelIds = pyEnv["discuss.channel"].create(
-        Array(20)
-            .keys()
-            .map((i) => ({ name: String(i) }))
-    );
+    const channelIds = pyEnv["discuss.channel"].create(range(20).map((i) => ({ name: String(i) })));
     setupChatHub({ folded: channelIds.reverse() });
     await start();
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached

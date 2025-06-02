@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { KeepLast } from "@web/core/utils/concurrency";
+import { range } from "@web/core/utils/numbers";
 import { DEFAULT_PALETTE } from "@html_editor/utils/color";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { Attachment, FileSelector, IMAGE_EXTENSIONS, IMAGE_MIMETYPES } from "./file_selector";
@@ -11,7 +12,7 @@ export class AutoResizeImage extends Attachment {
     static template = "html_editor.AutoResizeImage";
     setup() {
         super.setup();
-
+        this.range = range;
         this.image = useRef("auto-resize-image");
         this.container = useRef("auto-resize-image-container");
 

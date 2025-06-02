@@ -1,5 +1,6 @@
 import { Component, onWillStart, useState, onWillDestroy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { range } from "@web/core/utils/numbers";
 
 export class KioskPinCode extends Component {
     static template = "hr_attendance.KioskPinConfirm";
@@ -23,14 +24,8 @@ export class KioskPinCode extends Component {
         this.checkedIn = this.props.employeeData.attendance_state === 'checked_in';
 
         const onKeyDown = async (ev) => {
-            const allowedKeys = [...Array(10).keys()].reduce((acc, value) => { // { from '0': '0' ... to '9': '9' }
-                acc[value] = value;
-                return acc;
-            }, {
-                'Delete': 'C',
-                'Enter': 'OK',
-                'Backspace': null,
-            });
+            const allowedKeys = { Delete: "C", Enter: "OK", Backspace: null };
+            range(10).forEach((i) => (allowedKeys[i] = i)); // { from '0': 0 ... to '9': 9 }
             const key = ev.key;
 
             if (!Object.keys(allowedKeys).includes(key)) {

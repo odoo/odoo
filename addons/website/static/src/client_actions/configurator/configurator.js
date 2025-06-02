@@ -2,6 +2,7 @@ import { browser } from "@web/core/browser/browser";
 const sessionStorage = browser.sessionStorage;
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { delay } from "@web/core/utils/concurrency";
+import { range } from "@web/core/utils/numbers";
 import { getDataURLFromFile, redirect } from "@web/core/utils/urls";
 import weUtils from '@web_editor/js/common/utils';
 import { _t } from "@web/core/l10n/translation";
@@ -492,7 +493,7 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
     static template = "website.Configurator.ThemeSelectionScreen";
     setup() {
         super.setup();
-
+        this.range = range;
         this.uiService = useService('ui');
         this.orm = useService('orm');
         this.maxNbrDisplayExtraThemes = 100;

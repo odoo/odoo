@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { range } from "@web/core/utils/numbers";
 import { Base } from "./related_models";
 
 const { DateTime } = luxon;
@@ -93,7 +94,7 @@ export class PosPreset extends Base {
         const slots = {};
 
         // Compute slots for next 7 days
-        for (const i of [...Array(7).keys()]) {
+        for (const i of range(7)) {
             const dateNow = DateTime.now().plus({ days: i });
             const getDateTime = (hour) =>
                 DateTime.fromObject({

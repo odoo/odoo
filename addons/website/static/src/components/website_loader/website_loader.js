@@ -1,5 +1,6 @@
 import { rpc } from "@web/core/network/rpc";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { range } from "@web/core/utils/numbers";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { EventBus, Component, markup, useEffect, useState } from "@odoo/owl";
@@ -11,6 +12,7 @@ export class WebsiteLoader extends Component {
     static template = "website.website_loader";
 
     setup() {
+        this.range = range;
         this.website = useService("website");
 
         const initialState = {
