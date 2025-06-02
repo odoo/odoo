@@ -3,7 +3,7 @@
 
 from odoo import Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged, common, Form
+from odoo.tests import tagged, common, Form, HttpCase
 from odoo.tools import float_compare, float_is_zero
 
 
@@ -907,3 +907,22 @@ class TestRepair(common.TransactionCase):
         self.assertEqual(self.product_product_11.type, 'consu')
         self.assertTrue(self.product_product_11.filtered_domain(domain))
         self.assertFalse(self.product_order_repair.filtered_domain(domain))
+
+
+@tagged('post_install', '-at_install')
+class TestRepairHttp(HttpCase):
+
+    def test_repair_without_product_in_parts(self):
+        """Test that setting and unsetting a product in repair line triggers has_uncomplete_moves compute correctly."""
+        self.env['res.partner'].create({'name': 'A Partner'})
+        product = self.env['product.product'].create({'name': 'A Product', 'default_code': '1234'})
+        repair = self.env['repair.order'].create({
+            'move_ids': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1.0,
+                'repair_line_type': 'add',
+            })],
+        })
+
+        self.start_tour(f"/odoo/repairs/{repair.id}", "test_repair_without_product_in_parts", login='admin')
+        self.assertTrue(repair.has_uncomplete_moves)
