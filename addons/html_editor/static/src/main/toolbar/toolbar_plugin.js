@@ -328,9 +328,11 @@ export class ToolbarPlugin extends Plugin {
 
     updateToolbarVisibility(selectionData) {
         if (this.shouldBeVisible(selectionData)) {
-            // Open toolbar or update its position
-            const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };
-            this.overlay.open({ props });
+            // Do not reposition the toolbar if it's already open.
+            if (!this.overlay.isOpen) {
+                const props = { toolbar: this.getToolbarInfo(), class: "shadow rounded my-2" };
+                this.overlay.open({ props });
+            }
         } else if (this.overlay.isOpen && !this.shouldPreventClosing()) {
             this.closeToolbar();
         }
