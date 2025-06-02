@@ -17,12 +17,12 @@ patch(registry.category('web_tour.tours').get('configurator_translation'), {
             0,
             {
                 content: "Choose a shop page style",
-                trigger: '.theme_preview',
+                trigger: '.o_configurator_screen:contains(online catalog) .theme_preview',
                 run: 'click',
             },
             {
                 content: "Choose a product page style",
-                trigger: '.theme_preview',
+                trigger: '.o_configurator_screen:contains(product page) .theme_preview',
                 run: 'click',
             },
         );
