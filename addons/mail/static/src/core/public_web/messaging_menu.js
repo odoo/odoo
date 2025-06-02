@@ -31,14 +31,32 @@ export class MessagingMenu extends Component {
         });
         this.dropdown = useDropdownState();
         this.notificationList = useRef("notification-list");
+        this.actionService = useService("action");
 
         useExternalListener(window, "keydown", this.onKeydown, true);
     }
 
+    openFormView(thread) {
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            res_model: thread.model,
+            res_id: thread.id,
+            views: [[false, "form"]],
+        });
+        this.dropdown.close();
+        this.markAsRead(thread);
+    }
+
     onClickThread(isMarkAsRead, thread) {
         if (!isMarkAsRead) {
-            this.openDiscussion(thread);
-            return;
+            if(!["mail.box", "discuss.channel"].includes(thread.model)) {
+                this.openFormView(thread);
+                return;
+            }
+            else {
+                this.openDiscussion(thread);
+                return;
+            }
         }
         this.markAsRead(thread);
     }
