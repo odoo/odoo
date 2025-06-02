@@ -21,3 +21,7 @@ class PortalTest(http.Controller):
             "pid": kwargs.get("pid", None),
         }
         return request.render("test_mail_full.test_portal_template", values)
+
+    @http.route('/test_portal/public_type/<int:res_id>', type='http', auth='public', methods=['GET'])
+    def test_public_record_view(self, res_id):
+        return request.make_response(f'Testing public controller for {res_id}')
