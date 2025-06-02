@@ -98,3 +98,26 @@ def disable_gc():
         gc.enable()
         _logger.debug('enabled, counts %s', counts)
     return enable
+
+
+def collect_after_operation():
+    """Run a manual gc.collect after performing some operations."""
+    # manual collection
+    # if we ever get to high counts for any generations, collect them
+    g0, g1, g2 = gc.get_count()
+    if not g0:
+        return
+    t0, t1, t2 = gc.get_threshold()
+    if g0 < t0 // 2:
+        return
+    _logger.debug("collect after operation %s", (g0, g1, g2))
+    # check generations > 0 in case we collect(0) all the time and some objects
+    # moved to g1 (or further), but have little chance of being collected
+    # because we starve the automatic garbage collector
+    if g2 >= t2 // 2:
+        _logger.debug("collecting manually all objects, starving the gc?")
+        gc.collect(2)
+    elif g1 >= t1 // 2:
+        gc.collect(1)
+    else:
+        gc.collect(0)

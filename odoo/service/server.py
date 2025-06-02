@@ -754,6 +754,11 @@ class GeventServer(CommonServer):
             Derived from werzeug.serving.WSGIRequestHandler.log
             / werzeug.serving.WSGIRequestHandler.address_string
             """
+            def handle(self):
+                r = super().handle()
+                gc.collect_after_operation()
+                return r
+
             def _connection_upgrade_requested(self):
                 if self.headers.get('Connection', '').lower() == 'upgrade':
                     return True
@@ -1202,6 +1207,7 @@ class Worker(object):
                 if not self.alive:
                     break
                 self.process_work()
+                gc.collect_after_operation()
         except:
             _logger.exception("Worker %s (%s) Exception occurred, exiting...", self.__class__.__name__, self.pid)
             sys.exit(1)

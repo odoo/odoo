@@ -62,7 +62,7 @@ from odoo.fields import Command
 from odoo.modules.registry import Registry, DummyRLock
 from odoo.service import security
 from odoo.sql_db import Cursor, Savepoint
-from odoo.tools import config, float_compare, mute_logger, profiler, SQL, DotDict
+from odoo.tools import config, float_compare, gc, mute_logger, profiler, SQL, DotDict
 from odoo.tools.mail import single_email_re
 from odoo.tools.misc import find_in_path, lower_logging
 from odoo.tools.xml_utils import _validate_xml
@@ -383,6 +383,7 @@ class BaseCase(case.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.addClassCleanup(gc.collect_after_operation)
         def check_remaining_patchers():
             for patcher in _patch._active_patches:
                 _logger.warning("A patcher (targeting %s.%s) was remaining active at the end of %s, disabling it...", patcher.target, patcher.attribute, cls.__name__)
@@ -402,6 +403,7 @@ class BaseCase(case.TestCase):
             cls.addClassCleanup(patcher.stop)
 
     def setUp(self):
+        self.addCleanup(gc.collect_after_operation)
         super().setUp()
         self.http_request_key: str = ''
         self.http_request_allow_all: bool = False
