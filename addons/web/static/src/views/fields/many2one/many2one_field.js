@@ -176,6 +176,14 @@ export class Many2OneField extends Component {
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {
             context: this.context,
         });
+        // filter out *_view_ref keys from next action context
+        const refinedContext = {};
+        for (const key in action.context) {
+            if (!key.endsWith("_view_ref")) {
+                refinedContext[key] = action.context[key];
+            }
+        }
+        action.context = refinedContext;
         await this.action.doAction(action);
     }
     async openDialog(resId) {

@@ -4678,4 +4678,65 @@ QUnit.module("Fields", (hooks) => {
             '[[98,"kanban"],[false,"search"]]',
         ]);
     });
+
+    QUnit.debug("many2one field with form_view_ref context", async function (assert) {
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: true,
+                });
+                return {
+                    activeElement: document.body,
+                    activateElement() {},
+                    deactivateElement() {},
+                    bus: new owl.EventBus(),
+                    size: 0,
+                    isSmall: true,
+                };
+            },
+        });
+        serverData.views = {
+            "partner,false,form": `
+                <form>
+                    <div>View 99</div>
+                    <field name="trululu" context="{\'form_view_ref\': 100}"/>
+                </form>`,
+            "partner,false,search": `
+                <search></search>`,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            mockRPC(route, { method, args, kwargs }) {
+                if (method === "get_views") {
+                    assert.step("get_views "+kwargs.context.form_view_ref);
+                    assert.step(JSON.stringify(kwargs.views));
+                }
+                if (method === "get_formview_action") {
+                    assert.step("get_formview_action "+kwargs.context.form_view_ref);
+                    return {
+                        type: "ir.actions.act_window",
+                        res_model: "partner",
+                        view_type: "form",
+                        view_mode: "form",
+                        views: [[kwargs.context.form_view_ref || false, "form"]],
+                        target: "current",
+                        res_id: args[0],
+                        context: kwargs.context,
+                    };
+                }
+            },
+        });
+
+        await click(target, ".o_external_button");
+        assert.verifySteps([
+            'get_views undefined',
+            '[[false,"form"]]',
+            'get_formview_action 100',
+            'get_views undefined',
+            '[[100,"form"],[false,"search"]]',
+        ]);
+    });
 });
