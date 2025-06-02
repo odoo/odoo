@@ -92,6 +92,55 @@ test("should make a selection ending with italic text fully italic", async () =>
     });
 });
 
+test("should make two paragraphs (separated with whitespace) italic", async () => {
+    await testEditor({
+        contentBefore: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+        stepFunction: italic,
+        contentAfter: `
+            <p><em>[abc</em></p>
+            <p><em>def]</em></p>
+        `,
+    });
+});
+
+test("should make two paragraphs (separated with whitespace) not italic", async () => {
+    await testEditor({
+        contentBefore: `
+            <p><em>[abc</em></p>
+            <p><em>def]</em></p>
+        `,
+        stepFunction: italic,
+        contentAfter: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+    });
+});
+
+test("should make two paragraphs (separated with whitespace) italic, then not italic", async () => {
+    await testEditor({
+        contentBefore: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+        stepFunction: async (editor) => {
+            italic(editor);
+            expect(getContent(editor.editable)).toBe(`
+            <p><em>[abc</em></p>
+            <p><em>def]</em></p>
+        `);
+            italic(editor);
+        },
+        contentAfter: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+    });
+});
+
 test("should get ready to type in italic", async () => {
     await testEditor({
         contentBefore: `<p>ab[]cd</p>`,
