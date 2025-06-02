@@ -2610,7 +2610,6 @@ export class PosStore extends WithLazyGetterTrap {
 
     orderDone(order) {
         order.setScreenData({ name: "" });
-        order.uiState.locked = true;
         if (this.getOrder() === order) {
             this.searchProductWord = "";
         }
