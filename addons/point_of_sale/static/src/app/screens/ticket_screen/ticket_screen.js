@@ -182,7 +182,7 @@ export class TicketScreen extends Component {
     onClickOrder(clickedOrder) {
         this.setSelectedOrder(clickedOrder);
         this.numberBuffer.reset();
-        if ((!clickedOrder || clickedOrder.uiState.locked) && !this.getSelectedOrderlineId()) {
+        if ((!clickedOrder || clickedOrder.finalized) && !this.getSelectedOrderlineId()) {
             // Automatically select the first orderline of the selected order.
             const firstLine = this.getSelectedOrder().getOrderlines()[0];
             if (firstLine) {
@@ -217,7 +217,7 @@ export class TicketScreen extends Component {
         this.setSelectedOrder(order);
     }
     onClickOrderline(orderline) {
-        if (this.getSelectedOrder()?.uiState.locked) {
+        if (this.getSelectedOrder()?.finalized) {
             const order = this.getSelectedOrder();
             this.state.selectedOrderlineIds[order.id] = orderline.id;
             this.numberBuffer.reset();
@@ -389,7 +389,7 @@ export class TicketScreen extends Component {
     }
     get isOrderSynced() {
         return (
-            this.getSelectedOrder()?.uiState.locked &&
+            this.getSelectedOrder()?.finalized &&
             (this.getSelectedOrder().getScreenData().name === "" || this.state.filter === "SYNCED")
         );
     }
@@ -468,7 +468,7 @@ export class TicketScreen extends Component {
     }
     getStatus(order) {
         if (
-            order.uiState?.locked &&
+            order.finalized &&
             (order.getScreenData().name === "" || this.state.filter === "SYNCED")
         ) {
             return _t("Paid");

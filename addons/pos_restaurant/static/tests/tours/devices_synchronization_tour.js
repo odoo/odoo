@@ -7,6 +7,7 @@ import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_
 import * as DeviceSynchronization from "@pos_restaurant/../tests/tours/utils/devices_synchronization";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import { registry } from "@web/core/registry";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -93,5 +94,26 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             ProductScreen.clickLine("Coca-Cola", 2),
             ProductScreen.clickLine("Coca-Cola", 1),
             ProductScreen.clickLine("Water", 3),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("OrderSynchronisationTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            DeviceSynchronization.createNewOrderOnTable("4", [
+                ["Coca-Cola", 50],
+                ["Water", 30],
+            ]),
+            FloorScreen.clickTable("4"),
+            ProductScreen.orderLineHas("Coca-Cola", "50.0"),
+            DeviceSynchronization.markOrderAsPaid(),
+            ProductScreen.isShown(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.checkStatus("device_sync", "Paid"),
+            TicketScreen.selectOrder("device_sync"),
+            TicketScreen.confirmRefund(),
         ].flat(),
 });
