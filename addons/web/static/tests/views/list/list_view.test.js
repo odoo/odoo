@@ -10239,6 +10239,26 @@ test(`editable grouped list with handle widget`, async () => {
     });
 });
 
+test(`editable grouped list with handle widget (group by date)`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list editable="top" default_order="int_field">
+                <field name="int_field" widget="handle"/>
+                <field name="amount" widget="float" digits="[5,0]"/>
+            </list>
+        `,
+        groupBy: ["date"],
+    });
+    expect(`.o_group_header`).toHaveCount(2);
+    await contains(`.o_group_header:first`).click();
+    await contains(`.o_group_header:last`).click();
+    expect(`.o_group_header:first`).toHaveText("January 2017 (1)\n 1,200");
+    expect(`.o_group_header:last`).toHaveText("None (3)\n 800");
+    expect(`.o_field_handle:first span`).not.toBeEnabled();
+});
+
 test(`editable target, handle widget locks and unlocks on sort`, async () => {
     // resequence makes sense on a sequence field, not on arbitrary fields
     Foo._records[0].int_field = 0;
