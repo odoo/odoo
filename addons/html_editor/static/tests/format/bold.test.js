@@ -225,6 +225,55 @@ test("should make a few characters bold inside table (bold)", async () => {
     });
 });
 
+test("should make two paragraphs (separated with whitespace) bold", async () => {
+    await testEditor({
+        contentBefore: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+        stepFunction: bold,
+        contentAfter: `
+            <p><strong>[abc</strong></p>
+            <p><strong>def]</strong></p>
+        `,
+    });
+});
+
+test("should make two paragraphs (separated with whitespace) not bold", async () => {
+    await testEditor({
+        contentBefore: `
+            <p><strong>[abc</strong></p>
+            <p><strong>def]</strong></p>
+        `,
+        stepFunction: bold,
+        contentAfter: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+    });
+});
+
+test("should make two paragraphs (separated with whitespace) bold, then not bold", async () => {
+    await testEditor({
+        contentBefore: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+        stepFunction: async (editor) => {
+            bold(editor);
+            expect(getContent(editor.editable)).toBe(`
+            <p><strong>[abc</strong></p>
+            <p><strong>def]</strong></p>
+        `);
+            bold(editor);
+        },
+        contentAfter: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+    });
+});
+
 test("should insert a span zws when toggling a formatting command twice", () =>
     testEditor({
         contentBefore: `<p>[]<br></p>`,

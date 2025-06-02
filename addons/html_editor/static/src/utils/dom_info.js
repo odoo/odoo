@@ -15,7 +15,7 @@ export function isEmpty(el) {
 }
 
 export function isEmptyTextNode(node) {
-    return node.nodeType === Node.TEXT_NODE && node.nodeValue.length === 0;
+    return node.nodeType === Node.TEXT_NODE && node.textContent.trim().length === 0;
 }
 
 /**

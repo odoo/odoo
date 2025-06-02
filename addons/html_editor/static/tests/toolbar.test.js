@@ -229,6 +229,18 @@ test("toolbar format buttons should react to format change", async () => {
     expect(".btn[name='bold']").toHaveClass("active");
 });
 
+test("toolbar format buttons should react to format change across blocks (with whitespace)", async () => {
+    await setupEditor(`
+        <p>[abc</p>
+        <p>def]</p>
+        `);
+    await waitFor(".o-we-toolbar");
+    expect(".btn[name='bold']").not.toHaveClass("active");
+    await contains(".btn[name='bold']").click();
+    await animationFrame();
+    expect(".btn[name='bold']").toHaveClass("active");
+});
+
 test("toolbar disable link button when selection cross blocks", async () => {
     await setupEditor("<div>[<div>a<p>b</p></div>]</div>");
     await waitFor(".o-we-toolbar");
