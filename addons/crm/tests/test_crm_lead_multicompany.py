@@ -302,6 +302,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         self.assertEqual(crm_lead_form.company_id, self.company_2, 'Crm: company comes from partner')
 
     def test_gateway_incompatible_company_error_on_incoming_email(self):
+        self.env['ir.config_parameter'].set_param('crm.lead.auto.assignment.action', 'never')
         self.assertTrue(self.sales_team_1.alias_name)
         self.assertFalse(self.sales_team_1.company_id)
         customer_company = self.env['res.partner'].create({
