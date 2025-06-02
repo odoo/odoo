@@ -14,11 +14,14 @@ export const accountTourSteps = {
     newInvoice() {
         return [
             {
-                trigger: "button.o_list_button_add",
+                trigger: ".o_control_panel_breadcrumbs:has(span:contains('Invoices')) button.o_list_button_add",
                 content: _t("Now, we'll create your first invoice"),
                 run: "click",
             },
         ];
+    },
+    endSteps() {
+        return [];
     },
 }
 
@@ -29,7 +32,7 @@ registry.category("web_tour.tours").add('account_tour', {
     ...accountTourSteps.onboarding(),
     ...accountTourSteps.newInvoice(),
     {
-        trigger: "div[name=partner_id] .o_input_dropdown",
+        trigger: ".o_form_view_container:has(span:contains('Draft Invoice')) div[name=partner_id] .o_input_dropdown",
         content: markup(_t("Write a customer name to <b>create one</b> or <b>see suggestions</b>.")),
         tooltipPosition: "right",
         run: "click",
@@ -52,12 +55,12 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: "div[name=invoice_line_ids] .o_field_x2many_list_row_add a",
+        trigger: ".o_form_view_container:has(span:contains('Draft Invoice')) div[name=invoice_line_ids] .o_field_x2many_list_row_add a",
         content: _t("Add a line to your invoice"),
         run: "click",
     },
     {
-        trigger: "div[name=invoice_line_ids] div[name=product_id]",
+        trigger: ".o_form_view_container:has(span:contains('Draft Invoice')) div[name=invoice_line_ids] div[name=product_id]",
         content: _t("Fill in the details of the product or see the suggestion."),
         tooltipPosition: "bottom",
         run: "click",
@@ -74,13 +77,13 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: "div[name=invoice_line_ids] div[name=product_id] button[id=labelVisibilityButtonId]",
+        trigger: ".o_form_view_container:has(span:contains('Draft Invoice')) div[name=invoice_line_ids] div[name=product_id] button[id=labelVisibilityButtonId]",
         content: _t("Click here to add a description to your product."),
         tooltipPosition: "bottom",
         run: "click",
     },
     {
-        trigger: "div[name=invoice_line_ids] div[name=product_id] textarea",
+        trigger: ".o_form_view_container:has(span:contains('Draft Invoice')) div[name=invoice_line_ids] div[name=product_id] textarea",
         content: _t("Add a description to your item."),
         tooltipPosition: "bottom",
         run: "edit A very useful description.",
@@ -97,7 +100,7 @@ registry.category("web_tour.tours").add('account_tour', {
         },
     },
     {
-        trigger: "div[name=invoice_line_ids] td[name=price_unit]",
+        trigger: ".o_form_view_container:has(span:contains('Draft Invoice')) div[name=invoice_line_ids] td[name=price_unit]",
         content: _t("Verify the price and update if necessary."),
         tooltipPosition: "bottom",
         run: "click",
@@ -110,23 +113,20 @@ registry.category("web_tour.tours").add('account_tour', {
     },
     ...stepUtils.saveForm(),
     {
-        trigger: "button[name=action_post]",
+        trigger: ".o_form_view_container:has(span:contains('Draft Invoice')) button[name=action_post]",
         content: _t("Once your invoice is ready, confirm it."),
         run: "click",
     },
     {
-        trigger: "button[name=action_invoice_sent]:contains(send)",
+        trigger: "body:has(.o_form_sheet:has(span:contains('Customer Invoice'))) button[name=action_invoice_sent]:contains(send)",
         content: _t("Send the invoice to the customer and check what he'll receive."),
         tooltipPosition: "bottom",
         run: "click",
     },
     {
-        trigger: ".o_field_widget[name=mail_partner_ids] input",
-        content: _t("Send the invoice to the customer and check what he'll receive."),
-        tooltipPosition: "bottom",
-        run: "edit Test Customer",
-    },
-    {
+        // RecipientsInputTagsListPopover will not display if the customer already has an email address
+        // unless it's possible to have optional steps, we will only use it for tests at the moment.
+        isActive: ["auto"],
         trigger: ".o-mail-RecipientsInputTagsListPopover input",
         content: markup(_t("Write here <b>your own email address</b> to test the flow.")),
         run: "edit customer@example.com",
@@ -138,14 +138,10 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: ".modal button[name=action_send_and_print]",
+        trigger: "body:has(.o_form_sheet:has(span:contains('Customer Invoice'))) .modal button[name=action_send_and_print]",
         content: _t("Let's send the invoice."),
         tooltipPosition: "top",
         run: "click",
     },
-    {
-        trigger: "button[name=action_invoice_sent]:contains(send).btn-secondary",
-        content: _t("The invoice having been sent, the button has changed priority."),
-        run() {},
-    },
+    ...accountTourSteps.endSteps(),
 ]});
