@@ -396,6 +396,24 @@
                 resetViewArch: true,
             }"/>
     </BuilderRow>
+    <BuilderRow
+        label.translate="Background"
+        level="1"
+        action="'websiteConfig'"
+        t-if="isActiveItem('header_default_opt')
+              or isActiveItem('header_hamburger_opt')
+              or isActiveItem('header_boxed_opt')
+              or isActiveItem('header_vertical_opt')
+              or isActiveItem('header_sales_one_opt')
+              or isActiveItem('header_sales_two_opt')
+              or isActiveItem('header_sales_four_opt')
+              or isActiveItem('header_sidebar_opt')"
+        >
+        <BuilderCheckbox actionParam="{
+            views: ['!website.template_header_navlink_no_background'],
+            resetViewArch: true,
+        }"/>
+    </BuilderRow>
 </t>
 
 </templates>

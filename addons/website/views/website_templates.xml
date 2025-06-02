@@ -493,6 +493,12 @@
     </t>
 </template>
 
+<template id="template_header_navlink_no_background" inherit_id="website.layout" active="False">
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="o_navlink_no_background" separator=" "/>
+    </xpath>
+</template>
+
 <template id="template_header_mobile_position_left" inherit_id="website.template_header_mobile" active="False">
     <xpath expr="//t[@t-set='_side']" position="replace">
         <t t-set="_side" t-valuef="offcanvas-start"/>
@@ -633,14 +639,14 @@
                 <ul class="o_header_hamburger_right_col navbar-nav flex-row gap-2 align-items-center ms-auto">
                     <!-- Sign In -->
                     <t t-call="portal.placeholder_user_sign_in">
-                        <t t-set="_link_class" t-valuef="o_navlink_background_hover btn text-reset"/>
+                        <t t-set="_link_class" t-valuef="o_navlink_background btn text-reset"/>
                     </t>
                     <!-- User Dropdown -->
                     <t t-call="portal.user_dropdown">
                         <t t-set="_icon" t-value="true"/>
                         <t t-set="_item_class" t-valuef="dropdown"/>
                         <t t-set="_icon_class" t-valuef="fa-stack"/>
-                        <t t-set="_link_class" t-valuef="o_navlink_background_hover btn d-flex align-items-center rounded-circle p-1 pe-2 text-reset"/>
+                        <t t-set="_link_class" t-valuef="o_navlink_background btn d-flex align-items-center rounded-circle p-1 pe-2 text-reset"/>
                         <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                     </t>
                 </ul>
@@ -1153,8 +1159,8 @@
                                 <t t-set="_icon" t-value="true"/>
                                 <t t-set="_icon_class" t-valuef="fa-stack"/>
                                 <t t-set="_item_class" t-valuef="dropdown"/>
-                                <t t-set="_link_class" t-valuef="btn d-flex align-items-center border-0 fw-bold text-reset o_navlink_background_hover"/>
-                                <t t-set="_icon_wrap_class" t-value="'position-relative me-2 p-2 rounded-circle border bg-o-color-3'"/>
+                                <t t-set="_link_class" t-valuef="btn d-flex align-items-center border-0 fw-bold text-reset o_navlink_trigger_hover"/>
+                                <t t-set="_icon_wrap_class" t-value="'position-relative me-2 p-2 rounded-circle o_navlink_background transition-base'"/>
                                 <t t-set="_dropdown_menu_class" t-valuef="dropdown-menu-end"/>
                             </t>
                         </ul>
