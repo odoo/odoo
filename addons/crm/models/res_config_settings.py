@@ -17,13 +17,11 @@ class ResConfigSettings(models.TransientModel):
     is_membership_multi = fields.Boolean(string='Multi Teams', config_parameter='sales_team.membership_multi')
     module_partnership = fields.Boolean("Membership / Partnership")
     # Lead assignment
-    crm_use_auto_assignment = fields.Boolean(
-        string='Rule-Based Assignment', config_parameter='crm.lead.auto.assignment')
     crm_auto_assignment_action = fields.Selection([
-        ('manual', 'Manually'), ('auto', 'Repeatedly')],
-        string='Auto Assignment Action', compute='_compute_crm_auto_assignment_data',
-        readonly=False, store=True,
-        help='Manual assign allow to trigger assignment from team form view using an action button. Automatic configures a cron running repeatedly assignment in all teams.')
+        ('manual', 'Manually'), ('auto', 'Repeatedly'), ('incoming_emails', 'For incoming emails'), ('never', 'Never')],
+        string='Auto Assignment Action',
+        readonly=False, store=True, config_parameter='crm.lead.auto.assignment.action', default='incoming_emails',
+        help='Manual assign allow to trigger assignment from team form view using an action button. Automatic configures a cron running repeatedly assignment in all teams. Incoming Emails assigns incoming emails to available team members, and requires no additional setup.')
     crm_auto_assignment_interval_type = fields.Selection([
         ('minutes', 'Minutes'), ('hours', 'Hours'),
         ('days', 'Days'), ('weeks', 'Weeks')],
@@ -52,17 +50,15 @@ class ResConfigSettings(models.TransientModel):
     predictive_lead_scoring_fields_str = fields.Char(string='Lead Scoring Frequency Fields in String', config_parameter='crm.pls_fields')
     predictive_lead_scoring_field_labels = fields.Char(compute='_compute_predictive_lead_scoring_field_labels')
 
-    @api.depends('crm_use_auto_assignment')
+    @api.depends('crm_auto_assignment_action')
     def _compute_crm_auto_assignment_data(self):
         assign_cron = self.sudo().env.ref('crm.ir_cron_crm_lead_assign', raise_if_not_found=False)
         for setting in self:
-            if setting.crm_use_auto_assignment and assign_cron:
-                setting.crm_auto_assignment_action = 'auto' if assign_cron.active else 'manual'
+            if setting.crm_auto_assignment_action not in ['never', 'incoming_emails'] and assign_cron:
                 setting.crm_auto_assignment_interval_type = assign_cron.interval_type or 'days'
                 setting.crm_auto_assignment_interval_number = assign_cron.interval_number or 1
                 setting.crm_auto_assignment_run_datetime = assign_cron.nextcall
             else:
-                setting.crm_auto_assignment_action = 'manual'
                 setting.crm_auto_assignment_interval_type = 'days'
                 setting.crm_auto_assignment_run_datetime = False
                 setting.crm_auto_assignment_interval_number = 1
@@ -150,7 +146,7 @@ class ResConfigSettings(models.TransientModel):
             # could be avoided when saving a res.config without modifying this specific
             # configuration
             cron_vals = {
-                'active': self.crm_use_auto_assignment and self.crm_auto_assignment_action == 'auto',
+                'active': self.crm_auto_assignment_action == 'auto',
                 'interval_type': self.crm_auto_assignment_interval_type,
                 'interval_number': self.crm_auto_assignment_interval_number,
                 # keep nextcall on cron as it is required whatever the setting

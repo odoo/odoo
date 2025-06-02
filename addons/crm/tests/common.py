@@ -634,7 +634,7 @@ class TestLeadConvertCommon(TestCrmCommon):
 
     @classmethod
     def _switch_to_auto_assign(cls):
-        cls.env['ir.config_parameter'].set_param('crm.lead.auto.assignment', True)
+        cls.env['ir.config_parameter'].set_param('crm.lead.auto.assignment.action', 'auto')
         cls.assign_cron = cls.env.ref('crm.ir_cron_crm_lead_assign')
         cls.assign_cron.update({
             'active': True,
