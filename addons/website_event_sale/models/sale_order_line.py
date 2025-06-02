@@ -18,3 +18,6 @@ class SaleOrderLine(models.Model):
     def _should_show_strikethrough_price(self):
         """ Override of `website_sale` to hide the strikethrough price for events. """
         return super()._should_show_strikethrough_price() and not self.event_id
+
+    def _is_reorder_allowed(self):
+        return not self.event_id and super()._is_reorder_allowed()
