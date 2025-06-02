@@ -402,7 +402,6 @@ export class PaymentScreen extends Component {
 
                 if (this.pos.config.iface_print_skip_screen) {
                     this.currentOrder.setScreenData({ name: "" });
-                    this.currentOrder.uiState.locked = true;
                     switchScreen = this.currentOrder.uuid === this.pos.selectedOrderUuid;
                     nextScreen = this.pos.defaultScreen;
                     if (switchScreen) {

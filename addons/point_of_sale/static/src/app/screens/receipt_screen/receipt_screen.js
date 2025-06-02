@@ -32,7 +32,6 @@ export class ReceiptScreen extends Component {
         this.doBasicPrint = useTrackedAsync(() => this.pos.printReceipt({ basic: true }));
         onMounted(() => {
             const order = this.pos.getOrder();
-            this.currentOrder.uiState.locked = true;
 
             if (!this.pos.config.module_pos_restaurant) {
                 this.pos.checkPreparationStateAndSentOrderInPreparation(order, { orderDone: true });
@@ -81,7 +80,6 @@ export class ReceiptScreen extends Component {
     }
     async orderDone() {
         this.currentOrder.uiState.screen_data.value = "";
-        this.currentOrder.uiState.locked = true;
         if (!this.pos.config.module_pos_restaurant) {
             this.pos.addNewOrder();
         }
