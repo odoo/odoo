@@ -2,6 +2,7 @@
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
 const { Component, onWillStart } = owl;
 
@@ -37,15 +38,23 @@ class InsufficientCreditDialog extends Component {
 InsufficientCreditDialog.components = { Dialog };
 InsufficientCreditDialog.template = "iap.InsufficientCreditDialog";
 
-function insufficientCreditHandler(env, error, originalError) {
+export function insufficientCreditHandler(env, error, originalError) {
     if (!originalError) {
         return false;
     }
     const { data } = originalError;
     if (data && data.name === "odoo.addons.iap.tools.iap_tools.InsufficientCreditError") {
-        env.services.dialog.add(InsufficientCreditDialog, {
-            errorData: JSON.parse(data.message),
-        });
+        if(!data.message){
+            env.services.dialog.add(AlertDialog,{
+                title: "Insufficient Credit Error",
+                body: "Insufficient credit to perform this service.",
+            });
+        }
+        else { 
+            env.services.dialog.add(InsufficientCreditDialog, {
+                errorData: JSON.parse(data.message),
+            });
+        }
         return true;
     }
     return false;
