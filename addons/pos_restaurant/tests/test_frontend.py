@@ -6,6 +6,7 @@ from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_c
 from odoo.addons.point_of_sale.tests.common import archive_products
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
 from odoo import Command
+from unittest.mock import patch
 
 from datetime import datetime
 
@@ -570,3 +571,51 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tip_after_payment')
+
+    def test_synchronisation_of_orders(self):
+        """ Test order synchronization with order data using the notify_synchronisation method.
+            First, an ongoing order is created on the server, and verify its presence in the POS UI.
+            Then, the order is paid from the server, and confirm if the order state is updated correctly.
+        """
+        notify_synchronisation_og = self.env.registry['pos.config'].notify_synchronisation
+        bank_payment_method = self.bank_payment_method
+        assertEqual = self.assertEqual
+
+        def notify_synchronisation_patch(self, session_id, login_number, records={}):
+            if login_number != 0:
+                return notify_synchronisation_og(self, session_id, login_number, records)
+            orders = self.env['pos.order'].search([('session_id', '=', session_id)])
+            order = orders[0] if orders else orders
+            if not orders:
+                product_desk_organizer = self.env["product.product"].search([('available_in_pos', '=', True), ('name', '=', 'Desk Organizer')], limit=1)
+                order = self.env["pos.order"].create({
+                    'company_id': self.env.company.id,
+                    'session_id': session_id,
+                    'partner_id': False,
+                    'lines': [(0, 0, {
+                        'name': 'OL/0001',
+                        'product_id': product_desk_organizer.id,
+                        'price_unit': 10.00,
+                        'tax_ids': False,
+                        'price_subtotal': 10.00,
+                        'price_subtotal_incl': 10.00,
+                    })],
+                    'amount_paid': 0,
+                    'amount_total': 10.00,
+                    'amount_tax': 0.0,
+                    'amount_return': 0.0,
+                    "pos_reference": "Order 00000-001-0002"
+                })
+            elif order.state != "paid":
+                payment_context = {"active_ids": order.ids, "active_id": order.id}
+                order_payment = self.env['pos.make.payment'].with_context(**payment_context).sudo().create({
+                    'amount': order.amount_total,
+                    'payment_method_id': bank_payment_method.id
+                })
+                order_payment.with_context(**payment_context).check()
+                assertEqual(order.state, "paid")
+            records = {"pos.order": order.ids} if order else {}
+            return notify_synchronisation_og(self, session_id, login_number, records)
+
+        with patch.object(self.env.registry.models['pos.config'], "notify_synchronisation", notify_synchronisation_patch):
+            self.start_pos_tour("OrderSynchronisationTour")

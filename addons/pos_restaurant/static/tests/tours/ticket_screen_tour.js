@@ -6,6 +6,7 @@ import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";
+import { notify } from "@pos_restaurant/../tests/tours/utils/devices_synchronization";
 
 registry.category("web_tour.tours").add("PosResTicketScreenTour", {
     steps: () =>
@@ -45,5 +46,27 @@ registry.category("web_tour.tours").add("OrderNumberConflictTour", {
             TicketScreen.nthRowContains(1, "T 101"),
             TicketScreen.nthRowNotContains(2, "Self-Order"),
             TicketScreen.nthRowContains(2, "T 103"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("OrderSynchronisationTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            notify(),
+            Chrome.isSynced(),
+            Chrome.clickOrders(),
+            Chrome.isSynced(),
+            TicketScreen.selectFilter("Active"),
+            TicketScreen.checkStatus("002", "Ongoing"),
+            Chrome.clickPlanButton(),
+            notify(),
+            Chrome.isSynced(),
+            Chrome.clickOrders(),
+            TicketScreen.selectFilter("Paid"),
+            TicketScreen.checkStatus("002", "Paid"),
+            TicketScreen.selectOrder("002"),
+            TicketScreen.confirmRefund(),
         ].flat(),
 });
