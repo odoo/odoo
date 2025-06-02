@@ -200,7 +200,7 @@ class ChannelController(http.Controller):
         channel = request.env["discuss.channel"].search([("id", "=", parent_channel_id)])
         if not channel:
             raise NotFound()
-        domain = [("parent_channel_id", "=", channel.id)]
+        domain = [("parent_channel_id", "=", channel.id), ("active", "=", True)]
         if before:
             domain.append(("id", "<", before))
         if search_term:
