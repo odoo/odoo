@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 import json
 
+
 _logger = logging.getLogger(__name__)
 
 
@@ -13,20 +14,13 @@ class PosOrder(models.Model):
     menupro_id = fields.Char(string='MenuPro ID')
     origine = fields.Char(string='Origine')
 
-    @api.model
-    def sync_from_ui(self, orders):
-        result = super().sync_from_ui(orders)
 
-        created_orders = result.get('pos.order', {})
-        for order in created_orders:
-            self._sync_to_menupro(order)
-        return result
 
     @api.model
     def _sync_to_menupro(self, order):
         restaurant_id = self.env['ir.config_parameter'].sudo().get_param('restaurant_id')
         odoo_secret_key = tools.config.get("odoo_secret_key")
-        api_url = "https://api.finance.visto.group//orders/order/upsert"
+        api_url = "https://api.finance.visto.group/orders/order/upsert"
 
         if not restaurant_id or not odoo_secret_key:
             _logger.error("Secret key or restaurant ID not configured. Skipped sync to menupro")
