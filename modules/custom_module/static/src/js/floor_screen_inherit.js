@@ -38,12 +38,6 @@ patch(FloorScreen.prototype, {
         const floorsModel = pos?.models?.floor;
         let floorsArray = [];
 
-        if (floorsModel) {
-            floorsArray = Array.from(floorsModel.values());
-        } else {
-            console.warn("⚠️ Modèle 'floor' non trouvé dans pos.models !");
-        }
-
         const filteredFloors = floorsArray.filter(floor => {
             const floorId = floor?.id ?? floor?.data?.id ?? null;
             return floorId !== null && allowedFloorIds.includes(Number(floorId));
