@@ -8,17 +8,17 @@ import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
 import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { useBounceButton } from "@web/views/view_hook";
+import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
 import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
-import { KanbanColumnExamplesDialog } from "./kanban_column_examples_dialog";
 
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
-const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
 
 function validateColumnQuickCreateExamples(data) {
     const { allowedGroupBys = [], examples = [], foldField = "" } = data;

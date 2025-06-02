@@ -4,6 +4,8 @@ import { Domain } from "@web/core/domain";
 import { DynamicList } from "./dynamic_list";
 import { getGroupServerValue } from "./utils";
 
+export const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
+
 /**
  * @typedef {import("./record").Record} RelationalRecord
  */
