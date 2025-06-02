@@ -6,24 +6,21 @@ import { patch } from "@web/core/utils/patch";
 const { DateTime } = luxon;
 
 
-// Fonction pour supprimer la classe 'selected' des lignes de commande
 const removeSelectedClass = () => {
     const selectedOrderLines = document.querySelectorAll(".orderline.selected");
     selectedOrderLines.forEach(el => {
         el.classList.remove("selected");
     });
 };
-// Fonction pour désactiver les interactions sur les anciennes lignes de commande
+//  Function to Disable Interactions on Old Order Lines
 const disableInteractionOnOldOrders = (orderLines, isAdmin) => {
     orderLines.forEach(line => {
         if (!isAdmin && line.classList.contains("orderline") && !line.classList.contains("text-success")) {
-            // Désactiver le clic sur les anciennes lignes
             line.classList.remove("cursor-pointer");
             line.style.pointerEvents = "none";
             line.style.userSelect = "none";
             line.style.cursor = "not-allowed";
 
-            // Désactiver l'UI du numpad (boutons de modification de quantité)
             const numpadButtons = document.querySelectorAll(".numpad button");
             numpadButtons.forEach(button => {
                 button.disabled = true;
@@ -37,69 +34,32 @@ const disableInteractionOnOldOrders = (orderLines, isAdmin) => {
 
 patch(PosStore.prototype, {
 
-    async setup() {
-        console.log("setup store")
-
-        await super.setup(...arguments);
-    },
-
     getPrintingChanges(order, diningModeUpdate) {
-        console.log("order", order);
         if (!order.ticket_number || order.ticket_number === 0) {
-            const today = new Date();
-            const todayString = today.toDateString();
-
-            const lastResetDate = localStorage.getItem("pos.last_reset_date");
-            const currentCounter = parseInt(localStorage.getItem("pos.ticket_number")) || 0;
-
-            let newTicketNumber;
-
-            if (lastResetDate !== todayString) {
-                newTicketNumber = 1;
-                localStorage.setItem("pos.ticket_number", "1");
-                localStorage.setItem("pos.last_reset_date", todayString);
-                console.log("🔄 Reset quotidien - Nouveau ticket #1");
-            } else {
-                newTicketNumber = currentCounter + 1;
-                localStorage.setItem("pos.ticket_number", newTicketNumber.toString());
-                console.log(`📝 Nouveau ticket #${newTicketNumber} pour aujourd'hui`);
-            }
-
-            order.ticket_number = newTicketNumber;
-            this.ticket_number = newTicketNumber;
-
+            const generatedNumber = generateLocalTicketNumber();
+            order.ticket_number = generatedNumber;
+            this.ticket_number = generatedNumber;
         } else {
             this.ticket_number = parseInt(order.ticket_number);
-            console.log("♻️ Réutilisation ticket existant:", order.ticket_number);
         }
 
         const time = DateTime.now().toFormat("dd/MM/yyyy HH:mm");
 
         return {
-            table_name: order.table_id ? order.table_id.table_number : "",
-            floor_name: order.table_id?.floor_id.name || "",
+            table_name: order.table_id?.table_number || "",
+            floor_name: order.table_id?.floor_id?.name || "",
             config_name: order.config.name,
             time: time,
             tracking_number: order.tracking_number,
-            ticket_number: this.ticket_number,
+            ticket_number: order.ticket_number,
             takeaway: order.config.takeaway && order.takeaway,
             employee_name: order.employee_id?.name || order.user_id?.name,
             order_note: order.general_note,
             diningModeUpdate: diningModeUpdate,
         };
     },
+
     getReceiptHeaderData(order) {
-        const result = super.getReceiptHeaderData(...arguments);
-        result.is_spanish = this.config.is_spanish;
-        result.simplified_partner_id = this.config.simplified_partner_id.id;
-        if (order) {
-            result.is_l10n_es_simplified_invoice = order.is_l10n_es_simplified_invoice;
-            result.partner = order.get_partner();
-            result.invoice_name = order.invoice_name;
-        }
-        return result;
-    },
-     getReceiptHeaderData(order) {
         const result = super.getReceiptHeaderData(...arguments);
         result.ticket_number = order.ticket_number;
         return result;

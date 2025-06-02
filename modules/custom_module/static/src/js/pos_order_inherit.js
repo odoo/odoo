@@ -3,17 +3,69 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 
+function generateLocalTicketNumber() {
+    const today = new Date();
+    const todayString = today.toDateString();
+    const lastResetDate = localStorage.getItem("pos.last_reset_date");
+    let currentCounter = parseInt(localStorage.getItem("pos.ticket_number")) || 0;
 
+    let newTicketNumber;
+    if (lastResetDate !== todayString) {
+        newTicketNumber = 1;
+        localStorage.setItem("pos.last_reset_date", todayString);
+    } else {
+        newTicketNumber = currentCounter + 1;
+    }
 
+    localStorage.setItem("pos.ticket_number", newTicketNumber.toString());
+    return newTicketNumber;
+}
+
+async function getTicketNumber(orderId) {
+    try {
+        const response = await fetch('/custom_module/ticketNumber', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId }),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            return data.result.ticket_number;
+        }
+    } catch (error) {
+        console.warn("Offline mode or server error", error);
+    }
+    return 0; // fallback offline
+}
 patch(PosOrder.prototype, {
 
-    setup(vals) {
-        super.setup(vals);
-        console.log("this Setup original");
-        this.ticket_number = vals.ticket_number ;
-        console.log("vals",vals);
+    async setup(vals) {
+        await super.setup(vals);
+
+        try {
+            const result = await getTicketNumber(parseInt(vals.id));
+
+            if (result === 0) {
+                const localTicketNumber = generateLocalTicketNumber();
+                this.ticket_number = localTicketNumber;
+                vals.ticket_number = localTicketNumber;
+                console.log(`📝 Offline mode - New ticket #${localTicketNumber}`);
+            } else {
+                this.ticket_number = result;
+                vals.ticket_number = result;
+                localStorage.setItem("pos.ticket_number", result.toString());
+            }
+        } catch (error) {
+            const fallbackNumber = generateLocalTicketNumber();
+            this.ticket_number = fallbackNumber;
+            vals.ticket_number = fallbackNumber;
+            console.error("Error in setup ticket number, fallback to offline", error);
+        }
 
     },
+
+
+
 
 
     /* This function is called after the order has been successfully sent to the preparation tool(s). */
@@ -42,7 +94,7 @@ patch(PosOrder.prototype, {
             }
         }
         if (!this.lines.length) {
-            this.general_note = ""; // reset general note on empty order
+            this.general_note = "";
         }
         return true;
     }
