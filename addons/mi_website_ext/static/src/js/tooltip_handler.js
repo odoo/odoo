@@ -8,7 +8,6 @@ publicWidget.registry.TooltipHandler = publicWidget.Widget.extend({
   events: {
     "mouseenter img.tooltip-img": "_showTooltip",
     "mouseleave img.tooltip-img": "_hideTooltip",
-    "mousemove img.tooltip-img": "_moveTooltip",
   },
 
   start: function () {
@@ -18,7 +17,7 @@ publicWidget.registry.TooltipHandler = publicWidget.Widget.extend({
 
   _createTooltipElement: function () {
     this.$tooltip = $(`
-            <div class="custom-tooltip o_technical_modal" style="display:none;">
+            <div class="custom-tooltip o_technical_modal" style="display:none; transition: opacity 0.3s ease;">
                 <div class="tooltip-content"">
                     <img class="tooltip-icon" src="" alt="tooltip icon" />
                     <div class="tooltip-info">
@@ -41,17 +40,20 @@ publicWidget.registry.TooltipHandler = publicWidget.Widget.extend({
     this.$tooltip.find(".tooltip-text").text(text);
     this.$tooltip.find(".tooltip-title").text(title);
     this.$tooltip.show();
-    this._moveTooltip(ev); // posicionar al aparecer
+    this.$tooltip.css({
+      top: ev.pageY - this.$tooltip.outerHeight() - 10 + "px", // Posiciona arriba del cursor
+      left: ev.pageX - this.$tooltip.outerWidth() / 2 + "px", // Centrado con el cursor
+      display: "block",
+      opacity: 1,
+    }); // posicionar al aparecer
   },
 
   _hideTooltip: function () {
-    this.$tooltip.hide();
-  },
-
-  _moveTooltip: function (ev) {
     this.$tooltip.css({
-      top: ev.pageY - 120 + "px",
-      left: ev.pageX + 20 + "px",
+      opacity: 0,
     });
+    setTimeout(() => {
+      this.$tooltip.hide();
+    }, 300); // 300ms, igual a la transición
   },
 });

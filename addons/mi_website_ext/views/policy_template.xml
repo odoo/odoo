@@ -1,15 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="policy_template" name="Policy  View">
+    <template id="policy_template" name="Políticas y Reglamentos">
         <t t-call="website.layout">
-             <t t-set="hide_sidebar" t-value="True"/>
-            <t t-call-assets="mi_website_ext.assets_policy" />
+            <t t-set="hide_sidebar" t-value="True"/>
             <div class="content_container">
                 <div class="policy_container">
-                    <h1 class="policy_title">Politicas</h1>
-                    <p class="policy_subtitle">Aquí puedes mirar las fotos de todas nuestras
-                        actividades.</p>
+                    <h1 class="policy_title">Políticas y reglamentos</h1>
+                    <p class="policy_subtitle">
+                        A continuación, encontrarás los documentos importantes. Tu lectura quedará registrada una vez que hagas clic en "Visualizar".
+                    </p>
                     <div class="policy_section">
-
+                        <ul class="policy_group">
+                            <t t-foreach="policies" t-as="policy">
+                                <li class="policy_item">
+                                    <span t-esc="policy.name"/>
+                                    <button type="button"
+                class="js-view-policy" 
+                t-att-data-policy-id="policy.id"
+                t-att-data-policy-name="policy.name"
+                t-att-data-pdf-url="policy.attachment_url">
+                                        <i class="fa fa-check text-success me-2" t-if="policy.id in read_policy_ids"/>
+                                        <i class="fa fa-eye me-2"/>
+                                        <span>Visualizar</span>
+                                    </button>
+                                </li>
+                            </t>
+                        </ul>
                     </div>
                 </div>
             </div>

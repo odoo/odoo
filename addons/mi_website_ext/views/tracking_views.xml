@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_publication_view_log_list" model="ir.ui.view">
+        <field name="name">publication.view.log.list</field>
+        <field name="model">publication.view.log</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" delete="false">
+                <field name="create_date" string="Fecha de Lectura"/>
+                <field name="user_id"/>
+                <field name="res_model" string="Tipo de Contenido"/>
+                <field name="res_id"/>
+                <field name="res_model"/>
+                <button name="open_view_wizard_from_log" type="object" string="Ver Lecturas" />
+            </list>
+        </field>
+    </record>
+</odoo>

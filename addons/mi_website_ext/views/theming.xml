@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="dynamic_company_theming" name="Dynamic Company Theme" inherit_id="website.layout">
+        <xpath expr="//head" position="inside">
+            <t t-if="request.env.user.company_id and request.env.user.company_id.portal_background_image">
+                <style type="text/css">
+                    div#wrapwrap {
+                        background-image: url(
+                    <t t-out="image_data_uri(request.env.user.company_id.portal_background_image)"/>);
+                        background-size: cover;
+                        background-attachment: fixed;
+                        background-position: center;
+                    }
+                </style>
+            </t>
+            <t t-if="request.env.user.company_id and request.env.user.company_id.logo">
+                <style type="text/css">
+            .navbar-brand.logo img {
+                visibility: hidden;
+                /* También podemos darle un tamaño fijo para asegurar consistencia */
+                width: 95px;
+                height: 40px;
+            }
+
+            .navbar-brand.logo {
+                background-image: url(
+                        <t t-out="image_data_uri(request.env.user.company_id.logo)"/>);
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+                    </style>
+                </t>
+            </xpath>
+        </template>
+    </odoo>
