@@ -40,3 +40,47 @@
   gap: 32px;
   align-self: stretch;
 }
+
+.policy_group {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 16px;
+  padding: 0;
+}
+
+.policy_item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f0f8ff;
+  border-radius: 16px;
+  font-size: 16px;
+  color: #5b5959;
+  font-family: "Noto Sans";
+  box-shadow: 0px 4px 5.2px 0px rgba(63, 64, 123, 0.06);
+  padding: 8px 18px;
+}
+
+.policy_item button {
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 800;
+  color: black;
+  border: none;
+  background-color: #f9aa4e;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+@media (max-width: 576px) {
+  .policy_container {
+    width: 100%;
+    max-height: none;
+    position: static;
+  }
+
+  .content_container {
+    padding: 16px !important;
+  }
+}

@@ -1,0 +1,27 @@
+<odoo>
+    <template id="notify_absence_modal_template" name="Notify Absence Modal">
+        <div id="notify_absence_modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Aviso de incapacidad</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="advice_p"><strong>¡Esto enviará un aviso a RRHH!</strong></p>
+                        <p>Recuerda que debes entregar tu certificado de incapacidad.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="confirm_notify_btn" type="button" class="btn-enfermedad-custom">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="notify_absence_modal_in_body" inherit_id="website.layout">
+        <xpath expr="//body" position="inside">
+            <t t-call="mi_website_ext.notify_absence_modal_template"/>
+        </xpath>
+    </template>
+</odoo>

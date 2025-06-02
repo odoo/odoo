@@ -1,40 +1,30 @@
 <odoo>
     <template id="news_template" name="News View">
         <t t-call="website.layout">
-             <t t-set="hide_sidebar" t-value="True"/>
             <t t-call-assets="mi_website_ext.assets_news" />
             <div class="content_container">
                 <div class="news_container">
                     <h1 class="news_title">Noticias</h1>
-                    <p class="news_subtitle">Aquí puedes mirar las fotos de todas nuestras
-                        actividades.</p>
-                     <div class="news_section">
+                    <p class="news_subtitle">Lee las últimas noticias</p>
+                    <div class="news_section">
                         <div class="album_list">
-                            <div class="album_item">
-                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
-                                <h3>Dia del trabajador</h3>
-                                <p>01 de mayo</p>
-                            </div>
-                            <div class="album_item">
-                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
-                                <h3>Dia del trabajador</h3>
-                                <p>01 de mayo</p>
-                            </div>
-                            <div class="album_item">
-                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
-                                <h3>Dia del trabajador</h3>
-                                <p>01 de mayo</p>
-                            </div>
-                            <div class="album_item">
-                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
-                                <h3>Dia del trabajador</h3>
-                                <p>01 de mayo</p>
-                            </div>
-                            <div class="album_item">
-                                <img src="/mi_website_ext/static/src/img/imagetester.jpg"/>
-                                <h3>Dia del trabajador</h3>
-                                <p>01 de mayo</p>
-                            </div>
+                            <t t-if="news_posts">
+                                <t t-foreach="news_posts" t-as="post">
+                                    <a class="album_item" t-att-href="post.website_url or '#'">
+                                        <t t-if="post.image_1920">
+                                            <img t-att-src="image_data_uri(post.image_1920)" t-att-alt="post.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <img src="/mi_website_ext/static/src/img/imagetester.jpg" t-att-alt="post.name"/>
+                                        </t>
+                                        <h3><t t-esc="post.name"/></h3>
+                                        <p><span t-field="post.publish_date" t-options='{"format": "long"}'/></p>
+                                    </a>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <p class="text-muted">No hay publicaciones en el blog todavía.</p>
+                            </t>
                         </div>
                     </div>
                 </div>

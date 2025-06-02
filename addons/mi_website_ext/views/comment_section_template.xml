@@ -1,0 +1,104 @@
+<odoo>
+    <template id="publication_comment" name="Plantilla de Comentario Individual">
+        <t t-call-assets="mi_website_ext.assets_comment" />
+        <div class="show_comments" t-att-data-comment-id="comment.id">
+            <img t-att-src="image_data_uri(comment.author_id.image_128)" alt="Avatar"
+                 onerror="this.src='/mi_website_ext/static/src/img/imagetester.jpg';"/>
+            <div class="name_and_comment">
+                <div class="name_user">
+                    <h3>
+                        <t t-esc="comment.author_id.name"/> -
+                    </h3>
+                    <p>
+                        <span t-field="comment.create_date" t-options='{"widget": "relative"}'/>
+                    </p>
+                </div>
+                <p>
+                    <t t-esc="comment.content"/>
+                </p>
+                <div class="comment-actions">
+                    <button class="reply-button" t-att-data-comment-id="comment.id" t-att-data-author-name="comment.author_id.name">Responder</button>
+                </div>
+            </div>
+            <div title="Like" class="heart-container like-comment-button" t-att-data-comment-id="comment.id">
+                <input t-att-id="'like-checkbox-' + str(comment.id)" class="checkbox" type="checkbox" t-att-checked="comment.is_liked_by_current_user"/>
+                <div class="svg-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-outline" viewBox="0 0 24 24">
+                        <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Zm-3.585,18.4a2.973,2.973,0,0,1-3.83,0C4.947,16.006,2,11.87,2,8.967a4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,11,8.967a1,1,0,0,0,2,0,4.8,4.8,0,0,1,4.5-5.05A4.8,4.8,0,0,1,22,8.967C22,11.87,19.053,16.006,13.915,20.313Z"></path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="svg-filled" viewBox="0 0 24 24">
+                        <path d="M17.5,1.917a6.4,6.4,0,0,0-5.5,3.3,6.4,6.4,0,0,0-5.5-3.3A6.8,6.8,0,0,0,0,8.967c0,4.547,4.786,9.513,8.8,12.88a4.974,4.974,0,0,0,6.4,0C19.214,18.48,24,13.514,24,8.967A6.8,6.8,0,0,0,17.5,1.917Z"></path>
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="svg-celebrate">
+                        <polygon points="10,10 20,20"></polygon>
+                        <polygon points="10,50 20,50"></polygon>
+                        <polygon points="20,80 30,70"></polygon>
+                        <polygon points="90,10 80,20"></polygon>
+                        <polygon points="90,50 80,50"></polygon>
+                        <polygon points="80,80 70,70"></polygon>
+                    </svg>
+                </div>
+            </div>
+            <p class="like-count">
+                <t t-esc="comment.like_count"/>
+            </p>
+        </div>
+        <div class="replies ps-5">
+            <t t-foreach="comment.child_ids" t-as="reply">
+                <t t-call="mi_website_ext.publication_comment">
+                    <t t-set="comment" t-value="reply"/>
+                </t>
+            </t>
+        </div>
+    </template>
+    <template id="comment_section_template" name="Sección de Comentarios">
+        <t t-call-assets="mi_website_ext.assets_comment" />
+        <t t-set="main_object" t-value="main_object or publication or employee"/>
+        <div class="comment_section" t-if="main_object" 
+             t-att-data-res-model="main_object._name" 
+             t-att-data-res-id="main_object.id">
+            
+        </div>
+    </template>
+</odoo>
+
+<!--
+<div style="background-color: #f0f0f0; border: 1px solid red; padding: 5px; margin-bottom: 10px;">
+                <p class="m-0">- DEBUG INFO -</p>
+                <p class="m-0">
+                    <b>Objeto Principal (main_object):</b>
+                    <t t-esc="main_object"/>
+                </p>
+                <t t-set="comment_count" t-value="request.env['publication.comment'].search_count([('res_model','=',main_object._name), ('res_id','=',main_object.id)])"/>
+                <p class="m-0">
+                    <b>Comentarios Encontrados en BD:</b>
+                    <t t-esc="comment_count"/>
+                </p>
+            </div>
+            <h4>Comentarios</h4>
+            <div id="comments_list">
+                <t t-set="top_level_comments" t-value="request.env['publication.comment'].search([
+                    ('res_model', '=', main_object._name),
+                    ('res_id', '=', main_object.id),
+                    ('parent_id', '=', False)
+                ])"/>
+                <t t-foreach="top_level_comments" t-as="comment">
+                    <t t-call="mi_website_ext.publication_comment"/>
+                </t>
+            </div>
+            <div class="create_comment">
+                <img t-att-src="image_data_uri(request.env.user.partner_id.image_128)"
+                     onerror="this.src='/mi_website_ext/static/src/img/imagetester.jpg';"/>
+                <div class="input_icons">
+                    <input class="insert_comment" placeholder="Escribe un comentario..."/>
+                    <button class="emoji" title="Emoji (próximamente)">😊</button>
+                    <button class="attach" title="Adjuntar (próximamente)">📎</button>
+                </div>
+                <button class="send_button">Enviar</button>
+            </div>
+            <div class="replying-to-section" style="display: none;">
+                Respondiendo a
+                <strong class="reply-to-name"></strong>
+                <button class="btn btn-sm btn-link cancel-reply">Cancelar</button>
+            </div>
+-->

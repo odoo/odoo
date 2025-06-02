@@ -17,12 +17,37 @@
   background: #fff;
 }
 
+.news_header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  align-self: stretch;
+}
+
 .news_title {
   color: #323030;
   font-family: "Rubik";
   font-size: 36px;
   font-style: normal;
   font-weight: 800;
+}
+
+.news_header h4 {
+  align-self: stretch;
+  margin: 0;
+  color: #5b5959;
+  font-family: "Rubik";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.news_author {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
 }
 
 .news_subtitle {
@@ -32,6 +57,15 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+}
+
+.news_photo {
+  display: flex;
+  height: 662px;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
 }
 
 .news_section {
@@ -70,7 +104,6 @@
   height: 220px;
   gap: 3px;
   border-radius: 22px 22px 0px 0px;
-
 }
 
 .album_item h3 {
@@ -92,3 +125,14 @@
   font-weight: 300;
 }
 
+@media (max-width: 576px) {
+  .news_container {
+    width: 100%;
+    max-height: none;
+    position: static;
+  }
+
+  .content_container {
+    padding: 16px !important;
+  }
+}
