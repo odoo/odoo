@@ -411,13 +411,13 @@ class HrLeave(models.Model):
                 raise ValidationError(
                     self.env._("""A leave cannot be set across multiple versions with different working schedules.
 
-Please create one time off for each version period.
+    Please create one time off for each version period.
 
-Time off:
-%(time_off)s
+    Time off:
+    %(time_off)s
 
-Versions:
-%(versions)s""",
+    Versions:
+    %(versions)s""",
                       time_off=holiday.display_name,
                       versions='\n'.join(_(
                           "- '%(version)s' from %(start_date)s to %(end_date)s",
@@ -1376,7 +1376,7 @@ Versions:
             elif state not in dict_all_possible_state.get(holiday.state, {}):
                 if state == 'cancel':
                     error_message = self.env._('You can only cancel your own leave. You can cancel a leave only if this leave \
-is approved, validated or refused.')
+    is approved, validated or refused.')
                 elif state == 'confirm':
                     error_message = self.env._('You can\'t reset a leave. Cancel/delete this one and create an other')
                 elif state == 'validate1':
@@ -1506,7 +1506,9 @@ is approved, validated or refused.')
             to_do_confirm_activity.activity_feedback(['hr_holidays.mail_act_leave_approval'])
         if to_do:
             to_do.activity_feedback(['hr_holidays.mail_act_leave_approval', 'hr_holidays.mail_act_leave_second_approval'])
-        self.env['mail.activity'].with_context(short_name=False).create(activity_vals)
+        self.env['mail.activity'].with_context(short_name=False, mail_activity_quick_update=True).create(activity_vals)
+        if activity_vals:
+            self._notify_leave_request()
 
     ####################################################
     # Messaging methods
@@ -1541,6 +1543,46 @@ is approved, validated or refused.')
             self.check_access('read')
             return super(HrLeave, self.sudo()).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         return super().message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
+
+    def _notify_leave_request(self):
+        """Notifies the responsible approver(s) when an employee applies for leave."""
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        leave_model_description = self.env['ir.model']._get(self._name).display_name
+        subject = self.env.ref('hr_holidays.new_timeoff_request_template')._render_field('subject', self.ids, compute_lang=True)
+        for holiday in self:
+            if holiday.holiday_status_id.leave_validation_type == 'no_validation':
+                continue
+
+            partner_ids = holiday.sudo()._get_responsible_for_approval().mapped('partner_id')
+
+            if not partner_ids:
+                continue
+            leave_msg = self.env.ref('hr_holidays.new_timeoff_request_template').with_context(
+                manager=', '.join(partner_ids.mapped('name'))
+            )._render_field(
+                'body_html',
+                holiday.ids,
+                compute_lang=True
+            )[holiday.id]
+
+            subtitles = [
+                self.env._('%(employee_name)s requested a time-off \n',
+                    employee_name=holiday.employee_id.name),
+                self.env._('%(start_date)s → %(end_date)s (%(duration)s)',
+                    start_date=format_date(self.env, holiday.request_date_from, date_format='MMM dd'),
+                    end_date=format_date(self.env, holiday.request_date_to, date_format='MMM dd'),
+                    duration=holiday.duration_display)
+            ]
+            holiday.message_notify(
+                subject=subject[holiday.id],
+                body=leave_msg,
+                partner_ids=partner_ids.ids,
+                email_layout_xmlid='mail.mail_notification_layout',
+                model_description=leave_model_description,
+                subtitles=subtitles,
+            )
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
