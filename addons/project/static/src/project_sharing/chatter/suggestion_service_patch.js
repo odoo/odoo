@@ -5,15 +5,16 @@ import { patch } from "@web/core/utils/patch";
 patch(SuggestionService.prototype, {
     async fetchPartnersRoles(term, thread, { abortSignal } = {}) {
         if (thread.model === "project.task") {
-            const suggestedPartners = await this.makeOrmCall(
-                "project.task",
-                "get_mention_suggestions",
-                [thread.id],
-                { search: term },
-                { abortSignal }
+            this.store.insert(
+                await this.makeOrmCall(
+                    "project.task",
+                    "get_mention_suggestions",
+                    [thread.id],
+                    { search: term },
+                    { abortSignal }
+                )
             );
-            this.store.insert(suggestedPartners);
-            thread.limitedMentions = suggestedPartners["res.partner"];
+            return;
         }
         return super.fetchPartnersRoles(...arguments);
     },

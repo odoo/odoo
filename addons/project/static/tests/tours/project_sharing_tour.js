@@ -1,3 +1,4 @@
+import { delay } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
@@ -224,6 +225,13 @@ registry.category("web_tour.tours").add("portal_project_sharing_chatter_mention_
         { trigger: "table > tbody > tr a:has(span:contains(Project Sharing))", run: "click" },
         { trigger: ".o_project_sharing" },
         { trigger: ".o_kanban_record:contains('Test Task')", run: "click" },
+        { trigger: ".o-mail-Composer-input", run: "edit @xxx" },
+        {
+            trigger: "body:not(:has(.o-mail-Composer-suggestion))",
+            run: async () => {
+                await delay(odoo.loader.modules.get("@mail/core/common/suggestion_hook").DELAY_FETCH);
+            },
+        },
         { trigger: ".o-mail-Composer-input", run: "edit @Georges" },
         { trigger: ".o-mail-Composer-suggestion:contains('Georges')" },
     ],
