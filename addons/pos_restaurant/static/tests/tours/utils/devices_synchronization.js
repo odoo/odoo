@@ -1,7 +1,7 @@
 /* global posmodel */
 
 const getData = ({ lineProductName, productName, partnerName } = {}) => {
-    const order = posmodel.models["pos.order"].find((o) => o.pos_reference === "device_sync");
+    const order = posmodel.models["pos.order"].find((o) => o.pos_reference.includes("device_sync"));
 
     let partner = null;
     if (partnerName) {

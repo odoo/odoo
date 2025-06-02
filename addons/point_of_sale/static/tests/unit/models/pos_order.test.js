@@ -18,7 +18,6 @@ describe("pos.order", () => {
             screen_data: {},
             selected_orderline_uuid: undefined,
             selected_paymentline_uuid: undefined,
-            locked: false,
             TipScreen: {
                 inputTipAmount: "",
             },
