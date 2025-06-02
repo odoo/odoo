@@ -772,7 +772,7 @@ class AccountPayment(models.Model):
         if not self[0].id:  # if record is under creation/edition in UI, safely inject values in the query
             # Necessary since new record aren't searchable in the DB and record in edition aren't up to date yet
             values = {
-                field_name: self._fields[field_name].convert_to_write(self[field_name], self) or None
+                field_name: self._fields[field_name].convert_to_write(self[0][field_name], self[0]) or None
                 for field_name in used_fields
             }
             values["id"] = self._origin.id or 0
