@@ -35,7 +35,7 @@ async function getTicketNumber(orderId) {
     } catch (error) {
         console.warn("Offline mode or server error", error);
     }
-    return 0; // fallback offline
+    return 0;
 }
 patch(PosOrder.prototype, {
 
@@ -63,11 +63,6 @@ patch(PosOrder.prototype, {
         }
 
     },
-
-
-
-
-
     /* This function is called after the order has been successfully sent to the preparation tool(s). */
     // @Override
     updateLastOrderChange() {

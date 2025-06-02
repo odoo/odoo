@@ -2,9 +2,15 @@
 
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { patch } from "@web/core/utils/patch";
+import {
+    makeAwaitable,
+    ask,
+    makeActionAwaitable,
+} from "@point_of_sale/app/store/make_awaitable_dialog";
+import { ComboConfiguratorPopup } from  "@point_of_sale/app/store/combo_configurator_popup/combo_configurator_popup";
+import { computeComboItems } from "@point_of_sale/app/models/utils/compute_combo_items";
 
 const { DateTime } = luxon;
-
 
 const removeSelectedClass = () => {
     const selectedOrderLines = document.querySelectorAll(".orderline.selected");
@@ -35,14 +41,6 @@ const disableInteractionOnOldOrders = (orderLines, isAdmin) => {
 patch(PosStore.prototype, {
 
     getPrintingChanges(order, diningModeUpdate) {
-        if (!order.ticket_number || order.ticket_number === 0) {
-            const generatedNumber = generateLocalTicketNumber();
-            order.ticket_number = generatedNumber;
-            this.ticket_number = generatedNumber;
-        } else {
-            this.ticket_number = parseInt(order.ticket_number);
-        }
-
         const time = DateTime.now().toFormat("dd/MM/yyyy HH:mm");
 
         return {
@@ -85,24 +83,18 @@ patch(PosStore.prototype, {
         } else {
             merge = true;
         }
-
         console.log("merge =", merge);
-
         order.assert_editable();
-
         const options = {
             ...opts,
         };
-
         if ("price_unit" in vals) {
             merge = false;
         }
-
         if (typeof vals.product_id == "number") {
             vals.product_id = this.data.models["product.product"].get(vals.product_id);
         }
         const product = vals.product_id;
-
         const values = {
             price_type: "price_unit" in vals ? "manual" : "original",
             price_extra: 0,
@@ -112,7 +104,6 @@ patch(PosStore.prototype, {
             tax_ids: product.taxes_id.map((tax) => ["link", tax]),
             ...vals,
         };
-
         // Handle refund constraints
         if (
             order.doNotAllowRefundAndSales() &&
@@ -191,11 +182,9 @@ patch(PosStore.prototype, {
             const payload = await makeAwaitable(this.dialog, ComboConfiguratorPopup, {
                 product: values.product_id,
             });
-
             if (!payload) {
                 return;
             }
-
             const comboPrices = computeComboItems(
                 values.product_id,
                 payload,
@@ -362,9 +351,6 @@ patch(PosStore.prototype, {
         // FIXME: If merged with another line, this returned object is useless.
         return line;
     },
-
-
-
     async showLoginScreen() {
         this.showScreen("FloorScreen");
         this.reset_cashier();
