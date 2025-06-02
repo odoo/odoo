@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Insert the donation form inside the payment form's <form/> element. -->
     <template id="website_payment.payment_form" inherit_id="payment.form">
         <xpath expr="//div[@id='o_payment_form_options']" position="before">
             <div class="mb-3" t-if="is_donation">
@@ -10,8 +9,58 @@
         </xpath>
     </template>
 
-    <!-- Display of /donation/pay -->
-    <template id="website_payment.donation_pay" name="Donation payment">
+    <template id="website_payment.website_payment_donation_form">
+        <div class="container-fluid">
+            <form id="o_donation_field_form" class="o_mark_required" data-model_name="res.partner"
+                hide-change-model="true" data-mark="*">
+                <div class="s_website_form_rows row w-100 s_col_no_bgcolor">
+                    <div data-name="Field"
+                        t-attf-class="s_website_form_field s_website_form_model_required mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name"
+                        data-type="char">
+                        <label class="s_website_form_label" for="name">
+                            <span class="s_website_form_label_content">Name</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <input id="partner_name" type="text" name="name" data-fill-with="name"
+                            t-attf-class="form-control s_website_form_input #{error.get('name') and 'is-invalid' or ''}" />
+                        <div class="invalid-feedback">
+                            Please provide a name.
+                        </div>
+                    </div>
+                    <div data-name="Field"
+                        t-attf-class="s_website_form_field s_website_form_model_required mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6"
+                        id="div_email" data-type="char">
+                        <label class="s_website_form_label" for="email">
+                            <span class="s_website_form_label_content">Email</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <input id="partner_email" type="email" name="email" data-fill-with="email"
+                            t-attf-class="form-control s_website_form_input #{error.get('email') and 'is-invalid' or ''}" />
+                        <div class="invalid-feedback">
+                            Please enter a valid email address.
+                        </div>
+                    </div>
+                    <t t-set="country_id" t-value="partner_details.get('country_id')" />
+                    <div data-name="Field"
+                        t-attf-class="s_website_form_field s_website_form_model_required mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country"
+                        data-type="many2one">
+                        <label class="s_website_form_label" for="country_id">
+                            <span class="s_website_form_label_content">Country</span>
+                            <span class="s_website_form_mark"> *</span>
+                        </label>
+                        <select id="partner_country_id" name="country_id"
+                            t-attf-class="form-select s_website_form_input #{error.get('country_id') and 'is-invalid' or ''}"
+                            required="1">
+                            <option t-foreach="countries" t-as="c" t-att-value="c.id" t-out="c.name"
+                                t-att-selected="c.id == (country_id or -1)" />
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <template id="website_payment.donation_page_layout" name="Donation page layout">
         <t t-set="page_title">Donation</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
         <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
@@ -29,7 +78,12 @@
                             <div t-elif="not currency" class="alert alert-warning">
                                 <strong>Warning</strong> The currency is missing or incorrect.
                             </div>
-                            <t t-else="" t-call="payment.form"/>
+                            <div t-else="">
+                                <t t-if="is_donation">
+                                    <h1 class="o_page_header mt16 mb4 h3-fs">Donation</h1>
+                                </t>
+                                <t t-call="payment.form"/>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -38,46 +92,30 @@
         </t>
     </template>
 
+    <!--
+        Display of /donation/pay
+
+        Donation payment page extension.
+        This template exists as a separate inherited template to make the
+        donation form section editable in the website editor.
+
+        The donation form section uses `t-ignore="true"`, which only works
+        correctly when applied from an inherited template. Defining this
+        logic directly in the base layout would prevent the section from
+        being properly editable and manageable in the website builder.
+    -->
+    <template id="website_payment.donation_pay" inherit_id="website_payment.donation_page_layout" name="Donation payment">
+        <xpath expr="//t[@t-if='is_donation']//h1" position="after">
+            <div class="mb-3" t-ignore="true">
+                <section class="s_website_form mb-3 oe_unmovable oe_unremovable o_no_save o_no_content_width_option o_no_scroll_button o_no_background_option" data-vcss="001" data-snippet="s_website_form" data-name="Form">
+                    <t t-call="website_payment.website_payment_donation_form"/>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
     <template id="website_payment.donation_information" name="Donation Information">
-        <h1 class="o_page_header mt16 mb4 h3-fs">Donation</h1>
         <div class="row">
-            <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
-                <label class="col-form-label fw-bold" for="name">Name
-                    <span class="s_website_form_mark"> *</span>
-                </label>
-                <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" required="1"/>
-                <div class="invalid-feedback">
-                    Please provide a name.
-                </div>
-            </div>
-            <div class="w-100"/>
-            <div t-attf-class="mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
-                <label class="col-form-label fw-bold" for="email">Email
-                    <span class="s_website_form_mark"> *</span>
-                </label>
-                <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" required="1"/>
-                <div class="invalid-feedback">
-                    Please enter a valid email address.
-                </div>
-            </div>
-            <t t-set="country_id" t-value="partner_details.get('country_id')"/>
-            <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
-                <label class="col-form-label fw-bold" for="country_id">Country
-                    <span class="s_website_form_mark"> *</span>
-                </label>
-                <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}" required="1">
-                    <option value="">Country...</option>
-                    <t t-foreach="countries" t-as="c">
-                        <option t-att-value="c.id" t-att-selected="c.id == (country_id or -1)">
-                            <t t-out="c.name" />
-                        </option>
-                    </t>
-                </select>
-                <div class="invalid-feedback">
-                    Please select a country.
-                </div>
-            </div>
-            <div class="w-100"/>
             <div class="mb-3 col-lg-12 o_donation_payment_form">
                 <div class="col-lg-6 px-0">
                     <label class="col-form-label fw-bold">Amount (<t t-out="currency.symbol"/>)</label>

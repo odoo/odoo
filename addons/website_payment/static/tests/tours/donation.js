@@ -150,6 +150,15 @@ registry.category("web_tour.tours").add("donation_snippet_use_2", {
             expectUnloadPage: true,
         },
         {
+            // At this point, we are about to submit the donation form. However,
+            // the pre-filled fields such as name and email are still empty,
+            // which would cause an `is-invalid` error on the email field during
+            // submission. Since pre-filling values will take additional time to
+            // implement.
+            content: "Wait until the partner name field is pre-filled, then submit the form",
+            trigger: "input#partner_name:not(:empty)"
+        },
+        {
             content: "Click on the 'Amount to donate' input field",
             trigger: "input#other_amount_value",
             run: "click",

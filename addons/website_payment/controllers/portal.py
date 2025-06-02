@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo import http, _
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
@@ -43,13 +44,13 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if float(amount) < float(minimum_amount):
             raise ValidationError(_('Donation amount must be at least %.2f.', float(minimum_amount)))
         use_public_partner = request.env.user._is_public() or not partner_id
+        details = kwargs.get('partner_details')
         if use_public_partner:
-            details = kwargs['partner_details']
-            if not details.get('name'):
+            if not details.get('partner_name'):
                 raise ValidationError(_('Name is required.'))
-            if not details.get('email'):
+            if not details.get('partner_email'):
                 raise ValidationError(_('Email is required.'))
-            if not details.get('country_id'):
+            if not details.get('partner_country_id'):
                 raise ValidationError(_('Country is required.'))
             partner_id = request.website.user_id.partner_id.id
             del kwargs['partner_details']
@@ -67,12 +68,36 @@ class PaymentPortal(payment_portal.PaymentPortal):
         tx_sudo.is_donation = True
         if use_public_partner:
             tx_sudo.update({
-                'partner_name': details['name'],
-                'partner_email': details['email'],
-                'partner_country_id': int(details['country_id']),
+                'partner_name': details['partner_name'],
+                'partner_email': details['partner_email'],
+                'partner_country_id': int(details['partner_country_id']),
             })
         elif not tx_sudo.partner_country_id:
-            tx_sudo.partner_country_id = int(kwargs['partner_details']['country_id'])
+            tx_sudo.partner_country_id = int(kwargs['partner_details']['partner_country_id'])
+
+        tx_fields = tx_sudo._fields
+        # Prepare donation log message once during transaction creation.
+        # This message will later be used in post-processing to avoid
+        # recomputing field labels and values
+        message_body = Markup('Payment received from donation with following details:')
+
+        # Combine mandatory transaction fields (company, partner) with dynamic
+        # donation form fields into a single iterable
+        combined_fields = {
+            'company_id': tx_sudo.company_id.id,
+            'partner_id': tx_sudo.partner_id.id,
+            **dict(filter(lambda item: item[1], details.items())),
+        }
+        if kwargs.get('donation_comment'):
+            combined_fields.update({'Donation Comment': kwargs.get('donation_comment')})
+        for key, value in combined_fields.items():
+            field = tx_fields.get(key)
+            label = field.string if field else key
+            if field and field.type == 'many2one':
+                value = self.env[field.comodel_name].browse(int(value)).display_name
+            message_body += Markup('<br/>- %s: %s') % (label, value)
+        tx_sudo.donation_log_message = message_body
+
         # the user can change the donation amount on the payment page,
         # therefor we need to recompute the access_token
         access_token = payment_utils.generate_access_token(

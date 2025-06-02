@@ -49,8 +49,8 @@ export class FormOption extends BaseOptionComponent {
         this.showEndMessage = false;
         // Get the email_to value from the data-for attribute if it exists. We
         // use it if there is no value on the email_to input.
-        const formId = el.id;
-        const dataForValues = getParsedDataFor(formId, el.ownerDocument);
+        this.formId = el.id;
+        const dataForValues = getParsedDataFor(this.formId, el.ownerDocument);
         if (dataForValues) {
             this.dataForEmailTo = dataForValues["email_to"];
         }

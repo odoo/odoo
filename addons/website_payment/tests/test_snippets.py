@@ -5,7 +5,9 @@ from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 @tagged('post_install', '-at_install')
 class TestSnippets(HttpCaseWithUserPortal):
 
-    def test_01_donation(self):
+    def setUp(self):
+        super().setUp()
+
         payment_demo = self.env['ir.module.module']._get('payment_demo')
         if payment_demo.state != 'installed':
             self.skipTest("payment_demo module is not installed")
@@ -25,7 +27,12 @@ class TestSnippets(HttpCaseWithUserPortal):
 
         self.user_portal.country_id = belgium.id
 
+    def test_01_donation(self):
         self.start_tour("/?enable_editor=1", "donation_snippet_edition", login='admin')
         self.start_tour("/", "donation_snippet_use", login="portal")
         self.start_tour("/?enable_editor=1", "donation_snippet_edition_2", login='admin')
         self.start_tour("/", "donation_snippet_use_2", login="portal")
+
+    def test_02_donation_form_custom_field(self):
+        self.start_tour("/donation/pay", "donation_form_custom_field_create", login="admin")
+        self.start_tour("/donation/pay", "donation_form_custom_field_submit", login="portal")
