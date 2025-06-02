@@ -14,6 +14,9 @@ assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Od
 from . import _monkeypatches
 _monkeypatches.patch_init()
 
+from .tools.gc import gc_set_timing
+gc_set_timing(enable=True)
+
 # ----------------------------------------------------------
 # Shortcuts
 # Expose them at the `odoo` namespace level
