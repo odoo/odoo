@@ -226,7 +226,7 @@ class TestPortalFlow(MailCommon, HttpCase):
         # prepare result URLs on self to ease tests
         # ------------------------------------------------------------
         cls.portal_web_url = f'{base_url}/my/test_portal/{cls.record_portal.id}'
-        cls.portal_web_url_with_token = f'{base_url}/my/test_portal/{cls.record_portal.id}?{url_encode({"access_token": cls.record_portal.access_token, "pid": cls.customer.id, "hash": cls.record_portal_hash})}'
+        cls.portal_web_url_with_token = f'{base_url}/my/test_portal/{cls.record_portal.id}?{url_encode({"access_token": cls.record_portal.access_token, "pid": cls.customer.id, "hash": cls.record_portal_hash}, sort=True)}'
         cls.public_act_url_share = f'{base_url}/test_portal/public_type/{cls.record_public_act_url.id}'
         cls.internal_backend_local_url = f'/odoo/{cls.record_internal._name}/{cls.record_internal.id}'
         cls.portal_backend_local_url = f'/odoo/{cls.record_portal._name}/{cls.record_portal.id}'
