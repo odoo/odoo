@@ -2,6 +2,7 @@ import {
     many2ManyTagsFieldColorEditable,
     Many2ManyTagsFieldColorEditable,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { _t } from "@web/core/l10n/translation";
@@ -12,6 +13,7 @@ export class FieldMany2ManyTagsBanksTagsList extends TagsList {
 }
 
 export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
+    static template = "account.FieldMany2ManyTagsBanks";
     static components = {
         ...FieldMany2ManyTagsBanks.components,
         TagsList: FieldMany2ManyTagsBanksTagsList,
@@ -19,6 +21,7 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
 
     setup() {
         super.setup();
+        this.actionService = useService("action");
         onMounted(async () => {
             // Needed when you create a partner (from a move for example), we want the partner to be saved to be able
             // to have it as account holder
@@ -35,6 +38,17 @@ export class FieldMany2ManyTagsBanks extends Many2ManyTagsFieldColorEditable {
             allowOutPayment: record.data?.allow_out_payment,
         };
     }
+
+    openBanksListView() {
+        this.actionService.doAction({
+            type: "ir.actions.act_window",
+            name: _t("Banks"),
+            res_model: this.relation,
+            views: [[false, "list"], [false, "form"]],
+            domain: this.getDomain(),
+            target: "current",
+        });
+    }
 }
 
 export const fieldMany2ManyTagsBanks = {
@@ -47,6 +61,11 @@ export const fieldMany2ManyTagsBanks = {
             name: "allow_out_payment_field",
             type: "boolean",
         },
+        {
+            label: _t("No search more"),
+            name: "no_search_more",
+            type: "boolean",
+        },
     ],
     additionalClasses: [
         ...(many2ManyTagsFieldColorEditable.additionalClasses || []),
@@ -57,6 +76,13 @@ export const fieldMany2ManyTagsBanks = {
             ...many2ManyTagsFieldColorEditable.relatedFields({ options }),
             { name: options.allow_out_payment_field, type: "boolean", readonly: false },
         ];
+    },
+    extractProps({ attrs, options, string }, dynamicInfo) {
+        const noSearchMore = Boolean(options.no_search_more);
+        return {
+            ...many2ManyTagsFieldColorEditable.extractProps({ attrs, options, string }, dynamicInfo),
+            noSearchMore,
+        };
     },
 };
 
