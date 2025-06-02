@@ -622,3 +622,10 @@ class TestFrontend(TestFrontendCommon):
         We can now transfer order from one table to another and from floating order to another etc.
         """
         self.start_pos_tour('test_transfering_orders', login="pos_user")
+
+    def test_synchronisation_of_orders(self):
+        """ Test order synchronization with order data using the notify_synchronisation method.
+            First, an ongoing order is created on the server, and verify its presence in the POS UI.
+            Then, the order is paid from the server, and confirm if the order state is updated correctly.
+        """
+        self.start_pos_tour("OrderSynchronisationTour")
