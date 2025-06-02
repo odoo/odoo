@@ -9,7 +9,7 @@ export class ContentWidthOption extends BaseOptionComponent {
     static template = "website.ContentWidthOption";
     static selector = "section, .s_carousel .carousel-item, .s_carousel_intro_item";
     static exclude =
-        "[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *, .s_bento_banner section[data-name='Card'],.s_floating_blocks .s_floating_blocks_block, .s_bento_block_card";
+        "[data-snippet] :not(.oe_structure) > [data-snippet],#footer > *,#o_wblog_post_content *, .s_bento_banner section[data-name='Card'],.s_floating_blocks .s_floating_blocks_block, .s_bento_block_card, .o_no_content_width_option";
     static applyTo = ":scope > .container, :scope > .container-fluid, :scope > .o_container_small";
 }
 

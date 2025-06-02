@@ -32,6 +32,7 @@ This is a bridge module that adds multi-website support for payment providers.
         ],
         'web.assets_tests': [
             'website_payment/static/tests/tours/donation.js',
+            'website_payment/static/tests/tours/donation_form_custom_fields.js',
         ],
         'web.assets_unit_tests': [
             'website_payment/static/tests/builder/**/*',
