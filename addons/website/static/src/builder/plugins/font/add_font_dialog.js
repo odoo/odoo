@@ -1,42 +1,14 @@
 import { rpc } from "@web/core/network/rpc";
-import { Component, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, useRef, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Dialog } from "@web/core/dialog/dialog";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-class GoogleFontAutoComplete extends AutoComplete {
-    setup() {
-        super.setup();
-        this.inputRef = useRef("input");
-        this.sourcesListRef = useRef("sourcesList");
-        useEffect(
-            (el) => {
-                el.setAttribute("id", "google_font");
-            },
-            () => [this.inputRef.el]
-        );
-    }
-
-    get dropdownOptions() {
-        return {
-            ...super.dropdownOptions,
-            position: "bottom-fit",
-        };
-    }
-
-    onInput(ev) {
-        super.onInput(ev);
-        if (this.sourcesListRef.el) {
-            this.sourcesListRef.el.scrollTop = 0;
-        }
-    }
-}
-
 export class AddFontDialog extends Component {
     static template = "website.dialog.addFont";
-    static components = { GoogleFontAutoComplete, Dialog };
+    static components = { AutoComplete, Dialog };
     static props = {
         close: Function,
         allFonts: Array,
