@@ -19,7 +19,7 @@ class UomUom(models.Model):
     _description = 'Product Unit of Measure'
     _parent_name = 'relative_uom_id'
     _parent_store = True
-    _order = "relative_uom_id, name, id"
+    _order = 'sequence, relative_uom_id, id'
 
     def _unprotected_uom_xml_ids(self):
         """ Return a list of UoM XML IDs that are not protected by default.
@@ -32,6 +32,7 @@ class UomUom(models.Model):
         ]
 
     name = fields.Char('Unit Name', required=True, translate=True)
+    sequence = fields.Integer(compute="_compute_sequence", store=True, readonly=False, precompute=True)
     relative_factor = fields.Float(
         'Contains', default=1.0, digits=0, required=True,  # force NUMERIC with unlimited precision
         help='How much bigger or smaller this unit is compared to the reference UoM for this unit')
@@ -46,6 +47,34 @@ class UomUom(models.Model):
         'CHECK (relative_factor!=0)',
         'The conversion ratio for a unit of measure cannot be 0!',
     )
+
+    # === COMPUTE METHODS === #
+
+    @api.depends('relative_factor')
+    def _compute_sequence(self):
+        for uom in self:
+            if uom.id and uom.sequence:
+                # Only set a default sequence before the record creation, or on module update if
+                # there is no value.
+                continue
+            uom.sequence = int(uom.relative_factor * 100.0)
+
+    def _compute_rounding(self):
+        """ All Units of Measure share the same rounding precision defined in 'Product Unit'.
+            Set in a compute to ensure compatibility with previous calls to `uom.rounding`.
+        """
+        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit')
+        self.rounding = 10 ** -decimal_precision
+
+    @api.depends('relative_factor', 'relative_uom_id', 'relative_uom_id.factor')
+    def _compute_factor(self):
+        for uom in self:
+            if uom.relative_uom_id:
+                uom.factor = uom.relative_factor * uom.relative_uom_id.factor
+            else:
+                uom.factor = uom.relative_factor
+
+    # === ONCHANGE METHODS === #
 
     @api.onchange('relative_factor')
     def _onchange_critical_fields(self):
@@ -63,11 +92,15 @@ class UomUom(models.Model):
                 }
             }
 
+    # === CONSTRAINT METHODS === #
+
     @api.constrains('relative_factor', 'relative_uom_id')
     def _check_factor(self):
         for uom in self:
             if not uom.relative_uom_id and uom.relative_factor != 1.0:
                 raise UserError(_("Reference unit of measure is missing."))
+
+    # === CRUD METHODS === #
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_data(self):
@@ -77,6 +110,8 @@ class UomUom(models.Model):
                 "The following units of measure are used by the system and cannot be deleted: %s\nYou can archive them instead.",
                 ", ".join(locked_uoms.mapped('name')),
             ))
+
+    # === BUSINESS METHODS === #
 
     def round(self, value: float, rounding_method: RoundingMethod = 'HALF-UP') -> float:
         """Round the value using the 'Product Unit' precision"""
@@ -164,21 +199,6 @@ class UomUom(models.Model):
         if to_unit:
             amount = amount / self.factor
         return amount
-
-    @api.depends('relative_factor', 'relative_uom_id', 'relative_uom_id.factor')
-    def _compute_factor(self):
-        for uom in self:
-            if uom.relative_uom_id:
-                uom.factor = uom.relative_factor * uom.relative_uom_id.factor
-            else:
-                uom.factor = uom.relative_factor
-
-    def _compute_rounding(self):
-        """ All Units of Measure share the same rounding precision defined in 'Product Unit'.
-            Set in a compute to ensure compatibility with previous calls to `uom.rounding`.
-        """
-        decimal_precision = self.env['decimal.precision'].precision_get('Product Unit')
-        self.rounding = 10 ** -decimal_precision
 
     def _filter_protected_uoms(self):
         """Verifies self does not contain protected uoms."""
