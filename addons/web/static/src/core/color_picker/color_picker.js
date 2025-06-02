@@ -144,6 +144,32 @@ export class ColorPicker extends Component {
         }
         this.props.applyColorResetPreview();
     }
+
+    onColorResetApply() {
+        const color = "o-color-1";
+        this.applyColor(color);
+        this.props.close();
+    }
+
+    onColorResetHover(ev) {
+        const color = "o-color-1";
+        this.props.applyColorPreview(color);
+    }
+
+    onColorResetHoverOut() {
+        this.props.applyColorResetPreview();
+    }
+
+    onColorResetFocusin(ev) {
+        if (this.focusedColorBtn === ev.target) {
+            this.focusedColorBtn = null;
+            return;
+        }
+        this.onColorResetHover(ev);
+        this.focusedColorBtn = ev.target;
+        ev.target.focus();
+    }
+
     getTarget(ev) {
         const target = ev.target.closest(`[data-color]`);
         return this.root.el.contains(target) ? target : ev.target;

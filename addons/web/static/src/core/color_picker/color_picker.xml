@@ -29,10 +29,10 @@
             <div class="flex-grow-1" />
             <button class="btn btn-sm btn-light fa fa-trash me-1"
                     title="Reset"
-                    t-on-click="onColorApply"
-                    t-on-mouseover="onColorHover"
-                    t-on-mouseout="onColorHoverOut"
-                    t-on-focusin="onColorFocusin"/>
+                    t-on-click="onColorResetApply"
+                    t-on-mouseover="onColorResetHover"
+                    t-on-mouseout="onColorResetHoverOut"
+                    t-on-focusin="onColorResetFocusin"/>
         </div>
         <t t-if="state.activeTab==='theme'">
             <div class="pt-2 px-2 pb-3 d-flex flex-column gap-1 o_cc_preview_wrapper"
