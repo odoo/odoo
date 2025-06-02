@@ -1439,6 +1439,94 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(activities.activity_type_id, self.env.ref('hr_holidays.mail_act_leave_approval'), "The activity type should be for leave approval by the Employee's Approver.")
         self.assertEqual(activities.user_id, self.employee_hrmanager.leave_manager_id, "The activity should be assigned to the Employee's Approver.")
 
+    def test_mail_update_with_no_validation(self):
+        """
+        Test mail notification flow when the leave type uses 'No Validation'.
+        Ensures that:
+        - The leave is automatically approved.
+        - A notification message is sent to the employee.
+        """
+        self.holidays_type_1.responsible_ids = [Command.link(self.user_employee_id)]
+
+        # Create a leave request with a leave type that has 'no_validation' as its approval policy
+        test_leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_support_document.id,
+            'request_date_from': date(2022, 3, 11),
+            'request_date_to': date(2022, 3, 11),
+            'number_of_days': 1,
+        })
+
+        mail_message = self.env['mail.message'].search([
+            ('res_id', '=', test_leave.id),
+        ], limit=1)
+
+        self.assertTrue(mail_message, "Expected a mail notification to be sent for automatically approved leave.")
+        self.assertEqual(
+            mail_message.preview,
+            "The time off has been automatically approved",
+            "The mail preview text should confirm automatic approval."
+        )
+
+    def test_mail_update_with_employee_approver(self):
+        """Test that a leave request sends a notification to the correct approver (Employee Approver)."""
+
+        self.employee_emp.leave_manager_id = self.user_hruser_id
+        test_leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_3.id,
+            'request_date_from': date(2022, 3, 11),
+            'request_date_to': date(2022, 3, 11),
+            'number_of_days': 1,
+        })
+
+        leave_mail_message = self.env['mail.message'].search([
+            ('res_id', '=', test_leave.id),
+        ], limit=1)
+
+        self.assertTrue(leave_mail_message, "A mail notification should be sent for approval")
+        self.assertEqual(
+            leave_mail_message.subject,
+            "I'm requesting 1 days of TimeNotLimited from 2022-03-11 to 2022-03-11",
+            "The email subject should describe the leave request details correctly."
+        )
+        self.assertIn(
+            self.user_hruser.partner_id,
+            leave_mail_message.partner_ids,
+            "The leave notification should be sent to the employee's Time Off Officer."
+        )
+
+    def test_mail_update_with_time_off_officer(self):
+        """Test that a leave request sends a notification to the correct approver (TIme Off Officer)."""
+
+        self.holidays_type_1.responsible_ids = [Command.link(self.user_employee.id)]
+        test_leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': self.holidays_type_1.id,
+            'request_date_from': date(2022, 3, 10),
+            'request_date_to': date(2022, 3, 10),
+            'number_of_days': 1,
+        })
+
+        leave_mail_message = self.env['mail.message'].search([
+            ('res_id', '=', test_leave.id),
+        ], limit=1)
+
+        self.assertTrue(leave_mail_message, "A mail notification should be sent for approval")
+        self.assertEqual(
+            leave_mail_message.subject,
+            "I'm requesting 1 days of NotLimitedHR from 2022-03-10 to 2022-03-10",
+            "The email subject should describe the leave request details correctly."
+        )
+        self.assertIn(
+            self.user_employee.partner_id,
+            leave_mail_message.partner_ids,
+            "The leave notification should be sent to the employee's Time Off Officer."
+        )
+
     def test_time_off_date_edit(self):
         user_id = self.employee_emp.user_id
         employee_id = self.employee_emp.id
