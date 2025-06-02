@@ -62,6 +62,7 @@
                 'custom_module/static/src/js/pos_order_inherit.js',
                 'custom_module/static/src/js/action_widget_inherit.js',
                 'custom_module/static/src/js/hw_printer_inherited.js',
+                #'custom_module/static/src/js/pos_bus_inherited.js',
                 'custom_module/static/src/xml/pos_discount_control_buttons_inherit.xml',
                 'custom_module/static/src/xml/point_of_sale_control_buttons_inherit.xml',
 

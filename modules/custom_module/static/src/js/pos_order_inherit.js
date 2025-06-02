@@ -49,7 +49,6 @@ patch(PosOrder.prototype, {
                 const localTicketNumber = generateLocalTicketNumber();
                 this.ticket_number = localTicketNumber;
                 vals.ticket_number = localTicketNumber;
-                console.log(`📝 Offline mode - New ticket #${localTicketNumber}`);
             } else {
                 this.ticket_number = result;
                 vals.ticket_number = result;
