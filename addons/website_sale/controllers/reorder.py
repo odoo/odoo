@@ -33,7 +33,23 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         for line in sale_order.order_line:
             if not line._is_reorder_allowed():
-                continue  # Skip section headers, deliveries
+                continue  # Skip section headers, deliveries, or combo item lines
+
+            linked_products = None
+
+            if line.product_id.type == 'combo':
+                linked_products = [{
+                    'product_template_id': linked_line.product_id.product_tmpl_id.id,
+                    'parent_product_template_id': line.product_id.product_tmpl_id.id,
+                    'quantity': linked_line.product_uom_qty,
+                    'combo_item_id': linked_line.combo_item_id.id,
+                    'product_id': linked_line.product_id.id,
+                    'product_custom_attribute_values': [{
+                        'custom_product_template_attribute_value_id': pcav.custom_product_template_attribute_value_id.id,
+                        'custom_value': pcav.custom_value,
+                    } for pcav in linked_line.product_custom_attribute_value_ids],
+                    'no_variant_attribute_value_ids': linked_line.product_no_variant_attribute_value_ids.ids,
+                } for linked_line in line.linked_line_ids]
 
             Cart().add_to_cart(
                 product_id=line.product_id.id,
@@ -44,6 +60,7 @@ class CustomerPortal(sale_portal.CustomerPortal):
                     'custom_value': pcav.custom_value,
                 } for pcav in line.product_custom_attribute_value_ids],
                 no_variant_attribute_value_ids=line.product_no_variant_attribute_value_ids.ids,
+                linked_products=linked_products,
             )
 
         return request.session.get('website_sale_cart_quantity', request.cart.cart_quantity)
