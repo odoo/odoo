@@ -114,6 +114,7 @@ export class ModelFieldSelectorPopover extends Component {
         filter: { type: Function, optional: true },
         sort: { type: Function, optional: true },
         followRelations: { type: Boolean, optional: true },
+        canFollowRelationFor: { type: Function, optional: true },
         showDebugInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         path: { optional: true },
@@ -170,6 +171,9 @@ export class ModelFieldSelectorPopover extends Component {
     }
 
     canFollowRelationFor(fieldDef) {
+        if (typeof this.props.canFollowRelationFor === "function") {
+            return this.props.canFollowRelationFor(fieldDef, this.props.followRelation);
+        }
         if (fieldDef.type === "properties") {
             return true;
         }
