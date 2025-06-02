@@ -96,6 +96,55 @@ test("should make a selection ending with underline text fully underline", async
     });
 });
 
+test("should make two paragraphs (separated with whitespace) underline", async () => {
+    await testEditor({
+        contentBefore: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+        stepFunction: underline,
+        contentAfter: `
+            <p><u>[abc</u></p>
+            <p><u>def]</u></p>
+        `,
+    });
+});
+
+test("should make two paragraphs (separated with whitespace) not underline", async () => {
+    await testEditor({
+        contentBefore: `
+            <p><u>[abc</u></p>
+            <p><u>def]</u></p>
+        `,
+        stepFunction: underline,
+        contentAfter: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+    });
+});
+
+test("should make two paragraphs (separated with whitespace) underline, then not underline", async () => {
+    await testEditor({
+        contentBefore: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+        stepFunction: async (editor) => {
+            underline(editor);
+            expect(getContent(editor.editable)).toBe(`
+            <p><u>[abc</u></p>
+            <p><u>def]</u></p>
+        `);
+            underline(editor);
+        },
+        contentAfter: `
+            <p>[abc</p>
+            <p>def]</p>
+        `,
+    });
+});
+
 test("should get ready to type in underline", async () => {
     await testEditor({
         contentBefore: `<p>ab[]cd</p>`,
