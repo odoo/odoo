@@ -1046,23 +1046,21 @@ export class ListPlugin extends Plugin {
         if (list.classList.contains("o_checklist")) {
             return;
         }
+
+        const largestMarker = list.children[Symbol.iterator]()
+            .map((li) => parseFloat(this.window.getComputedStyle(li, "::marker").width))
+            .reduce(Math.max);
+        // For `UL` with large font size the marker width is so big that more padding is needed.
+        const largestMarkerPadding = Math.floor(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
+
+        // bootstrap sets ul { padding-left: 2rem; }
         const defaultPadding =
-            parseFloat(this.window.getComputedStyle(document.documentElement).fontSize) * 2; // 2rem
+            parseFloat(this.window.getComputedStyle(document.documentElement).fontSize) * 2;
         // Align the whole list based on the item that requires the largest padding.
-        const requiredPaddings = [...list.children].map((li) => {
-            const markerWidth = Math.floor(
-                parseFloat(this.window.getComputedStyle(li, "::marker").width)
-            );
-            // For `UL` with large font size the marker width is so big that more padding is needed.
-            const paddingForMarker =
-                li.parentElement.nodeName === "UL" ? markerWidth * 2 : markerWidth;
-            // For smaller font sizes, doubling the width of the dot marker is still lower than the
-            // default. The default is kept in that case.
-            return Math.max(defaultPadding, paddingForMarker);
-        });
-        const largestPadding = Math.max(...requiredPaddings);
-        if (largestPadding > defaultPadding) {
-            list.style.paddingInlineStart = `${largestPadding}px`;
+        // For smaller font sizes, doubling the width of the dot marker is still lower than the
+        // default. The default is kept in that case.
+        if (largestMarkerPadding > defaultPadding) {
+            list.style.paddingInlineStart = `${largestMarkerPadding}px`;
         }
     }
 
