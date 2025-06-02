@@ -219,9 +219,10 @@ class MrpUnbuild(models.Model):
                 taken_quantity = move.product_uom.round(taken_quantity)
                 if taken_quantity:
                     move_line_vals = self._prepare_move_line_vals(move, move_line, taken_quantity)
-                    self.env["stock.move.line"].create(move_line_vals)
+                    unbuild_move_line = self.env["stock.move.line"].create(move_line_vals)
                     needed_quantity -= taken_quantity
                     qty_already_used[move_line] += taken_quantity
+                    unbuild_move_line._apply_putaway_strategy()
 
         (finished_moves | consume_moves | produce_moves).picked = True
         finished_moves._action_done()
