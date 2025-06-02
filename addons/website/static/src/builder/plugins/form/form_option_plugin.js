@@ -37,6 +37,7 @@ import {
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
@@ -96,6 +97,7 @@ export class FormOptionPlugin extends Plugin {
                 },
                 selector: ".s_website_form",
                 applyTo: "form",
+                cleanForSave: this.whitelistForms.bind(this),
             },
             {
                 OptionComponent: FormFieldOptionRedraw,
@@ -758,6 +760,26 @@ export class FormOptionPlugin extends Plugin {
             model,
             propertyOrigins,
         ]);
+    }
+    async whitelistForms(el) {
+        for (const sigEl of el.querySelectorAll("input[name=website_form_signature]")) {
+            sigEl.remove();
+        }
+
+        for (const formEl of selectElements(el, ".s_website_form form[data-model_name]")) {
+            const model = formEl.dataset.model_name;
+            const fields = [
+                ...formEl.querySelectorAll(
+                    ".s_website_form_field:not(.s_website_form_custom) .s_website_form_input"
+                ),
+            ].map((el) => el.name);
+            if (fields.length) {
+                this.services.orm.call("ir.model.fields", "formbuilder_whitelist", [
+                    model,
+                    [...new Set(fields)],
+                ]);
+            }
+        }
     }
     /**
      * Set the correct mark on all fields.
