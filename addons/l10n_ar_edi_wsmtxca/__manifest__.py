@@ -1,0 +1,22 @@
+{
+    "name": "Argentinean Electronic Invoicing WSMTXCA webservice",
+    "summary": """
+        This module adds the WSMTXCA webservice to the Argentinean Electronic Invoicing module.
+        It allows to send electronic invoices to AFIP using the WSMTXCA webservice.
+    """,
+    "author": "Quilsoft",
+    "website": "https://www.quilsoft.com",
+    "license": "AGPL-3",
+    "category": "Accounting",
+    "version": "16.0.1.0.0",
+    "installable": True,
+    "application": False,
+    "depends": [
+        "l10n_ar_ux",
+        "l10n_ar_edi",
+        "account_accountant",
+    ],
+    "data": [
+        # "views/report_invoice.xml",
+    ],
+}

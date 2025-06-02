@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" name="report_invoice_document" inherit_id="l10n_ar.report_invoice_document">
+        <xpath expr="//t[@t-set='document_legend']" position="replace">
+            <t t-if="o.l10n_latam_document_type_id.l10n_ar_letter == 'A'">
+                <t t-set="document_legend" t-value="o.l10n_latam_document_type_id.code and 'PAGO EN C.B.U INFORMADA CÓDIGO Nº %02d' % int(o.l10n_latam_document_type_id.code) or ''"/>
+            </t>
+            <t t-else="">
+                <t t-set="document_legend" t-value="o.l10n_latam_document_type_id.code and 'Cod. %02d' % int(o.l10n_latam_document_type_id.code) or ''"/>
+            </t>
+        </xpath>
+    </template>
+</odoo>
