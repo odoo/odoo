@@ -7,7 +7,7 @@ import { renderToMarkup } from '@web/core/utils/render';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.PaymentForm = publicWidget.Widget.extend({
-    selector: '#o_payment_form',
+    selector: "#o_payment_form, .o_donation_payment_form",
     events: Object.assign({}, publicWidget.Widget.prototype.events, {
         'click [name="o_payment_radio"]': '_selectPaymentOption',
         'click [name="o_payment_delete_token"]': '_fetchTokenData',

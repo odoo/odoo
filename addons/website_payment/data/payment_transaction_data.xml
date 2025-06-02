@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="payment.model_payment_transaction" model="ir.model">
+            <field name="website_form_key">donation_form</field>
+            <field name="website_form_access">True</field>
+            <field name="website_form_label">Donation Form</field>
+        </record>
+
+        <function model="ir.model.fields" name="formbuilder_whitelist">
+            <value>payment.transaction</value>
+            <value eval="[
+                'partner_name',
+                'partner_email',
+                'partner_country_id',
+            ]"/>
+        </function>
+    </data>
+</odoo>
