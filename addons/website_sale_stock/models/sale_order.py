@@ -37,7 +37,8 @@ class SaleOrder(models.Model):
             if available_qty < total_cart_qty:
                 allowed_line_qty = available_qty - (product_qty_in_cart - old_qty)
                 if allowed_line_qty > 0:
-                    format_qty = lambda qty: int(qty) if float(qty).is_integer() else qty
+                    def format_qty(qty):
+                        return int(qty) if float(qty).is_integer() else qty
                     if order_line:
                         warning = order_line._set_shop_warning_stock(
                             format_qty(total_cart_qty),
