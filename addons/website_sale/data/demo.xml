@@ -531,11 +531,6 @@
             <field name="base">list_price</field>
         </record>
 
-        <record id="item_us" model="product.pricelist.item">
-            <field name="compute_price">formula</field>
-            <field name="base">list_price</field>
-        </record>
-
         <!-- Add demo-data for pretty website sales graph (for the sales dashboard) -->
         <record id="website_sale_order_1" model="sale.order">
             <field name="create_date" eval="datetime.now() - timedelta(days=8)"/>
