@@ -51,7 +51,7 @@ const { DateTime } = luxon;
 
 /**
  * @typedef {Object} Options
- * @property {(value: Value | Couple) => (null|Object)} [getFieldDef]
+ * @property {(value: Value) => (null|Object)} [getFieldDef]
  * @property {boolean} [distributeNot]
  */
 
@@ -88,13 +88,6 @@ const EXCHANGE = {
 };
 
 const COMPARATORS = ["<", "<=", ">", ">=", "in", "not in", "==", "is", "!=", "is not"];
-
-export class Couple {
-    constructor(x, y) {
-        this.fst = x;
-        this.snd = y;
-    }
-}
 
 export class Expression {
     constructor(ast) {
@@ -394,7 +387,12 @@ function _construcTree(ASTs, options = {}, negate = false) {
             try {
                 tree.value = treeFromDomain(formatAST(valueAST), {
                     ...options,
-                    getFieldDef: (p) => options.getFieldDef?.(new Couple(tree.path, p)) || null,
+                    getFieldDef: (p) => {
+                        if (typeof tree.path === "string" && typeof p === "string") {
+                            return options.getFieldDef?.(`${tree.path}.${p}`) || null;
+                        }
+                        return null;
+                    },
                 });
             } catch {
                 tree.value = Array.isArray(tree.value) ? tree.value : [tree.value];

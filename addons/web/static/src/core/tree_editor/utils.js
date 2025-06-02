@@ -9,7 +9,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import {
     condition,
-    Couple,
     Expression,
     isTree,
     normalizeValue,
@@ -104,41 +103,20 @@ export function useMakeGetFieldDef(fieldService) {
         const paths = new Set([...pathsInTree, ...additionalsPath]);
         const promises = [];
         const fieldDefs = {};
-        const loadFieldInfoFromMultiplePaths = async (resModel, fieldDefs, path) => {
-            if (typeof path === "string" && !(path in fieldDefs)) {
-                const prom = loadFieldInfo(resModel, path).then(({ fieldDef }) => {
-                    fieldDefs[path].fieldDef = fieldDef;
-                    return fieldDef?.relation || null;
-                });
-                fieldDefs[path] = { prom, pathFieldDefs: {}, fieldDef: null };
-                return prom;
-            }
-            if (path instanceof Couple && typeof path.fst === "string" && path.fst in fieldDefs) {
-                const resModel = await fieldDefs[path.fst].prom;
-                if (resModel) {
-                    return loadFieldInfoFromMultiplePaths(
-                        resModel,
-                        fieldDefs[path.fst].pathFieldDefs,
-                        path.snd
-                    );
-                }
-            }
-            return null;
-        };
         for (const path of paths) {
-            promises.push(loadFieldInfoFromMultiplePaths(resModel, fieldDefs, path));
+            promises.push(
+                loadFieldInfo(resModel, path).then(({ fieldDef }) => {
+                    fieldDefs[path] = fieldDef;
+                })
+            );
         }
         await Promise.all(promises);
-        const _getFieldDef = (path, fieldDefs) => {
+        return (path) => {
             if (typeof path === "string") {
-                return fieldDefs[path].fieldDef;
-            }
-            if (path instanceof Couple && typeof path.fst === "string" && path.fst in fieldDefs) {
-                return _getFieldDef(path.snd, fieldDefs[path.fst].pathFieldDefs);
+                return fieldDefs[path];
             }
             return null;
         };
-        return (path) => _getFieldDef(path, fieldDefs);
     };
 }
 
@@ -402,7 +380,8 @@ function _extractIdsRecursive(tree, getFieldDef, idsByModel) {
     return idsByModel;
 }
 
-function addPaths(paths, path) {
+function makePaths(path) {
+    const paths = [path];
     const { initialPath, lastPart } = splitPath(path);
     if (initialPath && lastPart) {
         // these paths are used in _createSpecialPaths
@@ -414,28 +393,33 @@ function addPaths(paths, path) {
             [initialPath, "__time", lastPart].join(".")
         );
     }
+    return paths;
 }
 
-export function getPathsInTree(tree, lookInSubTrees = false) {
+function _getPathsInTree(tree, lookInSubTrees = false) {
     const paths = [];
     if (tree.type === "condition") {
         paths.push(tree.path);
-        if (typeof tree.path === "string") {
-            addPaths(paths, tree.path);
-        }
-        if (lookInSubTrees && isTree(tree.value)) {
-            const subTreePaths = getPathsInTree(tree.value, lookInSubTrees);
+        if (typeof tree.path === "string" && lookInSubTrees && isTree(tree.value)) {
+            const subTreePaths = _getPathsInTree(tree.value, lookInSubTrees);
             for (const p of subTreePaths) {
-                paths.push(new Couple(tree.path, p));
+                if (typeof p === "string") {
+                    paths.push(`${tree.path}.${p}`);
+                }
             }
         }
     }
     if (tree.type === "connector" && tree.children) {
         for (const child of tree.children) {
-            paths.push(...getPathsInTree(child, lookInSubTrees));
+            paths.push(..._getPathsInTree(child, lookInSubTrees));
         }
     }
     return unique(paths);
+}
+
+function getPathsInTree(tree, lookInSubTrees = false) {
+    const paths = _getPathsInTree(tree, lookInSubTrees);
+    return paths.flatMap((p) => makePaths(p));
 }
 
 const SPECIAL_FIELDS = ["country_id", "user_id", "partner_id", "stage_id", "id"];
