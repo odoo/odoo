@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add('survey_tour', {
     run: "click",
 }, {
     trigger: 'button[name=action_survey_user_input_completed]',
-    content: _t("Here, you can overview all the participations."),
+    content: _t("Here, you can view the participants."),
     tooltipPosition: 'bottom',
     run: "click",
 }, {
