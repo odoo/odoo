@@ -32,6 +32,9 @@ class PosSelfOrderController(http.Controller):
         if 'name' in order:
             del order['name']
 
+        if device_type == 'kiosk':
+            order['floating_order_name'] = f"Table tracker {order['table_stand_number']}" if order.get('table_stand_number') else tracking_number
+
         order['pos_reference'] = pos_reference
         order['tracking_number'] = tracking_number
         order['sequence_number'] = sequence_number
