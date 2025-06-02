@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import nullcontext
 from datetime import datetime
-import gc
 import json
 import logging
 import sys
@@ -16,6 +14,8 @@ from psycopg2 import OperationalError
 
 from odoo import tools
 from odoo.tools import SQL
+
+from .gc import disable_gc
 
 
 _logger = logging.getLogger(__name__)
@@ -558,6 +558,7 @@ class Profiler:
         self.sub_profilers = []
         self.entry_count_limit = int(self.params.get("entry_count_limit",0)) # the limit could be set using a smarter way
         self.done = False
+        self.gc_reset = None
 
         if db is ...:
             # determine database from current thread
@@ -604,8 +605,8 @@ class Profiler:
             self.description = f"{frame.f_code.co_name} ({code.co_filename}:{frame.f_lineno})"
         if self.params:
             self.init_thread.profiler_params = self.params
-        if self.disable_gc and gc.isenabled():
-            gc.disable()
+        if self.disable_gc:
+            self.gc_reset = disable_gc()
         self.start_time = real_time()
         self.start_cpu_time = real_cpu_time()
         for collector in self.collectors:
@@ -654,8 +655,9 @@ class Profiler:
         except OperationalError:
             _logger.exception("Could not save profile in database")
         finally:
-            if self.disable_gc:
-                gc.enable()
+            if self.gc_reset:
+                self.gc_reset()
+                self.gc_reset = None
             if self.params:
                 del self.init_thread.profiler_params
             if self.log:
