@@ -22,6 +22,8 @@ const modifierFields = [
 
 export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
 
+const cache = {};
+
 /**
  * Loads an src into an HTMLImageElement.
  *
@@ -31,6 +33,9 @@ export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields
  *     or a placeholder image if the src is not found.
  */
 export function loadImage(src, img = new Image()) {
+    if (src in cache) {
+        return cache[src];
+    }
     const handleImage = (source, resolve, reject) => {
         img.addEventListener("load", () => resolve(img), { once: true });
         img.addEventListener("error", reject, { once: true });
@@ -40,7 +45,7 @@ export function loadImage(src, img = new Image()) {
     // grep: LOAD_IMAGE_404
     const placeholderHref = "/web/image/__odoo__unknown__src__/";
 
-    return new Promise((resolve, reject) => {
+    const prom = new Promise((resolve, reject) => {
         fetch(src)
             .then((response) => {
                 if (!response.ok) {
@@ -53,6 +58,8 @@ export function loadImage(src, img = new Image()) {
                 handleImage(src, resolve, reject);
             });
     });
+    cache[src] = prom;
+    return prom;
 }
 
 // Because cropperjs acquires images through XHRs on the image src and we don't
@@ -183,7 +190,11 @@ export async function loadImageInfo(el, attachmentSrc = "") {
     const srcUrl = new URL(src, docHref);
     const relativeSrc = srcUrl.pathname;
 
-    const { original } = await rpc("/html_editor/get_image_info", { src: relativeSrc });
+    const { original } = await rpc(
+        "/html_editor/get_image_info",
+        { src: relativeSrc },
+        { cached: true }
+    );
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
