@@ -3,9 +3,18 @@
 
 """ Odoo initialization. """
 
+import gc
 import sys
 from .release import MIN_PY_VERSION
 assert sys.version_info > MIN_PY_VERSION, f"Outdated python version detected, Odoo requires Python >= {'.'.join(map(str, MIN_PY_VERSION))} to run."
+
+# ----------------------------------------------------------
+# Set gc thresolds if they are default, see `odoo.tools.gc`.
+# ----------------------------------------------------------
+if gc.get_threshold()[0] == 700:
+    # Handling requests can sometimes allocate over 5k new objects, let leave
+    # some space before starting any collection.
+    gc.set_threshold(12_000, 20, 25)
 
 # ----------------------------------------------------------
 # Import tools to patch code and libraries
