@@ -2,56 +2,85 @@
     background-color: $o-we-bg-darker;
     font-family: $o-we-font-family;
     font-size: $o-we-font-size;
-    color: #d9d9d9;
-    width: 288px;
+    color: $o-we-fg-light;
+    width: $o-we-sidebar-width;
 }
 
 .o-snippets-top-actions {
-    border-bottom: 1px solid $o-we-bg-lighter;
+    border-bottom: $o-we-border-width solid $o-we-bg-lighter;
     height: 46px;
+}
 
-    .btn {
-        border: none;
-        border-radius: 0;
-        padding: 0.375rem 0.75rem;
-        font-size: $o-we-font-size;
-        font-weight: 400;
-        line-height: 1;
+.o-snippets-top-actions, .o-snippets-tabs {
+    .o-hb-btn {
+        --btn-font-size: #{$o-we-font-size};
+        --btn-padding-x: #{map-get($spacers, 2)};
 
-        &:not(.fa) {
-            font-family: $o-we-font-family;
-        }
-        &.btn-primary {
-            @include button-variant($o-brand-primary, $o-brand-primary);
-        }
-        &.btn-secondary {
-            @include button-variant($o-we-sidebar-tabs-bg, $o-we-sidebar-tabs-bg);
-        }
-        &:focus, &:active, &:focus:active {
-            outline: none;
-            box-shadow: none !important;
-        }
+        flex: 1 auto;
     }
-
-    button[data-action="mobile"] span.fa {
-        font-size: 20px;
-      }
 }
 
 .o-snippets-tabs {
-    font-size: 12px;
-    line-height: 24px;
+    .o-snippets-tabs-highlighter {
+        --x: -50%;
+        --border-color: #{$o-we-color-accent};
+        --bg-color: #{rgba($o-we-color-accent, .15)};
 
-    > button {
-        color: $o-we-color;
+        width: CALC(#{percentage(1/3)} - var(--gap));
+        transition: all .5s, transform .25s;
+        border: $o-we-border-width solid var(--border-color);
+        background-color: var(--bg-color);
+        transform: translateX(var(--x));
+
+        &.o-highlight-blocks {
+            --x: -150%;
+            --border-color: #{$o-we-color-success};
+            --bg-color: #{rgba($o-we-color-success, .15)};
+        }
+
+        &.o-highlight-theme {
+            --x: 50%;
+            --border-color: #{$o-we-color-global};
+            --bg-color: #{rgba($o-we-color-global, .15)};
+        }
+
+        .o_rtl & {
+            --x: 50%;
+
+            &.o-highlight-blocks {
+                --x: 150%;
+            }
+
+            &.o-highlight-theme {
+                --x: -50%;
+            }
+        }
     }
-    .active {
-        box-shadow: inset 0 -2px 0 #01bad2;
+
+    .o-hb-btn {
+        --btn-bg: transparent;
+        --btn-color: #{$o-we-fg-light};
+        --btn-hover-bg: transparent;
+        --btn-hover-color: #{$o-we-fg-lighter};
+        --btn-active-bg: transparent;
+        --btn-active-color: #{$o-we-fg-lighter};
+
+        &[data-name="blocks"] i {
+            color: $o-we-color-success;
+        }
+        &[data-name="customize"] i {
+            color: $o-we-color-accent;
+        }
+        &[data-name="theme"] i {
+            color: $o-we-color-global;
+        }
     }
 }
 
 .o-tab-content {
-    background-color: $o-we-bg-dark;
+    border-top: $o-we-border-width solid $o-we-bg-lighter;
+    scrollbar-color: $o-we-bg-lightest $o-we-bg-darker;
+    scrollbar-width: thin;
 }
 
 .o_theme_tab {
@@ -86,7 +115,7 @@
     overflow-y: auto;
     padding: $o-we-sidebar-blocks-content-spacing;
     background-color: $o-we-sidebar-blocks-content-bg;
-    box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
+    box-shadow: $o-we-item-standup-top $o-we-bg-lighter;
 
     .o_panel_header {
         padding: $o-we-sidebar-content-field-spacing 0;
@@ -106,10 +135,6 @@
         padding-inline-start: 15px;
         margin-bottom: $o-we-sidebar-content-field-spacing - 4px;
     }
-}
-
-.o-snippets-tabs > button[disabled] {
-    opacity: .5;
 }
 
 // TODO: adjust the style of those elements

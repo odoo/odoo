@@ -3,29 +3,36 @@
 
 <t t-name="html_builder.Builder">
     <div class="h-100 o-snippets-menu d-flex flex-column" t-ref="builder_sidebar">
-        <div class="o-snippets-top-actions d-flex justify-content-between flex-shrink-0">
-            <div class="d-flex">
-                <button type="button" t-on-click="() => this.undo()" class="btn btn-secondary fa fa-undo" t-att-disabled="!state.canUndo"/>
-                <button type="button"  t-on-click="() => this.redo()" class="btn btn-secondary fa fa-repeat" t-att-disabled="!state.canRedo"/>
+        <div class="o-snippets-top-actions d-flex justify-content-between flex-shrink-0 p-2">
+            <div class="d-flex gap-1">
+                <button type="button" t-on-click="() => this.undo()" class="o-hb-btn btn fa fa-undo" t-att-disabled="!state.canUndo"/>
+                <button type="button"  t-on-click="() => this.redo()" class="o-hb-btn btn fa fa-repeat" t-att-disabled="!state.canRedo"/>
             </div>
-            <div class="d-flex">
-                <button t-on-click="onMobilePreviewClick" type="button" class="btn btn-secondary" data-action="mobile" title="Mobile Preview" accesskey="v"><span class="fa fa-mobile"/></button>
-                <button type="button"  t-on-click="discard" class="btn btn-secondary" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
-                <button type="button" t-on-click="save" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
+            <div class="d-flex gap-1">
+                <button t-on-click="onMobilePreviewClick" type="button" class="o-hb-btn btn d-flex align-items-center" t-att-class="{active: props.isMobile}" data-action="mobile" title="Mobile Preview" accesskey="v" style="--btn-font-size: 20px"><span class="fa fa-mobile" role="img"/></button>
+                <button type="button"  t-on-click="discard" class="o-hb-btn btn" data-action="cancel" title="Tip: Esc to preview" accesskey="j">Discard</button>
+                <button type="button" t-on-click="save" class="o-hb-btn btn btn-success px-3" data-action="save" accesskey="s">Save</button>
             </div>
         </div>
-        <div class="o-snippets-tabs d-flex justify-content-between mt-2 p-2 pb-0 flex-shrink-0">
-            <button data-name="blocks" data-hotkey="1" class="px-2 cursor-pointer pb-1 pe-auto bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="props.isTranslation">
-                <span class="ps-1">Blocks</span>
+        <div class="o-snippets-tabs position-relative grid px-2 my-2" style="--columns: 3; --gap: 0.25rem">
+            <div
+                class="o-snippets-tabs-highlighter position-absolute start-50 h-100 rounded pe-none"
+                t-att-class="{
+                    'o-highlight-blocks': state.activeTab === 'blocks',
+                    'o-highlight-theme': state.activeTab === 'theme',
+                }"
+            />
+            <button data-name="blocks" data-hotkey="1" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'blocks'}" t-on-click="() => this.onTabClick('blocks')" t-att-disabled="props.isTranslation">
+                <i class="oi oi-plus me-1" role="img"/>Add
             </button>
-            <button data-name="customize" class="px-2 cursor-pointer pb-1 bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'customize'}" t-on-click="() => this.onTabClick('customize')">
-                <span>Customize</span>
+            <button data-name="customize" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'customize'}" t-on-click="() => this.onTabClick('customize')">
+                <i class="oi oi-settings-adjust me-1" role="img"/>Edit
             </button>
-            <button data-name="theme" t-if="ThemeTab" data-hotkey="2" class="px-2 cursor-pointer pb-1 bg-transparent text-uppercase border-0" t-att-class="{'active text-white': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="props.isTranslation">
-                <span class="pe-1">Theme</span>
+            <button data-name="theme" data-hotkey="2" t-if="ThemeTab" class="o-hb-btn position-relative btn" t-att-class="{'active cursor-default': state.activeTab === 'theme'}" t-on-click="() => this.onTabClick('theme')" t-att-disabled="props.isTranslation">
+                <i class="fa fa-cog me-1" role="img"/>Theme
             </button>
         </div>
-        <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1 pt-1">
+        <div class="o-tab-content overflow-y-auto overflow-x-hidden flex-grow-1">
             <t t-if="state.activeTab === 'blocks'">
                 <BlockTab />
             </t>
