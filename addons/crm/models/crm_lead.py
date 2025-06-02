@@ -2078,7 +2078,15 @@ class CrmLead(models.Model):
             defaults['priority'] = msg_dict.get('priority')
         defaults.update(custom_values)
 
-        return super().message_new(msg_dict, custom_values=defaults)
+        new_lead = super().message_new(msg_dict, custom_values=defaults)
+        auto_assign_action = self.env['ir.config_parameter'].sudo().get_param('crm.lead.auto.assignment.action', 'incoming_emails')
+        if auto_assign_action == 'incoming_emails' and not new_lead.user_id:
+            members_filtered = new_lead.team_id.crm_team_member_ids.filtered(lambda member: not member.assignment_optout and member.lead_month_count < member.assignment_max)
+            if not members_filtered:
+                members_filtered = new_lead.team_id.crm_team_member_ids.filtered(lambda member: not member.assignment_optout)
+            if members_filtered:
+                new_lead.user_id = members_filtered.sorted(key=lambda member: member.lead_month_count)[0].user_id
+        return new_lead
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.partner_id:

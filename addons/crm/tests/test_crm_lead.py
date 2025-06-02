@@ -985,6 +985,58 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.phone, self.test_phone_data[1])
         self.assertFalse(lead.phone_sanitized)
 
+    @users('user_sales_manager')
+    def test_incoming_email_automatic_lead_assignment(self):
+        # create two sales teams with an alias each
+        [team_alice, team_bob] = self.env['crm.team'].create([
+            {
+                'name': 'team_alice',
+                'alias_name': 'team.alice',
+            }, {
+                'name': 'team_bob',
+                'alias_name': 'team.bob',
+            },
+        ])
+
+        # create two users each belonging to one of the teams
+        [sales_alice, sales_bob] = self.env['res.users'].sudo().create([{'name': 'alice', 'login': 'alice'}, {'name': 'bob', 'login': 'bob'}])
+        self.env['crm.team.member'].create([
+            {
+                'user_id': sales_alice.id,
+                'crm_team_id': team_alice.id,
+            }, {
+                'user_id': sales_bob.id,
+                'crm_team_id': team_bob.id,
+            },
+        ])
+
+        # send three emails to both aliases
+        for x in range(3):
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@customerOfAlice{x}.be',
+                team_alice.alias_email,
+                subject=f'OpportunityTeamAlice{x}',
+                target_model='crm.lead',
+            )
+            self.format_and_process(
+                INCOMING_EMAIL,
+                f'source.email@customerOfBob{x}.be',
+                team_bob.alias_email,
+                subject=f'OpportunityTeamBob{x}',
+                target_model='crm.lead',
+            )
+
+        # each team should receive all three of their new opportunities and none of the others'
+        team1_leads = self.env['crm.lead'].search([('team_id', '=', team_alice.id)])
+        team2_leads = self.env['crm.lead'].search([('team_id', '=', team_bob.id)])
+        for lead in team1_leads:
+            self.assertTrue('source.email@customerOfAlice' in lead.email_from)
+            self.assertTrue(lead.user_id == sales_alice)
+        for lead in team2_leads:
+            self.assertTrue('source.email@customerOfBob' in lead.email_from)
+            self.assertTrue(lead.user_id == sales_bob)
+
 
 @tagged('lead_internals')
 class TestLeadFormTools(FormatAddressCase):
