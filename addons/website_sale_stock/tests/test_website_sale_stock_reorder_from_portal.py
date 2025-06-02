@@ -13,7 +13,6 @@ class TestWebsiteSaleStockReorderFromPortal(HttpCase, WebsiteSaleStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['website'].get_current_website().enabled_portal_reorder_button = True
 
         cls.available_product = cls._create_product(name='available_product')
         cls.unavailable_product = cls._create_product(name='unavailable_product')
