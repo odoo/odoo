@@ -1,1 +1,1 @@
-from . import modal_bio_editor
+from . import publication_view_wizard 

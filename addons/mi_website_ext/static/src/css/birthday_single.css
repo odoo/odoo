@@ -77,87 +77,193 @@
   align-self: stretch;
 }
 
-.comment_section {
+/* --- Estilos para la Tarjeta de Cumpleaños Creativa --- */
+/* Añade esto a tu archivo birthday_single.css */
+
+/* Contenedor principal que envuelve todo el diseño */
+.creative-birthday-card {
+  position: relative; /* Esencial para posicionar los elementos internos */
+  width: 100%;
+  min-height: 85vh; /* Altura mínima para que ocupe buen espacio en pantalla */
+  padding: 2em;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 16px !important;
-  align-self: stretch;
-  width: 80%;
-}
-
-.comment {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  align-self: stretch;
-}
-
-.comment img {
-  display: flex;
-  width: 50px;
-  height: 50px;
   justify-content: center;
   align-items: center;
-  border-radius: 160px;
+  background-color: #feece9; /* Color de fondo principal */
+  border-radius: 16px; /* Para que las esquinas sean redondeadas */
+  overflow: hidden; /* Muy importante para contener las formas y decoraciones */
+  z-index: 1;
+  font-family: "Montserrat", sans-serif; /* Fuente base */
 }
 
-.input_with_icons {
+/* Formas orgánicas de fondo (la "magia" del diseño) */
+.creative-birthday-card::before,
+.creative-birthday-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1; /* Se colocan detrás del contenido */
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; /* Forma orgánica */
+  background: #fdd1c5;
+  transition: all 0.5s ease-in-out;
+}
+
+/* Forma superior izquierda */
+.creative-birthday-card::before {
+  width: 60%;
+  height: 60%;
+  top: -20%;
+  left: -20%;
+  transform: rotate(-30deg);
+  background: linear-gradient(135deg, #fdd1c5, #fbaa9d);
+}
+
+/* Forma inferior derecha */
+.creative-birthday-card::after {
+  width: 50%;
+  height: 50%;
+  bottom: -20%;
+  right: -15%;
+  transform: rotate(20deg);
+  background: #fbaa9d;
+}
+
+/* Contenido Principal (Texto, pastel, botón) */
+.creative-birthday-card .hero-content-birthday {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  flex: 1 0 0;
-  padding: 0px 10px;
-  gap: 8px;
+  text-align: center;
+  z-index: 2; /* Para que esté por encima de las formas de fondo */
+}
+
+.creative-birthday-card .heading-group {
+  margin-bottom: 1em;
+}
+
+.creative-birthday-card .happy-text {
+  display: block;
+  font-size: 1.5em;
+  color: #d94d58;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+.creative-birthday-card .birthday-text {
+  font-family: "Pacifico", cursive; /* Fuente especial para "Birthday" */
+  font-size: 5.5em;
+  color: #d94d58;
+  margin: -0.2em 0;
+  font-weight: 400; /* La fuente Pacifico no tiene otros pesos */
+  line-height: 1;
+}
+
+.creative-birthday-card .cake-img {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  margin: 1em 0;
+}
+
+.creative-birthday-card .description {
+  max-width: 450px;
+  font-size: 0.9em;
+  line-height: 1.6;
+  color: #5c5c5c;
+}
+
+.creative-birthday-card .rsvp-btn {
+  background-color: #d94d58;
+  color: #fff;
+  border: none;
   border-radius: 8px;
-  border: 1px solid #a1a0a0;
-  background: #f0f8ff;
-}
-
-.insert_comment {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 12px 4px;
-  outline: none;
-  gap: 8px;
-  flex: 1 0 0;
-  border: none;
-  background: #f0f8ff;
-}
-
-.emoji {
-  background-image: url("/mi_website_ext/static/src/img/Cake.svg");
-  width: 32px;
-  height: 32px;
-  border-radius: 160px;
-  border: none;
-  border: none;
+  padding: 0.8em 2em;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
   cursor: pointer;
-  flex-shrink: 0;
+  margin-top: 1.5em;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.attach {
-  background-image: url("/mi_website_ext/static/src/img/Cake.svg");
-  width: 32px;
-  height: 32px;
-  border-radius: 160px;
-  border: none;
-  border: none;
-  cursor: pointer;
-  flex-shrink: 0;
+.creative-birthday-card .rsvp-btn:hover {
+  background-color: #c8414c;
+  transform: translateY(-2px);
 }
 
-.send_button {
-  display: flex;
-  height: 48px;
-  padding: 8px 16px;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  border-radius: 8px;
-  background: #f9aa4e;
-  box-shadow: 0px 4px 5.2px 0px rgba(63, 64, 123, 0.06);
-  margin-left: 57px;
-  border: none;
-  font-weight: 800;
+/* Posicionamiento de las Imágenes Decorativas (Frutas) */
+.creative-birthday-card .deco-img {
+  position: absolute;
+  z-index: 0; /* Detrás del contenido pero encima del fondo base */
+  pointer-events: none; /* Para que no interfieran con el mouse */
+}
+
+.creative-birthday-card .strawberry-1 {
+  width: 100px;
+  top: 25%;
+  left: 10%;
+  transform: rotate(-25deg);
+}
+.creative-birthday-card .strawberry-2 {
+  width: 40px;
+  top: 38%;
+  left: 22%;
+  transform: rotate(15deg);
+}
+.creative-birthday-card .blueberry-1 {
+  width: 80px;
+  top: 18%;
+  left: 20%;
+  transform: rotate(20deg);
+}
+.creative-birthday-card .strawberry-3 {
+  width: 100px;
+  top: 25%;
+  right: 10%;
+  transform: rotate(25deg) scaleX(-1);
+}
+.creative-birthday-card .strawberry-4 {
+  width: 40px;
+  top: 38%;
+  right: 22%;
+  transform: rotate(-15deg);
+}
+.creative-birthday-card .blueberry-2 {
+  width: 80px;
+  top: 15%;
+  right: 15%;
+  transform: rotate(-30deg);
+}
+
+/* Ajustes para pantallas más pequeñas (Móviles) */
+@media (max-width: 768px) {
+  .creative-birthday-card .birthday-text {
+    font-size: 3.5em;
+  }
+  .creative-birthday-card .happy-text {
+    font-size: 1.2em;
+  }
+  .creative-birthday-card .deco-img {
+    width: 18vw;
+  }
+  .creative-birthday-card .lemon-1,
+  .creative-birthday-card .lemon-2 {
+    width: 15vw;
+  }
+}
+
+@media (max-width: 576px) {
+  .birthday_container {
+    width: 100%;
+    max-height: none;
+    position: static;
+  }
+
+  .content_container {
+    padding: 16px !important;
+  }
 }

@@ -1,0 +1,53 @@
+<odoo>
+    <template id="blog_post_detail_template" name="Blog Post Detail View">
+        <t t-call="website.layout">
+            <t t-if="publication">
+                <div class="content_container">
+                    <div class="blog_container">
+                        <div class="blog_header">
+                            <h1 class="blog_title">
+                                <t t-esc="publication.name"/>
+                            </h1>
+                            <h4 t-if="publication.subtitle">
+                                <t t-esc="publication.subtitle"/>
+                            </h4>
+                        </div>
+                        <div class="blog_author">
+                            <p class="blog_subtitle">
+                                <span t-field="publication.publish_date" t-options='{"format": "long"}'/>
+                            </p>
+                            <p class="blog_subtitle">
+                                por
+                                <span t-esc="publication.user_id.name"/>
+                            </p>
+                        </div>
+                        <t t-if="publication.image_1920">
+                            <img t-att-src="image_data_uri(publication.image_1920)" t-att-alt="publication.name" class="blog_photo"/>
+                        </t>
+                        <div class="blog_section">
+                            <div t-field="publication.content_html"/>
+                        </div>
+                        <hr/>
+                        <div class="read_confirmation_section text-center my-4" 
+                             t-att-data-res-model="publication._name" 
+                             t-att-data-res-id="publication.id">
+                            <t t-if="has_read">
+                                <div class="alert alert-success" role="alert">
+                                    <i class="fa fa-check-circle me-2"/>Leído y entendido. ¡Gracias!
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <button class="accept-button js_mark_as_read">
+                                    <i class="fa fa-check me-2"/>Marcar como leído y entendido
+                                </button>
+                            </t>
+                        </div>
+                        <!-- <t t-call="mi_website_ext.comment_section_template">
+                            <t t-set="main_object" t-value="publication"/>
+                        </t> -->
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

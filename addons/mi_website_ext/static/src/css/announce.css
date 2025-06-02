@@ -311,7 +311,6 @@
 }
 
 .emoji {
-  background-image: url("/mi_website_ext/static/src/img/Cake.svg");
   width: 32px;
   height: 32px;
   border-radius: 160px;
@@ -322,7 +321,6 @@
 }
 
 .attach {
-  background-image: url("/mi_website_ext/static/src/img/Cake.svg");
   width: 32px;
   height: 32px;
   border-radius: 160px;
@@ -386,6 +384,18 @@
 
   to {
     transform: translateY(-0.1em);
+  }
+}
+
+@media (max-width: 576px) {
+  .announce_container {
+    width: 100%;
+    max-height: none;
+    position: static;
+  }
+
+  .content_container {
+    padding: 16px !important;
   }
 }
 

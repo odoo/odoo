@@ -1,0 +1,44 @@
+<odoo>
+    <record id="view_publication_view_wizard_form" model="ir.ui.view">
+        <field name="name">publication.view.wizard.form</field>
+        <field name="model">publication.view.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="publication_id" options="{'no_create': True, 'no_open': True}"/>
+                </group>
+                <notebook>
+                    <page string="Leído Por">
+                        <field name="read_by_user_ids" readonly="1">
+                            <list>
+                                <field name="name"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Pendiente de Leer">
+                        <field name="unread_by_user_ids" readonly="1">
+                            <list>
+                                <field name="name"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_publication_view_wizard" model="ir.actions.act_window">
+        <field name="name">Seguimiento de Lecturas</field>
+        <field name="res_model">publication.view.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field> </record>
+
+    <!--<menuitem id="menu_publication_view_wizard"
+              name="Seguimiento de Lecturas"
+              parent="mi_website_ext.menu_website_publication_root"
+              action="action_publication_view_wizard"
+              sequence="50"/>-->
+</odoo>

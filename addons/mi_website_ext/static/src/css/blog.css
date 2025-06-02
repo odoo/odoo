@@ -17,12 +17,37 @@
   background: #fff;
 }
 
+.blog_header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  align-self: stretch;
+}
+
 .blog_title {
   color: #323030;
   font-family: "Rubik";
   font-size: 36px;
   font-style: normal;
   font-weight: 800;
+}
+
+.blog_header h4 {
+  align-self: stretch;
+  margin: 0;
+  color: #5b5959;
+  font-family: "Rubik";
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.blog_author {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
 }
 
 .blog_subtitle {
@@ -32,6 +57,15 @@
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
+}
+
+.blog_photo {
+  display: flex;
+  height: 662px;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
 }
 
 .blog_section {
@@ -90,4 +124,16 @@
   font-size: 14px;
   font-style: normal;
   font-weight: 300;
+}
+
+@media (max-width: 576px) {
+  .blog_container {
+    width: 100%;
+    max-height: none;
+    position: static;
+  }
+
+  .content_container {
+    padding: 16px !important;
+  }
 }
