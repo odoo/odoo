@@ -17,6 +17,7 @@ const MegaMenuDropdownEdit = (I) => class extends I {
     };
 
     setup() {
+        super.setup();
         const hasMegaMenu = this.el.querySelector(".o_mega_menu_toggle");
         if (hasMegaMenu) {
             const bsDropdown = window.Dropdown.getOrCreateInstance(".o_mega_menu_toggle");
