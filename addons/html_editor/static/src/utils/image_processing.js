@@ -22,6 +22,27 @@ const modifierFields = [
 
 export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields];
 
+const cache = {};
+
+const placeholderHref = "/web/image/__odoo__unknown__src__/";
+
+function _getValidSrc(src) {
+    if (src in cache) {
+        return cache[src];
+    }
+    const prom = new Promise((resolve) => {
+        fetch(src)
+            .then((response) => {
+                resolve(response.ok ? src : placeholderHref);
+            })
+            .catch(() => {
+                resolve(placeholderHref);
+            });
+    });
+    cache[src] = prom;
+    return prom;
+}
+
 /**
  * Loads an src into an HTMLImageElement.
  *
@@ -30,28 +51,12 @@ export const removeOnImageChangeAttrs = [...cropperDataFields, ...modifierFields
  * @returns {Promise<HTMLImageElement>} Promise that resolves to the loaded img
  *     or a placeholder image if the src is not found.
  */
-export function loadImage(src, img = new Image()) {
-    const handleImage = (source, resolve, reject) => {
+export async function loadImage(src, img = new Image()) {
+    const source = await _getValidSrc(src);
+    return new Promise((resolve, reject) => {
         img.addEventListener("load", () => resolve(img), { once: true });
         img.addEventListener("error", reject, { once: true });
         img.src = source;
-    };
-    // The server will return a placeholder image with the following src.
-    // grep: LOAD_IMAGE_404
-    const placeholderHref = "/web/image/__odoo__unknown__src__/";
-
-    return new Promise((resolve, reject) => {
-        fetch(src)
-            .then((response) => {
-                if (!response.ok) {
-                    src = placeholderHref;
-                }
-                handleImage(src, resolve, reject);
-            })
-            .catch((error) => {
-                src = placeholderHref;
-                handleImage(src, resolve, reject);
-            });
     });
 }
 
@@ -196,7 +201,11 @@ export async function loadImageInfo(el, attachmentSrc = "") {
         relativeSrc = `/web/image/${encodeURIComponent(match)}`;
     }
 
-    const { original } = await rpc("/html_editor/get_image_info", { src: relativeSrc });
+    const { original } = await rpc(
+        "/html_editor/get_image_info",
+        { src: relativeSrc },
+        { cached: true }
+    );
     // If src was an absolute "external" URL, we consider unlikely that its
     // relative part matches something from the DB and even if it does, nothing
     // bad happens, besides using this random image as the original when using
