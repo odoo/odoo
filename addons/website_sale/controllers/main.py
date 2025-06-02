@@ -1459,6 +1459,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def _get_shop_payment_values(self, order, **kwargs):
         checkout_page_values = {
+            'sale_order': order,
             'website_sale_order': order,
             'errors': self._get_shop_payment_errors(order),
             'partner': order.partner_invoice_id,
