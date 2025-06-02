@@ -11,30 +11,13 @@ export class BackgroundPositionOverlay extends Component {
         discardPosition: { type: Function },
         editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
     };
+
     setup() {
-        this.parentBgDragger = useRef("parentBgDragger");
-        this.backgroundOverlay = useRef("backgroundOverlay");
-        this.overlayContent = useRef("overlayContent");
-        // This has been put here as it is used in an event listener. As we need
-        // to remove the event listener and the method needs to access the
-        // `BgPositionOverlay` instance, it has to be an array function.
-        this.dimensionOverlay = () => {
-            // Sets the overlay in the right place so that the draggable
-            // background sizes the background item like the editing element.
-            this.backgroundOverlay.el.style.width = `${this.props.editable.clientWidth}px`;
-            this.backgroundOverlay.el.style.height = `${this.props.editable.clientHeight}px`;
-            const overlayContentEl = this.overlayContent.el;
+        this.parentBgDraggerRef = useRef("parentBgDragger");
+        this.backgroundOverlayRef = useRef("backgroundOverlay");
+        this.overlayContentRef = useRef("overlayContent");
+        this._dimensionOverlay = this.dimensionOverlay.bind(this);
 
-            this.bgDraggerEl.style.width = `${this.props.editingElement.clientWidth}px`;
-            this.bgDraggerEl.style.height = `${this.props.editingElement.clientHeight}px`;
-
-            const topPos = Math.max(
-                0,
-                window.scrollY -
-                    (this.props.editingElement.getBoundingClientRect().top + window.scrollY)
-            );
-            overlayContentEl.querySelector(".o_we_overlay_buttons").style.top = `${topPos}px`;
-        };
         onWillStart(async () => {
             const position = getComputedStyle(this.props.editingElement)
                 .backgroundPosition.split(" ")
@@ -60,29 +43,34 @@ export class BackgroundPositionOverlay extends Component {
                 await scrollTo(this.props.editingElement, { extraOffset: 50 });
             }
         });
+
         onMounted(() => {
-            this.bgDraggerEl = this.parentBgDragger.el.children[0];
+            this.bgDraggerEl = this.parentBgDraggerRef.el.children[0];
             this.dimensionOverlay();
             this.bgDraggerEl.style.backgroundAttachment = getComputedStyle(
                 this.props.editingElement
             ).backgroundAttachment;
-            window.addEventListener("resize", this.dimensionOverlay);
+            window.addEventListener("resize", this._dimensionOverlay);
         });
+
         useEffect(() => {
-            this.tooltip = window.Tooltip.getOrCreateInstance(this.parentBgDragger.el, {
+            this.tooltip = window.Tooltip.getOrCreateInstance(this.parentBgDraggerRef.el, {
                 trigger: "manual",
-                container: this.backgroundOverlay.el,
+                container: this.backgroundOverlayRef.el,
             });
             this.tooltip.show();
         });
+
         onWillUnmount(() => {
-            window.removeEventListener("resize", this.dimensionOverlay);
+            window.removeEventListener("resize", this._dimensionOverlay);
             this.tooltip.dispose();
         });
     }
+
     apply() {
         this.props.applyPosition(getComputedStyle(this.bgDraggerEl).backgroundPosition);
     }
+
     onDragBackgroundStart(ev) {
         this.bgDraggerEl.classList.add("o_we_grabbing");
         const documentEl = window.document;
@@ -97,6 +85,7 @@ export class BackgroundPositionOverlay extends Component {
             { once: true }
         );
     }
+
     /**
      * Drags the overlay's background image.
      *
@@ -132,6 +121,28 @@ export class BackgroundPositionOverlay extends Component {
             return Math.max(bounds[0], Math.min(val, bounds[1]));
         }
     }
+
+    dimensionOverlay() {
+        // Sets the overlay in the right place so that the draggable
+        // background sizes the background item like the editing element.
+        this.backgroundOverlayRef.el.style.width = `${this.props.editable.clientWidth}px`;
+        this.backgroundOverlayRef.el.style.height = `${this.props.editable.clientHeight}px`;
+
+        const overlayContentEl = this.overlayContentRef.el;
+        const targetRect = this.props.editingElement.getBoundingClientRect();
+        overlayContentEl.style.left = `${targetRect.left + window.scrollX}px`;
+
+        this.bgDraggerEl.style.width = `${this.props.editingElement.clientWidth}px`;
+        this.bgDraggerEl.style.height = `${this.props.editingElement.clientHeight}px`;
+
+        const topPos = Math.max(
+            0,
+            window.scrollY -
+                (this.props.editingElement.getBoundingClientRect().top + window.scrollY)
+        );
+        overlayContentEl.querySelector(".o_we_overlay_buttons").style.top = `${topPos}px`;
+    }
+
     /**
      * Returns the difference between the editing element's size and the
      * background's rendered size. Background position values in % are a
