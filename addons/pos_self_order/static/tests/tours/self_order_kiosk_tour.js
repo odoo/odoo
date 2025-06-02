@@ -179,6 +179,7 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_sides", {
     ],
 });
 
+<<<<<<< f39addbc149f6cbcc3fbd88d2b57a5af90119a3b
 registry.category("web_tour.tours").add("test_self_order_kiosk_combo_qty_max_free", {
     steps: () => [
         Utils.clickBtn("Order Now"),
@@ -193,6 +194,12 @@ registry.category("web_tour.tours").add("test_self_order_kiosk_combo_qty_max_fre
 });
 
 registry.category("web_tour.tours").add("test_self_order_pricelist", {
+||||||| 3a1b6675342f5f59e39aa222d0b7089df0d23d87
+registry.category("web_tour.tours").add("self_order_pricelist", {
+    test: true,
+=======
+registry.category("web_tour.tours").add("self_order_pricelist", {
+>>>>>>> 8f837478bede96ab1379b16055d9774f30924739
     steps: () => [
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
