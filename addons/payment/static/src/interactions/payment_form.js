@@ -7,7 +7,7 @@ import { renderToMarkup } from '@web/core/utils/render';
 import { Interaction } from '@web/public/interaction';
 
 export class PaymentForm extends Interaction {
-    static selector = '#o_payment_form';
+    static selector = ".payment_form_container";
     dynamicContent = {
         '[name="o_payment_radio"]': { 't-on-change': this.selectPaymentOption },
         '[name="o_payment_delete_token"]': { 't-on-click': this.fetchTokenData },
@@ -20,7 +20,7 @@ export class PaymentForm extends Interaction {
     setup() {
         // Load the payment context from the payment form dataset.
         this.paymentContext = {};
-        Object.assign(this.paymentContext, this.el.dataset);
+        Object.assign(this.paymentContext, this.el.querySelector("#o_payment_form")?.dataset);
 
         this.defaultSubmitButtonLabel = document.querySelector(
             'button[name="o_payment_submit_button"]'

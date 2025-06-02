@@ -68,7 +68,7 @@ export class FormOptionPlugin extends Plugin {
         builder_header_middle_buttons: [
             {
                 Component: FormOptionAddFieldButton,
-                selector: ".s_website_form",
+                selector: ".s_website_form:not(.o_payment_form_field_container)",
                 applyTo: "form",
                 props: {
                     addField: (formEl) => this.addFieldToForm(formEl),
@@ -663,7 +663,11 @@ export class FormOptionPlugin extends Plugin {
                     for (const el of inputsInDependencyContainer) {
                         conditionValueList.push({
                             value: el.value,
-                            textContent: inputsInDependencyContainer.length === 1 ? el.value : dependencyContainerEl.querySelector(`label[for="${el.id}"]`).textContent,
+                            textContent:
+                                inputsInDependencyContainer.length === 1
+                                    ? el.value
+                                    : dependencyContainerEl.querySelector(`label[for="${el.id}"]`)
+                                          .textContent,
                         });
                     }
                     if (!inputContainerEl.dataset.visibilityCondition) {
