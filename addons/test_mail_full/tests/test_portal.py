@@ -242,12 +242,12 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
         # prepare result URLs on self to ease tests
         # ------------------------------------------------------------
         cls.portal_web_url = f'{base_url}/my/test_portal/{cls.record_portal.id}'
-        cls.portal_web_url_with_token = f'{base_url}/my/test_portal/{cls.record_portal.id}?{url_encode({"access_token": cls.record_portal.access_token, "pid": cls.customer.id, "hash": cls.record_portal_hash})}'
+        cls.portal_web_url_with_token = f'{base_url}/my/test_portal/{cls.record_portal.id}?{url_encode({"access_token": cls.record_portal.access_token, "pid": cls.customer.id, "hash": cls.record_portal_hash}, sort=True)}'
         cls.public_act_url_share = f'{base_url}/test_portal/public_type/{cls.record_public_act_url.id}'
-        cls.internal_backend_local_url = f'/web#{url_encode({"model": cls.record_internal._name, "id": cls.record_internal.id, "active_id": cls.record_internal.id, "cids": cls.company_admin.id})}'
-        cls.portal_backend_local_url = f'/web#{url_encode({"model": cls.record_portal._name, "id": cls.record_portal.id, "active_id": cls.record_portal.id, "cids": cls.company_admin.id})}'
-        cls.read_backend_local_url = f'/web#{url_encode({"model": cls.record_read._name, "id": cls.record_read.id, "active_id": cls.record_read.id, "cids": cls.company_admin.id})}'
-        cls.public_act_url_backend_local_url = f'/web#{url_encode({"model": cls.record_public_act_url._name, "id": cls.record_public_act_url.id, "active_id": cls.record_public_act_url.id, "cids": cls.company_admin.id})}'
+        cls.internal_backend_local_url = f'/web#{url_encode({"model": cls.record_internal._name, "id": cls.record_internal.id, "active_id": cls.record_internal.id, "cids": cls.company_admin.id}, sort=True)}'
+        cls.portal_backend_local_url = f'/web#{url_encode({"model": cls.record_portal._name, "id": cls.record_portal.id, "active_id": cls.record_portal.id, "cids": cls.company_admin.id}, sort=True)}'
+        cls.read_backend_local_url = f'/web#{url_encode({"model": cls.record_read._name, "id": cls.record_read.id, "active_id": cls.record_read.id, "cids": cls.company_admin.id}, sort=True)}'
+        cls.public_act_url_backend_local_url = f'/web#{url_encode({"model": cls.record_public_act_url._name, "id": cls.record_public_act_url.id, "active_id": cls.record_public_act_url.id, "cids": cls.company_admin.id}, sort=True)}'
         cls.discuss_local_url = '/web#action=mail.action_discuss'
 
     def test_assert_initial_data(self):
@@ -331,7 +331,7 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
             # std url, read record -> redirect to my with parameters being record portal action parameters (???)
             (
                 'Access record (no customer portal)', self.record_read_url_base,
-                f'{self.test_base_url}/my#{url_encode({"model": self.record_read._name, "id": self.record_read.id, "active_id": self.record_read.id, "cids": self.company_admin.id})}',
+                f'{self.test_base_url}/my#{url_encode({"model": self.record_read._name, "id": self.record_read.id, "active_id": self.record_read.id, "cids": self.company_admin.id}, sort=True)}',
             ),
             # std url, no access to record -> redirect to my with discuss action (???)
             (
@@ -403,7 +403,7 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
             # std url, no access to record -> redirect to login, with just some mail/view params kept (???)
             (
                 'No access record (internal)', self.record_internal_url_base,
-                f'{login_url}#{url_encode(odoo_internal_params)}',
+                f'{login_url}#{url_encode(odoo_internal_params, sort=True)}',
             ),
             (
                 'No access record (portal enabled)', self.record_portal_url_base,
@@ -411,7 +411,7 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
             ),
             (
                 'No access record (portal can read, no customer portal)', self.record_read_url_base,
-                f'{login_url}#{url_encode(odoo_read_params)}',
+                f'{login_url}#{url_encode(odoo_read_params, sort=True)}',
             ),
             # public_type act_url -> share users are redirected to frontend url
             (
