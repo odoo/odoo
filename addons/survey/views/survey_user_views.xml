@@ -17,7 +17,7 @@
                 <filter string="In Progress" name="in_progress" domain="[('state', '=', 'in_progress')]"/>
                 <filter name="completed" string="Completed" domain="[('state', '=', 'done')]"/>
                 <separator/>
-                <filter string="Quizz passed" name="scoring_success" domain="[('scoring_success','=', True)]"/>
+                <filter string="Quiz passed" name="scoring_success" domain="[('scoring_success','=', True)]"/>
                 <separator/>
                 <filter string="Tests Only" name="test" domain="[('test_entry','=', True)]"/>
                 <filter string="Exclude Tests" name="not_test" domain="[('test_entry','=', False)]"/>
@@ -69,7 +69,7 @@
                             <label for="attempts_number" string="Attempt n°" invisible="not is_attempts_limited or test_entry or state != 'done'"/>
                             <div invisible="not is_attempts_limited or test_entry or state != 'done'" class="d-inline-flex">
                                 <field name="attempts_number" nolabel="1"/>
-                                 / 
+                                 /
                                 <field name="attempts_limit" nolabel="1"/>
                             </div>
                             <field name="test_entry" groups="base.group_no_one"/>
@@ -152,7 +152,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_survey_user_input">
-        <field name="name">Participations</field>
+        <field name="name">Participants</field>
         <field name="res_model">survey.user_input</field>
         <field name="domain">[('survey_id.survey_type', 'in', ('assessment', 'custom', 'live_session', 'survey'))]</field>
         <field name="view_mode">list,kanban,form</field>
@@ -241,7 +241,7 @@
         </field>
     </record>
 
-    <menuitem name="Participations"
+    <menuitem name="Participants"
         id="menu_survey_type_form1"
         action="action_survey_user_input"
         parent="menu_surveys"
