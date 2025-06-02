@@ -5,4 +5,18 @@
             <i t-if="tag.allowOutPayment" class="ms-1 fa fa-unlock"/>
         </xpath>
     </t>
+
+    <t t-name="account.FieldMany2ManyTagsBanks" t-inherit="web.Many2ManyTagsField" t-inherit-mode="primary">
+        <xpath expr="//div[hasclass('o_field_many2many_selection')]" position="inside">
+            <button
+                aria-label="Internal link"
+                class="btn btn-link text-action o_dropdown_button px-1 py-0 oi oi-arrow-right"
+                data-tooltip="Internal link"
+                draggable="false"
+                tabindex="-1"
+                type="button"
+                t-on-click="this.openBanksListView"
+            />
+        </xpath>
+    </t>
 </templates>
