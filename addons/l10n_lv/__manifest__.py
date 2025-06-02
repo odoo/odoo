@@ -24,6 +24,7 @@ co-author is Chick.Farm (visit for more information https://www.myacc.cloud)
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/account_tax_report_data.xml',
     ],
     'demo': [
