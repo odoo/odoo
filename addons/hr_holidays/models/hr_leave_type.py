@@ -202,7 +202,6 @@ class HrLeaveType(models.Model):
             if leave_type.requires_allocation == 'yes':
                 allocations = self.env['hr.leave.allocation'].search([
                     ('holiday_status_id', '=', leave_type.id),
-                    ('allocation_type', '=', 'accrual'),
                     ('employee_id', '=', employee_id),
                     ('date_from', '<=', date_from),
                     '|',
