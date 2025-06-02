@@ -3,12 +3,14 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { localization } from "@web/core/l10n/localization";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
+import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
 import {
@@ -16,25 +18,24 @@ import {
     getClassNameFromDecoration,
     getFormattedValue,
 } from "@web/views/utils";
-import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
-import { localization } from "@web/core/l10n/localization";
 import { useMagicColumnWidths } from "./column_width_hook";
 
 import {
     Component,
     onMounted,
     onPatched,
-    status,
     onWillPatch,
     onWillRender,
+    status,
     useExternalListener,
     useRef,
 } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
 
 /**
  * @typedef {import('@web/model/relational_model/dynamic_list').DynamicList} DynamicList
@@ -393,6 +394,10 @@ export class ListRenderer extends Component {
         if (!this.props.list.canResequence() || this.props.readonly) {
             return false;
         }
+        const groupByField = this.props.list.groupByField;
+        if (groupByField && !this.isMovableField(groupByField)) {
+            return false;
+        }
         const { handleField, orderBy } = this.props.list;
         return !orderBy.length || (orderBy.length && orderBy[0].name === handleField);
     }
@@ -447,6 +452,10 @@ export class ListRenderer extends Component {
             return true;
         }
         return false;
+    }
+
+    isMovableField(field) {
+        return MOVABLE_RECORD_TYPES.includes(field.type);
     }
 
     focusCell(column, forward = true) {
