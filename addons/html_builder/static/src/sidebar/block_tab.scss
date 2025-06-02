@@ -41,19 +41,29 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 .o_block_tab {
     background-color: $o-we-sidebar-blocks-content-bg;
-    padding: 0 $o-we-sidebar-blocks-content-spacing;
+    padding-left: map-get($spacers, 2) ;
     height: 100%; // give enough space for tips pointing at snippets after a snippet search
     z-index: 1;
 
 
     .o_snippets_container, .o_snippets_container_header {
-        padding: $o-we-sidebar-blocks-content-spacing 0;
+        padding-bottom: $o-we-sidebar-blocks-content-spacing;
+    }
+
+    .o_snippets_container_header {
+        position: sticky;
+        top: 0;
+        background-color: $o-we-sidebar-blocks-content-bg;
+        padding-top: $o-we-sidebar-blocks-content-spacing * .5;
+        z-index: 1;
     }
 
     .o_snippets_container_body {
         display: flex; // Needed for too long snippet names
         flex-wrap: wrap;
         margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
+        z-index: 0;
+        position: relative;
 
         .o_snippet {
             flex: 0 0 auto;
