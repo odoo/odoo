@@ -470,8 +470,8 @@ registry.category("web_tour.tours").add("test_form_view_model_id", {
         },
         {
             trigger: ".o_field_widget[name='trigger']",
-            run() {
-                return waitUntil(() => {
+            async run() {
+                await waitUntil(() => {
                     const triggerGroups = Array.from(this.anchor.querySelectorAll("optgroup"));
                     return triggerGroups.map((el) => el.getAttribute("label")).join(" // ") === "Values Updated // Timing Conditions // Custom // External" &&
                         triggerGroups.map((el) => el.innerText).join(" // ") === "Stage is set toUser is setTag is addedPriority is set to // Based on date fieldAfter creationAfter last update // On createOn create and editOn deletionOn UI change // On webhook";
@@ -576,8 +576,8 @@ registry.category("web_tour.tours").add("test_form_view_mail_triggers", {
         },
         {
             trigger: ".o_field_widget[name='trigger']",
-            run() {
-                return waitUntil(() => {
+            async run() {
+                await waitUntil(() => {
                     const textLabels = Array.from(this.anchor.querySelectorAll("select optgroup"))
                         .map((el) => el.label)
                         .join(", ");
