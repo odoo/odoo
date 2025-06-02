@@ -309,7 +309,7 @@ function generateStringFromLayers(layers, tabSize) {
  */
 function getFiltersDescription(modifierInfo) {
     const description = [];
-    for (const [modifier, content, count] of modifierInfo) {
+    for (const [modifier, content, count = 0] of modifierInfo) {
         const makeLabel = MODIFIER_SUFFIX_LABELS[modifier];
         const elements = plural("element", count);
         if (typeof makeLabel === "function") {
@@ -835,7 +835,7 @@ function registerQueryMessage(filteredNodes, expectedCount) {
 
         // Next message part: initial element count (with selector if string)
         const rootModifierInfo = globalModifierInfo.shift();
-        const [rootModifier, rootContent, initialCount] = rootModifierInfo;
+        const [rootModifier, rootContent, initialCount = 0] = rootModifierInfo;
         if (rootContent) {
             lastQueryMessage += `: ${initialCount} ${rootModifier} ${JSON.stringify(rootContent)}`;
         } else {
