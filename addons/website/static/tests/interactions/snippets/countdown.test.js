@@ -137,6 +137,31 @@ test("countdown is stopped correctly", async () => {
     expect(queryAll(".s_countdown_end_redirect_message")).toHaveLength(0);
 });
 
+test("Countdown snippet exists, when the colors are not defined", async () => {
+    const countdownEl = `<section class="s_countdown pt48 pb48"
+            data-display="dhms"
+            data-end-action="nothing"
+            data-size="175"
+            data-layout="circle"
+            data-layout-background="none"
+            data-progress-bar-style="surrounded"
+            data-progress-bar-weight="thin"
+            id="countdown-section"
+            data-end-time="1749351790.469224">
+                <div class="container">
+                    <div class="s_countdown_canvas_wrapper"
+                    style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;">
+                    </div>
+                </div>
+            </section>`;
+    const { core } = await startInteractions(countdownEl);
+    expect(".o_error_dialog").toHaveCount(0);
+    expect(core.interactions).toHaveLength(1);
+});
+
 test("past date: redirect end message is shown", async () => {
     await startInteractions(getTemplate({ endAction: "redirect", endTime: 1 }));
     await tick();

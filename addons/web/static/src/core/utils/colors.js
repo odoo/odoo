@@ -201,7 +201,7 @@ export function convertRgbaToCSSColor(r, g, b, a) {
  *          - blue [0, 255] (integer)
  *          - opacity [0, 100.0] (float)
  */
-export function convertCSSColorToRgba(cssColor) {
+export function convertCSSColorToRgba(cssColor = "") {
     // Check if cssColor is a rgba() or rgb() color
     const rgba = cssColor.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
     if (rgba) {
