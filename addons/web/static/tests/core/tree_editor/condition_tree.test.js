@@ -6,15 +6,23 @@ import {
     complexCondition,
     condition,
     connector,
-    domainFromExpression,
     domainFromTree,
     expression,
-    expressionFromDomain,
     expressionFromTree,
     treeFromDomain,
     treeFromExpression,
 } from "@web/core/tree_editor/condition_tree";
 import { makeMockEnv } from "@web/../tests/web_test_helpers";
+
+function expressionFromDomain(domain, options = {}) {
+    const tree = treeFromDomain(domain, options);
+    return expressionFromTree(tree, options);
+}
+
+function domainFromExpression(expression, options = {}) {
+    const tree = treeFromExpression(expression, options);
+    return domainFromTree(tree);
+}
 
 describe.current.tags("headless");
 
