@@ -66,11 +66,11 @@ class AccountEdiXmlUBLPINTSG(models.AbstractModel):
             )
             # [BR-53-GST-SG]-If the GST accounting currency code (BT-6-GST) is present, then the Invoice total GST amount (BT-111-GST),
             # Invoice total including GST amount and Invoice Total excluding GST amount in accounting currency shall be provided.
-            additional_document_reference_list.append([{
+            additional_document_reference_list += [{
                 'id': invoice.company_id.currency_id.name,
                 'document_description': amount,
                 'document_type_code': code,
-            } for code, amount in amounts_in_accounting_currency])
+            } for code, amount in amounts_in_accounting_currency]
         return additional_document_reference_list
 
     def _export_invoice_vals(self, invoice):
