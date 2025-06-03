@@ -326,7 +326,10 @@ class PurchaseOrderLine(models.Model):
         if values.get('product_description_variants'):
             line_description = values['product_description_variants']
         supplier = values.get('supplier')
-        res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
+        if not values.get('force_uom') and supplier.product_uom_id != product_uom:
+            product_qty = product_uom._compute_quantity(product_qty, supplier.product_uom_id)
+            product_uom = supplier.product_uom_id
+        res = self.with_context(procurement_values=values)._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
         # We need to keep the vendor name set in _prepare_purchase_order_line. To avoid redundancy
         # in the line name, we add the line_description only if different from the product name.
         # This way, we shoud not lose any valuable information.
@@ -366,6 +369,7 @@ class PurchaseOrderLine(models.Model):
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
             and (l.orderpoint_id == values['orderpoint_id'] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
+            and (l.product_uom_id == product_uom if values.get('force_uom') else True)
         )
 
         # In case 'product_description_variants' is in the values, we also filter on the PO line
