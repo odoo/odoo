@@ -79,7 +79,7 @@
             </BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Size">
+    <BuilderRow label.translate="Size" t-if="!hasHeaderTemplates(['hamburger', 'sidebar'])">
         <BuilderSelect>
             <BuilderSelectItem classAction="''">Full-Width</BuilderSelectItem>
             <BuilderSelectItem classAction="'o_mega_menu_container_size'">Narrow</BuilderSelectItem>
