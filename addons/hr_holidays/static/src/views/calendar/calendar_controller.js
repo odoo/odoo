@@ -84,7 +84,7 @@ export class TimeOffCalendarController extends CalendarController {
         this._deleteRecord(record.id, record.rawRecord.can_cancel);
     }
 
-    async editRecord(record, context = {}, shouldFetchFormViewId = true) {
+    _editRecord(record, context, props = {}) {
         const onDialogClosed = () => {
             this.model.load();
             this.env.timeOffBus.trigger("update_dashboard");
@@ -94,6 +94,7 @@ export class TimeOffCalendarController extends CalendarController {
             this.displayDialog(
                 TimeOffFormViewDialog,
                 {
+                    ...props,
                     resModel: this.model.resModel,
                     resId: record.id || false,
                     context,
@@ -107,5 +108,15 @@ export class TimeOffCalendarController extends CalendarController {
                 { onClose: () => resolve() }
             );
         });
+    }
+
+    async editRecord(record, context = {}, shouldFetchFormViewId = true) {
+        return this._editRecord(record, context)
+    }
+}
+
+export class TimeOffReportCalendarController extends TimeOffCalendarController {
+    async editRecord(record, context = {}, shouldFetchFormViewId = true) {
+        return this._editRecord(record, context, {canExpand: false})
     }
 }

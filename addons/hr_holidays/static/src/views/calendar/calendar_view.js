@@ -1,6 +1,6 @@
 import { calendarView } from '@web/views/calendar/calendar_view';
 
-import { TimeOffCalendarController } from './calendar_controller';
+import { TimeOffCalendarController, TimeOffReportCalendarController } from './calendar_controller';
 import { TimeOffCalendarModel } from './calendar_model';
 import { TimeOffCalendarRenderer, TimeOffDashboardCalendarRenderer } from './calendar_renderer';
 
@@ -19,3 +19,7 @@ registry.category('views').add('time_off_calendar_dashboard', {
     ...TimeOffCalendarView,
     Renderer: TimeOffDashboardCalendarRenderer,
 });
+registry.category('views').add('time_off_report_calendar', {
+    ...TimeOffCalendarView,
+    Controller: TimeOffReportCalendarController,
+})
