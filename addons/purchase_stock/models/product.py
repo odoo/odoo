@@ -69,26 +69,33 @@ class ProductProduct(models.Model):
             ('product_id', 'in', self.ids)
         ]
         if location_ids:
-            domains.append(expression.AND([rfq_domain, [
+            domains.append([
                 '|',
-                '|',
-                    ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
                     '&',
-                        ('move_ids', '=', False),
-                        ('location_final_id', 'child_of', location_ids),
+                    ('orderpoint_id', '=', False),
+                    '|',
+                        '&',
+                            ('location_final_id', '=', False),
+                            ('order_id.picking_type_id.default_location_dest_id', 'in', location_ids),
+                        '&',
+                            ('move_ids', '=', False),
+                            ('location_final_id', 'child_of', location_ids),
                     '&',
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.location_id', 'in', location_ids)
-            ]]))
+            ])
         if warehouse_ids:
-            domains.append(expression.AND([rfq_domain, [
+            domains.append([
                 '|',
-                    ('order_id.picking_type_id.warehouse_id', 'in', warehouse_ids),
+                    '&',
+                        ('orderpoint_id', '=', False),
+                        ('order_id.picking_type_id.warehouse_id', 'in', warehouse_ids),
                     '&',
                         ('move_dest_ids', '=', False),
                         ('orderpoint_id.warehouse_id', 'in', warehouse_ids)
-            ]]))
-        return expression.OR(domains) if domains else []
+            ])
+        domains = expression.OR(domains) if domains else []
+        return expression.AND([rfq_domain, domains])
 
 
 class SupplierInfo(models.Model):
