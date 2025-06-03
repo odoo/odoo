@@ -13,9 +13,8 @@ const SettingsPatch = {
             rtcSession.volume ??
             this.volumes.find(
                 (volume) =>
-                    (volume.persona.type === "partner" &&
-                        volume.persona.id === rtcSession.partnerId) ||
-                    (volume.persona.type === "guest" && volume.persona.id === rtcSession.guestId)
+                    volume.partner_id.eq(rtcSession.partner_id) ||
+                    volume.guest_id.eq(rtcSession.guest_id)
             )?.volume ??
             0.5
         );

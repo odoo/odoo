@@ -80,10 +80,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                 {
                     "attachment_ids": [],
                     "author_guest_id": False,
-                    "author_id": {
-                        "id": self.chatbot_script.operator_partner_id.id,
-                        "type": "partner",
-                    },
+                    "author_id": self.chatbot_script.operator_partner_id.id,
                     "body": ["markup", "<p>Can you give us your email please?</p>"],
                     "chatbotStep": {
                         "message": chatbot_message.id,
@@ -160,7 +157,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     {
                         "attachment_ids": [],
                         "author_guest_id": False,
-                        "author_id": {"id": self.users[1].partner_id.id, "type": "partner"},
+                        "author_id": self.users[1].partner_id.id,
                         "body": ["markup", message.body],
                         "date": fields.Datetime.to_string(message.date),
                         "write_date": fields.Datetime.to_string(message.write_date),
@@ -272,10 +269,7 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                     {
                                         "attachment_ids": [],
                                         "author_guest_id": False,
-                                        "author_id": {
-                                            "id": self.env.user.partner_id.id,
-                                            "type": "partner",
-                                        },
+                                        "author_id": self.env.user.partner_id.id,
                                         "body": [
                                             "markup",
                                             '<div class="o_mail_notification o_hide_author">Rating: <img class="o_livechat_emoji_rating" src="/rating/static/src/img/rating_5.png" alt="rating"><br>\nGood service</div>',

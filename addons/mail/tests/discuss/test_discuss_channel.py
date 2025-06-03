@@ -90,11 +90,8 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "mail.message": self._filter_messages_fields(
                                     {
                                         "attachment_ids": [],
+                                        "author_id": self.env.user.partner_id.id,
                                         "author_guest_id": False,
-                                        "author_id": {
-                                            "id": self.env.user.partner_id.id,
-                                            "type": "partner",
-                                        },
                                         "body": [
                                             "markup",
                                             f'<div class="o_mail_notification" data-oe-type="channel-joined">invited <a href="#" data-oe-model="res.partner" data-oe-id="{self.test_partner.id}">@Test Partner</a> to the channel</div>',
@@ -161,7 +158,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "fetched_message_id": False,
                                     "id": member.id,
                                     "last_seen_dt": False,
-                                    "partner_id": {"id": self.test_partner.id, "type": "partner"},
+                                    "partner_id": self.test_partner.id,
                                     "seen_message_id": False,
                                 },
                             ],
@@ -207,7 +204,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                     "fetched_message_id": False,
                                     "id": member.id,
                                     "last_seen_dt": False,
-                                    "partner_id": {"id": self.test_partner.id, "type": "partner"},
+                                    "partner_id": self.test_partner.id,
                                     "seen_message_id": False,
                                     "channel_id": {"id": test_group.id, "model": "discuss.channel"},
                                 }
@@ -424,7 +421,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                                 "message_unread_counter": 0,
                                 "message_unread_counter_bus_id": 0,
                                 "new_message_separator": msg_1.id + 1,
-                                "partner_id": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                                "partner_id": self.user_admin.partner_id.id,
                                 "channel_id": {
                                     "id": chat.id,
                                     "model": "discuss.channel",
@@ -439,7 +436,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                         "discuss.channel.member": [
                             {
                                 "id": member.id,
-                                "partner_id": {"id": self.user_admin.partner_id.id, "type": "partner"},
+                                "partner_id": self.user_admin.partner_id.id,
                                 "seen_message_id": msg_1.id,
                                 "channel_id": {"id": chat.id, "model": "discuss.channel"},
                             },

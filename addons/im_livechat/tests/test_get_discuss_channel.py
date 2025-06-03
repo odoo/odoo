@@ -20,7 +20,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
         for _i in range(5):
             discuss_channels = self._open_livechat_discuss_channel()
             channel_operator_ids = [
-                channel_info["livechat_operator_id"]["id"] for channel_info in discuss_channels
+                channel_info["livechat_operator_id"] for channel_info in discuss_channels
             ]
             self.assertTrue(all(partner_id in channel_operator_ids for partner_id in self.operators.mapped('partner_id').ids))
 
@@ -182,7 +182,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": operator_member.id,
                     "livechat_member_type": "agent",
                     "last_seen_dt": False,
-                    "partner_id": {"id": operator.partner_id.id, "type": "partner"},
+                    "partner_id": operator.partner_id.id,
                     "seen_message_id": False,
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
@@ -199,7 +199,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "message_unread_counter_bus_id": self.env["bus.bus"]._bus_last_id() - 1,
                     "mute_until_dt": False,
                     "new_message_separator": 0,
-                    "partner_id": {"id": test_user.partner_id.id, "type": "partner"},
+                    "partner_id": test_user.partner_id.id,
                     "seen_message_id": False,
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
@@ -220,10 +220,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             ('partner_id', '=', operator.partner_id.id),
         ]
         operator_member = self.env['discuss.channel.member'].search(operator_member_domain)
-        self.assertEqual(channel_info['livechat_operator_id'], {
-            "id": operator.partner_id.id,
-            "type": "partner",
-        })
+        self.assertEqual(channel_info['livechat_operator_id'], operator.partner_id.id)
         self.assertFalse(channel_info['anonymous_name'])
         self.assertEqual(channel_info['country_id'], False)
         self.assertEqual(
@@ -273,7 +270,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "message_unread_counter_bus_id": self.env["bus.bus"]._bus_last_id() - 1,
                     "mute_until_dt": False,
                     "new_message_separator": 0,
-                    "partner_id": {"id": operator.partner_id.id, "type": "partner"},
+                    "partner_id": operator.partner_id.id,
                     "seen_message_id": False,
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
                 },

@@ -48,7 +48,6 @@ export class RecipientsInput extends Component {
                         email: partner.email,
                         name: partner.name,
                         partner_id: partner.id,
-                        persona: { type: "partner", id: partner.id },
                     });
                 }
             },
@@ -106,7 +105,6 @@ export class RecipientsInput extends Component {
                                     email: match.email,
                                     name: match.name,
                                     partner_id: match.id,
-                                    persona: { type: "partner", id: match.id },
                                 });
                             },
                         }))
@@ -140,14 +138,12 @@ export class RecipientsInput extends Component {
                                     email: partner.email,
                                     name: partner.name,
                                     partner_id: partner.id,
-                                    persona: { type: "partner", id: partner.id },
                                 });
                             } else {
                                 this.insertAdditionalRecipient({
                                     email,
                                     name,
                                     partner_id: false,
-                                    persona: false,
                                 });
                             }
                         };
@@ -160,7 +156,6 @@ export class RecipientsInput extends Component {
                                 email,
                                 name,
                                 partner_id: partnerId,
-                                persona: { type: "partner", id: partnerId },
                             });
                         };
                     }

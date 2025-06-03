@@ -18,14 +18,12 @@ export class ResUsersSettingsVolumes extends models.ServerModel {
                 partner_id = {
                     id: relatedPartner.id,
                     name: relatedPartner.name,
-                    type: "partner",
                 };
             }
             if (relatedGuest) {
                 guest_id = {
                     id: relatedGuest.id,
                     name: relatedGuest.name,
-                    type: "guest",
                 };
             }
             return {

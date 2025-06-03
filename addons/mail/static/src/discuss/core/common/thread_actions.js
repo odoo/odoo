@@ -26,7 +26,7 @@ threadActionsRegistry
         condition(component) {
             return (
                 component.thread?.model === "discuss.channel" &&
-                component.store.self.type !== "guest" &&
+                component.store.self_partner &&
                 (!component.props.chatWindow || component.props.chatWindow.isOpen)
             );
         },
