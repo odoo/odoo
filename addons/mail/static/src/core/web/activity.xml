@@ -3,25 +3,24 @@
 
 <t t-name="mail.Activity">
     <div class="o-mail-Activity d-flex py-1 mb-2" t-on-click="onClick">
-        <div class="o-mail-Activity-sidebar flex-shrink-0 position-relative"
-            t-att-class="{'d-flex align-items-center justify-content-end': !props.activity.persona}">
-            <a t-if="props.activity.persona" role="button" t-on-click="onClickAvatar">
-                <img class="w-100 h-100 rounded o_object_fit_cover" t-att-src="props.activity.persona.avatarUrl" />
-            </a>
-            <div
-                class="o-mail-Activity-iconContainer rounded-circle d-flex align-items-center justify-content-center"
-                t-att-class="{
-                       'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 w-50 h-50': props.activity.persona,
-                       'text-bg-success': props.activity.state === 'planned',
-                       'text-bg-warning': props.activity.state === 'today',
-                       'text-bg-danger': props.activity.state === 'overdue',
-                       }"
-                t-attf-style="{{!props.activity.persona ? 'height:80%; width:80%;' : ''}}"
-            >
-                <i class="fa small" t-attf-class="{{ props.activity.icon }} {{props.activity.persona ? 'small' : 'fs-2'}}"/>
+        <div class="o-mail-Activity-sidebar d-flex flex-shrink-0 position-relative align-items-start justify-content-center">
+            <div class="o-mail-Activity-avatarContainer position-relative d-flex align-items-center justify-content-center" t-att-role="props.activity.persona ? 'button' : 'img'" t-on-click="onClickAvatar">
+                <img t-if="props.activity.persona" class="w-100 h-100 rounded o_object_fit_cover" t-att-src="props.activity.persona.avatarUrl" />
+                <div
+                    class="o-mail-Activity-iconContainer rounded-circle d-flex align-items-center justify-content-center"
+                    t-att-class="{
+                        'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 w-50 h-50': props.activity.persona,
+                        'text-bg-success': props.activity.state === 'planned',
+                        'text-bg-warning': props.activity.state === 'today',
+                        'text-bg-danger': props.activity.state === 'overdue',
+                        }"
+                    t-attf-style="{{!props.activity.persona ? 'height:80%; width:80%;' : ''}}"
+                >
+                    <i class="fa small" t-attf-class="{{ props.activity.icon }} {{props.activity.persona ? 'small' : 'fs-2'}}"/>
+                </div>
             </div>
         </div>
-        <div class="flex-grow px-3">
+        <div class="flex-grow px-1">
             <div class="o-mail-Activity-info lh-1">
                 <span class="fw-bolder text-success" t-if="delay === 1">Tomorrow:</span>
                 <span class="fw-bolder text-success" t-elif="delay gt 0">Due in <t t-esc="delay"/> days:</span>
