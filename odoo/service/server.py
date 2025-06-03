@@ -57,7 +57,7 @@ except ImportError:
 from odoo import api, sql_db
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config, osutil, OrderedSet, profiler
+from odoo.tools import config, gc, osutil, OrderedSet, profiler
 from odoo.tools.cache import log_ormcache_stats
 from odoo.tools.misc import stripped_sys_argv, dumpstacks
 from .db import list_dbs
@@ -1353,18 +1353,24 @@ class WorkerCron(Worker):
 server = None
 server_phoenix = False
 
+
 def load_server_wide_modules():
     from odoo.modules.module import load_openerp_module  # noqa: PLC0415
-    for m in config['server_wide_modules']:
-        try:
-            load_openerp_module(m)
-        except Exception:
-            msg = ''
-            if m == 'web':
-                msg = """
-The `web` module is provided by the addons found in the `openerp-web` project.
-Maybe you forgot to add those addons in your addons_path configuration."""
-            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
+    reset_gc = gc.disable_gc()
+    try:
+        for m in config['server_wide_modules']:
+            try:
+                load_openerp_module(m)
+            except Exception:
+                msg = ''
+                if m == 'web':
+                    msg = """
+    The `web` module is provided by the addons found in the `openerp-web` project.
+    Maybe you forgot to add those addons in your addons_path configuration."""
+                _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
+    finally:
+        reset_gc()
+
 
 def _reexec(updated_modules=None):
     """reexecute openerp-server process with (nearly) the same arguments"""
