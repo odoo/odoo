@@ -5,7 +5,8 @@ from odoo import fields, models, api
 
 
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _name = 'account.move'
+    _inherit = ['account.move', 'pos.load.mixin']
 
     pos_order_ids = fields.One2many('pos.order', 'account_move')
     pos_payment_ids = fields.One2many('pos.payment', 'account_move_id')
@@ -14,6 +15,14 @@ class AccountMove(models.Model):
         help="The pos order that was reverted after closing the session to create an invoice for it.")
     pos_session_ids = fields.One2many("pos.session", "move_id", "POS Sessions")
     pos_order_count = fields.Integer(compute="_compute_origin_pos_count", string='POS Order Count')
+
+    @api.model
+    def _load_pos_data_fields(self, config_id):
+        return ['id', 'name', 'state']
+
+    @api.model
+    def _load_pos_data_domain(self, data):
+        return ['|', ('pos_order_ids', '!=', False), ('pos_payment_ids', '!=', False)]
 
     @api.depends('pos_order_ids')
     def _compute_origin_pos_count(self):
