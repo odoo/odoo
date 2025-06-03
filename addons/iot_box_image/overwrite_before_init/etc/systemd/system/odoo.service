@@ -1,7 +1,8 @@
 [Unit]
-Description=Odoo Open Source ERP and CRM
+Description=Odoo IoT Box service
 After=cups.socket network-online.target NetworkManager.service
 Wants=network-online.target
+StartLimitIntervalSec=0 # infinetely wait for Odoo to start
 
 [Service]
 User=odoo
@@ -24,3 +25,5 @@ WantedBy=multi-user.target
 # Tip: don't forget to 'systemctl disable' then re 'enable' service if you update the 'WantedBy' line
 # reason is that 'enable' creates a symlink in /etc/systemd/system/multi-user.target.wants/ pointing to this file which does
 # not get updated if you only 'systemctl daemon-reload'
+
+# Documentation: https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html
