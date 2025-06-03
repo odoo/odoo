@@ -25,9 +25,12 @@
                     </a>
                 </div>
                 <div>
-                    <div class="fw-bold"><t t-out="order_line.name_short"/></div>
+                    <t t-set="attrib_names" t-value="order_line.product_id.product_template_attribute_value_ids._get_combination_name()"/>
+                    <div class="fw-bold">
+                        <t t-out="order_line.product_id.name"/> <t t-if="attrib_names" t-out="' - ' + attrib_names"/>
+                    </div>
                     <div>
-                        <t t-out="'%s/%s are available in this location' % (available_qty, int(order_line.product_uom_qty))"/>
+                        <t t-out="'%s/%s available in this location' % (available_qty, int(order_line.product_uom_qty))"/>
                     </div>
                     <t t-set="buttonTitle" t-value="'Update cart' if available_qty else 'Remove from cart'"/>
                     <div name="o_wsale_unavailable_line_button_container">
