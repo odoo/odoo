@@ -938,6 +938,27 @@
               "ee4a297f-0cc3": { "chain": "session_expertise_ids", "type": "many2many" }
             }
           }
+        },
+        {
+          "id": "e22061ad-16c4",
+          "col": 11,
+          "row": 144,
+          "offset": { "x": 42, "y": 11 },
+          "width": 250,
+          "height": 102,
+          "tag": "chart",
+          "data": {
+            "baselineColorDown": "#EA6175",
+            "baselineColorUp": "#43C5B1",
+            "baselineMode": "percentage",
+            "title": { "text": "Leads Created", "bold": true },
+            "type": "scorecard",
+            "background": "#EFF6FF",
+            "baseline": "Data!C15",
+            "baselineDescr": { "text": "since last period" },
+            "keyValue": "Data!B15",
+            "humanize": true
+          }
         }
       ],
       "tables": [],
@@ -989,6 +1010,7 @@
         "B12": "1250",
         "B13": "750",
         "B14": "250",
+        "B15": "10",
         "C1": "=_t(\"Previous\")",
         "C2": "3500",
         "C3": "150",
@@ -997,10 +1019,12 @@
         "C7": "1200",
         "C8": "=IF(C2 > 0, C7/C2, 0)",
         "C9": "0.00564",
+        "C10": "2200",
         "C11": "2150",
         "C12": "850",
         "C13": "450",
         "C14": "560",
+        "C15": "7",
         "D1": "=_t(\"Current\")",
         "D2": "=FORMAT.LARGE.NUMBER(B2)",
         "D5": "=B5",
