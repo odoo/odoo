@@ -3049,7 +3049,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
     def test_reconcile_draft_cash_basis_surprise_use_case(self):
         ''' Use case: a reconciliation is made on a draft invoice, with no caba move created, but a cash basis tax is added
-            later on the invoice. When it gets posted, the reconciliation should be removed so that redoing the reconcilation 
+            later on the invoice. When it gets posted, the reconciliation should be removed so that redoing the reconcilation
             will create the caba move.
         '''
         self.env.company.tax_exigibility = True
@@ -3177,7 +3177,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         self.assertEqual(tax_cash_basis_moves.state, 'posted')
 
     def test_reconcile_draft_cash_basis_use_case(self):
-        ''' Test that no user error is raised when trying to generate cash basis entries from reconciling draft moves, 
+        ''' Test that no user error is raised when trying to generate cash basis entries from reconciling draft moves,
             instead the cash basis entry is created normally but stays in draft until all the moves are posted.
         '''
         cash_basis_move = self._prepare_cash_basis_move()
@@ -5726,3 +5726,57 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             self.assertEqual(payment2.state, 'in_process')
             payment1.move_id.line_ids.filtered(lambda l: l.account_id.account_type not in ('asset_receivable', 'liability_payable')).remove_move_reconcile()
             self.assertEqual(payment1.state, 'in_process')
+
+    def test_modify_all_reconciled_lines(self):
+        """Allow changing some fields on all the lines of a reconciliation batch at the same time."""
+        moves = self.env['account.move'].create([{
+            'move_type': 'entry',
+            'line_ids': [
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+                Command.create({
+                    'debit': 1000.0,
+                    'credit': 0.0,
+                    'account_id': self.company_data['default_account_receivable'].id,
+                }),
+            ]
+        }, {
+            'move_type': 'entry',
+            'line_ids': [
+                Command.create({
+                    'debit': 0.0,
+                    'credit': 1000.0,
+                    'account_id': self.company_data['default_account_receivable'].id,
+                }),
+                Command.create({
+                    'debit': 1000.0,
+                    'credit': 0.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        }])
+        moves.action_post()
+        receivable_lines = moves.line_ids.filtered(lambda l: l.account_id == self.company_data['default_account_receivable'])
+
+        receivable_lines.reconcile()
+
+        # Can change the account
+        receivable_lines.account_id = self.company_data['default_account_payable']
+        self.assertEqual(receivable_lines.mapped('reconciled'), [True, True])
+
+        # But can't change if not all the lines are changed at the same time
+        with closing(self.env.cr.savepoint()):
+            receivable_lines[0].account_id = self.company_data['default_account_receivable']
+            self.assertEqual(receivable_lines.mapped('reconciled'), [False, False])
+
+        # Can change the partner
+        receivable_lines.partner_id = self.partner_a
+        self.assertEqual(receivable_lines.mapped('reconciled'), [True, True])
+
+        # Cannot change other fields
+        with closing(self.env.cr.savepoint()):
+            receivable_lines.currency_id = self.other_currency
+            self.assertEqual(receivable_lines.mapped('reconciled'), [False, False])
