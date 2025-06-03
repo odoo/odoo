@@ -542,13 +542,17 @@ Please change the quantity done or the rounding precision in your settings.""",
                 for move in mvs:
                     move.forecast_availability, move.forecast_expected_date = forecast_info[move]
 
+    def _get_moves_to_propagate_date_deadline(self):
+        self.ensure_one()
+        return self.move_dest_ids | self.move_orig_ids
+
     def _set_date_deadline(self, new_deadline):
         # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
         already_propagate_ids = self.env.context.get('date_deadline_propagate_ids', set())
         already_propagate_ids.update(self.ids)
         self = self.with_context(date_deadline_propagate_ids=already_propagate_ids)
         for move in self:
-            moves_to_update = (move.move_dest_ids | move.move_orig_ids)
+            moves_to_update = move._get_moves_to_propagate_date_deadline()
             if move.date_deadline:
                 delta = move.date_deadline - fields.Datetime.to_datetime(new_deadline)
             else:
