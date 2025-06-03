@@ -7,7 +7,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from odoo.addons.product.tests.common import ProductAttributesCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.controllers.combo_configurator import (
     WebsiteSaleComboConfiguratorController,
@@ -19,7 +19,7 @@ from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCart(ProductAttributesCommon, WebsiteSaleCommon):
+class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
 
     @classmethod
     def setUpClass(cls):

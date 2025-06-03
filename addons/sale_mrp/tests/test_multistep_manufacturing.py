@@ -16,7 +16,7 @@ class TestMultistepManufacturing(TestMrpCommon):
         # Required for `manufacture_steps` to be visible in the view
         cls.env.user.group_ids += cls.env.ref('stock.group_adv_location')
         # Required for `product_id` to be visible in the view
-        cls.env.user.group_ids += cls.env.ref('product.group_product_variant')
+        cls._enable_variants()
 
         cls.route_mto.active = True
         cls.MrpProduction = cls.env['mrp.production']
