@@ -258,6 +258,7 @@ class ResPartner(models.Model):
             ]
         return [field_name]
 
+<<<<<<< 17a11b29556ab7c9c38c07bd30ad870c4bd11f14
     def _to_store_defaults(self, target: Store.Target):
         res = [
             "active",
@@ -270,6 +271,77 @@ class ResPartner(models.Model):
         if target.is_internal(self.env):
             res.append("email")
         return res
+||||||| a5678a651c869ca42d5bb2df1eecaa3867417a4b
+    def _to_store_defaults(self):
+        return ["active", "avatar_128", "email", "im_status", "is_company", "name", "user"]
+
+    def _to_store(self, store: Store, fields, *, main_user_by_partner=None):
+        if not self.env.user._is_internal() and "email" in fields:
+            fields.remove("email")
+        store.add_records_fields(
+            self,
+            [
+                field
+                for field in fields
+                if field not in ["display_name", "isAdmin", "notification_type", "signature", "user"]
+            ],
+        )
+        for partner in self:
+            data = {}
+            if "display_name" in fields:
+                data["displayName"] = partner.display_name
+            if "user" in fields:
+                main_user = main_user_by_partner and main_user_by_partner.get(partner)
+                if not main_user:
+                    users = partner.with_context(active_test=False).user_ids
+                    internal_users = users - users.filtered("share")
+                    main_user = internal_users[:1] or users[:1]
+                data["userId"] = main_user.id
+                data["isInternalUser"] = not main_user.share if main_user else False
+                if "isAdmin" in fields:
+                    data["isAdmin"] = main_user._is_admin()
+                if "notification_type" in fields:
+                    data["notification_preference"] = main_user.notification_type
+                if "signature" in fields:
+                    data["signature"] = main_user.signature
+            if data:
+                store.add(partner, data)
+=======
+    def _to_store_defaults(self):
+        return ["active", "avatar_128", "email", "im_status", "is_company", "name", "user"]
+
+    def _to_store(self, store: Store, fields, *, main_user_by_partner=None):
+        if not self.env.user._is_internal() and "email" in fields:
+            fields.remove("email")
+        store.add_records_fields(
+            self,
+            [
+                field
+                for field in fields
+                if field not in ["display_name", "isAdmin", "notification_type", "signature", "user"]
+            ],
+        )
+        for partner in self:
+            data = {}
+            if "display_name" in fields:
+                data["displayName"] = partner.display_name
+            if "user" in fields:
+                main_user = main_user_by_partner and main_user_by_partner.get(partner)
+                if not main_user:
+                    users = partner.with_context(active_test=False).user_ids
+                    internal_users = users - users.sudo().filtered("share")
+                    main_user = internal_users[:1] or users[:1]
+                data["userId"] = main_user.id
+                data["isInternalUser"] = not main_user.sudo().share if main_user else False
+                if "isAdmin" in fields:
+                    data["isAdmin"] = main_user._is_admin()
+                if "notification_type" in fields:
+                    data["notification_preference"] = main_user.notification_type
+                if "signature" in fields:
+                    data["signature"] = main_user.signature
+            if data:
+                store.add(partner, data)
+>>>>>>> 6abfd4952a68ba90615fd9f82e205ebd3b73959e
 
     @api.readonly
     @api.model
