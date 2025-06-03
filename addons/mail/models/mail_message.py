@@ -97,6 +97,7 @@ class MailMessage(models.Model):
     reaction_ids = fields.One2many(
         'mail.message.reaction', 'message_id', string="Reactions",
         groups="base.group_system")
+    message_schedule_ids = fields.One2many('mail.message.schedule', 'mail_message_id', string="Schedulers")
     # Attachments are linked to a document through model / res_id and to the message through this field.
     attachment_ids = fields.Many2many(
         'ir.attachment', 'message_attachment_rel',
@@ -1017,11 +1018,7 @@ class MailMessage(models.Model):
         if msg_vals:
             scheduled_dt_by_msg_id = {msg.id: msg_vals.get("scheduled_date", False) for msg in self}
         elif self:
-            schedulers = (
-                self.env["mail.message.schedule"]
-                .sudo()
-                .search([("mail_message_id", "in", self.ids)])
-            )
+            schedulers = self.sudo().message_schedule_ids
             for scheduler in schedulers:
                 scheduled_dt_by_msg_id[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
         record_by_message = self._record_by_message()

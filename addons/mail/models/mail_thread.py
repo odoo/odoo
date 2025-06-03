@@ -3279,6 +3279,27 @@ class MailThread(models.AbstractModel):
             set(kwargs.keys()),
             restricting_names=self._get_notify_valid_parameters()
         )
+        # if scheduled for later: add in queue instead of generating notifications
+        scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
+        if scheduled_date:
+            # send the message notifications at the scheduled date
+            schedule = self.env['mail.message.schedule'].sudo().create({
+                'scheduled_datetime': scheduled_date,
+                'mail_message_id': message.id,
+                'notification_parameters': json.dumps(kwargs),
+            })
+
+        # cache message data to avoid extra queries when accessing already-given values
+        cache_msg = self.env['mail.message'].browse(message.id)
+        for fname, fvalue in (msg_vals or {}).items():
+            cache_msg._fields[fname]._insert_cache(cache_msg, [fvalue])
+        # fillup values checked by lower methods, if not given
+        if scheduled_date:
+            cache_msg._fields['message_schedule_ids']._insert_cache(cache_msg, schedule.ids)
+        else:
+            cache_msg._fields['message_schedule_ids']._insert_cache(cache_msg, [])
+        if 'tracking_value_ids' not in msg_vals:
+            cache_msg._fields['tracking_value_ids']._insert_cache(cache_msg, [])
 
         recipients_data = self._notify_get_recipients(message, msg_vals=False, **kwargs)
         if not recipients_data:
@@ -3288,16 +3309,7 @@ class MailThread(models.AbstractModel):
         users = self.env['res.users'].browse(uid2pid)
         users._fields['partner_id']._insert_cache(users, uid2pid.values())
 
-        # if scheduled for later: add in queue instead of generating notifications
-        scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
-        if scheduled_date:
-            # send the message notifications at the scheduled date
-            self.env['mail.message.schedule'].sudo().create({
-                'scheduled_datetime': scheduled_date,
-                'mail_message_id': message.id,
-                'notification_parameters': json.dumps(kwargs),
-            })
-        else:
+        if not scheduled_date:
             # generate immediately the <mail.notification>
             # and send the <mail.mail>, <mail.push> and the <bus.bus> notifications
             self._notify_thread_by_inbox(message, recipients_data, msg_vals=False, **kwargs)
