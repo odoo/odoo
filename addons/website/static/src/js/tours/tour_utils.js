@@ -100,7 +100,7 @@ export function changeColumnSize(position = "right") {
 export function changeImage(snippet, position = "bottom") {
     return [
         {
-            trigger: "body :iframe .odoo-editor-editable",
+            trigger: ".o_builder_sidebar_open",
         },
         {
             trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
@@ -245,7 +245,7 @@ export function clickOnEditAndWaitEditMode(position = "bottom") {
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview :iframe .odoo-editor-editable",
+        trigger: ".o_builder_sidebar_open",
     }];
 }
 
@@ -268,7 +268,7 @@ export function clickOnEditAndWaitEditModeInTranslatedPage(position = "bottom") 
         run: "click",
     }, {
         content: "Check that we are in edit mode",
-        trigger: ".o_website_preview :iframe .odoo-editor-editable",
+        trigger: ".o_builder_sidebar_open",
     }];
 }
 
@@ -359,7 +359,7 @@ export function clickOnText(snippet, element, position = "bottom") {
 export function insertSnippet(snippet, { position = "bottom", ignoreLoading = false } = {}) {
     const blockEl = snippet.groupName || snippet.name;
     const insertSnippetSteps = [{
-        trigger: ".o_website_preview :iframe .odoo-editor-editable",
+        trigger: ".o_builder_sidebar_open",
         noPrepend: true,
     }];
     const snippetIDSelector = snippet.id ? `[data-snippet-id="${snippet.id}"]` : `[data-snippet-id^="${snippet.customID}_"]`;
@@ -500,7 +500,7 @@ export function registerWebsitePreviewTour(name, options, steps) {
             if (options.edition) {
                 tourSteps.unshift({
                     content: "Wait for the edit mode to be started",
-                    trigger: ".o_website_preview :iframe .odoo-editor-editable",
+                    trigger: ".o_builder_sidebar_open",
                     timeout: 30000,
                 });
             } else {
