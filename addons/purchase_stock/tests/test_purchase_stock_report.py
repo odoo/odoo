@@ -19,10 +19,10 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         # Checks the report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 0, "Must have 0 line for now.")
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 1, "Must have 1 line for now.")
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 5)
         self.assertEqual(pending_qty_in, 5)
@@ -30,13 +30,13 @@ class TestPurchaseStockReports(TestReportsCommon):
         # Confirms the PO and checks the report again.
         po.button_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0]['document_in']['id'], po.id)
-        self.assertEqual(lines[0]['quantity'], 5)
-        self.assertEqual(lines[0]['document_out'], False)
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(lines[1]['document_in']['id'], po.id)
+        self.assertEqual(lines[1]['quantity'], 5)
+        self.assertEqual(lines[1]['document_out'], False)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
@@ -45,10 +45,10 @@ class TestPurchaseStockReports(TestReportsCommon):
         receipt = po.picking_ids
         receipt.button_validate()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 0)
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
@@ -60,12 +60,12 @@ class TestPurchaseStockReports(TestReportsCommon):
         po = po_form.save()
         # Checks the report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 1, "Must have 1 line for now.")
-        self.assertEqual(lines[0]['document_in']['id'], po.id)
-        self.assertEqual(lines[0]['quantity'], 5)
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 2, "Must have 2 line for now.")
+        self.assertEqual(lines[1]['document_in']['id'], po.id)
+        self.assertEqual(lines[1]['quantity'], 5)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
@@ -91,10 +91,10 @@ class TestPurchaseStockReports(TestReportsCommon):
 
         # Checks the report -> Must be empty for now, just display some pending qty.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 0, "Must have 0 line for now.")
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 1, "Must have 1 line for now.")
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 4)
         self.assertEqual(pending_qty_in, 4)
@@ -102,13 +102,13 @@ class TestPurchaseStockReports(TestReportsCommon):
         # Confirms the PO and checks the report again.
         po.button_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0]['document_in']['id'], po.id)
-        self.assertEqual(lines[0]['quantity'], 4)
-        self.assertEqual(lines[0]['document_out'], False)
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(lines[1]['document_in']['id'], po.id)
+        self.assertEqual(lines[1]['quantity'], 4)
+        self.assertEqual(lines[1]['document_out'], False)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
@@ -118,10 +118,10 @@ class TestPurchaseStockReports(TestReportsCommon):
         # Receives 4 products.
         receipt.button_validate()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 0)
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
@@ -133,12 +133,12 @@ class TestPurchaseStockReports(TestReportsCommon):
         po = po_form.save()
         # Checks the report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty_in = docs['draft_picking_qty']['in']
-        draft_purchase_qty = docs['draft_purchase_qty']
-        pending_qty_in = docs['qty']['in']
-        self.assertEqual(len(lines), 1)
-        self.assertEqual(lines[0]['document_in']['id'], po.id)
-        self.assertEqual(lines[0]['quantity'], 6)
+        draft_picking_qty_in = self.sum_dicts(docs['product'], 'draft_picking_qty')['in']
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        pending_qty_in = self.sum_dicts(docs['product'], 'qty')['in']
+        self.assertEqual(len(lines), 2)
+        self.assertEqual(lines[1]['document_in']['id'], po.id)
+        self.assertEqual(lines[1]['quantity'], 6)
         self.assertEqual(draft_picking_qty_in, 0)
         self.assertEqual(draft_purchase_qty, 0)
         self.assertEqual(pending_qty_in, 0)
@@ -161,7 +161,7 @@ class TestPurchaseStockReports(TestReportsCommon):
         for po in [po1, po2]:
             context = po.order_line[0].action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids, context=context)
-            for line in lines:
+            for line in lines[1:]:
                 if line['document_in']['id'] == po.id:
                     self.assertTrue(line['is_matched'], "The corresponding PO line should be matched in the forecast report.")
                 else:
@@ -197,7 +197,8 @@ class TestPurchaseStockReports(TestReportsCommon):
         po.with_user(basic_purchase_user).button_confirm()
 
         docs = self.get_report_forecast(product_template_ids=self.product_template.ids)[1]
-        self.assertEqual(docs['draft_purchase_qty'], 150)
+        draft_purchase_qty = self.sum_dicts(docs['product'], 'draft_purchase_qty')['in']
+        self.assertEqual(draft_purchase_qty, 150)
 
     def test_vendor_delay_report_with_uom(self):
         """

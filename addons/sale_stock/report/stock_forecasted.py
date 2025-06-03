@@ -33,16 +33,14 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         domain = self._product_sale_domain(product_template_ids, product_ids)
-        so_lines = self.env['sale.order.line'].sudo().search(domain)
-        out_sum = 0
-        if so_lines:
-            product_uom = so_lines[0].product_id.uom_id
-            quantities = so_lines.mapped(lambda line: line.product_uom_id._compute_quantity(line.product_uom_qty, product_uom))
-            out_sum = sum(quantities)
-        res['draft_sale_qty'] = out_sum
-        res['draft_sale_orders'] = so_lines.mapped("order_id").sorted(key=lambda so: so.name).read(fields=['id', 'name'])
-        res['draft_sale_orders_matched'] = self.env.context.get('sale_line_to_match_id') in so_lines.ids
-        res['qty']['out'] += out_sum
+        so_lines = self.env['sale.order.line'].sudo().search(domain).grouped('product_id')
+        out_qty = {k.id: sum(v.mapped(lambda line: line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id))) for k, v in so_lines.items()}
+        self._add_product_quantities(res, product_template_ids, product_ids, 'draft_sale_qty', qty_out=out_qty)
+        for product in self._get_products(product_template_ids, product_ids):
+            if product not in so_lines:
+                continue
+            res['product'][product.id]['draft_sale_orders'] = so_lines[product].mapped("order_id").sorted(key=lambda so: so.name).read(fields=['id', 'name'])
+            res['product'][product.id]['draft_sale_orders_matched'] = self.env.context.get('sale_line_to_match_id') in so_lines[product].ids
         return res
 
     def _product_sale_domain(self, product_template_ids, product_ids):

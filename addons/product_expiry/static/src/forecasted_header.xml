@@ -5,9 +5,9 @@
         <xpath expr="//div[@name='on_hand']" position="after">
             <t t-if="props.docs.use_expiration_date">
                 <div class="h3 col-md-auto text-center">-</div>
-                <div t-attf-class="col-md-auto text-center #{props.docs.to_remove_qty}">
+                <div t-attf-class="col-md-auto text-center #{to_remove_qty}">
                     <div class="h3">
-                        <t t-out="_formatFloat(props.docs.to_remove_qty)"/>
+                        <t t-out="_formatFloat(to_remove_qty)"/>
                     </div>
                     <div>To Remove</div>
                 </div>

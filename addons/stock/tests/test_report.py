@@ -58,6 +58,24 @@ class TestReportsCommon(TransactionCase):
         lines = docs['lines']
         return report_values, docs, lines
 
+    def sum_dicts(self, dicts, key):
+        """
+        Aggregate the values of a specified key from a collection of dictionaries.
+
+        Args:
+            dicts (dict): A dictionary whose values are dictionaries.
+            key (str): The key to look for in each inner dictionary.
+
+        Returns:
+            dict: A dictionary with keys from the aggregated inner dictionaries and values being the sum of corresponding values.
+        """
+        """ Sum the values of a key in a list of dictionaries. """
+        res = {}
+        for d in dicts.values():
+            for k, v in d.get(key, {}).items():
+                res[k] = res.get(k, 0) + v
+        return res
+
 
 class TestReports(TestReportsCommon):
     def _check_closure_commands(self, zpl_rendered_template):
@@ -408,8 +426,8 @@ class TestReports(TestReportsCommon):
         some operations and checks the report data accords rigthly these operations.
         """
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0, "Must have 0 line.")
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")  # Free Stock line
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
 
@@ -424,8 +442,8 @@ class TestReports(TestReportsCommon):
         receipt = receipt_form.save()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0, "Must have 0 line.")
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['in'], 2)
         self.assertEqual(draft_picking_qty['out'], 0)
 
@@ -440,15 +458,15 @@ class TestReports(TestReportsCommon):
         delivery = delivery_form.save()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0, "Must have 0 line.")
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['in'], 2)
         self.assertEqual(draft_picking_qty['out'], 5)
 
         # Confirms the delivery: must have one report line and no more pending qty out now.
         delivery.action_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['in'], 2)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -462,7 +480,7 @@ class TestReports(TestReportsCommon):
         #   - line with 3 qty (delivery, unavailable)
         receipt.action_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 2, "Must have 2 line.")
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -495,7 +513,7 @@ class TestReports(TestReportsCommon):
         receipt.button_validate()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 2, "Still must have 2 line.")
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -627,7 +645,7 @@ class TestReports(TestReportsCommon):
 
         # Order must be: 7, 5, 3, 1, 2, 4, 6
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 7, "The report must have 7 line.")
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -672,7 +690,7 @@ class TestReports(TestReportsCommon):
 
         # Check report lines (link and order).
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 7, "The report must have 7 line.")
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
@@ -721,10 +739,10 @@ class TestReports(TestReportsCommon):
         receipt = pickings.filtered(lambda p: p.picking_type_id.id == self.picking_type_in.id)
 
         # The Forecasted Report don't show intermediate moves, it must display only ingoing/outgoing documents.
-        self.assertEqual(len(lines), 1, "The report must have only 1 line.")
-        self.assertEqual(lines[0]['document_in']['id'], receipt.id, "The report must only show the receipt.")
-        self.assertEqual(lines[0]['document_out'], False)
-        self.assertEqual(lines[0]['quantity'], reordering_rule.product_max_qty)
+        self.assertEqual(len(lines), 2, "The report must have only 2 lines.")
+        self.assertEqual(lines[1]['document_in']['id'], receipt.id, "The report must only show the receipt.")
+        self.assertEqual(lines[1]['document_out'], False)
+        self.assertEqual(lines[1]['quantity'], reordering_rule.product_max_qty)
 
     def test_report_forecast_5_multi_warehouse(self):
         """ Create some transfer for two different warehouses and check the
@@ -748,22 +766,22 @@ class TestReports(TestReportsCommon):
         delivery = delivery_form.save()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0, "Must have 0 line.")
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['out'], 5)
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
             context={'warehouse_id': wh_2.id},
         )
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0)
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
 
-        # Confirm the delivery -> The report must now have 1 line.
+        # Confirm the delivery -> The report still have 1 line.
         delivery.action_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(lines[0]['document_out']['id'], delivery.id)
@@ -773,8 +791,8 @@ class TestReports(TestReportsCommon):
             product_template_ids=self.product_template.ids,
             context={'warehouse_id': wh_2.id},
         )
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0)
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
 
         # Creates a delivery for the second warehouse.
@@ -788,7 +806,7 @@ class TestReports(TestReportsCommon):
         delivery_2 = delivery_form.save()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(lines[0]['document_out']['id'], delivery.id)
@@ -798,13 +816,13 @@ class TestReports(TestReportsCommon):
             product_template_ids=self.product_template.ids,
             context={'warehouse_id': wh_2.id},
         )
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0)
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 8)
         # Confirm the second delivery -> The report must now have 1 line.
         delivery_2.action_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(lines[0]['document_out']['id'], delivery.id)
@@ -814,7 +832,7 @@ class TestReports(TestReportsCommon):
             product_template_ids=self.product_template.ids,
             context={'warehouse_id': wh_2.id},
         )
-        draft_picking_qty = docs['draft_picking_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
         self.assertEqual(len(lines), 1)
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(lines[0]['document_out']['id'], delivery_2.id)
@@ -904,8 +922,8 @@ class TestReports(TestReportsCommon):
         wh_2_receipt = receipt_form.save()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0, "Must have 0 line.")
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['in'], 2)
         self.assertEqual(draft_picking_qty['out'], 0)
 
@@ -913,8 +931,8 @@ class TestReports(TestReportsCommon):
             product_template_ids=self.product_template.ids,
             context={'warehouse_id': wh_2.id},
         )
-        draft_picking_qty = docs['draft_picking_qty']
-        self.assertEqual(len(lines), 0, "Must have 0 line.")
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['in'], 5)
         self.assertEqual(draft_picking_qty['out'], 0)
 
@@ -923,17 +941,17 @@ class TestReports(TestReportsCommon):
         wh_2_receipt.action_confirm()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
-        self.assertEqual(len(lines), 1, "Must have 1 line.")
-        self.assertEqual(lines[0]['document_in']['id'], wh_1_receipt.id)
-        self.assertEqual(lines[0]['quantity'], 2)
+        self.assertEqual(len(lines), 2, "Must have 2 lines.")
+        self.assertEqual(lines[1]['document_in']['id'], wh_1_receipt.id)
+        self.assertEqual(lines[1]['quantity'], 2)
 
         report_values, docs, lines = self.get_report_forecast(
             product_template_ids=self.product_template.ids,
             context={'warehouse_id': wh_2.id},
         )
-        self.assertEqual(len(lines), 1, "Must have 1 line.")
-        self.assertEqual(lines[0]['document_in']['id'], wh_2_receipt.id)
-        self.assertEqual(lines[0]['quantity'], 5)
+        self.assertEqual(len(lines), 2, "Must have 2 lines.")
+        self.assertEqual(lines[1]['document_in']['id'], wh_2_receipt.id)
+        self.assertEqual(lines[1]['quantity'], 5)
 
     def test_report_forecast_7_multiple_variants(self):
         """ Create receipts for different variant products and check the report
@@ -1009,7 +1027,7 @@ class TestReports(TestReportsCommon):
         receipt_2.action_confirm()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_template.ids)
-        self.assertEqual(len(lines), 5, "Must have 5 lines.")
+        self.assertEqual(len(lines), 9, "Must have 9 lines.")  # variants are handled separately
         self.assertTrue(all(product_variant['id'] in product_template.product_variant_ids.ids for product_variant in docs['product_variants']))
 
         # Create a delivery for one of these products and check the report lines
@@ -1024,9 +1042,9 @@ class TestReports(TestReportsCommon):
         delivery.action_confirm()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_template.ids)
-        self.assertEqual(len(lines), 5, "Still must have 5 lines.")
+        self.assertEqual(len(lines), 8, "Still must have 8 lines.")
         self.assertEqual(docs['product_variants_ids'], product_template.product_variant_ids.ids)
-        # First and second lines should be about the "Game Joy Pocket (gray)"
+        # 2 lines should be about the "Game Joy Pocket (gray)"
         # and must link the delivery with the two receipt lines.
         line_1 = lines[0]
         line_2 = lines[1]

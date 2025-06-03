@@ -67,9 +67,9 @@ class TestMrpStockReports(TestReportsCommon):
         mo_2 = mo_form.save()
 
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_chococake.product_tmpl_id.ids)
-        draft_picking_qty = docs['draft_picking_qty']
-        draft_production_qty = docs['draft_production_qty']
-        self.assertEqual(len(lines), 0, "Must have 0 line.")
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        draft_production_qty = self.sum_dicts(docs['product'], 'draft_production_qty')
+        self.assertEqual(len(lines), 1, "Must have 1 line.")
         self.assertEqual(draft_picking_qty['in'], 0)
         self.assertEqual(draft_picking_qty['out'], 0)
         self.assertEqual(draft_production_qty['in'], 10)
@@ -79,8 +79,8 @@ class TestMrpStockReports(TestReportsCommon):
         mo_1.action_confirm()
         mo_2.action_confirm()
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_chococake.product_tmpl_id.ids)
-        draft_picking_qty = docs['draft_picking_qty']
-        draft_production_qty = docs['draft_production_qty']
+        draft_picking_qty = self.sum_dicts(docs['product'], 'draft_picking_qty')
+        draft_production_qty = self.sum_dicts(docs['product'], 'draft_production_qty')
         self.assertEqual(len(lines), 2, "Must have two line.")
         line_1 = lines[0]
         line_2 = lines[1]
@@ -167,10 +167,10 @@ class TestMrpStockReports(TestReportsCommon):
         mo_2 = (mo_1.production_group_id.production_ids - mo_1)
         # Checks the forecast report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_apple_pie.product_tmpl_id.ids)
-        self.assertEqual(len(lines), 1, "Must have only one line about the backorder")
-        self.assertEqual(lines[0]['document_in']['id'], mo_2.id)
-        self.assertEqual(lines[0]['quantity'], 1)
-        self.assertEqual(lines[0]['document_out'], False)
+        self.assertEqual(len(lines), 2, "Must have 2 lines, one about the backorder")
+        self.assertEqual(lines[1]['document_in']['id'], mo_2.id)
+        self.assertEqual(lines[1]['quantity'], 1)
+        self.assertEqual(lines[1]['document_out'], False)
 
         # Produces the last unit.
         mo_form = Form(mo_2)
@@ -179,7 +179,7 @@ class TestMrpStockReports(TestReportsCommon):
         mo_2.button_mark_done()
         # Checks the forecast report.
         report_values, docs, lines = self.get_report_forecast(product_template_ids=product_apple_pie.product_tmpl_id.ids)
-        self.assertEqual(len(lines), 0, "Must have no line")
+        self.assertEqual(len(lines), 1, "Free Stock line")
 
     def test_report_forecast_3_report_line_corresponding_to_mo_highlighted(self):
         """ When accessing the report from a MO, checks if the correct MO is highlighted in the report
@@ -208,7 +208,7 @@ class TestMrpStockReports(TestReportsCommon):
         for mo in [mo_1, mo_2]:
             context = mo.action_product_forecast_report()['context']
             _, _, lines = self.get_report_forecast(product_template_ids=product_banana.product_tmpl_id.ids, context=context)
-            for line in lines:
+            for line in lines[1:]:
                 if line['document_in']['id'] == mo.id:
                     self.assertTrue(line['is_matched'], "The corresponding MO line should be matched in the forecast report.")
                 else:
