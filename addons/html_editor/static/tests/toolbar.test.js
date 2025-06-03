@@ -33,6 +33,11 @@ import {
     moveSelectionOutsideEditor,
     setContent,
     setSelection,
+    simulateDoubleClickSelect,
+    simulateTripleClickSelect,
+    firstClick,
+    secondClick,
+    thirdClick,
 } from "./_helpers/selection";
 import { strong } from "./_helpers/tags";
 import { delay } from "@web/core/utils/concurrency";
@@ -625,9 +630,7 @@ test("toolbar correctly show namespace button group and stop showing when namesp
             toolbar_namespaces: [
                 {
                     id: "aNamespace",
-                    isApplied: (nodeList) => {
-                        return !!nodeList.find((node) => node.tagName === "DIV");
-                    },
+                    isApplied: (nodeList) => !!nodeList.find((node) => node.tagName === "DIV"),
                 },
             ],
             user_commands: { id: "test_cmd", run: () => null },
@@ -840,13 +843,11 @@ test("close the toolbar if the selection contains any nodes (traverseNode = [], 
 
 test.tags("desktop");
 test("should not close image cropper while loading media", async () => {
-    onRpc("/html_editor/get_image_info", () => {
-        return {
-            original: {
-                image_src: "#",
-            },
-        };
-    });
+    onRpc("/html_editor/get_image_info", () => ({
+        original: {
+            image_src: "#",
+        },
+    }));
     onRpc("/web/image/__odoo__unknown__src__/", async () => {
         await delay(50);
         return {};
@@ -969,42 +970,11 @@ describe("toolbar open and close on user interaction", () => {
             expect(".o-we-toolbar").toHaveCount(0);
         });
 
-        const firstClick = async (target) => {
-            manuallyDispatchProgrammaticEvent(target, "mousedown", { detail: 1 });
-            setSelection({ anchorNode: target, anchorOffset: 0 });
-            await tick(); // selectionChange
-            manuallyDispatchProgrammaticEvent(target, "mouseup", { detail: 1 });
-            manuallyDispatchProgrammaticEvent(target, "click", { detail: 1 });
-            await tick();
-        };
-
-        const secondClick = async (target) => {
-            manuallyDispatchProgrammaticEvent(target, "mousedown", { detail: 2 });
-            const document = target.ownerDocument;
-            document.getSelection().modify("extend", "forward", "word");
-            await tick(); // selectionChange
-            manuallyDispatchProgrammaticEvent(target, "mouseup", { detail: 2 });
-            manuallyDispatchProgrammaticEvent(target, "click", { detail: 2 });
-            await tick();
-        };
-
-        const thirdClick = async (target) => {
-            manuallyDispatchProgrammaticEvent(target, "mousedown", { detail: 3 });
-            const document = target.ownerDocument;
-            document.getSelection().modify("extend", "forward", "paragraphboundary");
-            await tick(); // selectionChange
-            manuallyDispatchProgrammaticEvent(target, "mouseup", { detail: 3 });
-            manuallyDispatchProgrammaticEvent(target, "click", { detail: 3 });
-            await tick();
-        };
-
         test("toolbar should open on double click", async () => {
             const { el } = await setupEditor("<p>test</p>");
             const p = el.firstElementChild;
 
-            // Double click
-            await firstClick(p);
-            await secondClick(p);
+            await simulateDoubleClickSelect(p);
             expect(getContent(el)).toBe("<p>[test]</p>");
             // toolbar open after double click is debounced
             await advanceTime(500);
@@ -1015,10 +985,7 @@ describe("toolbar open and close on user interaction", () => {
             const { el } = await setupEditor("<p>test text</p>");
             const p = el.firstElementChild;
 
-            // Triple click
-            await firstClick(p);
-            await secondClick(p);
-            await thirdClick(p);
+            await simulateTripleClickSelect(p);
             expect(getContent(el)).toBe("<p>[test text]</p>");
             // toolbar open after triple click is debounced
             await advanceTime(500);
@@ -1048,8 +1015,7 @@ describe("toolbar open and close on user interaction", () => {
             const { el } = await setupEditor("<p>test text</p>");
             const p = el.firstElementChild;
 
-            await firstClick(p);
-            await secondClick(p);
+            await simulateDoubleClickSelect(p);
             await pointerDown(p);
             manuallyDispatchProgrammaticEvent(p, "mousedown", { detail: 3 });
             setSelection({ anchorNode: p, anchorOffset: 0, focusOffset: 1 });
