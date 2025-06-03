@@ -1,4 +1,4 @@
-import { convertParamToObject } from "@html_builder/core/utils";
+import { convertParamToObject, isActionPreviewable } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -20,7 +20,7 @@ export class CompositeActionPlugin extends Plugin {
 
 class CompositeAction extends BuilderAction {
     static id = "composite";
-    static dependencies = ["builderActions"];
+    static dependencies = ["builderActions", "history"];
     loadOnClean = true;
     async prepare({ actionParam: { mainParam: actions }, actionValue }) {
         const proms = [];
@@ -86,11 +86,12 @@ class CompositeAction extends BuilderAction {
         return !!results.length && results.every((result) => result);
     }
     async load({ editingElement, params: { mainParam: actions }, value }) {
+        const isPreviewing = this.dependencies.history.getIsPreviewing();
         const loadActions = [];
         const loadResults = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.load) {
+            if (action.load && (!isPreviewing || isActionPreviewable(action))) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     ...actionDef,
@@ -117,9 +118,10 @@ class CompositeAction extends BuilderAction {
         dependencyManager,
         selectableContext,
     }) {
+        const isPreviewing = this.dependencies.history.getIsPreviewing();
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.apply) {
+            if (action.apply && (!isPreviewing || isActionPreviewable(action))) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     value,
@@ -141,6 +143,7 @@ class CompositeAction extends BuilderAction {
         selectableContext,
         nextAction,
     }) {
+        const isPreviewing = this.dependencies.history.getIsPreviewing();
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
             const actionDescr = this._getActionDescription({
@@ -152,14 +155,15 @@ class CompositeAction extends BuilderAction {
                 selectableContext,
                 nextAction,
             });
-
-            if (action.clean) {
-                action.clean(actionDescr);
-            } else if (action.apply) {
-                if (loadResult && loadResult[actionDef.action]) {
-                    actionDescr.loadResult = loadResult[actionDef.action];
+            if (!isPreviewing || isActionPreviewable(action)) {
+                if (action.clean) {
+                    action.clean(actionDescr);
+                } else if (action.apply) {
+                    if (loadResult && loadResult[actionDef.action]) {
+                        actionDescr.loadResult = loadResult[actionDef.action];
+                    }
+                    action.apply(actionDescr);
                 }
-                action.apply(actionDescr);
             }
         }
     }
@@ -193,6 +197,8 @@ class CompositeAction extends BuilderAction {
 class ReloadCompositeAction extends CompositeAction {
     static id = "reloadComposite";
     setup() {
-        this.reload = {};
+        this.reload = {
+            previewable: true,
+        };
     }
 }
