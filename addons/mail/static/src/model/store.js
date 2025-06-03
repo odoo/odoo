@@ -31,6 +31,8 @@ export class Store extends Record {
         this._.ERRORS.push(err);
     }
 
+    warnErrors = true;
+
     /** @param {() => any} fn */
     MAKE_UPDATE(fn) {
         this._.UPDATE++;
@@ -175,9 +177,11 @@ export class Store extends Record {
             }
             this._.UPDATE--;
             if (this._.ERRORS.length) {
-                console.warn("Store data insert aborted due to following errors:");
-                for (const err of this._.ERRORS) {
-                    console.warn(err);
+                if (this.warnErrors) {
+                    console.warn("Store data insert aborted due to following errors:");
+                    for (const err of this._.ERRORS) {
+                        console.warn(err);
+                    }
                 }
                 const [error1] = this._.ERRORS;
                 this._.ERRORS = [];

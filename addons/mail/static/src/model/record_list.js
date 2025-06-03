@@ -213,6 +213,13 @@ export class RecordListInternal {
         const inverse = getInverse(recordList);
         const targetModel = getTargetModel(recordList);
         if (typeof val !== "object") {
+            if (Array.isArray(recordList._store[targetModel].id)) {
+                throw new Error(
+                    `Cannot insert "${val}" on relational field "${recordList._.owner.Model.getName()}/${
+                        recordList._.name
+                    }": target model "${targetModel}" doesn't support single-id data!`
+                );
+            }
             // single-id data
             val = { [recordList._store[targetModel].id]: val };
         }
