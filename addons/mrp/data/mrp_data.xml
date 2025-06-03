@@ -10,7 +10,10 @@
         <record id="route_warehouse0_manufacture" model='stock.route'>
             <field name="name">Manufacture</field>
             <field name="company_id"></field>
-            <field name="sequence">10</field>
+            <field name="sequence">5</field>
+            <field name="product_selectable" eval="False"/>
+            <field name="warehouse_selectable" eval="True"/>
+            <field name="warehouse_ids" eval="[(4, ref('stock.warehouse0'))]"/>
         </record>
 
         <!-- Enable the manufacturing in warehouse0 -->

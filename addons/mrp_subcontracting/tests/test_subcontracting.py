@@ -147,6 +147,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
         # Create a different subcontract location & check rules replication
         reference_location_rules_count = self.env['stock.rule'].search_count(['|', ('location_src_id', '=', self.env.company.subcontracting_location_id.id), ('location_dest_id', '=', self.env.company.subcontracting_location_id.id)])
@@ -226,6 +227,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         # Tick "resupply subconractor on order"
         resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        resupply_sub_on_order_route.product_selectable = True
         (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
 
         # Tick "manufacture" and MTO on self.comp2
@@ -501,6 +503,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         resupply_sub_on_order_route = self.env['stock.route'].search([
             ('name', '=', 'Resupply Subcontractor on Order')
         ])
+        resupply_sub_on_order_route.product_selectable = True
+        self.comp2.bom_ids.unlink()
         (self.comp1 + self.comp2).write({
             'route_ids': [(4, resupply_sub_on_order_route.id)]
         })
