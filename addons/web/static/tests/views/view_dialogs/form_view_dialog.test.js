@@ -482,6 +482,19 @@ test("expand button with save and new", async () => {
     ]);
 });
 
+test("FormViewDialog with canExpand set to false", async () => {
+    Partner._views["form,false"] = /* xml */ `<form><field name="foo"/></form>`;
+    Partner._records = [];
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(FormViewDialog, {
+        resModel: "partner",
+        canExpand: false,
+    });
+    await animationFrame();
+    expect(".o_dialog .o_form_view").toHaveCount(1);
+    expect(".o_dialog .modal-header .o_expand_button").toHaveCount(0);
+});
+
 test.tags("desktop");
 test("close dialog with escape after modifying a field with onchange (no blur)", async () => {
     Partner._views["form,false"] = `<form><field name="foo"/></form>`;
