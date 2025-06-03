@@ -865,6 +865,50 @@ describe("unobserved mutations", () => {
             expect(textNode.textContent).toBe("a");
         });
     });
+
+    describe("childList", () => {
+        test("unobserved childList mutations should not affect history", async () => {
+            const { editor } = await setupEditor(`<p><span></span></p>`);
+            /** @type {HTMLElement} */
+            const parent = editor.editable.querySelector("p span");
+            const childA = editor.document.createElement("span");
+            const childB = editor.document.createElement("span");
+            withAddStep(editor, () => parent.append(childA));
+            editor.shared.history.ignoreDOMMutations(() => parent.append(childB));
+            withAddStep(editor, () => parent.replaceChildren());
+            editor.shared.history.undo();
+            const childNodes = [...parent.childNodes];
+            expect(childNodes.length).toBe(1);
+            expect(childNodes[0]).toBe(childA);
+        });
+        test("node addition to unobserved node is also unobserved", async () => {
+            const { editor } = await setupEditor(`<p><span></span></p>`);
+            /** @type {HTMLElement} */
+            const parent = editor.editable.querySelector("p span");
+            const nodeA = editor.document.createElement("span");
+            withAddStep(editor, () => parent.append(nodeA));
+            const nodeB = editor.document.createElement("span");
+            // B is an unobserved node
+            editor.shared.history.ignoreDOMMutations(() => nodeA.append(nodeB));
+            const nodeC = editor.document.createElement("span");
+            // addition of C to B should not be observed, thus empty step
+            withAddStep(editor, () => nodeB.append(nodeC));
+            editor.shared.history.undo();
+            // addition of A is reverted
+            expect(nodeA.parentNode).toBe(null);
+        });
+    });
+    test("node addition to descendant of unobserved node is not observed", async () => {
+        const { editor } = await setupEditor(`<p></p>`);
+        const p = editor.editable.querySelector("p");
+        const nodeA = editor.document.createElement("span");
+        const nodeB = editor.document.createElement("span");
+        nodeA.append(nodeB);
+        editor.shared.history.ignoreDOMMutations(() => p.append(nodeA));
+        const nodeC = editor.document.createElement("span");
+        withAddStep(editor, () => nodeB.append(nodeC)); // should be an empty step
+        expect(editor.shared.history.getHistorySteps().length).toBe(1);
+    });
 });
 
 describe("serialization", () => {
