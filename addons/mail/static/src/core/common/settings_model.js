@@ -212,7 +212,7 @@ export class Settings extends Record {
      * @param {number} param0.volume
      */
     async saveVolumeSetting({ partnerId, guestId, volume }) {
-        if (this.store.self.type !== "partner") {
+        if (!this.store.self_partner) {
             return;
         }
         const key = `${partnerId}_${guestId}`;
@@ -356,7 +356,7 @@ export class Settings extends Record {
      * @private
      */
     async _saveSettings() {
-        if (this.store.self.type !== "partner") {
+        if (!this.store.self_partner) {
             return;
         }
         browser.clearTimeout(this.globalSettingsTimeout);

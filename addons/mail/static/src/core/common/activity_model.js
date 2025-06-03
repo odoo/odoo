@@ -52,7 +52,7 @@ export class Activity extends Record {
     icon = "fa-tasks";
     mail_template_ids = fields.Many("mail.template");
     note = fields.Html("");
-    persona = fields.One("Persona");
+    persona = fields.One("res.partner");
     /** @type {string} */
     res_model;
     /** @type {[number, string]} */

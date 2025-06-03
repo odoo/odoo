@@ -339,7 +339,7 @@ export class DiscussChannel extends models.ServerModel {
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return channel;
+                return DiscussChannel.browse(channel.id);
             }
         }
         const id = this.create({

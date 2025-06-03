@@ -24,9 +24,7 @@ let temporaryIdOffset = 0.01;
 
 export const pyToJsModels = {
     "discuss.channel": "Thread",
-    "mail.guest": "Persona",
     "mail.thread": "Thread",
-    "res.partner": "Persona",
 };
 
 export const addFieldsByPyModel = {
@@ -64,14 +62,14 @@ patch(storeInsertFns, {
 export class Store extends BaseStore {
     static FETCH_DATA_DEBOUNCE_DELAY = 1;
     static OTHER_LONG_TYPING = 60000;
+    static IM_STATUS_DEBOUNCE_DELAY = 1000;
 
     FETCH_LIMIT = 30;
     DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
     isReady = new Deferred();
     /** This is the current logged partner / guest */
-    self_partner = fields.One("Persona");
-    self_guest = fields.One("Persona");
-    /** @returns {import("models").Persona} */
+    self_partner = fields.One("res.partner");
+    self_guest = fields.One("mail.guest");
     get self() {
         return this.self_partner || this.self_guest;
     }
@@ -89,7 +87,7 @@ export class Store extends BaseStore {
      * public page.
      */
     inPublicPage = false;
-    odoobot = fields.One("Persona");
+    odoobot = fields.One("res.partner");
     users = {};
     /** @type {number} */
     internalUserGroupId;
@@ -594,7 +592,7 @@ export class Store extends BaseStore {
             partnerId = user.partner_id;
         }
         if (partnerId) {
-            const partner = this.Persona.insert({ id: partnerId, type: "partner" });
+            const partner = this["res.partner"].insert({ id: partnerId });
             if (!partner.main_user_id) {
                 const [userId] = await this.env.services.orm.silent.search(
                     "res.users",
@@ -681,7 +679,7 @@ export const storeService = {
          * these values will still be executed immediately. Providing a dummy default is enough to
          * avoid crashes, the actual values being filled at livechat init when they are necessary.
          */
-        store.self_guest ??= { id: -1, type: "guest" };
+        store.self_guest ??= { id: -1 };
         store.settings ??= {};
         store.initialize();
         store.onStarted();

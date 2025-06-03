@@ -1382,12 +1382,6 @@ class Store {
         if (records._name === "discuss.channel") {
             return { id: record.id, model: "discuss.channel" };
         }
-        if (records._name === "mail.guest") {
-            return { id: record.id, type: "guest" };
-        }
-        if (records._name === "res.partner") {
-            return { id: record.id, type: "partner" };
-        }
         return record.id;
     }
 }

@@ -24,7 +24,7 @@ patch(Thread, threadStaticPatch);
 patch(Thread.prototype, {
     setup() {
         super.setup();
-        this.livechat_operator_id = fields.One("Persona");
+        this.livechat_operator_id = fields.One("res.partner");
         this.chatbotTypingMessage = fields.One("mail.message", {
             compute() {
                 if (this.chatbot) {
