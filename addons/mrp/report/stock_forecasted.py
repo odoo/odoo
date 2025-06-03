@@ -24,24 +24,18 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
-        res['draft_production_qty'] = {}
         domain = self._product_domain(product_template_ids, product_ids)
         domain += [('state', '=', 'draft')]
 
-        # Pending incoming quantity.
-        mo_domain = domain + [('location_dest_id', 'in', wh_location_ids)]
-        [product_qty] = self.env['mrp.production']._read_group(mo_domain, aggregates=['product_qty:sum'])[0]
-        res['draft_production_qty']['in'] = product_qty or 0.0
-
-        # Pending outgoing quantity.
-        move_domain = domain + [
+        in_domain = domain + [('location_dest_id', 'in', wh_location_ids)]  # Pending incoming quantity.
+        out_domain = domain + [  # Pending outgoing quantity.
             ('raw_material_production_id', '!=', False),
             ('location_id', 'in', wh_location_ids),
         ]
-        [product_qty] = self.env['stock.move']._read_group(move_domain, aggregates=['product_qty:sum'])[0]
-        res['draft_production_qty']['out'] = product_qty or 0.0
-        res['qty']['in'] += res['draft_production_qty']['in']
-        res['qty']['out'] += res['draft_production_qty']['out']
+        in_product_qty = {k.id: v for k, v in self.env['mrp.production']._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
+        out_product_qty = {k.id: v for k, v in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
+
+        self._add_product_quantities(res, product_template_ids, product_ids, 'draft_production_qty', in_product_qty, out_product_qty)
 
         return res
 

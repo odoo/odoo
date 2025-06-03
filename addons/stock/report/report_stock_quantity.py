@@ -68,24 +68,22 @@ WITH
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
         WHERE pt.is_storable = true AND
-            (source.w_id IS NOT NULL OR dest.w_id IS NOT NULL) AND
-            (source.w_id IS NULL OR dest.w_id IS NULL OR source.w_id <> dest.w_id) AND
+            source.w_id IS DISTINCT FROM dest.w_id AND
             m.product_qty != 0 AND
             m.state NOT IN ('draft', 'cancel') AND
-            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
+            (m.state != 'done' or m.date >= ((now() at time zone 'utc')::date - interval '%(report_period)s month'))
     ),
     all_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
-            CASE 
-                WHEN is_duplicated = 0 THEN sm.product_qty
-                WHEN sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id THEN sm.product_qty
+            CASE
+                WHEN is_duplicated = 0 OR sm.whs_id != sm.whd_id THEN sm.product_qty
                 ELSE 0
-            END, 
+            END,
             sm.date, sm.state, sm.company_id,
             CASE WHEN is_duplicated = 0 THEN sm.whs_id END,
-            CASE 
-                WHEN is_duplicated = 0 AND NOT (sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id) THEN sm.whd_id 
-                WHEN is_duplicated = 1 AND (sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id) THEN sm.whd_id 
+            CASE
+                WHEN is_duplicated = 0 AND (sm.whs_id IS NULL OR sm.whd_id IS NULL OR sm.whs_id = sm.whd_id) THEN sm.whd_id
+                WHEN is_duplicated = 1 AND (sm.whs_id IS NOT NULL AND sm.whd_id IS NOT NULL AND sm.whs_id != sm.whd_id) THEN sm.whd_id
             END
         FROM
             GENERATE_SERIES(0, 1, 1) is_duplicated,
@@ -139,8 +137,8 @@ FROM (SELECT
         stock_quant q
     LEFT JOIN stock_location l on (l.id=q.location_id)
     LEFT JOIN stock_warehouse wh
-        ON l.parent_path LIKE concat('%%/', wh.view_location_id, '/%%')
-        OR l.parent_path LIKE concat(wh.view_location_id, '/%%')
+            ON l.parent_path LIKE concat('%%/', wh.view_location_id, '/%%')
+            OR l.parent_path LIKE concat(wh.view_location_id, '/%%')
     LEFT JOIN product_product pp on pp.id=q.product_id
     WHERE
         (l.usage = 'internal' AND wh.id IS NOT NULL) OR
