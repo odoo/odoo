@@ -17,9 +17,15 @@
 </template>
 
 <template id="partner_detail" name="Partner Details">
-    <div class="row" itemscope="itemscope" itemtype="http://schema.org/Organization">
+    <div class="row mt-3" itemscope="itemscope" itemtype="http://schema.org/Organization">
         <div class="col-lg-3 col-md-4">
-            <div t-field="partner.avatar_1920" t-options='{"widget": "image", "preview_image": "avatar_1920", "style": "object-fit: cover", "class": "w-100 mb-2 rounded-3 border", "itemprop": "image"}'/>
+            <div t-field="partner.image_1920" t-options='{
+                "widget": "image",
+                "preview_image": "avatar_1920",
+                "style": "object-fit: cover",
+                "class": "w-100 mb-2 rounded-3 border o_partner_image oe_unremovable",
+                "itemprop": "image"
+            }'/>
             <t t-if="contact_details">
                 <div class="o_wcrm_contact_details">
                     <div t-field="partner.self" t-options='{
