@@ -24,6 +24,7 @@ export class FormViewDialog extends Component {
         viewId: { type: [Number, Boolean], optional: true },
         preventCreate: { type: Boolean, optional: true },
         preventEdit: { type: Boolean, optional: true },
+        canExpand: { type: Boolean, optional: true },
         isToMany: { type: Boolean, optional: true },
         size: Dialog.props.size,
     };
@@ -31,6 +32,7 @@ export class FormViewDialog extends Component {
         onRecordSaved: () => {},
         preventCreate: false,
         preventEdit: false,
+        canExpand: true,
         isToMany: false,
     };
 
@@ -46,6 +48,10 @@ export class FormViewDialog extends Component {
             : "web.FormViewDialog.ToOne.buttons";
 
         this.currentResId = this.props.resId;
+
+        if (this.props.canExpand) {
+            this.onExpandCallback = this.onExpand.bind(this);
+        }
 
         this.viewProps = {
             type: "form",
