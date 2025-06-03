@@ -210,7 +210,7 @@ class HrLeaveType(models.Model):
         ))
         for leave_type in self:
             if leave_type.requires_allocation:
-                allocations = allocation_by_leave_type.get(leave_type.id, self.env['hr.leave.allocation'])
+                allocations = allocation_by_leave_type.get(leave_type, self.env['hr.leave.allocation'])
                 allowed_excess = leave_type.max_allowed_negative if leave_type.allows_negative else 0
                 allocations = allocations.filtered(lambda alloc:
                     alloc.allocation_type == 'accrual'
