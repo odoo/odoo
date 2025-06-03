@@ -48,7 +48,7 @@ class DiscussChannel(models.Model):
                     Store.One("partner_id", [Store.One("country_id", ["code"])]),
                     Store.One("website_id", ["name"]),
                 ],
-                predicate=lambda channel: channel.livechat_visitor_id
+                predicate=lambda channel: channel.channel_type == "livechat"
                 and self.livechat_visitor_id.has_access("read"),
             ),
             "requested_by_operator",
