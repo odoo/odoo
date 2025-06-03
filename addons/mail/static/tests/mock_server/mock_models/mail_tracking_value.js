@@ -76,10 +76,17 @@ export class MailTrackingValue extends models.ServerModel {
                 values["old_value_integer"] = initial_value ? 1 : 0;
                 values["new_value_integer"] = new_value ? 1 : 0;
                 break;
-            case "monetary":
+            case "monetary": {
                 values["old_value_float"] = initial_value;
                 values["new_value_float"] = new_value;
+                let currencyField = col_info.currency_field;
+                // see get_currency_field in python fields
+                if (!currencyField && "currency_id" in record._fields) {
+                    currencyField = "currency_id";
+                }
+                values[`currency_id`] = record[0][currencyField];
                 break;
+            }
             case "selection":
                 values["old_value_char"] = initial_value;
                 values["new_value_char"] = new_value;
@@ -117,8 +124,16 @@ export class MailTrackingValue extends models.ServerModel {
                 id: tracking.id,
                 fieldName: irField.name,
                 fieldType: irField.ttype,
-                newValue: { value: this._format_display_value(tracking, "new") },
-                oldValue: { value: this._format_display_value(tracking, "old") },
+                newValue: {
+                    currencyId: tracking.currency_id,
+                    floatPrecision: this.env[irField.model]._fields[irField.name].digits,
+                    value: this._format_display_value(tracking, "new"),
+                },
+                oldValue: {
+                    currencyId: tracking.currency_id,
+                    floatPrecision: this.env[irField.model]._fields[irField.name].digits,
+                    value: this._format_display_value(tracking, "old"),
+                },
             };
         });
     }
