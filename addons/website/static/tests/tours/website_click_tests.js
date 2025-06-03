@@ -33,6 +33,16 @@ registerWebsitePreviewTour('website_click_tour', {
         trigger: ':iframe a[href="/"]',
         run: "click",
     },
+    {
+        content: "click the User dropdown to show Log out button",
+        trigger: ":iframe .dropdown:has(#o_logout) > a",
+        run: "click",
+    },
+    {
+        content: "click the Log out button and expect not to be logged out during the following steps",
+        trigger: ":iframe .editor_enable #o_logout",
+        run: "click",
+    },
     goBackToBlocks(),
     ...insertSnippet(cover),
     ...clickOnSnippet(cover),
