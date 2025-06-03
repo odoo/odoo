@@ -365,6 +365,102 @@
             ]"/>
     </record>
 
+    <record id="tax_purchase_vat_21_representation" model="account.tax.template">
+        <field name="sequence">408</field>
+        <field name="description">21%</field>
+        <field name="name">21% Representation</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">21</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="chart_template_latvia"/>
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'account_id': ref('a7580'),
+                'plus_report_expression_ids': [ref('vat_report_line_66_balance')],
+            }),
+            (0,0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('a5721'),
+                'plus_report_expression_ids': [ref('vat_report_line_62_balance')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 60,
+                'repartition_type': 'tax',
+                'account_id': ref('a7580'),
+                'minus_report_expression_ids': [ref('vat_report_line_66_balance')],
+            }),
+            (0,0, {
+                'factor_percent': 40,
+                'repartition_type': 'tax',
+                'account_id': ref('a5721'),
+                'minus_report_expression_ids': [ref('vat_report_line_62_balance')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_purchase_vat_21_light_vehicle" model="account.tax.template">
+        <field name="sequence">405</field>
+        <field name="description">21%</field>
+        <field name="name">21% Light Vehicle</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">21</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="chart_template_latvia"/>
+        <field name="tax_group_id" ref="tax_group_vat_21"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('a7580'),
+                'plus_report_expression_ids': [ref('vat_report_line_66_balance')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('a5721'),
+                'plus_report_expression_ids': [ref('vat_report_line_62_balance')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('a7580'),
+                'minus_report_expression_ids': [ref('vat_report_line_66_balance')],
+            }),
+            (0,0, {
+                'factor_percent': 50,
+                'repartition_type': 'tax',
+                'account_id': ref('a5721'),
+                'minus_report_expression_ids': [ref('vat_report_line_62_balance')],
+            }),
+        ]"/>
+    </record>
+
     <!-- 21% VAT in EU -->
     <record id="tax_purchase_vat_21_eu" model="account.tax.template">
         <field name="chart_template_id" ref="chart_template_latvia"/>
