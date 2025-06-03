@@ -425,6 +425,9 @@ describe("sanitize", () => {
     });
 
     test("should sanitize when undo is adding a script node", async () => {
+        // Prevent console.warn from making the test fail due to inexistent node
+        // to remove.
+        patchWithCleanup(console, { warn: () => {} });
         await testMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: "<p>a</p>",
