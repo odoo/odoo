@@ -185,13 +185,14 @@ class ResPartner(models.Model):
 
         self_partner = self.with_company(company)
         old_value = self_partner.peppol_verification_state
-        self_partner.peppol_verification_state = self._get_peppol_verification_state(
+        new_value = self._get_peppol_verification_state(
             self.peppol_endpoint,
             self.peppol_eas,
             self_partner._get_peppol_edi_format(),
         )
 
-        if old_value != self_partner.peppol_verification_state:
+        if old_value != new_value:
+            self_partner.peppol_verification_state = new_value
             self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
         return False
 
