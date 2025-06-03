@@ -3330,7 +3330,7 @@ class AccountMove(models.Model):
                     tax_values[key] += diff_sign * abs_delta_to_add
                     abs_diff -= abs_delta_to_add
 
-        return self.env['account.tax']._aggregate_taxes(
+        return self.env['account.tax'].with_company(self.company_id)._aggregate_taxes(
             to_process,
             filter_tax_values_to_apply=filter_tax_values_to_apply,
             grouping_key_generator=grouping_key_generator,
@@ -3435,7 +3435,7 @@ class AccountMove(models.Model):
                 bases_details[frozendict(grouping_dict)] = base_detail
 
                 # Compute the tax amounts.
-                tax_details_with_epd = self.env['account.tax']._aggregate_taxes(
+                tax_details_with_epd = self.env['account.tax'].with_company(self.company_id)._aggregate_taxes(
                     to_process,
                     grouping_key_generator=grouping_key_generator,
                 )

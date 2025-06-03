@@ -471,7 +471,7 @@
 
                 <p name="payment_communication" t-if="0"></p>
                 <div class="row" t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
-                    <div class="col-2 offset-6">
+                    <div class="col-2">
                         <strong>Payment Reference:</strong>
                     </div>
                     <div class="col-2">
@@ -484,11 +484,11 @@
 
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
-                        <div class="col-6 text-start">
-                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" t-out="o.invoice_payment_term_id.note"/>
+                        <div class="col-3 text-start">
+                            <span t-out="o.invoice_payment_term_id.note"/>
                         </div>
-                        <div class="col-6 text-end">
-                            <span dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
+                        <div class="col-3 text-end">
+                            <span t-if="o.invoice_payment_term_id.note != o_sec.invoice_payment_term_id.note" dir="rtl" t-out="o_sec.invoice_payment_term_id.note"/>
                         </div>
                     </div>
                     <t t-if="o.invoice_payment_term_id.display_on_invoice and o.payment_term_details">
@@ -527,20 +527,20 @@
                 <p t-if="o.narration" name="comment">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-if="o.narration != o_sec.narration" t-out="o.narration"/>
+                            <span t-out="o.narration"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span dir="rtl" t-out="o_sec.narration"/>
+                            <span t-if="o.narration != o_sec.narration" dir="rtl" t-out="o_sec.narration"/>
                         </div>
                     </div>
                 </p>
                 <p t-if="o.fiscal_position_id.note" name="note">
                     <div class="row">
                         <div class="col-6 text-start">
-                            <span t-if="o.fiscal_position_id.note != o_sec.fiscal_position_id.note" t-out="o.fiscal_position_id.note"/>
+                            <span t-out="o.fiscal_position_id.note"/>
                         </div>
                         <div class="col-6 text-end">
-                            <span dir="rtl" t-out="o_sec.fiscal_position_id.note"/>
+                            <span t-if="o.fiscal_position_id.note != o_sec.fiscal_position_id.note" dir="rtl" t-out="o_sec.fiscal_position_id.note"/>
                         </div>
                     </div>
                 </p>
