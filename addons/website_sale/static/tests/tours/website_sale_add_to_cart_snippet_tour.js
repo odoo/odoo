@@ -8,6 +8,7 @@ import {
     changeOptionInPopover,
 } from "@website/js/tours/tour_utils";
 import { assertCartContains } from '@website_sale/js/tours/tour_utils';
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 
 
 function editAddToCartSnippet() {
@@ -28,19 +29,14 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...clickOnSnippet({id: 's_add_to_cart'}),
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product No Variant", true),
         ...clickOnSave(),
+        stepUtils.waitIframeIsReady(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
 
         // Product with 2 variants with visitor choice (will open modal)
         ...editAddToCartSnippet(),
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 1", true),
         ...clickOnSave(),
-        {
-            trigger: ":iframe .s_add_to_cart_btn",
-            run: function () {
-                // Note: MSH: Need to wait for the button to be clickable(wait for event binding)
-                setTimeout(() => {}, 1000);
-            },
-        },
+        stepUtils.waitIframeIsReady(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
         clickOnElement("continue shopping", ":iframe .modal button:contains(Continue Shopping)"),
 
@@ -49,6 +45,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 2", true),
         ...changeOptionInPopover("Add to Cart Button", "Variant", "Product Yes Variant 2 (Pink)"),
         ...clickOnSave(),
+        stepUtils.waitIframeIsReady(),
         clickOnElement("add to cart button", ":iframe .s_add_to_cart_btn"),
         // Since 18.2, even if a specific variant is selected, the product configuration modal is displayed
         // The variant set on the modal used the default variants attributes (so will not correspond to the selected variant)
@@ -75,6 +72,7 @@ registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...changeOptionInPopover("Add to Cart Button", "Action", "Buy Now", false),
         // At this point the "Add to cart" button was changed to a "Buy Now" button
         ...clickOnSave(),
+        stepUtils.waitIframeIsReady(),
         clickOnElement('"Buy Now" button', ':iframe .s_add_to_cart_btn'),
         {
             // wait for the page to load, as the next check was sometimes too fast
