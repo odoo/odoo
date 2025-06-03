@@ -11,9 +11,9 @@
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2024
 # Cihad GÜNDOĞDU <cihadgundogdu@gmail.com>, 2024
 # Buket Şeker <buket_skr@hotmail.com>, 2024
+# Halil, 2024
 # Ömer ABA <omeraba93@gmail.com>, 2024
 # Levent Karakaş <levent@mektup.at>, 2024
-# Halil, 2024
 # İlknur Gözütok, 2024
 # Erdem Keskin <erdemkeskines@gmail.com>, 2024
 # Umur Akın <umura@projetgrup.com>, 2024
@@ -24,8 +24,8 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2024
 # Tugay Hatıl <tugayh@projetgrup.com>, 2024
 # Mehmet YAYLA, 2024
-# Murat Kaplan <muratk@projetgrup.com>, 2024
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2024
+# Murat Kaplan <muratk@projetgrup.com>, 2024
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2024
 # Cengiz Cokay Global Nonwoven, 2025
 # Melih Melik Sonmez, 2025
@@ -245,6 +245,73 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Merhaba,\n"
+"                <br/><br/>\n"
+"                İş başvurunuzun tarafımıza başarıyla ulaştığını teyit ederiz\n"
+"                \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-out=\"object.job_id.name or ''\">Kıdemli Geliştirici</strong></a>\" - <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>.\n"
+"                <br/><br/>\n"
+"                Size yakın zamanda geri dönüş sağlayacağız.\n"
+"\n"
+"                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"                    <a t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">İş Tanımı</a>\n"
+"                </div>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                <t t-if=\"object.user_id\">\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>İletişim:</strong></h3>\n"
+"                    <p>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"                        <span>E-posta adresi: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t></span><br/>\n"
+"                        <span>Telefon numarası: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t></span>\n"
+"                    </p>\n"
+"                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </t>\n"
+"\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>Sonraki adım nedir?</strong></h3>\n"
+"                Başvuruları genellikle <strong>birkaç gün içinde yanıtlarız.</strong><br/><br/>\n"
+"                Daha hızlı geri bildirim almak istemeniz veya geri bildirim süremizi yeterince\n"
+"                hızlı bulmamanız durumunda bu e-postayı yanıtlayarak \n"
+"                <strong>bizimle iletişime geçebilirsiniz </strong>.\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"                <t t-set=\"location\" t-value=\"''\"/>\n"
+"                <t t-if=\"object.job_id.address_id.name\">\n"
+"                    <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street\">\n"
+"                    <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero 9710</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.street2\">\n"
+"                    <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago (RM)</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.street2)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.city\">\n"
+"                    <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.city)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.state_id.name)\"/>\n"
+"                </t>\n"
+"                <t t-if=\"object.job_id.address_id.zip\">\n"
+"                    <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.zip)\"/>\n"
+"                </t>\n"
+"                <br/>\n"
+"                <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"                    <t t-out=\"object.job_id.address_id.country_id.name or ''\">Arjantin</t><br/>\n"
+"                    <t t-set=\"location\" t-value=\"'%s, %s' % (location, object.job_id.address_id.country_id.name)\"/>\n"
+"                </t>\n"
+"                <br/>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -442,13 +509,23 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "    <tr>\n"
 "        <td valign=\"top\">\n"
-"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">Sevgili<br/><br/>İlginiz ve zaman ayırdığınız için teşekkür ederiz.<br/>Gelecekteki çabalarınızda size en iyisini diliyoruz.                <br/><br/>En iyi<br/>\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Sayın,<br/><br/>\n"
+"                Gösterdiğiniz ilgi ve ayırdığınız zaman için teşekkür ederiz.<br/>\n"
+"                Gelecekteki çalışmalarınızda başarılar dileriz.\n"
+"                <br/><br/>\n"
+"                Saygılarımızla<br/>\n"
 "                <div style=\"font-size: 11px; color: grey;\">\n"
-"                    <t t-if=\"object.user_id\">-- <br/>\n"
-"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br/>E-posta: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        -- <br/>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Marc Demo</strong><br/>\n"
+"                        E-posta adresi: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t><br/>\n"
+"                        Telefon numarası: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
 "                    </t>\n"
-"                    <t t-else=\"\">-- <br/>\n"
-"                        <t t-out=\"object.company_id.name or ''\">Şirketiniz</t><br/>İK Ekibi<br/>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br/>\n"
+"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"                        İK Ekibi<br/>\n"
 "                    </t>\n"
 "                </div>\n"
 "            </div>\n"
@@ -504,6 +581,49 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Merhaba,<br/><br/>\n"
+"                <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> ekibine katılmak\n"
+"                konusunda gösterdiğiniz ilgi için teşekkür ederiz.\n"
+"                Öz geçmişiniz etkileyici olsa da, işe alım ekibimizin\n"
+"                başvurunuzu gözden geçirmiş olup \n"
+"                <b>sonraki aşamaya ilerlemeniz için uygun olmadığına karar verdiğini</b>\n"
+"                 size bildirmek istedik. <br/><br/>\n"
+"                Lütfen işe alımın zor bir süreç olduğunu ve hata yapabileceğimizi\n"
+"                unutmayın. Hata yaptığımızı düşünüyorsanız veya kararımıza dair \n"
+"                daha fazla bilgi almak isterseniz bu e-postayı \n"
+"                 yanıtlamaktan çekinmeyin.\n"
+"                <br/><br/>\n"
+"                Yine de öz geçmişinizi havuzumuzda saklayacak ve\n"
+"                tecrübe ve becerileriniz ile daha uyumlu olabileceğini \n"
+"                düşündüğümüz pozisyonlar ile ilgili sizinle iletişime geçeceğiz.\n"
+"                <br/><br/>\n"
+"                İş arayışınızda size başarılar diler ve gelecekte sizi başka\n"
+"                bir rol için değerlendirme şansına sahip olacağımızı\n"
+"                 umarız.\n"
+"                <br/><br/>\n"
+"                Teşekkür ederiz,\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    <t t-if=\"object.user_id\">\n"
+"                        -- <br/>\n"
+"                        <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</strong><br/>\n"
+"                        E-posta adresi: <t t-out=\"object.user_id.email or ''\">admin@yourcompany.example.com</t><br/>\n"
+"                        Telefon numarası: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        -- <br/>\n"
+"                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"                        İK Ekibi\n"
+"                    </t>\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_defaults
@@ -931,10 +1051,6 @@ msgid ""
 "statistics according to the source of the application: LinkedIn, Monster, "
 "Indeed, etc."
 msgstr ""
-"Bir iş pozisyonuna takma ad ayarlayarak, bu adrese gönderilen e-postalar "
-"otomatik olarak başvurular oluşturur. Uygulamanın kaynağına göre istatistik "
-"almak için birden fazla izleyici bile kullanabilirsiniz: LinkedIn, Monster, "
-"Indeed, vb."
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -1124,7 +1240,7 @@ msgstr "İş Pozisyonu Oluştur"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.mail_activity_plan_action_config_hr_applicant
 msgid "Create a Recruitment Activity Plan"
-msgstr ""
+msgstr "Bir işe alım faaliyet planı oluşturun"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -1337,7 +1453,7 @@ msgstr "İsim Göster"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display résumé on application form"
-msgstr ""
+msgstr "Başvuru formunda öz geçmişi göster"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1478,7 +1594,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__employee_id
 #: model:ir.model.fields,help:hr_recruitment.field_hr_candidate__employee_id
 msgid "Employee linked to the candidate."
-msgstr ""
+msgstr "Aday ile bağlantılı çalışan"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_config_employees
@@ -2378,7 +2494,7 @@ msgstr "Henüz veri yok!"
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
 msgid "No rules have been defined."
-msgstr ""
+msgstr "Herhangi bir kural tanımlanmadı."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2453,8 +2569,8 @@ msgid ""
 "Odoo helps you track applicants in the recruitment\n"
 "                process and follow up all operations: meetings, interviews, etc."
 msgstr ""
-"Odoo işe alım sürecinde adaylarınızı takip etmenize ve tüm\n"
-"işlemleri takip etmenize yardımcı olur: toplantılar, görüşmeler, vb."
+"Odoo, işe alım sürecindeki başvuru sahiplerini takip etmenize\n"
+"                ve tüm işlemleri izlemenize yardımcı olur: toplantılar, mülakatlar vb."
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
@@ -2491,9 +2607,6 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Yanıt vermemiş olsalar bile, gelen tüm mesajların ekleneceği bir ileti "
-"dizisinin (kayıt) isteğe bağlı kimliği. Ayarlanırsa, bu, yeni kayıtların "
-"oluşturulmasını tamamen devre dışı bırakacaktır."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_send_mail__lang
@@ -2504,10 +2617,6 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"E-posta gönderirken seçmek için isteğe bağlı çeviri dili (ISO kodu). "
-"Ayarlanmazsa, İngilizce sürüm kullanılacaktır. Bu genellikle uygun dili "
-"sağlayan bir yer tutucu ifadesi olmalıdır, örn. {{ object.partner_id.lang "
-"}}."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2583,7 +2692,7 @@ msgstr "Telefon/Mobil"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_candidate.py:0
 msgid "Please provide an candidate name."
-msgstr ""
+msgstr "Lütfen bir aday adı girin."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2593,10 +2702,6 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Posta geçidini kullanarak gönderilecek mesajların kuralları:\n"
-"- herkes: herkes posta gönderebilir\n"
-"- iş ortakları: sadece onaylanmış iş ortakları\n"
-"- takipçiler: sadece ilgili dokümanın veya takipçi kanalların takipçileri\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
@@ -2804,12 +2909,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_2
 msgid "Refused by applicant: job fit"
-msgstr ""
+msgstr "Başvuru sahibi tarafından reddedildi: pozisyona uygunluk"
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_8
 msgid "Refused by applicant: salary"
-msgstr ""
+msgstr "Başvuru sahibi tarafından reddedildi: maaş"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job_platform__regex
@@ -3254,9 +3359,6 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Bu rumuzun karşılık geldiği model (Odoo Belge Türü). Mevcut bir kayda yanıt "
-"vermeyen herhangi bir gelen e-posta, bu modelin yeni bir kaydının "
-"oluşturulmasına neden olacaktır (örneğin, bir Proje Görevi)"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq

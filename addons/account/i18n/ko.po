@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:38+0000\n"
+"POT-Creation-Date: 2025-05-30 18:36+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -212,6 +212,15 @@ msgstr "%(ref)s (%(currency_amount)s)"
 #: code:addons/account/models/account_account_tag.py:0
 msgid "%(tag)s (%(country_code)s)"
 msgstr "%(tag)s (%(country_code)s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_tax.py:0
+msgid ""
+"%(tax_account)s (%(account_name)s) should be an account of type "
+"\"%(receivable)s\" or \"%(payable)s\" with both options "
+"\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -15013,6 +15022,13 @@ msgid ""
 msgstr "전표에 대해 참조 모델과 참조 유형을 조합시키도록 구현되지 않았습니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "이 유통 항목이 속해 있는 회사입니다."
@@ -18054,6 +18070,14 @@ msgstr "이 계정에 외화를 설정할 수 없습니다. 이미 다른 외화
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
@@ -18126,6 +18150,14 @@ msgid ""
 msgstr ""
 "청구서를 승인할 수 없습니다. 총 금액이 마이너스입니다. 대신 대변전표를 생성해야 합니다. 활동 메뉴를 통해 대변전표 또는 환불 항목으로"
 " 변환하세요."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You do not have permission to mark this partner as the main commercial "
+"partner."
+msgstr ""
 
 #. module: account
 #. odoo-python

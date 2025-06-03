@@ -64,7 +64,7 @@ class AccountAnalyticApplicability(models.Model):
         account = self.env['account.account'].browse(kwargs.get('account'))
         if self.account_prefix:
             account_prefixes = tuple(prefix for prefix in re.split("[,;]", self.account_prefix.replace(" ", "")) if prefix)
-            if account and account.code.startswith(account_prefixes):
+            if account.code and account.code.startswith(account_prefixes):
                 score += 1
             else:
                 return -1
