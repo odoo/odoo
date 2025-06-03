@@ -2,6 +2,7 @@ import {
     click,
     contains,
     defineMailModels,
+    hover,
     insertText,
     onRpcBefore,
     openDiscuss,
@@ -9,7 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
-import { asyncStep, waitForSteps, Command } from "@web/../tests/web_test_helpers";
+import { asyncStep, waitForSteps, Command, serverState } from "@web/../tests/web_test_helpers";
 import { press } from "@odoo/hoot-dom";
 
 import { rpc } from "@web/core/network/rpc";
@@ -375,7 +376,7 @@ test("Delete all link previews at once", async () => {
         res_id: channelId,
         message_link_preview_ids: [
             Command.create({ link_preview_id: linkPreviewId_1 }),
-            Command.create({ link_preview_id: linkPreviewId_2 })
+            Command.create({ link_preview_id: linkPreviewId_2 }),
         ],
     });
     await start();
@@ -450,4 +451,64 @@ test("youtube and gdrive videos URL are embed", async () => {
     await contains("iframe[data-src='https://www.youtube.com/embed/9bZkp7q19f0?autoplay=1']", {
         parent: [".o-mail-LinkPreviewVideo[data-provider=youtube]"],
     });
+});
+
+test("Internal user can't delete others preview", async () => {
+    const pyEnv = await startServer();
+    const [linkPreviewId_1, linkPreviewId_2] = pyEnv["mail.link.preview"].create([
+        {
+            og_description: "Description",
+            og_title: "Article title 1",
+            og_type: "article",
+            source_url: "https://www.odoo.com/",
+        },
+        {
+            og_description: "Description",
+            og_title: "Article title 2",
+            og_type: "article",
+            source_url: "https://www.test.odoo.com/",
+        },
+    ]);
+    const partnerId = pyEnv["res.partner"].create({ name: "Test User" });
+    const userId = pyEnv["res.users"].create({
+        partner_id: partnerId,
+        login: "testUser",
+        password: "testUser",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "wololo",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+    });
+    pyEnv["mail.message"].create([
+        {
+            body: "msg-1",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            author_id: serverState.partnerId,
+            message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId_1 })],
+        },
+        {
+            body: "msg-2",
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+            author_id: partnerId,
+            message_link_preview_ids: [Command.create({ link_preview_id: linkPreviewId_2 })],
+        },
+    ]);
+    await start({ authenticateAs: pyEnv["res.users"].read(userId)[0] });
+    await openDiscuss(channelId);
+    await hover(".o-mail-Message:contains('msg-2') .o-mail-LinkPreviewCard");
+    await contains(
+        ".o-mail-Message:contains('msg-2') .o-mail-LinkPreviewCard button[aria-label='Remove']"
+    );
+    await hover(".o-mail-Message:contains('msg-1') .o-mail-LinkPreviewCard");
+    await contains(
+        ".o-mail-Message:contains('msg-1') .o-mail-LinkPreviewCard button[aria-label='Remove']",
+        { count: 0 }
+    );
 });

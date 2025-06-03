@@ -286,7 +286,11 @@ export class ResPartner extends webModels.ResPartner {
                 data.userId = mainUser ? mainUser.id : false;
                 data.isInternalUser = mainUser ? !mainUser.share : false;
                 if (fields.includes("isAdmin")) {
-                    data.isAdmin = true; // mock server simplification
+                    // mock server simplificationAdd commentMore actions
+                    const users = ResUsers.search([["login", "=", "admin"]]);
+                    data.isAdmin =
+                        this.env.cookie.get("authenticated_user_sid") ===
+                            (Number.isInteger(users?.[0]) ? users?.[0] : users?.[0]?.id) ?? false; // HOOT weirdness: somehow sometimes [0] of search is record, sometimes it's already record id...
                 }
                 if (fields.includes("notification_type")) {
                     data.notification_preference = mainUser.notification_type;
