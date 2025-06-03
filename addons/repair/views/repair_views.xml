@@ -75,7 +75,7 @@
                    <button name="action_repair_end" invisible="state != 'under_repair' or has_uncomplete_moves" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
                    <button name="action_assign" invisible="not reserve_visible" string="Check availability" type="object"/>
                    <button name="action_unreserve" type="object" string="Unreserve" invisible="not unreserve_visible" data-hotkey="w"/>
-                   <button name="action_create_sale_order" type="object" string="Create Quotation" invisible="state == 'cancel' or sale_order_id"/>
+                   <button name="action_create_sale_order" type="object" string="Create Quotation" invisible="not partner_id or (state == 'cancel' or sale_order_id)"/>
                    <button name="action_repair_cancel" string="Cancel Repair" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
                    <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,under_repair,done"/>
@@ -111,12 +111,12 @@
                                 <field name="lot_id" context="{'default_product_id': product_id}" groups="stock.group_production_lot" invisible="tracking not in ['serial', 'lot']" readonly="state == 'done'" required="state=='done' and tracking in ['serial', 'lot']"/>
                                 <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" invisible="lot_id"/>
                             </div>
-                            <label for="product_qty" invisible="not product_id"/>
-                            <div class="o_row" invisible="not product_id">
+                            <label for="product_qty" invisible="not product_id" groups="base.group_no_one"/>
+                            <div class="o_row" invisible="not product_id" groups="base.group_no_one">
                                 <field name="product_qty" readonly="tracking == 'serial' or state in ('done', 'cancel')"/>
                                 <field name="product_uom" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'"/>
                             </div>
-                            <field name="picking_id" options="{'no_create': True}"/>
+                            <field name="picking_id" invisible="not is_returned" options="{'no_create': True}"/>
                             <field name="under_warranty" readonly="state in ['cancel', 'done']"/>
                         </group>
                         <group>
@@ -168,16 +168,16 @@
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
-                                <field name="quantity" string="Done" readonly="not product_id"/>
-                                <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom" groups="uom.group_uom"/>
-                                <field name="picked" string="Used"/>
+                                <field name="quantity" string="Quantity" readonly="not product_id"/>
+                                <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
+                                <field name="picked" string="Picked" optional='hide'/>
                                 <field name="lot_ids" widget="many2many_tags"
                                     groups="stock.group_production_lot"
                                     invisible="not show_details_visible or has_tracking != 'serial'"
                                     optional="hide"
                                     context="{'default_product_id': product_id}"
                                     domain="[('product_id','=',product_id)]"/>
-                                <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
+                                <button name="action_show_details" type="object" string="Details"
                                         invisible="not show_details_visible" options='{"warn": true}'
                                         context="{'default_location_dest_id': location_dest_id}"
                                     />
