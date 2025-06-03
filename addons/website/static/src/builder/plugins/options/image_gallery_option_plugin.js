@@ -48,6 +48,7 @@ class ImageGalleryOption extends Plugin {
                     )) {
                         subEl.remove();
                     }
+                    containerEl.closest("section.s_image_gallery").style.removeProperty("height");
                 },
             },
             setImageGalleryLayout: {
@@ -164,7 +165,6 @@ class ImageGalleryOption extends Plugin {
                     const onClose = this.dependencies.media.openMediaDialog({
                         onlyImages: true,
                         multiImages: true,
-                        node: editingElement,
                         save: (images) => {
                             selectedImages = images;
                             resolve();
