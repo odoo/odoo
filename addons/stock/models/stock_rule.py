@@ -412,6 +412,7 @@ class StockRule(models.Model):
         :return: the cumulative delay and cumulative delay's description
         :rtype: tuple[defaultdict(float), list[str, str]]
         """
+        # FIXME : ensure one product or make the method work with multiple products
         _ = self.env._
         delays = defaultdict(float)
         delay_description = []
@@ -426,6 +427,9 @@ class StockRule(models.Model):
                     for rule in delaying_rules
                 ]
         # Check if there's a horizon set
+        bypass_global_horizon_days = self.env.context.get('bypass_global_horizon_days')
+        if bypass_global_horizon_days:
+            return delays, delay_description
         global_horizon_days = self.env['stock.warehouse.orderpoint'].get_horizon_days()
         if global_horizon_days:
             delays['horizon_time'] += global_horizon_days
