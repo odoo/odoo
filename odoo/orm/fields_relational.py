@@ -22,7 +22,8 @@ from .utils import COLLECTION_TYPES, SQL_OPERATORS, check_pg_name
 
 if typing.TYPE_CHECKING:
     from collections.abc import Sequence
-    from .types import CommandValue, ContextType, DomainType, Environment
+    from odoo.tools.misc import Collector
+    from .types import CommandValue, ContextType, DomainType, Environment, Registry
 
     OnDelete = typing.Literal['cascade', 'set null', 'restrict']
 
@@ -85,6 +86,9 @@ class _Relational(Field[BaseModel]):
         super().setup_nonrelated(model)
         assert self.comodel_name in model.pool, \
             f"Field {self} with unknown comodel_name {self.comodel_name or '???'!r}"
+
+    def setup_inverses(self, registry: Registry, inverses: Collector[Field, Field]):
+        """ Populate ``inverses`` with ``self`` and its inverse fields. """
 
     def get_comodel_domain(self, model: BaseModel) -> Domain:
         """ Return a domain from the domain attribute. """
@@ -813,14 +817,19 @@ class One2many(_RelationalMulti):
             # link self to its inverse field and vice-versa
             comodel = model.env[self.comodel_name]
             try:
-                invf = comodel._fields[self.inverse_name]
+                comodel._fields[self.inverse_name]
             except KeyError:
                 raise ValueError(f"{self.inverse_name!r} declared in {self!r} does not exist on {comodel._name!r}.")
+
+    def setup_inverses(self, registry, inverses):
+        if self.inverse_name:
+            # link self to its inverse field and vice-versa
+            invf = registry[self.comodel_name]._fields[self.inverse_name]
             if isinstance(invf, (Many2one, Many2oneReference)):
                 # setting one2many fields only invalidates many2one inverses;
                 # integer inverses (res_model/res_id pairs) are not supported
-                model.pool.field_inverses.add(self, invf)
-            comodel.pool.field_inverses.add(invf, self)
+                inverses.add(self, invf)
+            inverses.add(invf, self)
 
     _description_relation_field = property(attrgetter('inverse_name'))
 
@@ -1217,12 +1226,13 @@ class Many2many(_RelationalMulti):
             self.relation = self.column1 = self.column2 = None
 
         if self.relation:
-            m2m = model.pool._m2m
-
             # check whether other fields use the same schema
-            fields = m2m[(self.relation, self.column1, self.column2)]
-            for field in fields:
-                if (    # same model: relation parameters must be explicit
+            fields = model.pool.many2many_relations[self.relation, self.column1, self.column2]
+            for mname, fname in fields:
+                field = model.pool[mname]._fields[fname]
+                if (
+                    field is self
+                ) or (    # same model: relation parameters must be explicit
                     self.model_name == field.model_name and
                     self.comodel_name == field.comodel_name and
                     self._explicit and field._explicit
@@ -1233,12 +1243,15 @@ class Many2many(_RelationalMulti):
                     continue
                 msg = "Many2many fields %s and %s use the same table and columns"
                 raise TypeError(msg % (self, field))
-            fields.append(self)
+            fields.add((self.model_name, self.name))
 
+    def setup_inverses(self, registry, inverses):
+        if self.relation:
             # retrieve inverse fields, and link them in field_inverses
-            for field in m2m[(self.relation, self.column2, self.column1)]:
-                model.pool.field_inverses.add(self, field)
-                model.pool.field_inverses.add(field, self)
+            for mname, fname in registry.many2many_relations[self.relation, self.column2, self.column1]:
+                field = registry[mname]._fields[fname]
+                inverses.add(self, field)
+                inverses.add(field, self)
 
     def update_db(self, model, columns):
         cr = model._cr
