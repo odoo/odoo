@@ -38,6 +38,7 @@ class ImageToolOptionPlugin extends Plugin {
             withSequence(IMAGE_TOOL, {
                 OptionComponent: ImageToolOption,
                 selector: "img",
+                exclude: "[data-oe-type='image'] > img",
             }),
             withSequence(ALIGNMENT_STYLE_PADDING, {
                 template: "website.ImageAndFaOption",
