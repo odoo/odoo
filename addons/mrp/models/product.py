@@ -78,8 +78,14 @@ class ProductTemplate(models.Model):
 
     def action_used_in_bom(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
-        action['domain'] = [('bom_line_ids.product_tmpl_id', '=', self.id)]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_line_action_used_in_boms")
+        action['domain'] = [('product_tmpl_id', '=', self.id)]
+        action['context'] = {
+            'component_variant_count': len(
+                self.product_variant_ids.filtered(lambda variant: variant.bom_line_ids)
+            ),
+            'search_default_bom_active': True,
+        }
         return action
 
     def _compute_mrp_product_qty(self):
@@ -241,8 +247,14 @@ class ProductProduct(models.Model):
 
     def action_used_in_bom(self):
         self.ensure_one()
-        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
-        action['domain'] = [('bom_line_ids.product_id', '=', self.id)]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_line_action_used_in_boms")
+        action['domain'] = [('product_id', '=', self.id)]
+        action['context'] = {
+            'component_variant_count': len(
+                self.product_tmpl_id.product_variant_ids.filtered(lambda variant: variant.bom_line_ids)
+            ),
+            'search_default_bom_active': True,
+        }
         return action
 
     def _compute_mrp_product_qty(self):
