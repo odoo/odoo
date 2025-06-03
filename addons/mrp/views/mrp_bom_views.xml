@@ -181,6 +181,8 @@
                     <field name="product_tmpl_id"/>
                     <field name="code" optional="show"/>
                     <field name="type"/>
+                    <field name="component_qty" column_invisible="not context.get('filter_bom_components_by')" optional="show"/>
+                    <field name="component_uom_id" column_invisible="not context.get('filter_bom_components_by')" optional="show"/>
                     <field name="product_id" groups="product.group_product_variant" optional="hide"/>
                     <field name="product_id" groups="!product.group_product_variant" column_invisible="1"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
