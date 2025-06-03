@@ -5,9 +5,9 @@ import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 import { DispatchResult, Model, helpers, tokenize } from "@odoo/o-spreadsheet";
 import { Domain } from "@web/core/domain";
 import {
-  defineSpreadsheetModels,
-  getBasicPivotArch,
-  getBasicServerData,
+    defineSpreadsheetModels,
+    getBasicPivotArch,
+    getBasicServerData,
 } from "@spreadsheet/../tests/helpers/data";
 import {
     createModelWithDataSource,
@@ -1983,10 +1983,12 @@ test("Can set a value to a date filter from the SET_MANY_GLOBAL_FILTER_VALUE com
 test("getFiltersMatchingPivot return correctly matching filter according to cell formula", async function () {
     mockDate("2022-07-14 00:00:00");
     const serverData = getBasicServerData();
-    serverData.models.partner.records = [{
-      id: 10000,
-      product_id: false,
-    }];
+    serverData.models.partner.records = [
+        {
+            id: 10000,
+            product_id: false,
+        },
+    ];
     const { model } = await createSpreadsheetWithPivot({
         serverData,
         arch: /*xml*/ `
@@ -1995,6 +1997,7 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
                     <field name="probability" type="measure"/>
                     <field name="date" interval="year" type="col"/>
                     <field name="date" interval="month" type="col"/>
+                    <field name="date" interval="quarter" type="col"/>
                 </pivot>`,
     });
     await addGlobalFilter(
@@ -2024,10 +2027,17 @@ test("getFiltersMatchingPivot return correctly matching filter according to cell
     expect(relationalFilters1).toEqual([{ filterId: "42", value: [37] }]);
     const relationalFilters2 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"product_id","41")');
     expect(relationalFilters2).toEqual([{ filterId: "42", value: [41] }]);
-    const relationalFiltersWithNoneValue = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"#product_id",1)');
+    const relationalFiltersWithNoneValue = getFiltersMatchingPivot(
+        model,
+        '=PIVOT.HEADER(1,"#product_id",1)'
+    );
     expect(relationalFiltersWithNoneValue).toEqual([{ filterId: "42", value: undefined }]);
     const dateFilters1 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","08/2016")');
     expect(dateFilters1).toEqual([{ filterId: "43", value: { yearOffset: -6, period: "august" } }]);
+    const december = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:month","12/2016")');
+    expect(december).toEqual([{ filterId: "43", value: { yearOffset: -6, period: "december" } }]);
+    const q4 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:quarter","4/2016")');
+    expect(q4).toEqual([{ filterId: "43", value: { yearOffset: -6, period: "fourth_quarter" } }]);
     const dateFilters2 = getFiltersMatchingPivot(model, '=PIVOT.HEADER(1,"date:year","2016")');
     expect(dateFilters2).toEqual([{ filterId: "43", value: { yearOffset: -6 } }]);
 });
