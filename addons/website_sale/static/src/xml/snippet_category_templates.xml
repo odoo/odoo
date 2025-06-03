@@ -4,19 +4,20 @@
     <t t-name="website_sale.dynamic_filter_template_categories">
         <t t-foreach="data" t-as="category" t-key="category.id">
             <div
-                class="category_item rounded position-relative oe_unremovable oe_unmovable"
+                class="category_item rounded position-relative bg-black overflow-hidden oe_unremovable oe_unmovable"
                 t-att-data-category-id="category.id"
                 t-attf-style="grid-row: span {{size}};"
                 contenteditable="false"
+                role="article"
             >
                 <img
                     loading="lazy"
-                    t-attf-src="/web/image/product.public.category/{{category.id}}/cover_image"
+                    t-attf-src="/web/image/product.public.category/{{category.id}}/image_1920"
                     alt="Category Image"
-                    class="s_category_image img-fluid position-absolute w-100 h-100"
+                    class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
                 />
                 <div t-attf-class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}">
-                    <h4 class="text-light" t-out="category.name"/>
+                    <h3 class="h4 text-light" t-out="category.name"/>
                     <a
                         role="button"
                         t-attf-href="/shop/category/{{category.id}}"

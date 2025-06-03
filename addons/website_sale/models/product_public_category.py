@@ -23,7 +23,7 @@ class ProductPublicCategory(models.Model):
         return 10000
 
     name = fields.Char(required=True, translate=True)
-    cover_image = fields.Image(string="Cover Image")
+    image_1920 = fields.Image(string="Cover Image")
     sequence = fields.Integer(default=_default_sequence, index=True)
 
     parent_id = fields.Many2one(

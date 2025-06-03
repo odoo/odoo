@@ -1848,7 +1848,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     def set_category_image(self, category_id, media):
         image_data = request.env['ir.attachment'].browse(media[0]['id']).datas
         request.env['product.public.category'].browse(category_id).write({
-            'cover_image': image_data,
+            'image_1920': image_data,
         })
 
     @staticmethod
