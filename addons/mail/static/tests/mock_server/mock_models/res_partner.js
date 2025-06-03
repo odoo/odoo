@@ -285,7 +285,14 @@ export class ResPartner extends webModels.ResPartner {
                     );
                 }
                 if (partner.main_user_id && fields.includes("is_admin")) {
-                    store.add(ResUsers.browse(partner.main_user_id), { is_admin: true }); // mock server simplification
+                    const users = ResUsers.search([["login", "=", "admin"]]);
+                    store.add(ResUsers.browse(partner.main_user_id), {
+                        is_admin:
+                            // HOOT weirdness: somehow sometimes [0] of search is record, sometimes it's already record id...
+                            this.env.cookie.get("authenticated_user_sid") ===
+                                (Number.isInteger(users?.[0]) ? users?.[0] : users?.[0]?.id) ??
+                            false,
+                    });
                 }
                 if (partner.main_user_id && fields.includes("notification_type")) {
                     store.add(

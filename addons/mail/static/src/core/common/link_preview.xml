@@ -79,7 +79,7 @@
     </t>
 
     <t t-name="mail.LinkPreview.aside">
-        <div class="position-absolute top-0 end-0 small">
+        <div t-if="props.message?.allowsEdition" class="position-absolute top-0 end-0 small">
             <button t-attf-class="{{ className }}" class="o-mail-LinkPreview-aside btn" aria-label="Remove" t-on-click="onClick">
                 <i class="fa fa-times"/>
             </button>
