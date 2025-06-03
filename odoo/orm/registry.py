@@ -26,6 +26,7 @@ from odoo.tools import (
     SQL,
     OrderedSet,
     config,
+    gc,
     lazy_classproperty,
     remove_accents,
     sql,
@@ -149,6 +150,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         registry: Registry = object.__new__(cls)
         registry.init(db_name)
         registry.new = registry.init = registry.registries = None  # type: ignore
+        first_registry = not cls.registries
 
         # Initializing a registry will call general code which will in
         # turn call Registry() to obtain the registry being initialized.
@@ -160,12 +162,17 @@ class Registry(Mapping[str, type["BaseModel"]]):
             registry.setup_signaling()
             # This should be a method on Registry
             from odoo.modules.loading import load_modules, reset_modules_state  # noqa: PLC0415
+            reset_gc = lambda: None  # noqa: E731
             try:
+                if upgrade_modules or install_modules:
+                    update_module = True
                 if new_db_demo is None:
                     new_db_demo = config['with_demo']
+                if first_registry and not update_module:
+                    reset_gc = gc.disable_gc()
                 load_modules(
                     registry,
-                    update_module=update_module or bool(upgrade_modules or install_modules),
+                    update_module=update_module,
                     upgrade_modules=upgrade_modules,
                     install_modules=install_modules,
                     new_db_demo=new_db_demo,
@@ -173,6 +180,8 @@ class Registry(Mapping[str, type["BaseModel"]]):
             except Exception:
                 reset_modules_state(db_name)
                 raise
+            finally:
+                reset_gc()
         except Exception:
             _logger.error('Failed to load registry')
             del cls.registries[db_name]     # pylint: disable=unsupported-delete-operation
