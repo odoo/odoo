@@ -18,7 +18,7 @@ export class Composer extends Record {
     /** @type {boolean} */
     emailAddSignature = true;
     message = fields.One("mail.message");
-    mentionedPartners = fields.Many("Persona");
+    mentionedPartners = fields.Many("res.partner");
     mentionedRoles = fields.Many("res.role");
     mentionedChannels = fields.Many("Thread");
     cannedResponses = fields.Many("mail.canned.response");

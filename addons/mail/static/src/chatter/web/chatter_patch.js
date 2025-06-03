@@ -224,7 +224,6 @@ patch(Chatter.prototype, {
             email: result.email,
             partner_id: result.partner_id,
             name: result.name || result.email,
-            persona: result.partner_id ? { type: "partner", id: result.partner_id } : false,
         }));
         this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
             (additionalRecipient) =>

@@ -38,11 +38,19 @@ export class RtcSession extends Record {
 
     // Server data
     channel_member_id = fields.One("discuss.channel.member", { inverse: "rtcSession" });
-    persona = fields.One("Persona", {
+    partner_id = fields.One("res.partner", {
         compute() {
-            return this.channel_member_id?.persona;
+            return this.channel_member_id?.partner_id;
         },
     });
+    guest_id = fields.One("mail.guest", {
+        compute() {
+            return this.channel_member_id?.guest_id;
+        },
+    });
+    get persona() {
+        return this.partner_id || this.guest_id;
+    }
     /** @type {boolean} */
     is_camera_on;
     /** @type {boolean} */
@@ -160,16 +168,6 @@ export class RtcSession extends Record {
             isCameraOn: this.is_camera_on,
             isScreenSharingOn: this.is_screen_sharing_on,
         };
-    }
-
-    get partnerId() {
-        const persona = this.channel_member_id?.persona;
-        return persona.type === "partner" ? persona.id : undefined;
-    }
-
-    get guestId() {
-        const persona = this.channel_member_id?.persona;
-        return persona.type === "guest" ? persona.id : undefined;
     }
 
     /**

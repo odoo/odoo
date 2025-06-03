@@ -36,8 +36,8 @@ export class WelcomePage extends Component {
     }
 
     joinChannel() {
-        if (this.store.self.type === "guest") {
-            this.store.self.updateGuestName(this.state.userName.trim());
+        if (!this.store.self_partner) {
+            this.store.self_guest?.updateGuestName(this.state.userName.trim());
         }
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.audioStream);
         browser.localStorage.setItem(

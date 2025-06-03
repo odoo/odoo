@@ -83,7 +83,7 @@ export class Thread extends Record {
         return (
             this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
             this.group_ids.length === 0 &&
-            this.store.self?.type === "partner"
+            this.store.self_partner
         );
     }
     get allowedToUnpinChannelTypes() {
@@ -231,7 +231,7 @@ export class Thread extends Record {
     });
     // FIXME: should be in the portal/frontend bundle but live chat can be loaded
     // before portal resulting in the field not being properly initialized.
-    portal_partner = fields.One("Persona");
+    portal_partner = fields.One("res.partner");
     status = "new";
     /**
      * Stored scoll position of thread from top in ASC order.
@@ -242,27 +242,11 @@ export class Thread extends Record {
     transientMessages = fields.Many("mail.message");
     /* The additional recipients are the recipients that are manually added
      * by the user by using the "To" field of the Chatter. */
-    additionalRecipients = fields.Attr([], {
-        onUpdate() {
-            for (const recipient of this.additionalRecipients) {
-                recipient.persona = recipient.partner_id
-                    ? { type: "partner", id: recipient.partner_id }
-                    : false;
-            }
-        },
-    });
+    additionalRecipients = fields.Attr([]);
     /* The suggested recipients are the recipients that are suggested by the
      * current model and includes the recipients of the last message. (e.g: for
      * a crm lead, the model will suggest the customer associated to the lead). */
-    suggestedRecipients = fields.Attr([], {
-        onUpdate() {
-            for (const recipient of this.suggestedRecipients) {
-                recipient.persona = recipient.partner_id
-                    ? { type: "partner", id: recipient.partner_id }
-                    : false;
-            }
-        },
-    });
+    suggestedRecipients = fields.Attr([]);
     hasLoadingFailed = false;
     canPostOnReadonly;
     /** @type {Boolean} */
@@ -554,7 +538,7 @@ export class Thread extends Record {
      * @returns {import("models").Persona}
      */
     get effectiveSelf() {
-        return this.store.self;
+        return this.store.self_partner || this.store.self_guest;
     }
 
     async fetchNewMessages() {
@@ -764,7 +748,7 @@ export class Thread extends Record {
     }
 
     pin() {
-        if (this.model !== "discuss.channel" || this.store.self.type !== "partner") {
+        if (this.model !== "discuss.channel" || !this.store.self_partner) {
             return;
         }
         this.is_pinned = true;
@@ -839,11 +823,10 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            if (this.store.self.type === "partner") {
-                tmpData.author_id = this.effectiveSelf;
-            }
-            if (this.store.self.type === "guest") {
-                tmpData.author_guest_id = this.effectiveSelf;
+            if (this.store.self_partner) {
+                tmpData.author_id = this.store.self_partner;
+            } else {
+                tmpData.author_guest_id = this.store.self_guest;
             }
             if (parentId) {
                 tmpData.parent_id = this.store["mail.message"].get(parentId);

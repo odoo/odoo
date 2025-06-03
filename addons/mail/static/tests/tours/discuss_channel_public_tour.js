@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             async run() {
                 /** @type {import("models").Store} */
                 const store = odoo.__WOWL_DEBUG__.root.env.services["mail.store"];
-                if (store.self.type === "guest") {
+                if (store.self_guest) {
                     const src = this.anchor.querySelector("img").src;
                     const token = store["ir.attachment"].get(
                         (src.match("/web/image/([0-9]+)") || []).at(-1)

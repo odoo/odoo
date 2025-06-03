@@ -12,16 +12,17 @@ declare module "models" {
     import { Follower as FollowerClass } from "@mail/core/common/follower_model";
     import { LinkPreview as LinkPreviewClass } from "@mail/core/common/link_preview_model";
     import { MailActivityType as MailActivityTypeClass } from "@mail/core/common/mail_activity_type_model";
+    import { MailGuest as MailGuestClass } from "@mail/core/common/mail_guest_model";
     import { MailMessageSubtype as MailMessageSubtypeClass } from "@mail/core/common/mail_message_subtype_model";
     import { MailTemplate as MailTemplateClass } from "@mail/core/common/mail_template_model";
     import { Message as MessageClass } from "@mail/core/common/message_model";
     import { MessageLinkPreview as MessageLinkPreviewClass } from "@mail/core/common/message_link_preview_model";
     import { MessageReactions as MessageReactionsClass } from "@mail/core/common/message_reactions_model";
     import { Notification as NotificationClass } from "@mail/core/common/notification_model";
-    import { Persona as PersonaClass } from "@mail/core/common/persona_model";
     import { ResGroups as ResGroupsClass } from "@mail/core/common/res_groups_model";
     import { ResGroupsPrivilege as ResGroupsPrivilegeClass } from "@mail/core/common/res_groups_privilege_model";
     import { ResLang as ResLangClass } from "@mail/core/common/res_lang_model";
+    import { ResPartner as ResPartnerClass } from "@mail/core/common/res_partner_model";
     import { ResRole as ResRoleClass } from "@mail/core/common/res_role_model";
     import { ResUsers as ResUsersClass } from "@mail/core/common/res_users_model";
     import { Settings as SettingsClass } from "@mail/core/common/settings_model";
@@ -44,13 +45,14 @@ declare module "models" {
     export interface MailMessageSubtype extends MailMessageSubtypeClass {}
     export interface MailTemplate extends MailTemplateClass {}
     export interface Message extends MessageClass {}
+    export interface MailGuest extends MailGuestClass {}
     export interface MessageLinkPreview extends MessageLinkPreviewClass {}
     export interface MessageReactions extends MessageReactionsClass {}
     export interface Notification extends NotificationClass {}
-    export interface Persona extends PersonaClass {}
     export interface ResGroups extends ResGroupsClass {}
     export interface ResGroupsPrivilege extends ResGroupsPrivilegeClass {}
     export interface ResLang extends ResLangClass {}
+    export interface ResPartner extends ResPartnerClass {}
     export interface ResRole extends ResRoleClass {}
     export interface ResUsers extends ResUsersClass {}
     export interface Settings extends SettingsClass {}
@@ -69,14 +71,15 @@ declare module "models" {
         "mail.activity.type": StaticMailRecord<MailActivityType, typeof MailActivityTypeClass>;
         "mail.canned.response": StaticMailRecord<CannedResponse, typeof CannedResponseClass>;
         "mail.followers": StaticMailRecord<Follower, typeof FollowerClass>;
+        "mail.guest": StaticMailRecord<MailGuest, typeof MailGuestClass>;
         "mail.link.preview": StaticMailRecord<LinkPreview, typeof LinkPreviewClass>;
         "mail.message": StaticMailRecord<Message, typeof MessageClass>;
         "mail.message.link.preview": StaticMailRecord<MessageLinkPreview, typeof MessageLinkPreviewClass>;
         "mail.message.subtype": StaticMailRecord<MailMessageSubtype, typeof MailMessageSubtypeClass>;
         "mail.notification": StaticMailRecord<Notification, typeof NotificationClass>;
+        "res.partner": StaticMailRecord<ResPartner, typeof ResPartnerClass>;
         "mail.template": StaticMailRecord<MailTemplate, typeof MailTemplateClass>;
         MessageReactions: StaticMailRecord<MessageReactions, typeof MessageReactionsClass>;
-        Persona: StaticMailRecord<Persona, typeof PersonaClass>;
         "res.country": StaticMailRecord<Country, typeof CountryClass>;
         "res.groups": StaticMailRecord<ResGroups, typeof ResGroupsClass>;
         "res.groups.privilege": StaticMailRecord<ResGroupsPrivilege, typeof ResGroupsPrivilegeClass>;
@@ -105,13 +108,14 @@ declare module "models" {
         "mail.message.link.preview": MessageLinkPreview;
         "mail.message.subtype": MailMessageSubtype;
         "mail.notification": Notification;
+        "mail.guest": MailGuest;
         "mail.template": MailTemplate;
         MessageReactions: MessageReactions;
-        Persona: Persona;
         "res.country": Country;
         "res.groups": ResGroups;
         "res.groups.privilege": ResGroupsPrivilege;
         "res.lang": ResLang;
+        "res.partner": ResPartner;
         "res.role": ResRole;
         "res.users": ResUsers;
         Settings: Settings;

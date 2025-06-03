@@ -15,7 +15,7 @@ class UseSuggestion {
                 if (this.search.position === undefined || !this.search.delimiter) {
                     return; // nothing else to fetch
                 }
-                if (this.composer.store.self.type !== "partner") {
+                if (!this.composer.store.self_partner) {
                     return; // guests cannot access fetch suggestion method
                 }
                 if (
@@ -158,7 +158,6 @@ class UseSuggestion {
         if (option.partner) {
             this.composer.mentionedPartners.add({
                 id: option.partner.id,
-                type: "partner",
             });
         }
         if (option.role) {

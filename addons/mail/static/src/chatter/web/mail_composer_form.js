@@ -103,7 +103,6 @@ export class MailComposerFormRenderer extends formView.Renderer {
                         lang: partner.lang,
                         name: partner.name,
                         partner_id: partner.id,
-                        persona: { type: "partner", id: partner.id },
                     };
                 }
                 return recipient;
@@ -145,7 +144,6 @@ export class MailComposerFormRenderer extends formView.Renderer {
                             lang: partner.lang,
                             name: partner.name,
                             partner_id: partner.id,
-                            persona: { type: "partner", id: partner.id },
                         });
                     }
                 }

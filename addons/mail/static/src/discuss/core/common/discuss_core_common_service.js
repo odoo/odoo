@@ -50,7 +50,7 @@ export class DiscussCoreCommon {
             this.store["discuss.channel.member"].insert({
                 id,
                 fetched_message_id: { id: last_message_id },
-                partner_id: { type: "partner", id: partner_id },
+                partner_id: { id: partner_id },
                 thread: { id: channel_id, model: "discuss.channel" },
             });
         });
@@ -113,11 +113,7 @@ export class DiscussCoreCommon {
                 }
             }
         }
-        if (
-            channel.channel_type !== "channel" &&
-            this.store.self.type === "partner" &&
-            channel.selfMember
-        ) {
+        if (channel.channel_type !== "channel" && this.store.self_partner && channel.selfMember) {
             // disabled on non-channel threads and
             // on "channel" channels for performance reasons
             channel.markAsFetched();
@@ -126,7 +122,7 @@ export class DiscussCoreCommon {
             !channel.loadNewer &&
             !message.isSelfAuthored &&
             channel.composer.isFocused &&
-            this.store.self.type === "partner" &&
+            this.store.self_partner &&
             channel.newestPersistentMessage?.eq(channel.newestMessage) &&
             !channel.markedAsUnread
         ) {

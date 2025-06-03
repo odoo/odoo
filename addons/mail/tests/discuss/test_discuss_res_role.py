@@ -50,7 +50,7 @@ class TestDiscussResRole(TestResRole):
                         },
                     },
                 )
-                formatted_partner = {"id": user.partner_id.id, "type": "partner"}
+                formatted_partner = user.partner_id.id
                 if mentionned:
                     self.assertIn(formatted_partner, data["mail.message"][0]["partner_ids"])
                 else:

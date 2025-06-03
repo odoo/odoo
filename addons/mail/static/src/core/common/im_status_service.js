@@ -42,24 +42,23 @@ export const imStatusService = {
             "bus.bus/im_status_updated",
             async ({ presence_status, im_status, partner_id, guest_id, debounce = true }) => {
                 const store = env.services["mail.store"];
-                const persona = store.Persona.get({
-                    type: partner_id ? "partner" : "guest",
-                    id: partner_id || guest_id,
-                });
-                if (!persona) {
+                const partner = store["res.partner"].get(partner_id);
+                const guest = store["mail.guest"].get(guest_id);
+                if (!partner && !guest) {
                     return; // Do not store unknown persona's status
                 }
                 if (debounce) {
-                    persona.debouncedSetImStatus(im_status);
+                    partner?.debouncedSetImStatus(im_status);
+                    guest?.debouncedSetImStatus(im_status);
                 } else {
-                    persona.updateImStatus(im_status);
+                    partner?.updateImStatus(im_status);
+                    guest?.updateImStatus(im_status);
                 }
-                if (persona.notEq(store.self)) {
-                    return;
-                }
-                const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
-                if ((presence_status === "away" && isOnline) || presence_status === "offline") {
-                    updateBusPresence();
+                if (partner?.eq(store.self_partner) || guest?.eq(store.self_guest)) {
+                    const isOnline = presence.getInactivityPeriod() < AWAY_DELAY;
+                    if ((presence_status === "away" && isOnline) || presence_status === "offline") {
+                        updateBusPresence();
+                    }
                 }
             }
         );
