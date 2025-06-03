@@ -14,6 +14,28 @@ export class ForecastedDetails extends Component {
             this.props.docs.lines.length &&
             !this.props.docs.lines.some((line) => line.document_in || line.replenishment_filled);
 
+        // TO Clean, Extend & Simplify : write directly on the line : rowspan = x, skip = true, tot_qty = y, ...
+        // We need to apply rowspan logic on reservedOnHand lines too
+        this.splittedIncomingLines = {};
+        this.reservedOnHand = this.props.docs.lines.filter((line => !line.document_in && !line.reservation && !line.in_transit && line.replenishment_filled && line.document_out));
+        this.reservedOnHandTotalQty = this.reservedOnHand.reduce((sum, line) => sum + line.quantity, 0);
+        let j = 0;
+        for(let i = 0; i < this.props.docs.lines.length-1; i++){
+            const index = i-j;
+            const line = this.props.docs.lines[index];
+            const nextLine = this.props.docs.lines[i + 1];
+            if (!((line.document_in && nextLine.document_in && line.document_in.id === nextLine.document_in.id && line.document_in._name === nextLine.document_in._name) || (this.reservedOnHand.includes(line) && this.reservedOnHand.includes(nextLine)))) {
+                j = 0;
+                continue;
+            }
+            this.splittedIncomingLines[index] = this.splittedIncomingLines[index] || {
+                rowcount: 1,
+                tot_qty: line.quantity,
+            };
+            this.splittedIncomingLines[index].rowcount += 1;
+            this.splittedIncomingLines[index].tot_qty += nextLine.quantity;
+            j++;
+        }
         this._formatFloat = (num) => {
             return formatFloat(num, { digits: this.props.docs.precision });
         };
