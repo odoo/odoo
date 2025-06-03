@@ -1438,6 +1438,10 @@ Attempting to double-book your time off won't magically make your vacation 2x be
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
         self.ensure_one()
+
+        if self.employee_id.resource_id._is_flexible():
+            return (0, 23.99)
+
         domain = [
             ('calendar_id', '=', self.resource_calendar_id.id),
             ('display_type', '=', False),
