@@ -233,6 +233,18 @@ class ResourceCalendarLeaves(models.Model):
                     timesheet_vals_list.append(timesheet_vals)
         return self.env['account.analytic.line'].sudo().create(timesheet_vals_list)
 
+    def _reevaluate_leaves(self, time_domain_dict):
+        super()._reevaluate_leaves(time_domain_dict)
+        if not time_domain_dict:
+            return
+
+        domain = self._get_domain(time_domain_dict)
+        leaves = self.env['hr.leave'].search(domain)
+        if not leaves:
+            return
+        leaves.sudo()._generate_timesheets()
+        leaves.sudo()._check_missing_global_leave_timesheets()
+
     @api.model_create_multi
     def create(self, vals_list):
         results = super(ResourceCalendarLeaves, self).create(vals_list)
