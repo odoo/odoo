@@ -59,7 +59,7 @@ export class DataResponse extends Record {
     /** @type {number} */
     count;
     message = fields.One("mail.message");
-    partners = fields.Many("Persona");
+    partners = fields.Many("res.partner");
 }
 
 DataResponse.register();

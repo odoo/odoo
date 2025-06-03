@@ -33,8 +33,8 @@ test("subscribe to presence channels according to store data", async () => {
     onWebsocketEvent("subscribe", (data) => expect.step(`subscribe - [${data.channels}]`));
     expect(env.services.bus_service.isActive).toBe(false);
     // Should not subscribe to presences as bus service is not started.
-    store["Persona"].insert({ id: 1, type: "partner", name: "Partner 1" });
-    store["Persona"].insert({ id: 2, type: "partner", name: "Partner 2" });
+    store["res.partner"].insert({ id: 1, name: "Partner 1" });
+    store["res.partner"].insert({ id: 2, name: "Partner 2" });
     await tick();
     expect.waitForSteps([]);
     // Starting the bus should subscribe to known presence channels.
@@ -43,12 +43,12 @@ test("subscribe to presence channels according to store data", async () => {
         "subscribe - [odoo-presence-res.partner_1,odoo-presence-res.partner_2]",
     ]);
     // Discovering new presence channels should refresh the subscription.
-    store["Persona"].insert({ id: 1, type: "guest" });
+    store["mail.guest"].insert({ id: 1 });
     await expect.waitForSteps([
         "subscribe - [odoo-presence-mail.guest_1,odoo-presence-res.partner_1,odoo-presence-res.partner_2]",
     ]);
     // Updating "im_status_access_token" should refresh the subscription.
-    store["Persona"].insert({ id: 1, type: "guest", im_status_access_token: "token" });
+    store["mail.guest"].insert({ id: 1, im_status_access_token: "token" });
     await expect.waitForSteps([
         "subscribe - [odoo-presence-mail.guest_1-token,odoo-presence-res.partner_1,odoo-presence-res.partner_2]",
     ]);

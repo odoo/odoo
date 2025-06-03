@@ -156,23 +156,24 @@ export class DiscussCommandPalette {
     buildResults(filtered) {
         const TOTAL_LIMIT = this.ui.isSmall ? 7 : 8;
         const remaining = TOTAL_LIMIT - (filtered ? filtered.size : 0);
-        let personas = [];
-        const self = this.store.self;
-        if (self.type !== "guest") {
-            personas = Object.values(this.store.Persona.records).filter(
-                (persona) =>
-                    persona.main_user_id?.share === false &&
-                    cleanTerm(persona.displayName).includes(this.cleanedTerm) &&
-                    (!filtered || !filtered.has(persona))
+        let partners = [];
+        if (this.store.self_partner) {
+            partners = Object.values(this.store["res.partner"].records).filter(
+                (partner) =>
+                    partner.main_user_id?.share === false &&
+                    cleanTerm(partner.displayName).includes(this.cleanedTerm) &&
+                    (!filtered || !filtered.has(partner))
             );
-            personas = this.suggestion
-                .sortPartnerSuggestions(personas, this.cleanedTerm)
+            partners = this.suggestion
+                .sortPartnerSuggestions(partners, this.cleanedTerm)
                 .slice(0, TOTAL_LIMIT);
         }
-        const selfPersona = self.in(personas) ? self : undefined;
-        if (selfPersona) {
+        const selfPartner = this.store.self_partner?.in(partners)
+            ? this.store.self_partner
+            : undefined;
+        if (selfPartner) {
             // selfPersona filtered here to put at the bottom as lowest priority
-            personas = personas.filter((p) => p.notEq(selfPersona));
+            partners = partners.filter((p) => p.notEq(selfPartner));
         }
         const channels = Object.values(this.store.Thread.records)
             .filter(
@@ -195,8 +196,8 @@ export class DiscussCommandPalette {
         const elligiblePersonas = [];
         const elligibleChannels = [];
         let i = 0;
-        while ((channels.length || personas.length) && i < remaining) {
-            const p = personas.shift();
+        while ((channels.length || partners.length) && i < remaining) {
+            const p = partners.shift();
             const c = channels.shift();
             if (p) {
                 elligiblePersonas.push(p);
@@ -216,9 +217,9 @@ export class DiscussCommandPalette {
         for (const channel of elligibleChannels) {
             this.commands.push(this.makeDiscussCommand(channel));
         }
-        if (selfPersona && i < remaining) {
+        if (selfPartner && i < remaining) {
             // put self persona as lowest priority item
-            this.commands.push(this.makeDiscussCommand(selfPersona));
+            this.commands.push(this.makeDiscussCommand(selfPartner));
         }
     }
 
@@ -243,7 +244,7 @@ export class DiscussCommandPalette {
                 },
             };
         }
-        if (threadOrPersona?.Model?.name === "Persona") {
+        if (threadOrPersona?.Model?._name === "res.partner") {
             /** @type {import("models").Persona} */
             const persona = threadOrPersona;
             const chat = persona.searchChat();
