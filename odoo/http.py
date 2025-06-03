@@ -1307,6 +1307,7 @@ class HTTPRequest:
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
         httprequest.max_form_memory_size = 10 * 1024 * 1024  # 10 MB
+        self._session_id__ = httprequest.cookies.get('session_id')
 
         self.__wrapped = httprequest
         self.__environ = self.__wrapped.environ
@@ -1611,7 +1612,7 @@ class Request:
         self._post_init = None
 
     def _get_session_and_dbname(self):
-        sid = self.httprequest.cookies.get('session_id')
+        sid = self.httprequest._session_id__
         if not sid or not root.session_store.is_valid_key(sid):
             session = root.session_store.new()
         else:
