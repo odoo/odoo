@@ -2005,13 +2005,18 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         async function (assert) {
             patchDate(2022, 6, 14, 0, 0, 0);
             const serverData = getBasicServerData();
-            serverData.models["partner"].records.push({ ...serverData.models["partner"].records[0], id: 10000, product_id: false });
+            serverData.models["partner"].records.push({
+                ...serverData.models["partner"].records[0],
+                id: 10000,
+                product_id: false,
+            });
             const { model } = await createSpreadsheetWithPivot({
                 arch: /*xml*/ `
                 <pivot>
                     <field name="product_id" type="row"/>
                     <field name="probability" type="measure"/>
                     <field name="date" interval="month" type="col"/>
+                    <field name="date" interval="quarter" type="col"/>
                 </pivot>`,
                 serverData,
             });
@@ -2052,13 +2057,31 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 model,
                 '=ODOO.PIVOT.HEADER(1,"#product_id",1)'
             );
-            assert.deepEqual(relationalFiltersWithNoneValue, [{ filterId: "42", value: undefined }]);
+            assert.deepEqual(relationalFiltersWithNoneValue, [
+                { filterId: "42", value: undefined },
+            ]);
             const dateFilters1 = getFiltersMatchingPivot(
                 model,
                 '=ODOO.PIVOT.HEADER(1,"date:month","08/2016")'
             );
             assert.deepEqual(dateFilters1, [
                 { filterId: "43", value: { yearOffset: -6, period: "august" } },
+            ]);
+
+            const december = getFiltersMatchingPivot(
+                model,
+                '=ODOO.PIVOT.HEADER(1,"date:month","12/2016")'
+            );
+            assert.deepEqual(december, [
+                { filterId: "43", value: { yearOffset: -6, period: "december" } },
+            ]);
+
+            const q4 = getFiltersMatchingPivot(
+                model,
+                '=ODOO.PIVOT.HEADER(1,"date:quarter","4/2016")'
+            );
+            assert.deepEqual(q4, [
+                { filterId: "43", value: { yearOffset: -6, period: "fourth_quarter" } },
             ]);
             const dateFilters2 = getFiltersMatchingPivot(
                 model,
