@@ -12,7 +12,9 @@ class StockForecasted_Product_Product(models.AbstractModel):
         res = super()._get_report_header(product_template_ids, product_ids, wh_location_ids)
         res["use_expiration_date"] = any(self.env['product.product'].browse(res["product_variants_ids"]).mapped('use_expiration_date'))
         if res["use_expiration_date"]:
-            res["to_remove_qty"] = res['quantity_on_hand'] + res['incoming_qty'] - res['outgoing_qty'] - res['virtual_available']
+            products = self._get_products(product_template_ids, product_ids)
+            for product in products:
+                res["product"][product.id]["to_remove_qty"] = res["product"][product.id]['quantity_on_hand'] + res["product"][product.id]['incoming_qty'] - res["product"][product.id]['outgoing_qty'] - res["product"][product.id]['virtual_available']
         return res
 
     def _get_quant_domain(self, location_ids, products):
@@ -32,11 +34,6 @@ class StockForecasted_Product_Product(models.AbstractModel):
         if removal_date:
             res["removal_date"] = removal_date if removal_date == -1 else format_date(self.env, removal_date)
         return res
-
-    def _get_products_to_always_include(self, products, product_templates):
-        if not products:
-            return self.env['product.template'].browse(product_templates).product_variant_ids.filtered(lambda p: p.use_expiration_date)
-        return self.env['product.product'].browse(products).filtered(lambda p: p.use_expiration_date)
 
     def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
         res = []

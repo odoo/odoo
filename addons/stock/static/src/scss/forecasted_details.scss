@@ -1,0 +1,27 @@
+.o_stock_forecast {
+  button[data-bs-toggle="collapse"] i::before {
+    content: "\f078"; /* fa-chevron-down */
+  }
+
+  button[data-bs-toggle="collapse"].collapsed i::before {
+    content: "\f054"; /* fa-chevron-right */
+  }
+
+  thead.o_forecasted_details_main_header tr th {
+    border: none !important;
+  }
+
+  thead.o_forecasted_details_main_header tr th:first-child {
+    width:1%;
+    white-space:nowrap;
+  }
+
+  table.o_forecasted_details_table tr td:first-child {
+    border-right: none !important;
+  }
+
+  table.o_forecasted_details_table tr td:nth-child(2):not(.o_forecasted_details_line_button) {
+    border-left: none !important;
+    padding-left: 0px !important;
+  }
+}

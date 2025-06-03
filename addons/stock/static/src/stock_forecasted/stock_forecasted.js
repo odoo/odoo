@@ -121,13 +121,14 @@ export class StockForecasted extends Component {
         return { noContentHelp: _t("Try to add some incoming or outgoing transfers.") };
     }
 
-    async openView(resModel, view, resId) {
+    async openView(resModel, view, resId=false, domain = false) {
         const action = {
             type: "ir.actions.act_window",
             res_model: resModel,
             views: [[false, view]],
             view_mode: view,
-            res_id: resId,
+            res_id:  resId,
+            domain: domain,
         };
         return this.action.doAction(action);
     }

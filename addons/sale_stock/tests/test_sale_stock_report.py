@@ -174,8 +174,8 @@ class TestSaleStockReports(TestReportsCommon):
         report_values = self.env['stock.forecasted_product_product'].with_user(other).get_report_values(docids=self.product.ids)
         self.assertEqual(len(report_values['docs']['lines']), 1)
         self.assertEqual(report_values['docs']['lines'][0]['document_out']['name'], sale_order.name)
-        self.assertEqual(len(report_values['docs']['draft_sale_orders']), 1)
-        self.assertEqual(report_values['docs']['draft_sale_orders'][0]['name'], draft.name)
+        self.assertEqual(len(report_values['docs']['product'][self.product.id]['draft_sale_orders']), 1)
+        self.assertEqual(report_values['docs']['product'][self.product.id]['draft_sale_orders'][0]['name'], draft.name)
 
         # While 'other' can see these SO on the report, they shouldn't be able to access them.
         with self.assertRaises(AccessError):
