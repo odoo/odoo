@@ -2264,6 +2264,7 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
             'name': 'Product A',
             'categ_id': categ.id,
             'lst_price': 10,
+            'is_storable': True,
             'standard_price': 10
         })
         order = self.PosOrder.create({
