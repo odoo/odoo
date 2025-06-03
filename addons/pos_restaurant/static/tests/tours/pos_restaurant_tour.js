@@ -671,3 +671,13 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             ProductScreen.customerIsSelected("Deco Addict"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_open_default_register_screen_config", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.endTour(),
+        ].flat(),
+});

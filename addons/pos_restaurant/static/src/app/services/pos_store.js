@@ -28,17 +28,23 @@ patch(PosStore.prototype, {
             ? { page: "LoginScreen", params: {} }
             : this.defaultPage;
     },
-    get defaultPage() {
-        const screen = super.defaultPage;
+    get openOrder() {
         if (this.config.module_pos_restaurant) {
-            const screens = {
-                register: "ProductScreen",
-                tables: "FloorScreen",
-            };
-            screen.page = screens[this.config.default_screen];
-            screen.params = {};
+            return (
+                this.models["pos.order"].find((o) => o.state === "draft" && o.isDirectSale) ||
+                this.addNewOrder()
+            );
         }
-        return screen;
+        return super.openOrder;
+    },
+    get defaultPage() {
+        if (this.config.module_pos_restaurant && this.config.default_screen === "tables") {
+            return {
+                page: "FloorScreen",
+                params: {},
+            };
+        }
+        return super.defaultPage;
     },
     get idleTimeout() {
         return [
