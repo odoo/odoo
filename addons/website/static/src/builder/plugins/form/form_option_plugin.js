@@ -243,10 +243,12 @@ export class FormOptionPlugin extends Plugin {
                 apply: async ({ params: { mainParam } }) => {
                     const redirectToAction = (action) => {
                         redirect(`/odoo/action-${encodeURIComponent(action)}`);
-                    }
+                    };
 
                     new Promise((resolve) => {
-                        const message = _t("You are about to be redirected. Your changes will be saved.");
+                        const message = _t(
+                            "You are about to be redirected. Your changes will be saved."
+                        );
                         this.services.dialog.add(ConfirmationDialog, {
                             body: message,
                             confirmLabel: _t("Save and Redirect"),

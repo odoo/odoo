@@ -17,18 +17,18 @@ registry.category("services").add("google_maps", {
         const promiseKeys = {};
         const promiseKeysResolves = {};
         let lastKey;
-        window.odoo_gmaps_api_post_load = (async function odoo_gmaps_api_post_load() {
+        window.odoo_gmaps_api_post_load = async function odoo_gmaps_api_post_load() {
             promiseKeysResolves[lastKey]?.();
-        }).bind(this);
+        }.bind(this);
         return {
             /**
              * @param {boolean} [refetch=false]
              */
             async getGMapsAPIKey(refetch) {
                 if (refetch || !gMapsAPIKeyProm) {
-                    gMapsAPIKeyProm = new Promise(async resolve => {
-                        const data = await rpc('/website/google_maps_api_key');
-                        resolve(JSON.parse(data).google_maps_api_key || '');
+                    gMapsAPIKeyProm = new Promise(async (resolve) => {
+                        const data = await rpc("/website/google_maps_api_key");
+                        resolve(JSON.parse(data).google_maps_api_key || "");
                     });
                 }
                 return gMapsAPIKeyProm;
@@ -43,7 +43,7 @@ registry.category("services").add("google_maps", {
                 // that the key changes meanwhile... it will not work but we can
                 // agree the user can bother to reload the page at that moment.
                 if (refetch || !gMapsAPILoading) {
-                    gMapsAPILoading = new Promise(async resolve => {
+                    gMapsAPILoading = new Promise(async (resolve) => {
                         const key = await this.getGMapsAPIKey(refetch);
                         lastKey = key;
 
@@ -67,9 +67,11 @@ registry.category("services").add("google_maps", {
                                 notification.add(
                                     markup(`<div>
                                         <span>${escape(message)}</span><br/>
-                                        <a href="/odoo/action-website.action_website_configuration">${escape(urlTitle)}</a>
+                                        <a href="/odoo/action-website.action_website_configuration">${escape(
+                                            urlTitle
+                                        )}</a>
                                     </div>`),
-                                    { type: 'warning', sticky: true }
+                                    { type: "warning", sticky: true }
                                 );
                             }
                             resolve(false);
@@ -98,12 +100,15 @@ registry.category("services").add("google_maps", {
                 if (key) {
                     try {
                         const response = await this.fetchGoogleMaps(key);
-                        const isValid = (response.status === 200);
+                        const isValid = response.status === 200;
                         return {
                             isValid,
                             message: isValid
                                 ? undefined
-                                : _t("Invalid API Key. The following error was returned by Google: %(error)s", { error: await response.text() }),
+                                : _t(
+                                      "Invalid API Key. The following error was returned by Google: %(error)s",
+                                      { error: await response.text() }
+                                  ),
                         };
                     } catch {
                         return {
@@ -124,8 +129,12 @@ registry.category("services").add("google_maps", {
              * @returns {Promise<{ status: number }>}
              */
             async fetchGoogleMaps(key) {
-                return await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${encodeURIComponent(key)}`);
+                return await fetch(
+                    `https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${encodeURIComponent(
+                        key
+                    )}`
+                );
             },
-        }
-    }
+        };
+    },
 });
