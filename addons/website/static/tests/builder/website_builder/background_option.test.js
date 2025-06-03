@@ -142,10 +142,16 @@ async function dragAndDropBgImage() {
 }
 
 test("change the main color of a background image of type '/html_editor/shape'", async () => {
-    await setupWebsiteBuilder(`
-        <section style="background-image: url('/web_editor/shape/http_routing/404.svg?c2=o-color-2');">
-            AAAA
-        </section>`);
+    await setupWebsiteBuilder(
+        `
+            <section style="background-image: url('/web_editor/shape/http_routing/404.svg?c2=o-color-2');">
+                AAAA
+            </section>
+        `,
+        {
+            loadIframeBundles: true,
+        }
+    );
     await contains(":iframe section").click();
     await contains("[data-label='Main Color'] .o_we_color_preview").click();
     await contains(
