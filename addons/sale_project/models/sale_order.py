@@ -122,6 +122,7 @@ class SaleOrder(models.Model):
             projects_per_so[project.sale_order_id.id] |= project
         for order in self:
             projects = order.order_line.mapped('product_id.project_id')
+            projects |= order.project_id
             projects |= order.order_line.mapped('project_id')
             projects |= projects_per_so[order.id or order._origin.id]
             if not is_project_manager:
