@@ -475,10 +475,6 @@ class Store:
                 return {"id": self.records.id, "model": self.records._name}
             if self.records._name == "discuss.channel":
                 return {"id": self.records.id, "model": "discuss.channel"}
-            if self.records._name == "mail.guest":
-                return {"id": self.records.id, "type": "guest"}
-            if self.records._name == "res.partner":
-                return {"id": self.records.id, "type": "partner"}
             return self.records.id
 
     class Many(Relation):

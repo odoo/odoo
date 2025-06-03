@@ -1,9 +1,9 @@
-import { Persona } from "@mail/core/common/persona_model";
+import { ResPartner } from "@mail/core/common/res_partner_model";
 
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Persona} */
-const personaPatch = {
+const resPartnerPatch = {
     setup() {
         super.setup();
         /** @type {String[]} */
@@ -15,4 +15,4 @@ const personaPatch = {
         return super._computeDisplayName() || this.user_livechat_username;
     },
 };
-patch(Persona.prototype, personaPatch);
+patch(ResPartner.prototype, resPartnerPatch);

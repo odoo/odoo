@@ -37,14 +37,17 @@ export class ChannelInvitation extends Component {
             searchResultCount: 0,
             searchStr: "",
         });
-        this.debouncedFetchPartnersToInvite = useDebounced(this.fetchPartnersToInvite.bind(this), 250);
+        this.debouncedFetchPartnersToInvite = useDebounced(
+            this.fetchPartnersToInvite.bind(this),
+            250
+        );
         onWillStart(() => {
-            if (this.store.self.type === "partner") {
+            if (this.store.self_partner) {
                 this.fetchPartnersToInvite();
             }
         });
         onMounted(() => {
-            if (this.store.self.type === "partner" && this.props.thread) {
+            if (this.store.self_partner && this.props.thread) {
                 this.inputRef.el.focus();
             }
         });
@@ -118,7 +121,7 @@ export class ChannelInvitation extends Component {
         if (!results) {
             return;
         }
-        const { Persona: selectablePartners = [] } = this.store.insert(results.data);
+        const { "res.partner": selectablePartners = [] } = this.store.insert(results.data);
         this.selectablePartners = this.suggestionService.sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,

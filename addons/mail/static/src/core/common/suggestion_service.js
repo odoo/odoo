@@ -226,13 +226,13 @@ export class SuggestionService {
         };
     }
 
-    isSuggestionValid(persona, thread) {
-        return persona.type === "partner" && !persona.eq(this.store.odoobot);
+    isSuggestionValid(partner, thread) {
+        return partner.notEq(this.store.odoobot);
     }
 
     getPartnerSuggestions(thread) {
-        return Object.values(this.store.Persona.records).filter((persona) =>
-            this.isSuggestionValid(persona, thread)
+        return Object.values(this.store["res.partner"].records).filter((partner) =>
+            this.isSuggestionValid(partner, thread)
         );
     }
 

@@ -981,7 +981,7 @@ class UnfollowLinkTest(MailCommon, HttpCase):
             {
                 "id": follower.id,
                 "is_active": True,
-                "partner_id": {"id": self.env.user.partner_id.id, "type": "partner"},
+                "partner_id": self.env.user.partner_id.id,
             },
         ])
         self.assertEqual(message_data["mail.thread"][0]["selfFollower"], follower.id, "Should have follower ID")

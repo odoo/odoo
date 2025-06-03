@@ -566,4 +566,4 @@ class TestMultiCompanyThreadData(MailCommon, HttpCase):
             },
         )
         self.assertEqual(len(data["mail.followers"]), 1)
-        self.assertEqual(data["mail.followers"][0]["partner_id"]["id"], partner_portal.id)
+        self.assertEqual(data["mail.followers"][0]["partner_id"], partner_portal.id)

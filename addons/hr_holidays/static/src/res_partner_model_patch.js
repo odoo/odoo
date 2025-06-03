@@ -1,4 +1,4 @@
-import { Persona } from "@mail/core/common/persona_model";
+import { ResPartner } from "@mail/core/common/res_partner_model";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -16,7 +16,7 @@ export function getOutOfOfficeDateEndText(datetime) {
     return _t("Back on %(date)s", { date: fdate });
 }
 
-patch(Persona.prototype, {
+patch(ResPartner.prototype, {
     /** @returns {string} */
     get outOfOfficeDateEndText() {
         if (!this.main_user_id?.employee_id?.leave_date_to) {

@@ -172,7 +172,7 @@ test("should display invitations", async () => {
             channel_member_id: { id: memberId },
         })
             .add(pyEnv["discuss.channel.member"].browse(memberId), {
-                partner_id: { id: partnerId, type: "partner" },
+                partner_id: { id: partnerId },
                 channel_id: { id: channelId, model: "discuss.channel" },
             })
             .add(pyEnv["discuss.channel"].browse(channelId), {

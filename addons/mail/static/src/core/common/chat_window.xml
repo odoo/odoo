@@ -55,7 +55,7 @@
                     <t t-if="action_last" t-set="itemClass" t-value="ui.isSmall ? 'mx-2' : ''"/>
                 </t>
             </div>
-            <t t-if="this.store.inPublicPage and this.store.self.type === 'guest'">
+            <t t-if="this.store.inPublicPage and !this.store.self_partner">
                 <button class="btn ps-1" t-if="!state.editingGuestName">
                     <img class="o-mail-Discuss-selfAvatar rounded-circle object-fit-cover flex-shrink-0" alt="Avatar" t-att-src="store.self.avatarUrl" t-on-click="() => state.editingGuestName = true"/>
                 </button>
