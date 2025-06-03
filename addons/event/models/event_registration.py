@@ -419,7 +419,7 @@ class EventRegistration(models.Model):
                     results[record.id]['email_to_lst'] = [formataddr((record.name or "", email_normalized))]
         return results
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         if self.email and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -436,7 +436,7 @@ class EventRegistration(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('state', 'not in', ['cancel']),
                 ]).write({'partner_id': new_partner[0].id})
-        return super(EventRegistration, self)._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     # ------------------------------------------------------------
     # TOOLS

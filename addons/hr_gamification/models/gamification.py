@@ -37,8 +37,8 @@ class GamificationBadgeUser(models.Model):
             'context': {"dialog_size": "medium"},
         }
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(message, model_description, msg_vals)
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         self.ensure_one()
         base_url = self.get_base_url()
         for group in groups:

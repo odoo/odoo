@@ -17,10 +17,8 @@ class MailThread(models.AbstractModel):
         bypass_search_access=True,
         help="Website communication history")
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         if not self:
             return groups
 
@@ -33,14 +31,14 @@ class MailThread(models.AbstractModel):
             # sudo: mail.thread - user posting with read access should be able to create token when
             # notifying other customers that need it
             access_token = self.sudo()._portal_ensure_token()
-            local_msg_vals = dict(msg_vals or {})
-            local_msg_vals['access_token'] = access_token
-            local_msg_vals['pid'] = customer.id
-            local_msg_vals['hash'] = self._sign_token(customer.id)
+            params = {}
+            params['access_token'] = access_token
+            params['pid'] = customer.id
+            params['hash'] = self._sign_token(customer.id)
             # sudo: mail.thread - user posting with read access should be able to get/create signup
             # token when notifying other customers that need it
-            local_msg_vals.update(customer.sudo().signup_get_auth_param()[customer.id])
-            access_link = self._notify_get_action_link('view', **local_msg_vals)
+            params.update(customer.sudo().signup_get_auth_param()[customer.id])
+            access_link = self._notify_get_action_link('view', **params)
 
             new_group = [
                 ('portal_customer', lambda pdata: pdata['id'] == customer.id, {

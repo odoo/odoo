@@ -47,10 +47,8 @@ class ProjectTask(models.Model):
             (self.env['ir.model.data']._xmlid_to_res_id("project_todo.project_task_view_todo_activity"), "activity"),
         ]
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         self.ensure_one()
         if not self.project_id:
             for group_name, _group_method, group_data in groups:

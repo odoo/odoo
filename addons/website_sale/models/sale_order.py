@@ -845,18 +845,16 @@ class SaleOrder(models.Model):
             ]).cart_recovery_email_sent = True
         return super()._message_mail_after_hook(mails)
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         # After sending recovery cart emails, update orders to avoid sending it again
         if self.env.context.get("website_sale_send_recovery_email"):
             self.cart_recovery_email_sent = True
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # In case of cart recovery email, update link to redirect directly
         # to the cart (like ``mail_template_sale_cart_recovery`` template).
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         if not self:
             return groups
 
