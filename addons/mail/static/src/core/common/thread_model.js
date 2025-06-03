@@ -224,6 +224,9 @@ export class Thread extends Record {
         inverse: "threadAsNeedaction",
         sort: (message1, message2) => message1.id - message2.id,
     });
+    // FIXME: should be in the portal/frontend bundle but live chat can be loaded
+    // before portal resulting in the field not being properly initialized.
+    portal_partner = Record.one("Persona");
     status = "new";
     /**
      * Stored scoll position of thread from top in ASC order.
@@ -336,7 +339,6 @@ export class Thread extends Record {
     get isChatChannel() {
         return ["chat", "group"].includes(this.channel_type);
     }
-
 
     get supportsCustomChannelName() {
         return this.isChatChannel && this.channel_type !== "group";
@@ -528,6 +530,27 @@ export class Thread extends Record {
             // handled in fetchMessages
         }
         this.pendingNewMessages = [];
+    }
+
+    /**
+     * Get the effective persona performing actions on this thread.
+     * Priority order: logged-in user, portal partner (token-authenticated), guest.
+     *
+     * @returns {import("models").Persona}
+     */
+    get effectiveSelf() {
+        return this.store.self;
+    }
+
+    /**
+     * Get the current user's active identities.These identities include both
+     * the cookie-authenticated persona and the partner authenticated with the
+     * portal token in the context of this thread.
+     *
+     * @returns {import("models").Persona[]}
+     */
+    get selves() {
+        return [this.store.self];
     }
 
     async fetchNewMessages() {
@@ -777,7 +800,7 @@ export class Thread extends Record {
 
     addOrReplaceMessage(message, tmpMsg) {
         // The message from other personas (not self) should not replace the tmpMsg
-        if (tmpMsg && tmpMsg.in(this.messages) && message.author.eq(this.store.self)) {
+        if (tmpMsg && tmpMsg.in(this.messages) && this.effectiveSelf.eq(message.author)) {
             this.messages.splice(this.messages.indexOf(tmpMsg), 1, message);
             return;
         }
@@ -808,7 +831,7 @@ export class Thread extends Record {
                 res_id: this.id,
                 model: "discuss.channel",
             };
-            tmpData.author = this.store.self;
+            tmpData.author = this.effectiveSelf;
             if (parentId) {
                 tmpData.parentMessage = this.store["mail.message"].get(parentId);
             }
