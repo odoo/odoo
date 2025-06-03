@@ -676,3 +676,73 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
 
         # 35 = Product price (10) + landed cost price (25)
         self.assertEqual(product.standard_price, 35)
+
+    def test_refund_landed_cost_creates_negative_valuation(self):
+        """Ensure landed cost created from a vendor refund is negative and reduces valuation."""
+        self.env.company.anglo_saxon_accounting = True
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'is_storable': True,
+            'purchase_method': 'purchase',
+            'categ_id': self.stock_account_product_categ.id,
+        })
+        product.categ_id.write({
+            'property_stock_account_input_categ_id': self.company_data['default_account_stock_in'].id,
+            'property_stock_account_output_categ_id': self.company_data['default_account_stock_out'].id,
+            'property_stock_valuation_account_id': self.company_data['default_account_stock_valuation'].id,
+            'property_valuation': 'real_time',
+            'property_cost_method': 'average',
+        })
+        landed_cost_product = self.landed_cost
+        landed_cost_product.write({
+            'landed_cost_ok': True,
+            'categ_id': product.categ_id.id,
+            'type': 'service',
+            'purchase_method': 'purchase',
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.supplier_id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_qty': 1,
+                    'price_unit': 100,
+                }),
+                Command.create({
+                    'product_id': landed_cost_product.id,
+                    'product_qty': 1,
+                    'price_unit': 20,
+                }),
+            ],
+        })
+        po.button_confirm()
+        picking = po.picking_ids
+        picking.move_ids.quantity = 1
+        picking.button_validate()
+        po.action_create_invoice()
+        bill = po.invoice_ids[0]
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+        action = bill.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(picking)
+        lc = lc_form.save()
+        lc.button_validate()
+        self.assertEqual(lc.amount_total, 20)
+        self.assertEqual(lc.stock_valuation_layer_ids.value, 20)
+        reverse_wizard = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=bill.ids).create({
+            'reason': 'Refund for landed cost',
+            'date': fields.Date.today(),
+            'journal_id': bill.journal_id.id,
+        })
+        reversal = reverse_wizard.reverse_moves()
+        reversed_move = self.env['account.move'].browse(reversal['res_id'])
+        reversed_move.invoice_date = fields.Date.today()
+        reversed_move.action_post()
+        action = reversed_move.button_create_landed_costs()
+        lc_form = Form(self.env[action['res_model']].browse(action['res_id']))
+        lc_form.picking_ids.add(picking)
+        lc = lc_form.save()
+        lc.button_validate()
+        self.assertEqual(lc.amount_total, -20)
+        self.assertEqual(lc.stock_valuation_layer_ids.value, -20)
