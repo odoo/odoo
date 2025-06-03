@@ -9,3 +9,4 @@ from . import sale_order_inherit
 from . import onetracker_config
 from . import post_pack_message
 from . import stock_picking_type_inherit
+from . import stock_route_inherit
