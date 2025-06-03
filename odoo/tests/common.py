@@ -469,6 +469,8 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 
             The second form is convenient when used with :func:`users`.
         """
+        if not 'is_query_count' in self.test_tags:
+            self._logger.warning('assertQueryCount is used but the test is not tagged `is_query_count`')
         if self.warm:
             # mock random in order to avoid random bus gc
             with patch('random.random', lambda: 1):
@@ -725,8 +727,15 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         """override this method to add additional tags based on test method
         :test_method str: an inspectable test method name
         :return list: a list of tags to add
+
+        guess if the test_methods is a query_count and adds an `is_query_count` tag on the test
         """
-        return []
+        additional_tags = []
+        method_object = getattr(self, test_method, None)
+        method_source = inspect.getsource(method_object) if method_object else ''
+        if 'self.assertQueryCount' in method_source:
+            additional_tags.append('is_query_count')
+        return additional_tags
 
 savepoint_seq = itertools.count()
 
