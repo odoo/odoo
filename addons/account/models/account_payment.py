@@ -403,7 +403,7 @@ class AccountPayment(models.Model):
                     ('type', 'in', ['bank', 'cash', 'credit']),
                 ], limit=1)
 
-    @api.depends('journal_id')
+    @api.onchange('journal_id')
     def _compute_company_id(self):
         for payment in self:
             if payment.journal_id.company_id not in payment.company_id.parent_ids:
