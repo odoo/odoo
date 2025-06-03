@@ -2,6 +2,7 @@
 
 import { registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 /**
  * The purpose of these tours is to check whether Publish can or cannot be
  * used by the given current user.
@@ -10,7 +11,9 @@ import { registerWebsitePreviewTour } from '@website/js/tours/tour_utils';
 registerWebsitePreviewTour('test_can_publish_partner', {
     edition: false,
     url: '/partners',
-}, () => [{
+}, () => [
+    stepUtils.waitIframeIsReady(),
+{
     content: 'Open grade filter',
     trigger: ':iframe .dropdown:has(.dropdown-item:contains("Grade Test")) button.dropdown-toggle:contains("All Categories")',
     run: "click",
@@ -41,7 +44,9 @@ registerWebsitePreviewTour('test_can_publish_partner', {
 registerWebsitePreviewTour('test_cannot_publish_partner', {
     edition: false,
     url: '/partners',
-}, () => [{
+}, () => [
+    stepUtils.waitIframeIsReady(),
+{
     content: 'Open grade filter',
     trigger: ':iframe .dropdown:has(.dropdown-item:contains("Grade Test")) button.dropdown-toggle:contains("All Categories")',
     run: "click",

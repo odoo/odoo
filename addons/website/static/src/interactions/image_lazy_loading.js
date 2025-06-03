@@ -31,12 +31,12 @@ export class ImageLazyLoading extends Interaction {
         this.el.style.minHeight = "1px";
     }
 
-    async willStart() {
-        await onceAllImagesLoaded(this.el);
-    }
-
     start() {
-        this.el.style.minHeight = this.initialHeight;
+        onceAllImagesLoaded(this.el).then(() => {
+            if (!this.isDestroyed) {
+                this.el.style.minHeight = this.initialHeight;
+            }
+        });
     }
 
     destroy() {

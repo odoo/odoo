@@ -18,8 +18,6 @@ from odoo.addons.website_crm_partner_assign.controllers.main import (
     WebsiteCrmPartnerAssign,
 )
 
-import unittest
-
 
 class TestPartnerAssign(TransactionCase):
 
@@ -289,8 +287,6 @@ class TestPublish(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/partners'), 'test_can_publish_partner', login="testtest")
         self.assertTrue(self.partner.website_published, "Partner should have been published")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_03_reditor_not_salesman(self):
         self.user_test.group_ids = [

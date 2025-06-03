@@ -99,7 +99,7 @@ registerWebsitePreviewTour('course_publisher_standard', {
     run: "click",
 },
 {
-    trigger: "[is-ready=true]:iframe body:not(.editor_enable)",
+    trigger: ":iframe body[is-ready=true]:not(.editor_enable)",
 },
 {
     trigger:
