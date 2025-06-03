@@ -1,4 +1,4 @@
-from odoo import http
+from odoo import http, fields
 from odoo.http import request
 import requests
 import json
@@ -13,15 +13,22 @@ class SystemParameterController(http.Controller):
         data = json.loads(request.httprequest.data)
         pos_order_model = request.env['pos.order'].sudo()
 
-        if not data['order_id']:
+        if not data.get('order_id'):
             count = pos_order_model.get_today_ticket_number()
-            return {'ticket_number': count}
+            return {
+                'ticket_number': count,
+                'date': fields.Date.today().strftime('%Y-%m-%d')
+            }
 
-        order = pos_order_model.search([('id', '=', data['order_id'])], limit=1)
+        try:
+            order_id = int(data['order_id'])
+        except (ValueError, TypeError):
+            return {'error': f"Invalid order_id: {data['order_id']}. Must be an integer."}
 
+        order = pos_order_model.search([('id', '=', order_id)], limit=1)
         if not order:
-            return {'error': f"Order with ID {data['order_id']} not found."}
-        print("'ticket_number': ",order.ticket_number)
+            return {'error': f"Order with ID {order_id} not found."}
+
         return {'ticket_number': order.ticket_number}
 
     @http.route('/custom_module/restaurant_id', type='json', auth='public', methods=['POST'])

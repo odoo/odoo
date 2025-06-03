@@ -35,20 +35,6 @@ patch(FloorScreen.prototype, {
         });
 
 
-        const floorsModel = pos?.models?.floor;
-        let floorsArray = [];
-
-        const filteredFloors = floorsArray.filter(floor => {
-            const floorId = floor?.id ?? floor?.data?.id ?? null;
-            return floorId !== null && allowedFloorIds.includes(Number(floorId));
-        });
-
-        this.floors = filteredFloors;
-
-        if (this.floors.length > 0) {
-            const defaultFloor = this.floors[0];
-            this.selectFloor(defaultFloor);
-        }
     },
 
     selectFloor(floor) {
