@@ -407,10 +407,10 @@ class TestOldRules(TestStockCommon):
         self.assertEqual(picking_pick.partner_id.id, procurement_group1.partner_id.id)
         self.assertEqual(picking_pick.origin, move1.group_id.name)
 
-        # second out move, the "pick" picking should have lost its partner and origin
+        # second out move, the "pick" picking should have lost its partner and have its origin updated
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
-        self.assertEqual(picking_pick.origin, False)
+        self.assertEqual(picking_pick.origin, f'{move1.group_id.name},{move2.group_id.name}')
 
     def test_fixed_procurement_01(self):
         """ Run a procurement for 5 products when there are only 4 in stock then
@@ -591,10 +591,10 @@ class TestOldRules(TestStockCommon):
         self.assertEqual(picking_pick.partner_id.id, procurement_group1.partner_id.id)
         self.assertEqual(picking_pick.origin, move1.group_id.name)
 
-        # second out move, the "pick" picking should have lost its partner and origin
+        # second out move, the "pick" picking should have lost its partner and have its origin updated
         move2._action_confirm()
         self.assertEqual(picking_pick.partner_id.id, False)
-        self.assertEqual(picking_pick.origin, False)
+        self.assertEqual(picking_pick.origin, f'{move1.group_id.name},{move2.group_id.name}')
 
     def test_propagate_cancel_in_pull_setup(self):
         """
