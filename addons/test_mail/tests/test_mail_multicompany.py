@@ -8,6 +8,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 from werkzeug.urls import url_parse
 
+from odoo import fields
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.models.test_mail_corner_case_models import MailTestMultiCompanyWithActivity
@@ -534,7 +535,47 @@ class TestMultiCompanyRedirect(MailCommon, HttpCase):
                 )
                 self.assertEqual(response.status_code, 200)
                 self.assertNotIn('cids', response.request._cookies)
+    
+    def test_call_activity_access_error(self):
+        """Test store.add fails due to multi-company access when filtering partner.user_ids inside get_today_call_activity"""
+        if self.env['ir.module.module']._get('voip').state != 'installed':
+            self.skipTest("VoIP is required for this test.")
+        
+        portal_user = self.env['res.users'].create({
+            'name': "Company 2 User",
+            'login': 'company2_user@test.com',
+            'email': 'company2_user@test.com',
+            'company_id': self.env.company.id,
+            'company_ids': self.env.company.ids,
+            'group_ids': self.env.ref('base.group_portal').ids,
+        })
 
+        admin = self.env['res.users'].create({
+            'name': "Test User",
+            'login': 'test_user@test.com',
+            'email': 'test_user@test.com',
+            'company_id': self.env.company.id,
+            'company_ids': [self.env.company.id, self.company_2.id],
+            'group_ids': self.env.ref('base.group_erp_manager').ids,
+        })
+
+        activity_type = self.env['mail.activity.type'].create({
+            'name': 'test_activity_type',
+            'category': 'phonecall',
+        })
+
+        self.env['mail.activity'].create({
+            'activity_type_id': activity_type.id,
+            'user_id': admin.id,
+            'res_id': portal_user.partner_id,
+            'date_deadline': fields.Date.today(),
+            'res_model_id': self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1).id,
+            'summary': 'test_summary',
+            'phone': '+1234567890',
+        })
+
+        mail_activity = self.env['mail.activity'].with_user(admin).with_company(self.company_2.id)
+        self.assertTrue(mail_activity.get_today_call_activities())
 
 @tagged("-at_install", "post_install", "multi_company", "mail_controller")
 class TestMultiCompanyThreadData(MailCommon, HttpCase):
