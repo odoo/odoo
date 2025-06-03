@@ -30,7 +30,7 @@ export class Base extends WithLazyGetterTrap {
      * @param {*} _vals
      */
     setup(_vals) {
-        this._dirty = typeof this.id !== "number";
+        this._dirty = typeof this.id !== "number" || _vals._dirty || false;
     }
 
     /**

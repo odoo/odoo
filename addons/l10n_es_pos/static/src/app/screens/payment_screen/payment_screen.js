@@ -58,10 +58,19 @@ patch(PaymentScreen.prototype, {
     },
     async _postPushOrderResolve(order, order_server_ids) {
         if (this.pos.config.is_spanish) {
-            const invoiceName = await this.pos.data.call("pos.order", "get_invoice_name", [
+            const invoiceNames = await this.pos.data.call("pos.order", "get_invoice_name", [
                 order_server_ids,
             ]);
-            order.invoice_name = invoiceName;
+
+            for (const [orderId, invoiceName] of Object.entries(invoiceNames)) {
+                const order = this.pos.models["pos.order"].get(orderId);
+
+                if (!order) {
+                    continue;
+                }
+
+                order.invoice_name = invoiceName;
+            }
         }
         return super._postPushOrderResolve(...arguments);
     },

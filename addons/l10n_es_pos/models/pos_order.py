@@ -22,4 +22,4 @@ class PosOrder(models.Model):
         return res
 
     def get_invoice_name(self):
-        return self.account_move.name
+        return {record.id: record.account_move.name for record in self}

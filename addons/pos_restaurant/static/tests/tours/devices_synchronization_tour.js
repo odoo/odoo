@@ -7,6 +7,7 @@ import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_
 import * as DeviceSynchronization from "@pos_restaurant/../tests/tours/utils/devices_synchronization";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
+import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { registry } from "@web/core/registry";
 
 const ProductScreen = { ...ProductScreenPos, ...ProductScreenResto };
@@ -93,5 +94,41 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             ProductScreen.clickLine("Coca-Cola", 2),
             ProductScreen.clickLine("Coca-Cola", 1),
             ProductScreen.clickLine("Water", 3),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_synchronization_rollback", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            Chrome.clickPlanButton(),
+            Chrome.waitRequest(),
+
+            // At this point, the order is created on the server and not dirty on the client.
+            DeviceSynchronization.checkDirtyOrderCount(0),
+            OfflineUtil.setOfflineMode(),
+
+            // Adding orderline while offline on table 5 and come back to the floor plan
+            // should not remove the dirty flag
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickDisplayedProduct("Water"),
+            ProductScreen.clickDisplayedProduct("Coca-Cola"),
+            ProductScreen.orderLineHas("Coca-Cola", "2"),
+            ProductScreen.orderLineHas("Water", "1"),
+            Chrome.clickPlanButton(),
+
+            // So at this point, it should be 1 dirty order on the client
+            DeviceSynchronization.checkDirtyOrderCount(1),
+            FloorScreen.clickTable("5"),
+            ProductScreen.orderLineHas("Coca-Cola", "2"),
+            ProductScreen.orderLineHas("Water", "1"),
+            OfflineUtil.setOnlineMode(),
+            ProductScreen.clickOrderButton(),
+            Dialog.confirm(),
+            Chrome.waitRequest(),
+            DeviceSynchronization.checkDirtyOrderCount(0),
         ].flat(),
 });

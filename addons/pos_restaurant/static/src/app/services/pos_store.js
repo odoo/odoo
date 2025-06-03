@@ -83,7 +83,6 @@ patch(PosStore.prototype, {
             return false;
         }
         currentOrder.setCustomerCount(guestCount);
-        this.addPendingOrder([currentOrder.id]);
         return true;
     },
     async sendOrderInPreparationUpdateLastChange(order, cancelled = false) {
@@ -462,14 +461,6 @@ patch(PosStore.prototype, {
         this.restoreSampleDataState();
         return data;
     },
-    //@override
-    addNewOrder(data = {}) {
-        const order = super.addNewOrder(...arguments);
-        if (this.config.module_pos_restaurant) {
-            this.addPendingOrder([order.id]);
-        }
-        return order;
-    },
     createOrderIfNeeded(data) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
             let order = this.models["pos.order"].find((order) => order.isDirectSale);
@@ -484,7 +475,6 @@ patch(PosStore.prototype, {
         let currentCourse;
         if (this.config.module_pos_restaurant) {
             const order = this.getOrder();
-            this.addPendingOrder([order.id]);
             if (!order.uiState.booked) {
                 order.setBooked(true);
             }
@@ -776,9 +766,6 @@ patch(PosStore.prototype, {
             return;
         }
         return this.floorScrollPositions[floorId];
-    },
-    shouldCreatePendingOrder(order) {
-        return super.shouldCreatePendingOrder(order) || order.course_ids?.length > 0;
     },
     setOrder(order) {
         order?.ensureCourseSelection();

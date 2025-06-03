@@ -173,3 +173,17 @@ export function createNewOrderOnTable(tableName, productTuple) {
         },
     ];
 }
+
+export function checkDirtyOrderCount(count) {
+    return [
+        {
+            trigger: "body",
+            run: () => {
+                const dirtyOrders = posmodel.models["pos.order"].filter((o) => o.isDirty());
+                if (dirtyOrders.length !== count) {
+                    throw new Error(`Expected ${count} dirty orders, found ${dirtyOrders.length}`);
+                }
+            },
+        },
+    ];
+}

@@ -7,6 +7,8 @@ import { computeComboItems } from "./utils/compute_combo_items";
 import { accountTaxHelpers } from "@account/helpers/account_tax";
 import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
+import { effect } from "@web/core/utils/reactive";
+import { markRaw } from "@odoo/owl";
 
 const formatCurrency = registry.subRegistries.formatters.content.monetary[1];
 const { DateTime } = luxon;
@@ -54,6 +56,30 @@ export class PosOrder extends Base {
         if (!this.user_id && this.models["res.users"]) {
             this.user_id = this.user;
         }
+
+        // This effect monitors changes to the order and marks it as "dirty" (modified) when needed.
+        // Accessing order.raw ensures that changes to any of its fields are tracked reactively.
+        effect(
+            (order) => {
+                // Trigger reactivity for all fields in the order object. (will create a proxy)
+                order.raw;
+
+                // We use “this” here to prevent reactivity from subscribing to accessed values.
+                if (
+                    !this.uiState?.rawData?.inSynchronization &&
+                    !this.models._loadingData &&
+                    !this.isDirty()
+                ) {
+                    this._markDirty();
+                }
+            },
+            [this]
+        );
+    }
+
+    restoreState() {
+        super.restoreState(...arguments);
+        this.initUnreactiveData();
     }
 
     initState() {
@@ -74,6 +100,14 @@ export class PosOrder extends Base {
                 inputTipAmount: "",
             },
         };
+
+        this.initUnreactiveData();
+    }
+
+    initUnreactiveData() {
+        this.uiState.rawData = markRaw({
+            inSynchronization: false,
+        });
     }
 
     get user() {
