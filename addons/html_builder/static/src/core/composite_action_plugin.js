@@ -67,7 +67,7 @@ export class CompositeActionPlugin extends Plugin {
                     results.push(action.isApplied(actionDescr));
                 }
             }
-            return results.every((result) => result);
+            return !!results.length && results.every((result) => result);
         },
         load: async ({ editingElement, params: { mainParam: actions }, value }) => {
             const loadActions = [];
