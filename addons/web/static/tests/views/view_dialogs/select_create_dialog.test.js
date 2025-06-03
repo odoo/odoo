@@ -298,7 +298,7 @@ test.tags("desktop");
 test("SelectCreateDialog list view is readonly", async () => {
     Partner._fields.sequence = fields.Integer();
     Partner._views["list"] = /* xml */ `
-        <list string="Partner" editable="bottom">
+        <list string="Partner" editable="bottom" multi_edit="1">
             <field name="sequence" widget="handle"/>
             <field name="name"/>
             <field name="foo"/>
@@ -311,9 +311,13 @@ test("SelectCreateDialog list view is readonly", async () => {
         resModel: "partner",
     });
     await animationFrame();
-
-    // click on the first row to see if the list is editable
+    // select first row
     await contains(".o_list_view tbody tr td:first").click();
+    expect(".o_data_row_selected").toHaveCount(1);
+    // click on it to see if the list is editable
+    await contains(".o_list_view tbody tr:first .o_list_char").click();
+    expect(".o_data_row_selected").toHaveCount(0);
+    expect(".o_selected_row").toHaveCount(0);
 
     expect(".o_list_view tbody tr td .o_field_char input").toHaveCount(0, {
         message: "list view should not be editable in a SelectCreateDialog",
@@ -721,7 +725,7 @@ test("SelectCreateDialog: default props, create a record on desktop", async () =
 
 test.tags("desktop");
 test("SelectCreateDialog: click on row once in selection", async () => {
-    Partner._views["list"] = `<list><field name="name"/></list>`;
+    Partner._views["list"] = `<list multi_edit="1"><field name="name"/></list>`;
     Partner._views["search"] = `
         <search>
             <filter name="bar" help="Bar" domain="[('bar', '=', True)]"/>
@@ -741,6 +745,10 @@ test("SelectCreateDialog: click on row once in selection", async () => {
     await contains(".o_data_row .o_list_record_selector").click();
     expect(".o_dialog .o_data_row_selected").toHaveCount(1);
 
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    expect(".o_dialog .o_data_row_selected").toHaveCount(2);
+    await contains(".o_data_row:eq(1) .o_data_cell").click();
+    expect(".o_dialog .o_data_row_selected").toHaveCount(1);
     await contains(".o_data_row:eq(1) .o_data_cell").click();
     expect(".o_dialog .o_data_row_selected").toHaveCount(2);
 
@@ -857,7 +865,7 @@ test("SelectCreateDialog empty list, noContentHelp props", async () => {
     expect(queryOne(".o_dialog .o_list_view .o_view_nocontent")).toHaveInnerHTML(
         `<div class="o_nocontent_help">
             <p class="custom_classname">Hello</p>
-            <p>I'm an helper</p>  
+            <p>I'm an helper</p>
         </div>`
     );
 });
