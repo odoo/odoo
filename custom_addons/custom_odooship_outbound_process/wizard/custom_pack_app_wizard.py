@@ -169,18 +169,13 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                     picks_and_totes.append(
                         f"Pick: {pick.name} - Tote(s): {', '.join([t or '-' for t in totes])}"
                     )
-                warning_msg = (
+                missing_display = [m or '-' for m in missing]
+                raise ValidationError((
                         f"Scan ALL totes for Sale Order: {sale_order.name} before proceeding!\n"
-                        f"Missing tote(s): {', '.join(missing)}\n"
+                        f"Missing tote(s): {', '.join(missing_display)}\n"
                         "Picks for this order:\n" +
                         "\n".join(picks_and_totes)
-                )
-                return {
-                    "warning": {
-                        "title": "Scan All Totes for Discrete Pick",
-                        "message": warning_msg,
-                    }
-                }
+                ))
 
             pickings_to_load = so_pickings.filtered(
                 lambda p: any(tc in scanned_totes for tc in p.move_ids_without_package.mapped("pc_container_code"))
