@@ -206,25 +206,26 @@ class OrmCacheStatsLogger:
                 f"{'Model.Method':>15}"
             )
 
-            if size:
-                registries = Registry.registries.snapshot
-                for i, (dbname, registry) in enumerate(registries.items(), start=1):
-                    if not self.check_continue_logging():
-                        return
-                    _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
-                    db_cache_stats = cache_stats[dbname]
-                    sz_entries_all = 0
-                    for cache in registry._Registry__caches.values():
-                        for cache_key, cache_value in cache.snapshot.items():
-                            model_name, method = cache_key[:2]
-                            stats = db_cache_stats[model_name, method]
-                            cache_info = f'{model_name}.{method.__name__}'
-                            size = get_cache_size(cache_value, cache_info=cache_info)
-                            sz_entries_all += size
-                            stats[0] += size  # sz_entries_sum
-                            stats[1] = max(stats[1], size)  # sz_entries_max
-                            stats[2] += 1  # nb_entries
-                    db_size[dbname] = sz_entries_all
+            registries = Registry.registries.snapshot
+            for i, (dbname, registry) in enumerate(registries.items(), start=1):
+                if not self.check_continue_logging():
+                    return
+                _logger.info("Processing database %s (%d/%d)", dbname, i, len(registries))
+                db_cache_stats = cache_stats[dbname]
+                sz_entries_all = 0
+                for cache in registry._Registry__caches.values():
+                    for cache_key, cache_value in cache.snapshot.items():
+                        model_name, method = cache_key[:2]
+                        stats = db_cache_stats[model_name, method]
+                        stats[2] += 1  # nb_entries
+                        if not size:
+                            continue
+                        cache_info = f'{model_name}.{method.__name__}'
+                        size = get_cache_size(cache_value, cache_info=cache_info)
+                        sz_entries_all += size
+                        stats[0] += size  # sz_entries_sum
+                        stats[1] = max(stats[1], size)  # sz_entries_max
+                db_size[dbname] = sz_entries_all
 
             for (dbname, model_name, method), stat in STAT.copy().items():  # copy to avoid concurrent modification
                 if not self.check_continue_logging():
