@@ -12,8 +12,10 @@ from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, mute_logger
 from odoo.exceptions import ValidationError, UserError
-from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.tools import SQL, unique
+
+from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
+from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.addons.base_vat.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
@@ -787,18 +789,20 @@ class ResPartner(models.Model):
         )
 
     def write(self, vals):
-        res = super().write(vals)
-        moves_sudo = self.sudo().env['account.move'].search([('partner_id', 'in', self.ids)])
-        if moves_sudo and 'parent_id' in vals:
-            if not self.env.user.has_group('account.group_account_user'):
-                raise UserError(_("You do not have permission to mark this partner as the main commercial partner."))
+        if 'parent_id' in vals:
+            partner2moves = self.sudo().env['account.move'].search([('partner_id', 'in', self.ids)]).grouped('partner_id')
             parent_vat = self.env['res.partner'].browse(vals['parent_id']).vat
-            if vals['parent_id'] and {parent_vat} != set(self.mapped('vat')):
+            if partner2moves and vals['parent_id'] and {parent_vat} != set(self.mapped('vat')):
                 raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
 
-            self._compute_commercial_partner()
-            for partner in self:
-                moves_sudo.filtered(lambda m: m.partner_id == partner)['commercial_partner_id'] = partner.commercial_partner_id.id
+        res = super().write(vals)
+
+        if 'parent_id' in vals:
+            for partner, moves in partner2moves.items():
+                partner._compute_commercial_partner()
+                # Make sure to write on all the lines at the same time to avoid breaking the reconciliation check
+                moves.line_ids.with_context(bypass_lock_check=BYPASS_LOCK_CHECK).partner_id = partner.commercial_partner_id
+                moves.with_context(bypass_lock_check=BYPASS_LOCK_CHECK).commercial_partner_id = partner.commercial_partner_id
                 partner._message_log(body=_("The commercial partner has been updated for all related accounting entries."))
         return res
 
