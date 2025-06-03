@@ -84,6 +84,17 @@ migrationStepRegistry.add("18.4.11", {
     },
 });
 
+migrationStepRegistry.add("18.4.12", {
+    migrate(data) {
+        for (const globalFilter of data.globalFilters || []) {
+            if (globalFilter.defaultValue?.length === 0) {
+                delete globalFilter.defaultValue;
+            }
+        }
+        return data;
+    },
+});
+
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
     if (version < 1) {

@@ -8,6 +8,8 @@ import { addGlobalFilter, setGlobalFilterValue } from "@spreadsheet/../tests/hel
 import { globalFieldMatchingRegistry } from "@spreadsheet/global_filters/helpers";
 import { THIS_YEAR_GLOBAL_FILTER } from "../helpers/global_filter";
 
+const { DateTime } = luxon;
+
 describe.current.tags("headless");
 defineSpreadsheetModels();
 
@@ -66,7 +68,7 @@ test("Chart is impacted by global filter in dashboard mode", async function () {
     expect(computedDomain).toEqual([]);
     await setGlobalFilterValue(model, {
         id: "42",
-        value: { yearOffset: -1 },
+        value: { type: "year", period: { year: DateTime.local().year - 1 } },
     });
     computedDomain = model.getters.getChartDataSource(chartId).getComputedDomain();
     expect(computedDomain.length).toBe(3);
