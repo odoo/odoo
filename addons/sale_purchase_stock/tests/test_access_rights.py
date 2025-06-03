@@ -156,8 +156,8 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         # No exception was raised, but user is not allowed to edit pickings
         self.assertEqual(report_values['docs']['user_can_edit_pickings'], False)
         # The data in the report includes only the first PO
-        self.assertEqual(report_values['docs']['draft_purchase_qty'], 1)
-        self.assertEqual(report_values['docs']['draft_purchase_orders'], [{'id': po.id, 'name': po.name}])
+        self.assertEqual(report_values['docs']['product'][self.product.id]['draft_purchase_qty']['in'], 1)
+        self.assertEqual(report_values['docs']['product'][self.product.id]['draft_purchase_orders'], [{'id': po.id, 'name': po.name}])
         # A sales user cannot access the PO directly, despite viewing it's info in the report
         with self.assertRaises(AccessError, msg='Sales user is not allowed to access a PO'):
             po.with_user(self.user_salesperson).button_confirm()

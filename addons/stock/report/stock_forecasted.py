@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime
 
 from odoo import api, models
 from odoo.fields import Domain
@@ -58,6 +58,57 @@ class StockForecasted_Product_Product(models.AbstractModel):
         in_domain += [('state', 'in', ['waiting', 'confirmed', 'partially_available', 'assigned'])]
         return in_domain, out_domain
 
+    def _get_products(self, product_template_ids, product_ids):
+        """Return a list of product.product records based on the provided product_template_ids or product_ids."""
+        if product_template_ids:
+            return self.env['product.template'].browse(product_template_ids).product_variant_ids
+        if product_ids:
+            return self.env['product.product'].browse(product_ids)
+        return self.env['product.product']
+
+    def _get_product_quantities(self, res, product_template_ids, product_ids):
+        if 'product' not in res:
+            res['product'] = dict()
+        products = self._get_products(product_template_ids, product_ids)
+        for product in products:
+            if product.id not in res['product']:
+                res['product'][product.id] = {
+                    'uom': product.uom_id.display_name,
+                    'quantity_on_hand': product.qty_available,
+                    'virtual_available': product.virtual_available,
+                    'free_qty': product.free_qty,
+                    'incoming_qty': product.incoming_qty,
+                    'outgoing_qty': product.outgoing_qty,
+                    'qty': {
+                        'in':  0.0,
+                        'out':  0.0,
+                    },
+                }
+
+    def _add_product_quantities(self, res, product_template_ids, product_ids, var_name, qty_in={}, qty_out={}):
+        products = self._get_products(product_template_ids, product_ids)
+        for product in products:
+            res['product'][product.id][var_name] = {
+                'in': qty_in.get(product.id, 0.0),
+                'out': qty_out.get(product.id, 0.0),
+            }
+            res['product'][product.id]['qty']['in'] += qty_in.get(product.id, 0.0)
+            res['product'][product.id]['qty']['out'] += qty_out.get(product.id, 0.0)
+
+    def _get_product_leadtime(self, res, product_template_ids, product_ids):
+        """Return a dictionary with product lead times."""
+        products = self._get_products(product_template_ids, product_ids)
+        location = self._get_warehouse().lot_stock_id
+        for product in products:
+            rule = product._get_rules_from_location(location)
+            leadtime = rule._get_lead_days(product)
+            if not leadtime:
+                leadtime = [{'total_delay': 0}, {}]
+            res['product'][product.id]['leadtime'] = {
+                'total_delay': leadtime[0].get('total_delay', 0),
+                'details': leadtime[1]
+            }
+
     def _get_report_header(self, product_template_ids, product_ids, wh_location_ids):
         # Get the products we're working, fill the rendering context with some of their attributes.
         res = {}
@@ -82,26 +133,14 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 'multiple_product' : len(products) > 1,
             })
 
-        res['uom'] = products[:1].uom_id.display_name
-        res['quantity_on_hand'] = sum(products.mapped('qty_available'))
-        res['virtual_available'] = sum(products.mapped('virtual_available'))
-        res['incoming_qty'] = sum(products.mapped('incoming_qty'))
-        res['outgoing_qty'] = sum(products.mapped('outgoing_qty'))
-
         in_domain, out_domain = self._move_draft_domain(product_template_ids, product_ids, wh_location_ids)
-        [in_sum] = self.env['stock.move']._read_group(in_domain, aggregates=['product_qty:sum'])[0]
-        [out_sum] = self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'])[0]
+        in_sum = {k.id: v for k, v in self.env['stock.move']._read_group(in_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
+        out_sum = {k.id: v for k, v in self.env['stock.move']._read_group(out_domain, aggregates=['product_qty:sum'], groupby=['product_id'])}
 
-        res.update({
-            'draft_picking_qty': {
-                'in': in_sum,
-                'out': out_sum
-            },
-            'qty': {
-                'in': in_sum,
-                'out': out_sum
-            }
-        })
+        self._get_product_quantities(res, product_template_ids, product_ids)
+        self._add_product_quantities(res, product_template_ids, product_ids, 'draft_picking_qty', in_sum, out_sum)
+        self._get_product_leadtime(res, product_template_ids, product_ids)
+
         return res
 
     def _get_reservation_data(self, move):
@@ -111,11 +150,14 @@ class StockForecasted_Product_Product(models.AbstractModel):
             'id': move.picking_id.id
         }
 
+    def _get_warehouse(self):
+        return self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id', False)) or self.env['stock.warehouse'].search([['active', '=', True]])[0]
+
     def _get_report_data(self, product_template_ids=False, product_ids=False):
         assert product_template_ids or product_ids
         res = {}
 
-        warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse_id', False)) or self.env['stock.warehouse'].search([['active', '=', True]])[0]
+        warehouse = self._get_warehouse()
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],
@@ -132,6 +174,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         product = product or (move_out.product_id if move_out else move_in.product_id)
         is_late = move_out.date < move_in.date if (move_out and move_in) else False
+        delivery_late = move_out.state != 'done' and move_out.date < datetime.now() if move_out else False
+        receipt_late = move_in.state != 'done' and move_in.date < datetime.now() if move_in else False
 
         move_to_match_ids = self.env.context.get('move_to_match_ids') or []
         move_in_id = move_in.id if move_in else None
@@ -147,6 +191,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'is_late': is_late,
+            'delivery_late': delivery_late,
+            'receipt_late': receipt_late,
             'quantity': product.uom_id.round(quantity),
             'move_out': move_out,
             'move_in': move_in,
@@ -186,9 +232,6 @@ class StockForecasted_Product_Product(models.AbstractModel):
 
     def _get_report_moves_fields(self):
         return ['id', 'date']
-
-    def _get_products_to_always_include(self, products, product_templates):
-        return self.env['product.product']
 
     def _get_quant_domain(self, location_ids, products):
         return [('location_id', 'in', location_ids), ('quantity', '>', 0), ('product_id', 'in', products.ids)]
@@ -332,7 +375,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
             })
 
         qties = self.env['stock.quant']._read_group(
-            self._get_quant_domain(wh_location_ids, outs.product_id | self._get_products_to_always_include(product_ids, product_template_ids)),
+            self._get_quant_domain(wh_location_ids, outs.product_id | self._get_products(product_template_ids, product_ids)),
             ['product_id', 'location_id'], ['quantity:sum']
         )
         wh_stock_sub_location_ids = set(
@@ -363,7 +406,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
             if product_loc[1] not in wh_stock_sub_location_ids:
                 product_sum[product_loc[0]] += quantity
         lines = []
-        for product in (ins | outs).product_id | self._get_products_to_always_include(product_ids, product_template_ids):
+        for product in (ins | outs).product_id | self._get_products(product_template_ids, product_ids):
+            lines_init_count = len(lines)
             product_rounding = product.uom_id.rounding
             unreconciled_outs = []
             # remaining stock
@@ -419,7 +463,8 @@ class StockForecasted_Product_Product(models.AbstractModel):
                 lines.append(self._prepare_report_line(transit_stock, product=product, in_transit=True, read=read))
 
             # Unused remaining stock.
-            lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
+            if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding) or lines_init_count == len(lines):
+                lines += self._free_stock_lines(product, free_stock, moves_data, wh_location_ids, read)
 
             # In moves not used.
             for in_ in ins_per_product[product.id]:
@@ -429,9 +474,7 @@ class StockForecasted_Product_Product(models.AbstractModel):
         return lines
 
     def _free_stock_lines(self, product, free_stock, moves_data, wh_location_ids, read):
-        if not float_is_zero(free_stock, precision_rounding=product.uom_id.rounding):
             return [self._prepare_report_line(free_stock, product=product, read=read)]
-        return []
 
     @api.model
     def action_reserve_linked_picks(self, move_id):
