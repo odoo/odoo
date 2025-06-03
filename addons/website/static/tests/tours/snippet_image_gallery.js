@@ -25,7 +25,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the modal has opened properly",
-            trigger: ":iframe .s_gallery_lightbox img",
+            trigger: ":iframe .o_image_lightbox img",
         },
     ]
 );
