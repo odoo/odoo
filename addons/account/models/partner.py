@@ -671,7 +671,7 @@ class ResPartner(models.Model):
         return self.env['res.partner.bank'].search(domain)
 
     @api.depends_context('company')
-    @api.depends('commercial_partner_id.country_code')
+    @api.depends('country_code')
     def _compute_invoice_edi_format(self):
         for partner in self:
             if not partner.commercial_partner_id or partner.commercial_partner_id.invoice_edi_format_store == 'none':
