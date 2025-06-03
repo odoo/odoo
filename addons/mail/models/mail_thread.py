@@ -3280,13 +3280,14 @@ class MailThread(models.AbstractModel):
             restricting_names=self._get_notify_valid_parameters()
         )
 
-        recipients_data = self._notify_get_recipients(message, msg_vals=msg_vals, **kwargs)
+        recipients_data = self._notify_get_recipients(message, msg_vals=False, **kwargs)
         if not recipients_data:
             return recipients_data
         # cache data fetched by manual query to avoid extra queries when reading user.partner_id
         uid2pid = {r['uid']: r['id'] for r in recipients_data if r['uid']}
         users = self.env['res.users'].browse(uid2pid)
         users._fields['partner_id']._insert_cache(users, uid2pid.values())
+
         # if scheduled for later: add in queue instead of generating notifications
         scheduled_date = self._is_notification_scheduled(kwargs.pop('scheduled_date', None))
         if scheduled_date:
@@ -3299,9 +3300,9 @@ class MailThread(models.AbstractModel):
         else:
             # generate immediately the <mail.notification>
             # and send the <mail.mail>, <mail.push> and the <bus.bus> notifications
-            self._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
-            self._notify_thread_by_email(message, recipients_data, msg_vals=msg_vals, **kwargs)
-            self._notify_thread_by_web_push(message, recipients_data, msg_vals=msg_vals, **kwargs)
+            self._notify_thread_by_inbox(message, recipients_data, msg_vals=False, **kwargs)
+            self._notify_thread_by_email(message, recipients_data, msg_vals=False, **kwargs)
+            self._notify_thread_by_web_push(message, recipients_data, msg_vals=False, **kwargs)
 
         return recipients_data
 
