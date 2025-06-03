@@ -1546,6 +1546,7 @@ class AccountMoveLine(models.Model):
 
         line_to_write = self
         vals = self._sanitize_vals(vals)
+        matching2lines = None
         for line in self:
             if not any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in vals):
                 line_to_write -= line
@@ -1563,8 +1564,22 @@ class AccountMoveLine(models.Model):
                 line._check_tax_lock_date()
 
             # Check the reconciliation.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['reconciliation']):
-                line._check_reconciliation()
+            if changing_fields := {
+                field_name
+                for field_name in protected_fields['reconciliation']
+                if self.env['account.move']._field_will_change(line, vals, field_name)
+            }:
+                matching2lines = dict(self.env['account.move.line'].sudo()._read_group(
+                    domain=[('matching_number', 'in', [n for n in self.mapped('matching_number') if n])],
+                    groupby=['matching_number'],
+                    aggregates=['id:recordset']
+                )) if matching2lines is None and line.matching_number else matching2lines
+                if (
+                    # allow changing the partner or/and the account on all the lines of a reconciliation together
+                    changing_fields - {'partner_id', 'account_id'}
+                    or line.matching_number and not all(reconciled_line in self for reconciled_line in matching2lines[line.matching_number])
+                ):
+                    line._check_reconciliation()
 
         move_container = {'records': self.move_id}
         with self.move_id._check_balanced(move_container),\
