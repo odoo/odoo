@@ -19,6 +19,7 @@
         'views/onetracker_config_view.xml',
         'views/post_pack_message_view.xml',
         'views/stock_picking_type_inherit_view.xml',
+        'views/stock_route_inherit_view.xml',
         'views/menuitem_view.xml',
         'wizard/custom_pack_app_wizard_view.xml',
 
