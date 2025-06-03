@@ -42,6 +42,22 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
+    def _prepare_membership_line_data(self):
+        self.ensure_one()
+        date_from = self.product_id.membership_date_from
+        date_to = self.product_id.membership_date_to
+        if (date_from and date_from < (self.move_id.invoice_date or date.min) < (date_to or date.min)):
+            date_from = self.move_id.invoice_date
+        return {
+            'partner': self.move_id.partner_id.id,
+            'membership_id': self.product_id.id,
+            'member_price': self.price_unit,
+            'date': fields.Date.today(),
+            'date_from': date_from,
+            'date_to': date_to,
+            'account_invoice_line': self.id,
+        }
+
     def write(self, vals):
         # OVERRIDE
         res = super(AccountMoveLine, self).write(vals)
@@ -54,28 +70,18 @@ class AccountMoveLine(models.Model):
 
         existing_memberships = self.env['membership.membership_line'].search([
             ('account_invoice_line', 'in', to_process.ids)])
-        to_process = to_process - existing_memberships.mapped('account_invoice_line')
-
-        # All memberships already exist, break.
-        if not to_process:
-            return res
+        to_create = to_process - existing_memberships.mapped('account_invoice_line')
 
         memberships_vals = []
-        for line in to_process:
-            date_from = line.product_id.membership_date_from
-            date_to = line.product_id.membership_date_to
-            if (date_from and date_from < (line.move_id.invoice_date or date.min) < (date_to or date.min)):
-                date_from = line.move_id.invoice_date
-            memberships_vals.append({
-                'partner': line.move_id.partner_id.id,
-                'membership_id': line.product_id.id,
-                'member_price': line.price_unit,
-                'date': fields.Date.today(),
-                'date_from': date_from,
-                'date_to': date_to,
-                'account_invoice_line': line.id,
-            })
-        self.env['membership.membership_line'].create(memberships_vals)
+        for line in to_create:
+            memberships_vals.append(line._prepare_membership_line_data())
+
+        if memberships_vals:
+            self.env['membership.membership_line'].create(memberships_vals)
+
+        for membership in existing_memberships:
+            membership.write(membership.account_invoice_line._prepare_membership_line_data())
+
         return res
 
     @api.model_create_multi
@@ -98,18 +104,6 @@ class AccountMoveLine(models.Model):
 
         memberships_vals = []
         for line in to_process:
-            date_from = line.product_id.membership_date_from
-            date_to = line.product_id.membership_date_to
-            if (date_from and date_from < (line.move_id.invoice_date or date.min) < (date_to or date.min)):
-                date_from = line.move_id.invoice_date
-            memberships_vals.append({
-                'partner': line.move_id.partner_id.id,
-                'membership_id': line.product_id.id,
-                'member_price': line.price_unit,
-                'date': fields.Date.today(),
-                'date_from': date_from,
-                'date_to': date_to,
-                'account_invoice_line': line.id,
-            })
+            memberships_vals.append(line._prepare_membership_line_data())
         self.env['membership.membership_line'].create(memberships_vals)
         return lines
