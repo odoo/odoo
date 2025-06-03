@@ -20,11 +20,11 @@ const preventRaceConditionSteps = [{
 
 const selectSignImageStep = [
     {
-        trigger: ".o_we_customize_panel:not(:has(.snippet-option-GalleryElement))",
+        trigger: ".o_customize_tab:not(:has([data-label='Re-order']))",
     },
     {
         content: "Click on image 14",
-        trigger: ":iframe .s_image_gallery img[data-original-src*='library_image_14']",
+        trigger: ":iframe .s_image_gallery img[src*='library_image_14']",
         run: "click",
     },
 ];
@@ -63,11 +63,11 @@ registerWebsitePreviewTour("snippet_images_wall", {
         ...selectSignImageStep,
 {
     content: "Click on add a link",
-    trigger: ".snippet-option-ReplaceMedia we-button[data-set-link]",
+    trigger: "div[data-label='Media'] button[data-action-id='setLink']",
     run: "click",
 }, {
     content: "Change the link of the image",
-    trigger: ".snippet-option-ReplaceMedia [data-set-url] input",
+    trigger: "div[data-label='Your URL'] div[data-action-id='setUrl'] input",
     // TODO: This should not be needed, but there seems to be an odd behavior
     // with the input not properly blurring when clicking on the reorder
     // buttons. However this is also the case in older versions. It
@@ -76,45 +76,45 @@ registerWebsitePreviewTour("snippet_images_wall", {
     run: "edit /contactus && click body",
 }, {
     content: "Click on move to previous",
-    trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",
+    trigger: "div[data-label='Re-order'] button[data-action-value='prev']",
     run: "click",
 }, {
     content: "Check if sign is in second column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(a[href='/contactus'] img[data-index='1'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(2):has(img[data-index='1'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
     content: "Click on move to first",
-    trigger: ".snippet-option-GalleryElement we-button[data-position='first']",
+    trigger: "div[data-label='Re-order'] button[data-action-value='first']",
     run: "click",
 }, {
     content: "Check if sign is in first column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
     content: "Click on move to previous",
-    trigger: ".snippet-option-GalleryElement we-button[data-position='prev']",
+    trigger: "div[data-label='Re-order'] button[data-action-value='prev']",
     run: "click",
 }, {
     content: "Check if sign is in third column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
     content: "Click on move to next",
-    trigger: ".snippet-option-GalleryElement we-button[data-position='next']",
+    trigger: "div[data-label='Re-order'] button[data-action-value='next']",
     run: "click",
 }, {
     content: "Check if sign is in first column",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(1):has(img[data-index='0'][src*='library_image_14'])",
 },
 ...reselectSignImageSteps,
 {
     content: "Click on move to last",
-    trigger: ".snippet-option-GalleryElement we-button[data-position='last']",
+    trigger: "div[data-label='Re-order'] button[data-action-value='last']",
     run: "click",
 }, {
     content: "Check layout",
-    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][data-original-src*='library_image_14'])",
+    trigger: ":iframe .s_image_gallery .o_masonry_col:nth-child(3):has(img[data-index='5'][src*='library_image_14'])",
 }]);
