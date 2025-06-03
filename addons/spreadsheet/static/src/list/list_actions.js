@@ -13,6 +13,7 @@ const { isMatrix } = helpers;
  * @returns {Promise<void>}
  */
 export const SEE_RECORD_LIST = async (position, env, newWindow) => {
+    position = env.model.getters.getEvaluatedCell(position).origin ?? position;
     const cell = env.model.getters.getCorrespondingFormulaCell(position);
     const sheetId = position.sheetId;
     if (!cell || !cell.isFormula) {
@@ -61,6 +62,7 @@ export const SEE_RECORD_LIST = async (position, env, newWindow) => {
  */
 export const SEE_RECORD_LIST_VISIBLE = (position, getters) => {
     const evaluatedCell = getters.getEvaluatedCell(position);
+    position = evaluatedCell.origin ?? position;
     const cell = getters.getCorrespondingFormulaCell(position);
     return !!(
         evaluatedCell.type !== "empty" &&
