@@ -5,7 +5,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { renderToElement } from "@web/core/utils/render";
 
 export class Gallery extends Interaction {
-    static selector = ".s_image_gallery:not(.o_slideshow)";
+    static selector = ".s_image_gallery";
     dynamicContent = {
         "img": {
             "t-on-click": this.onClickImg,
@@ -25,11 +25,15 @@ export class Gallery extends Interaction {
      */
     onClickImg(ev) {
         const clickedEl = ev.currentTarget;
-        if (this.modalEl || clickedEl.matches("a > img")) {
+        if (
+            this.modalEl ||
+            clickedEl.matches("a > img") ||
+            !clickedEl.classList.contains("o_image_popup")
+        ) {
             return;
         }
 
-        let imageEls = this.el.querySelectorAll("img");
+        let imageEls = this.el.querySelectorAll("img.o_image_popup");
         const currentImageEl = clickedEl.closest("img");
         const currentImageIndex = [...imageEls].indexOf(currentImageEl);
         // We need to reset the images to their original source because it might
