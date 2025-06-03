@@ -44,4 +44,8 @@ export class LinkPreview extends Component {
     onImageLoaded() {
         this.env.onImageLoaded?.();
     }
+
+    get canDelete() {
+        return this.env.message?.allowsEdition;
+    }
 }
