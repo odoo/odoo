@@ -120,7 +120,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
 
         self.assertFalse(sale_order_line3.task_id, "Adding a new expense SO line should not create a task (sol3)")
         self.assertFalse(sale_order_line4.task_id, "Adding a new expense SO line should not create a task (sol4)")
-        self.assertEqual(len(self.sale_order.project_ids), 1, "SO create only one project with its service line. Adding new expense SO line should not impact that")
+        self.assertEqual(len(self.sale_order.order_line.mapped('project_id')), 1, "SO create only one project with its service line. Adding new expense SO line should not impact that")
 
         self.assertEqual((sale_order_line3.price_unit, sale_order_line3.qty_delivered, sale_order_line3.product_uom_qty, sale_order_line3.qty_invoiced), (self.company_data['product_order_cost'].standard_price, 3.0, 3.0, 0), 'Sale line is wrong after confirming vendor invoice')
         self.assertEqual((sale_order_line4.price_unit, sale_order_line4.qty_delivered, sale_order_line4.product_uom_qty, sale_order_line4.qty_invoiced), (self.company_data['product_delivery_cost'].standard_price, 3.0, 3.0, 0), 'Sale line is wrong after confirming vendor invoice')
@@ -214,7 +214,7 @@ class TestReInvoice(TestCommonSaleTimesheet):
 
         self.assertFalse(sale_order_line3.task_id, "Adding a new expense SO line should not create a task (sol3)")
         self.assertFalse(sale_order_line4.task_id, "Adding a new expense SO line should not create a task (sol4)")
-        self.assertEqual(len(self.sale_order.project_ids), 1, "SO create only one project with its service line. Adding new expense SO line should not impact that")
+        self.assertEqual(len(self.sale_order.order_line.mapped('project_id')), 1, "SO create only one project with its service line. Adding new expense SO line should not impact that")
 
         self.assertEqual((sale_order_line3.price_unit, sale_order_line3.qty_delivered, sale_order_line3.product_uom_qty, sale_order_line3.qty_invoiced), (self.company_data['product_delivery_sales_price'].list_price, 3.0, 3.0, 0), 'Sale line is wrong after confirming vendor invoice')
         self.assertEqual((sale_order_line4.price_unit, sale_order_line4.qty_delivered, sale_order_line4.product_uom_qty, sale_order_line4.qty_invoiced), (self.company_data['product_order_sales_price'].list_price, 3.0, 3.0, 0), 'Sale line is wrong after confirming vendor invoice')
