@@ -42,23 +42,23 @@ function pivotPeriodToFilterValue(timeRange, value) {
                 yearOffset,
             };
         case "month": {
-            const month = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            const month = value.includes("/") ? Number.parseInt(value.split("/")[0]) - 1 : -1;
             if (!(month in monthsOptions)) {
                 return { yearOffset, period: undefined };
             }
             return {
                 yearOffset,
-                period: monthsOptions[month - 1].id,
+                period: monthsOptions[month].id,
             };
         }
         case "quarter": {
-            const quarter = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            const quarter = value.includes("/") ? Number.parseInt(value.split("/")[0]) - 1 : -1;
             if (!(quarter in FILTER_DATE_OPTION.quarter)) {
                 return { yearOffset, period: undefined };
             }
             return {
                 yearOffset,
-                period: FILTER_DATE_OPTION.quarter[quarter - 1],
+                period: FILTER_DATE_OPTION.quarter[quarter],
             };
         }
     }
