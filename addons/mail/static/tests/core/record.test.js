@@ -1168,3 +1168,31 @@ test("insert with id relation keeps existing field values", async () => {
     expect(member2.channel.eq(channel1)).toBe(true);
     expect(member2.is_internal).toBe(true);
 });
+
+test("Inserting single-id data on non-single id Model throws human-readable error", async () => {
+    (class Persona extends Record {
+        static id = AND("partner_id", "guest_id");
+    }).register(localRegistry);
+    (class Message extends Record {
+        static id = "id";
+        id;
+        author = fields.One("Persona");
+    }).register(localRegistry);
+    const store = await start();
+    store.warnErrors = false;
+    const paul = store.Persona.insert({ partner_id: 1 });
+    store.Persona.insert({ guest_id: 2 });
+    expect(store.Persona.get({ partner_id: 1 }).exists()).toBe(true);
+    expect(store.Persona.get({ guest_id: 2 }).exists()).toBe(true);
+    expect(store.Persona.get(1)).toBe(undefined);
+    expect(store.Persona.get(2)).toBe(undefined);
+    expect(() => store.Persona.insert(3)).toThrow(
+        `Cannot insert "3" on model "Persona": this model doesn't support single-id data!`
+    );
+    const msg = store.Message.insert(100);
+    expect(() => (msg.author = 1)).toThrow(
+        `Cannot insert "1" on relational field "Message/author": target model "Persona" doesn't support single-id data!`
+    );
+    msg.author = { partner_id: 1 };
+    expectRecord(msg.author).toEqual(paul);
+});

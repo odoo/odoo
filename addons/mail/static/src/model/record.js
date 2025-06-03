@@ -298,6 +298,11 @@ export class Record {
             if (typeof data === "object" && data !== null) {
                 store._.updateFields(record, data);
             } else {
+                if (Array.isArray(record.Model.id)) {
+                    throw new Error(
+                        `Cannot insert "${data}" on model "${record.Model.getName()}": this model doesn't support single-id data!`
+                    );
+                }
                 // update on single-id data
                 store._.updateFields(record, { [record.Model.id]: data });
             }
