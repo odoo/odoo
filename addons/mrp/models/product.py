@@ -79,6 +79,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
         action['domain'] = [('bom_line_ids.product_tmpl_id', '=', self.id)]
+        action['context'] = {'filter_bom_components_by': 'product_tmpl_id', 'bom_component_id': self.id}
         return action
 
     def _compute_mrp_product_qty(self):
@@ -235,6 +236,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
         action['domain'] = [('bom_line_ids.product_id', '=', self.id)]
+        action['context'] = {'filter_bom_components_by': 'product_id', 'bom_component_id': self.id}
         return action
 
     def _compute_mrp_product_qty(self):
