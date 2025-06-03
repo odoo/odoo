@@ -366,6 +366,9 @@ export class HistoryPlugin extends Plugin {
      * /!\ This method should be used with extreme caution. Not observing some
      * mutations could lead to mutations that are impossible to undo/redo.
      *
+     * /!\ Do not re-introduce nodes that had been already added to the DOM in
+     * a history step. @see isObservedNode
+     *
      * @param {Function} callback
      */
     ignoreDOMMutations(callback) {
@@ -404,8 +407,7 @@ export class HistoryPlugin extends Plugin {
         /** @type {HistoryMutationRecord[]} */
         let records = this.transformToHistoryMutationRecords(mutationRecords);
         records = records.filter((record) => !this.isSystemMutationRecord(record));
-        records = this.handleUnobservedMutations(records);
-        records = records.filter((record) => !this.isNoOpRecord(record));
+        records = this.filterAndAdjustHistoryMutationRecords(records);
         this.stageRecords(records);
         records
             .filter(({ type }) => type === "attributes")
@@ -416,11 +418,21 @@ export class HistoryPlugin extends Plugin {
     /**
      * @param {HistoryMutationRecord} record
      */
-    isNoOpRecord(record) {
-        if (["attributes", "classList", "characterData"].includes(record.type)) {
-            return record.value === record.oldValue;
+    isValidRecord(record) {
+        switch (record.type) {
+            case "attributes":
+            case "classList":
+            case "characterData":
+                // Filter out no-op
+                return record.value !== record.oldValue;
+            case "childList":
+                return (
+                    // Filter out no-op
+                    (record.addedTrees.length || record.removedTrees.length) &&
+                    // Filter out mutation without a valid position for node insertion
+                    (record.previousSibling !== undefined || record.nextSibling !== undefined)
+                );
         }
-        return false;
     }
 
     dispatchContentUpdated() {
@@ -454,24 +466,18 @@ export class HistoryPlugin extends Plugin {
     }
 
     /**
-     * @param { HistoryMutationRecord[] } records
+     * @param {HistoryMutationRecord} record
      */
-    setIdOnRecords(records) {
-        for (const record of records) {
-            if (record.type !== "childList") {
-                continue;
-            }
-            const addedNodes = record.addedTrees.flatMap(treeToNodes);
-            const removedNodes = record.removedTrees.flatMap(treeToNodes);
-            for (const node of [...addedNodes, ...removedNodes]) {
-                if (this.nodeMap.hasNode(node)) {
-                    continue;
-                }
-                const id = node === this.editable ? "root" : this.generateId();
-                this.nodeMap.set(id, node);
-            }
+    setIdOnAddedNodes(record) {
+        if (record.type !== "childList") {
+            return;
         }
+        record.addedTrees
+            .flatMap(treeToNodes)
+            .filter((node) => !this.nodeMap.hasNode(node))
+            .forEach((node) => this.nodeMap.set(this.generateId(), node));
     }
+
     /**
      * @param { MutationRecord[] } records
      * @returns { MutationRecord[] }
@@ -710,18 +716,58 @@ export class HistoryPlugin extends Plugin {
      * target's affected property (attribute/class/textContent) and drop the
      * record.
      *
-     * Otherwise (observer enabled), update the record's `oldValue` with the
-     * last observed state of that target's property.
+     * Otherwise (observer enabled), update the record as follows:
+     * - mutations targeting an unobserved node are dropped
+     * - mutations of type "attributes", "classList", and "characterData" have
+     * their `oldValue` adjusted to the last observed state of that target's
+     * property
+     * - mutations of type "childList" are updated to not include references to
+     * unobserved nodes.
      *
      * @param {HistoryMutationRecord[]} records
      * @returns {HistoryMutationRecord[]}
      */
-    handleUnobservedMutations(records) {
+    filterAndAdjustHistoryMutationRecords(records) {
         if (this.isObserverDisabled) {
-            records.forEach((record) => this.storeOldValue(record));
+            records
+                .filter((record) => record.type !== "childList")
+                .filter((record) => this.isObservedNode(record.target))
+                .forEach((record) => this.storeOldValue(record));
             return [];
         }
-        return records.map((record) => this.updateOldValue(record));
+
+        const result = [];
+        for (const record of records) {
+            if (!this.isObservedNode(record.target)) {
+                continue;
+            }
+            const updatedRecord =
+                record.type === "childList"
+                    ? this.updateChildListRecord(record)
+                    : this.updateOldValue(record);
+            if (this.isValidRecord(updatedRecord)) {
+                this.setIdOnAddedNodes(record);
+                result.push(updatedRecord);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Any node that was added to the DOM without a mutation record in a history
+     * step (tipically due to {@link ignoreDOMMutations}) is considered an
+     * unobserved node.
+     *
+     * A known limitation to this approach is when a node that had been present
+     * in the editable before (and thus has an entry in the nodeMap) is re-added
+     * with {@link ignoreDOMMutations}. Such node will not be flagged as
+     * unobserved and history might become inconsistent.
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    isObservedNode(node) {
+        return this.nodeMap.hasNode(node);
     }
 
     /**
@@ -740,12 +786,9 @@ export class HistoryPlugin extends Plugin {
      *
      * @see updateOldValue
      *
-     * @param {HistoryMutationRecord} record
+     * @param {MutationRecordAttributes|MutationRecordClassList|MutationRecordCharacterData} record
      */
     storeOldValue(record) {
-        if (record.type === "childList") {
-            return;
-        }
         const { stateMap, key } = this.getObservedStateStorage(record);
         // Only store it if not already stored.
         if (!stateMap.has(key)) {
@@ -764,13 +807,10 @@ export class HistoryPlugin extends Plugin {
      * future mutation records targeting the same attribute/class of the same
      * element, which would create incorrect history mutations.
      *
-     * @param {HistoryMutationRecord} record
-     * @returns {HistoryMutationRecord}
+     * @param {MutationRecordAttributes|MutationRecordClassList|MutationRecordCharacterData} record
+     * @returns {MutationRecordAttributes|MutationRecordClassList|MutationRecordCharacterData}
      */
     updateOldValue(record) {
-        if (record.type === "childList") {
-            return record;
-        }
         const { stateMap, key } = this.getObservedStateStorage(record);
         if (!stateMap.has(key)) {
             return record;
@@ -805,6 +845,37 @@ export class HistoryPlugin extends Plugin {
             default:
                 throw new Error(`Unsupported mutation type: ${record.type}`);
         }
+    }
+
+    /**
+     * @param {MutationRecordChildList} record
+     * @returns {MutationRecordChildList}
+     */
+    updateChildListRecord(record) {
+        // Invalidate sibling references to unobserved nodes
+        const isValidReference = (node) => node === null || this.isObservedNode(node);
+        const updateSibling = (sibling) => (isValidReference(sibling) ? sibling : undefined);
+        const previousSibling = updateSibling(record.previousSibling);
+        const nextSibling = updateSibling(record.nextSibling);
+
+        // Filter out unobserved nodes in removedTrees
+        const removeUnobservedNodes = (tree) => {
+            if (!this.isObservedNode(tree.node)) {
+                return null;
+            }
+            return {
+                node: tree.node,
+                children: tree.children.map(removeUnobservedNodes).filter(Boolean),
+            };
+        };
+        const removedTrees = record.removedTrees.map(removeUnobservedNodes).filter(Boolean);
+
+        return {
+            ...record,
+            previousSibling,
+            nextSibling,
+            removedTrees,
+        };
     }
 
     /**
@@ -852,7 +923,6 @@ export class HistoryPlugin extends Plugin {
      * @param { HistoryMutationRecord[] } records
      */
     stageRecords(records) {
-        this.setIdOnRecords(records);
         for (const record of records) {
             switch (record.type) {
                 case "characterData":
@@ -897,19 +967,9 @@ export class HistoryPlugin extends Plugin {
                 return { type, id, parentId, node: serializedNode, nextId, previousId };
             });
 
-        // When nodes are expected to not be observed by the history, e.g.
-        // because they belong to a distinct lifecycle such as interactions,
-        // some operations such as replaceChildren might impact such a node
-        // together with observed ones. Marking the node with skipHistoryHack
-        // makes sure that it does not accidentally get observed during those
-        // operations.
-        // TODO Find a better solution.
-        const skipHistoryHackFilter = (node) => !node.dataset?.skipHistoryHack;
-        const removedTrees = record.removedTrees.filter((tree) => skipHistoryHackFilter(tree.node));
-        const addedTrees = record.addedTrees.filter((tree) => skipHistoryHackFilter(tree.node));
         return [
-            ...makeSingleNodeRecords(removedTrees, "remove"),
-            ...makeSingleNodeRecords(addedTrees, "add"),
+            ...makeSingleNodeRecords(record.removedTrees, "remove"),
+            ...makeSingleNodeRecords(record.addedTrees, "add"),
         ];
     }
 
@@ -1283,8 +1343,6 @@ export class HistoryPlugin extends Plugin {
             return;
         }
 
-        this.setNodeId(toAdd);
-
         const parent = this.nodeMap.getNode(parentId);
         if (!parent) {
             console.warn("Mutation could not be applied, parent node is missing.", mutation);
@@ -1603,7 +1661,7 @@ export class HistoryPlugin extends Plugin {
         const node = tree.node;
         const nodeId = this.nodeMap.getId(node);
         if (!nodeId) {
-            return;
+            throw new Error("Missing nodeId for serialization");
         }
         const result = {
             nodeType: node.nodeType,

@@ -212,12 +212,6 @@ registry.category("services").add("website_edit", {
                     insert(...args) {
                         const el = args[0];
                         super.insert(...args);
-                        // Avoid deletion accidents.
-                        // E.g. if an interaction inserts a node into a parent
-                        // node, and an option uses replaceChildren on the
-                        // parent node, you do not want the inserted node to be
-                        // reinserted upon undo of the option's action.
-                        el.dataset.skipHistoryHack = "true";
                         el.setAttribute("contenteditable", "false");
                     },
                 }),
