@@ -26,7 +26,9 @@ class StockPicking(models.Model):
         ('cross_dock', 'Cross Dock'),
         ('automation_bulk', 'Automation Bulk'),
         ('automation_putaway', 'Automation Putaway'),
+        ('merge', 'Merge')
     ], string='Process Type', copy=False)
+    slsu = fields.Boolean(string="Manual SLSU")
 
     def action_confirm_geek_pick(self):
         """
