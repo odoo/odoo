@@ -129,7 +129,8 @@ class ResCompany(models.Model):
     @api.depends("account_edi_proxy_client_ids", "l10n_it_codice_fiscale")
     def _compute_l10n_it_edi_proxy_user_id(self):
         for company in self:
-            company.l10n_it_edi_proxy_user_id = company.root_id.account_edi_proxy_client_ids.filtered(lambda x: x.proxy_type == 'l10n_it_edi')
+            edi_company = company._l10n_it_get_edi_company()
+            company.l10n_it_edi_proxy_user_id = edi_company.account_edi_proxy_client_ids.filtered(lambda x: x.proxy_type == 'l10n_it_edi')
 
             # If we can't find any proxy user, create a new demo proxy user for this italian company.
             # They must have the Codice Fiscale field filled for the registration process to work.
@@ -194,3 +195,14 @@ class ResCompany(models.Model):
         for company in self:
             if not company.l10n_it_has_tax_representative:
                 company.l10n_it_tax_representative_partner_id = False
+
+    def _l10n_it_get_edi_company(self):
+        self.ensure_one()
+        if (
+            self.root_id.id != self.id
+            and self.l10n_it_codice_fiscale == self.root_id.l10n_it_codice_fiscale
+            and self.vat == self.root_id.vat
+        ):
+            return self.root_id
+        else:
+            return self
