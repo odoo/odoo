@@ -78,6 +78,7 @@ ALLOWED_MIMETYPES = {
 }
 
 EMPTY = object()
+BYPASS_LOCK_CHECK = object()
 
 
 class AccountMove(models.Model):
@@ -2448,6 +2449,8 @@ class AccountMove(models.Model):
         ''', tuple(moves.ids)))
 
     def _check_fiscal_lock_dates(self):
+        if self.env.context.get('bypass_lock_check') is BYPASS_LOCK_CHECK:
+            return
         for move in self:
             journal = move.journal_id
             violated_lock_dates = move.company_id._get_lock_date_violations(
@@ -5203,9 +5206,9 @@ class AccountMove(models.Model):
                         if partial.exchange_move_id:
                             to_post |= partial.exchange_move_id
                             # If the draft invoice changed since it was reconciled, in a way that would affect the exchange diff,
-                            # any existing reconcilation and draft exchange move would be deleted already (to force the user to 
+                            # any existing reconcilation and draft exchange move would be deleted already (to force the user to
                             # re-do the reconciliation).
-                            # This is ensured by the the checks in env['account.move.line'].write(): 
+                            # This is ensured by the the checks in env['account.move.line'].write():
                             #     see env[account.move.line]._get_lock_date_protected_fields()['reconciliation']
 
                         if partial._get_draft_caba_move_vals() != partial.draft_caba_move_vals:
