@@ -90,7 +90,17 @@ class PaymentProvider(models.Model):
                 "Iyzico: " + self.env._("The communication with the API failed.")
             )
 
-        return response.json()
+        response_content = response.json()
+        error_code = response_content.get('errorCode')
+        if error_code:
+            error_message = response_content.get('errorMessage')
+            raise ValidationError("Iyzico: " + self.env._(
+                "The communication with the API failed. Iyzico gave us the following information: "
+                "'%(error_message)s' (code %(error_code)s)",
+                error_message=error_message, error_code=error_code,
+            ))
+
+        return response_content
 
     def _iyzico_calculate_signature(self, data):
         """ Compute the signature for the provided data according to the Iyzico documentation.
