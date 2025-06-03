@@ -90,7 +90,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket.ids)
         attachments = self.env['ir.attachment'].create(self.test_attachments_vals)
 
-        with self.assertQueryCount(employee=89):  # test_mail_full: 80
+        with self.assertQueryCount(employee=88):  # tmf: 87
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
@@ -317,7 +317,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=20):
+        with self.assertQueryCount(employee=20):  # randomness: 19+1
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)

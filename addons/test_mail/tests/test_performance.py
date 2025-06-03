@@ -119,7 +119,6 @@ class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
                 for attachment in self.test_attachments_vals
             ],
         })
-        self.flush_tracking()
         return test_partners, test_records, test_template_full
 
 
@@ -292,7 +291,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             'default_res_model': 'mail.test.activity',
         })
 
-        with self.assertQueryCount(admin=6, employee=6):
+        with self.assertQueryCount(admin=5, employee=5):
             activity = MailActivity.create({
                 'summary': 'Test Activity',
                 'res_id': record.id,
@@ -302,7 +301,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             # voip module read activity_type during create leading to one less query in enterprise on action_feedback
             _category = activity.activity_type_id.category
 
-        with self.assertQueryCount(admin=14, employee=13):  # tm: 10 / 10
+        with self.assertQueryCount(admin=9, employee=8):  # tm: 6 / 6
 
             activity.action_feedback(feedback='Zizisse Done !')
 
@@ -330,7 +329,6 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     def test_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        # todo guce postfreeze fix: 5 5 -> admin 12 employee 12 ->  9 9?
         with self.assertQueryCount(admin=5, employee=5):
             activity = record.action_start('Test Start')
             # read activity_type to normalize cache between enterprise and community
@@ -339,8 +337,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        # todo guce postfreeze fix: admin 15 employee 14 -> became 22 17?
-        with self.assertQueryCount(admin=15, employee=14):  # tm: 11 / 11
+        with self.assertQueryCount(admin=10, employee=9):  # tm: 7 / 7
             record.action_close('Dupe feedback')
 
         self.assertEqual(record.activity_ids, self.env['mail.activity'])
@@ -366,7 +363,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         record.write({'name': 'Dupe write'})
 
-        with self.assertQueryCount(admin=16, employee=15):  # tm 12 / 12
+        with self.assertQueryCount(admin=12, employee=11):  # tm: 9 / 9
             record.action_close('Dupe feedback', attachment_ids=attachments.ids)
 
         # notifications
@@ -423,7 +420,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, _test_template = self._create_test_records()
         customer = self.env['res.partner'].browse(self.customer.ids)
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        with self.assertQueryCount(admin=17, employee=17):  # tm 16/16
+        with self.assertQueryCount(admin=16, employee=16):  # tm 15/15
             composer_form = Form(
                 self.env['mail.compose.message'].with_context({
                     'default_composition_mode': 'comment',
@@ -450,6 +447,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     def test_mail_composer_mass_w_template(self):
         _partners, test_records, test_template = self._create_test_records_for_batch()
+        self.flush_tracking()
 
         with self.assertQueryCount(admin=3, employee=3):
             composer = self.env['mail.compose.message'].with_context({
@@ -974,7 +972,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     @users('admin', 'employee')
     @warmup
-    def test_message_post(self):
+    def test_message_post_followers(self):
         self.container.message_subscribe(self.user_portal.partner_id.ids)
         record = self.container.with_user(self.env.user)
 
@@ -1012,6 +1010,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_post_view(self):
         _partners, test_records, test_template = self._create_test_records_for_batch()
+        self.flush_tracking()
 
         with self.assertQueryCount(admin=3, employee=3):
             _composer = self.env['mail.compose.message'].with_context({
@@ -1393,7 +1392,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         """
         messages_all = self.messages_all.with_env(self.env)
 
-        with self.assertQueryCount(employee=24):  # tm 23
+        with self.assertQueryCount(employee=23):  # tm 22
             res = Store(messages_all, for_current_user=True).get_result()
 
         self.assertEqual(len(res["mail.message"]), 2 * 2)
@@ -1406,7 +1405,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     def test_message_to_store_single(self):
         message = self.messages_all[0].with_env(self.env)
 
-        with self.assertQueryCount(employee=24):  # tm 23
+        with self.assertQueryCount(employee=23):  # tm 22
             res = Store(message, for_current_user=True).get_result()
 
         self.assertEqual(len(res["mail.message"]), 1)
@@ -1713,11 +1712,14 @@ class TestPerformance(BaseMailPerformance):
         super().setUpClass()
 
         # record
-        cls.record_container = cls.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({
+        cls.record_container = cls.env['mail.test.container'].create({
             'name': 'Test record',
             'customer_id': cls.customer.id,
             'alias_name': 'test-alias',
         })
+        _partners, cls.record_tickets, _test_template = cls._create_test_records_for_batch(cls)
+        cls.record_ticket = cls.record_tickets[0]
+
         # followers
         cls.user_follower_email = cls.env['res.users'].with_context(cls._test_context).create({
             'name': 'user_follower_email',
@@ -1767,18 +1769,19 @@ class TestPerformance(BaseMailPerformance):
     @users('employee')
     @warmup
     def test_message_post(self):
-        # aims to cover as much features of message_post as possible
+        """ Aims to cover as much features of message_post as possible """
         recipients = self.user_inbox.partner_id + self.user_email.partner_id + self.partner
-        record_container = self.record_container.with_user(self.env.user)
+        ticket = self.record_ticket.with_user(self.env.user)
         attachments_vals = [  # not linear on number of attachments_vals
             ('attach tuple 1', "attachement tupple content 1"),
             ('attach tuple 2', "attachement tupple content 2", {'cid': 'cid1'}),
             ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
         ]
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
+        self.flush_tracking()
 
-        with self.assertQueryCount(employee=62):
-            record_container.with_context({}).message_post(
+        with self.assertQueryCount(employee=62):  # tm: 61
+            ticket.message_post(
                 body=Markup('<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>'),
                 subject='Test Subject',
                 message_type='notification',
@@ -1791,8 +1794,50 @@ class TestPerformance(BaseMailPerformance):
                 model_description=False,
                 mail_auto_delete=True
             )
-        new_message = record_container.message_ids[0]
-        self.assertEqual(attachments.mapped('res_model'), [record_container._name for i in range(3)])
-        self.assertEqual(attachments.mapped('res_id'), [record_container.id for i in range(3)])
+        new_message = ticket.message_ids[0]
+        self.assertEqual(attachments.mapped('res_model'), [ticket._name for i in range(3)])
+        self.assertEqual(attachments.mapped('res_id'), [ticket.id for i in range(3)])
         self.assertTrue(new_message.body.startswith('<p>Test body <img src="/web/image/'))
         self.assertEqual(new_message.notified_partner_ids, recipients)
+
+    @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('employee')
+    @warmup
+    def test_message_post_loop(self):
+        """ Simulate a loop posting on several records, to check notably cache
+        is used. """
+        # aims to cover as much features of message_post as possible
+        recipients = self.user_inbox.partner_id + self.user_email.partner_id + self.partner
+        tickets = self.record_tickets.with_user(self.env.user)
+        attachments_vals = [  # not linear on number of attachments_vals
+            ('attach tuple 1', "attachement tupple content 1"),
+            ('attach tuple 2', "attachement tupple content 2", {'cid': 'cid1'}),
+            ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
+        ]
+        attachments_all = [
+            self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
+            for _ticket in tickets
+        ]
+        self.flush_tracking()
+
+        with self.assertQueryCount(employee=628):  # tm: 628
+            for ticket, attachments in zip(tickets, attachments_all, strict=True):
+                ticket.message_post(
+                    body=Markup('<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>'),
+                    subject='Test Subject',
+                    message_type='notification',
+                    subtype_xmlid=None,
+                    partner_ids=recipients.ids,
+                    parent_id=False,
+                    attachments=attachments_vals,
+                    attachment_ids=attachments.ids,
+                    email_add_signature=True,
+                    model_description=False,
+                    mail_auto_delete=True
+                )
+        for ticket, attachments in zip(tickets, attachments_all, strict=True):
+            new_message = ticket.message_ids[0]
+            self.assertEqual(attachments.mapped('res_model'), [ticket._name for i in range(3)])
+            self.assertEqual(attachments.mapped('res_id'), [ticket.id for i in range(3)])
+            self.assertTrue(new_message.body.startswith('<p>Test body <img src="/web/image/'))
+            self.assertEqual(new_message.notified_partner_ids, recipients)
