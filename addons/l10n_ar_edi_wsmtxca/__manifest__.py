@@ -6,9 +6,9 @@
     """,
     "author": "Quilsoft",
     "website": "https://www.quilsoft.com",
-    "license": "AGPL-3",
+    "license": "LGPL-3",
     "category": "Accounting",
-    "version": "16.0.1.0.0",
+    "version": "1.0",
     "email": "cmanuel.alvarez11@gmail.com",
     "installable": True,
     "application": False,
@@ -16,8 +16,5 @@
         "l10n_ar_ux",
         "l10n_ar_edi",
         "account_accountant",
-    ],
-    "data": [
-       
     ],
 }
