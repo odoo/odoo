@@ -5,7 +5,7 @@ export class ResGroups extends Record {
     static id = "id";
     /** @type {string} */
     full_name;
-    personas = fields.Many("Persona");
+    partner_ids = fields.Many("res.partner");
     privilege_id = fields.One("res.groups.privilege");
 }
 

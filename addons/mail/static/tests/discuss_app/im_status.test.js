@@ -6,7 +6,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { Persona } from "@mail/core/common/persona_model";
+import { ResPartner } from "@mail/core/common/res_partner_model";
 import { describe, test } from "@odoo/hoot";
 import { Command, patchWithCleanup, serverState } from "@web/../tests/web_test_helpers";
 
@@ -59,7 +59,7 @@ test("initially away", async () => {
 });
 
 test("change icon on change partner im_status", async () => {
-    patchWithCleanup(Persona, { IM_STATUS_DEBOUNCE_DELAY: 0 });
+    patchWithCleanup(ResPartner, { IM_STATUS_DEBOUNCE_DELAY: 0 });
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     pyEnv["res.partner"].write([serverState.partnerId], { im_status: "online" });

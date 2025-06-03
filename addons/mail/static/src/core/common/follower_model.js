@@ -10,13 +10,15 @@ export class Follower extends Record {
     id;
     /** @type {boolean} */
     is_active;
-    partner_id = fields.One("Persona");
+    partner_id = fields.One("res.partner");
     subtype_ids = fields.Many("mail.message.subtype");
 
     /** @returns {boolean} */
     get isEditable() {
         const hasWriteAccess = this.thread ? this.thread.hasWriteAccess : false;
-        return this.partner_id.eq(this.store.self) ? this.thread.hasReadAccess : hasWriteAccess;
+        return this.partner_id.eq(this.store.self_partner)
+            ? this.thread.hasReadAccess
+            : hasWriteAccess;
     }
 
     async remove() {
