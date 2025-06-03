@@ -1665,6 +1665,17 @@ header {
     }
 }
 
+// For the "hamburger" and "sidebar" header, we set the mega menu columns to
+// 100% width when the breakpoint is above lg, because the menu keeps its mobile
+// width when displayed on desktop.
+@if index(("sidebar", "hamburger"), o-website-value("header-template")) {
+    @include media-breakpoint-up(lg) {
+        .o_mega_menu [class*="col-"] {
+            width: 100%;
+        }
+    }
+}
+
 #wrapwrap.o_header_overlay {
     > header:not(.o_header_affixed):not(.o_header_sidebar) {
         @include o-position-absolute(0, 0, auto, 0);
