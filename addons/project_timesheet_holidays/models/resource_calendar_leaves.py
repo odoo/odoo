@@ -233,6 +233,23 @@ class ResourceCalendarLeaves(models.Model):
                     timesheet_vals_list.append(timesheet_vals)
         return self.env['account.analytic.line'].sudo().create(timesheet_vals_list)
 
+    def _get_overlapping_hr_leaves(self):
+        gtos_with_timesheets = self.filtered(lambda r: not r.resource_id and r.company_id.internal_project_id and r.company_id.leave_timesheet_task_id)
+        if not gtos_with_timesheets:
+            return self.env['hr.leave']
+        overlapping_leaves = self.env['hr.leave']
+        for gto in gtos_with_timesheets:
+            domain = [
+                ('employee_id', 'in', gto.timesheet_ids.employee_id.ids),
+                ('date_from', '<=', gto.date_to),
+                ('date_to', '>=', gto.date_from),
+                ('company_id', '=', gto.company_id.id),
+            ]
+            if gto.calendar_id:
+                domain += [('resource_calendar_id', '=', gto.calendar_id.id)]
+            overlapping_leaves += self.env['hr.leave'].search(domain)
+        return overlapping_leaves
+
     @api.model_create_multi
     def create(self, vals_list):
         results = super(ResourceCalendarLeaves, self).create(vals_list)
@@ -242,12 +259,24 @@ class ResourceCalendarLeaves(models.Model):
     def write(self, vals):
         date_from, date_to, calendar_id = vals.get('date_from'), vals.get('date_to'), vals.get('calendar_id')
         global_time_off_updated = self.env['resource.calendar.leaves']
+        overlapping_leaves = self.env['hr.leave']
         if date_from or date_to or 'calendar_id' in vals:
             global_time_off_updated = self.filtered(lambda r: (date_from is not None and r.date_from != date_from) or (date_to is not None and r.date_to != date_to) or (calendar_id is None or r.calendar_id.id != calendar_id))
+            overlapping_leaves = global_time_off_updated.sudo()._get_overlapping_hr_leaves()
             timesheets = global_time_off_updated.sudo().timesheet_ids
             if timesheets:
                 timesheets.write({'global_leave_id': False})
                 timesheets.unlink()
         result = super(ResourceCalendarLeaves, self).write(vals)
         global_time_off_updated and global_time_off_updated.sudo()._generate_timesheeets()
+        if overlapping_leaves:
+            overlapping_leaves.sudo()._generate_timesheets()
         return result
+
+    def unlink(self):
+        overlapping_leaves = self.sudo()._get_overlapping_hr_leaves()
+        res = super().unlink()
+        # regenerate hr.leave timesheets AFTER the global time off has been deleted
+        if overlapping_leaves:
+            overlapping_leaves.sudo()._generate_timesheets()
+        return res
