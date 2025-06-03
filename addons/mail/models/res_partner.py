@@ -264,10 +264,10 @@ class ResPartner(models.Model):
                 main_user = main_user_by_partner and main_user_by_partner.get(partner)
                 if not main_user:
                     users = partner.with_context(active_test=False).user_ids
-                    internal_users = users - users.filtered("share")
+                    internal_users = users - users.sudo().filtered("share")
                     main_user = internal_users[:1] or users[:1]
                 data["userId"] = main_user.id
-                data["isInternalUser"] = not main_user.share if main_user else False
+                data["isInternalUser"] = not main_user.sudo().share if main_user else False
                 if "isAdmin" in fields:
                     data["isAdmin"] = main_user._is_admin()
                 if "notification_type" in fields:
