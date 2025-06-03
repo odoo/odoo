@@ -689,6 +689,13 @@ class MrpBomLine(models.Model):
         compute='_compute_child_line_ids')
     attachments_count = fields.Integer('Attachments Count', compute='_compute_attachments_count')
     tracking = fields.Selection(related='product_id.tracking')
+    bom_code = fields.Char(related='bom_id.code', readonly=True)
+    bom_active = fields.Boolean(related='bom_id.active', readonly=True)
+    bom_type = fields.Selection(related='bom_id.type', readonly=True)
+    bom_product_id = fields.Many2one(related='bom_id.product_id', readonly=True)
+    bom_product_tmpl_id = fields.Many2one(related='bom_id.product_tmpl_id', readonly=True)
+    bom_product_qty = fields.Float(related='bom_id.product_qty', string="BoM Quantity", readonly=True)
+    bom_product_uom_id = fields.Many2one(related='bom_id.product_uom_id', string="BoM Unit", readonly=True)
 
     _bom_qty_zero = models.Constraint(
         'CHECK (product_qty>=0)',
