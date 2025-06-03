@@ -44,6 +44,7 @@ class CoverPropertiesOptionPlugin extends Plugin {
             .openMediaDialog({
                 onlyImages: true,
                 save: (imageEl) => {
+                    imageEl.remove();
                     resultPromise = (async () => {
                         const b64ToSave = imageEl.getAttribute("src").startsWith("data:");
                         return { imageSrc: imageEl.getAttribute("src"), b64ToSave };

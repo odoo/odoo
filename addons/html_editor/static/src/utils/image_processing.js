@@ -8,6 +8,13 @@ import { getImageSrc } from "./image";
 export const cropperDataFields = ["x", "y", "width", "height", "rotate", "scaleX", "scaleY"];
 export const cropperDataFieldsWithAspectRatio = [...cropperDataFields, "aspectRatio"];
 export const isGif = (mimetype) => mimetype === "image/gif";
+export const postProcessAttributes = [
+    ...cropperDataFieldsWithAspectRatio,
+    "filter",
+    "quality",
+    "glFilter",
+    "resizeWidth",
+];
 const modifierFields = [
     "filter",
     "quality",

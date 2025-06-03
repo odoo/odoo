@@ -41,6 +41,7 @@ class ImageShapeOptionPlugin extends Plugin {
         builder_actions: this.getActions(),
         process_image_warmup_handlers: this.processImageWarmup.bind(this),
         process_image_post_handlers: this.processImagePost.bind(this),
+        post_process_image_predicates: (img) => img.dataset.shape,
     };
     setup() {
         this.shapeSvgTextCache = {};
@@ -143,7 +144,7 @@ class ImageShapeOptionPlugin extends Plugin {
         return shapeSvgText;
     }
     async loadShape(img, newData = {}) {
-        return this.dependencies.imagePostProcess.processImage({ img, newDataset: newData });
+        return this.dependencies.imagePostProcess.processImage(img, newData);
         //todo: handle hover effect before
         // todo: is it still needed?
         // await loadImage(shapeDataURL, img);

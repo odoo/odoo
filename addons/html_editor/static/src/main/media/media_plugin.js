@@ -19,6 +19,7 @@ import { MediaDialog } from "./media_dialog/media_dialog";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { execSyncOrAsync } from "@web/core/utils/concurrency";
 
 /**
  * @typedef { Object } MediaShared
@@ -136,49 +137,49 @@ export class MediaPlugin extends Plugin {
         }
     }
 
-    async onSaveMediaDialog(element, { node }) {
-        if (!element) {
-            // @todo @phoenix to remove
-            throw new Error("Element is required: onSaveMediaDialog");
-            // return;
-        }
-        if (node) {
-            const changedIcon = isIconElement(node) && isIconElement(element);
+    /**
+     *  Called when the media dialog is saved.
+     *
+     * @param {HTMLImageElement} newImgElement the element to insert
+     * @param {HTMLImageElement} originalImgElement the element to replace
+     */
+    onSaveMediaDialog(newImgElement, originalImgElement) {
+        if (originalImgElement) {
+            const changedIcon = isIconElement(originalImgElement) && isIconElement(newImgElement);
             if (changedIcon) {
                 // Preserve tag name when changing an icon and not recreate the
                 // editors unnecessarily.
-                for (const attribute of element.attributes) {
-                    node.setAttribute(attribute.nodeName, attribute.nodeValue);
+                for (const attribute of newImgElement.attributes) {
+                    originalImgElement.setAttribute(attribute.nodeName, attribute.nodeValue);
                 }
-                element = node;
+                newImgElement = originalImgElement;
             } else {
-                node.replaceWith(element);
+                originalImgElement.replaceWith(newImgElement);
             }
         } else {
-            this.dependencies.dom.insert(element);
+            this.dependencies.dom.insert(newImgElement);
         }
-        // Collapse selection after the inserted/replaced element.
-        const [anchorNode, anchorOffset] = rightPos(element);
-        this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
-        this.dispatchTo("after_save_media_dialog_handlers", element);
-        this.dependencies.history.addStep();
+
+        // Without execSyncOrAsync, tests in html_editor would fail if they
+        // don't await for the promise of onSaveMediaDialog to resolve.
+        //
+        // This code should be simplifed if the html_editor allows asynchronous
+        // operations.
+        return execSyncOrAsync(function* () {
+            for (const cb of this.getResource("process_new_image")) {
+                yield cb(newImgElement);
+            }
+
+            // Collapse selection after the inserted/replaced element.
+            const [anchorNode, anchorOffset] = rightPos(newImgElement);
+            this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+            this.dispatchTo("after_save_media_dialog_handlers", newImgElement);
+            this.dependencies.history.addStep();
+            return newImgElement;
+        }, this);
     }
 
     openMediaDialog(params = {}, editableEl = null) {
-        const oldSave =
-            params.save || ((element) => this.onSaveMediaDialog(element, { node: params.node }));
-        params.save = async (...args) => {
-            const selection = args[0];
-            const elements = selection
-                ? selection[Symbol.iterator]
-                    ? selection
-                    : [selection]
-                : [];
-            for (const onMediaDialogSaved of this.getResource("on_media_dialog_saved_handlers")) {
-                await onMediaDialogSaved(elements, { node: params.node });
-            }
-            return oldSave(...args);
-        };
         const { resModel, resId, field, type } = this.getRecordInfo(editableEl);
         const mediaDialogClosedPromise = this.dependencies.dialog.addDialog(MediaDialog, {
             resModel,
@@ -198,6 +199,10 @@ export class MediaPlugin extends Plugin {
                 "499761556", "392935303", "728584384", "865314310", "511727912", "466830211"],
             ...this.config.mediaModalParams,
             ...params,
+            save: async (element) => {
+                const newElement = await this.onSaveMediaDialog(element, params.node, params);
+                params.save?.(newElement);
+            },
         });
         return mediaDialogClosedPromise;
     }

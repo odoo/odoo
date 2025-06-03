@@ -1,4 +1,4 @@
-import { cropperDataFieldsWithAspectRatio, isGif, loadImage } from "@html_editor/utils/image_processing";
+import { cropperDataFieldsWithAspectRatio, isGif } from "@html_editor/utils/image_processing";
 import { registry } from "@web/core/registry";
 import { Plugin } from "@html_editor/plugin";
 import { ImageToolOption } from "./image_tool_option";
@@ -10,7 +10,6 @@ import {
     ALIGNMENT_STYLE_PADDING,
 } from "@html_builder/utils/option_sequence";
 import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
-import { computeMaxDisplayWidth } from "./image_format_option";
 
 export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
 export const REPLACE_MEDIA_EXCLUDE =
@@ -49,32 +48,10 @@ class ImageToolOptionPlugin extends Plugin {
         on_media_dialog_saved_handlers: async (elements, { node }) => {
             for (const image of elements) {
                 if (image && image.tagName === "IMG") {
-                    const updateImageAttributes = await this.dependencies.imagePostProcess.processImage({
-                        img: image,
-                        newDataset: {
+                    const updateImageAttributes =
+                        await this.dependencies.imagePostProcess.processImage(image, {
                             formatMimetype: "image/webp",
-                        },
-                        // TODO Using a callback is currently needed to avoid
-                        // the extra RPC that would occur if loadImageInfo was
-                        // called before processImage as well. This flow can be
-                        // simplified if image infos are somehow cached.
-                        onImageInfoLoaded: async (dataset) => {
-                            if (!dataset.originalSrc || !dataset.originalId) {
-                                return true;
-                            }
-                            const original = await loadImage(dataset.originalSrc);
-                            const maxWidth = dataset.width ? image.naturalWidth : original.naturalWidth;
-                            const optimizedWidth = Math.min(maxWidth, computeMaxDisplayWidth(node || this.editable));
-                            if (!["image/gif", "image/svg+xml"].includes(dataset.mimetypeBeforeConversion)) {
-                                // Convert to recommended format and width.
-                                dataset.resizeWidth = optimizedWidth;
-                            } else if (dataset.shape && dataset.mimetypeBeforeConversion !== "image/gif") {
-                                dataset.resizeWidth = optimizedWidth;
-                            } else {
-                                return true;
-                            }
-                        },
-                    });
+                        });
                     updateImageAttributes();
                 }
             }
@@ -91,7 +68,7 @@ class ImageToolOptionPlugin extends Plugin {
                             onClose: resolve,
                             onSave: async (newDataset) => {
                                 resolve(
-                                    this.dependencies.imagePostProcess.processImage({ img, newDataset })
+                                    this.dependencies.imagePostProcess.processImage(img, newDataset)
                                 );
                             },
                         });
@@ -105,7 +82,7 @@ class ImageToolOptionPlugin extends Plugin {
                     const newDataset = Object.fromEntries(
                         cropperDataFieldsWithAspectRatio.map((field) => [field, undefined])
                     );
-                    return this.dependencies.imagePostProcess.processImage({ img, newDataset });
+                    return this.dependencies.imagePostProcess.processImage(img, newDataset);
                 },
                 apply: ({ loadResult: updateImageAttributes }) => {
                     updateImageAttributes();
