@@ -977,7 +977,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=52, employee=51):
+        with self.assertQueryCount(admin=52, employee=51):  # tm: 53/52
             record.message_post(
                 body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
@@ -1775,7 +1775,7 @@ class TestPerformance(BaseMailPerformance):
         ]
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
 
-        with self.profile(), self.assertQueryCount(employee=62):
+        with self.profile(), self.assertQueryCount(employee=62):  # tm: 64
             record_container.with_context({}).message_post(
                 body=Markup('<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>'),
                 subject='Test Subject',
