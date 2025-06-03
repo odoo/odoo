@@ -234,7 +234,9 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # field dependencies
         self.field_depends: Collector[Field, Field] = Collector()
         self.field_depends_context: Collector[Field, str] = Collector()
-        self.field_inverses: Collector[Field, Field] = Collector()
+
+        # field inverses
+        self.many2many_relations: defaultdict[tuple[str, str, str], OrderedSet[tuple[str, str]]] = defaultdict(OrderedSet)
 
         # company dependent
         self.many2one_company_dependents: Collector[str, Field] = Collector()  # {model_name: (field1, field2, ...)}
@@ -383,7 +385,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         self.field_depends.clear()
         self.field_depends_context.clear()
-        self.field_inverses.clear()
+        self.many2many_relations.clear()
         self.many2one_company_dependents.clear()
 
         model_classes.setup_model_classes(env)
@@ -404,6 +406,15 @@ class Registry(Mapping[str, type["BaseModel"]]):
             for model in env.values():
                 model._register_hook()
             env.flush_all()
+
+    @functools.cached_property
+    def field_inverses(self) -> Collector[Field, Field]:
+        result = Collector()
+        for model_cls in self.models.values():
+            for field in model_cls._fields.values():
+                if field.relational:
+                    field.setup_inverses(self, result)
+        return result
 
     @functools.cached_property
     def field_computed(self) -> dict[Field, list[Field]]:

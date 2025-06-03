@@ -313,10 +313,8 @@ def setup_model_classes(env: Environment):
     for model_cls in models_classes:
         _setup(model_cls, env)
 
-    registry._m2m: defaultdict[tuple[str, str, str], list[Field]] = defaultdict(list)
     for model_cls in models_classes:
         _setup_fields(model_cls, env)
-    del registry._m2m
 
     for model_cls in models_classes:
         model_cls(env, (), ())._post_model_setup__()
