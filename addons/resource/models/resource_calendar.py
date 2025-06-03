@@ -327,10 +327,6 @@ class ResourceCalendar(models.Model):
             tz: (start_dt.astimezone(tz), end_dt.astimezone(tz))
             for tz in resources_per_tz.keys()
         }
-        # Use the outer bounds from the requested timezones
-        for tz, bounds in bounds_per_tz.items():
-            start = min(start, bounds[0].replace(tzinfo=utc))
-            end = max(end, bounds[1].replace(tzinfo=utc))
         # Generate once with utc as timezone
         days = rrule(DAILY, start.date(), until=end.date(), byweekday=weekdays)
         ResourceCalendarAttendance = self.env['resource.calendar.attendance']
@@ -368,12 +364,8 @@ class ResourceCalendar(models.Model):
             res_intervals = WorkIntervals(res)
             for resource in resources:
                 if resource and resource._is_flexible():
-                    duration_days = (end - start).days + (0.5 if (end - start).total_seconds() / 3600 < resource.calendar_id.hours_per_day else 1)
-                    if resource.calendar_id and resource.calendar_id.flexible_hours:
-                        duration_hours = duration_days * resource.calendar_id.hours_per_day
-                    else:
-                        duration_hours = (end - start).total_seconds() / 3600
-                    # If the resource is flexible, return the whole period from start_dt to end_dt with a dummy attendance
+                    duration_hours = (end - start).total_seconds() / 3600
+                    duration_days = (end - start).days + (duration_hours / resource.calendar_id.hours_per_day if resource.calendar_id.hours_per_day else 1)
                     dummy_attendance = self.env['resource.calendar.attendance'].new({
                         'duration_hours': duration_hours,
                         'duration_days': duration_days,
