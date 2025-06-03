@@ -1,9 +1,6 @@
-import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
 import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
-
-const { DateTime } = luxon;
 
 /**
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
@@ -31,34 +28,42 @@ function pivotPeriodToFilterValue(timeRange, value) {
         return undefined;
     }
 
-    const yearValue = Number.parseInt(value.split("/").at(-1), 10);
-    if (isNaN(yearValue)) {
+    const year = Number.parseInt(value.split("/").at(-1), 10);
+    if (isNaN(year)) {
         return undefined;
     }
-    const yearOffset = yearValue - DateTime.now().year;
     switch (timeRange) {
         case "year":
             return {
-                yearOffset,
+                type: "year",
+                period: {
+                    year,
+                },
             };
         case "month": {
-            const month = value.includes("/") ? Number.parseInt(value.split("/")[0]) - 1 : -1;
-            if (!(month in monthsOptions)) {
-                return { yearOffset, period: undefined };
+            const month = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            if (month <= 0 || month > 12) {
+                return { type: "year", period: { year } };
             }
             return {
-                yearOffset,
-                period: monthsOptions[month].id,
+                type: "month",
+                period: {
+                    month,
+                    year,
+                },
             };
         }
         case "quarter": {
-            const quarter = value.includes("/") ? Number.parseInt(value.split("/")[0]) - 1 : -1;
-            if (!(quarter in FILTER_DATE_OPTION.quarter)) {
-                return { yearOffset, period: undefined };
+            const quarter = value.includes("/") ? Number.parseInt(value.split("/")[0]) : -1;
+            if (quarter <= 0 || quarter > 4) {
+                return { type: "year", period: { year } };
             }
             return {
-                yearOffset,
-                period: FILTER_DATE_OPTION.quarter[quarter],
+                type: "quarter",
+                period: {
+                    quarter,
+                    year,
+                },
             };
         }
     }

@@ -48,8 +48,7 @@
                     onFromToChanged="(value) => this.onDateInput(filter.id, value)"/>
 
                 <DateFilterValue t-else=""
-                    period="filterValue?.period"
-                    yearOffset="filterValue?.yearOffset"
+                    value="filterValue"
                     disabledPeriods="filter.disabledPeriods"
                     onTimeRangeChanged="(value) => this.onDateInput(filter.id, value)"/>
             </div>
