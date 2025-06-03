@@ -1,4 +1,4 @@
-import { convertParamToObject } from "@html_builder/core/utils";
+import { convertParamToObject, isActionPreviewable } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
@@ -85,12 +85,12 @@ class CompositeAction extends BuilderAction {
         }
         return !!results.length && results.every((result) => result);
     }
-    async load({ editingElement, params: { mainParam: actions }, value }) {
+    async load({ isPreviewing, editingElement, params: { mainParam: actions }, value }) {
         const loadActions = [];
         const loadResults = [];
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.has("load")) {
+            if (action.has("load") && (!isPreviewing || isActionPreviewable(action))) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     ...actionDef,
@@ -110,6 +110,7 @@ class CompositeAction extends BuilderAction {
         }, {});
     }
     async apply({
+        isPreviewing,
         editingElement,
         params: { mainParam: actions },
         value,
@@ -119,7 +120,7 @@ class CompositeAction extends BuilderAction {
     }) {
         for (const actionDef of actions) {
             const action = this.dependencies.builderActions.getAction(actionDef.action);
-            if (action.has("apply")) {
+            if (action.has("apply") && (!isPreviewing || isActionPreviewable(action))) {
                 const actionDescr = this._getActionDescription({
                     editingElement,
                     value,
@@ -133,6 +134,7 @@ class CompositeAction extends BuilderAction {
         }
     }
     clean({
+        isPreviewing,
         editingElement,
         params: { mainParam: actions },
         value,
@@ -152,13 +154,15 @@ class CompositeAction extends BuilderAction {
                 selectableContext,
                 nextAction,
             });
-            if (action.has("clean")) {
-                action.clean(actionDescr);
-            } else if (action.has("apply")) {
-                if (loadResult && loadResult[actionDef.action]) {
-                    actionDescr.loadResult = loadResult[actionDef.action];
+            if (!isPreviewing || isActionPreviewable(action)) {
+                if (action.has("clean")) {
+                    action.clean(actionDescr);
+                } else if (action.has("apply")) {
+                    if (loadResult && loadResult[actionDef.action]) {
+                        actionDescr.loadResult = loadResult[actionDef.action];
+                    }
+                    action.apply(actionDescr);
                 }
-                action.apply(actionDescr);
             }
         }
     }
@@ -192,6 +196,8 @@ class CompositeAction extends BuilderAction {
 class ReloadCompositeAction extends CompositeAction {
     static id = "reloadComposite";
     setup() {
-        this.reload = {};
+        this.reload = {
+            previewable: true,
+        };
     }
 }
