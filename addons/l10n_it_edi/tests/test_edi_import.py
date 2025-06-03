@@ -242,3 +242,42 @@ class TestItEdiImport(TestItEdi):
                 'price_unit': -2,
             }
         ])
+
+    def test_receive_bill_with_discount_and_small_price_unit(self):
+        """This test check the a discount is applied correctly when the price unit is small enough
+        to cause rounding issues."""
+        content = self.with_applied_xpath(
+            etree.fromstring(self.invoice_content),
+            '''
+                <xpath expr="//FatturaElettronicaBody/DatiBeniServizi" position="replace">
+                    <DatiBeniServizi>
+                        <DettaglioLinee>
+                            <NumeroLinea>1</NumeroLinea>
+                            <Descrizione>Test rounding with small price unit</Descrizione>
+                            <Quantita>5000.000</Quantita>
+                            <PrezzoUnitario>0.0545</PrezzoUnitario>
+                            <PrezzoTotale>272.5000</PrezzoTotale>
+                            <ScontoMaggiorazione>
+                                <Tipo>S</Tipo>
+                                <Percentuale>10.00</Percentuale>
+                            </ScontoMaggiorazione>
+                            <AliquotaIVA>10.00</AliquotaIVA>
+                        </DettaglioLinee>
+                    </DatiBeniServizi>
+                </xpath>
+            ''')
+        invoice = self.edi_format._create_invoice_from_xml_tree(self.invoice_filename2, content)
+
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 245.25,  # 5000 * 0.0545 = 272.50 - 10% discount = 245.25
+            'amount_tax': 24.53,
+        }])
+        self.assertRecordValues(invoice.invoice_line_ids, [
+            {
+                'quantity': 5000.0,
+                'name': 'Test rounding with small price unit',
+                'price_unit': 0.05,
+            },
+        ])
+        # Required since discount is not a Currency field
+        self.assertAlmostEqual(invoice.invoice_line_ids[0].discount, 1.89, delta=0.01)

@@ -3,6 +3,7 @@
 
 from odoo import Command, api, models, fields, _, _lt
 from odoo.exceptions import UserError
+from odoo.tools.float_utils import float_is_zero
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 from odoo.osv.expression import OR, AND
@@ -865,8 +866,9 @@ class AccountEdiFormat(models.Model):
 
         # Quantity.
         line_elements = element.xpath('.//Quantita')
+        initial_quantity = 1
         if line_elements:
-            invoice_line_form.quantity = float(line_elements[0].text)
+            invoice_line_form.quantity = initial_quantity = float(line_elements[0].text)
         else:
             invoice_line_form.quantity = 1
 
@@ -911,14 +913,23 @@ class AccountEdiFormat(models.Model):
                 ))
 
         # Price Unit.
+        initial_unit_price = 0
         if not extra_info['simplified']:
             line_elements = element.xpath('.//PrezzoUnitario')
             if line_elements:
-                invoice_line_form.price_unit = float(line_elements[0].text)
+                invoice_line_form.price_unit = initial_unit_price = float(line_elements[0].text)
         else:
-            invoice_line_form.price_unit = price_subtotal
+            invoice_line_form.price_unit = initial_unit_price = price_subtotal
 
         # Discounts
+        # First, add a discount to fix potential rounding issues
+        difference = initial_unit_price * initial_quantity - invoice_line_form.price_subtotal
+        rounding = invoice_line_form.currency_id.rounding
+        if not float_is_zero(difference, precision_rounding=rounding) and not float_is_zero(invoice_line_form.price_subtotal, rounding):
+            invoice_line_form.discount -= difference / invoice_line_form.price_subtotal * 100
+
+        # Then, apply the discount from the XML
+        line_discount = 0
         discount_elements = element.xpath('.//ScontoMaggiorazione')
         if discount_elements:
             discount_element = discount_elements[0]
@@ -929,13 +940,15 @@ class AccountEdiFormat(models.Model):
                 discount_sign = 1
                 if discount_type and discount_type[0].text == 'MG':
                     discount_sign = -1
-                invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
+                line_discount += discount_sign * float(discount_percentage[0].text)
             # Discounts in cascade summarized in 1 percentage
             else:
                 total = float(element.xpath('.//PrezzoTotale')[0].text)
                 discount = 100 - (100 * total) / (invoice_line_form.quantity * invoice_line_form.price_unit)
-                invoice_line_form.discount = discount
+                line_discount += discount
 
+        if line_discount:
+            invoice_line_form.discount = 100 * (1 - (1 - invoice_line_form.discount / 100) * (1 - line_discount / 100))
         return message_to_log
 
     # -------------------------------------------------------------------------
