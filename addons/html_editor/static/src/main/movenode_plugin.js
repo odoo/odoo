@@ -449,7 +449,7 @@ export class MoveNodePlugin extends Plugin {
         if (blacklistSelectors && node.matches(blacklistSelectors)) {
             return false;
         }
-        return (node.parentElement?.getAttribute("contentEditable") === "true");
+        return node.parentElement?.getAttribute("contentEditable") === "true";
     }
 }
 

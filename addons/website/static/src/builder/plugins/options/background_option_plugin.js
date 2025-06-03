@@ -68,8 +68,20 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
                 noImages: true,
                 noDocuments: true,
                 isForBgVideo: true,
-                vimeoPreviewIds: ['528686125', '430330731', '509869821', '397142251', '763851966', '486931161',
-                    '499761556', '392935303', '728584384', '865314310', '511727912', '466830211'],
+                vimeoPreviewIds: [
+                    "528686125",
+                    "430330731",
+                    "509869821",
+                    "397142251",
+                    "763851966",
+                    "486931161",
+                    "499761556",
+                    "392935303",
+                    "728584384",
+                    "865314310",
+                    "511727912",
+                    "466830211",
+                ],
                 save: (media) => {
                     resolve(media.querySelector("iframe").src);
                 },

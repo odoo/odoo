@@ -88,7 +88,7 @@ test("Check if an element with a background image has necessary classes", async 
     expect(":iframe section").toHaveClass("oe_img_bg");
     expect(":iframe section").toHaveClass("o_bg_img_center");
     expect(":iframe section").toHaveClass("o_bg_img_origin_border_box");
-})
+});
 
 test("Change the background position and apply", async () => {
     await dragAndDropBgImage();

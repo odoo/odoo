@@ -174,7 +174,12 @@ export class BackgroundImageOptionPlugin extends Plugin {
         if (backgroundURL) {
             el.classList.add("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box");
         } else {
-            el.classList.remove("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box", "o_modified_image_to_save");
+            el.classList.remove(
+                "oe_img_bg",
+                "o_bg_img_center",
+                "o_bg_img_origin_border_box",
+                "o_modified_image_to_save"
+            );
         }
         // TODO: check this comment
         // We use selectStyle so that if when a background image is removed the

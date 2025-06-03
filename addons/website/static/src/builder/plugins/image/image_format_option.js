@@ -49,8 +49,7 @@ export function computeMaxDisplayWidth(img, MAX_SUGGESTED_WIDTH = 1920) {
     }
     const computedStyles = window.getComputedStyle(img);
     const displayWidth = parseFloat(computedStyles.getPropertyValue("width"));
-    const gutterWidth =
-        parseFloat(computedStyles.getPropertyValue("--o-grid-gutter-width")) || 30;
+    const gutterWidth = parseFloat(computedStyles.getPropertyValue("--o-grid-gutter-width")) || 30;
 
     // For the logos we don't want to suggest a width too small.
     if (img.closest("nav")) {
@@ -73,9 +72,7 @@ export function computeMaxDisplayWidth(img, MAX_SUGGESTED_WIDTH = 1920) {
     } else if (img.closest(".container-fluid")) {
         const lgBp = parseFloat(computedStyles.getPropertyValue("--breakpoint-lg")) || 992;
         const mdContainerFluidMaxInnerWidth = lgBp - gutterWidth;
-        return Math.round(
-            clamp(displayWidth, mdContainerFluidMaxInnerWidth, MAX_SUGGESTED_WIDTH)
-        );
+        return Math.round(clamp(displayWidth, mdContainerFluidMaxInnerWidth, MAX_SUGGESTED_WIDTH));
     }
     // If it's not in a container, it's probably not going to change size
     // depending on breakpoints. We still keep a margin safety.

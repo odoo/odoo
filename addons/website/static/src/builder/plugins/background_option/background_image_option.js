@@ -5,7 +5,7 @@ export class BackgroundImageOption extends BaseOptionComponent {
     static template = "website.BackgroundImageOption";
     static props = {};
     setup() {
-        // done here because we have direct access to the editing element 
+        // done here because we have direct access to the editing element
         // (which we don't have in the normalize of the current plugin)
         this.toggleBgImageClasses();
         super.setup();
@@ -14,8 +14,11 @@ export class BackgroundImageOption extends BaseOptionComponent {
         this.env.editor.shared.history.ignoreDOMMutations(() => {
             const editingEl = this.env.getEditingElement();
             const backgroundURL = getBgImageURLFromEl(editingEl);
-            this.env.editor.shared.backgroundImageOption.setImageBackground(editingEl, backgroundURL);
-        })
+            this.env.editor.shared.backgroundImageOption.setImageBackground(
+                editingEl,
+                backgroundURL
+            );
+        });
     }
     showMainColorPicker() {
         const editingEl = this.env.getEditingElement();
