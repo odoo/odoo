@@ -70,7 +70,6 @@ export const unremovableNodePredicates = [
     (node) => node.matches?.("[data-oe-type='monetary'] > span"),
 ];
 
-
 export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input"];
     static id = "delete";

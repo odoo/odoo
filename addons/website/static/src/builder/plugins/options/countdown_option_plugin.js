@@ -70,8 +70,7 @@ class CountdownOptionPlugin extends Plugin {
             if (!endMessageEl) {
                 const existingEndMessage = this.editingElEndMessages.get(editingElement);
                 editingElement.appendChild(
-                    existingEndMessage ||
-                        renderToElement("website.s_countdown.end_message")
+                    existingEndMessage || renderToElement("website.s_countdown.end_message")
                 );
             }
         } else {

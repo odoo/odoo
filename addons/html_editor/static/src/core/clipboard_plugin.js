@@ -1,7 +1,13 @@
 import { isTextNode, isParagraphRelatedElement } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
-import { removeClass, removeStyle, unwrapContents, wrapInlinesInBlocks, splitTextNode } from "../utils/dom";
+import {
+    removeClass,
+    removeStyle,
+    unwrapContents,
+    wrapInlinesInBlocks,
+    splitTextNode,
+} from "../utils/dom";
 import { childNodes, closestElement } from "../utils/dom_traversal";
 import { parseHTML } from "../utils/html";
 import {

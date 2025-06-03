@@ -365,10 +365,13 @@ class ImageGalleryOption extends Plugin {
                 !["image/gif", "image/svg+xml", "image/webp"].includes(mimetypeBeforeConversion)
             ) {
                 // Convert to webp but keep original width.
-                const update = await this.dependencies.imagePostProcess.processImage({ img, newDataset: {
-                    formatMimetype: "image/webp",
-                    ...newDataset,
-                }});
+                const update = await this.dependencies.imagePostProcess.processImage({
+                    img,
+                    newDataset: {
+                        formatMimetype: "image/webp",
+                        ...newDataset,
+                    },
+                });
                 update();
             }
         };

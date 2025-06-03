@@ -22,17 +22,15 @@ export class BaseContainerPlugin extends Plugin {
      * Register one of the predicates for `invalid_for_base_container_predicates`
      * as a property for optimization, see variants of `isCandidateForBaseContainer`.
      */
-    hasNonPhrasingContentPredicate = (element) => {
-        return element?.nodeType === Node.ELEMENT_NODE && containsAnyNonPhrasingContent(element);
-    };
+    hasNonPhrasingContentPredicate = (element) =>
+        element?.nodeType === Node.ELEMENT_NODE && containsAnyNonPhrasingContent(element);
     /**
      * The `unsplittable` predicate for `invalid_for_base_container_predicates`
      * is defined in this file and not in split_plugin because it has to be removed
      * in a specific case: see `isCandidateForBaseContainerAllowUnsplittable`.
      */
-    isUnsplittablePredicate = (element) => {
-        return this.getResource("unsplittable_node_predicates").some((fn) => fn(element));
-    };
+    isUnsplittablePredicate = (element) =>
+        this.getResource("unsplittable_node_predicates").some((fn) => fn(element));
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         // `baseContainer` normalization should occur after every other normalization

@@ -91,7 +91,7 @@ test("should preserve iframe in the toolbar's font size input", async () => {
         </section>
     `);
     const editor = getEditor();
-    const p = editor.editable.querySelector("p")
+    const p = editor.editable.querySelector("p");
     const p2 = p.nextElementSibling;
     // Activate the text block snippet.
     click(p);
