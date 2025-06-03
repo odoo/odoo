@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-
-from odoo import api, Command, fields, models, _
+from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import format_amount
+from odoo.tools import SQL, format_amount
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
@@ -183,6 +181,87 @@ class ProductTemplate(models.Model):
         included_computed_price = self.taxes_id.with_context(force_price_include=True).compute_all(price, self.currency_id)
         return included_computed_price['total_excluded']
 
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        if not name and self._must_prioritize_invoiced_product():
+            partner_id, journal_type = self._get_prioritized_products_partner_and_type()
+            products = self._get_prioritized_products(
+                partner_id,
+                journal_type,
+                is_product=False,
+                domain=domain,
+                limit=limit)
+            return [(product.id, product.display_name) for product in products]
+        else:
+            return super().name_search(name, domain, operator, limit)
+
+    @api.model
+    def _must_prioritize_invoiced_product(self):
+        return bool(self.env.context.get('partner_id') and self.env.context.get('prioritize_for'))
+
+    @api.model
+    def _get_prioritized_products_partner_and_type(self):
+        return (self.env.context.get('partner_id'), self.env.context.get('prioritize_for'))
+
+    @api.model
+    def _get_prioritized_products_sql_query(self, partner_id: int, journal_type: str, product_ids: list) -> SQL:
+        return SQL("""
+            SELECT product_id, product_tmpl_id, invoice_date
+            FROM(
+                SELECT DISTINCT ON (aml.product_id)
+                    aml.product_id,
+                    product.product_tmpl_id,
+                    am.invoice_date
+                FROM account_move am
+                JOIN account_move_line aml ON aml.move_id = am.id
+                JOIN product_product product ON product.id = aml.product_id
+                JOIN account_journal journal ON journal.id = am.journal_id
+                WHERE am.partner_id = %(partner_id)s
+                    AND am.state = 'posted'
+                    AND journal.type = %(journal_type)s
+                    AND product.id IN %(product_ids)s
+                ORDER BY aml.product_id, invoice_date DESC
+            ) sub
+            ORDER BY invoice_date DESC;""",
+            partner_id=partner_id,
+            journal_type=journal_type,
+            product_ids=tuple(product_ids)
+        )
+
+    @api.model
+    def _get_prioritized_products(self, partner_id, journal_type, is_product=False, domain=None, limit=0):
+        """ Returns the products in a prioritized sequence for product selection.
+        First, it lists all products that have been invoiced to the specified
+        partner, sorted from the most recent to the oldest invoice date.
+        Afterward, it includes the remaining products in their default order of display.
+        """
+        domain = domain or []
+        res_model = self.env['product.product'] if is_product else self.env['product.template']
+
+        # First search of the products to respect the initial domain.
+        all_products = res_model.search(domain)
+        product_variants = all_products if is_product else all_products.product_variant_ids
+        sql_query = self._get_prioritized_products_sql_query(partner_id, journal_type, product_variants.ids)
+        self.env.cr.execute(sql_query)
+        prioritized_product_and_time = self.env.cr.dictfetchall()
+
+        if limit:
+            prioritized_product_and_time = prioritized_product_and_time[:limit]
+
+        field_key = 'product_id' if is_product else 'product_tmpl_id'
+        # Convert from list to dict to dict_keys to remove duplicate IDs while keeping the order.
+        prioritized_products_ids = {p[field_key]: None for p in prioritized_product_and_time}.keys()
+        prioritized_products = res_model.browse(prioritized_products_ids)
+        remaining_limit = limit - len(prioritized_products)
+        if remaining_limit <= 0:
+            # Limit already reached, no need to search for further products.
+            return prioritized_products
+
+        # Include not prioritized products AFTER prioritized products.
+        remaining_products = all_products - prioritized_products
+        products = prioritized_products + remaining_products[:remaining_limit]
+        return products
+
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -311,3 +390,18 @@ class ProductProduct(models.Model):
                 if products_by_domain := products.filtered_domain(domain):
                     return products_by_domain[0]
         return self.env['product.product']
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        ProductTemplate = self.env['product.template']
+        if not name and ProductTemplate._must_prioritize_invoiced_product():
+            partner_id, journal_type = ProductTemplate._get_prioritized_products_partner_and_type()
+            products = ProductTemplate._get_prioritized_products(
+                partner_id,
+                journal_type,
+                is_product=True,
+                domain=domain,
+                limit=limit)
+            return [(product.id, product.display_name) for product in products]
+        else:
+            return super().name_search(name, domain, operator, limit)
