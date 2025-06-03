@@ -16,7 +16,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class LinkPreview extends Component {
     static template = "mail.LinkPreview";
-    static props = ["linkPreview", "delete?", "deleteAll?", "gifPaused?"];
+    static props = ["linkPreview", "delete?", "deleteAll?", "gifPaused?", "message?"];
     static components = { Gif };
 
     setup() {
