@@ -19,4 +19,9 @@ This is a base module. It holds website-related stuff for Contact model (res.par
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'assets': {
+        'html_builder.assets': [
+            'website_partner/static/src/website_builder/**/*',
+        ],
+    },
 }
