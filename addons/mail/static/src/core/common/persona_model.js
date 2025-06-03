@@ -128,10 +128,6 @@ export class Persona extends Record {
         return this.name;
     }
 
-    get emailWithoutDomain() {
-        return this.email.substring(0, this.email.lastIndexOf("@"));
-    }
-
     get avatarUrl() {
         const accessTokenParam = {};
         if (!this.store.self.isInternalUser) {
