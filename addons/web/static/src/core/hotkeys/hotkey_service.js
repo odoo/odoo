@@ -49,7 +49,7 @@ const NAV_KEYS = [
     "delete",
     "space",
 ];
-const MODIFIERS = ["alt", "control", "shift"];
+const MODIFIERS = ["alt", "control", "shift", "meta"];
 const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, "escape", "alt"];
 
 /**
@@ -78,8 +78,11 @@ export function getActiveHotkey(ev, useNativeModifiers = false) {
         if (ev.altKey) {
             hotkey.push("alt");
         }
-        if (ev.ctrlKey || (isMacOS() && ev.metaKey)) {
+        if (ev.ctrlKey) {
             hotkey.push("control");
+        }
+        if (isMacOS() && ev.metaKey) {
+            hotkey.push("meta");
         }
     } else {
         // Platform-specific modifiers
@@ -120,10 +123,11 @@ export function getActiveHotkey(ev, useNativeModifiers = false) {
 
 export const hotkeyService = {
     dependencies: ["ui"],
-    // Be aware that all odoo hotkeys are designed with this modifier in mind,
-    // so changing the overlay modifier may conflict with some shortcuts.
-    overlayModifier: "control",
+
     start(env, { ui }) {
+        // Be aware that all odoo hotkeys are designed with this modifier in mind,
+        // so changing the overlay modifier may conflict with some shortcuts.
+        hotkeyService.overlayModifier = isMacOS() ? "meta" : "alt";
         /** @type {Map<number, HotkeyRegistration>} */
         const registrations = new Map();
         let nextToken = 0;
@@ -178,7 +182,7 @@ export const hotkeyService = {
                 }
             }
 
-            if (!overlaysVisible && rawHotkey === (isMacOS() ? "control" : "alt")) {
+            if (!overlaysVisible && rawHotkey === hotkeyService.overlayModifier) {
                 // Special case: open hotkey overlays
                 addHotkeyOverlays(activeElement);
                 event.preventDefault();
@@ -249,7 +253,7 @@ export const hotkeyService = {
 
             // Prepare registrations and the common filter
             const reversedRegistrations = Array.from(registrations.values()).reverse();
-            const domRegistrations = getDomRegistrations(hotkey, activeElement);
+            const domRegistrations = getDomRegistrations(rawHotkey, activeElement);
             const allRegistrations = reversedRegistrations.concat(domRegistrations);
 
             // Find all candidates
@@ -309,6 +313,7 @@ export const hotkeyService = {
                 hotkey,
                 activeElement,
                 bypassEditableProtection: true,
+                rawModifiers: true,
                 callback: () => {
                     if (document.activeElement) {
                         document.activeElement.blur();
