@@ -22,12 +22,12 @@ export class MailMessageReaction extends models.ServerModel {
             const data = {
                 content: content,
                 count: reactionGroup.length,
-                guests: mailDataHelpers.Store.many(
+                guest_ids: mailDataHelpers.Store.many(
                     guests,
                     makeKwArgs({ fields: ["avatar_128", "name"] })
                 ),
                 message: message_id,
-                partners: mailDataHelpers.Store.many(
+                partner_ids: mailDataHelpers.Store.many(
                     partners,
                     makeKwArgs({ fields: ["avatar_128", "name"] })
                 ),

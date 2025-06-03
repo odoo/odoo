@@ -1513,20 +1513,14 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "id": follower_1.id,
                                     "is_active": True,
-                                    "partner_id": {
-                                        "id": self.user_emp_inbox.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "partner_id": self.user_emp_inbox.partner_id.id,
                                 },
                             ],
                             "mail.message": self._filter_messages_fields(
                                 {
                                     "attachment_ids": [],
                                     "author_guest_id": False,
-                                    "author_id": {
-                                        "id": self.env.user.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "author_id": self.env.user.partner_id.id,
                                     "body": [
                                         "markup",
                                         "<p>Test Post Performances with multiple inbox ping!</p>",
@@ -1568,10 +1562,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "res_partner_id": {
-                                        "id": self.user_emp_inbox.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "res_partner_id": self.user_emp_inbox.partner_id.id,
                                 },
                                 {
                                     "failure_type": False,
@@ -1579,10 +1570,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "res_partner_id": {
-                                        "id": self.user_follower_emp_inbox.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "res_partner_id": self.user_follower_emp_inbox.partner_id.id,
                                 },
                             ],
                             "mail.thread": self._filter_threads_fields(
@@ -1628,20 +1616,14 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "id": follower_2.id,
                                     "is_active": True,
-                                    "partner_id": {
-                                        "id": self.user_follower_emp_inbox.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "partner_id": self.user_follower_emp_inbox.partner_id.id,
                                 },
                             ],
                             "mail.message": self._filter_messages_fields(
                                 {
                                     "attachment_ids": [],
                                     "author_guest_id": False,
-                                    "author_id": {
-                                        "id": self.env.user.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "author_id": self.env.user.partner_id.id,
                                     "body": [
                                         "markup",
                                         "<p>Test Post Performances with multiple inbox ping!</p>",
@@ -1683,10 +1665,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "res_partner_id": {
-                                        "id": self.user_emp_inbox.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "res_partner_id": self.user_emp_inbox.partner_id.id,
                                 },
                                 {
                                     "failure_type": False,
@@ -1694,10 +1673,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "mail_message_id": message.id,
                                     "notification_status": "sent",
                                     "notification_type": "inbox",
-                                    "res_partner_id": {
-                                        "id": self.user_follower_emp_inbox.partner_id.id,
-                                        "type": "partner",
-                                    },
+                                    "res_partner_id": self.user_follower_emp_inbox.partner_id.id,
                                 },
                             ],
                             "mail.thread": self._filter_threads_fields(

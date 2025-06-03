@@ -15,8 +15,8 @@ const suggestionServicePatch = {
     /**
      * @override
      */
-    isSuggestionValid(persona, thread) {
-        if (thread?.model === "discuss.channel" && persona.eq(this.store.odoobot)) {
+    isSuggestionValid(partner, thread) {
+        if (thread?.model === "discuss.channel" && partner.eq(this.store.odoobot)) {
             return true;
         }
         return super.isSuggestionValid(...arguments);
@@ -42,7 +42,7 @@ const suggestionServicePatch = {
                 .filter((persona) => persona.type === "partner");
             if (thread.channel_type === "channel") {
                 const group = (thread.parent_channel_id || thread).group_public_id;
-                partners = new Set([...partners, ...(group?.personas ?? [])]);
+                partners = new Set([...partners, ...(group?.partner_ids ?? [])]);
             }
             return partners;
         } else {
