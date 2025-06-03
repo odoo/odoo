@@ -186,6 +186,8 @@
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="product_qty" optional="hide"/>
                     <field name="product_uom_id" groups="uom.group_uom" optional="hide" widget="many2one_uom"/>
+                    <field name="component_qty" column_invisible="not context.get('filter_bom_components_by')" optional="show"/>
+                    <field name="component_uom_id" column_invisible="not context.get('filter_bom_components_by')" optional="show"/>
                 </list>
             </field>
         </record>
@@ -238,7 +240,6 @@
             <field name="domain">[]</field> <!-- force empty -->
             <field name="view_mode">list,kanban,form</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
-            <field name="context">{'default_company_id': allowed_company_ids[0]}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No bill of materials found. Let's create one!
