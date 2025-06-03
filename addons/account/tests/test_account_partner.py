@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from freezegun import freeze_time
@@ -52,8 +53,7 @@ class TestAccountPartner(AccountTestInvoicingCommon):
         self.assertEqual(self.partner_a.customer_rank, 1)
 
     def test_manually_write_partner_id(self):
-
-        move_vals = {
+        move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': '2025-04-29',
             'partner_id': self.partner_a.id,
@@ -62,15 +62,20 @@ class TestAccountPartner(AccountTestInvoicingCommon):
                 'price_unit': 500.0,
                 'tax_ids': [],
             })],
-        }
-
-        move = self.env['account.move'].create(move_vals)
+        })
         move.action_post()
+        reversal = move._reverse_moves(cancel=True)
+
+        receivable_lines = (move + reversal).line_ids.filtered(lambda l: l.display_type == 'payment_term')
+
+        # Changing the partner should be possible despite being in locked periods as long as the VAT is the same
+        move.company_id.fiscalyear_lock_date = move.date
 
         # Initially, move's commercial partner should be partner_a
         self.assertEqual(move.commercial_partner_id, self.partner_a)
+        self.assertEqual(receivable_lines.mapped('reconciled'), [True, True])
 
-        self.partner_a['parent_id'] = self.partner_b.id
+        self.partner_a.parent_id = self.partner_b
 
         # Assert accounting move and move lines now use new commercial partner
         self.assertEqual(move.commercial_partner_id, self.partner_b)
@@ -78,3 +83,20 @@ class TestAccountPartner(AccountTestInvoicingCommon):
             all(line.partner_id == self.partner_b for line in move.line_ids),
             "All move lines should be reassigned to the new commercial partner."
         )
+        self.assertEqual(receivable_lines.mapped('reconciled'), [True, True])
+
+    def test_manually_write_partner_id_different_vat(self):
+        move = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'invoice_date': '2025-04-29',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({
+                'quantity': 1,
+                'price_unit': 500.0,
+            })],
+        })
+        move.action_post()
+        self.partner_a.vat = 'SOMETHING'
+        self.partner_b.vat = 'DIFFERENT'
+        with self.assertRaisesRegex(UserError, "different Tax ID"):
+            self.partner_a.parent_id = self.partner_b
