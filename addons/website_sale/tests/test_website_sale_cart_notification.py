@@ -3,11 +3,11 @@
 from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
-from odoo.addons.product.tests.common import ProductAttributesCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
 @tagged('post_install', '-at_install')
-class TestWebsiteSaleCartNotification(HttpCase, ProductAttributesCommon):
+class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):

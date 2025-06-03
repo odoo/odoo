@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import Form, tagged
 
 from odoo.addons.product.tests.common import ProductVariantsCommon
@@ -9,9 +10,19 @@ from odoo.addons.product.tests.common import ProductVariantsCommon
 class TestUpdateProductAttributeValueWizard(ProductVariantsCommon):
 
     def test_add_to_products(self):
+        product_template_shirt = self.env['product.template'].create({
+            'name': 'Shirt',
+            'categ_id': self.product_category.id,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [Command.set([self.size_attribute_l.id])],
+                }),
+            ],
+        })
         self.assertNotIn(
             self.size_attribute_m,
-            self.product_template_shirt.attribute_line_ids.value_ids,
+            product_template_shirt.attribute_line_ids.value_ids,
         )
 
         action = self.size_attribute_m.action_add_to_products()
@@ -23,7 +34,7 @@ class TestUpdateProductAttributeValueWizard(ProductVariantsCommon):
 
         self.assertIn(
             self.size_attribute_m,
-            self.product_template_shirt.attribute_line_ids.value_ids,
+            product_template_shirt.attribute_line_ids.value_ids,
         )
 
     def test_update_extra_prices(self):

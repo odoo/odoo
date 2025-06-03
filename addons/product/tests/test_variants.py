@@ -1,44 +1,53 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import io
+import unittest.mock
+
 from collections import OrderedDict
 from datetime import timedelta
 from unittest.mock import patch
 
-import io
-import unittest.mock
-
 from PIL import Image
 
-from odoo.fields import Command
 from odoo.exceptions import UserError
-from odoo.tests import tagged, TransactionCase, Form
+from odoo.fields import Command
+from odoo.tests import Form, TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.product.tests.common import ProductVariantsCommon, ProductAttributesCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
 @tagged('post_install', '-at_install')
 class TestVariantsSearch(ProductVariantsCommon):
 
     def test_attribute_line_search(self):
+        product_template_shirt = self.env['product.template'].create({
+            'name': 'Shirt',
+            'categ_id': self.product_category.id,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [Command.set([self.size_attribute_l.id])],
+                }),
+            ],
+        })
         search_not_to_be_found = self.env['product.template'].search(
             [('attribute_line_ids', '=', 'M')]
         )
-        self.assertNotIn(self.product_template_shirt, search_not_to_be_found,
+        self.assertNotIn(product_template_shirt, search_not_to_be_found,
                          'Shirt should not be found searching M')
 
         search_attribute = self.env['product.template'].search(
             [('attribute_line_ids', '=', 'Size')]
         )
-        self.assertIn(self.product_template_shirt, search_attribute,
+        self.assertIn(product_template_shirt, search_attribute,
                       'Shirt should be found searching Size')
 
         search_value = self.env['product.template'].search(
             [('attribute_line_ids', '=', 'L')]
         )
-        self.assertIn(self.product_template_shirt, search_value,
+        self.assertIn(product_template_shirt, search_value,
                       'Shirt should be found searching L')
 
     def test_name_search(self):
@@ -397,7 +406,7 @@ class TestVariants(ProductVariantsCommon):
         self.assertEqual(uom_unit, product.uom_id)
 
 @tagged('post_install', '-at_install')
-class TestVariantsNoCreate(ProductAttributesCommon):
+class TestVariantsNoCreate(ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -1090,7 +1099,7 @@ class TestVariantsArchive(ProductVariantsCommon):
 
     def test_name_search_dynamic_attributes(self):
         # To be able to test dynamic variant "variants" feature must be set up
-        self.env.user.write({'group_ids': [(4, self.env.ref('product.group_product_variant').id)]})
+        self._enable_variants()
         dynamic_attr = self.env['product.attribute'].create({
             'name': 'Dynamic',
             'create_variant': 'dynamic',
@@ -1458,7 +1467,7 @@ class TestVariantWrite(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
-class TestVariantsExclusion(ProductAttributesCommon):
+class TestVariantsExclusion(ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):

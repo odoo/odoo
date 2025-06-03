@@ -12,6 +12,8 @@ class ProductCommon(UomCommon):
         super().setUpClass()
 
         cls.group_product_pricelist = cls.quick_ref('product.group_product_pricelist')
+        cls.group_product_variant = cls.quick_ref('product.group_product_variant')
+
         cls.product_category = cls.env['product.category'].create({
             'name': 'Test Category',
         })
@@ -44,6 +46,10 @@ class ProductCommon(UomCommon):
         cls.env.user.group_ids += cls.group_product_pricelist
 
     @classmethod
+    def _enable_variants(cls):
+        cls.env.user.group_ids += cls.group_product_variant
+
+    @classmethod
     def _create_pricelist(cls, **create_vals):
         return cls.env['product.pricelist'].create({
             'name': "Test Pricelist",
@@ -63,7 +69,7 @@ class ProductCommon(UomCommon):
         })
 
 
-class ProductAttributesCommon(ProductCommon):
+class ProductVariantsCommon(ProductCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -119,13 +125,6 @@ class ProductAttributesCommon(ProductCommon):
             ]
         })
 
-
-class ProductVariantsCommon(ProductAttributesCommon):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
         cls.product_template_sofa = cls.env['product.template'].create({
             'name': 'Sofa',
             'uom_id': cls.uom_unit.id,
@@ -138,15 +137,4 @@ class ProductVariantsCommon(ProductAttributesCommon):
                     cls.color_attribute_green.id
                 ])],
             })]
-        })
-
-        cls.product_template_shirt = cls.env['product.template'].create({
-            'name': 'Shirt',
-            'categ_id': cls.product_category.id,
-            'attribute_line_ids': [
-                Command.create({
-                    'attribute_id': cls.size_attribute.id,
-                    'value_ids': [Command.set([cls.size_attribute_l.id])],
-                }),
-            ],
         })

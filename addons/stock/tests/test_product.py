@@ -225,7 +225,7 @@ class TestVirtualAvailable(TestStockCommon):
         calling `name_search` with a negative operator will exclude T from the
         result.
         """
-        self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('product.group_product_variant').id)]})
+        self._enable_variants()
         template = self.env['product.template'].create({
             'name': 'Super Product',
         })
