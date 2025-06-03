@@ -1651,23 +1651,3 @@ export function treeFromDomain(domain, options = {}) {
     const tree = construcTree(domain, options);
     return applyTransformations(FULL_VIRTUAL_OPERATORS_CREATION, tree, options);
 }
-
-/**
- * @param {DomainRepr} domain a string representation of a domain
- * @param {Options} [options={}]
- * @returns {string} an expression
- */
-export function expressionFromDomain(domain, options = {}) {
-    const tree = treeFromDomain(domain, options);
-    return expressionFromTree(tree, options);
-}
-
-/**
- * @param {string} expression an expression
- * @param {Options} [options={}]
- * @returns {string} a string representation of a domain
- */
-export function domainFromExpression(expression, options = {}) {
-    const tree = treeFromExpression(expression, options);
-    return domainFromTree(tree);
-}
