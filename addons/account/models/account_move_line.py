@@ -1560,6 +1560,7 @@ class AccountMoveLine(models.Model):
 
         line_to_write = self
         vals = self._sanitize_vals(vals)
+        matching2lines = None  # lazy cache
         lines_to_unreconcile = self.env['account.move.line']
         st_lines_to_unreconcile = self.env['account.bank.statement.line']
         for line in self:
@@ -1579,9 +1580,26 @@ class AccountMoveLine(models.Model):
                 line._check_tax_lock_date()
 
             # Break the reconciliation.
-            if any(self.env['account.move']._field_will_change(line, vals, field_name) for field_name in protected_fields['reconciliation']) and (line.matched_debit_ids or line.matched_credit_ids):
-                lines_to_unreconcile += line
-                st_lines_to_unreconcile += (line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id).statement_line_id
+            if (
+                line.matching_number
+                and (changing_fields := {
+                    field_name
+                    for field_name in protected_fields['reconciliation']
+                    if self.env['account.move']._field_will_change(line, vals, field_name)
+                })
+            ):
+                matching2lines = dict(self.env['account.move.line'].sudo()._read_group(
+                    domain=[('matching_number', 'in', [n for n in self.mapped('matching_number') if n])],
+                    groupby=['matching_number'],
+                    aggregates=['id:recordset'],
+                )) if matching2lines is None else matching2lines
+                if (
+                    # allow changing the partner or/and the account on all the lines of a reconciliation together
+                    changing_fields - {'partner_id', 'account_id'}
+                    or not all(reconciled_line in self for reconciled_line in matching2lines[line.matching_number])
+                ):
+                    lines_to_unreconcile += line
+                    st_lines_to_unreconcile += (line.matched_debit_ids.debit_move_id + line.matched_credit_ids.credit_move_id).statement_line_id
 
         lines_to_unreconcile.remove_move_reconcile()
         for st_line in st_lines_to_unreconcile:
