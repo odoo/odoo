@@ -14,7 +14,10 @@
                     string="Product"
                     readonly="state in ('purchase', 'to approve', 'cancel')"
                     required="not display_type"
-                    context="{'partner_id': parent.partner_id}"
+                    context="{
+                        'partner_id': parent.partner_id,
+                        'prioritize_for': 'purchase',
+                    }"
                     options="{'show_label_warning': True}"
                     widget="pol_product_many2one"/>
                 <field name="product_template_attribute_value_ids" column_invisible="1"/>
