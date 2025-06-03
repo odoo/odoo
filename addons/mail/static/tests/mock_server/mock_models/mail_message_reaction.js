@@ -27,9 +27,8 @@ export class MailMessageReaction extends models.ServerModel {
                 content: content,
                 count: reactionGroup.length,
                 sequence: Math.min(reactionGroup.map((reaction) => reaction.id)),
-                personas: mailDataHelpers.Store.many_ids(guests).concat(
-                    mailDataHelpers.Store.many_ids(partners)
-                ),
+                partner_ids: mailDataHelpers.Store.many_ids(partners),
+                guest_ids: mailDataHelpers.Store.many_ids(guests),
                 message: mailDataHelpers.Store.one_id(MailMessage.browse(message_id)),
             };
             store.add("MessageReactions", data);
