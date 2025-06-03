@@ -252,6 +252,8 @@ export class HistoryPlugin extends Plugin {
         this.stepsStates = new Map();
         this.nodeToIdMap = new WeakMap();
         this.idToNodeMap = new Map();
+        /** @type { WeakMap<Node, { attributes: Map<string, string>, classList: Map<string, boolean>, characterData: Map<string, string> }> } */
+        this.lastObservedState = new WeakMap();
         this.setNodeId(this.editable);
         this.dispatchTo("history_cleaned_handlers");
     }
@@ -393,10 +395,12 @@ export class HistoryPlugin extends Plugin {
     processNewRecords(mutationRecords) {
         mutationRecords = this.filterMutationRecords(mutationRecords);
         /** @type {HistoryMutationRecord[]} */
-        const records = mutationRecords
+        let records = mutationRecords
             .flatMap((record) => this.transformRecord(record))
-            .filter((record) => !this.isSystemMutationRecord(record))
-            .filter((record) => !this.isNoOpRecord(record));
+            .filter((record) => !this.isSystemMutationRecord(record));
+
+        records = this.handleUnobservedMutations(records);
+        records = records.filter((record) => !this.isNoOpRecord(record));
         this.stageRecords(records);
         records
             .filter(({ type }) => type === "attributes")
@@ -630,6 +634,108 @@ export class HistoryPlugin extends Plugin {
             return this.mutationFilteredClasses.has(record.className);
         }
         return false;
+    }
+
+    /**
+     * If the observer is disabled, store the last observed state of the
+     * target's affected property (attribute/class/textContent) and drop the
+     * record.
+     *
+     * Otherwise (observer enabled), update the record's `oldValue` with the
+     * last observed state of that target's property.
+     *
+     * @param {HistoryMutationRecord[]} records
+     * @returns {HistoryMutationRecord[]}
+     */
+    handleUnobservedMutations(records) {
+        if (this.isObserverDisabled) {
+            records.forEach((record) => this.storeOldValue(record));
+            return [];
+        }
+        return records.map((record) => this.updateOldValue(record));
+    }
+
+    /**
+     * This function, alongside @see updateOldValue, ensures mutation records
+     * have the correct historical "oldValue" by checking against the last
+     * observed state.
+     *
+     * When the observer is disabled, we store the record's `oldValue` for a
+     * node's attribute/class/textContent as the last observed value.
+     *
+     * As multiple mutations to the same node-attribute/class/textContent can
+     * happen with the observer disabled, we store only the first value
+     * encountered for each node-attribute/class/text. This way, we capture the
+     * state as it was before any modifications in the disabled observer
+     * sequence began.
+     *
+     * @see updateOldValue
+     *
+     * @param {HistoryMutationRecord} record
+     */
+    storeOldValue(record) {
+        if (record.type === "childList") {
+            return;
+        }
+        const { stateMap, key } = this.getObservedStateStorage(record);
+        // Only store it if not already stored.
+        if (!stateMap.has(key)) {
+            stateMap.set(key, record.oldValue);
+        }
+    }
+
+    /**
+     * This function, alongside @see storeOldValue, ensures mutation records
+     * have the correct historical "oldValue" by checking against the last
+     * observed state.
+     *
+     * When the observer is enabled, it updates a record's `oldValue` with the last
+     * observed state, and removes the entry to prevent reuse. Without removing
+     * the entry, the same historical value might be incorrectly applied to
+     * future mutation records targeting the same attribute/class of the same
+     * element, which would create incorrect history mutations.
+     *
+     * @param {HistoryMutationRecord} record
+     * @returns {HistoryMutationRecord}
+     */
+    updateOldValue(record) {
+        if (record.type === "childList") {
+            return record;
+        }
+        const { stateMap, key } = this.getObservedStateStorage(record);
+        if (!stateMap.has(key)) {
+            return record;
+        }
+        const lastObservedValue = stateMap.get(key);
+        // Remove entry, so it won't be used again.
+        stateMap.delete(key);
+        return { ...record, oldValue: lastObservedValue };
+    }
+
+    /**
+     * @param {HistoryMutationRecord} record
+     * @returns { { stateMap: Map, key: string } }
+     */
+    getObservedStateStorage(record) {
+        // Add entry for current target if not already present.
+        if (!this.lastObservedState.has(record.target)) {
+            this.lastObservedState.set(record.target, {
+                attributes: new Map(),
+                classList: new Map(),
+                characterData: new Map(),
+            });
+        }
+        const stateMap = this.lastObservedState.get(record.target)[record.type];
+        switch (record.type) {
+            case "attributes":
+                return { stateMap, key: record.attributeName };
+            case "classList":
+                return { stateMap, key: record.className };
+            case "characterData":
+                return { stateMap, key: "textContent" };
+            default:
+                throw new Error(`Unsupported mutation type: ${record.type}`);
+        }
     }
 
     /**
@@ -1069,10 +1175,7 @@ export class HistoryPlugin extends Plugin {
                     break;
                 }
                 case "classList": {
-                    const node = this.idToNodeMap.get(mutation.id);
-                    if (node) {
-                        toggleClass(node, mutation.className, mutation.value);
-                    }
+                    this.applyClassListMutation(mutation);
                     break;
                 }
                 case "attributes": {
@@ -1145,10 +1248,7 @@ export class HistoryPlugin extends Plugin {
                     break;
                 }
                 case "classList": {
-                    const node = this.idToNodeMap.get(mutation.id);
-                    if (node) {
-                        toggleClass(node, mutation.className, mutation.oldValue);
-                    }
+                    this.revertClassListMutation(mutation);
                     break;
                 }
                 case "attributes": {
@@ -1202,6 +1302,33 @@ export class HistoryPlugin extends Plugin {
                 }
             }
         }
+    }
+
+    /**
+     * Toggling a class to a value that is already the current one (i.e. adding
+     * class to a node that already has it) does not produce an observable
+     * mutation record. This scenarion might happen due to a previous unobserved
+     * mutation.  To make sure the class mutation is observed, we revert the
+     * class presence/absence to its recorded oldValue before applying the new
+     * value.
+     *
+     * @param {HistoryMutationClassList} mutation
+     */
+    applyClassListMutation(mutation) {
+        const node = this.idToNodeMap.get(mutation.id);
+        if (!node) {
+            return;
+        }
+        const { className, oldValue, value } = mutation;
+        if (oldValue !== node.classList.contains(className)) {
+            this.withObserverOff(() => toggleClass(node, className, oldValue));
+        }
+        toggleClass(node, className, value);
+    }
+
+    revertClassListMutation(mutation) {
+        const reverseMutation = { ...mutation, value: mutation.oldValue, oldValue: mutation.value };
+        this.applyClassListMutation(reverseMutation);
     }
 
     /**
