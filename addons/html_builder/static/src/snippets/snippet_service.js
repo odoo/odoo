@@ -158,7 +158,7 @@ export class SnippetModel extends Reactive {
                 snippetModel: this,
                 selectSnippet: (...args) => {
                     const newSnippetEl = onSelect(...args);
-                    this.cleanSnippetPreview(newSnippetEl);
+                    this.updateSnippetContent(newSnippetEl);
                 },
             },
             { onClose }
@@ -344,7 +344,7 @@ export class SnippetModel extends Reactive {
      *
      * @param {HTMLElement} snippetEl
      */
-    cleanSnippetPreview(snippetEl) {
+    updateSnippetContent(snippetEl) {
         snippetEl.querySelectorAll(".s_dialog_preview").forEach((el) => el.remove());
     }
 

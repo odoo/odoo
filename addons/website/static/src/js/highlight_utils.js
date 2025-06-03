@@ -252,18 +252,23 @@ export function makeHighlightSvgs(highlightEl, highlightID) {
     const numberOfCharPerWidth = memoize((width) => Math.round(width / sizePerChar()));
 
     const containerRect = highlightEl.getBoundingClientRect();
+    // Note: We cannot use `getClientRects()` as we want to be able to draw
+    // text highlights in the snippet/page dialogs where iframe is scaled.
+    const inPreviewIframe =
+        highlightEl.ownerDocument.documentElement.classList.contains("o_add_snippets_preview");
+    const scale = inPreviewIframe ? highlightEl.offsetWidth / containerRect.width : 1;
     const firstRect = highlightEl.getClientRects()[0];
     const svgs = [];
     for (const rects of finalRects) {
         const svg = makeHighlightSvg(highlightID || getCurrentTextHighlight(highlightEl), {
-            width: rects.width,
-            height: rects.height,
+            width: rects.width * scale,
+            height: rects.height * scale,
             numberOfCharPerWidth,
         });
         svgs.push(svg);
         const spanOffset = firstRect.x - containerRect.x;
-        svg.style.left = `${rects.x - containerRect.x - spanOffset}px`;
-        svg.style.top = `${rects.y - containerRect.y}px`;
+        svg.style.left = `${(rects.x - containerRect.x - spanOffset) * scale}px`;
+        svg.style.top = `${(rects.y - containerRect.y) * scale}px`;
         svg.style.bottom = `0px`;
         svg.style.right = `0px`;
     }
@@ -327,9 +332,6 @@ export function makeHighlightSvg(highlightID, params) {
  */
 function drawPath(options) {
     const { width, height, numberOfCharPerWidth } = options;
-    // Note: cannot use getBoundingClientRect as we want to be able to draw
-    // text highlights in snippets/add page dialogs where iframe is scaled.
-    options = { ...options, width, height };
     const yStart = options.position === "center" ? height / 2 : height;
 
     switch (options.mode) {
