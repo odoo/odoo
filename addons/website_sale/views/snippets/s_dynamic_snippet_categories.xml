@@ -2,9 +2,12 @@
 <odoo>
     <template id="s_dynamic_category" name="Category List">
         <section
-            class="s_dynamic_category pt32 pb32"
+            class="s_dynamic_category s_dynamic_category_clickable_items pt32 pb32"
             data-snippet="s_dynamic_category"
             data-all-products="true"
+            data-columns="4"
+            data-size="medium"
+            data-is-clickable="true"
         >
             <div class="container">
                 <div>
@@ -14,22 +17,28 @@
                             <p>Designing elegant, inviting environments that inspire and delight.</p>
                         </div>
                     </section>
-                    <div class="s_category_container d-grid gap-3" contenteditable="false">
-                        <div class="all_products rounded position-relative bg-black overflow-hidden oe_unremovable" role="article">
-                            <img
-                                src="/website_sale/static/src/img/all_products.jpg"
-                                alt="All Products"
-                                class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
-                            />
-                            <div class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column oe_unremovable oe_unmovable">
-                                <h3 class="text-light all_products_heading h4">All Collections</h3>
-                                <a
-                                    role="button"
-                                    href="/shop"
-                                    class="btn btn-primary align-self-start o_not-animable oe_unremovable"
-                                >
-                                    Explore Now
-                                </a>
+                    <div class="s_category_container d-grid gap-2" contenteditable="false">
+                        <div class="s_dynamic_category_wrapper d-contents rounded-2">
+                            <div class="all_products s_dynamic_category_item position-relative bg-black overflow-hidden oe_unremovable" role="article">
+                                <img
+                                    src="/website_sale/static/src/img/all_products.jpg"
+                                    alt="All Products"
+                                    class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
+                                />
+                                <div class="s_category_overlay p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column oe_unremovable oe_unmovable">
+                                    <span class="s_category_filter position-absolute start-0 top-0 end-0 bottom-0 d-none bg-black-25 transition-base z-n1" aria-hidden="true"/>
+                                    <h3 class="all_products_heading h4">All Collections</h3>
+                                    <a
+                                        role="button"
+                                        href="/shop"
+                                        class="s_dynamic_category_button btn btn-primary stretched-link align-self-start h-0 p-0 opacity-0 o_not-animable oe_unremovable"
+                                    >
+                                        Explore Now
+                                    </a>
+                                    <p class="s_dynamic_category_arrow position-absolute end-0 bottom-0 mb-3 me-3 transition-base">
+                                        <i class="oi oi-arrow-right fa-lg"/>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>

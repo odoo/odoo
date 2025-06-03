@@ -2,10 +2,13 @@
 <templates xml:space="preserve">
     <t t-name="website_sale.DynamicSnippetCategoryOptions" name="Category List">
         <BuilderRow label.translate="Columns">
-            <BuilderRange dataAttributeAction="'columns'" default="'2'" min="2" max="5" step="1"/>
+            <BuilderRange dataAttributeAction="'columns'" min="2" max="5" step="1"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Spacing" applyTo="'.s_category_container'">
+            <BuilderRange action="'setClassRange'" actionParam="['gap-0','gap-1','gap-2','gap-3','gap-4','gap-5']" max="5"/>
         </BuilderRow>
         <BuilderRow label.translate="Size">
-            <BuilderSelect dataAttributeAction="'size'" default="'small'">
+            <BuilderSelect dataAttributeAction="'size'" default="'medium'">
                 <BuilderSelectItem dataAttributeActionValue="'small'">Small</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'medium'">Medium</BuilderSelectItem>
                 <BuilderSelectItem dataAttributeActionValue="'large'">Large</BuilderSelectItem>
@@ -46,9 +49,29 @@
                 preview="false"
             />
         </BuilderRow>
-        <BuilderRow label.translate="Button">
+        <BuilderRow label.translate="Clickable items">
+            <BuilderCheckbox id="'clickable_item_opt'" dataAttributeAction="'isClickable'" dataAttributeActionValue="'true'" classAction="'s_dynamic_category_clickable_items'"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Arrows" t-if="isActiveItem('clickable_item_opt')" level="1">
+            <BuilderCheckbox classAction="'s_dynamic_category_no_arrows'" inverseAction="true"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Darken overlay" t-if="isActiveItem('clickable_item_opt')" level="1">
+            <BuilderCheckbox classAction="'s_dynamic_category_no_overlay'" inverseAction="true"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Button" t-if="!isActiveItem('clickable_item_opt')">
             <BuilderTextInput dataAttributeAction="'button'"/>
         </BuilderRow>
+        <!-- Apply global blocks options to ".s_dynamic_category_wrapper".
+            Each Block will inherit these values in CSS -->
+        <BuilderContext applyTo="'.s_dynamic_category_wrapper'">
+            <hr class="mx-3"/>
+            <div class="h6 px-3 text-reset">Blocks Design</div>
+            <div class="mb-2 px-3 opacity-75 small">Global options for all inner blocks.</div>
+            <BuilderRow label.translate="Roundness">
+                <BuilderRange action="'setClassRange'" actionParam="['rounded-0','rounded-1','rounded-2','rounded-3','rounded-4','rounded-5']" max="5"/>
+            </BuilderRow>
+            <ShadowOption/>
+        </BuilderContext>
     </t>
     <t t-name="website_sale.dynamicSnippetCategoryItemOptions" name="Category">
         <BuilderRow label.translate="Media">
