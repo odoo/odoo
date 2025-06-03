@@ -42,7 +42,7 @@ export class Domain {
 
     /**
      * Combine various domains together with `AND` operator
-     * @param {DomainRepr} domains
+     * @param {DomainRepr[]} domains
      * @returns {Domain}
      */
     static and(domains) {
@@ -51,7 +51,7 @@ export class Domain {
 
     /**
      * Combine various domains together with `OR` operator
-     * @param {DomainRepr} domains
+     * @param {DomainRepr[]} domains
      * @returns {Domain}
      */
     static or(domains) {
@@ -356,7 +356,10 @@ function matchCondition(record, condition) {
             if (fieldValue === false) {
                 return isNot;
             }
-            return Boolean(new RegExp(escapeRegExp(value).replace(/%/g, ".*")).test(fieldValue)) != isNot;
+            return (
+                Boolean(new RegExp(escapeRegExp(value).replace(/%/g, ".*")).test(fieldValue)) !=
+                isNot
+            );
         case "ilike":
         case "not ilike":
             if (fieldValue === false) {
@@ -368,7 +371,11 @@ function matchCondition(record, condition) {
             if (fieldValue === false) {
                 return isNot;
             }
-            return Boolean(new RegExp(escapeRegExp(value).replace(/%/g, ".*"), "i").test(fieldValue)) != isNot;
+            return (
+                Boolean(
+                    new RegExp(escapeRegExp(value).replace(/%/g, ".*"), "i").test(fieldValue)
+                ) != isNot
+            );
         case "any":
         case "not any":
             return true;
