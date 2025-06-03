@@ -41,7 +41,6 @@
         'views/point_of_sale_sequence.xml',
         'data/point_of_sale_data.xml',
         'views/pos_order_report_view.xml',
-        'views/account_statement_view.xml',
         'views/digest_views.xml',
         'views/res_partner_view.xml',
         'views/report_userlabel.xml',
