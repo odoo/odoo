@@ -1539,14 +1539,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "count": 1,
                     "message": last_message.id,
                     "sequence": min(reactions_0.ids),
-                    "personas": [{"id": partner_2, "type": "partner"}],
+                    "guest_ids": [],
+                    "partner_ids": [{"id": partner_2, "type": "partner"}],
                 },
                 {
                     "content": "😁",
                     "count": 2,
                     "message": last_message.id,
                     "sequence": min(reactions_1.ids),
-                    "personas": [
+                    "guest_ids": [],
+                    "partner_ids": [
                         {"id": partner_2, "type": "partner"},
                         {"id": partner_1, "type": "partner"},
                     ],
@@ -1556,7 +1558,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "count": 3,
                     "message": last_message.id,
                     "sequence": min(reactions_2.ids),
-                    "personas": [
+                    "guest_ids": [],
+                    "partner_ids": [
                         {"id": partner_2, "type": "partner"},
                         {"id": partner_1, "type": "partner"},
                         {"id": partner_0, "type": "partner"},
@@ -1570,14 +1573,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "count": 1,
                     "message": last_message.id,
                     "sequence": min(reactions_1.ids),
-                    "personas": [{"id": partner_2, "type": "partner"}],
+                    "guest_ids": [],
+                    "partner_ids": [{"id": partner_2, "type": "partner"}],
                 },
                 {
                     "content": "😊",
                     "count": 3,
                     "message": last_message.id,
                     "sequence": min(reactions_2.ids),
-                    "personas": [
+                    "guest_ids": [],
+                    "partner_ids": [
                         {"id": partner_2, "type": "partner"},
                         {"id": partner_1, "type": "partner"},
                         {"id": partner_0, "type": "partner"},
@@ -1588,7 +1593,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "count": 2,
                     "message": last_message.id,
                     "sequence": min(reactions_3.ids),
-                    "personas": [
+                    "guest_ids": [],
+                    "partner_ids": [
                         {"id": partner_1, "type": "partner"},
                         {"id": partner_0, "type": "partner"},
                     ],
