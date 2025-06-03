@@ -697,7 +697,7 @@ class TestKitPicking(common.TestMrpCommon):
         bom.bom_line_ids.product_uom_id = self.uom_gram
         bom.bom_line_ids.product_qty = 10
 
-        # create a delivery with 20 units of kit
+        # create a delivery with 20 units of kit with and without packaging
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         customer_location = self.env.ref('stock.stock_location_customers')
         stock_location = warehouse.lot_stock_id
@@ -714,6 +714,15 @@ class TestKitPicking(common.TestMrpCommon):
                 'location_id': stock_location.id,
                 'location_dest_id': customer_location.id,
                 'product_packaging_id': packaging.id,
+            }),
+            Command.create({
+                'name': kit.name,
+                'product_id': kit.id,
+                'product_uom_qty': 24,
+                'product_uom': kit.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+                'product_packaging_id': False,
             })],
         })
         delivery.action_confirm()
@@ -721,4 +730,5 @@ class TestKitPicking(common.TestMrpCommon):
         delivery.move_ids.picked = True
         delivery.button_validate()
         self.assertTrue(delivery.state, 'done')
-        self.assertEqual(delivery.move_ids.move_line_ids.product_packaging_qty, 12)
+        self.assertEqual(delivery.move_ids.move_line_ids[0].product_packaging_qty, 12)
+        self.assertEqual(delivery.move_ids.move_line_ids[1].product_packaging_qty, 0)
