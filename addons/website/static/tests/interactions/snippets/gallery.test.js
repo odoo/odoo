@@ -4,14 +4,14 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAll } from "@odoo/hoot-dom";
 import { advanceTime } from "@odoo/hoot-mock";
 
-setupInteractionWhiteList("website.gallery");
+setupInteractionWhiteList(["website.gallery", "website.base_lightbox"]);
 
 describe.current.tags("interaction_dev");
 
 // TODO Obtain rendering from `website.s_images_wall` template ?
 const defaultGallery = `
     <div id="wrapwrap">
-        <section class="s_image_gallery o_spc-small o_masonry pt24 pb24 o_colored_level" data-vcss="002" data-columns="3" style="overflow: hidden;" data-snippet="s_images_wall" data-name="Images Wall">
+        <section class="s_image_gallery o_spc-small o_masonry pt24 pb24 o_colored_level o_image_popup" data-vcss="002" data-columns="3" style="overflow: hidden;" data-snippet="s_images_wall" data-name="Images Wall">
             <div class="container">
                 <div class="row s_nb_column_fixed">
                     <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
@@ -32,15 +32,6 @@ const defaultGallery = `
     </div>
 `;
 
-test("gallery does nothing if there is no non-slideshow s_image_gallery", async () => {
-    const { core } = await startInteractions(`
-        <div id="wrapwrap">
-            <section class="s_image_gallery o_slideshow"/>
-        </div>
-    `);
-    expect(core.interactions).toHaveLength(0);
-});
-
 async function checkLightbox({ next, previous, close }) {
     const { core } = await startInteractions(defaultGallery);
     expect(core.interactions).toHaveLength(1);
@@ -48,7 +39,7 @@ async function checkLightbox({ next, previous, close }) {
     await click(imgEls[3]);
     await animationFrame();
     await advanceTime(1000);
-    const lightboxEl = document.querySelector(".s_gallery_lightbox");
+    const lightboxEl = document.querySelector(".o_image_lightbox");
     expect(lightboxEl).not.toBe(null);
 
     async function checkActiveImage(expectedIndex) {
@@ -73,7 +64,7 @@ async function checkLightbox({ next, previous, close }) {
     await close(lightboxEl);
     await animationFrame();
     await advanceTime(1000);
-    expect(document.querySelector(".s_gallery_lightbox")).toBe(null);
+    expect(document.querySelector(".o_image_lightbox")).toBe(null);
 }
 
 test("gallery interaction opens lightbox on click, then use keyboard", async () => {

@@ -2,7 +2,7 @@
 <odoo>
 
 <template id="s_image_gallery" name="Image Gallery">
-    <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default" data-vcss="002" data-columns="3">
+    <section class="s_image_gallery o_slideshow pt24 pb24 s_image_gallery_controllers_outside s_image_gallery_controllers_outside_arrows_right s_image_gallery_indicators_dots s_image_gallery_arrows_default o_image_popup" data-vcss="002" data-columns="3">
         <div class="o_container_small overflow-hidden">
             <div id="slideshow_sample" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="0">
                 <div class="carousel-inner">
@@ -37,7 +37,7 @@
 </template>
 
 <template id="s_images_wall" name="Images Wall">
-    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24" data-vcss="002" data-columns="3" style="overflow: hidden;">
+    <section class="s_image_gallery o_spc-small o_masonry pt24 pb24 o_image_popup" data-vcss="002" data-columns="3" style="overflow: hidden;">
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
@@ -75,13 +75,6 @@
     <field name="name">Image gallery 002 SCSS</field>
     <field name="bundle">web.assets_frontend</field>
     <field name="path">website/static/src/snippets/s_image_gallery/002.scss</field>
-</record>
-
-<record id="website.s_image_gallery_000_xml" model="ir.asset">
-    <field name="name">Image gallery 000 XML</field>
-    <field name="bundle">web.assets_frontend</field>
-    <field name="path">website/static/src/snippets/s_image_gallery/000.xml</field>
-    <field name="active" eval="True"/>
 </record>
 
 </odoo>
