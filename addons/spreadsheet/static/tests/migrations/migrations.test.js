@@ -634,3 +634,19 @@ test("Date with antepenultimate_year is not supported anymore", () => {
     const migratedData = load(data);
     expect(migratedData.globalFilters[0].defaultValue).toBe(undefined);
 });
+
+test("Default value is now undefined", () => {
+    const data = {
+        version: "1",
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "a relation filter",
+                defaultValue: [],
+            },
+        ],
+    };
+    const migratedData = load(data);
+    expect(migratedData.globalFilters[0].defaultValue).toBe(undefined);
+});
