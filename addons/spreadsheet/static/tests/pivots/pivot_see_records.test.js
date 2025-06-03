@@ -229,8 +229,14 @@ test("Can see records on PIVOT cells", async function () {
             selectCell(model, xc, "42");
             await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
 
+            setCellContent(model, "G7", `=${xc}`);
+            selectCell(model, "G7", "42");
+            await doMenuAction(cellMenuRegistry, ["pivot_see_records"], env);
+
             expect(actions[0]).toEqual(actions[1], { message: "both actions are the same" });
-            expect.verifySteps(["doAction", "doAction"]);
+            expect(actions[0]).toEqual(actions[2], { message: "all actions are the same" });
+
+            expect.verifySteps(["doAction", "doAction", "doAction"]);
             actions.length = 0;
         }
     }
