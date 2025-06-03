@@ -489,14 +489,14 @@ def model_create_single(method: T) -> T:
 
 
 @decorator
-def _model_create_multi(create, self, arg):
+def _model_create_multi(create: Callable[[T, list[ValuesType]], T], self: T, arg: ValuesType | list[ValuesType]) -> T:
     # 'create' expects a list of dicts and returns a recordset
     if isinstance(arg, Mapping):
         return create(self, [arg])
     return create(self, arg)
 
 
-def model_create_multi(method: T) -> T:
+def model_create_multi(method: Callable[[T, list[ValuesType]], T]) -> Callable[[T, list[ValuesType] | ValuesType], T]:
     """ Decorate a method that takes a list of dictionaries and creates multiple
         records. The method may be called with either a single dict or a list of
         dicts::
