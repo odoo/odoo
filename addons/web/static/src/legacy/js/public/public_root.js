@@ -370,6 +370,11 @@ export async function createPublicRoot(RootWidget) {
     await whenReady();
     const env = makeEnv();
     await startServices(env);
+
+    env.services["public.interactions"].isReady.then(() => {
+        document.body.setAttribute("is-ready", "true");
+    });
+
     Component.env = env;
     await env.services.public_component.mountComponents();
     const publicRoot = new RootWidget(null, env);

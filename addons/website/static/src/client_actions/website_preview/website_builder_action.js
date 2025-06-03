@@ -257,10 +257,6 @@ export class WebsiteBuilder extends Component {
 
     onIframeLoad(ev) {
         this.websiteService.pageDocument = this.websiteContent.el.contentDocument;
-        this.websiteContent.el.setAttribute("is-ready", "true");
-        this.websiteContent.el.contentWindow.addEventListener("beforeunload", () => {
-            this.websiteContent.el.removeAttribute("is-ready");
-        });
         if (this.translation) {
             deleteQueryParam("edit_translations", this.websiteService.contentWindow, true);
         }
@@ -419,7 +415,6 @@ export class WebsiteBuilder extends Component {
         this.websiteContent.el.contentWindow.addEventListener(
             "PUBLIC-ROOT-READY",
             (event) => {
-                this.websiteContent.el.setAttribute("is-ready", "true");
                 this.websiteService.websiteRootInstance = event.detail.rootInstance;
                 deferred.resolve();
             },

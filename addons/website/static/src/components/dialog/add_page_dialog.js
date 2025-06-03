@@ -465,7 +465,7 @@ export class AddPageDialog extends Component {
                 let contentDocument;
                 // Already in DOM ?
                 const pageIframeEl = document.querySelector("iframe.o_iframe");
-                if (pageIframeEl?.getAttribute("is-ready") === "true") {
+                if (pageIframeEl?.contentDocument.body.getAttribute("is-ready") === "true") {
                     // If there is a fully loaded website preview, use it.
                     contentDocument = pageIframeEl.contentDocument;
                 }

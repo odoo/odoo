@@ -1,10 +1,11 @@
 import { setupInteractionWhiteList, startInteractions } from "@web/../tests/public/helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
-import { advanceTime, Deferred } from "@odoo/hoot-dom";
+import { Deferred, queryOne, tick } from "@odoo/hoot-dom";
 
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ImageLazyLoading } from "@website/interactions/image_lazy_loading";
+import { onceAllImagesLoaded } from "@website/utils/images";
 
 setupInteractionWhiteList("website.image_lazy_loading");
 
@@ -14,11 +15,7 @@ test("images lazy loading removes height then restores it", async () => {
     const def = new Deferred();
     patchWithCleanup(ImageLazyLoading.prototype, {
         async willStart() {
-            await Promise.all([
-                new Promise((resolve) => setTimeout(resolve, 5000)),
-                super.willStart(),
-            ]);
-            def.resolve();
+            await def;
         },
     });
     const { core } = await startInteractions(
@@ -35,8 +32,10 @@ test("images lazy loading removes height then restores it", async () => {
     expect("img").toHaveAttribute("src", "/web/image/website.library_image_08");
     expect("img").toHaveAttribute("loading", "lazy");
     expect("img").toHaveStyle({ "min-height": "1px" });
-    advanceTime(6000);
-    await def;
+
+    await onceAllImagesLoaded(queryOne("#wrapwrap img"));
+    def.resolve();
+    await tick();
     expect("img").toHaveAttribute("src", "/web/image/website.library_image_08");
     expect("img").toHaveAttribute("loading", "lazy");
     expect("img").toHaveStyle({ "min-height": "100px" });

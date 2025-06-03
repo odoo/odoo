@@ -137,8 +137,8 @@ export class TourStepAutomatic extends TourStep {
             return true;
         }
         const parentFrame = hoot.getParentFrame(this.element);
-        return parentFrame && parentFrame.hasAttribute("is-ready")
-            ? parentFrame.getAttribute("is-ready") === "true"
+        return parentFrame && parentFrame.contentDocument.body.hasAttribute("is-ready")
+            ? parentFrame.contentDocument.body.getAttribute("is-ready") === "true"
             : true;
     }
 

@@ -55,7 +55,7 @@ registerWebsitePreviewTour('website_controller_page_default_page_check', {
 }, () => [
     {
         content: "records are listed in list mode by default",
-        trigger: '[is-ready=true]:iframe .o_website_list',
+        trigger: ':iframe [is-ready=true] .o_website_list',
         run() {
             const iframeDocument = document.querySelector(".o_website_preview iframe").contentDocument;
             // list option is selected by default in the switch
