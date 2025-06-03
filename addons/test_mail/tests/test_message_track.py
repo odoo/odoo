@@ -119,10 +119,12 @@ class TestTracking(MailCommon):
                 'id': message_1.tracking_value_ids.id,
                 'newValue': {
                     'currencyId': False,
+                    'floatPrecision': None,
                     'value': new_user.display_name,
                 },
                 'oldValue': {
                     'currencyId': False,
+                    'floatPrecision': None,
                     'value': original_user.display_name,
                 },
             })
@@ -521,6 +523,7 @@ class TestTrackingInternals(MailCommon):
             'date_field': today,
             'datetime_field': now,
             'float_field': 3.22,
+            'float_field_with_digits': 3.00001,
             'html_field': '<p>Html Value</p>',
             'integer_field': 42,
             'many2one_field_id': self.test_partner.id,
@@ -532,22 +535,30 @@ class TestTrackingInternals(MailCommon):
         new_message = test_record.message_ids - messages
         self.assertEqual(len(new_message), 1,
                          'Should have generated a tracking value')
-        self.assertTracking(
-            new_message,
-            [
-                ('boolean_field', 'boolean', 0, 1),
-                ('char_field', 'char', False, 'char_value'),
-                ('date_field', 'date', False, today_dt),
-                ('datetime_field', 'datetime', False, now),
-                ('float_field', 'float', 0, 3.22),
-                ('integer_field', 'integer', 0, 42),
-                ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
-                ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
-                ('selection_field', 'selection', '', 'FIRST'),
-                ('text_field', 'text', False, 'text_value'),
-            ],
-            strict=True
-        )
+        tracking_value_list = [
+            ('boolean_field', 'boolean', 0, 1),
+            ('char_field', 'char', False, 'char_value'),
+            ('date_field', 'date', False, today_dt),
+            ('datetime_field', 'datetime', False, now),
+            ('float_field', 'float', 0, 3.22),
+            ('float_field_with_digits', 'float', 0, 3.00001),
+            ('integer_field', 'integer', 0, 42),
+            ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
+            ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
+            ('selection_field', 'selection', '', 'FIRST'),
+            ('text_field', 'text', False, 'text_value'),
+        ]
+        self.assertTracking(new_message, tracking_value_list, strict=True)
+        # check formatting for all field types
+        formatted_values_all = new_message.tracking_value_ids._tracking_value_format()
+        for (field_name, field_type, _, _), formatted_vals in zip(tracking_value_list, formatted_values_all):
+            currency = self.env.ref('base.USD').id if field_type == 'monetary' else False
+            precision = None if field_name != 'float_field_with_digits' else (10, 8)
+            with self.subTest(field_name=field_name):
+                self.assertEqual(formatted_vals['oldValue']['currencyId'], currency)
+                self.assertEqual(formatted_vals['newValue']['currencyId'], currency)
+                self.assertEqual(formatted_vals['oldValue']['floatPrecision'], precision)
+                self.assertEqual(formatted_vals['newValue']['floatPrecision'], precision)
 
     @users('employee')
     def test_mail_track_compute(self):
@@ -689,10 +700,12 @@ class TestTrackingInternals(MailCommon):
             'fieldType': 'char',
             'newValue': {
                 'currencyId': False,
+                'floatPrecision': None,
                 'value': 'X',
             },
             'oldValue': {
                 'currencyId': False,
+                'floatPrecision': None,
                 'value': False,
             },
         }]
@@ -819,22 +832,22 @@ class TestTrackingInternals(MailCommon):
                     'id': trackings[0].id,
                     'fieldName': 'secret',
                     'fieldType': 'char',
-                    'newValue': {'currencyId': False, 'value': 'secret'},
-                    'oldValue': {'currencyId': False, 'value': False}
+                    'newValue': {'currencyId': False, 'floatPrecision': None, 'value': 'secret'},
+                    'oldValue': {'currencyId': False, 'floatPrecision': None, 'value': False}
                 }, {
                     'changedField': 'Old integer',
                     'id': trackings[2].id,
                     'fieldName': 'Removed',
                     'fieldType': 'integer',
-                    'newValue': {'currencyId': False, 'value': 35},
-                    'oldValue': {'currencyId': False, 'value': 30}
+                    'newValue': {'currencyId': False, 'floatPrecision': None, 'value': 35},
+                    'oldValue': {'currencyId': False, 'floatPrecision': None, 'value': 30}
                 }, {
                     'changedField': 'Unknown',
                     'id': trackings[1].id,
                     'fieldName': 'unknown',
                     'fieldType': 'char',
-                    'newValue': {'currencyId': False, 'value': False},
-                    'oldValue': {'currencyId': False, 'value': False}
+                    'newValue': {'currencyId': False, 'floatPrecision': None, 'value': False},
+                    'oldValue': {'currencyId': False, 'floatPrecision': None, 'value': False}
                 }
             ]
         )
@@ -996,10 +1009,12 @@ class TestTrackingInternals(MailCommon):
                     'fieldType': field_info[1],
                     'newValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[1],
                     },
                     'oldValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[0],
                     },
                 }
@@ -1027,10 +1042,12 @@ class TestTrackingInternals(MailCommon):
                     'fieldType': field_info[1],
                     'newValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[1],
                     },
                     'oldValue': {
                         'currencyId': False,
+                        'floatPrecision': None,
                         'value': values[0],
                     },
                 }
