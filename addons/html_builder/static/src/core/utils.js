@@ -1,3 +1,4 @@
+import { BuilderAction } from "@html_builder/core/builder_action";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     Component,
@@ -412,26 +413,11 @@ function useReloadAction(getAllActions) {
     return { reload };
 }
 
-export function useHasPreview(getAllActions) {
+export function useHasPreview() {
     const comp = useComponent();
-    const reload = useReloadAction(getAllActions).reload;
-    const getAction = comp.env.editor.shared.builderActions.getAction;
-
-    let hasPreview = true;
-    for (const descr of getAllActions()) {
-        if (descr.actionId) {
-            const action = getAction(descr.actionId);
-            if (action.preview === false) {
-                hasPreview = false;
-            }
-        }
-    }
-
     return (
-        hasPreview &&
-        !reload &&
-        (comp.props.preview === true ||
-            (comp.props.preview === undefined && comp.env.weContext.preview !== false))
+        comp.props.preview === true ||
+        (comp.props.preview === undefined && comp.env.weContext.preview !== false)
     );
 }
 
@@ -464,7 +450,7 @@ export function useClickableBuilderComponent() {
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
 
-    const hasPreview = useHasPreview(getAllActions);
+    const hasPreview = useHasPreview();
     const operationWithReload = useOperationWithReload(callApply, reload);
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
@@ -510,7 +496,7 @@ export function useClickableBuilderComponent() {
     }
 
     function clean(nextApplySpecs, isPreviewing) {
-        for (const { actionId, actionParam, actionValue } of getAllActions()) {
+        for (const { actionId, actionParam, actionValue } of getAllActions(isPreviewing)) {
             for (const editingElement of comp.env.getEditingElements()) {
                 let nextAction;
                 getAction(actionId).clean?.({
@@ -676,7 +662,7 @@ export function useInputBuilderComponent({
         return rawValue !== undefined ? formatRawValue(rawValue) : "";
     }
 
-    const shouldPreview = useHasPreview(getAllActions);
+    const shouldPreview = useHasPreview();
     function preview(userInputValue) {
         if (shouldPreview) {
             callOperation(applyOperation.preview, {
@@ -786,12 +772,23 @@ export const clickableBuilderComponentProps = {
     inheritedActions: { type: Array, element: String, optional: true },
 };
 
+export function isActionPreviewable(action) {
+    if (!(action instanceof BuilderAction)) {
+        throw new Error(
+            `Invalid action of type ${typeof action} (${
+                action?.prototype?.name
+            }). Expected BuilderAction`
+        );
+    }
+    return action.preview !== false && (!action.reload || action.reload.previewable);
+}
+
 export function getAllActionsAndOperations(comp) {
     const inheritedActionIds =
         comp.props.inheritedActions || comp.env.weContext.inheritedActions || [];
+    const getAction = comp.env.editor.shared.builderActions.getAction;
 
     function getActionsSpecs(actions, userInputValue) {
-        const getAction = comp.env.editor.shared.builderActions.getAction;
         const overridableMethods = ["apply", "clean", "load", "loadOnClean"];
         const specs = [];
         for (let { actionId, actionParam, actionValue } of actions) {
@@ -850,8 +847,8 @@ export function getAllActionsAndOperations(comp) {
             };
         }
     }
-    function getAllActions() {
-        const actions = getShorthandActions();
+    function getAllActions(onlyPreviewable = false) {
+        let actions = getShorthandActions();
 
         const { actionId, actionParam, actionValue } = getCustomAction() || {};
         if (actionId) {
@@ -867,11 +864,17 @@ export function getAllActionsAndOperations(comp) {
                             ?.getActions?.() || []
                 )
                 .flat() || [];
-        return actions.concat(inheritedActions || []);
+        actions = actions.concat(inheritedActions || []);
+
+        if (onlyPreviewable) {
+            actions = actions.filter((action) => isActionPreviewable(getAction(action.actionId)));
+        }
+
+        return actions;
     }
     function callOperation(fn, params = {}) {
         const isPreviewing = !!params.preview;
-        const actionsSpecs = getActionsSpecs(getAllActions(), params.userInputValue);
+        const actionsSpecs = getActionsSpecs(getAllActions(isPreviewing), params.userInputValue);
 
         comp.env.editor.shared.operation.next(() => fn(actionsSpecs, isPreviewing), {
             load: async () =>
@@ -886,6 +889,7 @@ export function getAllActionsAndOperations(comp) {
                             return;
                         }
                         const result = await applySpec.action.load({
+                            isPreviewing,
                             editingElement: applySpec.editingElement,
                             params: applySpec.actionParam,
                             value: applySpec.actionValue,
