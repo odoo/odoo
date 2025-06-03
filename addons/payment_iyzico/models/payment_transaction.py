@@ -150,7 +150,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'iyzico':
             return super()._compare_notification_data(notification_data)
 
-        amount = notification_data.get('paidPrice')
+        amount = notification_data.get('price')
         currency_code = notification_data.get('currency')
         self._validate_amount_and_currency(amount, currency_code)
 
