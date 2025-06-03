@@ -21,15 +21,31 @@ class SaleOrder(models.Model):
         ('manual', 'Manual'),
         ('cross_dock', 'Cross Dock'),
         ('automation_bulk', 'Automation Bulk'),
-        ('automation_putaway', 'Automation Putaway')
+        ('automation_putaway', 'Automation Putaway'),
+        ('merge','Merge')
     ], string="Automation/Manual Order", compute="_compute_process_type_selection", store=True)
+    slsu = fields.Boolean(string="Manual SLSU", compute="_compute_slsu", store=True)
+
+    @api.depends('automation_manual_order', 'order_line.product_uom_qty', 'order_line', 'discrete_pick')
+    def _compute_slsu(self):
+        for order in self:
+            if (
+                    order.automation_manual_order == 'manual'
+                    and len(order.order_line) == 1
+                    and order.order_line[0].product_uom_qty == 1
+                    and not order.discrete_pick
+            ):
+                order.slsu = True
+            else:
+                order.slsu = False
 
     @api.depends('order_line.route_id.routes_process_selection_types', 'discrete_pick')
     def _compute_process_type_selection(self):
         for order in self:
             # If discrete, clear the process type selection
             if order.discrete_pick:
-                order.automation_manual_order = False
+                order.automation_manual_order = 'merge'
+                print("\n\n\n\ discrete=====", order.discrete_pick, order.automation_manual_order)
                 continue
             # Gather all process types from the order line routes
             process_types = set(order.order_line.mapped('route_id.routes_process_selection_types'))
@@ -37,6 +53,7 @@ class SaleOrder(models.Model):
             if len(process_types) == 1:
                 order.automation_manual_order = process_types.pop()
             else:
+                print("\n\n\n else  confition-=====")
                 order.automation_manual_order = False  # Ambiguous or missing
 
     @api.model
@@ -65,3 +82,4 @@ class SaleOrder(models.Model):
             for pick in pickings:
                 pick.discrete_pick = order.discrete_pick
                 pick.automation_manual_order = order.automation_manual_order
+                pick.slsu = order.slsu
