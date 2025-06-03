@@ -166,7 +166,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                 body="fail",
             ).id
 
-            def _message_post_after_hook(self, message, values):
+            def _message_post_after_hook(self, message):
                 raise Exception("Boum!")
 
             with self.mock_datetime_and_now('2022-12-24 14:00:00'),\

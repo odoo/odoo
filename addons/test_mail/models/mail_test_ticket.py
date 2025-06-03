@@ -29,11 +29,9 @@ class MailTestTicket(models.Model):
         self.ensure_one()
         return f"Ticket for {self.name} on {self.datetime.strftime('%m/%d/%Y, %H:%M:%S')}"
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # Activate more groups to test query counters notably (and be backward compatible for tests)
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         for group_name, _group_method, group_data in groups:
             if group_name == 'portal':
                 group_data['active'] = True
@@ -174,7 +172,7 @@ class MailTestTicketPartner(models.Model):
         default='open', tracking=10)
     state_template_id = fields.Many2one('mail.template')
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         if self.email_from and not self.customer_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -190,7 +188,7 @@ class MailTestTicketPartner(models.Model):
                 self.search([
                     ('customer_id', '=', False), email_domain,
                 ]).write({'customer_id': new_partner[0].id})
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     def _creation_subtype(self):
         if self.state == 'new':
@@ -228,11 +226,9 @@ class MailTestContainer(models.Model):
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # Activate more groups to test query counters notably (and be backward compatible for tests)
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         for group_name, _group_method, group_data in groups:
             if group_name == 'portal':
                 group_data['active'] = True

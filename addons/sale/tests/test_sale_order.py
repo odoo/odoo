@@ -1303,9 +1303,7 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
             },
         ]
 
-        iterator = self.quotation._notify_get_classified_recipients_iterator(
-            message=self.message, recipients_data=recipients_data, msg_vals={"model": "sale.order"}
-        )
+        iterator = self.quotation._notify_get_classified_recipients_iterator(message=self.message, recipients_data=recipients_data)
         results = {lang: group for lang, render_values, group in iterator}
 
         button_en = results["en_US"].get("button_access", {}).get("title", "")

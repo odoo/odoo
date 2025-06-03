@@ -26,12 +26,8 @@ class MailThread(models.AbstractModel):
             ret["headers"] = repr(headers)
         return ret
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
-        groups = super()._notify_get_recipients_groups(
-            message,
-            model_description,
-            msg_vals=msg_vals,
-        )
+    def _notify_get_recipients_groups(self, message, model_description):
+        groups = super()._notify_get_recipients_groups(message, model_description)
         if message.model != "forum.post" or not message.res_id:
             return groups
 

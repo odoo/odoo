@@ -1122,7 +1122,6 @@ class MailMessage(models.Model):
         res: Store.FieldList,
         *,
         format_reply=True,
-        msg_vals=False,
         chatter_fields=False,
         inbox_fields=False,
         followers: Store.LazyValue[MailFollowers] = None,
@@ -1130,11 +1129,6 @@ class MailMessage(models.Model):
         """
         :param format_reply: if True, also get data about the parent message if it exists.
             Only makes sense for discuss channel.
-
-        :param msg_vals: dictionary of values used to create the message. If
-          given it may be used to access values related to ``message`` without
-          accessing it directly. It lessens query count in some optimized use
-          cases by avoiding access message content in db;
 
         :param inbox_fields: if True, also add inbox fields: followers of the current target for
             each thread of each message as well as module icon and priority fields.
@@ -1216,12 +1210,8 @@ class MailMessage(models.Model):
                 sudo=True,
             )
 
-        # fetch scheduled notifications once, only if msg_vals is not given to
-        # avoid useless queries when notifying Inbox right after a message_post
         scheduled_dt_by_msg = defaultdict(bool)
-        if msg_vals:
-            scheduled_dt_by_msg = {m: msg_vals.get("scheduled_date", False) for m in self}
-        elif self:
+        if self:
             schedulers = self.env["mail.message.schedule"].sudo().search([("mail_message_id", "in", self.ids)])
             for scheduler in schedulers:
                 scheduled_dt_by_msg[scheduler.mail_message_id.id] = scheduler.scheduled_datetime
@@ -1445,36 +1435,36 @@ class MailMessage(models.Model):
     @api.model
     def _get_reply_to(self, values):
         """ Return a specific reply_to for the document """
-        author_id = values.get('author_id')
-        model = values.get('model', self.env.context.get('default_model'))
-        res_id = values.get('res_id', self.env.context.get('default_res_id')) or False
+        author_id = values.get('author_id', self.default_get(['author_id']).get('author_id'))
+        model = values.get('model', self.default_get(['model']).get('model'))
+        res_id = values.get('res_id', self.default_get(['res_id']).get('res_id'))
         email_from = values.get('email_from')
-        message_type = values.get('message_type')
         records = None
-        if self._is_thread_message(vals={'model': model, 'res_id': res_id, 'message_type': message_type}):
+        if model and res_id and self._is_thread_message(thread=self.env[model].browse(res_id)):
             records = self.env[model].browse([res_id])
         else:
             records = self.env[model] if model else self.env['mail.thread']
-        return records.sudo()._notify_get_reply_to(default=email_from, author_id=author_id)[res_id]
+        return records.sudo()._notify_get_reply_to(default=email_from, author_id=author_id)[res_id or False]  # False is key for 'norecord'
 
     @api.model
     def _get_message_id(self, values):
+        model = values.get('model', self.default_get(['model']).get('model'))
+        res_id = values.get('res_id', self.default_get(['res_id']).get('res_id'))
         if values.get('reply_to_force_new', False) is True:
             message_id = tools.mail.generate_tracking_message_id('reply_to')
-        elif self._is_thread_message(vals=values):
+        elif model and res_id and self._is_thread_message(thread=self.env[model].browse(res_id)):
             message_id = tools.mail.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         else:
             message_id = tools.mail.generate_tracking_message_id('private')
         return message_id
 
-    def _is_thread_message(self, vals=False, thread=None):
+    def _is_thread_message(self, thread=None):
         """ Tool method to compute thread validity in notification methods.
 
         Thread message has a model and a res_id.
         """
-        vals = vals or {}
-        res_model = vals['model'] if 'model' in vals else thread._name if thread else self.model
-        res_id = vals['res_id'] if 'res_id' in vals else thread.ids[0] if thread and thread.ids else self.res_id
+        res_model = thread._name if thread else self.model
+        res_id = thread.ids[0] if thread and thread.ids else self.res_id
         return bool(res_id) if (res_model and res_model != 'mail.thread') else False
 
     def _invalidate_documents(self, model=None, res_id=None):

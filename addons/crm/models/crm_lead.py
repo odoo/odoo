@@ -2084,11 +2084,11 @@ class CrmLead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         return super()._track_log_get_default_subtype(track_init_values)
 
-    def _notify_by_email_prepare_rendering_context(self, message, msg_vals=False, model_description=False,
+    def _notify_by_email_prepare_rendering_context(self, message, model_description=False,
                                                    force_email_company=False, force_email_lang=False,
                                                    force_record_name=False, force_header=False, force_footer=False):
         render_context = super()._notify_by_email_prepare_rendering_context(
-            message, msg_vals=msg_vals, model_description=model_description,
+            message, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang,
             force_header=force_header, force_footer=force_footer, force_record_name=force_record_name,
         )
@@ -2130,7 +2130,7 @@ class CrmLead(models.Model):
         new_lead._assign_userless_lead_in_team(_('incoming email'))
         return new_lead
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         if self.email_from and not self.partner_id:
             # we consider that posting a message with a specified recipient (not a follower, a specific one)
             # on a document without customer means that it was created through the chatter using
@@ -2146,7 +2146,7 @@ class CrmLead(models.Model):
                 self.search([
                     ('partner_id', '=', False), email_domain, ('stage_id.fold', '=', False)
                 ]).write({'partner_id': new_partner[0].id})
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     @api.model
     def get_import_templates(self):

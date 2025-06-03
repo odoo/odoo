@@ -848,22 +848,21 @@ class DiscussChannel(models.Model):
     # MAILING
     # ------------------------------------------------------------
 
-    def _notify_get_recipients(self, message, msg_vals=False, **kwargs):
+    def _notify_get_recipients(self, message, **kwargs):
         # Override recipients computation as channel is not a standard
         # mail.thread document. Indeed there are no followers on a channel.
         # Instead of followers it has members that should be notified.
-        msg_vals = msg_vals or {}
 
         # notify only user input (comment, whatsapp messages or incoming / outgoing emails)
-        message_type = msg_vals['message_type'] if 'message_type' in msg_vals else message.message_type
+        message_type = message.message_type
         if message_type not in ('comment', 'email', 'email_outgoing', 'whatsapp_message'):
             return []
 
         recipients_data = []
-        author_id = msg_vals.get("author_id") or message.author_id.id
-        pids = msg_vals['partner_ids'] or [] if 'partner_ids' in msg_vals else message.partner_ids.ids
+        author_id = message.author_id.id
+        pids = message.partner_ids.ids
         if pids:
-            email_from = tools.email_normalize(msg_vals.get('email_from') or message.email_from)
+            email_from = tools.email_normalize(message.email_from)
             self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
             self.env['res.users'].flush_model(['notification_type', 'partner_id'])
             sql_query = SQL(
@@ -952,14 +951,12 @@ class DiscussChannel(models.Model):
             })
         return recipients_data
 
-    def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
+    def _notify_get_recipients_groups(self, message, model_description):
         # All recipients of a message on a channel are considered as partners.
         # This means they will receive a minimal email, without a link to access
         # in the backend. Mailing lists should indeed send minimal emails to avoid
         # the noise.
-        groups = super()._notify_get_recipients_groups(
-            message, model_description, msg_vals=msg_vals
-        )
+        groups = super()._notify_get_recipients_groups(message, model_description)
         for (index, (group_name, _group_func, group_data)) in enumerate(groups):
             if group_name != 'customer':
                 groups[index] = (group_name, lambda partner: False, group_data)
@@ -968,9 +965,9 @@ class DiscussChannel(models.Model):
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {"silent"}
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
+    def _notify_thread(self, message, **kwargs):
         # link message to channel
-        rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        rdata = super()._notify_thread(message, **kwargs)
         payload = {"id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id
@@ -985,17 +982,11 @@ class DiscussChannel(models.Model):
             store.add(message.channel_id, ["message_count"])
         return rdata
 
-    def _notify_by_web_push_prepare_payload(self, message, msg_vals=False, force_record_name=False):
-        payload = super()._notify_by_web_push_prepare_payload(
-            message, msg_vals=msg_vals, force_record_name=force_record_name,
-        )
-        msg_vals = msg_vals or {}
+    def _notify_by_web_push_prepare_payload(self, message, force_record_name=False):
+        payload = super()._notify_by_web_push_prepare_payload(message, force_record_name=force_record_name)
         payload['options']['data']['action'] = 'mail.action_discuss'
         record_name = force_record_name or message.record_name
-        author_ids = [msg_vals["author_id"]] if msg_vals.get("author_id") else message.author_id.ids
-        author = self.env["res.partner"].browse(author_ids) or self.env["mail.guest"].browse(
-            msg_vals.get("author_guest_id", message.author_guest_id.id)
-        )
+        author = message.author_id or message.author_guest_id
         if self.channel_type == 'chat':
             payload['title'] = author.name
         elif self.channel_type == 'channel':
@@ -1009,11 +1000,11 @@ class DiscussChannel(models.Model):
             payload['title'] = "#%s" % (record_name)
         return payload
 
-    def _notify_thread_by_web_push(self, message, recipients_data, msg_vals=False, **kwargs):
+    def _notify_thread_by_web_push(self, message, recipients_data, **kwargs):
         # only notify "web_push" recipients in discuss channels.
         # exclude "inbox" recipients in discuss channels as inbox and web push can be mutually exclusive.
         # the user can turn off the web push but receive notifs via inbox if they want to.
-        super()._notify_thread_by_web_push(message, [r for r in recipients_data if r["notif"] == "web_push"], msg_vals=msg_vals, **kwargs)
+        super()._notify_thread_by_web_push(message, [r for r in recipients_data if r["notif"] == "web_push"], **kwargs)
 
     def _message_receive_bounce(self, email, partner):
         # Override bounce management to unsubscribe bouncing addresses
@@ -1064,7 +1055,7 @@ class DiscussChannel(models.Model):
             self.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False),
         ).message_post(message_type=message_type, **kwargs)
 
-    def _message_post_after_hook(self, message, msg_vals):
+    def _message_post_after_hook(self, message):
         # Automatically set the message posted by the current user as seen for themselves.
         if self.self_member_id and message.is_current_user_or_guest_author:
             self.self_member_id._set_last_seen_message(message, notify=False)
@@ -1084,7 +1075,7 @@ class DiscussChannel(models.Model):
                     p.user_ids.res_users_settings_id.channel_notifications != "no_notif"
                 )
             self._add_members(partners=to_invite)
-        return super()._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message)
 
     def _message_update_content(self, message, /, *, partner_ids=None, **kwargs):
         if partner_ids:
