@@ -23,6 +23,7 @@ const seoContext = reactive({
     metaImage: '',
     defaultTitle: '',
     updatedAlts: [],
+    updatedTitles: [],
     brokenLinks: [],
 });
 
@@ -614,6 +615,7 @@ export class SeoChecks extends Component {
         this.object = seoObject || mainObject;
         this.state = useState({
             altAttributes: [],
+            titleAttributes: [],
             checkingLinks: false,
             checkingLink: false,
             checkedLinks: false,
@@ -622,8 +624,11 @@ export class SeoChecks extends Component {
             headingsScan: [],
         });
         this.imgUpdated = this.imgUpdated.bind(this);
+        this.videoUpdated = this.videoUpdated.bind(this);
         onWillStart(async () => {
-            this.state.altAttributes = await this.getAltAttributes();
+            const mediaAttributes = await this.getMediaAttributes();
+            this.state.altAttributes = mediaAttributes.altAttributes;
+            this.state.titleAttributes = mediaAttributes.titleAttributes;
             this.state.headingsScan = this.getHeadingsScan();
         });
     }
@@ -631,6 +636,11 @@ export class SeoChecks extends Component {
     imgUpdated(img) {
         img.updated = true;
         this.seoContext.updatedAlts = this.state.altAttributes.filter(img => img.updated);
+    }
+
+    videoUpdated(video) {
+        video.updated = true;
+        this.seoContext.updatedTitles = this.state.titleAttributes.filter((video) => video.updated);
     }
 
     getHeadingsScan() {
@@ -704,17 +714,19 @@ export class SeoChecks extends Component {
         link.remove = true;
     }
 
-    async getAltAttributes() {
+    async getMediaAttributes() {
         const uniqueRecords = new Set();
 
-        // Select all relevant <img> elements in the editable page.
+        // Select all relevant <img> and <iframe> elements in the editable page.
         const imgEls = this.website.pageDocument.documentElement.querySelectorAll("#wrapwrap img");
+        const videoEls =
+            this.website.pageDocument.documentElement.querySelectorAll(".media_iframe");
 
-        imgEls.forEach((el) => {
+        const collectMetadata = (el) => {
             // Find the closest ancestor element containing Odoo metadata.
             const recordEl = el.closest("[data-oe-model][data-oe-field][data-oe-id]");
             if (!recordEl) {
-                return; // Skip images without a proper metadata wrapper.
+                return; // Skip media without a proper metadata wrapper.
             }
 
             const model = recordEl.dataset.oeModel;
@@ -722,24 +734,29 @@ export class SeoChecks extends Component {
             const field = recordEl.dataset.oeField;
             const type = recordEl.dataset.oeType;
 
-            // Only include images that belong to static content definitions.
+            // Only include media that belong to static content definitions.
             if ((model !== "ir.ui.view" || field !== "arch") && type !== "html") {
                 return;
             }
 
             // Build a unique signature string to avoid duplicates.
             uniqueRecords.add(`${model}||${id}||${field}||${type}`);
-        });
-
+        };
+        imgEls.forEach(collectMetadata);
+        videoEls.forEach(collectMetadata);
         // Transform the Set of unique strings back into structured objects.
         const models = Array.from(uniqueRecords).map((entry) => {
             const [model, id, field, type] = entry.split("||");
             return { model, id: parseInt(id), field, type };
         });
-
-        const results = await rpc("/website/get_alt_images", { models });
-
-        return JSON.parse(results);
+        const results = await rpc("/website/get_media_elements", { models });
+        const parsed = JSON.parse(results);
+        const altAttributes = parsed.filter((el) => el.type === "img");
+        const titleAttributes = parsed.filter((el) => el.type === "video");
+        return {
+            altAttributes,
+            titleAttributes,
+        };
     }
 
     async getBrokenLinks() {
@@ -949,10 +966,15 @@ export class OptimizeSEODialog extends Component {
                 })
             );
         }
-        if (seoContext.updatedAlts?.length) {
+
+        if (seoContext.updatedAlts?.length || seoContext.updatedTitles?.length) {
+            const updatedMediaElements = [
+                ...(seoContext.updatedAlts || []),
+                ...(seoContext.updatedTitles || []),
+            ];
             rpcCalls.push(
-                rpc("/website/update_alt_images", {
-                    imgs: seoContext.updatedAlts,
+                rpc("/website/update_media_elements", {
+                    elements: updatedMediaElements,
                 })
             );
         }

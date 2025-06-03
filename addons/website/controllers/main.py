@@ -804,54 +804,119 @@ class Website(Home):
         xmlroot = ET.fromstring(response)
         return json.dumps([sugg[0].attrib['data'] for sugg in xmlroot if len(sugg) and sugg[0].attrib['data']])
 
-    @http.route(['/website/get_alt_images'], type='jsonrpc', auth="user", website=True)
-    def get_alt_images(self, models):
+    def extract_thumbnail_url(self, src):
+        if "youtube.com" in src or "youtu.be" in src:
+            video_id = re.search(r"(?:embed/|youtu\.be/)([^?&/]+)", src)
+            if video_id:
+                return f"https://img.youtube.com/vi/{video_id.group(1)}/maxresdefault.jpg"
+        elif "vimeo.com" in src:
+            video_id = re.search(r"/video/(\d+)", src)
+            if video_id:
+                return f"https://vumbnail.com/{video_id.group(1)}.jpg"
+        elif "dailymotion.com" in src:
+            video_id = re.search(r"/video/([^?&/]+)", src)
+            if video_id:
+                return f"https://www.dailymotion.com/thumbnail/video/{video_id.group(1)}"
+        elif "youku.com" in src or "youku.tv" in src:
+            video_id = re.search(r"id_([^?&=]+)", src)
+            if video_id:
+                return f"https://v.youku.com/v_show/id_{video_id.group(1)}.html"
+        return None
+
+    @http.route(['/website/get_media_elements'], type='jsonrpc', auth="user", website=True)
+    def get_media_elements(self, models):
         result = []
         for model in models:
             record = request.env[model['model']].browse(model['id'])
-            model['field'] = 'arch_db' if model['field'] == 'arch' else model['field']
-            tree = html.fromstring(str(record[model['field']]))
+            field = 'arch_db' if model['field'] == 'arch' else model['field']
+            tree = html.fromstring(str(record[field]))
             for index, el in enumerate(tree.xpath('//img')):
                 role = el.get('role')
                 decorative = role == "presentation"
                 alt = el.get('alt')
                 if not decorative or alt is None:
                     result.append({
+                        "type": "img",
                         "src": el.get("src"),
                         "alt": alt or "",
                         "decorative": False,
                         "updated": False,
                         "res_model": model['model'],
                         "res_id": model['id'],
-                        "id": f"{model['model']}-{model['id']}-{index}",
-                        "field": model.get('field'),
+                        "id": f"{model['model']}-{model['id']}-img-{index}",
+                        "field": field,
+                    })
+
+            for index, el in enumerate(tree.xpath('//iframe')):
+                role = el.get('role')
+                decorative = role == "presentation"
+                title = el.get('title')
+                src = el.get('src')
+                if not decorative or title is None:
+                    result.append({
+                        "type": "video",
+                        "src": src,
+                        "title": title or "",
+                        "thumbnail_url": self.extract_thumbnail_url(src),
+                        "decorative": False,
+                        "updated": False,
+                        "res_model": model['model'],
+                        "res_id": model['id'],
+                        "id": f"{model['model']}-{model['id']}-video-{index}",
+                        "field": field,
                     })
         return json.dumps(result)
 
-    @http.route(['/website/update_alt_images'], type='jsonrpc', auth="user", website=True)
-    def update_alt_images(self, imgs):
+    @http.route(['/website/update_media_elements'], type='jsonrpc', auth="user", website=True)
+    def update_media_elements(self, elements):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.Forbidden()
-        for img in imgs:
-            record = request.env[img['res_model']].browse(img['res_id'])
+
+        updates_by_record = {}
+        for el in elements:
+            key = (el['res_model'], el['res_id'], el['field'])
+            updates_by_record.setdefault(key, []).append(el)
+
+        for (model, res_id, field), updates in updates_by_record.items():
+            record = request.env[model].browse(res_id)
             if not record.has_access('write'):
                 continue
-            img['field'] = 'arch_db' if img['field'] == 'arch' else img['field']
-            tree = html.fromstring(str(record[img['field']]))
+            field = 'arch_db' if field == 'arch' else field
+            tree = html.fromstring(str(record[field]))
             modified = False
-            for index, element in enumerate(tree.xpath('//img')):
-                imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
-                if imgId == img['id']:
-                    if (img['decorative']):
-                        element.set('alt', '')
-                        element.set('role', 'presentation')
-                    else:
-                        element.set('alt', markup_escape(img['alt']))
-                        element.attrib.pop('role', None)
-                    modified = True
+
+            img_index, video_index = 0, 0
+            for node in tree.iter():
+                tag = node.tag.lower()
+                if tag == "img":
+                    imgId = f"{model}-{res_id}-img-{img_index}"
+                    update = next((u for u in updates if u['id'] == imgId), None)
+                    if update:
+                        if update['decorative']:
+                            node.set("alt", "")
+                            node.set("role", "presentation")
+                        else:
+                            node.set("alt", markup_escape(update["alt"]))
+                            node.attrib.pop("role", None)
+                        modified = True
+                    img_index += 1
+
+                elif tag in ("iframe", "video"):
+                    videoId = f"{model}-{res_id}-video-{video_index}"
+                    update = next((u for u in updates if u['id'] == videoId), None)
+                    if update:
+                        if update['decorative']:
+                            node.set("title", "")
+                            node.set("aria-hidden", "true")
+                            node.set("role", "presentation")
+                        else:
+                            node.set("title", markup_escape(update["title"]))
+                            node.attrib.pop("aria-hidden", None)
+                        modified = True
+                    video_index += 1
+
             if modified:
-                new_html_content = html.tostring(tree, encoding='unicode', method='html')
-                record.write({img['field']: new_html_content})
+                record.write({field: html.tostring(tree, encoding='unicode', method='html')})
 
     @http.route(['/website/update_broken_links'], type='jsonrpc', auth="user", website=True)
     def update_broken_links(self, links):
