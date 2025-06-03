@@ -308,8 +308,7 @@ class ResCompany(models.Model):
         ):
             error_msg = _(
                 "A participant with these details has already been registered on the network. "
-                "If you have previously registered to an alternative Peppol service, please deregister from that service, "
-                "or request a migration key before trying again. "
+                "If you have previously registered to a Peppol service, please deregister."
             )
             if (external_provider := _get_peppol_provider(participant_info)) and "Odoo" not in external_provider:
                 error_msg += _("The Peppol service that is used is %s.", external_provider)
