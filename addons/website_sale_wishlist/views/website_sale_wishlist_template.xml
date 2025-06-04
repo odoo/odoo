@@ -93,7 +93,11 @@
                 <a href="/shop/wishlist" t-attf-class="#{_link_class}">
                     <div t-attf-class="#{_icon_wrap_class}">
                         <i t-if="_icon" class="fa fa-1x fa-heart fa-stack"/>
-                        <sup t-esc="wishcount" t-attf-class="my_wish_quantity o_animate_blink badge bg-primary #{_badge_class}"/>
+                        <sup
+                            t-out="wishcount"
+                            t-attf-class="my_wish_quantity o_animate_blink badge bg-primary
+                                          #{_badge_class} #{'d-none' if (wishcount == 0) else ''}"
+                        />
                     </div>
                     <span t-if="_text" t-attf-class="#{_text_class}">Wishlist</span>
                 </a>
