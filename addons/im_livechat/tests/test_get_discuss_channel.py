@@ -177,6 +177,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                 },
                 {
                     "create_date": fields.Datetime.to_string(visitor_member.create_date),
+                    "custom_channel_name": False,
                     "fetched_message_id": False,
                     "id": visitor_member.id,
                     "is_bot": False,
@@ -253,6 +254,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             [
                 {
                     "create_date": fields.Datetime.to_string(operator_member.create_date),
+                    "custom_channel_name": False,
                     "fetched_message_id": False,
                     "id": operator_member.id,
                     "is_bot": False,

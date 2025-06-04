@@ -423,10 +423,7 @@ export class DiscussChannel extends models.ServerModel {
                 DiscussChannelMember.write([memberOfCurrentUser.id], {
                     message_unread_counter,
                 });
-                Object.assign(res, {
-                    custom_channel_name: memberOfCurrentUser.custom_channel_name,
-                    is_pinned: memberOfCurrentUser.is_pinned,
-                });
+                res.is_pinned = memberOfCurrentUser.is_pinned;
                 if (memberOfCurrentUser.rtc_inviting_session_id) {
                     res.rtcInvitingSession = mailDataHelpers.Store.one(
                         DiscussChannelMember.browse(memberOfCurrentUser.rtc_inviting_session_id)
@@ -434,7 +431,12 @@ export class DiscussChannel extends models.ServerModel {
                 }
                 store.add(
                     DiscussChannelMember.browse(memberOfCurrentUser.id),
-                    makeKwArgs({ extra_fields: { message_unread_counter: true } })
+                    makeKwArgs({
+                        extra_fields: {
+                            custom_channel_name: memberOfCurrentUser.custom_channel_name,
+                            message_unread_counter: true,
+                        },
+                    })
                 );
             }
             if (channel.channel_type !== "channel") {
@@ -541,7 +543,7 @@ export class DiscussChannel extends models.ServerModel {
         BusBus._sendone(
             partner,
             "mail.record/insert",
-            new mailDataHelpers.Store(this.browse(channelId), {
+            new mailDataHelpers.Store(DiscussChannelMember.browse(memberIdOfCurrentUser), {
                 custom_channel_name: name,
             }).get_result()
         );

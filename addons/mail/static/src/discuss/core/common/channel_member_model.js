@@ -13,6 +13,8 @@ export class ChannelMember extends Record {
 
     /** @type {string} */
     create_date;
+    /** @type {string} */
+    custom_channel_name;
     /** @type {number} */
     id;
     last_interest_dt = fields.Datetime();
