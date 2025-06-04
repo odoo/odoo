@@ -163,9 +163,3 @@ class SaleOrder(models.Model):
         moves._link_timesheets_to_invoice(self.env.context.get("timesheet_start_date"), self.env.context.get("timesheet_end_date"))
         self._reset_has_displayed_warning_upsell_order_lines()
         return moves
-
-    def get_first_service_line(self):
-        line = next((sol for sol in self.order_line if sol.is_service), False)
-        if not line:
-            raise UserError(_('The Sales Order must contain at least one service product.'))
-        return line
