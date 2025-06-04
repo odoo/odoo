@@ -2,12 +2,11 @@
 
 from .common import TestSaleProjectCommon
 from odoo import Command
-from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
+class TestAnalyticDistribution(TestSaleProjectCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -76,6 +75,73 @@ class TestAnalyticDistribution(HttpCase, TestSaleProjectCommon):
             sale_order_line.analytic_distribution,
             {str(self.project_global.account_id.id): 100},
             "The analytic distribution of the SOL should be set to the account of the project set on the product.",
+        )
+
+    def test_sol_analytic_distribution_populated_with_so_project_account(self):
+        # Create some accounts and distribution models
+        account_a, account_b = self.env['account.analytic.account'].create([{
+            'name': 'account',
+            'plan_id': plan.id,
+        } for plan in (self.analytic_plan, self.plan_b)])  # Main plan and another plan
+        self.env['account.analytic.distribution.model'].create([{
+            'product_id': self.product_a.id,
+            'analytic_distribution': {account_a.id: 100}
+        }, {
+            'product_id': self.product_b.id,
+            'analytic_distribution': {account_b.id: 100}
+        }])
+        # Create a project with an account belonging to the main plan
+        project = self.env['project.project'].create({
+            'name': 'Sale project',
+            'account_id': self.analytic_account_sale.id,
+        })
+        # Create a sale order linked to the project
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'project_id': project.id,
+        })
+        # Create some sale order lines
+        # Cases where the products match the distribution models
+        sale_order_line_1 = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_a.id,
+        })
+        self.assertEqual(
+            sale_order_line_1.analytic_distribution,
+            {str(account_a.id): 100},
+            "The distribution of the SOL should only be set to the matching distribution model defined for `product_a`, as `account_a` belongs to the main plan.",
+        )
+        sale_order_line_2 = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product_b.id,
+        })
+        self.assertEqual(
+            sale_order_line_2.analytic_distribution,
+            {str(account_b.id): 100, str(project.account_id.id): 100},
+            "The distribution of the SOL should be set the matching distribution model defined for `product_b` plus the SO project account. It is added because `account_b` does not belong to the main plan.",
+        )
+        # Cases where the products do not match any distribution model and where we set manually the distribution
+        sale_order_line_3 = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product.id,
+            'analytic_distribution': {str(account_a.id): 100},
+        })
+        sale_order_line_3._compute_analytic_distribution()
+        self.assertEqual(
+            sale_order_line_3.analytic_distribution,
+            {str(account_a.id): 100},
+            "The distribution of the SOL should only be set to the distribution of the SOL, as `account_a` belongs to the main plan.",
+        )
+        sale_order_line_4 = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': self.product.id,
+            'analytic_distribution': {str(account_b.id): 100},
+        })
+        sale_order_line_4._compute_analytic_distribution()
+        self.assertEqual(
+            sale_order_line_4.analytic_distribution,
+            {str(account_b.id): 100, str(project.account_id.id): 100},
+            "The distribution of the SOL should be set to the distribution of the SOL plus the SO project account. It is added because `account_b` does not belong to the main plan.",
         )
 
     def test_project_analytic_distribution_on_invoice_lines(self):
