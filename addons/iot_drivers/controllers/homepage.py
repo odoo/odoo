@@ -5,6 +5,7 @@ import logging
 import netifaces
 import platform
 import re
+import requests
 import subprocess
 import threading
 import time
@@ -249,6 +250,19 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'IoT Handlers loaded successfully',
         })
 
+    @route.iot_route('/iot_drivers/is_ngrok_enabled', type="http", linux_only=True)
+    def is_ngrok_enabled(self):
+        try:
+            response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
+            response.raise_for_status()
+            response.json()
+        except (requests.exceptions.RequestException, ValueError):
+            # if the request fails or the response is not valid JSON,
+            # it means ngrok is not enabled or not running
+            return json.dumps({'enabled': False})
+
+        return json.dumps({'enabled': True})
+
     # ---------------------------------------------------------- #
     # POST methods                                               #
     # -> Never use json.dumps() it will be done automatically    #
@@ -307,16 +321,40 @@ class IotBoxOwlHomePage(http.Controller):
             'password': helpers.generate_password(),
         }
 
-    @route.iot_route('/iot_drivers/enable_ngrok', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
+    @route.iot_route('/iot_drivers/enable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
     def enable_remote_connection(self, auth_token):
-        if subprocess.call(['pgrep', 'ngrok']) == 1:
-            subprocess.Popen(['sudo', 'systemd-run', 'ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
+        with helpers.writable():
+            p = subprocess.run(
+                ['ngrok', 'config', 'add-authtoken', auth_token, '--config', '/home/pi/ngrok.yml'],
+                check=False,
+            )
+        if p.returncode == 0:
+            subprocess.run(
+                ['sudo', 'systemctl', 'restart', 'odoo-ngrok.service'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+            return {'status': 'success'}
 
-        return {
-            'status': 'success',
-            'auth_token': auth_token,
-            'message': 'Ngrok tunnel is now enabled',
-        }
+        return {'status': 'failure'}
+
+    @route.iot_route('/iot_drivers/disable_ngrok', type="jsonrpc", methods=['POST'], linux_only=True)
+    def disable_remote_connection(self):
+        with helpers.writable():
+            p = subprocess.run(
+                ['ngrok', 'config', 'add-authtoken', '""', '--config', '/home/pi/ngrok.yml'], check=False
+            )
+        if p.returncode == 0:
+            subprocess.run(
+                ['sudo', 'systemctl', 'stop', 'odoo-ngrok.service'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+            return {'status': 'success'}
+
+        return {'status': 'failure'}
 
     @route.iot_route('/iot_drivers/update_hostname', type="jsonrpc", methods=['POST'], cors='*', linux_only=True)
     def update_hostname(self, hostname):

@@ -1,0 +1,14 @@
+[Unit]
+Description=Odoo Service to ensure ngrok is running
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/ngrok tcp 22 --config /home/pi/ngrok.yml
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
