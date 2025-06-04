@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderRange">
     <BuilderComponent>
-        <div class="d-flex flex-row flex-nowrap align-items-center" 
+        <div class="o-hb-range d-flex flex-row flex-nowrap align-items-center"
             t-att-data-action-id="info.actionId"
             t-att-data-action-param="info.actionParam"
             t-att-data-action-value="info.actionValue"
@@ -14,6 +14,7 @@
             t-att-data-attribute-action-value="info.attributeActionValue">
             <input
             type="range"
+            class="o-hb-rangeInput"
             t-att-class="className"
             t-att-min="min"
             t-att-max="max"
@@ -21,7 +22,7 @@
             t-att-value="rangeInputValue"
             t-on-change="onChange"
             t-on-input="onInput" />
-            <output t-if="props.displayRangeValue" t-out="displayValue" />
+            <output t-if="props.displayRangeValue" t-out="displayValue" class="ms-1"/>
         </div>
     </BuilderComponent>
 </t>

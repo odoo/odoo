@@ -32,6 +32,6 @@ export class BuilderCheckbox extends Component {
     }
 
     getClassName() {
-        return "o_field_boolean o_boolean_toggle form-switch";
+        return "o-hb-checkbox o_field_boolean o_boolean_toggle form-switch";
     }
 }

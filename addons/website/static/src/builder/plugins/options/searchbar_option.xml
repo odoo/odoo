@@ -25,7 +25,8 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Suggestions">
-        <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" unit.translate="results" saveUnit="''" min="0"/>
+        <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" min="0"/>
+        <span class="flex-grow-1 w-100">results</span>
     </BuilderRow>
 
     <t t-if="this.getItemValue('limit_opt') > 0" t-foreach="this.displayItems" t-as="item" t-key="`${item.label}_${item.dataAttribute}_${item.dependency}`">

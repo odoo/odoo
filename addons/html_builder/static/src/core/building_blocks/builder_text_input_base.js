@@ -10,6 +10,7 @@ export const textInputBasePassthroughProps = {
     title: { type: String, optional: true },
     style: { type: String, optional: true },
     tooltip: { type: String, optional: true },
+    classes: { type: String, optional: true },
     inputClasses: { type: String, optional: true },
 };
 

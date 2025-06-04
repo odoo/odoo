@@ -1,0 +1,12 @@
+.o-hb-input-base {
+    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+    border-radius: $o-we-sidebar-content-field-border-radius;
+    background-color: $o-we-sidebar-content-field-input-bg;
+    padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing;
+    color: inherit;
+
+    &:focus, &:focus-within {
+        border-color: var(--o-hb-input-active-border, #{$o-we-sidebar-content-field-input-border-color});
+        color: $o-we-fg-lighter;
+    }
+}
