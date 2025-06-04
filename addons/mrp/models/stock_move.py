@@ -86,7 +86,11 @@ class StockMoveLine(models.Model):
 
     def _compute_product_packaging_qty(self):
         kit_lines = self.filtered(lambda move_line: move_line.move_id.bom_line_id.bom_id.type == 'phantom')
+        kit_lines.product_packaging_qty = 0
         for move_line in kit_lines:
+            if not move_line.move_id.product_packaging_id:
+                continue
+
             move = move_line.move_id
             bom_line = move.bom_line_id
             kit_bom = bom_line.bom_id

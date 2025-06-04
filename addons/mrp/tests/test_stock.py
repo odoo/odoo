@@ -722,3 +722,117 @@ class TestKitPicking(common.TestMrpCommon):
         delivery.button_validate()
         self.assertTrue(delivery.state, 'done')
         self.assertEqual(delivery.move_ids.move_line_ids.product_packaging_qty, 12)
+
+    def test_multiple_kit_with_different_packaging(self):
+        """
+        Test that the packaging quantity is correctly computed with multiple kits that does not have the same packaging.
+        """
+
+        bom_1 = self.bom_1
+        bom_1.type = 'phantom'
+        bom_1.product_tmpl_id.uom_id = self.uom_unit
+        kit_1 = bom_1.product_id
+        kit_1.is_storable = True
+
+        bom_2 = self.bom_4
+        bom_2.type = 'phantom'
+        bom_2.product_tmpl_id.uom_id = self.uom_unit
+        kit_2 = bom_2.product_id
+        kit_2.is_storable = True
+
+        # create a packaging with 3 units for the first component
+        packaging = self.env['product.packaging'].create({
+            'name': 'Packaging',
+            'qty': 3,
+            'product_id': kit_1.id,
+        })
+
+        # create a delivery with a units of kit
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        customer_location = self.env.ref('stock.stock_location_customers')
+        stock_location = warehouse.lot_stock_id
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': kit_1.name,
+                'product_id': kit_1.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            }),
+            Command.create({
+                'name': kit_2.name,
+                'product_id': kit_2.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+
+        # Set the packaging on the first kit
+        for line in delivery.move_ids:
+            if (line.product_id.id == packaging.product_id.id):
+                line.product_packaging_id = packaging.id
+
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 6
+        delivery.move_ids.picked = True
+        delivery.button_validate()
+        self.assertTrue(delivery.state, 'done')
+
+        self.assertEqual(len(delivery.move_ids), 3)
+        self.assertEqual(delivery.move_ids[0].move_line_ids.product_packaging_qty, 4)
+        self.assertEqual(delivery.move_ids[1].move_line_ids.product_packaging_qty, 2)
+        self.assertEqual(delivery.move_ids[2].move_line_ids.product_packaging_qty, 0)
+
+    def test_kit_with_different_packaging_on_component(self):
+        """
+        Test that the packaging quantity is correctly computed when the components of a kit have different packaging.
+        """
+
+        bom = self.bom_1
+        bom.type = 'phantom'
+        bom.product_tmpl_id.uom_id = self.uom_unit
+        kit = bom.product_id
+        kit.is_storable = True
+
+        # create a packaging with 3 units for the first component
+        packaging = self.env['product.packaging'].create({
+            'name': 'Packaging',
+            'qty': 3,
+            'product_id': bom.bom_line_ids[0].product_id.id,
+        })
+
+        # create a delivery with a units of kit
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        customer_location = self.env.ref('stock.stock_location_customers')
+        stock_location = warehouse.lot_stock_id
+
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'move_ids': [Command.create({
+                'name': kit.name,
+                'product_id': kit.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 6
+
+        # Set the packaging on the first component of the kit
+        for line in delivery.move_ids:
+            if (line.product_id.id == packaging.product_id.id):
+                line.product_packaging_id = packaging.id
+
+        delivery.move_ids.picked = True
+        delivery.button_validate()
+        self.assertTrue(delivery.state, 'done')
+
+        self.assertEqual(len(delivery.move_ids), 2)
+        self.assertEqual(delivery.move_ids[0].move_line_ids.product_packaging_qty, 4)
+        self.assertEqual(delivery.move_ids[1].move_line_ids.product_packaging_qty, 0)
