@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="stock_availability_email" model="mail.template">
+            <field name="name">Sales: Product Availability Notification</field>
+            <field name="model_id" ref="product.model_product_product"/>
+            <field name="subject">{{ object.name }} is back in stock</field>
+            <field name="email_from">{{ object.company_id.email_formatted or user.email_formatted }}</field>
+            <field name="partner_to" eval="False"/>
+            <field name="use_default_to" eval="False"/>
+            <field name="description">Mail sent to customer when a product comes back in
+            stock</field>
+            <field name="email_layout_xmlid">mail.mail_notification_light"</field>
+            <field name="body_html" type="html">
+                <t t-set="partner_name" t-value="partner in ctx and ctx['partner'].name or 'Customer'"/>
+                <div id="body">
+                    <p>Hello <t t-out="partner_name"/>,</p>
+                    <p>The following product is now available.</p>
+                    <div style="display: flex; justify-content: center; width: 100%;">
+                        <a t-attf-href="#{object.website_url}">
+                            <img t-attf-src="/web/image/product.product/#{object.id}/image_1920"/>
+                        </a>
+                    </div>
+                    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; width: 100%;">
+                        <p t-esc="object.name"/>
+                        <p t-if="object.product_template_attribute_value_ids"
+                           style="margin-left: 0.5em;">
+                            (<t
+                            t-out="', '.join(object.product_template_attribute_value_ids.mapped('name'))"
+                            />)
+                        </p>
+                        <p style="margin-left: 0.5em; margin-right: 0.5em">-</p>
+                        <p t-esc="object.list_price" t-options="{'widget': 'monetary', 'display_currency': object.currency_id}"/>
+                    </div>
+                    <p t-esc="object.description_sale"/>
+                    <div style="display: flex; justify-content: center; width: 100%;">
+                        <a t-attf-href="#{object.website_url}" t-attf-style="background-color: {{object.website_id.get_current_website().company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.website_id.get_current_website().company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;">
+                            Order Now
+                        </a>
+                    </div>
+                    <p>Regards,</p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
