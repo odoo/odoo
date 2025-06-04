@@ -198,7 +198,6 @@ class HrLeaveType(models.Model):
         allocation_by_leave_type = dict(self.env['hr.leave.allocation']._read_group(
             domain=Domain([
                 ('holiday_status_id', 'in', self.filtered(lambda leave_type: leave_type.requires_allocation).ids),
-                ('allocation_type', '=', 'accrual'),
                 ('employee_id', '=', employee_id),
                 ('date_from', '<=', date_from),
                 '|',
