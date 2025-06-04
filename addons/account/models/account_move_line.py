@@ -1023,6 +1023,7 @@ class AccountMoveLine(models.Model):
             for line in self.move_id.line_ids
             if line.display_type == 'product'
             and (discount_allocation_account := line.move_id._get_discount_allocation_account())
+            and line.account_id != discount_allocation_account
             and (amount := line.currency_id.round(
                 line.move_id.direction_sign * line.quantity * line.price_unit * line.discount / 100
             ))
