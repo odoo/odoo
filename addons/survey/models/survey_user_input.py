@@ -5,6 +5,7 @@ import logging
 import textwrap
 import uuid
 
+from collections import Counter
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -54,6 +55,10 @@ class SurveyUser_Input(models.Model):
     scoring_total = fields.Float("Total Score", compute="_compute_scoring_values", store=True, compute_sudo=True, digits=(10, 2))  # stored for perf reasons
     scoring_success = fields.Boolean('Quizz Passed', compute='_compute_scoring_success', store=True, compute_sudo=True)  # stored for perf reasons
     survey_first_submitted = fields.Boolean(string='Survey First Submitted')
+    extra_end_message_id = fields.Many2one(
+        'survey.conditional.end.message', string='Extra End Message',
+        compute='_compute_extra_end_message_id', help="Most frequently represented extra end message in user answers")
+    survey_extra_end_message_ids = fields.One2many(related="survey_id.extra_end_message_ids")
     # live sessions
     is_session_answer = fields.Boolean('Is in a Session', help="Is that user input part of a survey session or not.")
     question_time_limit_reached = fields.Boolean("Question Time Limit Reached", compute='_compute_question_time_limit_reached')
@@ -163,6 +168,19 @@ class SurveyUser_Input(models.Model):
                 attempts_number_result = attempts_number_results.get(user_input.id, {})
                 user_input.attempts_number = attempts_number_result.get('attempts_number', 1)
                 user_input.attempts_count = attempts_number_result.get('attempts_count', 1)
+
+    @api.depends('user_input_line_ids.suggested_answer_id')
+    def _compute_extra_end_message_id(self):
+        for user_input in self:
+            extra_msgs = Counter(msg_id
+                           for line in user_input.user_input_line_ids
+                           for msg_id in line.suggested_answer_id.extra_end_message_ids)
+            if not extra_msgs:
+                user_input.extra_end_message_id = False
+                continue
+            user_input.extra_end_message_id = min(
+                (msg for msg, count in extra_msgs.items() if count == max(extra_msgs.values())),
+                key=lambda t: t.sequence)
 
     @api.model_create_multi
     def create(self, vals_list):

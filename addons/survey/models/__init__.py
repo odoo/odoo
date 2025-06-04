@@ -6,7 +6,9 @@ from . import challenge
 from . import ir_http
 from . import res_lang
 from . import res_partner
+from . import survey_conditional_end_message
 from . import survey_question
+from . import survey_question_answer
 from . import survey_survey
 from . import survey_survey_template
 from . import survey_user_input
