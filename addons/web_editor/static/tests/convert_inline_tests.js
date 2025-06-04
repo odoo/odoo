@@ -1126,6 +1126,20 @@ QUnit.module('convert_inline', {}, function () {
         styleSheet.deleteRule(0);
         $styleSheet.remove();
     });
+
+    QUnit.test('Create mso properly', async function (assert) {
+        assert.strictEqual(convertInline.createMso('<div>abcde</div>').nodeValue,
+            '[if mso]><div>abcde</div><![endif]',
+            "Should wrap the content in mso condition");
+
+        assert.strictEqual(convertInline.createMso('<div>ef<!--[if mso]><div>abcd</div><![endif]-->gh</div>').nodeValue,
+            '[if mso]><div>ef<div>abcd</div>gh</div><![endif]',
+            "Should wrap the content inside one mso condition");
+
+        assert.strictEqual(convertInline.createMso('<div>ef<!--[if !mso]><div>abcd</div><![endif]-->gh</div>').nodeValue,
+            '[if mso]><div>efgh</div><![endif]',
+            "Should remove nested mso hide condition");
+    });
 });
 
 });
