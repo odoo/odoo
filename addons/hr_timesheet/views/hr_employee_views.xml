@@ -38,6 +38,17 @@
         </field>
     </record>
 
+    <record id="hr_employee_view_kanban_inherit_timesheet" model="ir.ui.view">
+        <field name="name">hr.employee.kanban.timesheet</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="/kanban" position="attributes">
+                <attribute name="delete">0</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="unlink_employee_action" model="ir.actions.server">
         <field name="name">Delete</field>
         <field name="model_id" ref="hr.model_hr_employee"/>
