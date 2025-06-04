@@ -2123,7 +2123,7 @@ class HttpCase(TransactionCase):
                 ],
             }
 
-    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, **kw):
+    def browser_js(self, url_path, code, ready='', login=None, timeout=60, cookies=None, error_checker=None, watch=False, success_signal=DEFAULT_SUCCESS_SIGNAL, debug=False, cpu_throttling=None, network_throttling=None, **kw):
         """ Test JavaScript code running in the browser.
 
         To signal success test do: `console.log()` with the expected `success_signal`. Default is "test successful"
@@ -2144,6 +2144,7 @@ class HttpCase(TransactionCase):
         :param bool debug: automatically open a fullscreen Chrome window with opened devtools and a debugger breakpoint set at the start of the tour.
             The tour is ran with the `debug=assets` query parameter. When an error is thrown, the debugger stops on the exception.
         :param int cpu_throttling: CPU throttling rate as a slowdown factor (1 is no throttle, 2 is 2x slowdown, etc)
+        :param string network_throttling: (cellular2g, cellular3g, cellular4g)
         """
         if not self.env.registry.loaded:
             self._logger.warning('HttpCase test should be in post_install only')
@@ -2188,6 +2189,9 @@ class HttpCase(TransactionCase):
             cpu_throttling_os = os.environ.get('ODOO_BROWSER_CPU_THROTTLING') # used by dedicated runbot builds
             cpu_throttling = int(cpu_throttling_os) if cpu_throttling_os else cpu_throttling
 
+            network_throttling_os = os.environ.get('ODOO_BROWSER_NETWORK_THROTTLING')  # used by dedicated runbot builds
+            network_throttling = network_throttling_os if network_throttling_os else network_throttling
+
             if cpu_throttling:
                 assert 1 <= cpu_throttling <= 50  # arbitrary upper limit
                 timeout *= cpu_throttling  # extend the timeout as test will be slower to execute
@@ -2202,6 +2206,39 @@ class HttpCase(TransactionCase):
             # Needed because tests like test01.js (qunit tests) are passing a ready
             # code = ""
             self.assertTrue(browser._wait_ready(ready), 'The ready "%s" code was always falsy' % ready)
+
+            # slow down the network to simulate a slow connection, do it after ready code the page
+            # should not be loaded in slow mode
+            profile_dict = {
+                'cellular2g': {
+                    'latency': 300,  # in milliseconds
+                    'downloadThroughput': 250 * 1024,  # 250 KiB/s download speed
+                    'uploadThroughput': 50 * 1024,  # 50 KiB/s upload speed
+                },
+                'cellular3g': {
+                    'latency': 100,  # in milliseconds
+                    'downloadThroughput': 1000 * 1024,  # 1000 KiB/s download speed
+                    'uploadThroughput': 500 * 1024,  # 500 KiB/s upload speed
+                },
+                'cellular4g': {
+                    'latency': 30,  # in milliseconds
+                    'downloadThroughput': 20 * 1024 * 1024,  # 20 MiB/s download speed
+                    'uploadThroughput': 10 * 1024 * 1024,  # 10 MiB/s upload speed
+                },
+            }
+            if network_throttling or True:
+                _logger.log(
+                    logging.INFO if network_throttling_os else logging.WARNING,
+                    """Network throttling mode is only suitable for local testing -
+                    Throttling browser network to %s and extending timeout to %s sec""",
+                    network_throttling, timeout)
+
+                profile = profile_dict[network_throttling] if network_throttling in profile_dict else profile_dict['cellular3g']
+                browser._websocket_request('Network.emulateNetworkConditions', params={
+                    **profile,
+                    'connectionType': network_throttling or 'cellular3g',
+                    'offline': False,
+                })
 
             error = False
             try:
