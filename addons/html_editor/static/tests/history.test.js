@@ -744,6 +744,38 @@ describe("custom mutation", () => {
     });
 });
 
+describe("same text node mutations", () => {
+    test("should not record same text mutation", async () => {
+        const { el, editor } = await setupEditor(`<p>[]test</p>`);
+        const p = el.querySelector("p");
+        const textNode = editor.document.createTextNode("a");
+        p.append(textNode);
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(`<p>[]testa</p>`);
+        // Replace text node with a new one with the same content
+        p.replaceChild(editor.document.createTextNode("a"), textNode);
+        // addStep returns false when there are no mutations
+        expect(editor.shared.history.addStep()).toBe(false);
+    });
+    test("same text node mutation should not break history", async () => {
+        const { el, editor } = await setupEditor(`<p>[]hello </p>`);
+        const p = el.querySelector("p");
+        const textNode = editor.document.createTextNode("world");
+        p.append(textNode);
+        editor.shared.history.addStep();
+        expect(getContent(el)).toBe(`<p>[]hello world</p>`);
+        // Replace text node with a new one with the same content
+        p.replaceChild(editor.document.createTextNode("world"), textNode);
+        // It should not create a step but, the old node should be remapped to
+        // the new one and history keep working
+        expect(editor.shared.history.addStep()).toBe(false);
+        editor.shared.history.undo();
+        expect(getContent(el)).toBe(`<p>[]hello </p>`);
+        editor.shared.history.redo();
+        expect(getContent(el)).toBe(`<p>[]hello world</p>`);
+    });
+});
+
 describe("unobserved mutations", () => {
     const withAddStep = (editor, callback) => {
         callback();

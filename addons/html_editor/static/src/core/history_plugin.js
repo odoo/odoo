@@ -429,20 +429,9 @@ export class HistoryPlugin extends Plugin {
      */
     setIdOnRecords(records) {
         for (const record of records) {
-            if (record.type === "childList" && record.addedNodes.length) {
-                const { addedNodes, removedNodes } = record;
-                if (this.isSameTextContentMutation(record)) {
-                    const oldId = this.nodeToIdMap.get(removedNodes[0]);
-                    if (oldId) {
-                        this.nodeToIdMap.delete(removedNodes[0]);
-                        this.idToNodeMap.delete(oldId);
-                        this.nodeToIdMap.set(addedNodes[0], oldId);
-                        this.idToNodeMap.set(oldId, addedNodes[0]);
-                    }
-                } else {
-                    for (const node of addedNodes) {
-                        this.setNodeId(node);
-                    }
+            if (record.type === "childList") {
+                for (const node of record.addedNodes) {
+                    this.setNodeId(node);
                 }
             }
         }
@@ -457,9 +446,7 @@ export class HistoryPlugin extends Plugin {
             records = records.filter(callback);
         }
         records = this.filterAttributeMutationRecords(records);
-        // @todo: this removes mutation records that change the node reference.
-        // Fix this!
-        records = records.filter((record) => !this.isSameTextContentMutation(record));
+        records = this.filterSameTextContentMutationRecords(records);
         records = this.filterOutIntermediateStateMutationRecords(records);
         return records;
     }
@@ -481,6 +468,29 @@ export class HistoryPlugin extends Plugin {
             }
             return true;
         });
+    }
+
+    /**
+     * @param { MutationRecord[] } records
+     * @returns { MutationRecord[] }
+     */
+    filterSameTextContentMutationRecords(records) {
+        const filteredRecords = [];
+        for (const record of records) {
+            if (record.type === "childList" && this.isSameTextContentMutation(record)) {
+                const { addedNodes, removedNodes } = record;
+                const oldId = this.nodeToIdMap.get(removedNodes[0]);
+                if (oldId) {
+                    this.nodeToIdMap.delete(removedNodes[0]);
+                    this.idToNodeMap.delete(oldId);
+                    this.nodeToIdMap.set(addedNodes[0], oldId);
+                    this.idToNodeMap.set(oldId, addedNodes[0]);
+                }
+                continue;
+            }
+            filteredRecords.push(record);
+        }
+        return filteredRecords;
     }
 
     /**
