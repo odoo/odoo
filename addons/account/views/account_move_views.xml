@@ -405,8 +405,8 @@
                     <field name="ref" readonly="False"/>
                     <field name="name" optional="show"/>
                     <field name="discount_amount_currency" string="Discount Amount" optional="show" invisible="not discount_amount_currency"/>
-                    <field name="amount_residual" sum="Total Residual" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
-                    <field name="amount_residual_currency" string="Residual in Currency" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
+                    <field name="amount_residual_at_date" sum="Total Residual At Date" string="Residual" readonly="1" invisible="not is_account_reconcile"/>
+                    <field name="amount_residual_currency_at_date" string="Residual in Currency At Date" optional="hide" readonly="1" invisible="is_same_currency or not is_account_reconcile" groups="base.group_multi_currency"/>
                     <field name="currency_id" groups="base.group_multi_currency" optional="hide" string="Currency" readonly="1" invisible="is_same_currency"/>
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="move_type" column_invisible="True"/>
@@ -437,6 +437,7 @@
                     <field name="journal_id"/>
                     <field name="currency_id" groups="base.group_multi_currency" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
+                    <field name="reconcile_until"/>
                     <separator/>
                     <filter string="Posted" name="posted" domain="[('parent_state', '=', 'posted')]" help="Posted Journal Items" invisible="1"/>
                     <separator/>

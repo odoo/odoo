@@ -2000,6 +2000,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     ]
                 self.assertRecordValues(partials.sorted('amount'), expected_partials)
 
+    def test_reconcile_at_date(self):
+        comp_curr = self.company_data['currency']
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2024-12-25')
+        line_2 = self.create_line_for_reconciliation(-300.0, -300.0, comp_curr, '2025-01-15')
+        (line_1 + line_2).reconcile()
+        self.assertEqual(line_1.amount_residual, 700.0)
+        self.assertEqual(line_1.with_context(reconcile_until=fields.Date.from_string('2024-12-31')).amount_residual_at_date, 1000.0)
+        self.assertEqual(line_1.with_context(reconcile_until=fields.Date.from_string('2025-01-31')).amount_residual_at_date, 700.0)
+
     def test_reconcile_special_mexican_workflow_1(self):
         comp_curr = self.company_data['currency']
         foreign_curr = self.env['res.currency'].create({
