@@ -54,7 +54,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         ...goToTheme(),
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
-            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_we_collapse_toggler`,
+            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
             run: "click",
         }, {
             content: `Check that the setting for ${fontSizeClass} is correct`,
@@ -76,7 +76,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         ...goToTheme(),
         {
             content: `Open the collapse to see the font size of ${fontSizeClass}`,
-            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_we_collapse_toggler`,
+            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
             run: "click",
         },
         {
@@ -89,7 +89,7 @@ function getFontSizeTestSteps(fontSizeClass) {
         },
         {
             content: `Close the collapse to hide the font size of ${fontSizeClass}`,
-            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_we_collapse_toggler`,
+            trigger: `.we-bg-options-container:has([data-action-param="${classNameInfo.get(fontSizeClass).scssVariableName}"]) [data-label="Font Size"] .o_hb_collapse_toggler`,
             run: "click",
         },
         checkComputedFontSize(fontSizeClass, "end"),
