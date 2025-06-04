@@ -2210,6 +2210,8 @@ class MrpProduction(models.Model):
             elif mo_ids_always:
                 # we have to pass all the MOs that the nevers/no issue MOs are also passed to be "mark done" without a backorder
                 res = self.with_context(skip_backorder=True, mo_ids_to_backorder=mo_ids_always).button_mark_done()
+                if res is not True:
+                    res['context'] = dict(res.get('context', {}), marked_as_done=all(mo.state == 'done' for mo in self))
                 return res if self._should_return_records() else True
         return True
 
