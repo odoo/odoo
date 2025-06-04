@@ -345,7 +345,7 @@ test("Domain of date filter with month offset on graph field", async function ()
     /** @type GlobalFilter */
     const filter = {
         ...THIS_YEAR_GLOBAL_FILTER,
-        defaultValue: { yearOffset: 0, period: "july" },
+        defaultValue: "this_month",
     };
     await addGlobalFilter(model, filter, {
         chart: { [chartId]: { chain: "date", type: "date", offset: -2 } },
