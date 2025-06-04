@@ -181,7 +181,20 @@ export async function loadImageInfo(el, attachmentSrc = "") {
     }
 
     const srcUrl = new URL(src, docHref);
-    const relativeSrc = srcUrl.pathname;
+    let relativeSrc = srcUrl.pathname;
+
+    let match = relativeSrc.match(/\/(?:web_editor|html_editor)\/image_shape\/(\w+\.\w+)/);
+    if (el.dataset.shape && match) {
+        match = match[1];
+        if (match.endsWith("_perspective")) {
+            // As an image might already have been modified with a
+            // perspective for some customized snippets in themes. We need
+            // to find the original image to set the 'data-original-src'
+            // attribute.
+            match = match.slice(0, -12);
+        }
+        relativeSrc = `/web/image/${encodeURIComponent(match)}`;
+    }
 
     const { original } = await rpc("/html_editor/get_image_info", { src: relativeSrc });
     // If src was an absolute "external" URL, we consider unlikely that its
