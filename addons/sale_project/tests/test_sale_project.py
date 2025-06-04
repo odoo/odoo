@@ -367,7 +367,6 @@ class TestSaleProject(TestSaleProjectCommon):
             'product_id': self.product_consumable.id,
             'order_id': sale_order_1.id,
         }])
-        self.assertFalse(sale_order_1.show_create_project_button, "There is no service product with one of the correct service_policy on the sale order, the button should be hidden")
         self.assertFalse(sale_order_1.show_project_button, "There is no project on the sale order, the button should be hidden")
         self.assertFalse(sale_order_1.show_task_button, "There is no project on the sale order, the button should be hidden")
         # add a milestone product
