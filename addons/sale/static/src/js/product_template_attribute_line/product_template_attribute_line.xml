@@ -119,6 +119,38 @@
             </li>
         </ul>
     </t>
+    <t t-name="sale.ptav_image">
+        <ul class="list-inline flex-grow-1 mb-0">
+            <li
+                t-foreach="this.props.attribute_values"
+                t-as="ptav"
+                t-key="ptav.id"
+                class="list-inline-item me-2"
+            >
+                <label
+                    class="position-relative d-inline-block text-center o_sale_product_configurator_ptav_image rounded-3 cursor-pointer"
+                    t-att-title="ptav.name"
+                    t-attf-style="#{ptav.image ? 'background-image:url(/web/image/product.template.attribute.value/'+ptav.id+'/image); background-size:cover;' : ''}"
+                    t-att-class="{
+                        'active': this.props.selected_attribute_value_ids.includes(ptav.id),
+                        'custom_value': ptav.is_custom,
+                        'transparent': !ptav.is_custom and !ptav.html_color,
+                        'css_not_available': ptav.excluded
+                    }"
+                >
+                    <input
+                        type="radio"
+                        t-attf-id="ptav-{{ptav.id}}-input"
+                        t-att-value="ptav.id"
+                        t-att-name="'ptal-' + this.props.id"
+                        t-att-checked="this.props.selected_attribute_value_ids.includes(ptav.id)"
+                        t-on-change="updateSelectedPTAV"
+                        class="w-100 h-100 opacity-0 cursor-pointer"
+                    />
+                </label>
+            </li>
+        </ul>
+    </t>
     <t t-name="sale.ptav_multi">
          <ul class="list-unstyled flex-grow-1 m-0">
             <li t-foreach="this.props.attribute_values" t-as="ptav" t-key="ptav.id"

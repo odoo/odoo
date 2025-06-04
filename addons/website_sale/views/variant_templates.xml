@@ -12,7 +12,8 @@
                 <t t-set="single" t-value="len(ptavs) == 1"/>
 
                 <!-- Attributes selection is hidden if there is only one value available and it's not a custom value -->
-                <li t-att-data-attribute_id="attribute.id"
+                <li name="variant_attribute"
+                    t-att-data-attribute_id="attribute.id"
                     t-att-data-attribute_name="attribute.name"
                     t-att-data-attribute_display_type="attribute.display_type"
                     t-attf-class="variant_attribute #{
@@ -25,14 +26,14 @@
                     <t t-set="single_and_custom" t-value="single and ptavs[0].is_custom"/>
                     <h6 class="attribute_name mb-2">
                         <span t-field="ptal.attribute_id.name"/>
-                        <span t-if="attribute.display_type == 'color'" class="text-muted">
+                        <span t-if="attribute.display_type in ['color', 'image']" class="text-muted">
                             -
                             <t
                                 t-set="active_ptavs"
                                 t-value="[ptav for ptav in ptavs if ptav in combination]"
                             />
                             <t t-foreach="active_ptavs" t-as="ptav">
-                                <span class="attribute_value" t-field="ptav.name"/>
+                                <span class="attribute_value" name="attribute_value" t-field="ptav.name"/>
                             </t>
                         </span>
                     </h6>
@@ -151,6 +152,37 @@
                                         t-att-data-is_custom="ptav.is_custom"
                                         t-att-data-is_single="single"
                                         t-att-data-is_single_and_custom="single_and_custom"/>
+                                </label>
+                            </li>
+                        </ul>
+                    </t>
+
+                    <t t-elif="attribute.display_type == 'image'">
+                        <ul
+                            t-att-data-attribute_id="attribute.id"
+                            t-attf-class="list-inline o_wsale_product_attribute #{'d-none' if single_and_custom else ''}"
+                        >
+                            <li t-foreach="ptavs" t-as="ptav" class="list-inline-item me-2 mb-2">
+                                <label
+                                    name="o_wsale_attribute_image_selector"
+                                    t-attf-style="#{'background-image: url(/web/image/product.template.attribute.value/%s/image); background-size:cover;' % ptav.id if ptav.image else ''}"
+                                    t-attf-class="css_attribute_image oe_img_bg o_bg_img_center position-relative d-inline-block rounded-3 bg-body text-center cursor-pointer #{'active' if ptav in combination else ''} #{'custom_value' if ptav.is_custom else ''} #{'transparent' if (not ptav.is_custom and not ptav.html_color) else ''}"
+                                >
+                                    <input
+                                        type="radio"
+                                        t-attf-class="js_variant_change w-100 h-100 opacity-0 cursor-pointer #{attribute.create_variant}"
+                                        t-att-checked="ptav in combination"
+                                        t-att-name="'ptal-%s' % ptal.id"
+                                        t-att-value="ptav.id"
+                                        t-att-title="ptav.name"
+                                        t-att-data-attribute-value-id="ptav.product_attribute_value_id.id"
+                                        t-att-data-value_id="ptav.id"
+                                        t-att-data-value_name="ptav.name"
+                                        t-att-data-attribute_name="attribute.name"
+                                        t-att-data-is_custom="ptav.is_custom"
+                                        t-att-data-is_single="single"
+                                        t-att-data-is_single_and_custom="single_and_custom"
+                                    />
                                 </label>
                             </li>
                         </ul>

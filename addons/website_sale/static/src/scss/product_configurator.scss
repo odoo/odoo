@@ -49,6 +49,58 @@
     }
 }
 
+.css_attribute_image {
+    --o-wsale-css-attribute-image__height: 4rem;
+    --o-wsale-css-attribute-image__outline-width: #{$border-width * 2};
+
+    height: calc(var(--o-wsale-css-attribute-image__height) - var(--o-wsale-css-attribute-image__outline-width));
+    aspect-ratio: 1;
+    border: $border-width * 5 solid $body-bg;
+    outline: var(--o-wsale-css-attribute-image__outline-width) solid $border-color;
+    transition: $input-transition;
+
+    &:hover, &.active {
+        outline-color: map-get($theme-colors, 'primary');
+    }
+
+
+    &.custom_value {
+        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
+    }
+
+    &.transparent {
+        background-image: url(/web/static/img/transparent.png);
+    }
+
+    &.size_small {
+        --o-wsale-css-attribute-image__height: 3rem;
+        --o-wsale-css-attribute-image__outline-width: #{$border-width};
+    }
+}
+
+.css_not_available_msg {
+    display: none;
+}
+
+.css_not_available.js_product {
+    .css_quantity {
+        display: none !important;
+    }
+
+    .css_not_available_msg {
+        display: block;
+    }
+
+    .availability_messages {
+        display: none;
+    }
+
+    .oe_price,
+    .oe_default_price {
+        display: none;
+    }
+}
+
 .css_quantity {
     width: initial; // We don't want the quantity form to be full-width
     border-radius: $btn-border-radius;
