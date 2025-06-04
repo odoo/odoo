@@ -87,6 +87,25 @@ test("The domain editor should not crash the view when given a dynamic filter (a
     expect.verifySteps(["The domain should not involve non-literals"]);
 });
 
+test("The domain editor should not crash the view when given a dynamic filter (allow_expressions=False) in a sub domain", async function () {
+    Partner._fields.company_id = fields.Many2one({ relation: "partner" });
+    Partner._records[0].foo = "[('company_id', 'any', [('id', '=', uid)])]";
+
+    replaceNotificationService();
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+                <form>
+                    <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                    <field name="int" invisible="1" />
+                </form>`,
+    });
+    expect.verifySteps(["The domain should not involve non-literals"]);
+});
+
 test("The domain editor should not crash the view when given a dynamic filter (allow_expressions=True)", async function () {
     Partner._records[0].foo = `[("int", "=", uid)]`;
 
