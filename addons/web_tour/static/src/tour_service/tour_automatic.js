@@ -1,7 +1,7 @@
 import { tourState } from "./tour_state";
 import { config as transitionConfig } from "@web/core/transition";
 import { TourStepAutomatic } from "./tour_step_automatic";
-import { Macro } from "@web/core/macro";
+import { beforeMacroUnload, Macro } from "@web/core/macro";
 import { browser } from "@web/core/browser/browser";
 import { enableEventLogs, setupEventActions } from "@web/../lib/hoot-dom/helpers/events";
 import * as hootDom from "@odoo/hoot-dom";
@@ -60,10 +60,14 @@ export class TourAutomatic {
                             ? 9999999
                             : step.timeout || this.timeout || 10000,
                     action: async (trigger) => {
+                        if (step.willUnload) {
+                            beforeMacroUnload();
+                        }
                         if (delayToCheckUndeterminisms > 0) {
                             await step.checkForUndeterminisms(trigger, delayToCheckUndeterminisms);
                         }
                         const result = await step.doAction();
+                        tourState.setCurrentIndex(step.index + 1);
                         if (this.debugMode) {
                             console.log(trigger);
                             if (step.skipped) {
@@ -76,7 +80,6 @@ export class TourAutomatic {
                                 await this.pause();
                             }
                         }
-                        tourState.setCurrentIndex(step.index + 1);
                         return result;
                     },
                 },
@@ -111,6 +114,11 @@ export class TourAutomatic {
             onError: (error) => {
                 if (error.type === "Timeout") {
                     this.throwError(...this.currentStep.describeWhyIFailed, error.message);
+                } else if (error.type === "AuthorizeBeforeUnload") {
+                    this.throwError(
+                        error.message,
+                        `You can also add an additionnal step => { trigger : "reload" }.`
+                    );
                 } else {
                     this.throwError(error.message);
                 }

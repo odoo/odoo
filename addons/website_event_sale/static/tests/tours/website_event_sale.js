@@ -89,6 +89,10 @@ registry.category("web_tour.tours").add("event_buy_tickets", {
             content: "Validate attendees details",
             trigger: ".modal#modal_attendees_registration button[type=submit]",
             run: "click",
+            willUnload: true,
+        },
+        {
+            trigger: ".oe_cart:contains(payment method)",
         },
         wsTourUtils.goToCart({ quantity: 3 }),
         wsTourUtils.goToCheckout(),

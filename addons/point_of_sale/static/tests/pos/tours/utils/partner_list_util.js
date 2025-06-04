@@ -100,10 +100,11 @@ export function searchCustomerValue(val, pressEnter = false) {
         steps.push({
             content: `Press Enter to trigger "search more"`,
             trigger: `.modal-dialog .input-group input`,
-            run: () =>
+            run: function () {
                 document
                     .querySelector(".modal-dialog .input-group input")
-                    .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" })),
+                    .dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Enter" }));
+            },
         });
     }
     steps.push(checkCustomerShown(val));

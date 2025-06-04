@@ -1,5 +1,4 @@
 import { registry } from '@web/core/registry';
-import { queryValue, waitUntil } from '@odoo/hoot-dom';
 import comboConfiguratorTourUtils from '@sale/js/tours/combo_configurator_tour_utils';
 import productConfiguratorTourUtils from '@sale/js/tours/product_configurator_tour_utils';
 import * as wsTourUtils from '@website_sale/js/tours/tour_utils';
@@ -25,6 +24,7 @@ registry
                 content: "Proceed to checkout",
                 trigger: 'button:contains(Proceed to Checkout)',
                 run: 'click',
+                willUnload: true,
             },
             wsTourUtils.assertCartContains({ productName: "Combo product" }),
             wsTourUtils.assertCartContains({ productName: "3 x Product A1" }),
@@ -35,10 +35,7 @@ registry
             },
             {
                 content: "Verify the combo product's quantity",
-                trigger: 'div[name="website_sale_cart_line_quantity"] input.quantity',
-                run: async () => await waitUntil(
-                    () => queryValue('div[name="website_sale_cart_line_quantity"] input.quantity') === '3', { timeout: 1000 }
-                ),
+                trigger: 'div[name="website_sale_cart_line_quantity"] input.quantity:value(3)',
             },
             {
                 content: "Verify the combo product's price",

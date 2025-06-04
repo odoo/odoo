@@ -94,7 +94,10 @@ const homePage = 'tr:contains("Home")';
 const refreshPage = [
     {
         trigger: "body",
-        run() {window.location.reload();},
+        run() {
+            window.location.reload();
+        },
+        willUnload: true,
     },
 ];
 const duplicateSinglePage = [

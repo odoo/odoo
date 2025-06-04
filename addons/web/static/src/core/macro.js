@@ -103,6 +103,14 @@ async function waitUntil(predicate) {
     });
 }
 
+/**
+ * Stop the current macro and allow pageHide or beforeUnload to be triggered without causing an error
+ */
+export function beforeMacroUnload() {
+    console.warn("beforeMacroUnload");
+    window.dispatchEvent(new CustomEvent("StopMacro"));
+}
+
 export class Macro {
     currentIndex = 0;
     isComplete = false;
@@ -125,6 +133,28 @@ export class Macro {
     }
 
     async start() {
+        const handleUnloadEvent = () => {
+            console.warn("handleUnloadEvent");
+            const tokenFromStorage = sessionStorage.getItem("waitForUnload");
+            if (!tokenFromStorage) {
+                const message = `
+                    Be sure to use beforeMacroUnload() (exported in macro.js) for 
+                    any action() {} that involves firing a beforeUnload or pageHide event.
+                    This helps avoid non-deterministic behavior by explicitly stopping 
+                    the macro that might continue before the page is unloaded.
+                `.replace(/^\s+/gm, "");
+                const error = new MacroError("AuthorizeBeforeUnload", message);
+                this.stop(error);
+            }
+        };
+        window.addEventListener("beforeunload", handleUnloadEvent);
+        window.addEventListener("pagehide", handleUnloadEvent);
+        sessionStorage.removeItem("waitForUnload");
+        window.addEventListener("StopMacro", () => {
+            console.warn("StopMacro fired");
+            sessionStorage.setItem("waitForUnload", "1");
+            this.stop();
+        });
         await this.advance();
     }
 

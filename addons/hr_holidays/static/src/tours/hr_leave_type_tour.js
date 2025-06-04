@@ -122,6 +122,7 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             content: "Confirm the company selection",
             tooltipPosition: "bottom",
             run: "click",
+            willUnload: true,
         },
         {
             trigger: "button.o_form_button_create",

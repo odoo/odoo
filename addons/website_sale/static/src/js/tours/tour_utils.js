@@ -6,8 +6,17 @@ export function addToCart({productName, search = true, productHasVariants = fals
     if (search) {
         steps.push(...searchProduct(productName));
     }
-    steps.push(clickOnElement(productName, `a:contains(${productName})`));
-    steps.push(clickOnElement('Add to cart', '#add_to_cart'));
+    steps.push({
+        content: productName,
+        trigger: `a:contains(${productName})`,
+        run: "click",
+        willUnload: true,
+    });
+    steps.push({
+        content: "Add to cart",
+        trigger: "#add_to_cart",
+        run: "click",
+    });
     if (productHasVariants) {
         steps.push(clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'));
     }
@@ -101,6 +110,7 @@ export function goToCart({quantity = 1, position = "bottom", backend = false} = 
         trigger: `${backend ? ":iframe" : ""} a sup.my_cart_quantity:contains(/^${quantity}$/)`,
         tooltipPosition: position,
         run: "click",
+        willUnload: true,
     };
 }
 
@@ -109,6 +119,7 @@ export function goToCheckout() {
         content: 'Checkout your order',
         trigger: 'a[href^="/shop/checkout"]',
         run: 'click',
+        willUnload: true,
     };
 }
 
@@ -117,6 +128,7 @@ export function confirmOrder() {
         content: 'Confirm',
         trigger: 'a[href^="/shop/confirm_order"]',
         run: 'click',
+        willUnload: true,
     };
 }
 

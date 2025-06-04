@@ -112,6 +112,7 @@ webTours.add("update_shipping_after_discount", {
             content: "apply discount code",
             trigger: "form[name=coupon_code] .a-submit",
             run: "click",
+            willUnload: true,
         },
         ...assertCartAmounts({
             total: "0.00", // $50 total is covered by eWallet

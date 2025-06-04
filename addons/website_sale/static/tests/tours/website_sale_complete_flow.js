@@ -10,6 +10,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Open product page",
         trigger: '.oe_product_cart a:contains("Storage Box Test")',
         run: "click",
+        willUnload: true,
     },
     {
         content: "Add one more storage box",
@@ -36,11 +37,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         untaxed: '158.00',
         total: '181.70',
     }),
-    {
-        content: "Proceed to checkout",
-        trigger: 'a[href*="/shop/checkout"]',
-        run: "click",
-    },
+        tourUtils.goToCheckout(),
     {
         content: "Fulfill delivery address form",
         trigger: 'select[name="country_id"]',
@@ -74,6 +71,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Click on Confirm button",
         trigger: 'a[name="website_sale_main_button"]',
         run: "click",
+        willUnload: true,
     },
     {
         content: "Billing address is not same as delivery address",
@@ -84,6 +82,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Add a billing address",
         trigger: '.o_portal_address_row a[href^="/shop/address?address_type=billing"]:contains("Add address")',
         run: "click",
+        willUnload: true,
     },
     {
         trigger: 'h4:contains("New address")',
@@ -121,6 +120,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Click on Confirm button to save the address",
         trigger: 'a[name="website_sale_main_button"]',
         run: "click",
+        willUnload: true,
     },
     {
         content: "Check selected delivery address is same as typed in previous step",
@@ -134,6 +134,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Click for edit billing address",
         trigger: '#billing_container .o_portal_address_row a[href^="/shop/address?address_type=billing"].js_edit_address:first',
         run: "click",
+        willUnload: true,
     },
     {
         trigger: 'h4:contains("Edit address")',
@@ -162,6 +163,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Click on Confirm button to save the address",
         trigger: 'a[name="website_sale_main_button"]',
         run: "click",
+        willUnload: true,
     },
         tourUtils.confirmOrder(),
     {
@@ -181,11 +183,13 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Pay Now",
         trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
         run: "click",
+        willUnload: true,
     },
     {
         content: "Sign up",
         trigger: '.oe_cart a:contains("Sign Up")',
         run: "click",
+        willUnload: true,
     },
     {
         trigger: `.oe_signup_form input[name="password"]`,
@@ -199,6 +203,7 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Submit login",
         trigger: `.oe_signup_form button[type="submit"]`,
         run: "click",
+        willUnload: true,
     },
     {
         content: "See Quotations",
@@ -218,11 +223,13 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
         content: "Logout",
         trigger: '#o_logout:contains("Logout")',
         run: "click",
+        willUnload: true,
     },
     {
         content: "Sign in as admin",
         trigger: 'header a[href="/web/login"]',
         run: "click",
+        willUnload: true,
     },
     {
         trigger: `.oe_login_form input[name="login"]`,
@@ -241,7 +248,8 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     {
         content: "Submit login",
         trigger: `.oe_login_form button[type="submit"]`,
-        run: "click"
+        run: "click",
+        willUnload: true,
     },
     {
         trigger: ".o_frontend_to_backend_nav", // Check if the user is connected
@@ -249,8 +257,8 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
     {
         content: "Configuration Settings for 'Tax Included' and sign up 'On Invitation'",
         trigger: '#wrapwrap',
-        run: function () {
-            var def1 = rpc(`/web/dataset/call_kw/res.config.settings/create`, {
+        async run() {
+            await rpc(`/web/dataset/call_kw/res.config.settings/create`, {
                 model: "res.config.settings",
                 method: "create",
                 args: [{
@@ -259,18 +267,15 @@ import * as tourUtils from "@website_sale/js/tours/tour_utils";
                 }],
                 kwargs: {},
             });
-            var def2 = def1.then(function (resId) {
-                return rpc(`/web/dataset/call_kw/res.config.settings/execute`, {
-                    model: "res.config.settings",
-                    method: "execute",
-                    args: [[resId]],
-                    kwargs: {},
-                });
+            await rpc(`/web/dataset/call_kw/res.config.settings/execute`, {
+                model: "res.config.settings",
+                method: "execute",
+                args: [[resId]],
+                kwargs: {},
             });
-            def2.then(function () {
-                window.location.href = '/web/session/logout?redirect=/shop?search=Storage Box Test';
-            });
+            window.location.href = '/web/session/logout?redirect=/shop?search=Storage Box Test';
         },
+        willUnload: true,
     },
     // Testing b2b with Tax-Included Prices
     {
