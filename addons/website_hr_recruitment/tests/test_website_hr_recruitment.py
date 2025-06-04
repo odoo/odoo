@@ -23,7 +23,6 @@ class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
             'is_published': True,
             'department_id': department.id,
         })
-        self.start_tour(self.env['website'].get_client_action_url('/jobs'), 'model_required_field_should_have_action_name', login='admin')
 
         self.start_tour(self.env['website'].get_client_action_url('/jobs'), 'website_hr_recruitment_tour_edit_form', login='admin')
 

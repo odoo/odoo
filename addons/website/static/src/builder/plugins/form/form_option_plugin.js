@@ -124,10 +124,19 @@ export class FormOptionPlugin extends Plugin {
         },
         remove_disabled_reason_providers: ({ el, reasons }) => {
             if (el.classList.contains("s_website_form_model_required")) {
+                const models = this.modelsCache.get();
+                const modelName = el.closest("form")?.dataset.model_name;
+                const model = models?.find((model) => model.model === modelName);
+                const fieldName = getFieldName(el);
                 reasons.push(
-                    _t(
-                        "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility' option instead and add it a default value."
-                    )
+                    model
+                        ? _t(
+                              'The field "%(fieldName)s" is mandatory for the action "%(actionName)s".',
+                              { fieldName, actionName: model.website_form_label }
+                          )
+                        : _t("The field “%(fieldName)s” is mandatory for the selected action.", {
+                              fieldName,
+                          })
                 );
             }
             if (el.classList.contains("s_website_form_submit")) {
