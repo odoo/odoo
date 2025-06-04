@@ -64,27 +64,30 @@
         <field name="priority">1000</field>
         <field name="arch" type="xml">
             <list string="Purchase Order Lines"
-            decoration-muted="state in ['cancel', 'purchase']"
-                create="0" delete="0" edit="0" expand="1"
+                decoration-muted="state == 'cancel' or product_qty == 0.0"
+                create="0" delete="0" editable="bottom" expand="1" multi_edit="1"
                 js_class="purchase_order_line_compare">
                 <header>
                     <button name="action_clear_quantities" string="Clear Selected" type="object" class="o_clear_qty_buttons"/>
                 </header>
                 <field name="product_id" readonly="1"/>
                 <field name="partner_id" string="Vendor"/>
-                <field name="order_id" string="Reference" readonly="1"/>
-                <field name="state"/>
+                <field name="order_id" string="Reference" readonly="1" widget="many2one"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'purchase'"
+                    decoration-warning="state == 'to approve'"
+                    decoration-info="state in ('draft', 'sent')"/>
                 <field name="name" readonly="1"/>
                 <field name="date_planned" readonly="1"/>
                 <field name="product_qty"/>
-                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom"/>
-                <field name="price_unit" widget="monetary"/>
+                <field name="product_uom_id" groups="uom.group_uom" widget="many2one_uom" options="{'no_open': True}" readonly="1"/>
+                <field name="price_unit" widget="monetary" readonly="1"/>
                 <field name="price_subtotal" string="Total"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="price_total_cc" string="Company Total" widget="monetary"/>
                 <field name="company_currency_id" column_invisible="True"/>
                 <button name="action_choose" string="Choose" type="object" class="o_clear_qty_buttons" icon="fa-bullseye"
-                    invisible="product_qty &lt;= 0.0"/>
+                    invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
                 <button name="action_clear_quantities" string="Clear" type="object" class="o_clear_qty_buttons" icon="fa-times"
                     invisible="product_qty &lt;= 0.0 or state in ['cancel', 'purchase']"/>
             </list>
