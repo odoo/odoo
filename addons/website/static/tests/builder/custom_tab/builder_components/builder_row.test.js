@@ -88,7 +88,7 @@ describe("website tests", () => {
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeDisplayed();
-            expect(".o_we_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
         });
 
         test("expand=true is expanded by default", async () => {
@@ -100,7 +100,7 @@ describe("website tests", () => {
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeDisplayed();
             await animationFrame();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
         });
 
         test("Toggler button is not visible if no dependency is active", async () => {
@@ -111,7 +111,7 @@ describe("website tests", () => {
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeDisplayed();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(0);
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(0);
         });
 
         test("expand=true works when a dependency becomes active", async () => {
@@ -124,8 +124,8 @@ describe("website tests", () => {
             expect(".options-container").toBeDisplayed();
             await contains(".options-container button[data-class-action='a']").click();
             await animationFrame();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(1);
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
             expect(".options-container button[data-class-action='b']").toBeVisible();
         });
 
@@ -151,17 +151,17 @@ describe("website tests", () => {
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeDisplayed();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(0);
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(0);
             await contains(".options-container .dropdown-toggle").click();
             await contains(".dropdown-menu [data-class-action='a']").click();
             await animationFrame();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(1);
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
             expect(".options-container button[data-class-action='b']").toBeVisible();
             expect(".options-container button[data-class-action='d']").not.toBeVisible();
             await contains(".options-container .dropdown-toggle").click();
             await contains(".dropdown-menu [data-class-action='c']").click();
             await animationFrame();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(1);
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
             expect(".options-container button[data-class-action='d']").toBeVisible();
         });
@@ -174,13 +174,13 @@ describe("website tests", () => {
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeDisplayed();
-            expect(".o_we_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
-            await contains(".o_we_collapse_toggler:not(.d-none)").click();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveClass("active");
+            await contains(".o_hb_collapse_toggler:not(.d-none)").click();
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
             expect(".options-container button[data-class-action='b']").toBeVisible();
-            await contains(".o_we_collapse_toggler:not(.d-none)").click();
-            expect(".o_we_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            await contains(".o_hb_collapse_toggler:not(.d-none)").click();
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
         });
 
@@ -192,13 +192,13 @@ describe("website tests", () => {
             await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeDisplayed();
-            expect(".o_we_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
             await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveClass("active");
             expect(".options-container button[data-class-action='b']").toBeVisible();
             await contains("[data-label='Test Collapse'] span:contains('Test Collapse')").click();
-            expect(".o_we_collapse_toggler:not(.d-none)").not.toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none)").not.toHaveClass("active");
             expect(".options-container button[data-class-action='b']").not.toBeVisible();
         });
 
@@ -215,20 +215,20 @@ describe("website tests", () => {
             await contains(":iframe .test-options-target").click();
             expect(".options-container").toBeDisplayed();
             await animationFrame();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(1);
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(1);
             await contains(".options-container [data-class-action='a']:first").click();
             await animationFrame();
-            expect(".o_we_collapse_toggler:not(.d-none)").toHaveCount(2);
-            expect(".o_we_collapse_toggler:not(.d-none):first").toHaveClass("active");
-            expect(".o_we_collapse_toggler:not(.d-none):not(.d-none):last").not.toHaveClass(
+            expect(".o_hb_collapse_toggler:not(.d-none)").toHaveCount(2);
+            expect(".o_hb_collapse_toggler:not(.d-none):first").toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none):not(.d-none):last").not.toHaveClass(
                 "active"
             );
-            await contains(".options-container .o_we_collapse_toggler:not(.d-none):last").click();
-            expect(".o_we_collapse_toggler:not(.d-none):first").toHaveClass("active");
-            expect(".o_we_collapse_toggler:not(.d-none):last").toHaveClass("active");
-            await contains(".options-container .o_we_collapse_toggler:not(.d-none):first").click();
-            expect(".o_we_collapse_toggler:not(.d-none):first").not.toHaveClass("active");
-            expect(".o_we_collapse_toggler:not(.d-none):last").toHaveClass("active");
+            await contains(".options-container .o_hb_collapse_toggler:not(.d-none):last").click();
+            expect(".o_hb_collapse_toggler:not(.d-none):first").toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none):last").toHaveClass("active");
+            await contains(".options-container .o_hb_collapse_toggler:not(.d-none):first").click();
+            expect(".o_hb_collapse_toggler:not(.d-none):first").not.toHaveClass("active");
+            expect(".o_hb_collapse_toggler:not(.d-none):last").toHaveClass("active");
         });
     });
 });
