@@ -4,15 +4,19 @@
     <template id="unavailable_products_warning">
         <div
             name="unavailable_products_warning"
-            t-attf-class="alert alert-warning mt-2 {{'' if is_selected else 'd-none'}}"
+            t-attf-class="alert alert-warning mt-2 mb-2 {{'' if is_selected else 'd-none'}}"
         >
-            Some of the products are not available at <strong><t t-out="wh_name"/></strong>.
+            <div class="ms-1">
+                Some of the products are not available at <strong><t t-out="wh_name"/></strong>.
+            </div>
             <div
-                t-foreach="unavailable_order_lines"
-                t-as="order_line"
-                t-attf-class="d-flex gap-3 m-2 position-relative"
+                t-foreach="unavailable_order_lines.items()"
+                t-as="item"
+                t-attf-class="d-flex gap-3 m-1 position-relative"
             >
-                <div class="d-flex align-items-center gap-2">
+                <t t-set="order_line" t-value="item[0]"/>
+                <t t-set="available_qty" t-value="int(item[1])"/>
+                <div class="d-flex align-items-top gap-2">
                     <a t-att-href="order_line.product_id.website_url">
                         <span
                             t-field="order_line.product_id.image_128"
@@ -21,30 +25,37 @@
                     </a>
                 </div>
                 <div>
-                    <t t-out="order_line.product_id.name"/>
-                    ( <t t-out="order_line.shop_warning"/> )
+                    <t t-set="attrib_names" t-value="order_line.product_id.product_template_attribute_value_ids._get_combination_name()"/>
+                    <div class="fw-bold">
+                        <t t-out="order_line.product_id.name"/> <t t-if="attrib_names" t-out="' - ' + attrib_names"/>
+                    </div>
+                    <div>
+                        <t t-out="'%s/%s available in this location' % (available_qty, int(order_line.product_uom_qty))"/>
+                    </div>
+                    <t t-set="buttonTitle" t-value="'Update cart' if available_qty else 'Remove from cart'"/>
                     <div name="o_wsale_unavailable_line_button_container">
                         <a
-                            title="Remove from cart"
+                            t-att-title="buttonTitle"
                             href='#'
-                            class="js_wsc_delete_product d-none d-md-inline-block small"
+                            class="js_wsc_update_product_qty d-none d-md-inline-block small"
                             aria-label="Remove from cart"
                         >
                             <span
                                 t-att-data-line-id="order_line.id"
                                 t-att-data-product-id="order_line.product_id.id"
-                            >
-                                Remove
-                            </span>
+                                t-att-data-available-qty="available_qty"
+                                t-out="'Update' if available_qty else 'Remove'"
+                            />
                         </a>
                         <button
-                            title="Remove from cart"
-                            class="js_wsc_delete_product btn btn-light d-inline-block d-md-none"
+                            t-att-title="buttonTitle"
+                            class="js_wsc_update_product_qty btn btn-light d-inline-block d-md-none mt-1"
                         >
                             <i
-                                class="fa fa-trash-o"
+                                t-att-class="'fa fa-refresh' if available_qty else 'fa fa-trash-o'"
                                 t-att-data-line-id="order_line.id"
                                 t-att-data-product-id="order_line.product_id.id"
+                                t-att-data-available-qty="available_qty"
                             />
                         </button>
                     </div>

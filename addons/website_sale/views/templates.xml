@@ -2715,11 +2715,11 @@
                     t-if="order._has_deliverable_products()"
                     groups="account.group_delivery_invoice_address"
                 >
-                    <t t-call="website_sale.delivery_address_row">
-                        <t t-set="addresses" t-value="delivery_addresses"/>
-                    </t>
                     <t t-call="website_sale.delivery_form">
                         <t t-set="selected_dm_id" t-value="order.carrier_id.id"/>
+                    </t>
+                    <t t-call="website_sale.delivery_address_row">
+                        <t t-set="addresses" t-value="delivery_addresses"/>
                     </t>
                 </t>
                 <t t-call="website_sale.billing_address_row">
@@ -2738,7 +2738,7 @@
 
     <template id="delivery_address_row">
         <div id="delivery_address_row" class="mb-4">
-            <h4 class="mb-3">Delivery address</h4>
+            <h5 name="delivery_address_title" class="mb-3">Delivery address</h5>
             <t t-call="website_sale.address_row">
                 <t t-set="address_type" t-value="'delivery'"/>
                 <t t-set="addresses" t-value="delivery_addresses"/>
@@ -2765,7 +2765,10 @@
                             id="use_delivery_as_billing"
                             class="form-check-input"
                             t-att-checked="use_delivery_as_billing"
-                        /> Same as delivery address
+                        />
+                        <span name="use_delivery_as_billing_text">
+                            Same as delivery address
+                        </span>
                     </label>
                 </div>
             </t>

@@ -5,11 +5,11 @@
         inherit_id="website_sale_collect.unavailable_products_warning"
     >
         <div name="o_wsale_unavailable_line_button_container" position="inside">
-            <span class="d-none d-md-inline-block ms-1">
+            <span t-if="available_qty == 0" class="d-none d-md-inline-block ms-1">
                 <a
                     title="Add to Wishlist"
                     href="#"
-                    class="o_add_wishlist js_wsc_delete_product small px-2 border-start"
+                    class="o_add_wishlist js_wsc_update_product_qty small px-2 border-start"
                     t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
                     t-att-data-product-product-id="order_line.product_id.id"
                     data-action="o_wishlist"
@@ -17,14 +17,16 @@
                     <span
                         t-att-data-line-id="order_line.id"
                         t-att-data-product-id="order_line.product_id.id"
+                        t-att-data-available-qty="available_qty"
                     >
                         Save for Later
                     </span>
                 </a>
             </span>
             <button
+                t-if="available_qty == 0"
                 title="Add to Wishlist"
-                class="o_add_wishlist js_wsc_delete_product small btn btn-light d-md-none"
+                class="o_add_wishlist js_wsc_update_product_qty small btn btn-light d-md-none"
                 t-att-data-product-template-id="order_line.product_id.product_tmpl_id.id"
                 t-att-data-product-product-id="order_line.product_id.id"
                 data-action="o_wishlist"
@@ -33,6 +35,7 @@
                     class="fa fa-heart-o"
                     t-att-data-line-id="order_line.id"
                     t-att-data-product-id="order_line.product_id.id"
+                    t-att-data-available-qty="available_qty"
                 />
             </button>
         </div>

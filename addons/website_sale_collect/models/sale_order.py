@@ -135,22 +135,23 @@ class SaleOrder(models.Model):
         return not self._get_unavailable_order_lines(wh_id)
 
     def _get_unavailable_order_lines(self, wh_id):
-        """ Return the order lines with unavailable products for the given warehouse.
+        """ Return the order lines with unavailable products and their max available quantity for
+        the given warehouse.
 
         :param int wh_id: The warehouse in which to check the stock, as a `stock.warehouse` id.
         :return: The order lines with unavailable products.
-        :rtype: sale.order.line
+        :rtype: dict
         """
-        unavailable_order_lines = self.env['sale.order.line']
+        unavailable_sol_max_qty_available = {}
         for ol in self.order_line:
             if ol.is_storable:
                 product = ol.product_id
                 cart_qty = self._get_cart_qty(product.id)
                 free_qty = product.with_context(warehouse_id=wh_id).free_qty
                 if cart_qty > free_qty:
-                    ol._set_shop_warning_stock(cart_qty, max(free_qty, 0))
-                    unavailable_order_lines |= ol
-        return unavailable_order_lines
+                    max_available_qty = max(free_qty, 0)
+                    unavailable_sol_max_qty_available[ol] = max_available_qty
+        return unavailable_sol_max_qty_available
 
     def _verify_updated_quantity(self, order_line, product_id, new_qty, **kwargs):
         """ Override of `website_sale_stock` to skip the verification when click and collect

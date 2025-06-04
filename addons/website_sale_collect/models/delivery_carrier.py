@@ -10,10 +10,17 @@ from odoo.addons.website_sale_collect import utils
 class DeliveryCarrier(models.Model):
     _inherit = 'delivery.carrier'
 
+    def _get_default_wh_ids(self):
+        return self.env['stock.warehouse'].sudo().search(
+            [('company_id', 'in', self.env.company.id)]
+        ).ids
+
     delivery_type = fields.Selection(
         selection_add=[('in_store', "Pick up in store")], ondelete={'in_store': 'set default'}
     )
-    warehouse_ids = fields.Many2many(string="Stores", comodel_name='stock.warehouse')
+    warehouse_ids = fields.Many2many(
+        string="Stores", comodel_name='stock.warehouse', default=_get_default_wh_ids
+    )
 
     @api.constrains('delivery_type', 'is_published', 'warehouse_ids')
     def _check_in_store_dm_has_warehouses_when_published(self):
