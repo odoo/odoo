@@ -1467,7 +1467,7 @@ class Website(models.Model):
                 order = View._order
             views = View.with_context(active_test=False).search(domain, order=order)
             if views:
-                view = views.filter_duplicate()
+                view = views.filter_duplicate()[:1]
             else:
                 # we handle the raise below
                 view = self.env.ref(view_id, raise_if_not_found=False)
