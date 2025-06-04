@@ -20,7 +20,7 @@ import { Plugin } from "../plugin";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand"];
+    static dependencies = ["userCommand", "selection"];
 
     setup() {
         const hotkeyService = this.services.hotkey;
@@ -32,17 +32,25 @@ export class ShortCutPlugin extends Plugin {
         }
         for (const shortcut of this.getResource("shortcuts")) {
             const command = this.dependencies.userCommand.getCommand(shortcut.commandId);
-            this.addShortcut(shortcut.hotkey, () => {
-                command.run(shortcut.commandParams);
-            });
+            this.addShortcut(
+                shortcut.hotkey,
+                () => {
+                    command.run(shortcut.commandParams);
+                },
+                { isAvailable: command.isAvailable }
+            );
         }
     }
 
-    addShortcut(hotkey, action) {
+    addShortcut(hotkey, action, { isAvailable }) {
         this.services.hotkey.add(hotkey, action, {
             area: () => this.editable,
             bypassEditableProtection: true,
             allowRepeat: true,
+            isAvailable: () =>
+                isAvailable
+                    ? isAvailable(this.dependencies.selection.getEditableSelection())
+                    : true,
         });
     }
 }
