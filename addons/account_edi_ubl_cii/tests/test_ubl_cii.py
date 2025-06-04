@@ -273,7 +273,7 @@ class TestAccountEdiUblCii(AccountTestInvoicingCommon):
         bill = self.import_attachment(xml_attachment)
 
         self.assertRecordValues(bill.partner_id, [partner_vals])
-        self.assertEqual(bill.partner_id.contact_address, "270 rte d'Arlon\n\n8010 Strassen \nLuxembourg")
+        self.assertEqual(bill.partner_id.contact_address, "270 rte d'Arlon\n8010 Strassen\nLuxembourg")
 
     def test_actual_delivery_date_in_cii_xml(self):
 

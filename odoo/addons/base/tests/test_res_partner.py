@@ -1014,6 +1014,33 @@ class TestPartnerAddressCompany(TransactionCase):
         res_bhide = test_partner_bhide.with_context(show_address=1).display_name
         self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
+        partner = self.env['res.partner'].create({
+            'name': 'John',
+            'street': '123 Road',
+            'street2': '',
+            'city': 'Nowhere',
+        })
+        name = partner.with_context(show_address=True).display_name
+        self.assertEqual(name, 'John\n123 Road\nNowhere')
+
+        partner = self.env['res.partner'].create({
+            'name': 'John',
+            'street': '',
+            'street2': '123 Road',
+            'city': 'Nowhere',
+        })
+        name = partner.with_context(show_address=True).display_name
+        self.assertEqual(name, 'John\n123 Road\nNowhere')
+
+        partner = self.env['res.partner'].create({
+            'name': 'John',
+            'street': '',
+            'street2': '',
+            'city': 'Nowhere',
+        })
+        name = partner.with_context(show_address=True).display_name
+        self.assertEqual(name, 'John\nNowhere')
+
     def test_accessibility_of_company_partner_from_branch(self):
         """ Check accessibility of company partner from branch. """
         company = self.env['res.company'].create({'name': 'company'})
