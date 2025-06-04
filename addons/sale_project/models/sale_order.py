@@ -324,3 +324,9 @@ class SaleOrder(models.Model):
             # do nothing since the SO has been automatically confirmed during its creation
             return True
         return super().action_confirm()
+
+    def get_first_service_line(self):
+        line = next((sol for sol in self.order_line if sol.is_service), False)
+        if not line:
+            raise UserError(self.env._('The Sales Order must contain at least one service product.'))
+        return line
