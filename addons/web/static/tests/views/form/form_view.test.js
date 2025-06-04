@@ -10,6 +10,7 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
+    waitFor,
 } from "@odoo/hoot-dom";
 import {
     Deferred,
@@ -12791,4 +12792,79 @@ test(`pager is up to date`, async () => {
         message: "the pager indicator should be displayed",
     });
     expect(".o_pager_indicator").toHaveText("2 / 2");
+});
+
+test("Deletion raises a UserError, archive action available", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        } else if (method === "action_archive") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="foo"/>
+            </form>
+        `,
+        resId: 1,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect("h4.modal-title").toHaveText("Archive records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-primary").toHaveText("Archive");
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["unlink", "action_archive"]);
+    expect(".modal").toHaveCount(0);
+});
+
+test("Deletion raises a UserError, archive action not available", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        }
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <field name="display_name"/>
+            </form>
+        `,
+        resId: 1,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect.verifySteps(["unlink"]);
+    expect.errors(1);
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+    expect.verifyErrors([message]);
 });
