@@ -145,14 +145,14 @@
                     <div class="oe_title mw-100 pe-0">
                         <h1 class="d-flex flex-row justify-content-between">
                             <field name="name" class="o_task_name text-truncate" placeholder="Task Title..."/>
-                            <div class="d-flex justify-content-end o_state_container" invisible="not active">
-                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
-                            </div>
-                            <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" invisible="active">
-                                <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
-                            </div>
-                        </h1>
-                    </div>
+                        </div>
+                        <div class="d-flex justify-content-end o_state_container" invisible="not active">
+                            <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                        </div>
+                        <div class="d-flex justify-content-start o_state_container w-100 w-md-50 w-lg-25" invisible="active">
+                            <field name="state" widget="project_task_state_selection" class="o_task_state_widget"/>
+                        </div>
+                    </h1>
                     <group>
                         <group>
                             <field name="project_id" invisible="1"/>
