@@ -45,6 +45,15 @@ export function closeSession() {
         },
     ];
 }
+export function isCashMoveButtonHidden() {
+    return [
+        {
+            extraTrigger: ".pos-topheader",
+            trigger: ".pos-topheader:not(:contains(Cash In/Out))",
+            run: () => {},
+        },
+    ];
+}
 export function isCashMoveButtonShown() {
     return [
         {
