@@ -3,25 +3,51 @@
 
 <t t-name="html_builder.BuilderRow">
     <BuilderComponent>
-        <div class="d-flex position-relative p-1 px-2 ps-3 hb-row" t-att-class="this.getLevelClass()" t-ref="root" t-att-data-label="props.label">
-            <button t-ref="collapse"
-                    class="o_we_collapse_toggler pt-1 d-none" t-att-class="{ 'active': state.expanded }"
-                    title="Toggle more options"
-                    t-on-click="toggleCollapseContent"
-                    t-att-aria-expanded="state.expanded ? 'true' : 'false'"
-                    t-att-aria-controls="collapseContentId"/>
+        <div
+            class="hb-row d-flex position-relative pe-2"
+            t-att-class="this.getLevelClass()"
+            t-ref="root"
+            t-att-data-label="props.label"
+            >
+
+            <button
+                t-ref="collapse"
+                t-if="props.slots.collapse"
+                class="o_hb_collapse_toggler btn border-0 bg-transparent"
+                t-att-class="{ 'active fa-rotate-90': state.expanded }"
+                title="Toggle more options"
+                t-on-click="toggleCollapseContent"
+                t-att-aria-expanded="state.expanded ? 'true' : 'false'"
+                t-att-aria-controls="collapseContentId">
+                <i
+                    class="fa fa-caret-right"
+                    role="img"
+                />
+            </button>
+
             <t t-if="props.label">
-                <div class="d-flex hb-row-label align-items-center"
-                     t-attf-style="flex-grow: 0.4; flex-basis: 0; min-width: 0;"
-                     t-att-data-tooltip="state.tooltip"
-                     t-on-click="toggleCollapseContent">
+                <div
+                    class="hb-row-label d-flex align-items-center"
+                    t-att-class="{'hb-row-label-actionable': props.slots.collapse}"
+                    t-att-data-tooltip="state.tooltip"
+                    t-on-click="toggleCollapseContent"
+                    >
+
                     <span class="text-nowrap text-truncate" t-out="props.label" t-ref="label"/>
                 </div>
-                <div class="d-flex" style="flex-grow: 0.6; flex-basis: 0; min-width: 0; gap: 4px;" t-ref="content">
+                <div
+                    class="hb-row-content d-flex"
+                    t-ref="content"
+                    >
                     <t t-slot="default"/>
                 </div>
             </t>
-            <div t-else="" class="d-flex" style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;" t-ref="content">
+            <div
+                t-else=""
+                class="d-flex"
+                style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;"
+                t-ref="content"
+                >
                 <t t-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
             </div>
         </div>

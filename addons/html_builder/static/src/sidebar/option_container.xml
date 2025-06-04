@@ -3,12 +3,22 @@
 
 <t t-name="html_builder.OptionsContainer">
     <div t-if="props.options.length"
-         class="options-container" t-ref="root" t-att-data-container-title="title"
+         class="options-container mb-1" t-ref="root" t-att-data-container-title="title"
          t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
-        <div class="we-bg-darker d-flex align-items-center justify-content-between">
-            <span class="options-container-label flex-grow-1 ps-2 py-2 cursor-pointer" t-out="title" role="button" t-on-click="selectElement"/>
+        <div class="options-container-header d-flex align-items-center justify-content-between">
+            <t t-set="isActionable" t-value="Object.keys(props.snippetModel).length > 0"></t>
+            <span
+                class="options-container-label flex-grow-1 ps-2 py-2"
+                t-att-class="{
+                    'options-container-label-actionable cursor-pointer': isActionable,
+                }"
+                t-out="title"
+                t-att-role="isActionable ? 'button' : 'heading'"
+                t-on-click="selectElement"
+            />
+
             <div class="d-flex align-items-center gap-1 p-2">
-                <div t-if="props.headerMiddleButtons" class="me-3 d-inline">
+                <div t-if="props.headerMiddleButtons">
                     <t t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
                         <BuilderContext applyTo="headerMiddleButton.applyTo">
                             <t t-if="headerMiddleButton.Component"

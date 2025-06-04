@@ -4,7 +4,7 @@
     border-radius: $o-we-sidebar-content-field-border-radius;
     background-color: $o-we-sidebar-content-field-input-bg;
     padding: 0.15rem $o-we-sidebar-content-field-clickable-spacing;
-    flex: 0 1 50%;
+    flex: 0 1 calc(50% - calc(var(--hb-row-content-gap) * 0.5));
 
     &:focus, &:focus-within {
         border-color: var(--o-hb-input-active-border, #{$o-we-sidebar-content-field-input-border-color});

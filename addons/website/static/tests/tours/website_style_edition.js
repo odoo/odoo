@@ -56,7 +56,7 @@ registerWebsitePreviewTour("website_style_edition", {
     run: "click",
 }, {
     content: "Open a color combination",
-    trigger: "div[id^='builder_collapse_content'] button.o_we_collapse_toggler",
+    trigger: "div[id^='builder_collapse_content'] button.o_hb_collapse_toggler",
     run: "click",
 }, {
     content: "Edit the background color of that color combination",

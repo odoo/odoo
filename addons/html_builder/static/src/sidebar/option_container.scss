@@ -1,8 +1,22 @@
 .options-container {
-    .we-bg-options-container {
-        > div {
-            margin-top: 1px;
-            margin-bottom: 1px;
+    background-color: $o-we-bg-lighter;
+
+    .options-container-header {
+        --o-hb-btn-has-icon-paddingX: #{map-get($spacers, 1)};
+
+        background-color: $o-we-bg-light;
+    }
+
+    &:where(:not(:first-of-type)) .options-container-header {
+        box-shadow: inset 0 1px 0 $o-we-bg-lighter;
+    }
+
+    .options-container-label {
+        color: $o-we-fg-light;
+        font-size: $o-we-font-size-lg;
+
+        &-actionable:hover {
+            color: $o-we-fg-lighter
         }
     }
 
