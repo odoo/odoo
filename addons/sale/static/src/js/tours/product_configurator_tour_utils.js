@@ -1,4 +1,4 @@
-import { queryAttribute, queryValue, waitUntil } from '@odoo/hoot-dom';
+import { queryAttribute } from '@odoo/hoot-dom';
 
 function productSelector(productName) {
     return `
@@ -71,16 +71,13 @@ function setProductQuantity(productName, quantity) {
 }
 
 function assertProductQuantity(productName, quantity) {
-    const quantitySelector = `
-        ${productSelector(productName)}
-        td.o_sale_product_configurator_qty
-        input[name="sale_quantity"]
-    `;
     return {
         content: `Assert that the quantity of ${productName} is ${quantity}`,
-        trigger: quantitySelector,
-        run: async () =>
-            await waitUntil(() => queryValue(quantitySelector) === quantity, { timeout: 1000 }),
+        trigger: `
+            ${productSelector(productName)}
+            td.o_sale_product_configurator_qty
+            input[name="sale_quantity"]:value(${quantity})
+        `,
     };
 }
 
