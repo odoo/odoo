@@ -1,31 +1,35 @@
-import logging
-import pytz
-
-from collections import namedtuple, defaultdict
-
-from datetime import datetime, timedelta, time
-from dateutil.relativedelta import relativedelta
+from collections import defaultdict
+from datetime import datetime, time, timedelta
 from math import ceil
-from pytz import timezone, UTC
+from typing import NamedTuple
+
+import pytz
+from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
+from pytz import UTC, timezone
 
-from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.addons.resource.models.utils import HOURS_PER_DAY
-
-from odoo import api, fields, models
-from odoo.addons.base.models.res_partner import _tz_get
+from odoo import Command, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.tools.date_utils import float_to_time
-from odoo.fields import Command, Domain
-from odoo.tools.float_utils import float_round, float_compare
+from odoo.tools.float_utils import float_compare, float_round
 from odoo.tools.misc import format_date
 from odoo.tools.translate import _
 
-_logger = logging.getLogger(__name__)
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons.base.models.res_partner import _tz_get
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
+
 
 # Used to agglomerate the attendances in order to find the hour_from and hour_to
 # See _compute_date_from_to
-DummyAttendance = namedtuple('DummyAttendance', 'hour_from, hour_to, dayofweek, day_period, week_type')
+class DummyAttendance(NamedTuple):
+    hour_from: float
+    hour_to: float
+    dayofweek: str
+    day_period: str | None
+    week_type: str | None
+
 
 def get_employee_from_context(values, context, user_employee_id):
     employee_ids_list = [value[2] for value in values.get('employee_ids', []) if len(value) == 3 and value[0] == Command.SET]
@@ -214,15 +218,18 @@ class HrLeave(models.Model):
     request_date_from = fields.Date('Request Start Date')
     request_date_to = fields.Date('Request End Date')
     # Interface fields used when using hour-based computation
-    request_hour_from = fields.Float(string='Hour from')
-    request_hour_to = fields.Float(string='Hour to')
+    request_hour_from = fields.Float(string='Hour from', compute='_compute_request_hour_from_to', readonly=False, store=True)
+    request_hour_to = fields.Float(string='Hour to', compute='_compute_request_hour_from_to', readonly=False, store=True)
     # used only when the leave is taken in half days
     request_date_from_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
         string="Date Period Start", default='am')
+    request_date_to_period = fields.Selection([
+        ('am', 'Morning'), ('pm', 'Afternoon')],
+        string="Date Period End", default='pm')
     # request type
-    request_unit_half = fields.Boolean('Half-Day', compute='_compute_request_unit_half', store=True, readonly=False)
-    request_unit_hours = fields.Boolean('Specific Time', compute='_compute_request_unit_hours', store=True, readonly=False)
+    request_unit_half = fields.Boolean('Half-Day', compute='_compute_request_unit_half', store=True)
+    request_unit_hours = fields.Boolean('Specific Time', compute='_compute_request_unit_hours', store=True)
     # view
     is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
@@ -248,16 +255,27 @@ class HrLeave(models.Model):
     @api.onchange('request_hour_from', 'request_hour_to')
     def _onchange_hours(self):
         # avoid negative or after midnight
-        self.request_hour_from = min(self.request_hour_from, 23.99)
-        self.request_hour_from = max(self.request_hour_from, 0.0)
-        self.request_hour_to = min(self.request_hour_to, 24)
-        self.request_hour_to = max(self.request_hour_to, 0.0)
+        self.request_hour_from = min(max(self.request_hour_from, 0.0), 23.99)
+        self.request_hour_to = min(max(self.request_hour_to, 0.0), 24)
 
-        # avoid wrong order
-        self.request_hour_to = max(self.request_hour_to, self.request_hour_from)
+    @api.depends('employee_id', 'request_date_from', 'request_date_to', 'request_unit_hours')
+    def _compute_request_hour_from_to(self):
+        env_company_calendar = self.env.company.resource_calendar_id
+        for leave in self:
+            calendar = leave.resource_calendar_id or env_company_calendar
+            if not (leave.request_unit_hours
+                and leave.employee_id
+                and leave.request_date_from
+                and leave.request_date_to
+                and calendar):
+                continue
 
-    @api.depends('employee_id', 'request_date_from', 'request_date_to', 'request_hour_from', 'request_hour_to',
-        'request_unit_half', 'request_unit_hours', 'request_date_from_period')
+            hour_from, hour_to = leave._get_hour_from_to(leave.request_date_from, leave.request_date_to)
+            leave.request_hour_from = hour_from
+            leave.request_hour_to = hour_to
+
+    @api.depends('employee_id', 'leave_type_request_unit', 'request_date_from', 'request_date_to',
+            'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
     def _compute_dashboard_warning_message(self):
         all_leaves = self.search([
             ('date_from', '<', max(self.mapped('date_to'))),
@@ -285,7 +303,7 @@ class HrLeave(models.Model):
                     'employee_name': conflicting_holiday.employee_id.name,
                     'date_from': format_date(self.env, min(conflicting_holiday.mapped('date_from'))),
                     'date_to': format_date(self.env, min(conflicting_holiday.mapped('date_to'))),
-                    'state': holiday_states[conflicting_holiday.state]
+                    'state': holiday_states[conflicting_holiday.state],
                 }
                 if conflicting_holiday.employee_id.user_id.id != self.env.uid:
                     holidays_only_have_uid = False
@@ -303,7 +321,7 @@ class HrLeave(models.Model):
                     'employee_name': conflicting_holiday_data['employee_name'] if not holidays_only_have_uid else "",
                     'date_from': conflicting_holiday_data['date_from'],
                     'date_to': conflicting_holiday_data['date_to'],
-                    'state': conflicting_holiday_data['state']
+                    'state': conflicting_holiday_data['state'],
                 } for conflicting_holiday_data in conflicting_holidays_list
             )
 
@@ -404,49 +422,53 @@ Contracts:
                           end_date=format_date(self.env, contract.date_end) if contract.date_end else _("undefined"),
                       ) for contract in contracts)))
 
-    @api.depends('request_date_from_period', 'request_hour_from', 'request_hour_to', 'request_date_from', 'request_date_to',
-                 'request_unit_half', 'request_unit_hours', 'employee_id')
+    @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
+                'request_date_from', 'request_date_to', 'request_unit_half', 'request_unit_hours', 'employee_id')
     def _compute_date_from_to(self):
         for holiday in self:
             if not holiday.request_date_from:
                 holiday.date_from = False
-            elif not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
+                continue
+
+            if not holiday.request_unit_half and not holiday.request_unit_hours and not holiday.request_date_to:
                 holiday.date_to = False
-            else:
-                if (holiday.request_unit_half or holiday.request_unit_hours) and holiday.request_date_to != holiday.request_date_from:
-                    holiday.request_date_to = holiday.request_date_from
+                continue
 
+            if holiday.request_unit_hours:
+                hour_from = holiday.request_hour_from
+                hour_to = holiday.request_hour_to
+                if not hour_from or not hour_to:
+                    computed_from, computed_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to)
+                    hour_from = hour_from or computed_from
+                    hour_to = hour_to or computed_to
 
-                day_period = {
-                    'am': 'morning',
-                    'pm': 'afternoon'
-                }.get(holiday.request_date_from_period, None) if holiday.request_unit_half else None
-
-
-                compensated_request_date_from = holiday.request_date_from
-                compensated_request_date_to = holiday.request_date_to
-
-                if holiday.request_unit_hours:
-                    hour_from = holiday.request_hour_from
-                    hour_to = holiday.request_hour_to
-                else:
+            elif holiday.request_unit_half:
+                period_map = {'am': 'morning', 'pm': 'afternoon'}
+                from_period = period_map.get(holiday.request_date_from_period)
+                to_period = period_map.get(holiday.request_date_to_period)
+                if holiday.request_date_from == holiday.request_date_to:
+                    day_period = from_period if from_period == to_period else None
                     hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to,
-                        day_period=day_period)
+                    day_period)
+                else:
+                    hour_from, _ = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_from, from_period)
+                    _, hour_to = holiday._get_hour_from_to(holiday.request_date_to, holiday.request_date_to, to_period)
 
-                holiday.date_from = self._to_utc(compensated_request_date_from, hour_from, holiday.employee_id or holiday)
-                holiday.date_to = self._to_utc(compensated_request_date_to, hour_to, holiday.employee_id or holiday)
+            else:
+                hour_from, hour_to = holiday._get_hour_from_to(holiday.request_date_from, holiday.request_date_to)
 
-    @api.depends('holiday_status_id', 'request_unit_hours')
+            holiday.date_from = self._to_utc(holiday.request_date_from, hour_from, holiday.employee_id or holiday)
+            holiday.date_to = self._to_utc(holiday.request_date_to, hour_to, holiday.employee_id or holiday)
+
+    @api.depends('leave_type_request_unit')
     def _compute_request_unit_half(self):
         for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_hours:
-                holiday.request_unit_half = False
+            holiday.request_unit_half = holiday.leave_type_request_unit == 'half_day'
 
-    @api.depends('holiday_status_id', 'request_unit_half')
+    @api.depends('leave_type_request_unit')
     def _compute_request_unit_hours(self):
         for holiday in self:
-            if holiday.holiday_status_id or holiday.request_unit_half:
-                holiday.request_unit_hours = False
+            holiday.request_unit_hours = holiday.leave_type_request_unit == 'hour'
 
     def _get_employee_domain(self):
         domain = [
@@ -549,6 +571,7 @@ Contracts:
             if not leave.date_from or not leave.date_to or not calendar:
                 result[leave.id] = (0, 0)
                 continue
+            hours, days = (0, 0)
             if leave.employee_id:
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
@@ -1500,51 +1523,13 @@ is approved, validated or refused.')
         If there are no attendances on the exact days of the request, return
         the earliest hour_from and latest hour_to that exist in the schedule.
         """
-        self.ensure_one()
+        calendar = self.resource_calendar_id
+        if not calendar:
+            return (0, 24)
+        calendar.ensure_one()
 
-        domain = [
-            ('calendar_id', '=', self.resource_calendar_id.id),
-            ('display_type', '=', False),
-            ('day_period', '!=', 'lunch'),
-        ]
-        # In the case of flexible hours, we resort to centering the holiday hours around 12pm
-        if self.resource_calendar_id.flexible_hours:
-            hours_per_day = self.resource_calendar_id.hours_per_day
-            attendances = []
-            default_start = 12.0 - (hours_per_day / 2)
-            default_end = 12.0 + (hours_per_day / 2)
-            for week_type in [0, 1]:
-                for day in range(7):
-                    if day_period:
-                        attendances.append(DummyAttendance(default_start if day_period == 'morning' else 12, 12 if day_period == 'morning' else default_end, day, day_period, week_type))
-                    else:
-                        attendances.append(DummyAttendance(default_start, default_end, day, None, week_type))
-            attendances = sorted(attendances, key=lambda att: att.dayofweek)
-        else:
-            if day_period:
-                domain.append(('day_period', '=', day_period))
-            # Must be sorted by dayofweek ASC and day_period DESC
-            attendances = self.env['resource.calendar.attendance']._read_group(domain,
-                ['week_type', 'dayofweek'],
-                ['hour_from:min', 'hour_to:max'], order="dayofweek ASC")
-
-            attendances = [DummyAttendance(hour_from, hour_to, dayofweek, None, week_type) for week_type, dayofweek, hour_from, hour_to in attendances]
-
-            # If we can't find any attendances on the exact days of the request,
-            # we default to the widest possible range that exists in the schedule.
-            default_start = min((attendance.hour_from for attendance in attendances), default=0)
-            default_end = max((attendance.hour_to for attendance in attendances), default=0)
-
-        start_week_type = 0
-        end_week_type = 0
-        if self.resource_calendar_id.two_weeks_calendar:
-            start_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_from)
-            end_week_type = self.env['resource.calendar.attendance'].get_week_type(request_date_to)
-
-        hour_from = next((att.hour_from for att in attendances if int(att.dayofweek) == request_date_from.weekday() and (int(att.week_type) == start_week_type)),
-                         default_start)
-        hour_to = next((att.hour_to for att in attendances if int(att.dayofweek) == request_date_to.weekday() and (int(att.week_type) == end_week_type)),
-                       default_end)
+        hour_from, _ = calendar.get_hours_for_date(request_date_from, day_period)
+        _, hour_to = calendar.get_hours_for_date(request_date_to, day_period)
 
         return (hour_from, hour_to)
 
