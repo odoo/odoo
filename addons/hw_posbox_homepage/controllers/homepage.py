@@ -5,6 +5,7 @@ import logging
 import netifaces
 import platform
 import re
+import requests
 import subprocess
 import threading
 import time
@@ -255,6 +256,31 @@ class IotBoxOwlHomePage(http.Controller):
             'message': 'IoT Handlers loaded successfully',
         })
 
+    @http.route('/hw_posbox_homepage/is_ngrok_enabled', auth="none", type="http")
+    def is_ngrok_enabled(self):
+        # Check if the service exists for retro-compatibility TODO: remove in v18.4
+        p = subprocess.run(
+            ['systemctl', 'is-active', 'odoo-ngrok.service'],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if p.returncode != 0:
+            return json.dumps({
+                'enabled': subprocess.call(['pgrep', 'ngrok']) != 1
+            })
+
+        try:
+            response = requests.get("http://localhost:4040/api/tunnels", timeout=5)
+            response.raise_for_status()
+            response.json()
+        except (requests.exceptions.RequestException, ValueError):
+            # if the request fails or the response is not valid JSON,
+            # it means ngrok is not enabled or not running
+            return json.dumps({'enabled': False})
+
+        return json.dumps({'enabled': True})
+
     # ---------------------------------------------------------- #
     # POST methods                                               #
     # -> Never use json.dumps() it will be done automatically    #
@@ -305,16 +331,67 @@ class IotBoxOwlHomePage(http.Controller):
 
         return res_payload
 
-    @http.route('/hw_posbox_homepage/enable_ngrok', auth="none", type="jsonrpc", methods=['POST'], cors='*')
+    @http.route('/hw_posbox_homepage/enable_ngrok', auth="none", type="jsonrpc", methods=['POST'])
     def enable_remote_connection(self, auth_token):
-        if subprocess.call(['pgrep', 'ngrok']) == 1:
-            subprocess.Popen(['sudo', 'systemd-run', 'ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22'])
+        # check if the service exists for retro-compatibility TODO: remove in v18.4
+        p = subprocess.run(
+            ['systemctl', 'is-active', 'odoo-ngrok.service'],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if p.returncode != 0:
+            subprocess.Popen(
+                ['sudo', 'systemd-run', 'ngrok', 'tcp', '--authtoken', auth_token, '--log', '/tmp/ngrok.log', '22']
+            )
+            return {'status': 'success'}
 
-        return {
-            'status': 'success',
-            'auth_token': auth_token,
-            'message': 'Ngrok tunnel is now enabled',
-        }
+        # if the service exists, we only update the authtoken
+        with helpers.writable():
+            p = subprocess.run(
+                ['ngrok', 'config', 'add-authtoken', auth_token, '--config', '/home/pi/ngrok.yml'],
+                check=False,
+            )
+        if p.returncode == 0:
+            subprocess.run(
+                ['sudo', 'systemctl', 'restart', 'odoo-ngrok.service'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+            return {'status': 'success'}
+
+        return {'status': 'failure'}
+
+    @http.route('/hw_posbox_homepage/disable_ngrok', auth="none", type="jsonrpc", methods=['POST'])
+    def disable_remote_connection(self):
+        # check if the service exists for retro-compatibility TODO: remove in v18.4
+        p = subprocess.run(
+            ['systemctl', 'is-active', 'odoo-ngrok.service'],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            check=False,
+        )
+        if p.returncode != 0:
+            subprocess.run(
+                ['sudo', 'pkill', 'ngrok'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False
+            )
+            return {'status': 'success'}
+
+        with helpers.writable():
+            p = subprocess.run(
+                ['ngrok', 'config', 'add-authtoken', '""', '--config', '/home/pi/ngrok.yml'], check=False
+            )
+        if p.returncode == 0:
+            subprocess.run(
+                ['sudo', 'systemctl', 'stop', 'odoo-ngrok.service'],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+            )
+            return {'status': 'success'}
+
+        return {'status': 'failure'}
 
     @http.route('/hw_posbox_homepage/update_hostname', auth="none", type="jsonrpc", methods=['POST'], cors='*')
     def update_hostname(self, hostname):
