@@ -5,9 +5,10 @@
         <field name="model">ir.mail_server</field>
         <field name="inherit_id" ref="base.ir_mail_server_form"/>
         <field name="arch" type="xml">
-            <field name="smtp_user" position="after">
+            <field name="smtp_ssl_private_key" position="after">
                 <div invisible="smtp_authentication != 'outlook'"
-                    class="d-flex flex-row align-items-center" colspan="8"
+                    class="d-flex flex-row align-items-center"
+                    colspan="2"
                     groups="base.group_system">
                     <span invisible="smtp_authentication != 'outlook' or not microsoft_outlook_refresh_token"
                         class="badge text-bg-success">
