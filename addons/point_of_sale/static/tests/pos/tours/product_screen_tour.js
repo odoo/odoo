@@ -8,7 +8,7 @@ import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_
 import { registry } from "@web/core/registry";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { back, inLeftSide, selectButton } from "@point_of_sale/../tests/pos/tours/utils/common";
-import { scan_barcode, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import { scan_barcode, negateStep, refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 import * as ProductConfiguratorPopup from "@point_of_sale/../tests/pos/tours/utils/product_configurator_util";
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
@@ -285,6 +285,10 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
 
             scan_barcode("0100202"),
             ProductScreen.selectedOrderlineHas("Test Product 2", "1", "120.0", "Red"),
+
+            refresh(),
+            scan_barcode("0100100"),
+            ProductScreen.selectedOrderlineHas("Test Product 1", "2", "160.0"),
 
             scan_barcode("0100300"),
             ProductScreen.selectedOrderlineHas("Test Product 3", "1", "50.0"),
