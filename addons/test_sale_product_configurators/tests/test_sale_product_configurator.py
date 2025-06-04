@@ -62,7 +62,7 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
             'create_variant': 'no_variant'
         }, {
             'name': 'PA5',
-            'display_type': 'select',
+            'display_type': 'image',
             'create_variant': 'no_variant'
         }, {
             'name': 'PA7',

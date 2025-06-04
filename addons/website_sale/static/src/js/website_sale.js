@@ -134,7 +134,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                     }
                 }
             });
-            this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
+            this._changeAttribute(['.css_attribute_color', '.css_attribute_image', '.o_variant_pills']);
         }
     },
 
