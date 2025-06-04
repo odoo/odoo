@@ -55,7 +55,10 @@ const deepSerialization = (
 
                     if (typeof childRecord.id === "number" && childRecord._dirty) {
                         toUpdate.push(childRecord);
-                        childRecord._dirty = false;
+
+                        if (!opts.keepCommands) {
+                            childRecord._dirty = false;
+                        }
                     } else if (typeof childRecord.id !== "number") {
                         toCreate.push(childRecord);
                     }
@@ -111,17 +114,22 @@ const deepSerialization = (
                 processRecords(modelCommands.unlink.get(fieldName) || [], 3);
                 processRecords(modelCommands.delete.get(fieldName) || [], 2);
 
-                [modelCommands.unlink, modelCommands.delete].forEach((commands) => {
+                for (const commands of [modelCommands.unlink, modelCommands.delete]) {
                     const commandList = commands.get(fieldName) || [];
                     const remainingCommands = commandList.filter(
                         ({ parentId }) => parentId !== record.id
                     );
+
+                    if (opts.keepCommands) {
+                        continue;
+                    }
+
                     if (remainingCommands.length) {
                         commands.set(fieldName, remainingCommands);
                     } else {
                         commands.delete(fieldName);
                     }
-                });
+                }
             }
             continue;
         }
@@ -167,7 +175,9 @@ const deepSerialization = (
         res[key] = getValue();
     }
 
-    record._dirty = false;
+    if (!opts.keepCommands) {
+        record._dirty = false;
+    }
 
     // Cleanup: remove empty entries from uuidMapping.
     for (const key in uuidMapping) {

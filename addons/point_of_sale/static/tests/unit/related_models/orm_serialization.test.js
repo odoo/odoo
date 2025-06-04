@@ -139,8 +139,10 @@ describe("ORM serialization", () => {
         const line2 = models["pos.order.line"].create({ order_id: order, quantity: 2 });
         order.total = 10;
 
+        const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
         const result = models.serializeForORM(order);
         {
+            expect(keepCommandResult).toEqual(result);
             expect(result.uuid).not.toBeEmpty();
             expect(result.total).toBe(10);
             expect(result.lines.length).toBe(2);
@@ -171,7 +173,9 @@ describe("ORM serialization", () => {
 
         line1.quantity = 99;
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines.length).toBe(1);
             expect(result.lines[0][0]).toBe(1);
             expect(result.lines[0][1]).toBe(11);
@@ -181,7 +185,9 @@ describe("ORM serialization", () => {
         // Delete line
         line1.delete();
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines.length).toBe(1);
             expect(result.lines[0][0]).toBe(3);
             expect(result.lines[0][1]).toBe(11);
@@ -197,26 +203,34 @@ describe("ORM serialization", () => {
         const line = models["pos.order.line"].create({ order_id: order, quantity: 1 });
         line.attribute_ids = [["link", att1, att2]];
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines[0][2].attribute_ids).toEqual([99, 999]);
         }
 
         const att3 = models["product.attribute"].create({ id: 9999 });
         line.attribute_ids = [["link", att3]];
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines[0][2].attribute_ids).toEqual([99, 999, 9999]);
         }
 
         line.attribute_ids = [["unlink", att3, att2]];
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines[0][2].attribute_ids).toEqual([99]);
         }
 
         line.attribute_ids = [];
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines[0][2].attribute_ids).toEqual([]);
         }
     });
@@ -233,7 +247,9 @@ describe("ORM serialization", () => {
 
         models["pos.lot"].create({ line_id: line1, lot_name: "lot1" });
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines.length).toBe(1);
             const pack_lot_ids = result.lines[0][2].pack_lot_ids;
             expect(pack_lot_ids.length).toBe(1);
@@ -270,7 +286,9 @@ describe("ORM serialization", () => {
 
         models["pos.lot"].create({ line_id: line1, lot_name: "lot2" });
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines.length).toBe(1);
             const pack_lot_ids = result.lines[0][2].pack_lot_ids;
             expect(pack_lot_ids.length).toBe(1);
@@ -312,7 +330,9 @@ describe("ORM serialization", () => {
         order.lines[0].pack_lot_ids[1].delete();
         order.lines[0].pack_lot_ids[0].delete();
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines.length).toBe(1);
             const pack_lot_ids = result.lines[0][2].pack_lot_ids;
             expect(pack_lot_ids.length).toBe(2);
@@ -337,7 +357,9 @@ describe("ORM serialization", () => {
         });
 
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines.length).toBe(3);
             expect(result.lines[0][2].combo_line_ids).toBeEmpty();
             expect(result.lines[0][2].combo_parent_id).toBeEmpty();
@@ -390,7 +412,9 @@ describe("ORM serialization", () => {
 
         line1.quantity = 99;
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.lines.length).toBe(1);
             expect(result.lines[0][0]).toBe(1);
             expect(result.lines[0][1]).toBe(11);
@@ -425,7 +449,10 @@ describe("ORM serialization", () => {
         expect(order.groups[0].lines.length).toBe(2);
 
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
+
             expect(result.lines.length).toBe(2);
             expect(result.lines[0][2].group_id).toBeEmpty();
             expect(result.lines[1][2].group_id).toBeEmpty();
@@ -505,7 +532,9 @@ describe("ORM serialization", () => {
         expect(order.groups[1].lines.length).toBe(1);
 
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.groups[0].lines).toBeEmpty();
             expect(result.groups[1].lines).toBeEmpty();
             expect(result.lines.length).toBe(1);
@@ -521,7 +550,9 @@ describe("ORM serialization", () => {
         group1.index = 3;
         group2.index = 4;
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.groups.length).toBe(2);
             expect(result.groups[0][0]).toBe(1);
             expect(result.groups[0][1]).toBe(group1.id);
@@ -540,7 +571,9 @@ describe("ORM serialization", () => {
 
         {
             //All update/delete have been cleared
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
             expect(result.groups).toBeEmpty();
             expect(result.lines).toBeEmpty();
         }
@@ -575,7 +608,9 @@ describe("ORM serialization", () => {
         });
 
         {
+            const keepCommandResult = models.serializeForORM(order, { keepCommands: true });
             const result = models.serializeForORM(order);
+            expect(keepCommandResult).toEqual(result);
 
             expect(result.lines.length).toBe(4);
             expect(result.groups.length).toBe(2);

@@ -901,8 +901,8 @@ export class PosOrder extends Base {
         return this.lines;
     }
 
-    serializeForORM() {
-        const data = super.serializeForORM();
+    serializeForORM(opts = {}) {
+        const data = super.serializeForORM(opts);
         if (
             data.last_order_preparation_change &&
             typeof data.last_order_preparation_change === "object"
