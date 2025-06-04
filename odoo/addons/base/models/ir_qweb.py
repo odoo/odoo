@@ -367,9 +367,9 @@ import fnmatch
 import io
 import logging
 import math
-import os
 import re
 import textwrap
+import threading
 import time
 import token
 import tokenize
@@ -396,6 +396,7 @@ from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
+from odoo.tools.profiler import ExecutionContext
 from odoo.tools.translate import FORMAT_REGEX
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
@@ -567,7 +568,6 @@ class IrQweb(models.AbstractModel):
     _name = 'ir.qweb'
     _description = 'Qweb'
 
-    @QwebTracker.wrap_render
     @api.model
     def _render(self, template, values=None, **options):
         """ ``render(template, values, **options)``
@@ -590,6 +590,15 @@ class IrQweb(models.AbstractModel):
                   instead of `str`)
         :rtype: MarkupSafe
         """
+        # profiling code
+        current_thread = threading.current_thread()
+        execution_context_enabled = getattr(current_thread, 'profiler_params', {}).get('execution_context_qweb')
+        qweb_hooks = getattr(current_thread, 'qweb_hooks', ())
+        if execution_context_enabled or qweb_hooks:
+            # To have the new compilation cached because the generated code will change.
+            # Therefore 'profile' is a key to the cache.
+            options['profile'] = True
+
         values = values.copy() if values else {}
         if T_CALL_SLOT in values:
             raise ValueError(f'values[{T_CALL_SLOT}] should be unset when call the _render method and only set into the template.')
@@ -620,8 +629,28 @@ class IrQweb(models.AbstractModel):
         except Exception:
             return None
 
-    @QwebTracker.wrap_compile
     def _compile(self, template):
+        if not self.env.context.get('profile'):
+            return self.__compile(template)
+
+        template_functions, def_name = self.__compile(template)
+        render_template = template_functions[def_name]
+
+        def profiled_method_compile(self, values):
+            options = template_functions['options']
+            ref = options.get('ref')
+            ref_xml = options.get('ref_xml')
+            qweb_tracker = QwebTracker(ref, ref_xml, self.env.cr)
+            self = self.with_context(qweb_tracker=qweb_tracker)
+            if qweb_tracker.execution_context_enabled:
+                with ExecutionContext(template=ref):
+                    return render_template(self, values)
+            return render_template(self, values)
+        template_functions[def_name] = profiled_method_compile
+
+        return (template_functions, def_name)
+
+    def __compile(self, template):
         ref = None
         if isinstance(template, etree._Element):
             self = self.with_context(is_t_cache_disabled=True)
@@ -1472,10 +1501,17 @@ class IrQweb(models.AbstractModel):
 
         return code
 
-    @QwebTracker.wrap_compile_directive
     def _compile_directive(self, el, compile_context, directive, level):
         compile_handler = getattr(self, f"_compile_directive_{directive.replace('-', '_')}", None)
-        return compile_handler(el, compile_context, level)
+        if compile_context.get('profile') and directive not in ('inner-content', 'tag-open', 'tag-close'):
+            enter = f"{' ' * 4 * level}self.env.context['qweb_tracker'].enter_directive({directive!r}, {el.attrib!r}, {compile_context['_qweb_error_path_xml'][0]!r})"
+            leave = f"{' ' * 4 * level}self.env.context['qweb_tracker'].leave_directive({directive!r}, {el.attrib!r}, {compile_context['_qweb_error_path_xml'][0]!r})"
+            code_directive = compile_handler(el, compile_context, level)
+            if code_directive:
+                code_directive = [enter, *code_directive, leave]
+        else:
+            code_directive = compile_handler(el, compile_context, level)
+        return code_directive
 
     # compile directives
 
