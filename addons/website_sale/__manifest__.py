@@ -81,6 +81,7 @@
         'web.assets_frontend': [
             'website_sale/static/src/interactions/**/*',
             'website_sale/static/src/snippets/**/*.js',
+            'website_sale/static/src/snippets/s_searchbar/000.xml',
             ('remove', 'website_sale/static/src/snippets/**/000.js'),
             ('remove', 'website_sale/static/src/snippets/**/options.js'),
             'website_sale/static/src/js/tours/tour_utils.js',
