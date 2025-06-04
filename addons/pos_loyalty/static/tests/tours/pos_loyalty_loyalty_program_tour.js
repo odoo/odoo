@@ -331,6 +331,26 @@ registry.category("web_tour.tours").add("PosLoyaltyMultipleOrders", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_combo_product_dont_grant_point", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            ProductScreen.clickDisplayedProduct("Office Combo"),
+            combo.select("Combo Product 1"),
+            combo.select("Combo Product 4"),
+            combo.select("Combo Product 6"),
+            Dialog.confirm(),
+            Order.hasLine({ productName: "100% on the cheapest product" }),
+            ProductScreen.totalAmountIs("50.00"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_buy_x_get_y_reward_qty", {
     steps: () =>
         [
