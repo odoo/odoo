@@ -211,6 +211,9 @@ export function complexCondition(value) {
 function treeContainsExpressions(tree) {
     if (tree.type === "condition") {
         const { path, operator, value } = tree;
+        if (isTree(value) && treeContainsExpressions(value)) {
+            return true;
+        }
         return [path, operator, value].some(
             (v) =>
                 v instanceof Expression ||
