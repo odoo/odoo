@@ -472,7 +472,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
         """
         if (
             # XML attachments received by mail have a 'text/plain' mimetype.
-            'text/plain' in file_data['mimetype'] and (guess_mimetype(file_data['raw']).endswith('/xml') or file_data['name'].endswith('.xml'))
+            'text/plain' in file_data['mimetype'] and (guess_mimetype(file_data['raw'] or b'').endswith('/xml') or file_data['name'].endswith('.xml'))
             or file_data['mimetype'].endswith('/xml')
         ):
             try:
