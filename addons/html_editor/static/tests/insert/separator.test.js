@@ -19,7 +19,7 @@ describe("insert separator", () => {
         });
     });
 
-    test("should insert a separator before current element", async () => {
+    test("should insert a separator before current element if empty", async () => {
         await testEditor({
             contentBefore: "<p>content</p><p>[]<br></p>",
             stepFunction: insertSeparator,
@@ -28,11 +28,28 @@ describe("insert separator", () => {
         });
     });
 
-    test("should insert a separator before current paragraph related element but remain inside the div", async () => {
+    test("should insert a separator after current element if it contains text", async () => {
+        await testEditor({
+            contentBefore: "<p>content</p><p>text[]</p>",
+            stepFunction: insertSeparator,
+            contentAfterEdit: `<p>content</p><p>text</p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+            contentAfter: "<p>content</p><p>text</p><hr><p>[]<br></p>",
+        });
+    });
+
+    test("should insert a separator before current empty paragraph related element but remain inside the div", async () => {
         await testEditor({
             contentBefore: "<div><p>[]<br></p></div>",
             stepFunction: insertSeparator,
             contentAfter: "<div><hr><p>[]<br></p></div>",
+        });
+    });
+
+    test("should insert a separator after current paragraph related element containing text but remain inside the div", async () => {
+        await testEditor({
+            contentBefore: "<div><p>content[]</p></div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<div><p>content</p><hr><p>[]<br></p></div>",
         });
     });
 
@@ -44,7 +61,7 @@ describe("insert separator", () => {
         });
     });
 
-    test("should insert a separator before a p element inside a table cell", async () => {
+    test("should insert a separator before a empty p element inside a table cell", async () => {
         await testEditor({
             contentBefore: "<table><tbody><tr><td><p>[]<br></p></td></tr></tbody></table>",
             stepFunction: insertSeparator,
@@ -52,11 +69,28 @@ describe("insert separator", () => {
         });
     });
 
-    test("should insert a seperator within a block node", async () => {
+    test("should insert a separator after a p element containing text inside a table cell", async () => {
+        await testEditor({
+            contentBefore: "<table><tbody><tr><td><p>content[]</p></td></tr></tbody></table>",
+            stepFunction: insertSeparator,
+            contentAfter:
+                "<table><tbody><tr><td><p>content</p><hr><p>[]<br></p></td></tr></tbody></table>",
+        });
+    });
+
+    test("should insert a seperator before a empty block node", async () => {
         await testEditor({
             contentBefore: "<div>[]<br></div>",
             stepFunction: insertSeparator,
             contentAfter: "<hr><div>[]<br></div>",
+        });
+    });
+
+    test("should insert a seperator after a block node containing text", async () => {
+        await testEditor({
+            contentBefore: "<div>content[]</div>",
+            stepFunction: insertSeparator,
+            contentAfter: "<div>content</div><hr><p>[]<br></p>",
         });
     });
 
@@ -75,13 +109,15 @@ describe("insert separator", () => {
     test("should apply custom selection on separator when selected", async () => {
         const { el, editor } = await setupEditor("<p>abc</p><p>x[]yz</p>");
         await insertSeparator(editor);
-        expect(getContent(el)).toBe(`<p>abc</p><hr contenteditable="false"><p>x[]yz</p>`);
+        expect(getContent(el)).toBe(
+            `<p>abc</p><p>xyz</p><hr contenteditable="false"><p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+        );
 
         simulateArrowKeyPress(editor, ["Shift", "ArrowUp"]);
         await animationFrame();
 
         expect(getContent(el)).toBe(
-            `<p>a]bc</p><hr contenteditable="false" class="o_selected_hr"><p>x[yz</p>`
+            `<p>abc</p><p>]xyz</p><hr contenteditable="false" class="o_selected_hr"><p>[<br></p>`
         );
     });
 
