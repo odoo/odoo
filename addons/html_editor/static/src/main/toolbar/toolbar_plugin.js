@@ -11,6 +11,7 @@ import { omit } from "@web/core/utils/objects";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
+import { isSelectionInHtmlContent } from "@html_editor/core/user_command_plugin";
 
 /** @typedef { import("@html_editor/core/selection_plugin").EditorSelection } EditorSelection */
 /** @typedef { import("@html_editor/core/user_command_plugin").UserCommand } UserCommand */
@@ -56,6 +57,7 @@ import { _t } from "@web/core/l10n/translation";
  * @property {Function} Component
  * @property {Object} props
  * @property {(selection: EditorSelection) => boolean} [isAvailable]
+ * @property {boolean} [plainTextCompatible]
  *
  * ToolbarItem.id maps to the button's `name` attribute
  * ToolbarItem.description maps to the button's `title` attribute (tooltip content)
@@ -271,9 +273,13 @@ export class ToolbarPlugin extends Plugin {
             return composeToolbarButton(command, item);
         };
 
-        return toolbarItems.map((item) =>
-            "Component" in item ? { isAvailable: () => true, ...item } : commandItemToButton(item)
-        );
+        return toolbarItems.map((item) => {
+            const isAvailable = (selection) =>
+                [item.isAvailable, item.plainTextCompatible ? undefined : isSelectionInHtmlContent]
+                    .filter(Boolean)
+                    .every((predicate) => predicate(selection));
+            return "Component" in item ? { ...item, isAvailable } : commandItemToButton(item);
+        });
     }
 
     getButtonGroups() {
