@@ -1723,10 +1723,10 @@ class PosOrderLine(models.Model):
         is_refund_order = line.order_id.amount_total < 0.0
         is_refund_line = line.qty * line.price_unit < 0
 
-        product_name = line.product_id \
-            .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang) \
-            .get_product_multiline_description_sale()
-
+        lang = line.order_id.partner_id.lang or self.env.user.lang
+        product_name = line.with_context(lang=lang).full_product_name or line.product_id.with_context(lang=lang).display_name
+        if line.product_id.description_sale:
+            product_name += '\n' + line.product_id.with_context(lang=lang).description_sale
         return {
             **self.env['account.tax']._prepare_base_line_for_taxes_computation(
                 line,

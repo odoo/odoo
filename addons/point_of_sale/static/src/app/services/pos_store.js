@@ -880,8 +880,11 @@ export class PosStore extends WithLazyGetterTrap {
                 .reduce((acc, attr) => acc + attr.price_extra, 0);
 
             values.price_extra += priceExtra;
-            values.attribute_value_ids = values.product_id.product_template_variant_value_ids.map(
-                (attr) => ["link", attr]
+            if (!values.attribute_value_ids) {
+                values.attribute_value_ids = [];
+            }
+            values.attribute_value_ids = values.attribute_value_ids.concat(
+                values.product_id.product_template_variant_value_ids.map((attr) => ["link", attr])
             );
         }
 
