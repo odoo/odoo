@@ -1754,9 +1754,12 @@ class PosSession(models.Model):
             return
         self.state = 'opened'
         self.start_at = fields.Datetime.now()
-        self.name = self.config_id.name + self.env['ir.sequence'].with_context(
+
+        sequence = self.env['ir.sequence'].with_context(
             company_id=self.config_id.company_id.id
-        ).next_by_code('pos.session') + (self.name if self.name != '/' else '')
+        ).search([('code', '=', 'pos.session'), ('company_id', 'in', [self.config_id.company_id.id, False])], order='company_id', limit=1)
+
+        self.name = (self.config_id.name if sequence.prefix == '/' else '') + sequence.next_by_code('pos.session') + (self.name if self.name != '/' else '')
 
         cash_payment_method_ids = self.config_id.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
         if cash_payment_method_ids:
