@@ -51,11 +51,11 @@ class PublicPageController(http.Controller):
 
     @http.route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
     @add_guest_to_context
-    def discuss_channel(self, channel_id):
+    def discuss_channel(self, channel_id, highlight_message_id=None):
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
-        return self._response_discuss_public_template(Store(), channel)
+        return self._response_discuss_public_template(Store(), channel, highlight_message_id)
 
     def _response_discuss_channel_from_token(self, create_token, channel_name=None, default_display_mode=False):
         # sudo: ir.config_parameter - reading hard-coded key and using it in a simple condition
@@ -102,7 +102,7 @@ class PublicPageController(http.Controller):
             channel = channel.with_context(guest=guest)
         return self._response_discuss_public_template(store, channel)
 
-    def _response_discuss_public_template(self, store, channel):
+    def _response_discuss_public_template(self, store, channel, highlight_message_id=None):
         store.add(
             {
                 "companyName": request.env.company.name,
@@ -110,6 +110,7 @@ class PublicPageController(http.Controller):
                 "discuss_public_thread": Store.one(channel),
             }
         )
+        store.add(channel, {"highlightMessage": highlight_message_id})
         return request.render(
             "mail.discuss_public_channel_template",
             {

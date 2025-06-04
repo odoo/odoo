@@ -2,6 +2,8 @@
 
 from markupsafe import Markup
 
+from urllib.parse import urlencode
+
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
@@ -368,11 +370,22 @@ class TestMessageLinks(MailCommon, HttpCase):
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with self.subTest(thread_message=thread_message):
             expected_url = self.base_url() + f'/odoo/{thread_message.model}/{thread_message.res_id}?highlight_message_id={thread_message.id}'
-            res = self.url_open(f'/mail/message/{thread_message.id}')
-            self.assertEqual(res.url, expected_url)
+            url_params = {
+                "model": thread_message.model,
+                "res_id": thread_message.res_id,
+                "highlight_message_id": thread_message.id
+            }
+            res = self.url_open(f"/mail/view?{urlencode(url_params)}")
             self.assertEqual(res.url, expected_url)
         with self.subTest(deleted_message=deleted_message):
-            res = self.url_open(f'/mail/message/{deleted_message.id}')
+            expected_url = self.base_url() + f'/odoo/{deleted_message.model}/{deleted_message.res_id}?highlight_message_id={deleted_message.id}'
+            url_params = {
+                "model": deleted_message.model,
+                "res_id": deleted_message.res_id,
+                "highlight_message_id": deleted_message.id
+            }
+            res = self.url_open(f"/mail/view?{urlencode(url_params)}")
+            self.assertEqual(res.url, expected_url)
 
 @tagged("mail_message", "mail_store", "post_install", "-at_install")
 class TestMessageStore(MailCommon, HttpCase):
