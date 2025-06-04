@@ -68,6 +68,22 @@ migrationStepRegistry.add("18.4.10", {
     },
 });
 
+migrationStepRegistry.add("18.4.11", {
+    migrate(data) {
+        for (const globalFilter of data.globalFilters || []) {
+            if (globalFilter.type === "date" && globalFilter.rangeType === "fixedPeriod") {
+                if (typeof globalFilter.defaultValue !== "string") {
+                    // If the defaultValue is not a string, it's probably a
+                    // something very old that we do not support anymore
+                    // See migration2to3 (antepenultimate_year for example)
+                    delete globalFilter.defaultValue;
+                }
+            }
+        }
+        return data;
+    },
+});
+
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
     if (version < 1) {

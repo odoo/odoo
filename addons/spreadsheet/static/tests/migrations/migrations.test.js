@@ -123,9 +123,9 @@ test("Global filters: date is correctly migrated", () => {
     };
     const migratedData = load(data);
     const [f1, f2, f3] = migratedData.globalFilters;
-    expect(f1.defaultValue).toEqual({ yearOffset: -1 });
-    expect(f2.defaultValue).toEqual({ yearOffset: -2 });
-    expect(f3.defaultValue).toEqual({ yearOffset: 0 });
+    expect(f1.defaultValue).toBe(undefined);
+    expect(f2.defaultValue).toBe(undefined);
+    expect(f3.defaultValue).toBe(undefined);
 });
 
 test("List name default is model name", () => {
@@ -617,4 +617,20 @@ test("text global filter default value is now an array of strings", () => {
     expect(migratedData.globalFilters[1].defaultValue).toBe(undefined);
     expect(migratedData.globalFilters[1].rangeOfAllowedValues).toBe(undefined);
     expect(migratedData.globalFilters[1].rangesOfAllowedValues).toBe(undefined);
+});
+
+test("Date with antepenultimate_year is not supported anymore", () => {
+    const data = {
+        version: "1",
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                defaultValue: { year: "antepenultimate_year" },
+                rangeType: "fixedPeriod",
+            },
+        ],
+    };
+    const migratedData = load(data);
+    expect(migratedData.globalFilters[0].defaultValue).toBe(undefined);
 });
