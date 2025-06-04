@@ -17,6 +17,7 @@ export class BuilderOptionsPlugin extends Plugin {
     ];
     static shared = [
         "computeContainers",
+        "findOption",
         "getContainers",
         "updateContainers",
         "deactivateContainers",
@@ -411,6 +412,46 @@ export class BuilderOptionsPlugin extends Plugin {
             default:
                 throw new Error(`Unknown method ${method}`);
         }
+    }
+
+    /**
+     * Finds the given option in the given element closest options container, as
+     * well as in the parent containers if specified, and returns it and its
+     * target element.
+     *
+     * @param {HTMLElement} el the element
+     * @param {String} optionName the option name
+     * @param {Boolean} [allowParent=false] true if the parent containers should
+     *   be considered
+     * @returns {Object} - `option`: the requested option
+     *                   - `targetEl`: the target element of the option
+     */
+    findOption(el, optionName, allowParent = false) {
+        let containers = this.getContainers().filter((container) => container.element.contains(el));
+        containers.reverse();
+        if (!allowParent) {
+            containers = [containers[0]];
+        }
+
+        // Find the given option in the active containers and the element on
+        // which it applies.
+        let targetEl, requestedOption;
+        for (const { element, options } of containers) {
+            requestedOption = options.find((option) => {
+                if (option.OptionComponent) {
+                    return option.OptionComponent.name === optionName;
+                } else {
+                    return option.template.split(".").at(-1) === optionName;
+                }
+            });
+            if (requestedOption) {
+                const { applyTo } = requestedOption;
+                targetEl = applyTo ? element.querySelector(applyTo) : element;
+                break;
+            }
+        }
+
+        return { option: requestedOption, targetEl };
     }
 }
 
