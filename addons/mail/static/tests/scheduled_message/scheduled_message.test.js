@@ -8,12 +8,14 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD } from "@mail/chatter/web/scheduled_message";
-import { mockService, onRpc } from "@web/../tests/web_test_helpers";
+import { mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { getOrigin } from "@web/core/utils/urls";
+import { MailComposerAttachmentSelector } from "@mail/core/web/mail_composer_attachment_selector";
 
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { advanceTime, mockDate } from "@odoo/hoot-mock";
+import { advanceTime, mockDate, Deferred } from "@odoo/hoot-mock";
+import { manuallyDispatchProgrammaticEvent, queryAll } from "@odoo/hoot-dom";
 
 beforeEach(() => mockDate("2024-10-20 10:00:00"));
 describe.current.tags("desktop");
@@ -410,4 +412,62 @@ test("Scheduled message with attachments", async () => {
     await contains(".o-mail-Chatter-attachFiles sup", { text: "2" });
     await contains(".o-mail-AttachmentCard[title='Blah.txt']");
     await contains(".o-mail-AttachmentImage[title='Blu.png']");
+});
+
+test("widget mail_composer_attachment_selector: edit attachment of scheduled message", async () => {
+    expect.assertions(1);
+
+    const isUploaded = new Deferred();
+    patchWithCleanup(MailComposerAttachmentSelector.prototype, {
+        async onFileUploaded() {
+            await super.onFileUploaded(...arguments);
+            isUploaded.resolve();
+        },
+    });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv.user.partner_id;
+    const scheduled_date = "2024-10-20 14:00:00";
+    const attachmentIds = pyEnv["ir.attachment"].create([
+        {
+            mimetype: "text/plain",
+            name: "Blah.txt",
+            res_id: partnerId,
+            res_model: "res.partner",
+        },
+    ]);
+    const scheduledMessage = pyEnv["mail.scheduled.message"].create({
+        subject: "Greetings",
+        body: "<p>Hello There</p>",
+        attachment_ids: attachmentIds,
+        model: "res.partner",
+        res_id: partnerId,
+        scheduled_date,
+    });
+    const arch = `
+            <form>
+                <group>
+                    <field name="res_id" widget="many2one_reference_integer"/>
+                    <field name="attachment_ids" widget="mail_composer_attachment_list"/>
+                    <field name="model"/>
+                    <field name="attachment_ids" widget="mail_composer_attachment_selector"/>
+                </group>
+            </form>
+        `;
+
+    await start();
+    await openFormView("mail.scheduled.message", scheduledMessage, { arch });
+    const fileInputs = queryAll(".o_field_mail_composer_attachment_selector input");
+    const textFile = new File(["hello, world"], "text.txt", { type: "text/plain" });
+
+    // redefine 'files' so we can put mock data in through js
+    fileInputs.forEach((input) =>
+        Object.defineProperty(input, "files", {
+            value: [textFile],
+        })
+    );
+    fileInputs.forEach((input) => {
+        manuallyDispatchProgrammaticEvent(input, "change");
+    });
+    await isUploaded;
+    await contains("[name='attachment_ids'] a", { text: "text.txt" });
 });
