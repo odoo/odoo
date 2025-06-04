@@ -394,11 +394,10 @@ export class ListRenderer extends Component {
         if (!this.props.list.canResequence() || this.props.readonly) {
             return false;
         }
-        const groupByField = this.props.list.groupByField;
-        if (groupByField && !this.isMovableField(groupByField)) {
+        const { groupBy, groupByField, handleField, orderBy } = this.props.list;
+        if (groupBy?.length > 1 || (groupByField && !this.isMovableField(groupByField))) {
             return false;
         }
-        const { handleField, orderBy } = this.props.list;
         return !orderBy.length || (orderBy.length && orderBy[0].name === handleField);
     }
 
