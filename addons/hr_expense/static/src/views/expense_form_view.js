@@ -22,6 +22,7 @@ export class ExpenseFormController extends FormController {
             clickParams.name === "action_submit" &&
             record.data.duplicate_expense_ids.count
         ) {
+            await record.save();
             return new Promise((resolve) => {
                 this.dialogService.add(ConfirmationDialog, {
                     body: _t("An expense of same category, amount and date already exists."),
