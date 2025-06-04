@@ -24,6 +24,23 @@
         </BuilderSelect>
     </BuilderRow>
 
+    <BuilderRow label.translate="Template">
+        <BuilderSelect id="'template_opt'" dataAttributeAction="'templateId'">
+            <t t-foreach="this.templates" t-as="item" t-key="item_index">
+                <BuilderSelectItem t-if="!item.dependency or this.isActiveItem(item.dependency)"
+                    actionValue="item.templateId"
+                    dataAttributeActionValue="item.templateId"
+                    id="item.id">
+                    <Img src="item.image" alt="item.label"/>
+                </BuilderSelectItem>
+            </t>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Placeholder">
+        <BuilderTextInput id="'placeholder_opt'" action="'setPlaceholder'" />
+    </BuilderRow>
+
     <BuilderRow label.translate="Suggestions">
         <BuilderNumberInput id="'limit_opt'" dataAttributeAction="'limit'" min="0"/>
         <span class="flex-grow-1 w-100">results</span>

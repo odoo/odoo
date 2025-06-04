@@ -3,25 +3,41 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SearchbarOption } from "./searchbar_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
-
+import { SNIPPET_SPECIFIC_NEXT } from "@html_builder/utils/option_sequence";
+import { withSequence } from "@html_editor/utils/resource";
 class SearchbarOptionPlugin extends Plugin {
     static id = "searchbarOption";
     resources = {
         builder_options: [
-            {
+            withSequence(SNIPPET_SPECIFIC_NEXT, {
                 OptionComponent: SearchbarOption,
-                selector: ".s_searchbar_input",
+                template: "website.SearchbarOption",
+                selector: "#wrapwrap > header .s_searchbar_input, .s_searchbar_input",
+                title: _t("Search"),
+                editableOnly: false,
                 applyTo: ".search-query",
                 props: {
                     getOrderByItems: () => this.getResource("searchbar_option_order_by_items"),
                     getDisplayItems: () => this.getResource("searchbar_option_display_items"),
+                    getTemplates: () => this.getResource("searchbar_option_templates"),
                 },
-            },
+            }),
+            // {
+            //     OptionComponent: SearchbarOption,
+            //     selector: ".s_searchbar_input",
+            //     applyTo: ".search-query",
+            //     props: {
+            //         getOrderByItems: () => this.getResource("searchbar_option_order_by_items"),
+            //         getDisplayItems: () => this.getResource("searchbar_option_display_items"),
+            //         getTemplates: () => this.getResource("searchbar_option_templates"),
+            //     },
+            // },
         ],
         builder_actions: {
             SetSearchTypeAction,
             SetOrderByAction,
             SetSearchbarStyleAction,
+            SetPlaceholderAction,
             // This resets the data attribute to an empty string on clean.
             // TODO: modify the Python `_search_get_detail()` (grep
             // `with_description = options['displayDescription']`) so we can use
@@ -60,6 +76,18 @@ class SearchbarOptionPlugin extends Plugin {
                 label: _t("Image"),
                 dataAttribute: "displayImage",
                 dependency: "search_all_opt",
+            },
+        ],
+        searchbar_option_templates: [
+            {
+                label: _t("Default Template"),
+                templateId: "website.s_searchbar.autocomplete",
+                image: "/website/static/src/img/snippets_options/searchbar_template_default.svg",
+            },
+            {
+                label: _t("Second Template"),
+                templateId: "website.s_searchbar.autocomplete_second",
+                image: "/website/static/src/img/snippets_options/searchbar_template_second.svg",
             },
         ],
     };
@@ -146,6 +174,17 @@ export class SetSearchbarStyleAction extends BaseSearchBarAction {
         searchButtonEl?.classList.toggle("btn-primary", !isLight);
     }
 }
+class SetPlaceholderAction extends BaseSearchBarAction {
+    static id = "setPlaceholder";
+    getValue({ editingElement }) {
+        return editingElement.getAttribute("placeholder");
+    }
+    apply({ editingElement, value: widgetValue }) {
+        editingElement.setAttribute("placeholder", widgetValue);
+        editingElement.dataset.placeholder = widgetValue;
+    }
+}
+
 // This resets the data attribute to an empty string on clean.
 // TODO: modify the Python `_search_get_detail()` (grep
 // `with_description = options['displayDescription']`) so we can use

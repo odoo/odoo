@@ -139,3 +139,7 @@ export class SearchBarResults extends Interaction {
 registry
     .category("public.interactions")
     .add("website.search_bar_results", SearchBarResults);
+
+registry.category("public.interactions.edit").add("website.search_bar_results", {
+    Interaction: SearchBarResults,
+});

@@ -2063,7 +2063,24 @@ class Website(models.Model):
         best_score = 0
         best_word = None
         enumerate_words = self._trigram_enumerate_words if self.env.registry.has_trigram else self._basic_enumerate_words
-        for word in word_list or enumerate_words(search_details, search, limit):
+
+        candidates = word_list or []
+        if not word_list:
+            for detail in search_details:
+                model = self.env[detail['model']]
+                text_fields = []
+                for field in detail['search_fields']:
+                    base_field = field.split('.')[-1]
+                    field_obj = model._fields.get(base_field)
+                    if field_obj and field_obj.type not in ('float'):
+                        text_fields.append(field)
+                if not text_fields:
+                    continue
+                detail = dict(detail, search_fields=text_fields)
+                candidates += enumerate_words([detail], search, limit)
+
+        for word in candidates:
+            word = word.lower()
             if search in word:
                 return search
             if word[0] == search[0] and word not in words:
