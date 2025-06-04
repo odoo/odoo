@@ -27,14 +27,16 @@ export class TimePicker extends Component {
     };
     static props = {
         class: { type: String, optional: true },
-        value: { type: [String, Time], optional: true },
+        value: { type: [String, Time, { value: false }, { value: null }], optional: true },
         onChange: { type: Function, optional: true },
         onInvalid: { type: Function, optional: true },
         showSeconds: { type: Boolean, optional: true },
         minutesRounding: { type: Number, optional: true },
+        placeholder: { type: String, optional: true },
     };
     static defaultProps = {
         class: "",
+        value: "00:00",
         onChange: () => {},
         onInvalid: () => {},
         showSeconds: false,
@@ -47,7 +49,7 @@ export class TimePicker extends Component {
         this.dropdownState = useDropdownState();
 
         this.state = useState({
-            value: new Time(),
+            value: null,
             inputValue: "",
             isValid: true,
         });
@@ -123,12 +125,7 @@ export class TimePicker extends Component {
             this.suggestions = this.getSuggestions(props);
         }
 
-        const newValue = Time.from(props.value);
-        if (!newValue.equals(this.lastPropsValue, this.props.showSeconds)) {
-            this.lastPropsValue = newValue;
-            this.lastValue = newValue; // Prevents triggering props.onChange
-            this.setValue(newValue, false);
-        }
+        this.updateStateValue(Time.from(props.value));
     }
 
     /**
@@ -148,11 +145,11 @@ export class TimePicker extends Component {
     }
 
     /**
-     * @param {Time} newValue
+     * @param {Time|null} newValue
      * @param {boolean} [cleanValue=true]
      */
     setValue(newValue, cleanValue = true) {
-        if (cleanValue) {
+        if (newValue && cleanValue) {
             if (this.props.minutesRounding > 1) {
                 newValue.roundMinutes(this.props.minutesRounding);
             }
@@ -163,14 +160,28 @@ export class TimePicker extends Component {
             }
         }
 
-        this.state.value = newValue;
-        this.state.inputValue = newValue.toString(this.props.showSeconds);
-        this.state.isValid = true;
-
-        if (!newValue.equals(this.lastValue, this.props.showSeconds)) {
-            this.lastValue = newValue.copy();
+        const lastValue = this.lastValue;
+        this.updateStateValue(newValue);
+        if (newValue && !newValue.equals(lastValue, this.props.showSeconds)) {
             this.props.onChange(newValue.copy());
         }
+    }
+
+    /**
+     * @param {Time|null} newValue
+     */
+    updateStateValue(newValue) {
+        if (
+            newValue === this.lastValue ||
+            newValue?.equals(this.lastValue, this.props.showSeconds)
+        ) {
+            return;
+        }
+
+        this.lastValue = newValue?.copy() ?? newValue;
+        this.state.value = newValue;
+        this.state.inputValue = newValue ? newValue.toString(this.props.showSeconds) : "";
+        this.state.isValid = true;
     }
 
     /**
@@ -240,6 +251,9 @@ export class TimePicker extends Component {
      * @returns {string}
      */
     getPlaceholder() {
+        if (typeof this.props.placeholder === "string") {
+            return this.props.placeholder;
+        }
         const seconds = this.props.showSeconds ? ":ss" : "";
         return `hh:mm${seconds}`;
     }
