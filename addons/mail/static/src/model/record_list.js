@@ -316,9 +316,11 @@ export class RecordList extends Array {
                             recordList,
                             val,
                             function recordListSet_Insert(newRecord) {
-                                const oldRecord = toRaw(recordList._store.recordByLocalId).get(
-                                    recordList.data[index]
-                                );
+                                const oldRecord = toRaw(
+                                    toRaw(recordList._store.recordByLocalId).get(
+                                        recordList.data[index]
+                                    )
+                                )._raw;
                                 if (oldRecord && oldRecord.notEq(newRecord)) {
                                     oldRecord._.uses.delete(recordList);
                                 }
