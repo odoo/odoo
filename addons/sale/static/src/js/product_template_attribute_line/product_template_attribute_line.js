@@ -17,7 +17,7 @@ export class ProductTemplateAttributeLine extends Component {
                 name: String,
                 display_type: {
                     type: String,
-                    validate: type => ["color", "multi", "pills", "radio", "select"].includes(type),
+                    validate: type => ["color", "multi", "pills", "radio", "select", "image"].includes(type),
                 },
             },
         },
@@ -98,6 +98,8 @@ export class ProductTemplateAttributeLine extends Component {
                 return 'sale.ptav_color';
             case 'multi':
                 return 'sale.ptav_multi';
+            case 'image':
+                return 'sale.ptav_image';
         }
     }
 
