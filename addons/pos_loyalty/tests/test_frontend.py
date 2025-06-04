@@ -2925,3 +2925,45 @@ class TestUi(TestPointOfSaleHttpCommon):
             'payment_method_id': self.customer_account_payment_method.id,
         }).check()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_dont_give_points_again', login="accountman")
+
+    def test_refund_does_not_decrease_points(self):
+        """
+        Tests that when refunding a product bought while spending points, it does not decrease the points a second time
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'money',
+                'reward_point_amount': 0.1,
+                'minimum_amount': 1,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 100,
+                'discount': 1,
+                'discount_mode': 'per_point',
+            })],
+        })
+        self.product_refund = self.env["product.product"].create({
+            "name": "Refund Product",
+            "is_storable": True,
+            "list_price": 300,
+            "available_in_pos": True,
+            "taxes_id": False,
+        })
+        partner_refunding = self.env['res.partner'].create({'name': 'Refunding Guy'})
+        card = self.env['loyalty.card'].create({
+            'partner_id': partner_refunding.id,
+            'program_id': self.loyalty_program.id,
+            'points': 100,
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
+        self.assertEqual(card.points, 30)
