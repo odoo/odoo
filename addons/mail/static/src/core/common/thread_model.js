@@ -116,8 +116,6 @@ export class Thread extends Record {
     counter = 0;
     counter_bus_id = 0;
     /** @type {string} */
-    custom_channel_name;
-    /** @type {string} */
     description;
     /** @type {string} */
     display_name;
@@ -785,7 +783,9 @@ export class Thread extends Record {
                     { name: newName }
                 );
             } else if (this.supportsCustomChannelName) {
-                this.custom_channel_name = newName;
+                if (this.selfMember) {
+                    this.selfMember.custom_channel_name = newName;
+                }
                 await this.store.env.services.orm.call(
                     "discuss.channel",
                     "channel_set_custom_name",
