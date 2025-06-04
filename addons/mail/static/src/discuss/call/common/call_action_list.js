@@ -28,6 +28,16 @@ export class CallActionList extends Component {
         });
     }
 
+    get maxQuickAmount() {
+        return this.env.inChatWindow &&
+            this.props.thread.callCollapsed &&
+            !this.props.thread.activeRtcSession
+            ? 0
+            : this.isMobileOS
+            ? 3
+            : 4;
+    }
+
     get MORE() {
         return _t("More");
     }

@@ -362,6 +362,10 @@ export class Rtc extends Record {
              * Whether the network fell back to p2p mode in a SFU call.
              */
             fallbackMode: false,
+            /**
+             * Track if user has ever used video features to control auto-expand behavior
+             */
+            hasUsedVideo: false,
         });
         this.blurManager = undefined;
     }
@@ -1643,6 +1647,7 @@ export class Rtc extends Record {
                 break;
             }
         }
+        this.state.hasUsedVideo = true;
     }
 
     updateAndBroadcast(data) {

@@ -42,7 +42,12 @@ callActionsRegistry
         isActive: (component) => component.rtc.selfSession?.is_camera_on,
         icon: "fa-video-camera",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("camera"),
+        select: (component) => {
+            component.rtc.toggleVideo("camera");
+            if (!component.rtc.state.hasUsedVideo) {
+                component.props.thread.callCollapsed = false;
+            }
+        },
         sequence: 30,
     })
     .add("raise-hand", {
@@ -68,7 +73,12 @@ callActionsRegistry
         isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
         icon: "fa-desktop",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("screen"),
+        select: (component) => {
+            if (!component.rtc.state.hasUsedVideo) {
+                component.props.thread.callCollapsed = false;
+            }
+            component.rtc.toggleVideo("screen");
+        },
         sequence: 40,
     })
     .add("blur-background", {
@@ -97,6 +107,7 @@ callActionsRegistry
             if (component.props.fullscreen.isActive) {
                 component.props.fullscreen.exit();
             } else {
+                component.props.thread.callCollapsed = false;
                 component.props.fullscreen.enter();
             }
         },

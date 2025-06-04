@@ -74,6 +74,10 @@ export class Call extends Component {
         useHotkey("shift+m", () => this.rtc.toggleMicrophone());
     }
 
+    get collapseCallTitle() {
+        return this.props.thread.callCollapsed ? "Expand Call" : "Collapse Call";
+    }
+
     get isActiveCall() {
         return Boolean(this.props.thread.eq(this.rtc.channel));
     }
@@ -82,7 +86,12 @@ export class Call extends Component {
         if (this.state.isFullscreen || this.props.thread.activeRtcSession) {
             return false;
         }
-        if (!this.isActiveCall || this.props.thread.videoCount === 0 || this.props.compact) {
+        if (
+            !this.isActiveCall ||
+            this.props.thread.videoCount === 0 ||
+            this.props.compact ||
+            this.props.thread.callCollapsed
+        ) {
             return true;
         }
         return false;
@@ -90,6 +99,7 @@ export class Call extends Component {
 
     /** @returns {CardData[]} */
     get visibleCards() {
+        window.aku = this;
         const raisingHandCards = [];
         const sessionCards = [];
         const invitationCards = [];
@@ -234,6 +244,7 @@ export class Call extends Component {
             return;
         }
         const { width, height } = this.grid.el.getBoundingClientRect();
+        const gap = parseInt(getComputedStyle(this.grid.el).gap ?? 0);
         const aspectRatio = this.minimized ? 1 : 16 / 9;
         const tileCount = this.grid.el.children.length;
         let optimal = {
@@ -244,15 +255,17 @@ export class Call extends Component {
         };
         for (let columnCount = 1; columnCount <= tileCount; columnCount++) {
             const rowCount = Math.ceil(tileCount / columnCount);
-            const potentialHeight = width / (columnCount * aspectRatio);
-            const potentialWidth = height / rowCount;
+            const effectiveWidth = width - (columnCount - 1) * gap;
+            const effectiveHeight = height - (rowCount - 1) * gap;
+            const potentialHeight = effectiveWidth / (columnCount * aspectRatio);
+            const potentialWidth = effectiveHeight / rowCount;
             let tileHeight;
             let tileWidth;
             if (potentialHeight > potentialWidth) {
                 tileHeight = Math.floor(potentialWidth);
                 tileWidth = Math.floor(tileHeight * aspectRatio);
             } else {
-                tileWidth = Math.floor(width / columnCount);
+                tileWidth = Math.floor(effectiveWidth / columnCount);
                 tileHeight = Math.floor(tileWidth / aspectRatio);
             }
             const area = tileHeight * tileWidth;
