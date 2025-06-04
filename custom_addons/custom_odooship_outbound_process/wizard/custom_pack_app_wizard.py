@@ -152,12 +152,26 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             sale_order = first_picking.sale_id
             sale_order_id = sale_order.id
 
+            # Find all picks (for this SO, discrete, at this site)
             so_pickings = self.env["stock.picking"].search([
                 ("sale_id", "=", sale_order_id),
                 ("discrete_pick", "=", True),
                 ("site_code_id", "=", self.site_code_id.id),
-                ("current_state", "=", "pick"),
             ])
+
+            # --------- Check for any pick not in 'pick' state or with missing totes ---------
+            for picking in so_pickings:
+                if picking.current_state != "pick":
+                    raise ValidationError(
+                        f"Picking is not done yet for Pick Number: {picking.name}, SO Number: {sale_order.name} (current state: {picking.current_state})"
+                    )
+                # Check if picking has any move lines with tote barcodes
+                totes = picking.move_ids_without_package.mapped("pc_container_code")
+                if not any(totes):
+                    raise ValidationError(
+                        f"Picking is not done yet for Pick Number: {picking.name}, SO Number: {sale_order.name} (no tote assigned)"
+                    )
+
             required_totes = set(so_pickings.mapped("move_ids_without_package.pc_container_code"))
             scanned_totes = set(tote_codes) & required_totes
 
@@ -180,6 +194,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             pickings_to_load = so_pickings.filtered(
                 lambda p: any(tc in scanned_totes for tc in p.move_ids_without_package.mapped("pc_container_code"))
             )
+
         else:
             # === NON-DISCRETE LOGIC (allow multiple SOs, multiple picks, all in 'pick' state) ===
             pickings_to_load = self.env["stock.picking"].search([
@@ -187,7 +202,35 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 ("site_code_id", "=", self.site_code_id.id),
                 ("current_state", "=", "pick"),
             ])
-            # No filtering on discrete_pick, allow all picks in pick state
+
+            # Prevent displaying discrete picks by accident!
+            discrete_pickings = pickings_to_load.filtered(lambda p: p.discrete_pick)
+            if discrete_pickings:
+                error_lines = []
+                for pick in discrete_pickings:
+                    error_lines.append(
+                        f"Pick Number: {pick.name}, SO Number: {pick.sale_id.name if pick.sale_id else '-'}")
+                raise ValidationError(
+                    "You cannot scan totes belonging to a discrete order in non-discrete picking mode!\n"
+                    "The following picks are discrete and must be picked as a group:\n" +
+                    "\n".join(error_lines)
+                )
+
+            # --------- NEW BLOCK: Manual order discrete enforcement ---------
+            relevant_sos = pickings_to_load.mapped("sale_id")
+            if len(relevant_sos) > 1:
+                all_manual_slsu_false = all(
+                    (so.automation_manual_order == "manual" and not getattr(so, "slsu", False))
+                    for so in relevant_sos
+                )
+                if all_manual_slsu_false:
+                    so_names = ", ".join([so.name for so in relevant_sos])
+                    raise ValidationError(
+                        "This is a manual order and must be picked as a discrete order.\n"
+                        "Please scan only totes for a single sale order.\n"
+                        f"Detected sale orders: {so_names}"
+                    )
+            # ---------------------------------------------------------------
 
         self.picking_ids = [(6, 0, pickings_to_load.ids)]
 
@@ -199,7 +242,6 @@ class PackDeliveryReceiptWizard(models.TransientModel):
                 picking.site_code_id.id,
                 incoterm
             )
-            # For discrete, only load lines for totes actually scanned. For non-discrete, all totes.
             moves = picking.move_ids_without_package.filtered(
                 lambda m: m.pc_container_code in tote_codes
             )
