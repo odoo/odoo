@@ -6,6 +6,7 @@ import {
     treeFromDomain,
     formatValue,
     condition,
+    constructTree,
 } from "@web/core/tree_editor/condition_tree";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { deepEqual } from "@web/core/utils/objects";
@@ -68,9 +69,9 @@ export class DomainSelector extends Component {
             return;
         }
 
-        const tree = treeFromDomain(domain);
-
-        const getFieldDef = await this.makeGetFieldDef(p.resModel, tree, ["active"]);
+        const getFieldDef = await this.makeGetFieldDef(p.resModel, constructTree(domain), [
+            "active",
+        ]);
 
         this.tree = treeFromDomain(domain, {
             getFieldDef,

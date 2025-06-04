@@ -7,7 +7,11 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { EvaluationError } from "@web/core/py_js/py_builtin";
 import { registry } from "@web/core/registry";
-import { treeFromDomain, domainContainsExpresssions } from "@web/core/tree_editor/condition_tree";
+import {
+    constructTree,
+    domainContainsExpresssions,
+    treeFromDomain,
+} from "@web/core/tree_editor/condition_tree";
 import { useGetTreeDescription, useMakeGetFieldDef } from "@web/core/tree_editor/utils";
 import { useBus, useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { useRecordObserver } from "@web/model/relational_model/utils";
@@ -164,7 +168,7 @@ export class DomainField extends Component {
         let promises = [];
         const domain = this.getDomain(props);
         try {
-            const getFieldDef = await this.makeGetFieldDef(resModel, treeFromDomain(domain));
+            const getFieldDef = await this.makeGetFieldDef(resModel, constructTree(domain));
             const tree = treeFromDomain(domain, { distributeNot: !this.env.debug, getFieldDef });
             const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
             promises = trees.map((tree) => this.getDomainTreeDescription(resModel, tree));

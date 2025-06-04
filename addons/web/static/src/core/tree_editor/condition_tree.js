@@ -355,21 +355,21 @@ function getNormalizedCondition(condition) {
 
 /**
  * @param {AST[]} ASTs
- * @param {Options} [options={}]
+ * @param {boolean} [distributeNot=false]
  * @param {boolean} [negate=false]
  * @returns {{ tree: Tree, remaimingASTs: AST[] }}
  */
-function _construcTree(ASTs, options = {}, negate = false) {
+function _constructTree(ASTs, distributeNot = false, negate = false) {
     const [firstAST, ...tailASTs] = ASTs;
 
     if (firstAST.type === 1 && firstAST.value === "!") {
-        return _construcTree(tailASTs, options, !negate);
+        return _constructTree(tailASTs, distributeNot, !negate);
     }
 
     const tree = { type: firstAST.type === 1 ? "connector" : "condition" };
     if (tree.type === "connector") {
         tree.value = firstAST.value;
-        if (options.distributeNot && negate) {
+        if (distributeNot && negate) {
             tree.value = tree.value === "&" ? "|" : "&";
             tree.negate = false;
         } else {
@@ -384,15 +384,7 @@ function _construcTree(ASTs, options = {}, negate = false) {
         tree.value = toValue(valueAST);
         if (["any", "not any"].includes(tree.operator)) {
             try {
-                tree.value = treeFromDomain(formatAST(valueAST), {
-                    ...options,
-                    getFieldDef: (p) => {
-                        if (typeof tree.path === "string" && typeof p === "string") {
-                            return options.getFieldDef?.(`${tree.path}.${p}`) || null;
-                        }
-                        return null;
-                    },
-                });
+                tree.value = constructTree(formatAST(valueAST), distributeNot);
             } catch {
                 tree.value = Array.isArray(tree.value) ? tree.value : [tree.value];
             }
@@ -401,10 +393,10 @@ function _construcTree(ASTs, options = {}, negate = false) {
     let remaimingASTs = tailASTs;
     if (tree.type === "connector") {
         for (let i = 0; i < 2; i++) {
-            const { tree: child, remaimingASTs: otherASTs } = _construcTree(
+            const { tree: child, remaimingASTs: otherASTs } = _constructTree(
                 remaimingASTs,
-                options,
-                options.distributeNot && negate
+                distributeNot,
+                distributeNot && negate
             );
             remaimingASTs = otherASTs;
             addChild(tree, child);
@@ -415,10 +407,10 @@ function _construcTree(ASTs, options = {}, negate = false) {
 
 /**
  * @param {DomainRepr} domain
- * @param {Options} [options={}]
+ * @param {boolean} [distributeNot=false]
  * @returns {Tree}
  */
-function construcTree(domain, options = {}) {
+export function constructTree(domain, distributeNot = false) {
     domain = new Domain(domain);
     const domainAST = domain.ast;
     // @ts-ignore
@@ -426,7 +418,7 @@ function construcTree(domain, options = {}) {
     if (!initialASTs.length) {
         return connector("&");
     }
-    const { tree } = _construcTree(initialASTs, options);
+    const { tree } = _constructTree(initialASTs, distributeNot);
     return tree;
 }
 
@@ -876,6 +868,18 @@ function normalizeConnector(connector) {
     return newTree;
 }
 
+function makeOptions(path, options) {
+    return {
+        ...options,
+        getFieldDef: (p) => {
+            if (typeof path === "string" && typeof p === "string") {
+                return options.getFieldDef?.(`${path}.${p}`) || null;
+            }
+            return null;
+        },
+    };
+}
+
 /**
  * @param {Function} transformation
  * @param {Tree} tree
@@ -883,11 +887,19 @@ function normalizeConnector(connector) {
  * @param {"condition"|"connector"|"complex_condition"} [treeType="condition"]
  * @returns {Tree}
  */
-function operate(transformation, tree, options = {}, treeType = "condition") {
+function operate(
+    transformation,
+    tree,
+    options = {},
+    treeType = "condition",
+    traverseSubTrees = true
+) {
     if (tree.type === "connector") {
         const newTree = {
             ...tree,
-            children: tree.children.map((c) => operate(transformation, c, options, treeType)),
+            children: tree.children.map((c) =>
+                operate(transformation, c, options, treeType, traverseSubTrees)
+            ),
         };
         if (treeType === "connector") {
             return normalizeConnector(transformation(newTree, options) || newTree);
@@ -895,6 +907,15 @@ function operate(transformation, tree, options = {}, treeType = "condition") {
         return normalizeConnector(newTree);
     }
     const clone = cloneTree(tree);
+    if (traverseSubTrees && tree.type === "condition" && isTree(tree.value)) {
+        clone.value = operate(
+            transformation,
+            tree.value,
+            makeOptions(tree.path, options),
+            treeType,
+            traverseSubTrees
+        );
+    }
     if (treeType === tree.type) {
         return transformation(clone, options) || clone;
     }
@@ -949,7 +970,7 @@ class TreePattern extends Pattern {
         for (const name of vars) {
             values[name] = new Hole(name);
         }
-        const tree = construcTree(domain);
+        const tree = constructTree(domain);
         this._template = replaceVariablesByValues(tree, values);
     }
     detect(tree) {
@@ -1647,10 +1668,10 @@ export function domainFromTree(tree) {
 
 /**
  * @param {DomainRepr} domain
- * @param {Object} [options={}] see construcTree API
+ * @param {Object} [options={}] see constructTree API
  * @returns {Tree} a (simple) tree representation of a domain
  */
 export function treeFromDomain(domain, options = {}) {
-    const tree = construcTree(domain, options);
+    const tree = constructTree(domain, options.distributeNot);
     return applyTransformations(FULL_VIRTUAL_OPERATORS_CREATION, tree, options);
 }
