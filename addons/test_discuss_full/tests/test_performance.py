@@ -88,7 +88,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: _get_channels_as_member
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
-    #   33: channel _to_store_defaults:
+    #   34: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -120,6 +120,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - count discuss_channel_member (member_count)
     #       - _compute_message_needaction
     #       - search discuss_channel_res_groups_rel (group_ids)
+    #       - fetch im_livechat_channel_member_history (requested_by_operator)
     #       - fetch res_groups (group_ids)
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
@@ -146,7 +147,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch discuss_call_history
     #       - search mail_tracking_value
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 60
+    _query_count_discuss_channels = 61
 
     def setUp(self):
         super().setUp()
@@ -942,6 +943,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "test1 Ernest Employee",
                 "parent_channel_id": False,
+                "requested_by_operator": False,
                 "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
@@ -976,6 +978,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "mute_until_dt": False,
                 "name": "anon 2 Ernest Employee",
                 "parent_channel_id": False,
+                "requested_by_operator": False,
                 "rtc_session_ids": [["ADD", []]],
                 "uuid": channel.uuid,
             }
