@@ -1107,7 +1107,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             )
         ]})
         self.main_pos_config.open_ui()
-        self.start_pos_tour('chrome_without_cash_move_permission', login="accountman")
+        self.start_pos_tour('test_chrome_without_cash_move_permission', login='accountman')
 
     def test_09_pos_barcodes_scan_product_packaging(self):
         pack_of_10 = self.env['uom.uom'].create({
