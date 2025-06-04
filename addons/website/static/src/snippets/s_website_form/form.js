@@ -9,7 +9,6 @@ import { post } from "@web/core/network/http_service";
 import { user } from "@web/core/user";
 import { delay } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
-import { addLoadingEffect } from "@web/core/utils/ui";
 import {
     formatDate,
     formatDateTime,
@@ -29,9 +28,9 @@ export class Form extends Interaction {
         _endMessage: () => this.el.parentNode.querySelector(".s_website_form_end_message"),
     };
     dynamicContent = {
-        ".s_website_form_send, .o_website_form_send": { "t-on-click.prevent": this.send }, // !compatibility
+        ".s_website_form_send, .o_website_form_send": { "t-on-click.prevent": this.locked(this.send, true) }, // !compatibility
         _root: {
-            "t-on-submit.prevent": this.send,
+            "t-on-submit.prevent": this.locked(this.send, true),
             "t-att-class": () => ({
                 "d-none": this.isHidden,
             })
@@ -277,11 +276,6 @@ export class Form extends Interaction {
     }
 
     async send() {
-        // Prevent users from crazy clicking
-        const buttonEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
-        buttonEl.classList.add("disabled"); // !compatibility
-        buttonEl.setAttribute("disabled", "disabled");
-        this.restoreBtnLoading = addLoadingEffect(buttonEl);
         this.el.querySelector("#s_website_form_result, #o_website_form_result")?.replaceChildren(); // !compatibility
         this.removeErrorMessages();
         if (!this.checkErrorFields({})) {
@@ -367,11 +361,8 @@ export class Form extends Interaction {
         }
 
         // Post form and handle result
-        post(this.el.getAttribute("action") + (this.el.dataset.force_action || this.el.dataset.model_name), formData)
+        return post(this.el.getAttribute("action") + (this.el.dataset.force_action || this.el.dataset.model_name), formData)
             .then(async (resultData) => {
-                // Restore send button behavior
-                buttonEl.removeAttribute("disabled");
-                buttonEl.classList.remove("disabled"); // !compatibility
                 if (!resultData.id) {
                     // Failure, the server didn't return the created record ID
                     this.updateStatus("error", resultData.error ? resultData.error : false);
@@ -456,7 +447,6 @@ export class Form extends Interaction {
                     }
 
                     this.resetForm();
-                    this.restoreBtnLoading();
                 }
             })
             .catch(error => {
@@ -578,12 +568,6 @@ export class Form extends Interaction {
     }
 
     updateStatus(status, message) {
-        if (status !== "success") { // Restore send button behavior if result is an error
-            const buttonEl = this.el.querySelector(".s_website_form_send, .o_website_form_send");
-            buttonEl.removeAttribute("disabled");
-            buttonEl.classList.remove("disabled"); // !compatibility
-            this.restoreBtnLoading();
-        }
         const resultEl = this.el.querySelector("#s_website_form_result, #o_website_form_result"); // !compatibility
 
         if (status === "error" && !message) {
