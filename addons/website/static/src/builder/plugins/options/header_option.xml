@@ -330,75 +330,71 @@
 </t>
 
 <t t-name="website.headerElementOption">
-    <BuilderRow label.translate="Elements" action="'websiteConfig'">
-        <div class="flex-grow-1">
-            <div class="d-flex mb-1">
-                <BuilderButton
-                    title.translate="Show/hide text element"
-                    className="'flex-grow-1 me-1'"
-                    actionParam="{
-                        views: ['website.header_text_element'],
-                        resetViewArch: true,
-                    }"
-                >
-                    <Img src="'/website/static/src/img/snippets_options/header_extra_element_text.svg'"/>
-                </BuilderButton>
-                <t t-set="language_ids" t-value="env.services.website.currentWebsite.language_ids || []"/>
-                <BuilderButton
-                    t-if="language_ids.length > 1"
-                    title.translate="Show/hide language selector"
-                    className="'flex-grow-1 me-1 fa fa-flag'"
-                    actionParam="{
-                        views: ['website.header_language_selector'],
-                        resetViewArch: true,
-                    }"
-                >
-                </BuilderButton>
-                <BuilderButton
-                    title.translate="Show/hide search bar"
-                    className="'fa fa-search flex-grow-1 me-1'"
-                    actionParam="{
-                        views: ['website.header_search_box'],
-                        resetViewArch: true,
-                    }"/>
-                <BuilderButton
-                    title.translate="Show/hide sign in button"
-                    className="'fa fa-sign-in flex-grow-1'"
-                    actionParam="{
-                        views: ['portal.user_sign_in'],
-                        resetViewArch: true,
-                    }"/>
-            </div>
-            <div class="d-flex">
-                <BuilderButton
-                    title.translate="Show/hide social links"
-                    className="'flex-grow-1 me-1'"
-                    actionParam="{
-                        views: ['website.header_social_links'],
-                        resetViewArch: true,
-                    }"
-                >
-                    <Img src="'/website/static/src/img/snippets_options/header_extra_element_social.svg'"/>
-                </BuilderButton>
-                <BuilderButton
-                    title.translate="Show/hide button"
-                    className="'flex-grow-1 me-1'"
-                    actionParam="{
-                        views: ['website.header_call_to_action'],
-                        resetViewArch: true,
-                    }"
-                >
-                    <Img src="'/website/static/src/img/snippets_options/header_extra_element_cta.svg'"/>
-                </BuilderButton>
-                <BuilderButton
-                    title.translate="Show/hide logo"
-                    className="'flex-grow-1'"
-                    actionParam="websiteLogoParams"
-                >
-                    <Img src="'/website/static/src/img/snippets_options/header_extra_element_logo.svg'"/>
-                </BuilderButton>
-            </div>
-        </div>
+    <BuilderRow label.translate="Header elements" action="'websiteConfig'">
+        <BuilderButton
+            title.translate="Show/hide logo"
+            className="'flex-grow-1'"
+            actionParam="websiteLogoParams"
+        >
+            <Img src="'/website/static/src/img/snippets_options/header_extra_element_logo.svg'"/>
+        </BuilderButton>
+        <BuilderButton
+            title.translate="Show/hide text element"
+            className="'flex-grow-1'"
+            actionParam="{
+                views: ['website.header_text_element'],
+                resetViewArch: true,
+            }"
+        >
+            <Img src="'/website/static/src/img/snippets_options/header_extra_element_text.svg'"/>
+        </BuilderButton>
+        <BuilderButton
+            title.translate="Show/hide button"
+            className="'flex-grow-1'"
+            actionParam="{
+                views: ['website.header_call_to_action'],
+                resetViewArch: true,
+            }"
+        >
+            <Img src="'/website/static/src/img/snippets_options/header_extra_element_cta.svg'"/>
+        </BuilderButton>
+        <t t-set="language_ids" t-value="env.services.website.currentWebsite.language_ids || []"/>
+        <BuilderButton
+            t-if="language_ids.length > 1"
+            title.translate="Show/hide language selector"
+            className="'fa fa-flag flex-grow-1'"
+            actionParam="{
+                views: ['website.header_language_selector'],
+                resetViewArch: true,
+            }"
+        >
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Actions" action="'websiteConfig'">
+        <BuilderButton
+            title.translate="Show/hide search bar"
+            className="'fa fa-search flex-grow-1'"
+            actionParam="{
+                views: ['website.header_search_box'],
+                resetViewArch: true,
+            }"/>
+        <BuilderButton
+            title.translate="Show/hide social links"
+            className="'flex-grow-1'"
+            actionParam="{
+                views: ['website.header_social_links'],
+                resetViewArch: true,
+            }"
+        >
+            <Img src="'/website/static/src/img/snippets_options/header_extra_element_social.svg'"/>
+        </BuilderButton>
+        <BuilderButton
+            title.translate="Show/hide sign in button"
+            className="'fa fa-sign-in flex-grow-1'"
+            actionParam="{
+                views: ['portal.user_sign_in'],
+                resetViewArch: true,
+            }"/>
     </BuilderRow>
 </t>
 
