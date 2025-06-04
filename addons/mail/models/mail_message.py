@@ -893,7 +893,7 @@ class Message(models.Model):
             model_name: self.env[model_name]
             .browse(ids)
             .with_prefetch(tuple(ids_by_model[model_name] | prefetch_ids_by_model[model_name]))
-            for model_name, ids in ids_by_model.items() if self.env[model_name].browse(ids).exists()
+            for model_name, ids in ids_by_model.items()
         }
 
     def _record_by_message(self):
@@ -902,12 +902,7 @@ class Message(models.Model):
             message: self.env[message.model]
             .browse(message.res_id)
             .with_prefetch(records_by_model_name[message.model]._prefetch_ids)
-            for message in self.filtered(
-                lambda m:
-                    m.model and m.res_id and
-                    m.model in records_by_model_name and
-                    m.res_id in records_by_model_name[m.model].ids
-                )
+            for message in self.filtered(lambda m: m.model and m.res_id)
         }
 
     def _to_store(
