@@ -75,9 +75,4 @@ export class Chrome extends Component {
         adapter.data.scaleData = scaleData;
         adapter.dispatch(this.pos);
     }
-
-    // GETTERS //
-    get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control);
-    }
 }

@@ -255,6 +255,7 @@ registry.category("web_tour.tours").add("SessionStatisticsDisplay", {
             },
         ].flat(),
 });
+<<<<<<< 1c0c7de4bf5fb35b7642219db4198cc60fabc893
 
 registry.category("web_tour.tours").add("test_click_all_orders_keep_customer", {
     steps: () =>
@@ -279,3 +280,15 @@ registry.category("web_tour.tours").add("test_click_all_orders_keep_customer", {
             },
         ].flat(),
 });
+||||||| f6548acabd93dcb5c2dcd9ec5459f8bd6163efb3
+=======
+
+registry.category("web_tour.tours").add("test_chrome_without_cash_move_permission", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.isCashMoveButtonHidden(),
+        ].flat(),
+});
+>>>>>>> e31e2bc1c0ff5d6ebc81a0fb0c3239633d670c5b
