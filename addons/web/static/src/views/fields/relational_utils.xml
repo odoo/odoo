@@ -34,11 +34,8 @@
         />
         <AutoComplete t-else="" t-props="autoCompleteProps">
             <t t-set-slot="option" t-slot-scope="optionScope">
-                <t t-if="optionScope.data.record">
-                    <t t-slot="autoCompleteItem" t-props="optionScope.data" label="optionScope.label"/>
-                </t>
-                <t t-else="">
-                    <t t-esc="optionScope.label"/>
+                <t t-slot="{{ optionScope.data.slotName }}" t-props="optionScope.data" label="optionScope.label">
+                    <t t-out="optionScope.label"/>
                 </t>
             </t>
         </AutoComplete>
