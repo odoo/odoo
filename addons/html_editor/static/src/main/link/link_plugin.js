@@ -224,7 +224,10 @@ export class LinkPlugin extends Plugin {
             withSequence(50, {
                 //Default option
                 PopoverClass: LinkPopover,
-                isAvailable: () => true,
+                isAvailable: (linkEl) =>
+                    !this.getResource("restricted_text_container_selectors").some((s) =>
+                        linkEl?.matches(s)
+                    ),
                 getProps: (props) => props,
             }),
         ],
@@ -289,8 +292,13 @@ export class LinkPlugin extends Plugin {
             {
                 hotkey: "control+k",
                 category: "shortcut_conflict",
-                isAvailable: () =>
-                    this.dependencies.selection.getSelectionData().documentSelectionIsInEditable,
+                isAvailable: () => {
+                    const selectionData = this.dependencies.selection.getSelectionData();
+                    return (
+                        selectionData.documentSelectionIsInEditable &&
+                        !selectionData.documentSelectionIsRestrictedText
+                    );
+                },
             }
         );
         this.ignoredClasses = new Set(this.getResource("system_classes"));
@@ -571,11 +579,13 @@ export class LinkPlugin extends Plugin {
         };
 
         const popover = this.getActivePopover(linkElement);
-        this.currentOverlay = popover.overlay;
-        this.currentOverlay.open({ props: popover.getProps(props) });
-        if (this.linkInDocument) {
-            if (this.newlyInsertedLinks.has(this.linkInDocument)) {
-                this.newlyInsertedLinks.delete(this.linkInDocument);
+        if (popover) {
+            this.currentOverlay = popover.overlay;
+            this.currentOverlay.open({ props: popover.getProps(props) });
+            if (this.linkInDocument) {
+                if (this.newlyInsertedLinks.has(this.linkInDocument)) {
+                    this.newlyInsertedLinks.delete(this.linkInDocument);
+                }
             }
         }
     }

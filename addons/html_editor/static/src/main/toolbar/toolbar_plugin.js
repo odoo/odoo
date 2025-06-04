@@ -343,7 +343,7 @@ export class ToolbarPlugin extends Plugin {
             selectionData.currentSelectionIsInEditable &&
             !selectionData.documentSelectionIsProtected &&
             !selectionData.documentSelectionIsProtecting;
-        if (!inEditable) {
+        if (!inEditable || selectionData.documentSelectionIsRestrictedText) {
             return false;
         }
         const canDisplayToolbar = this.getResource("can_display_toolbar").every((fn) =>
