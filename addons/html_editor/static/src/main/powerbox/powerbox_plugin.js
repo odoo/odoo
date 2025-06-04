@@ -101,6 +101,7 @@ export class PowerboxPlugin extends Plugin {
                     commands: this.getAvailablePowerboxCommands(),
                     categories: this.getResource("powerbox_categories"),
                 }),
+            plainTextCompatible: true,
         },
         powerbox_categories: [
             withSequence(10, { id: "structure", name: _t("Structure") }),

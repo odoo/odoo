@@ -144,6 +144,7 @@ export class ToolbarPlugin extends Plugin {
                 this.isToolbarExpanded = true;
                 this.updateToolbar();
             },
+            plainTextCompatible: true,
         },
         toolbar_groups: [
             withSequence(100, { id: "expand_toolbar", namespaces: ["compact"] }),

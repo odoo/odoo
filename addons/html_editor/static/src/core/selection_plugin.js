@@ -195,7 +195,11 @@ export class SelectionPlugin extends Plugin {
         "selectAroundNonEditable",
     ];
     resources = {
-        user_commands: { id: "selectAll", run: this.selectAll.bind(this) },
+        user_commands: {
+            id: "selectAll",
+            run: this.selectAll.bind(this),
+            plainTextCompatible: true,
+        },
         shortcuts: [{ hotkey: "control+a", commandId: "selectAll" }],
         is_node_editable_predicates: (node) => node.parentElement?.isContentEditable,
     };
