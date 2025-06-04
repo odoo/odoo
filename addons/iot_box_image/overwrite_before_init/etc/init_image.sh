@@ -217,6 +217,7 @@ systemctl disable cups-browsed.service
 systemctl enable labwc.service
 systemctl enable odoo.service
 systemctl enable odoo-led-manager.service
+systemctl enable odoo-ngrok.service
 
 # create dirs for ramdisks
 create_ramdisk_dir () {
