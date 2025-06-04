@@ -48,3 +48,24 @@ class ResPartner(models.Model):
             on_time, ordered = numbers
             partner.on_time_rate = on_time / ordered * 100 if ordered else -1   # use negative number to indicate no data
         (self - seen_partner).on_time_rate = -1
+
+    @api.model
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        base_res = super().name_search(name, domain, operator, limit)
+        if not self.env.context.get('highlight_supplier', False):
+            return base_res
+        product = self.env['product.product'].browse(self.env.context.get('product_id'))
+        base_res.extend((p.id, p.name) for p in product.seller_ids.partner_id
+                        if p.id not in [res[0] for res in base_res])  # Override limit if all vendors not in base_res
+        return sorted(base_res, key=lambda res: 0 if res[0] in product.seller_ids.partner_id.ids else 1)
+
+    @api.depends('name')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        ctx = self.env.context
+        if not (ctx.get('product_id', 0) and ctx.get("formatted_display_name", 0) and ctx.get("highlight_supplier", 0)):
+            return
+        product = self.env['product.product'].browse(ctx['product_id'])
+        for rec in self:
+            if rec.id in product.seller_ids.partner_id.ids:
+                rec.display_name = f"**{rec.display_name}**"
