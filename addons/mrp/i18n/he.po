@@ -282,7 +282,7 @@ msgstr "60"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "8 GB RAM"
-msgstr ""
+msgstr "8 GB RAM"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -985,6 +985,9 @@ msgid ""
 "case the product is subcontracted, this can be used to determine the date at"
 " which components should be sent to the subcontractor."
 msgstr ""
+"זמן אספקה ממוצע בימים לייצור מוצר זה. במקרה של עץ מוצר רב-שלבי, זמני האספקה "
+"של רכיבי המשנה יתווספו. במקרה שהמוצר מיוצר בקבלנות משנה, ניתן להשתמש בפרמטר "
+"זה כדי לקבוע את התאריך שבו יש לשלוח את הרכיבים לקבלן המשנה."
 
 #. module: mrp
 #. odoo-javascript
@@ -3411,6 +3414,8 @@ msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
+"פעולות ייצור מתבצעות בתחנות עבודה.  תחנת עבודה יכול לכלול \n"
+"                עובדים ו/או מכונות, המשמשים לחישוב עלויות, תזמון, תכנון קיבולת ועוד."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_kanban_action
@@ -3419,6 +3424,8 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
+"פעולות ייצור מתבצעות בתחנות עבודה. תחנת עבודה יכול לכלול \n"
+"עובדים ו/או מכונות, המשמשים לחישוב עלויות, תזמון, תכנון קיבולת ועוד .                            הם יכולים להיות מוגדרים בתפריט ההגדרות."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reservation_state
@@ -3428,6 +3435,9 @@ msgid ""
 "            * Ready: The material is available to start the production.\n"
 "            * Waiting: The material is not available to start the production.\n"
 msgstr ""
+"מוכנות הייצור להזמנת הייצור  הזו, בהתאם להגדרות עץ המוצר:\n"
+"*מוכן: החומר זמין להתחלת הייצור.\n"
+"*ממתין: החומר אינו זמין להתחלת הייצור.\n"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_picking_tree_mrp_operation
@@ -3524,7 +3534,7 @@ msgstr "שורת אזהרת צריכה בייצור"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_mrp_display
 msgid "Mrp Display"
-msgstr ""
+msgstr "תצוגת ייצור"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -5604,6 +5614,7 @@ msgid ""
 "The total cost share for a manufacturing order's by-products cannot exceed "
 "100."
 msgstr ""
+"ההשתתפות הכוללת בעלות של תוצרי לוואי בהזמנת ייצור לא יכולה לעלות על 100."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
@@ -5620,7 +5631,7 @@ msgstr "הוראת עבודה זו הייתה צריכה להיות מעובדת
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid ""
 "There are no components to consume. Are you still sure you want to continue?"
-msgstr ""
+msgstr "אין רכיבים לצרוך. האם אתה בטוח שברצונך להמשיך?"
 
 #. module: mrp
 #. odoo-python
@@ -6198,7 +6209,7 @@ msgstr "צפה בהוראת עבודה"
 msgid ""
 "View and allocate production quantities to customer orders or other "
 "manufacturing orders"
-msgstr ""
+msgstr "הצג והקצה כמויות ייצור להזמנות לקוח או להזמנות ייצור אחרות."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
@@ -6348,11 +6359,13 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
+"אשף במקרה של צריכה תחת אזהרה/חומרה, כאשר נעשה שימוש ביותר רכיבים מהמצופה על "
+"פי עץ המוצר בהזמנת ייצור (בהקשר לעץ מוצר)."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
 msgid "Wizard to Split Multiple Productions"
-msgstr ""
+msgstr "אשף לפיצול ייצור מרובה"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split
@@ -6508,6 +6521,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "                    Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"הוראות עבודה הן פעולות שיש לבצע כחלק מהזמנת ייצור.\n"
+"                      הפעולות מוגדרות בעץ מוצר או מתווספות ישירות בהזמנת הייצור."
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -6518,6 +6533,8 @@ msgid ""
 "Work orders are operations to do as part of a manufacturing order.\n"
 "            Operations are defined in the bill of materials or added in the manufacturing order directly."
 msgstr ""
+"הוראות עבודה הן פעולות שיש לבצע כחלק מהזמנת ייצור.\n"
+"                        הפעולות מוגדרות בעץ מוצר או מתווספות ישירות בהזמנת הייצור."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -6622,6 +6639,9 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
+"אינך רשאי ליצור או לערוך מספר אצווה  או מספר סידורי עבור רכיבים עם סוג פעולה"
+" \"ייצור\". כדי לשנות זאת, עבור לסוג הפעולה וסמן את התיבה \"צור אצוות/מספרים"
+" סידוריים חדשים עבור רכיבים\"."
 
 #. module: mrp
 #. odoo-python
@@ -6740,6 +6760,8 @@ msgid ""
 "You cannot use the 'Apply on Variant' functionality and simultaneously "
 "create a BoM for a specific variant."
 msgstr ""
+"אינך יכול להשתמש בפונקציונליות 'החל על וריאנט' ובו זמנית ליצור עץ מוצר "
+"לוריאנט ספציפי. "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -6754,6 +6776,15 @@ msgid ""
 "                            <span invisible=\"mrp_production_count == 1\">these manufacturing orders</span>.\n"
 "                        </b>"
 msgstr ""
+"צרכת כמות שונה מהמצופה עבור המוצרים הבאים.\n"
+"<b invisible=\"consumption == 'strict'\">\n"
+"אנא אשר שזה בוצע בכוונה.\n"
+"</b>\n"
+"<b invisible=\"consumption != 'strict'\">\n"
+"יש לעיין בצריכת הרכיבים שלך או לבקש ממנהל לאשר\n"
+"<span invisible=\"mrp_production_count != 1\">את הזמנת הייצור הזו</span>\n"
+"<span invisible=\"mrp_production_count == 1\">את הזמנות הייצור הללו.</span>\n"
+"</b>"
 
 #. module: mrp
 #. odoo-python
@@ -6872,7 +6903,7 @@ msgstr "הוא מתווסף כרכיב בהזמנת ייצור"
 msgid ""
 "it is moved via a transfer, such as a receipt or a delivery order for "
 "instance."
-msgstr ""
+msgstr "זה מועבר באמצעות העברה, כגון קבלת סחורה או הזמנת משלוח, לדוגמה."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

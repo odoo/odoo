@@ -78,6 +78,7 @@ class AccountTaxGroup(models.Model):
             for field_name in ('tax_payable_account_id', 'tax_receivable_account_id'):
                 if group[field_name] and not (
                     group[field_name].account_type in ('asset_receivable', 'liability_payable')
+                    and group[field_name].reconcile
                     and group[field_name].non_trade
                 ):
                     raise ValidationError(

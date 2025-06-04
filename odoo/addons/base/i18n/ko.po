@@ -565,10 +565,10 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"이 모듈은 음식점 관리와 관련된 몇 가지 기능을 POS에 추가합니다 :\n"
-"- 계산서 인쇄: 주문이 결제되기 전에 수령증을 인쇄할 수 있습니다\n"
-"- 계산서 분할: 한 주문을 여러 개 주문으로 분할할 수 있습니다\n"
-"- 주방용 주문서 인쇄: 주방 또는 바 프린터로 주문서를 인쇄 할 수 있습니다\n"
+"이 모듈을 활용하여 POS에 레스토랑점 관리에 특화된 다음과 같은 기능을 추가할 수 있습니다:\n"
+"- 계산서 인쇄: 주문 결제 전에 영수증을 인쇄할 수 있습니다.\n"
+"- 계산서 분할: 한 주문을 여러 개 주문으로 분할할 수 있습니다.\n"
+"- 주방용 주문서 인쇄: 주방이나 바에 있는 프린터로 주문서를 전송하여 인쇄할 수 있습니다.\n"
 "\n"
 
 #. module: base
@@ -2307,6 +2307,8 @@ msgid ""
 "\n"
 "Additional module to allow the export of the Italian monthly tax report to XML format.\n"
 msgstr ""
+"\n"
+"해당 명세서를 가져올 전표를 찾을 수 없습니다. 전표를 직접 선택하세요.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi_ndd
@@ -3579,6 +3581,10 @@ msgid ""
 "================================\n"
 "Provides electronic invoicing for Brazil through Avatax in the POS.\n"
 msgstr ""
+"\n"
+"브라질 회계 POS용 EDI\n"
+"================================\n"
+"브라질 전자 청구서를 Avatax를 통해 POS에서 제공합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_br_edi_sale
@@ -6454,7 +6460,7 @@ msgid ""
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 msgstr ""
 "\n"
-"Includes the following data for the Chinese localization\n"
+"중국 현지화용으로 다음 정보가 포함되었습니다.\n"
 "========================================================\n"
 "\n"
 "계정 유형/科目类型\n"
@@ -6473,8 +6479,9 @@ msgstr ""
 "\n"
 "    增加大企业会计科目表\n"
 "\n"
-"바우처 인쇄 옵션이 추가되어 금액을 문자로 (숫자의 경우 특수 한자 인쇄)\n"
-"cn2an 라이브러리가 설치되면 올바르게 인쇄할 수 있습니다 (예: pip3로 cn2an 설치).\n"
+"cn2an 라이브러리가 설치되면 해당 금액을 단어 (숫자의 경우 특수 한자)로\n"
+"바우처를 올바르게 표시하여 인쇄하는\n"
+"옵션이 추가되였습니다 (예: pip3 설치 cn2an 사용).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -7596,6 +7603,10 @@ msgid ""
 "Official website: https://sie.se/\n"
 "XSD and documentation: https://sie.se/format/\n"
 msgstr ""
+"\n"
+"회계 데이터를 SIE 4 표준 파일로 내보내는 모듈입니다.\n"
+"공식 웹사이트: https://sie.se/\n"
+"XSD 및 문서: https://sie.se/format/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec_import
@@ -7702,6 +7713,10 @@ msgid ""
 "Official website: https://sie.se/\n"
 "XSD and documentation: https://sie.se/format/\n"
 msgstr ""
+"\n"
+"SIE 4 표준 파일 가져오기용 모듈입니다.\n"
+"공식 웹사이트: https://sie.se/\n"
+"XSD 및 문서: https://sie.se/format/\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_sie_import
@@ -22180,7 +22195,7 @@ msgstr "D - 전기, 가스, 난방기 및 에어컨 공급업체"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_dhl
 msgid "DHL Express Shipping (Legacy)"
-msgstr ""
+msgstr "DHL 익스프레스 선적 (레거시)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008
@@ -23047,9 +23062,9 @@ msgid ""
 "%(country_name)s: the name of the country\n"
 "%(country_code)s: the code of the country"
 msgstr ""
-"이 국가에 속한 주소에 사용할 형식을 표시합니다.\n"
+"주소가 해당 국가에 위치하고 있을 경우 적용될 표시 형식입니다.\n"
 "\n"
-"주소의 모든 필드에 파이썬 스타일의 문자열 패턴을 사용할 수 있습니다 (예 : '%(street)s'를 사용하여  '도로명' 필드 표시)\n"
+"모든 주소 필드에 파이썬 스타일의 문자열 패턴을 사용할 수 있습니다 (예 : '%(street)s' 를 활용하여 '도로명' 필드 표시)\n"
 "%(state_name)s: 시/도명\n"
 "%(state_code)s: 시/도 코드\n"
 "%(country_name)s: 국가명\n"
@@ -29009,7 +29024,7 @@ msgstr "이탈리아 - 재고 DDT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_xml_export
 msgid "Italy - Tax Report XML Export"
-msgstr ""
+msgstr "이탈리아 - 세금 신고서 XML 내보내기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi_website_sale
@@ -30000,7 +30015,7 @@ msgstr "pos_sale과 l10n_be 간의 연결 모듈"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_event_sale
 msgid "Link module between pos_sale and pos_event"
-msgstr ""
+msgstr "pos_sale 과 pos_event 사이의 연결 모듈"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_loyalty
@@ -30691,8 +30706,9 @@ msgid ""
 "assigned to specific groups in order to make them accessible to some users "
 "within the system."
 msgstr ""
-"사용자 메뉴 항목을 관리하고 사용자 정의합니다. 각 줄 앞에 상자를 클릭하여 나타나는 단추를 클릭하여 삭제할 수 있습니다. 메뉴 항목을 "
-"특정 사용자 그룹에 할당하여 시스템의 특정 기능을 사용할 수 있습니다."
+"Odoo 시스템 메뉴에 있는 사용 항목을 관리하고 사용자 지정합니다. 삭제하려는 항목을 있을 경우에는 각 행의 시작 부분에 있는 상자를 "
+"클릭하면 나타나는 버튼을 클릭합니다. 특정 사용자 그룹에 메뉴 항목을 지정할 수 있으며 이렇게 지정해 두면 시스템 내 일부 사용자만 "
+"접근할 수 있습니다."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides
@@ -31060,7 +31076,7 @@ msgstr "판매 주문 고나련 대량 문자 발송"
 #: model:ir.module.module,description:base.module_hr_recruitment_sms
 #: model:ir.module.module,summary:base.module_hr_recruitment_sms
 msgid "Mass mailing sms to job applicants"
-msgstr ""
+msgstr "입사 지원자에게 대량 메일 발송"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -39600,6 +39616,8 @@ msgid ""
 " Please install the new \"DHL Express Shipping\" module and uninstall this "
 "one as soon as possible."
 msgstr ""
+"더 이상 지원되지 않는 DHL Express 통합 레거시 버전입니다. 새로운 'DHL Express 배송' 모듈을 설치 후 최대한 빠른 "
+"시일 내에 해당 모듈을 제거하시기 바랍니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex_rest
@@ -45480,8 +45498,9 @@ msgid ""
 "number upon assignment, there can still be gaps in the sequence if records "
 "are deleted. The 'no gap' implementation is slower than the standard one."
 msgstr ""
-"레코드에 시퀀스 번호를 할당하는 동안 '차이 없음'시퀀스 구현은 각 이전 시퀀스 번호가 이미 할당되었는지 확인합니다. 이 시퀀스 구현은 "
-"할당 시퀀스 번호를 건너뛰지 않지만 레코드가 삭제되면 시퀀스에 틈이 있을 수 있습니다. '차이 없음' 구현은 표준 구현보다 느립니다."
+"레코드에 연번으로 시퀀스 번호를 지정하는 경우, '공백 없음' 으로 시퀀스를 설정하면 이전의 시퀀스 번호가 이미 배정이 된 번호인지 "
+"여부를 확인합니다. 이렇게 시퀀스를 설정할 경우 시퀀스 번호를 지정할 때 건너뛰지는 않지만 레코드가 삭제된 경우에는 시퀀스에 공백이 "
+"발생할 수 있습니다. '공백 없음' 설정을 하면 표준 설정을 할 때보다 속도가 느립니다."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_G
