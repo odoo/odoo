@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
-from odoo.exceptions import ValidationError
+from odoo import _
+from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
@@ -23,10 +22,10 @@ class WebsiteSaleForm(WebsiteForm):
         try:
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:
-            return json.dumps({'error_fields': e.args[0]})
+            raise ValidationError("Failed to extract data from form: %s" % e)
 
         if not (order_sudo := request.cart):
-            return json.dumps({'error': "No order found; please add a product to your cart."})
+            raise UserError(_("No order found; please add a product to your cart."))
 
         if data['record']:
             order_sudo.write(data['record'])
@@ -40,7 +39,7 @@ class WebsiteSaleForm(WebsiteForm):
         if data['attachments']:
             self.insert_attachment(model_record, order_sudo.id, data['attachments'])
 
-        return json.dumps({'id': order_sudo.id})
+        return request.redirect("/shop/payment")
 
 
 class Website(main.Website):

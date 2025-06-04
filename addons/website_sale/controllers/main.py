@@ -1453,10 +1453,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         order_sudo._recompute_taxes()
         order_sudo._recompute_prices()
+        # TODO-PDA why did it had to be in checkout?
         extra_step = request.website.viewref('website_sale.extra_info')
         if extra_step.active:
             return request.redirect("/shop/extra_info")
 
+        # TODO-PDA why not confirm_order?
         return request.redirect("/shop/payment")
 
     # === CHECKOUT FLOW - EXTRA STEP METHODS === #
