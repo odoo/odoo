@@ -2,13 +2,18 @@ import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
 import { closestElement } from "../utils/dom_traversal";
-import { isListItemElement, paragraphRelatedElementsSelector } from "../utils/dom_info";
+import {
+    isEmptyBlock,
+    isListItemElement,
+    paragraphRelatedElementsSelector,
+} from "../utils/dom_info";
 import { removeClass } from "@html_editor/utils/dom";
 import { withSequence } from "@html_editor/utils/resource";
+import { fillEmpty } from "../utils/dom";
 
 export class SeparatorPlugin extends Plugin {
     static id = "separator";
-    static dependencies = ["selection", "history", "split", "delete", "lineBreak"];
+    static dependencies = ["selection", "history", "split", "delete", "lineBreak", "baseContainer"];
     resources = {
         user_commands: [
             {
@@ -45,7 +50,15 @@ export class SeparatorPlugin extends Plugin {
             (block && !isListItemElement(block) ? block : null);
 
         if (element && element !== this.editable) {
-            element.before(sep);
+            if (isEmptyBlock(element)) {
+                element.before(sep);
+            } else {
+                element.after(sep);
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                fillEmpty(baseContainer);
+                sep.after(baseContainer);
+                this.dependencies.selection.setCursorStart(baseContainer);
+            }
         }
         this.dependencies.history.addStep();
     }
