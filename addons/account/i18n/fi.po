@@ -222,6 +222,9 @@ msgid ""
 "\"%(receivable)s\" or \"%(payable)s\" with both options "
 "\"%(allow_reconciliation)s\" and \"%(non_trade)s\" enabled."
 msgstr ""
+"%(tax_account)s (%(account_name)s) tulisi olla tilityyppiä "
+"\"%(receivable)s\" tai \"%(payable)s\", ja molempien vaihtoehtojen "
+"\"%(allow_reconciliation)s\" ja \"%(non_trade)s\" tulisi olla käytössä."
 
 #. module: account
 #. odoo-python
@@ -1891,7 +1894,7 @@ msgstr "Tilikartta"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "Tilikartoitus"
+msgstr "Tilikohdistukset"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2251,7 +2254,7 @@ msgstr "Tilit"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Verokannan tilikartoitus"
+msgstr "Verokannan tilikohdistus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -3194,7 +3197,7 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (VAT/Country) are met."
 msgstr ""
-"Sovellat vero- ja tilikartoituksia laskuihin automaattisesti, jos "
+"Sovellat vero- ja tilikohdistuksia laskuihin automaattisesti, jos "
 "yhteensopivuuskriteerit (ALV/maa) täyttyvät."
 
 #. module: account
@@ -4613,7 +4616,7 @@ msgstr "Koodi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__code_mapping_ids
 msgid "Code Mapping"
-msgstr "Koodin kartoitus"
+msgstr "Koodin kohdistus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
@@ -6497,7 +6500,7 @@ msgstr "Näytä laskumallin PDF-raportti"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_mapping_tab
 msgid "Display Mapping Tab"
-msgstr "Näytön kartoituksen välilehti"
+msgstr "Näytön kohdistuksen välilehti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__display_name
@@ -10438,12 +10441,12 @@ msgstr "Manuaalinen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "Mapping"
-msgstr "Kartoitus"
+msgstr "Kartoitus ja kohdistus"
 
 #. module: account
 #: model:ir.model,name:account.model_account_code_mapping
 msgid "Mapping of account codes per company"
-msgstr "Tilikoodien kartoitus yrityskohtaisesti"
+msgstr "Tilikoodien kohdistus yrityskohtaisesti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -12021,12 +12024,12 @@ msgstr "Kumppanin luottolimiitti"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Mapping"
-msgstr "Kumppanien kartoitus"
+msgstr "Kumppanien kohdistus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__partner_mapping_line_ids
 msgid "Partner Mapping Lines"
-msgstr "Kumppanien kartoitusrivit"
+msgstr "Kumppanien kohdistusrivit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__partner_name
@@ -12058,7 +12061,7 @@ msgstr "Kumppani on asetettu"
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_partner_mapping
 msgid "Partner mapping for reconciliation models"
-msgstr "Kumppanien kartoitus täsmäytysmalleille"
+msgstr "Kumppanien kohdistus täsmäytysmalleille"
 
 #. module: account
 #. odoo-python
@@ -14941,12 +14944,12 @@ msgstr "Verokartta"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "Verokartoitus"
+msgstr "Verokertoitus"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Verokannan vetuksen kartoitus"
+msgstr "Verokannan verokartoitus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
