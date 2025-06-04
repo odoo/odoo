@@ -98,10 +98,11 @@ export class FormOptionPlugin extends Plugin {
         },
         remove_disabled_reason_providers: ({ el, reasons }) => {
             if (el.classList.contains("s_website_form_model_required")) {
+                const fieldName = getFieldName(el);
                 reasons.push(
-                    _t(
-                        "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility' option instead and add it a default value."
-                    )
+                    _t("The field %(fieldName)s is mandatory for the selected action.", {
+                        fieldName,
+                    })
                 );
             }
             if (el.classList.contains("s_website_form_submit")) {
