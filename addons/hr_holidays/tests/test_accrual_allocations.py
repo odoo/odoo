@@ -1,13 +1,13 @@
 import datetime
-from freezegun import freeze_time
 from datetime import date
+
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
 from odoo import Command
-from odoo.exceptions import UserError
-from odoo.tests import tagged, Form
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -186,8 +186,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'holiday_status_id': leave_type.id,
                 'request_date_from': '2017-12-06 08:00:00',
                 'request_date_to': '2017-12-06 17:00:00',
-                'request_unit_half': True,
                 'request_date_from_period': 'am',
+                'request_date_to_period': 'am',
             })
             leave.action_approve()
 
@@ -1494,7 +1494,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'name': "Leave for employee",
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': leave_type.id,
-                'request_unit_hours': True,
                 'request_date_from': datetime.date(2024, 12, 19),
                 'request_date_to': datetime.date(2024, 12, 19),
                 'request_hour_from': '10',
@@ -2352,8 +2351,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 f.holiday_status_id = leave_type
                 f.date_from = '2024-02-01'
                 f.name = "Accrual allocation for employee"
-
-            allocation = f.record
 
             first_result = get_remaining_leaves(2024, 2, 21)
             self.assertEqual(get_remaining_leaves(2024, 2, 21), first_result, "Function return result should persist")
@@ -3792,7 +3789,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         })
 
         plan = self.env["hr.leave.accrual.level"].with_context(tracking_disable=True).create({
-            "accrual_plan_id" : accrual_plan.id,
+            "accrual_plan_id": accrual_plan.id,
         })
 
         with Form(plan) as f:
