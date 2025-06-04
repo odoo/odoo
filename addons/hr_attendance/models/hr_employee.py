@@ -200,27 +200,17 @@ class HrEmployee(models.Model):
 
     def action_open_last_month_attendances(self):
         self.ensure_one()
+        context = {
+            "create": 0
+        }
+        if self.company_id.hr_attendance_display_overtime:
+            context["search_default_approved"] = 1
         return {
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
             "views": [[self.env.ref('hr_attendance.hr_attendance_employee_simple_tree_view').id, "list"]],
-            "context": {
-                "create": 0
-            },
+            "context": context,
             "domain": [('employee_id', '=', self.id),
                        ('check_in', ">=", fields.Datetime.today().replace(day=1))]
-        }
-
-    def action_open_last_month_overtime(self):
-        self.ensure_one()
-        return {
-            "type": "ir.actions.act_window",
-            "name": _("Attendances This Month"),
-            "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_validated_hours_employee_simple_tree_view').id, "list"]],
-            "context": {
-                "create": 0
-            },
-            "domain": [('employee_id', '=', self.id), ('overtime_status', '=', 'approved')]
         }
