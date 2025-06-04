@@ -13,7 +13,6 @@ class PosPayment(models.Model):
 
     _name = "pos.payment"
     _description = "Point of Sale Payments"
-    _order = "id desc"
     _inherit = ['pos.load.mixin']
 
     name = fields.Char(string='Label', readonly=True)

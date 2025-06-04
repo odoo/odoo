@@ -2189,9 +2189,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         pos_order = self.PosOrder.search([('id', '=', pos_order_id)])
         payments = pos_order.payment_ids
         self.assertRecordValues(payments.sorted(), [
-            {'amount': -50, 'payment_method_id': cash_payment_method.id, 'is_change': True},
-            {'amount': 100, 'payment_method_id': cash_payment_method.id, 'is_change': False},
             {'amount': 400, 'payment_method_id': self.bank_payment_method.id, 'is_change': False},
+            {'amount': 100, 'payment_method_id': cash_payment_method.id, 'is_change': False},
+            {'amount': -50, 'payment_method_id': cash_payment_method.id, 'is_change': True},
         ])
         account_moves = self.env['account.move'].search([('pos_payment_ids', 'in', pos_order.payment_ids.ids)])
         self.assertEqual(sum(account_moves.mapped('amount_total')), pos_order.amount_total)

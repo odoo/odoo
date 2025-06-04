@@ -57,6 +57,11 @@ class PosOrder(models.Model):
             for line in order.lines.filtered(lambda l: l.product_id == order.config_id.down_payment_product_id and l.qty != 0 and (l.sale_order_origin_id or l.refunded_orderline_id.sale_order_origin_id)):
                 sale_lines = line.sale_order_origin_id.order_line or line.refunded_orderline_id.sale_order_origin_id.order_line
                 sale_order_origin = line.sale_order_origin_id or line.refunded_orderline_id.sale_order_origin_id
+
+                if line.sale_order_line_id:
+                    # This line is already linked to a sale order line, we skip it
+                    continue
+
                 if not any(line.display_type and line.is_downpayment for line in sale_lines):
                     self.env['sale.order.line'].create(
                         self.env['sale.advance.payment.inv']._prepare_down_payment_section_values(sale_order_origin)

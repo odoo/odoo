@@ -257,9 +257,9 @@ patch(PosStore.prototype, {
             this.removeOrder(order);
         } else if (order && this.previousScreen !== "ReceiptScreen") {
             if (!this.orderToTransferUuid) {
-                this.syncAllOrders({ orders: [order] });
+                this.syncAllOrders();
             } else {
-                await this.syncAllOrders({ orders: [order] });
+                await this.syncAllOrders();
             }
         }
         this.set_order(null);
