@@ -1481,7 +1481,55 @@ class Website(models.Model):
             :param raise_if_not_found: should the method raise an error if no view found
             :return: The view record or empty recordset
         '''
+<<<<<<< b034bdd551cd7dde25fbe6b3a2b711b29d17a80e
         if not isinstance(view_id, (int, str)):
+||||||| fb74d9f2d6cc001ac1b5968d8cd81096d721df05
+        View = self.env['ir.ui.view'].sudo()
+        view = View
+        if isinstance(view_id, str):
+            if 'website_id' in self._context:
+                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
+                order = 'website_id'
+            else:
+                domain = [('key', '=', view_id)]
+                order = View._order
+            views = View.with_context(active_test=False).search(domain, order=order)
+            if views:
+                view = views.filter_duplicate()
+            else:
+                # we handle the raise below
+                view = self.env.ref(view_id, raise_if_not_found=False)
+                # self.env.ref might return something else than an ir.ui.view (eg: a theme.ir.ui.view)
+                if not view or view._name != 'ir.ui.view':
+                    # make sure we always return a recordset
+                    view = View
+        elif isinstance(view_id, int):
+            view = View.browse(view_id)
+        else:
+=======
+        View = self.env['ir.ui.view'].sudo()
+        view = View
+        if isinstance(view_id, str):
+            if 'website_id' in self._context:
+                domain = [('key', '=', view_id)] + self.env['website'].website_domain(self._context.get('website_id'))
+                order = 'website_id'
+            else:
+                domain = [('key', '=', view_id)]
+                order = View._order
+            views = View.with_context(active_test=False).search(domain, order=order)
+            if views:
+                view = views.filter_duplicate()[:1]
+            else:
+                # we handle the raise below
+                view = self.env.ref(view_id, raise_if_not_found=False)
+                # self.env.ref might return something else than an ir.ui.view (eg: a theme.ir.ui.view)
+                if not view or view._name != 'ir.ui.view':
+                    # make sure we always return a recordset
+                    view = View
+        elif isinstance(view_id, int):
+            view = View.browse(view_id)
+        else:
+>>>>>>> a22d87408040353e5003cbe37ba5b3d3ad2c9c13
             raise ValueError('Expecting a string or an integer, not a %s.' % (type(view_id)))
 
         return self.env['ir.ui.view'].sudo().with_context(active_test=False)._get_template_view(view_id, raise_if_not_found=raise_if_not_found)
