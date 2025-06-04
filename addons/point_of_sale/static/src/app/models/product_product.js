@@ -29,9 +29,9 @@ export class ProductProduct extends Base {
         const productTmplRules =
             this.product_tmpl_id["<-product.pricelist.item.product_tmpl_id"] || [];
         const productRules = this["<-product.pricelist.item.product_id"] || [];
-        const rulesIds = [...new Set([...productTmplRules, ...productRules])].map(
-            (rule) => rule.id
-        );
+        const rulesIds = [...new Set([...productTmplRules, ...productRules])]
+            .filter((rule) => rule.pricelist_id.id === pricelist.id)
+            .map((rule) => rule.id);
         if (
             this.uiState.applicablePricelistRules[pricelist.id] &&
             (!rulesIds.length ||
