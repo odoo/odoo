@@ -170,7 +170,9 @@ export class ProductTemplate extends Base {
 
     getApplicablePricelistRules(pricelist) {
         const productTmplRules = this["<-product.pricelist.item.product_tmpl_id"] || [];
-        const rulesIds = [...new Set([...productTmplRules])].map((rule) => rule.id);
+        const rulesIds = [...new Set([...productTmplRules])]
+            .filter((rule) => rule.pricelist_id.id === pricelist.id)
+            .map((rule) => rule.id);
         if (
             this.uiState.applicablePricelistRules[pricelist.id] &&
             (!rulesIds.length ||
