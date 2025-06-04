@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="base_import.SynchronizeMenuByRange">
+        <DropdownItem class="'o_synchronize_menu_by_range'" onSelected.bind="syncMenusByRange">
+            <i class="fa fa-fw fa-refresh me-1"/>Synchroniser les menus par plage
+        </DropdownItem>
+    </t>
+
+    <t t-name="base_import.SynchronizeDialog">
+        <Dialog title="'Synchroniser les menus par plage'"
+                size="'md'"
+                closeOnClickAway="false"
+                closeOnEnter="false">
+            <div class="p-3">
+                <div class="mb-3">
+                    <label for="skip" class="form-label">Nombre d'entrées à ignorer</label>
+                    <input type="number"
+                           class="form-control"
+                           id="skip"
+                           t-model.number="state.skip"
+                           min="0"
+                           placeholder="Exemple : 10"/>
+                    <small class="form-text text-muted">Indiquez combien de produits doivent être ignorées avant de commencer.</small>
+                </div>
+                <div class="mb-3">
+                    <label for="limit" class="form-label">Nombre d'entrées à synchroniser</label>
+                    <input type="number"
+                           class="form-control"
+                           id="limit"
+                           t-model.number="state.limit"
+                           min="1"
+                           placeholder="Exemple : 100"/>
+                    <small class="form-text text-muted">Spécifiez combien de produits doivent être synchronisées dans cette opération.</small>
+                </div>
+
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary" t-on-click="props.close">Annuler</button>
+                <button class="btn btn-primary" t-on-click="onConfirm">Confirmer</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

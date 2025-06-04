@@ -1290,6 +1290,7 @@ class PosOrder(models.Model):
         pass
 
     def _post_chatter_message(self, body):
+        print('message_post',self.message_post(body=body))
         self.message_post(body=body)
 
 class PosOrderLine(models.Model):
