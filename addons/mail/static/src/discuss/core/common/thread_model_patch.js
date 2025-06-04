@@ -68,6 +68,12 @@ const threadPatch = {
                 return this.computeCorrespondent();
             },
         });
+        this.correspondentCountry = fields.One("res.country", {
+            /** @this {import("models").Thread} */
+            compute() {
+                return this.correspondent?.persona?.country_id ?? this.country_id;
+            },
+        });
         /** @type {"video_full_screen"|undefined} */
         this.default_display_mode = undefined;
         /** @type {Deferred<Thread|undefined>} */
@@ -226,6 +232,9 @@ const threadPatch = {
             return this.correspondent.persona.avatarUrl;
         }
         return super.avatarUrl;
+    },
+    get showCorrespondentCountry() {
+        return false;
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
