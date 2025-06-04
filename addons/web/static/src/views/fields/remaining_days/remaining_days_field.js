@@ -1,4 +1,3 @@
-
 import { Component } from "@odoo/owl";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
@@ -8,6 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { DateTimeField } from "../datetime/datetime_field";
 import { standardFieldProps } from "../standard_field_props";
+import { capitalize } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -21,9 +21,9 @@ export class RemainingDaysField extends Component {
 
     static defaultProps = {
         classes: {
-            'bf': 'days <= 0',
-            'danger': 'days < 0',
-            'warning': 'days == 0',
+            bf: "days <= 0",
+            danger: "days < 0",
+            warning: "days == 0",
         },
     };
 
@@ -44,21 +44,12 @@ export class RemainingDaysField extends Component {
         if (this.diffDays === null) {
             return "";
         }
-        switch (this.diffDays) {
-            case -1:
-                return _t("Yesterday");
-            case 0:
-                return _t("Today");
-            case 1:
-                return _t("Tomorrow");
-        }
         if (Math.abs(this.diffDays) > 99) {
             return this.formattedValue;
         }
-        if (this.diffDays < 0) {
-            return _t("%s days ago", -this.diffDays);
-        }
-        return _t("In %s days", this.diffDays);
+        const { record, name } = this.props;
+        const value = record.data[name];
+        return capitalize(value.toRelativeCalendar());
     }
 
     get formattedValue() {
@@ -76,7 +67,7 @@ export class RemainingDaysField extends Component {
             return null;
         }
         const classNames = {};
-        const evalContext = {days: this.diffDays, record: this.props.record.evalContext};
+        const evalContext = { days: this.diffDays, record: this.props.record.evalContext };
         for (const decoration in this.props.classes) {
             const value = evaluateExpr(this.props.classes[decoration], evalContext);
             classNames[getClassNameFromDecoration(decoration)] = value;
@@ -95,11 +86,9 @@ export const remainingDaysField = {
     component: RemainingDaysField,
     displayName: _t("Remaining Days"),
     supportedTypes: ["date", "datetime"],
-    extractProps: ({ options }) => {
-        return {
-            classes: options.classes,
-        };
-    },
+    extractProps: ({ options }) => ({
+        classes: options.classes,
+    }),
 };
 
 registry.category("fields").add("remaining_days", remainingDaysField);
