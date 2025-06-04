@@ -19,22 +19,25 @@ export class Time {
      * differently depending on the type of {value}
      *
      * - If value is already a Time object, it returns it.
+     * - If value is null, undefined or false, it returns null.
      * - If value is a string, it will try to parse it, @see {parseTime}
      * - If value is an object, it will use its [hour], [minute] and [second] properties
      * - Otherwise, return a new Time with default values
      *
      * @param {any} value
-     * @returns {Time}
+     * @returns {Time|null}
      */
     static from(value) {
-        if (value instanceof Time) {
+        if (value === null || value === undefined || value === false) {
+            return null;
+        } else if (value instanceof Time) {
             return value;
         } else if (typeof value === "string") {
             return parseTime(value, true);
         } else if (typeof value === "object") {
             return new Time(value);
         } else {
-            return new Time();
+            return null;
         }
     }
 

@@ -1,8 +1,10 @@
+import { Component, useState, xml } from "@odoo/owl";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, edit, press, animationFrame, runAllTimers } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { mountWithCleanup, defineParams } from "@web/../tests/web_test_helpers";
 import { TimePicker } from "@web/core/time_picker/time_picker";
+import { Dropdown } from "@web/core/dropdown/dropdown";
 
 /**
  * @param {any} value
@@ -55,7 +57,7 @@ test("default params, click on suggestion to select time", async () => {
 test("when opening, select the suggestion equals to the props value", async () => {
     await mountWithCleanup(TimePicker, {
         props: {
-            value: "12:30"
+            value: "12:30",
         },
     });
 
@@ -147,7 +149,7 @@ test("handle 12h (am/pm) time format", async () => {
         .map((i) => pad2(i));
     const H = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     const options = [];
-    ["am", "pm"].forEach(a => H.forEach(h => M.forEach(m => options.push(`${h}:${m}${a}`))));
+    ["am", "pm"].forEach((a) => H.forEach((h) => M.forEach((m) => options.push(`${h}:${m}${a}`))));
     expect(queryAllTexts(".o_time_picker_dropdown .o_time_picker_option")).toEqual(options);
 
     await edit("4:15pm", { confirm: "enter" });
@@ -265,4 +267,130 @@ test("typing a value that is in the suggestions will focus it in the dropdown", 
     await animationFrame();
     expect(".o_time_picker_option.focus").toHaveText("12:30");
     expect(".o_time_picker_option.focus").toBeVisible();
+});
+
+test("false, null and undefined are accepted values", async () => {
+    class Parent extends Component {
+        static components = { TimePicker };
+        static props = {};
+        static template = xml`<TimePicker value="state.value"/>`;
+
+        setup() {
+            this.state = useState({
+                value: null,
+            });
+        }
+    }
+
+    const comp = await mountWithCleanup(Parent);
+    expect(".o_time_picker_input").toHaveValue("");
+
+    comp.state.value = false;
+    await runAllTimers();
+    expect(".o_time_picker_input").toHaveValue("");
+
+    comp.state.value = undefined;
+    await runAllTimers();
+    expect(".o_time_picker_input").toHaveValue("0:00");
+});
+
+test("click-out triggers onChange", async () => {
+    class Parent extends Component {
+        static components = { TimePicker, Dropdown };
+        static props = {};
+        static template = xml`
+            <div>
+                <Dropdown>
+                    <button class="open">Open</button>
+                    <t t-set-slot="content">
+                        <TimePicker onChange.bind="onChange"/>
+                    </t>
+                </Dropdown>
+                <button class="outside">Outside</button>
+            </div>
+        `;
+
+        onChange(value) {
+            expect.step(`${value.hour}:${value.minute}`);
+        }
+    }
+
+    await mountWithCleanup(Parent);
+
+    await click(".open");
+    await animationFrame();
+
+    await click(".o_time_picker_input");
+    await animationFrame();
+    expect(".o_time_picker_option.focus").toHaveText("0:00");
+
+    await edit("12:3", { confirm: false });
+    await animationFrame();
+    expect.verifySteps([]);
+
+    await click(".outside");
+    await animationFrame();
+    expect(".o-dropdown--menu.o_time_picker_dropdown").toHaveCount(0);
+    expect.verifySteps(["12:30"]);
+});
+
+test("changing the props value updates the input", async () => {
+    class Parent extends Component {
+        static components = { TimePicker };
+        static props = {};
+        static template = xml`<TimePicker value="state.value" onChange.bind="onChange"/>`;
+
+        setup() {
+            this.state = useState({
+                value: null,
+            });
+        }
+
+        onChange(value) {
+            expect.step(`${value.hour}:${value.minute}`);
+        }
+    }
+
+    const comp = await mountWithCleanup(Parent);
+    expect(".o_time_picker_input").toHaveValue("");
+
+    // Set value from props
+    comp.state.value = "12:00";
+    await runAllTimers();
+    expect(".o_time_picker_input").toHaveValue("12:00");
+    expect.verifySteps([]);
+
+    // Set value by clicking
+    await click(".o_time_picker_input");
+    await animationFrame();
+    await click(`.o_time_picker_option:contains("11:30")`);
+    await animationFrame();
+    await runAllTimers();
+    expect.verifySteps(["11:30"]);
+
+    // Set falsy value from props
+    comp.state.value = false;
+    await runAllTimers();
+    expect(".o_time_picker_input").toHaveValue("");
+    expect.verifySteps([]);
+});
+
+test("ensure placeholder is customizable", async () => {
+    class Parent extends Component {
+        static components = { TimePicker };
+        static props = {};
+        static template = xml`<TimePicker placeholder="state.placeholder"/>`;
+
+        setup() {
+            this.state = useState({ placeholder: undefined });
+        }
+    }
+
+    const comp = await mountWithCleanup(Parent);
+    await animationFrame();
+    expect(".o_time_picker_input").toHaveAttribute("placeholder", "hh:mm");
+
+    comp.state.placeholder = "your time";
+    await animationFrame();
+    expect(".o_time_picker_input").toHaveAttribute("placeholder", "your time");
 });
