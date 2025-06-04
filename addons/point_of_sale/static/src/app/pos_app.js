@@ -69,9 +69,4 @@ export class Chrome extends Component {
         adapter.formatOrderData(selectedOrder);
         adapter.dispatch(this.pos);
     }
-
-    // GETTERS //
-    get showCashMoveButton() {
-        return Boolean(this.pos.config.cash_control);
-    }
 }
