@@ -870,8 +870,35 @@ class IrModelFields(models.Model):
         from odoo.orm.model_classes import pop_field
 
         uninstalling = self.env.context.get(MODULE_UNINSTALL_FLAG)
-        if not uninstalling and any(record.state != 'manual' for record in self):
-            raise UserError(_("This column contains module data and cannot be removed!"))
+        if not uninstalling and (base_fields := self.filtered(lambda r: r.state != "manual")):
+            error_messages = []
+
+            for rec in base_fields:
+                model = self.env.get(rec.model)
+                field = model._fields.get(rec.name) if model is not None else None
+                if field is not None and (rel_field := field.related_field):
+                    ir_rel_field = self.env["ir.model.fields"]._get(rel_field.model_name, rel_field.name)
+                    if rel_field.manual and ir_rel_field in self:
+                        base_fields -= rec
+                        continue
+
+                    ir_related_model = self.env["ir.model"]._get(rel_field.model_name)
+                    message_data = dict(
+                        label_child=rec.field_description,
+                        fname_child=rec.name,
+                        label_parent=ir_rel_field.field_description,
+                        fname_parent=ir_rel_field.name,
+                        parent_model_descr=ir_related_model.name,
+                        parent_model=rel_field.model_name,
+                    )
+                    error_messages.append(_('"%(label_child)s" (%(fname_child)s) depends on "%(label_parent)s" (%(fname_parent)s) used on %(parent_model_descr)s (%(parent_model)s). Deleting the last field will delete all the depending fields.', **message_data))
+
+            if error_messages or base_fields:
+                messages = []
+                if base_fields:
+                    messages.append(_("This column contains module data and cannot be removed!"))
+                messages.extend(error_messages)
+                raise UserError("\n".join(messages))
 
         records = self              # all the records to delete
         fields_ = OrderedSet()      # all the fields corresponding to 'records'

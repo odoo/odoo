@@ -3263,6 +3263,34 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         record.invalidate_recordset()
         self.assertEqual(record.comment0, record_value)
 
+    def test_manual_field_inherited(self):
+        manual_origin = self.env["ir.model.fields"].create({
+            "name": "x_manual_hazel",
+            "model_id": self.env["ir.model"]._get("test_orm.related").id,
+            "ttype": "char",
+        })
+        self.assertEqual(manual_origin.state, "manual")
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", "x_manual_hazel")
+        self.assertTrue(manual_inherited.exists())
+        self.assertEqual(manual_inherited.state, "base")
+
+        message = 'This column contains module data and cannot be removed!\n"X Manual Hazel" (x_manual_hazel) depends on "X Manual Hazel" (x_manual_hazel) used on Test ORM Related (test_orm.related). Deleting the last field will delete all the depending fields.'
+        with self.assertRaises(UserError, msg=message):
+            manual_inherited.unlink()
+
+        manual_origin.unlink()
+        self.assertFalse(manual_inherited.exists())
+
+    def test_manual_field_inherited_2(self):
+        manual_origin = self.env["ir.model.fields"].create({
+            "name": "x_manual_hazel",
+            "model_id": self.env["ir.model"]._get("test_orm.related").id,
+            "ttype": "char",
+        })
+        manual_inherited = self.env["ir.model.fields"]._get("test_orm.related_inherits", "x_manual_hazel")
+        (manual_inherited | manual_origin).unlink()
+        self.assertFalse((manual_inherited | manual_origin).exists())
+
 
 class TestX2many(TransactionExpressionCase):
 
