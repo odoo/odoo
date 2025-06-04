@@ -1207,6 +1207,17 @@ describe("links with inline image", () => {
             `<p>ab<a href="#">c</a>]d<img src="${base64Img}">exxf<img src="${base64Img}">g[<a href="#">h</a>i</p>`
         );
     });
+    test("link element should be removed and popover should close when image is deleted from a image link", async () => {
+        const { editor, el } = await setupEditor(`<p>ab<a href="#"><img src="${base64Img}"></a>c[]</p>`);
+        await click("img");
+        await waitFor(".o-we-toolbar");
+        await waitFor(".o-we-linkpopover");
+
+        execCommand(editor, "deleteImage");
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+
+        expect(cleanLinkArtifacts(getContent(el))).toBe(`<p>ab[]c</p>`);
+    });
 });
 
 describe("readonly mode", () => {

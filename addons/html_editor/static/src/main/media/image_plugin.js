@@ -384,7 +384,7 @@ export class ImagePlugin extends Plugin {
     deleteImage() {
         const targetedImg = this.getTargetedImage();
         if (targetedImg) {
-            if (this.delegateTo("delete_image_handlers", targetedImg)) {
+            if (this.delegateTo("delete_image_overrides", targetedImg)) {
                 return;
             }
             const cursors = this.dependencies.selection.preserveSelection();
