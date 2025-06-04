@@ -111,10 +111,27 @@ patch(PosStore.prototype, {
                 customer_note: line.customer_note,
                 description: line.name,
                 order_id: this.getOrder(),
+                custom_attribute_value_ids: Object.values(
+                    line.product_custom_attribute_value_ids || {}
+                ).map((value_line) => [
+                    "create",
+                    {
+                        custom_product_template_attribute_value_id:
+                            value_line.custom_product_template_attribute_value_id,
+                        custom_value: value_line.custom_value,
+                    },
+                ]),
             };
             if (line.display_type === "line_section") {
                 continue;
             }
+            newLineValues.attribute_value_ids = line.product_custom_attribute_value_ids.map(
+                (value_line) => {
+                    if (value_line?.custom_product_template_attribute_value_id) {
+                        return ["link", value_line.custom_product_template_attribute_value_id];
+                    }
+                }
+            );
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
 
