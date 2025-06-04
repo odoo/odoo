@@ -270,6 +270,7 @@ export class ImagePlugin extends Plugin {
                 anchorOffset = 0;
             }
             this.dependencies.selection.setSelection({ anchorNode, anchorOffset });
+            this.dispatchTo("after_image_delete_handlers", anchorNode);
             this.dependencies.history.addStep();
         }
     }
