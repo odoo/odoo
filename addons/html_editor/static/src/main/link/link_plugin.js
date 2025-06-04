@@ -257,6 +257,7 @@ export class LinkPlugin extends Plugin {
         /** Overrides */
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
+        delete_image_overrides: this.deleteImageLink.bind(this),
     };
 
     setup() {
@@ -684,6 +685,14 @@ export class LinkPlugin extends Plugin {
                 anchorEl.appendChild(newFont);
                 this.dependencies.color.colorElement(newFont, color, "color");
             }
+
+            // When a link contains unsupported element (like an iframe or a link),
+            // we remove the link. Cases can happen when a image link is replaced
+            // by a document or a video
+            const hasUnsupportedMedia = anchorEl.querySelector("a, iframe");
+            if (hasUnsupportedMedia) {
+                this.removeLinkInDocument(anchorEl);
+            }
         }
     }
 
@@ -793,8 +802,7 @@ export class LinkPlugin extends Plugin {
     /**
      * Remove the link from the collapsed selection
      */
-    removeLinkInDocument() {
-        const link = this.linkInDocument;
+    removeLinkInDocument(link = this.linkInDocument) {
         const cursors = this.dependencies.selection.preserveSelection();
         if (link && link.isContentEditable) {
             cursors.update(callbacksForCursorUpdate.unwrap(link));
@@ -1006,6 +1014,19 @@ export class LinkPlugin extends Plugin {
     onPasteNormalizeLink() {
         this.updateCurrentLinkSyncState();
         this.onInputDeleteNormalizeLink();
+    }
+
+    deleteImageLink(imageToDelete) {
+        if (imageToDelete.parentElement.tagName === "A") {
+            // If the link is empty after removing the image, remove it.
+            const cursors = this.dependencies.selection.preserveSelection();
+            cursors.update(callbacksForCursorUpdate.remove(imageToDelete));
+            imageToDelete.remove();
+            this.closeLinkTools(cursors);
+            this.dependencies.history.addStep();
+            return true;
+        }
+        return false;
     }
 
     /**

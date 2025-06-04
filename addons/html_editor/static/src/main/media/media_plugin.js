@@ -20,7 +20,6 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { rightPos } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { unwrapContents } from "@html_editor/utils/dom";
 
 /**
  * @typedef { Object } MediaShared
@@ -108,15 +107,6 @@ export class MediaPlugin extends Plugin {
             mediaElements.push(node);
         }
         for (const el of mediaElements) {
-            if (el.classList.contains("media_iframe_video")) {
-                // If an image is wrapped in an <a> tag, remove the link on
-                // replacing it with a video. This ensures the video is not
-                // unnecessarily wrapped in a clickable link.
-                const parentEl = el?.parentElement;
-                if (parentEl?.tagName === "A" && parentEl.children.length === 1) {
-                    unwrapContents(parentEl);
-                }
-            }
             if (isProtected(el) || isProtecting(el)) {
                 continue;
             }
