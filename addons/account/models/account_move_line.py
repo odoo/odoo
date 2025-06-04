@@ -914,6 +914,57 @@ class AccountMoveLine(models.Model):
 
     @api.depends('account_id', 'company_id', 'discount', 'price_unit', 'quantity', 'currency_rate')
     def _compute_discount_allocation_needed(self):
+<<<<<<< a8269376735433a4035779fcaa2aee6d2b369ade
+||||||| 4e7064733b78ee46000dc0df65136597161ef2a5
+        line2discounted_amount = {
+            line: [
+                (line.account_id, amount),
+                (discount_allocation_account, -amount),
+            ]
+            for line in self.move_id.line_ids
+            if line.display_type == 'product'
+            and (discount_allocation_account := line.move_id._get_discount_allocation_account())
+            and (amount := line.currency_id.round(
+                line.move_id.direction_sign * line.quantity * line.price_unit * line.discount / 100
+            ))
+        }
+
+        distribution_totals = defaultdict(lambda: defaultdict(float))
+        for line, discounted_amounts in line2discounted_amount.items():
+            for account, amount in discounted_amounts:
+                for analytic_account_id in line.analytic_distribution or {}:
+                    distribution_totals[frozendict({
+                        'move_id': line.move_id.id,
+                        'account_id': account.id,
+                        'currency_rate': line.currency_rate,
+                    })][analytic_account_id] += amount
+
+=======
+        line2discounted_amount = {
+            line: [
+                (line.account_id, amount),
+                (discount_allocation_account, -amount),
+            ]
+            for line in self.move_id.line_ids
+            if line.display_type == 'product'
+            and (discount_allocation_account := line.move_id._get_discount_allocation_account())
+            and line.account_id != discount_allocation_account
+            and (amount := line.currency_id.round(
+                line.move_id.direction_sign * line.quantity * line.price_unit * line.discount / 100
+            ))
+        }
+
+        distribution_totals = defaultdict(lambda: defaultdict(float))
+        for line, discounted_amounts in line2discounted_amount.items():
+            for account, amount in discounted_amounts:
+                for analytic_account_id in line.analytic_distribution or {}:
+                    distribution_totals[frozendict({
+                        'move_id': line.move_id.id,
+                        'account_id': account.id,
+                        'currency_rate': line.currency_rate,
+                    })][analytic_account_id] += amount
+
+>>>>>>> 9cf337214478d02a60fbecccaa53e5bd5072aeb4
         for line in self:
             line.discount_allocation_dirty = True
             discount_allocation_account = line.move_id._get_discount_allocation_account()
