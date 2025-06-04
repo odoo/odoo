@@ -11,8 +11,6 @@ from odoo.addons.website_hr_recruitment.controllers.main import WebsiteHrRecruit
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteHrRecruitmentForm(odoo.tests.HttpCase):
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_tour(self):
         job_guru = self.env['hr.job'].create({
             'name': 'Guru',
