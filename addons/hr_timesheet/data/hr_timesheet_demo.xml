@@ -8,6 +8,14 @@
         <record id="base.default_user_group" model="res.groups">
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_timesheet_manager'))]"/>
         </record>
+
+        <record id="portal_timesheets" model="portal.entry">
+            <field name="name">Timesheets</field>
+            <field name="description">Review all timesheets related to your projects</field>
+            <field name="url">/my/timesheets</field>
+            <field name="image" type="base64" file="hr_timesheet/static/img/timesheet.svg"/>
+            <field name="placeholder_count">timesheet_count</field>
+        </record>
     </data>
 
     <!-- Projects -->

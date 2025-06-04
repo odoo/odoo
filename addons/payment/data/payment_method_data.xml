@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+    <record id="portal_payment_orders" model="portal.entry">
+        <field name="name">Payment Methods</field>
+        <field name="description">Follow Payment</field>
+        <field name="url">/my/payment_method</field>
+        <field name="image" type="base64" file="payment/static/img/payment-methods.svg"/>
+    </record>
+
     <!-- === PRIMARY PAYMENT METHODS === -->
 
     <record id="payment_method_7eleven" model="payment.method">
