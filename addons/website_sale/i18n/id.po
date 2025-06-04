@@ -57,12 +57,12 @@ msgstr "'. Menunjukkan hasil untuk '"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "- All products"
-msgstr ""
+msgstr "- Semua produk"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "1 Column"
-msgstr ""
+msgstr "1 Kolom"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
@@ -77,7 +77,7 @@ msgstr "100 persen"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "2 Columns"
-msgstr ""
+msgstr "2 Kolom"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
@@ -106,6 +106,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<a href=\"/terms\" class=\"text-muted o_translate_inline\"><u>Syarat dan Ketentuan</u></a><br/>\n"
+"                Jaminan 30-hari uang-kembali<br/>\n"
+"                Pengiriman: 2-3 Hari Bisnis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -113,6 +116,8 @@ msgid ""
 "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
+"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
+"                    <span class=\"align-middle\">untuk mengikuti pesanan Anda.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -134,12 +139,12 @@ msgstr "<b>Komunikasi: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "<b>Deliver to pickup point</b>"
-msgstr ""
+msgstr "<b>Kirim ke poin pickup</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "<b>Delivery</b>"
-msgstr ""
+msgstr "<b>Pengiriman</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
@@ -163,6 +168,8 @@ msgid ""
 "<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
 "                                <span class=\"d-none d-md-inline\">Add to cart</span>"
 msgstr ""
+"<i class=\"d-md-none fa fa-shopping-cart\" role=\"presentation\"/>\n"
+"                                <span class=\"d-none d-md-inline\">Tambahkan ke keranjang</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -179,6 +186,8 @@ msgid ""
 "<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
 "                    Continue shopping"
 msgstr ""
+"<i class=\"fa fa-angle-left me-2 fw-light\"/>\n"
+"                    Lanjutkan belanja"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -216,7 +225,7 @@ msgstr "<i class=\"fa fa-pencil me-1\"/>Edit"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Want an invoice?"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Ingin faktur?"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -293,11 +302,13 @@ msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
 "                                        <i class=\"oi oi-close\" role=\"presentation\"/>"
 msgstr ""
+"<small class=\"mx-auto\"><b>Hapus Filter</b></small>\n"
+"                                        <i class=\"oi oi-close\" role=\"presentation\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "<span class=\"align-middle\">Already have an account?</span>"
-msgstr ""
+msgstr "<span class=\"align-middle\">Sudah memiliki akun?</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -403,17 +414,17 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Search results for </span>'"
-msgstr ""
+msgstr "<span class=\"text-muted\">Cari hasil untuk </span>'"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">Searching</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Mencari</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"text-muted\">in</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">di</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.floating_bar
@@ -457,6 +468,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge\">Click here</a>\n"
 "                            </strong> if you want to merge your previous cart into current cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge\">Klik di sini</a>\n"
+"                            </strong> bila Anda ingin menggabungkan keranjang Anda sebelumnya menjadi keranjang saat ini."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -465,6 +479,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">Click here</a>\n"
 "                            </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">Klik di sini</a>\n"
+"                            </strong> Bila Anda ingin memulihkan keranjang Anda yang sebelumnya. Keranjang Anda saat ini akan diganti dengan keranjang Anda yang sebelumnya."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -530,6 +547,48 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">TERDAPAT BARANG DI KERANJANG ANDA.</h1>\n"
+"                    Apakah Anda ingin menyelesaikan pembelian Anda?<br/><br/>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, hitam-coklat: kursi + meja + laci.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom_id.name or ''\">Satuan</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr/>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?id={{ object.id }}&amp;access_token={{ object.access_token }}\" target=\"_blank\" t-attf-style=\"background-color: {{object.user_id.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{object.user_id.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px; font-size:13px;\">\n"
+"                            Lanjutkan pesanan\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Terima kasih sudah belanja dengan <t t-out=\"company.name or ''\">Perusahaan Saya (San Francisco)</t>!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_delivery_carrier__website_description
@@ -810,7 +869,7 @@ msgstr "Produk Alternatif"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Always Fill the box"
-msgstr ""
+msgstr "Selalu Isi kotak"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_amount
@@ -874,12 +933,12 @@ msgstr "Rata-Rata Rating"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__back_button_label
 msgid "Back Button Label"
-msgstr ""
+msgstr "Label Tombol Kembali"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_delivery
 msgid "Back to address"
-msgstr ""
+msgstr "Kembali ke alamat"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
@@ -889,7 +948,7 @@ msgstr "Kembali ke keranjang"
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
 msgid "Back to extra info"
-msgstr ""
+msgstr "Kembali ke info ekstra"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -1063,7 +1122,7 @@ msgstr "Email pemulihan keranjang belanja sudah dikirim"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Catalog of products"
-msgstr ""
+msgstr "Katalog produk-produk"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1162,7 +1221,7 @@ msgstr "Klasik"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Classic Grid"
-msgstr ""
+msgstr "Grid Klasi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -1173,7 +1232,7 @@ msgstr "Bersihkan Filter"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Clear search for this category"
-msgstr ""
+msgstr "Hapus pencarian untuk kategori ini"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_collect
@@ -1233,7 +1292,7 @@ msgstr "Tutup Kategori Recursive"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Collapse sidebar sections"
-msgstr ""
+msgstr "Lipat bagian sidebar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1263,7 +1322,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Compact List"
-msgstr ""
+msgstr "List Padat"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -1379,6 +1438,7 @@ msgstr "Pesanan Dikonfirmasi"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Connect your eCommerce to Google Merchant Center via a product file."
 msgstr ""
+"Hubungkan eCommerce Anda ke Google Merchant Center melalui file produk."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
@@ -1398,7 +1458,7 @@ msgstr "URL Tombol Hubungi Kami"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Contain within the box"
-msgstr ""
+msgstr "Kekang dalam kotak"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1424,7 +1484,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Copy file link"
-msgstr ""
+msgstr "Salin link file"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1609,7 +1669,7 @@ msgstr "Pengiriman"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
 msgid "Delivery &amp; Billing"
-msgstr ""
+msgstr "Pengiriman &amp; Tagihan"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__amount_delivery
@@ -1630,7 +1690,7 @@ msgstr "Alamat pengiriman"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
 msgid "Delivery method"
-msgstr ""
+msgstr "Metode pengiriman"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1664,7 +1724,7 @@ msgstr "Keterangan untuk website"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Detailed List"
-msgstr ""
+msgstr "Daftar Rinci"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1832,6 +1892,8 @@ msgid ""
 "Drag building blocks here to customize the header for\n"
 "                                        \""
 msgstr ""
+"Tarik blok penyusun di sini untuk mengustomisasi header untuk\n"
+"                                        \""
 
 #. module: website_sale
 #. odoo-python
@@ -1904,7 +1966,7 @@ msgstr "Edit"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Edit address"
-msgstr ""
+msgstr "Edit alamat"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2015,7 +2077,7 @@ msgstr "Nama Kolom"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Filmstrip - default"
-msgstr ""
+msgstr "Filmstrip - default"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2035,18 +2097,18 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Floating"
-msgstr ""
+msgstr "Floating"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Floating sticky Toolbar"
-msgstr ""
+msgstr "Floating sticky Toolbar"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Focused"
-msgstr ""
+msgstr "Terfokus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__message_follower_ids
@@ -2088,7 +2150,7 @@ msgstr "Buat faktur secara otomatis saat pembayaran online sudah dikonfirmasi"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__gmc_xml_url
 msgid "Gmc Xml Url"
-msgstr ""
+msgstr "Gmc Xml Url"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2101,7 +2163,7 @@ msgstr "Pergi ke keranjang belanja"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_gmc_src
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_gmc_src
 msgid "Google Merchant Center Data Source"
-msgstr ""
+msgstr "Sumber Data Google Merchant Center"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
@@ -2150,7 +2212,7 @@ msgstr "Sembunyikan 'Tambahkan Ke Keranjang' saat harga = 0"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Hide all filters"
-msgstr ""
+msgstr "Sembunyikan semua filter"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2160,7 +2222,7 @@ msgstr "Jam."
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__step_href
 msgid "Href"
-msgstr ""
+msgstr "Href"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2288,7 +2350,7 @@ msgstr "Gambar 512"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Image Grid"
-msgstr ""
+msgstr "Grid Gambar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2313,7 +2375,7 @@ msgstr "Zoom Gambar"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Images Fill"
-msgstr ""
+msgstr "Isi Gambar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2433,7 +2495,7 @@ msgstr "Lanskap (4/3)"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Large Image"
-msgstr ""
+msgstr "Gambar Besar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2533,7 +2595,7 @@ msgstr "Line Subtotals Tax Display"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "List of products"
-msgstr ""
+msgstr "Daftar produk-produk"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2573,11 +2635,13 @@ msgid ""
 "Mail only sent to signed in customers with items available for sale in carts"
 " created after the feature activation."
 msgstr ""
+"Email hanya dikirim ke pelanggan yang sign-in dengan barang-barang yang "
+"tersedia untuk dijual di keranjang yang dibuat setelah aktivasi fitur."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
 msgid "Main Button Label"
-msgstr ""
+msgstr "Label Tombol Utama"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2639,7 +2703,7 @@ msgstr "Telepon Mobile"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Modern Showcase"
-msgstr ""
+msgstr "Showcase Modern"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2720,7 +2784,7 @@ msgstr "Produk Baru"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "New address"
-msgstr ""
+msgstr "Alamat baru"
 
 #. module: website_sale
 #: model:product.ribbon,name:website_sale.new_ribbon
@@ -2880,12 +2944,12 @@ msgstr "Menu Odoo"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Off-screen Menu"
-msgstr ""
+msgstr "Menu off-screen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pricelist_item_form
 msgid "On the website original price is crossed out."
-msgstr ""
+msgstr "Di website harga asli dicoret."
 
 #. module: website_sale
 #. odoo-python
@@ -2919,7 +2983,7 @@ msgstr "Analisis Sales Online"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Online catalog"
-msgstr ""
+msgstr "Katalog online"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__only_services
@@ -2995,7 +3059,7 @@ msgstr "Garis Pesanan ditampilkan di Website"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Order summary"
-msgstr ""
+msgstr "Ringkasan pesanan"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_orders_ecommerce
@@ -3497,7 +3561,7 @@ msgstr "Kuantitas"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Quick Browse Grid"
-msgstr ""
+msgstr "Grid Browse Cepat"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3572,7 +3636,7 @@ msgstr "Produk yang Baru Saja Terjual"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products (per user)"
-msgstr ""
+msgstr "Produk-Produk yang Baru Saja Dilihat (per user)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3622,7 +3686,7 @@ msgstr "Hapus satu"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Render a button to show the Off-screen Menu"
-msgstr ""
+msgstr "Render tombol untuk menunjukkan Menu Off-screen"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3777,18 +3841,18 @@ msgstr "Cari Produk-Produ"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search globally"
-msgstr ""
+msgstr "Cari secara global"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in"
-msgstr ""
+msgstr "Cari di"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search {{0}} globally"
-msgstr ""
+msgstr "Cari {{0}} secara global"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3942,17 +4006,17 @@ msgstr "Tunjukkan Kosong"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show a filmstrip navigation at the Top"
-msgstr ""
+msgstr "Tunjukkan navigasi filmstrip di Atas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show filters into Sidebar"
-msgstr ""
+msgstr "Tunjukkan filter di Sidebar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show into Sidebar"
-msgstr ""
+msgstr "Tunjukkan di Sidebar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_search
@@ -3978,7 +4042,7 @@ msgstr "Sidebar"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Sidebar Grid"
-msgstr ""
+msgstr "Grid Sidebar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4166,6 +4230,7 @@ msgstr "Token akses tidak valid."
 msgid ""
 "The building block will remain empty until the user visits a product page."
 msgstr ""
+"Blok penyusun akan tetap kosong sampai user mengunjungi halaman produk."
 
 #. module: website_sale
 #. odoo-python
@@ -4397,6 +4462,7 @@ msgstr "Thumbnail"
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email_activation_time
 msgid "Time when the 'Send abandoned cart email' feature was activated."
 msgstr ""
+"Waktu saat fitur 'Kirim email keranjang yang ditelantarkan' diaktifkan."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4412,7 +4478,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Toolbar"
-msgstr ""
+msgstr "Toolbar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -4536,7 +4602,7 @@ msgstr "URL Video"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "View More"
-msgstr ""
+msgstr "Lihat Lebih Banyak"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
@@ -4646,7 +4712,7 @@ msgstr "Kategori Website"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_checkout_step
 msgid "Website Checkout Step"
-msgstr ""
+msgstr "Website Langkah Checkout"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
@@ -4759,6 +4825,12 @@ msgid ""
 "                    In these cases, the calculated/fixed price is set as the unit price with 0% discount\n"
 "                    in the order."
 msgstr ""
+"Saat harga dihitung melalui formula atau tetap, harga asli\n"
+"                    biasanya tidak ditampilkan di baris sales order atau checkout. Namun, untuk\n"
+"                    peraturan harga berdasarkan formula tertentu, diskon dapat ditunjukkan di halaman\n"
+"                    toko (contoh. halaman produk dan konfigurator), tapi tidak di keranjang atau checkout.\n"
+"                    Dalam kasus-kasus ini, harga terhitung/tetap ditetapkan sebagai harga satuan dengan diskon 0%\n"
+"                    di pesanan."
 
 #. module: website_sale
 #. odoo-python
@@ -4791,7 +4863,7 @@ msgstr "Dengan tiga kaki"
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Wrong format: got `pricelist=%s`, expected an integer"
-msgstr ""
+msgstr "Format salah: mendapatkan `pricelist=%s`, mengharapkan integer"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4807,6 +4879,10 @@ msgid ""
 "                            If you want to modify your billing address, create a\n"
 "                            <a class=\"o_translate_inline\" href=\"/shop/address?address_type=billing\">new address</a>."
 msgstr ""
+"Anda sedang mengedit alamat <b>pengiriman dan tagihan</b> Anda\n"
+"                            di saat yang sama!<br/>\n"
+"                            Bila Anda ingin memodifikasi alamat taighan Anda, buat\n"
+"                            <a class=\"o_translate_inline\" href=\"/shop/address?address_type=billing\">alamat baru</a>."
 
 #. module: website_sale
 #. odoo-python
@@ -4970,6 +5046,8 @@ msgid ""
 "eCommerce must be accessible to all users for Google Merchant Center to "
 "operate properly."
 msgstr ""
+"eCommerce harus dapat diakses oleh semua user-user agar Google Merchant "
+"Center dapat bekerja dengan tepat."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

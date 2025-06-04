@@ -106,6 +106,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<a href=\"/terms\" class=\"text-muted o_translate_inline\"><u>الشروط والأحكام</u></a><br/>\n"
+"                ضمان إرجاع الأموال خلال 30 يوم<br/>\n"
+"                الشحن: 2-3 أيام عمل "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -113,6 +116,8 @@ msgid ""
 "<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
 "                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
+"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True)._get_signup_url()\" class=\"btn btn-primary o_translate_inline\">قم بالتسجيل</a>\n"
+"                    <span class=\"align-middle\">حتى تتمكن من متابعة طلبك.</span> "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
@@ -455,6 +460,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge\">Click here</a>\n"
 "                            </strong> if you want to merge your previous cart into current cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">اضغط هنا</a>\n"
+"                            </strong> إذا أردت دمج عربة التسوق السابقة مع عربة التسوق الحالية. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -463,6 +471,9 @@ msgid ""
 "                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">Click here</a>\n"
 "                            </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart."
 msgstr ""
+"<strong>\n"
+"                                <a class=\"o_translate_inline\" t-attf-href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash\">اضغط هنا</a>\n"
+"                            </strong> إذا أردت استعادة عربة التسوق السابقة. سيتم استبدال عربة التسوق الحالية بعربة التسوق السابقة الخاصة بك. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_form
@@ -2589,6 +2600,8 @@ msgid ""
 "Mail only sent to signed in customers with items available for sale in carts"
 " created after the feature activation."
 msgstr ""
+"بريد إلكتروني يتم إرساله فقط للعملاء المسجلين دخولهم والذين لديهم عناصر في "
+"عربات التسوق التي تم إنشاؤها بعد تفعيل الخاصية. "
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_checkout_step__main_button_label
@@ -4175,7 +4188,7 @@ msgstr "رمز الوصول غير صالح. "
 #: model:website.snippet.filter,help:website_sale.dynamic_filter_latest_viewed_products
 msgid ""
 "The building block will remain empty until the user visits a product page."
-msgstr ""
+msgstr "ستظل الكتلة البرمجية الإنشائية فارغة حتى يزور المستخدم صفحة المنتج. "
 
 #. module: website_sale
 #. odoo-python
@@ -4981,6 +4994,8 @@ msgid ""
 "eCommerce must be accessible to all users for Google Merchant Center to "
 "operate properly."
 msgstr ""
+"يجب أن يكون الوصول إلى المتجر الإلكتروني متاحاً لكافة المستخدمين لكي يعمل "
+"مركز Google Merchant Center بشكل صحيح. "
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

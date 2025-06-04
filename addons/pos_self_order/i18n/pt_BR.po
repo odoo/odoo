@@ -97,19 +97,19 @@ msgstr ""
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hello <t t-out=\"client_name\">Client name</t>,</t>\n"
-"                        <t t-else=\"\">Hello,</t>\n"
+"                        <t t-if=\"client_name\">Olá, <t t-out=\"client_name\">nome do cliente</t></t>\n"
+"                        <t t-else=\"\">Olá,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Your order <t t-out=\"object.tracking_number\">...</t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been confirmed. <span t-if=\"object.preset_time or client.street\">It will be ready</span> <span t-if=\"object.preset_time\">at <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-out=\"client.zip or ''\">zip</t>, <t t-out=\"city\">city</t>, <t t-out=\"country\">country</t></span></div>\n"
+"                    <div>Seu pedido <t t-out=\"object.tracking_number\">...</t>, no valor de <t t-out=\"object.amount_total\">R$xx,xx</t>, foi confirmado. <span t-if=\"object.preset_time or client.street\">Ele estará pronto</span> <span t-if=\"object.preset_time\">às <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12h00</t></span>, <span t-if=\"client.street\">na <t t-out=\"street\">Rua</t>, <t t-out=\"state\">Bairro</t>, <t t-out=\"client.zip or ''\">CEP</t>, <t t-out=\"city\">Cidade</t>, <t t-out=\"country\">País</t></span></div>\n"
 "                    <br/>\n"
-"                    <div>Thank you,</div>\n"
+"                    <div>Agradecemos muito!</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Attached, you will find your receipt</div>\n"
+"                        <div>Seu recibo está em anexo.</div>\n"
 "                        <br/>\n"
 "                    </div>\n"
-"                    <t t-out=\"store_name\">Store name</t>\n"
+"                    <t t-out=\"store_name\">Nome da loja</t>\n"
 "                </div>\n"
 "            "
 
@@ -142,19 +142,19 @@ msgstr ""
 "                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or user.lang\"/>\n"
 "                    <div>\n"
-"                        <t t-if=\"client_name\">Hello <t t-out=\"client_name\">Client name</t>,</t>\n"
-"                        <t t-else=\"\">Hello,</t>\n"
+"                        <t t-if=\"client_name\">Olá, <t t-out=\"client_name\">nome do cliente</t></t>\n"
+"                        <t t-else=\"\">Olá,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Your order <t t-out=\"object.tracking_number\">...</t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00 pm</t></span></div>\n"
+"                    <div>Seu pedido <t t-out=\"object.tracking_number\">...</t>, no valor de <t t-out=\"object.amount_total\">R$ xx,xx</t>, foi confirmado <span t-if=\"object.preset_time\">Ele estará pronto às <t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12h00</t></span></div>\n"
 "                    <br/>\n"
-"                    <div>Thank you,</div>\n"
+"                    <div>Agradecemos muito!</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Attached, you will find your receipt</div>\n"
+"                        <div>Seu recibo está em anexo</div>\n"
 "                        <br/>\n"
 "                    </div>\n"
-"                    <t t-out=\"store_name\">Store name</t>\n"
+"                    <t t-out=\"store_name\">Nome da loja</t>\n"
 "                </div>\n"
 "            "
 
@@ -490,7 +490,7 @@ msgstr "Entrega"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr "Delivery: Confirmation order for self"
+msgstr "Entrega: Confirmação de autoatendimento"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -696,7 +696,7 @@ msgstr ""
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Image to be displayed in the background"
-msgstr "Image to be displayed in the background"
+msgstr "Imagem exibida em segundo plano"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -889,7 +889,7 @@ msgstr "Nenhum produto encontrado"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 msgid "No, thanks"
-msgstr "No, thanks"
+msgstr "Não"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -968,7 +968,7 @@ msgstr "Pagar após"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Personalize the Kiosk background"
-msgstr "Personalize the Kiosk background"
+msgstr "Personalizar plano de fundo do quiosque"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1225,7 +1225,7 @@ msgstr "Seleção"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Self Order"
-msgstr "Self Order"
+msgstr "Autoatendimento"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1311,13 +1311,13 @@ msgstr "Serviço na mesa"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Session Inactive"
-msgstr "Session Inactive"
+msgstr "Sessão inativa"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_background_ids
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_background_ids
 msgid "Set background image"
-msgstr "Set background image"
+msgstr "Definir imagem de fundo"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1382,12 +1382,12 @@ msgstr "Mesa:"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Take a tracker and enter its number"
-msgstr "Take a tracker and enter its number"
+msgstr "Digite seu número de rastreador"
 
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.takeout_email_template
 msgid "Takeout: Confirmation order for self"
-msgstr "Takeout: Confirmation order for self"
+msgstr "Retirada: Confirmação de autoatendimento"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1482,7 +1482,7 @@ msgstr "Não classificado"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 msgid "Validate your selection"
-msgstr "Validate your selection"
+msgstr "Validar sua seleção"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1535,7 +1535,7 @@ msgstr "Quando você gostaria de receber seus pedidos?"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 msgid "Where do you want to eat?"
-msgstr "Where do you want to eat?"
+msgstr "Onde você quer comer?"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1616,7 +1616,7 @@ msgstr "CEP"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
 msgid "at the counter"
-msgstr "at the counter"
+msgstr "no balcão"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1644,7 +1644,7 @@ msgstr "https://odoo.com"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/kiosk_combo_page/kiosk_combo_page.xml:0
 msgid "included"
-msgstr "included"
+msgstr "Incluído"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree

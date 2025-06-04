@@ -231,6 +231,7 @@ msgstr "<span class=\"opacity-50 p-2\"> %</span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "<span> leads assigned the last 30 days out of a maximum of </span>"
 msgstr ""
+"<span> العملاء المهتمون الذين تم تعيينهم خلال آخر 30 يوم من أصل </span>  "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -260,6 +261,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>قم بتعيين العملاء المهتمين دورياً حسب الأولويات والفلاتر.</span><br/>\n"
+"                                <span invisible=\"not crm_use_auto_assignment\">\n"
+"                                    سوف تستخدم كافة فرق المبيعات هذا الإعداد اقتراضياً إلا إذا\n"
+"                                    تم تحديد خلاف ذلك.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -294,6 +300,8 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 msgid "A lead in a Won stage cannot be lost. Move it to another stage first."
 msgstr ""
+"لا يمكن أن يكون العميل المهتم في مرحلة \"تم ربح الصفقة\" ضائعاً. قم بنقله "
+"إلى مرحلة أخرى أولاً. "
 
 #. module: crm
 #. odoo-python
@@ -2342,6 +2350,8 @@ msgid ""
 "Manage members or partners. Members get grades and pricelists, partners "
 "allow lead assignment and commission plans."
 msgstr ""
+"قم بإدارة الأعضاء أو الشركاء. يحصل الأعضاء على الدرجات وقوائم الأسعار، بينما"
+" يحصل الشركاء على خطط تعيين العملاء المحتملين والعمولات. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_action
@@ -2442,6 +2452,8 @@ msgid ""
 "Member preferred assignment domain for user %(user)s and team %(team)s is "
 "incorrectly formatted"
 msgstr ""
+"لم تتم صياغة النطاق المفضل لتعيين العضو للمستخدم %(user)s والفريق %(team)s "
+"بشكل صحيح "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_partnership

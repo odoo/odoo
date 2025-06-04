@@ -267,7 +267,7 @@ msgstr "%s 不是儲存的欄位"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s taxes"
-msgstr ""
+msgstr "%s 稅項"
 
 #. module: account
 #. odoo-python
@@ -279,7 +279,7 @@ msgstr "%s，或 / 若不適用"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "%s, or not applicable"
-msgstr ""
+msgstr "%s，或不適用"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_block_payment
@@ -392,12 +392,12 @@ msgstr "/ 若不適用"
 #. module: account
 #: model:account.tax,name:account.1_sale_export_tax_template
 msgid "0% Exports"
-msgstr ""
+msgstr "0% 出口"
 
 #. module: account
 #: model:account.tax,name:account.1_purchase_import_tax_template
 msgid "0% Imports"
-msgstr ""
+msgstr "0% 進口"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
@@ -1747,7 +1747,7 @@ msgstr "同一個銀行賬戶，只能連結至單一流水賬戶。"
 msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
-msgstr ""
+msgstr "合作夥伴 %(partner)s 已有一個銀行賬戶，賬戶號碼為 %(number)s，但該賬戶已封存。請改為將它取消封存。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1772,7 +1772,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr ""
+msgstr "此國家/地區已有國外增值稅的財務規則。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1800,7 +1800,7 @@ msgstr "同一資料行內，不能同時存在子項目及分組方式數值（
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a archived account, you cannot post it."
-msgstr ""
+msgstr "此分錄的其中一個資料行使用了已封存的賬戶，所以無法過賬。"
 
 #. module: account
 #. odoo-python
@@ -2062,7 +2062,7 @@ msgstr "賬戶配對"
 #: model:ir.model.fields,field_description:account.field_res_partner__account_move_count
 #: model:ir.model.fields,field_description:account.field_res_users__account_move_count
 msgid "Account Move Count"
-msgstr ""
+msgstr "賬戶分錄數目"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -2587,7 +2587,7 @@ msgstr "加入"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Add QR-code link on PDF"
-msgstr ""
+msgstr "在 PDF 加入二維碼連結"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__plain
@@ -2857,7 +2857,7 @@ msgstr "在所選日期之前，所有未對賬的銀行結單資料行。"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign VAT"
-msgstr ""
+msgstr "允許外國增值稅"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -3347,7 +3347,7 @@ msgid ""
 "As soon as a journal item is involved, changes to the account, partner, "
 "journal entry or journal item are logged. You can then not delete those "
 "records anymore"
-msgstr ""
+msgstr "一旦涉及日記賬項目，對賬戶、合作夥伴、日記賬記項或日記賬項目的變更，都會被記錄下來。之後你將不可刪除這些記錄。"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -3422,13 +3422,13 @@ msgstr "附件"
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 msgid "Audit Trail"
-msgstr "審計軌跡"
+msgstr "審計追蹤"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr "審計軌跡訊息"
+msgstr "審計追蹤訊息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -4135,7 +4135,7 @@ msgstr "客戶"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__can_be_proposed
 msgid "Can Be Proposed"
-msgstr ""
+msgstr "可提議"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__can_edit_body
@@ -4156,7 +4156,7 @@ msgstr "允許分組付款"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Can't disable restricted audit trail: forced by localization."
-msgstr ""
+msgstr "不可停用受限審計追蹤，因本地化套裝強制使用。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4273,7 +4273,7 @@ msgstr "無法從不使用“整合”引擎的明細獲取整合詳細訊息"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "未能在產生的 PDF 中辨認發票：%s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -5517,7 +5517,7 @@ msgstr "該合作夥伴特定的信用額度."
 #: code:addons/account/models/account_report.py:0
 msgid ""
 "Cross report expressions must follow this format: cross_report(xml_id|id)"
-msgstr ""
+msgstr "跨報告的表達式必須跟從此格式：cross_report(xml_id|id)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -6403,7 +6403,7 @@ msgstr "顯示別名欄位"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__display_alternative_taxes_field
 msgid "Display Alternative Taxes Field"
-msgstr ""
+msgstr "顯示替代稅項欄位"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
@@ -7052,7 +7052,7 @@ msgstr "啟用對合作夥伴的信用額度."
 #: model:ir.model.fields,help:account.field_res_company__restrictive_audit_trail
 #: model:ir.model.fields,help:account.field_res_config_settings__restrictive_audit_trail
 msgid "Enable this option to prevent deletion of journal item related logs"
-msgstr ""
+msgstr "啟用此選項後，可防止刪除與日記賬項目相關的系統記錄"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -7086,7 +7086,7 @@ msgstr "輸入描述"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Enter an email to get notified"
-msgstr ""
+msgstr "輸入電郵地址，以收取通知"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_line_form
@@ -7184,6 +7184,8 @@ msgid ""
 "Error while creating XML:\n"
 "- %s"
 msgstr ""
+"建立 XML 時，發生錯誤：\n"
+"- %s"
 
 #. module: account
 #. odoo-python
@@ -7401,7 +7403,7 @@ msgstr "應用於從此分配明細建立的科目傳票因子，以百分比表
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "Failed to parse cross_report id or xml_id"
-msgstr ""
+msgstr "未能解析 cross_report id 或 xml_id"
 
 #. module: account
 #. odoo-python
@@ -7912,7 +7914,7 @@ msgstr "完整參考編號（INV/2024/00001）"
 #. module: account
 #: model:res.groups,comment:account.group_account_manager
 msgid "Full access, including configuration rights."
-msgstr ""
+msgstr "完全存取權限，包括設定配置的權限。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -8518,6 +8520,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
+"若你向歐盟內                                 其他國家的客戶銷售商品及服務，你必須根據送貨地址，收取增值稅。"
+"                                 無論你公司位於何處，此規則均適用。"
 
 #. module: account
 #. odoo-python
@@ -10266,7 +10270,7 @@ msgstr "手工"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__mapped_partner_id
 msgid "Mapped Partner"
-msgstr ""
+msgstr "已配對合作夥伴"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
@@ -11600,7 +11604,7 @@ msgstr "會凌駕公司產品及發票價格是否包含此稅的預設設定。
 #. module: account
 #: model:account.account,name:account.1_owner_current_account
 msgid "Owner's Current Account"
-msgstr ""
+msgstr "擁有人往來賬戶"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -12541,7 +12545,7 @@ msgstr "對外付款方式資料行屬性"
 #: model:ir.model.fields,field_description:account.field_mail_mail__account_audit_log_restricted
 #: model:ir.model.fields,field_description:account.field_mail_message__account_audit_log_restricted
 msgid "Protected by restricted Audit Logs"
-msgstr ""
+msgstr "受限制審計記錄保護"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -13132,18 +13136,18 @@ msgstr "受限制"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__restrictive_audit_trail
 msgid "Restricted Audit Trail"
-msgstr ""
+msgstr "受限審計追蹤"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted Only"
-msgstr ""
+msgstr "只限受限制"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__restrictive_audit_trail
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Restrictive Audit Trail"
-msgstr ""
+msgstr "限制式審計追蹤"
 
 #. module: account
 #. odoo-python
@@ -14500,7 +14504,7 @@ msgstr "稅項"
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_0
 msgid "Tax 0%"
-msgstr ""
+msgstr "稅率 0%"
 
 #. module: account
 #: model:account.tax.group,name:account.1_tax_group_15
@@ -16314,6 +16318,8 @@ msgid ""
 "To keep the restrictive audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"因要保留限制式審計追蹤，日記賬記項一經過賬，便不可刪除。\n"
+"不過，你可改為取消該日記賬記項。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -17974,7 +17980,7 @@ msgstr "你不可為雜項記項登記付款。"
 #. odoo-python
 #: code:addons/account/models/ir_attachment.py:0
 msgid "You cannot remove parts of a restricted audit trail."
-msgstr ""
+msgstr "你不可移除受限審計追蹤的部份內容。"
 
 #. module: account
 #. odoo-python
@@ -17982,7 +17988,7 @@ msgstr ""
 msgid ""
 "You cannot remove parts of a restricted audit trail. Archive the record "
 "instead."
-msgstr ""
+msgstr "你不可移除受限審計追蹤的部份內容。請改為將記錄封存。"
 
 #. module: account
 #. odoo-python
@@ -18051,13 +18057,13 @@ msgstr "文件一經發佈或過賬，便不可切換其類型。"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot use an archived account."
-msgstr ""
+msgstr "你不可使用已封存的賬戶。"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
 msgid "You cannot use cross report on itself"
-msgstr ""
+msgstr "不可對報告本身使用跨報告功能"
 
 #. module: account
 #. odoo-python
@@ -18540,7 +18546,7 @@ msgstr "為了使其被受理，必須在交付貨物或提供服務後 8 天內
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "not applicable"
-msgstr ""
+msgstr "不適用"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax

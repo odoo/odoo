@@ -60,12 +60,14 @@ msgstr "# View"
 msgid ""
 "%(link_start)sRead the guidelines to know how to gain karma.%(link_end)s"
 msgstr ""
+"%(link_start)sMulai pedoman untuk mengetahui bagaimana untuk mendapatkan "
+"karma.%(link_end)s"
 
 #. module: website_forum
 #. odoo-javascript
 #: code:addons/website_forum/static/src/interactions/website_forum.js:0
 msgid "%(score)s karma is required to perform this action."
-msgstr ""
+msgstr "%(score)s karma diperlukan untuk melakukan tindakan ini."
 
 #. module: website_forum
 #. odoo-python
@@ -249,6 +251,8 @@ msgid ""
 "<a class=\"btn btn-primary forum_register_url o_translate_inline\" "
 "href=\"/web/login\">Sign up</a>"
 msgstr ""
+"<a class=\"btn btn-primary forum_register_url o_translate_inline\" "
+"href=\"/web/login\">Sign up</a>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.404
@@ -257,6 +261,9 @@ msgid ""
 "class=\"oi oi-arrow-right display-inline-block\"/> Return to questions "
 "list</a>"
 msgstr ""
+"<a class=\"btn-link o_translate_inline\" t-attf-href=\"/forum\"><i "
+"class=\"oi oi-arrow-right display-inline-block\"/> Kembali ke daftar "
+"pertanyaan</a>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_all_oe_structure_forum_all_top
@@ -266,6 +273,10 @@ msgid ""
 "original-title=\"\" title=\"\" target=\"_blank\">Meet our community "
 "members</a>"
 msgstr ""
+"<a class=\"mb-2 o_translate_inline\" t-attf-"
+"href=\"/profile/users?forum_origin=#{request.httprequest.path}\" data-bs-"
+"original-title=\"\" title=\"\" target=\"_blank\">Bertemu dengan anggota "
+"komunitas kami</a>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_display
@@ -661,6 +672,8 @@ msgid ""
 "<i class=\"oi oi-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" title=\"More\"/>"
 msgstr ""
+"<i class=\"oi oi-ellipsis-h\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" title=\"Lebih Banyak\"/>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
@@ -2997,7 +3010,7 @@ msgstr "Re: %s"
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "Read: {{0}}"
-msgstr ""
+msgstr "Baca: {{0}}"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_reason_id

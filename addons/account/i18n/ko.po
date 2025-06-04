@@ -1756,6 +1756,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"계좌 번호 %(number)s 사용 중인 파트너 %(partner)s 의 은행 계좌가 이미 존재하며 보관 상태입니다. 대신 보관 취소를 "
+"하세요."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1813,7 +1815,7 @@ msgstr "한 라인에 하위값과 그룹별 검색값이 같이 있을 수 없�
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a archived account, you cannot post it."
-msgstr ""
+msgstr "해당 이동 내역에 있는 한 줄에서 보관된 계정을 사용하고 있으므로 게시를 할 수 없습니다."
 
 #. module: account
 #. odoo-python
@@ -10313,12 +10315,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"수기 결제: Odoo 외부의 다른 방법으로 결제하거나 지불을 받습니다.\n"
-"결제대행업체: 결제업체들은 자체적인 결제 방법을 사용하고 있습니다. 온라인 구매나 구독을 할 경우, 협력사에 저장된 결제 토큰을 이용하여 카드로 결제를 요청합니다.\n"
-"수표: 청구 금액을 수표로 지불하도록 Odoo에서 인쇄하세요.\n"
-"일괄 입금: 여러 고객들의 수표를 수금 후 일괄 입금을 생성하여 은행에 입금합니다 (account_batch_payment 모듈 필수).\n"
-"SEPA 계좌이체: 은행에 SEPA 계좌이체 파일을 전송하여 SEPA 지역에서 결제할 수 있습니다 (account_sepa 모듈 필수).\n"
-"SEPA 자동이체: 협력사 권한으로 SEPA 지역에서 결제가 가능합니다 (account_sepa 모듈 필수).\n"
+"수기 결제: Odoo 외부에서 결제 또는 지급받는 모든 결제 방식입니다.\n"
+"결제대행업체: 결제업체들은 자체적인 결제 방법을 제공하고 있습니다. 온라인 구매 또는 구독 시, 협력사에 저장된 결제 토큰을 이용하여 카드 결제를 처리합니다.\n"
+"수표: 수표를 발행하여 청구 금액을 지급하고 Odoo에서 수표를 인쇄하는 것도 가능합니다.\n"
+"일괄 입금: 고객들의 수표를 수금 후 일괄 입금을 생성하여 은행에 입금합니다(account_batch_payment 모듈 필수).\n"
+"SEPA 계좌 이체: 은행에 SEPA 계좌 이체 파일을 전송하여 SEPA 지역에서 결제할 수 있습니다(account_sepa 모듈 필수).\n"
+"SEPA 자동 이체: 협력사 권한으로 SEPA 지역에서 결제가 가능합니다 (account_sepa 모듈 필수).\n"
 
 #. module: account
 #. odoo-python
@@ -15278,7 +15280,7 @@ msgstr "해당 세금이 적용되는 국가입니다."
 msgid ""
 "The country of the foreign VAT number could not be detected. Please assign a"
 " country to the fiscal position."
-msgstr ""
+msgstr "해외 부가가치세 번호에 해당하는 국가를 찾을 수 없습니다. 재정 위치에 국가를 지정하세요."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id

@@ -103,13 +103,13 @@ msgstr "%(author name)s 来自 %(channel name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "%(author)s started a call."
-msgstr ""
+msgstr "%(author)s 开始呼叫。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(caller)s started a call"
-msgstr ""
+msgstr "%(author)s 开始呼叫。"
 
 #. module: mail
 #. odoo-javascript
@@ -2009,7 +2009,7 @@ msgstr "电话"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
 msgid "Call History"
-msgstr ""
+msgstr "通话记录"
 
 #. module: mail
 #. odoo-javascript
@@ -2020,18 +2020,18 @@ msgstr "通话设置"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_channel_id_not_null_constraint
 msgid "Call history must have a channel"
-msgstr ""
+msgstr "通话记录必须关联通信渠道"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_start_dt_is_not_null_constraint
 msgid "Call history must have a start date"
-msgstr ""
+msgstr "通话记录必须包含开始时间"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "Call lasted %(duration)s."
-msgstr ""
+msgstr "通话时长：%(duration)s。"
 
 #. module: mail
 #. odoo-javascript
@@ -3093,7 +3093,7 @@ msgstr "日期"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_date_deadline
 msgid "Date Deadline"
-msgstr ""
+msgstr "截止日期"
 
 #. module: mail
 #. odoo-javascript
@@ -3683,7 +3683,7 @@ msgstr "复制电子邮件"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__duration_hour
 msgid "Duration Hour"
-msgstr ""
+msgstr "持续时间（小时）"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
@@ -3820,7 +3820,7 @@ msgstr "电子邮件按钮颜色"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Button Text"
-msgstr ""
+msgstr "邮件按钮文本"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -4040,7 +4040,7 @@ msgstr "进入全屏模式"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 msgid "Enter full screen!"
-msgstr ""
+msgstr "进入全屏模式！"
 
 #. module: mail
 #. odoo-javascript
@@ -4589,7 +4589,7 @@ msgstr "前进"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Forward Message"
-msgstr ""
+msgstr "转发消息"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4816,7 +4816,7 @@ msgstr "有消息"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
 msgid "Has Warning"
-msgstr ""
+msgstr "存在警告"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -6030,7 +6030,7 @@ msgstr "退出此频道"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
 msgid "Line Description"
-msgstr ""
+msgstr "排程行描述"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__link_field_id
@@ -6041,7 +6041,7 @@ msgstr "链接字段"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_link_preview__link_preview_id
 msgid "Link Preview"
-msgstr ""
+msgstr "链接预览"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -6748,7 +6748,7 @@ msgstr "消息搜索"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
 msgid "Messages can only be linked to one call history"
-msgstr ""
+msgstr "消息仅能关联至一条通话记录"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -7453,19 +7453,19 @@ msgstr "通知所有人"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
-msgstr ""
+msgstr "通过在对话中@提及角色，可一次性通知多人。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role"
-msgstr ""
+msgstr "通知具有此角色的用户"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role who have permission to view this channel"
-msgstr ""
+msgstr "通知具有此角色且有权查看此频道的用户"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
@@ -7696,7 +7696,7 @@ msgstr "只有消息类型的备注才能在模型“discuss.channel”上更新
 msgid ""
 "Oops! We couldn't save your template due to an issue with this value: "
 "%(template_txt)s. Correct it and try again."
-msgstr ""
+msgstr "哎呀！由于以下值的问题，我们无法保存您的模板：%(template_txt)s。更正后重试。"
 
 #. module: mail
 #. odoo-javascript
@@ -8188,7 +8188,7 @@ msgstr "计划概要"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Plan-based scheduling are available only on documents."
-msgstr ""
+msgstr "基于计划的排期仅适用于文档。"
 
 #. module: mail
 #. odoo-javascript
@@ -9274,7 +9274,7 @@ msgstr "执行帐户"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Scheduling personal activities requires an assigned user."
-msgstr ""
+msgstr "安排个人活动需要指定用户。"
 
 #. module: mail
 #. odoo-javascript
@@ -9772,7 +9772,7 @@ msgstr "作为翻译请求目标语言代码的简称。"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
-msgstr ""
+msgstr "显示所有活动"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__show_notified_bcc
@@ -9790,7 +9790,7 @@ msgstr "显示关注者"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show My Activities"
-msgstr ""
+msgstr "显示我的活动"
 
 #. module: mail
 #. odoo-javascript
@@ -9814,12 +9814,12 @@ msgstr "显示全部收件人"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is this week"
-msgstr ""
+msgstr "显示下一次行动日期为本周的所有记录"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is tomorrow"
-msgstr ""
+msgstr "显示下次行动日期为明天的所有记录"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -11923,7 +11923,7 @@ msgstr "周"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
+msgstr "欢迎来到 #%(channelName)s！"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form

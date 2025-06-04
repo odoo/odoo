@@ -60,19 +60,19 @@ msgstr "%(event_name)s - %(attendee_name)s 的報名"
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s（尚餘名額：%(count)s）"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (Sold out)"
-msgstr ""
+msgstr "%(slot_name)s（已售完）"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s：尚欠 %(count)s 個名額"
 
 #. module: event
 #. odoo-python
@@ -1002,6 +1002,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"時段不可安排在所屬活動的時間範圍以外。\n"
+"\n"
+"活動：\t\t%(event_start)s 至 %(event_end)s\n"
+"時段：\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1010,12 +1014,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"時段的結束時間必須後於開始時間。\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "時段的時間必須介乎 0:00 至 23:59 之間。"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1144,7 +1150,7 @@ msgid ""
 "Allow multiple time slots. The communications, the maximum number of "
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
-msgstr ""
+msgstr "允許有多個時段。通訊、參加人數上限及門票註冊數量上限，可針對個別時段定義，而非整個活動劃一。"
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1267,6 +1273,8 @@ msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 msgstr ""
+"參加者\n"
+"                                    <span invisible=\"not is_multi_slots\">（每時段）</span>"
 
 #. module: event
 #. odoo-javascript
@@ -2016,7 +2024,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "以活動的時區表示。"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2054,7 +2062,7 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
-msgstr ""
+msgstr "你可為每項活動設定登記報名人數（參加者人數）的上限，超過此上限的報名將不獲受理。如果活動有多個時段，此上限會套用至每個時段。"
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -2286,7 +2294,7 @@ msgstr "表示網站所顯示的活動日期/時間所屬的時區。"
 msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
-msgstr ""
+msgstr "表示通訊將會傳送的時間。如果活動有多個時段，時間間隔將按每個時段計算，而不是按整項活動計算。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2309,7 +2317,7 @@ msgstr "間隔"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "活動/時段選擇無效"
 
 #. module: event
 #. odoo-python
@@ -2331,7 +2339,7 @@ msgstr "可用"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "活動是否有多個時段"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -2352,7 +2360,7 @@ msgstr "是關注人"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "是有多個時段"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -2564,7 +2572,7 @@ msgstr "已經發送的電郵"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "郵件時段"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2622,7 +2630,7 @@ msgstr "最大座位數"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "每時段上限"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2651,7 +2659,7 @@ msgstr "月"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "多個時段"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3321,7 +3329,7 @@ msgstr "時段"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "時段郵件排程工具"
 
 #. module: event
 #. odoo-python

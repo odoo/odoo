@@ -75,12 +75,12 @@ msgstr "Nº de LMs utilizadas"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__num_splits
 msgid "# Splits"
-msgstr "# Splits"
+msgstr "Nº de divisões"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# To Do Work Orders"
-msgstr "# To Do Work Orders"
+msgstr "Nº de ordens de trabalho pendentes"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
@@ -145,13 +145,13 @@ msgstr "%(qty)s %(measure)s inacabados em %(order)s"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s Ready To Produce"
-msgstr "%(qty)s Ready To Produce"
+msgstr "%(qty)s Pronto para produzir"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s To %(route)s"
-msgstr "%(qty)s To %(route)s"
+msgstr "%(qty)s até %(route)s"
 
 #. module: mrp
 #. odoo-python
@@ -485,7 +485,7 @@ msgstr "<span>minutos</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span> (minutes)</span>"
-msgstr "<span> (minutes)</span>"
+msgstr "<span> (minutos)</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -856,7 +856,7 @@ msgstr "Arquivado"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid "Are you sure you want to cancel these manufacturing orders?"
-msgstr "Are you sure you want to cancel these manufacturing orders?"
+msgstr "Tem certeza de que quer cancelar essas ordens de produção?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1380,7 +1380,7 @@ msgstr "Capacidade"
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_positive_capacity
 msgid "Capacity should be a non-negative number."
-msgstr "Capacity should be a non-negative number."
+msgstr "A capacidade deve ser um número não negativo."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_reported_from_previous_wo
@@ -3281,7 +3281,7 @@ msgstr "Gerenciar operações de ordem de trabalho"
 msgid ""
 "Manage the manufacturing processes and generate reports on those processes."
 msgstr ""
-"Manage the manufacturing processes and generate reports on those processes."
+"Gerenciar os processos de produção e gerar relatórios sobre esses processos."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
@@ -3517,7 +3517,7 @@ msgstr "Disponibilidade de material"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__max_batch_size
 msgid "Max Batch Size"
-msgstr "Max Batch Size"
+msgstr "Tamanho máximo do lote"
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_merge
@@ -3677,7 +3677,7 @@ msgstr "Nenhum pedido em espera"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "No Ready To Produce"
-msgstr "No Ready To Produce"
+msgstr "Nº Pronto para produzir"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -3865,8 +3865,8 @@ msgid ""
 "Number of pieces that can be produced in parallel for this product or for "
 "all, depending on the unit."
 msgstr ""
-"Number of pieces that can be produced in parallel for this product or for "
-"all, depending on the unit."
+"Número de peças que podem ser produzidas em paralelo para esse produto ou "
+"para todos, dependendo da unidade."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4508,7 +4508,9 @@ msgstr "Produto a ser construído..."
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_workcenter_product_product_uom_unique
 msgid "Product/Unit capacity should be unique for each workcenter."
-msgstr "Product/Unit capacity should be unique for each workcenter."
+msgstr ""
+"A capacidade do produto/unidade deve ser exclusiva para cada centro de "
+"trabalho."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_batch_produce__production_id
@@ -5118,7 +5120,7 @@ msgstr "Exibir 'Produzir tudo'"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__show_time_total
 msgid "Show Total Duration?"
-msgstr "Show Total Duration?"
+msgstr "Mostrar duração total?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
@@ -5852,7 +5854,7 @@ msgstr "Duração total"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration (minutes)"
-msgstr "Total Duration (minutes)"
+msgstr "Duração total (minutos)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -6452,7 +6454,7 @@ msgstr "Ordens de trabalho"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_report
 msgid "Work Orders Analysis"
-msgstr "Work Orders Analysis"
+msgstr "Análise de ordens de trabalho"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report

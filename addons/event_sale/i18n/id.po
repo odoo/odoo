@@ -74,6 +74,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Izinkan lebih dari satu slot waktu. Komunikasi, jumlah maksimum peserta dan "
+"jumlah maksimum pendaftaran tiket didefinisikan untuk setiap slot waktu "
+"alih-alih untuk seluruh acara."
 
 #. module: event_sale
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__done
@@ -130,6 +133,8 @@ msgid ""
 "Choose an event slot and it will automatically create a registration for "
 "this event slot."
 msgstr ""
+"Pilih slot acara dan akan secara otomatis membuat pendaftaran untuk slot "
+"acara ini."
 
 #. module: event_sale
 #: model:ir.model.fields,help:event_sale.field_sale_order_line__event_ticket_id
@@ -280,7 +285,7 @@ msgstr "Laporan Sales Acara"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_slot_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__event_slot_id
 msgid "Event Slot"
-msgstr ""
+msgstr "Slot Acara"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_date_begin
@@ -345,7 +350,7 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 msgid "Invalid slot choice \"%(slot_name)s\" for event \"%(event_name)s\"."
-msgstr ""
+msgstr "Pilihan slot tidak valid \"%(slot_name)s\" untuk acara \"%(event_name)s\":"
 
 #. module: event_sale
 #. odoo-python
@@ -362,7 +367,7 @@ msgstr "Alamat Faktur"
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator__is_multi_slots
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_line__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Apakah Multi Slot"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__active
@@ -599,6 +604,8 @@ msgid ""
 "The sale order line with the product %(product_name)s needs an event, a "
 "ticket and a slot in case the event has multiple time slots."
 msgstr ""
+"Baris pesanan sale dengan produk %(product_name)s membutuhkan acara, tiket "
+"dan slot pada kasus acara memiliki lebih dari satu slot waktu."
 
 #. module: event_sale
 #. odoo-python
@@ -665,7 +672,7 @@ msgstr ""
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_registration_change_exception
 msgid "changed from"
-msgstr ""
+msgstr "diganti dari"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.view_event_registration_editor_form

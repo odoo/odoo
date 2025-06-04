@@ -295,7 +295,7 @@ msgstr "'ロット-シリアル - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_type_label
 msgid "'Operation-type - %s' % object.name"
-msgstr "'処理タイプ - %s' % object.name"
+msgstr "'オペレーションタイプ - %s' % object.name"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
@@ -1793,7 +1793,7 @@ msgstr "この時点でこのレコードの会社を変更することは禁止
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Changing the operation type of this record is forbidden at this point."
-msgstr "この時点で、このレコードの処理タイプを変更することは禁止されています。"
+msgstr "この時点で、このレコードのオペレーションタイプを変更することは禁止されています。"
 
 #. module: stock
 #. odoo-python
@@ -2214,7 +2214,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
 msgid "Create a new operation type"
-msgstr "新しい処理タイプを作成します"
+msgstr "新しいオペレーションタイプを作成します"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_package_view
@@ -2932,7 +2932,7 @@ msgstr "移動先梱包IDドメイン"
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__move_partner_id
 msgid "Destination Address "
-msgstr "移動先アドレス (引当用)"
+msgstr "配送先住所"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3851,7 +3851,7 @@ msgstr "水平"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__reservation_method
 msgid "How products in transfers of this operation type should be reserved."
-msgstr "この処理タイプのプロダクトは、どのように引当されるべきか。"
+msgstr "このオペレーションタイプのプロダクトは、どのように引当されるべきか。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_barcode_rule__id
@@ -4095,7 +4095,7 @@ msgid ""
 "can also decide to not put lots in this operation type.  This means it will "
 "create stock with no lot or not put a restriction on the lot taken. "
 msgstr ""
-"これをチェックすると、ロット/シリアル番号を選択できるようになります。この処理タイプにロットを入れないこともできます。これは、ロットなしで在庫を作成するか、取得するロットに制限を設けないことを意味します。"
+"これをチェックすると、ロット/シリアル番号を選択できるようになります。このオペレーションタイプにロットを入れないこともできます。これは、ロットなしで在庫を作成するか、取得するロットに制限を設けないことを意味します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__return_id
@@ -5826,12 +5826,12 @@ msgstr "処理数"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Operation Type"
-msgstr "処理タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__return_picking_type_id
 msgid "Operation Type for Returns"
-msgstr "返品用処理タイプ"
+msgstr "返品用オペレーションタイプ"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking_type_label
@@ -5839,7 +5839,7 @@ msgstr "返品用処理タイプ"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "Operation Types"
-msgstr "処理タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: stock
 #. odoo-python
@@ -5850,17 +5850,17 @@ msgstr "操作はサポートされていません"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_id
 msgid "Operation type"
-msgstr "処理タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
 msgid "Operation type (PDF)"
-msgstr "処理タイプ(PDF)"
+msgstr "オペレーションタイプ(PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking_type
 msgid "Operation type (ZPL)"
-msgstr "処理タイプ(ZPL)"
+msgstr "オペレーションタイプ(ZPL)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_get_picking_type_operations
@@ -5876,7 +5876,7 @@ msgstr "処理"
 #: model:ir.actions.act_window,name:stock.action_picking_type_list
 #: model:ir.ui.menu,name:stock.menu_pickingtype
 msgid "Operations Types"
-msgstr "処理タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__move_line_ids_without_package
@@ -6492,7 +6492,7 @@ msgstr "優先ルート"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "Presence depends on the type of operation."
-msgstr "プレゼンスは処理タイプにより異なります。"
+msgstr "プレゼンスはオペレーションタイプにより異なります。"
 
 #. module: stock
 #. odoo-python
@@ -9006,9 +9006,9 @@ msgid ""
 "            On the operation type you could e.g. specify if packing is needed by default,\n"
 "            if it should show the customer."
 msgstr ""
-"処理タイプシステムにより、各在庫処理に\n"
+"オペレーションタイプシステムにより、各在庫処理に\n"
 "　　　特定のタイプを割り当て、それに応じてビューを変更することができます。\n"
-"            処理タイプでは、例えば、顧客に表示する必要がある場合に、\n"
+"            オペレーションタイプでは、例えば、顧客に表示する必要がある場合に、\n"
 "　　　デフォルトで梱包が必要かどうかを指定できます。"
 
 #. module: stock
@@ -9327,7 +9327,7 @@ msgid ""
 "reference values or assign the existing reference sequence to this operation"
 " type."
 msgstr ""
-"この付番プレフィックスは、別の処理タイプですでに使用されています。問題および/または参照番号の繰返しを避けるために一意のプレフィックスを選択するか、既存の参照番号付番をこの処理タイプに割当てることを推奨します。"
+"この付番プレフィックスは、別のオペレーションタイプですでに使用されています。問題および/または参照番号の繰返しを避けるために一意のプレフィックスを選択するか、既存の参照番号付番をこのオペレーションタイプに割当てることを推奨します。"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -9735,7 +9735,7 @@ msgstr "タイプ"
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__code
 #: model_terms:ir.ui.view,arch_db:stock.view_pickingtype_filter
 msgid "Type of Operation"
-msgstr "処理タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_exception_decoration
@@ -9832,7 +9832,7 @@ msgstr "不明な梱包"
 msgid ""
 "Unless previously specified by the source document, this will be the default"
 " picking policy for this operation type."
-msgstr "元ドキュメントで事前に指定されていない限り、これはこの処理タイプのデフォルトのピッキング方針となります。"
+msgstr "元ドキュメントで事前に指定されていない限り、これはこのオペレーションタイプのデフォルトのピッキング方針となります。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
@@ -10459,7 +10459,7 @@ msgid ""
 "type. To change this, go on the operation type and tick the box \"Create New"
 " Lots/Serial Numbers\"."
 msgstr ""
-"この処理タイプではロットやシリアル番号の作成の権限がありません。これを変更するには、処理タイプの画面にて「ロット/シリアル番号を新規作成」を選択して下さい。"
+"このオペレーションタイプではロットやシリアル番号の作成の権限がありません。これを変更するには、オペレーションタイプの画面にて「ロット/シリアル番号を新規作成」を選択して下さい。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -10661,7 +10661,7 @@ msgstr "同じ転送で同じ梱包内容を複数回移動したり、同じ梱
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
-msgstr "異なる処理タイプの異なる転送からのプロダクトを同梱することはできません。"
+msgstr "異なるオペレーションタイプの異なる転送からのプロダクトを同梱することはできません。"
 
 #. module: stock
 #. odoo-python
@@ -10762,7 +10762,7 @@ msgstr "一度に1つのピッキングのみを返却できます。"
 msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
-msgstr "内部処理タイプを実行するため、保管場所をアクティブにする必要があります。"
+msgstr "内部オペレーションタイプを実行するため、保管場所をアクティブにする必要があります。"
 
 #. module: stock
 #. odoo-python
@@ -10792,7 +10792,7 @@ msgstr "製品%sのロット/シリアル番号を指定する必要がありま
 msgid ""
 "You still have ongoing operations for operation types %(operations)s in "
 "warehouse %(warehouse)s"
-msgstr "処理タイプ%(operations)s用に進行中の処理がまだ倉庫%(warehouse)s内にあります"
+msgstr "オペレーションタイプ%(operations)s用に進行中の処理がまだ倉庫%(warehouse)s内にあります"
 
 #. module: stock
 #. odoo-python

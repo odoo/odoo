@@ -1952,7 +1952,7 @@ msgstr ""
 msgid ""
 "Define the working schedule of the resource. If not set, the resource will "
 "have fully flexible working hours."
-msgstr "リソースの就業スケジュールを定義します。設定されていない場合、リソースの就業時間は完全フレックスになります。"
+msgstr "リソースの勤務スケジュールを定義します。未設定の場合、このリソースは完全に柔軟な勤務時間となります。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__consumption
@@ -3311,7 +3311,7 @@ msgstr "製造リードタイム"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manu_type_id
 msgid "Manufacturing Operation Type"
-msgstr "製造工程タイプ"
+msgstr "製造オペレーションタイプ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -3858,7 +3858,7 @@ msgstr "消費操作"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__picking_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_type_id
 msgid "Operation Type"
-msgstr "工程タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -4054,7 +4054,7 @@ msgstr "製造MTO規則前のピッキング"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
 msgid "Picking Before Manufacturing Operation Type"
-msgstr "製造工程タイプ前のピッキング"
+msgstr "製造オペレーションタイプ前のピッキング"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_route_id
@@ -5795,7 +5795,7 @@ msgstr "転送"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr "処理タイプ"
+msgstr "オペレーションタイプ"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
@@ -6113,7 +6113,7 @@ msgid ""
 "BoM search. That allows to define stock rules which trigger different "
 "manufacturing orders with different BoMs."
 msgstr ""
-"調達が、同じ工程タイプが設定された'生産'ルートを持つとき、同じ工程タイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みます。そうでない場合、工程タイプは部品表検索では考慮されません。これにより、異なる部品表で異なる製造オーダのトリガとなる在庫規則を定義できます。"
+"調達が、同じオペレーションタイプが設定された'生産'ルートを持つとき、同じオペレーションタイプの部品表を使用して、そのプロダクトの製造オーダの作成を試みます。そうでない場合、オペレーションタイプは部品表検索では考慮されません。これにより、異なる部品表で異なる製造オーダのトリガとなる在庫規則を定義できます。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__manual_consumption
@@ -6379,7 +6379,7 @@ msgstr "作業区はブロックされています。クリックでブロック
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
 msgid "Working Hours"
-msgstr "労働時間"
+msgstr "稼働時間"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
@@ -6409,7 +6409,7 @@ msgid ""
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
 msgstr ""
-"この工程タイプではロットやシリアル番号は作成する権限がありません。これを変更するには、工程タイプの画面にて\"ロット/シリアル番号を新規作成\"を選択してください。"
+"このオペレーションタイプではロットやシリアル番号は作成する権限がありません。これを変更するには、オペレーションタイプの画面にて\"ロット/シリアル番号を新規作成\"を選択してください。"
 
 #. module: mrp
 #. odoo-python
@@ -6448,7 +6448,7 @@ msgstr "追加の構成品または副産品がない場合のみ製造オーダ
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "You can only merge manufacturing with the same operation type"
-msgstr "同じ工程タイプの製造のみマージできます。"
+msgstr "同じオペレーションタイプの製造のみマージできます。"
 
 #. module: mrp
 #. odoo-python

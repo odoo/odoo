@@ -1233,6 +1233,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"Slot tidak dapat dijadwalkan diluar jangkauan waktu acara itu sendiri.\n"
+"\n"
+"Acara:\t\t%(event_start)s - %(event_end)s\n"
+"Slot:\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -1241,12 +1245,14 @@ msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"Slot di akhir jam harus lebih lama dari jam mulainya.\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "Slot jam harus di antara 0:00 dan 23:59."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1380,6 +1386,9 @@ msgid ""
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Izinkan lebih dari satu slot waktu. Komunikasi, jumlah maksimum peserta dan "
+"jumlah maksimum pendaftaran tiket didefinisikan untuk setiap slot waktu "
+"alih-alih untuk seluruh acara."
 
 #. module: event
 #: model:event.stage,name:event.event_stage_announced
@@ -1502,6 +1511,8 @@ msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 msgstr ""
+"Peserta\n"
+"                                    <span invisible=\"not is_multi_slots\"> per slot</span>"
 
 #. module: event
 #. odoo-javascript
@@ -2092,7 +2103,7 @@ msgstr "URL Membagi Event"
 #. module: event
 #: model:ir.model,name:event.model_event_slot
 msgid "Event Slot"
-msgstr ""
+msgstr "Slot Acara"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2263,7 +2274,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "Ditunjukkan di zona waktu acara."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2304,6 +2315,10 @@ msgid ""
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"Untuk setiap acara Anda dapat mendefinisikan pendaftaran tempat maksimum "
+"(jumlah peserta), jumlah pendaftar di atas ini tidak akan diterima. Bila "
+"acara memiliki lebih dari satu slot, jumlah maksimum ini diterapkan per "
+"slot."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_new
@@ -2544,6 +2559,9 @@ msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"Mengindikasikan kapan komunikasi dikirim. Bila acara memiliki lebih dari "
+"satu slot, interval akan terkait ke setiap slot waktu alih-alih di seluruh "
+"acara."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2566,7 +2584,7 @@ msgstr "Interval"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "Acara tidak valid / pilihan slot"
 
 #. module: event
 #. odoo-python
@@ -2588,7 +2606,7 @@ msgstr "Tersedia"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "Apakah Acara Multi Slot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -2609,7 +2627,7 @@ msgstr "Adalah Follower"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Apakah Multi Slot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -2822,7 +2840,7 @@ msgstr "Email Dikirim"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "Slot Email"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2880,7 +2898,7 @@ msgstr "Tempat Maksimum"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "Maksimum per slot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -2909,7 +2927,7 @@ msgstr "Bulan"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "Multi Slot"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3595,18 +3613,18 @@ msgstr "Slot"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "Penjadwal Slot Email"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "Pilihan slot wajib pada acara dengan multi-slot."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "Komunikasi berdasarkan slot"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -3615,12 +3633,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "Slot-Slot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "Jumlah Slot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -3821,6 +3839,8 @@ msgid ""
 "The following slots cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Slot waktu berikut tidak dapat dihapus selagi mereka memiliki satu atau lebih pendaftaran yang terhubung ke mereka:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -3849,6 +3869,8 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and"
 " the extra registrations will remain."
 msgstr ""
+"Terdapat lebih banyak pendaftaran dari batasan ini, acara akan sold out dan "
+"pendaftaran ekstra akan tetap tersisa."
 
 #. module: event
 #. odoo-python
@@ -3857,6 +3879,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"Tidak ada kursi yang mencukupi untuk %(event_name)s:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -3880,6 +3904,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"Acara-acara berikut tidak dapat memiliki slot yang dijadwalkan di luar jangkauan waktu mereka:\n"
+"%(event_names)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -4024,7 +4050,7 @@ msgstr "Total Peserta"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "Total Pendaftaran"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4117,7 +4143,7 @@ msgstr "Mendatang/Sedang Berjalan"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "Update batas pendaftaran?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -4230,7 +4256,7 @@ msgstr "Apakah tempat-tempat tidak tersedia untuk tiket ini."
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "Apakah kursi sold out untuk slot ini."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form

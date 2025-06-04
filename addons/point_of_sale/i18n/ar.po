@@ -994,7 +994,7 @@ msgstr "معرف داخلي للطابعة"
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.js:0
 msgid ""
 "An unknown error occurred. Do you want to download the receipt instead?"
-msgstr ""
+msgstr "حدث خطأ غير معروف. هل ترغب في تنزيل الإيصال عوضاً عن ذلك؟ "
 
 #. module: point_of_sale
 #. odoo-python
@@ -5095,6 +5095,9 @@ msgid ""
 "Optional products are suggested when customers add items to their cart "
 "(e.g., adding a burger suggests cold drinks or fries)."
 msgstr ""
+"يتم اقتراح المنتجات الاختيارية عندما يضيف العملاء عناصر إلى عربة التسوق "
+"الخاصة بهم (على سبيل المثال، تقترح إضافة البرجر مشروبات باردة أو بطاطس "
+"مقلية). "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5649,7 +5652,7 @@ msgstr "يرجى تحديد حساب الدخل لهذا المنتج: '%(produc
 msgid ""
 "Please ensure the IoT box is turned on and connected to the network before "
 "retrying."
-msgstr ""
+msgstr "يرجى التأكد من تشغيل جهاز IoT وتوصيله بالشبكة قبل إعادة المحاولة. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6092,6 +6095,8 @@ msgid ""
 "Preparation printers are typically used by restaurants and bars to print the\n"
 "            orders at the kitchen/bar when the waiter updates an order."
 msgstr ""
+"تستخدم طابعات تحضيرالطلبات في المطاعم والحانات لطباعة\n"
+"            الطلبات في المطبخ/الحانة عندما يقوم النادل بتحديث الطلب. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_id
@@ -8028,6 +8033,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"لا يمكن أن تكون أوامر الاسترداد التالية جزءاً من فاتورة مجمعة لأنها قامت باسترداد مبالغ لطلبات تمت فوترتها بالفعل. يجب التعامل مع كل طلب استرداد على حدة.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8081,7 +8089,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/product_combo.py:0
 msgid "The maximum quantity of a combo must be greater or equal to 1."
-msgstr ""
+msgstr "يجب أن تكون الكمية القصوى للكومبو أكبر من أو تساوي 1. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8116,7 +8124,7 @@ msgstr "تعذّر إرسال الطلب إلى الخادم بسبب خطأ م�
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid ""
 "The order delivery / pickup date is in the future. You cannot cancel it."
-msgstr ""
+msgstr "تاريخ توصيل /استلام الطلب في المستقبل. لا يمكنك إلغاؤه. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8186,6 +8194,7 @@ msgid ""
 "The product will be available after this hour for online order and self "
 "order."
 msgstr ""
+"سيكون المنتج متوفراً بعد هذه الساعة للطلب عبر الإنترنت والطلب الذاتي. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_category__hour_until
@@ -8193,6 +8202,7 @@ msgid ""
 "The product will be available until this hour for online order and self "
 "order."
 msgstr ""
+"سيكون المنتج متوفراً حتى هذه الساعة للطلب عبر الإنترنت أو الطلب الذاتي. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__currency_rate
@@ -8452,6 +8462,8 @@ msgid ""
 "This barcode is not compatible with the GS1 standard. Consider configuring a"
 " fallback barcode parser from the PoS settings."
 msgstr ""
+"هذا الباركود غير متوافق مع معيار GS1. قم بتهيئة محلل الباركود الاحتياطي من "
+"إعدادات نظام نقاط البيع. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -8891,6 +8903,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"تعذر إنشاء فاتورة/فواتير موحدة لأن الطلبات التالية لا يمكن فوترتها.\n"
+"\n"
+"%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9041,6 +9056,7 @@ msgid ""
 "Used to generate the OOOO part of the pos_reference field of the pos.order "
 "model."
 msgstr ""
+"يُستخدم لإنشاء الجزء OOOOOO من الحقل pos_reference في نموذج pos.order. "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -9332,7 +9348,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid ""
 "You cannot close the POS while there are still draft orders for the day."
-msgstr ""
+msgstr "لا يمكنك إغلاق نقاط البيع بينما لا تزال هناك مسودات أوامر لليوم. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -9344,7 +9360,7 @@ msgstr "لا يمكنك إنشاء جلسة تبدأ قبل: %(lock_date_info)s 
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "You cannot delete a cash move that is not linked to this session."
-msgstr ""
+msgstr "لا يمكنك حذف حركة نقدية غير مرتبطة بهذه الجلسة. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -9504,6 +9520,8 @@ msgid ""
 "Your IoT box cannot find the printer, please ensure it is connected and "
 "turned on before retrying."
 msgstr ""
+"تعذر على جهاز IoT العثور على الطابعة. يرجى التأكد من توصيلها وتشغيلها قبل "
+"إعادة المحاولة. "
 
 #. module: point_of_sale
 #. odoo-python

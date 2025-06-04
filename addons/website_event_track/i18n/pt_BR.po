@@ -69,7 +69,7 @@ msgid ""
 "o_translate_inline\">Home page</a>"
 msgstr ""
 "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
+"o_translate_inline\">Página inicial</a>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -118,17 +118,17 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
-"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    Prezado <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Temos o prazer de informar que a sua proposta <t t-out=\"object.name or ''\">Sobre o que trata este evento?</t> foi aceita e confirmada no evento <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
 "    <br/>\n"
-"    You will find more details here:\n"
+"    Veja mais informações aqui:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none !important; background-color: {{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:3px\">\n"
-"            View Talk\n"
+"            Ver palestra\n"
 "        </a>\n"
 "    </div>\n"
 "    <br/><br/>\n"
-"    Thank you,\n"
+"    Obrigado,\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
 "        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>\n"
@@ -467,12 +467,12 @@ msgstr ""
 "            <t t-set=\"yahoo_url\" t-value=\"agenda_urls.get('yahoo_url')\"/>\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "            <tbody>\n"
-"                <!-- HEADER -->\n"
+"                <!-- CABEÇALHO -->\n"
 "                <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                            <tr><td valign=\"middle\">\n"
-"                                <span style=\"font-size: 10px;\">Your Event Track</span><br/>\n"
+"                                <span style=\"font-size: 10px;\">Sua sessão no evento</span><br/>\n"
 "                                <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name\"/>\n"
 "                            </td><td valign=\"middle\" align=\"right\">\n"
 "                                <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -485,21 +485,21 @@ msgstr ""
 "                        </table>\n"
 "                    </td>\n"
 "                </tr>\n"
-"                <!-- TALK DESCRIPTION -->\n"
+"                <!-- DESCRIÇÃO DA PALESTRA -->\n"
 "                <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                            <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                                <div>\n"
-"                                    Hello<t t-if=\"not user_id.is_public\" t-out=\"' ' + user_id.name\"/>,\n"
+"                                    Olá, <t t-if=\"not user_id.is_public\" t-out=\"' ' + user_id.name\"/>,\n"
 "                                    <br/><br/>\n"
-"                                    You recently show interest for the talk\n"
+"                                    Você demonstrou interesse pela palestra\n"
 "                                    <a t-if=\"object.description or object.partner_biography\" t-attf-href=\"{{ object.get_base_url() }}{{ object.website_url }}\" style=\"font-weight:bold;color:#875A7B;text-decoration:none;\" t-out=\"object.name or ''\">OpenWood Collection Online Reveal</a>\n"
 "                                    <span t-else=\"\" style=\"font-weight:bold;\" t-out=\"object.name or ''\">OpenWood Collection Online Reveal</span>.\n"
 "                                </div>\n"
 "                                <div t-if=\"agenda_urls\">\n"
 "                                    <br/>\n"
-"                                    <strong>Add this talk to your calendar</strong>\n"
+"                                    <strong>Adicionar palestra ao seu calendáriod</strong>\n"
 "                                    <a t-if=\"google_url\" t-att-href=\"google_url\" t-attf-style=\"padding:3px 5px; color: {{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; text-decoration:none;border-radius:3px;\" target=\"new\">\n"
 "                                        <img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/>\n"
 "                                        Google\n"
@@ -527,7 +527,7 @@ msgstr ""
 "                        </table>\n"
 "                    </td>\n"
 "                </tr>\n"
-"                <!-- DETAILS -->\n"
+"                <!-- INFORMAÇÕES -->\n"
 "                <tr>\n"
 "                    <td align=\"center\" style=\"min-width: 590px;\">\n"
 "                        <table width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -539,19 +539,19 @@ msgstr ""
 "                                        </td>\n"
 "                                        <td style=\"padding: 0px 10px 0px 10px;width:50%;line-height:20px;vertical-align:top;\">\n"
 "                                            <div t-if=\"object.is_one_day\">\n"
-"                                                <t t-out=\"object.date\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 4, 2021</t>\n"
-"                                                <t t-out=\"object.date\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">7:00 AM</t>\n"
-"                                                 - <t t-out=\"object.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">5:00 PM</t>\n"
+"                                                <t t-out=\"object.date\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">4 de maio de 2021</t>\n"
+"                                                <t t-out=\"object.date\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">7h</t>\n"
+"                                                 - <t t-out=\"object.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">17h</t>\n"
 "                                            </div>\n"
 "                                            <div t-else=\"\">\n"
-"                                                <strong>From</strong>\n"
-"                                                <t t-out=\"object.date or object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 4, 2021</t>\n"
-"                                                 - <t t-out=\"object.date or object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">7:00 AM</t>\n"
-"                                                <strong>To</strong>\n"
-"                                                <t t-out=\"object.date_end or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">May 6, 2021</t>\n"
-"                                                 - <t t-out=\"object.date_end or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">5:00 PM</t>\n"
+"                                                <strong>De</strong>\n"
+"                                                <t t-out=\"object.date or object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">4 de maio de 2021</t>\n"
+"                                                 - <t t-out=\"object.date or object.event_id.date_begin\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">7h</t>\n"
+"                                                <strong>Até</strong>\n"
+"                                                <t t-out=\"object.date_end or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;date_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;format&quot;: &quot;long&quot;}\">M6 de maio de 2021</t>\n"
+"                                                 - <t t-out=\"object.date_end or object.event_id.date_end\" t-options=\"{&quot;widget&quot;: &quot;datetime&quot;, &quot;time_only&quot;: True, &quot;tz_name&quot;: object.event_id.date_tz, &quot;hide_seconds&quot;: True, &quot;format&quot;: &quot;short&quot;}\">17h</t>\n"
 "                                            </div>\n"
-"                                            <div style=\"font-size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or ''\">Europe/Brussels</t></i></div>\n"
+"                                            <div style=\"font-size:12px;color:#9e9e9e\"><i><t t-out=\"object.event_id.date_tz or ''\">Europa/Bruxelas</t></i></div>\n"
 "                                        </td>\n"
 "                                        <td style=\"vertical-align:top;\">\n"
 "                                            <t t-if=\"event_address or object.location_id\">\n"
@@ -598,7 +598,7 @@ msgstr ""
 "                            </td></tr>\n"
 "                            <tr t-if=\"not object.date\">\n"
 "                                <td>\n"
-"                                    <strong><u>Note</u></strong>: The start and end times of the talk were not specified when the email was sent. The times indicated in this message correspond to those of the event.\n"
+"                                    <strong><u>Nota</u></strong>: Os horários de início e término da palestra não foram especificados quando o e-mail foi enviado. Os horários indicados nesta mensagem correspondem aos do evento.\n"
 "                                </td>\n"
 "                            </tr>\n"
 "                            <tr><td style=\"text-align:center;\">\n"
@@ -608,18 +608,18 @@ msgstr ""
 "                            </td></tr>\n"
 "\n"
 "                            <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
-"                                <!-- CONTACT ORGANIZER -->\n"
+"                                <!-- ENTRE EM CONTATO COM O ORGANIZADOR -->\n"
 "                                <t t-if=\"object.event_id.organizer_id.name or object.event_id.company_id.name\">\n"
 "                                    <div>\n"
-"                                        <span style=\"font-weight:300;margin:10px 0px\">Questions about this talk?</span>\n"
-"                                        <div>Please contact the organizer:</div>\n"
+"                                        <span style=\"font-weight:300;margin:10px 0px\">Dúvidas sobre o evento?</span>\n"
+"                                        <div>Entre em contato com o organizador:</div>\n"
 "                                        <ul>\n"
 "                                            <li t-out=\"object.event_id.organizer_id.name or object.event_id.company_id.name or ''\">YourCompany</li>\n"
 "                                            <t t-if=\"event_organizer.email\">\n"
-"                                                <li>Mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></li>\n"
+"                                                <li>E-mail: <a t-attf-href=\"mailto:{{ event_organizer.email }}\" style=\"text-decoration:none;color:#875A7B;\" t-out=\"event_organizer.email or ''\"/></li>\n"
 "                                            </t>\n"
 "                                            <t t-if=\"object.event_id.organizer_id.phone or object.event_id.company_id.phone\">\n"
-"                                                <li>Phone: <t t-out=\"object.event_id.organizer_id.phone or object.event_id.company_id.phone\"/></li>\n"
+"                                                <li>Telefone: <t t-out=\"object.event_id.organizer_id.phone or object.event_id.company_id.phone\"/></li>\n"
 "                                            </t>\n"
 "                                        </ul>\n"
 "                                    </div>\n"
@@ -627,30 +627,30 @@ msgstr ""
 "                            </td></tr>\n"
 "\n"
 "                            <tr><td style=\"text-align:center;\">\n"
-"                                <!-- CONTACT ORGANIZER SEPARATION -->\n"
+"                                <!-- SEPARAÇÃO DO CONTATO DO ORGANIZADOR -->\n"
 "                                <hr t-if=\"is_online or event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                            </td></tr>\n"
 "\n"
 "                            <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
-"                                <!-- PWA MARKGETING -->\n"
+"                                <!-- PWA MARKETING -->\n"
 "                                <div t-if=\"is_online\">\n"
-"                                    <strong>Get the best mobile experience.</strong>\n"
-"                                    <a href=\"/event\">Install our mobile app</a>\n"
+"                                    <strong>Tenha a melhor experiência móvel.</strong>\n"
+"                                    <a href=\"/event\">Instale nosso aplicativo móvel</a>\n"
 "                                </div>\n"
 "                            </td></tr>\n"
 "                            <tr><td style=\"text-align:center;\">\n"
-"                                <!-- PWA MARKGETING SEPARATION-->\n"
+"                                <!-- SEPARAÇÃO PWA MARKGETING -->\n"
 "                                <hr t-if=\"is_online and event_address\" width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
 "                            </td></tr>\n"
 "\n"
 "                            <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
-"                                <!-- GOOGLE MAPS LINK -->\n"
+"                                <!-- LINK DO GOOGLE MAPS -->\n"
 "                                <table t-if=\"event_address and location\" style=\"width:100%;\"><tr><td>\n"
 "                                    <div>\n"
 "                                        <i class=\"fa fa-map-marker\"/>\n"
 "                                        <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
 "                                            <img t-if=\"event_address.static_map_url and event_address.static_map_url_is_valid\" t-attf-src=\"{{ event_address.static_map_url }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
-"                                            <span t-else=\"\">See event location on Google Maps</span>\n"
+"                                            <span t-else=\"\">Ver localização no Google Maps</span>\n"
 "                                        </a>\n"
 "                                    </div>\n"
 "                                </td></tr></table>\n"
@@ -661,14 +661,14 @@ msgstr ""
 "            </tbody>\n"
 "            </table>\n"
 "            </td></tr>\n"
-"            <!-- FOOTER BY -->\n"
+"            <!-- RODAPÉ POR -->\n"
 "            <tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "                <table t-if=\"object.company_id\" width=\"590\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "                  <tr><td style=\"text-align: center; font-size: 14px;\">\n"
-"                    Sent by <a target=\"_blank\" t-attf-href=\"{{ object.get_base_url() }}\" style=\"color: #875A7B;\" t-out=\"object.event_id.organizer_id.name or object.event_id.company_id.name or ''\">YourCompany</a>\n"
+"                    Enviado por <a target=\"_blank\" t-attf-href=\"{{ object.get_base_url() }}\" style=\"color: #875A7B;\" t-out=\"object.event_id.organizer_id.name or object.event_id.company_id.name or ''\">YourCompany</a>\n"
 "                    <t t-if=\"'website_url' in object.event_id and object.event_id.website_url\">\n"
 "                        <br/>\n"
-"                        Discover <a href=\"/event\" style=\"color:#875A7B;\">all our events</a>.\n"
+"                        Veja <a href=\"/event\" style=\"color:#875A7B;\">todos os nossos eventos</a>.\n"
 "                    </t>\n"
 "                  </td></tr>\n"
 "                </table>\n"
@@ -741,7 +741,7 @@ msgstr "Adicionar um novo estágio no funil de tarefas"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_reminder
 msgid "Add reminder via email"
-msgstr "Add reminder via email"
+msgstr "Adicionar lembrete por e-mail"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
@@ -754,18 +754,18 @@ msgstr ""
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_reminder
 msgid "Add talk reminder"
-msgstr "Add talk reminder"
+msgstr "Adicionar lembrete da sessão"
 
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_reminder
 msgid "Add talk reminder: {{ object.name }}"
-msgstr "Add talk reminder: {{ object.name }}"
+msgstr "Adicionar lembrete da sessão: {{ object.name }}"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "Add this talk to your agenda ?"
-msgstr "Add this talk to your agenda ?"
+msgstr "Adicionar essa palestra à sua agenda?"
 
 #. module: website_event_track
 #. odoo-python
@@ -941,7 +941,7 @@ msgstr "Categoria"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Check your email to add the track to your agenda."
-msgstr "Check your email to add the track to your agenda."
+msgstr "Verifique seu e-mail para adicionar a sessão à sua agenda."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1179,7 +1179,7 @@ msgstr "E-mail"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Email Error"
-msgstr "Email Error"
+msgstr "Erro no e-mail"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
@@ -1365,8 +1365,8 @@ msgid ""
 "Get prepared and\n"
 "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/track' % (slug(event))\">register to your favorites talks now.</a>"
 msgstr ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+"Está pronto?\n"
+"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/track' % (slug(event))\">Inscreva-se nas suas palestras preferidas agora!</a>"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
@@ -1545,7 +1545,7 @@ msgstr "Dados inválidos"
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "Invalid data."
-msgstr "Invalid data."
+msgstr "Dados inválidos."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -1819,13 +1819,13 @@ msgstr "Sem visitantes na sessão ainda."
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No thanks"
-msgstr "No thanks"
+msgstr "Não"
 
 #. module: website_event_track
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "No thanks & don't ask again"
-msgstr "No thanks & don't ask again"
+msgstr "Não e não perguntar novamente"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
@@ -1933,7 +1933,7 @@ msgstr "Propostas no site"
 #. odoo-python
 #: code:addons/website_event_track/models/event_event.py:0
 msgid "Propose a talk"
-msgstr "Propose a talk"
+msgstr "Propor uma palestra"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage3
@@ -2178,8 +2178,8 @@ msgid ""
 "Talk already in your Favorites. The page does not seem to be up-to-date and "
 "needs a refresh."
 msgstr ""
-"Talk already in your Favorites. The page does not seem to be up-to-date and "
-"needs a refresh."
+"A palestra já está em seus Favoritos. A página não parece estar atualizada. "
+"Atualize-a."
 
 #. module: website_event_track
 #. odoo-javascript
@@ -2234,21 +2234,21 @@ msgid ""
 " them to your calendar, therefore the times indicated in this reminder "
 "correspond to those of the event."
 msgstr ""
-"The start and end times of the talk were not specified when you asked to add"
-" them to your calendar, therefore the times indicated in this reminder "
-"correspond to those of the event."
+"Os horários de início e término da palestra não foram especificados quando "
+"você pediu para adicioná-los ao seu calendário, portanto, os horários "
+"indicados neste lembrete correspondem aos do evento."
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "The talk has already begun."
-msgstr "The talk has already begun."
+msgstr "A palestra já começou."
 
 #. module: website_event_track
 #. odoo-python
 #: code:addons/website_event_track/controllers/event_track.py:0
 msgid "The talk is already finished."
-msgstr "The talk is already finished."
+msgstr "A palestra já terminou."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2459,7 +2459,7 @@ msgstr "Sessão bloqueada"
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/interactions/event_track_reminder.js:0
 msgid "Track successfully added to your favorites."
-msgstr "Track successfully added to your favorites."
+msgstr "Sessão adicionada aos favoritos com sucesso."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -2524,7 +2524,9 @@ msgstr "Mensagens não lidas"
 #: code:addons/website_event_track/models/event_track.py:0
 #: code:addons/website_event_track/models/website_visitor.py:0
 msgid "Unsupported 'Not In' operation on track wishlist visitors"
-msgstr "Unsupported 'Not In' operation on track wishlist visitors"
+msgstr ""
+"Operação \"Not In\" incompatível para visitantes da lista de desejos de "
+"sessões"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -2605,7 +2607,7 @@ msgstr "Avaliaremos a sua proposta e responderemos em breve."
 #. odoo-javascript
 #: code:addons/website_event_track/static/src/xml/website_event_track_email_reminder.xml:0
 msgid "We will send you a link to add this talk to your agenda."
-msgstr "We will send you a link to add this talk to your agenda."
+msgstr "Enviaremos um link para adicionar essa palestra à sua agenda."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal

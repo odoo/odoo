@@ -66,13 +66,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
 msgid "%(slot_name)s (Sold out)"
-msgstr ""
+msgstr "%(slot_name)s（售罄）"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s：尚欠 %(count)s 个名额"
 
 #. module: event
 #. odoo-python
@@ -2430,7 +2430,7 @@ msgstr "结束阶段"
 #. module: event
 #: model:event.stage,name:event.event_stage_done
 msgid "Ended"
-msgstr "结束的"
+msgstr "已结束"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__end_hour
@@ -3048,7 +3048,7 @@ msgstr "可用"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "活动是否有多个时段"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -3069,7 +3069,7 @@ msgstr "是关注者"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "是有多个时段"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -3281,7 +3281,7 @@ msgstr "EMail发送"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
 msgid "Mail Slot"
-msgstr ""
+msgstr "邮件时段"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3339,7 +3339,7 @@ msgstr "最多席位"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Maximum per slot"
-msgstr ""
+msgstr "每时段上限"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -3368,7 +3368,7 @@ msgstr "个月"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Multiple Slots"
-msgstr ""
+msgstr "多个时段"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4038,7 +4038,7 @@ msgstr "插槽"
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "时段邮件排期工具"
 
 #. module: event
 #. odoo-python
@@ -4058,7 +4058,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Slots"
-msgstr ""
+msgstr "时段"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
@@ -4257,6 +4257,8 @@ msgid ""
 "The following slots cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"以下时段因关联一个或多个注册记录而无法删除：\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -4282,7 +4284,7 @@ msgstr "停止日期不能早于开始日期。请检查门票 %(ticket_name)s"
 msgid ""
 "There are more registrations than this limit, the event will be sold out and"
 " the extra registrations will remain."
-msgstr ""
+msgstr "活动报名人数超过限额时，已超额报名的注册将保留，但活动会显示“已售罄”状态。"
 
 #. module: event
 #. odoo-python

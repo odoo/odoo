@@ -71,6 +71,8 @@ msgid ""
 "<br/>\n"
 "                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
+"<br/>\n"
+"                                벨기에에서는 전자 청구서 발행이 <u>2026년 1월부터 의무화</u>되었습니다. 지금 바로 등록하세요."
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -215,7 +217,7 @@ msgstr ""
 msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
-msgstr ""
+msgstr "이전에 MSH에서 전송한 메시지에 대해 수신 확인이 되지 않아 해당 오류가 발생했습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -223,7 +225,7 @@ msgstr ""
 msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
-msgstr ""
+msgstr "수신된 조각 메시지의 GroupId 및 FragmentNum 값이 이전에 수신된 조각 메시지의 값과 동일합니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -231,7 +233,7 @@ msgstr ""
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
-msgstr ""
+msgstr "조각을 수신하였으나 조각 그룹에 있는 두 개 이상의 조각 메시지가 압축 요소의 값을 지정합니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -239,7 +241,7 @@ msgstr ""
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
-msgstr ""
+msgstr "부분 데이터가 수신되었지만, 해당 부분 데이터 그룹에서 두 개 이상의 부분 데이터 메시지가 이 요소의 값을 지정합니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -254,7 +256,7 @@ msgstr ""
 msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
-msgstr ""
+msgstr "번들에 있는 특정한 메시지 단위에서 오류가 발생하여 해당 번들에 있는 메시지 단위가 처리되지 않았습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -280,7 +282,7 @@ msgstr "Peppol 문서를 받으려면 매입 전표를 사용해야 합니다."
 msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
-msgstr ""
+msgstr "MSH 응답은 응답 메시지에 다른 MEP 바인딩이 적용되었음을 나타냅니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -288,7 +290,7 @@ msgstr ""
 msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
-msgstr ""
+msgstr "FragmentCount에 값이 설정되어 있으나 이전에 수신된 조각에 더 큰 값이 있습니다."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -424,7 +426,7 @@ msgstr ""
 msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
-msgstr ""
+msgstr "중개용 MSH에서 ebMS 메시지의 라우팅을 수행할 수 없어서 메시지 처리가 중단되었습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -432,7 +434,7 @@ msgstr ""
 msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
-msgstr ""
+msgstr "MSH 헤더에서 메시지 만료를 확인되어 전달 또는 전송 시도를 중단합니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -604,7 +606,7 @@ msgstr "이메일과 전화번호는 필수 입력 사항입니다."
 msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
-msgstr ""
+msgstr "식별자가 \"%s\" 인 문서를 검증할 XSD를 찾을 수 없습니다."
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -831,7 +833,7 @@ msgstr "실시간"
 msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
-msgstr ""
+msgstr "지정되지 않은 메시지 속성이 %s 에 미지정 상태로 조각 SOAP 헤더에 존재합니다."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -853,7 +855,7 @@ msgstr " 휴대폰 번호"
 msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
-msgstr ""
+msgstr "첫 번째 부분 데이터한 수신한 후 %s 시간이 초과되었으나 다른 부분 데이터를 모두 수신하지 못했습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1167,7 +1169,7 @@ msgstr "프록시 유형"
 msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
-msgstr ""
+msgstr "프록시 오류가 발생했습니다. Odoo에 문의하세요(\"%s\" 누락, 구성 패널에서 로드되었는지 확인하세요)."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1266,6 +1268,7 @@ msgid ""
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
+"신뢰성 모듈에서 일부 구현된 신뢰성 기능이 정상적으로 작동하지 않거나, 해당 메시지 시퀀스와 관련된 신뢰성 상태가 유효하지 않습니다."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1308,7 +1311,7 @@ msgstr "해당 국가에서는 Peppol을 사용할 수 없습니다."
 msgid ""
 "The MSH is experiencing temporary or permanent failure in trying to open a "
 "transport connection with a remote MSH."
-msgstr ""
+msgstr "MSH에서 원격 MSH와의 전송 연결 시도 중 일시적 또는 영구적 오류가 발생했습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1326,7 +1329,7 @@ msgstr ""
 msgid ""
 "The Peppol Participant DNS lookup resulted in an URL address that does not "
 "belong to this server."
-msgstr ""
+msgstr "Peppol 참가자 DNS 조회 결과, 이 서버에 속하지 않는 URL 주소가 확인되었습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1429,6 +1432,7 @@ msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
 msgstr ""
+"부분 데이터 헤더에 복사된 eb3:Message 헤더가 재구성된 원본 메시지의 eb3:Message 헤더와 일치하지 않습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1436,7 +1440,7 @@ msgstr ""
 msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
-msgstr ""
+msgstr "ebMS 헤더가 XML 문서로 제대로 구성되지 않았거나 ebMS 패키징 규칙을 준수하지 않았습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1455,7 +1459,7 @@ msgstr ""
 msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
-msgstr ""
+msgstr "암호화된 데이터는 \"ebms\" SOAP 액터에 대한 보안 헤더를 참조하며 보안 모듈에서는 해독할 수 없습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1511,6 +1515,7 @@ msgid ""
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
+"프로세서에서 메시지의 보안 방법, 매개변수, 범위 또는 기타 보안 정책 수준 요구 사항이나 계약이 충족되지 않았음을 확인되었습니다."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1525,13 +1530,13 @@ msgstr "벨기에에서 식별용으로 권장되는 방식은 회사 등록 번
 msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
-msgstr ""
+msgstr "\"ebms\" SOAP 액터에 대한 보안 헤더의 서명을, 보안 모듈에서 검증할 수 없습니다."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr ""
+msgstr "데이터 조각 메시지의 크기가 %s 를 초과합니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1539,7 +1544,7 @@ msgstr ""
 msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
-msgstr ""
+msgstr "수신된 번들의 구조가 번들링 규칙을 부합하지 않습니다."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1553,7 +1558,7 @@ msgstr "이 사용자를 식별하는 고유 ID로, 보통 VAT"
 msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
-msgstr ""
+msgstr "본 사양에서 요구되는 사용법과 MIME 사용이 일치하지 않습니다."
 
 #. module: account_peppol
 #. odoo-python
@@ -1611,6 +1616,8 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"해당 사용자는 Peppol 사용자가 아닙니다. 관련 proxy_type은 반드시 \"peppol\" 이어야 합니다. peppol 참가자를"
+" 생성하기 위한 필수 항목입니다."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1800,7 +1807,7 @@ msgstr "Peppol 등록이 곧 활성화됩니다. 청구서 전송 기능은 이�
 msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
-msgstr ""
+msgstr "회사가 이미 청구서를 수신하기 위해 액세스 포인트 (%s)에 등록되어 있습니다. Odoo에는 발신자로만 등록됩니다."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form

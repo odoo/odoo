@@ -3326,8 +3326,8 @@ msgid ""
 "automatically set when the tax closing entry is posted."
 msgstr ""
 "Bất kỳ bút toán nào có thuế cho đến và bao gồm ngày đó sẽ được hoãn lại đến "
-"một thời gian sau, theo trình tự sổ nhật ký của bút toán đó. Ngày khóa sổ "
-"thuế được tự động thiết lập khi bút toán quyết toán thuế được ghi sổ."
+"một thời gian sau, theo trình tự sổ nhật ký của bút toán đó. Ngày khóa thuế "
+"được tự động thiết lập khi bút toán quyết toán thuế được ghi sổ."
 
 #. module: account
 #. odoo-python
@@ -3451,6 +3451,9 @@ msgid ""
 "journal entry or journal item are logged. You can then not delete those "
 "records anymore"
 msgstr ""
+"Ngay khi một hạng mục bút toán được liên kết, mọi thay đổi về tài khoản, đối"
+" tác, bút toán hay hạng mục bút toán sẽ được ghi lại. Sau đó, bạn sẽ không "
+"thể xóa những bản ghi này nữa."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__autopost_bills__ask
@@ -8764,6 +8767,9 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
+"Nếu bạn bán hàng hóa và dịch vụ cho khách hàng ở nước ngoài thuộc EU, bạn "
+"phải tính thuế GTGT dựa trên địa chỉ giao hàng. Quy tắc này áp dụng bất kể "
+"bạn đang ở đâu."
 
 #. module: account
 #. odoo-python
@@ -14987,7 +14993,7 @@ msgstr "Bao gồm thuế"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_lock_date_message
 #: model:ir.model.fields,field_description:account.field_account_move__tax_lock_date_message
 msgid "Tax Lock Date Message"
-msgstr "Thông báo ngày khoá sổ thuế"
+msgstr "Thông báo ngày khoá thuế"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__tax_map
@@ -15697,8 +15703,8 @@ msgid ""
 "The date the Tax Lock Date is set to by this exception. If the lock date is "
 "not changed it is set to the maximal date."
 msgstr ""
-"Ngày mà Ngày khóa sổ thuế được cài đặt dựa theo ngoại lệ này. Nếu ngày khóa "
-"sổ không được thay đổi thì ngày đó sẽ được đặt thành ngày tối đa."
+"Ngày mà Ngày khóa thuế được cài đặt dựa theo ngoại lệ này. Nếu ngày khóa sổ "
+"không được thay đổi thì ngày đó sẽ được đặt thành ngày tối đa."
 
 #. module: account
 #. odoo-python
@@ -16746,6 +16752,8 @@ msgid ""
 "This view shows only the journal entries that were selected from another context,\n"
 "                such as for sending by email or reviewing a batch of records."
 msgstr ""
+"Chế độ xem này chỉ hiển thị các bút toán đã được chọn từ một ngữ cảnh khác, \n"
+"chẳng hạn như để gửi qua email hoặc để xem xét một loạt bản ghi."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16853,6 +16861,8 @@ msgid ""
 "To keep the restrictive audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
+"Để duy trì dấu vết kiểm toán chặt chẽ, bạn không thể xóa các bút toán sau khi chúng đã được ghi sổ.\n"
+"Thay vào đó, bạn có thể hủy bút toán."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -17606,7 +17616,7 @@ msgstr "User Sale Lock Date"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__user_tax_lock_date
 msgid "User Tax Lock Date"
-msgstr "User Tax Lock Date"
+msgstr "Ngày khoá thuế cho người dùng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id

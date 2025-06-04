@@ -71,6 +71,8 @@ msgid ""
 "<br/>\n"
 "                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
+"<br/>\n"
+"Tại Bỉ, hóa đơn điện tử sẽ trở nên <u>bắt buộc kể từ tháng 1 năm 2026</u> – đừng chần chừ, hãy đăng ký ngay từ bây giờ."
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -206,10 +208,10 @@ msgid ""
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
-"Đã nhận được một Biên lai cho một tin nhắn trước đó đã được gửi bởi MSH, gây"
-" ra lỗi này, nhưng nội dung không khớp với nội dung của tin nhắn (VD: một "
-"phần nào đó chưa được xác nhận, hoặc chữ ký kết hợp không khớp với chữ ký "
-"của digest, đối với NRR)."
+"Đã nhận được Biên nhận cho một thông điệp trước đây được gửi bởi MSH đang "
+"tạo ra lỗi này, nhưng nội dung không khớp với nội dung thông điệp gốc (VD: "
+"một phần nào đó chưa được xác nhận, hoặc mã băm liên quan không khớp với mã "
+"băm chữ ký, trong trường hợp NRR)."
 
 #. module: account_peppol
 #. odoo-python
@@ -218,6 +220,8 @@ msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
 msgstr ""
+"Chưa nhận được Biên nhận cho một thông điệp trước đây được gửi bởi MSH đang "
+"tạo ra lỗi này."
 
 #. module: account_peppol
 #. odoo-python
@@ -226,6 +230,8 @@ msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
 msgstr ""
+"Một đoạn tin đã được nhận nhưng đoạn tin đã nhận được trước đó có cùng giá "
+"trị GroupId và FragmentNum."
 
 #. module: account_peppol
 #. odoo-python
@@ -234,6 +240,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
 msgstr ""
+"Một đoạn tin đã được nhận, nhưng có trên một đoạn tin trong nhóm các đoạn "
+"tin cùng chỉ định giá trị cho phần tử nén."
 
 #. module: account_peppol
 #. odoo-python
@@ -242,6 +250,8 @@ msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
 msgstr ""
+"Một đoạn tin đã được nhận, nhưng có trên một đoạn tin trong nhóm các đoạn "
+"tin cùng chỉ định giá trị cho phần tử này."
 
 #. module: account_peppol
 #. odoo-python
@@ -249,6 +259,7 @@ msgstr ""
 msgid ""
 "A fragment is received that relates to a group that was previously rejected."
 msgstr ""
+"Một đoạn tin được nhận nhưng liên quan đến một nhóm đã bị từ chối trước đó."
 
 #. module: account_peppol
 #. odoo-python
@@ -257,6 +268,8 @@ msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
 msgstr ""
+"Một đơn vị thông điệp trong gói đã không được xử lý do có một đơn vị thông "
+"điệp liên quan trong cùng gói gây ra lỗi."
 
 #. module: account_peppol
 #. odoo-python
@@ -284,6 +297,8 @@ msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
 msgstr ""
+"Một MSH phản hồi cho biết nó áp dụng ràng buộc MEP thay thế cho thông điệp "
+"phản hồi."
 
 #. module: account_peppol
 #. odoo-python
@@ -292,6 +307,8 @@ msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
 msgstr ""
+"Một giá trị đã được đặt cho FragmentCount, nhưng một đoạn tin nhận trước đó "
+"có giá trị lớn hơn."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -373,6 +390,9 @@ msgid ""
 "element/attribute contains a value that could not be recognized and "
 "therefore could not be used by the MSH."
 msgstr ""
+"Mặc dù tài liệu thông điệp được định dạng đúng và hợp lệ theo sơ đồ, song "
+"một số phần tử hoặc thuộc tính chứa giá trị không thể nhận diện, nên MSH "
+"không thể sử dụng được."
 
 #. module: account_peppol
 #. odoo-python
@@ -382,6 +402,9 @@ msgid ""
 "element/attribute value cannot be processed as expected because the related "
 "feature is not supported by the MSH."
 msgstr ""
+"Mặc dù tài liệu thông điệp được định dạng đúng và hợp lệ theo sơ đồ, một số "
+"giá trị của phần tử hoặc thuộc tính không thể xử lý như mong đợi vì tính "
+"năng liên quan không được MSH hỗ trợ."
 
 #. module: account_peppol
 #. odoo-python
@@ -417,6 +440,9 @@ msgid ""
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
 msgstr ""
+"Mặc dù thông điệp đã được gửi với yêu cầu gửi đảm bảo, nhưng phân hệ Độ tin "
+"cậy không thể xác nhận chắc chắn rằng thông điệp đã được chuyển đến đúng "
+"cách, dù đã cố gắng gửi lại nhiều lần."
 
 #. module: account_peppol
 #. odoo-python
@@ -425,6 +451,8 @@ msgid ""
 "An Intermediary MSH was unable to route an ebMS message and stopped "
 "processing the message."
 msgstr ""
+"Một MSH trung gian không thể định tuyến được thông điệp ebMS và đã ngừng xử "
+"lý thông điệp đó."
 
 #. module: account_peppol
 #. odoo-python
@@ -433,6 +461,8 @@ msgid ""
 "An MSH has determined that the message is expired and will not attempt to "
 "forward or deliver it."
 msgstr ""
+"Một MSH xác định thông điệp đã hết hạn và sẽ không cố gắng chuyển tiếp hoặc "
+"gửi thông điệp đó."
 
 #. module: account_peppol
 #. odoo-python
@@ -442,18 +472,22 @@ msgid ""
 "MPC for pulling, but the intermediary MSH is unable to store the message "
 "with this MPC"
 msgstr ""
+"Một bút toán trong chức năng định tuyến đã khớp và gán thông điệp cho một "
+"MPC để kéo về, nhưng MSH trung gian không thể lưu trữ thông điệp này với MPC"
+" đó."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred during the decompression."
-msgstr ""
+msgstr "Đã xảy ra lỗi trong quá trình giải nén."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An error occurred while decompressing the reassembled message."
 msgstr ""
+"Đã xảy ra lỗi trong quá trình giải nén thông điệp sau khi được ghép lại."
 
 #. module: account_peppol
 #. odoo-python
@@ -461,7 +495,7 @@ msgstr ""
 msgid ""
 "An incoming message fragment has a a value greater than the known "
 "FragmentCount."
-msgstr ""
+msgstr "Một đoạn tin đến có giá trị lớn hơn FragmentCount đã biết."
 
 #. module: account_peppol
 #. odoo-python
@@ -480,7 +514,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An internal error occurred"
-msgstr ""
+msgstr "Đã xảy ra lỗi nội bộ"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -605,7 +639,7 @@ msgstr "Cần có email và số điện thoại liên hệ."
 msgid ""
 "Could not find an XSD with which to validate the document with identifier "
 "\"%s\"."
-msgstr ""
+msgstr "Không tìm thấy XSD để xác thực tài liệu có định danh \"%s\"."
 
 #. module: account_peppol
 #: model:ir.model,website_form_label:account_peppol.model_res_partner
@@ -835,6 +869,8 @@ msgid ""
 "Message properties were present in the fragment SOAP header that were not "
 "specified in %s"
 msgstr ""
+"Có các thuộc tính thông điệp xuất hiện trong phần header SOAP của đoạn tin "
+"mà không được chỉ định trong %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_migration_key
@@ -857,18 +893,20 @@ msgid ""
 "More time than %s has passed since the first fragment was received but not "
 "all other fragments are received."
 msgstr ""
+"Đã quá %s kể từ khi đoạn tin đầu tiên được nhận, nhưng chưa nhận đủ các đoạn"
+" tin còn lại."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No UBL document was provided to the Peppol Outbound Service."
-msgstr ""
+msgstr "Không có tài liệu UBL nào được cung cấp cho Dịch vụ Xuất Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
-msgstr ""
+msgstr "Không tìm thấy endpoint người dùng AS4 nào hợp lệ."
 
 #. module: account_peppol
 #. odoo-python
@@ -877,6 +915,7 @@ msgid ""
 "Not enough disk space available to store all (expected) fragments of the "
 "group."
 msgstr ""
+"Không đủ dung lượng đĩa để lưu trữ tất cả các đoạn tin (dự kiến) của nhóm."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__not_valid
@@ -896,7 +935,7 @@ msgstr "Chưa được xác minh"
 #. module: account_peppol
 #: model:mail.template,description:account_peppol.mail_template_peppol_registration
 msgid "Notification email for peppol registration state update"
-msgstr ""
+msgstr "Email thông báo cập nhật trạng thái đăng ký Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -973,7 +1012,7 @@ msgstr "PEPPOL: cập nhật trạng thái đối tượng tham gia"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "PEPPOL: webhook keep alive"
-msgstr ""
+msgstr "PEPPOL: webhook vẫn hoạt động"
 
 #. module: account_peppol
 #. odoo-python
@@ -995,7 +1034,7 @@ msgstr "Địa chỉ Peppol cần được cung cấp."
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_company__peppol_can_send
 msgid "Peppol Can Send"
-msgstr ""
+msgstr "Peppol có thể gửi"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_peppol_config_wizard
@@ -1017,6 +1056,8 @@ msgid ""
 "Peppol Error [code=%(error_code)s]: %(error_subject)s\n"
 "%(error_message)s"
 msgstr ""
+"Lỗi Peppol [code=%(error_code)s]: %(error_subject)s\n"
+"%(error_message)s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_registration__peppol_external_provider
@@ -1100,7 +1141,7 @@ msgstr "Cảnh báo Peppol"
 #. module: account_peppol
 #: model:mail.template,name:account_peppol.mail_template_peppol_registration
 msgid "Peppol: Registration update"
-msgstr ""
+msgstr "Peppol: Cập nhật đăng ký"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1137,6 +1178,8 @@ msgstr "Vui lòng cài đặt danh bạ."
 msgid ""
 "Please set a journal for Peppol invoices on %s before receiving documents."
 msgstr ""
+"Vui lòng thiết lập sổ nhật ký cho hóa đơn Peppol trên %s trước khi nhận tài "
+"liệu."
 
 #. module: account_peppol
 #. odoo-python
@@ -1172,6 +1215,8 @@ msgid ""
 "Proxy error, please contact Odoo (missing \"%s\" - please make sure that it "
 "was loaded from the configuration panel)"
 msgstr ""
+"Lỗi proxy, vui lòng liên hệ Odoo (thiếu \"%s\" - hãy chắc chắn rằng nó đã "
+"được tải từ bảng cấu hình)."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__to_send
@@ -1270,6 +1315,9 @@ msgid ""
 "operational, or the reliability state associated with this message sequence "
 "is not valid."
 msgstr ""
+"Một số chức năng độ tin cậy do phân hệ Độ tin cậy triển khai không hoạt "
+"động, hoặc trạng thái độ tin cậy liên quan đến chuỗi thông điệp này không "
+"hợp lệ."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1284,7 +1332,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Something went wrong with your request"
-msgstr ""
+msgstr "Đã gặp sự cố với yêu cầu của bạn."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1313,6 +1361,8 @@ msgid ""
 "The MSH is experiencing temporary or permanent failure in trying to open a "
 "transport connection with a remote MSH."
 msgstr ""
+"MSH đang gặp sự cố tạm thời hoặc vĩnh viễn khi cố gắng thiết lập kết nối vận"
+" chuyển với MSH từ xa."
 
 #. module: account_peppol
 #. odoo-python
@@ -1322,6 +1372,8 @@ msgid ""
 " is not contained within the ebMS Message, as identified by a PartInfo/href "
 "URI)."
 msgstr ""
+"MSH không thể giải quyết tham chiếu payload bên ngoài (tức là một phần không"
+" nằm trong thông điệp ebMS, được xác định bởi URI PartInfo/href)."
 
 #. module: account_peppol
 #. odoo-python
@@ -1330,18 +1382,20 @@ msgid ""
 "The Peppol Participant DNS lookup resulted in an URL address that does not "
 "belong to this server."
 msgstr ""
+"Kết quả tra cứu DNS của Người dùng Peppol trả về một địa chỉ URL không thuộc"
+" về máy chủ này."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant cannot receive this document type."
-msgstr ""
+msgstr "Người dùng Peppol không thể nhận loại tài liệu này."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The Peppol Participant certificate is invalid."
-msgstr ""
+msgstr "Chứng chỉ Người dùng Peppol không hợp lệ."
 
 #. module: account_peppol
 #. odoo-python
@@ -1350,6 +1404,8 @@ msgid ""
 "The Peppol Participant service group found on his Service Metadata Provider "
 "is invalid."
 msgstr ""
+"Nhóm dịch vụ Người dùng Peppol được tìm thấy trên Nhà cung cấp Siêu dữ liệu "
+"Dịch vụ của nó không hợp lệ."
 
 #. module: account_peppol
 #. odoo-python
@@ -1370,30 +1426,34 @@ msgid ""
 "The Service Metadata Publisher associated to this participant is not "
 "reachable. url: %s"
 msgstr ""
+"Không thể truy cập được Nhà xuất bản Siêu dữ liệu Dịch vụ liên kết với người"
+" dùng này. URL: %s"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The UBL document provided to the Peppol Outbound Service is malformed."
 msgstr ""
+"Tài liệu UBL được cung cấp cho Dịch vụ Xuất Peppol có định dạng không hợp "
+"lệ."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document could not be canonicalized."
-msgstr ""
+msgstr "Tài liệu XML không thể được chuẩn hóa."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the XSD Schema."
-msgstr ""
+msgstr "Tài liệu XML không hợp lệ theo chuẩn XSD Schema."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The XML document is not valid according to the schematron."
-msgstr ""
+msgstr "Tài liệu XML không hợp lệ theo quy tắc schematron."
 
 #. module: account_peppol
 #. odoo-python
@@ -1405,13 +1465,13 @@ msgstr "Tài liệu không thể được tìm thấy"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be sent to the Peppol Participant."
-msgstr ""
+msgstr "Không thể gửi tài liệu đến Người dùng Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The document could not be validated."
-msgstr ""
+msgstr "Không thể xác thực tài liệu."
 
 #. module: account_peppol
 #. odoo-python
@@ -1432,6 +1492,8 @@ msgid ""
 "The eb3:Message header copied to the fragment header does not match the "
 "eb3:Message header in the reassembled source message."
 msgstr ""
+"Phần header eb3:Message được sao chép vào header đoạn tin không khớp với "
+"phần header eb3:Message trong thông điệp gốc sau khi được ghép lại."
 
 #. module: account_peppol
 #. odoo-python
@@ -1440,6 +1502,8 @@ msgid ""
 "The ebMS header is either not well formed as an XML document, or does not "
 "conform to the ebMS packaging rules."
 msgstr ""
+"Phần header ebMS không được định dạng đúng dưới dạng tài liệu XML hoặc không"
+" tuân thủ các quy tắc tạo gói của ebMS."
 
 #. module: account_peppol
 #. odoo-python
@@ -1449,6 +1513,8 @@ msgid ""
 "the MSH is not compatible with the expected content, based on the associated"
 " P-Mode."
 msgstr ""
+"Header ebMS hoặc một header mong đợi khác (VD: độ tin cậy, bảo mật) cho MSH "
+"không tương thích với nội dung dự kiến, dựa trên P-Mode liên quan."
 
 #. module: account_peppol
 #. odoo-python
@@ -1457,6 +1523,8 @@ msgid ""
 "The encrypted data reference the Security header intended for the \"ebms\" "
 "SOAP actor could not be decrypted by the Security Module."
 msgstr ""
+"Dữ liệu đã mã hóa tham chiếu đến phần header Bảo mật dành cho tác nhân SOAP "
+"\"ebms\" không thể giải mã được bởi phân hệ Bảo mật."
 
 #. module: account_peppol
 #. odoo-python
@@ -1489,20 +1557,20 @@ msgid ""
 " or the SOAP Body is not empty."
 msgstr ""
 "Thuộc tính href không tham chiếu đến một phần dữ liệu MIME hợp lệ, các phần "
-"MIME ngoài phần header đoạn  và một phần dữ liệu đã được thêm vào trong "
+"MIME ngoài phần header đoạn tin và một phần dữ liệu đã được thêm vào trong "
 "thông điệp, hoặc phần thân SOAP không rỗng."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The incoming message could not be decompressed."
-msgstr ""
+msgstr "Thông điệp đến không thể được giải nén."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The message does not comply with the AS4 policy."
-msgstr ""
+msgstr "Thông điệp không tuân thủ chính sách AS4."
 
 #. module: account_peppol
 #. odoo-python
@@ -1518,6 +1586,9 @@ msgid ""
 "scope or other security policy-level requirements or agreements were not "
 "satisfied."
 msgstr ""
+"Bộ xử lý xác định rằng phương thức bảo mật, tham số, phạm vi hoặc các yêu "
+"cầu hay thỏa thuận ở cấp chính sách bảo mật của thông điệp không được đáp "
+"ứng."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
@@ -1533,12 +1604,14 @@ msgid ""
 "The signature in the Security header intended for the \"ebms\" SOAP actor, "
 "could not be validated by the Security module."
 msgstr ""
+"Chữ ký trong phần header Bảo mật dành cho tác nhân SOAP \"ebms\" không thể "
+"được phân hệ Bảo mật xác thực."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "The size of the data part in a fragment message is greater than %s"
-msgstr ""
+msgstr "Kích thước phần dữ liệu trong một đoạn tin lớn hơn %s"
 
 #. module: account_peppol
 #. odoo-python
@@ -1547,6 +1620,7 @@ msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
 msgstr ""
+"Cấu trúc của một gói nhận được không tuân thủ theo các quy tắc tạo gói."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1560,31 +1634,31 @@ msgstr "ID duy nhất định danh người dùng này, thường là vat"
 msgid ""
 "The use of MIME is not consistent with the required usage in this "
 "specification."
-msgstr ""
+msgstr "Việc sử dụng MIME không phù hợp với yêu cầu sử dụng trong đặc tả này."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "There is no message available for pulling from this MPC at this moment."
-msgstr ""
+msgstr "Hiện tại không có thông điệp nào có thể kéo từ MPC này."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
 msgid "There was an error while sending this invoice via Peppol."
-msgstr ""
+msgstr "Đã xảy ra lỗi khi gửi hóa đơn này qua Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the Peppol Request"
-msgstr ""
+msgstr "Đã xảy ra lỗi với Yêu cầu Peppol."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an error with the incoming message."
-msgstr ""
+msgstr "Đã xảy ra lỗi với thông điệp đến."
 
 #. module: account_peppol
 #. odoo-python
@@ -1592,24 +1666,24 @@ msgstr ""
 msgid ""
 "There was an issue with the Hermes Migration Token Collection Interface "
 "(MTCI)."
-msgstr ""
+msgstr "Đã xảy ra sự cố với Giao diện Thu thập Token Di chuyển Hermes (MTCI)."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "There was an issue with the Peppol Participant."
-msgstr ""
+msgstr "Đã xảy ra lỗi với Người dùng Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
-msgstr ""
+msgstr "Hoá đơn này cũng đã được"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "This user is not registered on our Access Point."
-msgstr ""
+msgstr "Người dùng này chưa được đăng ký trên Điểm truy cập của chúng tôi."
 
 #. module: account_peppol
 #. odoo-python
@@ -1618,6 +1692,9 @@ msgid ""
 "This user's is not a Peppol User. The proxy_type associated must be "
 "\"peppol\". This is required to create a peppol participant."
 msgstr ""
+"Người dùng này không phải là người dùng Peppol. Trường proxy_type liên quan "
+"phải được đặt là \"peppol\". Đây là yêu cầu bắt buộc để tạo một thành viên "
+"Peppol."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1636,13 +1713,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unable to verify the digest value."
-msgstr ""
+msgstr "Không thể xác minh giá trị băm."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unexpected end of MIME multipart message."
-msgstr ""
+msgstr "Thông điệp MIME đa phần kết thúc bất ngờ."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_peppol_registration__peppol_endpoint
@@ -1659,7 +1736,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Unknown Peppol Error: %s"
-msgstr ""
+msgstr "Lỗi Peppol không xác định: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__peppol_verification_state__valid
@@ -1700,7 +1777,7 @@ msgstr ""
 #. module: account_peppol
 #: model:mail.template,subject:account_peppol.mail_template_peppol_registration
 msgid "Welcome to Peppol"
-msgstr ""
+msgstr "Chào mừng bạn đến với Peppol"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1773,7 +1850,7 @@ msgstr "Bạn có thể gửi hóa đơn này qua Peppol theo phương thức đ
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "You don't have enough credit"
-msgstr ""
+msgstr "Bạn không có đủ tín dụng"
 
 #. module: account_peppol
 #. odoo-python
@@ -1782,6 +1859,9 @@ msgid ""
 "You have reached the limit of documents you can send today. Retry later. "
 "Please contact the support if you think you need to increase that limit."
 msgstr ""
+"Bạn đã đạt đến giới hạn số lượng tài liệu có thể gửi hôm nay. Vui lòng thử "
+"lại sau. Nếu bạn cho rằng mình cần tăng giới hạn này, hãy liên hệ với bộ "
+"phận hỗ trợ."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1806,6 +1886,8 @@ msgid ""
 "Your Peppol registration will be activated soon. You can already send "
 "invoices."
 msgstr ""
+"Đăng ký Peppol của bạn sẽ sớm được kích hoạt. Bạn đã có thể gửi hóa đơn ngay"
+" bây giờ."
 
 #. module: account_peppol
 #. odoo-python
@@ -1814,6 +1896,8 @@ msgid ""
 "Your company is already registered on an Access Point (%s) for receiving "
 "invoices. We will register you on Odoo as a sender only."
 msgstr ""
+"Công ty của bạn đã được đăng ký trên một Điểm truy cập (%s) để nhận hóa đơn."
+" Chúng tôi sẽ chỉ đăng ký bạn trên Odoo với tư cách là bên gửi."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
@@ -1824,7 +1908,7 @@ msgstr "Endpoint của bạn"
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your identification has not been approved for this action yet"
-msgstr ""
+msgstr "Thông tin nhận dạng của bạn chưa được phê duyệt cho tác vụ này."
 
 #. module: account_peppol
 #. odoo-python
@@ -1855,7 +1939,7 @@ msgstr "Đăng ký của bạn sẽ được kích hoạt trong vòng một ngà
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "Your request is still being processed."
-msgstr ""
+msgstr "Yêu cầu của bạn vẫn đang được xử lý."
 
 #. module: account_peppol
 #. odoo-python
@@ -1867,19 +1951,19 @@ msgstr "bởi Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via Peppol"
-msgstr ""
+msgstr "không thể gửi được qua Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via Peppol"
-msgstr ""
+msgstr "được gửi qua Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
-msgstr ""
+msgstr "để gửi hoá đơn, nhưng hoá đơn này"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
-msgstr ""
+msgstr "sử dụng"

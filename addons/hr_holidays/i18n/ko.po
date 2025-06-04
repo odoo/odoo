@@ -33,6 +33,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_empty_folder\">\n"
+"                    아직 잔여 일수가 없습니다!\n"
+"                </p>\n"
+"                <p>\n"
+"                    <a type=\"action\" class=\"text-link\" name=\"%d\">휴가 배정 작업</a>을 시작할까요?\n"
+"                </p>\n"
+"            "
 
 #. module: hr_holidays
 #. odoo-python
@@ -386,6 +394,12 @@ msgid ""
 "                    from taking days off during critical periods.\n"
 "                </span>"
 msgstr ""
+"<span>\n"
+"                    필수 근무 기간을 설정해두면 중요한 기간 동안에는\n"
+"                </span>\n"
+"                <span>\n"
+"                    직원들이 휴가 사용을 지양하도록 할 수 있습니다.\n"
+"                </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -431,7 +445,7 @@ msgstr "직원의 연차, 병가, 승인 상태를 추적할 수 있는 좋은 �
 msgid ""
 "A great way to keep track on employee’s time off, sick days, and approval "
 "status."
-msgstr ""
+msgstr "직원의 휴가, 병가 및 승인 상태를 관리할 수 있는 좋은 방법입니다."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -2877,7 +2891,7 @@ msgstr "이 발생 계획에 대한 규칙이 아직 설정되어 있지 않습�
 msgid ""
 "Nobody here ? All of the people you're looking for will be working at that "
 "time."
-msgstr ""
+msgstr "검색이 되지 않나요? 검색 대상이 모두 해당 시간대에 근무 중입니다."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -3036,7 +3050,7 @@ msgstr "한정"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "Only a Time Off Officer can change the state of a leave in the past."
-msgstr ""
+msgstr "휴가 담당자만 과거의 휴가 상태를 변경할 권한이 있습니다."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4357,7 +4371,7 @@ msgstr "까지"
 msgid ""
 "Use accrual plans to give determined amount of time following the rules you "
 "define"
-msgstr ""
+msgstr "적립 계획을 활용하여 지정한 규칙에 따라 정해진 시간을 부여합니다."
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_res_users
@@ -4620,7 +4634,7 @@ msgstr "휴무일에는 휴가를 요청할 수 없습니다."
 msgid ""
 "You can create a new allocation or follow the approval status of the current"
 " ones."
-msgstr ""
+msgstr "새로운 배정 작업을 생성하거나 현재 배정 건의 승인 상태를 확인할 수 있습니다."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__accrual_validity_count
@@ -4640,7 +4654,7 @@ msgstr "이미 지난 발생 휴가는 누적을 시작할 수 없습니다."
 msgid ""
 "You can only cancel your own leave. You can cancel a leave only if this "
 "leave is approved, validated or refused."
-msgstr ""
+msgstr "휴가 취소는 본인의 휴가만 취소할 수 있습니다. 휴가를 취소하려면 휴가에 대해 승인, 확인 또는 반려가 완료되어야 합니다."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4849,7 +4863,7 @@ msgid ""
 "Your frequency selection is not correct: please choose a frequency between "
 "theses options:Hourly, Daily, Weekly, Twice a month, Monthly, Twice a year "
 "and Yearly."
-msgstr ""
+msgstr "빈도가 잘못 선택되었습니다. 다음 중에서 빈도를 선택하세요: 매시간, 매일, 매주, 격주, 매월, 매년"
 
 #. module: hr_holidays
 #. odoo-python

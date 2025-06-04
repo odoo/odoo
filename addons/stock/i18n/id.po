@@ -52,6 +52,21 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Bila lebih dari satu produk menggunakan awalan yang sama, mereka memiliki urutan yang sama, bila tidak urutan akan khusus ke produk.\n"
+"\n"
+"    * Legenda (untuk awalan):\n"
+"    - Tahun Saat ini dengan Abad: %(year)s\n"
+"    - Tahun Saat ini tanpa Abad: %(y)s\n"
+"    - Bulan: %(month)s\n"
+"    - Hari: %(day)s\n"
+"    - Hari dalam Tahun: %(doy)s\n"
+"    - Minggu dalam Tahun: %(woy)s\n"
+"    - Hari dalam Minggu (0:Senin): %(weekday)s\n"
+"    - Jam 00->24: %(h24)s\n"
+"    - Jam 00->12: %(h12)s\n"
+"    - Menit: %(min)s\n"
+"    - Detik: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -418,7 +433,7 @@ msgstr "1 Minggu"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
 msgid "1.00"
-msgstr ""
+msgstr "1.00"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -676,7 +691,7 @@ msgstr "<span class=\"o_stat_text\">NomorLot/Seri</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Nomor Lot/Seri</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -756,11 +771,13 @@ msgid ""
 "<span class=\"text-muted small\"> Available</span>\n"
 "                            <span> / </span>"
 msgstr ""
+"<span class=\"text-muted small\"> Tersedia</span>\n"
+"                            <span> / </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\"> Di Tangan</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -863,7 +880,7 @@ msgstr "<strong>Dari</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Instructions:</strong>"
-msgstr ""
+msgstr "<strong>Instruksi:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -2449,7 +2466,7 @@ msgstr "Khusus"
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "Custom Lot/Serial"
-msgstr ""
+msgstr "Lot/Seri Kustom"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -3200,6 +3217,8 @@ msgstr "Tampilkan Nomor Seri & Lot di Slip Pengirima"
 msgid ""
 "Display instructions tailored to the customer or vendor on stock operations."
 msgstr ""
+"Tampilkan instruksi yang disesuaikan untuk pelanggan atau vendor di operasi "
+"stok."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
@@ -4355,7 +4374,7 @@ msgstr "Instal Barcode"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Instructions on the Stock Operations"
-msgstr ""
+msgstr "Instruksi di Operasi Stok"
 
 #. module: stock
 #. odoo-python
@@ -4427,6 +4446,8 @@ msgid ""
 "Internal instructions for the partner or its parent company as set by the "
 "user."
 msgstr ""
+"Instruksi internal untuk partner atau perusahaan induknya sesuai penetapan "
+"oleh user."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
@@ -5619,7 +5640,7 @@ msgstr "Tanggal yang Diharapkan Berikutnya"
 #: model:ir.model.fields,field_description:stock.field_product_product__next_serial
 #: model:ir.model.fields,field_description:stock.field_product_template__next_serial
 msgid "Next Serial"
-msgstr ""
+msgstr "Seri Berikutnya"
 
 #. module: stock
 #. odoo-python
@@ -5659,6 +5680,8 @@ msgid ""
 "No Stock On Hand. This analysis gives you an overview of the current stock "
 "level of your products."
 msgstr ""
+"Tidak Ada Stok Di Tangan. Analisis ini memberikan Anda gambaran umum level "
+"stok saat ini untuk produk-produk Anda."
 
 #. module: stock
 #. odoo-javascript
@@ -6487,7 +6510,7 @@ msgstr "Alamat Rekanan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Instruksi Spesifik Partner"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6539,7 +6562,7 @@ msgstr "Picking"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
 msgid "Picking Instructions"
-msgstr ""
+msgstr "Instruksi Pickin"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -8289,7 +8312,7 @@ msgstr "Nomor-nomor seri"
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,field_description:stock.field_product_template__lot_sequence_id
 msgid "Serial/Lot Numbers Sequence"
-msgstr ""
+msgstr "Urutan Nomor Seri/Lot"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -9007,6 +9030,8 @@ msgid ""
 "Technical Field: The Ir.Sequence record that is used to generate serial/lot "
 "numbers for this product"
 msgstr ""
+"Field Teknis: Rekaman Ir.Sequence yang digunakan untuk membuat nomor "
+"seri/lot untuk produk ini"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -11409,7 +11434,7 @@ msgstr "contoh Stok Cadangan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "e.g. The delivery area is at the back of the building."
-msgstr ""
+msgstr "contoh. Areap engiriman di belakang bangunan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view

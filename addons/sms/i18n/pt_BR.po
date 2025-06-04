@@ -139,18 +139,15 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span invisible=\"sms_method != 'sms'\">\n"
-"                                    The message will be sent as an SMS to the recipients of the template\n"
-"                                    and will not appear in the messaging history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != 'note'\">\n"
-"                                    The SMS will not be sent, it will only be posted as an\n"
-"                                    internal note in the messaging history.\n"
-"                                </span>\n"
-"                                <span invisible=\"sms_method != 'comment'\">\n"
-"                                    The SMS will be sent as an SMS to the recipients of the\n"
-"                                    template and it will also be posted as an internal note\n"
-"                                    in the messaging history.\n"
-"                                </span>"
+"A mensagem será enviada como um SMS para os destinatários do modelo\n"
+"e não aparecerá no histórico de mensagens.\n"
+"</span>\n"
+"<span invisible=\"sms_method != 'note'\">\n"
+"O SMS não será enviado, ele será publicado apenas como uma nota interna no histórico de mensagens.\n"
+"</span>\n"
+"<span invisible=\"sms_method != 'comment'\">\n"
+"O SMS será enviado como um SMS para os destinatários do modelo e também será postado como uma nota interna no histórico de mensagens.\n"
+"</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1025,7 +1022,7 @@ msgstr "SMS (sem anotação)"
 #. odoo-javascript
 #: code:addons/sms/static/src/thread/message_patch.js:0
 msgid "SMS Account"
-msgstr "SMS Account"
+msgstr "Conta de SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_account_phone

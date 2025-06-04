@@ -1713,6 +1713,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"لا يمكن جدولة فترة زمنية خارج النطاق الزمني المحدد للفعالية.\n"
+"\n"
+"الفعالية:\t\t%(event_start)s - %(event_end)s\n"
+"الفترة الزمنية:\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -4292,6 +4296,8 @@ msgid ""
 "The following slots cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"لا يمكن حذف الفترات الزمنية التالية بينما هناك تسجيل واحد أو أكثر مرتبط بها:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -4320,6 +4326,8 @@ msgid ""
 "There are more registrations than this limit, the event will be sold out and"
 " the extra registrations will remain."
 msgstr ""
+"إذا كان عدد المسجلين أكثر من هذا الحد، سيتم تعيين علامة على الفعالية كـ "
+"\"نفدت الكمية\" وستبقى التسجيلات الإضافية. "
 
 #. module: event
 #. odoo-python

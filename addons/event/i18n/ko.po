@@ -1712,6 +1712,10 @@ msgid ""
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"행사 시간 범위를 벗어나는 시간대 슬롯은 예약할 수 없습니다.\n"
+"\n"
+"행사:\t\t%(event_start)s - %(event_end)s\n"
+"슬롯:\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
@@ -4261,7 +4265,7 @@ msgstr "행사에 잔여 좌석이 없는 경우에는 매진 처리됩니다. �
 msgid ""
 "The following slots cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
-msgstr ""
+msgstr "다음의 슬롯은 하나 이상의 등록에 연결되어 있으므로 삭제할 수 없습니다.- %s"
 
 #. module: event
 #. odoo-python
@@ -4287,7 +4291,7 @@ msgstr "중지일은 시작일보다 이전 날짜가 될 수 없습니다. %(ti
 msgid ""
 "There are more registrations than this limit, the event will be sold out and"
 " the extra registrations will remain."
-msgstr ""
+msgstr "등록 건수가 제한 수량을 초과할 경우, 행사는 매진 처리되며 추가 등록은 보류됩니다."
 
 #. module: event
 #. odoo-python

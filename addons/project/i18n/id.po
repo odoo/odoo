@@ -235,6 +235,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                Halo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Halo,<br/><br/>\n"
+"            </t>\n"
+"            Mohon ambil sedikit waktu untuk menilai layanan kami terkait tugas <strong t-out=\"object.name or ''\">Planning dan budget</strong>\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                yang ditugaskan ke <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
+"                    <strong>Beritahu kami perasaan Anda mengenai layanan kami</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klik salah satu emoji)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/src/img/rating_5.png\" title=\"Happy\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Kami menghargai feedback Anda. Feedback Anda membantu kami untuk terus menerus berkembang.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Survei kepuasan ini telah dikirim karena tugas Anda telah dipindahkan ke tahap <b t-out=\"object.stage_id.name or ''\">Sedang berlangsung</b></span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Survei kepuasan ini dikirim <b t-out=\"object.project_id.rating_status_period or ''\">setiap minggu</b> selama tugas ini dalam tahap <b t-out=\"object.stage_id.name or ''\">Sedang berlangsung</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td><br/>Salam hormat,</td></tr>\n"
+"        <tr><td>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">PerusahaanAnda</t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"opacity: 0.5;\">\n"
+"            <t t-out=\"object.project_id.company_id.phone or ''\">1 650-123-4567</t>\n"
+"            <t t-if=\"object.project_id.company_id.email\">\n"
+"                | <a t-attf-href=\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.email or ''\">info@perusahaanAnda.com</a>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.company_id.website\">\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"object.project_id.company_id.website or ''\">http://www.contoh.com</a>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -422,7 +497,7 @@ msgstr "<strong>Milestone:</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<strong>Priority:</strong>"
-msgstr ""
+msgstr "<strong>Prioritas:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -591,7 +666,7 @@ msgstr "Tambahkan Milestone"
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.xml:0
 msgid "Add Sub-task"
-msgstr ""
+msgstr "Tambahkan Sub-Tugas"
 
 #. module: project
 #. odoo-javascript
@@ -1201,7 +1276,7 @@ msgstr "Perusahaan"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
 msgid "Complete"
-msgstr ""
+msgstr "Selesai"
 
 #. module: project
 #: model:ir.model,name:project.model_res_config_settings
@@ -1276,7 +1351,7 @@ msgstr "Konversikan menjadi Task/Sub-Task"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_convert_to_template
 msgid "Convert to Template"
-msgstr ""
+msgstr "Konversikan menjadi Templat"
 
 #. module: project
 #. odoo-javascript
@@ -1940,7 +2015,7 @@ msgstr "Ikuti"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 msgid "Follow and comment on tasks in your projects"
-msgstr ""
+msgstr "Ikuti dan komentar pada tugas di project Anda"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
@@ -2863,7 +2938,7 @@ msgstr "Tidak ada tag yang ditemukan. Ayo buat baru!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_task_templates_action
 msgid "No task templates found. Let's create one!"
-msgstr ""
+msgstr "Tidak ada templat tugas yang ditemukan. Ayo buat baru!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3240,7 +3315,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Private tasks cannot be converted into templates"
-msgstr ""
+msgstr "Tugas-tugas pribadi tidak dapat dikonversi menjadi templat"
 
 #. module: project
 #. odoo-javascript
@@ -3405,13 +3480,13 @@ msgstr "Kegiatan-kegiatan project"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s"
-msgstr ""
+msgstr "Project: %(project_name)s"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Project: %(project_name)s, Stage: %(stage_name)s"
-msgstr ""
+msgstr "Project: %(project_name)s, Tahap: %(stage_name)s"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -3792,6 +3867,8 @@ msgid ""
 "Save time by using task templates with pre-filled details.<br>\n"
 "                    Standardize workflows and ensure consistency across tasks."
 msgstr ""
+"Hemat waktu dengan menggunakan templat tugas dengan rincian yang sudah diisi sebelumnya.<br>\n"
+"                    Standardisasikan alur kerja dan pastikan konsisten di seluruh tugas-tugas."
 
 #. module: project
 #. odoo-javascript
@@ -4296,7 +4373,7 @@ msgstr "Tahap Task"
 #: model:ir.actions.act_window,name:project.project_task_templates_action
 #: model:ir.ui.menu,name:project.project_menu_config_task_templates
 msgid "Task Templates"
-msgstr ""
+msgstr "Templat Tugas"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -4341,7 +4418,7 @@ msgstr "Task dibatalkan"
 #: code:addons/project/models/project_task.py:0
 #: code:addons/project/static/src/actions/client_actions.js:0
 msgid "Task converted to template"
-msgstr ""
+msgstr "Tugas dikonversikan menjadi templat"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_done
@@ -4426,7 +4503,7 @@ msgstr "Template"
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Template converted back to regular task"
-msgstr ""
+msgstr "Templat dikonversikan kembali menjadi tugas reguler"
 
 #. module: project
 #. odoo-javascript
@@ -4710,6 +4787,8 @@ msgid ""
 "This task is already a template. Do you want to convert it back to a regular"
 " task?"
 msgstr ""
+"Tugas ini sudah merupakan templat. Apakah Anda ingin mengonversikannya "
+"menjadi tugas reguler?"
 
 #. module: project
 #. odoo-javascript
@@ -5234,7 +5313,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_create/subtask_kanban_create.js:0
 msgid "Write a task name"
-msgstr ""
+msgstr "Tulis nama tugas"
 
 #. module: project
 #. odoo-javascript
@@ -5607,7 +5686,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "{{0}} Milestones reached out of {{1}}"
-msgstr ""
+msgstr "{{0}} Milestone dicapai dari {{1}}"
 
 #. module: project
 #. odoo-python
