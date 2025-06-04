@@ -419,6 +419,7 @@
                                 class="o_task_user_field"
                                 options="{'no_open': True, 'no_quick_create': True}"
                                 widget="many2many_avatar_user"/>
+                            <field name="role_ids" invisible="not (is_template and has_project_template)" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" placeholder="Assign at project creation"/>
                             <field name="priority" widget="priority_switch"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" context="{'project_id': project_id}"/>
                         </group>
@@ -1320,6 +1321,9 @@
                     <attribute name="required">is_template</attribute>
                 </field>
                 <field name="partner_id" position="replace"/>
+                <field name="user_ids" position="after">
+                    <field name="role_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" invisible="not (is_template and has_project_template)"/>
+                </field>
             </field>
         </record>
 
@@ -1348,6 +1352,9 @@
                 <filter name="unassigned" position="after">
                     <filter name="task_templates" string="Task Templates" domain="[('has_project_template', '=', False)]" invisible="1"/>
                 </filter>
+                <field name="user_ids" position="after">
+                   <field name="role_ids"/>
+                </field>
             </field>
         </record>
 

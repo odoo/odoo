@@ -284,7 +284,7 @@ class ProjectProject(models.Model):
         action['context']['allow_timesheets'] = self.allow_timesheets
         return action
 
-    def action_create_from_template(self, values=None):
-        project = super().action_create_from_template(values)
+    def action_create_from_template(self, values=None, role_to_users_mapping=None):
+        project = super().action_create_from_template(values, role_to_users_mapping)
         project._create_analytic_account()
         return project
