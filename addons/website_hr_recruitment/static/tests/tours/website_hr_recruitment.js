@@ -101,7 +101,7 @@ registerWebsitePreviewTour('website_hr_recruitment_tour_edit_form', {
     run: "click",
 }, {
     content: 'Add a new field',
-    trigger: 'we-button[data-add-field]',
+    trigger: 'div[data-container-title="Field"] button.o_we_bg_brand_primary',
     run: "click",
 },
 ...clickOnSave(),
@@ -154,6 +154,6 @@ registerWebsitePreviewTour('model_required_field_should_have_action_name', {
     run: "click",
 }, {
     content: "Select model-required field",
-    trigger: "we-customizeblock-options we-alert > span:not(:contains(undefined))",
+    trigger: ".options-container .alert > span:not(:contains(undefined))",
 }
 ]);
