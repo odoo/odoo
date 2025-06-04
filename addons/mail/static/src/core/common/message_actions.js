@@ -208,8 +208,8 @@ function transformAction(component, id, action) {
 export const messageActionsInternal = {
     condition(component, id, action) {
         return action.condition(component);
-    },
-};
+    }
+}
 
 export function useMessageActions() {
     const component = useComponent();

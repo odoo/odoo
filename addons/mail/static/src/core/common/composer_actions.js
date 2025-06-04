@@ -199,8 +199,8 @@ export const composerActionsInternal = {
         return typeof action.condition === "function"
             ? action.condition(component)
             : action.condition;
-    },
-};
+    }
+}
 
 export function useComposerActions() {
     const component = useComponent();
