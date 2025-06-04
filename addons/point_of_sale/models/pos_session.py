@@ -164,6 +164,7 @@ class PosSession(models.Model):
         data[0]['_server_version'] = exp_version()
         data[0]['_base_url'] = self.get_base_url()
         data[0]['_data_server_date'] = server_date or self.env.cr.now()
+        data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         return data
@@ -1823,7 +1824,7 @@ class PosSession(models.Model):
             for session in sessions
         ]
 
-        self.env['account.bank.statement.line'].sudo().create(vals_list)
+        self.env['account.bank.statement.line'].create(vals_list)
 
     def _get_attributes_by_ptal_id(self):
         # performance trick: prefetch fields with search_fetch() and fetch()
