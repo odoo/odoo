@@ -228,3 +228,44 @@ registry.category("web_tour.tours").add("test_indexed_db_draft_order", {
             ]),
         ].flat(),
 });
+<<<<<<< 7dfbaa4315eb8c0ec09582152857c1192a28fcae
+||||||| bc3308a0647f5a39e400d5686874ed6c6fc84191
+
+registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.totalAmountContains("100"),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product", true, "1.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.receiptIsThere(),
+            ReceiptScreen.totalAmountContains("100"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_chrome_without_cash_move_permission", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            Chrome.isCashMoveButtonHidden(),
+        ].flat(),
+});
+>>>>>>> eaabe25d9cc1349892ad8f1e95071f7fd2380af2

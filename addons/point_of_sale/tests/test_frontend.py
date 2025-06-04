@@ -1049,6 +1049,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ShowTaxExcludedTour', login="pos_user")
 
+<<<<<<< 7dfbaa4315eb8c0ec09582152857c1192a28fcae
     def test_chrome_without_cash_move_permission(self):
         self.env.user.write({'group_ids': [
             Command.set(
@@ -1061,6 +1062,21 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('chrome_without_cash_move_permission', login="accountman")
 
+||||||| bc3308a0647f5a39e400d5686874ed6c6fc84191
+=======
+    def test_chrome_without_cash_move_permission(self):
+        self.env.user.write({'groups_id': [
+            Command.set(
+                [
+                    self.env.ref('base.group_user').id,
+                    self.env.ref('point_of_sale.group_pos_user').id,
+                ]
+            )
+        ]})
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_chrome_without_cash_move_permission', login='accountman')
+
+>>>>>>> eaabe25d9cc1349892ad8f1e95071f7fd2380af2
     def test_09_pos_barcodes_scan_product_packaging(self):
         pack_of_10 = self.env['uom.uom'].create({
             'name': 'Pack of 10',
