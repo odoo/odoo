@@ -459,7 +459,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 'default_template_id': test_template.id,
             }).create({})
 
-        with self.assertQueryCount(admin=55, employee=55), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=77, employee=77), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -979,7 +979,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=52, employee=51):
+        with self.assertQueryCount(admin=53, employee=52):
             record.message_post(
                 body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
@@ -997,7 +997,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         template = self.env.ref('test_mail.mail_test_container_tpl')
 
         # about 20 (19 ?) queries per additional customer group
-        with self.assertQueryCount(admin=66, employee=65):
+        with self.assertQueryCount(admin=67, employee=66):
             record.message_post_with_source(
                 template,
                 message_type='comment',
@@ -1198,7 +1198,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=62, employee=62):
+        with self.assertQueryCount(admin=63, employee=63):
             rec.write({
                 'name': 'Test2',
                 'container_id': container_id,
@@ -1231,7 +1231,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(admin=30, employee=30):
+        with self.assertQueryCount(admin=33, employee=33):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,
@@ -1522,6 +1522,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "mail.notification": [
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_1.id,
                                     "mail_message_id": message.id,
@@ -1533,6 +1534,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_2.id,
                                     "mail_message_id": message.id,
@@ -1635,6 +1637,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                             ],
                             "mail.notification": [
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_1.id,
                                     "mail_message_id": message.id,
@@ -1646,6 +1649,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     },
                                 },
                                 {
+                                    "mail_email_address": False,
                                     "failure_type": False,
                                     "id": notif_2.id,
                                     "mail_message_id": message.id,

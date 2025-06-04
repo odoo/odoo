@@ -1614,8 +1614,9 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
         # sent emails (mass mail mode)
         for test_record in test_records:
+            all_partners = new_partners + self.partner_1 + self.partner_2 + test_record.customer_id
             self.assertMailMail(
-                new_partners + self.partner_1 + self.partner_2 + test_record.customer_id,
+                all_partners,
                 'sent',
                 author=self.user_employee.partner_id,
                 email_values={
@@ -1634,7 +1635,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'is_notification': True,  # auto_delete_keep_log -> keep underlying mail.message
                     'message_type': 'email_outgoing',
                     'model': test_record._name,
-                    'notified_partner_ids': self.env['res.partner'],
+                    'notified_partner_ids': all_partners,
                     'subtype_id': self.env['mail.message.subtype'],
                     'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
@@ -1676,7 +1677,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'is_notification': False,  # no to_delete -> no keep_log
                     'message_type': 'email_outgoing',
                     'model': test_record._name,
-                    'notified_partner_ids': self.env['res.partner'],
+                    'notified_partner_ids': test_record.customer_id,
                     'recipient_ids': test_record.customer_id,
                     'subtype_id': self.env['mail.message.subtype'],
                     'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
