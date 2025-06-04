@@ -1,6 +1,19 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
+        <record id="action_res_users_my_fullpage" model="ir.actions.act_window">
+            <!-- Like action_res_users_my, but in full page -->
+            <field name="name">Change My Preferences</field>
+            <field name="res_model">res.users</field>
+            <field name="view_mode">form</field>
+            <field name="path">my-preferences</field>
+        </record>
+        <record id="action_res_users_my_fullpage_view" model="ir.actions.act_window.view">
+            <field eval="50" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_users_form_simple_modif"/>
+            <field name="act_window_id" ref="mail.action_res_users_my_fullpage"/>
+        </record>
 
         <!-- Update Preferences form !-->
         <record id="view_users_form_simple_modif_mail" model="ir.ui.view">
@@ -12,6 +25,13 @@
                     <xpath expr="//group[@name='signature']|//field[@name='signature']" position="before">
                         <group string="Discuss" name="discuss">
                             <field name="notification_type" widget="radio" readonly="0"/>
+                            <field name="outgoing_mail_server_id" invisible="1"/> <!-- Used by the mail_server_configurator_selection widget -->
+                            <span class="o_form_label" invisible="not has_external_mail_server">Outgoing Mail Server</span>
+                            <field name="outgoing_mail_server_type"
+                                nolabel="1"
+                                string="Outgoing Mail Server"
+                                widget="mail_server_configurator_selection"
+                                invisible="not has_external_mail_server"/>
                             <field name="role_ids" widget="many2many_tags" readonly="not can_edit_role"/>
                         </group>
                     </xpath>
@@ -32,6 +52,13 @@
                     <xpath expr="//group[@name='messaging']|//field[@name='signature']" position="before">
                         <group string="Discuss" name="discuss">
                             <field name="notification_type" widget="radio" invisible="share"/>
+                            <field name="outgoing_mail_server_id" invisible="1"/> <!-- Used by the mail_server_configurator_selection widget -->
+                            <span class="o_form_label" invisible="not has_external_mail_server">Outgoing Mail Server</span>
+                            <field name="outgoing_mail_server_type"
+                                nolabel="1"
+                                string="Outgoing Mail Server"
+                                widget="mail_server_configurator_selection"
+                                invisible="not has_external_mail_server"/>
                             <field name="role_ids" widget="many2many_tags" readonly="not can_edit_role"/>
                         </group>
                     </xpath>

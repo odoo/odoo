@@ -3,6 +3,7 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.addons.mail.models.mail_alias import dot_atom_text
+from odoo.exceptions import UserError
 
 
 class MailAliasDomain(models.Model):
@@ -142,6 +143,7 @@ class MailAliasDomain(models.Model):
             self._sanitize_configuration(vals)
 
         alias_domains = super().create(vals_list)
+        alias_domains._check_default_from_not_used_by_users()
 
         # alias domain init: populate companies and aliases at first creation
         if alias_domains and self.search_count([]) == len(alias_domains):
@@ -162,7 +164,20 @@ class MailAliasDomain(models.Model):
     def write(self, vals):
         """ Sanitize bounce_alias / catchall_alias / default_from """
         self._sanitize_configuration(vals)
-        return super().write(vals)
+        ret = super().write(vals)
+        self._check_default_from_not_used_by_users()
+        return ret
+
+    def _check_default_from_not_used_by_users(self):
+        """Check that the default from is not used by a personal mail servers."""
+        match_from_filter = self.env["ir.mail_server"]._match_from_filter
+        personal_mail_servers = self.env["ir.mail_server"].sudo().search([("owner_user_id", "!=", False)])
+        if any(
+            match_from_filter(e, server.from_filter)
+            for e in self.mapped("default_from_email")
+            for server in personal_mail_servers
+        ):
+            raise UserError(_("A personal mail server is using that address, you can not use it."))
 
     @api.model
     def _sanitize_configuration(self, config_values):

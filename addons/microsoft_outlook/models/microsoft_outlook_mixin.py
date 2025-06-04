@@ -23,6 +23,8 @@ class MicrosoftOutlookMixin(models.AbstractModel):
 
     _OUTLOOK_SCOPE = None
 
+    active = fields.Boolean(default=True)
+
     is_microsoft_outlook_configured = fields.Boolean('Is Outlook Credential Configured',
         compute='_compute_is_microsoft_outlook_configured')
     microsoft_outlook_refresh_token = fields.Char(string='Outlook Refresh Token',
@@ -57,12 +59,12 @@ class MicrosoftOutlookMixin(models.AbstractModel):
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
                 'response_mode': 'query',
                 # offline_access is needed to have the refresh_token
-                'scope': 'offline_access %s' % self._OUTLOOK_SCOPE,
+                'scope': f'offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
                 'state': json.dumps({
                     'model': record._name,
                     'id': record.id,
                     'csrf_token': record._get_outlook_csrf_token(),
-                })
+                }),
             }))
 
     def open_microsoft_outlook_uri(self):
@@ -74,7 +76,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         """
         self.ensure_one()
 
-        if not self.env.user.has_group('base.group_system'):
+        if not self.env.is_admin():
             raise AccessError(_('Only the administrator can link an Outlook mail server.'))
 
         if not self.is_microsoft_outlook_configured:
@@ -83,6 +85,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         return {
             'type': 'ir.actions.act_url',
             'url': self.microsoft_outlook_uri,
+            'target': 'self',
         }
 
     def _fetch_outlook_refresh_token(self, authorization_code):
@@ -129,7 +132,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             data={
                 'client_id': microsoft_outlook_client_id,
                 'client_secret': microsoft_outlook_client_secret,
-                'scope': 'offline_access %s' % self._OUTLOOK_SCOPE,
+                'scope': f'offline_access https://outlook.office.com/User.read {self._OUTLOOK_SCOPE}',
                 'redirect_uri': url_join(base_url, '/microsoft_outlook/confirm'),
                 'grant_type': grant_type,
                 **values,
