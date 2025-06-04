@@ -7,12 +7,14 @@
             t-props="textInputBaseProps"
             inputRef="inputRef"
             value="displayValue"
-            inputClasses="props.inputClasses ? `text-end ${props.inputClasses}` : 'text-end'"
+            classes="'o-hb-input-field-number justify-content-end'"
+            inputClasses="props.inputClasses ? `o-hb-input-number text-end ${props.inputClasses}` : 'o-hb-input-number text-end'"
             commit="commit"
             preview="preview"
             onKeydown.bind="onKeydown"
-            />
-        <span t-out="props.unit" />
+            >
+            <span class="o-hb-input-field-unit" t-out="props.unit"/>
+        </BuilderTextInputBase>
     </BuilderComponent>
 </t>
 
