@@ -111,15 +111,6 @@ export class Thread extends Record {
         inverse: "thread",
         onDelete: (r) => r.delete(),
     });
-    correspondentCountry = fields.One("res.country", {
-        /** @this {import("models").Thread} */
-        compute() {
-            return this.correspondent?.persona?.country_id ?? this.country_id;
-        },
-    });
-    get showCorrespondentCountry() {
-        return false;
-    }
     counter = 0;
     counter_bus_id = 0;
     /** @type {string} */
