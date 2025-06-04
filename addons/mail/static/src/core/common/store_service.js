@@ -38,10 +38,16 @@ export const addFieldsByPyModel = {
 };
 
 patch(storeInsertFns, {
-    makeContext() {
+    makeContext(store) {
+        if (!(store instanceof Store)) {
+            return super.makeContext(...arguments);
+        }
         return { pyModels: Object.values(pyToJsModels) };
     },
-    getActualModelName(ctx, pyOrJsModelName) {
+    getActualModelName(store, ctx, pyOrJsModelName) {
+        if (!(store instanceof Store)) {
+            return super.getActualModelName(...arguments);
+        }
         if (ctx.pyModels.includes(pyOrJsModelName)) {
             console.warn(
                 `store.insert() should receive the python model name instead of “${pyOrJsModelName}”.`
@@ -49,7 +55,10 @@ patch(storeInsertFns, {
         }
         return pyToJsModels[pyOrJsModelName] || pyOrJsModelName;
     },
-    getExtraFieldsFromModel(pyOrJsModelName) {
+    getExtraFieldsFromModel(store, pyOrJsModelName) {
+        if (!(store instanceof Store)) {
+            return super.getExtraFieldsFromModel(...arguments);
+        }
         return addFieldsByPyModel[pyOrJsModelName];
     },
 });
