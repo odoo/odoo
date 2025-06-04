@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.CustomersAvatarsOption">
+    <!-- Apply global avatars options to ".o_avatar". !-->
+    <BuilderRow label.translate="Avatar Count"
+    tooltip.translate="Number of avatars to display">
+    <BuilderSelect dataAttributeAction="'avatarCount'">
+            <BuilderSelectItem dataAttributeActionValue="'1'" id="'count_1'">1</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'2'" id="'count_2'">2</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'3'" id="'count_3'">3</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'4'" id="'count_4'">4</BuilderSelectItem>
+            <BuilderSelectItem dataAttributeActionValue="'5'" id="'count_5'">5</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Additional #"
+        tooltip.translate="Show an extra avatar with a custom number">
+        <BuilderCheckbox dataAttributeAction="'showAdditional'" dataAttributeActionValue="'true'" id="'show_additional'"/>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Count" level="1"
+        tooltip.translate="Number to display in the additional avatar"
+        t-if="this.isActiveItem('show_additional')">
+        <BuilderNumberInput 
+            dataAttributeAction="'additionalCount'"
+            min="1" 
+            max="9999"
+            step="1"
+            default="15" />
+    </BuilderRow>
+
+    <BuilderRow label.translate="Size">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="'o_avatar_small'">Small</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_avatar_medium'">Default</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_avatar_large'">Large</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Stacking">
+        <BuilderSelect>
+            <BuilderSelectItem classAction="''">Last on top</BuilderSelectItem>
+            <BuilderSelectItem classAction="'o_first_on_top'">First on top</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Alignment">
+        <BuilderButtonGroup>
+            <BuilderButton className="'fa fa-fw fa-align-left'" title.translate="Left" classAction="'justify-content-start'"/>
+            <BuilderButton className="'fa fa-fw fa-align-center'" title.translate="Center" classAction="'justify-content-center'"/>
+            <BuilderButton className="'fa fa-fw fa-align-right'" title.translate="Right" classAction="'flex-row-reverse text-end'"/>
+        </BuilderButtonGroup>
+    </BuilderRow>
+
+    <BuilderRow label.translate="Show Label"
+        tooltip.translate="Display a label next to the avatars">
+        <BuilderCheckbox
+            applyTo="'.s_customers_avatars_label'"
+            classAction="'d-block'"
+        />
+    </BuilderRow>
+    <BuilderContext applyTo="'.o_avatar'">
+        <BorderConfigurator withRoundCorner="false" label.translate="Border"/>
+        <BuilderRow label.translate="Roundness" tooltip.translate="Applies to all avatars" level="1">
+            <BuilderRange
+                action="'customersAvatarsRoundness'"
+                max="5"
+                displayRangeValue="false"/>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+<t t-name="website.s_customers_avatars.new_avatar">
+    <img
+        src="/web/image/website.s_company_team_image_1"
+        class="img border o_avatar rounded-5"
+        style="border-width: 3px !important; border-color: rgb(255, 255, 255) !important;"
+        alt=""
+        />
+</t>
+
+</templates>
