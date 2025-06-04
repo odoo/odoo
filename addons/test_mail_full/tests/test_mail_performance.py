@@ -1,53 +1,19 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from datetime import datetime, timedelta
 from markupsafe import Markup
 
 from odoo import Command
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
+from odoo.addons.test_mail.tests.test_performance import BaseMailPostPerformance
 from odoo.tests.common import users, warmup
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
-class FullBaseMailPerformance(BaseMailPerformance):
+class FullBaseMailPerformance(BaseMailPostPerformance):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        # users / followers
-        cls.user_emp_email = mail_new_test_user(
-            cls.env,
-            company_id=cls.user_admin.company_id.id,
-            company_ids=[(4, cls.user_admin.company_id.id)],
-            email='user.emp.email@test.example.com',
-            login='user_emp_email',
-            groups='base.group_user,base.group_partner_manager',
-            name='Emmanuel Email',
-            notification_type='email',
-            signature='--\nEmmanuel',
-        )
-        cls.user_portal = mail_new_test_user(
-            cls.env,
-            company_id=cls.user_admin.company_id.id,
-            company_ids=[(4, cls.user_admin.company_id.id)],
-            email='user.portal@test.example.com',
-            login='user_portal',
-            groups='base.group_portal',
-            name='Paul Portal',
-        )
-        cls.customers = cls.env['res.partner'].create([
-            {
-                'country_id': cls.env.ref('base.be').id,
-                'email': f'customer.full.test.{idx}@example.com',
-                'name': f'Test Full Customer {idx}',
-                'phone': f'045611111{idx}',
-            } for idx in range(5)
-        ])
-        cls.test_users = cls.user_employee + cls.user_test + cls.user_test_email + cls.user_emp_email + cls.user_portal
 
         # records
         cls.record_containers = cls.env['mail.test.container.mc'].create([
@@ -62,14 +28,31 @@ class FullBaseMailPerformance(BaseMailPerformance):
                 'name': 'Test Container 2',
             },
         ])
-        cls.record_ticket = cls.env['mail.test.ticket.mc'].create({
+        cls.record_ticket_mc = cls.env['mail.test.ticket.mc'].create({
             'email_from': 'email.from@test.example.com',
             'container_id': cls.record_containers[0].id,
             'customer_id': False,
             'name': 'Test Ticket',
-            'user_id': cls.user_emp_email.id,
+            'user_id': cls.user_follower_emp_email.id,
         })
-        cls.record_ticket.message_subscribe(cls.customers.ids + cls.user_admin.partner_id.ids + cls.user_portal.partner_id.ids)
+        cls.record_ticket_mc.message_subscribe(
+            cls.customers.ids + cls.user_admin.partner_id.ids + cls.user_follower_portal.partner_id.ids
+        )
+
+        cls.tracking_values_ids = [
+            (0, 0, {
+                'field_id': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'email_from').id,
+                'new_value_char': 'new_value',
+                'old_value_char': 'old_value',
+            }),
+            (0, 0, {
+                'field_id': cls.env['ir.model.fields']._get(cls.record_ticket._name, 'customer_id').id,
+                'new_value_char': 'New Fake',
+                'new_value_integer': 2,
+                'old_value_char': 'Old Fake',
+                'old_value_integer': 1,
+            }),
+        ]
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -77,9 +60,9 @@ class TestMailPerformance(FullBaseMailPerformance):
 
     def test_assert_initial_values(self):
         """ Simply ensure some values through all tests """
-        record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket.ids)
+        record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket_mc.ids)
         self.assertEqual(record_ticket.message_partner_ids,
-                         self.user_emp_email.partner_id + self.user_admin.partner_id + self.customers + self.user_portal.partner_id)
+                         self.user_follower_emp_email.partner_id + self.user_admin.partner_id + self.customers + self.user_follower_portal.partner_id)
         self.assertEqual(len(record_ticket.message_ids), 1)
 
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -87,22 +70,28 @@ class TestMailPerformance(FullBaseMailPerformance):
     @warmup
     def test_message_post_w_followers(self):
         """ Aims to cover as much features of message_post as possible """
-        record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket.ids)
+        record_ticket = self.env['mail.test.ticket.mc'].browse(self.record_ticket_mc.ids)
         attachments = self.env['ir.attachment'].create(self.test_attachments_vals)
+        self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
+        self.flush_tracking()
 
-        with self.assertQueryCount(employee=88):  # tmf: 87
+        with self.assertQueryCount(employee=101):  # tmf: 98
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),
+                email_add_signature=True,
+                mail_auto_delete=True,
                 message_type='comment',
                 subject='Test Subject',
                 subtype_xmlid='mail.mt_comment',
+                tracking_value_ids=self.tracking_values_ids,
             )
 
         self.assertEqual(
             new_message.notified_partner_ids,
-            self.user_emp_email.partner_id + self.user_admin.partner_id + self.customers + self.user_portal.partner_id
+            self.user_follower_emp_email.partner_id + self.user_admin.partner_id + self.customers + self.user_follower_portal.partner_id
         )
+        self.assertEqual(self.push_to_end_point_mocked.call_count, 8, "Not sure why 8")
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
@@ -123,17 +112,19 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.test_users = cls.user_employee + cls.user_emp_inbox + cls.user_emp_email + cls.user_follower_emp_email + cls.user_follower_portal
 
         # rating-enabled test records
-        cls.record_ratings = cls.env['mail.test.rating'].create([
-            {
-                'customer_id': cls.customers[idx].id,
-                'name': f'TestRating_{idx}',
-                'user_id': cls.test_users[idx].id,
+        with cls.mock_push_to_end_point(cls):
+            cls.record_ratings = cls.env['mail.test.rating'].create([
+                {
+                    'customer_id': cls.customers[idx].id,
+                    'name': f'TestRating_{idx}',
+                    'user_id': cls.test_users[idx].id,
 
-            }
-            for idx in range(5)
-        ])
+                }
+                for idx in range(5)
+            ])
 
         # messages and ratings
         user_id_field = cls.env['ir.model.fields']._get(cls.record_ratings._name, 'user_id')
@@ -337,20 +328,21 @@ class TestRatingPerformance(FullBaseMailPerformance):
 
         # create records with 2 ratings to check batch statistics on them
         responsibles = [cls.user_admin, cls.user_employee, cls.env['res.users']]
-        cls.record_ratings = cls.env['mail.test.rating'].create([{
-            'customer_id': cls.partners[idx].id,
-            'name': f'Test Rating {idx}',
-            'user_id': responsibles[idx % 3].id,
-        } for idx in range(cls.RECORD_COUNT)])
-        rates = [enum % 5 for enum, _rec in enumerate(cls.record_ratings)]
-        # create rating from 1 -> 5 for each record
-        for rate, record in zip(rates, cls.record_ratings, strict=True):
-            record.rating_apply(rate + 1, token=record._rating_get_access_token())
-        # create rating with 4 or 5 (half records)
-        for record in cls.record_ratings[:10]:
-            record.rating_apply(4, token=record._rating_get_access_token())
-        for record in cls.record_ratings[10:]:
-            record.rating_apply(5, token=record._rating_get_access_token())
+        with cls.mock_push_to_end_point(cls):
+            cls.record_ratings = cls.env['mail.test.rating'].create([{
+                'customer_id': cls.partners[idx].id,
+                'name': f'Test Rating {idx}',
+                'user_id': responsibles[idx % 3].id,
+            } for idx in range(cls.RECORD_COUNT)])
+            rates = [enum % 5 for enum, _rec in enumerate(cls.record_ratings)]
+            # create rating from 1 -> 5 for each record
+            for rate, record in zip(rates, cls.record_ratings, strict=True):
+                record.rating_apply(rate + 1, token=record._rating_get_access_token())
+            # create rating with 4 or 5 (half records)
+            for record in cls.record_ratings[:10]:
+                record.rating_apply(4, token=record._rating_get_access_token())
+            for record in cls.record_ratings[10:]:
+                record.rating_apply(5, token=record._rating_get_access_token())
 
     def apply_ratings(self, rate):
         for record in self.record_ratings:
@@ -408,25 +400,25 @@ class TestRatingPerformance(FullBaseMailPerformance):
     @users('employee')
     @warmup
     def test_rating_last_value_perfs(self):
-        with self.assertQueryCount(employee=233):  # tmf: 233
+        with self.assertQueryCount(employee=254):  # tmf: 254
             self.create_ratings('mail.test.rating.thread')
 
-        with self.assertQueryCount(employee=263):  # tmf: 263
+        with self.assertQueryCount(employee=283):  # tmf: 283
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=222):  # tmf: 222
+        with self.assertQueryCount(employee=242):  # tmf: 242
             self.apply_ratings(5)
 
     @users('employee')
     @warmup
     def test_rating_last_value_perfs_with_rating_mixin(self):
-        with self.assertQueryCount(employee=256):  # tmf: 256
+        with self.assertQueryCount(employee=277):  # tmf: 277
             self.create_ratings('mail.test.rating')
 
-        with self.assertQueryCount(employee=285):  # tmf: 285
+        with self.assertQueryCount(employee=305):  # tmf: 305
             self.apply_ratings(1)
 
-        with self.assertQueryCount(employee=264):  # tmf: 264
+        with self.assertQueryCount(employee=284):  # tmf: 284
             self.apply_ratings(5)
 
         with self.assertQueryCount(employee=1):

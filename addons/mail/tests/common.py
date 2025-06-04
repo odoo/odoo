@@ -75,6 +75,19 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
     # ------------------------------------------------------------
 
     @contextmanager
+    def mock_push_to_end_point(self, max_direct_push=5):
+        with patch.object(mail_thread, 'push_to_end_point') as patched_push, \
+             patch('odoo.addons.mail.models.mail_thread.MAX_DIRECT_PUSH', max_direct_push):
+            self.push_to_end_point_mocked = patched_push
+            yield
+
+    @contextmanager
+    def _mock_push_to_end_point(self, max_direct_push=5):
+        mock = self.mock_push_to_end_point(max_direct_push=max_direct_push)
+        mock.__enter__()  # noqa: PLC2801
+        self.addCleanup(lambda: mock.__exit__(None, None, None))
+
+    @contextmanager
     def mock_mail_gateway(self, mail_unlink_sent=False):
         build_email_origin = IrMail_Server.build_email
         send_email_origin = IrMail_Server.send_email
@@ -1960,3 +1973,20 @@ class MailCommon(MailCase):
                 data.pop("rating_avg", None)
                 data.pop("rating_count", None)
         return list(threads_data)
+
+    @classmethod
+    def _setup_push_devices_for_partners(cls, partners, endpoint=None):
+        """ Generate keys and devices """
+        endpoint = endpoint or "https://test.odoo.com/webpush/user"
+        cls.vapid_public_key = cls.env['mail.push.device'].get_web_push_vapid_public_key()
+        return cls.env['mail.push.device'].sudo().create([
+            {
+                'endpoint': f'{endpoint}/{partner.name}',
+                'expiration_time': None,
+                'keys': json.dumps({
+                    'p256dh': 'BGbhnoP_91U7oR59BaaSx0JnDv2oEooYnJRV2AbY5TBeKGCRCf0HcIJ9bOKchUCDH4cHYWo9SYDz3U-8vSxPL_A',
+                    'auth': 'DJFdtAgZwrT6yYkUMgUqow'
+                }),
+                'partner_id': partner.id,
+            } for partner in partners
+        ])
