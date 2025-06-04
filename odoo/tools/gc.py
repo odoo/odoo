@@ -38,8 +38,8 @@ def _timing_gc_callback(event, info):
     gen = info['generation']
     if event == 'start':
         _gc_start = _gc_time()
-        if gen == 2 and _logger.isEnabledFor(logging.DEBUG):
-            _logger.debug("info %s, starting collection of gen2", gc_info())
+        if gen == 2:
+            _logger.runbot("info %s", gc_info())
     else:
         timing = _gc_time() - _gc_start
         _gc_timings[gen] += timing
