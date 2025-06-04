@@ -18,6 +18,7 @@ a dependency towards website editing and customization capabilities.""",
     'data': [
         'security/ir.model.access.csv',
         'data/mail_templates.xml',
+        'data/portal_entry_data.xml',
         'views/address_templates.xml',
         'views/mail_templates_public.xml',
         'views/portal_templates.xml',

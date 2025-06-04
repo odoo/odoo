@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_entry_addresses" model="portal.entry">
+        <field name="name">Addresses</field>
+        <field name="description">Add, remove or modify your addresses</field>
+        <field name="url">/my/addresses</field>
+        <field name="image" type="base64" file="portal/static/src/img/portal-addresses.svg"/>
+        <field name="is_config_card" eval="True"/>
+    </record>
+
+    <record id="portal_entry_base" model="portal.entry">
+        <field name="name">Connection &amp; Security</field>
+        <field name="description">Configure your connection parameters</field>
+        <field name="url">/my/security</field>
+        <field name="image" type="base64" file="portal/static/src/img/portal-connection.svg"/>
+        <field name="is_config_card" eval="True"/>
+    </record>
+</odoo>

@@ -27,6 +27,7 @@ The automatic assignment is figured from the weight of partner levels and the ge
         'data/crm_tag_data.xml',
         'data/mail_template_data.xml',
         'data/res_partner_activation_data.xml',
+        'data/portal_entry_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'wizard/crm_forward_to_partner_view.xml',

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_invoice_client" model="portal.entry">
+        <field name="name">Your Invoices</field>
+        <field name="description">Follow, download or pay your invoices</field>
+        <field name="url">/my/invoices?filterby=invoices</field>
+        <field name="image" type="base64" file="account/static/src/img/bill.svg"/>
+        <field name="placeholder_count">invoice_count</field>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="40"/>
+    </record>
+
+    <record id="portal_invoice_vendor" model="portal.entry">
+        <field name="name">Our Invoices</field>
+        <field name="description">Follow, download or pay our invoices</field>
+        <field name="url">/my/invoices?filterby=bills</field>
+        <field name="image" type="base64" file="account/static/src/img/bill.svg"/>
+        <field name="placeholder_count">bill_count</field>
+        <field name="category">vendor_category</field>
+        <field name="sequence" eval="120"/>
+    </record>
+</odoo>

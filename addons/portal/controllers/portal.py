@@ -158,9 +158,17 @@ class CustomerPortal(Controller):
             if fallback_sales_user and not fallback_sales_user._is_public():
                 sales_user_sudo = fallback_sales_user
 
+        portal_entries = dict(
+            request.env['portal.entry']._read_group(
+                [('show_in_portal', '=', True)],
+                groupby=["category"],
+                aggregates=['id:recordset']
+            )
+        )
         return {
             'sales_user': sales_user_sudo,
             'page_name': 'home',
+            'portal_entries': portal_entries,
         }
 
     def _prepare_home_portal_values(self, counters):

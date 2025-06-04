@@ -12,6 +12,7 @@
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
         'data/digest_data.xml',
+        'data/portal_entry_data.xml',
         'views/account_move_views.xml',
         'data/purchase_data.xml',
         'data/ir_cron_data.xml',

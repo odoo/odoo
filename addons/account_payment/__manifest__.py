@@ -9,6 +9,7 @@
     'auto_install': ['account'],
     'data': [
         'data/ir_config_parameter.xml',
+        'data/portal_entry_data.xml',
 
         'security/ir.model.access.csv',
         'security/ir_rules.xml',

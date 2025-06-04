@@ -9,6 +9,7 @@
     'depends': ['mrp'],
     'data': [
         'data/mrp_subcontracting_data.xml',
+        'data/portal_entry_data.xml',
         'security/mrp_subcontracting_security.xml',
         'security/ir.model.access.csv',
         'views/mrp_bom_views.xml',

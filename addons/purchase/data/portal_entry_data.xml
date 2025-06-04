@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="portal_rfq" model="portal.entry">
+        <field name="name">Requests for Quotation</field>
+        <field name="description">Follow your Requests for Quotation</field>
+        <field name="url">/my/rfq</field>
+        <field name="image" type="base64" file="web/static/img/rfq.svg"/>
+        <field name="placeholder_count">rfq_count</field>
+        <field name="category">vendor_category</field>
+        <field name="sequence" eval="130"/>
+    </record>
+
+    <record id="portal_purchase_orders" model="portal.entry">
+        <field name="name">Our Orders</field>
+        <field name="description">Follow orders you have to fulfill</field>
+        <field name="url">/my/purchase</field>
+        <field name="image" type="base64" file="purchase/static/src/img/calculator.svg"/>
+        <field name="placeholder_count">purchase_count</field>
+        <field name="category">vendor_category</field>
+        <field name="sequence" eval="140"/>
+    </record>
+</odoo>

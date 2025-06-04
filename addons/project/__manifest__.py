@@ -23,6 +23,7 @@
         'security/ir.model.access.csv',
         'security/ir.model.access.xml',
         'data/digest_data.xml',
+        'data/portal_entry_data.xml',
         'report/project_task_burndown_chart_report_views.xml',
         'views/account_analytic_account_views.xml',
         'views/digest_digest_views.xml',
