@@ -302,6 +302,7 @@ class AccountFiscalPosition(models.Model):
             localization_module.sudo().button_immediate_install()
         created_records = self.env["account.chart.template"]._instantiate_foreign_taxes(self.country_id, self.company_id)
         created_records.get('account.tax', self.env['account.tax']).fiscal_position_ids += self
+        self.env['account.return.type']._generate_or_refresh_all_returns(self.company_id.root_id)
 
 
 class AccountFiscalPositionAccount(models.Model):
