@@ -606,3 +606,26 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
             ProductScreen.totalAmountIs("10.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_refund_does_not_decrease_points", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Refunding Guy"),
+            ProductScreen.clickDisplayedProduct("Refund Product"),
+            ProductScreen.clickControlButton("Reward"),
+            SelectionPopup.has("$ 1 per point on your order", { run: "click" }),
+            PosLoyalty.finalizeOrder("Cash", "200"),
+            ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("001"),
+            ProductScreen.clickNumpad("1"),
+            ProductScreen.clickLine("$ 1 per point on your order"),
+            ProductScreen.clickNumpad("1"),
+            TicketScreen.confirmRefund(),
+            PaymentScreen.totalIs("-200.00"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+        ].flat(),
+});
