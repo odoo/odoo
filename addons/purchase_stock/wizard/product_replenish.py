@@ -8,6 +8,8 @@ from odoo.osv.expression import AND
 class ProductReplenish(models.TransientModel):
     _inherit = 'product.replenish'
 
+    partner_id = fields.Many2one('res.partner', string='Supplier')
+
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
@@ -19,11 +21,14 @@ class ProductReplenish(models.TransientModel):
                 res['warehouse_id'] = self.env['stock.warehouse'].search([
                     *self.env['stock.warehouse']._check_company_domain(company),
                 ], limit=1).id
+
             orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', 'in', [product_tmpl_id.product_variant_id.id, product_id.id]), ("warehouse_id", "=", res['warehouse_id'])], limit=1)
             if orderpoint.route_id:
                 res['route_id'] = orderpoint.route_id.id
             if orderpoint.supplier_id:
-                res['supplier_id'] = orderpoint.supplier_id.id
+                res['partner_id'] = orderpoint.supplier_id.partner_id.id
+            elif not orderpoint and product_tmpl_id.seller_ids:
+                res['partner_id'] = product_tmpl_id.seller_ids[0].partner_id.id
         return res
 
     @api.onchange('route_id')
@@ -31,7 +36,7 @@ class ProductReplenish(models.TransientModel):
         if self.show_vendor and not self.supplier_id and self.product_tmpl_id.seller_ids:
             self.supplier_id = self.product_tmpl_id.seller_ids[0].id
         elif not self.show_vendor:
-            self.supplier_id = False
+            self.partner_id = False
 
     @api.depends('route_id', 'supplier_id')
     def _compute_date_planned(self):
@@ -45,6 +50,14 @@ class ProductReplenish(models.TransientModel):
         if self.supplier_id:
             res['supplierinfo_id'] = self.supplier_id
             res['group_id'].partner_id = self.supplier_id.partner_id
+
+        if self.partner_id:
+            res['group_id'].partner_id = self.partner_id
+
+            seller_ids = self.product_tmpl_id.seller_ids.filtered(lambda s: s.partner_id == self.partner_id)
+            if seller_ids:
+                res['supplierinfo_id'] = seller_ids[0]  # Pricelist selection logic handled in _select_seller
+
         return res
 
     def action_stock_replenishment_info(self):

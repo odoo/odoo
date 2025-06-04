@@ -473,7 +473,7 @@ class TestReplenishWizard(PurchaseTestCommon):
             'quantity': 1,
             'warehouse_id': self.wh.id,
             'route_id': self.route_buy.id,
-            'supplier_id': product.seller_ids[2].id  # partner_b price 100$
+            'partner_id': product.seller_ids[2].partner_id.id  # partner_b price 100$
         })
         replenish_wizard.launch_replenishment()
         po = self.env['purchase.order'].search([
@@ -519,3 +519,83 @@ class TestReplenishWizard(PurchaseTestCommon):
         stock_picking = self.env[model_name].browse(int(stock_picking_id))
 
         self.assertEqual(stock_picking.partner_id, second_warehouse.partner_id)
+
+    def test_supplier_partner(self):
+        """
+            Tests defaults on PO when using a partner as supplier on replenish wizard
+            (ie. a partner not on the product's seller_ids)
+        """
+        product_to_buy = self.env['product.product'].create({
+            'name': "Furniture Service",
+            'is_storable': True,
+            'route_ids': [Command.link(self.route_buy.id)],
+        })
+        vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
+            'product_id': product_to_buy.id,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': 10,
+            'warehouse_id': self.wh.id,
+            'partner_id': vendor1.id,
+        })
+        genrated_picking = replenish_wizard.launch_replenishment()
+        links = genrated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+
+        last_po_id = False
+        if purchase_order_id and model_name:
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
+        self.assertEqual(last_po_id.partner_id, vendor1)
+        self.assertEqual(last_po_id.order_line.price_unit, 0.0)
+        self.assertEqual(last_po_id.currency_id, self.env.company.currency_id)
+
+    def test_supplier_partner_with_pricelist(self):
+        """
+            Tests defaults on PO when using a partner as supplier on replenish wizard
+            (ie. a partner not on the product's seller_ids)
+        """
+        product_to_buy = self.env['product.product'].create({
+            'name': "Furniture Service",
+            'is_storable': True,
+            'route_ids': [Command.link(self.route_buy.id)],
+        })
+        vendor1 = self.env['res.partner'].create({'name': 'vendor1', 'email': 'from.test@example.com'})
+        vendor2 = self.env['res.partner'].create({'name': 'vendor2', 'email': 'from.test2@example.com'})
+
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'partner_id': vendor1.id,
+            'min_qty': 1,
+            'price': 140,
+            'sequence': 1,
+        })
+        self.env['product.supplierinfo'].create({
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'partner_id': vendor1.id,
+            'min_qty': 10,
+            'price': 100,
+            'sequence': 2,
+        })
+
+        replenish_wizard = self.env['product.replenish'].with_context(default_product_tmpl_id=product_to_buy.product_tmpl_id.id).create({
+            'product_id': product_to_buy.id,
+            'product_tmpl_id': product_to_buy.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'quantity': 10,
+            'warehouse_id': self.wh.id,
+            'partner_id': vendor2.id,  # Using a partner not in the product's seller_ids
+        })
+        genrated_picking = replenish_wizard.launch_replenishment()
+        links = genrated_picking.get("params", {}).get("links")
+        url = links and links[0].get("url", "") or ""
+        purchase_order_id, model_name = self.url_extract_rec_id_and_model(url)
+
+        last_po_id = False
+        if purchase_order_id and model_name:
+            last_po_id = self.env[model_name].browse(int(purchase_order_id))
+        self.assertEqual(last_po_id.partner_id, vendor2)
+        self.assertEqual(last_po_id.order_line.price_unit, 0.0)  # Should not take price from pricelist
+        self.assertEqual(last_po_id.currency_id, self.env.company.currency_id)

@@ -31,7 +31,11 @@ class TestReorderingRule(TransactionCase):
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
-            seller.product_uom_id = product_form.uom_id
+
+        grp_uom = cls.env.ref('uom.group_uom')
+        cls.env.ref('base.group_user').write({'implied_ids': [Command.link(grp_uom.id)]})
+        cls.env.user.write({'group_ids': [Command.link(grp_uom.id)]})
+
         product_form.route_ids.add(cls.env.ref('purchase_stock.route_warehouse0_buy'))
         cls.product_01 = product_form.save()
 
@@ -694,9 +698,7 @@ class TestReorderingRule(TransactionCase):
             "name": "Customer",
             "lang": "fr_FR"
         })
-        proc_group = self.env["procurement.group"].create({
-            "partner_id": customer.id
-        })
+        proc_group = self.env["procurement.group"].create({})
         procurement = self.env["procurement.group"].Procurement(
                 product, 100, uom_unit,
                 customer.property_stock_customer,
@@ -710,6 +712,10 @@ class TestReorderingRule(TransactionCase):
                     "route_ids": [],
                 }
             )
+
+        po = self.env['purchase.order'].search([('partner_id', '=', default_vendor.id)])
+        self.assertTrue(po)
+
         self.env.invalidate_all()
 
         self.env["procurement.group"].run([procurement])

@@ -491,9 +491,12 @@ class PurchaseOrderLine(models.Model):
         return res
 
     @api.model
-    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, supplier, po):
-        partner = supplier.partner_id
+    def _prepare_purchase_order_line(self, product_id, product_qty, product_uom, company_id, partner, po):
         uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
+
+        product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
+        taxes = po.fiscal_position_id.map_tax(product_taxes)
+
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
         today = fields.Date.today()
@@ -501,12 +504,10 @@ class PurchaseOrderLine(models.Model):
             partner_id=partner,
             quantity=uom_po_qty,
             date=po.date_order and max(po.date_order.date(), today) or today,
-            uom_id=product_id.uom_id)
+            uom_id=product_id.uom_id)  # seller will be None if partner is not supplier
+
         if seller and seller.product_uom_id != product_uom:
             uom_po_qty = product_id.uom_id._compute_quantity(uom_po_qty, seller.product_uom_id, rounding_method='HALF-UP')
-
-        product_taxes = product_id.supplier_taxes_id.filtered(lambda x: x.company_id in company_id.parent_ids)
-        taxes = po.fiscal_position_id.map_tax(product_taxes)
 
         if seller:
             price_unit = (seller.product_uom_id._compute_price(seller.price, product_uom) if product_uom else seller.price)
@@ -522,12 +523,13 @@ class PurchaseOrderLine(models.Model):
             lang=partner.lang,
             partner_id=partner.id,
         )
+
         name = product_lang.with_context(seller_id=seller.id).display_name
         if product_lang.description_purchase:
             name += '\n' + product_lang.description_purchase
 
         date_planned = self.order_id.date_planned or self._get_date_planned(seller, po=po)
-        discount = seller.discount or 0.0
+        discount = seller.discount if seller and seller.discount else 0.0
 
         return {
             'name': name,

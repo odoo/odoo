@@ -328,7 +328,6 @@ class SaleOrderLine(models.Model):
             'name': self.order_id.name,
             'move_type': self.order_id.picking_policy,
             'sale_id': self.order_id.id,
-            'partner_id': self.order_id.partner_shipping_id.id,
         }
 
     def _create_procurements(self, product_qty, procurement_uom, values):

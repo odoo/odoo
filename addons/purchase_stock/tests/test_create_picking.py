@@ -647,7 +647,7 @@ class TestCreatePicking(ProductVariantsCommon):
             'partner_id': vendor
         })
         customer_move = self.env['stock.move'].search([('group_id', '=', procurement_group.id)])
-        purchase_order = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        purchase_order = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
         self.assertTrue(purchase_order, 'No purchase order created.')
 
         # Check purchase order line data.
@@ -670,14 +670,14 @@ class TestCreatePicking(ProductVariantsCommon):
         create_run_procurement(product, -10.00)
         self.assertEqual(customer_move.product_uom_qty, 35, 'The demand on the initial move should have been decreased when merged with the procurement.')
         self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been decreased since it is has been confirmed.')
-        purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        purchase_orders = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
         self.assertEqual(len(purchase_orders), 1, 'No RFQ should have been created for a negative demand')
 
         # Create procurement to increase quantity on the initial move that will create a new move and a new RFQ for missing demand.
         create_run_procurement(product, 5.00)
         self.assertEqual(customer_move.product_uom_qty, 35, 'The demand on the initial move should not have been increased since it should be a new move.')
         self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been increased since it is has been confirmed.')
-        purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
+        purchase_orders = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
         self.assertEqual(len(purchase_orders), 2, 'A new RFQ should have been created for missing demand.')
 
     def test_update_qty_purchased(self):

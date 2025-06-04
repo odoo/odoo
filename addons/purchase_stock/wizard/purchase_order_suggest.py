@@ -136,7 +136,7 @@ class PurchaseOrderSuggest(models.TransientModel):
                     quantity,
                     product.uom_id,
                     order.company_id,
-                    supplierinfo,
+                    supplierinfo.partner_id,
                     order
                 )
                 po_lines_commands.append(Command.update(existing_po_line.id, vals))
@@ -147,7 +147,7 @@ class PurchaseOrderSuggest(models.TransientModel):
                     quantity,
                     product.uom_id,
                     order.company_id,
-                    supplierinfo,
+                    supplierinfo.partner_id,
                     order
                 )
                 po_lines_commands.append(Command.create(vals))
