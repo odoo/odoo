@@ -25,6 +25,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
         'input .o_wsale_attribute_search_bar': '_searchAttributeValues',
         'click .o_wsale_view_more_btn': '_onToggleViewMoreLabel',
         'change .css_attribute_color input': '_onChangeColorAttribute',
+        'change label[name="o_wsale_attribute_image_selector"] input': '_onChangeImageAttribute',
         'click .o_variant_pills': '_onChangePillsAttribute',
     },
 
@@ -132,7 +133,7 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                     }
                 }
             });
-            this._changeAttribute(['.css_attribute_color', '.o_variant_pills']);
+            this._changeAttribute(['.css_attribute_color', '[name="o_wsale_attribute_image_selector"]', '.o_variant_pills']);
         }
     },
 
@@ -509,6 +510,33 @@ export const WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             $attrValueEl.innerText = $eventTarget.data('value_name');
         }
     },
+
+    /**
+     * Highlight selected image
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onChangeImageAttribute(ev) {
+        const parent = ev.target.closest('.js_product');
+        const images = parent.querySelectorAll('label[name="o_wsale_attribute_image_selector"]');
+        images.forEach(el => {
+            el.classList.remove('active');
+        });
+        images.forEach(el => {
+            const input = el.querySelector('input');
+            if (input && input.checked) {
+                el.classList.add('active');
+            }
+        });
+        let attrValueEl = ev.target
+            .closest('[name="variant_attribute"]')?.querySelector('[name="attribute_value"]');
+        if (attrValueEl) {
+            attrValueEl.innerText = ev.target.dataset.value_name;
+        }
+    },
+
+
 
     _onChangePillsAttribute: function (ev) {
         const radio = ev.target.closest('.o_variant_pills').querySelector("input");
