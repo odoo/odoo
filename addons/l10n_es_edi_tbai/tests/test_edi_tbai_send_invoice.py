@@ -4,6 +4,8 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from .common import TestEsEdiTbaiCommonGipuzkoa
+import base64
+from lxml import etree
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
@@ -197,3 +199,27 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         self.assertEqual(invoice.l10n_es_tbai_state, 'cancelled')
         self.assertEqual(invoice.l10n_es_tbai_cancel_document_id.state, 'accepted')
         self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+
+    def test_tbai_credit_note_importe_total(self):
+        invoice = self._create_posted_invoice()
+
+        with patch(
+            'odoo.addons.l10n_es_edi_tbai.models.l10n_es_edi_tbai_document.requests.Session.request',
+            return_value=self.mock_response_post_invoice_success,
+        ):
+            self._get_invoice_send_wizard(invoice).action_send_and_print()
+
+            reversal = self.env['account.move.reversal'].with_context(
+                active_model="account.move", active_ids=invoice.ids
+            ).create({
+                'journal_id': invoice.journal_id.id,
+                'l10n_es_tbai_refund_reason': 'R4',
+            })
+            credit_note = self.env['account.move'].browse(reversal.refund_moves()['res_id'])
+            credit_note.action_post()
+
+            self._get_invoice_send_wizard(credit_note).action_send_and_print()
+
+        tbai_xml = base64.b64decode(credit_note['l10n_es_tbai_post_file']).decode()
+        value = etree.fromstring(tbai_xml).findtext(".//ImporteTotalFactura")
+        self.assertEqual(value, '-4840.00')
