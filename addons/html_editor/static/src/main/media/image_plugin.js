@@ -277,6 +277,9 @@ export class ImagePlugin extends Plugin {
     deleteImage() {
         const selectedImg = this.getSelectedImage();
         if (selectedImg) {
+            if (this.delegateTo("delete_image_overrides", selectedImg)) {
+                return;
+            }
             const cursors = this.dependencies.selection.preserveSelection();
             cursors.update(callbacksForCursorUpdate.remove(selectedImg));
             const parentEl = closestBlock(selectedImg);
