@@ -14,7 +14,6 @@ import {
     resizeGrid,
     setElementToMaxZindex,
     toggleGridMode,
-    hasGridLayoutOption,
 } from "@html_builder/utils/grid_layout_utils";
 import { isElement } from "@html_editor/utils/dom_info";
 
@@ -26,7 +25,7 @@ function isGridItem(el) {
 
 export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
-    static dependencies = ["history", "selection"];
+    static dependencies = ["selection", "builderOptions"];
     resources = {
         get_overlay_buttons: withSequence(0, {
             getButtons: this.getActiveOverlayButtons.bind(this),
@@ -56,6 +55,22 @@ export class GridLayoutPlugin extends Plugin {
 
     setup() {
         this.overlayTarget = null;
+    }
+
+    /**
+     * Checks if the given container element has the grid mode option.
+     *
+     * @param {HTMLElement} containerEl the container element
+     * @returns {Boolean}
+     */
+    hasGridLayoutOption(containerEl) {
+        // Check if the "LayoutOption" option is active.
+        const { targetEl } = this.dependencies.builderOptions.findOption(
+            containerEl,
+            "LayoutOption",
+            true
+        );
+        return !!targetEl && targetEl === containerEl;
     }
 
     ignoreBackgroundGrid(record) {
@@ -422,7 +437,7 @@ export class GridLayoutPlugin extends Plugin {
 
             // Allow the grid mode if the container has the option or if
             // the grid mode is already activated.
-            const hasGridOption = hasGridLayoutOption(containerEl);
+            const hasGridOption = this.hasGridLayoutOption(containerEl);
             const isRowInGridMode = rowEl.classList.contains("o_grid_mode");
             const allowGridMode = hasGridOption || isRowInGridMode;
 
