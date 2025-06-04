@@ -1,3 +1,4 @@
+import { stepUtils } from "@web_tour/tour_service/tour_utils";
 import {
     insertSnippet,
     registerWebsitePreviewTour,
@@ -100,11 +101,7 @@ function websiteEditEventTourSteps() {
             }
         },
         ...clickOnSave(),
-        {
-            content: "Check that the event page is loaded",
-            trigger: ".o_website_preview :iframe html[data-view-xmlid='website_event.index']",
-            timeout: 30000,
-        },
+        stepUtils.waitIframeIsReady(),
         {
             content: "is short description updated?",
             trigger: ":iframe .opt_events_list_columns small:contains('new short description')",
