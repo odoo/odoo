@@ -54,8 +54,17 @@ class OrderController(PosSelfOrderController):
                 return http.Response(json.dumps({"error": f"Table '{table_identifier}' not found"}),
                                      content_type='application/json', status=404)
 
+            # Gestion des commandes existantes
+            existing_order = request.env['pos.order'].sudo().search([
+                ('table_id', '=', restaurant_table.id),
+                ('session_id', '=', pos_config.current_session_id.id),
+                ('state', '=', 'draft')
+            ], limit=1)
+
             # Préparer les lignes de commande
-            line_tuples = []
+            line_operations = []
+            line_dicts = []  # Pour la synchronisation
+
             for line in order_data['lines']:
                 product = request.env['product.product'].sudo().search([
                     ('menupro_id', '=', line.get('menupro_id'))
@@ -64,39 +73,103 @@ class OrderController(PosSelfOrderController):
                 if not product:
                     continue
 
+                qty = line.get('qty', 1)
+                note = line.get('note', '')
+                menupro_id = line.get('menupro_id')
+
+                # Calcul des taxes
                 taxes_res = product.taxes_id.compute_all(
                     product.lst_price,
                     currency=pos_config.pricelist_id.currency_id,
-                    quantity=line.get('qty', 1),
+                    quantity=qty,
                     product=product
                 )
 
-                line_data = {
+                line_uuid = str(uuid.uuid4())
+
+                # Format pour synchronisation
+                line_dict = {
                     'product_id': product.id,
-                    'qty': line.get('qty', 1),
-                    'note': line.get('note', ''),
+                    'qty': qty,
                     'price_unit': product.lst_price,
                     'price_subtotal': taxes_res['total_excluded'],
                     'price_subtotal_incl': taxes_res['total_included'],
-                    'tax_ids': [(6, 0, product.taxes_id.ids)],
-                    'uuid': str(uuid.uuid4()),
+                    'tax_ids': product.taxes_id.ids,
+                    'note': note,
+                    'uuid': line_uuid,
                 }
-                line_tuples.append((0, 0, line_data))
 
-            # Gestion des commandes existantes
-            existing_order = request.env['pos.order'].sudo().search([
-                ('table_id', '=', restaurant_table.id),
-                ('session_id', '=', pos_config.current_session_id.id),
-                ('state', '=', 'draft')
-            ], limit=1)
+                # Si commande existante, vérifier si le produit est déjà présent
+                if existing_order:
+                    # Chercher une ligne existante avec le même produit et même note
+                    existing_line = None
+                    for ol in existing_order.lines:
+                        if ol.product_id.id == product.id and ol.note == note:
+                            existing_line = ol
+                            break
+
+                    if existing_line:
+                        # Mise à jour de la quantité
+                        new_qty = existing_line.qty + qty
+                        line_dict['id'] = existing_line.id
+                        line_dict['qty'] = new_qty
+                        line_dict['price_subtotal'] = existing_line.price_unit * new_qty
+                        line_dict['price_subtotal_incl'] = existing_line.price_unit * new_qty * (
+                                    1 + existing_line.tax_ids.amount / 100)
+
+                        # Ajouter l'opération de mise à jour
+                        line_operations.append((1, existing_line.id, {
+                            'qty': new_qty,
+                            'price_subtotal': line_dict['price_subtotal'],
+                            'price_subtotal_incl': line_dict['price_subtotal_incl'],
+                        }))
+                    else:
+                        # Nouvelle ligne
+                        line_dict['id'] = False
+                        line_operations.append((0, 0, {
+                            'product_id': product.id,
+                            'qty': qty,
+                            'note': note,
+                            'price_unit': product.lst_price,
+                            'price_subtotal': taxes_res['total_excluded'],
+                            'price_subtotal_incl': taxes_res['total_included'],
+                            'tax_ids': [(6, 0, product.taxes_id.ids)],
+                            'uuid': line_uuid,
+                        }))
+                else:
+                    # Nouvelle commande
+                    line_operations.append((0, 0, {
+                        'product_id': product.id,
+                        'qty': qty,
+                        'note': note,
+                        'price_unit': product.lst_price,
+                        'price_subtotal': taxes_res['total_excluded'],
+                        'price_subtotal_incl': taxes_res['total_included'],
+                        'tax_ids': [(6, 0, product.taxes_id.ids)],
+                        'uuid': line_uuid,
+                    }))
+
+                line_dicts.append(line_dict)
 
             if existing_order:
-                # Ajouter les nouvelles lignes à la commande existante
-                existing_order.write({'lines': line_tuples})
+                # Appliquer les opérations sur les lignes sans effacer les existantes
+                # Nous allons traiter les mises à jour et les ajouts séparément
+
+                # 1. Mettre à jour les lignes existantes
+                for op in line_operations:
+                    if op[0] == 1:  # Mise à jour
+                        request.env['pos.order.line'].sudo().browse(op[1]).write(op[2])
+
+                # 2. Ajouter les nouvelles lignes
+                new_lines = [op for op in line_operations if op[0] == 0]
+                if new_lines:
+                    existing_order.write({'lines': new_lines})
+
+                # Recalculer les totaux
                 existing_order._onchange_amount_all()
 
-                # Solution alternative: synchroniser via la méthode standard
-                # Préparer les données dans le format attendu par sync_from_ui
+                # Préparer les données pour la synchronisation
+                # Nous devons inclure TOUTES les lignes de la commande
                 order_data_for_sync = {
                     'id': existing_order.id,
                     'name': existing_order.name,
@@ -113,17 +186,21 @@ class OrderController(PosSelfOrderController):
                     'state': 'draft',
                     'takeaway': existing_order.takeaway,
                     'sequence_number': existing_order.sequence_number,
-                    # Format spécial pour les lignes
-                    'lines': [[0, 0, {
-                        'product_id': line.product_id.id,
-                        'qty': line.qty,
-                        'price_unit': line.price_unit,
-                        'price_subtotal': line.price_subtotal,
-                        'price_subtotal_incl': line.price_subtotal_incl,
-                        'tax_ids': line.tax_ids.ids,
-                        'note': line.note,
-                        'uuid': line.uuid,
-                    }] for line in existing_order.lines]
+                    # Format spécial pour les lignes - toutes les lignes existantes
+                    'lines': [[
+                        1 if line.id else 0,
+                        line.id if line.id else 0,
+                        {
+                            'product_id': line.product_id.id,
+                            'qty': line.qty,
+                            'price_unit': line.price_unit,
+                            'price_subtotal': line.price_subtotal,
+                            'price_subtotal_incl': line.price_subtotal_incl,
+                            'tax_ids': line.tax_ids.ids,
+                            'note': line.note or '',
+                            'uuid': line.uuid,
+                        }
+                    ] for line in existing_order.lines]
                 }
 
                 # Synchroniser avec le POS
@@ -133,24 +210,25 @@ class OrderController(PosSelfOrderController):
                     json.dumps({
                         "success": True,
                         "order_id": existing_order.id,
-                        "message": "Order lines added successfully"
+                        "message": "Order updated successfully"
                     }),
                     content_type='application/json',
                     status=200
                 )
 
             else:
+                # Créer une nouvelle commande
                 sequence = request.env['ir.sequence'].sudo().next_by_code('pos.order')
                 order_dict = {
                     'name': sequence,
                     'pos_reference': sequence,
                     'session_id': pos_config.current_session_id.id,
                     'date_order': fields.Datetime.now().isoformat(),
-                    'lines': line_tuples,
+                    'lines': line_operations,
                     'access_token': access_token,
-                    'amount_total': sum(line[2]['price_subtotal_incl'] for line in line_tuples),
+                    'amount_total': sum(line[2]['price_subtotal_incl'] for line in line_operations),
                     'amount_tax': sum(
-                        line[2]['price_subtotal_incl'] - line[2]['price_subtotal'] for line in line_tuples),
+                        line[2]['price_subtotal_incl'] - line[2]['price_subtotal'] for line in line_operations),
                     'amount_paid': 0.0,
                     'amount_return': 0.0,
                     'uuid': str(uuid.uuid4()),
