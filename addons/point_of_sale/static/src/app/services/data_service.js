@@ -743,7 +743,7 @@ export class PosData extends Reactive {
         const data = await this.execute({ type: "call", model, method, args, kwargs, queue });
         if (data) {
             this.deviceSync?.dispatch && this.deviceSync.dispatch(data);
-            const results = this.models.loadData(data, [], true);
+            const results = this.models.loadData(data, [], true, true);
             this.synchronizeServerDataInIndexedDB(data);
             return results;
         }

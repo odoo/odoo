@@ -1262,6 +1262,7 @@ export class PosStore extends WithLazyGetterTrap {
             const newData = this.models.loadData(missingRecords, [], false, true);
 
             for (const line of newData["pos.order.line"]) {
+                line.pack_lot_ids = line.pack_lot_ids.filter((lot) => typeof lot.id === "number");
                 const refundedOrderLine = line.refunded_orderline_id;
 
                 if (refundedOrderLine && ["paid", "done"].includes(line.order_id.state)) {
