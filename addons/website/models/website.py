@@ -230,8 +230,11 @@ class Website(models.Model):
         for website in self:
             website_domain = website.domain or ''
             hostname = urlparse(website_domain).hostname or ''
-            punycode_hostname = hostname.encode('idna').decode('ascii')
-            website.domain_punycode = website_domain.replace(hostname, punycode_hostname)
+            try:
+                punycode_hostname = hostname.encode('idna').decode('ascii')
+                website.domain_punycode = website_domain.replace(hostname, punycode_hostname)
+            except UnicodeError:
+                website.domain_punycode = website_domain
 
     @api.depends('social_default_image')
     def _compute_has_social_default_image(self):
