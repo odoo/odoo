@@ -9,7 +9,7 @@ import { getElementsWithOption, getSnippetName } from "@html_builder/utils/utils
 const anchorSelector =
     ":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *, .row > *, .s_card";
 const anchorExclude =
-    ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup, .carousel *";
+    ".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *, .s_popup, .carousel *, .o_portal_index_card";
 
 export function canHaveAnchor(element) {
     return element.matches(anchorSelector) && !element.matches(anchorExclude);

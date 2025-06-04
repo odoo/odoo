@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="payment_methods_portal_entry" model="portal.entry">
+        <field name="name">Payment Methods</field>
+        <field name="description">Manage your payment methods</field>
+        <field name="url">/my/payment_method</field>
+        <field name="image" type="base64" file="payment/static/img/payment-methods.svg"/>
+        <field name="category">client_category</field>
+        <field name="sequence" eval="20"/>
+    </record>
+</odoo>

@@ -150,7 +150,7 @@
                     <t t-if="prev_record or next_record" t-call='portal.record_pager'/>
                 </div>
             </div>
-            <div id="wrap" class='o_portal_wrap'>
+            <div id="wrap" class='o_portal_wrap' data-name="My Account">
                 <div class="container pt-3 pb-5">
                     <t t-if="my_details">
                         <div class="wrapper col-12 d-flex flex-wrap justify-content-between align-items-center">
@@ -206,24 +206,46 @@
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
                 <div class="o_portal_docs row g-2">
-                    <div t-if="portal_alert_category_enable" class="o_portal_category row g-2 mt-3" id="portal_alert_category"/>
-                    <div t-if="portal_client_category_enable" class="o_portal_category row g-2 mt-3" id="portal_client_category"/>
-                    <div t-if="portal_service_category_enable" class="o_portal_category row g-2 mt-3" id="portal_service_category"/>
-                    <div t-if="portal_vendor_category_enable" class="o_portal_category row g-2 mt-3" id="portal_vendor_category"/>
-                    <div class="o_portal_category row g-2 mt-3" id="portal_common_category">
-                        <t t-call="portal.portal_docs_entry">
-                            <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
-                            <t t-set="title">Addresses</t>
-                            <t t-set="text">Add, remove or modify your addresses</t>
-                            <t t-set="url" t-value="'/my/addresses'"/>
-                            <t t-set="config_card" t-value="True"/>
+                    <div t-if="portal_entries.get('alert', [])"
+                        class="o_portal_category row g-2 mt-3 o_not_editable" id="portal_alert_category">
+                        <t t-foreach="portal_entries.get('alert', [])" t-as="entry">
+                            <t t-call="portal.portal_docs_entry">
+                                <t t-set="bg_color" t-value="'alert alert-primary align-items-center'"/>
+                                <t t-set="show_count" t-value="True"/>
+                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
+                            </t>
                         </t>
-                        <t t-call="portal.portal_docs_entry">
-                            <t t-set="icon" t-value="'/portal/static/src/img/portal-connection.svg'"/>
-                            <t t-set="title">Connection &amp; Security</t>
-                            <t t-set="text">Configure your connection parameters</t>
-                            <t t-set="url" t-value="'/my/security'"/>
-                            <t t-set="config_card" t-value="True"/>
+                    </div>
+                    <div t-if="portal_entries.get('client_category', [])"
+                        class="o_portal_category row g-2 mt-3" id="portal_client_category">
+                        <t t-foreach="portal_entries.get('client_category', [])" t-as="entry">
+                            <t t-call="portal.portal_docs_entry">
+                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
+                            </t>
+                        </t>
+                    </div>
+                    <div t-if="portal_entries.get('service_category', [])"
+                        class="o_portal_category row g-2 mt-3" id="portal_service_category">
+                        <t t-foreach="portal_entries.get('service_category', [])" t-as="entry">
+                            <t t-call="portal.portal_docs_entry">
+                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
+                            </t>
+                        </t>
+                    </div>
+                    <div t-if="portal_entries.get('vendor_category', [])"
+                        class="o_portal_category row g-2 mt-3" id="portal_vendor_category">
+                        <t t-foreach="portal_entries.get('vendor_category', [])" t-as="entry">
+                            <t t-call="portal.portal_docs_entry">
+                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
+                            </t>
+                        </t>
+                    </div>
+                    <div t-if="portal_entries.get('common_category', [])"
+                        class="o_portal_category row g-2 mt-3" id="portal_common_category">
+                        <t t-foreach="portal_entries.get('common_category', [])" t-as="entry">
+                            <t t-call="portal.portal_docs_entry">
+                                <t t-set="placeholder_count" t-value="entry.placeholder_count"/>
+                            </t>
                         </t>
                     </div>
                     <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
@@ -235,19 +257,23 @@
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <t t-set="force_show" t-value="placeholder_count and request.session.get('portal_counters', {}).get(placeholder_count) and not show_count"/>
-        <div t-att-class="'o_portal_index_card ' +  ('' if force_show or config_card else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
-            <a t-att-href="url" t-att-title="title" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else 'bg-100'}">
-                <div t-if="icon" class="o_portal_icon d-none">
-                    <img t-attf-src="#{icon}"/>
+        <div t-att-data-id="entry.id" t-att-class="'o_portal_index_card ' +  ('' if force_show or entry.should_show_portal_card() else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
+            <a t-att-href="entry.url" data-name="Portal Cards" t-att-title="entry.name" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else ''}">
+                <div t-if="entry.image" class="o_portal_icon d-none">
+                    <span t-field="entry.image"
+                        t-options="{'widget': 'image', 'width': 64, 'height': 64}"
+                        role="img"
+                        style="display: block; width: 64px; height: 64px;"
+                        t-attf-aria-label="'Icon for %s' % entry.name"/>
                 </div>
                 <div t-att-class="'alert-link' if bg_color else ''">
                     <div t-attf-class="mt-0 mb-1 fs-5 fw-normal lh-1 #{'d-flex gap-2' if placeholder_count or count else ''}">
-                        <t t-out="count"/>
-                        <span t-if="placeholder_count and not force_show" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="placeholder_count"/>
-                        <span t-out="title"/>
+                    <t t-out="count"/>
+                        <span t-if="entry.placeholder_count and not force_show" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="entry.placeholder_count"/>
+                        <h5 t-field="entry.name"/>
                     </div>
                     <div class="opacity-75">
-                        <t t-out="text"/>
+                        <p t-field="entry.description"/>
                     </div>
                 </div>
             </a>

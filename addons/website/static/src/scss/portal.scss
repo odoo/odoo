@@ -1,0 +1,11 @@
+.o_portal_index_card > a:not(.alert) {
+    @include o-apply-colors('portal-card');
+    @include o-apply-colors('portal-card-custom');
+    @include o-add-gradient('portal-gradient');
+
+    @if o-website-value('portal-card-border-width') {
+        border: o-website-value('portal-card-border-style') o-color('portal-card-border-color') !important;
+        border-width: o-website-value('portal-card-border-width') !important;
+    }
+    border-radius: o-website-value('portal-card-border-radius') !important;
+}

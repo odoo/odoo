@@ -12,6 +12,7 @@
         'data/payment_method_data.xml',
         'data/payment_provider_data.xml',
         'data/payment_cron.xml',
+        'data/portal_entry_data.xml',
 
         # QWeb templates.
         'views/express_checkout_templates.xml',

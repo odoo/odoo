@@ -5,6 +5,7 @@ from . import payment_method
 from . import payment_provider
 from . import payment_token
 from . import payment_transaction
+from . import portal_entry
 from . import res_company
 from . import res_country
 from . import res_partner

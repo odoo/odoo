@@ -245,6 +245,7 @@
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
             'website/static/src/libs/zoomodoo/zoomodoo.scss',
             'website/static/src/scss/website.scss',
+            'website/static/src/scss/portal.scss',
             'website/static/src/scss/website_common.scss',
             'website/static/src/scss/website_controller_page.scss',
             'website/static/src/scss/website.ui.scss',

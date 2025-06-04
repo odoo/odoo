@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="portal_my_home_productions" name="Productions" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
-        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
-            <t t-set="portal_vendor_category_enable" t-value="True"/>
-        </xpath>
-        <div id="portal_vendor_category" position="inside">
-            <t t-call="portal.portal_docs_entry"
-                icon.f="/mrp_subcontracting/static/src/img/manufacturing.svg"
-                title.translate="Manufacturing Orders"
-                text.translate="Follow manufacturing orders you have to fulfill"
-                url.f="/my/productions"
-                placeholder_count.f="production_count"/>
-        </div>
-    </template>
-
     <template id="portal_my_home_menu_production" name="Portal layout : production menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <t t-if="title">
