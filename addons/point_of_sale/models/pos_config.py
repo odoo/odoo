@@ -202,7 +202,25 @@ class PosConfig(models.Model):
     order_edit_tracking = fields.Boolean(string="Track orders edits", help="Store edited orders in the backend", default=False)
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
+    # Epson ePoS Printer Configuration
     epson_printer_ip = fields.Char(string='Epson Printer IP', help="Local IP address of an Epson receipt printer.")
+    # Epson Server Direct Print printer configuration
+    use_epson_server_direct_print = fields.Boolean(
+        string="Use Epson Server Direct Printer",
+        help="Configure your printer to retrieve receipts from the server",
+    )
+    epson_server_receipt_queue_url = fields.Char(
+        readonly=True,
+        store=False,
+        default=lambda self: f"{self.get_base_url()}/point_of_sale/epson_server_direct_print/{self.access_token}/add_receipt_to_print_queue",
+    )
+    epson_server_direct_print_url = fields.Char(
+        string="Epson Server Direct Print URL",
+        help="This URL needs to be set in the printer's configuration to enable server printing.",
+        readonly=True,
+        store=False,
+        default=lambda self: f"{self.get_base_url()}/point_of_sale/epson_server_direct_print/{self.access_token}/poll_server_print",
+    )
     use_fast_payment = fields.Boolean('Fast Payment Validation', help="Enable fast payment methods to validate orders on the product screen.")
     fast_payment_method_ids = fields.Many2many(
         'pos.payment.method', string='Fast Payment Methods', compute="_compute_fast_payment_method_ids", relation='pos_payment_method_config_fast_validation_relation',
@@ -222,6 +240,14 @@ class PosConfig(models.Model):
             'login_number': login_number,
             'records': records
         })
+
+    def notify_epson_server_direct_print_result(self, print_result):
+        """
+        Notify pos config about the result of a print job via websocket.
+        :param print_result: dict containing the result of the print job
+        Example: {'success': 'true', 'errorCode' : None}
+        """
+        self._notify('EPSON_SERVER_DIRECT_PRINT', print_result)
 
     def read_config_open_orders(self, domain, record_ids=[]):
         delete_record_ids = {}

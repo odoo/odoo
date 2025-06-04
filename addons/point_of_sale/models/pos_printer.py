@@ -17,6 +17,7 @@ class PosPrinter(models.Model):
         selection=[
             ('iot', 'Use a printer connected to the IoT Box'),
             ('epson_epos', 'Use an Epson printer'),
+            ('epson_server_direct_print', 'Use Epson Server Direct Print'),
         ]
     )
     proxy_ip = fields.Char('Proxy IP Address', help="The IP Address or hostname of the Printer's hardware proxy")

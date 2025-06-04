@@ -38,7 +38,7 @@ import { ProductInfoPopup } from "@point_of_sale/app/components/popups/product_i
 import { RetryPrintPopup } from "@point_of_sale/app/components/popups/retry_print_popup/retry_print_popup";
 import { PresetSlotsPopup } from "@point_of_sale/app/components/popups/preset_slots_popup/preset_slots_popup";
 import { DebugWidget } from "../utils/debug/debug_widget";
-import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
+import { EpsonPrinter, EpsonServerDirectPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 
@@ -646,8 +646,18 @@ export class PosStore extends WithLazyGetterTrap {
         this.markReady();
         await this.deviceSync.readDataFromServer();
 
-        if (this.config.other_devices && this.config.epson_printer_ip) {
-            this.hardwareProxy.printer = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+        const config = this.config;
+        // Epson ePoS printer
+        if (config.other_devices && config.epson_printer_ip) {
+            this.hardwareProxy.printer = new EpsonPrinter({ ip: config.epson_printer_ip });
+        // Epson Server Direct Print printer
+        } else if (config.use_epson_server_direct_print) {
+            this.hardwareProxy.printer = new EpsonServerDirectPrinter({
+                epsonServerReceiptQueueUrl: config.epson_server_receipt_queue_url,
+                access_token: config.access_token,
+                posData: this.data,
+                busService: this.env.services.bus_service,
+            });
         }
     }
 
@@ -1062,13 +1072,24 @@ export class PosStore extends WithLazyGetterTrap {
         return order.getSelectedOrderline();
     }
 
-    createPrinter(config) {
-        if (config.printer_type === "epson_epos") {
-            return new EpsonPrinter({ ip: config.epson_printer_ip });
+    createPrinter(printerConfig) {
+        const printerType = printerConfig.printer_type;
+        if (printerType === "epson_epos") {
+            return new EpsonPrinter({ ip: printerConfig.epson_printer_ip });
         }
-        const url = deduceUrl(config.proxy_ip || "");
+        else if (printerType === "epson_server_direct_print") {
+            debugger;
+            return new EpsonServerDirectPrinter({
+                epsonServerReceiptQueueUrl: this.config.epson_server_receipt_queue_url,
+                access_token: this.config.access_token,
+                posData: this.data,
+                busService: this.env.services.bus_service,
+            });
+        }
+        const url = deduceUrl(printerConfig.proxy_ip || "");
         return new HWPrinter({ url });
     }
+
     async _loadFonts() {
         return new Promise(function (resolve, reject) {
             // Waiting for fonts to be loaded to prevent receipt printing
@@ -1657,6 +1678,7 @@ export class PosStore extends WithLazyGetterTrap {
         order = this.getOrder(),
         printBillActionTriggered = false,
     } = {}) {
+        console.log("Printing receipt", this.printer)
         const result = await this.printer.print(
             OrderReceipt,
             {
