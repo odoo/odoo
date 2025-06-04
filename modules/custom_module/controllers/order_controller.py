@@ -8,7 +8,6 @@ from datetime import date, datetime
 
 _logger = logging.getLogger(__name__)
 
-
 def json_default(obj):
     """Fonction de sérialisation personnalisée pour les objets non standards"""
     if isinstance(obj, (date, datetime)):
