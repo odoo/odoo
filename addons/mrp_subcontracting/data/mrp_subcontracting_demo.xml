@@ -29,5 +29,13 @@
             <field name="route_ids" eval="[(4,ref('stock.route_warehouse0_mto'))]"></field>
         </record>
 
+        <record id="portal_manufacturing_orders" model="portal.entry">
+            <field name="name">Manufacturing Orders</field>
+            <field name="description">Follow manufacturing orders you have to fulfill</field>
+            <field name="url">/my/productions</field>
+            <field name="image" type="base64" file="mrp_subcontracting/static/src/img/manufacturing.svg"/>
+            <field name="placeholder_count">production_count</field>
+        </record>
+
     </data>
 </odoo>

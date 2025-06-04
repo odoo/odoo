@@ -10,5 +10,23 @@
         <record id="partnership.res_partner_grade_data_bronze" model="res.partner.grade">
             <field name="is_published" eval="True" />
         </record>
+
+        <!-- Portal Card Data  -->
+        <record id="portal_entry_leads" model="portal.entry">
+            <field name="name">Leads</field>
+            <field name="description">Follow and convert your leads</field>
+            <field name="url">/my/leads</field>
+            <field name="image" type="base64" file="website_crm_partner_assign/static/src/img/leads.svg"/>
+            <field name="placeholder_count">lead_count</field>
+        </record>
+    
+        <record id="portal_entry_opportunities" model="portal.entry">
+            <field name="name">Opportunities</field>
+            <field name="description">Follow and convert your opportunities</field>
+            <field name="url">/my/opportunities</field>
+            <field name="image" type="base64" file="website_crm_partner_assign/static/src/img/quotation.svg"/>
+            <field name="placeholder_count">opp_count</field>
+        </record>
+
     </data>
 </odoo>

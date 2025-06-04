@@ -88,5 +88,19 @@
             <field name="lang">{{ object.partner_id.lang }}</field>
             <field name="auto_delete" eval="True"/>
         </record>
+
+        <record id="portal_entry_addresses" model="portal.entry">
+            <field name="name">Addresses</field>
+            <field name="description">Add, remove or modify your addresses</field>
+            <field name="url">/my/addresses</field>
+            <field name="image" type="base64" file="portal/static/src/img/portal-addresses.svg"/>
+        </record>
+        <record id="portal_entry_base" model="portal.entry">
+            <field name="name">Connection &amp; Security</field>
+            <field name="description">Configure your connection parameters</field>
+            <field name="url">/my/security</field>
+            <field name="image" type="base64" file="portal/static/src/img/portal-connection.svg"/>
+        </record>
+
     </data>
 </odoo>
