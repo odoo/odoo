@@ -29,6 +29,13 @@ export class BuilderOverlayPlugin extends Plugin {
         this.overlayContainer = this.dependencies.localOverlay.makeLocalOverlay(
             "builder-overlay-container"
         );
+        // If the user scrolls the mouse wheel while hovering overlayContainer,
+        // no scroll will happen to the page. We need to manually process
+        // wheel events happening on overlayContainer.
+        this.overlayContainer.addEventListener(
+            "wheel",
+            (ev) => (this.document.documentElement.scrollTop += ev.deltaY)
+        );
         /** @type {[BuilderOverlay]} */
         this.overlays = [];
         // Refresh the overlays position everytime their target size changes.
