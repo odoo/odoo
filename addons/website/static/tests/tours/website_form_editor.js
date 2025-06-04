@@ -722,6 +722,11 @@ registerWebsitePreviewTour(
                 ':iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
             run: "click",
         },
+        {
+            content: "Check that the delete button is disabled and shows the tooltip",
+            trigger:
+                '.options-container-header span[title=\'The field "subject" is mandatory for the action "Send an E-mail".\'] > button.fa-trash[disabled]',
+        },
         ...changeOptionInPopover("Field", "Visibility", "Visible only if"),
         ...selectButtonByData("Your Name", "[data-action-value='Philippe of Belgium']"),
         ...selectButtonByText("Is equal to", "Is set"),
