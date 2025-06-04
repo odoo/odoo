@@ -125,7 +125,8 @@ patch(PaymentScreen.prototype, {
             if (!couponData[couponId].line_codes.includes(line.reward_identifier_code)) {
                 !couponData[couponId].line_codes.push(line.reward_identifier_code);
             }
-            couponData[couponId].points -= line.points_cost;
+            couponData[couponId].points =
+                line.refunded_qty > 0 ? 0.0 : couponData[couponId].points - line.points_cost;
         }
         // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
         couponData = Object.fromEntries(
