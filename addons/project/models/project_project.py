@@ -1266,6 +1266,8 @@ class ProjectProject(models.Model):
         self.ensure_one()
         self.is_template = is_template
         self.task_ids.write({"is_template": is_template})
+        if not is_template:
+            self.task_ids.role_ids = False
 
     @api.model
     def _get_template_default_context_whitelist(self):
@@ -1283,7 +1285,7 @@ class ProjectProject(models.Model):
             "partner_id",
         ]
 
-    def action_create_from_template(self, values=None):
+    def action_create_from_template(self, values=None, role_to_users_mapping=None):
         self.ensure_one()
         values = values or {}
         default = {
@@ -1296,4 +1298,12 @@ class ProjectProject(models.Model):
         }
         project = self.with_context(copy_from_template=True).copy(default=default)
         project.message_post(body=self.env._("Project created from template %(name)s.", name=self.name))
+
+        # Tasks dispatching using project roles
+        project.task_ids.role_ids = False
+        if role_to_users_mapping and (mapping := role_to_users_mapping.filtered(lambda entry: entry.user_ids)):
+            for template_task, new_task in zip(self.task_ids, project.task_ids):
+                for entry in mapping:
+                    if entry.role_id in template_task.role_ids:
+                        new_task.user_ids |= entry.user_ids
         return project

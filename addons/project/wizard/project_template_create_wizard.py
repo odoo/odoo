@@ -1,9 +1,16 @@
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 
 class ProjectTemplateCreateWizard(models.TransientModel):
     _name = 'project.template.create.wizard'
     _description = 'Project Template create Wizard'
+
+    def _default_role_to_users_ids(self):
+        res = []
+        template = self.env['project.project'].browse(self._context.get('template_id'))
+        if template:
+            res = [Command.create({'role_id': role.id}) for role in template.task_ids.role_ids]
+        return res
 
     name = fields.Char(string="Name", required=True)
     date_start = fields.Date(string="Start Date")
@@ -12,18 +19,27 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     alias_domain_id = fields.Many2one("mail.alias.domain", string="Alias Domain")
     partner_id = fields.Many2one("res.partner")
     template_id = fields.Many2one("project.project", default=lambda self: self._context.get('template_id'))
+    role_to_users_ids = fields.One2many('project.template.role.to.users.map', 'wizard_id', default=_default_role_to_users_ids)
 
-    def create_project_from_template(self):
-        # Dictionary with all fields and their values
+    def _get_template_whitelist_fields(self):
+        """
+        Whitelist of fields of this wizard that will be used when creating a project from a template.
+        """
+        return ["name", "date_start", "date", "alias_name", "alias_domain_id", "partner_id"]
+
+    def _create_project_from_template(self):
+        # Dictionary with all whitelist fields and their values
         field_values = self._convert_to_write(
             {
                 fname: self[fname]
-                for fname in self._fields.keys() - ["id", "template_id"]
+                for fname in self._fields.keys() & self._get_template_whitelist_fields()
             }
         )
-        project = self.template_id.action_create_from_template(field_values)
+        return self.template_id.action_create_from_template(values=field_values, role_to_users_mapping=self.role_to_users_ids)
+
+    def create_project_from_template(self):
         # Opening project task views after creation of project from template
-        return project.action_view_tasks()
+        return self._create_project_from_template().action_view_tasks()
 
     @api.model
     def action_open_template_view(self):
@@ -40,3 +56,12 @@ class ProjectTemplateCreateWizard(models.TransientModel):
             'target': 'new',
             'context': self.env.context,
         }
+
+
+class ProjectTemplateRoleToUsersMap(models.TransientModel):
+    _name = 'project.template.role.to.users.map'
+    _description = 'Project role to users mapping'
+
+    wizard_id = fields.Many2one('project.template.create.wizard', export_string_translation=False)
+    role_id = fields.Many2one('project.role', string='Project Role', required=True)
+    user_ids = fields.Many2many('res.users', string='Assignees', domain=[('share', '=', False), ('active', '=', True)])
