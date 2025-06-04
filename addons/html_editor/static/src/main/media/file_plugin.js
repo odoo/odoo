@@ -6,7 +6,6 @@ import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { unwrapContents } from "@html_editor/utils/dom";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -43,16 +42,6 @@ export class FilePlugin extends Plugin {
             },
         }),
         selectors_for_feff_providers: () => ".o_file_box",
-        normalize_handlers: (node) => {
-            // If an image is wrapped in an <a> tag, remove the link on
-            // replacing it with a document. This ensures the document is not
-            // unnecessarily wrapped in a clickable link.
-            const fileElement = node.querySelector(".o_file_box");
-            const parentEl = fileElement?.parentElement;
-            if (parentEl?.tagName === "A" && parentEl.children.length === 1) {
-                unwrapContents(parentEl);
-            }
-        },
     };
 
     get recordInfo() {

@@ -41,7 +41,7 @@ export class CaptionPlugin extends Plugin {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         mount_component_handlers: this.setupNewCaption.bind(this),
         delete_handlers: this.afterDelete.bind(this),
-        delete_image_handlers: this.handleDeleteImage.bind(this),
+        delete_image_overrides: this.handleDeleteImage.bind(this),
         after_save_media_dialog_handlers: this.onImageReplaced.bind(this),
         hints: [{ selector: "FIGCAPTION", text: _t("Write a caption...") }],
         unsplittable_node_predicates: [
