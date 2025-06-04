@@ -63,7 +63,7 @@ class SaleOrder(models.Model):
         UPDATE sale_order so
         SET warehouse_id = COALESCE(wh.id, %s)
         FROM stock_warehouse wh
-        WHERE so.company_id = wh.company_id
+        WHERE so.company_id = wh.company_id and so.warehouse_id IS NULL AND wh.active
         """
         params = [default_warehouse.id]
 
