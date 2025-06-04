@@ -28,8 +28,8 @@ class TestWebsiteSitemap(TransactionCase):
                 "UPDATE ir_ui_view SET write_date = %s WHERE id = %s",
                 (view_date, page.view_id.id)
             )
-            Page.invalidate_model(['write_date'])
             View.invalidate_model(['write_date'])
+            Page.invalidate_model(['write_date', 'view_write_date'])
             self.assertEqual(str(page.write_date), page_date)
             self.assertEqual(str(page.view_id.write_date), view_date)
 

@@ -22,6 +22,12 @@ class WebsitePage(models.Model):
 
     url = fields.Char('Page URL', required=True)
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, index=True, ondelete="cascade")
+
+    view_write_uid = fields.Many2one('res.users', "Last Content Update by",
+        related='view_id.write_uid')
+    view_write_date = fields.Datetime("Last Content Update on",
+        related='view_id.write_date')
+
     website_indexed = fields.Boolean('Is Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
