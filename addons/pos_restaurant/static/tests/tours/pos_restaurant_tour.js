@@ -2,6 +2,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as ChromePos from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import * as ChromeRestaurant from "@pos_restaurant/../tests/tours/utils/chrome";
 const Chrome = { ...ChromePos, ...ChromeRestaurant };
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
@@ -598,6 +599,12 @@ registry.category("web_tour.tours").add("test_multiple_preparation_printer_diffe
             Dialog.bodyIs("Printer 1: The printer is not reachable."),
             Dialog.bodyIs("Printer 2: The printer is not reachable."),
             Dialog.confirm(),
+            // OrderWarningDialog should not be shown as order already send for preparation
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
 
@@ -668,6 +675,31 @@ registry.category("web_tour.tours").add("test_customer_alone_saved", {
             Chrome.clickOrders(),
             Chrome.clickRegister(),
             ProductScreen.customerIsSelected("Deco Addict"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_no_kitchen_confirmation_for_deposit_money", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartnerOptions("A powerful PoS man!"),
+            PartnerList.clickDropDownItemText("Deposit money"),
+            {
+                content: "select payment method for deposit money",
+                trigger: ".o_dialog .selection-item:contains('bank')",
+                run: "click",
+            },
+            PaymentScreen.clickNumpad("+10"),
+            PaymentScreen.fillPaymentLineAmountMobile("bank", "10.0"),
+            PaymentScreen.changeIs("0"),
+            PaymentScreen.clickValidate(),
+            Dialog.is("The order is empty"),
+            Dialog.confirm("Yes"),
+            ReceiptScreen.clickNextOrder(),
+            Chrome.endTour(),
         ].flat(),
 });
 
