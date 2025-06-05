@@ -43,7 +43,7 @@ import {
 import { CTYPES } from "../utils/content_types";
 import { withSequence } from "@html_editor/utils/resource";
 import { compareListTypes } from "@html_editor/main/list/utils";
-import { hasTouch, isBrowserChrome } from "@web/core/browser/feature_detection";
+import { hasTouch, isBrowserChrome, isMacOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} RangeLike
@@ -63,7 +63,7 @@ import { hasTouch, isBrowserChrome } from "@web/core/browser/feature_detection";
  */
 
 export class DeletePlugin extends Plugin {
-    static dependencies = ["baseContainer", "selection", "history", "input"];
+    static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
     static id = "delete";
     static shared = ["deleteBackward", "deleteForward", "deleteRange", "deleteSelection", "delete"];
     resources = {
@@ -110,6 +110,36 @@ export class DeletePlugin extends Plugin {
     setup() {
         this.findPreviousPosition = this.makeFindPositionFn("backward");
         this.findNextPosition = this.makeFindPositionFn("forward");
+        if (isMacOS()) {
+            // Bypass the hotkey service for Alt+Backspace and Cmd+Backspace
+            // on macOS which would otherwise conflict with other shortcuts.
+            this.addDomListener(this.editable, "keydown", (event) => {
+                const runCommand = (commandId) => {
+                    this.dependencies.userCommand.getCommand(commandId).run();
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
+                };
+                // Delete word backward: Option + Backspace
+                if (event.altKey && event.key === "Backspace") {
+                    return runCommand("deleteBackwardWord");
+                }
+
+                // Delete word forward: Option + Delete
+                if (event.altKey && event.key === "Delete") {
+                    return runCommand("deleteForwardWord");
+                }
+
+                // Delete line backward: Command + Backspace
+                if (event.metaKey && event.key === "Backspace") {
+                    return runCommand("deleteBackwardLine");
+                }
+
+                // Delete line forward: Command + Delete
+                if (event.metaKey && event.key === "Delete") {
+                    return runCommand("deleteForwardLine");
+                }
+            });
+        }
     }
 
     // --------------------------------------------------------------------------
