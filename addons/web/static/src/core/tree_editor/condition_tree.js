@@ -6,7 +6,7 @@ import { toPyValue } from "@web/core/py_js/py_utils";
 import { ASTPattern } from "@web/core/tree_editor/ast_pattern";
 import { Hole, setHoleValues, upToHole } from "@web/core/tree_editor/hole";
 import { Just, Nothing } from "@web/core/tree_editor/maybe_monad";
-import { _Pattern, Pattern } from "@web/core/tree_editor/pattern";
+import { Pattern } from "@web/core/tree_editor/pattern";
 import { omit, pick } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
@@ -264,8 +264,8 @@ function areEqualTreesUpToHole(tree, otherTree) {
 }
 
 export function areEquivalentTrees(tree, otherTree) {
-    const simplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_DESTRUCTION, tree);
-    const otherSimplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_DESTRUCTION, otherTree);
+    const simplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_ELIMINATION, tree);
+    const otherSimplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_ELIMINATION, otherTree);
     return areEqualTrees(simplifiedTree, otherSimplifiedTree);
 }
 
@@ -818,11 +818,23 @@ export function splitPath(path) {
     return { initialPath, lastPart };
 }
 
+export function splitPath2(path) {
+    const pathParts = typeof path === "string" ? path.split(".") : [];
+    if (pathParts.length > 0) {
+        let index = pathParts.findIndex((p) => ["__date", "__time"].includes(p)); // by construction, must be -1 or >= 1
+        index = index > -1 ? index - 1 : pathParts.length - 1;
+        const path1 = pathParts.slice(0, index).join(".");
+        const path2 = pathParts.slice(index).join(".");
+        return [path1, path2];
+    }
+    return [null, path];
+}
+
 function allEqual(...values) {
     return values.slice(1).every((v) => v === values[0]);
 }
 
-function applyTransformations(transformations, transformed, ...fixedParams) {
+export function applyTransformations(transformations, transformed, ...fixedParams) {
     for (let i = transformations.length - 1; i >= 0; i--) {
         const fn = transformations[i];
         transformed = fn(transformed, ...fixedParams);
@@ -971,6 +983,7 @@ class TreePattern extends Pattern {
             values[name] = new Hole(name);
         }
         const tree = constructTree(domain);
+        this._vars = vars;
         this._template = replaceVariablesByValues(tree, values);
     }
     detect(tree) {
@@ -981,35 +994,114 @@ class TreePattern extends Pattern {
         return Nothing.of();
     }
     make(values) {
+        for (const v of this._vars) {
+            if (!(v in values)) {
+                return Nothing.of();
+            }
+        }
         return Just.of(replaceHoleByValues(this._template, values));
     }
 }
 
+class OperatorPattern extends Pattern {
+    static of(operator, domain) {
+        return new OperatorPattern(operator, domain);
+    }
+    constructor(operator, domain) {
+        super();
+        this.vars = new Set();
+        this.pushVariables(constructTree(domain));
+        this.operator = operator;
+        this.treePattern = TreePattern.of(domain, this.vars);
+    }
+    detect(tree) {
+        const mv = this.treePattern.detect(tree);
+        if (mv instanceof Nothing) {
+            return mv;
+        }
+        return Just.of({ ...mv.value, operator: this.operator });
+    }
+    make(values) {
+        if (values.operator !== this.operator) {
+            return Nothing.of();
+        }
+        return this.treePattern.make(omit(values, "operator"));
+    }
+    pushIfVar(v) {
+        if (v instanceof Expression && v._ast.type === 5) {
+            this.vars.add(v._ast.value);
+        }
+    }
+    pushVariables(tree) {
+        if (tree.type === "connector") {
+            for (const child of tree.children) {
+                this.pushVariables(child);
+            }
+            return;
+        }
+        this.pushIfVar(tree.path);
+        this.pushIfVar(tree.operator);
+        if (isTree(tree.value)) {
+            this.pushVariables(tree.value);
+        } else {
+            this.pushIfVar(tree.value);
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
-// between - is_not_between
+// between - not_between
 ////////////////////////////////////////////////////////////////////////////////
+
+const patternBetween = OperatorPattern.of(
+    "between",
+    `["&", (path, ">=", value1), (path, "<=", value2)]`
+);
+const patternNotBetween = OperatorPattern.of(
+    "not_between",
+    `["|", (path, "<", value1), (path, ">", value2)]`
+);
+
+const patternBetweenForDatetimeOptions = OperatorPattern.of(
+    "between",
+    `[
+        "&",
+            "|", (path, ">", value1), (path, "=", value1),
+            "|", (path, "<", value2), (path, "=", value2)
+    ]`
+);
+
+function wrapInAny(mv, initialPath, negate) {
+    if (mv instanceof Nothing) {
+        return;
+    }
+    let con = cloneTree(mv.value);
+    if (initialPath) {
+        con = condition(initialPath, "any", con);
+    }
+    con.negate = negate;
+    return con;
+}
 
 /**
  * @param {Connector} c
- * @param {[Condition, Condition]} param
+ * @param {[Tree, Tree]} param
  */
 function _createBetweenOperator(c, [child1, child2]) {
-    if (!allEqual("condition", child1.type, child2.type)) {
+    const pattern = Pattern.S([patternBetween, patternNotBetween]);
+    const mv = pattern.detect(connector(c.value, [child1, child2]));
+    if (mv instanceof Nothing) {
         return;
     }
-    if (formatValue(child1.path) !== formatValue(child2.path)) {
+    const { path, operator, value1, value2 } = mv.value;
+    if (typeof path !== "string") {
         return;
     }
-    if (c.value === "&" && child1.operator === ">=" && child2.operator === "<=") {
-        return condition(child1.path, "between", normalizeValue([child1.value, child2.value]));
+    const [initialPath] = splitPath2(path);
+    if (initialPath) {
+        return;
     }
-    if (c.value === "|" && child1.operator === "<" && child2.operator === ">") {
-        return condition(
-            child1.path,
-            "is_not_between",
-            normalizeValue([child1.value, child2.value])
-        );
-    }
+    return condition(path, operator, normalizeValue([value1, value2]));
 }
 
 /**
@@ -1017,22 +1109,64 @@ function _createBetweenOperator(c, [child1, child2]) {
  */
 function _removeBetweenOperator(c) {
     const { negate, path, operator, value } = c;
-    if (!Array.isArray(value)) {
+    // @ts-ignore
+    if (!Array.isArray(value) || !["between", "not_between"].includes(operator)) {
         return;
     }
-    if (operator === "between") {
-        return connector(
-            "&",
-            [condition(path, ">=", value[0]), condition(path, "<=", value[1])],
-            negate
-        );
-    } else if (operator === "is_not_between") {
-        return connector(
-            "|",
-            [condition(path, "<", value[0]), condition(path, ">", value[1])],
-            negate
-        );
+    const [initialPath, lastPart] = splitPath2(path);
+    const mv = Pattern.S([patternBetween, patternNotBetween]).make({
+        path: lastPart,
+        operator,
+        value1: value[0],
+        value2: value[1],
+    });
+    return wrapInAny(mv, initialPath, negate);
+}
+
+/**
+ * @param {Connector} c
+ * @param {[Tree, Tree]} param
+ */
+function _createBetweenOperatorForDatetimeOptions(c, [child1, child2]) {
+    const mv = patternBetweenForDatetimeOptions.detect(connector(c.value, [child1, child2]));
+    if (mv instanceof Nothing) {
+        return;
     }
+    const { path, operator, value1, value2 } = mv.value;
+    if (typeof path !== "string") {
+        return;
+    }
+    const [initialPath] = splitPath2(path);
+    if (initialPath) {
+        return;
+    }
+    const { lastPart } = splitPath(path);
+    if (!["__date", "__time"].includes(lastPart)) {
+        return;
+    }
+    return condition(path, operator, normalizeValue([value1, value2]));
+}
+
+/**
+ * @param {Condition} c
+ */
+function _removeBetweenOperatorForDatetimeOptions(c) {
+    const { negate, path, operator, value } = c;
+    if (
+        !Array.isArray(value) ||
+        operator !== "between" ||
+        !["__date", "__time"].includes(splitPath(path).lastPart)
+    ) {
+        return;
+    }
+    const [initialPath, lastPart] = splitPath2(path);
+    const mv = patternBetweenForDatetimeOptions.make({
+        path: lastPart,
+        operator,
+        value1: value[0],
+        value2: value[1],
+    });
+    return wrapInAny(mv, initialPath, negate);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1097,13 +1231,16 @@ class ParamsPattern extends Pattern {
     }
     detect({ path1, path2, path3, operator, value1, value2, value3 }) {
         const { initialPath: ip1, lastPart: lp1 } = splitPath(path1);
+        const { initialPath: firstPart, lastPart: fieldName } = splitPath(ip1);
+
+        if (firstPart || getFieldType(ip1, this.options) !== "datetime") {
+            return Nothing.of();
+        }
+
         const { initialPath: ip2, lastPart: lp2 } = splitPath(path2);
         const { initialPath: ip3, lastPart: lp3 } = splitPath(path3);
-        if (
-            !allEqual(ip1, ip2, ip3) ||
-            ip1 === "" ||
-            getFieldType(ip1, this.options) !== "datetime"
-        ) {
+
+        if (!allEqual(ip1, ip2, ip3)) {
             return Nothing.of();
         }
         let lastPart;
@@ -1118,7 +1255,7 @@ class ParamsPattern extends Pattern {
             return Nothing.of();
         }
 
-        const path = `${ip1}.${lastPart}`;
+        const path = `${fieldName}.${lastPart}`;
 
         let value;
         let success = false;
@@ -1160,6 +1297,9 @@ class ParamsPattern extends Pattern {
         if (!initialPath || !["__date", "__time"].includes(lastPart)) {
             return Nothing.of();
         }
+
+        const { initialPath: firstPart, lastPart: fieldName } = splitPath(initialPath);
+
         let path1;
         let path2;
         let path3;
@@ -1167,13 +1307,13 @@ class ParamsPattern extends Pattern {
         let value2;
         let value3;
         if (lastPart === "__date") {
-            path1 = `${initialPath}.year_number`;
-            path2 = `${initialPath}.month_number`;
-            path3 = `${initialPath}.day_of_month`;
+            path1 = `${fieldName}.year_number`;
+            path2 = `${fieldName}.month_number`;
+            path3 = `${fieldName}.day_of_month`;
         } else {
-            path1 = `${initialPath}.hour_number`;
-            path2 = `${initialPath}.minute_number`;
-            path3 = `${initialPath}.second_number`;
+            path1 = `${fieldName}.hour_number`;
+            path2 = `${fieldName}.minute_number`;
+            path3 = `${fieldName}.second_number`;
         }
 
         let success = false;
@@ -1201,7 +1341,7 @@ class ParamsPattern extends Pattern {
         }
 
         if (success) {
-            return Just.of({
+            const res = {
                 path1,
                 path2,
                 path3,
@@ -1209,77 +1349,74 @@ class ParamsPattern extends Pattern {
                 value1,
                 value2,
                 value3,
-            });
+            };
+            if (firstPart) {
+                res.firstPart = firstPart;
+            }
+            return Just.of(res);
         }
         return Nothing.of();
     }
 }
 
-const addRemoveOperatorP = (operator) =>
-    _Pattern.of(
-        (values) => Just.of({ ...values, operator }),
-        (values) => {
-            if (values.operator !== operator) {
-                return Nothing.of();
-            }
-            return Just.of(omit(values, "operator"));
-        }
-    );
-
-const VARS = ["path1", "path2", "path3", "value1", "value2", "value3"];
-const makeDomain1 = (operator) => `[
-    "|",
-    "|",
-        (path1, "${operator}", value1),
-        "&",
-            (path1, "=", value1),
-            (path2, "${operator}", value2),
-        "&",
-        "&",
+const domains = {
+    "<": `[
+        "|",
+        "|",
+            (path1, "<", value1),
+            "&",
+                (path1, "=", value1),
+                (path2, "<", value2),
+            "&",
+            "&",
+                (path1, "=", value1),
+                (path2, "=", value2),
+                (path3, "<", value3),
+    ]`,
+    ">": `[
+        "|", "|",
+            (path1, ">", value1),
+            "&",
+                (path1, "=", value1),
+                (path2, ">", value2),
+            "&", "&",
+                (path1, "=", value1),
+                (path2, "=", value2),
+                (path3, ">", value3),
+    ]`,
+    "=": `[
+        "&", "&",
             (path1, "=", value1),
             (path2, "=", value2),
-            (path3, "${operator}", value3),
-]`;
-const makePattern1 = (operator) =>
-    Pattern.C([TreePattern.of(makeDomain1(operator), VARS), addRemoveOperatorP(operator)]);
+            (path3, "=", value3),
+    ]`,
+    "!=": `[
+        "|", "|",
+            (path1, "!=", value1),
+            (path2, "!=", value2),
+            (path3, "!=", value3),
+    ]`,
+};
 
-const greaterOpP = makePattern1(">");
-const greaterOrEqualOpP = makePattern1(">=");
-const leaserOpP = makePattern1("<");
-const leaserOrEqualOpP = makePattern1("<=");
+const makeDomainWithAny = (domain) => `[(firstPart, "any", ${domain})]`;
 
-const makeDomain2 = (operator) => `[
-    "&",
-    "&",
-        (path1, "${operator}", value1),
-        (path2, "${operator}", value2),
-        (path3, "${operator}", value3),
-]`;
-const makePattern2 = (operator) =>
-    Pattern.C([TreePattern.of(makeDomain2(operator), VARS), addRemoveOperatorP(operator)]);
+const makePattern = (operator) => OperatorPattern.of(operator, domains[operator]);
+const makePatternWithAny = (operator) =>
+    OperatorPattern.of(operator, makeDomainWithAny(domains[operator]));
 
-const equalOpP = makePattern2("=");
-
-const makeDomain3 = (operator) => `[
-    "|",
-    "|",
-        (path1, "${operator}", value1),
-        (path2, "${operator}", value2),
-        (path3, "${operator}", value3),
-]`;
-const makePattern3 = (operator) =>
-    Pattern.C([TreePattern.of(makeDomain3(operator), VARS), addRemoveOperatorP(operator)]);
-const inequalOpP = makePattern3("!=");
-
-const operatorPatterns = [
-    greaterOpP,
-    greaterOrEqualOpP,
-    leaserOpP,
-    leaserOrEqualOpP,
-    equalOpP,
-    inequalOpP,
+const simpleOperatorPatterns = [
+    makePattern(">"),
+    makePattern("<"),
+    makePattern("="),
+    makePattern("!="),
 ];
 
+const simpleOperatorPatternsWithAny = [
+    makePatternWithAny(">"),
+    makePatternWithAny("<"),
+    makePatternWithAny("="),
+    makePatternWithAny("!="),
+];
 /**
  * @param {Connector} c
  * @param {[Condition, Condition, Condition]} param
@@ -1287,7 +1424,7 @@ const operatorPatterns = [
  */
 function _createDatetimeOption(c, [child1, child2, child3], options = {}) {
     const paramsPattern = new ParamsPattern(options);
-    const pattern = Pattern.C([Pattern.S(operatorPatterns), paramsPattern]);
+    const pattern = Pattern.C([Pattern.S(simpleOperatorPatterns), paramsPattern]);
     const mv = pattern.detect(connector(c.value, [child1, child2, child3]));
     if (mv instanceof Nothing) {
         return;
@@ -1300,12 +1437,38 @@ function _createDatetimeOption(c, [child1, child2, child3], options = {}) {
  */
 function _removeDatetimeOption(c) {
     const paramsPattern = new ParamsPattern();
-    const pattern = Pattern.C([Pattern.S(operatorPatterns), paramsPattern]);
+    const pattern = Pattern.C([
+        Pattern.S([...simpleOperatorPatternsWithAny, ...simpleOperatorPatterns]),
+        paramsPattern,
+    ]);
     const mv = pattern.make(c);
     if (mv instanceof Nothing) {
         return;
     }
-    return mv.value;
+    const tree = cloneTree(mv.value);
+    tree.negate = c.negate;
+    return tree;
+}
+
+/////////////////////////////////////////////////////////////////////////////////
+// any
+/////////////////////////////////////////////////////////////////////////////////
+
+function _removeAnyOperator(c) {
+    const { path, operator, value, negate } = c;
+    if (
+        operator === "any" &&
+        isTree(value) &&
+        value.type === "condition" &&
+        typeof path === "string" &&
+        typeof value.path === "string" &&
+        !negate &&
+        !value.negate &&
+        (["between", "not_between"].includes(value.operator) ||
+            ["__date", "__time"].includes(splitPath(value.path).lastPart))
+    ) {
+        return condition(`${path}.${value.path}`, value.operator, value.value);
+    }
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1395,10 +1558,7 @@ function _createVirtualOperator(c, options = {}) {
             return condition(path, "ends_with", value.slice(1), negate);
         }
     }
-    if (
-        ["between", "is_not_between"].includes(operator) &&
-        ["date", "datetime"].includes(fieldType)
-    ) {
+    if (["between", "not_between"].includes(operator) && ["date", "datetime"].includes(fieldType)) {
         let delta;
         let virtualOperator;
         if (isTodayExpr(value[0], fieldType)) {
@@ -1420,7 +1580,7 @@ function _createVirtualOperator(c, options = {}) {
     }
     if (
         fieldType === "datetime" &&
-        ["between", "is_not_between"].includes(operator) &&
+        ["between", "not_between"].includes(operator) &&
         isTodayExpr(value[0], fieldType) &&
         isEndOfTodayExpr(value[1])
     ) {
@@ -1470,19 +1630,14 @@ function _removeVirtualOperator(c) {
         }
         return condition(
             path,
-            ["next", "last"].includes(operator) ? "between" : "is_not_between",
+            ["next", "last"].includes(operator) ? "between" : "not_between",
             expressions,
             negate
         );
     }
     if (["today", "not_today"].includes(operator)) {
         if (Array.isArray(value)) {
-            return condition(
-                path,
-                operator === "today" ? "between" : "is_not_between",
-                value,
-                negate
-            );
+            return condition(path, operator === "today" ? "between" : "not_between", value, negate);
         } else {
             return condition(path, operator === "today" ? "=" : "!=", value, negate);
         }
@@ -1490,7 +1645,7 @@ function _removeVirtualOperator(c) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// complex conditions
+//  operations on trees
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -1510,19 +1665,16 @@ function _removeComplexCondition(c) {
     return condition(new Expression(bool(ast)), "=", 1);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//  operations on trees
-////////////////////////////////////////////////////////////////////////////////
-
 /**
  * @param {Tree} tree
  * @returns {Tree}
  */
-function createBetweenOperators(tree) {
+function createBetweenOperators(tree, options = {}) {
     return operate(
-        (connector) => rewriteNConsecutiveChildren(_createBetweenOperator, connector),
+        (connector, options) =>
+            rewriteNConsecutiveChildren(_createBetweenOperator, connector, options),
         tree,
-        {},
+        options,
         "connector"
     );
 }
@@ -1537,12 +1689,39 @@ function removeBetweenOperators(tree) {
 
 /**
  * @param {Tree} tree
+ * @returns {Tree}
+ */
+function createBetweenOperatorsForDatetimeOptions(tree, options = {}) {
+    return operate(
+        (connector, options) =>
+            rewriteNConsecutiveChildren(
+                _createBetweenOperatorForDatetimeOptions,
+                connector,
+                options
+            ),
+        tree,
+        options,
+        "connector"
+    );
+}
+
+/**
+ * @param {Tree} tree
+ * @returns {Tree}
+ */
+function removeBetweenOperatorsForDatetimeOptions(tree) {
+    return operate(_removeBetweenOperatorForDatetimeOptions, tree);
+}
+
+/**
+ * @param {Tree} tree
  * @param {Options} [options={}]
  * @returns {Tree}
  */
 function createDatetimeOptions(tree, options = {}) {
     return operate(
-        (connector) => rewriteNConsecutiveChildren(_createDatetimeOption, connector, options, 3),
+        (connector, options) =>
+            rewriteNConsecutiveChildren(_createDatetimeOption, connector, options, 3),
         tree,
         options,
         "connector"
@@ -1572,6 +1751,10 @@ export function createVirtualOperators(tree, options = {}) {
  */
 export function removeVirtualOperators(tree) {
     return operate(_removeVirtualOperator, tree);
+}
+
+function removeAnyOperators(tree) {
+    return operate(_removeAnyOperator, tree);
 }
 
 /**
@@ -1609,23 +1792,25 @@ function removeComplexConditions(tree) {
 
 ////////////////////////////////////////////////////////////////////////////////
 //  PUBLIC: MAPPINGS
-//    tree <-> expression
-//    domain <-> expression
 //    expression <-> tree
+//    domain <-> tree
 ////////////////////////////////////////////////////////////////////////////////
 
-const VIRTUAL_OPERATORS_CREATION = [createVirtualOperators, createBetweenOperators];
-const FULL_VIRTUAL_OPERATORS_CREATION = [
-    ...VIRTUAL_OPERATORS_CREATION,
+const VIRTUAL_OPERATORS_INTRODUCTION = [createVirtualOperators, createBetweenOperators];
+export const FULL_VIRTUAL_OPERATORS_INTRODUCTION = [
+    removeAnyOperators,
+    createBetweenOperatorsForDatetimeOptions,
+    ...VIRTUAL_OPERATORS_INTRODUCTION,
     createSpecialPaths,
     createDatetimeOptions,
 ];
 
-const VIRTUAL_OPERATORS_DESTRUCTION = [removeBetweenOperators, removeVirtualOperators];
-const FULL_VIRTUAL_OPERATORS_DESTRUCTION = [
+const VIRTUAL_OPERATORS_ELIMINATION = [removeBetweenOperators, removeVirtualOperators];
+export const FULL_VIRTUAL_OPERATORS_ELIMINATION = [
     removeDatetimeOptions,
     removeSpecialPaths,
-    ...VIRTUAL_OPERATORS_DESTRUCTION,
+    ...VIRTUAL_OPERATORS_ELIMINATION,
+    removeBetweenOperatorsForDatetimeOptions,
     removeComplexConditions,
 ];
 
@@ -1637,7 +1822,7 @@ const FULL_VIRTUAL_OPERATORS_DESTRUCTION = [
 export function treeFromExpression(expression, options = {}) {
     const ast = parseExpr(expression);
     const tree = _treeFromAST(ast, options);
-    return applyTransformations(VIRTUAL_OPERATORS_CREATION, tree, options);
+    return applyTransformations(VIRTUAL_OPERATORS_INTRODUCTION, tree, options);
 }
 
 /**
@@ -1647,7 +1832,7 @@ export function treeFromExpression(expression, options = {}) {
  */
 export function expressionFromTree(tree, options = {}) {
     const simplifiedTree = applyTransformations(
-        [createComplexConditions, ...VIRTUAL_OPERATORS_DESTRUCTION],
+        [createComplexConditions, ...VIRTUAL_OPERATORS_ELIMINATION],
         tree
     );
     return _expressionFromTree(simplifiedTree, options, true);
@@ -1658,7 +1843,7 @@ export function expressionFromTree(tree, options = {}) {
  * @returns {string} a string representation of a domain
  */
 export function domainFromTree(tree) {
-    const simplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_DESTRUCTION, tree);
+    const simplifiedTree = applyTransformations(FULL_VIRTUAL_OPERATORS_ELIMINATION, tree);
     const domainAST = {
         type: 4,
         value: getASTs(simplifiedTree),
@@ -1673,5 +1858,5 @@ export function domainFromTree(tree) {
  */
 export function treeFromDomain(domain, options = {}) {
     const tree = constructTree(domain, options.distributeNot);
-    return applyTransformations(FULL_VIRTUAL_OPERATORS_CREATION, tree, options);
+    return applyTransformations(FULL_VIRTUAL_OPERATORS_INTRODUCTION, tree, options);
 }
