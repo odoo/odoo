@@ -15,7 +15,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
         self.assertEqual(invoice.l10n_es_tbai_state, 'to_send')
         self.assertFalse(invoice.l10n_es_tbai_chain_index)
-        self.assertFalse(invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertFalse(invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
         # Post with success
         with patch(
@@ -27,10 +27,10 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         self.assertEqual(invoice.l10n_es_tbai_state, 'sent')
         self.assertTrue(invoice.l10n_es_tbai_chain_index)
         self.assertEqual(invoice.l10n_es_tbai_post_document_id.state, 'accepted')
-        self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
         self.assertEqual(invoice.state, 'posted')
-        self.assertFalse(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+        self.assertFalse(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
 
         # Cancel with success
         with patch(
@@ -41,7 +41,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
         self.assertEqual(invoice.l10n_es_tbai_state, 'cancelled')
         self.assertEqual(invoice.l10n_es_tbai_cancel_document_id.state, 'accepted')
-        self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+        self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
 
         self.assertEqual(invoice.state, 'cancel')
 
@@ -64,7 +64,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
             self.assertEqual(invoice.l10n_es_tbai_state, 'to_send')
             self.assertFalse(invoice.l10n_es_tbai_chain_index)
             self.assertEqual(invoice.l10n_es_tbai_post_document_id.state, 'rejected')
-            self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+            self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
         failed_document_id = invoice.l10n_es_tbai_post_document_id.id
 
@@ -80,7 +80,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         self.assertEqual(invoice.l10n_es_tbai_state, 'sent')
         self.assertTrue(invoice.l10n_es_tbai_chain_index)
         self.assertEqual(invoice.l10n_es_tbai_post_document_id.state, 'accepted')
-        self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
     def test_cancel_invoice_tbai_failure(self):
         invoice = self._create_posted_invoice()
@@ -105,7 +105,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         except UserError:
             self.assertEqual(invoice.l10n_es_tbai_state, 'sent')
             self.assertEqual(invoice.l10n_es_tbai_cancel_document_id.state, 'rejected')
-            self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+            self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
 
         failed_document_id = invoice.l10n_es_tbai_cancel_document_id.id
 
@@ -120,7 +120,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
         self.assertEqual(invoice.l10n_es_tbai_state, 'cancelled')
         self.assertEqual(invoice.l10n_es_tbai_cancel_document_id.state, 'accepted')
-        self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+        self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
 
     def test_post_invoice_tbai_request_error(self):
         invoice = self._create_posted_invoice()
@@ -139,7 +139,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
             self.assertEqual(invoice.l10n_es_tbai_state, 'to_send')
             self.assertTrue(invoice.l10n_es_tbai_chain_index)
             self.assertEqual(invoice.l10n_es_tbai_post_document_id.state, 'to_send')
-            self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+            self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
         pending_document_id = invoice.l10n_es_tbai_post_document_id.id
         chain_index = invoice.l10n_es_tbai_chain_index
@@ -156,7 +156,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
         self.assertEqual(invoice.l10n_es_tbai_state, 'sent')
         self.assertEqual(invoice.l10n_es_tbai_post_document_id.state, 'accepted')
-        self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_id)
+        self.assertTrue(invoice.l10n_es_tbai_post_document_id.xml_attachment_bin)
 
     def test_cancel_invoice_request_error(self):
         invoice = self._create_posted_invoice()
@@ -181,7 +181,7 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
         except UserError:
             self.assertEqual(invoice.l10n_es_tbai_state, 'sent')
             self.assertEqual(invoice.l10n_es_tbai_cancel_document_id.state, 'to_send')
-            self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+            self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
 
         pending_document_id = invoice.l10n_es_tbai_cancel_document_id.id
 
@@ -196,4 +196,4 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
 
         self.assertEqual(invoice.l10n_es_tbai_state, 'cancelled')
         self.assertEqual(invoice.l10n_es_tbai_cancel_document_id.state, 'accepted')
-        self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_id)
+        self.assertTrue(invoice.l10n_es_tbai_cancel_document_id.xml_attachment_bin)
