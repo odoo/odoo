@@ -1,6 +1,12 @@
 import { queryAll, queryAllTexts, queryOne, queryText, queryValue } from "@odoo/hoot-dom";
 import { contains, fields, models } from "@web/../tests/web_test_helpers";
 
+import { Domain } from "@web/core/domain";
+
+export function formatDomain(str) {
+    return new Domain(str).toString();
+}
+
 /**
  * @typedef {import("@odoo/hoot-dom").FillOptions} FillOptions
  * @typedef {import("@odoo/hoot-dom").Target} Target

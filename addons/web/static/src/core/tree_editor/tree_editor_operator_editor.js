@@ -39,7 +39,7 @@ const OPERATOR_DESCRIPTIONS = {
     next: _t("next"),
 
     // virtual operators (equivalent to a couple (<,>))
-    is_not_between: _t("not between"),
+    not_between: _t("not between"),
     not_last: _t("not last"),
     not_next: _t("not next"),
 
