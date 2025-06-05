@@ -151,3 +151,31 @@ class PaymentPortal(payment_portal.PaymentPortal):
             for provider_sudo in providers_sudo:
                 res[provider_sudo.id] = False
         return res
+
+    @http.route(
+        '/website_payment/snippet/supported_payment_methods',
+        type='jsonrpc', auth='public', readonly=True, sitemap=False,
+    )
+    def get_supported_payment_methods(self, limit=None):
+        """Retrieve the published payment methods brands to be displayed using the
+        `s_supported_payment_methods` snippet.
+
+        :param int limit: Limit the number of payment method returned.
+        :rtype: list[{ 'id': int, 'name': str, 'code': str }]
+        :return: The brands of published primary methods or the primary method it self if it does
+            not have brands.
+        """
+        limit = self._cast_as_int(limit)
+        # Sudoed to read the brands of primary methods
+        return request.env['payment.method'].sudo().search_read(
+            [
+                '|', '&', ('is_primary', '=', True),
+                     '&', ('provider_ids.is_published', '=', True),
+                          ('brand_ids', '=', False),
+                     '&', ('is_primary', '=', False),
+                          ('primary_payment_method_id.provider_ids.is_published', '=', True),
+            ],
+            fields=('id', 'name', 'code'),
+            limit=limit,
+            order='sequence',
+        )
