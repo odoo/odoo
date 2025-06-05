@@ -6,10 +6,11 @@
     'depends': ['base', 'web', 'web_tour'],
     'installable': True,
     'data': [
+        'data/test_action_bindings.xml',
+        'data/test_orm_data.xml',
         'security/ir.model.access.csv',
         'security/test_orm_security.xml',
         'views/test_orm_views.xml',
-        'data/test_orm_data.xml',
     ],
     'assets': {
         'web.assets_tests': [
