@@ -339,7 +339,7 @@ export class RecordList extends Array {
                                 );
                                 const inverse = getInverse(recordList);
                                 if (inverse) {
-                                    oldRecord[inverse].delete(recordList);
+                                    oldRecord[inverse].delete(recordList._.owner);
                                 }
                                 recordListProxy.data[index] = newRecord?.localId;
                                 if (newRecord) {
@@ -351,7 +351,7 @@ export class RecordList extends Array {
                                         newRecord
                                     );
                                     if (inverse) {
-                                        newRecord[inverse].add(recordList);
+                                        newRecord[inverse].add(recordList._.owner);
                                     }
                                 }
                             }
