@@ -9,7 +9,7 @@
             <div class="d-flex justify-content-between align-items-center mt-4 px-2">
                 <div class="o-mail-ActivityCell-deadline" t-out="reportingDateFormatted"/>
                 <div class="d-flex justify-content-end">
-                    <div t-if="props.userAssignedIds" class="d-flex justify-content-start">
+                    <div t-if="props.userAssignedIds" class="d-flex justify-content-center">
                         <Avatar t-if="props.userAssignedIds.length > 0"
                                 resModel="'res.users'" resId="props.userAssignedIds[0]"
                                 displayName="''" noSpacing="true"/>
