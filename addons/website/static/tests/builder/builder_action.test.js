@@ -1,15 +1,17 @@
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-dom";
-import { useState, xml } from "@odoo/owl";
-import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { BaseOptionComponent } from "@html_builder/core/utils";
-import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
+import { Builder } from "@html_builder/builder";
+import { SavePlugin } from "@html_builder/core/save_plugin";
+import { BaseOptionComponent } from "@html_builder/core/utils";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { animationFrame, Deferred } from "@odoo/hoot-dom";
+import { useState, xml } from "@odoo/owl";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
+import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 
 describe("website tests", () => {
     beforeEach(defineWebsiteModels);
@@ -121,5 +123,66 @@ describe("HTML builder tests", () => {
         prepareDeferred.resolve();
         await animationFrame();
         expect.verifySteps(["prepare"]);
+    });
+
+    test("reload action: apply, clean save and reload are called in the right order (async)", async () => {
+        let reloadDef;
+        patchWithCleanup(SavePlugin.prototype, {
+            async save() {
+                expect.step("save sync");
+                await super.save();
+                expect.step("save async");
+            },
+            async saveView() {
+                return new Promise((resolve) => setTimeout(resolve, 10));
+            },
+        });
+        patchWithCleanup(Builder.prototype, {
+            setup() {
+                super.setup();
+                this.editor.config.reloadEditor = async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 10));
+                    expect.step("reload");
+                    reloadDef.resolve();
+                };
+            },
+        });
+        addBuilderAction({
+            testReloadAction: {
+                reload: {},
+                isApplied: ({ editingElement }) => editingElement.dataset.applied === "true",
+                apply: async ({ editingElement }) => {
+                    expect.step("apply sync");
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                    expect.step("apply async");
+                    editingElement.dataset.applied = "true";
+                },
+                clean: async ({ editingElement }) => {
+                    expect.step("clean sync");
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                    expect.step("clean async");
+                    editingElement.dataset.applied = "false";
+                },
+            },
+        });
+
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderButton action="'testReloadAction'">Click</BuilderButton>`,
+        });
+        await setupHTMLBuilder(`<section class="test-options-target">Test</section>`);
+        await contains(":iframe .test-options-target").click();
+
+        // Apply
+        reloadDef = new Deferred();
+        await contains("[data-action-id='testReloadAction']").click();
+        await reloadDef;
+        expect.verifySteps(["apply sync", "apply async", "save sync", "save async", "reload"]);
+
+        // Clean
+        reloadDef = new Deferred();
+        await contains("[data-action-id='testReloadAction']").click();
+        await reloadDef;
+        expect.verifySteps(["clean sync", "clean async", "save sync", "save async", "reload"]);
     });
 });
