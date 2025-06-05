@@ -772,3 +772,23 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertRecordValues(delivery.move_ids, [
             {'quantity': 5.0, 'state': 'done', 'lot_ids': self.lot1.ids}
         ])
+
+    def test_adjustment_post_validation(self):
+        """
+        Check if an error is raised when updating a stock move quantity.
+        """
+        in_move = self._make_in_move(self.product1, 2, 2, lot_ids=[self.lot1])
+
+        in_move.write({"quantity": 5.0})
+        self.assertEqual(in_move.quantity, 5.0)
+        self.assertEqual(self.lot1.quantity_svl, 5.0)
+        in_move.write({"quantity": 3.0})
+        self.assertEqual(in_move.quantity, 3.0)
+        self.assertEqual(self.lot1.quantity_svl, 3.0)
+
+        in_move_lots = self._make_in_move(self.product1, 10, 5, lot_ids=[self.lot2, self.lot3])
+
+        with self.assertRaises(UserError):
+            in_move_lots.write({"quantity": 16.0})
+        with self.assertRaises(UserError):
+            in_move_lots.write({"quantity": 14.0})
