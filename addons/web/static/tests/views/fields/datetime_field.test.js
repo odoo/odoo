@@ -632,5 +632,5 @@ test("list datetime: column widths (show_time=false)", async () => {
     });
 
     expect(queryAllTexts(".o_data_row:eq(0) .o_data_cell")).toEqual(["02/08/2017", "partner,1"]);
-    expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 81, 679]);
+    expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 83, 677]);
 });
