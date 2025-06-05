@@ -396,6 +396,9 @@ class IrHttp(models.AbstractModel):
         View = env["ir.ui.view"]
         values = super()._get_values_500_error(env, values, exception)
         if 'qweb_exception' in values:
+            if not env.user.has_group('base.group_user'):
+                values.pop('qweb_exception', None)
+                values.pop('traceback', None)
             try:
                 # exception.name might be int, string
                 exception_template = int(exception.name)
@@ -412,7 +415,7 @@ class IrHttp(models.AbstractModel):
                 node = et.xpath(exception.path) if exception.path else et
                 line = node is not None and len(node) > 0 and etree.tostring(node[0], encoding='unicode')
                 if line:
-                    values['view'] = View._views_get(exception_template).filtered(
+                    values['view'] = View.sudo()._views_get(exception_template).filtered(
                         lambda v: line in v.arch
                     )
                     values['view'] = values['view'] and values['view'][0]
