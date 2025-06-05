@@ -226,6 +226,7 @@ export class BuilderOptionsPlugin extends Plugin {
             .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
             .map(([element, options]) => ({
                 id: previousElementToIdMap.get(element) || uniqueId(),
+                folded: true,
                 element,
                 options,
                 headerMiddleButtons: elementToHeaderMiddleButtons.get(element) || [],
@@ -244,6 +245,9 @@ export class BuilderOptionsPlugin extends Plugin {
         );
         if (lastValidContainerIdx > 0) {
             containers = containers.slice(lastValidContainerIdx);
+        }
+        if (containers.length) {
+            containers.at(-1).folded = false;
         }
         return containers;
     }
