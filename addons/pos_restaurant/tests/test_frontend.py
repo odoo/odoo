@@ -637,6 +637,18 @@ class TestFrontend(TestFrontendCommon):
         """
         self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_customer_alone_saved', login="pos_user")
 
+    def test_no_kitchen_confirmation_for_deposit_money(self):
+        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
+            self.skipTest("pos_settle_due module is required for this test")
+
+        self.customer_account_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Customer Account',
+            'split_transactions': True,
+        })
+        self.pos_config.write({'payment_method_ids': [(4, self.customer_account_payment_method.id)]})
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_no_kitchen_confirmation_for_deposit_money', login="pos_admin")
+
     def test_open_default_register_screen_config(self):
         """
         Tests that the default register screen is opened when the config is set to do so

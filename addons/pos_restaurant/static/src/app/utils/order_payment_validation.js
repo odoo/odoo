@@ -29,7 +29,11 @@ patch(OrderPaymentValidation.prototype, {
         return await super.afterOrderValidation(...arguments);
     },
     async askBeforeValidation() {
-        if (this.pos.config.module_pos_restaurant && this.order.hasChange && !this.order.isRefund) {
+        if (
+            this.pos.config.module_pos_restaurant &&
+            this.pos.categoryCount.length &&
+            !this.order.isRefund
+        ) {
             const confirmed = await ask(this.pos.dialog, {
                 title: _t("Warning !"),
                 body: _t(
