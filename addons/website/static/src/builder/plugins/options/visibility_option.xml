@@ -37,7 +37,7 @@
     <t t-set="geoip_country_code" t-value="this.props.websiteSession.geoip_country_code"/>
     <BuilderRow label.translate="Visibility" expand="true">
         <t t-call="website.DeviceVisibility"></t>
-        <BuilderSelect dataAttributeAction="'visibility'" action="'forceVisible'">
+        <BuilderSelect dataAttributeAction="'visibility'" action="'forceVisible'" preview="false">
             <BuilderSelectItem dataAttributeActionValue="null">No condition</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'conditional'" classAction="'o_snippet_invisible'" id="'visibility_conditional'">Conditionally</BuilderSelectItem>
         </BuilderSelect>
