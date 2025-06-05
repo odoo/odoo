@@ -164,7 +164,7 @@ function computeWidths(table, state, allowedWidth, startingWidths) {
         _columnWidths = startingWidths.slice();
     } else if (state.isEmpty) {
         // Table is empty => uniform distribution as starting point
-        _columnWidths = headers.map(() => allowedWidth / headers.length);
+        _columnWidths = Array(headers.length).fill(0);
     } else {
         // Table contains records => let the browser compute ideal widths
         // Set table layout auto and remove inline style
@@ -180,16 +180,23 @@ function computeWidths(table, state, allowedWidth, startingWidths) {
         table.classList.remove("o_list_computing_widths");
     }
 
+    let remainingWidth = allowedWidth;
     // Force columns to comply with their min and max widths
     if (state.hasSelectors) {
         _columnWidths[0] = SELECTOR_WIDTH;
+        remainingWidth -= SELECTOR_WIDTH;
     }
     if (state.hasOpenFormViewColumn) {
         const index = _columnWidths.length - (state.hasActionsColumn ? 2 : 1);
         _columnWidths[index] = OPEN_FORM_VIEW_BUTTON_WIDTH;
+        remainingWidth -= OPEN_FORM_VIEW_BUTTON_WIDTH;
     }
     if (state.hasActionsColumn) {
         _columnWidths[_columnWidths.length - 1] = DELETE_BUTTON_WIDTH;
+        remainingWidth -= DELETE_BUTTON_WIDTH;
+    }
+    if (state.isEmpty && remainingWidth > 0) {
+        return handleEmptyTableState(headers, _columnWidths, remainingWidth);
     }
     const columnWidthSpecs = getWidthSpecs(columns);
     const columnOffset = state.hasSelectors ? 1 : 0;
@@ -330,6 +337,28 @@ function getWidthSpecs(columns) {
 function getHorizontalPadding(el) {
     const { paddingLeft, paddingRight } = getComputedStyle(el);
     return parseFloat(paddingLeft) + parseFloat(paddingRight);
+}
+
+/**
+ * Compute ideal widths when table is empty
+ *
+ * @param {Object[]} headers
+ * @param {Number[]} columnWidths
+ * @param {Number} remainingWidth
+ * @returns {Number[]}
+ */
+function handleEmptyTableState(headers, columnWidths, remainingWidth) {
+    const labeledHeaders = headers.filter((th) => {
+        try {
+            const label = JSON.parse(th.querySelector('div[data-tooltip-info]').getAttribute('data-tooltip-info'))?.field?.label;
+            return Boolean(label);
+        } catch {
+            return false;
+        }
+    });
+
+    const uniformWidth = labeledHeaders.length > 0 ? remainingWidth / labeledHeaders.length : 0;
+    return headers.map((header, index) => labeledHeaders.includes(header) && columnWidths[index] === 0 ? uniformWidth : columnWidths[index]);
 }
 
 export function useMagicColumnWidths(tableRef, getState) {

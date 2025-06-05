@@ -153,7 +153,7 @@ test(`width computation: no record, lot of fields`, async () => {
                 <field name="currency_id"/>
             </list>`,
     });
-    expect(getColumnWidths()).toEqual([40, 29, 89, 80, 89, 102, 81, 139, 114, 100]);
+    expect(getColumnWidths()).toEqual([40, 83, 83, 83, 83, 83, 83, 83, 83, 94]);
 });
 
 test(`width computation: no record, few fields`, async () => {
@@ -168,7 +168,7 @@ test(`width computation: no record, few fields`, async () => {
                 <field name="int_field"/>
             </list>`,
     });
-    expect(getColumnWidths()).toEqual([40, 109, 559, 91]);
+    expect(getColumnWidths()).toEqual([40, 250, 250, 261]);
 });
 
 test(`width computation: no record, all fields with a max width`, async () => {
@@ -183,7 +183,7 @@ test(`width computation: no record, all fields with a max width`, async () => {
                 <field name="qux"/>
             </list>`,
     });
-    expect(getColumnWidths()).toEqual([40, 262, 233, 266]);
+    expect(getColumnWidths()).toEqual([40, 250, 250, 261]);
 });
 
 test(`width computation: no record, sample data`, async () => {
@@ -200,7 +200,31 @@ test(`width computation: no record, sample data`, async () => {
                 <field name="int_field"/>
             </list>`,
     });
-    expect(getColumnWidths()).toEqual([40, 109, 186, 186, 186, 91]);
+    expect(getColumnWidths()).toEqual([40, 150, 150, 150, 150, 161]);
+});
+
+test(`width computation: no record, lot of fields, no scrollbar`, async () => {
+    Foo._records = [];
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list>
+                <field name="bar"/>
+                <field name="foo"/>
+                <field name="int_field"/>
+                <field name="m2o"/>
+                <field name="qux"/>
+                <field name="date"/>
+                <field name="datetime"/>
+                <field name="amount"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+    });
+
+    const tableContainer = document.querySelector(".o_list_table");
+    expect(tableContainer.scrollWidth > 800).not.toBe(true);
 });
 
 test(`width computation: with records, lot of fields`, async () => {
@@ -243,6 +267,7 @@ test(`width computation: with records, lot of fields, grouped`, async () => {
         groupBy: ["int_field"],
     });
     expect(`.o_resize`).toHaveCount(9);
+    await contains(`.o_group_caret`).click();
     expect(getColumnWidths()).toEqual([40, 29, 89, 80, 89, 102, 81, 139, 114, 45]);
 });
 
@@ -415,7 +440,7 @@ test(`width computation: editable list, no record, with handle field`, async () 
     expect(`thead th:eq(0)`).toHaveText("", {
         message: "the handle field shouldn't have a header description",
     });
-    expect(getColumnWidths()).toEqual([40, 29, 360, 371]);
+    expect(getColumnWidths()).toEqual([40, 10, 370, 381]);
 });
 
 test(`width computation: widget with listViewWidth in its definition`, async () => {
@@ -557,7 +582,7 @@ test(`width computation: no record, nameless and stringless buttons`, async () =
     const columnWidths = getColumnWidths();
     expect(columnWidths[0]).toBe(40);
     expect(columnWidths[1]).toBeGreaterThan(300);
-    expect(columnWidths[2]).toBeGreaterThan(300);
+    expect(columnWidths[2]).toBeLessThan(30);
 });
 
 test(`width computation: x2many`, async () => {
@@ -579,7 +604,7 @@ test(`width computation: x2many`, async () => {
     });
 
     const columnWidths = getColumnWidths();
-    expect(columnWidths[1]).toBeGreaterThan(380);
+    expect(columnWidths[1]).toBeGreaterThan(220);
 });
 
 test(`width computation: x2many, column_invisible`, async () => {
@@ -604,12 +629,12 @@ test(`width computation: x2many, column_invisible`, async () => {
 
     let columnWidths = getColumnWidths();
     const fooWidth = columnWidths[1];
-    expect(fooWidth).toBeGreaterThan(380);
+    expect(fooWidth).toBeGreaterThan(220);
 
     await contains(".o_field_widget[name=bar] input").click();
     columnWidths = getColumnWidths();
     expect(columnWidths[2]).toBeLessThan(fooWidth);
-    expect(columnWidths[2]).toBeGreaterThan(220);
+    expect(columnWidths[2]).toBeGreaterThan(165);
 });
 
 test(`width computation: x2many, editable list, initially invisible, overflowing`, async () => {
@@ -810,7 +835,7 @@ test(`width computation: button with width in arch`, async () => {
         `,
     });
 
-    expect(getColumnWidths()).toEqual([40, 216, 216, 34, 68, 227]);
+    expect(getColumnWidths()).toEqual([40, 710, 10, 10, 10, 21]);
 });
 
 // freeze column widths
@@ -1329,12 +1354,12 @@ test(`freeze widths: x2many, toggle optional field`, async () => {
             </form>`,
     });
 
-    expect(getColumnWidths()).toEqual([92, 644, 32]);
+    expect(getColumnWidths()).toEqual([373, 362, 32]);
 
     // create a record to store the current widths, but discard it directly to keep
     // the list empty (otherwise, the browser automatically computes the optimal widths)
     await contains(".o_field_x2many_list_row_add a").click();
-    expect(getColumnWidths()).toEqual([92, 644, 32]);
+    expect(getColumnWidths()).toEqual([373, 362, 32]);
 
     await contains(".o_optional_columns_dropdown_toggle").click();
     await contains(".dropdown-item input").click();
