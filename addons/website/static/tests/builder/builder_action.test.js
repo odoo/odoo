@@ -237,4 +237,68 @@ describe("HTML builder tests", () => {
             expect.verifySteps(["apply true", "apply false"]);
         });
     });
+
+    test("reload action: apply, clean save and reload are called in the right order (async)", async () => {
+        let reloadDef;
+        patchWithCleanup(SavePlugin.prototype, {
+            async save() {
+                expect.step("save sync");
+                await super.save();
+                expect.step("save async");
+            },
+            async saveView() {
+                return new Promise((resolve) => setTimeout(resolve, 10));
+            },
+        });
+        patchWithCleanup(Builder.prototype, {
+            setup() {
+                super.setup();
+                this.editor.config.reloadEditor = async () => {
+                    await new Promise((resolve) => setTimeout(resolve, 10));
+                    expect.step("reload");
+                    reloadDef.resolve();
+                };
+            },
+        });
+        addBuilderAction({
+            TestReloadAction: class extends BuilderAction {
+                static id = "testReload";
+                reload = {};
+                isApplied({ editingElement }) {
+                    return editingElement.dataset.applied === "true";
+                }
+                async apply({ editingElement }) {
+                    expect.step("apply sync");
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                    expect.step("apply async");
+                    editingElement.dataset.applied = "true";
+                }
+                async clean({ editingElement }) {
+                    expect.step("clean sync");
+                    await new Promise((resolve) => setTimeout(resolve, 100));
+                    expect.step("clean async");
+                    editingElement.dataset.applied = "false";
+                }
+            },
+        });
+
+        addBuilderOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderButton action="'testReload'">Click</BuilderButton>`,
+        });
+        await setupHTMLBuilder(`<section class="test-options-target">Test</section>`);
+        await contains(":iframe .test-options-target").click();
+
+        // Apply
+        reloadDef = new Deferred();
+        await contains("[data-action-id='testReload']").click();
+        await reloadDef;
+        expect.verifySteps(["apply sync", "apply async", "save sync", "save async", "reload"]);
+
+        // Clean
+        reloadDef = new Deferred();
+        await contains("[data-action-id='testReload']").click();
+        await reloadDef;
+        expect.verifySteps(["clean sync", "clean async", "save sync", "save async", "reload"]);
+    });
 });
