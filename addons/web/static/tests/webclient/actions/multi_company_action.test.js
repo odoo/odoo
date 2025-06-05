@@ -30,7 +30,6 @@ class Partner extends models.Model {
                 </group>
             </form>
         `,
-        search: `<search></search>`,
     };
 }
 
@@ -122,4 +121,3 @@ test("form view in dialog shows wrong company error", async () => {
     expect(cookie.get("cids")).toBe("1"); // cookies were not modified
     expect.verifySteps([]); // don't reload
 });
-
