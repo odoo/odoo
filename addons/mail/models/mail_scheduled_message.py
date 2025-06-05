@@ -186,6 +186,7 @@ class ScheduledMessage(models.Model):
                 self.env[scheduled_message.model].browse(scheduled_message.res_id).with_user(message_creator).message_post(
                     attachment_ids=list(scheduled_message.attachment_ids.ids),
                     author_id=scheduled_message.author_id.id,
+                    subject=scheduled_message.subject,
                     body=scheduled_message.body,
                     partner_ids=list(scheduled_message.partner_ids.ids),
                     subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
