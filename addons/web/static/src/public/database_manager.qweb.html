@@ -284,9 +284,16 @@
                                 <label for="backup_format" class="col-md-4 col-form-label">Backup Format</label>
                                 <div class="col-md-8">
                                     <select id="backup_format" name="backup_format" class="form-select" required="required">
-                                        <option value="zip">zip (includes filestore)</option>
+                                        <option value="zip">zip</option>
                                         <option value="dump">pg_dump custom format (without filestore)</option>
                                     </select>
+                                </div>
+                            </div>
+                             <div class="row mb-3" id="filestore_div">
+                                <label for="backup_format" class="col-md-4 col-form-label">Include filestore</label>
+                                <div class="col-md-8">
+                                     <input id="filestore" type="checkbox" name="filestore" value="1" checked class="form-check-input" />
+                                     <input type="hidden" name="filestore" value="0"/>
                                 </div>
                             </div>
                         </div>
