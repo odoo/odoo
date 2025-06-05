@@ -12,7 +12,7 @@ export class DeviceController {
         this.id = uniqueId('listener-');
         this.iotIp = deviceInfo.iot_ip;
         this.identifier = deviceInfo.identifier;
-        this.iotId = deviceInfo.iot_id.id;
+        this.iotId = deviceInfo.iot_id?.id; // if class is instantiated without providing the full device record, iot_id will be undefined
         this.manual_measurement = deviceInfo.manual_measurement;
         this.iotLongpolling = iotLongpolling;
     }
