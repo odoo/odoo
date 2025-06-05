@@ -10,8 +10,8 @@
             <span class="ps-2 text-white" t-out="title" role="button" t-on-click="selectElement"/>
                 <!-- TODO CSS + remove temporary BS classes -->
             <div class="float-end">
-                <div class="me-3 d-inline">
-                    <t t-if="props.headerMiddleButtons" t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
+                <div t-if="props.headerMiddleButtons.length" class="me-3 d-inline">
+                    <t t-foreach="props.headerMiddleButtons" t-as="headerMiddleButton" t-key="headerMiddleButton.id">
                         <BuilderContext applyTo="headerMiddleButton.applyTo">
                             <t t-if="headerMiddleButton.Component"
                                 t-component="headerMiddleButton.Component"
@@ -65,7 +65,7 @@
                 <div>You can still access the block options but it might be ineffective.</div>
                 <button type="button" class="btn o_we_bg_brand_primary py-2 my-4 border-0" t-on-click="() => this.accessOutdated()">ACCESS OPTIONS ANYWAY</button>
             </div>
-        </t>        
+        </t>
     </div>
 </t>
 

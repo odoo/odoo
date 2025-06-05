@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website_payment.SupportedPaymentMethodsOption">
+    <BuilderRow label.translate="Limit">
+        <BuilderNumberInput min="1" step="1" default="6" action="'applyLimit'"/>
+    </BuilderRow>
+    <BuilderRow label.translate="Height">
+        <!-- `max=160` as the static payment methods images are 160px tall.
+             E.g. `/payment/static/img/paypal.png`. -->
+        <BuilderNumberInput min="16" max="160" step="1" default="32"
+                            unit="'px'" applyWithUnit="false"
+                            action="'applyHeight'"
+        />
+    </BuilderRow>
+</t>
+
+</templates>
