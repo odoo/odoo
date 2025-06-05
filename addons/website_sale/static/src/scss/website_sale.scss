@@ -462,12 +462,6 @@ body:not(.editor_enable) #category_header {
         // correctly when rendered into the last row.
         grid-auto-rows: minmax(160px, auto);
 
-        // Bootstrap uses a 12 columns grid system by default.
-        // Tweak the grid when in need to render 5 columns.
-        &[data-ppr="5"] {
-            --columns: 10;
-        }
-
         .oe_product {
             grid-row: span var(--o-wsale-products-grid-product-col-height, 1);
         }
@@ -572,6 +566,22 @@ body:not(.editor_enable) #category_header {
     .o_wsale_products_grid_table_md {
         @include media-breakpoint-only(md) {
             @include desktop-setup();
+        }
+    }
+
+    // Bootstrap uses a 12 columns grid system by default.
+    // Tweak the grid when in need to render 5 columns.
+    &[data-ppr="5"] {
+        .o_wsale_products_grid_table {
+            @include media-breakpoint-up(lg) {
+                --columns: 10;
+            }
+        }
+
+        .o_wsale_products_grid_table_md {
+            @include media-breakpoint-only(md) {
+                --columns: 10;
+            }
         }
     }
 }
