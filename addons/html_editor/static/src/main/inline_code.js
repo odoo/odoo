@@ -18,24 +18,25 @@ export class InlineCodePlugin extends Plugin {
         // We just inserted a backtick, check if there was another
         // one in the text.
         let textNode = selection.startContainer;
-        let offset = selection.startOffset;
-        let sibling = textNode.previousSibling;
-        while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-            offset += sibling.textContent.length;
-            sibling.textContent += textNode.textContent;
-            textNode.remove();
-            textNode = sibling;
-            sibling = textNode.previousSibling;
-        }
-        sibling = textNode.nextSibling;
-        while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-            textNode.textContent += sibling.textContent;
-            sibling.remove();
-            sibling = textNode.nextSibling;
-        }
-        const textHasTwoTicks = /`.*`/.test(textNode.textContent);
+        const wholeText = textNode.wholeText;
+        const textHasTwoTicks = /`.*`/.test(wholeText);
         // We don't apply the code tag if there is no content between the two `
-        if (textHasTwoTicks && textNode.textContent.replace(/`/g, "").length) {
+        if (textHasTwoTicks && wholeText.replace(/`/g, "").length) {
+            let offset = selection.startOffset;
+            let sibling = textNode.previousSibling;
+            while (sibling && sibling.nodeType === Node.TEXT_NODE) {
+                offset += sibling.textContent.length;
+                sibling.textContent += textNode.textContent;
+                textNode.remove();
+                textNode = sibling;
+                sibling = sibling.previousSibling;
+            }
+            sibling = textNode.nextSibling;
+            while (sibling && sibling.nodeType === Node.TEXT_NODE) {
+                textNode.textContent += sibling.textContent;
+                sibling.remove();
+                sibling = sibling.nextSibling;
+            }
             this.dependencies.selection.setSelection({
                 anchorNode: textNode,
                 anchorOffset: offset,
