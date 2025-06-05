@@ -39,7 +39,7 @@ export class CrmPlsTooltipButton extends Component {
         } else {
             // Apply pending changes. They may change probability
             await this.props.record.save();
-            if (status(this) === "destroyed") {
+            if (status(this) === "destroyed" || !this.props.record.resId) {
                 return;
             }
 
