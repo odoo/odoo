@@ -39,15 +39,20 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
 
             // Use +10 and +50 to increment the amount of the paymentline
             PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("⌫"),
             PaymentScreen.clickNumpad("+10"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "62.8"),
-            PaymentScreen.changeIs("10.0"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "10"),
+            PaymentScreen.remainingIs("42.8"),
+            PaymentScreen.validateButtonIsHighlighted(false),
+            PaymentScreen.clickNumpad("5"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "105"),
+            PaymentScreen.changeIs("52.2"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickNumpad("+50"),
-            PaymentScreen.fillPaymentLineAmountMobile("Cash", "112.80"),
-            PaymentScreen.changeIs("60.0"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "155"),
+            PaymentScreen.changeIs("102.2"),
             PaymentScreen.validateButtonIsHighlighted(true),
-            PaymentScreen.clickPaymentlineDelButton("Cash", "112.80"),
+            PaymentScreen.clickPaymentlineDelButton("Cash", "155.0"),
 
             // Multiple paymentlines
             PaymentScreen.clickPaymentMethod("Cash"),
