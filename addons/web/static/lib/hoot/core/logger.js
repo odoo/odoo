@@ -30,7 +30,7 @@ const {
  * @param {string} [prefix]
  * @param {string} [prefixColor]
  */
-const styledArguments = (args, prefix, prefixColor) => {
+function styledArguments(args, prefix, prefixColor) {
     const fullPrefix = `%c[${prefix || "HOOT"}]%c`;
     const styles = [`color:${prefixColor || "#ff0080"};font-weight:bold`, ""];
     let firstArg = args.shift() ?? "";
@@ -43,12 +43,12 @@ const styledArguments = (args, prefix, prefixColor) => {
         args.unshift(fullPrefix, ...styles, firstArg);
     }
     return args;
-};
+}
 
 /**
  * @param {any[]} args
  */
-const unstyledArguments = (args) => {
+function unstyledArguments(args) {
     const prefix = `[HOOT]`;
     const firstArg = args.shift() ?? "";
     if (typeof firstArg === "string") {
@@ -57,7 +57,7 @@ const unstyledArguments = (args) => {
         args.unshift(prefix, firstArg);
     }
     return [args.join(" ")];
-};
+}
 
 const DEBUG_PREFIX = ["DEBUG", "#ffb000"];
 const ERROR_PREFIX = ["ERROR", "#9f1239"];
@@ -261,10 +261,9 @@ export const logger = {
      * @param {string} reason
      */
     suppressIssues(reason) {
-        const restore = () => {
+        logger.suppressed = reason || "(suppressed)";
+        return function restore() {
             logger.suppressed = "";
         };
-        logger.suppressed = reason || "(suppressed)";
-        return restore;
     },
 };

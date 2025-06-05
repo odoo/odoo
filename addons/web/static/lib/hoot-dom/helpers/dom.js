@@ -586,7 +586,7 @@ function parseSelector(selector) {
     /**
      * @param {string} selector
      */
-    const addToSelector = (selector) => {
+    function addToSelector(selector) {
         registerChar = false;
         const index = currentPart.length - 1;
         if (typeof currentPart[index] === "string") {
@@ -594,7 +594,7 @@ function parseSelector(selector) {
         } else {
             currentPart.push(selector);
         }
-    };
+    }
 
     /** @type {(string | ReturnType<PseudoClassPredicateBuilder>)[]} */
     const firstPart = [""];

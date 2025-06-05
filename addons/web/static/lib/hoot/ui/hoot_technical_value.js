@@ -36,12 +36,13 @@ const {
  *
  * @type {typeof String.raw}
  */
-const xml = (template, ...substitutions) =>
-    owlXml({
+function xml(template, ...substitutions) {
+    return owlXml({
         raw: String.raw(template, ...substitutions)
             .replace(/>\s+/g, ">")
             .replace(/\s+</g, "<"),
     });
+}
 
 const INVARIABLE_OBJECTS = [Promise, RegExp];
 

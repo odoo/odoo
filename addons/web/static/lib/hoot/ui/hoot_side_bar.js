@@ -274,7 +274,7 @@ export class HootSideBar extends Component {
         /**
          * @param {Suite} suite
          */
-        const addSuite = (suite) => {
+        function addSuite(suite) {
             if (!(suite instanceof Suite) || (allowedIds && !allowedIds.has(suite.id))) {
                 return;
             }
@@ -285,7 +285,7 @@ export class HootSideBar extends Component {
             for (const child of suite.jobs) {
                 addSuite(child);
             }
-        };
+        }
 
         const unfoldedSuites = [];
         for (const suite of rootSuites) {
@@ -333,46 +333,48 @@ export class HootSideBar extends Component {
      * @param {Suite} suite
      */
     onSuiteKeydown(ev, suite) {
-        /**
-         * @param {number} delta
-         */
-        const selectElementAt = (delta) => {
-            const suiteElements = this.getSuiteElements();
-            const nextIndex = suiteElements.indexOf(ev.currentTarget) + delta;
-            if (nextIndex < 0) {
-                this.searchInputRef.el?.focus();
-            } else if (nextIndex >= suiteElements.length) {
-                suiteElements[0].focus();
-            } else {
-                suiteElements[nextIndex].focus();
-            }
-        };
-
-        switch (ev.key) {
+        const { currentTarget, key } = ev;
+        switch (key) {
             case "ArrowDown": {
-                return selectElementAt(+1);
+                return this.selectElementAt(currentTarget, +1);
             }
             case "ArrowLeft": {
                 if (this.state.unfoldedIds.has(suite.id)) {
                     return this.toggleItem(suite, false);
                 } else {
-                    return selectElementAt(-1);
+                    return this.selectElementAt(currentTarget, -1);
                 }
             }
             case "ArrowRight": {
                 if (this.state.unfoldedIds.has(suite.id)) {
-                    return selectElementAt(+1);
+                    return this.selectElementAt(currentTarget, +1);
                 } else {
                     return this.toggleItem(suite, true);
                 }
             }
             case "ArrowUp": {
-                return selectElementAt(-1);
+                return this.selectElementAt(currentTarget, -1);
             }
             case "Enter": {
                 ev.preventDefault();
                 actualLocation.href = createUrlFromId({ suite: suite.id });
             }
+        }
+    }
+
+    /**
+     * @param {HTMLElement} target
+     * @param {number} delta
+     */
+    selectElementAt(target, delta) {
+        const suiteElements = this.getSuiteElements();
+        const nextIndex = suiteElements.indexOf(target) + delta;
+        if (nextIndex < 0) {
+            this.searchInputRef.el?.focus();
+        } else if (nextIndex >= suiteElements.length) {
+            suiteElements[0].focus();
+        } else {
+            suiteElements[nextIndex].focus();
         }
     }
 

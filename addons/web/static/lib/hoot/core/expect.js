@@ -147,7 +147,7 @@ const $now = performance.now.bind(performance);
 /**
  * @param {[string, unknown][]} entries
  */
-const detailsFromEntries = (entries) => {
+function detailsFromEntries(entries) {
     const result = [];
     const expected = entries.at(-2);
     if (expected) {
@@ -158,44 +158,46 @@ const detailsFromEntries = (entries) => {
         result.push(Markup.received(received[0] || LABEL_RECEIVED, received[1]));
     }
     return result;
-};
+}
 
 /**
  * @param {...unknown} args
  */
-const detailsFromValues = (...args) => detailsFromEntries(args.map((arg) => [null, arg]));
+function detailsFromValues(...args) {
+    return detailsFromEntries(args.map((arg) => [null, arg]));
+}
 
 /**
  * @param {...unknown} args
  */
-const detailsFromValuesWithDiff = (...args) => [
-    ...detailsFromValues(...args),
-    Markup.diff(...args),
-];
+function detailsFromValuesWithDiff(...args) {
+    return [...detailsFromValues(...args), Markup.diff(...args)];
+}
 
 /**
  * @param {Error} [error]
  */
-const formatError = (error) => {
+function formatError(error) {
     let strError = error ? String(error) : "";
     if (error?.cause) {
         strError += `\n${formatError(error.cause)}`;
     }
     return strError;
-};
+}
 
 /**
  * @param {string} message
  * @param {boolean} plural
  * @param {boolean} not
  */
-const formatMessage = (message, plural, not) =>
-    message.replaceAll(R_PLURAL, plural ? "$2" : "$1").replaceAll(R_NOT, not ? "$2" : "$1");
+function formatMessage(message, plural, not) {
+    return message.replaceAll(R_PLURAL, plural ? "$2" : "$1").replaceAll(R_NOT, not ? "$2" : "$1");
+}
 
 /**
  * @param {Iterable<unknown> | Record<unknown, unknown>} object
  */
-const getLength = (object) => {
+function getLength(object) {
     if (typeof object === "string" || $isArray(object)) {
         return object.length;
     }
@@ -203,12 +205,12 @@ const getLength = (object) => {
         return [...object].length;
     }
     return $keys(object).length;
-};
+}
 
 /**
  * @param {number} depth amount of lines to remove from the stack
  */
-const getStack = (depth) => {
+function getStack(depth) {
     const error = new Error();
     if (!isFirefox()) {
         // remove ´Error´ in chrome
@@ -220,14 +222,14 @@ const getStack = (depth) => {
         lines.push(`… ${hidden.length} more`);
     }
     return lines.join("\n");
-};
+}
 
 /**
  * @param {Node} node
  * @param {string[]} keys
  * @returns {Record<string, string>}
  */
-const getStyleValues = (node, keys) => {
+function getStyleValues(node, keys) {
     const nodeStyle = getStyle(node);
     const styleValues = $create(null);
     if (nodeStyle) {
@@ -236,14 +238,14 @@ const getStyleValues = (node, keys) => {
         }
     }
     return styleValues;
-};
+}
 
 /**
  * @param {Iterable<unknown> | Record<unknown, unknown>} object
  * @param {unknown} item
  * @returns {boolean}
  */
-const includes = (object, item) => {
+function includes(object, item) {
     if (typeof object === "string") {
         return object.includes(item);
     }
@@ -259,7 +261,7 @@ const includes = (object, item) => {
         return includes($entries(object), item);
     }
     return includes($keys(object), item);
-};
+}
 
 /**
  * @template T
@@ -268,7 +270,7 @@ const includes = (object, item) => {
  * @param {string} [lastSeparator]
  * @returns {(T | string)[]}
  */
-const listJoin = (list, separator, lastSeparator) => {
+function listJoin(list, separator, lastSeparator) {
     if (list.length <= 1) {
         return list;
     }
@@ -290,26 +292,27 @@ const listJoin = (list, separator, lastSeparator) => {
         result.push(list[i]);
     }
     return result;
-};
+}
 
 /** @type {typeof makeLabel} */
-const makeLabelOrString = (...args) => {
+function makeLabelOrString(...args) {
     const label = makeLabel(...args);
     return label[1] === null ? label[0] : label;
-};
+}
 
 /**
  * @param {string} modifier
  * @param {string} message
  */
-const matcherModifierError = (modifier, message) =>
-    new HootError(`cannot use modifier "${modifier}": ${message}`);
+function matcherModifierError(modifier, message) {
+    return new HootError(`cannot use modifier "${modifier}": ${message}`);
+}
 
 /**
  * @param {string | Record<string, unknown>} style
  * @param {unknown} [defaultValue]
  */
-const parseInlineStyle = (style, defaultValue) => {
+function parseInlineStyle(style, defaultValue) {
     /** @type {Record<string, string>} */
     const styleObject = $create(null);
     if (typeof style === "string") {
@@ -325,21 +328,25 @@ const parseInlineStyle = (style, defaultValue) => {
         }
     }
     return styleObject;
-};
+}
 
 /** @type {StringConstructor["raw"]} */
-const r = (template, ...substitutions) => makeLabel(String.raw(template, ...substitutions), null);
+function r(template, ...substitutions) {
+    return makeLabel(String.raw(template, ...substitutions), null);
+}
 
 /**
  * @param {string} method
  */
-const scopeError = (method) => new HootError(`cannot call \`${method}()\` outside of a test`);
+function scopeError(method) {
+    return new HootError(`cannot call \`${method}()\` outside of a test`);
+}
 
 /**
  * @param {unknown} value
  * @param {string | number | RegExp} matcher
  */
-const valueMatches = (value, matcher) => {
+function valueMatches(value, matcher) {
     if (matcher === S_ANY) {
         return !isNil(value);
     }
@@ -350,7 +357,7 @@ const valueMatches = (value, matcher) => {
         value = parseFloat(value);
     }
     return strictEqual(value, matcher);
-};
+}
 
 const AMPERSAND = makeLabel("&", null);
 const ARROW_RIGHT = makeLabelIcon("fa fa-arrow-right text-sm");
@@ -2281,8 +2288,10 @@ export class Matcher {
         if (mapElements) {
             this._received = new ElementMap(this._received, mapElements);
         }
+        function passPredicate(...args) {
+            return not ? !predicate(...args) : predicate(...args);
+        }
         const not = this._flags & FLAGS.not;
-        const passPredicate = (...args) => (not ? !predicate(...args) : predicate(...args));
         const pass = mapElements ? this._received.every(passPredicate) : passPredicate();
 
         if (!(this._flags & FLAGS.silent)) {

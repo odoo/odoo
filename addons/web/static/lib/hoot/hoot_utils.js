@@ -208,6 +208,19 @@ function makeObjectCache() {
 }
 
 /**
+ * @template T
+ * @param {T | (() => T)} value
+ * @returns {T}
+ */
+function resolve(value) {
+    if (typeof value === "function") {
+        return value();
+    } else {
+        return value;
+    }
+}
+
+/**
  * @param {string} value
  * @param {number} [length=MAX_HUMAN_READABLE_SIZE]
  */
@@ -618,9 +631,8 @@ export function createJobScopedGetter(instanceGetter, afterCallback) {
             instances.set(currentJob, instanceGetter(parentInstance, ...args));
 
             if (canCallAfter) {
-                runner.after(() => {
+                runner.after(function instanceGetterCleanup() {
                     instances.delete(currentJob);
-
                     canCallAfter = false;
                     afterCallback?.();
                     canCallAfter = true;
@@ -1433,13 +1445,12 @@ export function toExplicitString(value) {
  * @param {{ el?: HTMLElement }} ref
  */
 export function useAutofocus(ref) {
-    let displayed = new Set();
-    useEffect(() => {
-        if (!ref.el) {
-            return;
-        }
+    /**
+     * @param {HTMLElement} el
+     */
+    function autofocus(el) {
         const nextDisplayed = new Set();
-        for (const element of ref.el.querySelectorAll("[autofocus]")) {
+        for (const element of el.querySelectorAll("[autofocus]")) {
             if (!displayed.has(element)) {
                 element.focus();
                 if (["INPUT", "TEXTAREA"].includes(element.tagName)) {
@@ -1450,7 +1461,10 @@ export function useAutofocus(ref) {
             nextDisplayed.add(element);
         }
         displayed = nextDisplayed;
-    });
+    }
+
+    let displayed = new Set();
+    useEffect(autofocus, () => [ref.el]);
 }
 
 /** @type {EventTarget["addEventListener"]} */
@@ -1471,12 +1485,8 @@ export class Callbacks {
     add(type, callback, once) {
         if (callback instanceof Promise) {
             const promiseValue = callback;
-            callback = function () {
-                return Promise.resolve(promiseValue).then((result) => {
-                    if (typeof result === "function") {
-                        result();
-                    }
-                });
+            callback = function waitForPromise() {
+                return Promise.resolve(promiseValue).then(resolve);
             };
         } else if (typeof callback !== "function") {
             return;

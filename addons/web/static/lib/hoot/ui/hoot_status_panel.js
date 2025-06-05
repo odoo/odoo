@@ -8,6 +8,8 @@ import { getColors, onColorSchemeChange } from "./hoot_colors";
 import { HootTestPath } from "./hoot_test_path";
 
 /**
+ * @typedef {import("../core/runner").Runner} Runner
+ *
  * @typedef {{
  * }} HootStatusPanelProps
  */
@@ -32,21 +34,34 @@ const $now = performance.now.bind(performance);
 //-----------------------------------------------------------------------------
 
 /**
+ * @param {HTMLCanvasElement | null} canvas
+ */
+function setupCanvas(canvas) {
+    if (!canvas) {
+        return;
+    }
+    [canvas.width, canvas.height] = [canvas.clientWidth, canvas.clientHeight];
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+}
+
+/**
  * @param {number} min
  * @param {number} max
  */
-const randInt = (min, max) => $floor($random() * (max - min + 1)) + min;
+function randInt(min, max) {
+    return $floor($random() * (max - min + 1)) + min;
+}
 
 /**
  * @param {string} content
  */
-const spawnIncentive = (content) => {
+function spawnIncentive(content) {
     const incentive = document.createElement("div");
     const params = [
         `--_content: '${content}'`,
-        `--_fly-duration: ${randInt(2_000, 3_000)}`,
+        `--_fly-duration: ${randInt(2000, 3000)}`,
         `--_size: ${randInt(32, 48)}`,
-        `--_wiggle-duration: ${randInt(800, 2_000)}`,
+        `--_wiggle-duration: ${randInt(800, 2000)}`,
         `--_wiggle-range: ${randInt(5, 30)}`,
         `--_x: ${randInt(0, 100)}`,
         `--_y: ${randInt(100, 150)}`,
@@ -55,17 +70,19 @@ const spawnIncentive = (content) => {
     incentive.setAttribute("style", params.join(";"));
 
     /** @param {AnimationEvent} ev */
-    const onEnd = (ev) => ev.animationName === "animation-incentive-travel" && incentive.remove();
+    function onEnd(ev) {
+        return ev.animationName === "animation-incentive-travel" && incentive.remove();
+    }
     incentive.addEventListener("animationend", onEnd);
     incentive.addEventListener("animationcancel", onEnd);
 
     document.querySelector("hoot-container").shadowRoot.appendChild(incentive);
-};
+}
 
 /**
  * @param {boolean} failed
  */
-const updateTitle = (failed) => {
+function updateTitle(failed) {
     const toAdd = failed ? TITLE_PREFIX.fail : TITLE_PREFIX.pass;
     let title = getTitle();
     if (title.startsWith(toAdd)) {
@@ -78,7 +95,7 @@ const updateTitle = (failed) => {
         }
     }
     setTitle(`${toAdd} ${title}`);
-};
+}
 
 const TIMER_PRECISION = 100; // in ms
 const TITLE_PREFIX = {
@@ -205,28 +222,11 @@ export class HootStatusPanel extends Component {
         <canvas t-ref="progress-canvas" class="flex h-1 w-full" />
     `;
 
+    currentTestStart;
     formatTime = formatTime;
+    intervalId = 0;
 
     setup() {
-        const startTimer = () => {
-            stopTimer();
-
-            currentTestStart = $now();
-            intervalId = setInterval(() => {
-                this.state.timer =
-                    $floor(($now() - currentTestStart) / TIMER_PRECISION) * TIMER_PRECISION;
-            }, TIMER_PRECISION);
-        };
-
-        const stopTimer = () => {
-            if (intervalId) {
-                clearInterval(intervalId);
-                intervalId = 0;
-            }
-
-            this.state.timer = 0;
-        };
-
         const { runner, ui } = this.env;
         this.canvasRef = useRef("progress-canvas");
         this.runnerReporting = useState(runner.reporting);
@@ -238,49 +238,17 @@ export class HootStatusPanel extends Component {
         this.uiState = useState(ui);
         this.progressBarIndex = 0;
 
-        let currentTestStart;
-        let intervalId = 0;
-
-        runner.beforeAll(() => {
-            this.state.debug = runner.debug;
-        });
-
-        runner.afterAll(() => {
-            if (!runner.config.headless) {
-                stopTimer();
-            }
-            updateTitle(this.runnerReporting.failed > 0);
-
-            if (runner.config.fun) {
-                for (let i = 0; i < this.runnerReporting.failed; i++) {
-                    spawnIncentive("😭");
-                }
-                for (let i = 0; i < this.runnerReporting.passed; i++) {
-                    spawnIncentive("🦉");
-                }
-            }
-        });
-
+        runner.beforeAll(this.globalSetup.bind(this));
+        runner.afterAll(this.globalCleanup.bind(this));
         if (!runner.config.headless) {
-            runner.beforeEach(startTimer);
-            runner.afterPostTest(stopTimer);
+            runner.beforeEach(this.startTimer.bind(this));
+            runner.afterPostTest(this.stopTimer.bind(this));
         }
 
-        useEffect(
-            (el) => {
-                if (el) {
-                    [el.width, el.height] = [el.clientWidth, el.clientHeight];
-                    el.getContext("2d").clearRect(0, 0, el.width, el.height);
-                }
-            },
-            () => [this.canvasRef.el]
-        );
+        useEffect(setupCanvas, () => [this.canvasRef.el]);
 
-        onColorSchemeChange(() => {
-            this.progressBarIndex = 0;
-            this.updateProgressBar();
-        });
-        onWillRender(() => this.updateProgressBar());
+        onColorSchemeChange(this.onColorSchemeChange.bind(this));
+        onWillRender(this.updateProgressBar.bind(this));
     }
 
     /**
@@ -300,12 +268,62 @@ export class HootStatusPanel extends Component {
         return $max($floor((totalResults - 1) / resultsPerPage), 0);
     }
 
+    /**
+     * @param {Runner} runner
+     */
+    globalCleanup(runner) {
+        if (!runner.config.headless) {
+            this.stopTimer();
+        }
+        updateTitle(this.runnerReporting.failed > 0);
+
+        if (runner.config.fun) {
+            for (let i = 0; i < this.runnerReporting.failed; i++) {
+                spawnIncentive("😭");
+            }
+            for (let i = 0; i < this.runnerReporting.passed; i++) {
+                spawnIncentive("🦉");
+            }
+        }
+    }
+
+    /**
+     * @param {Runner} runner
+     */
+    globalSetup(runner) {
+        this.state.debug = runner.debug;
+    }
+
     nextPage() {
         this.uiState.resultsPage = $min(this.uiState.resultsPage + 1, this.getLastPage());
     }
 
+    onColorSchemeChange() {
+        this.progressBarIndex = 0;
+        this.updateProgressBar();
+    }
+
     previousPage() {
         this.uiState.resultsPage = $max(this.uiState.resultsPage - 1, 0);
+    }
+
+    startTimer() {
+        this.stopTimer();
+
+        this.currentTestStart = $now();
+        this.intervalId = setInterval(() => {
+            this.state.timer =
+                $floor(($now() - this.currentTestStart) / TIMER_PRECISION) * TIMER_PRECISION;
+        }, TIMER_PRECISION);
+    }
+
+    stopTimer() {
+        if (this.intervalId) {
+            clearInterval(this.intervalId);
+            this.intervalId = 0;
+        }
+
+        this.state.timer = 0;
     }
 
     updateProgressBar() {
