@@ -3,6 +3,7 @@
 
 from odoo import http, _
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.json import scriptsafe as json_safe
 
@@ -151,3 +152,55 @@ class PaymentPortal(payment_portal.PaymentPortal):
             for provider_sudo in providers_sudo:
                 res[provider_sudo.id] = False
         return res
+
+    @http.route(
+        '/website_payment/snippet/supported_payment_methods',
+        type='jsonrpc', auth='public', website=True, sitemap=False, readonly=True,
+    )
+    def get_supported_payment_methods(self, limit=None):
+        """Retrieve the payment methods linked to payment providers published on the current
+        website.
+
+        If a payment method is a primary payment method, its brands are returned instead.
+
+        Note: The provider must be linked to the same company as the website. This differs from the
+        usual payment method selection, which uses the user's company. In this case, we want to
+        display the general payment methods linked to the website, regardless of the user.
+
+        :param int limit: The number of payment methods to return.
+        :return: The supported payment methods, in [{'name': str, 'image_url': str}] format.
+        :rtype: list[dict]
+        """
+        limit = self._cast_as_int(limit)
+        website = request.website
+
+        # For any primary payment method with at least one compatible provider.
+        compatible_providers_sudo = (
+            request.env['payment.provider']
+                # Force the public user such that editors see what customers will see
+                .with_user(website.user_id)
+                .sudo()  # Needed to read providers' fields with public user
+                ._get_compatible_providers(
+                    website.company_id.id, None, 0, website_id=website.id
+                )
+        )
+        # Select the brands, i.e. non-primary payment methods. E.g., Amex for Card.
+        brands_domain = Domain([
+            ('is_primary', '=', False),
+            ('primary_payment_method_id.provider_ids', 'in', compatible_providers_sudo.ids),
+        ])
+        # Or, select the primary payment methods without any brands. E.g., PayPal.
+        primary_without_brands_domain = Domain([
+            ('is_primary', '=', True),
+            ('brand_ids', '=', False),
+            ('provider_ids', 'in', compatible_providers_sudo.ids),
+        ])
+
+        return request.env['payment.method'].search(
+            Domain.OR([brands_domain, primary_without_brands_domain]),
+            limit=limit,
+        ).mapped(lambda pm: {
+            'name': pm.name,
+            # Loading the image via this url caches the image on the client browser
+            'image_url': request.env['website'].image_url(pm, 'image'),
+        })
