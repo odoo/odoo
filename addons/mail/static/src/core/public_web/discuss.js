@@ -37,7 +37,6 @@ export class Discuss extends Component {
 
     setup() {
         super.setup();
-        window.aku = this;
         this.store = useService("mail.store");
         this.messageHighlight = useMessageHighlight();
         this.contentRef = useRef("content");
