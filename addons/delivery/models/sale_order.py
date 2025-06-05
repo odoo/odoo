@@ -71,8 +71,55 @@ class SaleOrder(models.Model):
             order._create_delivery_line(carrier, amount)
         return True
 
+    def _force_update_fiscal_position_and_taxes(self):
+        """ Force the recomputation of fiscal position and tax """
+        fpos_before = self.fiscal_position_id
+        self._compute_fiscal_position_id()
+        if fpos_before != self.fiscal_position_id:
+            self._recompute_taxes()
+
+    def _get_delivery_pickup_location(self):
+        """Return the partner of the pickup location address"""
+        self.ensure_one()
+        PartnerAddress = self.env['res.partner']
+        if self.pickup_location_data:
+            pickup_location_data = self.pickup_location_data
+            country_id = (
+                pickup_location_data.get('country_code') and
+                self.env['res.country'].search_fetch(
+                    [('code', '=', pickup_location_data.get('country_code'))],
+                    field_names=['id'],
+                ))
+            state_id = (
+                pickup_location_data.get('state') and
+                self.env['res.country.state'].search_fetch(
+                    [('name', 'ilike', pickup_location_data.get('state'))],
+                    field_names=['id'],
+                ))
+            return PartnerAddress.new({
+                'name': pickup_location_data.get('name'),
+                'street': pickup_location_data.get('street'),
+                'city': pickup_location_data.get('city'),
+                'state_id': state_id,
+                'zip': pickup_location_data.get('zip_code'),
+                'country_id': country_id,
+            })
+        return PartnerAddress
+
+    def _compute_fiscal_position_id(self):
+        """ Override of `sale` to set the fiscal position matching the selected pickup location
+        for pickup orders of delivery providers.
+        """
+        AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
+        for order in self:
+            order.fiscal_position_id = AccountFiscalPosition.with_company(
+                order.company_id
+            )._get_fiscal_position(
+                order.partner_id, delivery=order._get_delivery_pickup_location()
+            )
+
     def _set_pickup_location(self, pickup_location_data):
-        """ Set the pickup location on the current order.
+        """ Set the pickup location on the current order & recompute fiscal position.
 
         Note: self.ensure_one()
 
@@ -88,6 +135,7 @@ class SaleOrder(models.Model):
             else:
                 pickup_location = None
             self.pickup_location_data = pickup_location
+            self._force_update_fiscal_position_and_taxes()
 
     def _get_pickup_locations(self, zip_code=None, country_code=None, **kwargs):
         """ Return the pickup locations of the delivery method close to a given zip code.

@@ -21,18 +21,12 @@ class SaleOrder(models.Model):
         for order in in_store_orders_with_pickup_data:
             order.warehouse_id = order.pickup_location_data['id']
 
-    def _compute_fiscal_position_id(self):
-        """Override of `sale` to set the fiscal position matching the selected pickup location
-        for pickup in-store orders."""
-        in_store_orders = self.filtered(
-            lambda so: so.carrier_id.delivery_type == 'in_store' and so.pickup_location_data
-        )
-        AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
-        for order in in_store_orders:
-            order.fiscal_position_id = AccountFiscalPosition._get_fiscal_position(
-                order.partner_id, delivery=order.warehouse_id.partner_id
-            )
-        super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
+    def _get_delivery_pickup_location(self):
+        """Override of `delivery` to get the warehouse address"""
+        self.ensure_one()
+        if self.carrier_id.delivery_type == 'in_store':
+            return self.warehouse_id.partner_id
+        return super()._get_delivery_pickup_location()
 
     def _set_delivery_method(self, delivery_method, rate=None):
         """ Override of `website_sale` to recompute warehouse and fiscal position when a new
@@ -46,7 +40,7 @@ class SaleOrder(models.Model):
         super()._set_delivery_method(delivery_method, rate=rate)
         if was_in_store_order:
             self._compute_warehouse_id()
-            self._compute_fiscal_position_id()
+            self._force_update_fiscal_position_and_taxes()
 
     def _set_pickup_location(self, pickup_location_data):
         """ Override `website_sale` to set the pickup location for in-store delivery methods.
@@ -60,7 +54,7 @@ class SaleOrder(models.Model):
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
-            self._compute_fiscal_position_id()
+            self._force_update_fiscal_position_and_taxes()
         else:
             self._compute_warehouse_id()
 
