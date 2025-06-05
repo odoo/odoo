@@ -237,6 +237,9 @@ class Im_LivechatReportChannel(models.Model):
                 answer_name_by_id.get(answer_id, self._unknown_chatbot_answer_name)
                 for answer_id in id_list
             )
+        if "day_number" in groupby:
+            lang_data = self.env['res.lang']._get_data(code=self.env.user.lang)
+            result.sort(key=lambda entry: (int(entry["day_number"]) - int(lang_data.week_start) + 7) % 7)
         return result
 
     @api.model
