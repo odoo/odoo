@@ -1155,12 +1155,21 @@ export class TablePlugin extends Plugin {
         if (!selection.isCollapsed || !currentCell) {
             return;
         }
-        const isArrowUp = ev.key === "ArrowUp";
-        const cellPosition = {
-            row: getRowIndex(currentCell),
-            col: getColumnIndex(currentCell),
+        this.buildTableGrid(currentTable);
+        const findCellPosition = (row, cell) => {
+            const col = this.tableGrid[row].indexOf(cell);
+            if (col !== -1) {
+                return col;
+            }
+            return -1;
         };
-        const tableRows = [...currentTable.rows].map((row) => [...row.cells]);
+        const currentRow = getRowIndex(currentCell);
+        const currentColumn = findCellPosition(currentRow, currentCell);
+
+        if (currentColumn < 0) {
+            return;
+        }
+        const isArrowUp = ev.key === "ArrowUp";
         const shouldNavigateCell = (currentNode) => {
             const siblingDirection = isArrowUp ? "previousElementSibling" : "nextElementSibling";
             const direction = isArrowUp ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
@@ -1179,7 +1188,11 @@ export class TablePlugin extends Plugin {
             return true;
         };
         const rowOffset = isArrowUp ? -1 : 1;
-        let targetNode = tableRows[cellPosition.row + rowOffset]?.[cellPosition.col];
+        let offset = currentRow + rowOffset;
+        if (rowOffset === 1 && currentCell.rowSpan > 1) {
+            offset = offset + currentCell.rowSpan - 1;
+        }
+        let targetNode = this.tableGrid[offset]?.[currentColumn];
         const siblingElement = isArrowUp
             ? currentTable.previousElementSibling
             : currentTable.nextElementSibling;
