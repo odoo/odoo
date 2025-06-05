@@ -85,7 +85,7 @@ patch(Thread.prototype, {
     },
 
     get membersThatCanSeen() {
-        return super.membersThatCanSeen.filter((member) => !member.is_bot);
+        return super.membersThatCanSeen.filter((member) => member.livechat_member_type !== "bot");
     },
 
     get avatarUrl() {

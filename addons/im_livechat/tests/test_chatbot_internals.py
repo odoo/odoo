@@ -165,7 +165,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
             "create_date": fields.Datetime.to_string(member_bot.create_date),
             "fetched_message_id": False,
             "id": member_bot.id,
-            "is_bot": True,
+            "livechat_member_type": "bot",
             "last_seen_dt": False,
             "persona": {"id": member_bot.partner_id.id, "type": "partner"},
             "seen_message_id": False,
@@ -313,7 +313,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     ),
                                     "fetched_message_id": False,
                                     "id": member_emp.id,
-                                    "is_bot": False,
+                                    "livechat_member_type": "agent",
                                     "last_seen_dt": fields.Datetime.to_string(
                                         member_emp.last_seen_dt
                                     ),

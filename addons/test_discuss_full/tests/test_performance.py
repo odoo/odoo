@@ -83,15 +83,13 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch channel_ids of current partner (active test filtering, _search_is_member)
     #       - search discuss_channel (member_domain)
     #       - search discuss_channel (pinned_member_domain)
-    #   32: channel _to_store_defaults:
+    #   31: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
     #       - fetch discuss_channel_rtc_session
     #       - search member (channel_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       01: member _to_store_defaults (livechat override):
-    #           - search im_livechat_channel_rule (is_bot)
     #       16: member _to_store:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
@@ -142,7 +140,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search user (_author_to_store)
     #       - fetch user (_author_to_store)
     #       - _compute_rating_stats
-    _query_count_discuss_channels = 60
+    _query_count_discuss_channels = 59
 
     def setUp(self):
         super().setUp()
@@ -1209,7 +1207,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
-                "is_bot": False,
+                "livechat_member_type": "agent",
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 0,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1225,7 +1223,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": fields.Datetime.to_string(member_1.last_seen_dt),
                 "fetched_message_id": last_message.id,
                 "id": member_1.id,
-                "is_bot": False,
+                "livechat_member_type": "visitor",
                 "persona": {"id": self.users[1].partner_id.id, "type": "partner"},
                 "seen_message_id": last_message.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
@@ -1235,7 +1233,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "create_date": member_0_create_date,
                 "fetched_message_id": False,
                 "id": member_0.id,
-                "is_bot": False,
+                "livechat_member_type": "agent",
                 "last_interest_dt": member_0_last_interest_dt,
                 "message_unread_counter": 1,
                 "message_unread_counter_bus_id": bus_last_id,
@@ -1251,7 +1249,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "last_seen_dt": fields.Datetime.to_string(member_g.last_seen_dt),
                 "fetched_message_id": last_message.id,
                 "id": member_g.id,
-                "is_bot": False,
+                "livechat_member_type": "visitor",
                 "persona": {"id": guest.id, "type": "guest"},
                 "seen_message_id": last_message.id,
                 "channel_id": {"id": channel.id, "model": "discuss.channel"},
