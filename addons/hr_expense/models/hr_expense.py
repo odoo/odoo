@@ -995,7 +995,10 @@ class HrExpense(models.Model):
             if expense.state == 'submitted':
                 expense.activity_schedule(
                     'hr_expense.mail_act_expense_approval',
-                    user_id=expense.sudo()._get_default_responsible_for_approval().id or self.env.user.id)
+                    user_id=expense.manager_id.id or
+                    expense.sudo()._get_default_responsible_for_approval().id or
+                    self.env.user.id
+                )
                 expenses_submitted_to_review |= expense
             elif expense.state == 'approved':
                 expenses_activity_done |= expense
