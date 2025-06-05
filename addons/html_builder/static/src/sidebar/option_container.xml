@@ -8,18 +8,20 @@
         <div class="options-container-header d-flex align-items-center justify-content-between">
             <t t-set="isActionable" t-value="Object.keys(props.snippetModel).length > 0"></t>
             <span
-                class="options-container-label ps-2 py-2"
+                class="options-container-label py-2 flex-grow-1"
                 t-att-class="{
                     'options-container-label-actionable cursor-pointer': isActionable,
                 }"
-                t-out="title"
                 t-att-role="isActionable ? 'button' : 'heading'"
-                t-on-click="selectElement"
-            />
-            <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
-                <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
-            </t>
-            <span class="flex-grow-1" />
+                t-on-click="toggleFold"
+                t-on-dblclick="selectElement"
+            >
+                <i class="fa fa-fw mx-1" role="img" t-att-class="this.props.foldedState.folded ? 'fa-caret-right' : 'fa-caret-down'"></i>
+                <t t-out="title"/>
+                <t t-if="props.optionTitleComponents" t-foreach="props.optionTitleComponents" t-as="optionTitleComponent" t-key="optionTitleComponent.id">
+                    <t t-component="optionTitleComponent.Component" t-props="optionTitleComponent.props || {}"/>
+                </t>
+            </span>
 
             <div class="d-flex align-items-center gap-1 p-2">
                 <div t-if="props.headerMiddleButtons">
@@ -59,7 +61,7 @@
                 </t>
             </div>
         </div>
-        <div class="we-bg-options-container pb-3" t-ref="content">
+        <div t-if="!this.props.foldedState.folded" class="we-bg-options-container pb-3" t-ref="content">
             <t t-foreach="props.options" t-as="OptionClass" t-key="OptionClass.name + '-' + OptionClass.template">
                 <BuilderContext applyTo="OptionClass.applyTo" t-if="hasAccess(OptionClass.groups)">
                     <t t-component="OptionClass"></t>

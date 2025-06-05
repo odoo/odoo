@@ -343,12 +343,20 @@ export class BuilderOptionsPlugin extends Plugin {
             element = element.parentElement;
         }
 
-        const previousElementToIdMap = new Map(this.lastContainers.map((c) => [c.element, c.id]));
+        const previousElementToIdAndStateMap = new Map(
+            this.lastContainers.map((c) => [c.element, { id: c.id, folded: c.foldedState.folded }])
+        );
+        const keepUnfolded = this.lastContainers.some((c) => c.element === element);
         let containers = reactive(
             [...elementToOptions]
                 .sort(([a], [b]) => (b.contains(a) ? 1 : -1))
                 .map(([element, Options]) => ({
-                    id: previousElementToIdMap.get(element) || uniqueId(),
+                    id: previousElementToIdAndStateMap.get(element)?.id || uniqueId(),
+                    foldedState: {
+                        folded: keepUnfolded
+                            ? previousElementToIdAndStateMap.get(element)?.folded ?? true
+                            : true,
+                    },
                     element,
                     options: Options,
                     optionTitleComponents: elementToOptionTitleComponents.get(element) || [],
@@ -370,6 +378,12 @@ export class BuilderOptionsPlugin extends Plugin {
         );
         if (lastValidContainerIdx > 0) {
             containers = containers.slice(lastValidContainerIdx);
+        }
+        for (let i = containers.length - 1; i >= 0; i--) {
+            containers[i].foldedState.folded = false;
+            if (containers[i].options.length) {
+                break;
+            }
         }
         return containers;
     }

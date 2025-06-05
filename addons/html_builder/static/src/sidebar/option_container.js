@@ -24,6 +24,7 @@ export class OptionsContainer extends BaseOptionComponent {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
+        foldedState: { type: Object, shape: { folded: Boolean }, optional: true },
         removeDisabledReason: { type: String, optional: true },
         isClonable: false,
         cloneDisabledReason: { type: String, optional: true },
@@ -90,6 +91,10 @@ export class OptionsContainer extends BaseOptionComponent {
             : "";
 
         return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
+    }
+
+    toggleFold() {
+        this.props.foldedState.folded = !this.props.foldedState.folded;
     }
 
     selectElement() {
