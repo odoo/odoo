@@ -286,15 +286,14 @@ class TestGetOperator(MailCommon, TestGetOperatorCommon):
         self.assertEqual(livechat_channel.available_operator_ids, operator_2)
 
     @users("employee")
-    def test_max_sessions_mode_limited_operator_in_call_no_new_sessions(self):
+    def test_block_assignment_during_call(self):
         """Test operator is not available when they are in call, even below the livechat channel
         limit."""
         operator = self._create_operator()
         livechat_channel_data = {
             "name": "Livechat Channel",
             "user_ids": operator,
-            "max_sessions_mode": "limited",
-            "max_sessions": 2,
+            "block_assignment_during_call": True,
         }
         livechat_channel = self.env["im_livechat.channel"].sudo().create(livechat_channel_data)
         self._create_chat(livechat_channel, operator, in_call=True)
