@@ -1,0 +1,46 @@
+<odoo>
+    <!-- Vue liste pour les tags de propriété -->
+    <record id="view_estate_property_tag_list" model="ir.ui.view">
+        <field name="name">estate.property.tag.list</field>
+        <field name="model">estate.property.tag</field>
+        <field name="arch" type="xml">
+            <list string="Property Tags" editable="bottom">
+                <field name="name" string="Tag Name" />
+                <field name="color" string="Tag Color" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Vue formulaire pour les tags de propriété -->
+    <record id="view_estate_property_tag_form" model="ir.ui.view">
+        <field name="name">estate.property.tag.form</field>
+        <field name="model">estate.property.tag</field>
+        <field name="arch" type="xml">
+            <form string="Property Tag">
+                <sheet>
+                    <group>
+                        <label for="name" />
+                        <field name="name" class="oe_edit_only" />
+                    </group>
+                    <group>
+                        <label for="color" />
+                        <field name="color" widget="color" class="oe_edit_only" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action pour les tags de propriété -->
+    <record id="action_estate_property_tag" model="ir.actions.act_window">
+        <field name="name">Property Tags</field>
+        <field name="res_model">estate.property.tag</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Menu pour les tags de propriété -->
+    <menuitem id="menu_estate_property_tag"
+        name="Property Tags"
+        parent="estate_root_menu"
+        action="action_estate_property_tag" />
+</odoo>
