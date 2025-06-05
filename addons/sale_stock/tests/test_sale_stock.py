@@ -2230,3 +2230,31 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         self.assertEqual(pickings[0].state, 'done')
         self.assertEqual(len(sale_order.order_line), 1)
+
+    def test_negative_move_with_take_loc_from_rule(self):
+        """
+        This test checks if t a negative move will be merged correctly when the loc_dest_id
+        is taken from the rule instead of the picking type.
+        """
+        warehouse = self.company_data['default_warehouse']
+        rule = warehouse.delivery_route_id.rule_ids.filtered(lambda r: r.action == 'pull')
+        new_loc = self.env['stock.location'].create({
+            'name': 'New Location',
+            'usage': 'transit',
+            'location_id': warehouse.view_location_id.id,
+        })
+        rule.picking_type_id.write({
+            'default_location_dest_id': new_loc.id,
+        })
+        rule.location_dest_from_rule = True
+
+        so = self._get_new_sale_order(product=self.product_a, amount=5)
+        so.action_confirm()
+        self.assertEqual(len(so.picking_ids), 1)
+        self.assertEqual(so.picking_ids.move_ids.quantity, 5)
+        self.assertEqual(so.picking_ids.move_ids.location_dest_id, rule.location_dest_id)
+
+        so.order_line.write({'product_uom_qty': 3})
+        self.assertEqual(len(so.picking_ids), 1)
+        self.assertEqual(so.picking_ids.move_ids.quantity, 3)
+        self.assertEqual(so.picking_ids.move_ids.location_dest_id, rule.location_dest_id)
