@@ -28,9 +28,9 @@ export class BuilderCheckbox extends Component {
                 isActive: isApplied(),
             };
         });
+        this.onPointerEnter = operation.preview;
+        this.onPointerLeave = operation.revert;
         this.onChange = operation.commit;
-        this.onMouseenter = operation.preview;
-        this.onMouseleave = operation.revert;
     }
 
     getClassName() {
