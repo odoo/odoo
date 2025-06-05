@@ -11,7 +11,9 @@
             t-att-data-style-action="info.styleAction"
             t-att-data-style-action-value="info.styleActionValue"
             t-att-data-attribute-action="info.attributeAction"
-            t-att-data-attribute-action-value="info.attributeActionValue">
+            t-att-data-attribute-action-value="info.attributeActionValue"
+            t-on-pointerenter="() => this.onPointerEnter(props.id)"
+            t-on-pointerleave="() => this.onPointerLeave(props.id)">
             <CheckBox className="getClassName()" onChange="onChange" value="state.isActive"/>
         </div>
     </BuilderComponent>

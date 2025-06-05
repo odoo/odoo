@@ -157,6 +157,7 @@
         'website.website_builder_assets': [
             'website_sale/static/src/js/website_sale_form_editor.js',
             'website_sale/static/src/website_builder/**/*',
+            ('remove', 'website_sale/static/src/**/*.inside.scss'),
         ],
         'website.assets_wysiwyg': [
             'website_sale/static/src/scss/website_sale.editor.scss',
@@ -173,6 +174,9 @@
         ],
         'website.backend_assets_all_wysiwyg': [
             'website_sale/static/src/js/components/wysiwyg_adapter/wysiwyg_adapter.js',
+        ],
+        'website.inside_builder_style': [
+            'website_sale/static/src/website_builder/**/*.inside.scss',
         ],
         'web.assets_tests': [
             'website_sale/static/tests/tours/**/*',
