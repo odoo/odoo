@@ -4,6 +4,7 @@ import {
     getCell,
     getCellContent,
     getCellFormula,
+    getCellFormattedValue,
     getCellValue,
 } from "@spreadsheet/../tests/utils/getters";
 import { createSpreadsheetWithPivot } from "@spreadsheet/../tests/utils/pivot";
@@ -889,4 +890,73 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             assert.equal(cell.evaluated.error.message, "ya done!");
         }
     );
+
+
+    QUnit.test("date are between two years are correctly grouped by weeks", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records= [
+            { active: true, id: 5, foo: 11, bar: true, product_id: 37, date: "2024-01-03" },
+            { active: true, id: 6, foo: 12, bar: true, product_id: 41, date: "2024-12-30" },
+            { active: true, id: 7, foo: 13, bar: true, product_id: 37, date: "2024-12-31" },
+            { active: true, id: 8, foo: 14, bar: true, product_id: 37, date: "2025-01-01" }
+        ];
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /*xml*/ `
+                <pivot string="Partners">
+                    <field name="date:year" type="col"/>
+                    <field name="date:week" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+
+        assert.equal(getCellFormattedValue(model,"B1"),"2024");
+        assert.equal(getCellFormattedValue(model,"B2"),"W1 2024");
+        assert.equal(getCellFormattedValue(model,"B4"),"11");
+        
+        assert.equal(getCellFormattedValue(model,"C2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"C4"),"25");
+
+        assert.equal(getCellFormattedValue(model,"D1"),"2025");
+        assert.equal(getCellFormattedValue(model,"D2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"D4"),"14");
+    });
+
+
+    QUnit.test("date are between two years are correctly grouped by weeks and days", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records= [
+            { active: true, id: 5, foo: 11, bar: true, product_id: 37, date: "2024-01-03" },
+            { active: true, id: 6, foo: 12, bar: true, product_id: 41, date: "2024-12-30" },
+            { active: true, id: 7, foo: 13, bar: true, product_id: 37, date: "2024-12-31" },
+            { active: true, id: 8, foo: 14, bar: true, product_id: 37, date: "2025-01-01" }
+        ];
+        const { model } = await createSpreadsheetWithPivot({
+            serverData,
+            arch: /*xml*/ `
+                <pivot string="Partners">
+                    <field name="date:year" type="col"/>
+                    <field name="date:week" type="col"/>
+                    <field name="date:day" type="col"/>
+                    <field name="foo" type="measure"/>
+                </pivot>`,
+        });
+
+        assert.equal(getCellFormattedValue(model,"B1"),"2024");
+        assert.equal(getCellFormattedValue(model,"B2"),"W1 2024");
+        assert.equal(getCellFormattedValue(model,"B3"),"01/03/2024");
+        assert.equal(getCellFormattedValue(model,"B5"),"11");
+        
+        assert.equal(getCellFormattedValue(model,"C2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"C3"),"12/30/2024");
+        assert.equal(getCellFormattedValue(model,"C5"),"12");
+
+        assert.equal(getCellFormattedValue(model,"D3"),"12/31/2024");
+        assert.equal(getCellFormattedValue(model,"D5"),"13");
+
+        assert.equal(getCellFormattedValue(model,"E1"),"2025");
+        assert.equal(getCellFormattedValue(model,"E2"),"W1 2025");
+        assert.equal(getCellFormattedValue(model,"E3"),"01/01/2025");
+        assert.equal(getCellFormattedValue(model,"E5"),"14");
+    });
 });
