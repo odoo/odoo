@@ -61,6 +61,8 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  * @property { DeletePlugin['delete'] } delete
  * @property { DeletePlugin['deleteRange'] } deleteRange
  * @property { DeletePlugin['deleteSelection'] } deleteSelection
+ * @property { DeletePlugin['deleteBackward'] } deleteBackward
+ * @property { DeletePlugin['deleteForward'] } deleteForward
  */
 
 // @todo @phoenix: move these predicates to different plugins
