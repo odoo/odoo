@@ -25,7 +25,6 @@ class ProductsListPageOptionPlugin extends Plugin {
         },
     };
 }
-
 export class SetPpgAction extends BuilderAction {
     static id = "setPpg";
     setup() {

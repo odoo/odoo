@@ -11,12 +11,15 @@ export class BuilderAction {
         this.dispatchTo = plugin.dispatchTo.bind(plugin);
         this.delegateTo = plugin.delegateTo.bind(plugin);
 
-        this.preview = true;
-        this.withLoadingEffect = true;
-        this.loadOnClean = false;
-
         this.setup();
+
+        // Preview is enabled by default in non-reload actions,
+        // and disabled by default in reload actions.
+        this.preview ??= this.reload ? false : true;
+        this.withLoadingEffect ??= true;
+        this.loadOnClean ??= false;
     }
+
     /**
      * Called after dependencies and services are assigned.
      * Subclasses override this instead of the constructor.
