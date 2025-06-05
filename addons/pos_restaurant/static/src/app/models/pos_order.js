@@ -172,4 +172,11 @@ patch(PosOrder.prototype, {
             ) + 1
         );
     },
+
+    getOrderData(reprint) {
+        return {
+            ...super.getOrderData(reprint),
+            customer_count: this.getCustomerCount(),
+        };
+    },
 });

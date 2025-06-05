@@ -1,3 +1,34 @@
+import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+const CONSOLE_COLOR = "#F5B427";
+
+export const getStrNotes = (note) => {
+    if (!note) {
+        return "";
+    }
+    if (Array.isArray(note)) {
+        return note.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
+    }
+    if (typeof note === "string") {
+        try {
+            const parsed = JSON.parse(note);
+            if (Array.isArray(parsed)) {
+                return parsed.map((n) => (typeof n === "string" ? n : n.text)).join(", ");
+            }
+            return note;
+        } catch (error) {
+            logPosMessage(
+                "OrderChange",
+                "getStrNotes",
+                "Error while parsing note, not valid JSON",
+                CONSOLE_COLOR,
+                [error]
+            );
+            return note;
+        }
+    }
+    return "";
+};
+
 export const changesToOrder = (order, orderPreparationCategories, cancelled = false) => {
     const toAdd = [];
     const toRemove = [];
@@ -8,6 +39,7 @@ export const changesToOrder = (order, orderPreparationCategories, cancelled = fa
         : Object.values(order.last_order_preparation_change.lines);
 
     for (const lineChange of linesChanges) {
+        lineChange["note"] = getStrNotes(lineChange.note);
         if (lineChange["quantity"] > 0 && !cancelled) {
             toAdd.push(lineChange);
         } else {
@@ -76,7 +108,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                 product_id: product.id,
                 attribute_value_names: orderline.attribute_value_ids.map((a) => a.name),
                 quantity: quantityDiff,
-                note: note,
+                note: getStrNotes(note),
                 customer_note: customerNote,
                 pos_categ_id: product.pos_categ_ids[0]?.id ?? 0,
                 pos_categ_sequence: product.pos_categ_ids[0]?.sequence ?? 0,
@@ -127,7 +159,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
                     basic_name: lineResume["basic_name"],
                     display_name: lineResume["display_name"],
                     isCombo: lineResume["isCombo"],
-                    note: lineResume["note"],
+                    note: getStrNotes(lineResume["note"]),
                     customer_note: lineResume["customer_note"],
                     attribute_value_names: lineResume["attribute_value_names"],
                     group: lineResume["group"],

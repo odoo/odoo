@@ -1,44 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="pos_self_order.OrderChangeReceipt">
-        <div class="pos-receipt">
-            <div class="pos-receipt-title" t-if="changes.preset_name">
-                    <t t-esc="changes.preset_name"/> <t t-if="changes.preset_time">(<t t-esc="changes.preset_time"/>)</t>
+    <t t-name="pos_self_order.OrderChangeReceipt" t-inherit="point_of_sale.OrderChangeReceipt" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('receipt-header')]" position="inside">
+            <div t-if="data.tracker" class="pos-receipt-title" style="font-size: 85%;">
+                <span>Tracker number: <t t-esc="data.tracker"/></span>
             </div>
-            <div class="pos-receipt-order-data"><t t-esc="changes.name"/></div>
-            <t t-if="changes.tracker || changes.trackingNumber">
-                <br />
-                <div class="pos-receipt-title">
-                    <t t-esc="changes.trackingNumber"/>
-                    <t t-if="changes.tracker">
-                        / Tracker number: <t t-esc="changes.tracker"/>
-                    </t>
-                </div>
-            </t>
-            <br />
-            <div class="pos-receipt-title">
-                NEW
-                <t t-esc='changes.time.hours'/>:<t t-esc='changes.time.minutes'/>
-            </div>
-            <br />
-            <t t-foreach="changes.new" t-as="change" t-key="change_index">
-                <div class="product-details d-flex" t-att-class="{'ms-5': change.combo_parent_id}">
-                    <span class="product-quantity me-3 mb-1" t-esc="change.qty"/>
-                    <span class="product-name" t-esc="change.full_product_name"/>
-                </div>
-                <t t-if="change.customer_note">
-                    <div>
-                        NOTE
-                        <span class="pos-receipt-right-align">...</span>
-                    </div>
-                    <div><span class="pos-receipt-left-padding">--- <t t-esc="change.customer_note" /></span></div>
-                    <br/>
-                </t>
-            </t>
-            <br />
-            <br />
-    </div>
+            <div t-if="data.name" class="pos-receipt-order-data"><t t-esc="data.name"/></div>
+        </xpath>
     </t>
 
 </templates>
