@@ -4,6 +4,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { ThemeColorsOption } from "./theme_colors_option";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
 import { getCSSVariableValue } from "@html_builder/utils/utils_css";
+import { loadBundle } from "@web/core/assets";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -198,6 +199,7 @@ export class ThemeTabPlugin extends Plugin {
             get changeColorPalette() {
                 const customizeWebsiteVariable = getAction("customizeWebsiteVariable");
                 return {
+                    reload: {},
                     ...customizeWebsiteVariable,
                     apply: async (action) => {
                         const confirmed = await new Promise((resolve) => {
@@ -213,6 +215,7 @@ export class ThemeTabPlugin extends Plugin {
                             return;
                         }
                         await customizeWebsiteVariable.apply(action);
+                        await loadBundle("web.assets_web", { js: false, refreshCSS: true });
                     },
                 };
             },

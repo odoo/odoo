@@ -125,10 +125,14 @@ export const assets = {
      * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
      * @returns {Promise<BundleFileNames>}
      */
-    getBundle(bundleName, { targetDoc = document } = {}) {
+    getBundle(bundleName, { targetDoc = document, refreshCSS = false } = {}) {
         const cacheMap = getCacheMap(targetDoc);
+        let bundleCache;
         if (cacheMap.has(bundleName)) {
-            return cacheMap.get(bundleName);
+            bundleCache = cacheMap.get(bundleName);
+            if (!refreshCSS) {
+                return bundleCache;
+            }
         }
         const url = new URL(`/web/bundle/${bundleName}`, location.origin);
         for (const [key, value] of Object.entries(session.bundle_params || {})) {
@@ -143,9 +147,13 @@ export const assets = {
                     for (const { src, type } of Object.values(result)) {
                         if (type === "link" && src) {
                             cssLibs.push(src);
-                        } else if (type === "script" && src) {
+                        } else if (type === "script" && src && !refreshCSS) {
                             jsLibs.push(src);
                         }
+                    }
+                    if (bundleCache && refreshCSS) {
+                        const { jsLibs: cachedJsLibs } = await bundleCache;
+                        jsLibs.push(...cachedJsLibs);
                     }
                 }
                 return { cssLibs, jsLibs };
@@ -169,7 +177,7 @@ export const assets = {
      * @param {Boolean} [options.js=true] apply bundle js on targetDoc
      * @returns {Promise<void[]>}
      */
-    loadBundle(bundleName, { targetDoc = document, css = true, js = true } = {}) {
+    loadBundle(bundleName, { targetDoc = document, css = true, js = true, refreshCSS = false } = {}) {
         if (typeof bundleName !== "string") {
             throw new Error(
                 `loadBundle(bundleName:string) accepts only bundleName argument as a string ! Not ${JSON.stringify(
@@ -177,10 +185,10 @@ export const assets = {
                 )} as ${typeof bundleName}`
             );
         }
-        return getBundle(bundleName, { targetDoc }).then(({ cssLibs, jsLibs }) => {
+        return getBundle(bundleName, { targetDoc, refreshCSS }).then(({ cssLibs, jsLibs }) => {
             const promises = [];
             if (css && cssLibs) {
-                promises.push(...cssLibs.map((url) => assets.loadCSS(url, { targetDoc })));
+                promises.push(...cssLibs.map((url) => assets.loadCSS(url, { targetDoc, refreshCSS })));
             }
             if (js && jsLibs) {
                 promises.push(...jsLibs.map((url) => assets.loadJS(url, { targetDoc })));
@@ -199,10 +207,14 @@ export const assets = {
      * @param {Document} [options.targetDoc=document] document to which the bundle will be applied (e.g. iframe document)
      * @returns {Promise<void>} resolved when the stylesheet has been loaded
      */
-    loadCSS(url, { retryCount = 0, targetDoc = document } = {}) {
+    loadCSS(url, { retryCount = 0, targetDoc = document, refreshCSS = false } = {}) {
         const cacheMap = getCacheMap(targetDoc);
         if (cacheMap.has(url)) {
-            return cacheMap.get(url);
+            if (!refreshCSS) {
+                return cacheMap.get(url);
+            }
+            targetDoc.head.querySelector(`link[href='${url}']`)?.remove();
+            cacheMap.delete(url);
         }
         const linkEl = targetDoc.createElement("link");
         linkEl.setAttribute("href", url);
