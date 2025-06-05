@@ -84,6 +84,7 @@
             "point_of_sale/static/src/app/utils/numbers.js",
             "point_of_sale/static/src/app/hooks/hooks.js",
             "point_of_sale/static/src/app/utils/debug-formatter.js",
+            "point_of_sale/static/src/app/store/order_change_receipt_template.xml",
         ],
         # Assets tests
         "pos_self_order.assets_tests": [
