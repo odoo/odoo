@@ -90,10 +90,11 @@ class SaleOrder(models.Model):
             and json.loads(self.customizable_pdf_form_fields)
         ) or {}
 
-        headers_available = self.available_quotation_document_ids.filtered(
+        available_docs = self.available_quotation_document_ids | self.quotation_document_ids
+        headers_available = available_docs.filtered(
             lambda doc: doc.document_type == 'header'
         )
-        footers_available = self.available_quotation_document_ids.filtered(
+        footers_available = available_docs.filtered(
             lambda doc: doc.document_type == 'footer'
         )
         selected_documents = self.quotation_document_ids
