@@ -130,7 +130,7 @@ def start_nginx_server():
 
 @toggleable
 @require_db
-def check_git_branch(server_url=None):
+def check_git_branch(server_url=None, get_db_branch=False):
     """Check if the local branch is the same as the connected Odoo DB and
     checkout to match it if needed.
 
@@ -150,10 +150,12 @@ def check_git_branch(server_url=None):
     try:
         git = ['git', '--work-tree=/home/pi/odoo/', '--git-dir=/home/pi/odoo/.git']
 
+        # For master ['server_serie'] is formatted like "18.4". For db < master the format is like "saas~18.3"
         db_branch = data['result']['server_serie'].replace('~', '-')
         if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
             db_branch = 'master'
-
+        if get_db_branch:
+            return db_branch
         local_branch = (
             subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
         )
@@ -162,8 +164,8 @@ def check_git_branch(server_url=None):
             local_branch,
             db_branch,
         )
-
         if db_branch != local_branch:
+            update_conf({'database_version', db_branch})
             try:
                 with writable():
                     subprocess.run(git + ['branch', '-m', db_branch], check=True)
@@ -263,6 +265,17 @@ def get_mac_address():
             addr = netifaces.ifaddresses(interface).get(netifaces.AF_LINK)[0]['addr']
             if addr != '00:00:00:00:00:00':
                 return addr
+
+
+def get_identifier():
+    """Get the identifier of the IoT Box. For databases < saas-18.4, it returns the MAC address.
+    For databases >= saas-18.4, it returns the serial number.
+    """
+    db_version = get_conf('database_version') or check_git_branch(get_db_branch=True)
+    # Patch necessary to correctly connect with iot box images >25_04 with dbs >= saas-18.4
+    if db_version and (db_version > 'saas-18.3' or db_version == 'master'):
+        return get_serial_number()
+    return get_mac_address()
 
 def get_path_nginx():
     return str(list(Path().absolute().parent.glob('*nginx*'))[0])
@@ -616,6 +629,30 @@ def _get_raspberry_pi_model():
     with open('/proc/device-tree/model', 'r', encoding='utf-8') as model_file:
         match = re.search(r'Pi (\d)', model_file.read())
         return int(match[1]) if match else 0
+
+
+def get_serial_number():
+    """Returns the serial number of the IoT Box."""
+    if platform.system() == 'Linux':
+        return read_file_first_line('/sys/firmware/devicetree/base/serial-number').strip("\x00")
+    else:
+        # Get motherboard's uuid (serial number isn't reliable as it's not always present)
+        command = [
+            'powershell',
+            '-Command',
+            "(Get-CimInstance Win32_ComputerSystemProduct).UUID"
+        ]
+
+        p = subprocess.run(command, stdout=subprocess.PIPE, check=False)
+        if p.returncode == 0:
+            serial = p.stdout.decode().strip()
+            if serial:
+                return serial
+        else:
+            _logger.error("Failed to get Windows IoT serial number")
+
+        # We still need to return a unique identifier as it's used in the db to identify an IoT Box
+        return get_mac_address()
 
 
 raspberry_pi_model = _get_raspberry_pi_model()
