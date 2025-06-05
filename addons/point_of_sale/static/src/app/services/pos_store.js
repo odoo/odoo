@@ -22,7 +22,7 @@ import {
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { ScaleScreen } from "../screens/scale_screen/scale_screen";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import { changesToOrder, getOrderChanges } from "../models/utils/order_change";
+import { changesToOrder, getOrderChanges, getStrNotes } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
@@ -1713,14 +1713,6 @@ export class PosStore extends WithLazyGetterTrap {
         await this.sendOrderInPreparation(o, { cancelled });
     }
 
-    getStrNotes(note) {
-        return note && typeof note === "string"
-            ? JSON.parse(note)
-                  .map((n) => n.text)
-                  .join(", ")
-            : "";
-    }
-
     getOrderData(order, reprint) {
         return {
             reprint: reprint,
@@ -1729,8 +1721,9 @@ export class PosStore extends WithLazyGetterTrap {
             time: DateTime.now().toFormat("HH:mm"),
             tracking_number: order.tracking_number,
             preset_name: order.preset_id?.name || "",
+            preset_time: order.presetDateTime,
             employee_name: order.employee_id?.name || order.user_id?.name,
-            internal_note: this.getStrNotes(order.internal_note),
+            internal_note: getStrNotes(order.internal_note),
             general_customer_note: order.general_customer_note,
             changes: {
                 title: "",
@@ -1758,9 +1751,6 @@ export class PosStore extends WithLazyGetterTrap {
         const orderData = this.getOrderData(order, reprint);
 
         const changes = this.filterChangeByCategories(categories, orderChange);
-        for (const changeItem of [...changes.new, ...changes.cancelled, ...changes.noteUpdate]) {
-            changeItem.note = this.getStrNotes(changeItem.note || "[]");
-        }
         return { orderData, changes };
     }
 
