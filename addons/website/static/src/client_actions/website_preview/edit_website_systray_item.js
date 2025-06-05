@@ -22,6 +22,7 @@ export class EditWebsiteSystrayItem extends Component {
     }
 
     onClickEditPage() {
+        this.websiteContext.edition = true;
         this.props.onEditPage();
     }
 
