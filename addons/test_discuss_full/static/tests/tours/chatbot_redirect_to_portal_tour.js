@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("test_mail_full.chatbot_redirect_to_portal", {
+registry.category("web_tour.tours").add("chatbot_redirect_to_portal", {
     url: "/contactus",
     steps: () => [
         {
