@@ -54,22 +54,6 @@ test("domainFromTree", async () => {
             result: `[("foo", "=ilike", "%hello")]`,
         },
         {
-            tree: condition("foo", "between", [1, 3]),
-            result: `["&", ("foo", ">=", 1), ("foo", "<=", 3)]`,
-        },
-        {
-            tree: condition("foo", "between", [1, expression("uid")], true),
-            result: `["!", "&", ("foo", ">=", 1), ("foo", "<=", uid)]`,
-        },
-        {
-            tree: condition("foo", "is_not_between", [1, expression("uid")]),
-            result: `["|", ("foo", "<", 1), ("foo", ">", uid)]`,
-        },
-        {
-            tree: condition("foo", "is_not_between", [1, 3], true),
-            result: `["!", "|", ("foo", "<", 1), ("foo", ">", 3)]`,
-        },
-        {
             tree: condition("foo", "next", [1, "weeks", "date"]),
             result: `["&", ("foo", ">=", context_today().strftime("%Y-%m-%d")), ("foo", "<=", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
         },
@@ -104,35 +88,6 @@ test("domainFromTree", async () => {
         {
             tree: condition("foo", "not_next", [1, "weeks", "date"], true),
             result: `["!", "|", ("foo", "<", context_today().strftime("%Y-%m-%d")), ("foo", ">", (context_today() + relativedelta(weeks = 1)).strftime("%Y-%m-%d"))]`,
-        },
-        {
-            tree: condition("date.__time", "=", false),
-            result: `["&", "&", ("date.hour_number", "=", False), ("date.minute_number", "=", False), ("date.second_number", "=", False)]`,
-        },
-        {
-            tree: condition("date.__time", "!=", false),
-            result: `["|", "|", ("date.hour_number", "!=", False), ("date.minute_number", "!=", False), ("date.second_number", "!=", False)]`,
-        },
-        {
-            tree: condition("date.__time", "=", "01:15:24"),
-            result: `["&", "&", ("date.hour_number", "=", 1), ("date.minute_number", "=", 15), ("date.second_number", "=", 24)]`,
-        },
-        {
-            tree: condition("date.__time", "!=", "01:15:24"),
-            result: `["|", "|", ("date.hour_number", "!=", 1), ("date.minute_number", "!=", 15), ("date.second_number", "!=", 24)]`,
-        },
-        {
-            tree: condition("date.__time", "between", ["01:15:24", "22:06:56"]),
-            result: `[
-                "&",
-                    "|", "|",
-                            ("date.hour_number", ">=", 1),
-                            "&", ("date.hour_number", "=", 1), ("date.minute_number", ">=", 15),
-                            "&", "&", ("date.hour_number", "=", 1), ("date.minute_number", "=", 15), ("date.second_number", ">=", 24),
-                    "|", "|",
-                            ("date.hour_number", "<=", 22),
-                            "&", ("date.hour_number", "=", 22), ("date.minute_number", "<=", 6),
-                            "&", "&", ("date.hour_number", "=", 22), ("date.minute_number", "=", 6), ("date.second_number", "<=", 56)]`,
         },
     ];
     for (const { tree, result } of toTest) {
@@ -180,21 +135,6 @@ test("domainFromTree . treeFromDomain", async () => {
         },
         {
             domain: `["!", "|", ("foo", "<", 1), ("foo", ">", uid)]`,
-        },
-        {
-            domain: `["&", "&", ("date.hour_number", "=", False), ("date.minute_number", "=", False), ("date.second_number", "=", False)]`,
-        },
-        {
-            domain: `["&", "&", ("date.hour_number", "!=", False), ("date.minute_number", "!=", False), ("date.second_number", "!=", False)]`,
-        },
-        {
-            domain: `["&", "&", ("date.hour_number", "=", 1), ("date.minute_number", "=", 15), ("date.second_number", "=", 24)]`,
-        },
-        {
-            domain: `["|", "|", ("date.hour_number", "!=", 1), ("date.minute_number", "!=", 15), ("date.second_number", "!=", 24)]`,
-        },
-        {
-            domain: `["&", "&", "&", "&", "&", ("date.hour_number", ">=", 1), ("date.minute_number", ">=", 15), ("date.second_number", ">=", 24), ("date.hour_number", "<=", 22), ("date.minute_number", "<=", 6), ("date.second_number", "<=", 56)]`,
         },
     ];
     for (const { domain, result } of toTest) {
@@ -576,7 +516,7 @@ test("treeFromExpression", () => {
         },
         {
             expression: `foo < 1 or foo > 3`,
-            result: condition("foo", "is_not_between", [1, 3]),
+            result: condition("foo", "not_between", [1, 3]),
         },
         {
             expression: `date_field >= context_today().strftime("%Y-%m-%d") and date_field <= (context_today() + relativedelta(years = 1)).strftime("%Y-%m-%d")`,
@@ -1068,7 +1008,7 @@ test("evaluation . expressionFromTree = contains . domainFromTree", () => {
         condition("y", "=", false),
         condition("foo", "between", [1, 3]),
         condition("foo", "between", [1, expression("uid")], true),
-        condition("foo", "is_not_between", [1, 3]),
+        condition("foo", "not_between", [1, 3]),
         condition("datefield", "next", [1, "weeks", "date"]),
         condition("datetimefield", "last", [1, "years", "datetime"]),
         condition("datetimefield", "not_last", [1, "years", "datetime"]),

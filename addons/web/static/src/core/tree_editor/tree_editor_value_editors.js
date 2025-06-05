@@ -164,7 +164,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "ilike":
         case "not ilike":
             return STRING_EDITOR;
-        case "is_not_between":
+        case "not_between":
         case "between": {
             const editorInfo = getValueEditorInfo(fieldDef, "=");
             const { defaultValue } = getValueEditorInfo(fieldDef, "=", {

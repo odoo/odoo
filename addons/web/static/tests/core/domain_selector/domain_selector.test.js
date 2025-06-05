@@ -29,6 +29,7 @@ import {
     isNotSupportedPath,
     isNotSupportedValue,
     openModelFieldSelectorPopover,
+    formatDomain,
     selectOperator,
     selectValue,
     toggleArchive,
@@ -2123,6 +2124,20 @@ test(`any/not any operator in editable mode`, async () => {
     );
 });
 
+test(`any/not any operator in editable mode (add a rule in empty sub domain)`, async () => {
+    await makeDomainSelector({
+        readonly: false,
+        isDebugMode: true,
+        domain: `[("product_id", "any", [])]`,
+    });
+    await addNewRule();
+    expect(getCurrentPath()).toBe("Product");
+    expect(getCurrentOperator()).toBe("matches");
+    expect(getCurrentPath(1)).toBe("Id");
+    expect(getCurrentOperator(1)).toBe("equals");
+    expect(SELECTORS.debugArea).toHaveValue(`[("product_id", "any", [("id", "=", 1)])]`);
+});
+
 test(`any/not any operator (readonly) with custom domain as value`, async () => {
     const toTest = [
         {
@@ -2812,27 +2827,33 @@ test("datetime options (readonly)", async () => {
             domain: `[
                 "&",
                     "|",
-                    "|",
-                        ("datetime.year_number", ">=", 2025),
-                        "&",
-                            ("datetime.year_number", "=", 2025),
-                            ("datetime.month_number", ">=", 3),
-                        "&",
-                        "&",
+                        "|", "|",
+                            ("datetime.year_number", ">", 2025),
+                            "&",
+                                ("datetime.year_number", "=", 2025),
+                                ("datetime.month_number", ">", 3),
+                            "&", "&",
+                                ("datetime.year_number", "=", 2025),
+                                ("datetime.month_number", "=", 3),
+                                ("datetime.day_of_month", ">", 20),
+                        "&", "&",
                             ("datetime.year_number", "=", 2025),
                             ("datetime.month_number", "=", 3),
-                            ("datetime.day_of_month", ">=", 20),
+                            ("datetime.day_of_month", "=", 20),
                     "|",
-                    "|",
-                        ("datetime.year_number", "<=", 2026),
-                        "&",
-                            ("datetime.year_number", "=", 2026),
-                            ("datetime.month_number", "<=", 7),
-                        "&",
-                        "&",
+                        "|","|",
+                            ("datetime.year_number", "<", 2026),
+                            "&",
+                                ("datetime.year_number", "=", 2026),
+                                ("datetime.month_number", "<", 7),
+                            "&", "&",
+                                ("datetime.year_number", "=", 2026),
+                                ("datetime.month_number", "=", 7),
+                                ("datetime.day_of_month", "<", 15),
+                        "&", "&",
                             ("datetime.year_number", "=", 2026),
                             ("datetime.month_number", "=", 7),
-                            ("datetime.day_of_month", "<=", 15),
+                            ("datetime.day_of_month", "=", 15)
             ]`,
             text: `Datetime ➔ Date between 03/20/2025 and 07/15/2026`,
         },
@@ -2887,27 +2908,33 @@ test("datetime options (readonly)", async () => {
             domain: `[
                 "&",
                     "|",
-                    "|",
-                        ("datetime.hour_number", ">=", 15),
-                        "&",
-                            ("datetime.hour_number", "=", 15),
-                            ("datetime.minute_number", ">=", 40),
-                        "&",
-                        "&",
+                        "|", "|",
+                            ("datetime.hour_number", ">", 15),
+                            "&",
+                                ("datetime.hour_number", "=", 15),
+                                ("datetime.minute_number", ">", 40),
+                            "&", "&",
+                                ("datetime.hour_number", "=", 15),
+                                ("datetime.minute_number", "=", 40),
+                                ("datetime.second_number", ">", 30),
+                        "&", "&",
                             ("datetime.hour_number", "=", 15),
                             ("datetime.minute_number", "=", 40),
-                            ("datetime.second_number", ">=", 30),
+                            ("datetime.second_number", "=", 30),
                     "|",
-                    "|",
-                        ("datetime.hour_number", "<=", 17),
-                        "&",
-                            ("datetime.hour_number", "=", 17),
-                            ("datetime.minute_number", "<=", 20),
-                        "&",
-                        "&",
-                            ("datetime.hour_number", "=", 17),
-                            ("datetime.minute_number", "=", 20),
-                            ("datetime.second_number", "<=", 00),
+                        "|", "|",
+                            ("datetime.hour_number", "<", 17),
+                            "&",
+                                ("datetime.hour_number", "=", 17),
+                                ("datetime.minute_number", "<", 20),
+                            "&", "&",
+                                ("datetime.hour_number", "=", 17),
+                                ("datetime.minute_number", "=", 20),
+                                ("datetime.second_number", "<", 00),
+                        "&", "&",
+                                ("datetime.hour_number", "=", 17),
+                                ("datetime.minute_number", "=", 20),
+                                ("datetime.second_number", "=", 00)
             ]`,
             text: `Datetime ➔ Time between 15:40:30 and 17:20:00`,
         },
@@ -3018,25 +3045,35 @@ test("datetime options (edit)", async () => {
         },
     });
     await addNewRule();
-    expect.verifySteps(['[("id", "=", 1)]']);
+    expect.verifySteps([formatDomain('[("id", "=", 1)]')]);
     await openModelFieldSelectorPopover();
     await contains(".o_model_field_selector_popover_item_name:contains('Datetime')").click();
     expect.verifySteps([
-        '["&", ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("datetime", "<=", datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]',
+        formatDomain(
+            `[
+                "&",
+                    ("datetime", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")),
+                    ("datetime", "<=", datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))
+            ]`
+        ),
     ]);
 
     await openModelFieldSelectorPopover();
     await followRelation(2);
     await contains(".o_model_field_selector_popover_item_name:contains('Date')").click();
     expect.verifySteps([
-        '["&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 24)]',
+        formatDomain(
+            '["&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 24)]'
+        ),
     ]);
 
     await contains(".o_datetime_input").click();
     await contains(getPickerCell("26")).click();
     expect(getCurrentValue()).toBe("03/26/2025");
     expect.verifySteps([
-        '["&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 26)]',
+        formatDomain(
+            '["&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 26)]'
+        ),
     ]);
 
     expect(getOperatorOptions()).toEqual([
@@ -3058,16 +3095,31 @@ test("datetime options (edit)", async () => {
     expect(SELECTORS.clearNotSupported).toHaveCount(0);
     expect(`${SELECTORS.editor} .o_datetime_input`).toHaveCount(2);
     expect.verifySteps([
-        `["&", "|", "|", ("datetime.year_number", ">=", 2025), "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", ">=", 3), "&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", ">=", 24), "|", "|", ("datetime.year_number", "<=", 2025), "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "<=", 3), "&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "<=", 24)]`,
+        formatDomain(
+            `[
+                "&",
+                    "|",
+                        "|", "|",
+                            ("datetime.year_number", ">", 2025),
+                            "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", ">", 3),
+                            "&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", ">", 24),
+                        "&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 24),
+                    "|",
+                        "|", "|",
+                            ("datetime.year_number", "<", 2025),
+                            "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "<", 3),
+                            "&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "<", 24),
+                            "&", "&", ("datetime.year_number", "=", 2025), ("datetime.month_number", "=", 3), ("datetime.day_of_month", "=", 24)]`
+        ),
     ]);
 
     await openModelFieldSelectorPopover();
     await followRelation();
     await contains(".o_model_field_selector_popover_item_name:contains('Weekday')").click();
-    expect.verifySteps([`[("datetime.day_of_week", "=", 1)]`]);
+    expect.verifySteps([formatDomain(`[("datetime.day_of_week", "=", 1)]`)]);
     await selectValue(5);
     expect(getCurrentValue()).toBe("Friday");
-    expect.verifySteps([`[("datetime.day_of_week", "=", 5)]`]);
+    expect.verifySteps([formatDomain(`[("datetime.day_of_week", "=", 5)]`)]);
 
     expect(getOperatorOptions()).toEqual([
         "equals",
@@ -3089,7 +3141,9 @@ test("datetime options (edit)", async () => {
     await editValue("12:15:00");
     expect(getCurrentValue()).toBe("12:15:00");
     expect.verifySteps([
-        '["&", "&", ("datetime.hour_number", "=", 12), ("datetime.minute_number", "=", 15), ("datetime.second_number", "=", 0)]',
+        formatDomain(
+            '["&", "&", ("datetime.hour_number", "=", 12), ("datetime.minute_number", "=", 15), ("datetime.second_number", "=", 0)]'
+        ),
     ]);
 
     await openModelFieldSelectorPopover();
@@ -3098,7 +3152,7 @@ test("datetime options (edit)", async () => {
     await contains(".o_model_field_selector_popover_item_name:contains('Hour')").click();
     expectStep = true;
     await editValue("15");
-    expect.verifySteps(['[("datetime.hour_number", "=", 15)]']);
+    expect.verifySteps([formatDomain('[("datetime.hour_number", "=", 15)]')]);
 
     expect(getOperatorOptions()).toEqual([
         "equals",

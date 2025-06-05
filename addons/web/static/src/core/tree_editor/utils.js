@@ -216,7 +216,7 @@ function _getConditionDescription(node, getFieldDef, getPathDescription, display
     let join;
     let addParenthesis = Array.isArray(value);
     switch (operator) {
-        case "is_not_between":
+        case "not_between":
         case "between":
             join = _t("and");
             addParenthesis = false;

@@ -45,7 +45,7 @@ export function getDomainDisplayedOperators(fieldDef, params = {}) {
                 ">",
                 "<",
                 "between",
-                "is_not_between",
+                "not_between",
                 ...("allowExpressions" in params && !params.allowExpressions
                     ? []
                     : ["next", "not_next", "last", "not_last"]),
@@ -61,7 +61,7 @@ export function getDomainDisplayedOperators(fieldDef, params = {}) {
                 ">",
                 "<",
                 "between",
-                "is_not_between",
+                "not_between",
                 "ilike",
                 "not ilike",
                 "set",
@@ -89,7 +89,7 @@ export function getDomainDisplayedOperators(fieldDef, params = {}) {
         case "date_option":
         case "datetime_option":
         case "time_option":
-            return ["=", "!=", ">", "<", "between", "is_not_between", "set", "not_set"];
+            return ["=", "!=", ">", "<", "between", "not_between", "set", "not_set"];
         case undefined:
             return ["="];
         default:
