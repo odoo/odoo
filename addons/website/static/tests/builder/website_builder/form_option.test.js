@@ -18,6 +18,7 @@ import {
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
+import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -686,6 +687,7 @@ describe("Many2one Field", () => {
     });
 
     test("SelectMenu to add records", async () => {
+        await unfoldAllOptionsGroups();
         await contains(addRecordButtonSelector).click();
         await expectElementCount(".o_select_menu_menu .o_select_menu_item", records.length - 1);
         expect(queryOne(".o_select_menu_menu").getBoundingClientRect().top).toBeLessThan(

@@ -7,6 +7,7 @@ import {
     openLinkPopup,
     registerWebsitePreviewTour,
     clickToolbarButton,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 const toggleMegaMenu = (stepOptions) =>
@@ -265,6 +266,7 @@ registerWebsitePreviewTour(
             run: "click",
         },
         // Change MegaMenu template
+        ...unfoldOptionsGroup("Mega Menu"),
         ...changeOptionInPopover("Mega Menu", "Template", "[title='Big Icons Subtitles']"),
         ...clickToolbarButton(
             "h4 of first menu link of the first column",

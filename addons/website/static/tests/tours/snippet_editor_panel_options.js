@@ -6,6 +6,7 @@ import {
     goBackToBlocks,
     registerWebsitePreviewTour,
     selectFullText,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 import { browser } from "@web/core/browser/browser";
 import { delay } from "@web/core/utils/concurrency";
@@ -45,6 +46,7 @@ registerWebsitePreviewTour(
         selectFullText("first paragraph", ".s_text_image p:not([data-selection-placeholder])"),
         checkIfParagraphSelected(":iframe .s_text_image p:not([data-selection-placeholder])"),
         checkIfTextToolbarVisible,
+        ...unfoldOptionsGroup("Text - Image"),
         {
             content: "Click on the width option.",
             trigger: "[data-action-param='o_container_small']",
@@ -120,6 +122,7 @@ registerWebsitePreviewTour(
         checkIfParagraphSelected(":iframe .s_text_block p:not([data-selection-placeholder])"),
         // Test keeping the text selection when removing all columns of a
         // snippet.
+        ...unfoldOptionsGroup("Text"),
         ...changeOptionInPopover("Text", "Layout", "[data-action-value='0']"),
         {
             content: "The snippet should have the correct number of columns.",

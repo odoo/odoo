@@ -1,4 +1,8 @@
-import { insertSnippet, registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
+import {
+    insertSnippet,
+    registerWebsitePreviewTour,
+    unfoldOptionsGroup,
+} from "@website/js/tours/tour_utils";
 
 import { FileSelectorControlPanel } from "@html_editor/main/media/media_dialog/file_selector";
 import { patch } from "@web/core/utils/patch";
@@ -93,6 +97,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe #wrap .s_image_gallery .img",
             run: "click",
         },
+        ...unfoldOptionsGroup("Image Gallery"),
         {
             content: "click on add images to open image dialog (in multi mode)",
             trigger: "button[data-action-id='addImage']",

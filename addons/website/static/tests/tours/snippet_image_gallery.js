@@ -9,6 +9,7 @@ import {
     changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     assertCssVariable,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -160,6 +161,7 @@ registerWebsitePreviewTour(
             trigger:
                 ".o_customize_tab [data-container-title='Image'] [data-label='Filter'] .o-dropdown:contains('Blur')",
         },
+        ...unfoldOptionsGroup("Image Gallery"),
         {
             content: "Change the height of the snippet",
             trigger: `.o_customize_tab [data-container-title="Image Gallery"] [data-label="Height"] input`,

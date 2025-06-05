@@ -5,6 +5,7 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -53,6 +54,7 @@ test("Changing the number of columns to 'None' (0)", async () => {
 
     await contains("[data-label='Layout'] .dropdown").click();
     await contains("[data-action-id='changeColumnCount'][data-action-value='1']").click();
+    await unfoldAllOptionsGroups();
     expect(":iframe .s_text_block .container > .row:only-child > .col-lg-12").toHaveCount(1);
 
     await contains("[data-label='Layout'] .dropdown").click();
@@ -76,6 +78,7 @@ test("Changing the number of columns (base case)", async () => {
     await contains("[data-label='Layout'] .dropdown").click();
     await contains("[data-action-id='changeColumnCount'][data-action-value='2']").click();
     expect(":iframe .s_kickoff .row > .col-lg-6").toHaveCount(2);
+    await unfoldAllOptionsGroups();
     await contains("[data-label='Layout'] .dropdown").click();
     await contains("[data-action-id='changeColumnCount'][data-action-value='3']").click();
     expect(":iframe .s_kickoff .row > .col-lg-4").toHaveCount(3);

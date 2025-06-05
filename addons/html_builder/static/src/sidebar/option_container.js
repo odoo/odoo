@@ -24,6 +24,8 @@ export class OptionsContainer extends BaseOptionComponent {
         options: { type: Array },
         editingElement: true, // HTMLElement from iframe
         isRemovable: false,
+        toggleFold: { type: Function, optional: true },
+        folded: { type: Boolean, optional: true },
         removeDisabledReason: { type: String, optional: true },
         isClonable: false,
         cloneDisabledReason: { type: String, optional: true },
@@ -90,10 +92,6 @@ export class OptionsContainer extends BaseOptionComponent {
             : "";
 
         return (title || getSnippetName(this.env.getEditingElement())) + titleExtraInfo;
-    }
-
-    selectElement() {
-        this.dependencies.builderOptions.updateContainers(this.props.editingElement);
     }
 
     toggleOverlayPreview(el, show) {

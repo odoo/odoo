@@ -3,6 +3,7 @@ import {
     insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 const snippets = [
@@ -99,6 +100,11 @@ registerWebsitePreviewTour(
             run: "click",
         },
         checkScrollbar(true),
+        {
+            content: "Wait s_media_list is removed from popup",
+            trigger: "body:not(:has(.o_customize_tab [data-container-title='Media List']))",
+        },
+        ...unfoldOptionsGroup("Popup"),
         toggleBackdrop("Popup"), // show Popup backdrop
         {
             content: "Close the Popup that has now backdrop.",

@@ -42,6 +42,11 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: `Target the "Text - Image" group`,
+            trigger: `.options-container[data-container-title="Text - Image"]:has(.options-container-label i.fa-caret-right) button[title="Select only this block"]`,
+            run: "click",
+        },
+        {
             content: "Add new image column",
             trigger: "[data-action-id='addGridElement'][data-action-param='image']",
             run: "click",
