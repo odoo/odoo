@@ -173,13 +173,13 @@
 
     <template id="template_header_sidebar" inherit_id="website.template_header_sidebar">
         <xpath expr="//t[@t-call='website.placeholder_header_brand']" position="after">
-            <div class="d-flex gap-1 ms-auto mb-0">
+            <ul class="list-unstyled d-flex gap-1 ms-auto mb-0">
                 <t t-call="website_sale.header_cart_link">
                     <t t-set="_icon" t-value="True"/>
                     <t t-set="_link_class" t-value="'o_navlink_background btn position-relative p-1 rounded-circle text-reset'"/>
                     <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 rounded-pill mt-n1 me-n1'"/>
                 </t>
-            </div>
+            </ul>
         </xpath>
     </template>
 
