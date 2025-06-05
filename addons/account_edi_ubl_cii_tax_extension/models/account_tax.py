@@ -235,11 +235,17 @@ class AccountTax(models.Model):
     ubl_cii_allowance_charge_reason_code = fields.Selection(
         string="Allowance Charge Reason Code",
         selection=ALLOWANCE_CHARGE_REASON_CODES,
+        compute='_compute_ubl_cii_allowance_charge_reason_code',
+        readonly=False,
+        store=True,
     )
 
     ubl_cii_tax_exemption_reason_code = fields.Selection(
         help="The reason why the amount is exempted from VAT or why no VAT is being charged, used for electronic invoicing purposes.",
         string="Tax Exemption Reason Code",
+        compute='_compute_ubl_cii_tax_exemption_reason_code',
+        readonly=False,
+        store=True,
         selection=[
             ('VATEX_EU_AE', 'VATEX-EU-AE - Reverse charge'),
             ('VATEX_EU_D', 'VATEX-EU-D - Intra-Community acquisition from second hand means of transport'),
@@ -315,14 +321,70 @@ class AccountTax(models.Model):
             if not tax.ubl_cii_requires_exemption_reason:
                 tax.ubl_cii_tax_exemption_reason_code = False
 
-    @api.depends('amount_type')
+    @api.depends('amount', 'amount_type', 'type_tax_use', 'company_id.account_fiscal_country_id.code', 'fiscal_position_ids')
     def _compute_ubl_cii_tax_category_code(self):
         for tax in self:
-            if tax.amount_type == 'percent' and not tax.ubl_cii_tax_category_code:
-                code = 'S'
-            elif tax.amount_type == 'fixed' and not tax.ubl_cii_tax_category_code:
-                code = 'E'
-            else:
-                code = tax.ubl_cii_tax_category_code
+            tax.ubl_cii_tax_category_code = self._ubl_cii_tax_category_code_for(tax)
 
-            tax.ubl_cii_tax_category_code = code
+    @api.model
+    def _ubl_cii_tax_category_code_for(self, tax):
+        tax.ensure_one()
+
+        if tax.company_id.account_fiscal_country_id.code == 'BE':
+            template = self.env['account.chart.template'].with_company(tax.company_id)
+
+            if intracom_fp := template.ref('fiscal_position_template_3', raise_if_not_found=False):
+                if tax in intracom_fp.tax_ids:
+                    # 0% IntraCom tax
+                    return 'K'
+
+            if co_contractant_fp := template.ref('fiscal_position_template_4', raise_if_not_found=False):
+                if tax in co_contractant_fp.tax_ids:
+                    # Co-Contractant tax
+                    return 'AE'
+
+        if tax.amount_type == 'percent':
+            if tax.type_tax_use == 'sale' and tax.amount == 0.0:
+                # 0% Sales Taxes
+                return 'E'
+            else:
+                # Percent taxes default
+                return 'S'
+        elif tax.amount_type == 'fixed':
+            # Fixed taxes default
+            return 'E'
+
+        return False
+
+    @api.depends()
+    def _compute_ubl_cii_allowance_charge_reason_code(self):
+        for tax in self:
+            tax.ubl_cii_allowance_charge_reason_code = self._ubl_cii_allowance_charge_reason_code_for(tax)
+
+    @api.model
+    def _ubl_cii_allowance_charge_reason_code_for(self, tax):
+        return False
+
+    @api.depends('company_id.account_fiscal_country_id.code', 'fiscal_position_ids')
+    def _compute_ubl_cii_tax_exemption_reason_code(self):
+        for tax in self:
+            tax.ubl_cii_tax_exemption_reason_code = self._ubl_cii_tax_exemption_reason_code_for(tax)
+
+    @api.model
+    def _ubl_cii_tax_exemption_reason_code_for(self, tax):
+        tax.ensure_one()
+
+        if tax.company_id.account_fiscal_country_id.code == 'BE':
+            template = self.env['account.chart.template'].with_company(tax.company_id)
+
+            if intracom_fp := template.ref('fiscal_position_template_3', raise_if_not_found=False):
+                if tax in intracom_fp.tax_ids:
+                    # 0% IntraCom tax
+                    return 'VATEX_EU_IC'
+
+            if co_contractant_fp := template.ref('fiscal_position_template_4', raise_if_not_found=False):
+                if tax in co_contractant_fp.tax_ids:
+                    # Co-Contractant tax
+                    return 'VATEX_EU_AE'
+
+        return False
