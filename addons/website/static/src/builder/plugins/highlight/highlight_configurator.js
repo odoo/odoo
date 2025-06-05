@@ -1,7 +1,6 @@
-import { Component, onMounted, useRef, useState } from "@odoo/owl";
+import { Component, onWillStart, useState } from "@odoo/owl";
 import { ColorPicker } from "@web/core/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
-import { applyTextHighlight } from "@website/js/highlight_utils";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 
 export const highlightIdToName = {
@@ -47,13 +46,9 @@ export class HighlightConfigurator extends Component {
     setup() {
         this.state = useState(this.props.getHighlightState());
         this.highlightIdToName = highlightIdToName;
-        this.preview = useRef("preview");
-        onMounted(() => {
+        onWillStart(() => {
             if (!this.state.highlightId) {
                 this.openHighlightPicker(false);
-            }
-            if (this.state.highlightId && this.preview.el) {
-                applyTextHighlight(this.preview.el, this.state.highlightId);
             }
         });
     }
