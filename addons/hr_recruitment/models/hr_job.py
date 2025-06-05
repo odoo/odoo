@@ -63,8 +63,7 @@ class HrJob(models.Model):
     currency_id = fields.Many2one("res.currency", related="company_id.currency_id", readonly=True)
     compensation = fields.Monetary(currency_field="currency_id")
 
-    activities_overdue = fields.Integer(compute='_compute_activities')
-    activities_today = fields.Integer(compute='_compute_activities')
+    activity_count = fields.Integer(compute='_compute_activities')
 
     job_properties = fields.Properties('Properties', definition='company_id.job_properties_definition')
 
@@ -97,19 +96,15 @@ class HrJob(models.Model):
         self.env.cr.execute("""
             SELECT
                 app.job_id,
-                COUNT(*) AS act_count,
-                CASE
-                    WHEN %(today)s::date - act.date_deadline::date = 0 THEN 'today'
-                    WHEN %(today)s::date - act.date_deadline::date > 0 THEN 'overdue'
-                END AS act_state
+                COUNT(*) AS act_count
              FROM mail_activity act
              JOIN hr_applicant app ON app.id = act.res_id
              JOIN hr_recruitment_stage sta ON app.stage_id = sta.id
             WHERE act.user_id = %(user_id)s AND act.res_model = 'hr.applicant'
-              AND act.date_deadline <= %(today)s::date AND app.active
+              AND app.active
               AND app.job_id IN %(job_ids)s
               AND sta.hired_stage IS NOT TRUE
-            GROUP BY app.job_id, act_state
+            GROUP BY app.job_id
         """, {
             'today': fields.Date.context_today(self),
             'user_id': self.env.uid,
@@ -118,10 +113,9 @@ class HrJob(models.Model):
         })
         job_activities = defaultdict(dict)
         for activity in self.env.cr.dictfetchall():
-            job_activities[activity['job_id']][activity['act_state']] = activity['act_count']
+            job_activities[activity['job_id']] = activity['act_count']
         for job in self:
-            job.activities_overdue = job_activities[job.id].get('overdue', 0)
-            job.activities_today = job_activities[job.id].get('today', 0)
+            job.activity_count = job_activities[job.id]
 
     @api.depends('application_ids.interviewer_ids')
     def _compute_extended_interviewer_ids(self):
@@ -360,24 +354,10 @@ class HrJob(models.Model):
         views = ['activity'] + [view for view in action['view_mode'].split(',') if view != 'activity']
         action['view_mode'] = ','.join(views)
         action['views'] = [(False, view) for view in views]
-        return action
-
-    def action_open_late_activities(self):
-        action = self.action_open_activities()
         action['context'] = {
             'default_job_id': self.id,
             'search_default_job_id': self.id,
-            'search_default_activities_overdue': True,
             'search_default_running_applicant_activities': True,
-        }
-        return action
-
-    def action_open_today_activities(self):
-        action = self.action_open_activities()
-        action['context'] = {
-            'default_job_id': self.id,
-            'search_default_job_id': self.id,
-            'search_default_activities_today': True,
         }
         return action
 
