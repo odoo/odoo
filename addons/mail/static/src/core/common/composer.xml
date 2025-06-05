@@ -28,8 +28,16 @@
                     <button t-att-disabled="!state.active or areAllActionsDisabled" class="d-none" title="Attach files" aria-label="Attach files" t-ref="file-uploader"><i class="fa fa-fw fa-paperclip"/></button>
                 </t>
             </FileUploader>
+<<<<<<< 369e1c71653a30747444da7c6b7d35b5aa0385f9
             <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0 d-flex">
                 <img class="o-mail-Composer-avatar mx-auto o_avatar rounded-3" t-att-src="store.self.avatarUrl" alt="Avatar of user"/>
+||||||| 551910726956b085e4e1ce17d1f785e90640fe43
+            <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0">
+                <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="props.composer.thread.effectiveSelf.avatarUrl" alt="Avatar of user"/>
+=======
+            <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0">
+                <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="(thread?.effectiveSelf or message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
+>>>>>>> eaf11e870a3f42cf0c5ecfa18f462f843a56e77a
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread?.eq(props.composer.thread)">
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message, props.composer.thread)">
