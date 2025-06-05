@@ -306,7 +306,7 @@ class Ewaybill(models.Model):
 
     def _check_transporter(self):
         error_message = []
-        if self.transporter_id and not self.transporter_id.vat:
+        if self.transporter_id and not self.transporter_id.vat and (self.mode != "1" or not self.vehicle_no):
             error_message.append(_("- Transporter %s does not have a GST Number", self.transporter_id.name))
         if self.mode == "4" and self.vehicle_no and self.vehicle_type == "R":
             error_message.append(_("- Vehicle type can not be regular when the transportation mode is ship"))
