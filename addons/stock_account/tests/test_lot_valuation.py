@@ -791,3 +791,16 @@ class TestLotValuation(TestStockValuationCommon):
         self.assertRecordValues(delivery.move_ids, [
             {'quantity': 5.0, 'state': 'done', 'lot_ids': self.lot1.ids}
         ])
+
+    def test_adjustment_post_validation(self):
+        """
+        On a picking order test the behavior of changing the quantity on a stock.move
+        """
+        in_move = self._make_in_move(self.product1, 2, 2, create_picking=True, lot_ids=[self.lot1])
+        picking = in_move.picking_id
+        picking.action_toggle_is_locked()
+        with self.assertRaises(UserError):
+            with Form(picking) as picking_form:
+                with picking_form.move_ids_without_package.edit(0) as mv:
+                    mv.quantity = 5.0
+        self.assertEqual(in_move.quantity, 2)
