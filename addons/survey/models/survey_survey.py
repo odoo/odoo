@@ -806,6 +806,7 @@ class Survey(models.Model):
         """
         if self.questions_layout == "one_page":
             return True
+        page_or_question = page_or_question or self.question_ids[-1]
         pages_or_questions = self._get_pages_or_questions(user_input)
         current_page_index = pages_or_questions.ids.index(page_or_question.id)
         next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
