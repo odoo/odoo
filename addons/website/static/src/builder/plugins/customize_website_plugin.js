@@ -11,6 +11,8 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { debounce } from "@web/core/utils/timing";
 import { withSequence } from "@html_editor/utils/resource";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { renderToElement } from "@web/core/utils/render";
+import { CompositeAction } from "@html_builder/core/composite_action_plugin";
 
 export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
@@ -45,6 +47,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             CustomizeButtonStyleAction,
             WebsiteConfigAction,
             PreviewableWebsiteConfigAction,
+            TemplatePreviewableWebsiteConfigAction,
             SelectTemplateAction,
         },
         color_combination_getters: withSequence(5, (el, actionParam) => {
@@ -522,7 +525,7 @@ export class CustomizeBodyBgTypeAction extends BuilderAction {
 
 export class WebsiteConfigAction extends BuilderAction {
     static id = "websiteConfig";
-    static dependencies = ["customizeWebsite"];
+    static dependencies = ["builderActions", "customizeWebsite"];
     setup() {
         this.reload = {};
         this.preview = false;
@@ -554,7 +557,7 @@ export class WebsiteConfigAction extends BuilderAction {
     async apply(action) {
         return this._toggleConfig(action, true);
     }
-    clean(action) {
+    async clean(action) {
         return this._toggleConfig(action, false);
     }
 
@@ -602,6 +605,7 @@ export class WebsiteConfigAction extends BuilderAction {
         };
         const shouldReset = isViewData && !!action.params.resetViewArch;
         const records = action.params[paramName] || [];
+        const getAction = this.dependencies.builderActions.getAction;
         if (action.selectableContext) {
             if (!apply) {
                 // do nothing, we will do it anyway in the apply call
@@ -609,14 +613,14 @@ export class WebsiteConfigAction extends BuilderAction {
             }
             for (const item of action.selectableContext.items) {
                 for (const a of item.getActions()) {
-                    if (a.actionId === "websiteConfig") {
+                    if (getAction(a.actionId) instanceof WebsiteConfigAction) {
                         for (const record of a.actionParam[paramName] || []) {
                             // disable all
                             prepareRecord(record, true);
                         }
-                    } else if (a.actionId === "composite" || a.actionId === "reloadComposite") {
+                    } else if (getAction(a.actionId) instanceof CompositeAction) {
                         for (const itemAction of a.actionParam.mainParam) {
-                            if (itemAction.action === "websiteConfig") {
+                            if (getAction(itemAction.action) instanceof WebsiteConfigAction) {
                                 for (const record of itemAction.actionParam[paramName] || []) {
                                     prepareRecord(record, true);
                                 }
@@ -750,6 +754,59 @@ export class PreviewableWebsiteConfigAction extends BuilderAction {
                 revert: () => {
                     undoCleanCallback();
                 },
+            });
+        }
+    }
+}
+
+class TemplatePreviewableWebsiteConfigAction extends WebsiteConfigAction {
+    static id = "templatePreviewableWebsiteConfig";
+
+    setup() {
+        this.reload = {};
+        this.preview = true;
+    }
+
+    async apply(action) {
+        if (!action.isPreviewing) {
+            await super.apply(action);
+        } else {
+            await this.renderPreview(action);
+        }
+    }
+
+    async clean(action) {
+        if (!action.isPreviewing) {
+            await super.clean(action);
+        }
+    }
+
+    async renderPreview({ editingElement: el, params }) {
+        if (params.templateId && !el.closest(params.placeExcludeRootClosest)) {
+            const renderedEl = renderToElement(params.templateId);
+            const targetEl = el;
+            if (targetEl) {
+                if (params.placeBefore) {
+                    for (const el of targetEl.querySelectorAll(params.placeBefore)) {
+                        el.insertAdjacentElement("beforebegin", renderedEl.cloneNode(true));
+                    }
+                }
+                if (params.placeAfter) {
+                    for (const el of targetEl.querySelectorAll(params.placeAfter)) {
+                        el.insertAdjacentElement("afterend", renderedEl.cloneNode(true));
+                    }
+                }
+            }
+        }
+        // Wait one frame to get the proper fade-in animation effect.
+        // The promise ensures this completes before continuing, avoiding a race
+        // that could mark the element o_dirty and trigger an unnecessary save.
+        if (params.previewClass) {
+            await new Promise((resolve) => {
+                requestAnimationFrame(() => {
+                    params.previewClass.split(/\s+/).forEach((cls) => el.classList.add(cls));
+                    resolve();
+                });
             });
         }
     }

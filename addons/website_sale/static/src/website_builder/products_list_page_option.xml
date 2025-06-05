@@ -65,17 +65,29 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Categories" action="'websiteConfig'">
+    <BuilderRow label.translate="Categories" action="'templatePreviewableWebsiteConfig'">
         <BuilderButton
                 title.translate="Show into Sidebar"
                 id="'categories_opt'"
-                actionParam="{views: ['website_sale.products_categories']}"
+                actionParam="{
+                    views: ['website_sale.products_categories'],
+                    previewClass: 'o_wsale_previewing_sidebar o_wsale_has_sidebar',
+                    templateId: 'website_sale.editor_preview.sidebar',
+                    placeBefore: '#products_grid',
+                    placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_sidebar',
+                    }"
         >Sidebar</BuilderButton>
 
         <BuilderButton
                 title.translate="Show a filmstrip navigation at the Top"
                 id="'categories_opt_top'"
-                actionParam="{views: ['website_sale.products_categories_top']}"
+                actionParam="{
+                    views: ['website_sale.products_categories_top'],
+                    previewClass: 'o_wsale_previewing_filmstrip',
+                    templateId: 'website_sale.editor_preview.filmstrip',
+                    placeAfter: '#o_wsale_products_header h1',
+                    placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_filmstrip',
+                }"
         >Top</BuilderButton>
     </BuilderRow>
 
@@ -153,7 +165,7 @@
     </BuilderRow>
 
     <BuilderRow label.translate="Filters">
-        <BuilderSelect action="'websiteConfig'">
+        <BuilderSelect action="'templatePreviewableWebsiteConfig'">
             <BuilderSelectItem
                     title.translate="Hide all filters"
                     id="'attributes_hide_opt'"
@@ -162,12 +174,21 @@
             <BuilderSelectItem
                     title.translate="Show filters into Sidebar"
                     id="'attributes_opt'"
-                    actionParam="{views: ['website_sale.products_attributes']}"
+                    actionParam="{
+                        views: ['website_sale.products_attributes'],
+                        previewClass: 'o_wsale_previewing_sidebar o_wsale_has_sidebar',
+                        templateId: 'website_sale.editor_preview.sidebar',
+                        placeBefore: '#products_grid',
+                        placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_sidebar',
+                    }"
             >Sidebar</BuilderSelectItem>
             <BuilderSelectItem
                     title.translate="Render a button to show the Off-screen Menu"
                     id="'attributes_opt_top'"
-                    actionParam="{views: ['website_sale.products_attributes_top']}"
+                    actionParam="{
+                        views: ['website_sale.products_attributes_top'],
+                        previewClass: 'o_wsale_previewing_offcanvas',
+                    }"
             >Off-screen Menu</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
@@ -207,9 +228,17 @@
             label.translate="Floating"
             tooltip.translate="Floating sticky Toolbar"
             level="1"
-            action="'websiteConfig'"
     >
-        <BuilderCheckbox actionParam="{views: ['website_sale.floating_bar']}"/>
+        <BuilderCheckbox
+                action="'templatePreviewableWebsiteConfig'"
+                actionParam="{
+                    views: ['website_sale.floating_bar'],
+                    previewClass: 'o_wsale_previewing_floating_bar',
+                    templateId: 'website_sale.editor_preview.floating_bar',
+                    placeExcludeRootClosest: '#o_wsale_container.o_wsale_has_floating_bar',
+                    placeAfter: '.o_wsale_products_main_row',
+                }"
+        />
     </BuilderRow>
 
     <BuilderRow label.translate="Default Sort" level="1">
