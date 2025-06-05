@@ -1151,12 +1151,14 @@ export class TablePlugin extends Plugin {
         if (!selection.isCollapsed || !currentCell) {
             return;
         }
+        this.buildTableGrid(currentTable);
+        const currentRow = getRowIndex(currentCell);
+        const currentRowIndex = getRowIndex(currentCell);
+        const currentColIndex = this.tableGrid[currentRowIndex].findIndex((c) => c === currentCell);
+        if (currentColIndex < 0) {
+            return;
+        }
         const isArrowUp = ev.key === "ArrowUp";
-        const cellPosition = {
-            row: getRowIndex(currentCell),
-            col: getColumnIndex(currentCell),
-        };
-        const tableRows = [...currentTable.rows].map((row) => [...row.cells]);
         const shouldNavigateCell = (currentNode) => {
             const siblingDirection = isArrowUp ? "previousElementSibling" : "nextElementSibling";
             const direction = isArrowUp ? DIRECTIONS.LEFT : DIRECTIONS.RIGHT;
@@ -1175,7 +1177,11 @@ export class TablePlugin extends Plugin {
             return true;
         };
         const rowOffset = isArrowUp ? -1 : 1;
-        let targetNode = tableRows[cellPosition.row + rowOffset]?.[cellPosition.col];
+        let offset = currentRow + rowOffset;
+        if (rowOffset === 1 && currentCell.rowSpan > 1) {
+            offset = offset + currentCell.rowSpan - 1;
+        }
+        let targetNode = this.tableGrid[offset]?.[currentColIndex];
         const siblingElement = isArrowUp
             ? currentTable.previousElementSibling
             : currentTable.nextElementSibling;
