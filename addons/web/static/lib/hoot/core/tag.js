@@ -40,7 +40,7 @@ const {
  * @param {string} tagKey
  * @param {string} tagName
  */
-const checkTagSimilarity = (tagKey, tagName) => {
+function checkTagSimilarity(tagKey, tagName) {
     if (R_UNIQUE_TAG.test(tagKey)) {
         return;
     }
@@ -55,7 +55,7 @@ const checkTagSimilarity = (tagKey, tagName) => {
             similarities.push([existingTags[key], tagName]);
         }
     }
-};
+}
 
 const R_UNIQUE_TAG = /\d/;
 const SIMILARITY_PERCENTAGE = 0.1;

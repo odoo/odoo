@@ -41,7 +41,7 @@ const {
  * @param {string} label
  * @param {string} owner
  */
-const stackTemplate = (label, owner) => {
+function stackTemplate(label, owner) {
     // Defined with string concat because line returns are taken into account in <pre> tags.
     const preContent =
         /* xml */ `<t t-foreach="parseStack(${owner}.stack)" t-as="part" t-key="part_index">` +
@@ -58,7 +58,7 @@ const stackTemplate = (label, owner) => {
             </div>
         </t>
     `;
-};
+}
 
 const ERROR_TEMPLATE = /* xml */ `
     <div class="text-rose flex items-center gap-1 px-2 truncate">

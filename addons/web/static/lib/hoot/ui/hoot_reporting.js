@@ -9,10 +9,10 @@ import { HootTestPath } from "./hoot_test_path";
 import { HootTestResult } from "./hoot_test_result";
 
 /**
+ * @typedef {import("../core/test").Test} Test
+ *
  * @typedef {{
  * }} HootReportingProps
- *
- * @typedef {import("../core/test").Test} Test
  */
 
 //-----------------------------------------------------------------------------
@@ -54,9 +54,21 @@ const issueTemplate = (varName, colorClassName) => /* xml */ `
         </div>
     </t>`;
 
-const sortByDurationAscending = (a, b) => a.duration - b.duration;
+/**
+ * @param {Test} a
+ * @param {Test} b
+ */
+function sortByDurationAscending(a, b) {
+    return a.duration - b.duration;
+}
 
-const sortByDurationDescending = (a, b) => b.duration - a.duration;
+/**
+ * @param {Test} a
+ * @param {Test} b
+ */
+function sortByDurationDescending(a, b) {
+    return b.duration - a.duration;
+}
 
 const COLORS = {
     failed: "text-rose",

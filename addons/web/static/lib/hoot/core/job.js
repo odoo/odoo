@@ -31,13 +31,13 @@ const {
 /**
  * @param {JobConfig} config
  */
-const validateConfig = (config) => {
+function validateConfig(config) {
     for (const [key, value] of $entries(config)) {
         if (!isOfType(value, CONFIG_TAG_SCHEMA[key])) {
             throw new HootError(`invalid config tag: parameter "${key}" does not exist`);
         }
     }
-};
+}
 
 /** @type {Record<keyof JobConfig, import("../hoot_utils").ArgumentType>} */
 const CONFIG_TAG_SCHEMA = {

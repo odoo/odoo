@@ -799,7 +799,9 @@ function registerFileInput({ target }) {
  * @param {ConfirmAction} confirmAction
  */
 async function registerForChange(target, initialValue, confirmAction) {
-    const dispatchChange = () => target.value !== initialValue && dispatch(target, "change");
+    function dispatchChange() {
+        return target.value !== initialValue && dispatch(target, "change");
+    }
 
     confirmAction &&= confirmAction.toLowerCase();
     if (confirmAction === "auto") {
@@ -898,7 +900,7 @@ function setupEvents(type, options) {
     currentEventTypes.push(type);
     $assign(currentEventInit, options?.eventInit);
 
-    return () => {
+    return function finalizeEvents() {
         for (const eventType in currentEventInit) {
             delete currentEventInit[eventType];
         }
@@ -1291,7 +1293,7 @@ async function _keyDown(target, eventInit) {
      * @param {string} toInsert
      * @param {string} type
      */
-    const insertValue = (toInsert, type) => {
+    function insertValue(toInsert, type) {
         const { selectionStart, selectionEnd, value } = target;
         inputData = toInsert;
         inputType = type;
@@ -1303,7 +1305,7 @@ async function _keyDown(target, eventInit) {
                 nextSelectionStart = nextSelectionEnd = selectionStart + 1;
             }
         }
-    };
+    }
 
     const { ctrlKey, key, shiftKey } = keyDownEvent;
     const initialValue = target.value;
@@ -1483,7 +1485,9 @@ async function _keyDown(target, eventInit) {
                 // Set target value (if possible)
                 try {
                     nextValue = await globalThis.navigator.clipboard.readText();
-                } catch (err) {}
+                } catch {
+                    // Ignore clipboard errors
+                }
                 inputType = "insertFromPaste";
 
                 await dispatch(target, "paste", {
@@ -1842,7 +1846,9 @@ const VIEW = 0b100;
  * - cannot be canceled
  * @param {FullEventInit} eventInit
  */
-const mapEvent = (eventInit) => eventInit;
+function mapEvent(eventInit) {
+    return eventInit;
+}
 
 // Pointer, mouse & wheel event mappers
 // ------------------------------------
@@ -1850,34 +1856,40 @@ const mapEvent = (eventInit) => eventInit;
 /**
  * @param {FullEventInit<MouseEventInit>} eventInit
  */
-const mapMouseEvent = (eventInit) => ({
-    button: -1,
-    buttons: runTime.buttons,
-    clientX: eventInit.clientX ?? eventInit.pageX ?? eventInit.screenX ?? 0,
-    clientY: eventInit.clientY ?? eventInit.pageY ?? eventInit.screenY ?? 0,
-    ...runTime.modifierKeys,
-    ...eventInit,
-});
+function mapMouseEvent(eventInit) {
+    return {
+        button: -1,
+        buttons: runTime.buttons,
+        clientX: eventInit.clientX ?? eventInit.pageX ?? eventInit.screenX ?? 0,
+        clientY: eventInit.clientY ?? eventInit.pageY ?? eventInit.screenY ?? 0,
+        ...runTime.modifierKeys,
+        ...eventInit,
+    };
+}
 
 /**
  * @param {FullEventInit<PointerEventInit>} eventInit
  */
-const mapPointerEvent = (eventInit) => ({
-    ...mapMouseEvent(eventInit),
-    button: btn.LEFT,
-    pointerId: 1,
-    pointerType: hasTouch() ? "touch" : "mouse",
-    ...eventInit,
-});
+function mapPointerEvent(eventInit) {
+    return {
+        ...mapMouseEvent(eventInit),
+        button: btn.LEFT,
+        pointerId: 1,
+        pointerType: hasTouch() ? "touch" : "mouse",
+        ...eventInit,
+    };
+}
 
 /**
  * @param {FullEventInit<WheelEventInit>} eventInit
  */
-const mapWheelEvent = (eventInit) => ({
-    ...mapMouseEvent(eventInit),
-    button: btn.LEFT,
-    ...eventInit,
-});
+function mapWheelEvent(eventInit) {
+    return {
+        ...mapMouseEvent(eventInit),
+        button: btn.LEFT,
+        ...eventInit,
+    };
+}
 
 // Touch event mappers
 // -------------------
@@ -1885,7 +1897,7 @@ const mapWheelEvent = (eventInit) => ({
 /**
  * @param {FullEventInit<TouchEventInit>} eventInit
  */
-const mapTouchEvent = (eventInit) => {
+function mapTouchEvent(eventInit) {
     const touches = eventInit.targetTouches ||
         eventInit.touches || [new Touch({ identifier: 0, ...eventInit })];
     return {
@@ -1895,7 +1907,7 @@ const mapTouchEvent = (eventInit) => {
         targetTouches: eventInit.targetTouches || touches,
         touches: eventInit.touches || (eventInit.type === "touchend" ? [] : touches),
     };
-};
+}
 
 // Keyboard & input event mappers
 // ------------------------------
@@ -1903,20 +1915,24 @@ const mapTouchEvent = (eventInit) => {
 /**
  * @param {FullEventInit<InputEventInit>} eventInit
  */
-const mapInputEvent = (eventInit) => ({
-    data: null,
-    isComposing: !!runTime.isComposing,
-    ...eventInit,
-});
+function mapInputEvent(eventInit) {
+    return {
+        data: null,
+        isComposing: !!runTime.isComposing,
+        ...eventInit,
+    };
+}
 
 /**
  * @param {FullEventInit<KeyboardEventInit>} eventInit
  */
-const mapKeyboardEvent = (eventInit) => ({
-    isComposing: !!runTime.isComposing,
-    ...runTime.modifierKeys,
-    ...eventInit,
-});
+function mapKeyboardEvent(eventInit) {
+    return {
+        isComposing: !!runTime.isComposing,
+        ...runTime.modifierKeys,
+        ...eventInit,
+    };
+}
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -2152,7 +2168,7 @@ export async function drag(target, options) {
      * @param {boolean} endDrag
      * @returns {T}
      */
-    const expectIsDragging = (fn, endDrag) => {
+    function expectIsDragging(fn, endDrag) {
         return {
             async [fn.name](...args) {
                 if (dragEndReason) {
@@ -2167,7 +2183,7 @@ export async function drag(target, options) {
                 return result;
             },
         }[fn.name];
-    };
+    }
 
     const cancel = expectIsDragging(
         /** @type {DragHelpers["cancel"]} */
