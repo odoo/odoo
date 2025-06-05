@@ -54,8 +54,8 @@ const {
  * @param {string} name
  * @returns {T}
  */
-const makeInteractorFn = (type, fn, name) =>
-    ({
+function makeInteractorFn(type, fn, name) {
+    return {
         [name](...args) {
             const result = fn(...args);
             if (result instanceof Promise) {
@@ -72,7 +72,8 @@ const makeInteractorFn = (type, fn, name) =>
                 return dispatchInteraction(type, name, args, result);
             }
         },
-    }[name]);
+    }[name];
+}
 
 const DEBUG_NAMESPACE = "hoot";
 
