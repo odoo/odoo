@@ -86,6 +86,9 @@
             <field name="mode">primary</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
+                <kanban position="attributes">
+                    <attribute name="create">true</attribute>
+                </kanban>
                 <xpath expr="//main" position="inside">
                     <span>
                         Cost: <field name="standard_price"/>
