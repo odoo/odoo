@@ -547,6 +547,12 @@ export class FormatPlugin extends Plugin {
     }
 
     onBeforeInput(ev) {
+        if (
+            ev.inputType.startsWith("format") &&
+            !isHtmlContentSupported(this.dependencies.selection.getEditableSelection())
+        ) {
+            ev.preventDefault();
+        }
         if (ev.inputType === "insertText") {
             const selection = this.dependencies.selection.getEditableSelection();
             if (!selection.isCollapsed) {
