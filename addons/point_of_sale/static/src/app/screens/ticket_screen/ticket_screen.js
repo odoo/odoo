@@ -259,7 +259,6 @@ export class TicketScreen extends Component {
     }
     async onDoRefund() {
         const order = this.getSelectedOrder();
-
         if (order && this._doesOrderHaveSoleItem(order)) {
             if (!this._prepareAutoRefundOnOrder(order)) {
                 // Don't proceed on refund if preparation returned false.
@@ -318,6 +317,11 @@ export class TicketScreen extends Component {
             const product = this.pos.db.get_product_by_id(refundDetail.orderline.productId);
             const options = this._prepareRefundOrderlineOptions(refundDetail);
             const newOrderline = await destinationOrder.add_product(product, options);
+            if (newOrderline.order.orderlines.length > 1){
+                for (let i = 0; i < newOrderline.order.orderlines.length -1; i++){
+                    newOrderline.order.removeOrderline(newOrderline.order.orderlines[i]);
+                }
+            }
             originalToDestinationLineMap.set(refundDetail.orderline.id, newOrderline);
             refundDetail.destinationOrderUid = destinationOrder.uid;
         }
