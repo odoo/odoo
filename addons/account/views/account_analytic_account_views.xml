@@ -28,9 +28,11 @@
             <field name="arch" type="xml">
                 <field name="debit" position="attributes">
                     <attribute name="column_invisible">False</attribute>
+                    <attribute name="groups">account.group_account_readonly</attribute>
                 </field>
                 <field name="credit" position="attributes">
                     <attribute name="column_invisible">False</attribute>
+                    <attribute name="groups">account.group_account_readonly</attribute>
                 </field>
             </field>
         </record>
