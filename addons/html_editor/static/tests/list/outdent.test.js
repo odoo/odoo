@@ -497,6 +497,23 @@ describe("with selection collapsed", () => {
                 <h2>c</h2>`),
         });
     });
+    test("should preserve `ul` fontSize if exists", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <ul style="font-size: 12px;">
+                    <li>a</li>
+                    <li>
+                        []b
+                    </li>
+                </ul>`),
+            stepFunction: keydownShiftTab,
+            contentAfter: unformat(`
+                <ul style="font-size: 12px;">
+                    <li>a</li>
+                </ul>
+                <p style="font-size: 12px;">[]b</p>`),
+        });
+    });
     test("should not crash when outdenting a list item with empty nodes", async () => {
         const { el, editor } = await setupEditor(
             unformat(`

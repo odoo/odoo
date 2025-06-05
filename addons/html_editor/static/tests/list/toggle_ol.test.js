@@ -23,6 +23,14 @@ describe("Range collapsed", () => {
             });
         });
 
+        test("should not copy padding of base container", async () => {
+            await testEditor({
+                contentBefore: `<p style="padding: 0px">ab[]cd</p>`,
+                stepFunction: toggleOrderedList,
+                contentAfter: "<ol><li>ab[]cd</li></ol>",
+            });
+        });
+
         test("should turn a unordered list into a ordered list", async () => {
             await testEditor({
                 contentBefore: "<ul><li>ab[]cd</li></ul>",
