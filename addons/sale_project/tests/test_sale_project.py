@@ -118,8 +118,14 @@ class TestSaleProject(TestSaleProjectCommon):
             'order_id': sale_order.id,
         })
 
+        self.product_order_service3.description_sale = "Task in New Project"
         so_line_order_new_task_new_project = SaleOrderLine.create({
             'name': f"{self.product_order_service3.display_name}\n[TEST2]\nNew project",
+            'product_id': self.product_order_service3.id,
+            'product_uom_qty': 10,
+            'order_id': sale_order.id,
+        })
+        so_line_order_new_task_new_project2 = SaleOrderLine.create({
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
@@ -158,6 +164,11 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(
             str(so_line_order_new_task_new_project.task_id.description),
             '<p>New project</p>',
+        )
+        self.assertEqual(
+            so_line_order_new_task_new_project2.task_id.name,
+            self.product_order_service3.display_name,
+            "Task name created from a SOL with default description should use the product name",
         )
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")

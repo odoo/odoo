@@ -242,6 +242,10 @@ class TestSaleOrder(SaleCommon):
         no_variant_product = no_variant_product_tmpl.product_variant_id
         ptals = no_variant_product_tmpl.valid_product_template_attribute_line_ids
         ptav1 = next(iter(ptals.product_template_value_ids))
+        product_with_desc = self.env['product.product'].create({
+            'name': "Product with description",
+            'description_sale': "Additional\ninfo.",
+        })
 
         self.sale_order.order_line = [
             Command.create({'is_downpayment': True}),
@@ -250,18 +254,19 @@ class TestSaleOrder(SaleCommon):
                 'product_id': no_variant_product.id,
                 'product_no_variant_attribute_value_ids': ptav1.ids,
             }),
+            Command.create({'product_id': product_with_desc.id}),
         ]
-        sol1, sol2, sol3, sol4, sol5 = self.sale_order.order_line
+        sol1, sol2, sol3, sol4, sol5, sol6 = self.sale_order.order_line
         sol1.name += "\nOK THANK YOU\nGOOD BYE"
 
         self.assertEqual(
             sol1.display_name,
             f"{self.sale_order.name} - OK THANK YOU ({self.partner.name})",
-            "Product line with description should display the first line of description",
+            "Product line with a custom description should display the first line of description",
         )
         self.assertEqual(
             sol2.display_name,
-            f"{self.sale_order.name} - {sol2.product_id.name} ({self.partner.name})",
+            f"{self.sale_order.name} - {sol2.product_id.display_name} ({self.partner.name})",
             "Product line without description should display the product name",
         )
         self.assertEqual(
@@ -279,6 +284,11 @@ class TestSaleOrder(SaleCommon):
             sol5.display_name,
             f"{self.sale_order.name} - {no_variant_product.name} ({self.partner.name})",
             "Lines with attribute-based descriptions should display the product name",
+        )
+        self.assertEqual(
+            sol6.display_name,
+            f"{self.sale_order.name} - {product_with_desc.display_name} ({self.partner.name})",
+            "Product lines with standard sales description should display the product name",
         )
 
     def test_state_changes(self):
