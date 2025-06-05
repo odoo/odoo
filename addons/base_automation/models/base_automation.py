@@ -774,6 +774,10 @@ class BaseAutomation(models.Model):
                 records = create.origin(self.with_env(automations.env), vals_list, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=None):
+                    _logger.debug(
+                        "Processing automation rule %s (#%s) on %s records (create)",
+                        automation.sudo().name, automation.sudo().id, len(records),
+                    )
                     automation._process(automation._filter_post(records, feedback=True))
                 return records.with_env(self.env)
 
@@ -798,6 +802,10 @@ class BaseAutomation(models.Model):
                 write.origin(self.with_env(automations.env), vals, **kw)
                 # check postconditions, and execute actions on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
+                    _logger.debug(
+                        "Processing automation rule %s (#%s) on %s records (write)",
+                        automation.sudo().name, automation.sudo().id, len(records),
+                    )
                     records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
                     automation._process(records, domain_post=domain_post)
                 return True
@@ -831,6 +839,10 @@ class BaseAutomation(models.Model):
                 _compute_field_value.origin(self, field)
                 # check postconditions, and execute automations on the records that satisfy them
                 for automation in automations.with_context(old_values=old_values):
+                    _logger.debug(
+                        "Processing automation rule %s (#%s) on %s records (_compute_field_value)",
+                        automation.sudo().name, automation.sudo().id, len(records),
+                    )
                     records, domain_post = automation._filter_post_export_domain(pre[automation], feedback=True)
                     automation._process(records, domain_post=domain_post)
                 return True
@@ -845,6 +857,10 @@ class BaseAutomation(models.Model):
                 records = self.with_env(automations.env)
                 # check conditions, and execute actions on the records that satisfy them
                 for automation in automations:
+                    _logger.debug(
+                        "Processing automation rule %s (#%s) on %s records (unlink)",
+                        automation.sudo().name, automation.sudo().id, len(records),
+                    )
                     automation._process(automation._filter_post(records, feedback=True))
                 # call original method
                 return unlink.origin(self, **kwargs)
@@ -899,6 +915,10 @@ class BaseAutomation(models.Model):
                 automations = self.env['base.automation']._get_actions(self, [mail_trigger])
                 for automation in automations.with_context(old_values=None):
                     records = automation._filter_pre(self, feedback=True)
+                    _logger.debug(
+                        "Processing automation rule %s (#%s) on %s records (_message_post)",
+                        automation.sudo().name, automation.sudo().id, len(records),
+                    )
                     automation._process(records)
 
                 return message

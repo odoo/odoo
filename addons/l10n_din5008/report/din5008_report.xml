@@ -113,7 +113,7 @@
                     <div class="company_details">
                         <table class="table-borderless">
                             <tr>
-                                <td colspan="4">
+                                <td colspan="3">
                                     <ul class="list-inline">
                                         <li t-if="company.company_details"><span t-field="company.company_details"/></li>
                                     </ul>
@@ -132,11 +132,11 @@
                                         <li>HRB Nr: <span t-field="company.company_registry"/></li>
                                     </ul>
                                 </td>
-                                <td colspan="2" t-if="company.partner_id.bank_ids">
+                                <td colspan="3" t-if="company.partner_id.bank_ids">
                                     <ul class="list-inline">
                                         <t t-foreach="company.partner_id.bank_ids[:2]" t-as="bank">
                                             <li><span t-field="bank.bank_id.name"/></li>
-                                            <li>IBAN: <span t-field="bank.acc_number"/></li>
+                                            <li class="text-nowrap">IBAN: <span t-field="bank.acc_number"/></li>
                                             <li>BIC: <span t-field="bank.bank_id.bic"/></li>
                                         </t>
                                     </ul>

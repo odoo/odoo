@@ -23,7 +23,7 @@ class TestImportFiles(TransactionCase):
                     {
                         "res_model": model,
                         "file": file_content,
-                        "file_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "file_type": "application/vnd.ms-excel",
                     }
                 )
 

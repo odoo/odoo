@@ -189,12 +189,23 @@ class HrContract(models.Model):
             leaves = mapped_leaves[resource.id]
 
             real_attendances = attendances - leaves
-            if contract.has_static_work_entries() or not leaves:
+
+            if not calendar:
+                real_leaves = leaves
+            elif calendar.flexible_hours:
+                # Flexible hours case
+                # For multi day leaves, we want them to occupy the virtual working schedule 12 AM to average working days
+                # For one day leaves, we want them to occupy exactly the time it was taken, for a time off in days
+                # this will mean the virtual schedule and for time off in hours the chosen hours
+                one_day_leaves = WorkIntervals([l for l in leaves if l[0].date() == l[1].date()])
+                multi_day_leaves = leaves - one_day_leaves
+                static_attendances = calendar._attendance_intervals_batch(
+                    start_dt, end_dt, resources=resource, tz=tz)[resource.id]
+                real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
+
+            elif contract.has_static_work_entries() or not leaves:
                 # Empty leaves means empty real_leaves
                 real_leaves = attendances - real_attendances
-            elif not calendar:
-                # If fully flexible working schedule is defined
-                real_leaves = leaves
             else:
                 # In the case of attendance based contracts use regular attendances to generate leave intervals
                 static_attendances = calendar._attendance_intervals_batch(

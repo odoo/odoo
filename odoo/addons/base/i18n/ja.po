@@ -2737,7 +2737,7 @@ msgid ""
 msgstr ""
 "\n"
 "IoTボックスに接続されているデバイスをPOSで使用できるようにします。\n"
-"サポートされているデバイスには、決済端末、レシートプリンター、はかり、顧客画面などがあります。\n"
+"サポートされているデバイスには、決済端末、レシートプリンター、スケール、顧客画面などがあります。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_us_1099
@@ -2777,7 +2777,7 @@ msgid ""
 "Allows using IoT devices, such as scales and printers, for delivery operations.\n"
 msgstr ""
 "\n"
-"はかりやプリンターなどのIoTデバイスを配信操作に使用できます。\n"
+"スケールやプリンターなどのIoTデバイスを配信操作に使用できます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_delivery
@@ -11140,7 +11140,7 @@ msgid ""
 "if the product doesn't exists, inside barcode application.\n"
 msgstr ""
 "\n"
-"このモジュールでは、バーコードアプリケーション内にプロダクトが存在しない場合に、バーコードLookup APIキーを使用してバーコードからプロダクトを作成することができます。\n"
+"このモジュールでは、バーコードアプリケーション内にプロダクトが存在しない場合に、Barcode Lookup APIキーを使用してバーコードからプロダクトを作成することができます。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_landed_costs
@@ -22639,7 +22639,7 @@ msgstr "マージ先連絡先"
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__res_model
 #: model:ir.model.fields,field_description:base.field_ir_actions_client__res_model
 msgid "Destination Model"
-msgstr "宛先モデル"
+msgstr "対象モデル"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -36574,12 +36574,12 @@ msgstr "プロダクト在庫通知"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_barcodelookup
 msgid "Product Barcode Lookup"
-msgstr "バーコードLookupAPIキーを利用して、カメラでバーコードをスキャンしてプロダクトを作成できるモジュールです。"
+msgstr "プロダクト Barcode Lookup"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_product_barcodelookup
 msgid "Product Barcode Lookup for eCommerce"
-msgstr "Eコマース用プロダクトバーコード検索"
+msgstr "Eコマース用プロダクトBarcode Lookup"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -37558,19 +37558,19 @@ msgstr "Razorpay OAuth 統合"
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Read"
-msgstr "読む"
+msgstr "読み取り"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Read Access"
-msgstr "読出権限"
+msgstr "読み取りアクセス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__readonly
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
-msgstr "読出のみ"
+msgstr "読み取り専用"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.BRL
@@ -40546,7 +40546,7 @@ msgstr "在庫勘定"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_barcodelookup
 msgid "Stock Barcode - Barcode Lookup"
-msgstr "在庫バーコード - バーコードLookup"
+msgstr "在庫バーコード - Barcode Lookup"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_intrastat
@@ -42557,14 +42557,14 @@ msgstr ""
 msgid ""
 "This module allows you to create products from barcode using Barcode Lookup "
 "API Key"
-msgstr "このモジュールでは、バーコードLookup APIキーを使用してバーコードからプロダクトを作成することができます。"
+msgstr "このモジュールでは、Barcode Lookup APIキーを使用してバーコードからプロダクトを作成することができます。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_product_barcodelookup
 msgid ""
 "This module allows you to display data get from barcode lookup API in the "
 "eCommerce"
-msgstr "このモジュールを使用すると、eコマースでバーコード検索APIから取得したデータを表示することができます。"
+msgstr "このモジュールを使用すると、eコマースでBarcode LookupAPIから取得したデータを表示することができます。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_sms
@@ -42756,7 +42756,7 @@ msgstr ""
 msgid ""
 "This module enables product creation by scanning barcodes with a camera, "
 "utilizing the Barcode Lookup API Key."
-msgstr "バーコードLookup APIキーを利用し、カメラでバーコードをスキャンしてプロダクトを作成するモジュールです。"
+msgstr "Barcode Lookup APIキーを利用し、カメラでバーコードをスキャンしてプロダクトを作成するモジュールです。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt
@@ -45328,13 +45328,13 @@ msgstr "書く"
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 msgid "Write Access"
-msgstr "更新権限"
+msgstr "書き込みアクセス"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__write_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__write_date
 msgid "Write Date"
-msgstr "日付を書く"
+msgstr "更新日時"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__code
@@ -46381,7 +46381,7 @@ msgstr "properties_definition"
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
 msgid "read"
-msgstr "読む"
+msgstr "読み取り"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__resource_ref

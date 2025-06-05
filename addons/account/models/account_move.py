@@ -80,6 +80,7 @@ ALLOWED_MIMETYPES = {
 }
 
 EMPTY = object()
+BYPASS_LOCK_CHECK = object()
 
 
 class AccountMove(models.Model):
@@ -2374,6 +2375,8 @@ class AccountMove(models.Model):
         ''', tuple(moves.ids)))
 
     def _check_fiscal_lock_dates(self):
+        if self.env.context.get('bypass_lock_check') is BYPASS_LOCK_CHECK:
+            return
         for move in self:
             journal = move.journal_id
             violated_lock_dates = move.company_id._get_lock_date_violations(
@@ -4190,7 +4193,8 @@ class AccountMove(models.Model):
 
                         if success or file_data['type'] == 'pdf' or file_data['attachment'].mimetype in ALLOWED_MIMETYPES:
                             (invoice.invoice_line_ids - existing_lines).is_imported = True
-                            invoice._link_bill_origin_to_purchase_orders(timeout=4)
+                            if not extend_with_existing_lines:
+                                invoice._link_bill_origin_to_purchase_orders(timeout=4)
                             invoices |= invoice
                             current_invoice = self.env['account.move']
                             add_file_data_results(file_data, invoice)

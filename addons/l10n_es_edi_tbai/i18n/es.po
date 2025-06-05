@@ -10,10 +10,11 @@ msgstr ""
 "PO-Revision-Date: 2025-01-13 15:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.template_LROE_240_inner
@@ -34,7 +35,7 @@ msgstr "Aceptado"
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_account_move_reversal
 msgid "Account Move Reversal"
-msgstr "Reversión de asiento contable"
+msgstr "Reversión de movimiento de cuenta"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_account_move_send
@@ -49,6 +50,8 @@ msgid ""
 "BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
 "Valor Añadido. Artículo 80. Modificación de la base imponible."
 msgstr ""
+"BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
+"Valor Añadido. Artículo 80. Modificación de la base imponible."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_state__cancelled
@@ -59,7 +62,9 @@ msgstr "Cancelado"
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/account_move.py:0
 msgid "Cannot send an entry that is not posted to TicketBAI."
-msgstr "No es posible enviar a través de TicketBAI un asiento o registro sin contabilizar."
+msgstr ""
+"No es posible enviar a través de TicketBAI un asiento o registro sin "
+"contabilizar."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -100,12 +105,12 @@ msgstr "Índice de secuencia"
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_res_company
 msgid "Companies"
-msgstr "Empresas"
+msgstr "Compañías"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_l10n_es_edi_tbai_document__company_id
 msgid "Company"
-msgstr "Empresa"
+msgstr "Compañía"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model,name:l10n_es_edi_tbai.model_res_config_settings
@@ -151,7 +156,7 @@ msgstr "Hacienda Foral de la Diputación de Álava"
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__res_company__l10n_es_tbai_tax_agency__bizkaia
 msgid "Hacienda Foral de Bizkaia"
-msgstr ""
+msgstr "Hacienda Foral de Bizkaia"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__res_company__l10n_es_tbai_tax_agency__gipuzkoa
@@ -170,7 +175,7 @@ msgid ""
 "In case of a foreign customer, you need to configure the tax scope on taxes:\n"
 "%s"
 msgstr ""
-"En el caso de un cliente extranjero, es necesario configurar la posición fiscal en impuestos:\n"
+"En el caso de un cliente extranjero, es necesario configurar el ámbito fiscal en impuestos:\n"
 "%s"
 
 #. module: l10n_es_edi_tbai
@@ -181,10 +186,12 @@ msgid ""
 "the Epigrafe or Main Activity.  In this version, you need to go in debug "
 "mode to Settings > Technical > System Parameters and set the parameter "
 "'l10n_es_edi_tbai.epigrafe'to your epigrafe number. You can find them in %s"
-msgstr "Para utilizar TicketBAI Batuz para autónomos, necesitará configurar"
-"el epígrafe o actividad principal.  En esta versión, debe ir al modo desarrollador"
-"Ajustes > Técnico > Parámetros del sistema y configurar los parámetros "
-"'l10n_es_edi_tbai.epigrafe' con su número de epígrafe. Puede encontrar la lista de epígrafes en: %s"
+msgstr ""
+"Para utilizar TicketBAI Batuz para autónomos, necesitará configurar el "
+"epígrafe o actividad principal.  En esta versión, debe ir al modo "
+"desarrolladorAjustes > Técnico > Parámetros del sistema y configurar los "
+"parámetros 'l10n_es_edi_tbai.epigrafe' con su número de epígrafe. Puede "
+"encontrar la lista de epígrafes en: %s"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,help:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_reversed_ids
@@ -193,8 +200,8 @@ msgid ""
 "In the case where a vendor refund has multiple original invoices, you can "
 "set them here. "
 msgstr ""
-"Para las facturas rectificativas de un proveedor que tenga diversas "
-"facturas reembolsadas, puede configurarlas aquí."
+"Para las facturas rectificativas de un proveedor que tenga diversas facturas"
+" reembolsadas, puede configurarlas aquí."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_refund_reason
@@ -210,8 +217,8 @@ msgid ""
 "Invoice index in chain, set if and only if an in-chain XML was submitted and"
 " did not error"
 msgstr ""
-"Índice de las secuencias de facturación que se establece si y, solo si, se envió un XML y"
-" no dio error"
+"Índice de facturas en cadena que se establece si y solo si se envió un XML y"
+" no se produjo un error."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_l10n_es_edi_tbai_document__is_cancel
@@ -265,7 +272,7 @@ msgstr "Publicar documento L10N Es Tbai"
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_l10n_es_edi_tbai_document__write_uid
 msgid "Last Updated by"
-msgstr "Última actualización realizada por"
+msgstr "Última actualización por"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_l10n_es_edi_tbai_document__write_date
@@ -314,7 +321,8 @@ msgstr "No se ha encontrado ningún certificado"
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.res_config_settings_view_form
 msgid "No tax agency selected: TicketBAI not activated."
-msgstr "No se ha seleccionado ninguna agencia tributaria: no se ha activado TicketBAI."
+msgstr ""
+"No se ha seleccionado ninguna agencia tributaria: TicketBai no activado."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -322,13 +330,15 @@ msgstr "No se ha seleccionado ninguna agencia tributaria: no se ha activado Tick
 msgid ""
 "No valid certificate found for this company, TicketBAI file will not be "
 "signed.\n"
-msgstr "No se ha encontrado ningún certificado válido para esta empresa, el archivo TicketBAI no se podrá firmar.\n"
+msgstr ""
+"No se ha encontrado ningún certificado válido para esta empresa, el archivo "
+"TicketBAI no se podrá firmar.\n"
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid "Please configure the Tax ID on your company for TicketBAI."
-msgstr "Por favor, configure el NIF de su empresa para TicketBAI."
+msgstr "Configure el NIF en su compañía par TicketBai."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -340,7 +350,7 @@ msgstr "Por favor, configure el certificado para TicketBAI/SII."
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid "Please specify a tax agency on your company for TicketBAI."
-msgstr "Por favor, especifique una agencia tributaria de su empresa para TicketBAI."
+msgstr "Especifique una agencia tributaria para su compañía en TicketBAI."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -381,7 +391,7 @@ msgstr "R4: Art. 80 - resto"
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_refund_reason__r5
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move_reversal__l10n_es_tbai_refund_reason__r5
 msgid "R5: Factura rectificativa en facturas simplificadas"
-msgstr ""
+msgstr "R5: Factura rectificativa en facturas simplificadas"
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -408,12 +418,12 @@ msgstr "Se debe especificar el motivo del reembolso (TicketBAI)"
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_reversed_ids
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_reversed_ids
 msgid "Refunded Vendor Bills"
-msgstr "Facturas de proveedor reembolsadas"
+msgstr "Facturas de proveedores reembolsadas"
 
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.res_config_settings_view_form
 msgid "Registro de Libros connection TicketBAI"
-msgstr "Conexión de Libros de registro a TicketBAI"
+msgstr "Registro de Libros conexión TicketBAI"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__l10n_es_edi_tbai_document__state__rejected
@@ -428,13 +438,13 @@ msgstr "Mensaje de respuesta"
 #. module: l10n_es_edi_tbai
 #: model_terms:ir.ui.view,arch_db:l10n_es_edi_tbai.view_move_form_inherit_l10n_es_edi_tbai
 msgid "Send Bill to TicketBAI"
-msgstr "Enviar factura a TicketBAI"
+msgstr "Envíe facturas a TicketBAI"
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/account_move_send.py:0
 msgid "Send the e-invoice to the Basque Government."
-msgstr "Enviar la factura electrónica al gobierno vasco."
+msgstr "Envíe la factura electrónica al Gobierno Vasco"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_state__sent
@@ -514,7 +524,9 @@ msgstr "Licencia de prueba (Gipuzkoa)"
 msgid ""
 "Test mode: EDI data is sent to separate test servers and is not considered "
 "official."
-msgstr "Modo de prueba: los datos EDI se envían a servidores de prueba distintos y no se consideran oficiales."
+msgstr ""
+"Modo de prueba: los datos EDI se envían a servidores de prueba distintos y "
+"no se consideran oficiales."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -522,7 +534,9 @@ msgstr "Modo de prueba: los datos EDI se envían a servidores de prueba distinto
 msgid ""
 "There should be at least one tax set on each line in order to send to "
 "TicketBAI."
-msgstr "Debería haber, como mínimo, un impuesto definido en cada línea para enviarlo a TicketBAI."
+msgstr ""
+"Debería haber, como mínimo, un impuesto definido en cada línea para enviarlo"
+" a TicketBAI."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -606,7 +620,9 @@ msgstr "Estado de TicketBAI"
 msgid ""
 "TicketBAI: Cannot post a reversal document while the source document has not"
 " been posted"
-msgstr "TicketBAI: no es posible publicar un documento de reversión mientras el documento original no haya sido publicado"
+msgstr ""
+"TicketBAI: No es posible publicar un documento de reversión mientras el "
+"documento original no haya sido publicado"
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -614,13 +630,13 @@ msgstr "TicketBAI: no es posible publicar un documento de reversión mientras el
 msgid ""
 "TicketBAI: Cannot post invoice while chain head (%s) has not been posted"
 msgstr ""
-"TicketBAI: No se puede contabilizar la factura mientras no se haya "
-"contabilizado la cabeza de la secuencia (%s)"
+"TicketBAI: No se puede publicar la factura mientras no se haya publicado la "
+"cabeza de cadena (%s)"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_res_company__l10n_es_tbai_chain_sequence_id
 msgid "TicketBai account.move chain sequence"
-msgstr "Cadena de secuencia TicketBAI account.move"
+msgstr "Secuencia en cadena del account.move de TicketBai"
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields.selection,name:l10n_es_edi_tbai.selection__account_move__l10n_es_tbai_state__to_send
@@ -643,8 +659,7 @@ msgstr "Adjunto XML"
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/account_move.py:0
 msgid "You cannot delete a move that has a TicketBAI chain id."
-msgstr ""
-"No puede eliminar un movimiento que tiene un ID en la secuencia de TicketBAI."
+msgstr "No puede eliminar un asiento que tiene un ID en cadena de TicketBai."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -652,8 +667,8 @@ msgstr ""
 msgid ""
 "You cannot reset to draft an entry that has been posted to TicketBAI's chain"
 msgstr ""
-"No es posible reestablecer a borrador un asiento una vez ya se haya "
-"publicado en la secuencia de TicketBAI."
+"No puede reestablecer a borrador un asiento que se publicó en la cadena de "
+"TicketBai."
 
 #. module: l10n_es_edi_tbai
 #. odoo-python
@@ -661,7 +676,9 @@ msgstr ""
 msgid ""
 "You need to fill in the Reference field as the invoice number from your "
 "vendor."
-msgstr "Debe completar el campo de referencia con el número de factura de su proveedor."
+msgstr ""
+"Debe rellenar el campo de referencia con el número de factura de su "
+"proveedor."
 
 #. module: l10n_es_edi_tbai
 #: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_l10n_es_edi_tbai_document__state

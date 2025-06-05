@@ -1508,7 +1508,7 @@ msgstr "同一個銀行賬戶，只能連結至單一流水賬戶。"
 msgid ""
 "A bank account with Account Number %(number)s already exists for Partner "
 "%(partner)s, but is archived. Please unarchive it instead."
-msgstr ""
+msgstr "合作夥伴 %(partner)s 已有一個銀行賬戶，賬戶號碼為 %(number)s，但該賬戶已封存。請改為將它取消封存。"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -2286,7 +2286,7 @@ msgstr "可採取行動的錯誤"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Activate Audit Trail"
-msgstr "啟動審計軌跡"
+msgstr "啟動審計追蹤"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -3168,13 +3168,13 @@ msgstr "審計日誌已啟動"
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Audit Trail"
-msgstr "審計軌跡"
+msgstr "審計追蹤"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
 #: model:ir.model.fields,field_description:account.field_account_move__audit_trail_message_ids
 msgid "Audit Trail Messages"
-msgstr "審計軌跡訊息"
+msgstr "審計追蹤訊息"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -3905,7 +3905,7 @@ msgstr "允許分組付款"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Can't disable audit trail when there are existing records."
-msgstr "若有現存記錄，便無法停用審計軌跡。"
+msgstr "若有現存記錄，便無法停用審計追蹤。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4004,7 +4004,7 @@ msgstr "無法從不使用“整合”引擎的明細獲取整合詳細訊息"
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "未能在產生的 PDF 中辨認發票：%s"
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -9892,7 +9892,7 @@ msgstr "建立應計分錄"
 #: model_terms:ir.actions.act_window,help:account.action_account_audit_trail_report
 msgid ""
 "Make sure you first activate the audit trail in the accounting settings"
-msgstr "請確保首先在會計設定中，啟動審計軌跡"
+msgstr "請確保首先在會計設定中，啟動審計追蹤"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_management_menu
@@ -16193,7 +16193,7 @@ msgid ""
 "To keep the audit trail, you can not delete journal entries once they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"為保留審計軌跡，日記賬記項在完成過賬後便無法刪除。\n"
+"為保留審計追蹤，日記賬記項在完成過賬後便無法刪除。\n"
 "你可考慮改為取消該日記賬記項。"
 
 #. module: account

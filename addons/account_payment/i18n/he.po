@@ -114,6 +114,8 @@ msgid ""
 "<strong>Installment</strong>\n"
 "                                        <br/>"
 msgstr ""
+"<strong>תשלום</strong>\n"
+"                                       <br/>"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.payment_refund_wizard_view_form
@@ -122,6 +124,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>אזהרה! </strong>קיים החזר כספי ממתין עבור תשלום זה.                                                      אנא המתן מספר רגעים עד לסיום העיבוד. \n"
+"אם ההחזר עדיין ממתין\n"
+"                                    לאחר מספר דקות, בדוק את הגדרות ספק התשלומים שלך."
 
 #. module: account_payment
 #. odoo-python
@@ -647,7 +652,7 @@ msgstr "תשלום מקור של תשלומי החזר הקשורים"
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "There are pending transactions for this invoice."
-msgstr ""
+msgstr "יש עסקאות ממתינות עבור חשבונית זו."
 
 #. module: account_payment
 #. odoo-python
@@ -699,13 +704,13 @@ msgstr "חשבונית זו לא נרשמה."
 #. odoo-python
 #: code:addons/account_payment/models/account_move.py:0
 msgid "This is not an outgoing invoice."
-msgstr ""
+msgstr "זו אינה חשבונית יוצאת."
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_count
 #: model:ir.model.fields,field_description:account_payment.field_account_move__transaction_count
 msgid "Transaction Count"
-msgstr ""
+msgstr "מספר עסקאות"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_bank_statement_line__transaction_ids
@@ -736,6 +741,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked providers(s): %s"
 msgstr ""
+"לא ניתן למחוק אמצעי תשלום שמקושר לספק שנמצא במצב פעיל או מצב בדיקה.\n"
+"ספקים מקושרים:%s"
 
 #. module: account_payment
 #. odoo-python
@@ -744,6 +751,8 @@ msgid ""
 "You cannot uninstall this module as payments using this payment method "
 "already exist."
 msgstr ""
+"לא ניתן להסיר את המודול הזה מכיוון שכבר קיימות עסקאות שבוצעו באמצעות אמצעי "
+"תשלום זה."
 
 #. module: account_payment
 #. odoo-python

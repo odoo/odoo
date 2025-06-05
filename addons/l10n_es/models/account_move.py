@@ -8,7 +8,10 @@ class AccountMove(models.Model):
     l10n_es_is_simplified = fields.Boolean("Is Simplified",
                                            compute="_compute_l10n_es_is_simplified", readonly=False, store=True)
 
-    @api.depends('partner_id', 'amount_total_signed')
+    # Note: We depend on 'line_ids.balance' instead of 'amount_total_signed' directly.
+    # Otherwise the field is recomputed when the 'state' changes (since 'amount_total_signed' depends on it);
+    # the recomputation would i.e. happen when confirming the invoice and override any manual edits of the field.
+    @api.depends('partner_id', 'line_ids.balance')
     def _compute_l10n_es_is_simplified(self):
         simplified_partner = self.env.ref('l10n_es.partner_simplified', raise_if_not_found=False)
         for move in self:

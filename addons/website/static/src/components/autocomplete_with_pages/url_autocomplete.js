@@ -4,6 +4,8 @@ import { Component } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { AutoCompleteWithPages } from "@website/components/autocomplete_with_pages/autocomplete_with_pages";
 
+// TODO: we probably don't need it anymore after merging html_builder
+// see: https://github.com/odoo/odoo/pull/187091
 export class UrlAutoComplete extends Component {
     static props = {
         options: { type: Object },

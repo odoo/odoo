@@ -170,9 +170,10 @@ export class EmbeddedComponentPlugin extends Plugin {
         // just before adding the root rendered html.
         const fiber = root.node.fiber;
         const fiberComplete = fiber.complete;
-        fiber.complete = function () {
+        fiber.complete = () => {
             host.replaceChildren();
-            fiberComplete.call(this);
+            fiberComplete.call(fiber);
+            this.dispatchTo("post_mount_component_handlers");
         };
         const info = {
             root,

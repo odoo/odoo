@@ -16,6 +16,7 @@ import {
     queryAll,
     queryAllRects,
     queryAllTexts,
+    queryFirst,
     queryOne,
     queryRect,
     waitFor,
@@ -892,6 +893,9 @@ describe(parseUrl(import.meta.url), () => {
                 </div>
             `);
 
+            expect(() => queryFirst("invalid:pseudo-selector")).toThrow();
+            // Perform in-between valid query with custom pseudo selectors
+            expect(queryFirst(".modal:visible:contains('Tung Tung Tung Sahur')")).toBe(null);
             expect(() => queryOne(".tralalero:contains(Tralala):visible:scrollable:first")).toThrow(
                 `found 0 elements instead of 1: 0 matching ".tralalero:contains(Tralala):visible:scrollable:first" (1 element with text "Tralala" > 1 visible element > 0 scrollable elements > 0 first elements)`
             );
