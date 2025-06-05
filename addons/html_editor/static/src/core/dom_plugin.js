@@ -60,6 +60,8 @@ function getConnectedParents(nodes) {
  * @typedef {Object} DomShared
  * @property { DomPlugin['insert'] } insert
  * @property { DomPlugin['copyAttributes'] } copyAttributes
+ * @property { DomPlugin['setTag'] } setTag
+ * @property { DomPlugin['setTagName'] } setTagName
  */
 
 export class DomPlugin extends Plugin {

@@ -166,6 +166,8 @@ function scrollToSelection(selection) {
  * @property { SelectionPlugin['setCursorEnd'] } setCursorEnd
  * @property { SelectionPlugin['setCursorStart'] } setCursorStart
  * @property { SelectionPlugin['setSelection'] } setSelection
+ * @property { SelectionPlugin['isSelectionInEditable'] } isSelectionInEditable
+ * @property { SelectionPlugin['isNodeEditable'] } isNodeEditable
  * @property { SelectionPlugin['selectAroundNonEditable'] } selectAroundNonEditable
  */
 
