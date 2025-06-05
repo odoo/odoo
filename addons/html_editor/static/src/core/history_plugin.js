@@ -813,7 +813,7 @@ export class HistoryPlugin extends Plugin {
                     break;
                 }
                 case "childList": {
-                    record.addedNodes.forEach((added) => {
+                    [...record.removedNodes]
                         // When nodes are expected to not be observed by the
                         // history, e.g. because they belong to a distinct
                         // lifecycle such as interactions, some operations such
@@ -823,54 +823,45 @@ export class HistoryPlugin extends Plugin {
                         // it does not accidentally get observed during those
                         // operations.
                         // TODO Find a better solution.
-                        if (
-                            added?.dataset?.skipHistoryHack ||
-                            added?.closest?.("data-skip-history-hack")
-                        ) {
-                            return;
-                        }
-                        const mutation = {
-                            type: "add",
-                        };
-                        if (!record.nextSibling && this.nodeToIdMap.get(record.target)) {
-                            mutation.append = this.nodeToIdMap.get(record.target);
-                        } else if (record.nextSibling && this.nodeToIdMap.get(record.nextSibling)) {
-                            mutation.before = this.nodeToIdMap.get(record.nextSibling);
-                        } else if (!record.previousSibling && this.nodeToIdMap.get(record.target)) {
-                            mutation.prepend = this.nodeToIdMap.get(record.target);
-                        } else if (
-                            record.previousSibling &&
-                            this.nodeToIdMap.get(record.previousSibling)
-                        ) {
-                            mutation.after = this.nodeToIdMap.get(record.previousSibling);
-                        } else {
-                            return false;
-                        }
-                        mutation.id = this.nodeToIdMap.get(added);
-                        mutation.node = this.serializeNode(added, mutatedNodes);
-                        this.currentStep.mutations.push(mutation);
-                    });
-                    record.removedNodes.forEach((removed) => {
-                        // TODO Find a better solution.
-                        if (
-                            removed?.dataset?.skipHistoryHack ||
-                            removed?.closest?.("data-skip-history-hack")
-                        ) {
-                            return;
-                        }
-                        this.currentStep.mutations.push({
-                            type: "remove",
-                            id: this.nodeToIdMap.get(removed),
-                            parentId: this.nodeToIdMap.get(record.target),
-                            node: this.serializeNode(removed),
-                            nextId: record.nextSibling
-                                ? this.nodeToIdMap.get(record.nextSibling)
-                                : undefined,
-                            previousId: record.previousSibling
-                                ? this.nodeToIdMap.get(record.previousSibling)
-                                : undefined,
+                        .filter((removed) => !removed.dataset?.skipHistoryHack)
+                        .forEach((removed, index, removedNodes) => {
+                            const previousSibling = record.previousSibling;
+                            const nextSibling = removedNodes[index + 1] || record.nextSibling;
+                            this.currentStep.mutations.push({
+                                type: "remove",
+                                id: this.nodeToIdMap.get(removed),
+                                parentId: this.nodeToIdMap.get(record.target),
+                                node: this.serializeNode(removed),
+                                nextId: nextSibling ? this.nodeToIdMap.get(nextSibling) : undefined,
+                                previousId: previousSibling
+                                    ? this.nodeToIdMap.get(previousSibling)
+                                    : undefined,
+                            });
                         });
-                    });
+                    [...record.addedNodes]
+                        // TODO Find a better solution.
+                        .filter((added) => !added.dataset?.skipHistoryHack)
+                        .forEach((added, index, addedNodes) => {
+                            const mutation = {
+                                type: "add",
+                            };
+                            const previousSibling = addedNodes[index - 1] || record.previousSibling;
+                            const nextSibling = record.nextSibling;
+                            if (!nextSibling && this.nodeToIdMap.get(record.target)) {
+                                mutation.append = this.nodeToIdMap.get(record.target);
+                            } else if (nextSibling && this.nodeToIdMap.get(nextSibling)) {
+                                mutation.before = this.nodeToIdMap.get(nextSibling);
+                            } else if (!previousSibling && this.nodeToIdMap.get(record.target)) {
+                                mutation.prepend = this.nodeToIdMap.get(record.target);
+                            } else if (previousSibling && this.nodeToIdMap.get(previousSibling)) {
+                                mutation.after = this.nodeToIdMap.get(previousSibling);
+                            } else {
+                                return false;
+                            }
+                            mutation.id = this.nodeToIdMap.get(added);
+                            mutation.node = this.serializeNode(added, mutatedNodes);
+                            this.currentStep.mutations.push(mutation);
+                        });
                     break;
                 }
             }
