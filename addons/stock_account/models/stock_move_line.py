@@ -77,6 +77,8 @@ class StockMoveLine(models.Model):
         self.ensure_one()
         if self.state != 'done':
             return
+        if self.product_id.lot_valuated and not self.lot_id:
+            raise UserError(_('This product is valuated by lot: an explicit Lot/Serial number is required when adding quantity'))
         product_uom = self.product_id.uom_id
         added_uom_qty = self.product_uom_id._compute_quantity(added_qty, product_uom, rounding_method='HALF-UP')
         if product_uom.is_zero(added_uom_qty):
