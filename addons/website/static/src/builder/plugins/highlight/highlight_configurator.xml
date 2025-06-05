@@ -21,10 +21,6 @@
             <input type="number" id="thicknessInput" class="text-end w-25" t-att-value="this.state.thickness" t-on-input="onThicknessChange" />
             <span class="ms-1">px</span>
         </div>
-
-        <div class="fs-2 mt-3 p-5 text-center fw-bolder border" style="padding: 20px 5px;">
-            <span t-attf-style="--text-highlight-color: {{this.state.color}}; --text-highlight-width: {{this.state.thickness}};" t-ref="preview" t-attf-class="o_text_highlight o_text_highlight_{{this.state.highlightId}}">Text</span>
-        </div>
     </div>
 </t>
 </templates>
