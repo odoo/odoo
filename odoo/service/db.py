@@ -276,20 +276,21 @@ def dump_db_manifest(cr):
     return manifest
 
 @check_db_management_enabled
-def dump_db(db_name, stream, backup_format='zip'):
+def dump_db(db_name, stream, backup_format='zip', with_filestore=True):
     """Dump database `db` into file-like object `stream` if stream is None
     return a file object with the dump """
 
-    _logger.info('DUMP DB: %s format %s', db_name, backup_format)
+    _logger.info('DUMP DB: %s format %s %s', db_name, backup_format, 'with filestore' if with_filestore else 'without filestore')
 
     cmd = [find_pg_tool('pg_dump'), '--no-owner', db_name]
     env = exec_pg_environ()
 
     if backup_format == 'zip':
         with tempfile.TemporaryDirectory() as dump_dir:
-            filestore = odoo.tools.config.filestore(db_name)
-            if os.path.exists(filestore):
-                shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
+            if with_filestore:
+                filestore = odoo.tools.config.filestore(db_name)
+                if os.path.exists(filestore):
+                    shutil.copytree(filestore, os.path.join(dump_dir, 'filestore'))
             with open(os.path.join(dump_dir, 'manifest.json'), 'w') as fh:
                 db = odoo.sql_db.db_connect(db_name)
                 with db.cursor() as cr:

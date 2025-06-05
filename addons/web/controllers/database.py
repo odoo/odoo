@@ -124,7 +124,8 @@ class Database(http.Controller):
             return self._render_template(error=error)
 
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
-    def backup(self, master_pwd, name, backup_format='zip'):
+    def backup(self, master_pwd, name, backup_format='zip', filestore=True):
+        filestore = str2bool(filestore)
         insecure = odoo.tools.config.verify_admin_password('admin')
         if insecure and master_pwd:
             dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
@@ -138,7 +139,7 @@ class Database(http.Controller):
                 ('Content-Type', 'application/octet-stream; charset=binary'),
                 ('Content-Disposition', content_disposition(filename)),
             ]
-            dump_stream = odoo.service.db.dump_db(name, None, backup_format)
+            dump_stream = odoo.service.db.dump_db(name, None, backup_format, filestore)
             response = Response(dump_stream, headers=headers, direct_passthrough=True)
             return response
         except Exception as e:
