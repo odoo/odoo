@@ -7,7 +7,7 @@ class EventEventTicket(models.Model):
     _inherit = ['event.event.ticket', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [
             ('event_id.is_finished', '=', False),
             ('event_id.company_id', '=', data['pos.config'][0]['company_id']),

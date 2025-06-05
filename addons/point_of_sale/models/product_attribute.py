@@ -18,7 +18,7 @@ class ProductAttributeCustomValue(models.Model):
     pos_order_line_id = fields.Many2one('pos.order.line', string="PoS Order Line", ondelete='cascade')
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
@@ -35,7 +35,7 @@ class ProductTemplateAttributeLine(models.Model):
         return ['display_name', 'attribute_id', 'product_template_value_ids']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
         return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
 
@@ -45,7 +45,7 @@ class ProductTemplateAttributeValue(models.Model):
     _inherit = ['product.template.attribute.value', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         ptav_ids = {ptav_id for p in data['product.product'] for ptav_id in p['product_template_variant_value_ids']}
         ptav_ids.update({ptav_id for ptal in data['product.template.attribute.line'] for ptav_id in ptal['product_template_value_ids']})
         return AND([
@@ -63,7 +63,7 @@ class ProductTemplateAttributeExclusion(models.Model):
     _inherit = ['product.template.attribute.exclusion', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         loaded_product_tmpl_ids = list({p['id'] for p in data['product.template']})
         return [('product_tmpl_id', 'in', loaded_product_tmpl_ids)]
 

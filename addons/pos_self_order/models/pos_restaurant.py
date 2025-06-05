@@ -32,7 +32,7 @@ class RestaurantTable(models.Model):
         return ['table_number', 'identifier', 'floor_id']
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
+    def _load_pos_self_data_domain(self, data, config_id=None):
         return [('floor_id', 'in', [floor['id'] for floor in data['restaurant.floor']])]
 
 
@@ -44,5 +44,5 @@ class RestaurantFloor(models.Model):
         return ['name', 'table_ids']
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
+    def _load_pos_self_data_domain(self, data, config_id=None):
         return [('id', 'in', data['pos.config'][0]['floor_ids'])]

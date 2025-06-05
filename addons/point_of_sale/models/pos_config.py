@@ -10,7 +10,7 @@ from odoo import api, fields, models, _, Command, tools, SUPERUSER_ID
 from odoo.http import request
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import SQL, convert
-from odoo.osv import expression
+from odoo.service.common import exp_version
 
 DEFAULT_LIMIT_LOAD_PRODUCT = 5000
 DEFAULT_LIMIT_LOAD_PARTNER = 100
@@ -215,7 +215,8 @@ class PosConfig(models.Model):
         static_records = {}
 
         for model, ids in records.items():
-            static_records[model] = self.env[model]._read_pos_record(ids, self.id)
+            records = self.env[model].browse(ids)
+            static_records[model] = self.env[model]._load_pos_data_read(records, self.id)
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
@@ -251,18 +252,33 @@ class PosConfig(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data):
-        return [('id', '=', data['pos.session'][0]['config_id'])]
+    def _load_pos_data_domain(self, data, config_id=None):
+        return [('id', '=', config_id)]
 
-    def _load_pos_data(self, data):
-        domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(self.id)
-        return self.search_read(domain, fields, load=False)
+    @api.model
+    def _load_pos_data_read(self, records, config_id):
+        read_records = super()._load_pos_data_read(records, config_id)
+        server_date = self.env.context.get('pos_last_server_date')
 
-    def _post_read_pos_data(self, data):
-        if not data[0]['use_pricelist']:
-            data[0]['pricelist_id'] = False
-        return super()._post_read_pos_data(data)
+        read_records[0]['_server_version'] = exp_version()
+        read_records[0]['_base_url'] = self.get_base_url()
+        read_records[0]['_data_server_date'] = server_date or self.env.cr.now()
+        read_records[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
+        read_records[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+
+        # Add custom fields for 'formula' taxes.
+        # We can ignore data for _load_pos_data_domain since isn't needed in the domain computation of account.tax
+        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain({}, config_id))
+        fields = set(self._load_pos_data_fields(config_id))
+        product_fields = taxes._eval_taxes_computation_prepare_product_fields()
+        fields = list(fields.union(product_fields))
+        read_records[0]['_product_default_values'] = \
+            self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
+
+        if not read_records[0]['use_pricelist']:
+            read_records[0]['pricelist_id'] = False
+
+        return read_records
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

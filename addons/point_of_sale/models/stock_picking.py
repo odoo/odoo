@@ -184,7 +184,7 @@ class StockPickingType(models.Model):
                 raise ValidationError(_("You cannot archive '%(picking_type)s' as it is used by POS configuration '%(config)s'.", picking_type=picking_type.name, config=pos_config.name))
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('id', '=', data['pos.config'][0]['picking_type_id'])]
 
     @api.model

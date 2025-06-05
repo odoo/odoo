@@ -15,7 +15,7 @@ class LoyaltyCard(models.Model):
         related="source_pos_order_id.partner_id")
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('program_id', 'in', [program["id"] for program in data["loyalty.program"]])]
 
     @api.model

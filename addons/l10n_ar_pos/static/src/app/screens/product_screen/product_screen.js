@@ -8,7 +8,7 @@ patch(ProductScreen.prototype, {
 
         onMounted(() => {
             if (this.pos.isArgentineanCompany() && !this.pos.getOrder().partner_id) {
-                this.pos.getOrder().partner_id = this.pos.session._consumidor_final_anonimo_id;
+                this.pos.getOrder().partner_id = this.pos.config._consumidor_final_anonimo_id;
             }
         });
     },

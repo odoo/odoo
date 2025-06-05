@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         domain = [
             *self.env['product.template']._check_company_domain(data['pos.config'][0]['company_id']),
             ('available_in_pos', '=', True),
@@ -62,14 +62,9 @@ class ProductTemplate(models.Model):
             'public_description', 'sequence',
         ]
 
-    def _load_pos_data(self, data):
-        # Add custom fields for 'formula' taxes.
-        fields = set(self._load_pos_data_fields(data['pos.config'][0]['id']))
-        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain(data))
-        product_fields = taxes._eval_taxes_computation_prepare_product_fields()
-        fields = list(fields.union(product_fields))
-
-        config = self.env['pos.config'].browse(data['pos.config'][0]['id'])
+    @api.model
+    def _load_pos_data_search_read(self, data, config_id):
+        config = self.env['pos.config'].browse(config_id)
         limit_count = config.get_limited_product_count()
         pos_limited_loading = self.env.context.get('pos_limited_loading', True)
         if limit_count and pos_limited_loading:
@@ -105,9 +100,6 @@ class ProductTemplate(models.Model):
             domain = self._load_pos_data_domain(data)
             products = self._load_product_with_domain(domain)
 
-        data['pos.config'][0]['_product_default_values'] = \
-            self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
-
         special_products = config._get_special_products().filtered(
                     lambda product: not product.sudo().company_id
                                     or product.sudo().company_id == self.company_id
@@ -118,20 +110,19 @@ class ProductTemplate(models.Model):
             if not tip_company_id or tip_company_id == self.env.company:
                 products += config.tip_product_id.product_tmpl_id
 
-        fields = self._load_pos_data_fields(config.id)
-        return self.with_context(config_id=config.id)._post_read_pos_data(products.read(fields, load=False))
+        return self._load_pos_data_read(products, config.id)
 
-    def _post_read_pos_data(self, data):
-        config = self.env['pos.config'].browse(self.env.context.get('config_id'))
-        self._process_pos_ui_product_product(data, config)
-        return super()._post_read_pos_data(data)
+    @api.model
+    def _load_pos_data_read(self, records, config_id):
+        read_records = super()._load_pos_data_read(records, config_id)
+        config = self.env['pos.config'].browse(config_id)
+        self._process_pos_ui_product_product(read_records, config)
+        return read_records
 
     def _load_product_with_domain(self, domain, load_archived=False):
         context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
         domain = self._server_date_to_domain(domain)
-        return self.with_context(context).search(
-            domain,
-            order='sequence,default_code,name')
+        return self.with_context(context).search(domain, order='sequence,default_code,name')
 
     def _process_pos_ui_product_product(self, products, config_id):
 

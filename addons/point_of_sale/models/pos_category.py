@@ -36,7 +36,7 @@ class PosCategory(models.Model):
     has_image = fields.Boolean(compute='_compute_has_image')
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         domain = []
         limited_categories = data['pos.config'][0]['limit_categories']
         if limited_categories:

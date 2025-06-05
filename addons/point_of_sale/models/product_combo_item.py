@@ -8,7 +8,7 @@ class ProductComboItem(models.Model):
     _inherit = ['product.combo.item', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('id', 'in', list(set().union(*[combo.get('combo_item_ids') for combo in data['product.combo']])))]
 
     @api.model

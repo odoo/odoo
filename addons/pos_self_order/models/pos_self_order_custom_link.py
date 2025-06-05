@@ -39,7 +39,7 @@ class Pos_Self_OrderCustom_Link(models.Model):
     sequence = fields.Integer("Sequence", default=1)
 
     @api.model
-    def _load_pos_self_data_domain(self, data):
+    def _load_pos_self_data_domain(self, data, config_id=None):
         return [('pos_config_ids', 'in', data['pos.config'][0]['id'])]
 
     @api.model

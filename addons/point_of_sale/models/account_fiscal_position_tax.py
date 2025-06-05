@@ -6,5 +6,5 @@ class AccountFiscalPositionTax(models.Model):
     _inherit = ['account.fiscal.position.tax', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('position_id', 'in', [fpos['id'] for fpos in data['account.fiscal.position']])]

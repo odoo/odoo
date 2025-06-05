@@ -54,7 +54,7 @@ class PosOrder(models.Model):
         raise UserError(_('No open session available. Please open a new session to capture the order.'))
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'][0]['id'])]
 
     @api.model
@@ -1420,7 +1420,7 @@ class PosOrderLine(models.Model):
     is_edited = fields.Boolean('Edited', default=False)
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('order_id', 'in', [order['id'] for order in data['pos.order']])]
 
     @api.model
@@ -1767,7 +1767,7 @@ class PosPackOperationLot(models.Model):
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
@@ -1787,7 +1787,7 @@ class AccountCashRounding(models.Model):
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('id', '=', data['pos.config'][0]['rounding_method'])]
 
     @api.model

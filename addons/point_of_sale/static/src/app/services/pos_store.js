@@ -2292,7 +2292,7 @@ export class PosStore extends WithLazyGetterTrap {
 
         const excludedProductIds = [
             this.config.tip_product_id?.product_tmpl_id?.id,
-            ...this.session._pos_special_products_ids.map(
+            ...this.config._pos_special_products_ids.map(
                 (id) => this.models["product.product"].get(id)?.product_tmpl_id?.id
             ),
         ].filter(Boolean);

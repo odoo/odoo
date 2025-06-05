@@ -1,19 +1,21 @@
-from odoo import models
+from odoo import models, api
 
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    def _load_pos_data(self, data):
-        res = super()._load_pos_data(data)
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-        discount_product_id = config_id.discount_product_id.id
-        product_ids_set = {product['id'] for product in res}
+    @api.model
+    def _load_pos_data_read(self, records, config_id):
+        read_data = super()._load_pos_data_read(records, config_id)
 
-        if config_id.module_pos_discount and discount_product_id not in product_ids_set:
-            productModel = self.env['product.product'].with_context({**self.env.context, 'display_default_code': False})
-            fields = self.env['product.template']._load_pos_data_fields(data['pos.config'][0]['id'])
-            product = productModel.search_read([('id', '=', discount_product_id)], fields=fields, load=False)
-            res.extend(product)
+        config = self.env['pos.config'].browse(config_id)
+        discount_product_id = config.discount_product_id.id
+        product_ids_set = {product['id'] for product in read_data}
 
-        return res
+        if config.module_pos_discount and discount_product_id not in product_ids_set:
+            product_model = self.env['product.product'].with_context({**self.env.context, 'display_default_code': False})
+            records = product_model.search([('id', '=', discount_product_id)])
+            read_records = self._load_pos_data_read(records, config_id)
+            read_data.extend(read_records)
+
+        return read_data

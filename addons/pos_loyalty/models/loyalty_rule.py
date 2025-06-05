@@ -21,7 +21,7 @@ class LoyaltyRule(models.Model):
     )
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         return [('program_id', 'in', config_id._get_program_ids().ids)]
 

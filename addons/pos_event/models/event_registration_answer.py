@@ -13,5 +13,5 @@ class EventRegistrationAnswer(models.Model):
                 'write_date', 'event_id']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return False

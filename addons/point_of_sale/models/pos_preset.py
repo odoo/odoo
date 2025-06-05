@@ -34,7 +34,7 @@ class PosPreset(models.Model):
                     raise ValidationError(_('The start time must be before the end time.'))
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         preset_ids = data['pos.config'][0]['available_preset_ids'] + [data['pos.config'][0]['default_preset_id']]
         return [('id', 'in', preset_ids)]
 

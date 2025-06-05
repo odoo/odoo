@@ -23,7 +23,7 @@ class RestaurantFloor(models.Model):
     floor_prefix = fields.Integer('Floor Prefix', default=1, help="The prefix will be used when creating a new table in the PoS interface.")
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('pos_config_ids', '=', data['pos.config'][0]['id'])]
 
     @api.model
@@ -114,7 +114,7 @@ class RestaurantTable(models.Model):
             table.display_name = f"{table.floor_id.name}, {table.table_number}"
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         floor_ids = self.env['pos.config'].browse(data['pos.config'][0]['id']).floor_ids.ids
         return [('active', '=', True), ('floor_id', 'in', floor_ids)]
 

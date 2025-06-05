@@ -7,7 +7,7 @@ class ProductPricelist(models.Model):
     _inherit = ['product.pricelist', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
         pricelist_ids = [preset['pricelist_id'] for preset in data['pos.preset']]
         return [('id', 'in', config_id._get_available_pricelists().ids + pricelist_ids)]
@@ -22,7 +22,7 @@ class ProductPricelistItem(models.Model):
     _inherit = ['product.pricelist.item', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
         product_ids = [p['id'] for p in data['product.product']]
         pricelist_ids = [p['id'] for p in data['product.pricelist']]

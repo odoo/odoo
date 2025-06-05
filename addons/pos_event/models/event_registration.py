@@ -29,7 +29,7 @@ class EventRegistration(models.Model):
         super()._compute_registration_status()
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return False
 
     @api.model

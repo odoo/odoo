@@ -29,7 +29,7 @@ patch(PaymentScreen.prototype, {
         const orderLines = this.currentOrder.getOrderlines();
         const has_origin_order = orderLines.some((line) => line.sale_order_origin_id);
         const has_intracom_taxes = orderLines.some((line) =>
-            line.tax_ids?.some((tax) => this.pos.session._intracom_tax_ids?.includes(tax.id))
+            line.tax_ids?.some((tax) => this.pos.config._intracom_tax_ids?.includes(tax.id))
         );
         if (
             this.pos.company.country_id &&

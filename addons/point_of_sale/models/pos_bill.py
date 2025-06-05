@@ -23,7 +23,7 @@ class PosBill(models.Model):
         return result.id, result.display_name
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return ['|', ('id', 'in', data['pos.config'][0]['default_bill_ids']), ('pos_config_ids', '=', False)]
 
     @api.model

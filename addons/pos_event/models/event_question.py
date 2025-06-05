@@ -12,5 +12,5 @@ class EventQuestion(models.Model):
         return ['title', 'question_type', 'event_type_id', 'event_id', 'sequence', 'once_per_order', 'is_mandatory_answer', 'answer_ids']
 
     @api.model
-    def _load_pos_data_domain(self, data):
+    def _load_pos_data_domain(self, data, config_id=None):
         return [('event_id', 'in', [event['id'] for event in data['event.event']])]
