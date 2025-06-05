@@ -99,13 +99,15 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @typedef { MutationRecord | MutationRecordClassList | MutationRecordAttributes } HistoryMutationRecord
  *
  * @typedef { Object } PreviewableOperation
- * @property { Function } apply
+ * @property { Function } commit
  * @property { Function } preview
  * @property { Function } revert
  */
 
 /**
  * @typedef { Object } HistoryShared
+ * @property { HistoryPlugin['addCustomMutation'] } addCustomMutation
+ * @property { HistoryPlugin['applyCustomMutation'] } applyCustomMutation
  * @property { HistoryPlugin['addExternalStep'] } addExternalStep
  * @property { HistoryPlugin['addStep'] } addStep
  * @property { HistoryPlugin['canRedo'] } canRedo
@@ -114,6 +116,7 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @property { HistoryPlugin['getHistorySteps'] } getHistorySteps
  * @property { HistoryPlugin['getNodeById'] } getNodeById
  * @property { HistoryPlugin['makePreviewableOperation'] } makePreviewableOperation
+ * @property { HistoryPlugin['makePreviewableAsyncOperation'] } makePreviewableAsyncOperation
  * @property { HistoryPlugin['makeSavePoint'] } makeSavePoint
  * @property { HistoryPlugin['makeSnapshotStep'] } makeSnapshotStep
  * @property { HistoryPlugin['redo'] } redo
@@ -122,6 +125,9 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @property { HistoryPlugin['serializeSelection'] } serializeSelection
  * @property { HistoryPlugin['stageSelection'] } stageSelection
  * @property { HistoryPlugin['undo'] } undo
+ * @property { HistoryPlugin['getIsPreviewing'] } getIsPreviewing
+ * @property { HistoryPlugin['setStepExtra'] } setStepExtra
+ * @property { HistoryPlugin['getIsCurrentStepModified'] } getIsCurrentStepModified
  */
 
 export class HistoryPlugin extends Plugin {
