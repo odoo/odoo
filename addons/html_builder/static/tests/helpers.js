@@ -10,7 +10,7 @@ import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
-import { after, queryFirst } from "@odoo/hoot";
+import { after, click, queryAll, queryFirst } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
 import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
 import {
@@ -550,4 +550,11 @@ export async function editBuilderRangeValue(selector, newValue) {
     await delay();
     input.dispatchEvent(new Event("change"));
     await delay();
+}
+
+export async function unfoldAllOptionsGroups() {
+    for (const i of queryAll(".options-container-header i.fa-caret-right")) {
+        await click(i);
+    }
+    await animationFrame();
 }

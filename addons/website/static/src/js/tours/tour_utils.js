@@ -459,6 +459,16 @@ export function selectSnippetColumn(snippet, index = 0, position = "bottom") {
     };
 }
 
+export function unfoldOptionsGroup(name) {
+    return [
+        {
+            content: `Unfold the "${name}" group`,
+            trigger: `.options-container[data-container-title="${name}"] .options-container-label i.fa-caret-right`,
+            run: "click",
+        },
+    ];
+}
+
 export function prepend_trigger(steps, prepend_text = "") {
     for (const step of steps) {
         if (!step.noPrepend && prepend_text) {

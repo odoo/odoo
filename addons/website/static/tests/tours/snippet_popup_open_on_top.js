@@ -4,6 +4,7 @@ import {
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -24,6 +25,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_popup p.lead",
             run: "editor " + " hello world".repeat(300),
         },
+        ...unfoldOptionsGroup("Popup"),
         {
             content: "Set delay to 0 second",
             trigger: '[data-action-id="setPopupDelay"] input',

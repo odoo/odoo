@@ -7,6 +7,7 @@ import {
     addPlugin,
     addActionOption,
     waitForSnippetDialog,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import {
     dummyBase64Img,
@@ -286,7 +287,7 @@ test("Use the sidebar 'create anchor' buttons", async () => {
     expect(":iframe section.sixth div").toHaveAttribute("id", "Card");
 });
 
-test("Clicking on the options container title selects the corresponding element", async () => {
+test("Clicking on the select element button in container's header selects the corresponding element", async () => {
     await setupWebsiteBuilder(dummySnippet);
 
     await contains(":iframe .col-lg-7").click();
@@ -294,7 +295,9 @@ test("Clicking on the options container title selects the corresponding element"
     expect(".o_customize_tab .options-container").toHaveCount(2);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe .col-lg-7");
 
-    await contains(".o_customize_tab .options-container span:contains('Dummy Section')").click();
+    await contains(
+        ".o_customize_tab .options-container-header:has(span:contains('Dummy Section')) button[title='Select only this block']"
+    ).click();
     expect(".o_customize_tab .options-container").toHaveCount(1);
     expect(".oe_overlay.oe_active").toHaveRect(":iframe section");
 });
@@ -384,4 +387,14 @@ test("applying option container button should wait for actions in progress", asy
 
     undo(editor);
     expect(editable).toHaveInnerHTML(`<p class="test-options-target">plop</p>`);
+});
+
+test("Use the sidebar 'target' button", async () => {
+    await setupWebsiteBuilderWithSnippet("s_banner");
+    await contains(":iframe h1").click();
+    expect(".options-container").toHaveCount(2);
+    await contains(
+        ".o_customize_tab .options-container[data-container-title='Banner'] button[title='Select only this block']"
+    ).click();
+    expect(".options-container").toHaveCount(1);
 });

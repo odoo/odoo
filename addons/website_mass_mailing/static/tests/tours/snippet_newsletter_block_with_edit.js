@@ -3,6 +3,7 @@ import {
     clickOnSave,
     insertSnippet,
     registerWebsitePreviewTour,
+    unfoldOptionsGroup,
 } from '@website/js/tours/tour_utils';
 
 registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
@@ -36,6 +37,7 @@ registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         trigger: ':iframe .s_newsletter_block .s_newsletter_subscribe_form',
         run: "click",
     },
+    ...unfoldOptionsGroup("Newsletter Block"),
     {
         content: 'Toggle the option to display the Thanks message',
         trigger: "div[data-action-id='toggleThanksMessage'] input[type='checkbox']",

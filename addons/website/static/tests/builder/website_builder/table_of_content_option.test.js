@@ -24,6 +24,7 @@ import {
     insertStructureSnippet,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
@@ -75,6 +76,7 @@ test("click on addItem option button", async () => {
     ]);
 
     await contains(":iframe .s_table_of_content_main h2").click();
+    await unfoldAllOptionsGroups();
     await contains("[data-action-id='addItem']").click();
     expect(
         queryAllTexts(":iframe .s_table_of_content_vertical_navbar a.table_of_content_link_depth_0")

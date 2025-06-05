@@ -5,12 +5,14 @@ import {
     defineWebsiteModels,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
 
 defineWebsiteModels();
 
 test("toggle price list description items", async () => {
     await setupWebsiteBuilderWithSnippet("s_pricelist_boxed");
     await contains(":iframe .s_pricelist_boxed_section").click();
+    await unfoldAllOptionsGroups();
     await waitFor("[data-action-id='togglePriceListDescription']");
     expect(
         "[data-action-id='togglePriceListDescription'] .o-checkbox .form-check-input:checked"

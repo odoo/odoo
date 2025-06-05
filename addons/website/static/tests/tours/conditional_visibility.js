@@ -6,6 +6,7 @@ import {
     insertSnippet,
     goBackToBlocks,
     registerWebsitePreviewTour,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 const snippets = [
@@ -239,6 +240,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_text_image[data-snippet=s_image_text] img",
             run: "click",
         },
+        ...unfoldOptionsGroup("Column"),
         {
             content: "Change visibility of the 'Image - Text' snippet",
             trigger:

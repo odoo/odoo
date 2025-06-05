@@ -4,6 +4,7 @@ import {
     registerWebsitePreviewTour,
     toggleMobilePreview,
     changeOptionInPopover,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 const columnCountOptSelector = "div[data-label='Layout'] .dropdown-toggle";
@@ -88,6 +89,11 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            content: `Target the "Columns" group`,
+            trigger: `.options-container[data-container-title="Columns"]:has(.options-container-label i.fa-caret-right) button[title="Select only this block"]`,
+            run: "click",
+        },
+        {
             content: "Check that there is 1 column on mobile and click on the selector",
             trigger: `${columnCountOptSelector}:contains('1')`,
             run: "click",
@@ -136,6 +142,7 @@ registerWebsitePreviewTour(
                 triggerPointerEvent("pointerup", 150, 100);
             },
         },
+        ...unfoldOptionsGroup("Columns"),
         {
             content: "Check that the counter shows 'Custom'",
             trigger: `${columnCountOptSelector}:contains('Custom')`,

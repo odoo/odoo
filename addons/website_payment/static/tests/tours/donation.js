@@ -4,6 +4,7 @@ import {
     registerWebsitePreviewTour,
     insertSnippet,
     changeOptionInPopover,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 
 registerWebsitePreviewTour(
@@ -128,6 +129,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_donation_donate_btn",
             run: "click",
         },
+        ...unfoldOptionsGroup("Donation Button"),
         ...changeOptionInPopover("Donation Button", "Custom Amount", "[data-action-param='slider']"),
         ...clickOnSave(),
     ]

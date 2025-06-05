@@ -6,6 +6,7 @@ import {
     goBackToBlocks,
     registerWebsitePreviewTour,
     changeOptionInPopover,
+    unfoldOptionsGroup,
 } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
 import { editorsWeakMap } from "@html_editor/../tests/tours/helpers/editor";
@@ -686,6 +687,7 @@ registerWebsitePreviewTour(
         // while field B's visibility is also tied to another field.
         ...clickOnEditAndWaitEditMode(),
         ...selectFieldByLabel("field A"),
+        ...unfoldOptionsGroup("Form"),
         {
             content: "Verify that the form editor appeared",
             trigger: ".o_customize_tab div[data-container-title='Form'] .we-bg-options-container",
@@ -800,6 +802,7 @@ registerWebsitePreviewTour(
             trigger: ":iframe .s_website_form_send",
             run: "click",
         },
+        ...unfoldOptionsGroup("Form"),
         {
             content: "Change the Recipient Email",
             trigger: '[data-label="Recipient Email"] input',
@@ -918,6 +921,7 @@ registerWebsitePreviewTour(
     },
     () =>
         editContactUs([
+            ...unfoldOptionsGroup("Form"),
             {
                 content: "Change the Recipient Email",
                 trigger: "div[data-label='Recipient Email'] input",
@@ -933,6 +937,7 @@ registerWebsitePreviewTour(
     },
     () =>
         editContactUs([
+            ...unfoldOptionsGroup("Form"),
             {
                 content: "Change a random option",
                 trigger: "[data-action-id='setMark'] input",
@@ -1111,6 +1116,7 @@ registerWebsitePreviewTour(
     },
     () =>
         editContactUs([
+            ...unfoldOptionsGroup("Form"),
             {
                 content: "Change a random option",
                 trigger: "[data-action-id='setMark'] input",
