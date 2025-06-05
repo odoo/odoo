@@ -176,7 +176,15 @@ export class FormatPlugin extends Plugin {
      * @returns {boolean}
      */
     hasSelectionFormat(format, traversedNodes = this.dependencies.selection.getTraversedNodes()) {
-        const selectedNodes = traversedNodes.filter(isTextNode);
+        const selectedNodes = traversedNodes.filter(
+            (node) =>
+                ((node.nodeType === Node.ELEMENT_NODE &&
+                    node.matches("[t-field], [t-out], [t-esc]")) ||
+                (isTextNode(node) &&
+                    (isVisibleTextNode(node) || isZWS(node)))) &&
+                isContentEditable(node)
+        );
+
         const isFormatted = formatsSpecs[format].isFormatted;
         return selectedNodes.some((n) => isFormatted(n, this.editable));
     }
@@ -265,7 +273,7 @@ export class FormatPlugin extends Plugin {
             this.dependencies.selection
                 .getSelectedNodes()
                 .map((n) => closestElement(n, "*[t-field],*[t-out],*[t-esc]"))
-                .filter(Boolean)
+                .filter((node) => Boolean(node) && node.isContentEditable)
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of selectedNodes) {

@@ -1,5 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
-import { isZWS } from "@html_editor/utils/dom_info";
+import { isContentEditable, isZWS } from "@html_editor/utils/dom_info";
 import { reactive } from "@odoo/owl";
 import { isTextNode } from "@web/views/view_compiler";
 import { Toolbar } from "./toolbar";
@@ -308,7 +308,8 @@ export class ToolbarPlugin extends Plugin {
         if (isCollapsed) {
             return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
         }
-        return this.getFilterTraverseNodes().length;
+        const traversedNodes = this.getFilterTraverseNodes();
+        return traversedNodes.filter(isContentEditable).length;
     }
 
     shouldPreventClosing(selectionData) {

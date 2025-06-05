@@ -38,11 +38,11 @@ test("should make two paragraphs not italic", async () => {
     });
 });
 
-test("should make qweb tag italic", async () => {
+test("should not make qweb tag italic when its contenteditble is false", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: italic,
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="font-style: italic;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false">Test</p>]</div>`,
     });
 });
 

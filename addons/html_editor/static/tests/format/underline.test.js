@@ -45,11 +45,11 @@ test("should make two paragraphs not underline", async () => {
     });
 });
 
-test("should make qweb tag underline", async () => {
+test("should not make qweb tag underline when its contenteditable false element", async () => {
     await testEditor({
         contentBefore: `<div><p t-esc="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: underline,
-        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false" style="text-decoration-line: underline;">Test</p>]</div>`,
+        contentAfter: `<div>[<p t-esc="'Test'" contenteditable="false">Test</p>]</div>`,
     });
 });
 

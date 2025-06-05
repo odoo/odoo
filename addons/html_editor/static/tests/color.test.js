@@ -510,3 +510,17 @@ test("should apply gradient text color on selected text", async () => {
             '<div style="background-image:none"><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
     });
 });
+test("should not split unsplittable element when applying color", async () => {
+    await testEditor({
+        contentBefore: '<div style="color: rgb(255, 0, 0);"><p>[test]</p></div>',
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfter:
+            '<div style="color: rgb(255, 0, 0);"><p><font style="color: rgb(0, 0, 255);">[test]</font></p></div>',
+    });
+    await testEditor({
+        contentBefore: '<div style="color: rgb(255, 0, 0);"><p>t[es]t</p></div>',
+        stepFunction: setColor("rgb(0, 0, 255)", "color"),
+        contentAfter:
+            '<div style="color: rgb(255, 0, 0);"><p>t<font style="color: rgb(0, 0, 255);">[es]</font>t</p></div>',
+    });
+});
