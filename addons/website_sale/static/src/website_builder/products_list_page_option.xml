@@ -40,7 +40,7 @@
         </BuilderButtonGroup>
     </BuilderRow>
 
-    <BuilderRow label.translate="Size" applyTo="'#o_wsale_products_grid'" level="1">
+    <BuilderRow label.translate="Size" level="1">
         <BuilderNumberInput action="'setPpg'" step="1"/>
         <t t-if="this.isActiveItem('grid_view_opt')">
             <span class="mx-2">by</span>
@@ -247,7 +247,7 @@
         <BuilderCheckbox actionParam="{views: ['website_sale.floating_bar']}"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Default Sort" level="1" applyTo="'#o_wsale_products_grid'">
+    <BuilderRow label.translate="Default Sort" level="1">
         <BuilderSelect action="'setDefaultSort'">
             <t t-foreach="products_sort_mapping" t-as="queryAndLabel" t-key="queryAndLabel_index">
                 <BuilderSelectItem actionValue="queryAndLabel.query" t-out="queryAndLabel.label"/>
