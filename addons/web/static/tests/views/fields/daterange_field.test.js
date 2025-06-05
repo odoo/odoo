@@ -909,7 +909,7 @@ test("list daterange: column widths", async () => {
 
     expect(".o_data_row").toHaveCount(1);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
-    expect(columnWidths).toEqual([40, 183, 300, 277]);
+    expect(columnWidths).toEqual([40, 187, 310, 263]);
 });
 
 test("list daterange: column widths (fancy format)", async () => {
@@ -948,7 +948,7 @@ test("list daterange: column widths (fancy format)", async () => {
         "",
     ]);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
-    expect(columnWidths).toEqual([40, 361, 527, 100]);
+    expect(columnWidths).toEqual([40, 375, 549, 100]);
 });
 
 test("list daterange: column widths (show_time=false)", async () => {
@@ -975,7 +975,7 @@ test("list daterange: column widths (show_time=false)", async () => {
     expect(".o_data_row").toHaveCount(1);
     expect(queryAllTexts(".o_data_cell")).toEqual(["02/08/2017\n02/09/2017", ""]);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
-    expect(columnWidths).toEqual([40, 183, 577]);
+    expect(columnWidths).toEqual([40, 187, 573]);
 });
 
 test("list daterange: column widths (no record)", async () => {
@@ -1001,7 +1001,7 @@ test("list daterange: column widths (no record)", async () => {
 
     expect(".o_data_row").toHaveCount(0);
     const columnWidths = queryAllProperties(".o_list_table thead th", "offsetWidth");
-    expect(columnWidths).toEqual([40, 183, 300, 277]);
+    expect(columnWidths).toEqual([40, 187, 310, 263]);
 });
 
 test("always range: related end date, both start date and end date empty", async () => {

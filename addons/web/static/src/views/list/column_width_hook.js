@@ -141,8 +141,9 @@ function computeOptimalDateWidths() {
     const datetimeSpans = div.querySelectorAll(".datetimes span");
     const datetimeWidths = [...datetimeSpans].map((span) => span.getBoundingClientRect().width);
     document.body.removeChild(div);
-    _dateFieldWidth = Math.ceil(Math.max(...dateWidths)) + 1;
-    _datetimeFieldWidth = Math.ceil(Math.max(...datetimeWidths)) + 1;
+    // add a 5% margin to cope with potential bold decorations
+    _dateFieldWidth = Math.ceil(Math.max(...dateWidths) * 1.05);
+    _datetimeFieldWidth = Math.ceil(Math.max(...datetimeWidths) * 1.05);
 }
 
 /**
