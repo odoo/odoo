@@ -75,6 +75,7 @@ export class CalendarCommonRenderer extends Component {
 
         const fullCalendarRenderDebounced = useDebounced(() => this.fc.api.updateSize(), 100, {
             immediate: true,
+            trailing: true,
         });
         const fullCalendarResizeObserver = new ResizeObserver(fullCalendarRenderDebounced);
         useEffect(
