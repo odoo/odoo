@@ -4627,6 +4627,24 @@ export class OdooEditor extends EventTarget {
         for (const el of element.querySelectorAll('.oe-tabs')) {
             el.setAttribute('contenteditable', 'false');
         }
+
+        // some templates injected in editor have `div` as base containers which will break
+        // features, to fix this we unwrap all direct children of editable and put
+        // the inline ones in a `p`.
+        for (const el of element.querySelectorAll(".note-editable > div")) {
+            // we dont unwrap divs with data-* 
+            if (el.parentElement.querySelector("*[data-oe-model], *[data-oe-field], *[data-oe-id], *[data-oe-xpath]")) {
+                continue;
+            }
+            const children = unwrapContents(el);
+            for (const child of children) {
+                if (!isBlock(child) && child.textContent !== "\n") {
+                    const p = this.document.createElement("P");
+                    child.parentElement.replaceChild(p, child);
+                    p.appendChild(child);
+                }
+            }
+        }
     }
 
     cleanForSave(element = this.editable) {
