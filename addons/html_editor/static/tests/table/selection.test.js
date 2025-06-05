@@ -1440,6 +1440,97 @@ describe("move cursor with arrow keys", () => {
                 `),
             });
         });
+        test("should move the cursor down across cells with colspan using ArrowUp", async () => {
+            const { el } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr><td><br></td><td><br></td><td><br></td></tr>
+                            <tr><td><br></td><td colspan="2"><br></td></tr>
+                            <tr><td><br></td><td><br></td><td>[]<br></td></tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            press(["ArrowUp"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td colspan="2">[]<br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+
+            press(["ArrowUp"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td>[]<br></td><td><br></td></tr>
+                        <tr><td><br></td><td colspan="2"><br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+        });
+        test("should move the cursor down across cells with rowspan using ArrowUp", async () => {
+            const { el } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr><td><br></td><td><br></td></tr>
+                            <tr><td><br></td><td rowspan="2"><br></td></tr>
+                            <tr><td><br></td></tr>
+                            <tr><td><br></td><td>[]<br></td></tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            press(["ArrowUp"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td rowspan="2">[]<br></td></tr>
+                        <tr><td><br></td></tr>
+                        <tr><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+
+            press(["ArrowUp"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td>[]<br></td></tr>
+                        <tr><td><br></td><td rowspan="2"><br></td></tr>
+                        <tr><td><br></td></tr>
+                        <tr><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+        });
     });
 
     describe("arrowdown", () => {
@@ -1672,6 +1763,97 @@ describe("move cursor with arrow keys", () => {
                     </table>
                 `),
             });
+        });
+        test("should move the cursor down across cells with colspan using ArrowDown", async () => {
+            const { el } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr><td><br></td><td><br></td><td>[]<br></td></tr>
+                            <tr><td><br></td><td colspan="2"><br></td></tr>
+                            <tr><td><br></td><td><br></td><td><br></td></tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            press(["ArrowDown"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td colspan="2">[]<br></td></tr>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+
+            press(["ArrowDown"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td colspan="2"><br></td></tr>
+                        <tr><td><br></td><td>[]<br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+        });
+        test("should move the cursor down across cells with rowspan using ArrowDown", async () => {
+            const { el } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr><td><br></td><td>[]<br></td></tr>
+                            <tr><td><br></td><td rowspan="2"><br></td></tr>
+                            <tr><td><br></td></tr>
+                            <tr><td><br></td><td><br></td></tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            press(["ArrowDown"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td rowspan="2">[]<br></td></tr>
+                        <tr><td><br></td></tr>
+                        <tr><td><br></td><td><br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+
+            press(["ArrowDown"]);
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><br></td><td><br></td></tr>
+                        <tr><td><br></td><td rowspan="2"><br></td></tr>
+                        <tr><td><br></td></tr>
+                        <tr><td><br></td><td>[]<br></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
         });
     });
 });
