@@ -442,7 +442,7 @@ class MailComposer(models.TransientModel):
                 mail_values['attachment_ids'] = self.env['mail.thread'].with_context(attached_to=record)._message_post_process_attachments(
                     mail_values.pop('attachments', []),
                     attachment_ids,
-                    {'model': 'mail.message', 'res_id': 0}
+                    {'model': record._name, 'res_id': record.id}
                 )['attachment_ids']
 
                 # generate message_id directly; instead of letting mail_message create
