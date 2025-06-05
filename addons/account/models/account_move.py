@@ -1171,7 +1171,7 @@ class AccountMove(models.Model):
                 continue
 
             currencies = invoice._get_lines_onchange_currency().currency_id
-            currency = currencies if len(currencies) == 1 else invoice.company_id.currency_id
+            currency = currencies if len(currencies) == 1 else invoice.company_id.currency_id or self.env.company.currency_id
             reconciliation_vals = payment_data.get(invoice.id, [])
             payment_state_matters = invoice.is_invoice(True)
 
