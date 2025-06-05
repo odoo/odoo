@@ -75,7 +75,7 @@ class UtilPerf(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         sql_count = len(sql_queries)
         if not query_list:
             return sql_count
-        return sql_count, sql_queries
+        return sql_count, route_profiler
 
     def _check_url_hot_query(self, url, expected_query_count, select_tables_perf=None, insert_tables_perf=None):
         query_count, sql_queries = self._get_url_hot_query(url, query_list=True)
