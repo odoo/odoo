@@ -104,6 +104,8 @@ class ConnectionManager(Thread):
             req.raise_for_status()
             if req.json().get('error') == 'expired':
                 self.pairing_code_expired = True
+                self.pairing_code = False
+                self.pairing_uuid = False
             return req.json().get('result', {})
         except Exception:
             _logger.exception('Could not reach iot-proxy.odoo.com')
