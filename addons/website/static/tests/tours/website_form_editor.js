@@ -387,29 +387,55 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'we-list table input:eq(0)',
             run: 'text Germany',
         }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('Germany'))",
+            run: function () {},
+        }, {
             content: "Change Option 2 Label",
             trigger: 'we-list table input:eq(1)',
             run: 'text Belgium',
+        }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('Belgium'))",
+            run: function () {},
         }, {
             content: "Change first Option 3 label",
             trigger: 'we-list table input:eq(2)',
             run: 'text France',
         }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('France'))",
+            run: function () {},
+        }, {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
             content: "Change last Option label",
-            trigger: 'we-list table input:eq(3)',
+            trigger: "we-list table input:eq(3)[name='Item']",
             run: 'text Canada',
+        }, {
+            content: "Check that the label has been changed on the snippet",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(.s_website_form_select_item:contains('Canada'))",
+            run: function () {},
         }, {
             content: "Remove Germany Option",
             trigger: '.o_we_select_remove_option:eq(0)',
+        }, {
+            content: "Check that the Germany option was removed",
+            trigger: "iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+                ":has(label:contains('State'))" +
+                ":not(:has(.s_website_form_select_item:contains('Germany')))",
+            run: function () {},
         }, {
             content: "Click on Add new Checkbox",
             trigger: 'we-list we-button.o_we_list_add_optional',
         }, {
             content: "Change last option label with a number",
-            trigger: 'we-list table input:eq(3)',
+            trigger: "we-list table input:eq(3)[name='Item']",
             run: 'text 44 - UK',
         }, {
             content: "Check that the input value is the full option value",
