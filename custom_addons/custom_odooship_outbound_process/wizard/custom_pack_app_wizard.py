@@ -1102,86 +1102,28 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.error(f"OneTraker request exception: {e}")
             raise UserError(f"Request error: {str(e)}")
 
-    # def send_payload_and_print_label(self, payload, pick_name=None):
-    #     self.ensure_one()
-    #
-    #     config = self.get_onetraker_config()
-    #     api_url = config.get("ONETRAKER_CREATE_ORDER_URL")
-    #     bearer_token = config.get("BEARER")
-    #     bench_ip = self.pack_bench_id.printer_ip
-    #
-    #     if not bench_ip:
-    #         raise UserError(_("Pack Bench is missing printer IP."))
-    #
-    #     headers = {
-    #         'Content-Type': 'application/json',
-    #         'Authorization': bearer_token
-    #     }
-    #
-    #     try:
-    #         t_start = time.perf_counter()
-    #         response = requests.post(api_url, headers=headers, json=payload, timeout=50)
-    #         response.raise_for_status()
-    #
-    #         response_json = response.json()
-    #         _logger.info(f"[ONETRAKER][FULL RESPONSE] for {pick_name or 'N/A'}:\n{json.dumps(response_json, indent=4)}")
-    #
-    #         generic = response_json.get("genericResponse", {})
-    #         status_code = generic.get("apiStatusCode")
-    #         status_success = generic.get("apiSuccessStatus")
-    #         status_message = generic.get("apiStatusMessage", "Unknown error from OneTraker")
-    #
-    #         if status_code != 200 or status_success != "True":
-    #             _logger.error(f"[ONETRAKER][ERROR] Code: {status_code}, Message: {status_message}")
-    #             raise UserError(_(status_message))
-    #         else:
-    #             _logger.info(f"[ONETRAKER][SUCCESS] Code: {status_code}, Message: {status_message}")
-    #
-    #         label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
-    #                                                                                                 {}).get("url")
-    #
-    #         # if not label_url:
-    #         #     raise UserError(_("Label URL not found in OneTraker response."))
-    #         con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
-    #
-    #         # if not label_url:
-    #         #     raise UserError(_("Label URL not found in OneTraker response."))
-    #
-    #         t_label_start = time.perf_counter()
-    #         label_resp = requests.get(label_url, stream=True, timeout=50)
-    #         label_resp.raise_for_status()
-    #
-    #         zpl_data = ""
-    #         for chunk in label_resp.iter_content(chunk_size=1024):
-    #             zpl_data += chunk.decode('utf-8')
-    #
-    #         t_label_end = time.perf_counter()
-    #
-    #         if not zpl_data.strip():
-    #             raise UserError(_("Downloaded label is empty."))
-    #
-    #         t_print_start = time.perf_counter()
-    #         with socket.create_connection((bench_ip, 9100), timeout=40) as sock:
-    #             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
-    #             sock.sendall(zpl_data.encode('utf-8'))
-    #
-    #         t_end = time.perf_counter()
-    #         time_to_response = t_label_start - t_start
-    #         time_to_label_download = t_label_end - t_label_start
-    #         time_to_print = t_end - t_print_start
-    #         total_time = t_end - t_start
-    #         _logger.info(
-    #             f"[PERF][{pick_name or 'N/A'}] "
-    #             f"API Response: {time_to_response:.2f}s, "
-    #             f"Label Download: {time_to_label_download:.2f}s, "
-    #             f"Print: {time_to_print:.2f}s, "
-    #             f"Total Time: {total_time:.2f}s"
-    #         )
-    #         return label_url, con_id
-    #
-    #     except Exception as e:
-    #         _logger.error(f"[ONETRAKER][FAILURE] {str(e)}")
-    #         raise UserError(_("Failed to print label:\n%s") % str(e))
+    def _send_label_to_print_api(self, label_url):
+        """
+        Sends the label URL to the new print API endpoint for the given printerId.
+        Chooses UAT or PROD based on is_production_env config parameter.
+        """
+        printer_id = self.pack_bench_id.printer_name
+        if not printer_id:
+            raise UserError("Pack Bench is missing printer name (printerId). Please configure it.")
+        is_production = self.env['ir.config_parameter'].sudo().get_param('is_production_env') == 'True'
+        if is_production:
+            api_url = f"https://shiperoo-wes.prod.automation.shiperoo.com/printers/printUrl/{printer_id}"
+        else:
+            api_url = f"https://shiperoo-wes.uat.automation.shiperoo.com/printers/printUrl/{printer_id}"
+        payload = {"url": label_url}
+        headers = {"Content-Type": "application/json"}
+        try:
+            response = requests.post(api_url, headers=headers, json=payload, timeout=20)
+            response.raise_for_status()
+            _logger.info(f"[PRINT API] Label sent to print API for printer {printer_id}: {label_url} (env: {'PROD' if is_production else 'UAT'})")
+        except Exception as e:
+            _logger.error(f"[PRINT API][FAIL] Could not send label to print API for printer {printer_id}: {str(e)}")
+            raise UserError(_(f"Failed to send label to print API: {str(e)}"))
 
     def send_payload_and_print_label(self, payload, pick_name=None):
         self.ensure_one()
@@ -1189,10 +1131,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         config = self.get_onetraker_config()
         api_url = config.get("ONETRAKER_CREATE_ORDER_URL")
         bearer_token = config.get("BEARER")
-        bench_ip = self.pack_bench_id.printer_ip
-
-        if not bench_ip:
-            raise UserError(_("Pack Bench is missing printer IP."))
+        # bench_ip = self.pack_bench_id.printer_ip  # No longer needed
 
         headers = {
             'Content-Type': 'application/json',
@@ -1210,27 +1149,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             if generic.get("apiStatusCode") != 200 or generic.get("apiSuccessStatus") != "True":
                 raise UserError(_(generic.get("apiStatusMessage", "Unknown error from OneTraker")))
 
-            label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
-                                                                                                    {}).get("url")
+            label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label", {}).get("url")
             con_id = response_json.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
 
-            # 🧵 Start async label printing
-            try:
-                label_resp = requests.get(label_url, stream=True, timeout=10)
-                label_resp.raise_for_status()
-                zpl_data = b''.join(label_resp.iter_content(chunk_size=1024))
-
-                if zpl_data.strip():
-                    threading.Thread(
-                        target=self._fire_and_forget_label_print,
-                        args=(zpl_data, bench_ip),
-                        daemon=True
-                    ).start()
-                else:
-                    raise ValueError("Empty label data")
-
-            except Exception as e:
-                _logger.warning(f"[LABEL][PRINT FAIL] for pick {pick_name}: {str(e)}")
+            # Use new print API
+            if label_url:
+                self._send_label_to_print_api(label_url)
+            else:
+                _logger.warning(f"[PRINT API] No label_url found in response for pick {pick_name}")
 
             return label_url, con_id
 
@@ -1240,36 +1166,9 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
     def print_label_via_pack_bench(self, label_url):
         self.ensure_one()
-
-        # if not label_url:
-        #     raise UserError(_("No label URL provided to print."))
-
-        bench_ip = self.pack_bench_id.printer_ip
-        if not bench_ip:
-            raise UserError(_("Pack Bench is missing IP address. Please configure it."))
-
-        try:
-            #  Fast label fetch with short timeout
-            response = requests.get(label_url, timeout=20)
-            if response.status_code != 200 or not response.text.strip():
-                raise UserError(_("Failed to download label or label content is empty."))
-
-            zpl_data = response.text.strip()
-
-            #  Instant socket print (raw, no buffer delay)
-            with socket.create_connection((bench_ip, 9100), timeout=20) as sock:
-                sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)  # disable Nagle
-                sock.sendall(zpl_data.encode('utf-8'))
-
-            _logger.info(f"[ZEBRA][FAST] Label printed instantly to {bench_ip}:9100")
-
-        except (requests.exceptions.RequestException, socket.timeout) as e:
-            _logger.error(f"[ZEBRA][TIMEOUT] {str(e)}")
-            raise UserError(_("Timeout during label printing:\n%s") % str(e))
-
-        except socket.error as e:
-            _logger.error(f"[ZEBRA][SOCKET ERROR] {str(e)}")
-            raise UserError(_("Printer socket error:\n%s") % str(e))
+        if not label_url:
+            raise UserError(_("No label URL provided to print."))
+        self._send_label_to_print_api(label_url)
 
     def send_payload_to_onetraker(self, env, picking, lines, config):
         if not picking:
@@ -1398,9 +1297,14 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             if resp_data.get("genericResponse", {}).get("apiSuccessStatus") != "True":
                 raise ValidationError(resp_data.get("genericResponse", {}).get("apiStatusMessage", "Unknown error"))
 
-            label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
-                                                                                                {}).get("url")
+            label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label", {}).get("url")
             con_id = resp_data.get("order", {}).get("shipment", {}).get("carrier_details", {}).get("con_id")
+
+            # Use new print API
+            if label_url:
+                self._send_label_to_print_api(label_url)
+            else:
+                _logger.warning(f"[PRINT API] No label_url found in response for multi-pick: {order_number}")
 
             #  Fire-and-forget label printing
             try:
