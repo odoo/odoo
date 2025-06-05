@@ -417,7 +417,6 @@ function useReloadAction(getAllActions) {
 
 export function useHasPreview(getAllActions) {
     const comp = useComponent();
-    const reload = useReloadAction(getAllActions).reload;
     const getAction = comp.env.editor.shared.builderActions.getAction;
 
     let hasPreview = true;
@@ -432,7 +431,6 @@ export function useHasPreview(getAllActions) {
 
     return (
         hasPreview &&
-        !reload &&
         (comp.props.preview === true ||
             (comp.props.preview === undefined && comp.env.weContext.preview !== false))
     );
