@@ -567,6 +567,9 @@ class StockRoute(models.Model):
                 rules.action_unarchive()
             else:
                 rules.action_archive()
+        if 'sequence' in vals:
+            Orderpoint = self.env['stock.warehouse.orderpoint']
+            self.env.add_to_compute(Orderpoint._fields.get('rule_ids'), Orderpoint.sudo().search([]))
         return super().write(vals)
 
     @api.constrains('company_id')

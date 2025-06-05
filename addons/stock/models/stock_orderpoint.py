@@ -76,7 +76,7 @@ class StockWarehouseOrderpoint(models.Model):
         default=lambda self: self.env.company)
     allowed_location_ids = fields.One2many(comodel_name='stock.location', compute='_compute_allowed_location_ids')
 
-    rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules')
+    rule_ids = fields.Many2many('stock.rule', string='Rules used', compute='_compute_rules', store=True, precompute=True)
     lead_days_date = fields.Date(compute='_compute_lead_days')
     route_id = fields.Many2one(
         'stock.route', string='Route', domain="[('product_selectable', '=', True)]")

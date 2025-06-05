@@ -56,20 +56,22 @@ class TestProcRule(TransactionCase):
         delivery.action_confirm()
         self.product._compute_quantities()  # Computes `outgoing_qty` to have the orderpoint.
 
-        # Then, creates a rule and adds it into the route's rules.
-        reception_route.rule_ids.action_archive()
-        self.env['stock.rule'].create({
-            'name': 'Looping Rule',
-            'route_id': reception_route.id,
-            'location_dest_id': warehouse.lot_stock_id.id,
-            'location_src_id': warehouse.lot_stock_id.id,
-            'action': 'pull_push',
-            'procure_method': 'make_to_order',
-            'picking_type_id': warehouse.int_type_id.id,
-        })
+        def create_rule():
+            reception_route.rule_ids.action_archive()
+            self.env['stock.rule'].create({
+                'name': 'Looping Rule',
+                'route_id': reception_route.id,
+                'location_dest_id': warehouse.lot_stock_id.id,
+                'location_src_id': warehouse.lot_stock_id.id,
+                'action': 'pull_push',
+                'procure_method': 'make_to_order',
+                'picking_type_id': warehouse.int_type_id.id,
+            })
 
-        # Tries to open the Replenishment view -> It should raise an UserError.
         with self.assertRaises(UserError):
+            # Then, creates a rule and adds it into the route's rules.
+            create_rule()
+            # Tries to open the Replenishment view -> It should raise an UserError.
             self.env['stock.warehouse.orderpoint'].action_open_orderpoints()
 
     def test_proc_rule(self):

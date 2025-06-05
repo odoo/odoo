@@ -1068,6 +1068,9 @@ class ProductTemplate(models.Model):
                 raise UserError(_("You can not change the inventory tracking of a product that is currently reserved on a stock move. If you need to change the inventory tracking, you should first unreserve the stock move."))
         if 'is_storable' in vals and not vals['is_storable'] and any(p.is_storable and not p.uom_id.is_zero(p.qty_available) for p in self):
             raise UserError(_("Available quantity should be set to zero before changing inventory tracking"))
+        if 'route_ids' in vals:
+            Orderpoint = self.env['stock.warehouse.orderpoint']
+            self.env.add_to_compute(Orderpoint._fields.get('rule_ids'), Orderpoint.sudo().search([('product_id.product_tmpl_id', 'in', self.ids)]))
         return super().write(vals)
 
     def copy(self, default=None):
