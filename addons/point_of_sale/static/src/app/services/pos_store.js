@@ -1701,7 +1701,6 @@ export class PosStore extends WithLazyGetterTrap {
                 if (reprint && opts.orderDone) {
                     return;
                 }
-
                 await this.printChanges(order, orderChange, reprint);
             } catch (e) {
                 console.info("Failed in printing the changes in the order", e);
@@ -1717,14 +1716,6 @@ export class PosStore extends WithLazyGetterTrap {
         await this.sendOrderInPreparation(o, { cancelled });
     }
 
-    getStrNotes(note) {
-        return note && typeof note === "string"
-            ? JSON.parse(note)
-                  .map((n) => n.text)
-                  .join(", ")
-            : "";
-    }
-
     getOrderData(order, reprint) {
         return {
             reprint: reprint,
@@ -1733,6 +1724,7 @@ export class PosStore extends WithLazyGetterTrap {
             time: DateTime.now().toFormat("HH:mm"),
             tracking_number: order.tracking_number,
             preset_name: order.preset_id?.name || "",
+            preset_time: order.presetDateTime,
             employee_name: order.employee_id?.name || order.user_id?.name,
             internal_note: order.internal_note,
             general_customer_note: order.general_customer_note,
@@ -1760,11 +1752,7 @@ export class PosStore extends WithLazyGetterTrap {
         orderChange.new = [...comboChanges, ...normalChanges];
 
         const orderData = this.getOrderData(order, reprint);
-
         const changes = this.filterChangeByCategories(categories, orderChange);
-        for (const changeItem of [...changes.new, ...changes.cancelled, ...changes.noteUpdate]) {
-            changeItem.note = this.getStrNotes(changeItem.note || "[]");
-        }
         return { orderData, changes };
     }
 
