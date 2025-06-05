@@ -33,7 +33,9 @@ patch(Thread.prototype, {
         return super.canLeave;
     },
     get correspondents() {
-        return super.correspondents.filter((correspondent) => !correspondent.is_bot);
+        return super.correspondents.filter(
+            (correspondent) => correspondent.livechat_member_type !== "bot"
+        );
     },
 
     computeCorrespondent() {
