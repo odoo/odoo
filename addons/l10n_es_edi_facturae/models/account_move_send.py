@@ -15,7 +15,12 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_invoice_extra_attachments(self, move):
         # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(move) + move.l10n_es_edi_facturae_xml_id
+        l10n_es_edi_facturae_xml_id = self.env['ir.attachment'].search([
+            ('res_model', '=', move._name),
+            ('res_id', 'in', move._origin.ids),
+            ('res_field', '=', 'l10n_es_edi_facturae_xml_file')
+        ])
+        return super()._get_invoice_extra_attachments(move) + l10n_es_edi_facturae_xml_id
 
     def _get_placeholder_mail_attachments_data(self, move, invoice_edi_format=None, extra_edis=None):
         # EXTENDS 'account'
@@ -79,4 +84,4 @@ class AccountMoveSend(models.AbstractModel):
         if attachments_vals:
             attachments = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachments_vals)
             res_ids = attachments.mapped('res_id')
-            self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'])
+            self.env['account.move'].browse(res_ids).invalidate_recordset(fnames=['l10n_es_edi_facturae_xml_file'])

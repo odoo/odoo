@@ -289,7 +289,7 @@ class TestEdiTbaiXmls(TestEsEdiTbaiCommon):
             'res_id': self.out_invoice.id,
             'res_field': 'xml_attachment_id',
         })
-        post_edi_document.xml_attachment_id = post_xml_attachment
+        post_edi_document.xml_attachment_bin = post_xml_attachment.datas
         self.out_invoice.l10n_es_tbai_post_document_id = post_edi_document
         cancel_edi_document = self.out_invoice._l10n_es_tbai_create_edi_document(cancel=True)
         cancel_edi_document._generate_xml(self.out_invoice._l10n_es_tbai_get_values(cancel=True))

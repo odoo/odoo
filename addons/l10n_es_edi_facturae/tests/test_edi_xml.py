@@ -202,7 +202,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         invoice.action_post()
         wizard = self.create_send_and_print(invoice)
         wizard.action_send_and_print()
-        self.assertFalse(invoice.l10n_es_edi_facturae_xml_id)
+        self.assertFalse(invoice.l10n_es_edi_facturae_xml_file)
 
     def test_tax_withheld(self):
         with freeze_time(self.frozen_today), \

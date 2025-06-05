@@ -56,12 +56,12 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         required=True,
         readonly=True,
     )
-    xml_attachment_id = fields.Many2one(
-        comodel_name='ir.attachment',
+    xml_attachment_bin = fields.Binary(
         string="XML Attachment",
         copy=False,
         readonly=True,
     )
+    xml_attachment_bin_filename = fields.Char()
     company_id = fields.Many2one(
         'res.company',
         required=True,
@@ -94,6 +94,13 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     # -------------------------------------------------------------------------
     # HELPER METHODS
     # -------------------------------------------------------------------------
+
+    def _get_xml_attachment_id(self):
+        return self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('res_field', '=', 'xml_attachment_bin')
+        ])
 
     def _is_in_chain(self):
         """True iff the document has been posted to the chain and confirmed by govt."""
@@ -159,7 +166,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         if error:
             return error
 
-        if not self.xml_attachment_id:
+        if not self.xml_attachment_bin:
             self._generate_xml(values)
 
         if (
@@ -229,7 +236,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'url': get_key(self.company_id.l10n_es_tbai_tax_agency, 'cancel_url_' if self.is_cancel else 'post_url_', company.l10n_es_tbai_test_env),
             'headers': {"Content-Type": "application/xml; charset=utf-8"},
             'pkcs12_data': company.l10n_es_tbai_certificate_id,
-            'data': self.xml_attachment_id.raw,
+            'data': base64.b64decode(self.xml_attachment_bin),
         }
 
     @api.model
@@ -257,7 +264,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             xml_to_send = self._generate_final_xml_bi(freelancer=freelancer)
             lroe_str = etree.tostring(xml_to_send)
         else:
-            lroe_str = self.xml_attachment_id.raw
+            lroe_str = base64.b64decode(self.xml_attachment_bin)
 
         lroe_bytes = gzip.compress(lroe_str)
 
@@ -298,7 +305,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'freelancer': freelancer,
             'epigrafe': self.env['ir.config_parameter'].sudo().get_param('l10n_es_edi_tbai.epigrafe', '')
         }
-        lroe_values.update({'tbai_b64_list': [base64.b64encode(self.xml_attachment_id.raw).decode()]})
+        lroe_values.update({'tbai_b64_list': [self.xml_attachment_bin.decode()]})
         lroe_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
         lroe_xml = cleanup_xml_node(lroe_str)
 
@@ -364,12 +371,16 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             xml_doc = self._generate_purchase_document_xml_bi(values)
 
         if xml_doc is not None:
-            self.sudo().xml_attachment_id = self.env['ir.attachment'].create({
-                'name': values['attachment_name'],
-                'raw': etree.tostring(xml_doc, encoding='UTF-8'),
-                'type': 'binary',
-                'res_model': values['res_model'],
-                'res_id': values['res_id'],
+            # Generate XML
+            self.sudo().write({
+                'xml_attachment_bin': base64.b64encode(etree.tostring(xml_doc, encoding='UTF-8')),
+                'xml_attachment_bin_filename': values['attachment_name']
+            })
+
+            # Set name on newly-created attachment.
+            attachment = self._get_xml_attachment_id()
+            attachment.sudo().write({
+                'name': values['attachment_name']
             })
 
     @api.model
@@ -828,7 +839,19 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     def _get_xml(self):
         """Returns the XML object representing the document."""
         self.ensure_one()
-        doc = self.xml_attachment_id
+        doc = base64.b64decode(self.xml_attachment_bin)
         if not doc:
             return None
-        return etree.fromstring(doc.raw.decode('utf-8'))
+        return etree.fromstring(doc.decode('utf-8'))
+
+    # -------------------------------------------------------------------------
+    # CRUD METHODS
+    # -------------------------------------------------------------------------
+
+    # When an Edi Tbaidocument is deleted, all attachments linked to this Edi Tbaidocument are also unlinked.
+    def unlink(self):
+        self.env['ir.attachment'].search([
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids)
+        ]).unlink()
+        return super().unlink()
