@@ -14,6 +14,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import format_datetime, format_date, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.addons.product.wizard.product_label_layout import PRODUCT_LABEL_SELECTION, LOT_LABEL_SELECTION
 
 
 class StockPickingType(models.Model):
@@ -83,23 +84,13 @@ class StockPickingType(models.Model):
     auto_print_product_labels = fields.Boolean(
         "Auto Print Product Labels",
         help="If this checkbox is ticked, Odoo will automatically print the product labels of a picking when it is validated.")
-    product_label_format = fields.Selection([
-        ('dymo', 'Dymo'),
-        ('2x7xprice', '2 x 7 with price'),
-        ('4x7xprice', '4 x 7 with price'),
-        ('4x12', '4 x 12'),
-        ('4x12xprice', '4 x 12 with price'),
-        ('zpl', 'ZPL Labels'),
-        ('zplxprice', 'ZPL Labels with price')], string="Product Label Format to auto-print", default='2x7xprice')
+    product_label_format = fields.Selection(
+        selection=PRODUCT_LABEL_SELECTION, string="Product Label Format to auto-print", default='2x7xprice')
     auto_print_lot_labels = fields.Boolean(
         "Auto Print Lot/SN Labels",
         help="If this checkbox is ticked, Odoo will automatically print the lot/SN labels of a picking when it is validated.")
-    lot_label_format = fields.Selection([
-        ('4x12_lots', '4 x 12 - One per lot/SN'),
-        ('4x12_units', '4 x 12 - One per unit'),
-        ('zpl_lots', 'ZPL Labels - One per lot/SN'),
-        ('zpl_units', 'ZPL Labels - One per unit')],
-        string="Lot Label Format to auto-print", default='4x12_lots')
+    lot_label_format = fields.Selection(
+        selection=LOT_LABEL_SELECTION, string="Lot Label Format to auto-print", default='4x12_lots')
     auto_print_reception_report = fields.Boolean(
         "Auto Print Reception Report",
         help="If this checkbox is ticked, Odoo will automatically print the reception report of a picking when it is validated and has assigned moves.")
