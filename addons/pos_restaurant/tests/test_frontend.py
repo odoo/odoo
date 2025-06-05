@@ -570,3 +570,43 @@ class TestFrontend(TestFrontendCommon):
         self.pos_config.write({'iface_tipproduct': True, 'tip_product_id': self.tip.id})
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_tip_after_payment')
+
+    def test_pricelist_applied_on_order_line(self):
+        """Test that the pricelist price is correctly applied in the POS order line"""
+        # Create product
+        product = self.env['product.product'].create({
+            'name': 'Pricelist Product',
+            'list_price': 100.0,
+            'available_in_pos': True,
+            'taxes_id': False,
+        })
+
+        # Create pricelist with fixed price for the product
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+            'item_ids': [(0, 0, {
+                'applied_on': '0_product_variant',
+                'product_id': product.id,
+                'compute_price': 'fixed',
+                'fixed_price': 80.0,
+            })]
+        })
+
+        # Assign pricelist to POS config
+        self.pos_config.write({
+            'use_presets': True,
+            'default_preset_id': self.env.ref('pos_restaurant.pos_takein_preset', False).id,
+            'available_preset_ids': [(6, 0, [
+                self.env.ref('pos_restaurant.pos_takeout_preset').id,
+                self.env.ref('pos_restaurant.pos_delivery_preset').id,
+            ])],
+            'available_pricelist_ids': pricelist.ids,
+            'pricelist_id': pricelist.id,
+            'use_pricelist': True,
+        })
+
+        # Open POS UI
+        self.pos_config.with_user(self.pos_user).open_ui()
+
+        # Run tour simulating POS UI behavior
+        self.start_pos_tour('test_pricelist_applied_on_order_line_tour', login='pos_admin')

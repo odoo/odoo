@@ -683,3 +683,14 @@ registry.category("web_tour.tours").add("test_combo_preparation_receipt_layout",
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pricelist_applied_on_order_line_tour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickNewOrder(),
+            ProductScreen.clickDisplayedProduct("Pricelist Product"),
+            ProductScreen.totalAmountIs("80.00"),
+        ].flat(),
+});

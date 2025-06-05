@@ -129,7 +129,8 @@ export class PosOrder extends Base {
     }
 
     setPreset(preset) {
-        this.setPricelist(preset.pricelist_id);
+        const pricelist_id = preset.pricelist_id ? preset.pricelist_id : this.config.pricelist_id;
+        pricelist_id && this.setPricelist(pricelist_id);
         this.fiscal_position_id = preset.fiscal_position_id;
         this.preset_id = preset;
     }
