@@ -192,3 +192,10 @@ class TestExpensesStates(TestExpenseCommon):
         self.expenses_all.manager_id = False
         self.expenses_all.action_submit()
         self.assertSequenceEqual(['approved', 'approved'], self.expenses_all.mapped('state'))
+
+    def test_expense_next_activity(self):
+        """ Test the auto-validation flow skips 'submitted' state when there is no manager"""
+        self.expenses_employee.manager_id = self.expense_user_manager_2
+        self.expenses_all.action_submit()
+        mail_activity = self.env['mail.activity'].search([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expenses_employee.id)])
+        self.assertEqual(mail_activity.user_id.id, self.expense_user_manager_2.id)
