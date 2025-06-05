@@ -1,7 +1,8 @@
-import contextlib
+import dataclasses
 import inspect
 import json
-from collections import defaultdict
+import logging
+import typing
 from http import HTTPStatus
 
 import docutils.core
@@ -15,6 +16,8 @@ from odoo.modules.module_graph import get_sorted_installed_modules
 from odoo.service.model import get_public_method
 from odoo.tools import lazy_classproperty, py_to_js_locale
 
+logger = logging.getLogger(__name__)
+
 
 class DocController(http.Controller):
     """
@@ -23,7 +26,7 @@ class DocController(http.Controller):
     documents.
     """
 
-    @http.route(['/doc', '/doc/', '/doc/<model_name>', '/doc/index.html'], type='http', auth='user')
+    @http.route(['/doc', '/doc/<model_name>', '/doc/index.html'], type='http', auth='user')
     def doc_client(self, mod=None, **kwargs):
         request.env.user._on_webclient_bootstrap()
         context = request.env['ir.http'].webclient_rendering_context()
@@ -58,14 +61,12 @@ class DocController(http.Controller):
                     },
                     'methods': [
                         method_name
-                        for method_name
-                        in dir(Model)
+                        for method_name in dir(Model)
                         if is_public_method(Model, method_name)
                     ],
                     # sorted(..., key=partial(sort_key_method, modules, Model)),
                 }
-                for ir_model
-                in self.env['ir.model'].sudo().search([])
+                for ir_model in self.env['ir.model'].sudo().search([])
                 if (Model := self.env[ir_model.model]).has_access('read')
             ],
         }
@@ -107,13 +108,11 @@ class DocController(http.Controller):
                     field,
                     module=next(iter(Model._fields[field['name']]._modules), None),
                 )
-                for field
-                in Model.fields_get().values()
+                for field in Model.fields_get().values()
             },
             'methods': {
                 method_name: self._doc_method(Model, model_name, method, method_name)
-                for method_name
-                in dir(Model)
+                for method_name in dir(Model)
                 if (method := is_public_method(Model, method_name))
             },
         }
@@ -133,174 +132,28 @@ class DocController(http.Controller):
             for parent_model in reversed(type(model).mro())
             if hasattr(parent_model, method_name)
         )
-        signature, parameters, return_ = self._doc_method_signature(method)
 
-        obj = {
-            'model': introducing_model._name or 'core',
-            'module': introducing_model._module or 'core',
-            'signature': str(signature),
-            'parameters': parameters,
-            # doc: ''
-            # raise: {}
-            # return: {}
-            # api: []
-            # signature: ''
-        }
-
-        if method.__doc__:
-            rst_fields, html_docstring = self._doc_method_docstring(method)
-            if html_docstring:
-                obj['doc'] = html_docstring
-            if raises := rst_fields.get('raises'):
-                obj['raise'] = raises
-            for param, doc in rst_fields.get('param', {}).items():
-                with contextlib.suppress(KeyError):
-                    parameters[param]['doc'] = doc
-            for param, type_ in rst_fields.get('type', {}).items():
-                with contextlib.suppress(KeyError):
-                    parameters[param].setdefault('annotation', type_)
-            if rdoc := rst_fields.get('returns'):
-                return_['doc'] = rdoc
-            if rtype := rst_fields.get('rtype'):
-                return_.setdefault('annotation', rtype)
-
-        if return_:
-            obj['return'] = return_
-
+        # accumate the decorators such as @api.model
         api = []
         if getattr(method, '_api_model', False):
             api.append('model')
+
+        signature = parse_signature(method)
+        obj = {
+            **signature.as_dict(),
+            # signature: '',
+            # parameters: {},
+            # return: {}
+            # raise: {}
+            # doc: ''
+            'model': introducing_model._name or 'core',
+            'module': introducing_model._module or 'core',
+            # api: []
+        }
         if api:
             obj['api'] = api
 
-        obj['signature'] = str(signature.replace(
-            parameters=[
-                inspect.Parameter(
-                    name=name,
-                    kind=inspect._ParameterKind[p.get('kind', 'POSITIONAL_OR_KEYWORD')],
-                    default=p.get('default', inspect._empty),
-                ) for name, p in parameters.items()],
-            return_annotation=return_.get('annotation', inspect._empty),
-        )).replace(") -> '", ") -> ").removesuffix("'")
-
         return obj
-
-    def _doc_method_signature(self, method):
-        signature = inspect.signature(method)
-
-        # replace BaseModel and such by list[int], see /json/2
-        return_type = str(signature.return_annotation).strip("'\"").rpartition('.')[2]
-        if return_type in ('Self', 'BaseModel', 'Model'):
-            signature = signature.replace(return_annotation=list[int])
-
-        # strip self and cls from the signature
-        iter_params = iter(signature.parameters.items())
-        if next(iter_params, (None, None))[0] in ('self', 'cls'):
-            signature = signature.replace(parameters=(v for i, v in iter_params))
-
-        parameters = {}
-        for param_name, param in signature.parameters.items():
-            parameters[param_name] = {}
-            if param.kind.name != 'POSITIONAL_OR_KEYWORD':
-                parameters[param_name]['kind'] = param.kind.name
-            if param.default is not param.empty:
-                try:
-                    json.dumps(param.default)
-                except TypeError:
-                    pass
-                else:
-                    parameters[param_name]['default'] = param.default
-            if param.annotation is not param.empty:
-                parameters[param_name]['annotation'] = str(param.annotation)
-
-        return_ = {}
-        if signature.return_annotation is not signature.empty:
-            return_['annotation'] = signature.return_annotation
-
-        return signature, parameters, return_
-
-    def _doc_method_docstring(self, method):
-        docstring = inspect.cleandoc(method.__doc__)
-        doctree = _DocUtils.tree(docstring)
-
-        field_lists = [node for node in doctree if node.tagname == 'field_list']
-
-        # populate rst_fields using the :param: and like fields
-        rst_fields = defaultdict(dict)
-        # rst_fields = {
-        #     'param': {name: doc},
-        #     'type': {name: type},
-        #     'returns': ...,
-        #     'rtype': ...,
-        #     'raise': {exception: doc},
-        #     'var': {name: doc},
-        #     'vartype': {name: type},
-        #     'meta': {},
-        # }
-
-        for field_list in field_lists:
-            for field in field_list:
-                field_name, field_body = field.children
-                kind, sp, name = str(field_name[0]).partition(' ')
-                if kind not in RST_INFO_FIELDS:
-                    continue
-
-                kind = RST_INFO_FIELDS[kind]
-
-                if kind == 'returns':
-                    assert not sp, (kind, name)
-                    rst_fields[kind] = _DocUtils.html_firstchild(field_body)
-                elif kind == 'rtype':
-                    assert not sp, (kind, name)
-                    rst_fields[kind] = field_body.children[0].astext().strip()
-                elif kind in ('param', 'var'):
-                    # :param str foo: hello
-                    # -> :param foo: hello
-                    #    :type foo: str
-                    type_, _, name = name.rpartition(' ')
-                    if type_:
-                        kind_type = 'type' if kind == 'param' else 'vartype'
-                        rst_fields[kind_type][name] = type_
-                    rst_fields[kind][name] = _DocUtils.html_firstchild(field_body)
-                elif kind in ('type', 'vartype'):
-                    rst_fields[kind][name] = field_body.children[0].astext().strip()
-                else:
-                    rst_fields[kind][name] = _DocUtils.html_firstchild(field_body)
-            doctree.remove(field_list)
-
-        assert set(rst_fields).issubset(RST_INFO_FIELDS), rst_fields
-        return rst_fields, _DocUtils.html(doctree)
-
-
-# https://www.sphinx-doc.org/en/master/usage/domains/python.html#info-field-lists
-RST_INFO_FIELDS = {
-    'param': 'param',
-    'parameter': 'param',
-    'arg': 'param',
-    'argument': 'param',
-    'key': 'param',
-    'keyword': 'param',
-
-    'type': 'type',
-
-    'raises': 'raises',
-    'raise': 'raises',
-    'except': 'raises',
-    'exception': 'raises',
-
-    'var': 'var',
-    'ivar': 'var',
-    'cvar': 'var',
-
-    'vartype': 'vartype',
-
-    'returns': 'returns',
-    'return': 'returns',
-
-    'rtype': 'rtype',
-
-    'meta': 'meta',
-}
 
 
 def is_public_method(model, name):
@@ -352,6 +205,218 @@ def sort_key_method(sorted_module_list, model, method_name):
     else:
         depth = -1
     return depth, method_name
+
+
+def parse_signature(method) -> 'Signature':
+    isign = inspect.signature(method)
+
+    # strip self and cls from the signature
+    iter_params = iter(isign.parameters.items())
+    if next(iter_params, (None, None))[0] in ('self', 'cls'):
+        isign = isign.replace(parameters=(v for i, v in iter_params))
+
+    # replace BaseModel and such by list[int], see /json/2
+    return_type = str(isign.return_annotation).strip("'\"").rpartition('.')[2]
+    if return_type in ('Self', 'BaseModel', 'Model'):
+        isign = isign.replace(return_annotation='list[int]')
+
+    # parse the signature proper
+    parameters = {
+        param_name: Param.from_inspect(param)
+        for param_name, param in isign.parameters.items()
+    }
+    returns = Return.from_inspect(isign.return_annotation)
+    signature = Signature(parameters, returns, raise_={}, doc=None)
+
+    # if the method has a docstring, use it to enhance the signature
+    if not method.__doc__:
+        return signature
+    docstring = inspect.cleandoc(method.__doc__)
+    doctree = _DocUtils.tree(docstring)
+
+    # extract the ":param [annotation] <name>: text" and alike fields
+    # from the docstring
+    field_lists = [node for node in doctree if node.tagname == 'field_list']
+    for field_list in field_lists:
+        for field in field_list:
+            field_name, field_body = field.children
+            kind, sp, name = str(field_name[0]).partition(' ')
+            match (RST_INFO_FIELDS.get(kind), sp, name):
+                # unrecognized kind, e.g. var, meta, ...
+                case (None, _, _):
+                    pass
+                # :param [annotation] <name>: <rst>
+                case ('param', ' ', annotation_name):
+                    annotation, _, name = annotation_name.rpartition(' ')
+                    if param := signature.parameters.get(name):
+                        if annotation and not param.annotation:
+                            param.annotation = annotation
+                        param.doc = _DocUtils.html_firstchild(field_body)
+                # :type <name>: <annotation>
+                case ('type', ' ', name):
+                    if (param := signature.parameters.get(name)) and not param.annotation:
+                        param.annotations = field_body.children[0].astext().strip()
+                # :returns: <rst>
+                case ('returns', '', ''):
+                    signature.return_.doc = _DocUtils.html_firstchild(field_body)
+                # :rtype: <type>
+                case ('rtype', '', ''):
+                    if not signature.return_.annotation:
+                        signature.return_.annotation = field_body.children[0].astext().strip()
+                # :raises <exception>: <rst>
+                case ('raises', ' ', name):
+                    signature.raise_[name] = _DocUtils.html_firstchild(field_body)
+                case _:
+                    logger.warning(
+                        'unable to parse %r in docstring of %s\n%s\n"""\n%s\n"""',
+                        str(field_name[0]), method, RST_INFO_FIELDS_URL, docstring,
+                    )
+        doctree.remove(field_list)
+
+    signature.doc = _DocUtils.html(doctree)
+    return signature
+
+
+RST_INFO_FIELDS_URL = "https://www.sphinx-doc.org/en/master/usage/domains/python.html#info-field-lists"
+RST_INFO_FIELDS = {
+    'param': 'param',
+    'parameter': 'param',
+    'arg': 'param',
+    'argument': 'param',
+    'key': 'param',
+    'keyword': 'param',
+
+    'type': 'type',
+
+    'raises': 'raises',
+    'raise': 'raises',
+    'except': 'raises',
+    'exception': 'raises',
+
+    'returns': 'returns',
+    'return': 'returns',
+
+    'rtype': 'rtype',
+}
+
+
+def stringify_annotation(annotation) -> str | None:
+    if annotation is inspect._empty:
+        return None
+    if isinstance(annotation, str):
+        return annotation
+    if isinstance(annotation, type):
+        return annotation.__name__
+    return str(annotation)
+
+
+@dataclasses.dataclass
+class Signature:
+    parameters: dict[str, 'Param']
+    return_: 'Return'
+    raise_: dict[str, str]
+    doc: str | None
+
+    def as_dict(self):
+        d = {
+            'signature': str(self),
+            'parameters': {
+                (p := param.as_dict()).pop('name'): p
+                for param in self.parameters.values()
+            },
+        }
+        if return_dict := self.return_.as_dict():
+            d['return'] = return_dict
+        if self.raise_:
+            d['raise'] = self.raise_
+        if self.doc is not None:
+            d['doc'] = self.doc
+        return d
+
+    def __str__(self):
+        return self.stringify(annotation=False)
+
+    def stringify(self, annotation=True, default=True, return_annotation=True):
+        out = ['(']
+        for name, param in self.parameters.items():
+            out.append(name)
+            if annotation and param.annotation:
+                out.append(f': {param.annotation}')
+                if default and param.default is not inspect._empty:
+                    out.append(f' = {param.default}')
+            elif default and param.default is not inspect._empty:
+                out.append(f'={param.default}')
+            out.append(', ')
+        if self.parameters:
+            out.pop()  # remove trailing ', '
+        out.append(')')
+        if return_annotation and self.return_.annotation:
+            out.append(f' -> {self.return_.annotation}')
+        return ''.join(out)
+
+
+@dataclasses.dataclass
+class Param:
+    name: str
+    kind: typing.Literal[
+        # def foo(pos_only, /, pos_or_kw, *var_pos, kw_only, **var_kw)
+        'POSITIONAL_ONLY',
+        'POSITIONAL_OR_KEYWORD',
+        'VAR_POSITIONAL',
+        'KEYWORD_ONLY',
+        'VAR_KEYWORD',
+    ]
+    default: typing.Any | inspect._empty
+    annotation: str | None
+    doc: str | None
+
+    @classmethod
+    def from_inspect(cls, parameter):
+        return cls(
+            name=parameter.name,
+            kind=parameter.kind.name,
+            default=parameter.default,
+            annotation=stringify_annotation(parameter.annotation),
+            doc=None,
+        )
+
+    def as_dict(self):
+        d = vars(self)
+        if self.kind == 'POSITIONAL_OR_KEYWORD':
+            # most (99%) params are POSITIONAL_OR_KEYWORD
+            # make the export smaller by ignoring those
+            d.pop('kind')
+        if self.annotation is None:
+            d.pop('annotation')
+        if self.doc is None:
+            d.pop('doc')
+        if self.default is inspect._empty:
+            d.pop('default')
+        else:
+            # ignore the default value when it is not json serializable
+            try:
+                json.dumps(self.default)
+            except ValueError:
+                d.pop('default')
+        return d
+
+
+@dataclasses.dataclass
+class Return:
+    annotation: str | None
+    doc: str | None
+
+    @classmethod
+    def from_inspect(cls, return_annotation):
+        return cls(stringify_annotation(return_annotation), doc=None)
+
+    def as_dict(self):
+        d = vars(self)
+        if self.annotation is None:
+            d.pop('annotation')
+        if self.doc is None:
+            d.pop('doc')
+        return d
 
 
 # This class could had been a python module, but lazy_classproperty
