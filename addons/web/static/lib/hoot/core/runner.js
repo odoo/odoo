@@ -42,7 +42,7 @@ import {
 } from "../mock/window";
 import { DEFAULT_CONFIG, FILTER_KEYS } from "./config";
 import { makeExpect } from "./expect";
-import { HootFixtureElement, destroy, makeFixtureManager } from "./fixture";
+import { destroy, makeFixtureManager } from "./fixture";
 import { LOG_LEVELS, logger } from "./logger";
 import { Suite, suiteError } from "./suite";
 import { Tag, getTagSimilarities, getTags } from "./tag";
@@ -138,27 +138,29 @@ const $now = performance.now.bind(performance);
 /**
  * @param {Job[]} jobs
  */
-const filterReady = (jobs) =>
-    jobs.filter((job) => {
+function filterReady(jobs) {
+    return jobs.filter((job) => {
         if (job instanceof Suite) {
             job.setCurrentJobs(filterReady(job.currentJobs));
             return job.currentJobs.length;
         }
         return job.run;
     });
+}
 
 /**
  * @param {Record<string, number>} values
  */
-const formatIncludes = (values) =>
-    $entries(values)
+function formatIncludes(values) {
+    return $entries(values)
         .filter(([, value]) => $abs(value) === INCLUDE_LEVEL.url)
         .map(([id, value]) => (value >= 0 ? id : `${EXCLUDE_PREFIX}${id}`));
+}
 
 /**
  * @param {import("./expect").Assertion[]} assertions
  */
-const formatAssertions = (assertions) => {
+function formatAssertions(assertions) {
     const lines = [];
     for (const { failedDetails, label, message, number } of assertions) {
         const formattedMessage = message.map((part) => (isLabel(part) ? part[0] : String(part)));
@@ -186,18 +188,22 @@ const formatAssertions = (assertions) => {
         }
     }
     return lines;
-};
+}
 
 /**
  * @param {Event} ev
  */
-const safePrevent = (ev) => ev.cancelable && ev.preventDefault();
+function safePrevent(ev) {
+    if (ev.cancelable) {
+        ev.preventDefault();
+    }
+}
 
 /**
  * @template T
  * @param {T[]} array
  */
-const shuffle = (array) => {
+function shuffle(array) {
     const copy = [...array];
     let randIndex;
     for (let i = 0; i < copy.length; i++) {
@@ -205,22 +211,16 @@ const shuffle = (array) => {
         [copy[i], copy[randIndex]] = [copy[randIndex], copy[i]];
     }
     return copy;
-};
+}
 
 /**
  * @param {Test} test
  * @param {boolean} shouldSuppress
  */
-const handleConsoleIssues = (test, shouldSuppress) => {
+function handleConsoleIssues(test, shouldSuppress) {
     if (shouldSuppress && test.config.todo) {
         return logger.suppressIssues(`suppressed by "test.todo"`);
     } else {
-        const offConsoleEvents = () => {
-            while (cleanups.length) {
-                cleanups.pop()();
-            }
-        };
-
         const cleanups = [];
         if (globalThis.console instanceof EventTarget) {
             cleanups.push(
@@ -229,14 +229,18 @@ const handleConsoleIssues = (test, shouldSuppress) => {
             );
         }
 
-        return offConsoleEvents;
+        return function offConsoleEvents() {
+            while (cleanups.length) {
+                cleanups.pop()();
+            }
+        };
     }
-};
+}
 
 /**
  * @param {Event} ev
  */
-const warnUserEvent = (ev) => {
+function warnUserEvent(ev) {
     if (!ev.isTrusted) {
         return;
     }
@@ -247,7 +251,7 @@ const warnUserEvent = (ev) => {
     );
 
     removeEventListener(ev.type, warnUserEvent);
-};
+}
 
 const WARNINGS = {
     viewport: "Viewport size does not match the expected size for the current preset",
@@ -889,29 +893,7 @@ export class Runner {
         /** @type {Runner["_handleError"]} */
         const handleError = this._handleError.bind(this);
 
-        /**
-         * @param {Job} [job]
-         */
-        const nextJob = (job) => {
-            this.state.currentTest = null;
-            if (job) {
-                const sibling = job.currentJobs?.[job.currentJobIndex++];
-                if (sibling) {
-                    return sibling;
-                }
-                const parent = job.parent;
-                if (parent && (!jobs.length || jobs.some((j) => parent.path.includes(j)))) {
-                    return parent;
-                }
-            }
-            const index = this._currentJobs.findIndex(Boolean);
-            if (index >= 0) {
-                return this._currentJobs.splice(index, 1)[0];
-            }
-            return null;
-        };
-
-        let job = nextJob();
+        let job = this._nextJob(jobs);
         while (job && this.state.status === "running") {
             const callbackChain = this._getCallbackChain(job);
             if (job instanceof Suite) {
@@ -952,7 +934,7 @@ export class Runner {
                         }
                     }
                 }
-                job = nextJob(job);
+                job = this._nextJob(jobs, job);
                 continue;
             }
 
@@ -966,7 +948,7 @@ export class Runner {
                 this._pushTest(test);
                 test.setRunFn(null);
                 test.parent.reporting.add({ skipped: +1, tests: +1 });
-                job = nextJob(job);
+                job = this._nextJob(jobs, job);
                 continue;
             }
 
@@ -1106,7 +1088,7 @@ export class Runner {
                 continue;
             }
 
-            job = nextJob(job);
+            job = this._nextJob(jobs, job);
         }
 
         if (this.state.status === "done") {
@@ -1141,7 +1123,7 @@ export class Runner {
             await this._missedCallbacks.shift()();
         }
 
-        await this._callbacks.call("after-all", logger.error);
+        await this._callbacks.call("after-all", this, logger.error);
 
         const { passed, failed, assertions } = this.reporting;
         if (failed > 0) {
@@ -1212,28 +1194,28 @@ export class Runner {
         const current = getCurrent && (() => this._createCurrentConfigurators(getCurrent));
 
         /** @type {Configurators["debug"]} */
-        const debug = () => {
+        function debug() {
             tags("debug");
             return configurableFn;
-        };
+        }
 
         /** @type {Configurators["only"]} */
-        const only = () => {
+        function only() {
             tags("only");
             return configurableFn;
-        };
+        }
 
         /** @type {Configurators["skip"]} */
-        const skip = () => {
+        function skip() {
             tags("skip");
             return configurableFn;
-        };
+        }
 
         /** @type {Configurators["todo"]} */
-        const todo = () => {
+        function todo() {
             tags("todo");
             return configurableFn;
-        };
+        }
 
         // FUNCTION MODIFIERS
 
@@ -1253,16 +1235,16 @@ export class Runner {
          *  test.config({ multi: 100 });
          *  test("non-deterministic test", async () => { ... });
          */
-        const config = (...configs) => {
+        function config(...configs) {
             $assign(currentConfig, ...configs);
             return configurators;
-        };
+        }
 
         /** @type {Configurators["multi"]} */
-        const multi = (count) => {
+        function multi(count) {
             currentConfig.multi = count;
             return configurators;
-        };
+        }
 
         /**
          * Adds tags to the current test/suite.
@@ -1278,16 +1260,25 @@ export class Runner {
          *  test.tags("mobile");
          *  test("my mobile test", () => { ... });
          */
-        const tags = (...tagNames) => {
+        function tags(...tagNames) {
             currentConfig.tags.push(...getTags(tagNames));
             return configurators;
-        };
+        }
 
         /** @type {Configurators["timeout"]} */
-        const timeout = (ms) => {
+        function timeout(ms) {
             currentConfig.timeout = ms;
             return configurators;
-        };
+        }
+
+        /** @type {ConfigurableFunction} */
+        function configurableFn(...args) {
+            const jobConfig = { ...currentConfig };
+            currentConfig = { tags: [] };
+            return boundFn(jobConfig, ...args);
+        }
+
+        const boundFn = fn.bind(this);
 
         const configuratorGetters = { debug, only, skip, todo };
         const configuratorMethods = { config, multi, tags, timeout };
@@ -1296,13 +1287,6 @@ export class Runner {
         }
         /** @type {Configurators} */
         const configurators = { ...configuratorGetters, ...configuratorMethods };
-
-        /** @type {ConfigurableFunction} */
-        const configurableFn = (...args) => {
-            const jobConfig = { ...currentConfig };
-            currentConfig = { tags: [] };
-            return fn.call(this, jobConfig, ...args);
-        };
 
         const properties = {};
         for (const [key, getter] of $entries(configuratorGetters)) {
@@ -1378,11 +1362,11 @@ export class Runner {
         /**
          * @param {JobConfig} config
          */
-        const configureCurrent = (config) => {
+        function configureCurrent(config) {
             getCurrent().configure(config);
 
             return currentConfigurators;
-        };
+        }
 
         /**
          * @param  {...string} tagNames
@@ -1537,6 +1521,29 @@ export class Runner {
         }
 
         return false;
+    }
+
+    /**
+     * @param {Job[]} jobs
+     * @param {Job} [job]
+     */
+    _nextJob(jobs, job) {
+        this.state.currentTest = null;
+        if (job) {
+            const sibling = job.currentJobs?.[job.currentJobIndex++];
+            if (sibling) {
+                return sibling;
+            }
+            const parent = job.parent;
+            if (parent && (!jobs.length || jobs.some((j) => parent.path.includes(j)))) {
+                return parent;
+            }
+        }
+        const index = this._currentJobs.findIndex(Boolean);
+        if (index >= 0) {
+            return this._currentJobs.splice(index, 1)[0];
+        }
+        return null;
     }
 
     /**
@@ -1810,11 +1817,9 @@ export class Runner {
         }
 
         // Register default hooks
-        this.beforeAll(() => {
-            document.head.appendChild(HootFixtureElement.styleElement);
-            return () => HootFixtureElement.styleElement.remove();
-        });
+        this.beforeAll(this.fixture.globalSetup);
         this.afterAll(
+            this.fixture.globalCleanup,
             // Warn user events
             !this.debug && on(window, "pointermove", warnUserEvent),
             !this.debug && on(window, "pointerdown", warnUserEvent),
@@ -1839,7 +1844,7 @@ export class Runner {
         enableEventLogs(logger.level === LOG_LEVELS.debug);
         setFrameRate(this.config.fps);
 
-        await this._callbacks.call("before-all", logger.error);
+        await this._callbacks.call("before-all", this, logger.error);
     }
 
     /**
