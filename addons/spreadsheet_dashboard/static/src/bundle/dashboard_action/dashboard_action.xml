@@ -43,8 +43,7 @@
                     An error occured while loading the dashboard
                 </div>
                 <t t-else="">
-                    <MobileFigureContainer t-if="env.isSmall" spreadsheetModel="dashboard.model" t-key="dashboard.id"/>
-                    <div t-else="" class="o_renderer" t-att-class="{'o-sample-dashboard': dashboard.isSample}">
+                    <div class="o_renderer" t-att-class="{'o-sample-dashboard': dashboard.isSample}">
                         <SpreadsheetComponent
                             model="dashboard.model"
                             t-key="dashboard.id"/>
