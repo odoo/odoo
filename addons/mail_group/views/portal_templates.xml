@@ -180,12 +180,12 @@
                         <t t-set="group_message_child_ids" t-value="message.group_message_child_ids.filtered(lambda m: m.moderation_status == 'accepted')"/>
                         <div class="o_mg_link_parent" t-if="group_message_child_ids and (not mode or mode == 'thread')">
                             <p class="mt8">
-                                <a href="#" class="o_mg_link_hide">
+                                <button class="o_mg_link_hide btn btn-link p-0">
                                     <i class="oi oi-chevron-right" role="img" aria-label="Hide replies" title="Hide replies"/> <t t-esc="len(group_message_child_ids)"/> replies
-                                </a>
-                                <a href="#" class="o_mg_link_show d-none">
+                                </button>
+                                <button class="o_mg_link_show d-none btn btn-link p-0">
                                     <i class="oi oi-chevron-down" role="img" aria-label="Show replies" title="Show replies"/> <t t-esc="len(group_message_child_ids)"/> replies
-                                </a>
+                                </button>
                             </p>
                             <div class="o_mg_link_content o_mg_replies ms-5 d-none">
                                 <t t-call="mail_group.messages_short">
@@ -219,12 +219,12 @@
         <div class="o_mg_link_parent">
             <t t-set="attachments" t-value="message.attachment_ids"/>
             <p t-if="attachments" class="mt8">
-                <a href="#" class="o_mg_link_hide">
+                <button class="o_mg_link_hide btn btn-link p-0">
                     <i class="oi oi-chevron-right" role="img" aria-label="Hide attachments" title="Hide attachments"/> <t t-esc="len(attachments)"/> attachments
-                </a>
-                <a href="#" class="o_mg_link_show d-none">
+                </button>
+                <button class="o_mg_link_show d-none btn btn-link p-0">
                     <i class="oi oi-chevron-down" role="img" aria-label="Show attachments" title="Show attachments"/> <t t-esc="len(attachments)"/> attachments
-                </a>
+                </button>
             </p>
             <div class="o_mg_link_content d-none row justify-content-center">
                 <div class="mx-4 my-3 text-center o_mg_attachment" t-foreach="attachments" t-as="attachment">

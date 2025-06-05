@@ -36,7 +36,7 @@ const getTemplate = function (headerType) {
                             <img src="/web/image/website.s_faq_horizontal_default_image_1" class="img img-fluid rounded" style="width: 100% !important;" alt="" loading="lazy" data-mimetype="image/jpeg" data-original-id="278" data-original-src="/website/static/src/img/snippets_demo/s_faq_horizontal_1.jpg" data-mimetype-before-conversion="image/jpeg">
                             <p><br>The first step in the onboarding process is <b>account creation</b>. This involves signing up on our platform using your email address or social media accounts. Once you’ve created an account, you will receive a confirmation email with a link to activate your account. Upon activation, you’ll be prompted to complete your profile, which includes setting up your preferences, adding any necessary payment information, and selecting the initial features or modules you wish to use.</p>
                             <p>Next, you will be introduced to our <b>setup wizard</b>, which is designed to guide you through the basic configuration of the platform. The wizard will help you configure essential settings such as language, time zone, and notifications.</p>
-                            <p><a href="#">Read More <i class="fa fa-angle-right" role="img"></i></a></p>
+                            <p><a href="#test">Read More <i class="fa fa-angle-right" role="img"></i></a></p>
                         </span>
                         </article>
                     </div>
@@ -70,7 +70,7 @@ const getTemplate = function (headerType) {
                             <p>Our support team is available 24/7 to assist with any issues or questions you may have, ensuring that help is always within reach.</p>
                             <p>Additionally, we offer a comprehensive knowledge base, including detailed documentation, video tutorials, and community forums where you can connect with other users and share insights.</p>
                             <p>We also provide regular updates and new features based on user feedback, ensuring that our platform continues to evolve to meet your needs.</p>
-                            <p><a href="#" class="btn btn-secondary">Documentation</a></p>
+                            <p><a href="#test" class="btn btn-secondary">Documentation</a></p>
                         </span>
                         </article>
                     </div>

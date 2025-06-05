@@ -2,10 +2,10 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="html_editor.navbarLinkPopover" t-inherit="html_editor.linkPopover">
-        <xpath expr="//a[@title='Remove Link']" position="replace">
-            <a href="#" class="ms-2 js_edit_menu text-dark" t-on-click="onClickEditMenu" title="Edit Menu">
+        <xpath expr="//button[@title='Remove Link']" position="replace">
+            <button class="ms-2 js_edit_menu text-dark border-0 bg-transparent p-0" t-on-click="onClickEditMenu" title="Edit Menu">
                 <i class="fa fa-sitemap"></i>
-            </a>
+            </button>
         </xpath>
     </t>
 

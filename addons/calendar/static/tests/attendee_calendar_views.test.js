@@ -122,7 +122,7 @@ test("Linked record rendering", async () => {
     await changeScale("week");
     await clickEvent(eventId);
     expect(".fa-link").toHaveCount(1, { message: "A link icon should be present" });
-    expect("li a[href='#']").toHaveText(display_name);
+    expect("li button").toHaveText(display_name);
 });
 
 test("Default duration rendering", async () => {

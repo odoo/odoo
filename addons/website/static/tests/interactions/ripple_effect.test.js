@@ -14,7 +14,7 @@ describe.current.tags("interaction_dev");
 test("ripple_effect introduces an element on click", async () => {
     const { core } = await startInteractions(`
         <div id="wrapwrap">
-            <a class="btn" href="#">Click here</a>
+            <a class="btn" href="#test">Click here</a>
         </div>
     `);
     expect(core.interactions).toHaveLength(1);

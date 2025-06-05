@@ -13,7 +13,7 @@
                 <div class="flex-grow-1 text-center" t-att-class="{ 'disable-buttons': !posState.has_chart_template || loadScenario.status === 'loading' }">
                     <p class="h1 text-primary mt-4" t-if="!posState.has_pos_config">Choose your store</p>
                     <p t-if="!posState.has_chart_template" class="h2 m-3">
-                        Please <a href="#" class="btn-link o_form_uri" role="button" t-on-click="() => action.doAction('account.action_account_config')">install a chart of accounts</a> to activate the buttons.
+                        Please <button class="btn btn-link o_form_uri p-0 fs-2" role="button" t-on-click="() => action.doAction('account.action_account_config')">install a chart of accounts</button> to activate the buttons.
                     </p>
                     <br />
                     <div t-attf-class="d-flex {{posState.is_restaurant_installed ? 'flex-column' : 'flex-column-reverse'}}">

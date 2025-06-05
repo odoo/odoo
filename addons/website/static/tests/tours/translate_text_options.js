@@ -38,7 +38,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Click edit button",
-            trigger: ".o_menu_systray .o_edit_website_container button",
+            trigger: ".o_menu_systray .o_edit_website_container .o-dropdown-toggle-custo",
             run: "click",
         },
         {

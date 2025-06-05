@@ -184,11 +184,11 @@
                     <ul class="nav o_survey_results_topbar_dropdown_filters align-items-center">
                         <t t-set="dropdown_item_classes" t-translation="off">dropdown-item d-flex align-items-center justify-content-between</t>
                         <li class="nav-item dropdown me-2 my-1">
-                            <a href="#" role="button" data-bs-toggle="dropdown"
+                            <button role="button" data-bs-toggle="dropdown"
                                t-attf-class="btn btn-outline-primary dropdown-toggle #{'active' if search_finished else ''}">
                                 <span t-if="search_finished">Completed surveys</span>
                                 <span t-else="">All surveys</span>
-                            </a>
+                            </button>
                             <div class="dropdown-menu">
                                 <a t-attf-class="#{dropdown_item_classes} filter-finished-or-not #{'active' if not search_finished else ''}">
                                     <span>All surveys</span>
@@ -201,12 +201,12 @@
                             </div>
                         </li>
                         <li t-if="survey.scoring_type != 'no_scoring'" class="nav-item dropdown me-2 my-1">
-                            <a href="#" role="button" data-bs-toggle="dropdown"
+                            <button role="button" data-bs-toggle="dropdown"
                                t-attf-class="btn btn-outline-primary dropdown-toggle #{'active' if search_passed_or_failed else ''}">
                                 <span t-if="search_failed">Failed only</span>
                                 <span t-elif="search_passed">Passed only</span>
                                 <span t-else="">Passed and Failed</span>
-                            </a>
+                            </button>
                             <div class="dropdown-menu">
                                 <a t-attf-class="#{dropdown_item_classes} filter-passed-and-failed #{'active' if not search_passed_or_failed else ''}">
                                     <span>Passed and Failed</span>
@@ -467,7 +467,7 @@
                     <t t-set="total" t-value="ceil(non_skipped_answers_count / page_record_limit) + 1"/>
                     <li t-foreach="range(1, total)" t-as="num"
                         t-att-class="'page-item o_survey_js_results_pagination %s' % ('active' if num == 1 else '')">
-                        <a href="#" class="page-link" t-esc="num"></a>
+                        <button class="page-link" t-esc="num"></button>
                     </li>
                 </ul>
                 <button class="btn btn-sm btn-primary mx-0 my-3 o_survey_question_answers_show_btn">Show All</button>

@@ -192,8 +192,12 @@
             p, p > *, li, li > * {
                 color: #adadad;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 color: #36a6d2;
+            }
+            button.btn.btn-primary, button.btn.btn-outline-primary, button.btn.btn-fill-primary {
+                background-color: #36a6d2;
+                border-color: #36a6d2;
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
                 background-color: #36a6d2;
@@ -248,7 +252,7 @@
                         <h1>Breaking IT news
                             <br/>and Analysis</h1>
                         <p style="text-align: left;">Our roundup of the most popular and latest tech related videos from last week.<br/></p>
-                        <p style="text-align:left;"><a class="btn btn-primary" href="#">VISIT OUR WEBSITE</a></p>
+                        <p style="text-align:left;"><button class="btn btn-primary">VISIT OUR WEBSITE</button></p>
                     </div>
                     <div class="col-lg-5 px-0">
                         <img class="img-fluid o_we_custom_image" src="/web_editor/image_shape/mass_mailing_themes.s_tech_default_image/web_editor/geometric/geo_cornered_triangle.svg" data-shape="web_editor/geometric/geo_cornered_triangle" data-file-name="text_image-cornered_triangle.svg" data-shape-colors=";;;;" data-original-mimetype="image/jpeg"/>
@@ -272,7 +276,7 @@
                                 <p>Modern smartphones have all the built-in tech equal to a majority of the current professional cameras.</p>
                                 <a class="btn btn-primary" t-att-href="website_url_or_none"><span class="fa fa-play" />&amp;nbsp;&amp;nbsp;WATCH VIDEO</a>
                                 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;
-                                <a class="btn btn-link" href="#">READ MORE</a>
+                                <button class="btn btn-link">READ MORE</button>
                             </div>
                         </div>
                     </div>
@@ -361,8 +365,12 @@
             p, p > *, li, li > * {
                 font-family: Georgia, Times, "Times New Roman", serif;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 color: #C69678;
+            }
+            button.btn.btn-primary, button.btn.btn-outline-primary, button.btn.btn-fill-primary {
+                background-color: #C69678;
+                border-color: #C69678;
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
                 background-color: #C69678;
@@ -503,7 +511,7 @@
             p, p > *, li, li > * {
                 font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 color: #6c757d;
             }
             hr {
@@ -546,30 +554,30 @@
                             <hr class="s_hr_1px s_hr_solid"/>
                         </div>
                         <p>
-                            <a class="btn btn-link" style="text-align:left" href="#">
+                            <button class="btn btn-link" style="text-align:left">
                                 Interview with Janet James&amp;nbsp;
                                 <span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                             <br/>
-                            <a class="btn btn-link" style="text-align:left" href="#">
+                            <button class="btn btn-link" style="text-align:left">
                                 Destinations for an eco-holiday&amp;nbsp;
                                 <span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                             <br/>
-                            <a class="btn btn-link" style="text-align:left" href="#">
+                            <button class="btn btn-link" style="text-align:left">
                                 Top 5 energy-boosting morning routines&amp;nbsp;
                                 <span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                             <br/>
-                            <a class="btn btn-link" style="text-align:left" href="#">
+                            <button class="btn btn-link" style="text-align:left">
                                 Delicious recipes from around the world&amp;nbsp;
                                 <span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                             <br/>
-                            <a class="btn btn-link" style="text-align:left" href="#">
+                            <button class="btn btn-link" style="text-align:left">
                                 Rainy day ideas&amp;nbsp;
                                 <span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                         </p>
                     </div>
                 </div>
@@ -583,28 +591,28 @@
                 <div class="row">
                     <div class="col-lg-6 o_cc">
                         <h3><font style="background-color: rgb(231, 148, 57);">TRAVEL</font></h3>
-                        <a href="#">
+                        <span>
                             <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_magazine/s_default_image_product_2.jpg" alt="Man on a rock looking at mountains in the distance" style="width: 100% !important; padding: 15px 0px;"/>
-                        </a>
+                        </span>
                         <h2 style="text-align: left;">Destinations for an eco-holiday</h2>
                         <p style="text-align: left;">Bitten by the travel bug but looking to travel consciously? Eco-travel is the way forward.</p>
                         <p style="text-align: right;">
-                            <a href="#" class="btn btn-link">
+                            <button class="btn btn-link">
                                 Find out more&amp;nbsp;<span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                         </p>
                     </div>
                     <div class="col-lg-6 o_cc">
                         <h3><font style="background-color: rgb(231, 99, 99);">LIFESTYLE</font></h3>
-                        <a href="#">
+                        <span>
                             <img class="img-fluid o_we_custom_image" src="/mass_mailing_themes/static/src/img/theme_magazine/s_default_image_product_1.jpg" alt="Woman having breakfast in bed" style="width: 100% !important; padding: 15px 0px;"/>
-                        </a>
+                        </span>
                         <h2 style="text-align: left;">Top 5 energy-boosting morning routines</h2>
                         <p style="text-align: left;">Imagine waking up with more energy, more flexibility, with less stress and fewer instances of anxiously rushing out the door.</p>
                         <p style="text-align: right;">
-                            <a href="#" class="btn btn-link">
+                            <button class="btn btn-link">
                                 Find out more&amp;nbsp;<span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                         </p>
                     </div>
                 </div>
@@ -621,9 +629,9 @@
                         <h2>Delicious recipes from around the world</h2>
                         <p>Travel without leaving your kitchen with these international recipes. From Canada to Australia, Mexico to Sweden, and everywhere in between.</p>
                         <div style="text-align:right">
-                            <a href="#" class="btn btn-link">
+                            <button class="btn btn-link">
                                 Read More&amp;nbsp;<span class="fa fa-angle-right"/>
-                            </a>
+                            </button>
                         </div>
                     </div>
                     <div class="col-lg-6 px-0">
@@ -692,10 +700,14 @@
             p, p > *, li, li > * {
                 color: #6c757d;
             }
-            a:not(.btn), a.btn.btn-link{
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 color: #BA0013;
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
+                background-color: #BA0013;
+                border-color: #BA0013;
+            }
+            button.btn.btn-primary, button.btn.btn-outline-primary, button.btn.btn-fill-primary {
                 background-color: #BA0013;
                 border-color: #BA0013;
             }
@@ -736,7 +748,7 @@
                    <span style="font-size: 12px; font-weight: bolder;">Customer Service</span>
                 </p>
                 <p style="text-align: center;">
-                    <a role="button" href="#" class="btn btn-primary">READ MORE</a>
+                    <button role="button" class="btn btn-primary">READ MORE</button>
                 </p>
             </div>
         </div>
@@ -790,10 +802,14 @@
                 font-size: 18px;
                 font-weight: bolder;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 color: #000000;
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
+                background-color: #000000;
+                border-color: #000000;
+            }
+            button.btn.btn-primary, button.btn.btn-outline-primary, button.btn.btn-fill-primary {
                 background-color: #000000;
                 border-color: #000000;
             }
@@ -928,9 +944,14 @@
                 font-weight: bolder;
                 color: #543427;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 text-decoration-line: underline;
                 color: #397B21;
+            }
+            button.btn.btn-primary, button.btn.btn-outline-primary, button.btn.btn-fill-primary {
+                color: #543427;
+                background-color: #D3C5B1;
+                border-color: #D3C5B1;
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
                 color: #543427;
@@ -1034,22 +1055,22 @@
                         <h3>DON'T MISS THIS</h3>
                         <ul>
                             <li>
-                                <a href="#" target="_blank" data-original-title="" title="">10 Books To Read in 2022</a>
+                                <button class="btn btn-link p-0" target="_blank" data-original-title="" title="">10 Books To Read in 2022</button>
                             </li>
                             <li>
-                                <a href="#" target="_blank" data-original-title="" title="">Find Out Who's Employee Of The Month</a>
+                                <button class="btn btn-link p-0" target="_blank" data-original-title="" title="">Find Out Who's Employee Of The Month</button>
                             </li>
                             <li>
-                                <a href="#" target="_blank" data-original-title="" title="">Why You Need Two Types of Content Strategists</a>
+                                <button class="btn btn-link p-0" target="_blank" data-original-title="" title="">Why You Need Two Types of Content Strategists</button>
                             </li>
                             <li>
-                                <a href="#" target="_blank" data-original-title="" title="">7 Ways to Nurture Creativity</a>
+                                <button class="btn btn-link p-0" target="_blank" data-original-title="" title="">7 Ways to Nurture Creativity</button>
                             </li>
                             <li>
-                                <a href="#" target="_blank" data-original-title="" title="">Infographic: Our Company Throughout The Generations</a>
+                                <button class="btn btn-link p-0" target="_blank" data-original-title="" title="">Infographic: Our Company Throughout The Generations</button>
                             </li>
                             <li>
-                                <a href="#" target="_blank" data-original-title="" title="">7 Unexpected Signs You're Good At Your Job</a>
+                                <button class="btn btn-link p-0" target="_blank" data-original-title="" title="">7 Unexpected Signs You're Good At Your Job</button>
                             </li>
                         </ul>
                     </div>
@@ -1097,7 +1118,7 @@
             p, p > *, li, li > * {
                 font-size: 16px;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 text-decoration-line: underline;
                 color: #212529;
             }
@@ -1108,6 +1129,10 @@
             a.btn.btn-secondary, a.btn.btn-outline-secondary, a.btn.btn-fill-secondary {
                 color: #CE0000;
                 background-color: #FFFFFF;
+                border-color: #CE0000;
+            }
+            button.btn.btn-primary, button.btn.btn-outline-primary, button.btn.btn-fill-primary {
+                background-color: #CE0000;
                 border-color: #CE0000;
             }
         </style>
@@ -1244,7 +1269,7 @@
             <div class="container s_allow_columns">
                 <img src="/mass_mailing_themes/static/src/img/theme_newsletter/FPsignature.gif" style="width: 125px" alt=""/>
                 <p style="text-align:center;" class="pt32">
-                    <a role="button" href="#" class="btn btn-primary btn-lg" target="_blank">&amp;nbsp;&amp;nbsp;Comment on this post&amp;nbsp;&amp;nbsp;</a>
+                    <button role="button" class="btn btn-primary btn-lg" target="_blank">&amp;nbsp;&amp;nbsp;Comment on this post&amp;nbsp;&amp;nbsp;</button>
                 </p>
             </div>
         </div>
@@ -1293,7 +1318,7 @@
                 font-size: 18px;
                 font-weight: bolder;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 color: #35979c;
             }
         </style>
@@ -1311,7 +1336,7 @@
             <div class="container s_allow_columns">
                 <p>Registration is free, but mandatory:</p>
                 <p style="text-align: center;">
-                    <a href="#" class="btn btn-primary btn-lg">Save your seat now</a>
+                    <button class="btn btn-primary btn-lg">Save your seat now</button>
                 </p>
                 <p style="text-align: center;">
                     <span class="font-weight: bolder">
@@ -1399,7 +1424,7 @@
         </div>
         <div class="s_text_block o_mail_snippet_general px-3 pt0 pb4" data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
-                <p>For more information, check the event page : <a href="#" target="_blank" rel="noreferrer">[link]</a>.</p>
+                <p>For more information, check the event page : <button class="btn btn-link p-0" target="_blank" rel="noreferrer">[link]</button>.</p>
                 <p>We're on the starting blocks to prepare an incredible event for you!
                     <br/>We hope to see you there.
                 </p>
@@ -1425,7 +1450,7 @@
                 font-size: 18px;
                 font-weight: bolder;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link {
                 color: #35979c;
             }
         </style>
@@ -1438,8 +1463,8 @@
                 </div>
                 <p>Here are some photos taken during the event:</p>
                 <ul>
-                    <li><a href="#" target="_blank">Link 1</a></li>
-                    <li><a href="#" target="_blank">Link 2</a></li>
+                    <li><button class="btn btn-link p-0" target="_blank">Link 1</button></li>
+                    <li><button class="btn btn-link p-0" target="_blank">Link 2</button></li>
                 </ul>
                 <p>Don't hesitate to send us more!</p>
             </div>
@@ -1465,10 +1490,10 @@
             <div class="container s_allow_columns">
                 <p>Here are the links to our sponsors' websites if you wish to meet them:</p>
                 <ul>
-                    <li><a href="#" target="_blank">Link 1</a></li>
-                    <li><a href="#" target="_blank">Link 2</a></li>
-                    <li><a href="#" target="_blank">Link 3</a></li>
-                    <li><a href="#" target="_blank">Link 4</a></li>
+                    <li><button class="btn btn-link p-0" target="_blank">Link 1</button></li>
+                    <li><button class="btn btn-link p-0" target="_blank">Link 2</button></li>
+                    <li><button class="btn btn-link p-0" target="_blank">Link 3</button></li>
+                    <li><button class="btn btn-link p-0" target="_blank">Link 4</button></li>
                 </ul>
                 <p>You may test Odoo for free by clicking <a href="https://odoo.com/trial" target="_blank">here</a>.</p>
             </div>
@@ -1515,7 +1540,7 @@
                 color: rgb(91, 119, 143);
                 font-size: 14px;
             }
-            a:not(.btn), a.btn.btn-link {
+            a:not(.btn), a.btn.btn-link, button.btn.btn-link, button.btn-link, button.btn-link {
                 color: rgb(20, 102, 184);
             }
             a.btn.btn-primary, a.btn.btn-outline-primary, a.btn.btn-fill-primary {
@@ -1531,15 +1556,20 @@
                 border-top-color: rgb(67, 129, 219);
                 border-top-width: 2px;
             }
+            button.btn.btn-primary, button.btn.btn-outline-primary, button.btn.btn-fill-primary {
+                color: rgb(255, 255, 255);
+                background-color: rgb(67, 128, 219);
+                font-size: 14px;
+            }
         </style>
         <div class="s_header_logo o_mail_block_header_logo o_mail_snippet_general" data-snippet="s_mail_block_header_logo" data-name="Centered Logo" style="background-color: rgb(220, 234, 255);">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4"></div>
                     <div class="col-lg-4 pt16 pb16" style="text-align: center;">
-                        <a style="text-decoration:none;" href="#" target="_blank">
+                        <span style="text-decoration:none;" target="_blank">
                             <font style="font-size: 24px; background-color: rgb(20, 102, 184);" class="text-o-color-4">A+</font> <font style="color: rgb(20, 102, 184); font-size: 24px;"><span style="font-weight: normal">Training</span></font>
-                        </a>
+                        </span>
                     </div>
                     <div class="col-lg-4" style="text-align: right;"></div>
                 </div>
@@ -1581,7 +1611,7 @@
                         <p>Getting practical experience can be as likely as getting struck by lightning – <span style="font-style: italic;">thank you, coronavirus</span> – but, you can take things into your own hands and use your free time to upskill.</p>
                         <p><span style="font-weight: bolder;">And what better field to upskill in than software development?</span> Jobs have been steadily booming for years, and will continue to do so. By taking some of these free courses, you can make your CV more competitive and your portfolio more interesting.</p>
                         <p></p>
-                        <p><a href="#" target="_blank" class="btn btn-primary flat btn-lg"><span style="font-weight: bolder;">Register now</span></a></p>
+                        <p><button target="_blank" class="btn btn-primary flat btn-lg"><span style="font-weight: bolder;">Register now</span></button></p>
                     </div>
                 </div>
             </div>

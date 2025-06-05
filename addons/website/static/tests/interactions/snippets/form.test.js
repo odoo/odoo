@@ -88,7 +88,7 @@ const formTemplate = /* html */ `
                         <div class="mb-0 py-2 col-12 s_website_form_submit text-end s_website_form_no_submit_label" data-name="Submit Button">
                             <div style="width: 200px;" class="s_website_form_label"></div>
                             <span id="s_website_form_result"></span>
-                            <a href="#" role="button" class="btn btn-primary s_website_form_send">Submit</a>
+                            <a href="#test" role="button" class="btn btn-primary s_website_form_send">Submit</a>
                         </div>
                     </div>
                 </form>

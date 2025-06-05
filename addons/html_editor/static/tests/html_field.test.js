@@ -343,7 +343,7 @@ test("XML-like self-closing elements are fixed in readonly mode", async () => {
     Partner._records = [
         {
             id: 1,
-            txt: `<a href="#"/>outside<a href="#">inside</a>`,
+            txt: `<a href="#test"/>outside<a href="#test">inside</a>`,
         },
     ];
     await mountView({
@@ -359,7 +359,7 @@ test("XML-like self-closing elements are fixed in readonly mode", async () => {
     expect(".odoo-editor-editable").toHaveCount(0);
     expect(`[name="txt"] .o_readonly`).toHaveCount(1);
     expect(`[name="txt"] .o_readonly`).toHaveInnerHTML(
-        `<a href="#" target="_blank" rel="noreferrer"></a>outside<a href="#" target="_blank" rel="noreferrer">inside</a>`
+        `<a href="#test" target="_blank" rel="noreferrer"></a>outside<a href="#test" target="_blank" rel="noreferrer">inside</a>`
     );
 });
 
@@ -367,7 +367,7 @@ test("XML-like self-closing elements are fixed in editable mode", async () => {
     Partner._records = [
         {
             id: 1,
-            txt: `<a href="#"/>outside<a href="#">inside</a>`,
+            txt: `<a href="#test"/>outside<a href="#test">inside</a>`,
         },
     ];
     await mountView({
@@ -383,7 +383,7 @@ test("XML-like self-closing elements are fixed in editable mode", async () => {
     expect(".odoo-editor-editable").toHaveCount(1);
     expect(`[name="txt"] .o_readonly`).toHaveCount(0);
     expect(`[name="txt"] .odoo-editor-editable`).toHaveInnerHTML(
-        `<div class="o-paragraph">outside<a href="#">inside</a></div>`
+        `<div class="o-paragraph">outside<a href="#test">inside</a></div>`
     );
 });
 
@@ -954,7 +954,7 @@ test("link preview in Link Popover", async () => {
     setSelectionInHtmlField(".test_target a");
     await animationFrame();
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
@@ -965,11 +965,11 @@ test("link preview in Link Popover", async () => {
     });
     // Click on Discard button to undo changes.
     await contains(".o-we-linkpopover .o_we_discard_link").click();
-    await waitFor("a.o_we_edit_link");
+    await waitFor("button.o_we_edit_link");
     expect(".test_target a").toHaveText("This website");
 
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("This website", {
         message: "The label input field should match the link's content",
     });
@@ -984,7 +984,7 @@ test("link preview in Link Popover", async () => {
     });
 
     // Click on the edit link icon
-    await contains("a.o_we_edit_link").click();
+    await contains("button.o_we_edit_link").click();
     expect(".o-we-linkpopover input.o_we_label_link").toHaveValue("New label", {
         message: "The label input field should match the link's content",
     });

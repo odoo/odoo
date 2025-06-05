@@ -162,7 +162,7 @@ var initTourSteps = function (eventName) {
 
 var browseTalksSteps = [{
     content: 'Browse Talks Menu',
-    trigger: 'a[href*="#"]:contains("Talks")',
+    trigger: 'button:contains("Talks")',
     run: "click",
 }, {
     content: 'Browse Talks Submenu',

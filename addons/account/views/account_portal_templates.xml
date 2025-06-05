@@ -240,7 +240,7 @@
     <template id="portal_invoice_error" name="Invoice error/warning display">
         <div class="row mr16">
             <div t-attf-class="'col-lg-12 mr16 ml16 alert alert-dismissable' #{'alert-danger' if error else 'alert-warning'}" role="alert">
-                <a href="#" class="close" data-bs-dismiss="alert" aria-label="close" title="close">×</a>
+                <button class="close btn btn-link p-0" data-bs-dismiss="alert" aria-label="close" title="close">×</button>
                 <t t-if="error == 'generic'" name="generic">
                     There was an error processing this page.
                 </t>
@@ -251,7 +251,7 @@
     <template id="portal_invoice_success" name="Invoice success display">
         <div class="row mr16">
             <div class="col-lg-12 mr16 ml16 alert alert-dismissable alert-success" role="status">
-                <a href="#" class="close" data-bs-dismiss="alert" aria-label="close" title="close">×</a>
+                <button class="close btn btn-link p-0" data-bs-dismiss="alert" aria-label="close" title="close">×</button>
             </div>
         </div>
     </template>

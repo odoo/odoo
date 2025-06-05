@@ -971,7 +971,7 @@ test("toolbar should close on open link popover (iframe)", async () => {
 
 test.tags("desktop");
 test("toolbar should close on edit link from preview", async () => {
-    await setupEditor(`<p><a href="#">[a]</a></p>`);
+    await setupEditor(`<p><a href="#test">[a]</a></p>`);
     expect(".o-we-toolbar").toHaveCount(1);
     await click(".o-we-toolbar .fa-link");
     await waitFor(".o-we-linkpopover");

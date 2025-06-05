@@ -9,7 +9,7 @@ import { getContent } from "../_helpers/selection";
 describe("button style", () => {
     test("editable button should have cursor text", async () => {
         const { el } = await setupEditor(
-            '<p><a href="#" class="btn btn-fill-primary">Link styled as button</a></p>'
+            '<p><a href="#test" class="btn btn-fill-primary">Link styled as button</a></p>'
         );
 
         const button = el.querySelector("a");
@@ -110,7 +110,7 @@ describe("Custom button style", () => {
         const { el } = await setupEditor("<p>[Hello]</p>", allowCustomOpt);
         await waitFor(".o-we-toolbar");
         await click(".o-we-toolbar .fa-link");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#", {
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#test", {
             confirm: false,
         });
         await click('select[name="link_type"]');
@@ -141,14 +141,14 @@ describe("Custom button style", () => {
         await animationFrame();
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="#" class="btn btn-fill-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello</a></p>'
+            '<p><a href="#test" class="btn btn-fill-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello</a></p>'
         );
 
         await click(".o_we_apply_link");
         await animationFrame();
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="#" class="btn btn-fill-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello[]</a></p>'
+            '<p><a href="#test" class="btn btn-fill-custom" style="color: #FF0000; background-color: #00FF00; border-width: 6px; border-color: #0000FF; border-style: dotted; ">Hello[]</a></p>'
         );
     });
 
@@ -156,7 +156,7 @@ describe("Custom button style", () => {
         const { el } = await setupEditor("<p>[Hello]</p>", allowTargetBlankOpt);
         await waitFor(".o-we-toolbar");
         await click(".o-we-toolbar .fa-link");
-        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#", {
+        await contains(".o-we-linkpopover input.o_we_href_input_link").edit("#test", {
             confirm: false,
         });
 
@@ -166,7 +166,7 @@ describe("Custom button style", () => {
         await animationFrame();
 
         expect(cleanLinkArtifacts(getContent(el))).toBe(
-            '<p><a href="#" target="_blank">Hello[]</a></p>'
+            '<p><a href="#test" target="_blank">Hello[]</a></p>'
         );
     });
 });

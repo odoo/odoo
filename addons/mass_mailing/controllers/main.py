@@ -543,6 +543,7 @@ class MassMailController(http.Controller):
         return True
 
     def _format_bl_request(self, mailing, document_id):
+        # TODO
         mailing_model_name = request.env['ir.model']._get(mailing.mailing_model_real).display_name
         return {
             'mailing_link': Markup(f'<a href="#" data-oe-model="mailing.mailing" data-oe-id="{mailing.id}">{escape(mailing.subject)}</a>'),

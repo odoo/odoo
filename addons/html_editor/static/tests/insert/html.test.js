@@ -615,12 +615,12 @@ describe("not collapsed selection", () => {
                 editor.shared.dom.insert(
                     parseHTML(
                         editor.document,
-                        '<p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p><p>\uFEFF<a href="#">\uFEFFlink\uFEFF</a>\uFEFF</p>'
+                        '<p>\uFEFF<a href="#test">\uFEFFlink\uFEFF</a>\uFEFF</p><p>\uFEFF<a href="#test">\uFEFFlink\uFEFF</a>\uFEFF</p>'
                     )
                 );
                 editor.shared.history.addStep();
             },
-            contentAfter: '<p><a href="#">link</a></p><p><a href="#">link</a>[]</p>',
+            contentAfter: '<p><a href="#test">link</a></p><p><a href="#test">link</a>[]</p>',
         });
     });
 });

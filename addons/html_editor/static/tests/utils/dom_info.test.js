@@ -357,7 +357,7 @@ describe("getDeepestPosition", () => {
         expect([node, offset]).toEqual([a, 1]);
     });
     test("should not skip zwnbsp", () => {
-        const [a] = insertTestHtml('\ufeff<a href="#">abc</a>');
+        const [a] = insertTestHtml('\ufeff<a href="#test">abc</a>');
         const editable = a.parentElement;
         const zwnbsp = editable.firstChild;
         const [node, offset] = getDeepestPosition(editable, 0);
@@ -413,14 +413,14 @@ describe("isEmptyBlock", () => {
     });
 
     test("should identify a tag with text as non-empty", () => {
-        const [a] = insertTestHtml('<a href="#">Link text</a>');
+        const [a] = insertTestHtml('<a href="#test">Link text</a>');
         const result = isEmptyBlock(a);
         expect(result).toBe(false);
     });
 
     test("should return false for a p containing media element", () => {
         const [p] = insertTestHtml(
-            '<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>'
+            '<p><a href="#test" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>'
         );
         const result = isEmptyBlock(p);
         expect(result).toBe(false);

@@ -1129,7 +1129,7 @@ export async function clickM2OHighlightedItem(el, fieldName, selector) {
 
 // X2Many
 export async function addRow(target, selector) {
-    await click(target.querySelector(`${selector ? selector : ""} .o_field_x2many_list_row_add a`));
+    await click(target.querySelector(`${selector ? selector : ""} .o_field_x2many_list_row_add button`));
 }
 
 export async function removeRow(target, index) {

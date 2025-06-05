@@ -9,11 +9,11 @@ function websiteCreateEventTourSteps() {
     return [
         {
             content: "Click here to add new content to your website.",
-            trigger: ".o_menu_systray .o_new_content_container > a",
+            trigger: ".o_menu_systray .o_new_content_container > button",
             tooltipPosition: "bottom",
             run: "click",
         }, {
-            trigger: "a[data-module-xml-id='base.module_website_event']",
+            trigger: "button[data-module-xml-id='base.module_website_event']",
             content: "Click here to create a new event.",
             tooltipPosition: "bottom",
             run: "click",
@@ -68,7 +68,7 @@ function websiteCreateEventTourSteps() {
             trigger: ":iframe body:not(.editor_enable)",
         },
         {
-            trigger: ".o_menu_systray_item.o_website_publish_container a",
+            trigger: ".o_menu_systray_item.o_website_publish_container button",
             content: "Click to publish your event.",
             tooltipPosition: "top",
             run: "click",

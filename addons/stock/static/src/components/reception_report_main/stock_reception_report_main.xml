@@ -18,7 +18,7 @@
                 <h1>
                     <t t-if="data.docs">
                         <div t-foreach="data.docs" t-as="doc" t-key="doc.id">
-                            <a href="#" t-on-click.prevent="() => this.onClickTitle(doc.id)" view-type="form" t-esc="doc.name"/>
+                            <button class="btn btn-link p-0 fs-1" t-on-click.prevent="() => this.onClickTitle(doc.id)" view-type="form" t-esc="doc.name"/>
                             <span t-esc="doc.display_state" t-attf-class="ms-1 align-text-top badge rounded-pill bg-opacity-50 {{ doc.state == 'done' ? 'bg-success' : 'bg-info' }}"/>
                         </div>
                     </t>

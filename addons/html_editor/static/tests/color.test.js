@@ -318,17 +318,17 @@ test("should apply background color to a list of 3 links", async () => {
         contentBefore:
             "<ul>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             "[abc" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             "bcd" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             "cde]" +
             "</a>" +
             "</li>" +
@@ -337,21 +337,21 @@ test("should apply background color to a list of 3 links", async () => {
         contentAfter:
             "<ul>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             '<font style="background-color: rgb(255, 0, 0);">' +
             "[abc" +
             "</font>" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             '<font style="background-color: rgb(255, 0, 0);">' +
             "bcd" +
             "</font>" +
             "</a>" +
             "</li>" +
             "<li>" +
-            '<a href="#">' +
+            '<a href="#test">' +
             '<font style="background-color: rgb(255, 0, 0);">' +
             "cde]" +
             "</font>" +
@@ -363,11 +363,11 @@ test("should apply background color to a list of 3 links", async () => {
 
 test("should distribute color to texts and to button separately", async () => {
     await testEditor({
-        contentBefore: '<p>a[b<a href="#" class="btn">c</a>d]e</p>',
+        contentBefore: '<p>a[b<a href="#test" class="btn">c</a>d]e</p>',
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
         contentAfter:
             '<p>a<font style="color: rgb(255, 0, 0);">[b</font>' +
-            '<a href="#" class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
+            '<a href="#test" class="btn"><font style="color: rgb(255, 0, 0);">c</font></a>' +
             '<font style="color: rgb(255, 0, 0);">d]</font>e</p>',
     });
 });

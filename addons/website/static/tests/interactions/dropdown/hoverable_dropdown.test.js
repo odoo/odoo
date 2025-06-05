@@ -12,9 +12,9 @@ const dropdownTemplate = `
         <div class="dropdown" style="margin: auto;">
             <a class="dropdown-toggle">Dropdown</a>
             <div class="dropdown-menu">
-                <a href="#" style="display: block;">A</a>
-                <a href="#" style="display: block;">B</a>
-                <a href="#" style="display: block;">C</a>
+                <a href="#test" style="display: block;">A</a>
+                <a href="#test" style="display: block;">B</a>
+                <a href="#test" style="display: block;">C</a>
             </div>
         </div>
     </header>
