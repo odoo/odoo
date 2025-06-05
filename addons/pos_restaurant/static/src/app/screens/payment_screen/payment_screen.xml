@@ -8,7 +8,7 @@
 
         <xpath expr="//button[hasclass('button') and hasclass('next')]/span[hasclass('next_text')]" position="replace">
             <t t-if="pos.config.set_tip_after_payment and currentOrder.isPaid()">
-                <span class="back_text">Close Tab</span>
+                <span class="back_text">Validate</span>
             </t>
             <t t-else="">$0</t>
         </xpath>
@@ -16,7 +16,7 @@
     <t t-name="pos_restaurant.PaymentScreenBack" t-inherit="point_of_sale.PaymentScreenBack" t-inherit-mode="extension">
         <xpath expr="//button[hasclass('button') and hasclass('back')]/span[hasclass('back_text')]" position="replace">
             <t t-if="pos.config.set_tip_after_payment and currentOrder.isPaid()">
-                <span class="back_text">Keep Open</span>
+                <span class="back_text">Back</span>
             </t>
             <t t-else="">$0</t>
         </xpath>

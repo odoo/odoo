@@ -15,7 +15,7 @@ import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/p
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, onMounted } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
-import { ask, makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { sprintf } from "@web/core/utils/strings";
 import { serializeDateTime } from "@web/core/l10n/dates";
@@ -225,20 +225,38 @@ export class PaymentScreen extends Component {
         this.hardwareProxy.openCashbox();
     }
     async addTip() {
-        const tip = this.currentOrder.getTip();
+        const tip = this.pos.getTip();
         const change = this.currentOrder.getChange();
-        const value = tip === 0 && change > 0 ? change : tip;
-        const newTip = await makeAwaitable(this.dialog, NumberPopup, {
-            title: tip ? _t("Change Tip") : _t("Add Tip"),
-            startingValue: this.env.utils.formatCurrency(value, false),
-            formatDisplayedValue: (x) => `${this.pos.currency.symbol} ${x}`,
-        });
+        const amount = tip.amount === 0 && change > 0 ? change : tip.amount;
 
+        this.dialog.add(NumberPopup, {
+            title: tip ? _t("Change Tip") : _t("Add Tip"),
+            startingValue: tip.type === "percent" ? tip.value : this.env.utils.formatCurrency(amount, false),
+            startingType: tip.type || "fixed",
+            types: [
+                { name: "fixed", symbol: this.pos.currency.symbol },
+                { name: "percent", symbol: "%" },
+            ],
+            getPayload: (newTip, type) => this.onNewTip({ newTip, type, currentTip: tip.amount }),
+            formatDisplayedValue: (amount, type) => {
+                if (type === "fixed") {
+                    return `${this.pos.currency.symbol} ${amount}`;
+                }
+                if (type === "percent") {
+                    return `${amount} %`;
+                }
+                return amount;
+            },
+        });
+    }
+    async onNewTip({ newTip, type, currentTip }) {
         if (newTip === undefined) {
             return;
         }
 
-        await this.pos.setTip(parseFloat(newTip ?? ""));
+        const tipAmount = this.computeNewTip(newTip, type, currentTip);
+        await this.pos.setTip(tipAmount, type, newTip);
+
         const pLine =
             this.selectedPaymentLine &&
             (!this.selectedPaymentLine.isElectronic() ||
@@ -246,7 +264,7 @@ export class PaymentScreen extends Component {
                 ? this.selectedPaymentLine
                 : false;
 
-        if (!pLine || newTip === tip) {
+        if (!pLine || newTip === currentTip) {
             this.notification.add(
                 _t(
                     "The tip has been added to the order. However,the selected payment line does not allow tips to be added."
@@ -254,8 +272,19 @@ export class PaymentScreen extends Component {
             );
             return;
         }
-
-        pLine.setAmount(pLine.getAmount() - (tip || 0) + parseFloat(newTip));
+        pLine.setAmount(pLine.getAmount() - (currentTip || 0) + tipAmount);
+    }
+    computeNewTip(value, type, currentTip = 0) {
+        const valueParsed = parseFloat(value ?? "");
+        if (valueParsed === NaN) {
+            return 0;
+        }
+        let tip = valueParsed;
+        if (type === "percent") {
+            const total = this.currentOrder.getTotalWithTax() - currentTip;
+            tip = (total * valueParsed) / 100;
+        }
+        return this.pos.currency.round(tip);
     }
     async toggleShippingDatePicker() {
         if (!this.currentOrder.getShippingDate()) {
