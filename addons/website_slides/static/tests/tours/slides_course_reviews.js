@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add("course_reviews", {
             run() {
                 const a = document.querySelector("a[id=review-tab]");
                 if (a.textContent !== "Reviews (1)") {
-                    throw Error("Text should be 'Reviews (1)'.")
+                    throw Error("Text should be 'Reviews (1)'.");
                 }
                 a.click();
             },
@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("course_reviews", {
             trigger: ".modal.modal_shown.show button.o_portal_chatter_composer_btn",
             run() {
                 if (this.anchor.textContent !== "Update review") {
-                    throw Error("Button text should be 'Update review'.")
+                    throw Error("Button text should be 'Update review'.");
                 }
                 this.anchor.click();
             },
@@ -84,15 +84,29 @@ registry.category("web_tour.tours").add("course_reviews", {
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍'):not(:visible)",
+            trigger:
+                "#chatterRoot:shadow .o-mail-QuickReactionMenu-emoji span:contains('👍'):not(:visible)",
             run: "click",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReactions-add:not(:visible)",
+            trigger:
+                "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReactions-add:not(:visible)",
         },
         {
             trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-MessageReaction",
             run: "click",
+        },
+        { trigger: '#chatterRoot:shadow .o-mail-Message button:contains("Comment")', run: "click" },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer textarea",
+            run: "edit Thanks for enjoying my 'mid' course, you mid student",
+        },
+        {
+            trigger: "#chatterRoot:shadow .o-mail-Message .o-mail-Composer textarea",
+            run: "press ctrl+Enter",
+        },
+        {
+            trigger: `#chatterRoot:shadow .o_wrating_publisher_comment:contains("Thanks for enjoying my 'mid' course, you mid student")`,
         },
     ],
 });
