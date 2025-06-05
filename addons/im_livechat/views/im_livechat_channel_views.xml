@@ -140,10 +140,11 @@
                                         </div>
                                     </group>
                                 </group>
-                                <group>
+                                <group string="Session Limits">
                                     <group>
                                         <field name="max_sessions_mode" widget="radio" options="{'horizontal': true}"/>
                                         <field name="max_sessions" invisible="max_sessions_mode != 'limited'"/>
+                                        <field name="block_assignment_during_call"/>
                                     </group>
                                 </group>
                             </page>

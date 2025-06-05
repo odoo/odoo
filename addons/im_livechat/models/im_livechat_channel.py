@@ -46,13 +46,14 @@ class Im_LivechatChannel(models.Model):
         [("unlimited", "Unlimited"), ("limited", "Limited")],
         default="unlimited",
         string="Sessions per Operator",
-        help="If limited, operators will only handle the selected number of sessions at a time. While on a call, they will not receive new conversations.",
+        help="If limited, operators will only handle the selected number of sessions at a time.",
     )
     max_sessions = fields.Integer(
         default=10,
         string="Maximum Sessions",
         help="Maximum number of concurrent sessions per operator.",
     )
+    block_assignment_during_call = fields.Boolean("No Chats During Call", help="While on a call, agents will not receive new conversations.")
 
     # computed fields
     web_page = fields.Char('Web Page', compute='_compute_web_page_link', store=False, readonly=True,
@@ -105,8 +106,8 @@ class Im_LivechatChannel(models.Model):
         if livechat_channels := self.filtered(lambda c: c.max_sessions_mode == "limited"):
             possible_users = users if users is not None else livechat_channels.user_ids
             limited_users = possible_users.filtered(lambda user: "online" in user.im_status)
-            counts = dict(
-                ((partner, livechat_channels), count)
+            counts = {
+                (partner, livechat_channels): count
                 for (partner, livechat_channels, count) in self.env["discuss.channel"]._read_group(
                     [
                         ("livechat_operator_id", "in", limited_users.partner_id.ids),
@@ -116,18 +117,19 @@ class Im_LivechatChannel(models.Model):
                     groupby=["livechat_operator_id", "livechat_channel_id"],
                     aggregates=["__count"],
                 )
+            }
+
+        def is_available(user, channel):
+            return (
+                "online" in user.im_status
+                and (
+                    channel.max_sessions_mode == "unlimited"
+                    or counts.get((user.partner_id, channel), 0) < channel.max_sessions
+                )
+                # sudo: res.users - it's acceptable to check if the user is in call
+                and (not channel.block_assignment_during_call or not user.sudo().is_in_call)
             )
 
-        def is_available(user, livechat_channel):
-            partner = user.partner_id
-            return "online" in user.im_status and (
-                livechat_channel.max_sessions_mode == "unlimited"
-                or (
-                    counts.get((partner, livechat_channel), 0) < livechat_channel.max_sessions
-                    # sudo: res.users - it's acceptable to check if the user is in call
-                    and not user.sudo().is_in_call
-                )
-            )
         operators_by_livechat_channel = {}
         for livechat_channel in self:
             possible_users = users if users is not None else livechat_channel.user_ids
