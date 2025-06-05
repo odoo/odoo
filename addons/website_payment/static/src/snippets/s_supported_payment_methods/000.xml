@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website_payment.s_supported_payment_methods.icons">
+        <!-- The `image` field on the payment method has a max height of 64px -->
+        <t t-set="height" t-value="Math.min(height, 64)"/>
+        <!-- The `min-height` ensures that in the event that no payment methods are given, then the
+        element stays selectable. -->
+        <div class="d-flex flex-wrap gap-1" t-attf-style="min-height: #{height}px">
+            <t t-foreach="payment_methods" t-as="pm" t-key="pm.id">
+                <img
+                    class="img img-fluid rounded"
+                    t-att-alt="pm.name"
+                    t-att-title="pm.name"
+                    t-attf-src="/web/image/payment.method/#{pm.id}/image"
+                    t-attf-style="height: #{height}px;"
+                    loading="lazy"
+                />
+            </t>
+        </div>
+    </t>
+
+    <t t-name="website_payment.s_supported_payment_methods.view_providers">
+        <div class="alert alert-warning container my-0 px-3 border-2 border-warning">
+            <div class="row gx-1 text-warning">
+                <span class="col-auto me-auto">No published payment methods</span>
+                <a
+                    class="btn-view_providers col-auto text-warning"
+                    href="/odoo/action-payment.action_payment_provider"
+                    target="_blank"
+                >
+                    <strong><i class="oi oi-arrow-right"/> View providers</strong>
+                </a>
+            </div>
+        </div>
+    </t>
+</templates>
