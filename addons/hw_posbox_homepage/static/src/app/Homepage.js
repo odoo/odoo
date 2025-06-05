@@ -159,7 +159,7 @@ export class Homepage extends Component {
 					<ServerDialog />
 				</t>
 			</SingleData>
-            <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up" name="'Pairing Code'" value="state.data.pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
+            <SingleData t-if="state.data.pairing_code and !this.store.base.is_access_point_up and !state.data.pairing_code_expired" name="'Pairing Code'" value="state.data.pairing_code + ' - Enter this code in the IoT app in your Odoo database'" icon="'fa-code'"/>
             <SingleData t-if="state.data.pairing_code_expired" name="'Pairing Code'" value="'Code has expired - restart the IoT Box to generate a new one'" icon="'fa-code'"/>
             <SingleData  t-if="store.advanced and !store.base.is_access_point_up" name="'Six terminal'" value="state.data.six_terminal" icon="'fa-money'">
                 <t t-set-slot="button">
