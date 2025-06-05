@@ -297,6 +297,7 @@ class TestWorkEntry(TestWorkEntryBase):
         self.assertEqual(work_entry_types, [entry_type_1, entry_type_1, entry_type_1, entry_type_2])
 
     def test_work_entry_duration(self):
+<<<<<<< 8c5e3d745b80c61332dbb814e622294d047e2576:addons/hr_work_entry/tests/test_work_entry.py
         """ Test the duration of a work entry is rounded to the nearest minute """
         work_entry = self.env['hr.work.entry'].create({
             'name': 'Test Work Entry',
@@ -306,4 +307,46 @@ class TestWorkEntry(TestWorkEntryBase):
             'date_stop': datetime(2023, 10, 1, 9, 59, 59, 999999),
             'work_entry_type_id': self.work_entry_type.id,
         })
+||||||| edfa37271a0015a0d4acb17e6985a87e707e5f33:addons/hr_work_entry_contract/tests/test_work_entry.py
+        """ Test the duration of a work entry is rounded to the nearest minute """
+        work_entry = self.env['hr.work.entry'].create({
+            'name': 'Test Work Entry',
+            'employee_id': self.richard_emp.id,
+            'contract_id': self.richard_emp.contract_id.id,
+            'date_start': datetime(2023, 10, 1, 9, 0, 0),
+            'date_stop': datetime(2023, 10, 1, 9, 59, 59, 999999),
+            'work_entry_type_id': self.work_entry_type.id,
+        })
+=======
+        """ Test the duration of a work entry is rounded to the nearest minute and correctly calculated """
+        work_entry, one_day_entry, multi_day_entry = self.env['hr.work.entry'].create([
+            {
+                'name': 'Test Work Entry',
+                'employee_id': self.richard_emp.id,
+                'contract_id': self.richard_emp.contract_id.id,
+                'date_start': datetime(2023, 10, 1, 9, 0, 0),
+                'date_stop': datetime(2023, 10, 1, 9, 59, 59, 999999),
+                'work_entry_type_id': self.work_entry_type.id,
+            },
+            {
+                'name': 'Test One Day Entry',
+                'employee_id': self.richard_emp.id,
+                'contract_id': self.richard_emp.contract_id.id,
+                'date_start': datetime(2023, 10, 1, 9, 0, 0),
+                'date_stop': datetime(2023, 10, 2, 9, 30, 0),
+                'work_entry_type_id': self.work_entry_type.id,
+            },
+            {
+                'name': 'Multi-Day Entry',
+                'employee_id': self.richard_emp.id,
+                'contract_id': self.richard_emp.contract_id.id,
+                'date_start': datetime(2023, 10, 1, 0, 0, 0),
+                'date_stop': datetime(2023, 10, 8, 1, 0, 0),
+                'work_entry_type_id': self.work_entry_type.id,
+            }
+        ])
+
+>>>>>>> 497f85dddad5d2cc74cb2b6d70d226a6212feae2:addons/hr_work_entry_contract/tests/test_work_entry.py
         self.assertEqual(work_entry.duration, 1, "The duration should be 1 hour")
+        self.assertEqual(one_day_entry.duration, 24.5, "Duration should be 24 hours and half an hour")
+        self.assertEqual(multi_day_entry.duration, 169, "Duration should be 169 hours (7 days and one hour)")
