@@ -2106,3 +2106,115 @@ test("can group by property", async () => {
     expect(getEvaluatedCell(model, "A1").value).toBe("hello");
     expect(getEvaluatedCell(model, "A2").value).toBe(1);
 });
+
+test("date are between two years are correctly grouped by weeks", async () => {
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        {
+            active: true,
+            id: 5,
+            foo: 11,
+            bar: true,
+            product_id: 37,
+            date: "2024-01-03",
+        },
+        {
+            active: true,
+            id: 6,
+            foo: 12,
+            bar: true,
+            product_id: 41,
+            date: "2024-12-30",
+        },
+        {
+            active: true,
+            id: 7,
+            foo: 13,
+            bar: true,
+            product_id: 37,
+            date: "2024-12-31",
+        },
+        {
+            active: true,
+            id: 8,
+            foo: 14,
+            bar: true,
+            product_id: 37,
+            date: "2025-01-01",
+        },
+    ];
+    const { model } = await createSpreadsheetWithPivot({
+        serverData,
+        arch: /*xml*/ `
+            <pivot string="Partners">
+                <field name="date:year" type="col"/>
+                <field name="date:week" type="col"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+    });
+
+    // prettier-ignore
+    expect(getFormattedValueGrid(model, "B1:D4")).toEqual({
+            B1: "2024",     C1: "",         D1: "2025",
+            B2: "W1 2024",  C2: "W1 2025",  D2: "W1 2025",
+            B3: "Foo",      C3: "Foo",      D3: "Foo",
+            B4: "11",       C4: "25",       D4: "14",
+        });
+});
+
+test("date are between two years are correctly grouped by weeks and days", async () => {
+    const serverData = getBasicServerData();
+    serverData.models.partner.records = [
+        {
+            active: true,
+            id: 5,
+            foo: 11,
+            bar: true,
+            product_id: 37,
+            date: "2024-01-03",
+        },
+        {
+            active: true,
+            id: 6,
+            foo: 12,
+            bar: true,
+            product_id: 41,
+            date: "2024-12-30",
+        },
+        {
+            active: true,
+            id: 7,
+            foo: 13,
+            bar: true,
+            product_id: 37,
+            date: "2024-12-31",
+        },
+        {
+            active: true,
+            id: 8,
+            foo: 14,
+            bar: true,
+            product_id: 37,
+            date: "2025-01-01",
+        },
+    ];
+    const { model } = await createSpreadsheetWithPivot({
+        serverData,
+        arch: /*xml*/ `
+            <pivot string="Partners">
+                <field name="date:year" type="col"/>
+                <field name="date:week" type="col"/>
+                <field name="date:day" type="col"/>
+                <field name="foo" type="measure"/>
+            </pivot>`,
+    });
+
+    // prettier-ignore
+    expect(getFormattedValueGrid(model, "B1:E5")).toEqual({
+            B1: "2024",         C1: "",             D1: "",            E1: "2025",
+            B2: "W1 2024",      C2: "W1 2025",      D2: "",            E2: "W1 2025",
+            B3: "03 Jan 2024",  C3: "30 Dec 2024",  D3: "31 Dec 2024", E3: "01 Jan 2025",
+            B4: "Foo",          C4: "Foo",          D4: "Foo",         E4: "Foo",
+            B5: "11",           C5: "12",           D5: "13",          E5: "14",
+        })
+});
