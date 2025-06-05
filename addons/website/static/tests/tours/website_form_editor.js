@@ -388,13 +388,28 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         trigger: 'we-list table input:eq(0)',
         run: "edit Germany",
     }, {
+        content: "Check that the label has been changed on the snippet",
+        trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            ":has(option:contains('Germany'))",
+        run: function () {},
+    }, {
         content: "Change Option 2 Label",
         trigger: 'we-list table input:eq(1)',
         run: "edit Belgium",
     }, {
+        content: "Check that the label has been changed on the snippet",
+        trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            ":has(option:contains('Belgium'))",
+        run: function () {},
+    }, {
         content: "Change first Option 3 label",
         trigger: 'we-list table input:eq(2)',
         run: "edit France",
+    }, {
+        content: "Check that the label has been changed on the snippet",
+        trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            ":has(option:contains('France'))",
+        run: function () {},
     },
     {
         // TODO: Fix code to avoid this behavior
@@ -415,13 +430,26 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     },
     {
         content: "Change last Option label",
-        trigger: 'we-list table input:eq(3)',
+        trigger: "we-list table input:eq(3)[name='Item']",
         // TODO: Fix code to avoid blur event
         run: "edit Canada",
+    },
+    {
+        content: "Check that the label has been changed on the snippet",
+        trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            ":has(option:contains('Canada'))",
+        run: function () {},
     }, {
         content: "Remove Germany Option",
         trigger: '.o_we_select_remove_option:eq(0)',
         run: "click",
+    },
+    {
+        content: "Check that the Germany option was removed",
+        trigger: ":iframe .s_website_form_field.s_website_form_custom.s_website_form_required" +
+            ":has(label:contains('State'))" +
+            ":not(:has(option:contains('Germany')))",
+        run: function () {},
     },
     {
         // TODO: Fix code to avoid this behavior
@@ -435,7 +463,7 @@ registerWebsitePreviewTour("website_form_editor_tour", {
         run: "click",
     }, {
         content: "Change last option label with a number",
-        trigger: 'we-list table input:eq(3)',
+        trigger: "we-list table input:eq(3)[name='Item']",
         run: "edit 44 - UK",
     }, {
         content: "Check that the input value is the full option value",
