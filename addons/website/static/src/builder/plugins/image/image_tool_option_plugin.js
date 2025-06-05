@@ -15,6 +15,7 @@ import {
 } from "@html_builder/utils/option_sequence";
 import { ReplaceMediaOption, searchSupportedParentLinkEl } from "./replace_media_option";
 import { computeMaxDisplayWidth } from "./image_format_option";
+import { ImageSizeTag } from "./image_size_tag";
 
 export const REPLACE_MEDIA_SELECTOR = "img, .media_iframe_video, span.fa, i.fa";
 export const REPLACE_MEDIA_EXCLUDE =
@@ -32,6 +33,10 @@ class ImageToolOptionPlugin extends Plugin {
     ];
     static shared = ["canHaveHoverEffect"];
     resources = {
+        builder_header_middle_buttons: {
+            Component: ImageSizeTag,
+            selector: "img",
+        },
         builder_options: [
             withSequence(REPLACE_MEDIA, {
                 OptionComponent: ReplaceMediaOption,
