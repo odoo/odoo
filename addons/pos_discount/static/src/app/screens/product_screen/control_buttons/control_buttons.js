@@ -10,17 +10,34 @@ patch(ControlButtons.prototype, {
         this.dialog.add(NumberPopup, {
             title: _t("Discount Percentage"),
             startingValue: this.pos.config.discount_pc,
-            getPayload: (num) => {
-                const percent = Math.max(
-                    0,
-                    Math.min(100, this.env.utils.parseValidFloat(num.toString()))
-                );
-                this.applyDiscount(percent);
+            startingType: "percent",
+            types: [
+                { name: "fixed", symbol: this.pos.currency.symbol },
+                { name: "percent", symbol: "%" },
+            ],
+            getPayload: (num, type) => {
+                let value = num;
+                if (type === "percent") {
+                    value = Math.max(
+                        0,
+                        Math.min(100, this.env.utils.parseValidFloat(num.toString()))
+                    );
+                }
+                this.applyDiscount(value, type);
+            },
+            formatDisplayedValue: (x, type) => {
+                if (type === "fixed") {
+                    return `${this.pos.currency.symbol} ${x}`;
+                }
+                if (type === "percent") {
+                    return `${x} %`;
+                }
+                return x;
             },
         });
     },
     // FIXME business method in a compoenent, maybe to move in pos_store
-    async applyDiscount(percent) {
+    async applyDiscount(value, type) {
         const order = this.pos.getOrder();
         const lines = order.getOrderlines();
         const product = this.pos.config.discount_product_id;
@@ -51,8 +68,8 @@ patch(ControlButtons.prototype, {
         const globalDiscountBaseLines = accountTaxHelpers.prepare_global_discount_lines(
             baseLines,
             order.company_id,
-            "percent",
-            percent,
+            type,
+            value,
             {
                 computation_key: "global_discount",
                 grouping_function: groupingFunction,

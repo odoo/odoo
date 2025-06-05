@@ -78,6 +78,84 @@ export function totalAmountContains(value) {
         },
     ];
 }
+export function totalAmountWithTipContains(value, tip, { tip15, tip20, tip25 } = {}) {
+    const steps = [];
+
+    // No tip
+    if (tip === null) {
+        steps.push({
+            trigger: `.receipt-screen .o_payment_successful:contains("${value}")`,
+        });
+        steps.push({
+            trigger: `.receipt-screen .o_payment_successful:not(:contains("tip"))`,
+        });
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .order-container .orderline .product-name span:last-child`,
+            run: function () {
+                const productNames = document.querySelectorAll(
+                    `.receipt-screen .pos-receipt .order-container .orderline .product-name span:last-child`
+                );
+                const noTip = Array.from(productNames).every(
+                    (el) => !el.textContent.includes("Tips")
+                );
+                if (!noTip) {
+                    throw new Error("There should be no 'Tips' in the product names.");
+                }
+            },
+        });
+    }
+
+    // Has tip
+    else {
+        steps.push({
+            trigger: `.receipt-screen .o_payment_successful:contains("${value} +")`,
+        });
+        steps.push({
+            trigger: `.receipt-screen .o_payment_successful:contains("${tip} tip")`,
+        });
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .order-container .orderline .product-name span:last-child:contains("Tips")`,
+            run: function () {
+                const linesDetails = document.querySelectorAll(
+                    `.receipt-screen .pos-receipt .order-container .orderline .line-details`
+                );
+                const tipLine = Array.from(linesDetails).find((el) =>
+                    el.querySelector(".product-name span:last-child").textContent.includes("Tips")
+                );
+                if (!tipLine) {
+                    throw new Error("There should be a line with 'Tips' in the receipt.");
+                }
+                const tipAmount = tipLine.querySelector(".product-price").textContent;
+                if (!tipAmount.includes(tip)) {
+                    throw new Error(`Tip amount "${tip}" no included in "${tipAmount}".`);
+                }
+            },
+        });
+    }
+
+    // Tip 15%
+    if (tip15) {
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .tip-form .percentage-options .option:nth-child(1) .amount:contains("${tip15}")`,
+        });
+    }
+
+    // Tip 20%
+    if (tip20) {
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .tip-form .percentage-options .option:nth-child(2) .amount:contains("${tip20}")`,
+        });
+    }
+
+    // Tip 25%
+    if (tip25) {
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .tip-form .percentage-options .option:nth-child(3) .amount:contains("${tip25}")`,
+        });
+    }
+
+    return steps;
+}
 export function receiptAmountTotalIs(value) {
     return [
         {

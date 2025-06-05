@@ -5,11 +5,11 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
-import { TipReceipt } from "@pos_restaurant/app/components/tip_receipt/tip_receipt";
+import { TipReceipt } from "@point_of_sale/app/components/tip_receipt/tip_receipt";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
 export class TipScreen extends Component {
-    static template = "pos_restaurant.TipScreen";
+    static template = "point_of_sale.TipScreen";
     static props = {
         orderUuid: { type: String },
     };
@@ -101,7 +101,7 @@ export class TipScreen extends Component {
         this.goNextScreen();
     }
     goNextScreen() {
-        if (!this.pos.config.module_pos_restaurant) {
+        if (!this.pos.config.module_pos_restaurant && !this.pos.config.set_tip_after_payment) {
             this.pos.addNewOrder();
         }
         this.pos.navigate("ReceiptScreen", {

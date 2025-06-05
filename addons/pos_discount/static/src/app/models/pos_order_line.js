@@ -4,6 +4,7 @@ import { patch } from "@web/core/utils/patch";
 patch(PosOrderline.prototype, {
     /**
      * Checks if the current line applies for a global discount from `pos_discount.DiscountButton`.
+     * All lines are eligible for global discount except the discount product line itself.
      * @returns Boolean
      */
     isGlobalDiscountApplicable() {

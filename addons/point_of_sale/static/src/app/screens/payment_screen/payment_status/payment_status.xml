@@ -3,9 +3,18 @@
 
     <t t-name="point_of_sale.PaymentScreenStatus">
         <div t-if="props.order.payment_ids.length == 0" class="text-bg-light border text-center py-4 fs-4">
-    Please select a payment method 
+            Please select a payment method
         </div>
         <section t-else="" t-attf-class="paymentlines-container border-top pt-3 {{ props.order.getDue() > 0 ? 'text-danger' : 'text-success'}}">
+            <div t-if="this.state.tip.amount > 0" class="tip-container d-flex flex-lg-row justify-content-between align-items-center fs-2 mb-2 text-dark position-relative">
+                <span class="label pe-2" t-esc="tipLabel" />
+                <span class="align-self-end me-5 pe-5">
+                    <PriceFormatter price="tipText" />
+                </span>
+                <div class="position-absolute top-0 end-0 d-flex align-items-center h-100">
+                    <i class="fa fa-info-circle mx-2 px-3 fs-4" data-tooltip="The tip is already included inside the payment lines" />
+                </div>
+            </div>
             <div class="payment-status-container d-flex flex-column-reverse flex-lg-row justify-content-between fs-2">
                 <div t-if="this.props.order.hasRemainingAmount()" class="payment-status-remaining d-flex justify-content-between flex-grow-1">
                     <span class="label pe-2">Remaining</span>

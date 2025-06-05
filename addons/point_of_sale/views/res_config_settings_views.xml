@@ -122,6 +122,10 @@
                                             <label string="Tip Product" for="pos_tip_product_id" class="col-lg-3 o_light_label "/>
                                             <field name="pos_tip_product_id"/>
                                         </div>
+                                        <div invisible="not pos_iface_tipproduct">
+                                            <field name="pos_set_tip_after_payment" class="oe_inline"/>
+                                            <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment"/>
+                                        </div>
                                     </div>
                                 </setting>
                             </block>

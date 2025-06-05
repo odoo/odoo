@@ -12,6 +12,15 @@ export class NumberPopup extends Component {
         subtitle: { type: String, optional: true },
         buttons: { type: buttonsType, optional: true },
         startingValue: { type: [Number, String], optional: true },
+        types: {
+            type: Array,
+            optional: true,
+            element: {
+                name: { type: String },
+                symbol: { type: String, optional: true },
+            },
+        },
+        startingType: { type: String, optional: true },
         feedback: { type: Function, optional: true },
         formatDisplayedValue: { type: Function, optional: true },
         placeholder: { type: String, optional: true },
@@ -35,8 +44,13 @@ export class NumberPopup extends Component {
             triggerAtEscape: () => this.cancel(),
             triggerAtInput: ({ buffer }) => (this.state.buffer = buffer),
         });
+
+        const defaultType =
+            this.props.types?.find((type) => type.name === this.props.startingType) ||
+            this.props.types?.[0];
         this.state = useState({
             buffer: this.props.startingValue,
+            type: defaultType,
         });
     }
 
@@ -45,7 +59,7 @@ export class NumberPopup extends Component {
     }
 
     confirm() {
-        this.props.getPayload(this.state.buffer);
+        this.props.getPayload(this.state.buffer, this.state.type?.name);
         this.props.close();
     }
 

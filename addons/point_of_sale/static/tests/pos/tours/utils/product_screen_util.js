@@ -271,6 +271,17 @@ export function clickInternalNoteButton(buttonLabel) {
     ];
 }
 
+export function cancelOrder() {
+    return [
+        ...clickControlButton("Cancel Order"),
+        {
+            content: "Confirm cancel order",
+            trigger: ".o_dialog .modal-footer button:contains('Ok')",
+            run: "click",
+        },
+    ];
+}
+
 /**
  * Selects a given price list in the user interface. This function is designed to be used to select a specific price list.
  *
@@ -783,6 +794,22 @@ export function customerIs(name) {
 export function checkTotalAmount(amount) {
     return {
         trigger: `.order-summary .total:contains(${amount})`,
+    };
+}
+
+export function checkTotalAmountStriclyLessThan(amount) {
+    return {
+        content: `Check if the total amount is lesser than ${amount}`,
+        trigger: `.order-summary .total`,
+        run: function () {
+            const totalElement = document.querySelector(".order-summary .total");
+            const totalValue = parseFloat(totalElement.textContent.replace(/[^0-9.]+/g, ""));
+            if (totalValue > amount) {
+                throw new Error(
+                    `Expected total amount to be less than ${amount}, but got ${totalValue}`
+                );
+            }
+        },
     };
 }
 

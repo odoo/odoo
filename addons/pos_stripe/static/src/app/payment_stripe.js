@@ -213,13 +213,28 @@ export class PaymentStripe extends PaymentInterface {
     }
 
     async captureAfterPayment(processPayment, line) {
-        const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
-        if (capturePayment.charges) {
-            line.card_type = this.getCardBrandFromPaymentMethodDetails(
-                capturePayment.charges.data[0].payment_method_details
-            );
+        // Don't capture if the customer can tip, in that case we
+        // will capture later.
+        if (!this.canBeAdjusted(line.uuid)) {
+            const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+            if (capturePayment.charges) {
+                line.card_type = this.getCardBrandFromPaymentMethodDetails(
+                    capturePayment.charges.data[0].payment_method_details
+                );
+            }
+            line.transaction_id = capturePayment.id;
         }
-        line.transaction_id = capturePayment.id;
+    }
+
+    canBeAdjusted(uuid) {
+        var order = this.pos.getOrder();
+        var line = order.getPaymentlineByUuid(uuid);
+        return (
+            this.pos.config.set_tip_after_payment &&
+            line.payment_method_id.use_payment_terminal === "stripe" &&
+            line.card_type !== "interac" &&
+            (!line.card_type || !line.card_type.includes("eftpos"))
+        );
     }
 
     async capturePayment(paymentIntentId) {

@@ -148,6 +148,7 @@ class PosConfig(models.Model):
         help='This field is there to pass the id of the pos user group to the point of sale client.')
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one('product.product', string='Tip Product', default=_get_default_tip_product, help="This product is used as reference on customer receipts.")
+    set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
     default_bill_ids = fields.Many2many('pos.bill', string="Coins/Bills")
@@ -343,6 +344,10 @@ class PosConfig(models.Model):
                 pos_config.pos_session_duration = 0
                 pos_config.current_user_id = False
 
+    @api.depends('set_tip_after_payment')
+    def _compute_local_data_integrity(self):
+        super()._compute_local_data_integrity()
+
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
         for config in self:
@@ -446,6 +451,9 @@ class PosConfig(models.Model):
                 'company_id': self.env.company.id,
             })
         for vals in vals_list:
+            if not vals.get('iface_tipproduct', False):
+                vals['set_tip_after_payment'] = False
+
             self._check_header_footer(vals)
             IrSequence = self.env['ir.sequence'].sudo()
             val = {
@@ -482,11 +490,14 @@ class PosConfig(models.Model):
             prepa_printers_menuitem.active = self.sudo().env['pos.config'].search_count([('is_order_printer', '=', True)], limit=1) > 0
 
     @api.depends('use_pricelist', 'pricelist_id', 'available_pricelist_ids', 'payment_method_ids', 'limit_categories',
-        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment')
+        'iface_available_categ_ids', 'module_pos_hr', 'module_pos_discount', 'iface_tipproduct', 'default_preset_id', 'module_pos_appointment', 'set_tip_after_payment')
     def _compute_local_data_integrity(self):
         self.last_data_change = self.env.cr.now()
 
     def write(self, vals):
+        if 'iface_tipproduct' in vals and not vals['iface_tipproduct']:
+            vals['set_tip_after_payment'] = False
+
         self._check_header_footer(vals)
         self._reset_default_on_vals(vals)
         if ('is_order_printer' in vals and not vals['is_order_printer']):

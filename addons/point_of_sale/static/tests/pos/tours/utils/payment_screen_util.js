@@ -2,6 +2,7 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
+import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 /**
  * Clicks on the payment method and then performs checks if necessary.
@@ -398,5 +399,17 @@ export function shippingLaterHighlighted() {
     return {
         content: "Shipping later button is highlighted",
         trigger: ".button:contains('Ship Later').highlight",
+    };
+}
+
+/**
+ * Tell if the tip container is shown.
+ */
+export function tipContainerIsShown(boolean = true) {
+    return {
+        content: `tip container is ${boolean ? "shown" : "not shown"}`,
+        trigger: boolean
+            ? ".payment-screen .tip-container"
+            : negate(".tip-container", ".payment-screen"),
     };
 }

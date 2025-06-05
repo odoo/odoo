@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.TipCell">
+        <div class="tip-cell" t-on-click.stop="editTip">
+            <t t-if="state.isEditing">
+                <input type="text" name="tip-amount" t-ref="autofocus" t-model="orderUiState.inputTipAmount" t-on-blur="onBlur" t-on-keydown="onKeydown" />
+            </t>
+            <div t-else="">
+                <t t-esc="tipAmountStr"></t>
+            </div>
+        </div>
+    </t>
+
+</templates>

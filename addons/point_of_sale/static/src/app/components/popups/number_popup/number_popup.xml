@@ -4,9 +4,14 @@
         <Dialog title="props.title" bodyClass="'d-flex flex-column justify-content-center'" size="'sm'">
             <div t-if="props.subtitle" class="subtitle p-1 mx-auto" t-esc="props.subtitle"/>
             <div class="input-symbol mb-3">
-                <div class="popup-input value active form-control form-control-lg text-center">
-                    <span t-if="this.state.buffer || !props.placeholder" class="input-value" t-esc="props.formatDisplayedValue(this.state.buffer || '')"/>
+                <div class="popup-input value active form-control form-control-lg text-center position-relative">
+                    <span t-if="this.state.buffer || !props.placeholder" class="input-value" t-esc="props.formatDisplayedValue(this.state.buffer || '', this.state.type?.name)"/>
                     <span t-else="" class="text-muted" t-esc="props.placeholder"/>
+                </div>
+                <div t-if="props.types &amp;&amp; props.types.length &gt; 1" class="number-popup-types row mx-0 mt-2 rounded">
+                    <t t-foreach="props.types" t-as="type" t-key="type.name">
+                        <button t-on-click="() => this.state.type = type" class="number-popup-type col btn btn-lg lh-lg o-default-button rounded-0 py-2" t-att-class="{ ['number-popup-type-' + type.name]: type?.name, 'btn-primary' : this.state.type?.name === type.name, 'btn-secondary' : this.state.type?.name !== type.name, 'rounded-start-2' : type_first, 'rounded-end-2' : type_last}" t-esc="type.symbol || ''"/>
+                    </t>
                 </div>
             </div>
             <div t-if="props.feedback(this.state.buffer)" class="p-2 mx-auto mt-n2 mb-2" t-esc="props.feedback(this.state.buffer)" />

@@ -717,14 +717,33 @@ export class PosStore extends WithLazyGetterTrap {
         line.setDiscount(val);
     }
 
-    async setTip(tip) {
+    async setTip(tip, type = "fixed", value = null) {
         const currentOrder = this.getOrder();
         const tipProduct = this.config.tip_product_id;
         let line = currentOrder.lines.find((line) => line.product_id.id === tipProduct.id);
 
-        if (line) {
+        // Helper to set tip info on the order
+        const setOrderTip = (amount, tipType, tipValue) => {
+            currentOrder.is_tipped = !!amount;
+            currentOrder.tip_amount = amount || false;
+            currentOrder.tip_type = amount ? tipType : false;
+            currentOrder.tip_value = amount ? tipValue || amount : false;
+        };
+
+        // Delete tip
+        if (line && !tip) {
+            line.delete();
+            setOrderTip(false, false, false);
+        }
+
+        // Update tip
+        else if (line) {
             line.setUnitPrice(tip);
-        } else {
+            setOrderTip(tip, type, value || tip);
+        }
+
+        // Add tip
+        else if (tip) {
             line = await this.addLineToCurrentOrder(
                 {
                     product_id: tipProduct,
@@ -733,11 +752,24 @@ export class PosStore extends WithLazyGetterTrap {
                 },
                 {}
             );
+            setOrderTip(tip, type, value || tip);
         }
-
-        currentOrder.is_tipped = true;
-        currentOrder.tip_amount = tip;
         return line;
+    }
+
+    getTip() {
+        const currentOrder = this.getOrder();
+        return currentOrder.is_tipped
+            ? {
+                  amount: currentOrder.tip_amount || 0,
+                  type: currentOrder.tip_type || "fixed",
+                  value: currentOrder.tip_value || currentOrder.tip_amount || 0,
+              }
+            : {
+                  amount: 0,
+                  type: "fixed",
+                  value: 0,
+              };
     }
 
     selectOrderLine(order, line) {

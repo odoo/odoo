@@ -93,6 +93,33 @@
                 </div>
                 <!-- handle xpath using before-footer! -->
                 <div class="before-footer"/>
+
+                <t t-if="order.config.set_tip_after_payment">
+                    <div class="tip-form py-3">
+                        <div class="title text-center mt-3">For convenience, we are providing the following gratuity calculations:</div>
+                        <div class="percentage-options percentage-options d-flex flex-nowrap mt-3">
+                            <t t-set="totalAmount" t-value="order.getTotalWithTax() - order.getTip()"/>
+                            <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                                <div>15%</div>
+                                <div class="amount">
+                                    <t t-esc="formatCurrency(totalAmount * 0.15)"></t>
+                                </div>
+                            </div>
+                            <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                                <div>20%</div>
+                                <div class="amount">
+                                    <t t-esc="formatCurrency(totalAmount * 0.20)"></t>
+                                </div>
+                            </div>
+                            <div class="option d-flex flex-column flex-nowrap align-items-center justify-content-center flex-grow-1">
+                                <div>25%</div>
+                                <div class="amount">
+                                    <t t-esc="formatCurrency(totalAmount * 0.25)"></t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
             </t>
 
             <!-- Footer -->
