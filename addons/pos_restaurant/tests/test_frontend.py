@@ -625,3 +625,15 @@ class TestFrontend(TestFrontendCommon):
         We can now transfer order from one table to another and from floating order to another etc.
         """
         self.start_pos_tour('test_transfering_orders', login="pos_user")
+
+    def test_no_kitchen_confirmation_for_deposit_money(self):
+        if not self.env["ir.module.module"].search([("name", "=", "pos_settle_due"), ("state", "=", "installed")]):
+            self.skipTest("pos_settle_due module is required for this test")
+
+        self.customer_account_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Customer Account',
+            'split_transactions': True,
+        })
+        self.pos_config.write({'payment_method_ids': [(4, self.customer_account_payment_method.id)]})
+        self.pos_config.with_user(self.pos_admin).open_ui()
+        self.start_pos_tour('test_no_kitchen_confirmation_for_deposit_money', login="pos_admin")
