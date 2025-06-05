@@ -38,6 +38,16 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             company_ids=[Command.set(cls.env.companies.ids)],
         )
 
+        cls.expense_user_manager_2 = mail_new_test_user(
+            cls.env,
+            name='Expense manager',
+            login='expense_manager_2',
+            email='expense_manager_2@example.com',
+            notification_type='email',
+            groups='base.group_user,hr_expense.group_hr_expense_manager',
+            company_ids=[Command.set(cls.env.companies.ids)],
+        )
+
         cls.expense_employee = cls.env['hr.employee'].create({
             'name': 'expense_employee',
             'user_id': cls.expense_user_employee.id,
