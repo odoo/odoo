@@ -19,7 +19,10 @@ patch(ActivityMenu.prototype, {
 
     openActivityGroup(group, filter = "all", newWindow) {
         // fetch the data from the button otherwise fetch the ones from the parent (.o_ActivityMenuView_activityGroup).
-        const context = {};
+        const context = {
+            // include archived records, as activities are more important than archived
+            'active_test': false,
+        };
         if (group.model === "crm.lead") {
             this.dropdown.close();
             if (filter === "my" || filter === "all") {
