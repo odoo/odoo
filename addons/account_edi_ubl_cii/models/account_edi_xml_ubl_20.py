@@ -294,20 +294,9 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         :param taxes_vals:  The tax details for the current invoice line.
         :return:            A python dictionary.
         """
-        product = line.product_id
-        taxes = line.tax_ids.flatten_taxes_hierarchy()
-        if self._context.get('convert_fixed_taxes'):
-            taxes = taxes.filtered(lambda t: t.amount_type != 'fixed')
         customer = line.move_id.commercial_partner_id
         supplier = line.move_id.company_id.partner_id.commercial_partner_id
-        tax_category_vals_list = self._get_tax_category_list(customer, supplier, taxes)
-        description = line.name and line.name.replace('\n', ' ')
-        return {
-            'description': description,
-            'name': product.name or description,
-            'sellers_item_identification_vals': {'id': product.code},
-            'classified_tax_category_vals': tax_category_vals_list,
-        }
+        return self._get_line_item_vals(line.product_id, line.name, customer, supplier, line.tax_ids)
 
     def _get_document_allowance_charge_vals_list(self, invoice, taxes_vals=None):
         """
@@ -378,6 +367,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
         :return:        A list of python dictionaries.
         """
         fixed_tax_charge_vals_list = []
+        allowance_vals = self._get_line_allowance_charge_vals(line.currency_id, line.price_subtotal, line.discount)
         if self._context.get('convert_fixed_taxes'):
             for grouping_key, tax_details in tax_values_list['tax_details'].items():
                 if grouping_key['tax_amount_type'] == 'fixed':
@@ -392,30 +382,6 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
 
             if not line.discount:
                 return fixed_tax_charge_vals_list
-
-        # Price subtotal with discount subtracted:
-        net_price_subtotal = line.price_subtotal
-        # Price subtotal without discount subtracted:
-        if line.discount == 100.0:
-            gross_price_subtotal = 0.0
-        else:
-            gross_price_subtotal = line.currency_id.round(net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0))
-
-        allowance_vals = {
-            'currency_name': line.currency_id.name,
-            'currency_dp': self._get_currency_decimal_places(line.currency_id),
-
-            # Must be 'false' since this method is for allowances.
-            'charge_indicator': 'false',
-
-            # A reason should be provided. In Odoo, we only manage discounts.
-            # Full code list is available here:
-            # https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
-            'allowance_charge_reason_code': 95,
-
-            # The discount should be provided as an amount.
-            'amount': gross_price_subtotal - net_price_subtotal,
-        }
 
         return [allowance_vals] + fixed_tax_charge_vals_list
 
@@ -626,6 +592,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             'DeliveryType_template': 'account_edi_ubl_cii.ubl_20_DeliveryType',
             'InvoicePeriodType_template': 'account_edi_ubl_cii.ubl_20_InvoicePeriodType',
             'MonetaryTotalType_template': 'account_edi_ubl_cii.ubl_20_MonetaryTotalType',
+            'ItemType_template': 'account_edi_ubl_cii.ubl_20_ItemType',
             'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_20_InvoiceLineType',
             'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_20_CreditNoteLineType',
             'DebitNoteLineType_template': 'account_edi_ubl_cii.ubl_20_DebitNoteLineType',
@@ -722,22 +689,22 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
         return {
-            'vat': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree),
-            'phone': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Telephone', tree),
-            'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
-            'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree) or
-                    self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree),
+            'vat': self._find_value(f'.//cac:{role}Party//cbc:CompanyID[string-length(text()) > 5]', tree),
+            'phone': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Telephone', tree),
+            'email': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:ElectronicMail', tree),
+            'name': self._find_value(f'.//cac:{role}Party//cac:Contact//cbc:Name', tree) or
+                    self._find_value(f'.//cac:{role}Party//cbc:RegistrationName', tree),
             'postal_address': self._get_postal_address(tree, role),
         }
 
     def _get_postal_address(self, tree, role):
         return {
-            'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
-            'street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:StreetName', tree),
-            'additional_street': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:AdditionalStreetName', tree),
-            'city': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CityName', tree),
-            'zip': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:PostalZone', tree),
-            'state_code': self._find_value(f'.//cac:{role}Party/cac:Party/cac:PostalAddress/cbc:CountrySubentityCode', tree),
+            'country_code': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cac:Country/cbc:IdentificationCode', tree),
+            'street': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cbc:StreetName', tree),
+            'additional_street': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cbc:AdditionalStreetName', tree),
+            'city': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cbc:CityName', tree),
+            'zip': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cbc:PostalZone', tree),
+            'state_code': self._find_value(f'.//cac:{role}Party//cac:PostalAddress/cbc:CountrySubentityCode', tree),
         }
 
     def _import_fill_invoice(self, invoice, tree, qty_factor):
@@ -791,7 +758,7 @@ class AccountEdiXmlUbl_20(models.AbstractModel):
             if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1
             else 'CreditNoteLine'
         )
-        invoice_line_vals, line_logs = self._import_invoice_lines(invoice, tree, './{*}' + line_tag, qty_factor)
+        invoice_line_vals, line_logs = self._import_lines(invoice, tree, './{*}' + line_tag, document_type=invoice.move_type, tax_type=invoice.journal_id.type, qty_factor=qty_factor)
         line_vals = allowance_charges_line_vals + invoice_line_vals
 
         invoice_values = {

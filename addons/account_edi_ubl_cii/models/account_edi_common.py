@@ -395,6 +395,9 @@ class AccountEdiCommon(models.AbstractModel):
             if vat:
                 partner.vat, _country_code = self.env['res.partner']._run_vat_checks(country, vat, validation='setnull')
             logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
+        elif not partner and not logs:
+            logs.append(_("Could not retrieve partner with details: Name: %(name)s, Vat: %(vat)s, Phone: %(phone)s, Email: %(email)s",
+                  name=name, vat=vat, phone=phone, email=email))
         if not partner.country_id and not partner.street and not partner.street2 and not partner.city and not partner.zip and not partner.state_id:
             partner.write({
                 'country_id': country.id,
@@ -508,19 +511,17 @@ class AccountEdiCommon(models.AbstractModel):
             logs.append(_("A payment of %s was detected.", formatted_amount))
         return logs
 
-    def _import_invoice_lines(self, invoice, tree, xpath, qty_factor):
+    def _import_lines(self, record, tree, xpath, document_type=False, tax_type=False, qty_factor=1):
         logs = []
         lines_values = []
         for line_tree in tree.iterfind(xpath):
-            line_values = self.with_company(invoice.company_id)._retrieve_invoice_line_vals(line_tree, invoice.move_type, qty_factor)
-            line_values['tax_ids'], tax_logs = self._retrieve_taxes(
-                invoice, line_values, invoice.journal_id.type,
-            )
+            line_values = self.with_company(record.company_id)._retrieve_invoice_line_vals(line_tree, document_type, qty_factor)
+            line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type)
             logs += tax_logs
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
             lines_values.append(line_values)
-            lines_values += self._retrieve_line_charges(invoice, line_values, line_values['tax_ids'])
+            lines_values += self._retrieve_line_charges(record, line_values, line_values['tax_ids'])
         return lines_values, logs
 
     def _retrieve_invoice_line_vals(self, tree, document_type=False, qty_factor=1):
@@ -802,3 +803,37 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _correct_invoice_tax_amount(self, tree, invoice):
         pass  # To be implemented by the format if needed
+
+    def _get_line_item_vals(self, product, description, customer, supplier, taxes):
+        flattened_taxes = taxes.flatten_taxes_hierarchy()
+        if self._context.get('convert_fixed_taxes'):
+            flattened_taxes = flattened_taxes.filtered(lambda t: t.amount_type != 'fixed')
+        oneline_description = description and description.replace('\n', ' ')
+        return {
+            'description': oneline_description or product.description,
+            'name': product.name or oneline_description,
+            'sellers_item_identification_vals': {'id': product.code},
+            'classified_tax_category_vals': self._get_tax_category_list(customer, supplier, flattened_taxes),
+        }
+
+    def _get_line_allowance_charge_vals(self, currency, net_price, discount):
+        if discount == 100.0:
+            gross_price = 0.0
+        else:
+            gross_price = currency.round(net_price / (1.0 - (discount or 0.0) / 100.0))
+        return {
+            'currency_name': currency.name,
+            'currency_dp': self._get_currency_decimal_places(currency),
+
+            # Must be 'false' since this method is for allowances.
+            'charge_indicator': 'false',
+
+            # A reason should be provided. In Odoo, we only manage discounts.
+            #     # Full code list is available here:
+            #     # https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
+            'allowance_charge_reason_code': '95',
+            'allowance_charge_reason': _("Discount"),
+
+            # The discount should be provided as an amount.
+            'amount': gross_price - net_price,
+        }
