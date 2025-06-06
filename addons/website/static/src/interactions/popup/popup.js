@@ -22,6 +22,13 @@ export class Popup extends Interaction {
         "_window": {
             "t-on-hashchange": this.onHashChange,
         },
+        ".modal:not(.s_popup_no_backdrop)": {
+            // Here, bootstrap's data-bs-backdrop attribute is not used and
+            // we use a custom click handler instead to dismiss the popup on
+            // click outside as we do not use bootstrap native backdrop.
+            // See MODAL_BACKDROP_WEBSITE.
+            "t-on-click": this.onBackdropModalClick,
+        },
     };
 
     setup() {
@@ -214,6 +221,17 @@ export class Popup extends Interaction {
             // TODO : it should not have been a hash at all for ecommerce, but a
             // query string parameter
             this.showPopupOnClick(new URL(ev.newURL).hash);
+        }
+    }
+
+    /**
+     * Handles clicks outside the popup to dismiss it.
+     *
+     * @param {MouseEvent} ev
+     */
+    onBackdropModalClick(ev) {
+        if (ev.target === ev.currentTarget) {
+            this.hidePopup();
         }
     }
 }
