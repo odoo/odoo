@@ -115,8 +115,8 @@ export class BuilderOptionsPlugin extends Plugin {
             this.target = target;
         }
         if (!this.target || !this.target.isConnected) {
-            this.lastContainers = this.lastContainers.filter((c) => c.element.isConnected);
-            this.target = this.lastContainers.at(-1)?.element;
+            const connectedContainers = this.lastContainers.filter((c) => c.element.isConnected);
+            this.target = connectedContainers.at(-1)?.element;
         }
 
         const newContainers = this.computeContainers(this.target);

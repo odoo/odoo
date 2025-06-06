@@ -7,13 +7,6 @@ import {
     setupWebsiteBuilder,
 } from "./website_helpers";
 import { xml } from "@odoo/owl";
-import { queryOne } from "@odoo/hoot-dom";
-
-function expectOptionContainerToInclude(editor, elem) {
-    expect(
-        editor.shared["builder-options"].getContainers().map((container) => container.element)
-    ).toInclude(elem);
-}
 
 defineWebsiteModels();
 
@@ -130,9 +123,9 @@ test("Undo/Redo an action that activates another target restores the old one on 
     expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
 });
 
-test("Container fallback to a valid ancestor if target dissapear", async () => {
+test("Containers fallback to a valid ancestor if the target disappears and restore it on undo", async () => {
     addActionOption({
-        customAction: {
+        targetAction: {
             apply: ({ editingElement }) => {
                 editingElement.remove();
             },
@@ -145,57 +138,31 @@ test("Container fallback to a valid ancestor if target dissapear", async () => {
     });
     addOption({
         selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
+        template: xml`<BuilderButton action="'targetAction'">Test</BuilderButton>`,
     });
     addOption({
         selector: ".test-ancestor",
         template: xml`<BuilderButton action="'ancestorAction'">Ancestor selected</BuilderButton>`,
     });
-    const { getEditor } = await setupWebsiteBuilder(`
-        <div class="test-ancestor">
+    await setupWebsiteBuilder(`
+        <div data-name="Ancestor" class="test-ancestor">
             Hey I'm an ancestor
-            <div class="test-options-target target1">
+            <div data-name="Target 1" class="test-options-target target1">
                 Homepage
             </div>
         </div>
 
     `);
-    const editor = getEditor();
 
     await contains(":iframe .target1").click();
-    expectOptionContainerToInclude(editor, queryOne(":iframe .target1"));
-    await contains("[data-action-id='customAction']").click();
-    expectOptionContainerToInclude(editor, queryOne(":iframe .test-ancestor"));
+    expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
+    expect(".options-container[data-container-title='Target 1']").toHaveCount(1);
+    await contains("[data-action-id='targetAction']").click();
+    expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
+    expect(".options-container[data-container-title='Target 1']").toHaveCount(0);
     expect("[data-action-id='ancestorAction']").toHaveCount(1);
-});
 
-test("Remove element, undo should restore the selection to the removed element", async () => {
-    addActionOption({
-        customAction: {
-            apply: ({ editingElement }) => {
-                editingElement.remove();
-            },
-        },
-    });
-    addOption({
-        selector: ".test-options-target",
-        template: xml`<BuilderButton action="'customAction'">Test</BuilderButton>`,
-        title: "child",
-    });
-    const { getEditor } = await setupWebsiteBuilder(`
-        <div class="test-ancestor">
-            Hey I'm an ancestor
-            <div class="test-options-target target1">
-                Homepage
-            </div>
-        </div>
-
-    `);
-    const editor = getEditor();
-
-    await contains(":iframe .target1").click();
-    expectOptionContainerToInclude(editor, queryOne(":iframe .target1"));
-    await contains("[data-container-title='child'] button.fa-trash").click();
     await contains(".o-snippets-top-actions .fa-undo").click();
-    expectOptionContainerToInclude(editor, queryOne(":iframe .target1"));
+    expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
+    expect(".options-container[data-container-title='Target 1']").toHaveCount(1);
 });
