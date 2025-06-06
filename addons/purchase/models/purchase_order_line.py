@@ -92,6 +92,7 @@ class PurchaseOrderLine(models.Model):
         compute='_compute_section_line_id',
         store=True,
     )
+    technical_price_unit = fields.Float(help="Technical field for price computation")
 
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
     def _compute_amount(self):
@@ -216,6 +217,8 @@ class PurchaseOrderLine(models.Model):
                 values.update(product_id=False, price_unit=0, product_uom_qty=0, product_uom_id=False, date_planned=False)
             else:
                 values.update(self._prepare_add_missing_fields(values))
+            if values.get('price_unit') and not values.get('technical_price_unit'):
+                values['technical_price_unit'] = values['price_unit']
 
         lines = super().create(vals_list)
         for line in lines:
@@ -293,7 +296,7 @@ class PurchaseOrderLine(models.Model):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.price_unit = self.product_qty = 0.0
+        self.price_unit = self.product_qty = self.technical_price_unit = 0.0
 
         self._product_id_change()
 
@@ -321,7 +324,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'product_uom_id', 'company_id', 'order_id.partner_id')
     def _compute_price_unit_and_date_planned_and_name(self):
         for line in self:
-            if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion'):
+            if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion') or (line.technical_price_unit != line.price_unit):
                 continue
             params = line._get_select_sellers_params()
 
@@ -351,13 +354,13 @@ class PurchaseOrderLine(models.Model):
                     line.date_order or fields.Date.context_today(line),
                     False
                 )
-                line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
+                line.price_unit = line.technical_price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
 
             elif line.selected_seller_id:
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
                 price_unit = line.selected_seller_id.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-                line.price_unit = line.selected_seller_id.product_uom_id._compute_price(price_unit, line.product_uom_id)
+                line.price_unit = line.technical_price_unit = line.selected_seller_id.product_uom_id._compute_price(price_unit, line.product_uom_id)
                 line.discount = line.selected_seller_id.discount or 0.0
 
             # record product names to avoid resetting custom descriptions

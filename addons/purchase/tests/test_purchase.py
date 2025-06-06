@@ -1081,3 +1081,24 @@ class TestPurchase(AccountTestInvoicingCommon):
             'partner_id': self.partner_a.id,
         })
         self.assertEqual(po_2.currency_id, gbp, "The currency should be set from context default_currency_id, bypassing the compute")
+
+    def test_prevent_recompute_price_on_manual_set(self):
+        """Ensure manually set unit price on a purchase order line remains unchanged when quantity is updated."""
+        self.product_a.seller_ids = [Command.create({
+            'partner_id': self.partner_a.id,
+            'min_qty': 1,
+            'price': 5,
+            'product_code': 'Vendor A',
+        })]
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 1
+        po = po_form.save()
+        self.assertEqual(po.order_line.price_unit, 5)
+        # Update the price manually and then change the quantity
+        with Form(po.order_line) as line:
+            line.price_unit = 100.0
+        po.order_line.product_qty = 10
+        self.assertEqual(po.order_line.price_unit, 100.0, "Price should remain 100.0 after changing the quantity")
