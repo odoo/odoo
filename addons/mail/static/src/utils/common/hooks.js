@@ -474,7 +474,7 @@ export function useDiscussSystray() {
         class: "o-mail-DiscussSystray-class",
         get contentClass() {
             return `d-flex flex-column flex-grow-1 ${
-                ui.isSmall ? "overflow-auto w-100 mh-100" : ""
+                ui.isSmall ? "overflow-auto o-scrollbar-thin w-100 mh-100" : ""
             }`;
         },
         get menuClass() {
