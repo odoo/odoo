@@ -613,7 +613,7 @@ test("add a link to an image with a caption", async () => {
         ),
         stepFunction: async () => {
             await addLinkToImage("odoo.com");
-            expect(".o-we-linkpopover").toHaveCount(1);
+            await expectElementCount(".o-we-linkpopover", 1);
             await expectElementCount(".o-we-toolbar", 1);
         },
         contentAfter: unformat(
@@ -673,7 +673,7 @@ test("add a caption then a link to an image surrounded by text", async () => {
         stepFunction: async () => {
             await toggleCaption("Hello");
             await addLinkToImage("odoo.com");
-            expect(".o-we-linkpopover").toHaveCount(1);
+            await expectElementCount(".o-we-linkpopover", 1);
             await expectElementCount(".o-we-toolbar", 1);
         },
         contentAfter: unformat(
@@ -750,7 +750,7 @@ test("remove a link from an image with a caption", async () => {
         stepFunction: async () => {
             await removeLinkFromImage();
             await animationFrame();
-            expect(".o-we-linkpopover").toHaveCount(0);
+            await expectElementCount(".o-we-linkpopover", 0);
             await expectElementCount(".o-we-toolbar", 1);
         },
         contentAfter: unformat(
@@ -795,7 +795,7 @@ test("remove a caption from an image with a link", async () => {
         ),
         stepFunction: async () => {
             await toggleCaption();
-            expect(".o-we-linkpopover").toHaveCount(1);
+            await expectElementCount(".o-we-linkpopover", 1);
             await expectElementCount(".o-we-toolbar", 1);
         },
         contentAfter: unformat(
