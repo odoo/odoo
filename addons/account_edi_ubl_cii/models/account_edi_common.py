@@ -832,7 +832,6 @@ class AccountEdiCommon(models.AbstractModel):
             #     # Full code list is available here:
             #     # https://docs.peppol.eu/poacc/billing/3.0/codelist/UNCL5189/
             'allowance_charge_reason_code': '95',
-            'allowance_charge_reason': _("Discount"),
 
             # The discount should be provided as an amount.
             'amount': gross_price - net_price,

@@ -1,5 +1,6 @@
 {
     'name': "Import electronic orders with UBL",
+    'version': '1.0',
     'category': 'Sales/Sales',
     'description': """
 Electronic ordering module

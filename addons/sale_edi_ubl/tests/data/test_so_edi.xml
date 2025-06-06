@@ -2,20 +2,18 @@
 <Order xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
   <cbc:CustomizationID>urn:fdc:peppol.eu:poacc:trns:order:3</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:ordering:3</cbc:ProfileID>
-  <cbc:ID>My PO</cbc:ID>
+  <cbc:ID>My SO</cbc:ID>
   <cbc:IssueDate>create_date_placeholder</cbc:IssueDate>
-  <cbc:OrderTypeCode>105</cbc:OrderTypeCode>
+  <cbc:OrderTypeCode>220</cbc:OrderTypeCode>
+  <cac:ValidityPeriod>
+    <cbc:EndDate>validity_date_placeholder</cbc:EndDate>
+  </cac:ValidityPeriod>
   <cbc:DocumentCurrencyCode>USD</cbc:DocumentCurrencyCode>
   <cac:BuyerCustomerParty>
     <cac:Party>
       <cac:PartyName>
-        <cbc:Name>company_1_data</cbc:Name>
+        <cbc:Name>partner_a</cbc:Name>
       </cac:PartyName>
-      <cac:PostalAddress>
-        <cac:Country>
-          <cbc:IdentificationCode>US</cbc:IdentificationCode>
-        </cac:Country>
-      </cac:PostalAddress>
       <cac:PartyTaxScheme>
         <cbc:CompanyID>US12345674</cbc:CompanyID>
         <cac:TaxScheme>
@@ -23,30 +21,17 @@
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
-        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:RegistrationName>partner_a</cbc:RegistrationName>
         <cbc:CompanyID>US12345674</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
-        <cbc:Name>company_1_data</cbc:Name>
+        <cbc:Name>partner_a</cbc:Name>
       </cac:Contact>
     </cac:Party>
   </cac:BuyerCustomerParty>
   <cac:SellerSupplierParty>
     <cac:Party>
       <cac:PartyName>
-        <cbc:Name>partner_a</cbc:Name>
-      </cac:PartyName>
-      <cac:PartyLegalEntity>
-        <cbc:RegistrationName>partner_a</cbc:RegistrationName>
-      </cac:PartyLegalEntity>
-      <cac:Contact>
-        <cbc:Name>partner_a</cbc:Name>
-      </cac:Contact>
-    </cac:Party>
-  </cac:SellerSupplierParty>
-  <cac:Delivery>
-    <cac:DeliveryParty>
-      <cac:PartyName>
         <cbc:Name>company_1_data</cbc:Name>
       </cac:PartyName>
       <cac:PostalAddress>
@@ -54,6 +39,19 @@
           <cbc:IdentificationCode>US</cbc:IdentificationCode>
         </cac:Country>
       </cac:PostalAddress>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>company_1_data</cbc:Name>
+      </cac:Contact>
+    </cac:Party>
+  </cac:SellerSupplierParty>
+  <cac:Delivery>
+    <cac:DeliveryParty>
+      <cac:PartyName>
+        <cbc:Name>partner_a</cbc:Name>
+      </cac:PartyName>
       <cac:PartyTaxScheme>
         <cbc:CompanyID>US12345674</cbc:CompanyID>
         <cac:TaxScheme>
@@ -61,38 +59,46 @@
         </cac:TaxScheme>
       </cac:PartyTaxScheme>
       <cac:PartyLegalEntity>
-        <cbc:RegistrationName>company_1_data</cbc:RegistrationName>
+        <cbc:RegistrationName>partner_a</cbc:RegistrationName>
         <cbc:CompanyID>US12345674</cbc:CompanyID>
       </cac:PartyLegalEntity>
       <cac:Contact>
-        <cbc:Name>company_1_data</cbc:Name>
+        <cbc:Name>partner_a</cbc:Name>
       </cac:Contact>
     </cac:DeliveryParty>
   </cac:Delivery>
+  <cac:PaymentTerms>
+    <cbc:Note>Immediate Payment</cbc:Note>
+  </cac:PaymentTerms>
   <cac:TaxTotal>
-    <cbc:TaxAmount currencyID="USD">76.50</cbc:TaxAmount>
+    <cbc:TaxAmount currencyID="USD">69.00</cbc:TaxAmount>
   </cac:TaxTotal>
   <cac:AnticipatedMonetaryTotal>
-    <cbc:LineExtensionAmount currencyID="USD">510.00</cbc:LineExtensionAmount>
-    <cbc:TaxExclusiveAmount currencyID="USD">510.00</cbc:TaxExclusiveAmount>
-    <cbc:TaxInclusiveAmount currencyID="USD">586.50</cbc:TaxInclusiveAmount>
+    <cbc:LineExtensionAmount currencyID="USD">460.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="USD">460.00</cbc:TaxExclusiveAmount>
+    <cbc:TaxInclusiveAmount currencyID="USD">529.00</cbc:TaxInclusiveAmount>
     <cbc:PrepaidAmount currencyID="USD">0.00</cbc:PrepaidAmount>
-    <cbc:PayableAmount currencyID="USD">586.50</cbc:PayableAmount>
+    <cbc:PayableAmount currencyID="USD">529.00</cbc:PayableAmount>
   </cac:AnticipatedMonetaryTotal>
   <cac:OrderLine>
     <cac:LineItem>
       <cbc:ID>1</cbc:ID>
       <cbc:Quantity unitCode="C62">10.0</cbc:Quantity>
-      <cbc:LineExtensionAmount currencyID="USD">500.00</cbc:LineExtensionAmount>
+      <cbc:LineExtensionAmount currencyID="USD">450.00</cbc:LineExtensionAmount>
       <cac:AllowanceCharge>
         <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
         <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
         <cbc:AllowanceChargeReason>Discount</cbc:AllowanceChargeReason>
-        <cbc:Amount currencyID="USD">0.00</cbc:Amount>
+        <cbc:Amount currencyID="USD">50.00</cbc:Amount>
       </cac:AllowanceCharge>
       <cac:Price>
-        <cbc:PriceAmount currencyID="USD">50.00</cbc:PriceAmount>
+        <cbc:PriceAmount currencyID="USD">45.00</cbc:PriceAmount>
         <cbc:BaseQuantity unitCode="C62">1</cbc:BaseQuantity>
+        <cac:AllowanceCharge>
+          <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
+          <cbc:Amount currencyID="USD">5.00</cbc:Amount>
+          <cbc:BaseAmount currencyID="USD">50.00</cbc:BaseAmount>
+        </cac:AllowanceCharge>
       </cac:Price>
       <cac:Item>
         <cbc:Description>Product A description</cbc:Description>

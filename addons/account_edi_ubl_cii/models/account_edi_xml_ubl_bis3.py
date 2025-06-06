@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from lxml import etree
+from markupsafe import Markup
 
 from odoo import models, _
 from odoo.addons.account_edi_ubl_cii.models.account_edi_xml_ubl_20 import UBL_NAMESPACES
+from odoo.tools import html2plaintext, cleanup_xml_node
 
 from stdnum.no import mva
 
@@ -23,6 +26,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         3.0 is therefore done by implementing PEPPOL BIS Billing 3.0 without extensions or extra rules."
 
     Thus, EHF 3 and Bis 3 are actually the same format. The specific rules for NO defined in Bis 3 are added in Bis 3.
+
+    To avoid multi-parental inheritance in case of UBL 4.0, we're adding the sale/purchase logic here.
+    * Documentation for Peppol Order transaction 3.5: https://docs.peppol.eu/poacc/upgrade-3/syntax/Order/tree/
     """
 
     # -------------------------------------------------------------------------
@@ -451,3 +457,141 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                     'peppol_endpoint': peppol_endpoint,
                 })
         return partner_vals
+
+    # -------------------------------------------------------------------------
+    # Sale/Purchase Order
+    # -------------------------------------------------------------------------
+
+    def _get_line_item_vals(self, product, description, customer, supplier, taxes):
+        vals = super()._get_line_item_vals(product, description, customer, supplier, taxes)
+        vals['standard_item_identification'] = product.barcode
+
+        variant_info = [{
+            'name': value.attribute_id.name,
+            'value': value.name
+        } for value in product.product_template_attribute_value_ids]
+        if len(variant_info) > 0:
+            vals['variant_info'] = variant_info
+
+        return vals
+
+    def _get_line_xpaths(self, document_type=False, qty_factor=1):
+        if document_type == 'order':
+            return {
+                **super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor),
+                'delivered_qty': ('./{*}Quantity'),
+            }
+        return super()._get_line_xpaths(document_type=document_type, qty_factor=qty_factor)
+
+    def _get_order_line_item_price_vals(self, price_unit, discount, currency, uom):
+        """ Return the unit price of the line item discounts applied but before taxes.
+        Source: https://docs.peppol.eu/poacc/upgrade-3/syntax/Order/cac-OrderLine/cac-LineItem/cac-Price/ """
+        net_price_unit = currency.round(price_unit * (1 - (discount / 100)))
+        uom_code = self._get_uom_unece_code(uom)
+
+        vals = {
+            'currency': currency,
+            'currency_dp': self._get_currency_decimal_places(currency),
+            'price_amount': net_price_unit,
+            'base_quantity': 1,
+            'base_quantity_unit_code': uom_code,
+        }
+        if discount:
+            vals['item_allowance_charge_vals'] = {
+                'currency_name': currency.name,
+                'currency_dp': self._get_currency_decimal_places(currency),
+                'charge_indicator': 'false',
+                'base_amount': price_unit,
+                'amount': price_unit - net_price_unit,
+            }
+        return vals
+
+    def _get_anticipated_monetary_total_vals(self, order_line_vals, currency, amount_total, amount_paid=0):
+        """ Source: https://docs.peppol.eu/poacc/upgrade-3/syntax/Order/cac-AnticipatedMonetaryTotal/ """
+        line_extension_amount = sum(line['line_extension_amount'] for line in order_line_vals)
+        # todo: global/flat discount for allowance_total_amount, shipping/landed costs for charge_total_amount
+        return {
+            'currency': currency,
+            'currency_dp': min(self._get_currency_decimal_places(currency), 2),
+            'line_extension_amount': line_extension_amount,
+            'tax_exclusive_amount': line_extension_amount,
+            'tax_inclusive_amount': amount_total,
+            # 'allowance_total_amount': allowance_total_amount,
+            # 'charge_total_amount': charge_total_amount,
+            'prepaid_amount': amount_paid,
+            'payable_amount': amount_total - amount_paid,
+        }
+
+    def _export_order_vals(self, order):
+        return {
+            'builder': self,
+            'order': order,
+            'format_float': self.format_float,
+
+            # UBL 2.0 templates
+            'AllowanceChargeType_template': 'account_edi_ubl_cii.ubl_20_AllowanceChargeType',
+            'TaxCategoryType_template': 'account_edi_ubl_cii.ubl_20_TaxCategoryType',
+            # UBL 2.1 templates
+            'AddressType_template': 'account_edi_ubl_cii.ubl_21_AddressType',
+            'PartyType_template': 'account_edi_ubl_cii.ubl_21_PartyType',
+            # UBL BIS 3 templates
+            'AnticipatedMonetaryTotalType_template': 'account_edi_ubl_cii.ubl_20_MonetaryTotalType',
+            'ItemType_template': 'account_edi_ubl_cii.ubl_bis3_ItemType',
+            'LineItemType_template': 'account_edi_ubl_cii.ubl_bis3_LineItemType',
+
+            'vals': {
+                'id': order.name,
+                'issue_date': order.create_date.date(),
+                'note': html2plaintext(order.note, include_references=False) if order.note else False,
+                'tax_amount': order.amount_tax,
+                'currency': order.currency_id,
+                'currency_dp': self._get_currency_decimal_places(order.currency_id),  # currency decimal places
+                'document_currency_code': order.currency_id.name.upper(),
+                'payment_terms_vals': {'name': order.payment_term_id.name} if order.payment_term_id else {},
+            },
+        }
+
+    def _export_order(self, order):
+        vals = self._export_order_vals(order)
+        xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.ubl_bis3_OrderType', vals)
+        return etree.tostring(cleanup_xml_node(xml_content), xml_declaration=True, encoding='UTF-8')
+
+    def _import_order_payment_terms_id(self, company_id, tree, xpath):
+        """ Return payment term name from given tree and try to find a match. """
+        payment_term_name = self._find_value(xpath, tree)
+        if not payment_term_name:
+            return False
+        payment_term_domain = self.env['account.payment.term']._check_company_domain(company_id)
+        payment_term_domain.append(('name', '=', payment_term_name))
+        return self.env['account.payment.term'].search(payment_term_domain, limit=1)
+
+    def _retrieve_order_vals(self, order, tree):
+        order_vals = {}
+        logs = []
+
+        order_vals['date_order'] = tree.findtext('.//{*}EndDate') or tree.findtext('.//{*}IssueDate')
+        order_vals['note'] = self._import_description(tree, xpaths=['./{*}Note'])
+        order_vals['payment_term_id'] = self._import_order_payment_terms_id(order.company_id, tree, './/cac:PaymentTerms/cbc:Note')
+        order_vals['currency_id'], currency_logs = self._import_currency(tree, './/{*}DocumentCurrencyCode')
+
+        logs += currency_logs
+        return order_vals, logs
+
+    def _import_order_ubl(self, order, file_data, new):
+        """ Common importing method to extract order data from file_data.
+        :param order: Order to fill details from file_data.
+        :param file_data: File data to extract order related data from.
+        :return: True if there's no exception while extraction.
+        :rtype: Boolean
+        """
+        tree = file_data['xml_tree']
+
+        # Update the order.
+        order_vals, logs = self._retrieve_order_vals(order, tree)
+        if order:
+            order.write(order_vals)
+            order.message_post(body=Markup("<strong>%s</strong>") % _("Format used to import the document: %s", self._description))
+            if logs:
+                order._create_activity_set_details(Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs))
+
+        return True
