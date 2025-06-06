@@ -1966,7 +1966,7 @@ test("composer state: attachments save and restore", async () => {
     await contains(".o-mail-AttachmentCard", { text: "text4.txt" });
 });
 
-test("sidebar: cannot unpin channel group_based_subscription: mandatorily pinned", async () => {
+test("sidebar: cannot leave channel with group_ids", async () => {
     mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({

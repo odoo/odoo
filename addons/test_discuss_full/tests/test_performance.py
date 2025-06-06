@@ -73,7 +73,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - _compute_message_needaction
     #           - fetch res_groups (group_public_id)
     #           - fetch ir_module_category (group_public_id)
-    #           - search group_ids (group_based_subscription)
+    #           - search group_ids
     _query_count_init_messaging = 35
     # Queries for _query_count_discuss_channels (in order):
     #   1: insert res_device_log
@@ -115,7 +115,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_needaction
     #       - fetch res_groups (group_public_id)
     #       - fetch ir_module_category (group_public_id)
-    #       - search group_ids (group_based_subscription)
+    #       - search group_ids
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #   - _get_last_messages
@@ -606,7 +606,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": "General announcements for all employees.",
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": True,
+                "group_ids": channel.group_ids.ids,
                 "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -638,7 +638,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -670,7 +670,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -702,7 +702,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", [member_0.id]]],
@@ -737,7 +737,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": self.env.ref("base.group_user").id,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -769,7 +769,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -801,7 +801,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -833,7 +833,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -865,7 +865,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -897,7 +897,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -929,7 +929,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],
@@ -961,7 +961,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "description": False,
                 "fetchChannelInfoState": "fetched",
                 "from_message_id": False,
-                "group_based_subscription": False,
+                "group_ids": [],
                 "group_public_id": False,
                 "id": channel.id,
                 "invited_member_ids": [["ADD", []]],

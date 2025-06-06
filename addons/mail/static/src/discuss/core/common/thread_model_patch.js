@@ -80,6 +80,7 @@ const threadPatch = {
         this.fetchChannelInfoDeferred = undefined;
         /** @type {"not_fetched"|"fetching"|"fetched"} */
         this.fetchChannelInfoState = "not_fetched";
+        this.group_ids = fields.Many("res.groups");
         this.hasOtherMembersTyping = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
