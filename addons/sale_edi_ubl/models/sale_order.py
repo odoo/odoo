@@ -4,6 +4,9 @@ from odoo import _, api, models, Command
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def _get_edi_builders(self):
+        return super()._get_edi_builders() + [self.env['sale.edi.xml.ubl_bis3']]
+
     def _get_import_file_type(self, file_data):
         """ Identify UBL files. """
         # EXTENDS 'account'
@@ -26,12 +29,13 @@ class SaleOrder(models.Model):
             }
         return super()._get_edi_decoder(file_data, new)
 
-    def _create_activity_set_details(self):
+    def _create_activity_set_details(self, body):
         """ Create activity on sale order to set details.
 
         :return: None.
         """
-        activity_message = _("Some information could not be imported")
+        activity_message = _("Some information could not be imported:")
+        activity_message += body
         self.activity_schedule(
             'mail.mail_activity_data_todo',
             user_id=self.env.user.id,

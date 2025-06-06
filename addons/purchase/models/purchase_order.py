@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+
 from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -14,10 +16,12 @@ from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedS
 from odoo.tools.float_utils import float_is_zero, float_repr
 from odoo.exceptions import UserError, ValidationError
 
+_logger = logging.getLogger(__name__)
+
 
 class PurchaseOrder(models.Model):
     _name = 'purchase.order'
-    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin']
+    _inherit = ['portal.mixin', 'product.catalog.mixin', 'mail.thread', 'mail.activity.mixin', 'account.document.import.mixin']
     _description = "Purchase Order"
     _rec_names_search = ['name', 'partner_ref']
     _order = 'priority desc, id desc'
@@ -1298,5 +1302,24 @@ class PurchaseOrder(models.Model):
         self.ensure_one()
         return self.state == 'cancel'
 
+    # ------------------------------------------------------------
+    # EDI
+    # ------------------------------------------------------------
+
     def _get_edi_builders(self):
         return []
+
+    def create_document_from_attachment(self, attachment_ids):
+        """ Create the purchase orders from given attachment_ids
+        and redirect newly create order view.
+
+        :param list attachment_ids: List of attachments process.
+        :return: An action redirecting to related sale order view.
+        :rtype: dict
+        """
+        attachments = self.env['ir.attachment'].browse(attachment_ids)
+        if not attachments:
+            raise UserError(_("No attachment was provided"))
+
+        orders = self.with_context(default_partner_id=self.env.user.partner_id.id)._create_records_from_attachments(attachments)
+        return orders._get_records_action(name=_("Generated Orders"))

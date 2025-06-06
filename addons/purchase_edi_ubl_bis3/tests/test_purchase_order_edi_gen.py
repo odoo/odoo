@@ -10,6 +10,7 @@ from datetime import datetime
 @tagged('post_install', '-at_install')
 class TestPurchaseOrderEDIGen(AccountTestInvoicingCommon):
     def test_purchase_order_download_edi(self):
+        self.user.company_id.partner_id.vat = 'US12345674'
         po = self.env['purchase.order'].create({
             'name': 'My PO',
             'partner_id': self.partner_a.id,
