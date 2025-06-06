@@ -928,3 +928,24 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(len(matching_records), 2)
         self.assertEqual(matching_records.account_move_id, vendor_bill)
         self.assertEqual(matching_records.purchase_order_id, purchase_order)
+
+    def test_orderline_price_manual_set(self):
+        """Ensure that manually set unit price on a PO line is not reset when quantity changes."""
+        self.product_a.seller_ids = [Command.create({
+            'partner_id': self.partner_a.id,
+            'min_qty': 1,
+            'price': 5,
+            'product_code': 'Vendor A',
+        })]
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_a
+            po_line.product_qty = 1
+        po = po_form.save()
+        self.assertEqual(po.order_line.price_unit, 5)
+        # Update the price manually and then change the quantity
+        with Form(po.order_line) as line:
+            line.price_unit = 100.0
+        po.order_line.product_qty = 10
+        self.assertEqual(po.order_line.price_unit, 100.0,"Price should remain 100.0 after changing the quantity")
