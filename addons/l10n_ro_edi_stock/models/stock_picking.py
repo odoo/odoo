@@ -243,6 +243,7 @@ _eu_country_vat = {
     'GR': 'EL'
 }
 
+
 class Picking(models.Model):
     _inherit = 'stock.picking'
 
