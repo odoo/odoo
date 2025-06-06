@@ -1,10 +1,11 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { click, queryOne, queryAll, select, waitFor } from "@odoo/hoot-dom";
+import { click, queryOne, queryAll, select, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "../_helpers/editor";
 import { cleanLinkArtifacts, unformat } from "../_helpers/format";
 import { contains } from "../../../../web/static/tests/_framework/dom_test_helpers";
-import { getContent } from "../_helpers/selection";
+import { getContent, simulateDoubleClickSelect } from "../_helpers/selection";
+import { insertText } from "../_helpers/user_actions";
 
 describe("button style", () => {
     test("editable button should have cursor text", async () => {
@@ -168,5 +169,21 @@ describe("Custom button style", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe(
             '<p><a href="#" target="_blank">Hello[]</a></p>'
         );
+    });
+});
+
+describe("button edit", () => {
+    test("button link should be editable with double click select", async () => {
+        const { el, editor } = await setupEditor('<p>this is a <a href="#">link</a></p>');
+        await waitForNone(".o-we-linkpopover");
+        const button = el.querySelector("a");
+        // simulate double click selection
+        await simulateDoubleClickSelect(button);
+        expect(getContent(el)).toBe(
+            '<p>this is a \ufeff<a href="#" class="o_link_in_selection">[\ufefflink]\ufeff</a>\ufeff</p>'
+        );
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="#">[link]</a></p>');
+        await insertText(editor, "X");
+        expect(cleanLinkArtifacts(getContent(el))).toBe('<p>this is a <a href="#">X[]</a></p>');
     });
 });
