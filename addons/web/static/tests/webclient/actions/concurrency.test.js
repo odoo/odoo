@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { queryAll, queryAllTexts } from "@odoo/hoot-dom";
+import { queryAll, queryAllTexts, runAllTimers } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import {
@@ -28,6 +28,7 @@ import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSetupAction } from "@web/search/action_hook";
 import { WebClient } from "@web/webclient/webclient";
 import { browser } from "@web/core/browser/browser";
+import { router } from "@web/core/browser/router";
 
 const { ResCompany, ResPartner, ResUsers } = webModels;
 const actionRegistry = registry.category("actions");
@@ -782,8 +783,23 @@ test("doing browser back temporarily disables the UI", async () => {
     await mountWithCleanup(WebClient);
 
     await getService("action").doAction(4);
-    await contains(".o_kanban_record").click();
     await getService("action").doAction(8);
+    await runAllTimers(); // wait for the update of the router
+    expect(router.current).toEqual({
+        action: 8,
+        actionStack: [
+            {
+                action: 4,
+                displayName: "Partners Action 4",
+                view_type: "kanban",
+            },
+            {
+                action: 8,
+                displayName: "Favorite Ponies",
+                view_type: "list",
+            },
+        ],
+    });
 
     def = new Deferred();
     browser.history.back();
