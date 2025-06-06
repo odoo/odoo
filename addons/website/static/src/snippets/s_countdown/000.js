@@ -71,6 +71,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         this.$('.s_countdown_canvas_flex').remove();
 
         clearInterval(this.setInterval);
+        window.removeEventListener("resize", this._onResize);
         this._super(...arguments);
     },
 
@@ -218,8 +219,10 @@ const CountdownWidget = publicWidget.Widget.extend({
             for (const val of this.diff) {
                 const canvas = val.canvas.querySelector('canvas');
                 const ctx = canvas.getContext("2d");
-                ctx.canvas.width = this.width;
-                ctx.canvas.height = this.size;
+                const dpr = window.devicePixelRatio || 1;
+                ctx.canvas.width = this.width * dpr;
+                ctx.canvas.height = this.size * dpr;
+                ctx.scale(dpr, dpr);
                 this._clearCanvas(ctx);
 
                 $(canvas).toggleClass('d-none', hideCountdown);
@@ -246,6 +249,11 @@ const CountdownWidget = publicWidget.Widget.extend({
             clearInterval(this.setInterval);
             if (!this.editableMode) {
                 this._handleEndCountdownAction();
+            }
+            // Re-render on resize when the countdown is finished.
+            if (!this._onResize) {
+                this._onResize = () => this._render();
+                window.addEventListener("resize", this._onResize);
             }
         }
     },
@@ -295,16 +303,17 @@ const CountdownWidget = publicWidget.Widget.extend({
      */
     _drawText: function (canvas, textNb, textUnit, full = false) {
         const ctx = canvas.getContext("2d");
+        const dpr = window.devicePixelRatio || 1;
         const nbSize = this.size / 4;
         ctx.font = `${nbSize}px Arial`;
         ctx.fillStyle = this.textColor;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(textNb, canvas.width / 2, canvas.height / 2);
+        ctx.fillText(textNb, (canvas.width / dpr) / 2, (canvas.height / dpr) / 2);
 
         const unitSize = this.size / 12;
         ctx.font = `${unitSize}px Arial`;
-        ctx.fillText(textUnit, canvas.width / 2, canvas.height / 2 + nbSize / 1.5, this.width);
+        ctx.fillText(textUnit, (canvas.width / dpr) / 2, (canvas.height / dpr) / 2 + nbSize / 1.5, this.width);
 
         if (this.layout === 'boxes' && this.layoutBackground !== 'none' && this.progressBarStyle === 'none') {
             let barWidth = this.size / (this.progressBarWeight === 'thin' ? 31 : 10);
