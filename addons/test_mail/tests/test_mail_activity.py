@@ -391,8 +391,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         for model_name, msg, exp_total, exp_today, exp_planned, exp_overdue in [
             # FIXME: only "first free activity" count, seems weird
             ('mail.activity', 'Free activities', 1, 1, 0, 0),
-            # FIXME: archiving records should not remove activities
-            (self.test_record._name, 'Removing activities on archive', 0, 0, 1, 0),
+            (self.test_record._name, 'Archiving does not remove activities', 1, 1, 1, 0),
             (self.test_lead_records._name, 'Planned do not count in total', 1, 1, 1, 0),
         ]:
             with self.subTest(model_name=model_name, msg=msg):
@@ -417,8 +416,8 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
                 self.assertEqual(planned_count, exp_planned)
                 self.assertEqual(overdue_count, exp_overdue)
         self.assertEqual(
-            data["Store"]["activityCounter"], 2,
-            '1 from lead (today), 1 from free (today), planned for third model does not count'
+            data["Store"]["activityCounter"], 3,
+            '1 from lead (today), 1 from free (today), 1 from activity-test-model'
         )
 
 
