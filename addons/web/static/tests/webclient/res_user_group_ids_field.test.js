@@ -1,6 +1,12 @@
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { click, hover, queryAllTexts, runAllTimers, select } from "@odoo/hoot-dom";
-import { contains, defineModels, mountView, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    mountView,
+    onRpc,
+    serverState,
+} from "@web/../tests/web_test_helpers";
 import { ResGroups } from "../_framework/mock_server/mock_models/res_groups";
 import { ResUsers } from "../_framework/mock_server/mock_models/res_users";
 import { ResCompany } from "../_framework/mock_server/mock_models/res_company";
@@ -93,6 +99,7 @@ beforeEach(() => {
             ],
         },
     ];
+    serverState.userId = 1;
 });
 
 test("simple rendering", async () => {

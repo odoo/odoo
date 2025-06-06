@@ -42,6 +42,7 @@ import {
     getService,
     installLanguages,
     makeServerError,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -3798,7 +3799,7 @@ test(`can create a record with default values`, async () => {
         context: { active_field: 2 },
     });
 
-    const n = Partner._records.length;
+    const n = MockServer.env["partner"].length;
 
     await contains(`.o_form_button_create`).click();
     expect(`.o_form_editable`).toHaveCount(1);
@@ -3807,7 +3808,7 @@ test(`can create a record with default values`, async () => {
     await contains(`.o_form_button_save`).click();
     expect.verifySteps(["web_save"]);
     expect(`.o_form_editable`).toHaveCount(1);
-    expect(Partner._records).toHaveLength(n + 1);
+    expect(MockServer.env["partner"]).toHaveLength(n + 1);
 });
 
 test(`default record with a one2many and an onchange on sub field`, async () => {
