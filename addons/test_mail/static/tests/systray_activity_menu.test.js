@@ -73,6 +73,7 @@ test("activity menu widget: activity menu with 2 models", async () => {
     await contains(".o-mail-ActivityMenu-counter", { text: "5" });
     const actionChecks = {
         context: {
+            active_test: false,
             force_search_count: 1,
             search_default_filter_activities_my: 1,
             search_default_activities_overdue: 1,
