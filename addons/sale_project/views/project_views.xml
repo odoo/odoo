@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <record id="project_edit_project_inherit" model="ir.ui.view">
+        <field name="name">project.project.edit.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">form_confirm_non_billable</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
         <field name="name">project.project.view.form.simplified.inherit</field>
         <field name="model">project.project</field>
