@@ -19,6 +19,8 @@ class BaseModel(models.AbstractModel):
     def unlink(self):
         # Override unlink to delete messages. This cannot be
         # cascaded, because link is done through (model, res_id). """
+        if self._abstract or self._transient:
+            return super().unlink()
         if self:
             self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         return super().unlink()
