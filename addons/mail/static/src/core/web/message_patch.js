@@ -86,10 +86,10 @@ patch(Message.prototype, {
     /**
      * @returns {string}
      */
-    formatTracking(trackingType, trackingValue) {
-        switch (trackingType) {
+    formatTracking(trackingFieldInfo, trackingValue) {
+        switch (trackingFieldInfo.fieldType) {
             case "boolean":
-                return trackingValue.value ? _t("Yes") : _t("No");
+                return trackingValue ? _t("Yes") : _t("No");
             /**
              * many2one formatter exists but is expecting id/display_name or data
              * object but only the target record name is known in this context.
@@ -100,39 +100,35 @@ patch(Message.prototype, {
             case "char":
             case "many2one":
             case "selection":
-                return formatChar(trackingValue.value);
+                return formatChar(trackingValue);
             case "date": {
-                const value = trackingValue.value
-                    ? deserializeDate(trackingValue.value)
-                    : trackingValue.value;
+                const value = trackingValue ? deserializeDate(trackingValue) : trackingValue;
                 return formatDate(value);
             }
             case "datetime": {
-                const value = trackingValue.value
-                    ? deserializeDateTime(trackingValue.value)
-                    : trackingValue.value;
+                const value = trackingValue ? deserializeDateTime(trackingValue) : trackingValue;
                 return formatDateTime(value);
             }
             case "float":
-                return formatFloat(trackingValue.value, { digits: trackingValue.floatPrecision });
+                return formatFloat(trackingValue, { digits: trackingFieldInfo.floatPrecision });
             case "integer":
-                return formatInteger(trackingValue.value);
+                return formatInteger(trackingValue);
             case "text":
-                return formatText(trackingValue.value);
+                return formatText(trackingValue);
             case "monetary":
-                return formatMonetary(trackingValue.value, {
-                    currencyId: trackingValue.currencyId,
+                return formatMonetary(trackingValue, {
+                    currencyId: trackingFieldInfo.currencyId,
                 });
             default:
-                return trackingValue.value;
+                return trackingValue;
         }
     },
 
     /**
      * @returns {string}
      */
-    formatTrackingOrNone(trackingType, trackingValue) {
-        const formattedValue = this.formatTracking(trackingType, trackingValue);
+    formatTrackingOrNone(trackingFieldInfo, trackingValue) {
+        const formattedValue = this.formatTracking(trackingFieldInfo, trackingValue);
         return formattedValue || _t("None");
     },
 });

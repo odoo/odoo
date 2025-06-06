@@ -3611,9 +3611,9 @@ class MailThread(models.AbstractModel):
                 tracking_values = record_wlang._track_filter_for_display(tracking_values)
             tracking = [
                 (
-                    fmt_vals['changedField'],
-                    fmt_vals['oldValue']['value'],
-                    fmt_vals['newValue']['value'],
+                    fmt_vals['fieldInfo']['changedField'],
+                    fmt_vals['oldValue'],
+                    fmt_vals['newValue'],
                 ) for fmt_vals in tracking_values._tracking_value_format()
             ]
 
