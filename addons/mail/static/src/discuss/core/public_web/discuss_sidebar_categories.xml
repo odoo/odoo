@@ -188,7 +188,7 @@
             'ms-1': thread.importantCounter > 0,
         }">
             <Dropdown state="showingActions" position="'right-start'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary my-0 min-w-0 p-0 o-rounded-bubble mx-1'">
-                <button class="btn me-1 btn-light rounded-circle d-flex o-px-0_5 py-1 align-items-center justify-content-center" t-att-class="{ 'o-showingActions border-dark o-mail-discussSidebarBgColor shadow-sm': showingActions.isOpen, 'bg-transparent border-transparent': !showingActions.isOpen }" t-att-title="actionsTitle">
+                <button class="btn me-1 btn-light rounded-circle d-flex o-px-0_5 py-1 align-items-center justify-content-center o-mail-discussSidebarBgColor border-dark" t-att-class="{ 'o-showingActions shadow-sm': showingActions.isOpen }" t-att-title="actionsTitle">
                     <i role="img" class="oi oi-fw oi-lg oi-ellipsis-h"/>
                 </button>
                 <t t-set-slot="content">

@@ -24,8 +24,8 @@ test("Do not open chat windows automatically when chat hub is compact", async ()
         create_uid: serverState.publicUserId,
     });
     await start();
-    await click("button.oi.oi-ellipsis-h[title='Chat Options']");
-    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item", { text: "Hide all conversations" });
     await contains(".o-mail-ChatHub-bubbleBtn .fa-comments");
     await withGuest(guestId, () =>
         rpc("/mail/message/post", {

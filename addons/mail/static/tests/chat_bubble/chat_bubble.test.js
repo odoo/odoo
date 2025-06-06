@@ -305,8 +305,8 @@ test("Can close all chat windows at once", async () => {
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button.oi.oi-ellipsis-h[title='Chat Options']");
-    await click("button.o-mail-ChatHub-option", { text: "Close all conversations" });
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item", { text: "Close all conversations" });
     await contains(".o-mail-ChatBubble", { count: 0 });
     assertChatHub({});
 });
@@ -323,8 +323,8 @@ test("Can compact chat hub", async () => {
     await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
     await contains(".o-mail-ChatBubble", { text: "+13" });
     await hover(".o-mail-ChatHub-hiddenBtn");
-    await click("button.oi.oi-ellipsis-h[title='Chat Options']");
-    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item", { text: "Hide all conversations" });
     await contains(".o-mail-ChatBubble i.fa.fa-comments");
     await click(".o-mail-ChatBubble i.fa.fa-comments");
     await contains(".o-mail-ChatBubble", { count: 8 });
@@ -342,8 +342,8 @@ test("Compact chat hub is crosstab synced", async () => {
     await contains(".o-mail-ChatBubble", { count: 2, target: env1 });
     await contains(".o-mail-ChatBubble", { count: 2, target: env2 });
     await hover(".o-mail-ChatBubble:eq(0)", { target: env1 });
-    await click("button.oi.oi-ellipsis-h[title='Chat Options']", { target: env1 });
-    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations", target: env1 });
+    await click("button[title='Chat Options']", { target: env1 });
+    await click(".o-dropdown-item", { text: "Hide all conversations", target: env1 });
     await contains(".o-mail-ChatBubble .fa-comments", { target: env1 });
     await contains(".o-mail-ChatBubble .fa-comments", { target: env2 });
 });
@@ -516,8 +516,8 @@ test("Open chat window from messaging menu with chat hub compact", async () => {
     setupChatHub({ folded: [chatId] });
     await start();
     await openFormView("res.partner", serverState.partnerId);
-    await click("button.oi.oi-ellipsis-h[title='Chat Options']");
-    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item", { text: "Hide all conversations" });
     await contains(".o-mail-ChatHub-compact");
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "John" });
@@ -549,8 +549,8 @@ test("Open chat window from command palette with chat hub compact", async () => 
     });
     setupChatHub({ folded: [chatId] });
     await start();
-    await click("button.oi.oi-ellipsis-h[title='Chat Options']");
-    await click("button.o-mail-ChatHub-option", { text: "Hide all conversations" });
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item", { text: "Hide all conversations" });
     await contains(".o-mail-ChatHub-compact");
     await triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");

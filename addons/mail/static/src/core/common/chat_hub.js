@@ -9,9 +9,10 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export class ChatHub extends Component {
-    static components = { ChatBubble, ChatWindow, Dropdown };
+    static components = { ChatBubble, ChatWindow, Dropdown, DropdownItem };
     static props = [];
     static template = "mail.ChatHub";
 
