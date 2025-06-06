@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="ubl_bis3_ItemType" inherit_id="account_edi_ubl_cii.ubl_20_CommonItemType" primary="True">
+        <xpath expr="//*[local-name()='ClassifiedTaxCategory']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cac:AdditionalItemProperty t-foreach="vals.get('variant_info')" t-as="variant">
+                    <cbc:Name t-out="variant.get('name')" />
+                    <cbc:Value t-out="variant.get('value')" />
+                </cac:AdditionalItemProperty>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="ubl_bis3_LineItemType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:ID t-out="vals.get('id')" />
+            <cbc:Quantity
+                t-att-unitCode="vals.get('quantity_unit_code')"
+                t-out="vals.get('quantity')" />
+            <cbc:LineExtensionAmount
+                t-att-currencyID="vals['currency'].name"
+                t-out="format_float(vals.get('line_extension_amount'), vals.get('currency_dp'))" />
+            <cac:AllowanceCharge>
+                <t t-call="{{AllowanceChargeType_template}}">
+                    <t t-set="vals" t-value="vals.get('allowance_charge_vals', {})"/>
+                </t>
+            </cac:AllowanceCharge>
+            <cac:Price>
+                <t t-set="price_vals" t-value="vals.get('price_vals')" />
+                <cbc:PriceAmount
+                    t-att-currencyID="price_vals['currency'].name"
+                    t-out="format_float(price_vals.get('price_amount'), vals.get('currency_dp'))" />
+                <cbc:BaseQuantity
+                    t-att-unitCode="price_vals.get('base_quantity_unit_code')"
+                    t-out="price_vals.get('base_quantity')" />
+                <cac:AllowanceCharge>
+                    <t t-call="{{AllowanceChargeType_template}}">
+                        <t t-set="vals" t-value="price_vals.get('item_allowance_charge_vals', {})"/>
+                    </t>
+                </cac:AllowanceCharge>
+            </cac:Price>
+            <cac:Item>
+                <t t-call="{{ItemType_template}}">
+                    <t t-set="vals" t-value="vals.get('item')" />
+                </t>
+            </cac:Item>
+        </t>
+    </template>
+
+    <template id="ubl_bis3_OrderType">
+        <Order
+            xmlns="urn:oasis:names:specification:ubl:schema:xsd:Order-2"
+            xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:CustomizationID>urn:fdc:peppol.eu:poacc:trns:order:3</cbc:CustomizationID>
+            <cbc:ProfileID>urn:fdc:peppol.eu:poacc:bis:ordering:3</cbc:ProfileID>
+            <cbc:ID t-out="vals.get('id')" />
+            <cbc:IssueDate t-out="vals.get('issue_date')" />
+            <cbc:OrderTypeCode t-out="vals.get('order_type_code')" />
+            <cbc:Note t-out="vals.get('note')" />
+            <cac:ValidityPeriod>
+                <cbc:EndDate t-out="vals.get('validity_date')"/>
+            </cac:ValidityPeriod>
+            <cac:QuotationDocumentReference>
+                <cbc:ID t-out="vals.get('quotation_document_reference')"/>
+            </cac:QuotationDocumentReference>
+            <cac:OriginatorDocumentReference>
+                <cbc:ID t-out="vals.get('originator_document_reference')"/>
+            </cac:OriginatorDocumentReference>
+            <cbc:DocumentCurrencyCode t-out="vals.get('document_currency_code')" />
+            <cac:BuyerCustomerParty>
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="vals.get('customer_party_vals')" />
+                    </t>
+                </cac:Party>
+            </cac:BuyerCustomerParty>
+            <cac:SellerSupplierParty>
+                <cac:Party>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="vals.get('supplier_party_vals')" />
+                    </t>
+                </cac:Party>
+            </cac:SellerSupplierParty>
+            <cac:Delivery>
+                <cac:DeliveryParty>
+                    <t t-call="{{PartyType_template}}">
+                        <t t-set="vals" t-value="vals.get('delivery_party_vals')" />
+                    </t>
+                </cac:DeliveryParty>
+            </cac:Delivery>
+            <cac:PaymentTerms>
+                <t t-set="payment_terms_vals" t-value="vals.get('payment_terms_vals', {})" />
+                <cbc:Note t-out="payment_terms_vals.get('name')" />
+            </cac:PaymentTerms>
+            <cac:TaxTotal>
+                <cbc:TaxAmount
+                    t-att-currencyID="vals['currency'].name"
+                    t-out="format_float(vals.get('tax_amount'), vals.get('currency_dp'))" />
+            </cac:TaxTotal>
+            <cac:AnticipatedMonetaryTotal>
+                <t t-call="{{AnticipatedMonetaryTotalType_template}}">
+                    <t t-set="vals" t-value="vals.get('anticipated_monetary_total_vals')" />
+                </t>
+            </cac:AnticipatedMonetaryTotal>
+            <cac:OrderLine t-foreach="vals.get('order_lines')" t-as="line_vals">
+                <cac:LineItem>
+                    <t t-call="{{LineItemType_template}}">
+                        <t t-set="vals" t-value="line_vals" />
+                    </t>
+                </cac:LineItem>
+            </cac:OrderLine>
+        </Order>
+    </template>
+</odoo>
