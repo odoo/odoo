@@ -136,9 +136,20 @@ class MailController(http.Controller):
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
             return request.redirect(record_action['url'])
-        # other choice: act_window (no support of anything else currently)
+        # anything else than an act_window is not supported
         elif record_action['type'] != 'ir.actions.act_window':
             return cls._redirect_to_messaging()
+
+        # backend act_window: when not logged, unless really readable as public,
+        # user is going to be redirected to login -> keep mail/view as redirect
+        # in that case. In case of readable record, we consider this might be
+        # a customization and we do not change the behavior in stable
+        if uid is None or request.env.user._is_public():
+            has_access = record_sudo.with_user(request.env.user).has_access('read')
+            if not has_access:
+                return cls._redirect_to_login_with_mail_view(
+                    model, res_id, access_token=access_token, **kwargs,
+                )
 
         url_params = {}
         menu_id = request.env['ir.ui.menu']._get_best_backend_root_menu_id_for_model(model)
