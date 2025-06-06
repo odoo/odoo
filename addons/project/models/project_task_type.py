@@ -45,6 +45,8 @@ class ProjectTaskType(models.Model):
             " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
             " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning', export_string_translation=False)
+    rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Day count before tasks in this stage become stale. Set to 0 to disable \
+        Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
 
     user_id = fields.Many2one('res.users', 'Stage Owner', default=_default_user_id, compute='_compute_user_id', store=True, index=True)
 

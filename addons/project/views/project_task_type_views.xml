@@ -50,6 +50,7 @@
                                 <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color', 'edit_tags': True}"
                                        invisible="user_id"
                                        required="not user_id"/>
+                                <field name="rotting_threshold_days"/>
                             </group>
                         </group>
                     </sheet>
@@ -64,6 +65,7 @@
                 <list string="Task Stage" delete="0" sample="1" multi_edit="1" editable="bottom" open_form_view="True">
                     <field name="sequence" widget="handle" optional="show"/>
                     <field name="name" placeholder="e.g. To Do"/>
+                    <field name="rotting_threshold_days" optional="hide"/>
                     <field name="mail_template_id" optional="hide"/>
                     <field name="project_ids" required="1" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="color" optional="hide" widget="color_picker"/>

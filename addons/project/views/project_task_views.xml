@@ -111,6 +111,9 @@
                 <filter name="my_tasks" position="before">
                     <field string="Properties" name="task_properties"/>
                 </filter>
+                <filter name="open_tasks" position="after">
+                    <filter string="Rotting" name="filter_rotting" domain="[('is_rotting', '=', True)]"/>
+                </filter>
                 <filter name="closed_on" position="after">
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
@@ -331,8 +334,10 @@
                     <field name="closed_depend_on_count" invisible="1"/>
                     <field name="html_field_history_metadata" invisible="1"/>
                     <field name="is_template" invisible="1"/>
+                    <field name="is_rotting" invisible="1"/>
+                    <field name="rotting_days" invisible="1"/>
                     <header>
-                        <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id"/>
+                        <field name="stage_id" widget="rotting_statusbar_duration" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="not project_id and not stage_id"/>
                         <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="1"/>
                         <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" invisible="project_id" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>
@@ -398,6 +403,8 @@
                         </h1>
                         <div class="d-flex justify-content-end align-items-center px-1" invisible="not active or is_template">
                             <field name="priority" class="h3 pe-2" widget="priority_switch"/>
+                        </div>
+                        <div class="d-flex justify-content-end o_state_container" invisible="not active or is_template">
                             <field name="state" widget="project_task_state_selection" class="o_task_state_widget" />
                         </div>
                         <div class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25" invisible="active and not is_template">
@@ -697,6 +704,8 @@
                                             <widget name="subtask_counter" class="me-1"/>
                                         </t>
                                         <field name="priority" class="pt-1" widget="priority"/>
+                                        <field name="is_rotting" invisible="1"/>
+                                        <field name="rotting_days" widget="rotting" class="ms-1 d-flex"/>
                                     </div>
                                     <div class="d-flex ms-auto">
                                         <field name="user_ids" widget="many2many_avatar_user"/>
@@ -750,7 +759,9 @@
                     <field name="date_last_stage_update" optional="hide" column_invisible="context.get('default_is_template', False)"/>
                     <field name="state" widget="project_task_state_selection" nolabel="1" width="20px" options="{'is_toggle_mode': false}"/>
                     <field name="stage_id_color" column_invisible="1"/>
-                    <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show" widget="selection_badge" options="{'color_field': 'stage_id_color'}"/>
+                    <field name="is_rotting" column_invisible="True"/>
+                    <field name="rotting_days" column_invisible="True"/>
+                    <field name="stage_id" column_invisible="context.get('set_visible', False)" optional="show" widget="badge_rotting" options="{'color_field': 'stage_id_color'}"/>
                 </list>
             </field>
         </record>
