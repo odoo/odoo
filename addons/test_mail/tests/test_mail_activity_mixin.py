@@ -187,10 +187,10 @@ class TestActivityMixin(TestActivityCommon):
         self.assertEqual(rec.activity_ids, new_act)
         rec.action_archive()
         self.assertEqual(rec.active, False)
-        self.assertEqual(rec.activity_ids, self.env['mail.activity'])
+        self.assertEqual(rec.activity_ids, new_act)
         rec.action_unarchive()
         self.assertEqual(rec.active, True)
-        self.assertEqual(rec.activity_ids, self.env['mail.activity'])
+        self.assertEqual(rec.activity_ids, new_act)
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_mixin_archive_user(self):
