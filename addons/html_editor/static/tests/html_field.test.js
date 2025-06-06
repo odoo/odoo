@@ -16,7 +16,6 @@ import {
     queryAllTexts,
     queryOne,
     waitFor,
-    waitForNone,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, xml } from "@odoo/owl";
@@ -41,6 +40,7 @@ import { Counter, EmbeddedWrapperMixin } from "./_helpers/embedded_component";
 import { moveSelectionOutsideEditor, setSelection } from "./_helpers/selection";
 import { insertText, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
 import { unformat } from "./_helpers/format";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -967,8 +967,7 @@ test("link preview in Link Popover", async () => {
     });
     // Move selection outside to discard
     setSelectionInHtmlField(".test_target");
-    await waitForNone(".o-we-linkpopover", { root: document, timeout: 500 });
-    expect(".o-we-linkpopover").toHaveCount(0);
+    await expectElementCount(".o-we-linkpopover", 0);
     expect(".test_target a").toHaveText("This website");
 
     // Select link label to open the floating toolbar.
