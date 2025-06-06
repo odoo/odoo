@@ -392,7 +392,7 @@ test("group year/quarter/month filters to a single filter type", () => {
             type: "date",
             label: "a relative date filter",
             rangeType: "relative",
-            defaultValue: "last_week",
+            defaultValue: "last_7_days",
         },
     ]);
 });
@@ -658,4 +658,63 @@ test("Default value is now undefined", () => {
     };
     const migratedData = load(data);
     expect(migratedData.globalFilters[0].defaultValue).toBe(undefined);
+});
+
+test("last_six_month and last_three_years are removed", () => {
+    const data = {
+        version: 14,
+        odooVersion: 5,
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                label: "My label",
+                rangeType: "relative",
+                defaultValue: "last_six_month",
+            },
+            {
+                id: "2",
+                type: "date",
+                label: "My label",
+                rangeType: "relative",
+                defaultValue: "last_three_years",
+            },
+            {
+                id: "3",
+                type: "date",
+                label: "My label",
+                rangeType: "relative",
+                defaultValue: "last_month",
+            },
+            {
+                id: "4",
+                type: "date",
+                label: "My label",
+                rangeType: "relative",
+                defaultValue: "last_week",
+            },
+            {
+                id: "5",
+                type: "date",
+                label: "My label",
+                rangeType: "relative",
+                defaultValue: "last_three_months",
+            },
+            {
+                id: "6",
+                type: "date",
+                label: "My label",
+                rangeType: "relative",
+                defaultValue: "last_year",
+            },
+        ],
+    };
+    const migratedData = load(data);
+    const filters = migratedData.globalFilters;
+    expect(filters[0].defaultValue).toBe(undefined);
+    expect(filters[1].defaultValue).toBe(undefined);
+    expect(filters[2].defaultValue).toBe("last_30_days");
+    expect(filters[3].defaultValue).toBe("last_7_days");
+    expect(filters[4].defaultValue).toBe("last_90_days");
+    expect(filters[5].defaultValue).toBe("last_12_months");
 });

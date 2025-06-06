@@ -102,40 +102,28 @@ export function getRelativeDateFromTo(now, offset, rangeType) {
             to = now.endOf("day").plus(offsetParam);
             break;
         }
-        case "last_week": {
+        case "last_7_days": {
             const offsetParam = { days: 7 * offset };
             to = to.plus(offsetParam);
             from = startOfNextDay.minus({ days: 7 }).plus(offsetParam);
             break;
         }
-        case "last_month": {
+        case "last_30_days": {
             const offsetParam = { days: 30 * offset };
             to = to.plus(offsetParam);
             from = startOfNextDay.minus({ days: 30 }).plus(offsetParam);
             break;
         }
-        case "last_three_months": {
+        case "last_90_days": {
             const offsetParam = { days: 90 * offset };
             to = to.plus(offsetParam);
             from = startOfNextDay.minus({ days: 90 }).plus(offsetParam);
             break;
         }
-        case "last_six_months": {
-            const offsetParam = { days: 180 * offset };
-            to = to.plus(offsetParam);
-            from = startOfNextDay.minus({ days: 180 }).plus(offsetParam);
-            break;
-        }
-        case "last_year": {
-            const offsetParam = { days: 365 * offset };
-            to = to.plus(offsetParam);
-            from = startOfNextDay.minus({ days: 365 }).plus(offsetParam);
-            break;
-        }
-        case "last_three_years": {
-            const offsetParam = { days: 3 * 365 * offset };
-            to = to.plus(offsetParam);
-            from = startOfNextDay.minus({ days: 3 * 365 }).plus(offsetParam);
+        case "last_12_months": {
+            const offsetParam = { months: 12 * offset };
+            to = startOfNextDay.minus({ months: 1 }).endOf("month").plus(offsetParam);
+            from = startOfNextDay.minus({ months: 12 }).startOf("month").plus(offsetParam);
             break;
         }
         default:
