@@ -144,7 +144,7 @@
                 <div t-if="(!ui.isSmall || pos.ticket_screen_mobile_pane === 'right')" class="leftpane d-flex flex-column flex-grow-1 gap-2 w-100 h-100 h-lg-100 bg-view">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
-                    <t t-if="_selectedSyncedOrder?.getOrderlines()?.length" > 
+                    <t t-if="_selectedSyncedOrder?.getOrderlines()?.length" >
                         <div t-if="isOrderSynced" t-att-class="{ 'highlight text-danger': !getHasItemsToRefund() }" class="py-2 px-3 rounded-3 bg-view text-center">
                             Select the product(s) to refund and set the quantity
                         </div>
@@ -196,7 +196,12 @@
                                 </div>
                             </t>
                             <div t-else="" class="pads d-flex gap-2 m-2 mt-0" >
-                                <BackButton onClick="() => pos.onClickBackButton()"/>
+                                <BackButton t-if="ui.isSmall" onClick="() => pos.onClickBackButton()"/>
+                                <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
+                                    t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
+                                    t-if="this.pos.unwatched.printers.length and _selectedSyncedOrder.uiState.lastPrints.length">
+                                    <i class="fa fa-cutlery" aria-hidden="true"/>
+                                </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
                                     t-att-disabled="!_selectedSyncedOrder"
                                     t-on-click="() => this.setOrder(_selectedSyncedOrder)">
