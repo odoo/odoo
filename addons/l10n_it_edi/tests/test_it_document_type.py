@@ -12,7 +12,7 @@ class TestItDocumentType(TestItEdi):
 
         move_debit_note_wiz = self.env['account.debit.note'].with_context(
             active_model='account.move',
-            active_ids=original_move.ids
+            active_ids=original_move.ids,
         ).create({
             'copy_lines': True,
         })

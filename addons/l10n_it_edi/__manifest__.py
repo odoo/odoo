@@ -7,6 +7,7 @@
     'depends': [
         'l10n_it',
         'account_edi_proxy_client',
+        'account_debit_note',
     ],
     'auto_install': ['l10n_it'],
     'description': """
