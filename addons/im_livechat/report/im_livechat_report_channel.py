@@ -40,7 +40,6 @@ class Im_LivechatReportChannel(models.Model):
     rating = fields.Integer('Rating', aggregator="avg", readonly=True)
     # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
-    partner_id = fields.Many2one("res.partner", "Agent", readonly=True)
     handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
     handled_by_agent = fields.Integer("Handled by Agent", readonly=True, aggregator="sum")
     visitor_partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
@@ -62,6 +61,9 @@ class Im_LivechatReportChannel(models.Model):
     chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
     chatbot_answers_path_str = fields.Char("Chatbot Answers (String)", readonly=True)
     session_expertises = fields.Char("Expertises used in this session", readonly=True)
+    partner_id = fields.Many2one("res.partner", "Agent", readonly=True)
+    help_request_agent_id = fields.Many2one("res.partner", related="channel_id.livechat_help_request_agent_id", readonly=True)
+    active_agent_id = fields.Many2one("res.partner", related="channel_id.livechat_active_agent_id", readonly=True)
 
     @property
     def _unknown_chatbot_answer_name(self):

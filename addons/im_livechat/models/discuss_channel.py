@@ -43,7 +43,7 @@ class DiscussChannel(models.Model):
     livechat_agent_partner_ids = fields.Many2many(
         "res.partner",
         "im_livechat_channel_member_history_discuss_channel_agent_rel",
-        string="Agents",
+        string="All Agents",
         compute="_compute_livechat_agent_partner_ids",
         store=True,
     )
@@ -63,6 +63,18 @@ class DiscussChannel(models.Model):
         "mail.guest",
         string="Customers (Guests)",
         compute="_compute_livechat_customer_guest_ids",
+    )
+    livechat_help_request_agent_id = fields.Many2one(
+        "res.partner",
+        string="Help Requested (Agent)",
+        compute="_compute_livechat_help_request_agent_id",
+        store=True,
+    )
+    livechat_active_agent_id = fields.Many2one(
+        "res.partner",
+        string="Active Agent",
+        compute="_compute_livechat_active_agent_id",
+        store=True,
     )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
@@ -182,6 +194,45 @@ class DiscussChannel(models.Model):
             channel.livechat_customer_guest_ids = (
                 channel.livechat_customer_history_ids.guest_id
             )
+
+    @api.depends("livechat_agent_history_ids")
+    def _compute_livechat_help_request_agent_id(self):
+        helped_agent_history_by_channel = dict(
+            self.env["im_livechat.channel.member.history"]._read_group(
+                [("channel_id", "in", self.ids), ("livechat_member_type", "=", "agent")],
+                ["channel_id"],
+                ["id:min"],
+                having=[("__count", ">", 1)],
+            )
+        )
+        helped_agent_by_channel = {
+            history.channel_id: history.partner_id
+            for history in self.env["im_livechat.channel.member.history"].search_fetch(
+                [("id", "in", list(helped_agent_history_by_channel.values()))],
+                ["channel_id", "partner_id"],
+            )
+        }
+        for channel in self:
+            channel.livechat_help_request_agent_id = helped_agent_by_channel.get(channel)
+
+    @api.depends("livechat_agent_history_ids")
+    def _compute_livechat_active_agent_id(self):
+        active_agent_history_by_channel = dict(
+            self.env["im_livechat.channel.member.history"]._read_group(
+                [("channel_id", "in", self.ids), ("livechat_member_type", "in", ("agent", "bot"))],
+                ["channel_id"],
+                ["id:max"],
+            )
+        )
+        active_agent_by_channel = {
+            history.channel_id: history.partner_id
+            for history in self.env["im_livechat.channel.member.history"].search_fetch(
+                [("id", "in", list(active_agent_history_by_channel.values()))],
+                ["channel_id", "partner_id"],
+            )
+        }
+        for channel in self:
+            channel.livechat_active_agent_id = active_agent_by_channel.get(channel)
 
     def _sync_field_names(self):
         return super()._sync_field_names() + ["livechat_operator_id"]
