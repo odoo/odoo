@@ -32,6 +32,7 @@ test("call a specific action with some params and value", async () => {
     expect(".options-container").toBeDisplayed();
     expect("[data-action-id='customAction']").toHaveText("MyAction");
     await click("[data-action-id='customAction']");
+    await animationFrame();
     // The function `apply` should be called twice (on hover (for preview), then, on click).
     expect.verifySteps(["customAction myParam myValue", "customAction myParam myValue"]);
 });
@@ -44,6 +45,7 @@ test("call a shorthand action", async () => {
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     await click("[data-class-action='my-custom-class']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("my-custom-class");
 });
 test("call a shorthand action and a specific action", async () => {
@@ -63,6 +65,7 @@ test("call a shorthand action and a specific action", async () => {
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     await click("[data-action-id='customAction'][data-class-action='my-custom-class']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("my-custom-class");
     // The function `apply` should be called twice (on hover (for preview), then, on click).
     expect.verifySteps(["customAction", "customAction"]);
@@ -194,11 +197,13 @@ test("clean another action", async () => {
     await contains(":iframe .test-options-target").click();
     expect(".options-container").toBeDisplayed();
     await click("[data-class-action='my-custom-class1']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
         "test-options-target o-paragraph my-custom-class1"
     );
     await click("[data-class-action='my-custom-class2']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveAttribute(
         "class",
         "test-options-target o-paragraph my-custom-class2"
@@ -231,6 +236,7 @@ test("clean should provide the next action value", async () => {
 
     await click("[data-class-action='c1']");
     await click("[data-class-action='c2']");
+    await animationFrame();
     expect.verifySteps([
         "customAction apply",
         "customAction apply",
@@ -269,8 +275,10 @@ test("clean should only be called on the currently selected item", async () => {
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
     await contains(":iframe .test-options-target").click();
     await click("[data-action-id='customAction1']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("c1");
     await click("[data-action-id='customAction2']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("c2");
     expect.verifySteps([
         "customAction1 apply",
