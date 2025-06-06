@@ -138,6 +138,11 @@ export class ColorPicker extends Component {
         this.props.applyColorPreview(color);
     }
 
+    onCustomColorPreview(ev) {
+        this.props.applyColorResetPreview();
+        this.onColorPreview(ev);
+    }
+
     onColorHover(ev) {
         if (this.getTarget(ev).tagName !== "BUTTON") {
             return;
