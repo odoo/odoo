@@ -55,12 +55,12 @@ class MailController(http.Controller):
         comparison = cls._check_token(token)
         if not comparison:
             _logger.warning('Invalid token in route %s', request.httprequest.url)
-            return comparison, None, cls._redirect_to_messaging()
+            return comparison, None, cls._redirect_to_generic_fallback(model, res_id)
         try:
             record = request.env[model].browse(res_id).exists()
         except Exception:
             record = None
-            redirect = cls._redirect_to_messaging()
+            redirect = cls._redirect_to_generic_fallback(model, res_id)
         else:
             redirect = cls._redirect_to_record(model, res_id)
         return comparison, record, redirect
