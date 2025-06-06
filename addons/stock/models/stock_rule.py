@@ -573,80 +573,135 @@ class ProcurementGroup(models.Model):
         return res
 
     @api.model
-    def _get_rule(self, product_id, location_id, values):
-        """ Find a pull rule for the location_id, fallback on the parent
+    def _get_rules_for_combinations(self, combinations, values):
+        """ Find pull rules for the location_ids, fallback on the parent
         locations if it could not be found.
+        Batched version of _get_rule with a different return type.
+
+        :param combinations: list of (product_id, location_id, warehouse_id) triplets
+        :param values: kwargs type parameter. Common keys are route_ids and product_packaging_id
+
+        :return result_dict: a dict mapping (product, location, warehouse) -> stock.rule
         """
-        result = self.env['stock.rule']
-        if not location_id:
-            return result
-        locations = location_id
-        # Get the location hierarchy, starting from location_id up to its root location.
-        while locations[-1].location_id:
-            locations |= locations[-1].location_id
-        domain = self._get_rule_domain(locations, values)
+        result_dict = {}
+        # Replace False warehouses/products by empty recordset and uniquify combinations.
+        unique_combinations = {
+            (combination[0] or self.env['product.product'], combination[1], combination[2] or self.env['stock.warehouse'])
+            for combination in combinations
+        }
+        products, locations, warehouses = zip(*unique_combinations)
+        products = self.env['product.product'].union(*products)
+        locations = self.env['stock.location'].union(*locations)
+        warehouses = self.env['stock.warehouse'].union(*warehouses)
+        if not locations:
+            return result_dict
+        all_locations = self.env['stock.location']
+        for location in locations:
+            all_locations |= location
+            # Get the location hierarchy, starting from location_id up to its root location.
+            while all_locations[-1].location_id and all_locations[-1].location_id not in all_locations:
+                all_locations |= all_locations[-1].location_id
+        domain = self._get_rule_domain(all_locations, values)
         # Get a mapping (location_id, route_id) -> warehouse_id -> rule_id
         rule_dict = self._search_rule_for_warehouses(
             values.get("route_ids", False),
             values.get("product_packaging_id", False),
-            product_id,
-            values.get("warehouse_id", locations.warehouse_id),
+            products,
+            warehouses or all_locations.warehouse_id,
             domain,
         )
+        # Buid a mapping location-id -> is_intercomp_location
+        location_intercomp_dict = {
+            location.id: self._check_intercomp_location(location)
+            for location in all_locations
+        }
 
-        def extract_rule(rule_dict, route_ids, warehouse_id, location_dest_id):
+        def extract_rule(rule_dict, routes, warehouse, location_dest):
             rule = self.env['stock.rule']
-            for route_id in sorted(route_ids, key=lambda r: r.sequence):
-                sub_dict = rule_dict.get((location_dest_id.id, route_id.id))
+            for route in routes:
+                sub_dict = rule_dict.get((location_dest.id, route.id))
                 if not sub_dict:
                     continue
-                if not warehouse_id:
+                if not warehouse:
                     rule = sub_dict[next(iter(sub_dict))]
+                elif warehouse.id not in sub_dict and False not in sub_dict:
+                    continue
                 else:
-                    rule = sub_dict.get(warehouse_id.id)
+                    rule = sub_dict.get(warehouse.id)
                     rule = rule or sub_dict[False]
                 if rule:
                     break
             return rule
 
-        def get_rule_for_routes(rule_dict, route_ids, packaging_id, product_id, warehouse_id, location_dest_id):
-            res = self.env['stock.rule']
-            if route_ids:
-                res = extract_rule(rule_dict, route_ids, warehouse_id, location_dest_id)
-            if not res and packaging_id:
-                res = extract_rule(rule_dict, packaging_id.route_ids, warehouse_id, location_dest_id)
-            if not res:
-                res = extract_rule(rule_dict, product_id.route_ids | product_id.categ_id.total_route_ids, warehouse_id, location_dest_id)
-            if not res and warehouse_id:
-                res = extract_rule(rule_dict, warehouse_id.route_ids, warehouse_id, location_dest_id)
-            return res
+        def get_rule_for_tuple(rule_dict, product_routes, warehouse, routes_by_warehouse, location_dest, routes, packaging_routes, multi_company_user):
+            result = self.env['stock.rule']
+            location = location_dest
+            # Go through the location hierarchy again, this time breaking at the first valid stock.rule found
+            # in rules_by_location.
+            inter_comp_location_checked = False
+            while (not result) and location:
+                candidate_locations = location
+                if not inter_comp_location_checked and multi_company_user and location_intercomp_dict[location.id]:
+                    # Add the intercomp location to candidate_locations as the intercomp domain was added
+                    # above in the call to _get_rule_domain.
+                    inter_comp_location = self.env.ref('stock.stock_location_customers', raise_if_not_found=False)
+                    candidate_locations |= inter_comp_location
+                    inter_comp_location_checked = True
+                for candidate_location in candidate_locations:
+                    warehouse = warehouse or candidate_location.warehouse_id
+                    if routes:
+                        result = extract_rule(rule_dict, routes, warehouse, candidate_location)
+                    if not result and packaging_routes:
+                        result = extract_rule(rule_dict, packaging_routes, warehouse, candidate_location)
+                    if not result and product_routes:
+                        result = extract_rule(rule_dict, product_routes, warehouse, candidate_location)
+                    if not result and warehouse:
+                        result = extract_rule(rule_dict, routes_by_warehouse.get(warehouse.id), warehouse, candidate_location)
+                    if result:
+                        break
+                else:
+                    location = location.location_id
+            return result
 
-        location = location_id
-        # Go through the location hierarchy again, this time breaking at the first valid stock.rule found
-        # in rules_by_location.
-        inter_comp_location_checked = False
-        while (not result) and location:
-            candidate_locations = location
-            if not inter_comp_location_checked and self._check_intercomp_location(location):
-                # Add the intercomp location to candidate_locations as the intercomp domain was added
-                # above in the call to _get_rule_domain.
-                inter_comp_location = self.env.ref('stock.stock_location_customers', raise_if_not_found=False)
-                candidate_locations |= inter_comp_location
-                inter_comp_location_checked = True
-            for candidate_location in candidate_locations:
-                result = get_rule_for_routes(
-                    rule_dict,
-                    values.get("route_ids", self.env['stock.route']),
-                    values.get("product_packaging_id", self.env['product.packaging']),
-                    product_id,
-                    values.get("warehouse_id", candidate_location.warehouse_id),
-                    candidate_location,
-                )
-                if result:
-                    break
-            else:
-                location = location.location_id
-        return result
+        multi_company_user = self.env.user.has_group('base.group_multi_company')
+        intercomp_warehouse = self.env.ref('stock.stock_location_customers', raise_if_not_found=False).warehouse_id or self.env['stock.warehouse']
+        # Get routes in advance to avoid doing lots of One2many convert_to_record calls.
+        routes_by_product = {
+            p.id: sorted(p.route_ids | p.categ_id.total_route_ids, key=lambda r: r.sequence)
+            for p in products
+        }
+        routes_by_warehouse = {
+            w.id: sorted(w.route_ids, key=lambda r: r.sequence)
+            for w in (
+                warehouses
+                or locations.warehouse_id | intercomp_warehouse)
+        }
+        routes = sorted(values.get("route_ids") or self.env['stock.route'], key=lambda r: r.sequence)
+        packaging_routes = sorted((values.get('product_packaging_id') or self.env['product.packaging']).route_ids, key=lambda r: r.sequence)
+        for product, location, warehouse in unique_combinations:
+            result = get_rule_for_tuple(
+                rule_dict,
+                routes_by_product.get(product.id),
+                warehouse,
+                routes_by_warehouse,
+                location,
+                routes,
+                packaging_routes,
+                multi_company_user,
+            )
+            result_dict[product, location, warehouse] = result
+        return result_dict
+
+    @api.model
+    def _get_rule(self, product_id, location_id, values):
+        """ Find a pull rule for the location_id, fallback on the parent
+        locations if it could not be found.
+        """
+        if not location_id:
+            return self.env['stock.rule']
+        result_dict = self._get_rules_for_combinations([(product_id, location_id, values.get('warehouse_id', False))], values)
+        warehouse_id = values.get('warehouse_id') or self.env['stock.warehouse']
+        return result_dict[product_id, location_id, warehouse_id]
 
     @api.model
     def _check_intercomp_location(self, locations):
@@ -659,7 +714,7 @@ class ProcurementGroup(models.Model):
         location_ids = locations.ids
         # If the method is called to find rules towards the Inter-company location, also add the 'Customer' location in the domain.
         # This is to avoid having to duplicate every rules that deliver to Customer to have the Inter-company part.
-        if self._check_intercomp_location(locations):
+        if self.env.user.has_group('base.group_multi_company') and self._check_intercomp_location(locations):
             location_ids.append(self.env.ref('stock.stock_location_customers', raise_if_not_found=False).id)
         domain = ['&', ('location_dest_id', 'in', location_ids), ('action', '!=', 'push')]
         # In case the method is called by the superuser, we need to restrict the rules to the

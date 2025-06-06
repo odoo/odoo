@@ -608,24 +608,59 @@ class Product(models.Model):
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
         return defaultdict(float), defaultdict(float)
 
+    @api.model
+    def _get_rules_for_combinations(self, combinations, route_ids=False, result_dict=None, base_location_dict=None):
+        """ Return stock.rules related to combinations and route_ids.
+        Batched-like version of _get_rules_from_location with a different return type.
+
+        :param combinations: list of (product, location) pairs to find rules.
+        :param route_ids: stock.routes recordset used to filter rules.
+        :param result_dct: a dictionary mapping (product, location) -> rules
+        :param base_location_dict: a dictionary mapping (product, location) -> location
+        This param serves to store the root location (value) that led to the
+        current location (key) for the same product (key) following rule.location_src_id tree.
+
+        :return result dict: a dictionary mapping (product, location) -> rules
+        """
+        result_dict = result_dict or defaultdict(lambda: self.env['stock.rule'])
+        base_location_dict = base_location_dict or {}
+        unique_combinations = {(
+                product,
+                location,
+                location.warehouse_id or result_dict[product, location].propagate_warehouse_id
+            )
+            for product, location in combinations
+        }
+        rule_dict = self.env['procurement.group'].with_context(active_test=True)._get_rules_for_combinations(
+            unique_combinations,
+            {'route_ids': route_ids}
+        )
+        next_combinations = []
+        for product, location, warehouse in unique_combinations:
+            candidate_rule = rule_dict.get((product, location, warehouse), self.env['stock.rule'])
+            base_location = base_location_dict.get((product, location), location)
+            base_location_dict[product, candidate_rule.location_src_id] = base_location
+            # Check for rules that are not bound to a specific warehouse
+            candidate_rule = candidate_rule or rule_dict.get(
+                (product, location, self.env["stock.warehouse"]),
+                self.env["stock.rule"],
+            )
+            if candidate_rule in result_dict[product, base_location]:
+                raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", candidate_rule.display_name))
+            if not candidate_rule:
+                continue
+            if candidate_rule.procure_method == 'make_to_stock' or candidate_rule.action not in ('pull_push', 'pull'):
+                result_dict[product, base_location] |= candidate_rule
+            else:
+                result_dict[product, base_location] |= candidate_rule
+                next_combinations.append((product, candidate_rule.location_src_id))
+        if not next_combinations:
+            return result_dict
+        return self._get_rules_for_combinations(next_combinations, route_ids, result_dict, base_location_dict)
+
     def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
-        if not seen_rules:
-            seen_rules = self.env['stock.rule']
-        warehouse = location.warehouse_id
-        if not warehouse and seen_rules:
-            warehouse = seen_rules[-1].propagate_warehouse_id
-        rule = self.env['procurement.group'].with_context(active_test=True)._get_rule(self, location, {
-            'route_ids': route_ids,
-            'warehouse_id': warehouse,
-        })
-        if rule in seen_rules:
-            raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
-        if not rule:
-            return seen_rules
-        if rule.procure_method == 'make_to_stock' or rule.action not in ('pull_push', 'pull'):
-            return seen_rules | rule
-        else:
-            return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
+        rule_dict = self._get_rules_for_combinations([(self, location)], route_ids=route_ids)
+        return rule_dict[self, location]
 
     def _get_dates_info(self, date, location, route_ids=False):
         rules = self._get_rules_from_location(location, route_ids=route_ids)
