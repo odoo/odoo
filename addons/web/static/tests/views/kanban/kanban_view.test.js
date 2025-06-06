@@ -569,7 +569,7 @@ test("empty group when grouped by date", async () => {
 
     expect(queryAllTexts(".o_kanban_header")).toEqual(["January 2017\n(1)", "February 2017\n(3)"]);
 
-    Partner._records.shift(); // remove only record of the first group
+    MockServer.env["partner"].shift(); // remove only record of the first group
 
     await press("Enter"); // reload
     await animationFrame();
@@ -1528,7 +1528,7 @@ test("kanban with an action id as on_create attrs", async () => {
             // simplified flow in this test: simulate a target new action which
             // creates a record and closes itself
             expect.step(`doAction ${action}`);
-            Partner._records.push({ id: 299, foo: "new" });
+            MockServer.env["partner"].create({ foo: "new" });
             options.onClose();
         },
     });
@@ -7141,7 +7141,7 @@ test("non empty kanban with sample data", async () => {
 test("empty grouped kanban with sample data: add a column", async () => {
     onRpc("web_read_group", function ({ parent }) {
         const result = parent();
-        result.groups = Product._records.map((r) => ({
+        result.groups = this.env["product"].map((r) => ({
             product_id: [r.id, r.display_name],
             __count: 0,
             __extra_domain: [["product_id", "=", r.id]],
@@ -7272,7 +7272,7 @@ test("empty grouped kanban with sample data: delete a column", async () => {
 test("empty grouped kanban with sample data: add a column and delete it right away", async () => {
     onRpc("web_read_group", function ({ parent }) {
         const result = parent();
-        result.groups = Product._records.map((r) => ({
+        result.groups = this.env["product"].map((r) => ({
             product_id: [r.id, r.display_name],
             __count: 0,
             __extra_domain: [["product_id", "=", r.id]],
@@ -7543,7 +7543,7 @@ test("button executes action and check domain", async () => {
 
     mockService("action", {
         doActionButton({ onClose }) {
-            Partner._records[0].active = false;
+            MockServer.env["partner"][0].active = false;
             onClose();
         },
     });
@@ -10166,6 +10166,7 @@ test("set cover image", async () => {
             mimetype: "image/png",
             res_model: "partner",
             res_id: 1,
+            create_uid: false,
         },
         {
             id: 2,
@@ -10173,6 +10174,7 @@ test("set cover image", async () => {
             mimetype: "image/png",
             res_model: "partner",
             res_id: 2,
+            create_uid: false,
         },
     ];
     Partner._fields.displayed_image_id = fields.Many2one({
@@ -10311,6 +10313,7 @@ test("unset cover image", async () => {
             mimetype: "image/png",
             res_model: "partner",
             res_id: 1,
+            create_uid: false,
         },
         {
             id: 2,
@@ -10318,6 +10321,7 @@ test("unset cover image", async () => {
             mimetype: "image/png",
             res_model: "partner",
             res_id: 2,
+            create_uid: false,
         },
     ];
     Partner._fields.displayed_image_id = fields.Many2one({

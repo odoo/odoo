@@ -27,9 +27,7 @@ defineMailModels();
 test("activity upload document is available", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const activityType = pyEnv["mail.activity.type"]._records.find(
-        (r) => r.name === "Upload Document"
-    );
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Upload Document");
     pyEnv["mail.activity"].create({
         activity_category: "upload_file",
         activity_type_id: activityType.id,
@@ -47,9 +45,7 @@ test("activity upload document is available", async () => {
 test("activity can upload a document", async () => {
     const pyEnv = await startServer();
     const fakeId = pyEnv["res.partner"].create({});
-    const activityType = pyEnv["mail.activity.type"]._records.find(
-        (r) => r.name === "Upload Document"
-    );
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Upload Document");
     pyEnv["mail.activity"].create({
         activity_category: "upload_file",
         activity_type_id: activityType.id,
@@ -257,7 +253,7 @@ test("activity with mail template layout", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const activityType = pyEnv["mail.activity.type"]._records.find((r) => r.name === "Email");
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Email");
     pyEnv["mail.activity.type"].write(activityType.id, { mail_template_ids: [mailTemplateId] });
     pyEnv["mail.activity"].create({
         activity_type_id: activityType.id,
@@ -278,7 +274,7 @@ test("activity with mail template: preview mail", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const activityType = pyEnv["mail.activity.type"]._records.find((r) => r.name === "Email");
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Email");
     pyEnv["mail.activity.type"].write(activityType.id, { mail_template_ids: [mailTemplateId] });
     pyEnv["mail.activity"].create({
         activity_type_id: activityType.id,
@@ -311,7 +307,7 @@ test("activity with mail template: send mail", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const mailTemplateId = pyEnv["mail.template"].create({ name: "Dummy mail template" });
-    const activityType = pyEnv["mail.activity.type"]._records.find((r) => r.name === "Email");
+    const activityType = pyEnv["mail.activity.type"].find((r) => r.name === "Email");
     pyEnv["mail.activity.type"].write(activityType.id, { mail_template_ids: [mailTemplateId] });
     pyEnv["mail.activity"].create({
         activity_type_id: activityType.id,
