@@ -713,7 +713,7 @@ class MailRenderMixin(models.AbstractModel):
 
         # rendering options (update default defined on field by asked options)
         engine = getattr(self._fields[field], 'render_engine', engine)
-        field_options = getattr(self._fields[field], 'render_options', {})
+        field_options = getattr(self._fields[field], 'render_options', {}).copy()
         if options:
             field_options.update(**options)
 
