@@ -1135,6 +1135,78 @@ class AccountChartTemplate(models.AbstractModel):
     @template(model='account.reconcile.model')
     def _get_account_reconcile_model(self, template_code):
         return {
+<<<<<<< f6bfc6f7a171d56ebf8e071fceea75b43f62c16e
+||||||| 57b4056798b9a380027fd3da1c4f3965249a4509
+            "reconcile_perfect_match": {
+                "name": _('Invoices/Bills Perfect Match'),
+                "sequence": 1,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": True,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": True,
+                "payment_tolerance_type": 'percentage',
+                "payment_tolerance_param": 0,
+                "match_partner": True,
+            },
+            "reconcile_partial_underpaid": {
+                "name": _('Invoices/Bills Partial Match if Underpaid'),
+                "sequence": 2,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": False,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": False,
+                "match_partner": True,
+            },
+            "reconcile_bill": {
+                "name": 'Create Bill',
+                "sequence": 5,
+                "rule_type": 'writeoff_button',
+                'counterpart_type': 'purchase',
+                'line_ids': [
+                    Command.create({
+                        'amount_type': 'percentage_st_line',
+                        'amount_string': '100',
+                    }),
+                ],
+            },
+=======
+            "reconcile_perfect_match": {
+                "name": _('Invoices/Bills Perfect Match'),
+                "sequence": 1,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": True,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": True,
+                "payment_tolerance_type": 'percentage',
+                "payment_tolerance_param": 0,
+                "match_partner": True,
+            },
+            "reconcile_partial_underpaid": {
+                "name": _('Invoices/Bills Partial Match if Underpaid'),
+                "sequence": 2,
+                "rule_type": 'invoice_matching',
+                "auto_reconcile": False,
+                "match_nature": 'both',
+                "match_same_currency": True,
+                "allow_payment_tolerance": False,
+                "match_partner": True,
+            },
+            "reconcile_bill": {
+                "name": _('Create Bill'),
+                "sequence": 5,
+                "rule_type": 'writeoff_button',
+                'counterpart_type': 'purchase',
+                'line_ids': [
+                    Command.create({
+                        'amount_type': 'percentage_st_line',
+                        'amount_string': '100',
+                    }),
+                ],
+            },
+>>>>>>> c2ab1c7cf1c6690d793475855330905b48d870df
             'internal_transfer_reco': {
                 'name': _('Internal Transfers'),
                 'line_ids': [
