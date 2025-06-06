@@ -91,78 +91,69 @@ export function checkFilterFieldMatching(fieldMatchings) {
     return CommandResult.Success;
 }
 
-/**
- * Get a date domain relative to the current date.
- * The domain will span the amount of time specified in rangeType and end the day before the current day.
- *
- *
- * @param {Object} now current time, as luxon time
- * @param {number} offset offset to add to the date
- * @param {import("@spreadsheet").RelativePeriod} rangeType
- * @param {string} fieldName
- * @param {"date" | "datetime"} fieldType
- *
- * @returns {Domain|undefined}
- */
-export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldType) {
+export function getRelativeDateFromTo(now, offset, rangeType) {
     const startOfNextDay = now.plus({ days: 1 }).startOf("day");
-    let endDate = now.endOf("day");
-    let startDate = endDate;
+    let to = now.endOf("day");
+    let from = to;
     switch (rangeType) {
         case "year_to_date": {
             const offsetParam = { years: offset };
-            startDate = now.startOf("year").plus(offsetParam);
-            endDate = now.endOf("day").plus(offsetParam);
+            from = now.startOf("year").plus(offsetParam);
+            to = now.endOf("day").plus(offsetParam);
             break;
         }
         case "last_week": {
             const offsetParam = { days: 7 * offset };
-            endDate = endDate.plus(offsetParam);
-            startDate = startOfNextDay.minus({ days: 7 }).plus(offsetParam);
+            to = to.plus(offsetParam);
+            from = startOfNextDay.minus({ days: 7 }).plus(offsetParam);
             break;
         }
         case "last_month": {
             const offsetParam = { days: 30 * offset };
-            endDate = endDate.plus(offsetParam);
-            startDate = startOfNextDay.minus({ days: 30 }).plus(offsetParam);
+            to = to.plus(offsetParam);
+            from = startOfNextDay.minus({ days: 30 }).plus(offsetParam);
             break;
         }
         case "last_three_months": {
             const offsetParam = { days: 90 * offset };
-            endDate = endDate.plus(offsetParam);
-            startDate = startOfNextDay.minus({ days: 90 }).plus(offsetParam);
+            to = to.plus(offsetParam);
+            from = startOfNextDay.minus({ days: 90 }).plus(offsetParam);
             break;
         }
         case "last_six_months": {
             const offsetParam = { days: 180 * offset };
-            endDate = endDate.plus(offsetParam);
-            startDate = startOfNextDay.minus({ days: 180 }).plus(offsetParam);
+            to = to.plus(offsetParam);
+            from = startOfNextDay.minus({ days: 180 }).plus(offsetParam);
             break;
         }
         case "last_year": {
             const offsetParam = { days: 365 * offset };
-            endDate = endDate.plus(offsetParam);
-            startDate = startOfNextDay.minus({ days: 365 }).plus(offsetParam);
+            to = to.plus(offsetParam);
+            from = startOfNextDay.minus({ days: 365 }).plus(offsetParam);
             break;
         }
         case "last_three_years": {
             const offsetParam = { days: 3 * 365 * offset };
-            endDate = endDate.plus(offsetParam);
-            startDate = startOfNextDay.minus({ days: 3 * 365 }).plus(offsetParam);
+            to = to.plus(offsetParam);
+            from = startOfNextDay.minus({ days: 3 * 365 }).plus(offsetParam);
             break;
         }
         default:
             return undefined;
     }
+    return { from, to };
+}
 
-    let leftBound, rightBound;
-    if (fieldType === "date") {
-        leftBound = serializeDate(startDate);
-        rightBound = serializeDate(endDate);
-    } else {
-        leftBound = serializeDateTime(startDate);
-        rightBound = serializeDateTime(endDate);
+export function getDateDomain(from, to, field, fieldType) {
+    const serialize = fieldType === "date" ? serializeDate : serializeDateTime;
+    if (from && to) {
+        return new Domain(["&", [field, ">=", serialize(from)], [field, "<=", serialize(to)]]);
     }
-
-    return new Domain(["&", [fieldName, ">=", leftBound], [fieldName, "<=", rightBound]]);
+    if (from) {
+        return new Domain([[field, ">=", serialize(from)]]);
+    }
+    if (to) {
+        return new Domain([[field, "<=", serialize(to)]]);
+    }
+    return new Domain();
 }
