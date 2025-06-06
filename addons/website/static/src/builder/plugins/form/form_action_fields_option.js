@@ -21,6 +21,6 @@ export class FormActionFieldsOption extends BaseOptionComponent {
     async getFormInfo(props = this.props) {
         const el = this.env.getEditingElement();
         const formInfo = await props.prepareFormModel(el, props.activeForm);
-        Object.assign(this.state.formInfo, formInfo);
+        this.state.formInfo.fields = formInfo.fields || [];
     }
 }
