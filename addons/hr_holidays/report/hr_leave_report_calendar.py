@@ -4,6 +4,7 @@ from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
+from datetime import timedelta, datetime
 
 
 class HrLeaveReportCalendar(models.Model):
@@ -92,6 +93,46 @@ class HrLeaveReportCalendar(models.Model):
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         return self.env.user.employee_id._get_unusual_days(date_from, date_to)
+
+    @api.model
+    def get_gantt_data(self, domain, groupby, read_specification, limit=None, offset=0, unavailability_fields=None, progress_bar_fields=None, start_date=None, stop_date=None, scale=None):
+        def get_unavailable_employee_intervals(employees_record, start, stop, scale):
+            leaves_mapping = employees_record.resource_id._get_unavailable_intervals(start, stop)
+            cell_dt = timedelta(hours=1) if scale in ['day', 'week'] else timedelta(hours=12)
+            result = {}
+            for employee in employees_record:
+                # remove intervals smaller than a cell, as they will cause half a cell to turn grey
+                # ie: when looking at a week, a employee start everyday at 8, so there is a unavailability
+                # like: 2019-05-22 20:00 -> 2019-05-23 08:00 which will make the first half of the 23's cell grey
+                notable_intervals = filter(lambda interval: interval[1] - interval[0] >= cell_dt, leaves_mapping.get(employee.resource_id.id, []))
+                result[employee.id] = [{'start': interval[0], 'stop': interval[1]} for interval in notable_intervals]
+            return result
+
+        gantt_data = super().get_gantt_data(domain, groupby, read_specification, limit=limit, offset=offset, unavailability_fields=unavailability_fields, progress_bar_fields=progress_bar_fields, start_date=start_date, stop_date=stop_date, scale=scale)
+        if self.env.context.get('leave_report_show_all_resources') and groupby == ['employee_id']:
+            existing_ids = {group['employee_id'][0] for group in gantt_data['groups'] if group.get('employee_id')}
+            employee_not_in_gantt_data = self.env['hr.employee'].search([
+                ('active', '=', True),
+                ('company_id', 'in', self.env.companies.ids),
+                ('id', 'not in', existing_ids),
+                '|',
+                ('user_id', '=', self.env.uid),
+                ('parent_id.user_id', '=', self.env.uid),
+            ])
+            for emp in employee_not_in_gantt_data:
+                gantt_data['groups'].append({
+                    'employee_id': (emp.id, emp.name),
+                    '__record_ids': [],
+                })
+            employee_not_in_gantt_data_unavailabilities = get_unavailable_employee_intervals(
+                employee_not_in_gantt_data,
+                datetime.strptime(str(start_date), "%Y-%m-%d %H:%M:%S"),
+                datetime.strptime(str(stop_date), "%Y-%m-%d %H:%M:%S"),
+                scale,
+            )
+            gantt_data['unavailabilities']['employee_id'].update(employee_not_in_gantt_data_unavailabilities)
+            gantt_data['length'] += len(employee_not_in_gantt_data)
+        return gantt_data
 
     @api.depends('employee_id.name', 'leave_id')
     def _compute_name(self):
