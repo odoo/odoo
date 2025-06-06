@@ -87,6 +87,11 @@ class PaymentTransaction(models.Model):
         readonly=True,
         index=True,
     )
+    is_live = fields.Boolean(
+        string="Production Environment",
+        help="Whether the transaction happened in a production environment. False for transactions"
+             " created before this tracking was implemented.",
+    )
     source_transaction_id = fields.Many2one(
         string="Source Transaction",
         comodel_name='payment.transaction',
@@ -177,6 +182,8 @@ class PaymentTransaction(models.Model):
 
             if not values.get('reference'):
                 values['reference'] = self._compute_reference(provider.code, **values)
+
+            values['is_live'] = provider.state == 'enabled'
 
             # Duplicate partner values.
             partner = self.env['res.partner'].browse(values['partner_id'])
