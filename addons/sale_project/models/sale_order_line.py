@@ -148,7 +148,11 @@ class SaleOrderLine(models.Model):
                 if accounts_to_add := project._get_analytic_accounts().filtered(
                     lambda account: account.root_plan_id not in applied_root_plans
                 ):
-                    line.analytic_distribution |= {",".join(str(account_id.id) for account_id in accounts_to_add): 100}
+                    # project account is added to each analytic distribution line
+                    line.analytic_distribution = {
+                        f"{account_ids},{','.join(map(str, accounts_to_add.ids))}": percentage
+                        for account_ids, percentage in line.analytic_distribution.items()
+                    }
             else:
                 line.analytic_distribution = project._get_analytic_distribution()
 
