@@ -12,6 +12,20 @@ class TestWarehouseMrp(common.TestMrpCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.graphics_card = cls.env['product.product'].create({
+            'name': 'Individual Workplace',
+            'uom_id': cls.uom_unit.id,
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        cls.laptop = cls.env['product.product'].create({
+            'name': 'Acoustic Bloc Screens',
+            'uom_id': cls.uom_unit.id,
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'none',
+        })
         cls.depot_location = cls.env['stock.location'].create({
             'name': 'Depot',
             'usage': 'internal',
