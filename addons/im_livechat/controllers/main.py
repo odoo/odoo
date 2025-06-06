@@ -132,8 +132,7 @@ class LivechatController(http.Controller):
                 "isLoaded": True,
                 "livechat_active": True,
                 "livechat_operator_id": Store.One(
-                    operator,
-                    ["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()],
+                    operator, self.env["discuss.channel"]._store_livechat_operator_id_fields(),
                 ),
                 "name": channel_vals["name"],
                 "scrollUnread": False,
