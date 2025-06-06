@@ -25,12 +25,6 @@
                     <field name="pos_iface_splitbill" string="Allow Bill Splitting"/>
                 </setting>
             </block>
-            <div id="tip_product" position="after">
-                <div invisible="not pos_module_pos_restaurant or not pos_iface_tipproduct">
-                    <field name="pos_set_tip_after_payment" class="oe_inline"/>
-                    <label class="fw-normal" for="pos_set_tip_after_payment" string="Add tip after payment"/>
-                </div>
-            </div>
             <block id="pos_interface_section" position="inside">
                 <setting invisible="not pos_module_pos_restaurant or is_kiosk_mode" help="Select the table first or after registering the order">
                     <field name="pos_default_screen" widget="radio"/>

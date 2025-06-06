@@ -476,15 +476,27 @@ export class PaymentScreen extends Component {
         return true;
     }
     get nextPage() {
-        return !this.error
-            ? {
-                  page: "ReceiptScreen",
-                  params: {
-                      orderUuid: this.currentOrder.uuid,
-                  },
-              }
-            : this.pos.defaultPage;
+        if (this.error) {
+            return this.pos.defaultPage;
+        }
+
+        const order = this.currentOrder;
+        let page = "ReceiptScreen";
+        if (this.pos.config.set_tip_after_payment && !order.is_tipped) {
+            const mainPayment = order.payment_ids[0];
+            if (mainPayment && mainPayment.canBeAdjusted()) {
+                page = "TipScreen";
+            }
+        }
+
+        return {
+            page,
+            params: {
+                orderUuid: order.uuid,
+            },
+        };
     }
+
     paymentMethodImage(id) {
         if (this.paymentMethod.image) {
             return `/web/image/pos.payment.method/${id}/image`;

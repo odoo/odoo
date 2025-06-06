@@ -78,6 +78,39 @@ export function totalAmountContains(value) {
         },
     ];
 }
+export function totalAmountWithTipContains(value, tip) {
+    const steps = [];
+
+    // No tip
+    if (tip === null) {
+        steps.push({
+            isActive: ["desktop"],
+            trigger: `.receipt-screen .o_payment_successful:contains("${value}")`,
+        });
+        steps.push({
+            isActive: ["desktop"],
+            trigger: `.receipt-screen .o_payment_successful:not(:contains("tip"))`,
+        });
+    }
+    // Has tip
+    else {
+        steps.push({
+            isActive: ["desktop"],
+            trigger: `.receipt-screen .o_payment_successful:contains("${value} +")`,
+        });
+        steps.push({
+            isActive: ["desktop"],
+            trigger: `.receipt-screen .o_payment_successful:contains("${tip} tip")`,
+        });
+    }
+    // Fallback mobile
+    steps.push({
+        isActive: ["mobile"],
+        trigger: `.receipt-screen`,
+    });
+
+    return steps;
+}
 export function receiptAmountTotalIs(value) {
     return [
         {

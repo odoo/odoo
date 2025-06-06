@@ -6,7 +6,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as FloorScreen from "@pos_restaurant/../tests/tours/utils/floor_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
-import * as TipScreen from "@pos_restaurant/../tests/tours/utils/tip_screen_util";
+import * as TipScreen from "@point_of_sale/../tests/pos/tours/utils/tip_screen_util";
 import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import { registry } from "@web/core/registry";

@@ -9,7 +9,6 @@ class ResConfigSettings(models.TransientModel):
     pos_floor_ids = fields.Many2many(related='pos_config_id.floor_ids', readonly=False)
     pos_iface_printbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
     pos_iface_splitbill = fields.Boolean(compute='_compute_pos_module_pos_restaurant', store=True, readonly=False)
-    pos_set_tip_after_payment = fields.Boolean(compute='_compute_pos_set_tip_after_payment', store=True, readonly=False)
     pos_default_screen = fields.Selection(related="pos_config_id.default_screen", readonly=False)
 
     @api.depends('pos_module_pos_restaurant', 'pos_config_id')
@@ -25,11 +24,3 @@ class ResConfigSettings(models.TransientModel):
                     'pos_iface_printbill': res_config.pos_config_id.iface_printbill,
                     'pos_iface_splitbill': res_config.pos_config_id.iface_splitbill,
                 })
-
-    @api.depends('pos_iface_tipproduct', 'pos_config_id')
-    def _compute_pos_set_tip_after_payment(self):
-        for res_config in self:
-            if res_config.pos_iface_tipproduct:
-                res_config.pos_set_tip_after_payment = res_config.pos_config_id.set_tip_after_payment
-            else:
-                res_config.pos_set_tip_after_payment = False
