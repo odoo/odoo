@@ -172,6 +172,11 @@ class configmanager:
         # list of nargs='?' options, indexed by short/long option (-x, --xx)
         self.optional_options = {}
 
+        # map old name -> new name
+        self.aliases = {
+            # there are no aliases at the moment
+        }
+
         self.parser = self._build_cli()
         self._load_default_options()
         self._parse_config()
@@ -717,13 +722,12 @@ class configmanager:
             self._runtime_options['stop_after_init'] = True
 
     def _warn_deprecated_options(self):
-        for old_option_name, new_option_name in [
-            # there are no deprecated option at the moment
-        ]:
-            deprecated_value = self.options.pop(old_option_name, None)
-            if deprecated_value:
-                default_value = self.casts[new_option_name].my_default
-                current_value = self.options[new_option_name]
+        for old_option_name, new_option_name in self.aliases.items():
+            for source_name, deprecated_value in self._get_sources(old_option_name).items():
+                if deprecated_value is EMPTY:
+                    continue
+                default_value = self._default_options[new_option_name]
+                current_value = self[new_option_name]
 
                 if deprecated_value in (current_value, default_value):
                     # Surely this is from a --save that was run in a
@@ -733,27 +737,27 @@ class configmanager:
                     # automatically removed on the next --save anyway.
                     self._log(logging.INFO,
                         f"The {old_option_name!r} option found in the "
-                        "configuration file is a deprecated alias to "
+                        f"{source_name} is a deprecated alias to "
                         f"{new_option_name!r}. The configuration value "
                         "is the same as the default value, it can "
                         "safely be removed.")
                 elif current_value == default_value:
                     # deprecated_value != current_value == default_value
                     # assume the new option was not set
-                    self.options[new_option_name] = deprecated_value
+                    self._runtime_options[new_option_name] = self.parse(new_option_name, deprecated_value)
                     self._warn(
                         f"The {old_option_name!r} option found in the "
-                        "configuration file is a deprecated alias to "
+                        f"{source_name} is a deprecated alias to "
                         f"{new_option_name!r}, please use the latter.",
                         DeprecationWarning)
                 else:
                     # deprecated_value != current_value != default_value
                     self.parser.error(
                         f"The two options {old_option_name!r} "
-                        "(found in the configuration file but "
-                        f"deprecated) and {new_option_name!r} are set "
-                        "to different values. Please remove the first "
-                        "one and make sure the second is correct."
+                        f"(found in the {source_name} but deprecated) "
+                        f"and {new_option_name!r} are set to different "
+                        "values. Please remove the first one and make "
+                        "sure the second is correct."
                     )
 
     @classmethod
@@ -884,17 +888,18 @@ class configmanager:
         p = ConfigParser.RawConfigParser()
         try:
             p.read([rcfile])
-            for (name,value) in p.items('options'):
+            for (name, value) in p.items('options'):
                 if name == 'without_demo':
                     name = 'with_demo'
                     value = str(self._check_without_demo(None, 'without_demo', value))
                 option = self.options_index.get(name)
                 if not option:
-                    self._log(logging.WARNING,
-                        "unknown option %r in the config file at %s, "
-                        "option stored as-is, without parsing",
-                        name, self['config'],
-                    )
+                    if name not in self.aliases:
+                        self._log(logging.WARNING,
+                            "unknown option %r in the config file at "
+                            "%s, option stored as-is, without parsing",
+                            name, self['config'],
+                        )
                     self._file_options[name] = value
                     continue
                 if not option.file_loadable:
@@ -1029,10 +1034,10 @@ class configmanager:
                 for no, source in enumerate(self.options.maps[:-4])
             },
             'runtime': self._runtime_options.get(name, EMPTY),
-            'cli': self._cli_options.get(name, EMPTY),
-            'env': self._env_options.get(name, EMPTY),
-            'file': self._file_options.get(name, EMPTY),
-            'default': self._default_options.get(name, EMPTY),
+            'command line': self._cli_options.get(name, EMPTY),
+            'environment variable': self._env_options.get(name, EMPTY),
+            'configuration file': self._file_options.get(name, EMPTY),
+            'hardcoded default': self._default_options.get(name, EMPTY),
         }
 
 
