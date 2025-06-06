@@ -299,3 +299,16 @@ test("Pause GIF when thread is not focused", async () => {
     await focus(".o-mail-Thread");
     await contains(".o-mail-LinkPreviewImage img:not([data-paused])");
 });
+
+test("Show help when no favorite GIF", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    onRpc("/discuss/gif/categories", () => rpc.categories);
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add GIFs']");
+    // gif picker quires extra delay before click (to give time to load initial state)
+    await contains(".o-discuss-GifPicker");
+    await click(".o-discuss-GifPicker div[aria-label='list-item']", { text: "Favorites" });
+    await contains("span", { text: "So uhh... maybe go favorite some GIFs?" });
+});
