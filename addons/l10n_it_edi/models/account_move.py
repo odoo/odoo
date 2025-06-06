@@ -836,6 +836,7 @@ class AccountMove(models.Model):
             'services_or_goods': services_or_goods,
             'goods_in_italy': services_or_goods == 'consu' and self._l10n_it_edi_goods_in_italy(),
             'professional_fees': self._l10n_it_edi_is_professional_fees(),
+            **({'debit_note': True} if self.debit_origin_id else {}),
         }
 
     def _l10n_it_edi_document_type_mapping(self):
@@ -846,7 +847,8 @@ class AccountMove(models.Model):
                      'self_invoice': False,
                      'simplified': False,
                      'downpayment': False,
-                     'professional_fees': False},
+                     'professional_fees': False,
+                     'debit_note': False},
             'TD02': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
@@ -866,7 +868,8 @@ class AccountMove(models.Model):
             'TD05': {'move_types': ['in_invoice', 'out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
-                     'simplified': False},
+                     'simplified': False,
+                     'debit_note': True},
             'TD06': {'move_types': ['out_invoice'],
                      'import_type': 'in_invoice',
                      'self_invoice': False,
