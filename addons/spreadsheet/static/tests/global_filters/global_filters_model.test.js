@@ -2,7 +2,7 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, mockDate, mockTimeZone } from "@odoo/hoot-mock";
 
-import { DispatchResult, Model, helpers, tokenize } from "@odoo/o-spreadsheet";
+import { DispatchResult, Model, helpers, tokenize, constants } from "@odoo/o-spreadsheet";
 import { Domain } from "@web/core/domain";
 import {
     defineSpreadsheetModels,
@@ -62,7 +62,8 @@ describe.current.tags("headless");
 defineSpreadsheetModels();
 
 const { DateTime } = luxon;
-const { toZone } = helpers;
+const { toZone, toNumber } = helpers;
+const { DEFAULT_LOCALE } = constants;
 
 /**
  * @typedef {import("@spreadsheet").GlobalFilter} GlobalFilter
@@ -970,6 +971,7 @@ test("ODOO.FILTER.VALUE text filter", async function () {
 });
 
 test("ODOO.FILTER.VALUE date filter", async function () {
+    mockDate("2022-03-10 00:00:00");
     const { model } = await createModelWithDataSource();
     setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Date Filter")`);
     await animationFrame();
@@ -981,39 +983,42 @@ test("ODOO.FILTER.VALUE date filter", async function () {
     });
     await animationFrame();
     const [filter] = model.getters.getGlobalFilters();
-    const year = DateTime.local().year;
     await setGlobalFilterValue(model, {
         id: filter.id,
         value: {
             type: "quarter",
-            period: { year, quarter: 1 },
+            period: { year: 2022, quarter: 1 },
         },
     });
     await animationFrame();
-    expect(getCellValue(model, "A10")).toBe(`Q1/${year}`);
+    expect(getCellValue(model, "A10")).toBe(toNumber("2022-01-01", DEFAULT_LOCALE));
+    expect(getCellValue(model, "B10")).toBe(toNumber("2022-03-31", DEFAULT_LOCALE));
     await setGlobalFilterValue(model, {
         id: filter.id,
         value: {
             type: "year",
-            period: { year },
+            period: { year: 2022 },
         },
     });
     await animationFrame();
-    expect(getCellValue(model, "A10")).toBe(`${year}`);
+    expect(getCellValue(model, "A10")).toBe(toNumber("2022-01-01", DEFAULT_LOCALE));
+    expect(getCellValue(model, "B10")).toBe(toNumber("2022-12-31", DEFAULT_LOCALE));
     await setGlobalFilterValue(model, {
         id: filter.id,
         value: {
             type: "month",
-            period: { year, month: 1 },
+            period: { year: 2022, month: 1 },
         },
     });
     await animationFrame();
-    expect(getCellValue(model, "A10")).toBe(`01/${year}`);
+    expect(getCellValue(model, "A10")).toBe(toNumber("2022-01-01", DEFAULT_LOCALE));
+    expect(getCellValue(model, "B10")).toBe(toNumber("2022-01-31", DEFAULT_LOCALE));
     await setGlobalFilterValue(model, {
         id: filter.id,
     });
     await animationFrame();
     expect(getCellValue(model, "A10")).toBe(``);
+    expect(getCellValue(model, "B10")).toBe(``);
 });
 
 test("ODOO.FILTER.VALUE date from/to without values", async function () {
@@ -1564,13 +1569,14 @@ test("Default value defines value at model loading", async function () {
     expect(model.getters.getGlobalFilterValue(filter.id)).toEqual(defaultValue);
 });
 
-test("filter display value of year filter is a string", async function () {
+test("filter display value of year filter is a range of dates", async function () {
+    mockDate("2023-10-10 00:00:00");
     const { model } = await createSpreadsheetWithPivotAndList();
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const [filter] = model.getters.getGlobalFilters();
-    expect(model.getters.getFilterDisplayValue(filter.label)[0][0].value).toBe(
-        String(new Date().getFullYear())
-    );
+    const values = model.getters.getFilterDisplayValue(filter.label);
+    expect(values[0][0].value).toBe(toNumber("2023-01-01", DEFAULT_LOCALE));
+    expect(values[1][0].value).toBe(toNumber("2023-12-31", DEFAULT_LOCALE));
 });
 
 test("Export global filters for excel", async function () {
@@ -1580,7 +1586,7 @@ test("Export global filters for excel", async function () {
     const filterPlugin = model["handlers"].find(
         (handler) => handler instanceof GlobalFiltersCoreViewPlugin
     );
-    const exportData = { styles: [], sheets: [] };
+    const exportData = { styles: [], sheets: [], formats: {} };
     filterPlugin.exportForExcel(exportData);
     const filterSheet = exportData.sheets[0];
     expect(filterSheet).not.toBe(undefined, {
@@ -1590,7 +1596,10 @@ test("Export global filters for excel", async function () {
     expect(filterSheet.cells["A2"]).toBe(filter.label);
     expect(filterSheet.cells["B1"]).toBe("Value");
     expect(filterSheet.cells["B2"]).toBe(
-        model.getters.getFilterDisplayValue(filter.label)[0][0].value
+        String(model.getters.getFilterDisplayValue(filter.label)[0][0].value)
+    );
+    expect(filterSheet.cells["C2"]).toBe(
+        String(model.getters.getFilterDisplayValue(filter.label)[1][0].value)
     );
     model.exportXLSX(); // should not crash
 });
@@ -1745,18 +1754,17 @@ test("Relative date filter at model loading", async function () {
 test("Relative date filter display value", async function () {
     mockDate("2022-05-16 00:00:00");
     const label = "Last Month";
-    const defaultValue = RELATIVE_DATE_RANGE_TYPES[1].type;
     const { model } = await createSpreadsheetWithPivot();
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
         label,
-        defaultValue,
+        defaultValue: "year_to_date",
         rangeType: "relative",
     });
-    expect(model.getters.getFilterDisplayValue(label)[0][0].value).toBe(
-        RELATIVE_DATE_RANGE_TYPES[1].description.toString()
-    );
+    const values = model.getters.getFilterDisplayValue(label);
+    expect(values[0][0].value).toBe(toNumber("2022-01-01", DEFAULT_LOCALE));
+    expect(values[1][0].value).toBe(toNumber("2022-05-16", DEFAULT_LOCALE));
 });
 
 test("Relative date filter domain value", async function () {

@@ -1,6 +1,6 @@
 /** @ts-check */
 import { describe, expect, test } from "@odoo/hoot";
-import { getRelativeDateDomain } from "@spreadsheet/global_filters/helpers";
+import { getDateDomain, getRelativeDateFromTo } from "@spreadsheet/global_filters/helpers";
 import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
@@ -9,6 +9,11 @@ import {
 describe.current.tags("headless");
 
 const { DateTime } = luxon;
+
+function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldType) {
+    const { from, to } = getRelativeDateFromTo(now, offset, rangeType);
+    return getDateDomain(from, to, fieldName, fieldType);
+}
 
 test("getRelativeDateDomain > year_to_date (year to date)", async function () {
     const now = DateTime.fromISO("2022-05-16");

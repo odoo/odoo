@@ -194,10 +194,11 @@ test("a new sheet is added for global filters", async function () {
 test("global filters and their display value are exported", async function () {
     const { model } = await createModelWithDataSource();
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+    const year = new Date().getFullYear().toString();
     const data = await freezeOdooData(model);
     expect(data.globalFilters.length).toBe(1);
     expect(data.globalFilters[0].label).toBe("This Year");
-    expect(data.globalFilters[0].value).toBe(new Date().getFullYear().toString());
+    expect(data.globalFilters[0].value).toBe(`1/1/${year}, 12/31/${year}`);
 });
 
 test("from/to global filters are exported", async function () {
