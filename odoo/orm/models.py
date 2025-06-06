@@ -200,7 +200,7 @@ class MetaModel(type):
     """ The metaclass of all model classes.
         Its main purpose is to register the models per module.
     """
-    module_to_models: defaultdict[str, list[MetaModel]] = defaultdict(list)
+    _module_to_models__: defaultdict[str, list[MetaModel]] = defaultdict(list)
 
     pool: Registry | None
     """Reference to the registry for registry classes, otherwise it is a definition class."""
@@ -256,7 +256,7 @@ class MetaModel(type):
 
         # Remember which models to instantiate for this module.
         if self._module:
-            self.module_to_models[self._module].append(self)
+            self._module_to_models__[self._module].append(self)
 
         if not self._abstract and self._name not in self._inherit:
             # this class defines a model: add magic fields
