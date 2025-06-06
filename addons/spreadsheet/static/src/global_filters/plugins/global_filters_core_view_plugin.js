@@ -10,19 +10,18 @@
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
 import { user } from "@web/core/user";
-import { constructDateRange } from "@web/search/utils/dates";
 
 import { EvaluationError, helpers } from "@odoo/o-spreadsheet";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 
 import {
     checkFilterValueIsValid,
-    getRelativeDateDomain,
+    getDateDomain,
+    getRelativeDateFromTo,
 } from "@spreadsheet/global_filters/helpers";
-import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
-import { serializeDateTime, serializeDate } from "@web/core/l10n/dates";
+import { serializeDate } from "@web/core/l10n/dates";
 
 const { DateTime } = luxon;
 
@@ -214,7 +213,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "boolean":
                 return [[{ value: value?.length ? value.join(", ") : "" }]];
             case "date":
-                return this._getDateFilterDisplayValue(filter, value);
+                return this._getDateFilterDisplayValue(filter);
             case "relation":
                 return this._getRelationFilterDisplayValue(filter, value);
         }
@@ -346,61 +345,18 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     // Private
     // -------------------------------------------------------------------------
 
-    _getDateFilterDisplayValue(filter, value) {
-        switch (filter.rangeType) {
-            case "from_to": {
-                const locale = this.getters.getLocale();
-                const from = {
-                    value: value?.from ? toNumber(value.from, locale) : "",
-                    format: locale.dateFormat,
-                };
-                const to = {
-                    value: value?.to ? toNumber(value.to, locale) : "",
-                    format: locale.dateFormat,
-                };
-                return [[from], [to]];
-            }
-            case "fixedPeriod": {
-                if (!value || value.period?.year === undefined) {
-                    return [[{ value: "" }]];
-                }
-                const yearString = String(value.period.year);
-                switch (value.type) {
-                    case "year":
-                        return [[{ value: yearString }]];
-                    case "month": {
-                        if (value.period.month === undefined) {
-                            return [[{ value: yearString }]];
-                        }
-                        return [
-                            [
-                                {
-                                    value:
-                                        String(value.period.month).padStart(2, "0") +
-                                        "/" +
-                                        yearString,
-                                },
-                            ],
-                        ];
-                    }
-                    case "quarter": {
-                        if (value.period.quarter === undefined) {
-                            return [[{ value: yearString }]];
-                        }
-                        // we do not want the translated value (like T1 in French)
-                        return [[{ value: "Q" + String(value.period.quarter) + "/" + yearString }]];
-                    }
-                }
-                return [[{ value: "" }]];
-            }
-            case "relative": {
-                const type = RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === value);
-                if (!type) {
-                    return [[{ value: "" }]];
-                }
-                return [[{ value: type.description.toString() }]];
-            }
-        }
+    _getDateFilterDisplayValue(filter) {
+        const { from, to } = this._getDateRange(filter);
+        const locale = this.getters.getLocale();
+        const _from = {
+            value: from ? toNumber(serializeDate(from), locale) : "",
+            format: locale.dateFormat,
+        };
+        const _to = {
+            value: to ? toNumber(serializeDate(to), locale) : "",
+            format: locale.dateFormat,
+        };
+        return [[_from], [_to]];
     }
 
     _getRelationFilterDisplayValue(filter, value) {
@@ -420,6 +376,27 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     /**
+     * @returns {{ from?: DateTime, to?: DateTime }}
+     */
+    _getDateRange(filter, offset = 0) {
+        const value = this.getGlobalFilterValue(filter.id);
+        if (!value) {
+            return {};
+        }
+        const now = DateTime.local();
+
+        if (filter.rangeType === "from_to") {
+            const from = value.from && DateTime.fromISO(value.from).startOf("day");
+            const to = value.to && DateTime.fromISO(value.to).endOf("day");
+            return { from, to };
+        }
+        if (filter.rangeType === "relative") {
+            return getRelativeDateFromTo(now, offset, value);
+        }
+        return this._getFixedPeriodFromTo(now, offset, value);
+    }
+
+    /**
      * Get the domain relative to a date field
      *
      * @private
@@ -430,35 +407,14 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @returns {Domain}
      */
     _getDateDomain(filter, fieldMatching) {
-        const value = this.getGlobalFilterValue(filter.id);
-        if (!value || !fieldMatching.chain) {
+        if (!fieldMatching.chain) {
             return new Domain();
         }
         const field = fieldMatching.chain;
         const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
         const offset = fieldMatching.offset || 0;
-        const now = DateTime.local();
-
-        if (filter.rangeType === "from_to") {
-            const serialize = type === "datetime" ? serializeDateTime : serializeDate;
-            const from = value.from && serialize(DateTime.fromISO(value.from).startOf("day"));
-            const to = value.to && serialize(DateTime.fromISO(value.to).endOf("day"));
-            if (from && to) {
-                return new Domain(["&", [field, ">=", from], [field, "<=", to]]);
-            }
-            if (from) {
-                return new Domain([[field, ">=", from]]);
-            }
-            if (to) {
-                return new Domain([[field, "<=", to]]);
-            }
-            return new Domain();
-        }
-
-        if (filter.rangeType === "relative") {
-            return getRelativeDateDomain(now, offset, value, field, type);
-        }
-        return this._getFixedPeriodDomain(now, offset, value, field, type);
+        const { from, to } = this._getDateRange(filter, offset);
+        return getDateDomain(from, to, field, type);
     }
 
     /**
@@ -512,11 +468,11 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         return new Domain([[field, "in", [toBoolean(value[0]), toBoolean(value[1])]]]);
     }
 
-    _getFixedPeriodDomain(now, offset, value, field, type) {
+    _getFixedPeriodFromTo(now, offset, value) {
         let granularity = "year";
         const noYear = value.period.year === undefined;
         if (noYear) {
-            return new Domain();
+            return {};
         }
         const setParam = { year: value.period.year };
         const plusParam = {};
@@ -539,14 +495,16 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 }
                 break;
         }
-        return constructDateRange({
-            referenceMoment: now,
-            fieldName: field,
-            fieldType: type,
-            granularity,
-            setParam,
-            plusParam,
-        }).domain;
+        if ("quarter" in setParam) {
+            // Luxon does not consider quarter key in setParam (like moment did)
+            setParam.month = setParam.quarter * 3 - 2; // start of the quarter
+            delete setParam.quarter;
+        }
+        const date = now.set(setParam).plus(plusParam || {});
+        return {
+            from: date.startOf(granularity),
+            to: date.endOf(granularity),
+        };
     }
 
     /**
