@@ -1,15 +1,20 @@
-.options-container:has(.o_wsale_products_list_page_options) {
-    > div:first-child { // Title
-        display: none !important;
+.options-container:has(.o_wsale_editor_overlay) {
+    &, > .we-bg-options-container {
+        position: relative;
     }
+}
 
-    > .we-bg-options-container {
-        margin-top: -4px; // Cancel margin
-        padding-top: 8px; // Avoid margin collapse, like bootstrap's pt-2
-    }
+.o_wsale_editor_overlay {
+    --offcanvas-color: inherit;
 
-    .hb-row:not([class*="o_we_sublevel_"]) > .hb-row-label {
-        font-size: $o-we-sidebar-content-main-title-font-size;
+    height: fit-content;
+    background: inherit;
+    top: -36px !important;
+
+    ~ .offcanvas-backdrop {
+        width: $o-we-sidebar-width;
+        right: 0;
+        left: auto;
     }
 }
 

@@ -31,11 +31,79 @@ class ProductsListPageOptionPlugin extends Plugin {
     async onSave() {
         const pageEl = this.editable.querySelector("#o_wsale_container");
         if (pageEl) {
+            const updateData = {};
+
             const gapToSave = pageEl.dataset.gapToSave;
             if (typeof gapToSave !== "undefined") {
-                return rpc("/shop/config/website", { shop_gap: gapToSave });
+                updateData.shop_gap = gapToSave;
+            }
+
+            // Define class groups to save in fields
+            const classGroups = [
+                {
+                    prefix: 'o_wsale_design_',
+                    field: 'shop_opt_products_design_class'
+                },
+                {
+                    prefix: 'o_wsale_products_opt_hover_',
+                    field: 'shop_opt_products_hover_effect_class'
+                },
+                {
+                    prefix: 'o_wsale_products_opt_text_align_',
+                    field: 'shop_opt_products_text_align_class'
+                },
+                {
+                    prefix: 'o_wsale_products_opt_name_color_',
+                    field: 'shop_opt_products_name_color_class'
+                },
+                {
+                    prefix: 'o_wsale_products_opt_img_hover_',
+                    field: 'shop_opt_products_img_hover_class'
+                },
+            ];
+
+            // Process each class group and add to update data
+            for (const group of classGroups) {
+                const classes = this.extractClassesByPrefix(pageEl, group.prefix);
+                if (classes !== null) {
+                    updateData[group.field] = classes;
+                }
+            }
+
+            // Single RPC call
+            if (Object.keys(updateData).length > 0) {
+                console.log(updateData)
+                return rpc("/shop/config/website", updateData);
             }
         }
+    }
+
+    /**
+    * Extract classes that start with a specific prefix from an element
+    * @param {Element} element - The DOM element to scan
+    * @param {string} prefix - The class prefix to look for (e.g., 'o_wsale_products_opt_hover_')
+    * @returns {string} Matching classes, or empty string if none found
+    */
+    extractClassesByPrefix(element, prefixes) {
+        // Normalize prefixes to array
+        const prefixArray = Array.isArray(prefixes) ? prefixes : [prefixes];
+
+        const classList = Array.from(element.classList);
+        const matchingClasses = [];
+
+        // Find all classes that start with any of the specified prefixes
+        for (const className of classList) {
+            for (const prefix of prefixArray) {
+                if (className.startsWith(prefix)) {
+                    matchingClasses.push(className);
+                    break; // Don't check other prefixes for this class
+                }
+            }
+        }
+
+        matchingClasses.sort();
+
+        return matchingClasses.join(' ');
     }
 }
 
