@@ -256,7 +256,6 @@ export class DiscussChannel extends models.ServerModel {
         const [channel] = this.browse(ids);
         const memberOfCurrentUser = this._find_or_create_member_for_self(channel.id);
         Object.assign(data, {
-            group_based_subscription: channel.group_ids.length > 0,
             is_editable: (() => {
                 if (channel.channel_type === "channel") {
                     // Match the ACL rules
@@ -267,6 +266,7 @@ export class DiscussChannel extends models.ServerModel {
                 }
                 return Boolean(memberOfCurrentUser);
             })(),
+            group_ids: channel.group_ids,
             member_count: DiscussChannelMember.search_count([["channel_id", "=", channel.id]]),
         });
         return data;

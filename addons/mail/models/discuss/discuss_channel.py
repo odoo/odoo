@@ -420,20 +420,13 @@ class DiscussChannel(models.Model):
             "create_uid",
             "default_display_mode",
             "description",
-            "group_ids",
+            Store.Many("group_ids", []),
             "group_public_id",
             "last_interest_dt",
             "member_count",
             "name",
             "uuid",
         ]
-
-    def _field_store_repr(self, field_name):
-        """Return the default Store representation of the given field name, which can be passed as
-        param to the various Store methods."""
-        if field_name == "group_ids":
-            return [Store.Attr("group_based_subscription", lambda c: bool(c.group_ids))]
-        return [field_name]
 
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
@@ -1056,7 +1049,7 @@ class DiscussChannel(models.Model):
             "default_display_mode",
             "description",
             Store.One("from_message_id"),
-            "group_ids",
+            Store.Many("group_ids", []),
             Store.One("group_public_id", ["full_name"]),
             Store.Many(
                 "invited_member_ids",

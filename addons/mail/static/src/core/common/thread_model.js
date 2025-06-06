@@ -80,7 +80,7 @@ export class Thread extends Record {
     get canLeave() {
         return (
             this.allowedToLeaveChannelTypes.includes(this.channel_type) &&
-            !this.group_based_subscription &&
+            this.group_ids.length === 0 &&
             this.store.self?.type === "partner"
         );
     }
