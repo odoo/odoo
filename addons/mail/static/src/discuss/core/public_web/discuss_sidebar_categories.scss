@@ -43,12 +43,9 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 
 .o-mail-DiscussSidebarChannel-actions button {
     opacity: 35%;
+    --border-opacity: .15;
 
-    &:hover {
-        opacity: 100%;
-    }
-
-    &.o-showingActions {
+    &:hover, &.o-showingActions {
         opacity: 100%;
         --border-opacity: .25;
     }
