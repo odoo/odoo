@@ -5986,9 +5986,24 @@ class BaseModel(metaclass=MetaModel):
                 except KeyError as e:
                     raise ValueError(f"Invalid field in filter of {self._name}: {domain!r}") from e
 
-                if comparator in ('any', 'not any') and isinstance(value, Query):
-                    comparator = 'in' if comparator == 'any' else 'not in'
-                    value = set(value)
+                if comparator in ('any', 'not any'):
+                    if isinstance(value, Query):
+                        comparator = 'in' if comparator == 'any' else 'not in'
+                        value = set(value)
+                    else:
+                        # handle sub-domain in batch
+                        corecords = self.mapped(key)
+                        if not isinstance(corecords, BaseModel):
+                            raise ValueError(f"Invalid relational field {key} for {domain!r}")  # noqa: TRY004
+                        valid_ids = set(corecords.filtered_domain(value)._ids)
+                        is_any = comparator == 'any'
+                        stack.append({
+                            record.id
+                            for record in self
+                            if valid_ids.isdisjoint(record.mapped(key)._ids) != is_any
+                        })
+                        continue
+
                 if comparator.endswith('like'):
                     if comparator.endswith('ilike'):
                         # ilike uses unaccent and lower-case comparison
@@ -6086,10 +6101,6 @@ class BaseModel(metaclass=MetaModel):
                         ok = any(like_regex.match(unaccent(x)) for x in data)
                         if comparator.startswith('not'):
                             ok = not ok
-                    elif comparator == 'any':
-                        ok = data.filtered_domain(value)
-                    elif comparator == 'not any':
-                        ok = not data.filtered_domain(value)
                     else:
                         raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' doesn't exist.")
 
