@@ -218,7 +218,7 @@ class Store:
             elif isinstance(val, date):
                 target[key] = odoo.fields.Date.to_string(val)
             elif isinstance(val, Markup):
-                target[key] = ["markup", val]
+                target[key] = ["markup", str(val)]
             else:
                 target[key] = val
 
