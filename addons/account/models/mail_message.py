@@ -84,9 +84,9 @@ class MailMessage(models.Model):
             audit_log_preview = (title or '') + '\n'
             audit_log_preview += "\n".join(
                 "%(old_value)s ⇨ %(new_value)s (%(field)s)" % {
-                    'old_value': fmt_vals['oldValue']['value'],
-                    'new_value': fmt_vals['newValue']['value'],
-                    'field': fmt_vals['changedField'],
+                    'old_value': fmt_vals['oldValue'],
+                    'new_value': fmt_vals['newValue'],
+                    'field': fmt_vals['fieldInfo']['changedField'],
                 }
                 for fmt_vals in tracking_value_ids._tracking_value_format()
             )

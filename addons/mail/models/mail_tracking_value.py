@@ -184,29 +184,25 @@ class MailTrackingValue(models.Model):
             } for tracking in self
         )
 
+        def sort_tracking_info(tracking_info_tuple):
+            tracking = tracking_info_tuple[0]
+            field_name = tracking.field_id.name or (tracking.field_info['name'] if tracking.field_info else 'unknown')
+            return (fields_sequence_map.get(field_name, 100), field_name)
+
         formatted = [
             {
-                'changedField': col_info['string'],
                 'id': tracking.id,
-                'fieldName': tracking.field_id.name or (tracking.field_info['name'] if tracking.field_info else 'unknown'),
-                'fieldType': col_info['type'],
-                'newValue': {
+                'fieldInfo': {
+                    'changedField': col_info['string'],
                     'currencyId': tracking.currency_id.id,
                     'floatPrecision': col_info.get('digits'),
-                    'value': tracking._format_display_value(col_info['type'], new=True)[0],
+                    'fieldType': col_info['type'],
                 },
-                'oldValue': {
-                    'currencyId': tracking.currency_id.id,
-                    'floatPrecision': col_info.get('digits'),
-                    'value': tracking._format_display_value(col_info['type'], new=False)[0],
-                },
+                'newValue': tracking._format_display_value(col_info['type'], new=True)[0],
+                'oldValue': tracking._format_display_value(col_info['type'], new=False)[0],
             }
-            for tracking, col_info in zip(self, fields_col_info)
+            for tracking, col_info in sorted(zip(self, fields_col_info), key=sort_tracking_info)
         ]
-        formatted.sort(
-            key=lambda info: (fields_sequence_map.get(info['fieldName'], 100), info['fieldName']),
-            reverse=False,
-        )
         return formatted
 
     def _format_display_value(self, field_type, new=True):
