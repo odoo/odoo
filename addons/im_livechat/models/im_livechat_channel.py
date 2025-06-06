@@ -213,55 +213,51 @@ class Im_LivechatChannel(models.Model):
     # --------------------------
     # Channel Methods
     # --------------------------
-    def _get_livechat_discuss_channel_vals(
-        self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
-    ):
-        user_operator = False
-        if chatbot_script:
-            if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
-                return False
-        else:
-            user_operator = self._get_operator(previous_operator_id=previous_operator_id, lang=lang, country_id=country_id)
-            if not user_operator:
-                # no one available
-                return False
-        # partner to add to the discuss.channel
-        operator_partner_id = user_operator.partner_id.id if user_operator else chatbot_script.operator_partner_id.id
+    def _get_livechat_discuss_channel_vals(self, anonymous_name, agent=None, bot=None, country_id=None):
+        """Get the values to create a discuss channel from a livechat channel.
+
+        :param str anonymous_name:
+        :param agent: ``res.users` of the agent the chat is assigned to or None
+        :param bot: ``chatbot.script`` the chat is assigned to or None
+        :param int country_id: id of the visitor's country if it could be determined or None
+        """
+        agent = agent or self.env["res.partner"]
+        bot = bot or self.env["chatbot.script"]
         members_to_add = [
             Command.create(
                 {
-                    "livechat_member_type": "agent" if user_operator else "bot",
-                    "chatbot_script_id": chatbot_script.id if not user_operator else False,
-                    "partner_id": operator_partner_id,
+                    "livechat_member_type": "agent" if agent else "bot",
+                    "chatbot_script_id": bot,
+                    "partner_id": agent.id or bot.operator_partner_id.id,
                     "unpin_dt": fields.Datetime.now(),
                 }
             )
         ]
-        visitor_user = False
-        if user_id:
-            visitor_user = self.env['res.users'].browse(user_id)
-            if visitor_user and visitor_user.active and user_operator and visitor_user != user_operator:  # valid session user (not public)
-                members_to_add.append(Command.create({"livechat_member_type": "visitor", 'partner_id': visitor_user.partner_id.id}))
-
-        if chatbot_script:
-            name = chatbot_script.title
-        else:
-            name = ' '.join([
-                visitor_user.display_name if visitor_user else anonymous_name,
-                user_operator.livechat_username or user_operator.name
-            ])
-
+        visitor = self.env["res.partner"]
+        if not self.env.user._is_public() and self.env.user.partner_id != agent:
+            visitor = self.env.user.partner_id
+            members_to_add.append(
+                Command.create({"livechat_member_type": "visitor", "partner_id": visitor.id})
+            )
         return {
-            'channel_member_ids': members_to_add,
-            'livechat_active': True,
-            'livechat_operator_id': operator_partner_id,
-            'livechat_channel_id': self.id,
-            "livechat_failure": "no_answer" if user_operator else "no_failure",
-            'chatbot_current_step_id': chatbot_script._get_welcome_steps()[-1].id if chatbot_script else False,
-            'anonymous_name': False if user_id else anonymous_name,
-            'country_id': country_id,
-            'channel_type': 'livechat',
-            'name': name,
+            "channel_member_ids": members_to_add,
+            "livechat_active": True,
+            "livechat_operator_id": agent.partner_id.id or bot.operator_partner_id.id,
+            "livechat_channel_id": self.id,
+            "livechat_failure": "no_answer" if agent else "no_failure",
+            "chatbot_current_step_id": bot._get_welcome_steps()[-1].id if bot else False,
+            "anonymous_name": visitor.display_name or anonymous_name,
+            "country_id": country_id,
+            "channel_type": "livechat",
+            "name": (
+                bot.title
+                or " ".join(
+                    [
+                        visitor.display_name or anonymous_name,
+                        agent.livechat_username or agent.name,
+                    ]
+                )
+            ),
         }
 
     def _get_less_active_operator(self, operator_statuses, operators):
