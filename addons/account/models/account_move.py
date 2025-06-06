@@ -5156,12 +5156,17 @@ class AccountMove(models.Model):
             # If the field autocheck_on_post is set, we want the checked field on the move to be checked
             if move.journal_id.autocheck_on_post:
                 move.checked = move.journal_id.autocheck_on_post
+<<<<<<< 2136e35704d580f959ca31cea18aabafb78bfd7f
             else:
                 move.sudo().activity_schedule(
                     activity_type_id=self.env.ref('mail.mail_activity_data_todo').id,
                     summary=_('To check'),
                     user_id=move.invoice_user_id.name,
                 )
+||||||| 7bb84621b773cdd7e9984222d61d70d622f8ac43
+            move.checked = move.journal_id.autocheck_on_post
+=======
+>>>>>>> 044c8b7e99eb5fce4959640a2b6fada81b733567
 
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
