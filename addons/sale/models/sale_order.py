@@ -1160,7 +1160,7 @@ class SaleOrder(models.Model):
             and not line.product_id
             for line in self.order_line
         ):
-            return _("A line on these orders missing a product, you cannot confirm it.")
+            return _("Some order lines are missing a product, you need to correct them before going further.")
 
         return False
 

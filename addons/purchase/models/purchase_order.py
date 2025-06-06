@@ -529,6 +529,9 @@ class PurchaseOrder(models.Model):
         for order in self:
             if order.state not in ['draft', 'sent']:
                 continue
+            error_msg = order._confirmation_error_message()
+            if error_msg:
+                raise UserError(error_msg)
             order.order_line._validate_analytic_distribution()
             order._add_supplier_to_product()
             # Deal with double validation process
@@ -551,6 +554,19 @@ class PurchaseOrder(models.Model):
         if self.lock_confirmed_po == 'lock':
             raise UserError(_("Unlocking the order is not allowed as 'Lock Confirmed Orders' is enabled."))
         self.locked = False
+
+    def _confirmation_error_message(self):
+        """ Return whether order can be confirmed or not if not then return error message. """
+        self.ensure_one()
+        if any(
+            not line.display_type
+            and not line.is_downpayment
+            and not line.product_id
+            for line in self.order_line
+        ):
+            return _("Some order lines are missing a product, you need to correct them before going further.")
+
+        return False
 
     def _prepare_supplier_info(self, partner, line, price, currency):
         # Prepare supplierinfo data when adding a product
