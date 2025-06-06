@@ -13,7 +13,6 @@
     'data': [
         'views/res_bank_views.xml',
         'data/uom_data.xml',
-        'data/tax_report.xml',
     ],
     'installable': True,
     'auto_install': ['account'],
