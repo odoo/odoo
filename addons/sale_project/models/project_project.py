@@ -142,6 +142,38 @@ class ProjectProject(models.Model):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
+    def _fetch_linked_products(self, project_ids, limit=None):
+        return self.env["product.template"].search([
+            ("service_tracking", "!=", "no"),
+            "|",
+                ("project_id", "in", project_ids),
+                ("project_template_id", "in", project_ids),
+        ], limit=limit)
+
+    def _fetch_linked_sale_orders(self, project_ids, limit=None):
+        return self.env["sale.order"].search([("project_id", "in", project_ids)], limit=limit)
+
+    @api.onchange('allow_billable')
+    def _onchange_allow_billable_sale_project(self):
+        """ show warning to user that linked products will be unlinked """
+        message = None
+        if not self.allow_billable:
+            if (
+                self._fetch_linked_products(self.ids, limit=1) or
+                self._fetch_linked_sale_orders(self.ids, limit=1)
+            ):
+                message = {
+                    'warning': {
+                        'title': self.env._('Warning'),
+                        'message': self.env._("Making this project non-billable will unlink it from any products that create tasks in it or use it as a template. Are you sure you want to continue?"),
+                    },
+                }
+        return message
+
+    def _unlink_billable_products(self):
+        linked_product_ids = self._fetch_linked_products(self.ids)
+        linked_product_ids.write({'project_id': False, 'project_template_id': False})
+
     def action_customer_preview(self):
         self.ensure_one()
         return {
@@ -189,6 +221,8 @@ class ProjectProject(models.Model):
 
     def write(self, vals):
         project = super().write(vals)
+        if vals.get('allow_billable') is False:
+            self._unlink_billable_products()
         if sol_id := vals.get('sale_line_id'):
             self._ensure_sale_order_linked([sol_id])
         return project
