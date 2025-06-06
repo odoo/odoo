@@ -1399,6 +1399,12 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         other_partners = self._search(Partner, [('child_ids', 'not any', [('name', '=', one_child_partner.name)])])
         self.assertEqual(other_partners, all_partner - partner)
 
+        # check if we perform the check in batch
+        PartnerClass = self.env.registry['res.partner']
+        with patch.object(PartnerClass, 'filtered_domain', autospec=True, side_effect=PartnerClass.filtered_domain) as patched:
+            all_partner.filtered_domain([('child_ids', 'any', [('name', '=', partner.name)])])
+            self.assertEqual(patched.call_count, 2, "should be called here and only once for the any operator")
+
 
 @tagged('res_partner')
 class TestExpression2(TransactionExpressionCase):
