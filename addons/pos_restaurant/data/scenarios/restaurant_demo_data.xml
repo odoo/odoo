@@ -611,7 +611,7 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/sushi-combo.png"/>
             <field name="combo_ids" eval="[(6, 0, [ref('drink_combo'), ref('sushi_choice')])]"/>
-            <field name="categ_id" ref="point_of_sale.product_category_food"/>
+            <field name="categ_id" eval="ref('point_of_sale.product_category_food', raise_if_not_found=False)"/>
             <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="taxes_id" eval="[(5,)]"/>
             <field name="supplier_taxes_id" eval="[(5,)]"/>
