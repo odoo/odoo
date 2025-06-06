@@ -95,15 +95,22 @@
     border: $border-width solid transparent !important;
 
     &.o-bubblesHover {
-        opacity: 50%;
+        border-color: mix($o-gray-200, $o-gray-300) !important;
+
+        i {
+            opacity: 50%;
+        }
     }
 
     &:hover {
         border-color: $o-gray-300 !important;
-        opacity: 75%;
     }
     &.show {
-        opacity: 100% !important;
         border-color: mix($o-gray-300, $o-gray-400) !important;
+    }
+    &:hover, &.show {
+        i {
+            opacity: 100%;
+        }
     }
 }
