@@ -37,6 +37,7 @@
             ('include', 'web._assets_primary_variables'),
             'web/static/src/scss/bootstrap_overridden.scss',
             'html_builder/static/src/**/*.inside.scss',
+            'html_editor/static/src/main/link/link.scss',
         ],
         'html_builder.assets_edit_frontend': [
             ('include', 'website.assets_edit_frontend'),
