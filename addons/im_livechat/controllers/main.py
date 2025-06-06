@@ -124,7 +124,7 @@ class LivechatController(http.Controller):
                     "steps": welcome_steps.mapped(lambda s: {"scriptStep": s.id}),
                 }
                 store.add(chatbot_script)
-                store.add(welcome_steps)
+                store.add(welcome_steps, welcome_steps._to_store_defaults() + ["html_message"])
             operator = request.env["res.partner"].sudo().browse(channel_vals["livechat_operator_id"])
             channel_info = {
                 "fetchChannelInfoState": "fetched",
