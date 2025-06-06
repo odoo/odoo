@@ -34,18 +34,18 @@ const { define, loader } = odoo;
 /**
  * @param {Record<any, any>} object
  */
-const clearObject = (object) => {
+function clearObject(object) {
     for (const key in object) {
         delete object[key];
     }
-};
+}
 
 /**
  * @param {string} fileSuffix
  * @param {string[]} entryPoints
  * @param {Set<string>} additionalAddons
  */
-const defineModuleSet = async (fileSuffix, entryPoints, additionalAddons) => {
+async function defineModuleSet(fileSuffix, entryPoints, additionalAddons) {
     /** @type {ModuleSet} */
     const moduleSet = {};
     if (additionalAddons.has("*")) {
@@ -82,13 +82,13 @@ const defineModuleSet = async (fileSuffix, entryPoints, additionalAddons) => {
     }
 
     return moduleSet;
-};
+}
 
 /**
  * @param {string} fileSuffix
  * @param {string[]} entryPoints
  */
-const describeDrySuite = async (fileSuffix, entryPoints) => {
+async function describeDrySuite(fileSuffix, entryPoints) {
     const moduleSet = await defineModuleSet(fileSuffix, entryPoints, new Set(["*"]));
     const moduleSetLoader = new ModuleSetLoader(moduleSet);
 
@@ -114,12 +114,12 @@ const describeDrySuite = async (fileSuffix, entryPoints) => {
     }
 
     moduleSetLoader.cleanup();
-};
+}
 
 /**
  * @param {Set<string>} addons
  */
-const fetchDependencies = async (addons) => {
+async function fetchDependencies(addons) {
     // Fetch missing dependencies
     const addonsToFetch = [];
     for (const addon of addons) {
@@ -154,12 +154,12 @@ const fetchDependencies = async (addons) => {
     await Promise.all([...addons].map((addon) => dependencyCache[addon]));
 
     return getDependencies(addons);
-};
+}
 
 /**
  * @param {string} name
  */
-const findMockFactory = (name) => {
+function findMockFactory(name) {
     if (MODULE_MOCKS_BY_NAME.has(name)) {
         return MODULE_MOCKS_BY_NAME.get(name);
     }
@@ -169,17 +169,79 @@ const findMockFactory = (name) => {
         }
     }
     return null;
-};
+}
+
+/**
+ * Reduce the size of the given field and freeze it.
+ *
+ * @param {Record<string, unknown>>} field
+ */
+function freezeField(field) {
+    delete field.name;
+    if (field.groupable) {
+        delete field.groupable;
+    }
+    if (!field.readonly && !field.related) {
+        delete field.readonly;
+    }
+    if (!field.required) {
+        delete field.required;
+    }
+    if (field.searchable) {
+        delete field.searchable;
+    }
+    if (field.sortable) {
+        delete field.sortable;
+    }
+    if (field.store && !field.related) {
+        delete field.store;
+    }
+    return Object.freeze(field);
+}
+
+/**
+ * Reduce the size of the given model and freeze it.
+ *
+ * @param {Record<string, unknown>>} model
+ */
+function freezeModel(model) {
+    if (model.fields) {
+        for (const [fieldName, field] of Object.entries(model.fields)) {
+            model.fields[fieldName] = freezeField(field);
+        }
+        Object.freeze(model.fields);
+    }
+    if (model.inherit) {
+        if (model.inherit.length) {
+            model.inherit = model.inherit.filter((m) => m !== "base");
+        }
+        if (!model.inherit.length) {
+            delete model.inherit;
+        }
+    }
+    if (model.order === "id") {
+        delete model.order;
+    }
+    if (model.parent_name === "parent_id") {
+        delete model.parent_name;
+    }
+    if (model.rec_name === "name") {
+        delete model.rec_name;
+    }
+    return Object.freeze(model);
+}
 
 /**
  * @param {string} name
  */
-const getAddonName = (name) => name.match(R_PATH_ADDON)?.[1];
+function getAddonName(name) {
+    return name.match(R_PATH_ADDON)?.[1];
+}
 
 /**
  * @param {Iterable<string>} addons
  */
-const getDependencies = (addons) => {
+function getDependencies(addons) {
     const result = new Set(DEFAULT_ADDONS);
     for (const addon of addons) {
         if (DEFAULT_ADDONS.includes(addon)) {
@@ -191,24 +253,28 @@ const getDependencies = (addons) => {
         }
     }
     return result;
-};
+}
 
 /**
  * @param {string} name
  */
-const getSuitePath = (name) => name.replace("../tests/", "");
+function getSuitePath(name) {
+    return name.replace("../tests/", "");
+}
 
 /**
  * Keeps the original definition of a factory.
  *
  * @param {string} name
  */
-const makeFixedFactory = (name) => () => {
-    if (!loader.modules.has(name)) {
-        loader.startModule(name);
-    }
-    return loader.modules.get(name);
-};
+function makeFixedFactory(name) {
+    return () => {
+        if (!loader.modules.has(name)) {
+            loader.startModule(name);
+        }
+        return loader.modules.get(name);
+    };
+}
 
 /**
  * Toned-down version of the RPC + ORM features since this file cannot depend on
@@ -219,7 +285,7 @@ const makeFixedFactory = (name) => () => {
  * @param {any[]} args
  * @param {Record<string, any>} kwargs
  */
-const orm = async (model, method, args, kwargs) => {
+async function orm(model, method, args, kwargs) {
     const response = await realFetch(`/web/dataset/call_kw/${model}/${method}`, {
         body: JSON.stringify({
             id: nextRpcId++,
@@ -237,13 +303,13 @@ const orm = async (model, method, args, kwargs) => {
         throw error;
     }
     return result;
-};
+}
 
 /**
  * @template {Record<string, string[]>} T
  * @param {T} dependencies
  */
-const resolveAddonDependencies = (dependencies) => {
+function resolveAddonDependencies(dependencies) {
     const findJob = () =>
         Object.entries(remaining).find(([, deps]) => deps.every((dep) => dep in solved));
 
@@ -264,7 +330,20 @@ const resolveAddonDependencies = (dependencies) => {
     }
 
     Object.assign(dependencies, solved);
-};
+}
+
+/**
+ * @param {Record<string, unknown>>} model
+ */
+function unfreezeModel(model) {
+    const fields = Object.create(null);
+    if (model.fields) {
+        for (const [fieldName, field] of Object.entries(model.fields)) {
+            fields[fieldName] = { ...field };
+        }
+    }
+    return { ...model, fields };
+}
 
 /**
  * This method tries to manually run the garbage collector (if exposed) and logs
@@ -280,7 +359,7 @@ const resolveAddonDependencies = (dependencies) => {
  * @param {string} label
  * @param {number} [testCount]
  */
-const __gcAndLogMemory = async (label, testCount) => {
+async function __gcAndLogMemory(label, testCount) {
     if (typeof window.gc !== "function") {
         return;
     }
@@ -309,7 +388,7 @@ const __gcAndLogMemory = async (label, testCount) => {
         logs.push("- tests:", testCount);
     }
     console.log(...logs);
-};
+}
 
 /** @extends {OdooModuleLoader} */
 class ModuleSetLoader extends loader.constructor {
@@ -469,7 +548,7 @@ const globalFetchCache = Object.create(null);
 const modelsToFetch = new Set();
 /** @type {Map<string, string[]>} */
 const moduleNamesCache = new Map();
-/** @type {Map<string, Record<string, any>>} */
+/** @type {Map<string, Record<string, unknown>>} */
 const serverModelCache = new Map();
 /** @type {string[]} */
 const sortedModuleNames = [];
@@ -514,12 +593,16 @@ export async function fetchModelDefinitions(modelNames) {
         const modelDefs = await response.json();
 
         for (const [modelName, modelDef] of Object.entries(modelDefs)) {
-            serverModelCache.set(modelName, modelDef);
+            serverModelCache.set(modelName, freezeModel(modelDef));
             modelsToFetch.delete(modelName);
         }
     }
 
-    return [...modelNames].map((modelName) => [modelName, serverModelCache.get(modelName)]);
+    const result = Object.create(null);
+    for (const modelName of modelNames) {
+        result[modelName] = unfreezeModel(serverModelCache.get(modelName));
+    }
+    return result;
 }
 
 /**

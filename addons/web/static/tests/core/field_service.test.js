@@ -4,6 +4,7 @@ import {
     fields,
     getService,
     makeMockEnv,
+    MockServer,
     models,
     mountWithCleanup,
     onRpc,
@@ -13,6 +14,9 @@ import { Deferred, animationFrame } from "@odoo/hoot-mock";
 import { Component, useState, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * @param {string} resModel
+ */
 function getModelInfo(resModel) {
     return {
         resModel: resModel._name,
@@ -20,10 +24,12 @@ function getModelInfo(resModel) {
     };
 }
 
+/**
+ * @param {string} resModel
+ */
 function getDefinitions(resModel) {
-    const records = Species._records;
     const fieldDefs = {};
-    for (const record of records) {
+    for (const record of MockServer.env["species"]) {
         for (const definition of record.definitions) {
             fieldDefs[definition.name] = {
                 is_property: true,
