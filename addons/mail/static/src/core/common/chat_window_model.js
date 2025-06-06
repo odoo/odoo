@@ -1,5 +1,4 @@
 import { fields, Record } from "@mail/core/common/record";
-import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /** @typedef {{ thread?: import("models").Thread }} ChatWindowData */
 
@@ -95,7 +94,7 @@ export class ChatWindow extends Record {
         if (notifyState) {
             this.store.chatHub.save();
         }
-        if (focus && !isMobileOS()) {
+        if (focus) {
             this.focus({ jumpToNewMessage });
         }
     }

@@ -17,6 +17,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 /**
  * @typedef {Object} Props
@@ -55,6 +56,7 @@ export class ChatWindow extends Component {
         this.threadActions = useThreadActions();
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
+        this.isMobileOS = isMobileOS();
 
         useChildSubEnv({
             closeActionPanel: () => this.threadActions.activeAction?.close(),
