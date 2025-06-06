@@ -169,7 +169,33 @@
                                 <!-- If not printing lots/serial numbers => merge lines with same product -->
                                 <t t-else="" name="aggregated_move_lines">
                                     <t t-set="aggregated_lines" t-value="o.move_line_ids._get_aggregated_product_quantities()"/>
-                                    <t t-call="stock.stock_report_delivery_aggregated_move_lines"/>
+                                    <t t-set="lines" t-value="o.move_ids.filtered(lambda x: x.product_uom_qty)"/>
+                                    <tr t-foreach="lines" t-as="move">
+                                        <td>
+                                            <span t-field="move.product_id">Customizable Desk</span>
+                                            <p t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
+                                                <span t-out="move.description_picking" t-options="{'widget': 'text'}">Description on transfer</span>
+                                            </p>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-out="format_number(move.product_uom_qty)">3.00</span>
+                                            <span t-field="move.product_uom" groups="uom.group_uom">units</span>
+                                            <t t-if="move.packaging_uom_id != move.product_uom" groups="uom.group_uom">
+                                                <br/>
+                                                <span class="text-muted" t-field="move.packaging_uom_qty">1.00</span>
+                                                <span class="text-muted" t-field="move.packaging_uom_id">Pack of 6</span>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-out="format_number(move.quantity)">3.00</span>
+                                            <span t-field="move.product_uom" groups="uom.group_uom">units</span>
+                                            <t t-if="move.packaging_uom_id != move.product_uom" groups="uom.group_uom">
+                                                <br/>
+                                                <span class="text-muted" t-esc="move.product_uom._compute_quantity(move.quantity, move.packaging_uom_id)">1.00</span>
+                                                <span class="text-muted" t-field="move.packaging_uom_id">Pack of 6</span>
+                                            </t>
+                                        </td> 
+                                    </tr>
                                 </t>
                             </t>
                         </tbody>
@@ -226,6 +252,32 @@
 
     <!-- templates for easier extension + cut back on repeat code due to multiple conditionals -->
     <!-- move line(s) printing for tables -->
+    <template id="stock_report_delivery_move_line"> 
+            <td>
+                <span t-field="move.product_id">Customizable Desk</span>
+                <p t-if="move.description_picking and move.description_picking != move.product_id.name and move.description_picking != move.product_id.display_name">
+                    <span t-out="move.description_picking" t-options="{'widget': 'text'}">Description on transfer</span>
+                </p>
+            </td>
+            <td class="text-end">
+                <span t-out="format_number(move.product_uom_qty)">3.00</span>
+                <span t-field="move.product_uom" groups="uom.group_uom">units</span>
+                <t t-if="move.packaging_uom_id != move.product_uom" groups="uom.group_uom">
+                    <br/>
+                    <span class="text-muted" t-field="move.packaging_uom_qty">1.00</span>
+                    <span class="text-muted" t-field="move.packaging_uom_id">Pack of 6</span>
+                </t>
+            </td>
+            <td class="text-end">
+                <span t-out="format_number(move.quantity)">3.00</span>
+                <span t-field="move.product_uom" groups="uom.group_uom">units</span>
+                <t t-if="move.packaging_uom_id != move.product_uom" groups="uom.group_uom">
+                    <br/>
+                    <span class="text-muted" t-esc="move.product_uom._compute_quantity(move.quantity, move.packaging_uom_id)">1.00</span>
+                    <span class="text-muted" t-field="move.packaging_uom_id">Pack of 6</span>
+                </t>
+            </td>
+    </template>
     <template id="stock_report_delivery_has_serial_move_line">
         <td>
             <span t-field="move_line.product_id"/>
