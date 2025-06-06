@@ -12,6 +12,16 @@ from odoo.addons.payment.tests.common import PaymentCommon
 @tagged('-at_install', 'post_install')
 class TestPaymentTransaction(PaymentCommon):
 
+    def test_is_live_when_created_by_enabled_provider(self):
+        self.provider.state = 'enabled'
+        tx = self._create_transaction('redirect')
+        self.assertTrue(tx.is_live)
+
+    def test_is_not_live_when_created_by_test_provider(self):
+        self.provider.state = 'test'  # Will work with anything other than 'enabled'
+        tx = self._create_transaction('redirect')
+        self.assertFalse(tx.is_live)
+
     def test_capture_allowed_for_authorized_users(self):
         """ Test that users who have access to a transaction can capture it. """
         if not self.env.ref('account.group_account_invoice', raise_if_not_found=False):
