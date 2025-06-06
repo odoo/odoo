@@ -133,7 +133,7 @@ class PosSession(models.Model):
         return relations
 
     @api.model
-    def _load_pos_data_models(self, config_id):
+    def _load_pos_data_models(self, config):
         return ['pos.config', 'pos.preset', 'resource.calendar.attendance', 'pos.order', 'pos.order.line', 'pos.pack.operation.lot', 'pos.payment', 'pos.payment.method', 'pos.printer',
             'pos.category', 'pos.bill', 'res.company', 'account.tax', 'account.tax.group', 'product.template', 'product.product', 'product.attribute', 'product.attribute.custom.value',
             'product.template.attribute.line', 'product.template.attribute.value', 'product.template.attribute.exclusion', 'product.combo', 'product.combo.item', 'res.users', 'res.partner', 'product.uom',
@@ -141,11 +141,11 @@ class PosSession(models.Model):
             'account.cash.rounding', 'account.fiscal.position', 'account.fiscal.position.tax', 'stock.picking.type', 'res.currency', 'pos.note', 'product.tag', 'ir.module.module']
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
+    def _load_pos_data_domain(self, data, config):
         return [('id', '=', self.id)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at',
             'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start', 'access_token'
@@ -153,14 +153,14 @@ class PosSession(models.Model):
 
     def load_data(self, models_to_load):
         response = {}
-        response['pos.session'] = self._load_pos_data_search_read(response, self.config_id.id)
+        response['pos.session'] = self._load_pos_data_search_read(response, self.config_id)
 
-        for model in self._load_pos_data_models(self.config_id.id):
+        for model in self._load_pos_data_models(self.config_id):
             if models_to_load and model not in models_to_load:
                 continue
 
             try:
-                response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id.id)
+                response[model] = self.env[model]._load_pos_data_search_read(response, self.config_id)
             except AccessError:
                 response[model] = []
 
@@ -168,14 +168,14 @@ class PosSession(models.Model):
 
     def load_data_params(self):
         response = {}
-        fields = self._load_pos_data_fields(self.config_id.id)
+        fields = self._load_pos_data_fields(self.config_id)
         response['pos.session'] = {
             'fields': fields,
             'relations': self._load_pos_data_relations('pos.session', fields)
         }
 
-        for model in self._load_pos_data_models(self.config_id.id):
-            fields = self.env[model]._load_pos_data_fields(self.config_id.id)
+        for model in self._load_pos_data_models(self.config_id):
+            fields = self.env[model]._load_pos_data_fields(self.config_id)
             response[model] = {
                 'fields': fields,
                 'relations': self._load_pos_data_relations(model, fields)
@@ -204,8 +204,9 @@ class PosSession(models.Model):
         }
 
     def get_pos_ui_product_pricelist_item_by_product(self, product_tmpl_ids, product_ids, config_id):
-        pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(config_id)
-        pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(config_id)
+        pos_config = self.env['pos.config'].browse(config_id)
+        pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(pos_config)
+        pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(pos_config)
         today = fields.Date.today()
         pricelist_item_domain = [
             '&',
@@ -1840,10 +1841,11 @@ class PosSession(models.Model):
         return []
 
     def find_product_by_barcode(self, barcode, config_id):
-        product_fields = self.env['product.product']._load_pos_data_fields(config_id)
-        product_template_fields = self.env['product.template']._load_pos_data_fields(config_id)
-        packaging_fields = self.env['product.uom']._load_pos_data_fields(config_id)
-        product_tmpl_attr_value_fields = self.env['product.template.attribute.value']._load_pos_data_fields(config_id)
+        pos_config = self.env['pos.config'].browse(config_id)
+        product_fields = self.env['product.product']._load_pos_data_fields(pos_config)
+        product_template_fields = self.env['product.template']._load_pos_data_fields(pos_config)
+        packaging_fields = self.env['product.uom']._load_pos_data_fields(pos_config)
+        product_tmpl_attr_value_fields = self.env['product.template.attribute.value']._load_pos_data_fields(pos_config)
         product_context = {**self.env.context, 'display_default_code': False}
         product = self.env['product.product'].search([
             ('barcode', '=', barcode),

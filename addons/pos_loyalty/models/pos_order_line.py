@@ -24,7 +24,7 @@ class PosOrderLine(models.Model):
         return super().is_not_sellable_line() or self.reward_id
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['is_reward_line', 'reward_id', 'reward_identifier_code', 'points_cost', 'coupon_id']
         return params

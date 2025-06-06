@@ -5,8 +5,8 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     @api.model
-    def _load_pos_data_read(self, records, config_id):
-        data = super()._load_pos_data_read(records, config_id)
+    def _load_pos_data_read(self, records, config):
+        data = super()._load_pos_data_read(records, config)
 
         if self.env.company.country_id.code == 'ES':
             tbai_refund_reason_field = self.env['ir.model.fields']._get('account.move', 'l10n_es_tbai_refund_reason')

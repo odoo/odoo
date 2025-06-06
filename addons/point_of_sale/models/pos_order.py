@@ -54,8 +54,8 @@ class PosOrder(models.Model):
         raise UserError(_('No open session available. Please open a new session to capture the order.'))
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        return [('state', '=', 'draft'), ('config_id', '=', data['pos.config'][0]['id'])]
+    def _load_pos_data_domain(self, data, config):
+        return [('state', '=', 'draft'), ('config_id', '=', config.id)]
 
     @api.model
     def _process_order(self, order, existing_order):
@@ -1072,7 +1072,7 @@ class PosOrder(models.Model):
         next_days_orders.session_id = False
         today_orders.write({'state': 'cancel'})
         return {
-            'pos.order': today_orders.read(self._load_pos_data_fields(self.config_id.ids[0]), load=False)
+            'pos.order': today_orders.read(self._load_pos_data_fields(self.config_id), load=False)
         }
 
     def _get_open_order(self, order):
@@ -1125,7 +1125,7 @@ class PosOrder(models.Model):
 
         # Sometime pos_orders_ids can be empty.
         pos_order_ids = self.env['pos.order'].browse(order_ids)
-        config_id = pos_order_ids.config_id.ids[0] if pos_order_ids else False
+        config = pos_order_ids.config_id[0] if pos_order_ids else False
 
         for order in pos_order_ids:
             order._ensure_access_token()
@@ -1133,20 +1133,20 @@ class PosOrder(models.Model):
                 order.config_id.notify_synchronisation(order.config_id.current_session_id.id, self.env.context.get('login_number', 0))
 
         _logger.info("PoS synchronisation #%d finished", sync_token)
-        return pos_order_ids.read_pos_data(orders, config_id)
+        return pos_order_ids.read_pos_data(orders, config)
 
-    def read_pos_data(self, data, config_id):
+    def read_pos_data(self, data, config):
         # If the previous session is closed, the order will get a new session_id due to _get_valid_session in _process_order
         session_ids = set({order.get('session_id') for order in data})
         is_new_session = any(order.get('session_id') not in session_ids for order in data)
 
         return {
-            'pos.order': self.read(self._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.session': self.session_id._load_pos_data({})['data'] if config_id and is_new_session else [],
-            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config_id), load=False) if config_id else [],
-            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
-            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config_id), load=False) if config_id else [],
+            'pos.order': self.read(self._load_pos_data_fields(config), load=False) if config else [],
+            'pos.session': self.session_id._load_pos_data_search_read(config)['data'] if config and is_new_session else [],
+            'pos.payment': self.payment_ids.read(self.payment_ids._load_pos_data_fields(config), load=False) if config else [],
+            'pos.order.line': self.lines.read(self.lines._load_pos_data_fields(config), load=False) if config else [],
+            'pos.pack.operation.lot': self.lines.pack_lot_ids.read(self.lines.pack_lot_ids._load_pos_data_fields(config), load=False) if config else [],
+            "product.attribute.custom.value": self.lines.custom_attribute_value_ids.read(self.lines.custom_attribute_value_ids._load_pos_data_fields(config), load=False) if config else [],
         }
 
     @api.model
@@ -1420,11 +1420,11 @@ class PosOrderLine(models.Model):
     is_edited = fields.Boolean('Edited', default=False)
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
+    def _load_pos_data_domain(self, data, config):
         return [('order_id', 'in', [order['id'] for order in data['pos.order']])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'qty', 'attribute_value_ids', 'custom_attribute_value_ids', 'price_unit', 'uuid',
             'price_subtotal', 'price_subtotal_incl', 'order_id', 'note', 'price_type',
@@ -1767,11 +1767,11 @@ class PosPackOperationLot(models.Model):
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
+    def _load_pos_data_domain(self, data, config):
         return [('pos_order_line_id', 'in', [line['id'] for line in data['pos.order.line']])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['lot_name', 'pos_order_line_id', 'write_date']
 
 
@@ -1787,9 +1787,9 @@ class AccountCashRounding(models.Model):
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        return [('id', '=', data['pos.config'][0]['rounding_method'])]
+    def _load_pos_data_domain(self, data, config):
+        return [('id', '=', config.rounding_method.id)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'rounding', 'rounding_method', 'strategy']

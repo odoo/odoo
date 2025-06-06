@@ -18,9 +18,9 @@ class PosPrinter(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        return [('id', 'in', data['pos.config'][0]['printer_ids'])]
+    def _load_pos_data_domain(self, data, config):
+        return [('id', 'in', config.printer_ids.ids)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['id', 'name', 'proxy_ip', 'product_categories_ids', 'printer_type']

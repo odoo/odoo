@@ -216,7 +216,7 @@ class PosConfig(models.Model):
 
         for model, ids in records.items():
             records = self.env[model].browse(ids)
-            static_records[model] = self.env[model]._load_pos_data_read(records, self.id)
+            static_records[model] = self.env[model]._load_pos_data_read(records, self)
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
@@ -235,10 +235,10 @@ class PosConfig(models.Model):
             dynamic_records[model] = self.env[model].search(domain)
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
-        data = pos_order_data.read_pos_data([], self.id)
+        data = pos_order_data.read_pos_data([], self)
 
         for key, records in dynamic_records.items():
-            fields = self.env[key]._load_pos_data_fields(self.id)
+            fields = self.env[key]._load_pos_data_fields(self)
             ids = list(set(records.ids + [record['id'] for record in data.get(key, [])]))
             dynamic_records[key] = self.env[key].browse(ids).read(fields, load=False)
 
@@ -252,31 +252,29 @@ class PosConfig(models.Model):
         }
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        return [('id', '=', config_id)]
+    def _load_pos_data_domain(self, data, config):
+        return [('id', '=', config.id)]
 
     @api.model
-    def _load_pos_data_read(self, records, config_id):
-        read_records = super()._load_pos_data_read(records, config_id)
-        server_date = self.env.context.get('pos_last_server_date')
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+        record = read_records[0]
 
-        read_records[0]['_server_version'] = exp_version()
-        read_records[0]['_base_url'] = self.get_base_url()
-        read_records[0]['_data_server_date'] = server_date or self.env.cr.now()
-        read_records[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
-        read_records[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
+        record['_server_version'] = exp_version()
+        record['_base_url'] = self.get_base_url()
+        record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
+        record['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
+        record['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
 
         # Add custom fields for 'formula' taxes.
         # We can ignore data for _load_pos_data_domain since isn't needed in the domain computation of account.tax
-        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain({}, config_id))
-        fields = set(self._load_pos_data_fields(config_id))
+        taxes = self.env['account.tax'].search(self.env['account.tax']._load_pos_data_domain({}, config))
         product_fields = taxes._eval_taxes_computation_prepare_product_fields()
-        fields = list(fields.union(product_fields))
-        read_records[0]['_product_default_values'] = \
+        record['_product_default_values'] = \
             self.env['account.tax']._eval_taxes_computation_prepare_product_default_values(product_fields)
 
-        if not read_records[0]['use_pricelist']:
-            read_records[0]['pricelist_id'] = False
+        if not record['use_pricelist']:
+            record['pricelist_id'] = False
 
         return read_records
 

@@ -138,8 +138,8 @@ class PosPaymentMethod(models.Model):
                 'config_id': pos_session_sudo.config_id.id
             })
 
-    def _load_pos_data_fields(self, config_id):
-        data = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        data = super()._load_pos_data_fields(config)
         data += ['viva_wallet_terminal_id']
         return data
 

@@ -5,8 +5,8 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     @api.model
-    def _load_pos_data_read(self, records, config_id):
-        read_records = super()._load_pos_data_read(records, config_id)
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
         if self.env.company.country_code == 'BE':
             intracom_fpos = self.env["account.chart.template"].with_company(self.company_id.root_id).sudo().ref("fiscal_position_template_3", False)
             if intracom_fpos:

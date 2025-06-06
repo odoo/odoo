@@ -15,11 +15,11 @@ class LoyaltyCard(models.Model):
         related="source_pos_order_id.partner_id")
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
+    def _load_pos_data_domain(self, data, config):
         return [('program_id', 'in', [program["id"] for program in data["loyalty.program"]])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['partner_id', 'code', 'points', 'program_id', 'expiration_date', 'write_date']
 
     def _has_source_order(self):

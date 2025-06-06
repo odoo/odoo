@@ -27,14 +27,14 @@ class ProductTemplate(models.Model):
             product['image_128'] = bool(product['image_128'])
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['self_order_available']
         return params
 
     @api.model
-    def _load_pos_self_data_domain(self, data, config_id=None):
-        domain = super()._load_pos_self_data_domain(data, config_id)
+    def _load_pos_self_data_domain(self, data, config):
+        domain = super()._load_pos_self_data_domain(data, config)
         return AND([domain, [('self_order_available', '=', True)]])
 
     @api.onchange('available_in_pos')
@@ -97,7 +97,7 @@ class ProductProduct(models.Model):
         for config in config_self:
             if config.current_session_id and config.access_token:
                 config._notify('PRODUCT_CHANGED', {
-                    'product.product': self.read(self._load_pos_self_data_fields(config.id), load=False)
+                    'product.product': self.read(self._load_pos_self_data_fields(config), load=False)
                 })
 
     def _can_return_content(self, field_name=None, access_token=None):

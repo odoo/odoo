@@ -7,5 +7,5 @@ class ProductTag(models.Model):
     _inherit = ['product.tag', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['name']

@@ -8,11 +8,11 @@ class ProductProduct(models.Model):
     _inherit = ['product.product', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
+    def _load_pos_data_domain(self, data, config):
         return [('product_tmpl_id', 'in', [p['id'] for p in data['product.template']])]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'lst_price', 'display_name', 'product_tmpl_id', 'product_template_variant_value_ids',
             'product_template_attribute_value_ids', 'barcode', 'product_tag_ids', 'default_code', 'standard_price'
@@ -29,9 +29,8 @@ class ProductProduct(models.Model):
                 ))
 
     @api.model
-    def _load_pos_data_read(self, records, config_id):
-        read_records = super()._load_pos_data_read(records, config_id)
-        config = self.env['pos.config'].browse(config_id)
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
         different_currency = config.currency_id != self.env.company.currency_id
         if different_currency:
             for product in read_records:

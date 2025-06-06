@@ -13,21 +13,19 @@ class HrEmployee(models.Model):
     _inherit = ['hr.employee', 'pos.load.mixin']
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-        return config_id._employee_domain(config_id.current_user_id.id)
+    def _load_pos_data_domain(self, data, config):
+        return config._employee_domain(config.current_user_id.id)
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['name', 'user_id', 'work_contact_id']
 
     def _server_date_to_domain(self, domain):
         return domain
 
     @api.model
-    def _load_pos_data_read(self, records, config_id):
-        read_records = super()._load_pos_data_read(records, config_id)
-        config = self.env['pos.config'].browse(config_id)
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
         manager_ids = records.filtered(lambda emp: config.group_pos_manager_id.id in emp.user_id.all_group_ids.ids).ids
 
         employees_barcode_pin = records.get_barcodes_and_pin_hashed()

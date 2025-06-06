@@ -26,8 +26,8 @@ class PosOrder(models.Model):
         result = super().sync_from_ui(orders)
         order_ids = self.browse([o['id'] for o in result["pos.order"]])
         if order_ids:
-            config_id = order_ids.config_id.ids[0] if order_ids else False
-            result['restaurant.order.course'] = order_ids.course_ids.read(order_ids.course_ids._load_pos_data_fields(config_id)) if config_id else []
+            config = order_ids.config_id[0] if order_ids else False
+            result['restaurant.order.course'] = order_ids.course_ids.read(order_ids.course_ids._load_pos_data_fields(config)) if config else []
         else:
             result['restaurant.order.course'] = []
         return result

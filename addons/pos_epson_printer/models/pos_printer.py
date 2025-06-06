@@ -18,7 +18,7 @@ class PosPrinter(models.Model):
                 raise ValidationError(_("Epson Printer IP Address cannot be empty."))
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        params = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        params = super()._load_pos_data_fields(config)
         params += ['epson_printer_ip']
         return params

@@ -26,30 +26,28 @@ class ResPartner(models.Model):
         if len(domain) == 0:
             limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading(offset)}
             domain += [('id', 'in', list(limited_partner_ids))]
-            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), load=False)
+            new_partner = self.search_read(domain, self._load_pos_data_fields(config), load=False)
         else:
             # If search domain is not empty, we need to search inside all partners
-            new_partner = self.search_read(domain, self._load_pos_data_fields(config_id), offset=offset, limit=100, load=False)
+            new_partner = self.search_read(domain, self._load_pos_data_fields(config), offset=offset, limit=100, load=False)
         return {
             'res.partner': new_partner,
         }
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        config_id = self.env['pos.config'].browse(data['pos.config'][0]['id'])
-
+    def _load_pos_data_domain(self, data, config):
         # Collect partner IDs from loaded orders
         loaded_order_partner_ids = {order['partner_id'] for order in data['pos.order']}
 
         # Extract partner IDs from the tuples returned by get_limited_partners_loading
-        limited_partner_ids = {partner[0] for partner in config_id.get_limited_partners_loading()}
+        limited_partner_ids = {partner[0] for partner in config.get_limited_partners_loading()}
 
         limited_partner_ids.add(self.env.user.partner_id.id)  # Ensure current user is included
         partner_ids = limited_partner_ids.union(loaded_order_partner_ids)
         return [('id', 'in', list(partner_ids))]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'name', 'street', 'street2', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'email',
             'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name',

@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
             so_line.is_repair_line = bool(so_line.move_ids.sudo().filtered(lambda m: m.repair_id))
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
-        result = super()._load_pos_data_fields(config_id)
+    def _load_pos_data_fields(self, config):
+        result = super()._load_pos_data_fields(config)
         result += ['is_repair_line']
         return result

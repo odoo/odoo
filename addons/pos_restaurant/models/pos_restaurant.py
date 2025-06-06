@@ -23,11 +23,11 @@ class RestaurantFloor(models.Model):
     floor_prefix = fields.Integer('Floor Prefix', default=1, help="The prefix will be used when creating a new table in the PoS interface.")
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        return [('pos_config_ids', '=', data['pos.config'][0]['id'])]
+    def _load_pos_data_domain(self, data, config):
+        return [('pos_config_ids', '=', config.id)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['name', 'background_color', 'table_ids', 'sequence', 'pos_config_ids', 'floor_background_image']
 
     @api.ondelete(at_uninstall=False)
@@ -114,12 +114,11 @@ class RestaurantTable(models.Model):
             table.display_name = f"{table.floor_id.name}, {table.table_number}"
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
-        floor_ids = self.env['pos.config'].browse(data['pos.config'][0]['id']).floor_ids.ids
-        return [('active', '=', True), ('floor_id', 'in', floor_ids)]
+    def _load_pos_data_domain(self, data, config):
+        return [('active', '=', True), ('floor_id', 'in', config.floor_ids.ids)]
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return ['table_number', 'width', 'height', 'position_h', 'position_v', 'parent_id', 'shape', 'floor_id', 'color', 'seats', 'active']
 
     def are_orders_still_in_draft(self):

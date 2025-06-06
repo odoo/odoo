@@ -14,12 +14,11 @@ class PosPreset(models.Model):
 
     # will be overridden.
     @api.model
-    def _load_pos_self_data_domain(self, data, config_id=None):
-        config_id = data['pos.config'][0]['available_preset_ids']
-        return ['|', ('id', '=', data['pos.config'][0]['default_preset_id']), '&', ('available_in_self', '=', True), ('id', 'in', config_id)]
+    def _load_pos_self_data_domain(self, data, config):
+        return ['|', ('id', '=', config.default_preset_id.id), '&', ('available_in_self', '=', True), ('id', 'in', config.available_preset_ids.ids)]
 
     @api.model
-    def _load_pos_self_data_fields(self, config_id):
-        params = super()._load_pos_self_data_fields(config_id)
+    def _load_pos_self_data_fields(self, config):
+        params = super()._load_pos_self_data_fields(config)
         params.append('service_at')
         return params

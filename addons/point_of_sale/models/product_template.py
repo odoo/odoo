@@ -33,28 +33,26 @@ class ProductTemplate(models.Model):
     def create_product_variant_from_pos(self, attribute_value_ids, config_id):
         """ Create a product variant from the POS interface. """
         self.ensure_one()
+        pos_config = self.env['pos.config'].browse(config_id)
         product_template_attribute_value_ids = self.env['product.template.attribute.value'].browse(attribute_value_ids)
         product_variant = self._create_product_variant(product_template_attribute_value_ids)
         return {
-            'product.product': product_variant.read(self.env['product.product']._load_pos_data_fields(config_id), load=False),
+            'product.product': product_variant.read(self.env['product.product']._load_pos_data_fields(pos_config), load=False),
         }
 
     @api.model
-    def _load_pos_data_domain(self, data, config_id=None):
+    def _load_pos_data_domain(self, data, config):
         domain = [
-            *self.env['product.template']._check_company_domain(data['pos.config'][0]['company_id']),
+            *self.env['product.template']._check_company_domain(config.company_id),
             ('available_in_pos', '=', True),
             ('sale_ok', '=', True),
         ]
-        limited_categories = data['pos.config'][0]['limit_categories']
-        if limited_categories:
-            available_category_ids = data['pos.config'][0]['iface_available_categ_ids']
-            category_ids = self.env['pos.category'].browse(available_category_ids)._get_descendants().ids
-            domain += [('pos_categ_ids', 'in', category_ids)]
+        if config.limit_categories:
+            domain += [('pos_categ_ids', 'in', config.iface_available_categ_ids.ids)]
         return domain
 
     @api.model
-    def _load_pos_data_fields(self, config_id):
+    def _load_pos_data_fields(self, config):
         return [
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
@@ -63,12 +61,11 @@ class ProductTemplate(models.Model):
         ]
 
     @api.model
-    def _load_pos_data_search_read(self, data, config_id):
-        config = self.env['pos.config'].browse(config_id)
+    def _load_pos_data_search_read(self, data, config):
         limit_count = config.get_limited_product_count()
         pos_limited_loading = self.env.context.get('pos_limited_loading', True)
         if limit_count and pos_limited_loading:
-            query = self._where_calc(self._load_pos_data_domain(data))
+            query = self._where_calc(self._load_pos_data_domain(data, config))
             sql = SQL(
                 """
                     WITH pm AS (
@@ -97,7 +94,7 @@ class ProductTemplate(models.Model):
             product_combo = products.filtered(lambda p: p['type'] == 'combo')
             products += product_combo.combo_ids.combo_item_ids.product_id.product_tmpl_id
         else:
-            domain = self._load_pos_data_domain(data)
+            domain = self._load_pos_data_domain(data, config)
             products = self._load_product_with_domain(domain)
 
         special_products = config._get_special_products().filtered(
@@ -110,12 +107,11 @@ class ProductTemplate(models.Model):
             if not tip_company_id or tip_company_id == self.env.company:
                 products += config.tip_product_id.product_tmpl_id
 
-        return self._load_pos_data_read(products, config.id)
+        return self._load_pos_data_read(products, config)
 
     @api.model
-    def _load_pos_data_read(self, records, config_id):
-        read_records = super()._load_pos_data_read(records, config_id)
-        config = self.env['pos.config'].browse(config_id)
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
         self._process_pos_ui_product_product(read_records, config)
         return read_records
 
