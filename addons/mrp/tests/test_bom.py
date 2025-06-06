@@ -1,11 +1,11 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions, Command, fields
-from odoo.tests import Form
+from odoo import exceptions, fields
+from odoo.fields import Command
+from odoo.tests import Form, HttpCase, freeze_time, tagged
+from odoo.tools import float_compare, float_repr, float_round
+
 from odoo.addons.mrp.tests.common import TestMrpCommon
-from odoo.tests.common import HttpCase, tagged, freeze_time
-from odoo.tools import float_compare, float_round, float_repr
 
 
 @freeze_time(fields.Date.today())
@@ -14,10 +14,17 @@ class TestBoM(TestMrpCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.ref('base.group_user').write({'implied_ids': [
-            Command.link(cls.env.ref('product.group_product_variant').id),
-            Command.link(cls.env.ref('mrp.group_mrp_routings').id),
+        cls.group_user.write({'implied_ids': [
+            Command.link(cls.group_product_variant.id),
+            Command.link(cls.group_mrp_routings.id),
         ]})
+
+    @classmethod
+    def make_prods(cls, n):
+        return cls.env['product.product'].create([
+            {'name': f"p{k + 1}", 'is_storable': True}
+            for k in range(n)
+        ])
 
     def test_01_explode(self):
         boms, lines = self.bom_1.explode(self.product_4, 3)

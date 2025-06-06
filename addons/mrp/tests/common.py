@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 
 from odoo import Command
 from odoo.tests import Form
+
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.common import TestStockCommon
 
@@ -15,24 +15,24 @@ class TestMrpCommon(TestStockCommon):
         the tracking/qty for each different products. It returns the
         MO, used bom and the tree products.
         """
-        product_to_build = cls.env['product.product'].create({
-            'name': 'Young Tom',
-            'type': 'consu',
-            'is_storable': True,
-            'tracking': tracking_final,
-        })
-        product_to_use_1 = cls.env['product.product'].create({
-            'name': 'Botox',
-            'type': 'consu',
-            'is_storable': True,
-            'tracking': tracking_base_1,
-        })
-        product_to_use_2 = cls.env['product.product'].create({
-            'name': 'Old Tom',
-            'type': 'consu',
-            'is_storable': True,
-            'tracking': tracking_base_2,
-        })
+        product_to_build, product_to_use_1, product_to_use_2 = cls.env['product.product'].create([
+            {
+                'name': 'Young Tom',
+                'type': 'consu',
+                'is_storable': True,
+                'tracking': tracking_final,
+            }, {
+                'name': 'Botox',
+                'type': 'consu',
+                'is_storable': True,
+                'tracking': tracking_base_1,
+            }, {
+                'name': 'Old Tom',
+                'type': 'consu',
+                'is_storable': True,
+                'tracking': tracking_base_2,
+            }
+        ])
         bom_1 = cls.env['mrp.bom'].create({
             'product_id': product_to_build.id,
             'product_tmpl_id': product_to_build.product_tmpl_id.id,
@@ -43,7 +43,8 @@ class TestMrpCommon(TestStockCommon):
             'bom_line_ids': [
                 Command.create({'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
                 Command.create({'product_id': product_to_use_1.id, 'product_qty': qty_base_1}),
-            ]})
+            ],
+        })
         mo_form = Form(cls.env['mrp.production'])
         mo_form.product_id = product_to_build
         if picking_type_id:
@@ -56,7 +57,26 @@ class TestMrpCommon(TestStockCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestMrpCommon, cls).setUpClass()
+        super().setUpClass()
+
+        cls.group_mrp_routings = cls.quick_ref('mrp.group_mrp_routings')
+
+        # Kept for reduced diff in existing tests, should be dropped someday
+        cls.product_7_template = cls.product_template_sofa
+
+        cls.product_7_attr1_v1 = cls.product_7_template.attribute_line_ids[
+            0].product_template_value_ids[0]
+        cls.product_7_attr1_v2 = cls.product_7_template.attribute_line_ids[
+            0].product_template_value_ids[1]
+        cls.product_7_attr1_v3 = cls.product_7_template.attribute_line_ids[
+            0].product_template_value_ids[2]
+
+        cls.product_7_1 = cls.product_7_template._get_variant_for_combination(
+            cls.product_7_attr1_v1)
+        cls.product_7_2 = cls.product_7_template._get_variant_for_combination(
+            cls.product_7_attr1_v2)
+        cls.product_7_3 = cls.product_7_template._get_variant_for_combination(
+            cls.product_7_attr1_v3)
 
         (
             cls.product_4,
@@ -101,29 +121,29 @@ class TestMrpCommon(TestStockCommon):
         # `workorder_ids` to be visible in the view of `mrp.production`. The
         # field `product_uom_id` must be set by many tests, and subviews of
         # `workorder_ids` must be present in many tests to create records.
-        cls.env.user.group_ids += cls.env.ref('uom.group_uom') + cls.env.ref('mrp.group_mrp_routings')
+        cls.env.user.group_ids += cls.group_uom + cls.group_mrp_routings
         cls.picking_type_manu = cls.warehouse_1.manu_type_id
         cls.picking_type_manu.sequence = 5
         cls.route_manufacture = cls.warehouse_1.manufacture_pull_id.route_id
 
-        cls.workcenter_1 = cls.env['mrp.workcenter'].create({
-            'name': 'Nuclear Workcenter',
-            'time_start': 10,
-            'time_stop': 5,
-            'time_efficiency': 80,
-        })
-        cls.workcenter_2 = cls.env['mrp.workcenter'].create({
-            'name': 'Simple Workcenter',
-            'time_start': 0,
-            'time_stop': 0,
-            'time_efficiency': 100,
-        })
-        cls.workcenter_3 = cls.env['mrp.workcenter'].create({
-            'name': 'Double Workcenter',
-            'time_start': 0,
-            'time_stop': 0,
-            'time_efficiency': 100,
-        })
+        cls.workcenter_1, cls.workcenter_2, cls.workcenter_3 = cls.env['mrp.workcenter'].create([
+            {
+                'name': 'Nuclear Workcenter',
+                'time_start': 10,
+                'time_stop': 5,
+                'time_efficiency': 80,
+            }, {
+                'name': 'Simple Workcenter',
+                'time_start': 0,
+                'time_stop': 0,
+                'time_efficiency': 100,
+            }, {
+                'name': 'Double Workcenter',
+                'time_start': 0,
+                'time_stop': 0,
+                'time_efficiency': 100,
+            }
+        ])
         for (workcenter, default_capacity) in [(cls.workcenter_1, 2), (cls.workcenter_2, 1), (cls.workcenter_3, 2)]:
             cls.env['mrp.workcenter.capacity'].create({
                 'workcenter_id': workcenter.id,
@@ -227,29 +247,6 @@ class TestMrpCommon(TestStockCommon):
             ]})
 
         cls.stock_location_components = cls.shelf_1
-        cls.laptop = cls.env['product.product'].create({
-            'name': 'Acoustic Bloc Screens',
-            'uom_id': cls.env.ref("uom.product_uom_unit").id,
-            'type': 'consu',
-            'is_storable': True,
-            'tracking': 'none',
-        })
-        cls.graphics_card = cls.env['product.product'].create({
-            'name': 'Individual Workplace',
-            'uom_id': cls.env.ref("uom.product_uom_unit").id,
-            'type': 'consu',
-            'is_storable': True,
-            'tracking': 'none',
-        })
-
-    @classmethod
-    def make_prods(cls, n):
-        return [
-            cls.env["product.product"].create(
-                {"name": f"p{k + 1}", 'is_storable': True}
-            )
-            for k in range(n)
-        ]
 
     @classmethod
     def make_bom(cls, p, *cs):
