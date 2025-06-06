@@ -9,6 +9,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { PowerboxPlugin } from "../src/main/powerbox/powerbox_plugin";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 describe.tags("desktop");
 describe("visibility", () => {
@@ -132,7 +133,7 @@ describe("buttons", () => {
         await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.fa-square");
         await animationFrame();
-        expect(".o-we-linkpopover").toHaveCount(1);
+        await expectElementCount(".o-we-linkpopover", 1);
     });
 
     test("should open powerbox using power buttons", async () => {
