@@ -94,7 +94,7 @@ import * as hootMock from "@odoo/hoot-mock";
 
 /**
  * @template {unknown[]} T
- * @typedef {T extends [any, ...infer U] ? U : never} DropFirst
+ * @typedef {import("../hoot_utils").DropFirst} DropFirst
  */
 
 /**

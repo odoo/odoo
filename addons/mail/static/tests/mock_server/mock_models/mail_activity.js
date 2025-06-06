@@ -5,7 +5,6 @@ import { Domain } from "@web/core/domain";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 import { groupBy, sortBy, unique } from "@web/core/utils/arrays";
 import { DEFAULT_MAIL_SEARCH_ID, DEFAULT_MAIL_VIEW_ID } from "./constants";
-import { MailActivityType } from "./mail_activity_type";
 
 const { DateTime } = luxon;
 
@@ -19,7 +18,7 @@ export class MailActivity extends models.ServerModel {
     activity_type_id = fields.Many2one({
         relation: "mail.activity.type",
         default() {
-            return MailActivityType._records[0].id;
+            return this.env["mail.activity.type"][0].id;
         },
     });
     user_id = fields.Many2one({ relation: "res.users", default: () => serverState.userId });
@@ -29,10 +28,7 @@ export class MailActivity extends models.ServerModel {
 
     /** @param {number[]} ids */
     action_feedback(ids) {
-        this.write(
-            ids,
-            { active: false, date_done: serializeDate(today()), state: "done" }
-        );
+        this.write(ids, { active: false, date_done: serializeDate(today()), state: "done" });
     }
 
     /** @param {number[]} ids */
@@ -236,7 +232,7 @@ export class MailActivity extends models.ServerModel {
                 reporting_date: reportingDate ? reportingDate.toFormat("yyyy-LL-dd") : false,
                 state: ongoing.length ? this._compute_state_from_date(dateDeadline) : "done",
                 user_assigned_ids: userAssignedIds,
-                summaries: ongoing.map((a) => a.summary ? a.summary : ''),
+                summaries: ongoing.map((a) => (a.summary ? a.summary : "")),
                 ...attachmentsInfo,
             };
         }
