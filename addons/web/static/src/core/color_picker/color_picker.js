@@ -1,7 +1,8 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { applyOpacityToGradient, isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { getCSSVariableValue } from "@web/core/utils/utils_css";
 import { cookie } from "@web/core/browser/cookie";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 import { POSITION_BUS } from "../position/position_hook";
@@ -28,6 +29,20 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(222, 222, 222) 0%, rgb(69, 69, 69) 100%)",
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
+
+const DEFAULT_GRAYSCALES_COLORS = {
+    solid: ["black", "900", "800", "600", "400", "200", "100", "white"],
+    transparent: [
+        "black-75",
+        "black-50",
+        "black-25",
+        "black-15",
+        "white-25",
+        "white-50",
+        "white-75",
+        "white-85",
+    ],
+};
 
 export const DEFAULT_THEME_COLOR_VARS = [
     "o-color-1",
@@ -56,19 +71,24 @@ export class ColorPicker extends Component {
         enabledTabs: { type: Array, optional: true },
         colorPrefix: { type: String },
         showRgbaField: { type: Boolean, optional: true },
+        defaultGradientOpacity: { type: Number, optional: true },
+        enabledGrayscales: { type: Array, optional: true },
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
         className: { type: String, optional: true },
     };
     static defaultProps = {
         close: () => {},
+        defaultGradientOpacity: 1,
         enabledTabs: ["solid", "gradient", "custom"],
         showRgbaField: false,
+        enabledGrayscales: ["solid"],
     };
-
+    applyOpacityToGradient = applyOpacityToGradient;
     setup() {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.DEFAULT_GRAYSCALES_COLORS = DEFAULT_GRAYSCALES_COLORS;
         this.root = useRef("root");
 
         this.defaultColor = this.props.state.selectedColor;
@@ -177,6 +197,14 @@ export class ColorPicker extends Component {
         }
     }
 
+    getDefaultColorSet() {
+        for (const color of Object.values(this.DEFAULT_GRAYSCALES_COLORS).flat()) {
+            if (getCSSVariableValue(color) === this.state.currentCustomColor) {
+                return color;
+            }
+        }
+        return false;
+    }
     toggleGradientPicker() {
         this.state.showGradientPicker = !this.state.showGradientPicker;
     }
