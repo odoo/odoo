@@ -378,6 +378,15 @@ test("should apply text color whithout interrupting gradient background color on
             '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
     });
 });
+test("should apply text color whithout interrupting gradient background color on fully selected gradient", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcde]</font></p>',
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="color: rgb(255, 0, 0);">[abcde]</font></font></p>',
+    });
+});
 test("should apply background color whithout interrupting gradient text color on selected text", async () => {
     await testEditor({
         contentBefore:
@@ -385,6 +394,15 @@ test("should apply background color whithout interrupting gradient text color on
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
         contentAfter:
             '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">ab<font style="background-color: rgb(255, 0, 0);">[ca]</font>bc</font></p>',
+    });
+});
+test("should apply background color whithout interrupting gradient text color on fully selected gradient", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcde]</font></p>',
+        stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
+        contentAfter:
+            '<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);"><font style="background-color: rgb(255, 0, 0);">[abcde]</font></font></p>',
     });
 });
 test("should apply background color whithout interrupting gradient background color on selected text", async () => {
@@ -508,5 +526,21 @@ test("should apply gradient text color on selected text", async () => {
         ),
         contentAfter:
             '<div style="background-image:none"><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[ab<strong>cd</strong>ef]</font></p></div>',
+    });
+});
+test("should remove text gradient and apply new text color if gradient is fully selected", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);" class="text-gradient">[abcd]</font></p>',
+        stepFunction: setColor("#ff0000", "color"),
+        contentAfter: '<p><font style="color: rgb(255, 0, 0);">[abcd]</font></p>',
+    });
+});
+test("should remove background gradient and apply new background color if gradient is fully selected", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><font style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[abcd]</font></p>',
+        stepFunction: setColor("#ff0000", "backgroundColor"),
+        contentAfter: '<p><font style="background-color: rgb(255, 0, 0);">[abcd]</font></p>',
     });
 });

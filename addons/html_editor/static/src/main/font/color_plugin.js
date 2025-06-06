@@ -277,10 +277,21 @@ export class ColorPlugin extends Plugin {
                 let font = closestElement(node, "font") || closestElement(node, "span");
                 const children = font && descendants(font);
                 const hasInlineGradient = font && isColorGradient(font.style["background-image"]);
+                const isFullySelected =
+                    children && children.every((child) => selectedNodes.includes(child));
+                const isTextGradient =
+                    hasInlineGradient && font.classList.contains("text-gradient");
+                const shouldReplaceExistingGradient =
+                    isFullySelected &&
+                    ((mode === "color" && isTextGradient) ||
+                        (mode === "backgroundColor" && !isTextGradient));
                 if (
                     font &&
                     (font.nodeName === "FONT" || (font.nodeName === "SPAN" && font.style[mode])) &&
-                    (isColorGradient(color) || color === "" || !hasInlineGradient)
+                    (isColorGradient(color) ||
+                        color === "" ||
+                        !hasInlineGradient ||
+                        shouldReplaceExistingGradient)
                 ) {
                     // Partially selected <font>: split it.
                     const selectedChildren = children.filter((child) =>
@@ -319,7 +330,8 @@ export class ColorPlugin extends Plugin {
                             mode === "color" &&
                             (font.style.webkitTextFillColor ||
                                 (closestGradientEl &&
-                                    closestGradientEl.classList.contains("text-gradient")))
+                                    closestGradientEl.classList.contains("text-gradient") &&
+                                    !shouldReplaceExistingGradient))
                         ) {
                             font.style.webkitTextFillColor = color;
                         }
@@ -354,8 +366,6 @@ export class ColorPlugin extends Plugin {
                         font = previous;
                     } else {
                         // No <font> found: insert a new one.
-                        const isTextGradient =
-                            hasInlineGradient && font.classList.contains("text-gradient");
                         font = this.document.createElement("font");
                         node.after(font);
                         if (isTextGradient && mode === "color") {
