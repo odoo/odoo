@@ -3,7 +3,6 @@ import { Thread } from "@mail/core/common/thread_model";
 import { useSequential } from "@mail/utils/common/hooks";
 import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
 
-import { formatList } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
@@ -264,7 +263,14 @@ const threadPatch = {
             return this.correspondent.name;
         }
         if (this.channel_type === "group" && !this.name) {
-            return formatList(this.channel_member_ids.map((channelMember) => channelMember.name));
+            let name = this.channel_member_ids
+                .slice(0, 5)
+                .map((channelMember) => channelMember.name)
+                .join(", ");
+            if (this.channel_member_ids.length > 5) {
+                name += "...";
+            }
+            return name;
         }
         if (this.model === "discuss.channel" && this.name) {
             return this.name;

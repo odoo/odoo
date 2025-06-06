@@ -1307,7 +1307,7 @@ test("out-of-focus notif on needaction message in group chat contributes only on
     );
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", { text: "Inbox" });
     await contains(".o-mail-DiscussSidebar-item:has(.badge:contains(1))", {
-        text: "Mitchell Admin and Dumbledore",
+        text: "Mitchell Admin, Dumbledore",
     });
     expect(titleService.current).toBe("(1) Inbox");
 });

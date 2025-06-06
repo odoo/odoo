@@ -88,7 +88,7 @@ test("Conversation mentions in the command palette with @", async () => {
     await contains(".o_command_palette .o_command_category", {
         contains: [
             ["span.fw-bold", { text: "Mentions" }],
-            [".o_command.focused .o_command_name", { text: "Mitchell Admin and Mario" }],
+            [".o_command.focused .o_command_name", { text: "Mitchell Admin, Mario" }],
         ],
     });
     // can also make self conversation
@@ -96,7 +96,7 @@ test("Conversation mentions in the command palette with @", async () => {
         contains: [[".o_command_name", { text: "Mitchell Admin" }]],
     });
     await click(".o_command.focused");
-    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin and Mario" });
+    await contains(".o-mail-ChatWindow", { text: "Mitchell Admin, Mario" });
 });
 
 test("Max 3 most recent conversations in command palette of Discuss", async () => {
