@@ -1,8 +1,9 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, delay, tick } from "@odoo/hoot-dom";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { advanceTime, Deferred, delay, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains } from "@web/../tests/web_test_helpers";
+import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Operation } from "@html_builder/core/operation";
+import { HistoryPlugin } from "@html_editor/core/history_plugin";
 import {
     addActionOption,
     addOption,
@@ -114,5 +115,106 @@ describe("Block editable", () => {
         await tick();
         expect(":iframe .o_loading_screen.o_we_ui_loading").toHaveCount(0);
         expect(":iframe .test-options-target").toHaveClass("custom-action");
+    });
+});
+
+describe("Async operations", () => {
+    defineWebsiteModels();
+    beforeEach(() => {
+        patchWithCleanup(HistoryPlugin.prototype, {
+            makePreviewableAsyncOperation(operation) {
+                const res = super.makePreviewableAsyncOperation(operation);
+                const revert = res.revert;
+                res.revert = async () => {
+                    await revert();
+                    expect.step("revert");
+                };
+                return res;
+            },
+        });
+    });
+
+    test("In clickable component, revert is awaited before applying the next apply", async() => {
+        const applyDelay = 1000;
+        addActionOption({
+            customAction: {
+                apply: async ({ editingElement, value }) => {
+                    await new Promise((resolve) => setTimeout(resolve, applyDelay));
+                    editingElement.classList.add(value);
+                    expect.step("apply first");
+                },
+            },
+            customAction2: {
+                apply: ({ editingElement, value }) => {
+                    editingElement.classList.add(value);
+                    expect.step("apply second");
+                },
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`
+                <BuilderRow label.translate="Type">
+                    <BuilderSelect>
+                        <BuilderSelectItem action="'customAction'" actionValue="'first'">first</BuilderSelectItem>
+                        <BuilderSelectItem action="'customAction2'" actionValue="'second'">second</BuilderSelectItem>
+                    </BuilderSelect>
+                </BuilderRow>
+            `,
+        });
+
+        await setupWebsiteBuilder(`<div class="test-options-target">TEST</div>`);
+        await contains(":iframe .test-options-target").click();
+        await contains(".options-container [data-label='Type'] .btn-primary ").click();
+        await hover(".options-container [data-action-value='first']");
+        await hover(".options-container [data-action-value='second']");
+        await advanceTime(applyDelay + 50);
+        expect.verifySteps(["apply first", "revert", "apply second"]);
+        expect(":iframe .test-options-target").toHaveClass("second");
+        expect(":iframe .test-options-target").not.toHaveClass("first");
+        // Escape the select to trigger an explicit revert. Otherwise, the test
+        // sometimes fails with an unverified step.
+        await press(["Escape"]);
+        expect.verifySteps(["revert"]);
+    });
+
+    test("In ColorPicker, revert is awaited before applying the next apply", async() => {
+        const applyDelay = 1000;
+        addActionOption({
+            customAction: {
+                apply: async ({ editingElement }) => {
+                    let color = getComputedStyle(editingElement).getPropertyValue("background-color");
+                    if (color === "rgb(255, 0, 0)") {
+                        color = "red";
+                        await new Promise((resolve) => setTimeout(resolve, applyDelay));
+                    } else {
+                        color = "blue";
+                    }
+                    editingElement.classList.add(color);
+                    expect.step(`apply ${color}`);
+                },
+            },
+        });
+        addOption({
+            selector: ".test-options-target",
+            template: xml`<BuilderRow>
+                <BuilderColorPicker enabledTabs="['solid']" styleAction="'background-color'" action="'customAction'"/>
+            </BuilderRow>`,
+        });
+
+        await setupWebsiteBuilder(`<div class="test-options-target">TEST</div>`);
+        await contains(":iframe .test-options-target").click();
+
+        await contains(".we-bg-options-container .o_we_color_preview").click();
+        await contains(".o-overlay-item [data-color='#FF0000']").hover();
+        await contains(".o-overlay-item [data-color='#0000FF']").hover();
+        await advanceTime(applyDelay + 50);
+        expect(":iframe .test-options-target").toHaveClass("blue");
+        expect(":iframe .test-options-target").not.toHaveClass("red");
+        expect.verifySteps(["apply red", "revert", "apply blue"]);
+        // Escape the colorpicker to trigger an explicit revert. Otherwise, the
+        // test sometimes fails with an unverified step.
+        await press(["Escape"]);
+        expect.verifySteps(["revert"]);
     });
 });

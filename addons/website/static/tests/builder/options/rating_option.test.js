@@ -29,10 +29,12 @@ test("change rating score", async () => {
     await contains(".options-container [data-action-id='activeIconsNumber'] input").click();
     await clear();
     await fill("1");
+    await animationFrame();
     expect(":iframe .s_rating .s_rating_active_icons i").toHaveCount(1);
     await contains(".options-container [data-action-id='totalIconsNumber'] input").click();
     await clear();
     await fill("4");
+    await animationFrame();
     expect(":iframe .s_rating .s_rating_inactive_icons i").toHaveCount(3);
     expect(":iframe .s_rating").toHaveInnerHTML(
         `<h4 class="s_rating_title">Quality</h4>

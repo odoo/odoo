@@ -50,8 +50,12 @@ export class Operation {
             (() => {
                 this.cancelPrevious = null;
                 isCancel = true;
-                cancelPrevious?.();
                 cancelResolve?.();
+                // Cancel in the mutex to wait for the revert before the next
+                // apply.
+                this.mutex.exec(async () => {
+                    await cancelPrevious?.();
+                });
             });
 
         const cancelTimePromise = new Promise((resolve) => setTimeout(resolve, cancelTime));

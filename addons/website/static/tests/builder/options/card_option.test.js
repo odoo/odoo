@@ -23,10 +23,11 @@ test("set card width", async () => {
     expect("[data-action-id='setCardWidth'] input").toHaveValue(100);
 
     await setInputRange("[data-action-id='setCardWidth'] input", 50);
+    await animationFrame();
     expect(":iframe .s_card").toHaveStyle({ maxWidth: "50%" });
 });
 
-test("set card aligment", async () => {
+test("set card alignment", async () => {
     await setupWebsiteBuilder(simpleCardHtml);
     await contains(":iframe .s_card").click();
     await waitFor("[data-action-id='setCardWidth'] input");
@@ -43,12 +44,15 @@ test("set card aligment", async () => {
     expect("[data-label='Alignment'] button[title='Left']").toHaveClass("active");
 
     await click("[data-label='Alignment'] button[title='Center']");
+    await animationFrame();
     expect(":iframe .s_card").toHaveClass("mx-auto");
 
     await click("[data-label='Alignment'] button[title='Right']");
+    await animationFrame();
     expect(":iframe .s_card").toHaveClass("ms-auto");
 
     await click("[data-label='Alignment'] button[title='Left']");
+    await animationFrame();
     expect(":iframe .s_card").toHaveClass("me-auto");
 });
 
@@ -201,6 +205,7 @@ test("set cover image width", async () => {
     // Width option is now available
     expect("[data-label='Width']").toHaveCount(1);
     await setInputRange("[data-label='Width'] input", 25);
+    await animationFrame();
     const cardImageWidthValue =
         queryOne(":iframe .s_card").style.getPropertyValue("--card-img-size-h");
     expect(parseFloat(cardImageWidthValue)).toBeWithin(24.9, 25.1);
@@ -212,6 +217,7 @@ test("cover image set to wide aspect ratio can be vertically aligned", async () 
     await waitFor("[data-action-id='alignCoverImage']");
     expect("[data-label='Alignment'] [data-action-id='alignCoverImage'").toHaveCount(1);
     await setInputRange("[data-action-id='alignCoverImage'] input", 50);
+    await animationFrame();
     expect(":iframe .s_card .o_card_img_wrapper").toHaveClass("o_card_img_adjust_v");
     expect(":iframe .s_card").toHaveStyle({ "--card-img-ratio-align": "50%" });
 });
