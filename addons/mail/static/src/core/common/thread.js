@@ -43,6 +43,7 @@ const PRESENT_MESSAGE_THRESHOLD = 10;
 export class Thread extends Component {
     static components = { Message, NotificationMessage, Transition, DateSection };
     static props = [
+        "autofocus?",
         "showDates?",
         "isInChatWindow?",
         "jumpPresent?",
@@ -130,6 +131,14 @@ export class Thread extends Component {
             this.updateShowJumpPresent()
         );
         this.setupScroll();
+        useEffect(
+            (focus) => {
+                if (focus && this.state.mountedAndLoaded) {
+                    this.root.el.focus();
+                }
+            },
+            () => [this.props.autofocus + this.props.thread.autofocus, this.state.mountedAndLoaded]
+        );
         useEffect(
             () => {
                 this.computeJumpPresentPosition();
