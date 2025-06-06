@@ -106,6 +106,7 @@ export const priorityField = {
             autosave: "autosave" in options ? !!options.autosave : true,
         };
     },
+    listViewWidth: 32,
 };
 
 registry.category("fields").add("priority", priorityField);
