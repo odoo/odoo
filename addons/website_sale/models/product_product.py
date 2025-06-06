@@ -249,13 +249,13 @@ class ProductProduct(models.Model):
                 'link': format_product_link(product.website_url),
                 **product._prepare_gmc_identifier(),
                 **product._prepare_gmc_image_links(base_url),
-                **product._prepare_gmc_price_info(),
+                **price_info,
                 **product._prepare_gmc_shipping_info(delivery_methods_sudo, all_countries),
                 **product._prepare_gmc_stock_info(),
                 **product._prepare_gmc_additional_info(),
             }
             for product in self
-            if product._is_variant_possible()
+            if product._is_variant_possible() and (price_info := product._prepare_gmc_price_info())
         }
 
     def _prepare_gmc_identifier(self):
