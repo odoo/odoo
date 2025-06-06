@@ -10,3 +10,4 @@ from . import test_edi_reverse_charge
 from . import test_edi_pa
 from . import test_account_move_send
 from . import test_res_partner
+from . import test_it_document_type
