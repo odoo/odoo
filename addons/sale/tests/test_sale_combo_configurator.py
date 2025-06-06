@@ -170,3 +170,25 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
             'name': combo_name,
             'combo_item_ids': [Command.create({'product_id': product.product_variant_id.id})],
         })
+
+    def test_sale_combo_configurator_nested_lines_deleted(self):
+        if self.env['ir.module.module']._get('sale_management').state != 'installed':
+            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
+
+        combo_a = self.env['product.combo'].create({
+            'name': "Combo A",
+            'combo_item_ids': [
+                Command.create({'product_id': self._create_product(name="Product A1").id}),
+            ],
+        })
+        self._create_product(
+            name="Combo product",
+            list_price=25,
+            type='combo',
+            combo_ids=[
+                Command.link(combo_a.id),
+            ],
+        )
+        self.start_tour(
+            '/', 'sale_combo_nested_combo_lines_deleted', login='salesman'
+        )

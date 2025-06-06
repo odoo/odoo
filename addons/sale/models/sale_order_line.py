@@ -1556,6 +1556,20 @@ class SaleOrderLine(models.Model):
     def has_valued_move_ids(self):
         return self.move_ids
 
+    def _get_all_linked_lines(self, visited=None):
+        if visited is None:
+            visited = set()
+        all_linked_lines = self.env['sale.order.line']
+        linked_lines = self._get_linked_lines()
+
+        for line in linked_lines:
+            if line.id in visited:
+                continue
+            visited.add(line.id)
+            all_linked_lines |= line
+            all_linked_lines |= line._get_all_linked_lines(visited=visited)
+        return all_linked_lines
+
     def _get_linked_line(self):
         """ Return the linked line of this line, if any.
 
