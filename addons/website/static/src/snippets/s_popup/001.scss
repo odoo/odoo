@@ -54,7 +54,8 @@
 
     // No backdrop
     .s_popup_no_backdrop {
-        // Allow scrolling on elements behind
+        // Allow using elements behind the modal (especially useful for small
+        // popups like the cookie bar one).
         pointer-events: none;
 
         // Allow Chrome to scroll the modal content even if there is no scroll on the document behind.
