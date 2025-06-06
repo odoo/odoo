@@ -66,6 +66,11 @@ class PaymentTransaction(models.Model):
         readonly=True)
     last_state_change = fields.Datetime(
         string="Last State Change Date", readonly=True, default=fields.Datetime.now)
+    is_live = fields.Boolean(
+        string="Is Live",
+        help="True for transactions that happened in a live environment,"
+             " and false for demo transactions and historical records.",
+        index=True)
 
     # Fields used for traceability.
     operation = fields.Selection(  # This should not be trusted if the state is draft or pending.
@@ -167,6 +172,8 @@ class PaymentTransaction(models.Model):
 
             if not values.get('reference'):
                 values['reference'] = self._compute_reference(provider.code, **values)
+
+            values['is_live'] = provider.state == 'enabled'
 
             # Duplicate partner values.
             partner = self.env['res.partner'].browse(values['partner_id'])
