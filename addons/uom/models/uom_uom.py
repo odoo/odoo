@@ -16,8 +16,11 @@ class UomUom(models.Model):
     _order = "relative_uom_id, name, id"
 
     def _unprotected_uom_xml_ids(self):
+        """ Return a list of UoM XML IDs that are not protected by default.
+        Note: Some of these may be protected via overrides in other modules.
+        """
         return [
-            "product_uom_hour",  # NOTE: this uom is protected when hr_timesheet is installed.
+            "product_uom_hour",
             "product_uom_dozen",
             "product_uom_pack_6",
         ]
