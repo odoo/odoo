@@ -139,10 +139,40 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.display_type or line.analytic_distribution or not line.product_id:
                 continue
+<<<<<<< 38ba0f13e25ec779d83b75fc7d11c2a50366f12a
             project = line.product_id.project_id or line.order_id.project_id
             distribution = project._get_analytic_distribution()
             if distribution:
                 line.analytic_distribution = distribution
+||||||| 6b9a117f9290b7145aa0a4ac940bc59afbe5e849
+
+            if line.analytic_distribution:
+                applied_root_plans = self.env['account.analytic.account'].browse(
+                    list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
+                ).root_plan_id
+                if accounts_to_add := project._get_analytic_accounts().filtered(
+                    lambda account: account.root_plan_id not in applied_root_plans
+                ):
+                    line.analytic_distribution |= {",".join(str(account_id.id) for account_id in accounts_to_add): 100}
+            else:
+                line.analytic_distribution = project._get_analytic_distribution()
+=======
+
+            if line.analytic_distribution:
+                applied_root_plans = self.env['account.analytic.account'].browse(
+                    list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
+                ).root_plan_id
+                if accounts_to_add := project._get_analytic_accounts().filtered(
+                    lambda account: account.root_plan_id not in applied_root_plans
+                ):
+                    # project account is added to each analytic distribution line
+                    line.analytic_distribution = {
+                        f"{account_ids},{','.join(map(str, accounts_to_add.ids))}": percentage
+                        for account_ids, percentage in line.analytic_distribution.items()
+                    }
+            else:
+                line.analytic_distribution = project._get_analytic_distribution()
+>>>>>>> 4b9ab5975ce2b4be226c51968af2f4c1d8f13382
 
     @api.model_create_multi
     def create(self, vals_list):
