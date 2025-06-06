@@ -166,18 +166,16 @@ export class FormOptionPlugin extends Plugin {
                     const activeForm = this.getModelsCache(el).find(
                         (model) => model.id === parseInt(modelId)
                     );
-                    return { activeForm, formInfo: await this.prepareFormModel(el, activeForm) };
+                    return { formInfo: await this.prepareFormModel(el, activeForm) };
                 },
                 apply: ({ editingElement: el, value: modelId, loadResult }) => {
                     if (!loadResult) {
                         return;
                     }
-                    this.applyFormModel(
-                        el,
-                        loadResult.activeForm,
-                        parseInt(modelId),
-                        loadResult.formInfo
-                    );
+                    const models = this.getModelsCache(el);
+                    const targetModelName = getModelName(el);
+                    const activeForm = models.find((m) => m.model === targetModelName);
+                    this.applyFormModel(el, activeForm, parseInt(modelId), loadResult.formInfo);
                 },
                 isApplied: ({ editingElement: el, value: modelId }) => {
                     const models = this.getModelsCache(el);
