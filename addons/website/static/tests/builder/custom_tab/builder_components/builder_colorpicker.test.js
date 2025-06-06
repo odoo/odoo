@@ -1,6 +1,6 @@
 import { undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { click, Deferred, hover, press, tick } from "@odoo/hoot-dom";
+import { animationFrame, click, Deferred, hover, press, tick } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 import {
@@ -22,6 +22,7 @@ test("should apply backgroundColor to the editing element", async () => {
     expect(".options-container").toBeDisplayed();
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await click(".o-overlay-item [data-color='o-color-1']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("test-options-target bg-o-color-1");
 });
 
@@ -35,6 +36,7 @@ test("should apply o_cc color", async () => {
     expect(".options-container").toBeDisplayed();
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await click(".o-overlay-item [data-color='o_cc3']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("test-options-target o_cc3");
 });
 
@@ -48,6 +50,7 @@ test("should apply color to the editing element", async () => {
     expect(".options-container").toBeDisplayed();
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await click(".o-overlay-item [data-color='o-color-1']");
+    await animationFrame();
     expect(":iframe .test-options-target").toHaveClass("test-options-target text-o-color-1");
 });
 
@@ -119,15 +122,8 @@ test("apply custom action", async () => {
     await contains(":iframe .test-options-target").click();
     await contains(".we-bg-options-container .o_we_color_preview").click();
     await contains(".o-overlay-item [data-color='#FF0000']").click();
-    // 3 times for hover (preview), focus (preview), click
-    expect.verifySteps([
-        "load",
-        "apply rgb(255, 0, 0)",
-        "load",
-        "apply rgb(255, 0, 0)",
-        "load",
-        "apply rgb(255, 0, 0)",
-    ]);
+    // Applied twice for hover (preview) and click (commit).
+    expect.verifySteps(["load", "apply rgb(255, 0, 0)", "load", "apply rgb(255, 0, 0)"]);
 });
 
 test("apply custom async action", async () => {

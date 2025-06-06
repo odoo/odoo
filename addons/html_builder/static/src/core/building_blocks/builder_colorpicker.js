@@ -58,10 +58,19 @@ export function useColorPickerBuilderComponent() {
             : colorValue;
     }
 
+    let preventNextPreview = false;
     function onApply(colorValue) {
+        preventNextPreview = false;
         callOperation(applyOperation.commit, { userInputValue: getColor(colorValue) });
     }
     let onPreview = (colorValue) => {
+        // Avoid previewing the same color twice. It won't block previewing
+        // another color, as in that case the mouseout/focusout will call an
+        // explicit revert and set the flag to false.
+        if (preventNextPreview) {
+            return;
+        }
+        preventNextPreview = true;
         callOperation(applyOperation.preview, {
             userInputValue: getColor(colorValue),
             operationParams: {
@@ -78,7 +87,12 @@ export function useColorPickerBuilderComponent() {
         state,
         onApply,
         onPreview,
-        onPreviewRevert: () => applyOperation.revert(),
+        onPreviewRevert: () => {
+            preventNextPreview = false;
+            // The `next` will cancel the previous operation, which will revert
+            // the operation in case of a preview.
+            comp.env.editor.shared.operation.next();
+        },
     };
 }
 

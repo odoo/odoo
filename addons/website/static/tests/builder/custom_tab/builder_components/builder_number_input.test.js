@@ -539,7 +539,7 @@ describe("sanitized values", () => {
         `);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit("-1", { instantly: true });
-        expect.verifySteps(["customAction ", "customAction 0", "customAction 0"]); // input, input, change
+        expect.verifySteps(["customAction ", "customAction 0"]); // input, change
         expect(".options-container input").toHaveValue("0");
     });
     test("use max when the given value is bigger", async () => {
@@ -560,7 +560,8 @@ describe("sanitized values", () => {
         `);
         await contains(":iframe .test-options-target").click();
         await contains(".options-container input").edit("11", { instantly: true });
-        expect.verifySteps(["customAction ", "customAction 10", "customAction 10"]); // input, input, change
+        await animationFrame();
+        expect.verifySteps(["customAction ", "customAction 10"]); // input, change
         expect(".options-container input").toHaveValue("10");
     });
     test("multi values: trailing space in BuilderNumberInput is ignored", async () => {

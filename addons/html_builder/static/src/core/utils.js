@@ -469,8 +469,10 @@ export function useClickableBuilderComponent() {
 
     const withLoadingEffect = useWithLoadingEffect(getAllActions);
 
+    let preventNextPreview = false;
     const operation = {
         commit: () => {
+            preventNextPreview = false;
             if (reload) {
                 callOperation(operationWithReload);
             } else {
@@ -482,6 +484,11 @@ export function useClickableBuilderComponent() {
             }
         },
         preview: () => {
+            // Avoid previewing the same option twice.
+            if (preventNextPreview) {
+                return;
+            }
+            preventNextPreview = true;
             callOperation(applyOperation.preview, {
                 operationParams: {
                     cancellable: true,
@@ -490,6 +497,7 @@ export function useClickableBuilderComponent() {
             });
         },
         revert: () => {
+            preventNextPreview = false;
             // The `next` will cancel the previous operation, which will revert
             // the operation in case of a preview.
             comp.env.editor.shared.operation.next();
