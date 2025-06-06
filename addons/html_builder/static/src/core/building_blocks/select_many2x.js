@@ -38,6 +38,7 @@ export class SelectMany2X extends Component {
         closeOnEnterKey: { type: Boolean, optional: true },
         message: { type: String, optional: true },
         create: { type: Function, optional: true },
+        displayedField: { type: String, optional: true },
     };
     static defaultProps = {
         fields: [],
@@ -45,6 +46,7 @@ export class SelectMany2X extends Component {
         limit: 5,
         closeOnEnterKey: true,
         message: _t("Choose a record..."),
+        displayedField: "display_name",
     };
     static components = { SelectMenu, SelectMany2XCreate };
 
