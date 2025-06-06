@@ -34,7 +34,7 @@ class DiscussChannel(models.Model):
                     predicate=lambda channel: channel.livechat_visitor_id,
                 ),
             ]
-        return super()._field_store_repr(field_name)
+        return [field_name]
 
     def _to_store_defaults(self, for_current_user=True):
         return super()._to_store_defaults(for_current_user=for_current_user) + [
