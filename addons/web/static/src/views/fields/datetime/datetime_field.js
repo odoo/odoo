@@ -194,7 +194,8 @@ export class DateTimeField extends Component {
      * @param {number} valueIndex
      */
     getFormattedValue(valueIndex) {
-        const value = this.values[valueIndex];
+        const values = this.values;
+        const value = values[valueIndex];
         if (!value) {
             return "";
         }
@@ -202,7 +203,7 @@ export class DateTimeField extends Component {
         if (this.field.type === "date") {
             return formatDate(value, { condensed });
         }
-        if (showTime && valueIndex === 1 && this.values[0].hasSame(value, "day")) {
+        if (showTime && valueIndex === 1 && values[0] && values[0].hasSame(value, "day")) {
             return formatDateTime(value, {
                 format: showSeconds ? localization.timeFormat : localization.shortTimeFormat,
             });

@@ -1322,3 +1322,20 @@ test("daterange in readonly with same dates but different hours", async () => {
         message: "end date only shows time since it has the same day as start date",
     });
 });
+
+test("daterange in list view with missing first date", async () => {
+    Partner._records[0].datetime_end = Partner._records[0].datetime;
+    Partner._records[0].datetime = false;
+
+    await mountView({
+        type: "list",
+        resModel: "partner",
+        arch: /* xml */ `
+            <list multi_edit="1">
+                <field name="datetime_end" widget="daterange" options="{'start_date_field': 'datetime'}" />
+            </list>
+        `,
+    });
+
+    expect(".o_field_daterange[name=datetime_end]").toHaveText("02/08/2017 15:30");
+});
