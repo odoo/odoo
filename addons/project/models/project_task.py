@@ -1001,6 +1001,12 @@ class ProjectTask(models.Model):
             user_ids.append(Command.link(self.env.user.id))
             vals['user_ids'] = user_ids
 
+        parent_id = vals.get('parent_id', self.env.context.get('default_parent_id'))
+        if parent_id:
+            parent = self.env['project.task'].browse(parent_id)
+            if not vals.get('tag_ids'):
+                vals['tag_ids'] = parent.tag_ids
+
         return vals
 
     @api.model
