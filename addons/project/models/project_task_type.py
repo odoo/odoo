@@ -11,6 +11,7 @@ class ProjectTaskType(models.Model):
     _name = 'project.task.type'
     _description = 'Task Stage'
     _order = 'sequence, id'
+    _inherit = ['mail.rotting.stage.mixin']
 
     def _get_default_project_ids(self):
         default_project_id = self.env.context.get('default_project_id')
@@ -44,6 +45,7 @@ class ProjectTaskType(models.Model):
             " * Good feedback from the customer will update the state to 'Approved' (green bullet).\n"
             " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning', export_string_translation=False)
+    day_rot = fields.Integer(default=10)
 
     user_id = fields.Many2one('res.users', 'Stage Owner', default=_default_user_id, compute='_compute_user_id', store=True, index=True)
 
