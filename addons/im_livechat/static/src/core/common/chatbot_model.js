@@ -3,6 +3,7 @@ import { rpc } from "@web/core/network/rpc";
 import { browser } from "@web/core/browser/browser";
 import { debounce } from "@web/core/utils/timing";
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
+import { prettifyMessageContent } from "@mail/utils/common/format";
 
 export class Chatbot extends Record {
     static id = AND("script", "thread");
@@ -122,7 +123,10 @@ export class Chatbot extends Record {
             this.currentStep.message = this.store["mail.message"].insert({
                 id: this.store.getNextTemporaryId(),
                 author_id: this.script.operator_partner_id,
-                body: this.currentStep.scriptStep.message,
+                body: await prettifyMessageContent(this.currentStep.scriptStep.message, {
+                    allowEmojiLoading: false,
+                    withParagraph: true,
+                }),
                 thread: this.thread,
             });
         }

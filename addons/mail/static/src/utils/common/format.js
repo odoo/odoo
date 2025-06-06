@@ -28,7 +28,7 @@ const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/
  */
 export async function prettifyMessageContent(
     rawBody,
-    { validMentions = [], allowEmojiLoading = true } = {}
+    { validMentions = [], allowEmojiLoading = true, withParagraph = false } = {}
 ) {
     let body = htmlTrim(rawBody);
     body = htmlReplace(body, /(\r|\n){2,}/g, () => markup`<br/><br/>`);
@@ -42,6 +42,10 @@ export async function prettifyMessageContent(
     // as text internally and only make html enrichment at display time but
     // the current design makes this quite hard to do.
     body = generateMentionsLinks(body, validMentions);
+    if (withParagraph) {
+        body = htmlReplace(body, /([<]\s*br\s*\/?[>]){2,}/gi, () => markup`</p><p>`);
+        body = markup`<p>${body}</p>`;
+    }
     if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
         body = await _generateEmojisOnHtml(body);
     }

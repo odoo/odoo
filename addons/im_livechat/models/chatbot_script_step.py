@@ -349,6 +349,6 @@ class ChatbotScriptStep(models.Model):
         return [
             Store.Many("answer_ids"),
             Store.Attr("is_last", lambda step: step._is_last_step()),
-            Store.Attr("message", lambda s: plaintext2html(s.message) if s.message else False),
+            "message",
             "step_type",
         ]
