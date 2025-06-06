@@ -5,13 +5,12 @@ declare module "@spreadsheet" {
     export type RangeType = "fixedPeriod" | "relative" | "from_to";
     export type FixedPeriods = "quarter" | "month";
     export type RelativePeriod =
-        | "last_month"
-        | "last_week"
-        | "last_three_months"
-        | "last_six_months"
-        | "last_year"
-        | "last_three_years"
+        | "last_7_days"
+        | "last_30_days"
+        | "last_90_days"
+        | "last_12_months"
         | "year_to_date";
+
     export type DateFilterTimePeriod = RelativePeriod | "this_month" | "this_quarter" | "this_year";
 
     export interface FieldMatching {

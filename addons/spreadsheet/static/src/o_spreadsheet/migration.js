@@ -95,6 +95,27 @@ migrationStepRegistry.add("18.4.12", {
     },
 });
 
+const defaultValueMap = {
+    last_week: "last_7_days",
+    last_month: "last_30_days",
+    last_three_months: "last_90_days",
+    last_year: "last_12_months",
+};
+
+migrationStepRegistry.add("18.4.13", {
+    migrate(data) {
+        for (const globalFilter of data.globalFilters || []) {
+            if (["last_six_month", "last_three_years"].includes(globalFilter.defaultValue)) {
+                delete globalFilter.defaultValue;
+            }
+            if (globalFilter.defaultValue in defaultValueMap) {
+                globalFilter.defaultValue = defaultValueMap[globalFilter.defaultValue];
+            }
+        }
+        return data;
+    },
+});
+
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
     if (version < 1) {
