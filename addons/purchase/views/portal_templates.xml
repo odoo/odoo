@@ -151,8 +151,8 @@
                                 </t>
                           </div>
 
-                          <div>
-                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary invisible"
+                          <div t-if="order._get_edi_builders()">
+                            <button id="portal_connect_software_modal_btn" type="button" class="btn btn-primary"
                             data-bs-toggle="modal" data-bs-target="#portal_connect_software_modal">
                                 Connect with your software!
                             </button>
