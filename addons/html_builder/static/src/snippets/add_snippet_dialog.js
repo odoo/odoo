@@ -55,10 +55,13 @@ export class AddSnippetDialog extends Component {
             });
             root.mount(iframeDocument.body);
 
-            await loadBundle("html_builder.iframe_add_dialog", {
-                targetDoc: iframeDocument,
-                js: false,
-            });
+            await Promise.all([
+                loadBundle("web.assets_frontend", { targetDoc: iframeDocument, js: false }),
+                loadBundle("html_builder.iframe_add_dialog", {
+                    targetDoc: iframeDocument,
+                    js: false,
+                }),
+            ]);
             this.state.showIframe = true;
         });
 
