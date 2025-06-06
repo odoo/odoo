@@ -946,13 +946,12 @@ class MailMessage(models.Model):
             Store.Many("attachment_ids", sort="id", sudo=True),
             # sudo: mail.message: access to author_guest_id is allowed
             Store.One("author_guest_id", ["avatar_128", "name"], sudo=True),
-            Store.Attr(
+            # sudo: mail.message: access to author_id is allowed
+            Store.One(
                 "author_id",
-                # sudo: mail.message: access to author_id is allowed
-                value=lambda m: Store.One(
-                    m.sudo().author_id,
-                    ["avatar_128", "is_company", "user", *m._get_store_partner_name_fields()],
-                ),
+                ["avatar_128", "is_company", "user"],
+                dynamic_fields=lambda m: m._get_store_partner_name_fields(),
+                sudo=True,
             ),
             "body",
             "create_date",
