@@ -104,11 +104,13 @@ export class BuilderColorPicker extends Component {
         ...basicContainerBuilderComponentProps,
         noTransparency: { type: Boolean, optional: true },
         enabledTabs: { type: Array, optional: true },
+        grayscales: { type: Object, optional: true },
         unit: { type: String, optional: true },
         title: { type: String, optional: true },
         getUsedCustomColors: { type: Function, optional: true },
         selectedTab: { type: String, optional: true },
         defaultColor: { type: String, optional: true },
+        defaultOpacity: { type: Number, optional: true },
     };
     static defaultProps = {
         enabledTabs: ["theme", "gradient", "custom"],
@@ -139,6 +141,8 @@ export class BuilderColorPicker extends Component {
                 showRgbaField: true,
                 noTransparency: this.props.noTransparency,
                 enabledTabs: this.props.enabledTabs,
+                grayscales: this.props.grayscales,
+                defaultOpacity: this.props.defaultOpacity,
                 className: "o-hb-colorpicker",
             },
             {
