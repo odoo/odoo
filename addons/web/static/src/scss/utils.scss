@@ -77,7 +77,7 @@
 
     &::before {
         content: "";
-        @include o-position-absolute(0, 0, 0, 0);
+        @include o-position-absolute(1px, 1px, 1px, 1px);
         z-index: -1;
         background-image: url('/web/static/img/transparent.png');
         background-size: var(--PreviewAlphaBg-background-size, 10px) auto;
@@ -85,7 +85,7 @@
     }
     &::after {
         content: "";
-        @include o-position-absolute(0, 0, 0, 0);
+        @include o-position-absolute(1px, 1px, 1px, 1px);
         z-index: -1;
         background: inherit; // Inherit all background properties
         border-radius: inherit;
