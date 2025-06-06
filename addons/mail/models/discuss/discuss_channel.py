@@ -384,17 +384,29 @@ class DiscussChannel(models.Model):
                         channels=failing_channels.mapped("name"),
                     )
                 )
+
+        def get_field_name(field_description):
+            if isinstance(field_description, Store.Attr):
+                return field_description.field_name
+            return field_description
+
         def get_vals(channel):
-            return {field_name: channel[field_name] for field_name in self._sync_field_names()}
+            return {
+                get_field_name(field_description): (
+                    channel[get_field_name(field_description)],
+                    field_description,
+                )
+                for field_description in self._sync_field_names()
+            }
 
         old_vals = {channel: get_vals(channel) for channel in self}
         result = super().write(vals)
         for channel in self:
             new_vals = get_vals(channel)
             diff = []
-            for field_name, value in new_vals.items():
-                if value != old_vals[channel][field_name]:
-                    diff.append(field_name)
+            for field_name, (value, field_description) in new_vals.items():
+                if value != old_vals[channel][field_name][0]:
+                    diff.append(field_description)
             if diff:
                 channel._bus_send_store(channel, diff)
         if vals.get('group_ids'):

@@ -184,19 +184,16 @@ class DiscussChannel(models.Model):
             )
 
     def _sync_field_names(self):
-        return super()._sync_field_names() + ["livechat_operator_id"]
+        return super()._sync_field_names() + [
+            Store.One(
+                "livechat_operator_id",
+                self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+            ),
+        ]
 
-    def _field_store_repr(self, field_name):
-        if field_name == "livechat_operator_id":
-            return [
-                # sudo - res.partner: accessing livechat operator is allowed
-                Store.One(
-                    "livechat_operator_id",
-                    ["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()],
-                    sudo=True,
-                ),
-            ]
-        return super()._field_store_repr(field_name)
+    def _store_livechat_operator_id_fields(self):
+        """Return the standard fields to include in Store for livechat_operator_id."""
+        return ["avatar_128", *self.env["res.partner"]._get_store_livechat_username_fields()]
 
     def _to_store_defaults(self, for_current_user=True):
         fields = [
@@ -204,7 +201,12 @@ class DiscussChannel(models.Model):
             "chatbot_current_step",
             Store.One("country_id", ["code", "name"]),
             "livechat_active",
-            "livechat_operator_id",
+            # sudo - res.partner: accessing livechat operator is allowed
+            Store.One(
+                "livechat_operator_id",
+                self.env["discuss.channel"]._store_livechat_operator_id_fields(),
+                sudo=True,
+            ),
         ]
         if self.env.user._is_internal():
             fields.append(Store.One("livechat_channel_id", ["name"], sudo=True))
