@@ -1,4 +1,4 @@
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onMounted, onWillUnmount } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -23,6 +23,18 @@ export class SlideUnsubscribeDialog extends Component {
         this.isFollower = this.props.isFollower === "True";
         this.updateState("subscription");
         this.isChecked = this.isFollower;
+        this.onOutsideClick = (event) => {
+            const isInsideDialog = event.target.closest(".modal-content");
+            if (!isInsideDialog) {
+                this.props.close();
+            }
+        };
+        onMounted(() => {
+            document.addEventListener("click", this.onOutsideClick);
+        });
+        onWillUnmount(() => {
+            document.removeEventListener("click", this.onOutsideClick);
+        });
     }
 
     updateState(mode) {
