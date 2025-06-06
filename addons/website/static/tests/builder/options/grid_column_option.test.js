@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, Deferred, edit, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, Deferred, edit, queryAll, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilderWithSnippet } from "../website_helpers";
 
@@ -17,6 +17,7 @@ test("Using the Padding (Y, X) option should display a padding preview", async (
         def.resolve();
     });
     await def;
+    await animationFrame();
     expect(queryFirst(":iframe .s_banner .o_grid_item")).not.toHaveClass("o_we_padding_highlight");
 });
 
