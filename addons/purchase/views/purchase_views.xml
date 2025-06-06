@@ -149,6 +149,18 @@
                 <div class="alert alert-warning" role="alert" invisible="not purchase_warning_text">
                     <field name="purchase_warning_text" class="fw-bold"/>
                 </div>
+                <div
+                    class="alert alert-warning w-100 d-flex align-items-center gap-1"
+                    invisible="state != 'draft' or not duplicated_order_ids"
+                    role="alert"
+                >
+                    <span>Warning: this order might be a duplicate of</span>
+                    <field
+                        name="duplicated_order_ids"
+                        widget="x2many_buttons"
+                        string="Duplicated Documents"
+                    />
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button"
