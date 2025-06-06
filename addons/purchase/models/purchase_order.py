@@ -157,6 +157,7 @@ class PurchaseOrder(models.Model):
         store=True,
         precompute=True,
     )
+    duplicated_order_ids = fields.Many2many(comodel_name='purchase.order', compute='_compute_duplicated_order_ids')
 
     receipt_reminder_email = fields.Boolean('Receipt Reminder Email', compute='_compute_receipt_reminder_email', store=True, readonly=False)
     reminder_date_before_receipt = fields.Integer('Days Before Receipt', compute='_compute_receipt_reminder_email', store=True, readonly=False)
@@ -288,6 +289,58 @@ class PurchaseOrder(models.Model):
                 if product_msg := line.purchase_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
             order.purchase_warning_text = '\n'.join(warnings)
+
+    @api.depends('partner_ref', 'origin', 'partner_id')
+    def _compute_duplicated_order_ids(self):
+        """Compute duplicated purchase orders based on key fields."""
+        draft_orders = self.filtered(lambda o: o.state == 'draft')
+        order_to_duplicate_orders = draft_orders._fetch_duplicate_orders()
+        for order in draft_orders:
+            duplicate_ids = order_to_duplicate_orders.get(order.id, [])
+            order.duplicated_order_ids = [Command.set(duplicate_ids)]
+        (self - draft_orders).duplicated_order_ids = False
+
+    def _fetch_duplicate_orders(self):
+        """ Fetch duplicated orders.
+
+        :return: Dictionary mapping order to its related duplicated orders.
+        :rtype: dict
+        """
+        orders = self.filtered(lambda order: order.id and order.partner_ref)
+        if not orders:
+            return {}
+
+        self.env['purchase.order'].flush_model(['company_id', 'partner_id', 'partner_ref', 'origin', 'state'])
+
+        result = self.env.execute_query(SQL("""
+            SELECT
+                po.id AS order_id,
+                array_agg(duplicate_po.id) AS duplicate_ids
+            FROM purchase_order po
+            JOIN purchase_order AS duplicate_po
+                ON po.company_id = duplicate_po.company_id
+                AND po.id != duplicate_po.id
+                AND duplicate_po.state != 'cancel'
+                AND po.partner_id = duplicate_po.partner_id
+                AND (
+                    po.origin = duplicate_po.name
+                    OR po.partner_ref = duplicate_po.partner_ref
+                )
+            WHERE po.id IN %(orders)s
+            GROUP BY po.id
+        """, orders=tuple(orders.ids)))
+
+        return {order_id: set(duplicate_ids) for order_id, duplicate_ids in result}
+
+    def action_open_business_doc(self):
+        self.ensure_one()
+        return {
+            'name': _("Order"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'purchase.order',
+            'res_id': self.id,
+            'views': [(False, 'form')],
+        }
 
     @api.onchange('date_planned')
     def onchange_date_planned(self):

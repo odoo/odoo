@@ -661,31 +661,25 @@ class SaleOrder(models.Model):
                 total += (line.price_subtotal * 100)/(100-line.discount) if line.discount != 100 else (line.price_unit * line.product_uom_qty)
             order.amount_undiscounted = total
 
-    @api.depends('client_order_ref', 'date_order', 'origin', 'partner_id')
+    @api.depends('client_order_ref', 'origin', 'partner_id')
     def _compute_duplicated_order_ids(self):
-        order_to_duplicate_orders = self._fetch_duplicate_orders()
-        for order in self:
+        draft_orders = self.filtered(lambda o: o.state == 'draft')
+        order_to_duplicate_orders = draft_orders._fetch_duplicate_orders()
+        for order in draft_orders:
             order.duplicated_order_ids = [Command.set(order_to_duplicate_orders.get(order.id, []))]
+        (self - draft_orders).duplicated_order_ids = False
 
     def _fetch_duplicate_orders(self):
-        """ Fectch duplicated orders.
+        """ Fetch duplicated orders.
 
-        :return: Dictionary mapping order to it's related duplicated orders.
+        :return: Dictionary mapping order to its related duplicated orders.
         :rtype: dict
         """
         orders = self.filtered(lambda order: order.id and order.client_order_ref)
         if not orders:
             return {}
 
-        used_fields = (
-            'company_id',
-            'partner_id',
-            'client_order_ref',
-            'origin',
-            'date_order',
-            'state',
-        )
-        self.env['sale.order'].flush_model(used_fields)
+        self.env['sale.order'].flush_model(['company_id', 'partner_id', 'client_order_ref', 'origin', 'state'])
 
         result = self.env.execute_query(SQL("""
             SELECT
@@ -697,11 +691,9 @@ class SaleOrder(models.Model):
                  AND sale_order.id != duplicate_order.id
                  AND duplicate_order.state != 'cancel'
                  AND sale_order.partner_id = duplicate_order.partner_id
-                 AND sale_order.date_order = duplicate_order.date_order
-                 AND sale_order.client_order_ref = duplicate_order.client_order_ref
                  AND (
-                    sale_order.origin = duplicate_order.origin
-                    OR (sale_order.origin IS NULL AND duplicate_order.origin IS NULL)
+                    sale_order.origin = duplicate_order.name
+                    OR sale_order.client_order_ref = duplicate_order.client_order_ref
                 )
              WHERE sale_order.id IN %(orders)s
              GROUP BY sale_order.id
