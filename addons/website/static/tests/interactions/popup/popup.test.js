@@ -144,6 +144,17 @@ describe("close popup", () => {
         await click(".btn-primary.o_website_form_send");
         expect(modal).toBeVisible();
     });
+
+    test("close popup by clicking outside the modal", async () => {
+        const { core } = await startInteractions(getPopupTemplate());
+        expect(core.interactions).toHaveLength(1);
+        await tick();
+        await animationFrame();
+        await advanceTime(100);
+        expect(modal).toBeVisible();
+        await click(".modal");
+        expect(modal).not.toBeVisible();
+    });
 });
 
 describe("show popup", () => {

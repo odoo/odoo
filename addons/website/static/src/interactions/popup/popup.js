@@ -22,6 +22,9 @@ export class Popup extends Interaction {
         "_window": {
             "t-on-hashchange": this.onHashChange,
         },
+        ".modal, _document": {
+            "t-on-click": this.dismissPopupOnClickOutside,
+        },
     };
 
     setup() {
@@ -214,6 +217,24 @@ export class Popup extends Interaction {
             // TODO : it should not have been a hash at all for ecommerce, but a
             // query string parameter
             this.showPopupOnClick(new URL(ev.newURL).hash);
+        }
+    }
+
+    /**
+     * Handles clicks outside the popup/modal content to dismiss it.
+     *
+     * @param {MouseEvent} ev
+     */
+    dismissPopupOnClickOutside(ev) {
+        // If the builder is active, do not dismiss the popup.
+        if (document.body.classList.contains("o_builder_open")) {
+            return;
+        }
+        const modalContent = this.el.querySelector(".modal-content");
+        const isClickOutside =
+            ev.target === this.modalEl || (modalContent && !modalContent.contains(ev.target));
+        if (isClickOutside) {
+            this.hidePopup();
         }
     }
 }
