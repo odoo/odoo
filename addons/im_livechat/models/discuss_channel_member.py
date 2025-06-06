@@ -133,12 +133,11 @@ class DiscussChannelMember(models.Model):
                 "active",
                 "avatar_128",
                 Store.One("country_id", ["code", "name"]),
-                "im_status",
                 "is_public",
                 "user_livechat_username",
             ]
             if self.livechat_member_type == "visitor":
-                new_fields += ["offline_since"]
+                new_fields += ["im_status", "offline_since"]
             return new_fields
         return super()._get_store_partner_fields(fields)
 

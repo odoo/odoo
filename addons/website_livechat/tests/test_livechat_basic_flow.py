@@ -262,8 +262,6 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                         "avatar_128_access_token": self.operator.partner_id._get_avatar_128_access_token(),
                         "country_id": False,
                         "id": self.operator.partner_id.id,
-                        "im_status": "online",
-                        "im_status_access_token": self.operator.partner_id._get_im_status_access_token(),
                         "is_public": False,
                         "user_livechat_username": "El Deboulonnator",
                         "write_date": fields.Datetime.to_string(
