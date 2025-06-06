@@ -405,6 +405,12 @@ class ProjectTask(models.Model):
             return NotImplemented
         return [('state', 'in', searched_states)]
 
+    def _get_rotting_depends_fields(self):
+        return super()._get_rotting_depends_fields() + ['is_closed']
+
+    def _get_rotting_domain(self):
+        return super()._get_rotting_domain() & Domain('is_closed', '=', False)
+
     @property
     def OPEN_STATES(self):
         """ Return a list of the technical names complementing the CLOSED_STATES, a.k.a the open states """
