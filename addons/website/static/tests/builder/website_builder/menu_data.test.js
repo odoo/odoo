@@ -1,8 +1,9 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { waitFor, waitForNone, click } from "@odoo/hoot-dom";
+import { waitFor, click } from "@odoo/hoot-dom";
 import { defineWebsiteModels } from "../website_helpers";
 import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { patchWithCleanup, mockService, onRpc } from "@web/../tests/web_test_helpers";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { MenuDataPlugin } from "@website/builder/plugins/menu_data_plugin";
@@ -25,7 +26,7 @@ describe("NavbarLinkPopover", () => {
                 config: { Plugins: [...MAIN_PLUGINS, MenuDataPlugin] },
             }
         );
-        expect(".o-we-linkpopover").toHaveCount(0);
+        await expectElementCount(".o-we-linkpopover", 0);
         // selection inside a top menu link
         setSelection({ anchorNode: el.querySelector(".nav-link > span"), anchorOffset: 0 });
         await waitFor(".o-we-linkpopover");
@@ -34,8 +35,7 @@ describe("NavbarLinkPopover", () => {
         expect(".o-we-linkpopover:has(i.fa-sitemap)").toHaveCount(1);
         // selection outside a top menu link
         setSelection({ anchorNode: el.querySelector("p"), anchorOffset: 0 });
-        await waitForNone(".o-we-linkpopover");
-        expect(".o-we-linkpopover").toHaveCount(0);
+        await expectElementCount(".o-we-linkpopover", 0);
     });
 
     test("should open a navbar popover when the selection is inside a top menu link and stay open if selection move in the same link", async () => {

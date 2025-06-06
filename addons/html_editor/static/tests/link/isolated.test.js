@@ -5,9 +5,10 @@ import { descendants } from "@html_editor/utils/dom_traversal";
 import { tick } from "@odoo/hoot-mock";
 import { getContent, setSelection } from "../_helpers/selection";
 import { cleanLinkArtifacts } from "../_helpers/format";
-import { animationFrame, pointerDown, pointerUp, queryOne, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
 import { dispatchNormalize } from "../_helpers/dispatch";
 import { nodeSize } from "@html_editor/utils/position";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 test("should pad a link with ZWNBSPs and add visual indication", async () => {
     await testEditor({
@@ -63,8 +64,7 @@ test("should keep isolated link after a delete and typing", async () => {
 
 test("should delete the content from the link when popover is active", async () => {
     const { editor, el } = await setupEditor('<p><a href="#/">abc[]abc</a></p>');
-    await waitFor(".o-we-linkpopover");
-    expect(".o-we-linkpopover").toHaveCount(1);
+    await expectElementCount(".o-we-linkpopover", 1);
     deleteBackward(editor);
     deleteBackward(editor);
     deleteBackward(editor);
