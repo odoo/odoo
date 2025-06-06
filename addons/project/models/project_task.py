@@ -92,6 +92,7 @@ class ProjectTask(models.Model):
         'rating.mixin',
         'mail.tracking.duration.mixin',
         'html.field.history.mixin',
+        'mail.rotting.resource.mixin'
     ]
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_deadline asc, id desc"
@@ -391,6 +392,15 @@ class ProjectTask(models.Model):
         else:
             return NotImplemented
         return [('state', 'in', searched_states)]
+
+    @api.depends('state')
+    def _compute_rotting(self):
+        super()._compute_rotting()
+
+    def _resource_is_not_rotting_hook(self, task):
+        if task.is_closed:
+            return True
+        return super()._resource_is_not_rotting_hook(task)
 
     @property
     def OPEN_STATES(self):
