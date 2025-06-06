@@ -791,9 +791,11 @@ export function checkTotalAmountStriclyLessThan(amount) {
         trigger: `.order-summary .total`,
         run: function () {
             const totalElement = document.querySelector(".order-summary .total");
-            const totalValue = parseFloat(totalElement.textContent.replace(/[^0-9\.]+/g, ""));
+            const totalValue = parseFloat(totalElement.textContent.replace(/[^0-9.]+/g, ""));
             if (totalValue > amount) {
-                throw new Error(`Expected total amount to be less than ${amount}, but got ${totalValue}`);
+                throw new Error(
+                    `Expected total amount to be less than ${amount}, but got ${totalValue}`
+                );
             }
         },
     };

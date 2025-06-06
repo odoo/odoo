@@ -381,6 +381,8 @@ export function shippingLaterHighlighted() {
 export function tipContainerIsShown(boolean = true) {
     return {
         content: `tip container is ${boolean ? "shown" : "not shown"}`,
-        trigger: boolean ? '.payment-screen .tip-container' : negate('.tip-container', '.payment-screen'),
+        trigger: boolean
+            ? ".payment-screen .tip-container"
+            : negate(".tip-container", ".payment-screen"),
     };
 }

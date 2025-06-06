@@ -231,7 +231,8 @@ export class PaymentScreen extends Component {
 
         this.dialog.add(NumberPopup, {
             title: tip ? _t("Change Tip") : _t("Add Tip"),
-            startingValue: tip.type === "percent" ? tip.value : this.env.utils.formatCurrency(amount, false),
+            startingValue:
+                tip.type === "percent" ? tip.value : this.env.utils.formatCurrency(amount, false),
             startingType: tip.type || "fixed",
             types: [
                 { name: "fixed", symbol: this.pos.currency.symbol },
@@ -276,7 +277,7 @@ export class PaymentScreen extends Component {
     }
     computeNewTip(value, type, currentTip = 0) {
         const valueParsed = parseFloat(value ?? "");
-        if (valueParsed === NaN) {
+        if (isNaN(valueParsed)) {
             return 0;
         }
         let tip = valueParsed;

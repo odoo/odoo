@@ -11,8 +11,8 @@ export function clickNoTip() {
         {
             trigger: `.tip-screen .no-tip button`,
             run: "click",
-        }
-    ]
+        },
+    ];
 }
 export function setCustomTip(amount) {
     return [

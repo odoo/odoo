@@ -18,7 +18,10 @@ patch(ControlButtons.prototype, {
             getPayload: (num, type) => {
                 let value = num;
                 if (type === "percent") {
-                    value = Math.max(0, Math.min(100, this.env.utils.parseValidFloat(num.toString())));
+                    value = Math.max(
+                        0,
+                        Math.min(100, this.env.utils.parseValidFloat(num.toString()))
+                    );
                 }
                 this.applyDiscount(value, type);
             },

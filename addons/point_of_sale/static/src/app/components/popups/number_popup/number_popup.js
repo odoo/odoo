@@ -46,7 +46,8 @@ export class NumberPopup extends Component {
         });
 
         const defaultType =
-            this.props.types?.find((type) => type.name === this.props.startingType) || this.props.types?.[0];
+            this.props.types?.find((type) => type.name === this.props.startingType) ||
+            this.props.types?.[0];
         this.state = useState({
             buffer: this.props.startingValue,
             type: defaultType,
