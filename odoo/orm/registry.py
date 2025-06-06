@@ -374,7 +374,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
         model_names = []
-        for model_def in models.MetaModel.module_to_models.get(module.name, []):
+        for model_def in models.MetaModel._module_to_models__.get(module.name, []):
             # models register themselves in self.models
             model_cls = model_classes.add_to_registry(self, model_def)
             model_names.append(model_cls._name)
