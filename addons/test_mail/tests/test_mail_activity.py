@@ -355,46 +355,71 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
             {'name': 'Test Lead 1'},
             {'name': 'Test Lead 2'},
         ])
+        cls.dt_reference = datetime(2024, 1, 15, 8, 0, 0)
 
-    @freeze_time("2024-01-15 14:00:00 UTC")
+        # records and leads and free activities
+        # have 1 record (or activity) for today, one for tomorrow
+        for record, summary, dt in (
+            (cls.test_record, "Summary Today'", cls.dt_reference),
+            (cls.test_record_2, "Summary Tomorrow'", cls.dt_reference + timedelta(days=1)),
+            (cls.test_lead_records[0], "Summary Today'", cls.dt_reference),
+            (cls.test_lead_records[1], "Summary Tomorrow'", cls.dt_reference + timedelta(days=1)),
+        ):
+            record.with_user(cls.user_employee).activity_schedule(
+                "test_mail.mail_act_test_todo",
+                date_deadline=dt.date(),
+                summary=summary,
+                user_id=cls.user_employee.id,
+            )
+        for dt in (cls.dt_reference, cls.dt_reference + timedelta(days=1)):
+            cls.env['mail.activity'].with_user(cls.user_employee).create({
+                'date_deadline': dt,
+                'summary': "Summary",
+                'user_id': cls.user_employee.id,
+            })
+
     @users("employee")
     def test_systray_activities_for_various_records(self):
         """Check that activities made on archived or not archived records, to
         check they are shown in the systray activities."""
         # archive record 1, add activities
         self.test_record.action_archive()
-        self.test_record.activity_schedule(
-            "test_mail.mail_act_test_todo",
-            user_id=self.user_employee.id,
-        )
-        # record 2 and leads and free activities
-        for summary in ["Summary1", "Summary2"]:
-            for record in [self.test_record_2, self.test_lead_records[0], self.test_lead_records[1]]:
-                record.activity_schedule(
-                    "test_mail.mail_act_test_todo",
-                    summary=summary,
-                    user_id=self.user_employee.id,
-                )
-            self.env['mail.activity'].with_user(self.user_employee).create({
-                'summary': summary,
-                'user_id': self.user_employee.id,
-            })
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]})
-        total_activity_count = sum(
-            record["total_count"]
-            for record in data["Store"]["activityGroups"]
-            if record.get("model") == self.test_record._name
+        with freeze_time(self.dt_reference):
+            data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]})
+        for model_name, msg, exp_total, exp_today, exp_planned, exp_overdue in [
+            # FIXME: only "first free activity" count, seems weird
+            ('mail.activity', 'Free activities', 1, 1, 0, 0),
+            # FIXME: archiving records should not remove activities
+            (self.test_record._name, 'Removing activities on archive', 0, 0, 1, 0),
+            (self.test_lead_records._name, 'Planned do not count in total', 1, 1, 1, 0),
+        ]:
+            with self.subTest(model_name=model_name, msg=msg):
+                total_count = sum(
+                    record["total_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                today_count = sum(
+                    record["today_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                planned_count = sum(
+                    record["planned_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                overdue_count = sum(
+                    record["overdue_count"] for record in data["Store"]["activityGroups"]
+                    if record.get("model") == model_name
+                )
+                self.assertEqual(total_count, exp_total)
+                self.assertEqual(today_count, exp_today)
+                self.assertEqual(planned_count, exp_planned)
+                self.assertEqual(overdue_count, exp_overdue)
+        self.assertEqual(
+            data["Store"]["activityCounter"], 2,
+            '1 from lead (today), 1 from free (today), planned for third model does not count'
         )
-        self.assertEqual(total_activity_count, 2)
-        total_lead_count = sum(
-            record["total_count"]
-            for record in data["Store"]["activityGroups"]
-            if record.get("model") == self.test_lead_records._name
-        )
-        self.assertEqual(total_lead_count, 2)
-        self.assertEqual(data["Store"]["activityCounter"], 5)
 
 
 @tests.tagged('mail_activity')
