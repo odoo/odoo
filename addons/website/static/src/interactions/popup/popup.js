@@ -22,6 +22,9 @@ export class Popup extends Interaction {
         "_window": {
             "t-on-hashchange": this.onHashChange,
         },
+        ".modal, _document": {
+            "t-on-click": this.dismissPopupOnClickOutside,
+        },
     };
 
     setup() {
@@ -215,6 +218,38 @@ export class Popup extends Interaction {
             // query string parameter
             this.showPopupOnClick(new URL(ev.newURL).hash);
         }
+    }
+
+    /**
+     * Handles clicks outside the popup/modal content to dismiss it.
+     *
+     * @param {MouseEvent} ev - The click event object.
+     */
+    dismissPopupOnClickOutside(ev) {
+        // 1. Critical: If the builder is active, do not dismiss the popup.
+        if (document.body.classList.contains("o_builder_open")) {
+            return; // Exit immediately if in builder mode
+        }
+
+        // 2. Identify the main content area of the modal.
+        //    It's crucial to check if modalContent exists, especially if the modal
+        //    might not always have a .modal-content wrapper.
+        const modalContent = this.el.querySelector(".modal-content");
+
+        // 3. Determine if the click target is outside the modal's active area.
+        //    We check two conditions:
+        //    a) If the click was directly on the 'modalEl' (e.g., the backdrop).
+        //    b) If 'modalContent' exists AND the click target is NOT inside 'modalContent'.
+        const isClickOutside = (ev.target === this.modalEl) ||
+                            (modalContent && !modalContent.contains(ev.target));
+
+        if (isClickOutside) {
+            this.hidePopup(); // Dismiss the popup if the click was outside its content
+        }
+
+        // Optional: If you also want to prevent closing when clicking on the popup's main wrapper (this.el)
+        // but *not* its content, you could adjust the logic.
+        // However, the current logic handles most common scenarios well.
     }
 }
 
