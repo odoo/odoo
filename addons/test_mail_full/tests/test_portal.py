@@ -370,10 +370,10 @@ class TestPortalFlow(MailCommon, HttpCase):
                 "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
                 f'{login_url}?{url_encode({"redirect": self.record_portal_url_auth_wrong_token.replace(self.test_base_url, "")})}',
             ),
-            # std url, no access to record -> redirect to login, with internal backend redirect ending with a ? (???)
+            # std url, no access to record -> redirect to login with redirect to original link, will be rejected after login
             (
                 'No access record (internal)', self.record_internal_url_base,
-                f'{login_url}?{url_encode({"redirect": self.internal_backend_local_url + "?"})}',
+                f'{login_url}?{url_encode({"redirect": self.record_internal_url_base.replace(self.test_base_url, "")})}',
             ),
             # std url, no access to record but portal -> redirect to login, original (local) URL kept as redirection post login to try again (even if faulty)
             (
@@ -382,7 +382,7 @@ class TestPortalFlow(MailCommon, HttpCase):
             ),
             (
                 'No access record (portal can read, no customer portal)', self.record_read_url_base,
-                f'{login_url}?{url_encode({"redirect": self.read_backend_local_url + "?"})}',
+                f'{login_url}?{url_encode({"redirect": self.record_read_url_base.replace(self.test_base_url, "")})}',
             ),
             # public_type act_url -> share users are redirected to frontend url
             (
