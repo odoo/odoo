@@ -57,6 +57,7 @@ export class Thread extends Record {
         return thread;
     }
 
+    autofocus = 0;
     /** @type {number} */
     id;
     /** @type {string} */
