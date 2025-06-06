@@ -1,7 +1,7 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
+import { applyOpacityToGradient, isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 import { POSITION_BUS } from "../position/position_hook";
@@ -28,6 +28,10 @@ const DEFAULT_GRADIENT_COLORS = [
     "linear-gradient(135deg, rgb(222, 222, 222) 0%, rgb(69, 69, 69) 100%)",
     "linear-gradient(135deg, rgb(255, 222, 202) 0%, rgb(202, 115, 69) 100%)",
 ];
+
+const DEFAULT_GRAYSCALES = {
+    solid: ["black", "900", "800", "600", "400", "200", "100", "white"],
+};
 
 export const DEFAULT_THEME_COLOR_VARS = [
     "o-color-1",
@@ -58,20 +62,26 @@ export class ColorPicker extends Component {
         colorPrefix: { type: String },
         themeColorPrefix: { type: String, optional: true },
         showRgbaField: { type: Boolean, optional: true },
+        defaultOpacity: { type: Number, optional: true },
+        grayscales: { type: Object, optional: true },
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
         className: { type: String, optional: true },
     };
     static defaultProps = {
         close: () => {},
+        defaultOpacity: 100,
         enabledTabs: ["solid", "gradient", "custom"],
         showRgbaField: false,
         themeColorPrefix: "",
     };
+    applyOpacityToGradient = applyOpacityToGradient;
 
     setup() {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES);
+        this.grayscales = Object.assign(this.grayscales, this.props.grayscales);
         this.root = useRef("root");
 
         this.defaultColor = this.props.state.selectedColor;
