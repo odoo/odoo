@@ -360,16 +360,6 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
         support and propagation. """
         self.authenticate(None, None)
         login_url = f'{self.test_base_url}/web/login'
-        odoo_internal_params = {
-            'model': self.record_internal._name,
-            'id': self.record_internal.id,
-            'active_id': self.record_internal.id,
-        }
-        odoo_read_params = {
-            'model': self.record_read._name,
-            'id': self.record_read.id,
-            'active_id': self.record_read.id,
-        }
 
         for url_name, url, exp_url in [
             # valid token -> ok -> redirect to portal URL
@@ -382,10 +372,10 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
                 "No access (portal enabled), invalid token", self.record_portal_url_auth_wrong_token,
                 f'{login_url}?{url_encode({"redirect": self.record_portal_url_auth_wrong_token.replace(self.test_base_url, "")})}',
             ),
-            # std url, no access to record -> redirect to login, with just some mail/view params kept (???)
+            # std url, no access to record -> redirect to login with redirect to original link, will be rejected after login
             (
                 'No access record (internal)', self.record_internal_url_base,
-                f'{login_url}#{url_encode(odoo_internal_params, sort=True)}',
+                f'{login_url}?{url_encode({"redirect": self.record_internal_url_base.replace(self.test_base_url, "")})}',
             ),
             # std url, no access to record but portal -> redirect to login, original (local) URL kept as redirection post login to try again (even if faulty)
             (
@@ -394,7 +384,7 @@ class TestPortalFlow(TestMailFullCommon, HttpCase):
             ),
             (
                 'No access record (portal can read, no customer portal)', self.record_read_url_base,
-                f'{login_url}#{url_encode(odoo_read_params, sort=True)}',
+                f'{login_url}?{url_encode({"redirect": self.record_read_url_base.replace(self.test_base_url, "")})}',
             ),
             # public_type act_url -> share users are redirected to frontend url
             (
