@@ -10,6 +10,7 @@ import {
     select,
     waitFor,
     waitForNone,
+    manuallyDispatchProgrammaticEvent,
 } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
@@ -84,6 +85,18 @@ describe("should open a popover", () => {
         queryOne(".o_we_href_input_link").focus();
         await animationFrame();
         expect(queryOne(".o-we-linkpopover").parentElement).toHaveAttribute("style", style);
+    });
+    test("link popover should close when clicking on a contenteditable false element", async () => {
+        await setupEditor(
+            '<p><a href="#">li[]nk</a> <a contenteditable="false">uneditable link</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        expect(".o-we-linkpopover").toHaveCount(1);
+        // click on an uneditable element
+        const nodeEl = queryOne("a[contenteditable='false']");
+        manuallyDispatchProgrammaticEvent(nodeEl, "mousedown");
+        await waitForNone(".o-we-linkpopover", { timeout: 1500 });
+        expect(".o-we-linkpopover").toHaveCount(0);
     });
 });
 

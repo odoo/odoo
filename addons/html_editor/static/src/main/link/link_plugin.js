@@ -738,7 +738,7 @@ export class LinkPlugin extends Plugin {
         } else {
             const closestLinkElement = closestElement(selection.anchorNode, "A");
             if (closestLinkElement && closestLinkElement.isContentEditable) {
-                if (closestLinkElement !== this.linkInDocument) {
+                if (closestLinkElement !== this.linkInDocument || !this.currentOverlay.isOpen) {
                     this.openLinkTools(closestLinkElement);
                 }
             } else if (
@@ -1106,9 +1106,11 @@ export class LinkPlugin extends Plugin {
                 overlay: this.dependencies.overlay.createOverlay(
                     link_popover.PopoverClass,
                     {
-                        closeOnPointerdown: false,
+                        closeOnPointerdown: true,
                     },
-                    { sequence: 50 }
+                    {
+                        sequence: 50,
+                    }
                 ),
                 isAvailable: link_popover.isAvailable,
                 getProps: link_popover.getProps,
