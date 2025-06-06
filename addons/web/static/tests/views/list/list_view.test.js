@@ -16549,7 +16549,6 @@ test(`Properties: boolean`, async () => {
     expect(`.o_field_cell.o_boolean_cell`).toHaveCount(3);
 
     await contains(`.o_field_cell.o_boolean_cell`).click();
-    await contains(`.o_field_cell.o_boolean_cell input`).click();
     await contains(`.o_list_button_save`).click();
     expect(`.o_field_cell.o_boolean_cell input:first`).not.toBeChecked();
     expect.verifySteps(["web_save"]);
