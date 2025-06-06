@@ -627,6 +627,9 @@
                                         'default_lst_price': price_unit,
                                         'default_uom_id': product_uom_id,
                                     }"
+                                    options="{
+                                        'show_label_warning': True
+                                    }"
                                     optional="hide"
                                     widget="sol_product_many2one"/>
                                 <field name="product_template_id"
@@ -636,6 +639,9 @@
                                     context="{
                                         'default_list_price': price_unit,
                                         'default_uom_id': product_uom_id,
+                                    }"
+                                    options="{
+                                        'show_label_warning': True
                                     }"
                                     optional="show"
                                     widget="sol_product_many2one"
