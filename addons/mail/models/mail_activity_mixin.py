@@ -253,15 +253,6 @@ class MailActivityMixin(models.AbstractModel):
             ('user_id', '=', self.env.user.id)
         ])]
 
-    def unlink(self):
-        """ Override unlink to delete records activities through (res_model, res_id). """
-        record_ids = self.ids
-        result = super(MailActivityMixin, self).unlink()
-        self.env['mail.activity'].with_context(active_test=False).sudo().search(
-            [('res_model', '=', self._name), ('res_id', 'in', record_ids)]
-        ).unlink()
-        return result
-
     def _read_group_groupby(self, groupby_spec, query):
         if groupby_spec != 'activity_state':
             return super()._read_group_groupby(groupby_spec, query)
