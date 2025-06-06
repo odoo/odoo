@@ -16,7 +16,6 @@ from odoo.fields import Domain
 from odoo.tools import format_date, format_datetime, format_time, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
-from odoo.tools.translate import html_translate
 
 _logger = logging.getLogger(__name__)
 
@@ -68,7 +67,7 @@ class EventEvent(models.Model):
 
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Html(string='Note', store=True, compute="_compute_note", readonly=False)
-    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
+    description = fields.Html(string='Description', translate=True, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True,

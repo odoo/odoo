@@ -2,7 +2,6 @@
 
 from odoo import api, fields, models
 from odoo.http import request
-from odoo.tools.translate import html_translate
 
 from odoo.addons.website.models import ir_http
 
@@ -14,7 +13,7 @@ class ProductTemplate(models.Model):
 
     available_threshold = fields.Float(string="Show Threshold", default=5.0)
     show_availability = fields.Boolean(string="Show availability Qty", default=False)
-    out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
+    out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=True)
 
     def _is_sold_out(self):
         """Return whether the product is sold out (no available quantity).

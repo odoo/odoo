@@ -3885,6 +3885,40 @@ class TestHtmlField(TransactionCase):
         new_record.comment2
         self.assertEqual(patch.call_count, 3)
 
+    def test_write_non_existing(self):
+        html = '''
+<h1>My First Heading</h1>
+<p>My first paragraph.</p>
+'''
+        record = self.env['test_orm.prefetch'].browse(9999)
+        record.html_description = html
+        self.assertHTMLEqual(record.html_description, html)
+        # flushing on non-existing records does not break for scalar fields; the
+        # same behavior is expected for translated fields
+        record.flush_recordset()
+
+    def test_delay_translations_no_term(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('nl_NL')
+        Prefetch = self.env['test_orm.prefetch']
+        record = Prefetch.create({'name': 'record_1', 'html_description': '<h1>Knife</h1>'})
+        record.update_field_translations('html_description', {'fr_FR': {'Knife': 'Couteau'}})
+
+        for html in ('<h1></h1>', '', False):
+            # delay_translations only works when the written value has at least one translatable term
+            record.with_context(lang='en_US', delay_translations=True).html_description = html
+            for lang in ('en_US', 'fr_FR', 'nl_NL'):
+                self.assertEqual(
+                    record.with_context(lang=lang).html_description,
+                    html,
+                    f'html_description for {lang} should be {html}'
+                )
+                self.assertEqual(
+                    record.with_context(lang=lang, check_translations=True).html_description,
+                    html,
+                    f'html_description for {lang} should be {html} when check_translations'
+                )
+
 
 class TestMagicFields(TransactionCase):
 

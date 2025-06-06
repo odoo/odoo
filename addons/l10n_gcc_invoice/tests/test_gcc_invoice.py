@@ -23,7 +23,7 @@ class TestGccInvoice(AccountTestInvoicingCommon):
             'terms_type': 'plain',
         })
         # Add translation to invoice terms
-        self.env.company.update_field_translations('invoice_terms', {'en_US': {'English Terms': 'English Terms'}, 'ar_001': {'English Terms': 'Arabic Terms'}})
+        self.env.company.update_field_translations('invoice_terms', {'en_US': 'English Terms', 'ar_001': 'Arabic Terms'})
         invoice = self.init_invoice('out_invoice', products=self.product_a)
 
         self.assertEqual(invoice.narration, Markup('<p>English Terms</p>'), 'Original narration not correct')

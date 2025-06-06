@@ -32,7 +32,7 @@ class HrJob(models.Model):
         """)
 
     description = fields.Html(
-        'Job Description', translate=html_translate,
+        'Job Description', translate=True,
         prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False, sanitize_form=False)

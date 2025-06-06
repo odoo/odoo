@@ -4,6 +4,7 @@ import logging
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.translate import html_translate
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
@@ -128,25 +129,25 @@ class PaymentProvider(models.Model):
     # Message fields
     pre_msg = fields.Html(
         string="Help Message", help="The message displayed to explain and help the payment process",
-        translate=True)
+        translate=html_translate)
     pending_msg = fields.Html(
         string="Pending Message",
         help="The message displayed if the order pending after the payment process",
         default=lambda self: _(
             "Your payment has been processed but is waiting for approval."
-        ), translate=True)
+        ), translate=html_translate)
     auth_msg = fields.Html(
         string="Authorize Message", help="The message displayed if payment is authorized",
-        default=lambda self: _("Your payment has been authorized."), translate=True)
+        default=lambda self: _("Your payment has been authorized."), translate=html_translate)
     done_msg = fields.Html(
         string="Done Message",
         help="The message displayed if the order is successfully done after the payment process",
         default=lambda self: _("Your payment has been processed."),
-        translate=True)
+        translate=html_translate)
     cancel_msg = fields.Html(
         string="Cancelled Message",
         help="The message displayed if the order is cancelled during the payment process",
-        default=lambda self: _("Your payment has been cancelled."), translate=True)
+        default=lambda self: _("Your payment has been cancelled."), translate=html_translate)
 
     # Feature support fields
     support_tokenization = fields.Boolean(

@@ -3273,6 +3273,7 @@ class BaseModel(metaclass=MetaModel):
             # falsy values (except emtpy str) are used to void the corresponding translation
             if any(translation and not isinstance(translation, str) for translation in translations.values()):
                 raise UserError(_("Translations for model translated fields only accept falsy values and str"))
+            translations = {k: field.convert_to_cache(v, self) for k, v in translations.items()}
             value_en = translations.get('en_US', True)
             if not value_en and value_en != '':
                 translations.pop('en_US')

@@ -544,6 +544,8 @@ class Html(BaseString):
     strip_style: bool = False                 # whether to strip style attributes (removed and therefore not sanitized)
     strip_classes: bool = False               # whether to strip classes attributes
 
+    _tmp = set()
+
     def _get_attrs(self, model_class, name):
         # called by _setup_attrs__(), working together with BaseString._setup_attrs__()
         attrs = super()._get_attrs(model_class, name)
@@ -565,7 +567,10 @@ class Html(BaseString):
         # where not using `html_translate` before and they must remain without `html_translate`.
         # Otherwise, breaks `--test-tags .test_render_field`, for instance.
         elif attrs.get('translate') is True and attrs.get('sanitize', True):
-            attrs['translate'] = html_translate
+            name_ = f'{model_class._name}.{name}'
+            if not name.startswith('x_') and name_ not in self._tmp and name_ not in KNOWN_TRANSLATE_FIELDS:
+                _logger.warning("HTML field with translate=True and sanitize=True %s", name_)
+                self._tmp.add(name_)
         return attrs
 
     _related_sanitize = property(attrgetter('sanitize'))
@@ -730,3 +735,87 @@ class LangProxyDict(collections.abc.MutableMapping):
 
     def __repr__(self):
         return f"<LangProxyDict lang={self._lang!r} size={len(self._cache)} at {hex(id(self))}>"
+
+
+KNOWN_TRANSLATE_FIELDS = {
+    'account.fiscal.position.note',
+    'account.payment.term.note',
+    'account.tax.description',
+    'account.tax.invoice_legal_notes',
+    'res.company.invoice_terms',
+    'res.company.invoice_terms_html',
+    'appointment.resource.description',
+    'appointment.type.message_confirmation',
+    'appointment.type.message_intro',
+    'ir.actions.act_url.help',
+    'ir.actions.act_window.help',
+    'ir.actions.act_window_close.help',
+    'ir.actions.actions.help',
+    'ir.actions.client.help',
+    'ir.actions.report.help',
+    'ir.actions.server.help',
+    'res.company.company_details',
+    'res.company.report_footer',
+    'res.company.report_header',
+    'event.booth.category.description',
+    'event.event.description',
+    'event.event.ticket_instructions',
+    'event.type.ticket_instructions',
+    'gamification.badge.description',
+    'gamification.karma.rank.description',
+    'gamification.karma.rank.description_motivational',
+    'helpdesk.sla.description',
+    'helpdesk.team.description',
+    # 'hr.appraisal.template.appraisal_employee_feedback_template',  # html_translate
+    # 'hr.appraisal.template.appraisal_manager_feedback_template',  # html_translate
+    'hr.contract.salary.benefit.description',
+    'hr.salary.rule.note',
+    'hr.resume.line.description',
+    'lunch.alert.message',
+    'lunch.product.description',
+    'res.company.lunch_notify_message',
+    'mail.activity.type.default_note',
+    'mail.alias.alias_bounced_content',  # html_translate
+    'mail.template.body_html',  # double check this
+    'maintenance.equipment.category.note',
+    # 'payment.provider.auth_msg',  # html_translate
+    # 'payment.provider.cancel_msg',  # html_translate
+    # 'payment.provider.done_msg',  # html_translate
+    # 'payment.provider.pending_msg',  # html_translate
+    # 'payment.provider.pre_msg',  # html_translate
+    'product.template.public_description',
+    'product.template.description',
+    'room.room.description',
+    'sale.order.template.note',
+    'sale.order.close.reason.retention_message',
+    'res.company.sign_terms',
+    'res.company.sign_terms_html',
+    'survey.question.description',
+    'survey.survey.description',
+    'survey.survey.description_done',
+    # 'test_orm.prefetch.html_description',  html_translate
+    # 'test_orm.prefetch.rare_html_description',  html_translate
+    # 'test_orm.related_translation_1.html',  html_translate
+    # 'test.model.website_description',  html_translate
+    'web_tour.tour.rainbow_man_message',
+    # 'event.sponsor.website_description',  html_translate
+    'event.track.description',
+    'forum.forum.faq',
+    'forum.forum.welcome_message',
+    'hr.job.description',
+    'hr.job.job_details',
+    # 'hr.job.website_description', html_translate
+    # 'im_livechat.channel.website_description', removed
+    # 'res.partner.website_description', html_translate
+    'product.template.out_of_stock_message',
+    # 'product.public.category.website_description', html_translate
+    # 'product.public.category.website_footer', html_translate
+    # 'product.template.description_ecommerce', html_translate
+    # 'product.template.website_description', html_translate
+    'slide.channel.description',
+    'slide.channel.description_html',
+    'slide.channel.description_short',
+    'slide.channel.enroll_msg',
+    'slide.slide.description',
+    'slide.slide.html_content',
+}

@@ -2014,9 +2014,9 @@ class TestOrmPrefetch(models.Model):
 
     name = fields.Char('Name', translate=True)
     description = fields.Char('Description', translate=True)
-    html_description = fields.Html('Styled description', translate=True)
+    html_description = fields.Html('Styled description', translate=html_translate)
     rare_description = fields.Char('Rare Description', translate=True, prefetch=False)
-    rare_html_description = fields.Html('Rare Styled description', translate=True, prefetch=False)
+    rare_html_description = fields.Html('Rare Styled description', translate=html_translate, prefetch=False)
     harry = fields.Integer('Harry Potter', prefetch='Harry Potter')
     hermione = fields.Char('Hermione Granger', prefetch='Harry Potter')
     ron = fields.Float('Ron Weasley', prefetch='Harry Potter')

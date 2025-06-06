@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
-from odoo.tools.translate import html_translate
 
 
 class GamificationKarmaRank(models.Model):
@@ -11,9 +10,9 @@ class GamificationKarmaRank(models.Model):
     _order = 'karma_min'
 
     name = fields.Text(string='Rank Name', translate=True, required=True)
-    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False,)
+    description = fields.Html(string='Description', translate=True, sanitize_attributes=False)
     description_motivational = fields.Html(
-        string='Motivational', translate=html_translate, sanitize_attributes=False, sanitize_overridable=True,
+        string='Motivational', translate=True, sanitize_attributes=False, sanitize_overridable=True,
         help="Motivational phrase to reach this rank on your profile page")
     karma_min = fields.Integer(
         string='Required Karma', required=True, default=1)

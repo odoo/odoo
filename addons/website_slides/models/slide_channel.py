@@ -315,7 +315,7 @@ class SlideChannel(models.Model):
     active = fields.Boolean(default=True, tracking=100)
     description = fields.Html('Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on top of the course page, just below the title")
     description_short = fields.Html('Short Description', translate=True, sanitize_attributes=False, sanitize_form=False, help="The description that is displayed on the course card")
-    description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
+    description_html = fields.Html('Detailed Description', translate=True, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
         ('training', 'Training'), ('documentation', 'Documentation')],
         string="Course type", default="training", required=True)
@@ -383,7 +383,7 @@ class SlideChannel(models.Model):
         help='Defines how people can enroll to your Course.', copy=False)
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
-        default=_get_default_enroll_msg, translate=tools.html_translate, sanitize_attributes=False)
+        default=_get_default_enroll_msg, translate=True, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
         ('public', 'Everyone'),

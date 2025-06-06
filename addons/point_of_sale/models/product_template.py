@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
         help="Category used in the Point of Sale.")
     public_description = fields.Html(
         string="Product Description",
-        translate=True
+        translate=True,
     )
     pos_optional_product_ids = fields.Many2many(
         comodel_name='product.template',
