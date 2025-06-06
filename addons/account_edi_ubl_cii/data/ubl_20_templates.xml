@@ -320,6 +320,43 @@
         </t>
     </template>
 
+    <template id="ubl_20_CommonItemType">
+        <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+           xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+            <cbc:Description t-out="vals.get('description')"/>
+            <cbc:Name t-out="vals.get('name')"/>
+            <cac:SellersItemIdentification>
+                <t t-set="sellers_item_identification_vals" t-value="vals.get('sellers_item_identification_vals', {})"/>
+                <cbc:ID t-out="sellers_item_identification_vals.get('id')"/>
+                <cbc:ExtendedID t-out="sellers_item_identification_vals.get('extended_id')"/>
+            </cac:SellersItemIdentification>
+            <cac:StandardItemIdentification>
+                <t t-set="standard_item_identification_vals" t-value="vals.get('standard_item_identification_vals', {})"/>
+                <cbc:ID t-att="standard_item_identification_vals.get('id_attrs')"
+                        t-out="standard_item_identification_vals.get('id')"/>
+            </cac:StandardItemIdentification>
+            <cac:CommodityClassification t-foreach="vals.get('commodity_classification_vals', [])" t-as="foreach_vals">
+                <cbc:ItemClassificationCode
+                        t-att="foreach_vals.get('item_classification_attrs', {})"
+                        t-out="foreach_vals.get('item_classification_code')"/>
+            </cac:CommodityClassification>
+            <cac:ClassifiedTaxCategory t-foreach="vals.get('classified_tax_category_vals', [])" t-as="foreach_vals">
+                <t t-call="{{TaxCategoryType_template}}">
+                    <t t-set="vals" t-value="foreach_vals"/>
+                </t>
+            </cac:ClassifiedTaxCategory>
+        </t>
+    </template>
+
+    <template id="ubl_20_ItemType" inherit_id="account_edi_ubl_cii.ubl_20_CommonItemType" primary="True">
+        <xpath expr="//*[local-name()='Name']" position="after">
+            <t xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:BrandName t-out="vals.get('brand_name')"/>
+                <cbc:ModelName t-out="vals.get('model_name')"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="ubl_20_CommonLineType">
         <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
            xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
@@ -344,31 +381,9 @@
                 </t>
             </cac:TaxTotal>
             <cac:Item>
-                <t t-set="item_vals" t-value="vals.get('item_vals', {})"/>
-                <cbc:Description t-out="item_vals.get('description')"/>
-                <cbc:Name t-out="item_vals.get('name')"/>
-                <cbc:BrandName t-out="item_vals.get('brand_name')"/>
-                <cbc:ModelName t-out="item_vals.get('model_name')"/>
-                <cac:SellersItemIdentification>
-                    <t t-set="sellers_item_identification_vals" t-value="item_vals.get('sellers_item_identification_vals', {})"/>
-                    <cbc:ID t-out="sellers_item_identification_vals.get('id')"/>
-                    <cbc:ExtendedID t-out="sellers_item_identification_vals.get('extended_id')"/>
-                </cac:SellersItemIdentification>
-                <cac:StandardItemIdentification>
-                    <t t-set="standard_item_identification_vals" t-value="item_vals.get('standard_item_identification_vals', {})"/>
-                    <cbc:ID t-att="standard_item_identification_vals.get('id_attrs')"
-                            t-out="standard_item_identification_vals.get('id')"/>
-                </cac:StandardItemIdentification>
-                <cac:CommodityClassification t-foreach="item_vals.get('commodity_classification_vals', [])" t-as="foreach_vals">
-                    <cbc:ItemClassificationCode
-                            t-att="foreach_vals.get('item_classification_attrs', {})"
-                            t-out="foreach_vals.get('item_classification_code')"/>
-                </cac:CommodityClassification>
-                <cac:ClassifiedTaxCategory t-foreach="item_vals.get('classified_tax_category_vals', [])" t-as="foreach_vals">
-                    <t t-call="{{TaxCategoryType_template}}">
-                        <t t-set="vals" t-value="foreach_vals"/>
-                    </t>
-                </cac:ClassifiedTaxCategory>
+                <t t-call="{{ItemType_template}}">
+                    <t t-set="vals" t-value="vals.get('item_vals', {})"/>
+                </t>
             </cac:Item>
             <cac:Price>
                 <t t-set="price_vals" t-value="vals.get('price_vals', {})"/>
