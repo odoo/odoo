@@ -66,28 +66,6 @@ class TestStockCommon(ProductVariantsCommon):
             'name': 'Wood',  # product_2
         }])
 
-        # Kept for reduced diff in other modules (mainly stock & mrp)
-        cls.prod_att_1 = cls.color_attribute
-        cls.prod_attr1_v1 = cls.color_attribute_red
-        cls.prod_attr1_v2 = cls.color_attribute_blue
-        cls.prod_attr1_v3 = cls.color_attribute_green
-
-        cls.product_7_template = cls.product_template_sofa
-
-        cls.product_7_attr1_v1 = cls.product_7_template.attribute_line_ids[
-            0].product_template_value_ids[0]
-        cls.product_7_attr1_v2 = cls.product_7_template.attribute_line_ids[
-            0].product_template_value_ids[1]
-        cls.product_7_attr1_v3 = cls.product_7_template.attribute_line_ids[
-            0].product_template_value_ids[2]
-
-        cls.product_7_1 = cls.product_7_template._get_variant_for_combination(
-            cls.product_7_attr1_v1)
-        cls.product_7_2 = cls.product_7_template._get_variant_for_combination(
-            cls.product_7_attr1_v2)
-        cls.product_7_3 = cls.product_7_template._get_variant_for_combination(
-            cls.product_7_attr1_v3)
-
         cls.ProductObj = cls.env['product.product']
         cls.UomObj = cls.env['uom.uom']
         cls.PartnerObj = cls.env['res.partner']
