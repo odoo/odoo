@@ -71,6 +71,9 @@ class MemorySessionStore(SessionStore):
         for sid in sid_to_remove:
             self.store.pop(sid)
 
+    def get_missing_session_identifiers(self, identifiers):
+        return set(identifiers).difference(self.store)
+
     def rotate(self, session, env):
         FilesystemSessionStore.rotate(self, session, env)
 
