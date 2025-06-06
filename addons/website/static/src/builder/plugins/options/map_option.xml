@@ -39,7 +39,21 @@
         </BuilderSelect>
     </BuilderRow>
     <BuilderRow label.translate="Color Filter">
-        <BuilderColorPicker styleAction="'background-color'" applyTo="'.s_map_color_filter'"/>
+        <BuilderColorPicker styleAction="'background-color'" applyTo="'.s_map_color_filter'" defaultOpacity="50"
+                enabledTabs="['custom', 'gradient']"
+                grayscales="{
+                    'transparent': [
+                        'black-75',
+                        'black-50',
+                        'black-25',
+                        'black-15',
+                        'white-25',
+                        'white-50',
+                        'white-75',
+                        'white-85'
+                    ],
+                    'solid': [],
+                }"/>
     </BuilderRow>
     <BuilderRow label.translate="Description">
         <BuilderCheckbox action="'mapDescription'"/>

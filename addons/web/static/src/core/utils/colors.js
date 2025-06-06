@@ -1,4 +1,18 @@
 /**
+ * Adds opacity to the gradient
+ *
+ * @static
+ * @param {string} gradient - css gradient string
+ * @param {number} opacity - [0, 1] {float}
+ * @returns {string} - gradient string with opacity
+ */
+export function applyOpacityToGradient(gradient, opacity = 100) {
+    if (opacity === 100) {
+        return gradient;
+    }
+    return gradient.replace(/rgb\(([^)]+)\)/g, `rgba($1, ${opacity / 100.0})`);
+}
+/**
  * Converts RGB color components to HSL components.
  *
  * @static

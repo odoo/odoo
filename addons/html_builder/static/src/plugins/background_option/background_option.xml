@@ -33,8 +33,24 @@
         <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
         <!-- Color filter -->
         <BuilderRow t-if="this.showColorFilter()" label.translate="Color Filter" level="2">
-            <!-- TODO handle data-opacity="0.5" -->
-            <BuilderColorPicker action="'selectFilterColor'" enabledTabs="['custom', 'gradient']" selectedTab="'gradient'"/>
+            <BuilderColorPicker
+                action="'selectFilterColor'"
+                defaultOpacity="50"
+                enabledTabs="['custom', 'gradient']"
+                grayscales="{
+                    'transparent': [
+                        'black-75',
+                        'black-50',
+                        'black-25',
+                        'black-15',
+                        'white-25',
+                        'white-50',
+                        'white-75',
+                        'white-85'
+                    ],
+                    'solid': [],
+                }"
+                selectedTab="'gradient'"/>
         </BuilderRow>
         <BackgroundShapeOption t-if="props.withShapes"/>
     </t>

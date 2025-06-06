@@ -363,6 +363,7 @@ $o-transparent-grays: (
     'white-85': rgba(white, 0.85),
 ) !default;
 $o-gray-color-palettes: () !default;
+$o-gray-color-palettes: map-merge($o-transparent-grays, $o-gray-color-palettes);
 $o-gray-color-palette-name: '' !default;
 
 // Color combinations
