@@ -101,7 +101,7 @@ QUnit.module("leave dashboard", {
 });
 
 
-QUnit.test("test employee is passed to has_accrual_allocation", async (assert) => {
+QUnit.test("test employee is passed to get_time_off_dashboard_data", async (assert) => {
 
     const webClient = await createWebClient({ serverData, async mockRPC(route, args) {
         if (route == '/web/dataset/call_kw/hr.leave/has_access'){
@@ -113,21 +113,19 @@ QUnit.test("test employee is passed to has_accrual_allocation", async (assert) =
         if (route == '/web/dataset/call_kw/hr.employee/get_mandatory_days'){
             return {}
         }
-        if (route == '/web/dataset/call_kw/hr.leave.type/get_allocation_data_request'){
-            return {}
-        }
-        if (route == '/web/dataset/call_kw/hr.employee/get_allocation_requests_amount'){
-            return {}
-        }
         if (route == '/web/dataset/call_kw/hr.employee/get_special_days_data'){
             return {
                         "mandatoryDays": [],
                         "bankHolidays": [],
                     }
                 }
-        if (route == '/web/dataset/call_kw/hr.leave.type/has_accrual_allocation'){
-            assert.strictEqual(args.kwargs.context.employee_id, 200, "Should pass the employeeId to has_accrual_allocation");
-            return true
+        if (route == '/web/dataset/call_kw/hr.employee/get_time_off_dashboard_data'){
+            assert.strictEqual(args.kwargs.context.employee_id, 200, "Should pass the employeeId to get_time_off_dashboard_data");
+            return {
+                "has_accrual_allocation": true,
+                "allocation_data": {},
+                "allocation_request_amount": 0
+            }
         }
     }});
 
@@ -145,17 +143,10 @@ QUnit.test("test basic rendering", async (assert) => {
     patchDate(2025, 2, 18, 8, 0, 0);
 
     const mockRPC = async function (route, args) {
-        if (
-            route === "/web/dataset/call_kw/hr.leave/has_access" ||
-            route === "/web/dataset/call_kw/hr.leave.type/has_accrual_allocation"
-        ) {
+        if (route === "/web/dataset/call_kw/hr.leave/has_access") {
             return true;
         }
-        if (
-            route === "/web/dataset/call_kw/hr.leave/get_unusual_days" ||
-            route === "/web/dataset/call_kw/hr.leave.type/get_allocation_data_request" ||
-            route === "/web/dataset/call_kw/hr.employee/get_allocation_requests_amount"
-        ) {
+        if (route === "/web/dataset/call_kw/hr.leave/get_unusual_days") {
             return {};
         }
         if (route === "/web/dataset/call_kw/hr.employee/get_mandatory_days") {
@@ -179,6 +170,13 @@ QUnit.test("test basic rendering", async (assert) => {
                 ],
                 bankHolidays: [],
             };
+        }
+        if(route === "/web/dataset/call_kw/hr.employee/get_time_off_dashboard_data") {
+            return {
+                "has_accrual_allocation": true,
+                "allocation_data": {},
+                "allocation_request_amount": 0
+            }
         }
     };
     const webClient = await createWebClient({ serverData, mockRPC });
