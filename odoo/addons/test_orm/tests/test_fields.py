@@ -1397,6 +1397,14 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         text2 = self.registry['test_orm.bar'].text2
         self.assertTrue(text2.trim, "The related field was defined with trim=True")
 
+        # now let's change text.trim, and check that text1 gets the new value;
+        # this tests the behavior of related fields when setting up models
+        # incrementally
+        self.patch(text, 'trim', True)
+        self.registry._setup_models__(self.cr, ['test_orm.foo'])
+        self.assertTrue(self.registry['test_orm.foo'].text.trim)
+        self.assertTrue(self.registry['test_orm.bar'].text1.trim)
+
     def test_25_related_single(self):
         """ test related fields with a single field in the path. """
         record = self.env['test_orm.related'].create({'name': 'A'})

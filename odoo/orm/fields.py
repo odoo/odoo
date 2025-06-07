@@ -398,9 +398,11 @@ class Field(typing.Generic[T]):
         if self._direct or self._toplevel:
             self._setup_attrs__(owner, name)
             if self._toplevel:
-                # free memory, self._args__ and self._base_fields__ are no longer useful
+                # free memory from stuff that is no longer useful
                 self.__dict__.pop('_args__', None)
-                self.__dict__.pop('_base_fields__', None)
+                if not self.related:
+                    # keep _base_fields__ on related fields for incremental model setup
+                    self.__dict__.pop('_base_fields__', None)
 
     #
     # Setup field parameter attributes
@@ -616,6 +618,9 @@ class Field(typing.Generic[T]):
             raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
 
         self.related_field = field
+
+        # if field's setup is invalidated, then self's setup must be invalidated, too
+        model.pool.field_setup_dependents.add(field, self)
 
         # determine dependencies, compute, inverse, and search
         self.compute = self._compute_related
