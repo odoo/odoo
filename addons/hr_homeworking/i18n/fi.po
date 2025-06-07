@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-16 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgstr "Kotona"
 #: code:addons/hr_homeworking/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_homeworking/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Home - Idle"
-msgstr "Kotona - joutokäynti"
+msgstr "Kotona - Toimeton"
 
 #. module: hr_homeworking
 #. odoo-javascript
@@ -65,7 +66,7 @@ msgstr "Kotona - Online"
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Home - Present"
-msgstr "Kotona - Läsnä"
+msgstr "Kotona - Käytettävissä"
 
 #. module: hr_homeworking
 #. odoo-javascript
@@ -74,34 +75,34 @@ msgstr "Kotona - Läsnä"
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_base__hr_icon_display__presence_office
 #: model:ir.model.fields.selection,name:hr_homeworking.selection__hr_employee_public__hr_icon_display__presence_office
 msgid "At Office"
-msgstr "Toimistossa"
+msgstr "Toimistolla"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_homeworking/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Office - Idle"
-msgstr "Toimistossa - joutokäynti"
+msgstr "Toimistolla - Toimeton"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_homeworking/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Office - Offline"
-msgstr "Toimistossa - Offline"
+msgstr "Toimistolla - Offline"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_homeworking/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Office - Online"
-msgstr "Toimistossa - Online"
+msgstr "Toimistolla - Online"
 
 #. module: hr_homeworking
 #. odoo-javascript
 #: code:addons/hr_homeworking/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Office - Present"
-msgstr "Toimistossa - Läsnä"
+msgstr "Toimistolla - Käytettävissä"
 
 #. module: hr_homeworking
 #. odoo-javascript
@@ -117,7 +118,7 @@ msgstr "Muualla"
 #: code:addons/hr_homeworking/static/src/avatar_card_popover_patch.xml:0
 #: code:addons/hr_homeworking/static/src/components/avatar_card_resource/avatar_card_resource_popover.xml:0
 msgid "At Other - Idle"
-msgstr "Muualla - joutokäynti"
+msgstr "Muualla - Toimeton"
 
 #. module: hr_homeworking
 #. odoo-javascript
@@ -141,7 +142,7 @@ msgstr "Normaali työntekijä"
 #. module: hr_homeworking
 #: model:ir.model,name:hr_homeworking.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__work_location_type
@@ -178,7 +179,7 @@ msgstr "Päivämäärä"
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__day_week_string
 msgid "Day Week String"
-msgstr "Päivä Viikko Merkkijono"
+msgstr "Päivä, Viikko -merkkijono"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_base__display_name
@@ -202,7 +203,7 @@ msgstr "Työntekijän sijainti"
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee_location__employee_name
 msgid "Employee Name"
-msgstr "Employee Name"
+msgstr "Työntekijän nimi"
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__friday_location_id
@@ -262,7 +263,7 @@ msgid ""
 "Only one default work location and one exceptional work location per day per"
 " employee."
 msgstr ""
-"Vain yksi oletustyöpaikka ja yksi poikkeuksellinen työpaikka päivässä "
+"Vain yksi oletustyöpaikka ja yksi poikkeuksellinen työpaikka per päivä "
 "työntekijää kohti."
 
 #. module: hr_homeworking
@@ -298,8 +299,7 @@ msgstr "Sunnuntai"
 #: model:ir.model.fields,help:hr_homeworking.field_hr_employee_base__exceptional_location_id
 #: model:ir.model.fields,help:hr_homeworking.field_hr_employee_public__exceptional_location_id
 msgid "This is the exceptional, non-weekly, location set for today."
-msgstr ""
-"Tämä on poikkeuksellinen, ei-viikoittainen sijaintisarja tälle päivälle."
+msgstr "Tämä on poikkeuksellinen, ei-viikoittainen sijainti tälle päivälle."
 
 #. module: hr_homeworking
 #: model:ir.model.fields,field_description:hr_homeworking.field_hr_employee__thursday_location_id

@@ -6,6 +6,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -416,7 +417,7 @@ msgstr "<small class=\"text-end\">Vaihe:</small>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "<small class=\"text-muted\">Assignees</small>"
-msgstr "<small class=\"text-muted\">Vastaanottajat</small>"
+msgstr "<small class=\"text-muted\">Vastuuhenkilöt</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -811,7 +812,7 @@ msgstr "Varattu aika:"
 #: model:ir.model,name:project.model_account_analytic_account
 #: model:ir.model.fields,field_description:project.field_project_project__auto_account_id
 msgid "Analytic Account"
-msgstr "Analyyttinen tili"
+msgstr "Kustannuspaikka"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1337,7 +1338,7 @@ msgstr "Konsultointi"
 #: model:ir.model,name:project.model_res_partner
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_phone
@@ -2675,7 +2676,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/views/project_task_kanban/project_task_kanban_examples.js:0
 msgid "Manufacturing"
-msgstr "Valmistus"
+msgstr "Tuotanto"
 
 #. module: project
 #. odoo-javascript
@@ -2793,7 +2794,7 @@ msgstr "Toimenpiteeni määräaika"
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "My Deadline"
-msgstr "Määräaika"
+msgstr "Määräaikani"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2803,7 +2804,7 @@ msgstr "Omat suosikkini"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Projects"
-msgstr "Omat projektit"
+msgstr "Omat projektini"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_my_task
@@ -2811,12 +2812,12 @@ msgstr "Omat projektit"
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_fsm_base
 msgid "My Tasks"
-msgstr "Omat tehtävät"
+msgstr "Omat tehtäväni"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "My Updates"
-msgstr "Omat päivitykset"
+msgstr "Omat päivitykseni"
 
 #. module: project
 #. odoo-python
@@ -3474,7 +3475,7 @@ msgstr "Projektin jakaminen"
 #. module: project
 #: model:ir.model,name:project.model_project_share_collaborator_wizard
 msgid "Project Sharing Collaborator Wizard"
-msgstr "Projektin jakamisen yhteistyökumppanien ohjattu toiminto"
+msgstr "Ohjattu projektin jakamisen yhteistyökumppani -toiminto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_recurring_tasks_action
@@ -4037,7 +4038,7 @@ msgstr "Turvatunnus"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Select an assignee from the menu"
-msgstr "Valitse vastaanottaja valikosta"
+msgstr "Valitse vastuuhenkilö valikosta"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
@@ -4167,10 +4168,10 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Jotkin valituista analyyttisistä tileistä liittyvät projektiin:\n"
+"Jotkin valituista kustannuspaikoista liittyvät projektiin:\n"
 "%(accountList)s\n"
 "\n"
-"Näiden tilien arkistointi poistaa mahdollisuuden kirjata työaikakirjanpitoa vastaavien projektien osalta.\n"
+"Niiden arkistointi poistaa mahdollisuuden kirjata työaikakirjanpitoa vastaavien projektien osalta.\n"
 "\n"
 "Oletko varma, että haluat jatkaa?"
 
@@ -4679,8 +4680,8 @@ msgid ""
 "The project's company cannot be changed if its analytic account has analytic"
 " lines or if more than one project is linked to it."
 msgstr ""
-"Projektin yritystä ei voi muuttaa, jos sen analyyttisellä tilillä on "
-"analyyttisiä rivejä tai jos siihen on liitetty useampi kuin yksi projekti."
+"Projektin yritystä ei voi muuttaa, jos sen kustannuspaikalla on analyyttisiä"
+" rivejä tai jos siihen on liitetty useampi kuin yksi projekti."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -4773,9 +4774,9 @@ msgid ""
 " purchase orders, invoices and bills, timesheets, and tickets."
 msgstr ""
 "He voivat muokata jaettuja projektitehtäviä ja tarkastella tiettyjä "
-"asiakirjoja lukutilassa verkkosivustollasi. Näihin kuuluvat liidit ja "
-"myyntimahdollisuudet, tarjoukset tai myyntitilaukset, ostotilaukset, laskut "
-"ja laskut, työaikataulut ja tukipyynnöt."
+"asiakirjoja lukutilassa verkkosivullasi. Näihin kuuluvat liidit ja "
+"myyntimahdollisuudet, tarjoukset tai myyntitilaukset, ostotilaukset, myynti-"
+" ja ostolaskut, työaikakirjaukset ja tukipyynnöt."
 
 #. module: project
 #. odoo-python
@@ -4806,10 +4807,10 @@ msgid ""
 "\n"
 "Are you sure you want to proceed?"
 msgstr ""
-"Tämä analyyttinen tili liittyy seuraaviin hankkeisiin:\n"
+"Tämä kustannuspaikka liittyy seuraaviin hankkeisiin:\n"
 "%(projectList)s\n"
 "\n"
-"Tilin arkistointi poistaa mahdollisuuden kirjata näiden projektien työaikakirjauksia.\n"
+"Tilin arkistoinnin jälkeen näiden projektien työaikakirjauksia ei enää voida kirjata.\n"
 "\n"
 "Oletko varma, että haluat jatkaa?"
 
@@ -5069,7 +5070,7 @@ msgid ""
 "associated with the project on relevant documents."
 msgstr ""
 "Seuraa projektin kustannuksia, tuloja ja katetta asettamalla projektiin "
-"liittyvä analyyttinen tili asiaankuuluviin asiakirjoihin."
+"liittyvä kustannuspaikka asiaankuuluviin asiakirjoihin."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form

@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,8 +31,8 @@ msgid ""
 "Alternative regex delimiter for the FNC1. The separator must not match the "
 "begin/end of any related rules pattern."
 msgstr ""
-"Vaihtoehtoinen regex-rajausmerkki FNC1:lle. Erotin ei saa vastata minkään "
-"asiaan liittyvän sääntökuvion alkua/loppua."
+"Vaihtoehtoinen regex-erotin FNC1:lle. Erotin ei saa vastata minkään asiaan "
+"liittyvän sääntökuvion alkua/loppua."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__associated_uom_id
@@ -41,12 +42,12 @@ msgstr "Liittyvä mittayksikkö"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_nomenclature
 msgid "Barcode Nomenclature"
-msgstr "Viivakoodi nimistö"
+msgstr "Viivakoodi nimikkeistö"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model,name:barcodes_gs1_nomenclature.model_barcode_rule
 msgid "Barcode Rule"
-msgstr "Viivakoodi sääntö"
+msgstr "Viivakoodisääntö"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__use_date
@@ -66,7 +67,7 @@ msgstr "Desimaali"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
 msgid "Destination location"
-msgstr "Kohdepaikka"
+msgstr "Kohdesijainti"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__display_name
@@ -83,17 +84,17 @@ msgstr "Koodaus"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__expiration_date
 msgid "Expiration Date"
-msgstr "Viim. voimassaolo"
+msgstr "Viim. voimassaolopäivä"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr "FNC1 Erotin"
+msgstr "FNC1-erotin"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid "GS1 Content Type"
-msgstr "GS1 Sisältötyyppi"
+msgstr "GS1-sisältötyyppi"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
@@ -110,21 +111,21 @@ msgstr "HTTP-reititys"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__id
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid ""
 "If True, use the last digit of AI to determine where the first decimal is"
 msgstr ""
-"Jos True, käytetään AI:n viimeistä numeroa ensimmäisen desimaalin sijainnin "
+"Jos tosi, käytetään AI:n viimeistä numeroa ensimmäisen desimaalin paikan "
 "määrittämiseen"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "Invalid barcode: can't be formated as date"
-msgstr "Virheellinen viivakoodi: ei voida käsitellä, jos muotoiltu päiväksi"
+msgstr "Virheellinen viivakoodi: ei voida tulkita päivämääräksi"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
@@ -136,7 +137,7 @@ msgstr "Virheellinen viivakoodi: tarkistusnumero on virheellinen"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
 msgid "Is GS1 Nomenclature"
-msgstr "Onko GS1-nimikkeistö"
+msgstr "On GS1-nimikkeistö"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
@@ -151,7 +152,7 @@ msgstr "Erä/sarjanumero"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__measure
 msgid "Measure"
-msgstr "Määre"
+msgstr "Mittamääre"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
@@ -182,7 +183,7 @@ msgstr "Määrä"
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid "The FNC1 Separator Alternative is not a valid Regex: %(error)s"
-msgstr "FNC1 Erottimen vaihtoehto ei ole kelvollinen Regex: %(error)s"
+msgstr "FNC1-erottimen vaihtoehto ei ole kelvollinen regex: %(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
@@ -208,15 +209,15 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
-"Sääntökuvio \"%s\" ei ole kelvollinen, se tarvitsee kaksi ryhmää:\n"
+"Sääntökaava \"%s\" ei ole kelvollinen, se tarvitsee kaksi ryhmää:\n"
 "\t- Ensimmäinen on sovellustunniste (yleensä 2-4 numeroa);\n"
-"\t- Toinen arvoa varten."
+"\t- Toinen, johon arvo tallennetaan."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_rule.py:0
 msgid "The rule pattern '%(rule)s' is not a valid Regex: %(error)s"
-msgstr "Sääntökuvio '%(rule)s' ei ole kelvollinen Regex: %(error)s"
+msgstr "Sääntökaava '%(rule)s' ei ole kelvollinen regex: %(error)s"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -226,8 +227,8 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
-"Viivakoodisäännön \"%s\" kuviossa on vikaa.\n"
-"Jos tämä sääntö käyttää desimaalilukua, tarkista, ettei se voi saada Application Identifierin viimeiseksi merkiksi muuta kuin numeron.\n"
+"Viivakoodisäännön \"%s\" kaavassa on vikaa.\n"
+"Jos tämä sääntö käyttää desimaalilukua, tarkista, ettei se voi saada sovellustunnisteen viimeiseksi merkiksi muuta kuin numeron.\n"
 "Tarkista myös, että mahdolliset sovitetut arvot voivat olla vain numeroita, muuten arvoa ei voida muuntaa mitaksi."
 
 #. module: barcodes_gs1_nomenclature
@@ -244,13 +245,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr "Tätä viivakoodia ei voi tunnistaa millään viivakoodisäännöillä."
+msgstr "Viivakoodia ei voida tulkita minkään viivakoodisäännön mukaisesti."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 msgid "This barcode can't be partially or fully parsed."
-msgstr "Tätä viivakoodia ei voida tunnistaa osittain tai kokonaan."
+msgstr "Viivakoodia ei voida tulkita osittain tai kokonaan."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding

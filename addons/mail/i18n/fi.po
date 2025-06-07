@@ -6,6 +6,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-23 18:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -185,13 +186,13 @@ msgid ""
 "message.%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an "
 "emoji in your message."
 msgstr ""
-"%(new_line)s%(new_line)sTyyppi %(bold_start)s@username%(bold_end)s to "
-"mention someone, and grab their attention.%(new_line)sType "
-"%(bold_start)s#channel%(bold_end)s to mention a channel.%(new_line)sType "
-"%(bold_start)s/command%(bold_end)s to execute a command.%(new_line)sType "
-"%(bold_start)s::shortcut%(bold_end)s to insert a canned response in your "
-"message.%(new_line)sType %(bold_start)s:emoji:%(bold_end)s to insert an "
-"emoji in your message."
+"%(new_line)s%(new_line)sKirjoita %(bold_start)s@username%(bold_end)s "
+"mainitaksesi henkilön, saadaksesi tämän huomion.%(new_line)sKirjoita "
+"%(bold_start)s#channel%(bold_end)s mainitaksesi kanavan.%(new_line)sKirjoita"
+" %(bold_start)s/command%(bold_end)s suorittaaksesi "
+"komennon.%(new_line)sKirjoita %(bold_start)s::shortcut%(bold_end)s "
+"lisätäksesi valmiin vastauksen viestiisi.%(new_line)sKirjoita "
+"%(bold_start)s:emoji:%(bold_end)s lisätäksesi emojin viestiisi."
 
 #. module: mail
 #. odoo-javascript
@@ -1070,7 +1071,7 @@ msgstr "Lisää reaktio"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add a Tenor GIF API key to enable GIFs support."
-msgstr "Lisää Tenor GIF API -avain, jotta GIF-tuki otetaan käyttöön."
+msgstr "Lisää Tenor GIF API -avain ottaaksesi GIF:t käyttöön."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__tenor_api_key
@@ -1078,7 +1079,7 @@ msgid ""
 "Add a Tenor GIF API key to enable GIFs support. "
 "https://developers.google.com/tenor/guides/quickstart#setup"
 msgstr ""
-"Lisää Tenor GIF API -avain, jotta GIF-tuki saadaan käyttöön. "
+"Lisää Tenor GIF API -avain ottaaksesi GIF:t käyttöön. "
 "https://developers.google.com/tenor/guides/quickstart#setup"
 
 #. module: mail
@@ -2590,17 +2591,17 @@ msgstr "Asetukset"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr "Määritä ICE-palvelinten lista webRTC:tä varten"
+msgstr "Määritä ICE-palvelimien lista webRTC:tä varten"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your activity types"
-msgstr "Konfiguroi aktiviteettien tyypit"
+msgstr "Määritä aktiviteettityypit"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr "Konfiguroi oma sähköpostipalvelin"
+msgstr "Määritä oma sähköpostipalvelimesi"
 
 #. module: mail
 #. odoo-javascript
@@ -2694,7 +2695,7 @@ msgstr "Pitää vastauksia uutena lankana"
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_activity
@@ -3494,8 +3495,8 @@ msgid ""
 "Display an option on related documents to open a composition wizard with "
 "this template"
 msgstr ""
-"Näytä vaihtoehto tähän liittyvissä asiakirjoissa, jolla voit avata ohjatun "
-"kokoonpanotoiminnon tällä mallilla"
+"Näytä valinta tähän liittyvissä asiakirjoissa avata ohjattu "
+"kokoonpanotoiminto ja tämä malli"
 
 #. module: mail
 #. odoo-javascript
@@ -3925,7 +3926,7 @@ msgstr "Sähköpostin kopio"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "Sähköpostin ohjattu koostaminen"
+msgstr "Ohjattu sähköpostin koostaminen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_domain
@@ -6477,7 +6478,7 @@ msgstr "Valikko"
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Kumppanin yhdistämistyökalu"
+msgstr "Ohjattu kumppanin yhdistämistoiminto"
 
 #. module: mail
 #. odoo-python
@@ -6872,12 +6873,12 @@ msgstr "Toimenpiteeni määräaika"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 msgid "My Templates"
-msgstr "Omat mallipohjat"
+msgstr "Omat mallipohjani"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "My canned responses"
-msgstr "Omat purkitetut vastaukseni"
+msgstr "Omat esivalmistellut vastaukseni"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__name
@@ -8360,9 +8361,9 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Käsittele jokainen saapuva sähköposti osana tämän dokumenttityypin "
-"keskustelua. Tämä luo uuden dokumentin jokaiselle uudelle keskustelulle, tai"
-" liittää vastausviestit olemassaoleville keskusteluille (dokumenteille)."
+"Käsittele jokainen saapuva sähköposti osana tämän asiakirjatyypin "
+"keskustelua. Tämä luo uuden asiakirjan jokaiselle uudelle keskustelulle, tai"
+" liittää vastausviestit olemassaoleviin keskusteluihin (asiakirjoissa)."
 
 #. module: mail
 #. odoo-javascript
@@ -8727,7 +8728,7 @@ msgstr "Poista osoite mustalta listalta"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
 msgid "Remove email from blacklist wizard"
-msgstr "Poista sähköposti markkinointiestolistalta, ohjattu toiminto"
+msgstr "Ohjattu sähköpostin poistaminen markkinointiestolistalta"
 
 #. module: mail
 #. odoo-python
@@ -8746,7 +8747,7 @@ msgstr "Poista seuraajat: %(partner_names)s"
 msgid "Remove the contextual action to use this template on related documents"
 msgstr ""
 "Poista kontekstuaalinen toiminto käyttääksesi tätä mallia asiaan liittyvissä"
-" dokumenteissa"
+" asiakirjoissa"
 
 #. module: mail
 #. odoo-javascript
@@ -8871,7 +8872,7 @@ msgstr "Lähetä uudelleen sähköposti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
 msgid "Resend wizard"
-msgstr "Uudelleenlähetystyökalu"
+msgstr "Ohjattu uudelleenlähetoiminto"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -9459,8 +9460,8 @@ msgid ""
 "Sender address (placeholders may be used here). If not set, the default "
 "value will be the author's email alias if configured, or email address."
 msgstr ""
-"Lähettäjän osoite (tässä voi käyttää varauksia). Jos ei asetettu, oletusarvo"
-" on kirjoittajan sähköpostialias, jos se on määritetty, tai "
+"Lähettäjän osoite (tässä voi käyttää paikanvaraajia). Jos ei asetettu, "
+"oletusarvo on kirjoittajan sähköpostialias, jos se on määritetty, tai "
 "sähköpostiosoite."
 
 #. module: mail
@@ -11675,7 +11676,7 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
-"Kun tulostetaan asiakirjoja ja viedään tai tuodaan tietoja, aika-arvot lasketaan tämän aikavyöhykkeen mukaan.\n"
+"Tulostettaessa asiakirjoja ja viedessö tai tuodessa tietoja, aika-arvot lasketaan tämän aikavyöhykkeen mukaan.\n"
 "Jos aikavyöhykettä ei ole asetettu, käytetään UTC (Coordinated Universal Time) -aikavyöhykettä.\n"
 "Muuten arvot lasketaan verkkoselaimen aika-asetusten mukaan."
 
@@ -12345,13 +12346,13 @@ msgstr "hetken päästä"
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "incorrectly configured alias"
-msgstr "virheellisesti konfiguroitu alias"
+msgstr "virheellisesti määritetty alias"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/models.py:0
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "virheellisesti konfiguroitu alias (tuntematon tietueviittaus)"
+msgstr "virheellisesti määritetty alias (tuntematon kirjausviittaus)"
 
 #. module: mail
 #. odoo-python

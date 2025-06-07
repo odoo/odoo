@@ -6,6 +6,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
 # Wil Odoo, 2025
 # Jessica Jakara, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1026,8 +1027,8 @@ msgid ""
 "Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n"
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Lisää ja muokkaa reittitoimintoja, jotta voit käsitellä tuotteen liikkumista varastoissasi (esim. pura > laadunvalvonta > saapuvien tuotteiden varasto, keräile > pakkaa > toimita lähtevät tuotteet.\n"
-"  Voit myös asettaa varastopaikoille poistostrategioita, jotta saapuvat tuotteet voidaan lähettää tietyille alisijainteihin heti (esim. tietyt laatikot, telineet). "
+"Lisää ja muokkaa reittitoimintoja, jotta voit käsitellä tuotteen siirtoja varastoissasi, esim. pura > laadunvalvonta > saapuvien tuotteiden varasto, keräile > pakkaa > toimita lähtevät tuotteet.\n"
+" Voit myös asettaa varastopaikoille poistostrategioita, jotta saapuvat tuotteet voidaan lähettää tiettyihin alisijainteihin heti (esim. tietyt laatikot, telineet). "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1038,8 +1039,11 @@ msgid ""
 "strategies on warehouse locations in order to send incoming products into "
 "specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
-"Lisää ja muokkaa reittitoimintoja, jotta voit käsitellä tuotteen liikkumista varastoissasi (esim. pura > laadunvalvonta > saapuvien tuotteiden varasto, keräile > pakkaa > toimita lähtevät tuotteet.\n"
-"  Voit myös asettaa varastopaikoille poistostrategioita, jotta saapuvat tuotteet voidaan lähettää tiettyihin alisijainteihin heti (esim. tietyt laatikot, telineet). "
+"Lisää ja muokkaa reittitoimintoja, jotta voit käsitellä tuotteen siirtoja "
+"varastoissasi, esim. pura > laadunvalvonta > saapuvien tuotteiden varasto, "
+"keräile > pakkaa > toimita lähtevät tuotteet. Voit myös asettaa "
+"varastopaikoille poistostrategioita, jotta saapuvat tuotteet voidaan "
+"lähettää tiettyihin alisijainteihin heti (esim. tietyt laatikot, telineet). "
 
 #. module: stock
 #. odoo-javascript
@@ -1382,7 +1386,7 @@ msgstr "Liitteiden määrä"
 #: model:ir.ui.menu,name:stock.menu_attribute_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Attributes"
-msgstr "Attribuutit"
+msgstr "Määritteet"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__8
@@ -2055,7 +2059,7 @@ msgstr "Kuluta rivi"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_id
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_ids
@@ -2658,7 +2662,7 @@ msgid ""
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
 "Määritä vähimmäisvarastosääntö, jotta Odoo luo automaattisesti "
-"tarjouspyyntöjä tai vahvistettuja valmistustilauksia varastosi "
+"tarjouspyyntöjä tai vahvistettuja tuotantotilauksia varastosi "
 "täydentämiseksi."
 
 #. module: stock
@@ -2676,12 +2680,12 @@ msgid ""
 "            the stock operations like the manufacturing orders\n"
 "            consumptions, inventories, etc."
 msgstr ""
-"Määritä sijaintisi vastaamaan varastorakennettasi ja\n"
-"             organisaatiota. Odoo pystyy hallitsemaan fyysisiä sijainteja\n"
-"             (varastot, hyllyt, altaat jne.), kumppaneiden sijainnit (asiakkaat,\n"
-"             myyjiä) ja virtuaalisia sijainteja, jotka ovat vastaavia\n"
-"             varastotoiminnot, kuten valmistustilaukset\n"
-"             kulutus, varastot jne. "
+"Määritä sijaintisi vastaamaan varastosi rakennetta ja\n"
+"             järjestystä. Odoolla voit hallita fyysisiä sijainteja\n"
+"             (varastot, hyllyt, säiliöt jne.), kumppaneiden sijainteja (asiakkaat,\n"
+"             toimittajat) ja virtuaalisia sijainteja, jotka vastaavat\n"
+"             varastotoimintoja, kuten tuotantotilauksia,\n"
+"             kulutusta, varastoja jne. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
@@ -2694,7 +2698,7 @@ msgid ""
 "Least Packages: products/lots that were stocked in package with least amount of qty will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Määrittää oletusmenetelmän, jota käytetään tuotteen tarkan sijainnin (hyllyn) ehdottamiseen tässä sijainnissa, josta tuote tulee poimia, mistähyllytetystä erästä poimitaan, jne. Tätä menetelmää voidaan käyttää tuoteryhmätasolla, ja varalähde tehdään vanhemmissa sijainneissa, jos tätä ei aseteta.\n"
+"Määrittää oletusmenetelmän, jota käytetään tuotteen tarkan sijainnin (hyllyn) ehdottamiseen tässä sijainnissa, josta tuote tulee poimia, mistä hyllytetystä erästä poimitaan, jne. Tätä menetelmää voidaan käyttää tuoteryhmille, ja varalähde tehdään vanhemmissa sijainneissa, jos tätä ei aseteta.\n"
 "\n"
 "FIFO: ensimmäisenä varastoidut tuotteet/erät siirretään ensimmäisenä.\n"
 "LIFO: viimeisenä varastoidut tuotteet/erät siirretään ensimmäisenä.\n"
@@ -4139,9 +4143,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Jos tämä valintaruutu on valittuna, poimintalinjat edustavat "
-"yksityiskohtaisia ​​varastotoimintoja. Jos näin ei ole, poimintalinjat "
-"edustavat yksityiskohtaista varastotoimintaa."
+"Jos tämä on valittuna, keräilyrivit edustavat yksityiskohtaisia "
+"​​varastotoimintoja. Jos näin ei ole, keräilyrivit edustavat koottua "
+"yksityiskohtaista varastotoimintaa."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -5283,7 +5287,7 @@ msgstr "Manuaalinen"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Manufacturing"
-msgstr "Valmistus"
+msgstr "Tuotanto"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__3
@@ -5361,7 +5365,7 @@ msgstr "Ongelma viestin toimituksessa"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Varoitus varastokeräilylle"
+msgstr "Viesti varastokeräilyyn"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_ids
@@ -5479,9 +5483,9 @@ msgid ""
 " If none is given, the moves generated by stock rules will be grouped into "
 "one big picking."
 msgstr ""
-"Tämän tilauskohdan kautta luodut liikkeet asetetaan tähän hankintaryhmään. "
-"Jos mitään ei anneta, varastosääntöjen tuottamat siirrot ryhmitellään "
-"yhdeksi suureksi keräykseksi."
+"Tämän tilauskohdan kautta luodut siirrot asetetaan tähän hankintaryhmään. "
+"Jos ei annettu, varastosääntöjen tuottamat siirrot ryhmitellään yhdeksi "
+"suureksi keräykseksi."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_adv_location
@@ -5524,12 +5528,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
-msgstr "Omat inventoinnit"
+msgstr "Omat määräni"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Transfers"
-msgstr "Omat siirrot"
+msgstr "Omat siirtoni"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__name
@@ -5580,7 +5584,7 @@ msgstr "Ei koskaan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__never_product_template_attribute_value_ids
 msgid "Never attribute Values"
-msgstr "Ei koskaan luotavien attribuuttien arvot"
+msgstr "Ei koskaan luotavien määritteiden arvot"
 
 #. module: stock
 #. odoo-python
@@ -5892,9 +5896,9 @@ msgid ""
 "                                        barcode operator and configure the routing of the reports.\n"
 "                                        <br/>"
 msgstr ""
-"Odoo avaa oletusarvoisesti PDF-esikatselun. Jos haluat (vain Enterprise-käyttäjät) tulostaa heti,\n"
+"Odoo avaa oletusarvoisesti PDF-esikatselun. Jos haluat (vain Yritys-käyttäjät) tulostaa heti,\n"
 "                                        asenna IoT-sovellus tietokoneeseen, joka on samassa lähiverkossa kuin\n"
-"                                        viivakoodioperaattorin kanssa ja määritä raporttien reititys.\n"
+"                                        viivakoodioperaattori ja määritä raporttien reititys.\n"
 "                                       <br/>"
 
 #. module: stock
@@ -6616,7 +6620,7 @@ msgstr "Suunnitteluongelmia"
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
 msgid "Please contact your administrator to configure your warehouse."
-msgstr "Ota yhteyttä järjestelmänvalvojaasi määrittääksesi varaston."
+msgstr "Ota yhteyttä ylläpitäjään määrittääksesi varaston."
 
 #. module: stock
 #. odoo-python
@@ -6828,7 +6832,7 @@ msgstr "Tuotteen kapasiteetti"
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "Product Categories"
-msgstr "Tuotekategoriat"
+msgstr "Tuoteryhmät"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -6839,7 +6843,7 @@ msgstr "Tuotekategoriat"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
-msgstr "Tuotekategoria"
+msgstr "Tuoteryhmä"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_report_label
@@ -7653,7 +7657,7 @@ msgstr "Täydennä tilauksesta (MTO)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 msgid "Replenish wizard"
-msgstr "Täydennä ohjattu toiminto"
+msgstr "Ohjattu täydennystoiminto"
 
 #. module: stock
 #. odoo-javascript
@@ -8379,7 +8383,7 @@ msgstr "Aseta omistaja varastoiduille tuotteille"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Set product attributes (e.g. color, size) to manage variants"
-msgstr "Aseta tuoteominaisuudet (esim. väri, koko) hallitsemaan variantteja"
+msgstr "Aseta tuotemääritteet (esim. väri, koko) hallitsemaan variantteja"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
@@ -8585,7 +8589,7 @@ msgstr "Allekirjoitus"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Signed"
-msgstr "Hyväksytty"
+msgstr "Allekirjoitettu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -9649,8 +9653,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated by manufacturing orders."
 msgstr ""
-"Tätä varastokohtaa käytetään oletusarvon sijasta valmistusmääräysten "
-"tuottamien varastojen siirtojen lähteenä."
+"Tätä varastoa käytetään oletusvaraston sijasta tuotantotilausten luoien "
+"varastosiirtojen lähteenä."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_inventory
@@ -10021,8 +10025,8 @@ msgstr "Siirtymäpaikat"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Transport management: organize packs in your fleet, or carriers."
 msgstr ""
-"Kuljetusten hallinta: organisoi kuljetustesi tai kuljetusliikkeiden "
-"pakkaukset."
+"Kuljetusten hallinta: organisoi ajokalustosi tai kuljetusliikkeiden "
+"pakkauksia."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
@@ -10691,8 +10695,8 @@ msgid ""
 "When set to True the destination location of the stock.move will be the "
 "rule.Otherwise, it takes it from the picking type."
 msgstr ""
-"Kun arvoksi on asetettu True, stock.move:n määränpää on sääntö. Muussa "
-"tapauksessa se otetaan poimintatyypistä."
+"Kun arvoksi on asetettu Tosi, stock.move määränpää on sääntö. Muussa "
+"tapauksessa se otetaan keräilytyypistä."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__is_locked
@@ -10813,8 +10817,8 @@ msgid ""
 "You are going to pick products that are not referenced\n"
 "in this location. That leads to a negative stock."
 msgstr ""
-"Valitset tuotteita, joihin ei viitata\n"
-"tässä paikassa. Tämä johtaa negatiiviseen varastosaldoon."
+"Olet keräilemässä tuotteita, joista ei ole viittauksia\n"
+"tässä sijainnissa. Tämä johtaa negatiiviseen varastosaldoon."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint_replenish
@@ -10860,9 +10864,9 @@ msgid ""
 "                routes can be assigned to a product, a product category or be fixed\n"
 "                on procurement or sales order."
 msgstr ""
-"Tässä voit määrittää tärkeimmät reitit, jotka kulkevat varastojen läpi ja määrittelevät tuotteiden virtaukset. Nämä\n"
-"                 reitit voidaan osoittaa tuotteelle, tuoteryhmälle tai korjata\n"
-"                 hankinta- tai myyntitilauksesta. "
+"Tässä voit määrittää tärkeimmät reitit, jotka koskevat varastojasi ja määrittelevät tuotteiden liikevirrat. Nämä\n"
+"                 reitit voidaan kohdistaa tuotteelle, tuoteryhmälle tai asettaa\n"
+"                 hankinta- tai myyntitilauksille kiinteiksi. "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -11091,7 +11095,7 @@ msgid ""
 "destination location for a manufacturing type operation."
 msgstr ""
 "Sijaintia ei voi määrittää romutuspaikaksi, kun se on määritetty "
-"valmistusmuotoisen toiminnon kohdepaikaksi."
+"tuotantotyypin toimenpiteen kohdesijainniksi."
 
 #. module: stock
 #. odoo-python
@@ -11100,7 +11104,8 @@ msgid ""
 "You cannot set a scrap location as the destination location for a "
 "manufacturing type operation."
 msgstr ""
-"Et voi määrittää romun sijaintia valmistus-tyyppisen toiminnon määränpääksi."
+"Sijaintia ei voi määrittää romutuspaikaksi, kun se on määritetty "
+"tuotantotyypin toimenpiteen kohdesijainniksi."
 
 #. module: stock
 #. odoo-python

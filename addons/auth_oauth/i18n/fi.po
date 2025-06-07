@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Wil Odoo, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-20 10:02+0000\n"
+"POT-Creation-Date: 2025-03-12 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr "Käyttö estetty"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_enabled
 msgid "Allow users to sign in with Google"
-msgstr "Salli käyttäjien kirjautua Google tunnuksilla"
+msgstr "Salli käyttäjien kirjautua Google-tunnuksilla"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
@@ -48,23 +49,23 @@ msgstr "Sallittu"
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
 msgid "Authorization URL"
-msgstr "Autentikoinnin URL (Authorization URL)"
+msgstr "Tunnistautumisen URL"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
 msgid "CSS class"
-msgstr "CSS luokka"
+msgstr "CSS-luokka"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__client_id
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__auth_oauth_google_client_id
 msgid "Client ID"
-msgstr "Asiakkaan tunniste/ID"
+msgstr "Asiakkaan tunnus/ID"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "Client ID:"
-msgstr "Client ID:"
+msgstr "Asiakkaan tunnus/ID:"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_config_settings
@@ -110,7 +111,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_oauth.field_res_config_settings__id
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__write_uid
@@ -130,22 +131,22 @@ msgstr "Liitä teksti kirjautumisikkunaan"
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
-msgstr "Facebook-kirjautuminen"
+msgstr "Kirjaudu sisään Facebookilla"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_google
 msgid "Log in with Google"
-msgstr "Google-kirjautuminen"
+msgstr "Kirjaudu sisään Googlella"
 
 #. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
-msgstr "Odoo.com-tunnistautuminen"
+msgstr "Kirjaudu sisään Odoo.com tunnuksilla"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
 msgid "Login button label"
-msgstr "Kirjaudu-painikkeen nimi"
+msgstr "Kirjaudu-painikkeen otsake"
 
 #. module: auth_oauth
 #. odoo-python
@@ -161,28 +162,28 @@ msgstr ""
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_provider_id
 msgid "OAuth Provider"
-msgstr "OAuth Provider"
+msgstr "OAuth-palveluntarjoaja"
 
 #. module: auth_oauth
 #: model:ir.ui.menu,name:auth_oauth.menu_oauth_providers
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form
 msgid "OAuth Providers"
-msgstr "OAuth Providers"
+msgstr "OAuth-palveluntarjoajat"
 
 #. module: auth_oauth
 #: model:ir.model.constraint,message:auth_oauth.constraint_res_users_uniq_users_oauth_provider_oauth_uid
 msgid "OAuth UID must be unique per provider"
-msgstr "OAuth UID täytyy olla Provider-kohtaisesti yksilöllinen"
+msgstr "OAuth UID täytyy olla yksilöllinen per palveluntarjoaja"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_uid
 msgid "OAuth User ID"
-msgstr "OAuth User ID"
+msgstr "OAuth-käyttäjätunnus"
 
 #. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_auth_oauth_provider
 msgid "OAuth2 provider"
-msgstr "OAuth2 provider"
+msgstr "OAuth2-palveluntarjoaja"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_users_form
@@ -192,7 +193,7 @@ msgstr "Oauth"
 #. module: auth_oauth
 #: model:ir.model.fields,help:auth_oauth.field_res_users__oauth_uid
 msgid "Oauth Provider user_id"
-msgstr "Oauth tarjoajan käyttäjätunnus/user_id"
+msgstr "Oauth-palveluntarjoaja käyttäjätunnus/user_id"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__name
@@ -259,7 +260,7 @@ msgid ""
 "invitation email."
 msgstr ""
 "Sinulla ei ole pääsyä tähän tietokantaan tai käyttäjäkutsusi on vanhentunut."
-" Pyydä uutta kutsua ja varmista että seuraat kutsuviestissä olevaa linkkiä."
+" Pyydä uutta kutsua ja varmista, että seuraat kutsuviestissä olevaa linkkiä."
 
 #. module: auth_oauth
 #. odoo-python
@@ -271,7 +272,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_form
 #: model_terms:ir.ui.view,arch_db:auth_oauth.view_oauth_provider_tree
 msgid "arch"
-msgstr "arch"
+msgstr "arkkitehtuuri"
 
 #. module: auth_oauth
 #: model_terms:ir.ui.view,arch_db:auth_oauth.res_config_settings_view_form

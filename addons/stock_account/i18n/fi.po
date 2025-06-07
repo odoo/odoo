@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2025
 # Jessica Jakara, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -179,12 +180,12 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
 msgid "Analytic Account"
-msgstr "Analyyttinen tili"
+msgstr "Kustannuspaikka"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_ids
 msgid "Analytic Account Line"
-msgstr "Analyyttinen tilirivi"
+msgstr "Kustannuspaikka"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_plan
@@ -249,8 +250,9 @@ msgid ""
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
-"Tuotteelle %s ei löydy varastotulostiliä. Sinun on määritettävä sellainen "
-"tuoteryhmälle tai sijaintipaikalle ennen tämän toiminnon käsittelyä."
+"Tuotteelle %s ei löydy varastosta poiston tiliä. Sinun on määritettävä "
+"sellainen tuoteryhmälle tai sijaintipaikalle ennen tämän toiminnon "
+"käsittelyä."
 
 #. module: stock_account
 #. odoo-python
@@ -296,8 +298,8 @@ msgid ""
 "Configuration error. Please configure the price difference account on the "
 "product or its category to process this operation."
 msgstr ""
-"Määritysvirhe. Määritä tuotteen tai sen kategorian hintaerotili, jotta voit "
-"käsitellä tämän toiminnon."
+"Määritysvirhe. Määritä tuotteelle tai sen tuoteryhmälle hintaerotili, jotta "
+"voit käsitellä tämän toiminnon."
 
 #. module: stock_account
 #. odoo-python
@@ -330,8 +332,8 @@ msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s"
 " to %(new_method)s."
 msgstr ""
-"Kustannuslaskentamenetelmän muutos tuoteryhmässä %(category)s: "
-"%(old_method)s-stä %(new_method)s-een."
+"Kustannuslaskentamenetelmän muutos tuoteryhmässä %(category)s: tavasta "
+"%(old_method)s tapaan%(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -344,8 +346,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
-"Kaikkien saapuvien varastosiirtojen vastapuolen päiväkirjamerkinnät kirjataan tälle tilille, ellei ole olemassa erityistä arvostustiliä\n"
-"                määritetty lähtöpaikassa. Tämä on oletusarvo kaikille tämän luokan tuotteille. Se voidaan määrittää myös suoraan kullekin tuotteelle."
+"Kaikkien saapuvien varastosiirtojen vastaavat päiväkirjamerkinnät kirjataan tälle tilille, ellei erityistä arvostustiliä\n"
+"                ole määritetty lähtöpaikassa. Tämä on oletusarvo kaikille tämän tuoteryhmän tuotteille. Se voidaan määrittää myös tuotekohtaisesti."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -453,9 +455,10 @@ msgid ""
 "%(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
-"Koska tuoteryhmä on muuttunut (%(old_category)s:sta %(new_category)s:ksi), "
-"kustannuslaskentamenetelmä on muuttunut tuotteen %(product)s osalta: "
-"%(old_method)s:sta %(new_method)s:ksi."
+"Koska tuoteryhmä on muuttunut (tuoteryhmästä%(old_category)s "
+"tuoteryhmään%(new_category)s), kustannuslaskentamenetelmä on muuttunut "
+"tuotteen %(product)s osalta: menetelmästä %(old_method)s menetelmään "
+"%(new_method)s."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -694,7 +697,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__categ_id
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Product Category"
-msgstr "Tuotekategoria"
+msgstr "Tuoteryhmä"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
@@ -1277,7 +1280,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr "Ohjattu malli tuotteen varastovaraston uudelleenarviointiin"
+msgstr "Ohjattu toimintomalli tuotteen varaston uudelleenarviointiin"
 
 #. module: stock_account
 #. odoo-python
@@ -1401,7 +1404,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock_account/models/stock_valuation_layer.py:0
 msgid "You must set a counterpart account on your product category."
-msgstr "Sinun on määritettävä tuoteryhmäsi vastinetili."
+msgstr "Sinun on määritettävä tuoteryhmäsi vastatili."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

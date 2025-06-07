@@ -3,8 +3,9 @@
 # 	* pos_self_order
 # 
 # Translators:
-# Wil Odoo, 2025
 # Jessica Jakara, 2025
+# Wil Odoo, 2025
+# Dylan Kiss, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-16 20:37+0000\n"
 "PO-Revision-Date: 2025-02-20 10:06+0000\n"
-"Last-Translator: Jessica Jakara, 2025\n"
+"Last-Translator: Dylan Kiss, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
-msgstr "(vaatii Odoo Yritys)"
+msgstr "(vaaditaan Odoo Yritys)"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -191,7 +192,7 @@ msgstr "Peruuta tilaus"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_service_mode
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_service_mode
 msgid "Choose the kiosk mode"
-msgstr "Valitse kioskitila"
+msgstr "Valitse Itsepalvelupäätetila"
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_mode
@@ -266,7 +267,7 @@ msgstr "Yhteys katkesi, yritä myöhemmin uudelleen"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_partner
 msgid "Contact"
-msgstr "Kontakti"
+msgstr "Yhteystiedot"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -325,8 +326,8 @@ msgid ""
 "Custom links that the restaurant can configure to be displayed on the self "
 "order screen"
 msgstr ""
-"Mukautetut linkit, jotka ravintola voi määrittää näytettäväksi omassa "
-"tilausnäytössä"
+"Mukautetut linkit, jotka ravintola voi määrittää näytettäväksi "
+"itsepalvelutilauksen näytöllä"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -365,7 +366,7 @@ msgstr "Oletuskäyttäjä"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_language_id
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_default_language_id
 msgid "Default language for the kiosk mode"
-msgstr "Kioskitilan oletuskieli"
+msgstr "Itsepalvelupäätetilan oletuskieli"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -433,8 +434,8 @@ msgid ""
 "Each table in your floor plan is assigned a unique QR code based on your configuration. For security reasons,\n"
 "                    both the point of sale and table names are encrypted in the generated URL, as shown in the example below:."
 msgstr ""
-"Jokaiselle pohjapiirroksen pöydälle annetaan yksilöllinen QR-koodi, joka perustuu kokoonpanoosi. Turvallisuussyistä,\n"
-"                    sekä myyntipisteen että pöytien nimet salataan luodussa URL-osoitteessa, kuten alla olevassa esimerkissä näkyy:."
+"Jokaiselle pöytäkartassa olevalle pöydälle annetaan yksilöllinen QR-koodi, joka perustuu kokoonpanoosi. Turvallisuussyistä,\n"
+"                    sekä Kassajärjestelmän että pöytien nimet salataan luodussa URL-osoitteessa, kuten alla olevassa esimerkissä näkyy:"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_preset
@@ -596,7 +597,7 @@ msgstr "Info"
 msgid ""
 "It seems there hasn't been any activity on this kiosk. Would you like to "
 "continue?"
-msgstr "Kioskilla ei ole ollut mitään toimintaa. Haluatko jatkaa?"
+msgstr "Itsepalvelupäätteellä ei ole ollut mitään toimintaa. Haluatko jatkaa?"
 
 #. module: pos_self_order
 #. odoo-python
@@ -605,7 +606,7 @@ msgstr "Kioskilla ei ole ollut mitään toimintaa. Haluatko jatkaa?"
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__kiosk
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
-msgstr "Kioski"
+msgstr "Itsepalvelupääte"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -621,7 +622,7 @@ msgstr "Kieli"
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_available_language_ids
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_available_language_ids
 msgid "Languages available for the kiosk mode"
-msgstr "Kioskitilassa käytettävissä olevat kielet"
+msgstr "Itsepalvelupäätetilassa saatavilla olevat kielet"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__write_uid
@@ -636,7 +637,7 @@ msgstr "Viimeksi päivitetty"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Let your customers order using their mobile or a kiosk."
-msgstr "Anna asiakkaidesi tilata kännykällä tai kioskilla."
+msgstr "Anna asiakkaidesi tilata kännykällä tai itsepalvelupäätteellä."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
@@ -686,13 +687,13 @@ msgstr "Mobiilivalikko"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Mobile self-order & Kiosk"
-msgstr "Mobiili itsepalvelutilaus & kioski"
+msgstr "Itsepalvelutilaus mobiililla & Itsepalvelupääte"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/landing_page/landing_page.xml:0
 msgid "My Order"
-msgstr "Oma tilaus"
+msgstr "Oma tilaukseni"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -768,13 +769,12 @@ msgstr "OK"
 #. odoo-python
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "Only pay after each is available with kiosk mode."
-msgstr ""
-"Vain maksaminen jokaisen maksun jälkeen on käytettävissä kioskitilassa."
+msgstr "\"Maksa vain jokaisen X jälkeen\" on käytettävissä itsepalvelutilassa."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Open Kiosk"
-msgstr "Avoin kioski"
+msgstr "Avoin Itsepalvelupääte"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -982,7 +982,7 @@ msgstr "QR-valikko"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "QR menu & Kiosk activation"
-msgstr "QR-valikko ja kioskiaktivointi"
+msgstr "QR-valikko & Itsepalvelupäätteen aktivointi"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__mobile
@@ -1079,13 +1079,13 @@ msgstr "Valitse osoitteesi"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand
 msgid "Self Order Kiosk Image Brand"
-msgstr "Itsepalvelutilauskioskin brändi"
+msgstr "Itsepalvelupäätteen kuvan brändi"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand_name
 #: model:ir.model.fields,field_description:pos_self_order.field_res_config_settings__pos_self_ordering_image_brand_name
 msgid "Self Order Kiosk Image Brand Name"
-msgstr "Itsepalvelutilauskioskin brändin nimi"
+msgstr "Itsepalvelupäätteen kuvan brändin nimi"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_product_product__self_order_visible
@@ -1163,7 +1163,7 @@ msgstr "Esitykset"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
 msgid "Start Kiosk"
-msgstr "Käynnistä kioski"
+msgstr "Käynnistä Itsepalvelupääte"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__status
@@ -1337,7 +1337,7 @@ msgstr "Kyllä"
 #: code:addons/pos_self_order/models/pos_config.py:0
 #: code:addons/pos_self_order/models/res_config_settings.py:0
 msgid "You cannot add cash payment methods in kiosk mode."
-msgstr "Käteismaksutapoja ei voi lisätä kioskitilassa."
+msgstr "Käteismaksutapoja ei voi lisätä itsepalvelupäätetilassa."
 
 #. module: pos_self_order
 #. odoo-javascript

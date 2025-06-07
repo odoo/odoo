@@ -24,7 +24,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/cloud_storage_google/models/ir_attachment.py:0
 msgid "%s is not a valid Google Cloud Storage URL."
-msgstr ""
+msgstr "%s ni veljaven URL shrambe Google Cloud."
 
 #. module: cloud_storage_google
 #: model:ir.model,name:cloud_storage_google.model_ir_attachment
@@ -50,22 +50,22 @@ msgstr "Prikazani naziv"
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_bucket_name
 msgid "Google Bucket Name"
-msgstr ""
+msgstr "Google Ime vedra"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields.selection,name:cloud_storage_google.selection__res_config_settings__cloud_storage_provider__google
 msgid "Google Cloud Storage"
-msgstr ""
+msgstr "Google Cloud Storage"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_account_info
 msgid "Google Service Account Info"
-msgstr ""
+msgstr "Google Informacije o računu storitve"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_res_config_settings__cloud_storage_google_service_account_key
 msgid "Google Service Account Key"
-msgstr ""
+msgstr "Google Ključ računa storitve"
 
 #. module: cloud_storage_google
 #: model:ir.model.fields,field_description:cloud_storage_google.field_ir_attachment__id
@@ -80,6 +80,8 @@ msgid ""
 "Some Google attachments are in use, please migrate cloud storages before "
 "disable the provider"
 msgstr ""
+"Nekatere priloge Google so v uporabi, prosimo, preselite shrambe v oblaku, "
+"preden onemogočite ponudnika."
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -88,6 +90,8 @@ msgid ""
 "The account info is not allowed to download blobs from the bucket.\n"
 "%s"
 msgstr ""
+"Podatki o računu ne dovoljujejo prenosa blobov iz vedra.\n"
+"%s"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -96,6 +100,8 @@ msgid ""
 "The account info is not allowed to set the bucket's CORS.\n"
 "%s"
 msgstr ""
+"Podatki o računu ne smejo nastaviti CORS-a vedra.\n"
+"%s"
 
 #. module: cloud_storage_google
 #. odoo-python
@@ -104,3 +110,5 @@ msgid ""
 "The account info is not allowed to upload blobs to the bucket.\n"
 "%s"
 msgstr ""
+"Podatki o računu ne dovoljujejo nalaganja blobov v vedro.\n"
+"%s"
