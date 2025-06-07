@@ -87,6 +87,15 @@ def gc_info():
     }
 
 
+def gc_freeze():
+    """Freeze all allocated objects now.
+
+    This allows the GC to skip checking them when performing full collections.
+    """
+    gc.freeze()
+    _logger.debug("frozen %d objects", gc.get_freeze_count())
+
+
 @contextlib.contextmanager
 def disabling_gc():
     """Disable gc in the context manager."""
