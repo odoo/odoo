@@ -25,5 +25,5 @@ test("message translation in livechat", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("[title='Expand']");
-    await contains("[title='Translate']");
+    await contains(".o-dropdown-item:contains('Translate')");
 });
