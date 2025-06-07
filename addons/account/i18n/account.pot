@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
-"PO-Revision-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-06-06 18:37+0000\n"
+"PO-Revision-Date: 2025-06-06 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -3409,6 +3409,8 @@ msgid "Bank: Balance"
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 #: model:ir.ui.menu,name:account.account_banks_menu
 msgid "Banks"
 msgstr ""
@@ -8452,6 +8454,7 @@ msgstr ""
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Internal link"
 msgstr ""
@@ -10527,6 +10530,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
+msgstr ""
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "No search more"
 msgstr ""
 
 #. module: account
@@ -14816,6 +14825,13 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr ""
@@ -17688,6 +17704,14 @@ msgstr ""
 msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
 msgstr ""
 
 #. module: account
