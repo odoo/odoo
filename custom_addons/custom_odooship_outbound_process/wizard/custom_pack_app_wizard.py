@@ -961,7 +961,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         payload = {
             "merchant_code": config["DEFAULT_MERCHANT_CODE"],
-            "service_type": sale.service_type or "STANDARD",
+            "service_type": sale.service_type.strip().upper(),
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "tu_id": None,
@@ -1207,6 +1207,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.info(f"[ONETRAKER][SINGLE PICK RESPONSE] {json.dumps(response_json, indent=4)}")
 
             generic = response_json.get("genericResponse", {})
+            
             if generic.get("apiStatusCode") != 200 or generic.get("apiSuccessStatus") != "True":
                 raise UserError(_(generic.get("apiStatusMessage", "Unknown error from OneTraker")))
 
@@ -1356,7 +1357,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
 
         payload = {
             "merchant_code": config["DEFAULT_MERCHANT_CODE"],
-            "service_type": sale.service_type or "STANDARD",
+            "service_type": sale.service_type.strip().upper(),
             "order_number": order_number,
             "tags": {"external_order_id": customer_ref},
             "auto_generate_label": config["DEFAULT_AUTO_GENERATE_LABEL"],
