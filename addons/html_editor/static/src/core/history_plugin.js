@@ -5,6 +5,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { withSequence } from "@html_editor/utils/resource";
 import { Deferred } from "@web/core/utils/concurrency";
 import { toggleClass } from "@html_editor/utils/dom";
+import { omit, pick } from "@web/core/utils/objects";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -33,9 +34,7 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @property { "characterData" } type
  * // todo change id to nodeId
  * @property { string } id
- * // todo change text to textValue
- * @property { string } text
- * // todo change text to textOldValue
+ * @property { string } value
  * @property { string } oldValue
  *
  * @typedef { Object } HistoryMutationAttributes
@@ -43,9 +42,7 @@ import { toggleClass } from "@html_editor/utils/dom";
  * // todo change id to nodeId
  * @property { string } id
  * @property { string } attributeName
- * // todo change value to attributeValue
  * @property { string } value
- * // todo change oldValue to attributeOldValue
  * @property { string } oldValue
  *
  * @typedef { Object } HistoryMutationClassList
@@ -87,6 +84,7 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @property { "classList" } type
  * @property { Node } target
  * @property { string } className
+ * @property { boolean } oldValue
  * @property { boolean } value
  *
  * @typedef {Object} MutationRecordAttributes
@@ -94,9 +92,15 @@ import { toggleClass } from "@html_editor/utils/dom";
  * @property { Node } target
  * @property { string } attributeName
  * @property { string } oldValue
- * @property { string } newValue
+ * @property { string } value
  *
- * @typedef { MutationRecord | MutationRecordClassList | MutationRecordAttributes } HistoryMutationRecord
+ * @typedef {Object} MutationRecordCharacterData
+ * @property { "characterData" } type
+ * @property { Node } target
+ * @property { string } oldValue
+ * @property { string } value
+ *
+ * @typedef { MutationRecord | MutationRecordClassList | MutationRecordAttributes | MutationRecordCharacterData } HistoryMutationRecord
  *
  * @typedef { Object } PreviewableOperation
  * @property { Function } commit
@@ -378,17 +382,23 @@ export class HistoryPlugin extends Plugin {
         /** @type {HistoryMutationRecord[]} */
         const records = mutationRecords
             .flatMap((record) => this.transformRecord(record))
-            .filter((record) => !this.isSystemClassOrAttributeRecord(record))
+            .filter((record) => !this.isSystemMutationRecord(record))
             .filter((record) => !this.isNoOpRecord(record));
         this.stageRecords(records);
+        records
+            .filter(({ type }) => type === "attributes")
+            .forEach((record) => this.dispatchTo("attribute_change_handlers", record));
         return records;
     }
 
     /**
-     * @param {HistoryMutationRecord} param0
+     * @param {HistoryMutationRecord} record
      */
-    isNoOpRecord({ type, oldValue, newValue }) {
-        return type === "attributes" && oldValue === newValue;
+    isNoOpRecord(record) {
+        if (["attributes", "classList", "characterData"].includes(record.type)) {
+            return record.value === record.oldValue;
+        }
+        return false;
     }
 
     dispatchContentUpdated() {
@@ -409,12 +419,12 @@ export class HistoryPlugin extends Plugin {
      * @param { MutationRecord[] } records
      */
     handleNewRecords(records) {
-        const filteredRecords = this.processNewRecords(records);
-        if (filteredRecords.length) {
+        const processedRecords = this.processNewRecords(records);
+        if (processedRecords.length) {
             // TODO modify `handleMutations` of web_studio to handle
             // `undoOperation`
             const stepState = this.stepsStates.get(this.currentStep.id);
-            this.getResource("handleNewRecords").forEach((cb) => cb(filteredRecords, stepState));
+            this.getResource("handleNewRecords").forEach((cb) => cb(processedRecords, stepState));
             // Process potential new records adds by handleNewRecords.
             this.processNewRecords(this.observer.takeRecords());
             this.dispatchContentUpdated();
@@ -538,8 +548,8 @@ export class HistoryPlugin extends Plugin {
 
     /**
      * Class attribute records are expanded into multiple classList records.
-     * Attribute records have their oldValue normalized and newValue added to it.
-     * @todo: expand childList mutations to add/remove records.
+     * Attribute records have their oldValue normalized and new value added to it.
+     * CharacterData records have new value added to it.
      *
      * @param { MutationRecord } record
      * @returns { HistoryMutationRecord | HistoryMutationRecord[] }
@@ -550,9 +560,12 @@ export class HistoryPlugin extends Plugin {
                 return this.splitClassMutationRecord(record);
             }
             const oldValue = record.oldValue === undefined ? null : record.oldValue;
-            const newValue = record.target.getAttribute(record.attributeName);
-            const { type, target, attributeName } = record;
-            return { type, target, attributeName, oldValue, newValue };
+            const value = record.target.getAttribute(record.attributeName);
+            return { ...pick(record, "type", "target", "attributeName"), oldValue, value };
+        }
+        if (record.type === "characterData") {
+            const value = record.target.textContent;
+            return { ...pick(record, "type", "target", "oldValue"), value };
         }
         return record;
     }
@@ -578,12 +591,13 @@ export class HistoryPlugin extends Plugin {
         const addedClasses = setDifference(classesAfter, classesBefore);
         const removedClasses = setDifference(classesBefore, classesAfter);
 
-        /** @type {(className: string, operation: string) => MutationRecordClassList } */
+        /** @type {(className: string, isAdded: boolean) => MutationRecordClassList } */
         const createClassRecord = (className, isAdded) => ({
             type: "classList",
             target: record.target,
             className,
             value: isAdded,
+            oldValue: !isAdded,
         });
         // Generate records for each class change
         return [
@@ -595,7 +609,7 @@ export class HistoryPlugin extends Plugin {
     /**
      * @param { HistoryMutationRecord } record
      */
-    isSystemClassOrAttributeRecord(record) {
+    isSystemMutationRecord(record) {
         if (record.type === "attributes") {
             return this.mutationFilteredAttributes.has(record.attributeName);
         }
@@ -672,39 +686,11 @@ export class HistoryPlugin extends Plugin {
         }
         for (const record of records) {
             switch (record.type) {
-                case "characterData": {
-                    this.currentStep.mutations.push({
-                        type: "characterData",
-                        id: this.nodeToIdMap.get(record.target),
-                        text: record.target.textContent,
-                        oldValue: record.oldValue,
-                    });
-                    break;
-                }
-                case "classList": {
-                    this.currentStep.mutations.push({
-                        type: "classList",
-                        id: this.nodeToIdMap.get(record.target),
-                        className: record.className,
-                        oldValue: !record.value,
-                        value: record.value,
-                    });
-                    break;
-                }
+                case "characterData":
+                case "classList":
                 case "attributes": {
-                    this.currentStep.mutations.push({
-                        type: "attributes",
-                        id: this.nodeToIdMap.get(record.target),
-                        attributeName: record.attributeName,
-                        oldValue: record.oldValue,
-                        value: record.newValue,
-                    });
-                    this.dispatchTo("attribute_change_handlers", {
-                        target: record.target,
-                        attributeName: record.attributeName,
-                        oldValue: record.oldValue,
-                        value: record.newValue,
-                    });
+                    const id = this.nodeToIdMap.get(record.target);
+                    this.currentStep.mutations.push({ ...omit(record, "target"), id });
                     break;
                 }
                 case "childList": {
@@ -1063,7 +1049,7 @@ export class HistoryPlugin extends Plugin {
                 case "characterData": {
                     const node = this.idToNodeMap.get(mutation.id);
                     if (node) {
-                        node.textContent = mutation.text;
+                        node.textContent = mutation.value;
                     }
                     break;
                 }
