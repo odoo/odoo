@@ -141,7 +141,7 @@ test("remove banner when opening thread at the bottom", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Expand']", { parent: [".o-mail-Message", { text: "Hello World" }] });
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-mail-Thread-banner", { text: "1 new message" });
     await click(".o-mail-DiscussSidebar-item", { text: "Inbox" });
     await contains(".o-mail-Discuss-threadName[title='Inbox']");
@@ -165,7 +165,7 @@ test("keep banner after mark as unread when scrolling to bottom", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Expand']", { parent: [".o-mail-Message", { text: "message 29" }] });
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-dropdown-item:contains('Mark as Unread')");
     await scroll(".o-mail-Thread", "bottom");
     await contains(".o-mail-Thread-banner", { text: "30 new messages" });
 });

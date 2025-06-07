@@ -112,13 +112,13 @@ test("Edit message (mobile)", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await click(".o-dropdown-item:contains('Edit')");
     await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Hello world" });
     await click("button", { text: "Discard editing" });
     await contains(".o-mail-Message.o-editing .o-mail-Composer", { count: 0 });
     await contains(".o-mail-Message-content", { text: "Hello world" });
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Edit']");
+    await click(".o-dropdown-item:contains('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click(".o-mail-Message .fa-paper-plane-o");
     await contains(".o-mail-Message-content", { text: "edited message (edited)" });
@@ -583,11 +583,11 @@ test("Deleting parent message of a reply should adapt reply visual", async () =>
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Reply']");
+    await click(".o-dropdown-item:contains('Reply')");
     await insertText(".o-mail-Composer-input", "FooBarFoo");
     triggerHotkey("Enter", false);
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Delete']");
+    await click(".o-dropdown-item:contains('Delete')");
     await click("button", { text: "Delete" });
     await contains(".o-mail-MessageInReply", { text: "Original message was deleted" });
 });
@@ -1336,9 +1336,9 @@ test("Can download all files of a message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
-    await contains("[title='Download Files']");
+    await contains(".o-dropdown-item:contains('Download Files')");
     await click(":nth-child(2 of .o-mail-Message) [title='Expand']");
-    await contains("[title='Download Files']", { count: 0 });
+    await contains(".o-dropdown-item:contains('Download Files')", { count: 0 });
 });
 
 test("Can remove files of message individually", async () => {
@@ -1381,9 +1381,10 @@ test("Can remove files of message individually", async () => {
     await contains(
         ":nth-child(1 of .o-mail-Message) :nth-child(2 of .o-mail-AttachmentContainer) [title='Remove']"
     );
-    await contains(":nth-child(2 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']", {
-        count: 0,
-    });
+    await contains(
+        ":nth-child(2 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']",
+        { count: 0 }
+    );
     await contains(":nth-child(3 of .o-mail-Message) .o-mail-AttachmentContainer [title='Remove']");
 });
 
@@ -1546,7 +1547,7 @@ test("delete all attachments of message without content should mark message as d
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Delete']");
+    await click(".o-dropdown-item:contains('Delete')");
     await click("button", { text: "Delete" });
     await contains(".o-mail-Message", { text: "This message has been removed" });
 });
@@ -1685,7 +1686,7 @@ test("Can reply to chatter messages from history", async () => {
     await start();
     await openDiscuss("mail.box_history");
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Reply']");
+    await click(".o-dropdown-item:contains('Reply')");
     await click(".o-mail-Composer button[title='More Actions']");
     await contains(".dropdown-item:contains('Open Full Composer')");
 });
@@ -1731,7 +1732,7 @@ test("Mark as unread", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-mail-Thread-newMessage");
     await contains(".o-mail-DiscussSidebarChannel .badge", { text: "1" });
 });
@@ -1867,7 +1868,7 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await click(".o-mail-QuickReactionMenu button", { text: "😅" });
     await contains(".o-mail-MessageReaction", { text: "😅1" });
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='View Reactions']");
+    await click(".o-dropdown-item:contains('View Reactions')");
     await contains(".o-mail-MessageReactionMenu", { text: "😅1" });
 });
 
@@ -1962,9 +1963,9 @@ test("Copy Message Link", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
-    await contains("[title='Copy Link']", { count: 0 });
+    await contains(".o-dropdown-item:contains('Copy Link'_", { count: 0 });
     await click(".o-mail-Message:eq(1) [title='Expand']");
-    await click("[title='Copy Link']");
+    await click(".o-dropdown-item:contains('Copy Link')");
     await waitForSteps([url(`/mail/message/${messageId_2}`)]);
     await press(["ctrl", "v"]);
     await press("Enter");

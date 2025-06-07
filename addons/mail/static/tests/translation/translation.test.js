@@ -54,9 +54,11 @@ test("translation of email message", async () => {
         author_id: partnerId,
         res_id: partnerId,
     });
-    onRpcBefore("/mail/message/translate", (args) => {
-        return { body: "To bad weather, good face.", lang_name: "Spanish", error: null };
-    });
+    onRpcBefore("/mail/message/translate", (args) => ({
+        body: "To bad weather, good face.",
+        lang_name: "Spanish",
+        error: null,
+    }));
     await start();
     await openFormView("res.partner", partnerId);
     await contains("span", {
@@ -64,7 +66,7 @@ test("translation of email message", async () => {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });
     await click("button[title='Expand']");
-    await click("span[title='Translate']");
+    await click(".o-dropdown-item:contains('Translate')");
     await contains("span", {
         text: "To bad weather, good face.",
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
@@ -73,7 +75,7 @@ test("translation of email message", async () => {
         text: "(Translated from: Spanish)",
     });
     await click("button[title='Expand']");
-    await click("span[title='Revert']");
+    await click(".o-dropdown-item:contains('Revert')");
     await contains("span", {
         text: "Al mal tiempo, buena cara.",
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
