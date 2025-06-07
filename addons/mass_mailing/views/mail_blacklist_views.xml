@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mail_blacklist_view_tree" model="ir.ui.view">
+        <field name="name">mail.blacklist.view.list.inherit.mailing</field>
+        <field name="model">mail.blacklist</field>
+        <field name="inherit_id" ref="mail.mail_blacklist_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="opt_out_reason_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_view_form" model="ir.ui.view">
+        <field name="name">mail.blacklist.view.form.inherit.mailing</field>
+        <field name="model">mail.blacklist</field>
+        <field name="inherit_id" ref="mail.mail_blacklist_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="opt_out_reason_id" placeholder="e.g. I received too many emails"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_view_search" model="ir.ui.view">
+        <field name="name">mail.blacklist.view.search</field>
+        <field name="model">mail.blacklist</field>
+        <field name="inherit_id" ref="mail.mail_blacklist_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <group expand="0" string="Group By">
+                    <filter string="Reason"
+                            name="group_by_opt_out_reason_id"
+                            context="{'group_by': 'opt_out_reason_id'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

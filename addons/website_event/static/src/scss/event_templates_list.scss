@@ -1,0 +1,139 @@
+.o_wevent_sidebar_social > .o_wevent_social_link {
+    $o_link_size: 2.3em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: $o_link_size;
+    height: $o_link_size;
+    margin: 0 0 ($spacer * .5) ($spacer * .25);
+    line-height: $o_link_size;
+    background-color: map-get($grays, '100');
+    border: $border-width solid $border-color;
+    border-radius: 50%;
+    text-align: center;
+    &:hover, &:focus {
+        background-color: map-get($grays, '300');
+        text-decoration: none;
+    }
+}
+
+// Index
+.o_wevent_index {
+    // Events List
+    .o_wevent_events_list {
+        .opt_events_list_columns {
+            .card-header {
+                height: 200px;
+            }
+            .card-footer {
+                color: color-contrast($card-bg);
+            }
+        }
+        .opt_events_list_rows {
+            .card-header {
+                min-height: 130px;
+            }
+            @include media-breakpoint-down(md) {
+                .o_wevent_badge {
+                    position: relative !important;
+                    max-width: fit-content;
+                }
+            }
+        }
+        .o_wevent_badge_event {
+            @include o-position-absolute($top: 0, $right: 0);
+            @include border-end-radius(0);
+            padding: ($spacer * .5) $card-spacer-x;
+            transform: translateY(-50%);
+        }
+    }
+    .o_wevent_sidebar_title {
+        margin: 0 0 ($spacer * 1.5) 0;
+        border-bottom: $border-width solid $border-color;
+        padding: 0 0 ($spacer * .5) 0;
+        font-weight: $font-weight-bold;
+    }
+    .o_wevent_sidebar_block {
+        margin: 0 0 ($spacer * 2.5) 0;
+    }
+    .o_wevent_sidebar_figure {
+        position: relative;
+
+        .figure-img {
+            margin-bottom: 0;
+        }
+        .figure-caption {
+            @include o-position-absolute($left: 0, $bottom: 0);
+            width: 100%;
+            padding: $spacer;
+            background-color: rgba($color: #000, $alpha: 0.5);
+            @include border-bottom-radius($border-radius);
+            color: #fff;
+        }
+    }
+    a:has(.o_wevent_sidebar_figure) {
+        // This is required for Chrome. Without it, the <figcaption> element
+        // inside the second photo will not be editable properly.
+        display: block;
+    }
+    .o_half_screen_height {
+        // Set min-height to the same value as the header
+        min-height: 200px !important;
+    }
+    .o_wevent_search {
+        @include media-breakpoint-up(lg) {
+            max-width: 300px;
+        }
+    }
+}
+
+// Used in wevent and wevent_sale
+.o_wevent_event_date {
+    top: $card-spacer-x;
+    right: $card-spacer-x;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    text-align: center;
+    background-color: $o-wevent-bg-color-base;
+    color: $o-wevent-bg-color-base-contrast;
+
+    .o_wevent_event_day {
+        @include font-size(1.125rem);
+        font-weight: 300;
+        line-height: 1;
+    }
+    .o_wevent_event_month {
+        @include font-size(0.75rem);
+        font-weight: $font-weight-bold;
+        text-transform: uppercase;
+    }
+    &.left{
+        left: $card-spacer-x;
+    }
+
+    &.o_wevent_date_with_flag {
+        .o_wevent_event_country_flag {
+            height: 20px;
+            margin-top: 2px;
+            i {
+                font-size: 20px;
+            }
+            img {
+                max-width: 2.4rem;
+            }
+        }
+        .o_wevent_event_date_text {
+            line-height: .8rem;
+        }
+        .o_wevent_event_day, .o_wevent_event_month {
+            @include font-size(.8rem);
+        }
+        .o_wevent_event_day {
+            font-weight: 400;
+        }
+    }
+}

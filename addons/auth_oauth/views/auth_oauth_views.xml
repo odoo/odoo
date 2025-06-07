@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_oauth_provider_form" model="ir.ui.view">
+            <field name="name">auth.oauth.provider.form</field>
+            <field name="model">auth.oauth.provider</field>
+            <field name="arch" type="xml">
+                <form string="arch">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="client_id" />
+                            <field name="enabled" />
+                            <field name="body" />
+                            <field name="css_class" groups="base.group_no_one" />
+                        </group>
+                        <group>
+                            <field name="auth_endpoint" />
+                            <field name="scope" />
+                            <field name="validation_endpoint" />
+                            <field name="data_endpoint" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>        
+        <record id="view_oauth_provider_tree" model="ir.ui.view">
+            <field name="name">auth.oauth.provider.list</field>
+            <field name="model">auth.oauth.provider</field>
+            <field name="arch" type="xml">
+                <list string="arch">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name" />
+                    <field name="client_id" />
+                    <field name="enabled" />
+                </list>
+            </field>
+        </record>
+        <record id="action_oauth_provider" model="ir.actions.act_window">
+            <field name="name">Providers</field>
+            <field name="res_model">auth.oauth.provider</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_oauth_providers" name="OAuth Providers"
+            parent="base.menu_users" sequence="30"
+            action="action_oauth_provider" groups="base.group_no_one"/>
+</odoo>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="view_barcode_gs1_nomenclature_form" model="ir.ui.view">
+            <field name="name">Barcode Nomenclatures</field>
+            <field name="model">barcode.nomenclature</field>
+            <field name="inherit_id" ref="barcodes.view_barcode_nomenclature_form"/>
+            <field name="arch" type="xml">
+                <!-- Nomenclature form -->
+                <xpath expr="//field[@name='upc_ean_conv']" position="attributes">
+                    <attribute name="invisible">is_gs1_nomenclature</attribute>
+                </xpath>
+                <xpath expr="//group[@name='general_attributes']" position="after">
+                    <group name="gs1_attributes" col="4">
+                        <field name="is_gs1_nomenclature"/>
+                        <field name="gs1_separator_fnc1" invisible="not is_gs1_nomenclature"/>
+                    </group>
+                </xpath>
+                <!-- Rules table -->
+                <xpath expr="//field[@name='rule_ids']" position="attributes">
+                    <attribute name="context">{'is_gs1': is_gs1_nomenclature}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='encoding']" position="attributes">
+                    <attribute name="column_invisible">parent.is_gs1_nomenclature</attribute>
+                </xpath>
+                <xpath expr="//field[@name='pattern']" position="after">
+                    <field name="gs1_content_type" column_invisible="not parent.is_gs1_nomenclature"/>
+                    <field name="gs1_decimal_usage" column_invisible="not parent.is_gs1_nomenclature" invisible="gs1_content_type != 'measure'"/>
+                    <field name="associated_uom_id" column_invisible="not parent.is_gs1_nomenclature" invisible="gs1_content_type != 'measure'"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_barcode_gs1_nomenclature_tree" model="ir.ui.view">
+            <field name="name">Barcode Nomenclatures</field>
+            <field name="model">barcode.nomenclature</field>
+            <field name="inherit_id" ref="barcodes.view_barcode_nomenclature_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="is_gs1_nomenclature"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_barcode_gs1_rule_form" model="ir.ui.view">
+            <field name="name">Barcode Rule</field>
+            <field name="model">barcode.rule</field>
+            <field name="inherit_id" ref="barcodes.view_barcode_rule_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='encoding']" position="attributes">
+                    <attribute name="invisible">parent.is_gs1_nomenclature or type == 'alias'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='alias']" position="after">
+                    <field name="gs1_content_type" invisible="not parent.is_gs1_nomenclature"/>
+                    <field name="gs1_decimal_usage" invisible="not parent.is_gs1_nomenclature or gs1_content_type != 'measure'"/>
+                    <field name="associated_uom_id" invisible="not parent.is_gs1_nomenclature or gs1_content_type != 'measure'"/>
+                    <field name="is_gs1_nomenclature" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+</odoo>

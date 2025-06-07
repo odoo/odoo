@@ -1,0 +1,82 @@
+--init stock,hr
+--update account,website
+--without-demo rigolo
+--import-partial /tmp/import-partial
+--pidfile /tmp/pidfile
+--load base,mail
+--data-dir /tmp/data-dir
+
+--no-http
+--http-interface 10.0.0.254
+--http-port 6942
+--gevent-port 8012
+--proxy-mode
+--x-sendfile
+
+--db-filter .*
+
+--test-file /tmp/file-file
+--test-tags :TestMantra.test_is_extra_mile_done
+--screencasts /tmp/screencasts
+--screenshots /tmp/screenshots
+
+--logfile /tmp/odoo.log
+--log-handler odoo.tools.config:DEBUG
+--log-handler :WARNING
+--log-web
+--log-sql
+--log-db logdb
+--log-db-level debug
+--log-level debug
+
+--email-from admin@example.com
+--from-filter .*
+--smtp smtp.localhost
+--smtp-port 1299
+--smtp-ssl
+--smtp-user spongebob
+--smtp-password Tigrou0072
+--smtp-ssl-certificate-filename /tmp/tlscert
+--smtp-ssl-private-key-filename /tmp/tlskey
+
+--database horizon
+--db_user kiwi
+--db_password Tigrou0073
+--pg_path /tmp/pg_path
+--db_host db.localhost
+--db_port 4269
+--db_sslmode verify-full
+--db_maxconn 42
+--db_maxconn_gevent 100
+--db-template backup1706
+--db_replica_host db2.localhost
+--db_replica_port 2038
+
+--load-language fr_FR
+--language fr_FR
+--i18n-export /tmp/translate_out.csv 
+--i18n-import /tmp/translate_in.csv  
+--i18n-overwrite
+--modules stock,hr,mail
+
+--no-database-list
+
+--dev xml,reload
+--shell-interface ipython
+--stop-after-init
+--osv-memory-count-limit 71
+--transient-age-limit 4
+--max-cron-threads 4
+--unaccent
+--geoip-city-db /tmp/city.db
+--geoip-country-db /tmp/country.db
+
+--workers 92
+--limit-memory-soft 1048576
+--limit-memory-soft-gevent 1048577
+--limit-memory-hard 1048578
+--limit-memory-hard-gevent 1048579
+--limit-time-cpu 60
+--limit-time-real 61
+--limit-time-real-cron 62
+--limit-request 100

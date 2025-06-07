@@ -1,0 +1,97 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_stock_account
+# 
+# Translators:
+# Wil Odoo, 2024
+# Maitê Dietze, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Maitê Dietze, 2025\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/stock_move.py:0
+msgid ""
+"'%(missing_plan_names)s' analytic plan(s) required on the project "
+"'%(project_name)s' linked to the stock picking."
+msgstr ""
+"'%(missing_plan_names)s' plano(s) analítico(s) necessário(s) para o projeto "
+"'%(project_name)s' vinculado à separação de estoque."
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__analytic_costs
+msgid "Analytic Costs"
+msgstr "Custos analíticos"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Linha analítica"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "Aplicabilidades do plano analítico"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "Categoria"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "Domínio"
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr "Transferência de estoque"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr "Materiais"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_picking_type
+msgid "Picking Type"
+msgstr "Tipo de separação"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "Projeto"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_move
+msgid "Stock Move"
+msgstr "Movimentação de estoque"
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_applicability__business_domain__stock_picking
+msgid "Stock Picking"
+msgstr "Separação de estoque"
+
+#. module: project_stock_account
+#: model:ir.model.fields,help:project_stock_account.field_stock_picking_type__analytic_costs
+msgid ""
+"Validating stock pickings will generate analytic entries for the selected "
+"project. Products set for re-invoicing will also be billed to the customer."
+msgstr ""
+"A validação das separações de estoque gerará lançamentos analíticos para o "
+"projeto selecionado. Os produtos definidos para refaturamento também serão "
+"faturados para o cliente."

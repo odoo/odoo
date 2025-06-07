@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="partner_autocomplete.PartnerAutoComplete" t-inherit="web.AutoComplete" t-inherit-mode="primary">
+        <xpath expr="//ul" position="inside">
+            <t t-if="this.sources &amp;&amp; this.sources.at(-1)?.options.length !== 0 &amp;&amp; !this.shouldSearchWorldwide">  <!-- 1 because IAP sources (potential partners) are loaded after DB sources (existing partners)-->
+                <li
+                    class="o-autocomplete--dropdown-item ui-menu-item d-block"
+                    t-on-pointerdown="() => this.ignoreBlur = true"
+                    t-on-mouseleave="() => this.onOptionMouseLeave()"
+                    t-on-click="(ev) => this.searchWorldwide(ev)"
+                >
+                    <a
+                        t-attf-id="{{props.id or 'autocomplete'}}_{{source_index}}_{{option_index}}"
+                        role="option"
+                        href="#"
+                        class="dropdown-item ui-menu-item-wrapper text-truncate text-info"
+                        t-att-class="{ 'ui-state-active': isActiveSourceOption([source_index, option_index]) }"
+                        t-att-aria-selected="isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
+                    >
+                        Search Worldwide 🌎
+                    </a>
+                </li>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="partner_autocomplete.PartnerAutoCompleteCharField" t-inherit="web.CharField" t-inherit-mode="primary">
+        <xpath expr="//t[@t-else='']" position="before">
+            <t t-elif="props.record.resModel !== 'res.partner' || props.record.data.company_type === 'company'">
+                <PartnerAutoComplete
+                    value="props.record.data[props.name] || ''"
+                    sources="sources"
+                    onSelect.bind="onSelect"
+                    input="inputRef"
+                    placeholder="placeholder || ''"
+                />
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="partner_autocomplete.PartnerAutoCompleteMany2XField" t-inherit="web.Many2XAutocomplete" t-inherit-mode="primary">
+        <xpath expr="//AutoComplete" position="replace">
+            <PartnerAutoComplete t-else=""
+                value="this.props.value || ''"
+                autoSelect="true"
+                sources="sources"
+                onSelect.bind="onSelect"
+                onChange.bind="onChange"
+                input="inputRef"
+                placeholder="placeholder || ''"
+                id="this.props.id"
+            />
+        </xpath>
+    </t>
+
+    <t t-name="partner_autocomplete.DropdownOption">
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 24px;">
+            <div>
+                <span t-esc="option.name"/>,
+                <span class="text-muted" t-esc="option.description"/>
+            </div>
+            <img style="width: 24px; max-height: 100%" class="ms-1" t-att-src="option.logoUrl" onerror="this.style.display='none'"/>
+        </div>
+    </t>
+
+    <t t-name="partner_autocomplete.InsufficientCreditNotification">
+        <div class="o-hidden-ios">
+            <a class="btn btn-link" t-att-href="credits_url"><i class="oi oi-arrow-right"/> Buy more credits</a>
+        </div>
+    </t>
+
+    <t t-name="partner_autocomplete.AccountTokenMissingNotification">
+        <div class="">
+            <a class="btn btn-link" t-att-href="account_url" ><i class="oi oi-arrow-right"/> Set Your Account Token</a>
+        </div>
+    </t>
+</templates>

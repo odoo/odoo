@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_partner_form">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <group id="invoice_send_settings" position="after">
+                <group string="Purchase Withholding" invisible="'AR' not in fiscal_country_codes or not is_company">
+                    <field name="l10n_ar_partner_tax_ids" nolabel="1" colspan="2" widget="auto_save_res_partner">
+                        <list editable="top">
+                            <field name="tax_id" options="{'no_create': True, 'no_open': True}" domain="[('l10n_ar_withholding_payment_type', '=', 'supplier')]"/>
+                            <field name="from_date" optional="hide"/>
+                            <field name="to_date" optional="hide"/>
+                            <field name="ref" optional="hide"/>
+                        </list>
+                    </field>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="discuss.pttAdBanner">
+    <span t-if="isVisible" class="o-discuss-PttAdBanner alert alert-info px-2 py-1 m-0 rounded-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="small" t-out="pttExtService.downloadText"/>
+            <button class="btn d-flex opacity-75 opacity-100-hover" title="Close banner" t-on-click="onClickClose">
+                <i class="fa fa-fw fa-close"/>
+            </button>
+        </div>
+    </span>
+</t>
+
+</templates>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="after">
+            <t t-if="props.data.is_gcc_country">
+                <br/>
+                <br/>
+                <div class="pos-receipt-header">
+                    <span id="title_english" t-translation="off">Tax Invoice</span>
+                </div>
+                <div class="pos-receipt-header">
+                    <span id="title_arabic" t-translation="off">الفاتورة الضريبية</span>
+                </div>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@t-esc='props.data.cashier']/.." position="attributes">
+            <attribute name="t-if">!props.data.is_gcc_country</attribute>
+        </xpath>
+        <xpath expr="//div[@t-esc='props.data.cashier']/.." position="after">
+            <div t-if="props.data.is_gcc_country" t-translation="off">
+                <div>Served by / خدم بواسطة <t t-esc="props.data.cashier"/></div>
+            </div>
+        </xpath>
+    </t>
+</templates>

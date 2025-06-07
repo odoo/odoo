@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <t t-name="hr_recruitment.RecruitmentActionHelper">
+        <div class="o_view_nocontent">
+            <div class="o_nocontent_help">
+                <p class="o_view_nocontent_smiling_face">
+                    Ready to recruit more efficiently?
+                </p>
+                <p>
+                    Let's create a job position.
+                </p>
+                <t t-if="!state.hasDemoData and isRecruitmentUser">
+                    <div class="d-flex gap-3 align-items-center or-separator">
+                        <hr class="flex-grow-1" /> or <hr class="flex-grow-1" />
+                    </div>
+
+                    <a type="object" class="btn btn-secondary mt-3"
+                        t-on-click="() => this.loadRecruitmentScenario()">
+                        Load sample data
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+</odoo>

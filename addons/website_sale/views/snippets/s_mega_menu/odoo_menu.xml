@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template
+        id="website_sale.s_mega_menu_odoo_menu"
+        name="eCommerce: Odoo Menu"
+        groups="base.group_user"
+    >
+        <section class="s_mega_menu_odoo_menu pt16 o_colored_level o_cc o_cc1">
+            <div class="container">
+                <div class="row">
+                    <t
+                        t-set="categories"
+                        t-value="request.env['product.public.category'].search([
+                            ('parent_id', '=', False)
+                        ])[:4]"
+                    />
+                    <t t-foreach="categories" t-as="category">
+                        <div class="col-12 col-lg-3 pt16 pb24">
+                            <h4 class="o_default_snippet_text text-uppercase h5 fw-bold mt-0">
+                                <a
+                                    t-att-href="'/shop/category/%s' % category.id"
+                                    class="nav-link o_default_snippet_text p-0 text-black"
+                                    t-esc="category.name"
+                                />
+                            </h4>
+                            <div class="s_hr pt4 pb16">
+                                <hr class="w-100 mx-auto"
+                                    style="border-top-width: 2px; border-top-color: var(--primary);"
+                                />
+                            </div>
+                            <nav class="nav flex-column">
+                                <t t-foreach="category.child_id" t-as="sub_category">
+                                    <a t-att-href="'/shop/category/%s' % sub_category.id"
+                                        class="nav-link o_default_snippet_text px-0"
+                                        t-esc="sub_category.name"/>
+                                </t>
+                            </nav>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

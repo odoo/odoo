@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <!-- CHANNEL 1: Taking care of Trees -->
+    <!-- ================================================== -->
+    <record id="product_course_channel_1" model="product.product">
+        <field name="name">Taking care of Trees Course</field>
+        <field name="standard_price">150.0</field>
+        <field name="list_price">150.0</field>
+        <field name="type">service</field>
+        <field name="service_tracking">course</field>
+        <field name="invoice_policy">order</field>
+        <field name="is_published" eval="True"/>
+        <field name="image_1920" type="base64" file="website_sale_slides/static/img/channel_demo_tree_1.jpg"/>
+    </record>
+
+    <!-- CHANNEL 5: Basics of Furniture Creation -->
+    <!-- ================================================== -->
+    <record id="product_course_channel_5" model="product.product">
+        <field name="name">Basics of Furniture Creation</field>
+        <field name="standard_price">200.0</field>
+        <field name="list_price">200.0</field>
+        <field name="type">service</field>
+        <field name="service_tracking">course</field>
+        <field name="invoice_policy">order</field>
+        <field name="is_published" eval="True"/>
+        <field name="image_1920" type="base64" file="website_sale_slides/static/img/channel_demo_furniture_2.jpg"/>
+    </record>
+
+    <!-- CHANNEL 6: DIY Furniture -->
+    <!-- ================================================== -->
+    <record id="product_course_channel_6" model="product.product">
+        <field name="name">DIY Furniture Course</field>
+        <field name="standard_price">100.0</field>
+        <field name="list_price">100.0</field>
+        <field name="type">service</field>
+        <field name="service_tracking">course</field>
+        <field name="invoice_policy">order</field>
+        <field name="is_published" eval="True"/>
+        <field name="image_1920" type="base64" file="website_sale_slides/static/img/product_course.png"/>
+    </record>
+</data></odoo>

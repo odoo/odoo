@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_pricelist_page">
+        <div class="container bg-white p-4 my-4">
+            <div class="oe_structure"></div>
+            <div class="row my-3">
+                <div class="col-12">
+                    <h2 t-if="is_html_type">
+                        Pricelist <span t-if="display_pricelist_title">:</span>
+                        <a t-if="display_pricelist_title" href="#" class="o_action"
+                            data-model="product.pricelist" t-att-data-res-id="pricelist.id">
+                            <span t-field="pricelist.display_name">Gold Member Pricelist</span>
+                        </a>
+                    </h2>
+                    <h2 t-else="">
+                        Pricelist <span t-if="display_pricelist_title">:</span>
+                        <span t-if="display_pricelist_title" t-field="pricelist.display_name">Gold Member Pricelist</span>
+                    </h2>
+                </div>
+            </div>
+            <div class="oe_structure"></div>
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-sm">
+                        <thead>
+                            <th class="text-end px-1" colspan="100%">Quantities (Price)</th>
+                            <tr>
+                                <th class="px-1">Products</th>
+                                <th class="px-1" groups="uom.group_uom">UOM</th>
+                                <t t-foreach="quantities" t-as="qty">
+                                    <th class="text-end px-1"><span t-out="qty">10 Units</span></th>
+                                </t>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="products" t-as="product">
+                                <tr>
+                                    <td t-att-class="is_product_tmpl and 'fw-bold px-1' or None">
+                                        <a t-if="is_html_type" href="#" class="o_action" t-att-data-model="is_product_tmpl and 'product.template' or 'product.product'" t-att-data-res-id="product['id']">
+                                            <span t-out="product['name']">Virtual Interior Design</span>
+                                        </a>
+                                        <span t-else="" t-out="product['name']">Acme Widget</span>
+                                    </td>
+                                    <td groups="uom.group_uom" class="px-1" t-out="product['uom']"/>
+                                    <t t-foreach="quantities" t-as="qty">
+                                        <td class="text-end px-1">
+                                            <span t-out="product['price'][qty]" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'>$15.00</span>
+                                        </td>
+                                    </t>
+                                </tr>
+                                <t t-if="is_product_tmpl and 'variants' in product">
+                                    <tr t-foreach="product['variants']" t-as="variant">
+                                        <td class="px-1">
+                                            <a t-if="is_html_type" href="#" class="o_action ms-4" data-model="product.product" t-att-data-res-id="variant['id']">
+                                                <span t-out="variant['name']">Acme Widget - Blue</span>
+                                            </a>
+                                            <span t-else="" class="ms-4" t-out="variant['name']">Acme Widget - Blue</span>
+                                        </td>
+                                        <td groups="uom.group_uom" class="px-1" t-out="product['uom']"/>
+                                        <t t-foreach="quantities" t-as="qty">
+                                            <td class="text-end px-1">
+                                                <span t-out="variant['price'][qty]" t-options='{"widget": "monetary", "display_currency": pricelist.currency_id}'>$14.00</span>
+                                            </td>
+                                        </t>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="oe_structure"></div>
+        </div>
+    </template>
+
+    <template id="report_pricelist">
+        <t t-call="web.html_container">
+            <div class="page">
+                <t t-if="is_html_type">
+                    <t t-call="product.report_pricelist_page"/>
+                </t>
+                <t t-else="">
+                    <t t-call="web.external_layout">
+                        <t t-call="product.report_pricelist_page"/>
+                    </t>
+                </t>
+            </div>
+            <p style="page-break-before:always;"> </p>
+            <div class="oe_structure"></div>
+        </t>
+    </template>
+
+</odoo>

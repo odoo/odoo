@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record id="website_event_menu_view_search" model="ir.ui.view">
+        <field name="name">website.event.menu.view.search</field>
+        <field name="model">website.event.menu</field>
+        <field name="arch" type="xml">
+            <search string="Website Event Menus">
+                <field name="menu_id"/>
+                <field name="event_id"/>
+                <field name="menu_type"/>
+                <field name="view_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="website_event_menu_view_form" model="ir.ui.view">
+        <field name="name">website.event.menu.view.form</field>
+        <field name="model">website.event.menu</field>
+        <field name="arch" type="xml">
+            <form string="Website Event Menu">
+                <sheet>
+                    <group>
+                        <field name="menu_id"/>
+                        <field name="event_id"/>
+                        <field name="menu_type"/>
+                        <field name="view_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="website_event_menu_view_tree" model="ir.ui.view">
+        <field name="name">website.event.menu.view.list</field>
+        <field name="model">website.event.menu</field>
+        <field name="arch" type="xml">
+            <list string="Website Event Menus">
+                <field name="menu_id"/>
+                <field name="event_id"/>
+                <field name="menu_type"/>
+                <field name="view_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="website_event_menu_action" model="ir.actions.act_window">
+        <field name="name">Menus</field>
+        <field name="res_model">website.event.menu</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No Website Menu Items yet!
+            </p><p>
+                This technical menu displays all event sub-menu items.
+            </p>
+        </field>
+    </record>
+
+</data>
+</odoo>

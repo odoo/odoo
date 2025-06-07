@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="partner_demo_company_tz" model="res.partner">
+        <field name="name">TZ Company</field>
+        <field name="vat">TZ000111111</field>
+        <field name="street">KN 4 St</field>
+        <field name="city">Dodoma</field>
+        <field name="country_id" ref="base.tz"/>
+        <field name="zip">00000</field>
+        <field name="phone">+250 534 567</field>
+        <field name="email">info@company.tzexample.com</field>
+        <field name="website">www.tzexample.com</field>
+        <field name="is_company" eval="True"/>
+    </record>
+
+    <record id="demo_company_tz" model="res.company">
+        <field name="name">TZ Company</field>
+        <field name="partner_id" ref="partner_demo_company_tz"/>
+    </record>
+
+    <record id="demo_bank_tz" model="res.partner.bank">
+        <field name="acc_number">BKIGTZRR</field>
+        <field name="partner_id" ref="partner_demo_company_tz"/>
+        <field name="company_id" ref="demo_company_tz"/>
+    </record>
+
+    <function model="res.company" name="_onchange_country_id">
+        <value eval="[ref('demo_company_tz')]"/>
+    </function>
+
+    <function model="res.users" name="write">
+        <value eval="[ref('base.user_root'), ref('base.user_admin'), ref('base.user_demo')]"/>
+        <value eval="{'company_ids': [(4, ref('l10n_tz_account.demo_company_tz'))]}"/>
+    </function>
+
+    <function model="account.chart.template" name="try_loading">
+        <value eval="[]"/>
+        <value>tz</value>
+        <value model="res.company" eval="obj().env.ref('l10n_tz_account.demo_company_tz')"/>
+        <value name="install_demo" eval="True"/>
+    </function>
+</odoo>

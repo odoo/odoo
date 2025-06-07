@@ -1,0 +1,17 @@
+.o-mail-ChatWindow-command {
+    @media (hover: none) {
+        .fa-phone, .fa-video-camera {
+            color: $success !important;
+        }
+    }
+    @media (hover: hover) {
+        &:hover {
+            &:has(.fa-phone), &:has(.fa-video-camera) {
+                outline: 1px solid rgba($success, .35);
+                i {
+                    color: lighten($success, 5%) !important;
+                }
+            }
+        }
+    }
+}

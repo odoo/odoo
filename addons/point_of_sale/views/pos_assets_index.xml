@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- This contains the tour assets. They are included during testing. -->
+<template id="point_of_sale.index" name="POS Index">&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <title>Odoo POS</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+
+        <style> body { background: #222; } </style>
+
+        <script type="text/javascript">
+            var odoo = <t t-out="json.dumps({
+                'csrf_token': request.csrf_token(None),
+                '__session_info__': session_info,
+                'from_backend': from_backend,
+                'login_number': login_number,
+                'pos_session_id': pos_session_id,
+                'pos_config_id': pos_config_id,
+                'access_token': access_token,
+                'use_pos_fake_tours': use_pos_fake_tours,
+                'debug': debug,
+            })"/>;
+            // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
+            // what is genuinely necessary, and not the whole backend.
+            odoo.loadMenusPromise = Promise.resolve();
+        </script>
+
+        <t t-call="web.conditional_assets_tests">
+            <t t-set="ignore_missing_deps" t-value="True"/>
+        </t>
+        <t t-call-assets="point_of_sale.assets_prod" />
+        <t t-if="use_pos_fake_tours">
+            <t t-call-assets="point_of_sale.assets_debug" />
+        </t>
+    </head>
+    <body class="pos">
+    </body>
+</html>
+</template>
+
+</odoo>

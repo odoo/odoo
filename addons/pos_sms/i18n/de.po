@@ -1,0 +1,69 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_sms
+# 
+# Translators:
+# Larissa Manderfeld, 2024
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:55+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: de\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_sms
+#: model:sms.template,body:pos_sms.sms_template_data_point_of_sale
+msgid ""
+"\n"
+"                {{ object.company_id.name }} : Your order with reference: {{ object.pos_reference }} was processed succesfully with amount {{  object.currency_id.format(object.amount_total) }}. Use {{ object.pos_reference }}  for further reference\n"
+"            "
+msgstr ""
+"\n"
+"                {{ object.company_id.name }} : Ihre Bestellung mit Referenz: {{ object.pos_reference }} in Höhe von {{  object.currency_id.format(object.amount_total) }} wurde erfolgreich verarbeitet. Verwenden Sie {{ object.pos_reference }} zur weiteren Kommunikation\n"
+"            "
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
+
+#. module: pos_sms
+#: model:sms.template,name:pos_sms.sms_template_data_point_of_sale
+msgid "POS: Sent Order Confirmation via Text"
+msgstr "Kassensystem: per Textnachricht gesendete Bestellbestätigung"
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Kassensystem-Konfiguration"
+
+#. module: pos_sms
+#: model:ir.model,name:pos_sms.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "Kassenaufträge"
+
+#. module: pos_sms
+#: model_terms:ir.ui.view,arch_db:pos_sms.pos_sms_res_config_settings_view_form
+msgid "Receipt template"
+msgstr "Kassenbonvorlage"
+
+#. module: pos_sms
+#: model:ir.model.fields,help:pos_sms.field_pos_config__sms_receipt_template_id
+#: model:ir.model.fields,help:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
+msgid "SMS will be sent to the customer based on this template"
+msgstr "SMS werden basierend auf dieser Vorlage an den Kunden gesendet"
+
+#. module: pos_sms
+#: model:ir.model.fields,field_description:pos_sms.field_pos_config__sms_receipt_template_id
+#: model:ir.model.fields,field_description:pos_sms.field_res_config_settings__pos_sms_receipt_template_id
+msgid "Sms Receipt template"
+msgstr "SMS-Belegvorlage"

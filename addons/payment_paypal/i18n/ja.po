@@ -1,0 +1,182 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_paypal
+# 
+# Translators:
+# Wil Odoo, 2024
+# Junko Augias, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Junko Augias, 2025\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client ID"
+msgstr "クライアントID"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Client Secret"
+msgstr "クライアントシークレット"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__code
+msgid "Code"
+msgstr "コード"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "APIへの接続を確立できませんでした。"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "Could not generate a new access token."
+msgstr "新しいアクセストークンを生成できませんでした。"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_email_account
+msgid "Email"
+msgstr "メール"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Generate your webhook"
+msgstr "Webhookを作成"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "How to configure your paypal account?"
+msgstr "PayPalアカウントをどのように設定すればよいですか？"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/controllers/main.py:0
+msgid "Invalid response format, can't normalize."
+msgstr "無効な応答形式、正規化できません。"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr " txn_id (%(txn_id)s) または txn_type (%(txn_type)s)用の欠損値"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "参照に一致する取引が見つかりません%s。"
+
+#. module: payment_paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_provider__code__paypal
+msgid "PayPal"
+msgstr "PayPal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token
+msgid "PayPal Access Token"
+msgstr "PayPalアクセストークン"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "PayPal Access Token Expiry"
+msgstr "PayPalアクセストークン期限"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_id
+msgid "PayPal Client ID"
+msgstr "PayPalクライアントID"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_secret
+msgid "PayPal Client Secret"
+msgstr "PayPalクライアントシークレット"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
+msgstr "PayPalトランザクションタイプ"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
+msgid "PayPal Webhook ID"
+msgstr "PayPal Webhook ID"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_provider
+msgid "Payment Provider"
+msgstr "決済プロバイダー"
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "決済トランザクション"
+
+#. module: payment_paypal
+#. odoo-javascript
+#: code:addons/payment_paypal/static/src/js/payment_form.js:0
+msgid "Payment processing failed"
+msgstr "支払処理に失敗しました"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "Received data with invalid payment status: %s"
+msgstr "無効な支払ステータスのデータを受信しました: %s"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "The communication with the API failed. Details: %s"
+msgstr "APIとの連絡に失敗しました。詳細: %s"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+msgid "The customer left the payment page."
+msgstr "顧客が支払ページを去りました。"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
+msgid "The moment at which the access token becomes invalid."
+msgstr "アクセスークンが無効になる瞬間。"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr "Paypalのアカウントを識別するためにのみ使用される公開ビジネスEメール"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
+msgid "The short-lived token used to access Paypal APIs"
+msgstr "Paypal APIにアクセスするために使用される短命トークン"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "この決済プロバイダーのテクニカルコード。"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+msgid "Webhook ID"
+msgstr "Webhook ID"
+
+#. module: payment_paypal
+#. odoo-python
+#: code:addons/payment_paypal/models/payment_provider.py:0
+msgid "You must have an HTTPS connection to generate a webhook."
+msgstr "Webhookを作成するにはHTTPS接続が必要です。"

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.l10n_in</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="invoicing_settings" position="inside">
+                <setting help="Use this if setup with Reseller(E-Commerce)." name="ecommerce_reseller_setting" title="Manage Reseller(E-Commerce)" invisible="country_code != 'IN'">
+                    <field name="group_l10n_in_reseller"/>
+                </setting>
+            </block>
+            <xpath expr="//app[@name='account']" position="inside">
+                <div id="india_integration_section">
+                    <block title="Indian Integration" id="india_localization" invisible="country_code != 'IN'">
+                        <setting name="india_production_setting"
+                                 string="Production Environment"
+                                 help="Activate this to start using Indian services in the production environment.">
+                            <field name="l10n_in_edi_production_env"/>
+                            <div class='mt8'
+                                 invisible="not l10n_in_edi_production_env or (not module_l10n_in_edi and not module_l10n_in_gstin_status and not module_l10n_in_edi_ewaybill)">
+                                <button name="l10n_in_edi_buy_iap"
+                                        title="Costs 1 credit per transaction. Free 200 credits will be available for the first time."
+                                        icon="fa-arrow-right"
+                                        type="object"
+                                        string="Buy credits"
+                                        class="btn-link"/>
+                            </div>
+                        </setting>
+                        <setting name="l10n_in_tds_tcs"
+                                 help="Enable this to activate Tax Deduction Source and Tax Collection Source."
+                                 string="TDS and TCS"
+                                 documentation="/applications/finance/fiscal_localizations/india.html">
+                            <field name="module_l10n_in_withholding"/>
+                        </setting>
+                        <setting name="electronic_invoices_in"
+                                 help="Connect to NIC (National Informatics Center) to submit invoices on posting."
+                                 company_dependent="1"
+                                 documentation="/applications/finance/fiscal_localizations/india.html#india-e-invoicing">
+                            <field name="module_l10n_in_edi"/>
+                        </setting>
+                        <setting name="electronic_waybill_in"
+                                 help="Connect to NIC (National Informatics Center) to submit e-waybill on posting."
+                                 company_dependent="1"
+                                 documentation="/applications/finance/fiscal_localizations/india.html#indian-e-waybill">
+                            <field name="module_l10n_in_edi_ewaybill" class="oe_inline"/>
+                        </setting>
+                        <setting name="india_gstin_status_api_settings"
+                                 string="Check GST Number Status"
+                                 help="Enable this to check the GST Number status"
+                                 documentation="/applications/finance/fiscal_localizations/india.html#indian-check-gstin-status">
+                            <field name="module_l10n_in_gstin_status" class="oe_inline"/>
+                        </setting>
+                    </block>
+
+                </div>
+            </xpath>
+            <app name="account" position="inside">
+                <block title="Product" name="l10n_in_product_setting_container" invisible="country_code != 'IN'">
+                    <setting string="HSN/SAC Validation" help="HSN/SAC Digit Validation for GST Compliance based on your Aggregate Annual Turnover (AATO).">
+                        <field name="l10n_in_hsn_code_digit"/>
+                    </setting>
+                </block>
+            </app>
+            <block id="print_vendor_checks_setting_container" position="inside">
+                <setting id="vendor_payment_order_file" company_dependent="1"
+                    help="Generate Vendor Payment Order file(csv file), upload to your bank to make the payments" invisible="country_code != 'IN'">
+                    <field name="module_l10n_in_enet_batch_payment" widget="upgrade_boolean"/>
+                </setting>
+            </block>
+        </field>
+    </record>
+</odoo>

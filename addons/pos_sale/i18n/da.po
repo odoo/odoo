@@ -1,0 +1,415 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_sale
+# 
+# Translators:
+# Martin Trigaux, 2024
+# lhmflexerp <lhm@flexerp.dk>, 2024
+# Sanne Kristensen <sanne@vkdata.dk>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2024\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
+msgid "(tax incl.)"
+msgstr "(Inkl. moms)"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+msgid "<span style=\"margin: 0px 5px;\">:</span>"
+msgstr "<span style=\"margin: 0px 5px;\">:</span>"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "A new order has been created."
+msgstr "En ny ordre er blevet oprettet."
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount To Pay In POS"
+msgstr ""
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+msgid "Amount left to pay in POS to avoid double payment or double invoicing."
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "Apply a down payment (fixed amount)"
+msgstr "Anvend en forudbetaling (fast beløb)"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "Apply a down payment (percentage)"
+msgstr "Anvend en forudbetaling (procent)"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurer opsætning"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
+msgid "Currency Rate"
+msgstr "Valutakurs"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.message_body
+msgid "Delivered from"
+msgstr "Leveret fra"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
+msgid "Delivery Quantity"
+msgstr "Levering antal"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "Do you want to load the SN/Lots linked to the Sales Order?"
+msgstr "Ønsker du at indlæse SN/Lots knyttet til salgsordren?"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "Down Payment"
+msgstr "Aconto betaling"
+
+#. module: pos_sale
+#: model:product.template,name:pos_sale.default_downpayment_product_product_template
+msgid "Down Payment (POS)"
+msgstr "Forudbetaling (POS)"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__down_payment_details
+msgid "Down Payment Details"
+msgstr "Download betalingsdetaljer"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__down_payment_product_id
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_down_payment_product_id
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Down Payment Product"
+msgstr "Produkt til aconto fakturering"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+msgid ""
+"Down payment (ref: %(order_reference)s on \n"
+" %(date)s)"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "Due balance: %s"
+msgstr "Forfalden saldo: %s"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "Error amount too high"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
+msgid "From"
+msgstr "Fra"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
+msgid "Invoiced"
+msgstr "Faktureret"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid ""
+"It seems that you didn't configure a down payment product in your point of "
+"sale. You can go to your point of sale configuration to choose one."
+msgstr ""
+"Det lader til, at du ikke har opsat et produkt til forudbetaling i din "
+"kasse. Du kan gå til din kasseopsætning og vælge et."
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/sale_order.py:0
+msgid "Linked POS Orders"
+msgstr "Tilknyttede POS ordrer"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_origin_id
+msgid "Linked Sale Order"
+msgstr "Tilknyttet salgsordre"
+
+#. module: pos_sale
+#. odoo-python
+#: code:addons/pos_sale/models/pos_order.py:0
+msgid "Linked Sale Orders"
+msgstr "Tilknyttede salgsordrer"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "No down payment product"
+msgstr "Intet produkt til forudbetaling"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
+msgid "Open POS Sessions"
+msgstr "Åbne POS-sessioner"
+
+#. module: pos_sale
+#: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
+msgid "Open Sessions"
+msgstr "Åbne sessioner"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+msgid "Optional Products:"
+msgstr "Valgfrie produkter:"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__order_reference
+msgid "Order"
+msgstr "Ordre"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_line_ids
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__pos_order_line_ids
+msgid "Order lines Transfered to Point of Sale"
+msgstr "Ordrelinjer overført til Point of Sale"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+msgid "POS Order"
+msgstr "POS ordre"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
+msgid "Paid"
+msgstr "Betalt"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "POS konfiguration"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "Point of Sale linjer"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "POS ordrer"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_pos_session
+msgid "Point of Sale Session"
+msgstr "PoS session"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_config_ids
+msgid "Point of Sales"
+msgstr "POS"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
+msgid "Pos Order Count"
+msgstr "Pos Ordre antal"
+
+#. module: pos_sale
+#: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__done
+msgid "Posted"
+msgstr "Bogført"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_product_product
+msgid "Product Variant"
+msgstr "Varevariant"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
+msgid "Quotation/Order"
+msgstr "Tilbud/Ordre"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "SN/Lots Loading"
+msgstr "SN/Lots Loading"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/components/orderline/orderline.xml:0
+msgid "SO"
+msgstr "SO"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__sale_order_count
+msgid "Sale Order Count"
+msgstr "Salgsordre mængde"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales"
+msgstr "Salg"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_report
+msgid "Sales Analysis Report"
+msgstr "Analytisk salgsrapport"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Salgsordre"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Salgsordrelinje"
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_crm_team
+#: model:ir.model.fields,field_description:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order__crm_team_id
+#: model:ir.model.fields,field_description:pos_sale.field_pos_session__crm_team_id
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales Team"
+msgstr "Salgsteam"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
+msgid "Sales Team (PoS)"
+msgstr "Salgsteam (PoS)"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "Sales are reported to the following sales team"
+msgstr "Salg rapporteres til følgende salgs hold"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
+msgid "Session Running"
+msgstr "Kørende session"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
+msgid "Session Sale Amount"
+msgstr "Sessionssalg beløb"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
+msgid "Sessions Running"
+msgstr "Kørende sessioner"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/components/control_buttons/control_buttons.xml:0
+msgid "Set Sale Order"
+msgstr "Angiv salgsordre"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "Settle the order"
+msgstr "Afvikl ordren"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
+msgid "Source Sale Order Line"
+msgstr "Salgsordrelinjekilde"
+
+#. module: pos_sale
+#: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
+msgid "Status"
+msgstr "Status"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
+msgid ""
+"The rate of the currency to the currency of rate applicable at the date of "
+"the order"
+msgstr "Valutakursen til valuta på kursen anvendelig på datoen for ordren"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_pos_session__crm_team_id
+#: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
+msgid "This Point of sale's sales will be related to this Sales Team."
+msgstr "Dette point of sales salg vil blive relateret til dette salgs hold."
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
+msgid "This product will be applied when down payment is made"
+msgstr "Dette produkt tilføjes, når forudbetaling er lavet"
+
+#. module: pos_sale
+#: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
+#: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
+msgid "This product will be used as down payment on a sale order."
+msgstr "Dette produkt vil blive anvendt som forudbetaling på en salgsordre."
+
+#. module: pos_sale
+#: model:ir.model,name:pos_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Overfør"
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
+msgid ""
+"Transferred<br/>\n"
+"                                from Sale"
+msgstr ""
+
+#. module: pos_sale
+#: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
+msgid ""
+"Transferred<br/>\n"
+"                                to POS"
+msgstr ""
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid "What do you want to do?"
+msgstr "Hvad vil du gøre?"
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/models/pos_store.js:0
+msgid ""
+"You have tried to charge a down payment of %s but only %s remains to be "
+"paid, %s will be applied to the purchase order line."
+msgstr ""
+"Du har forsøgt at opkræve en udbetaling på %s, men der er kun %s tilbage, "
+"der skal betales, %s vil blive anvendt på indkøbsordrelinjen."
+
+#. module: pos_sale
+#. odoo-javascript
+#: code:addons/pos_sale/static/src/overrides/components/product_info_popup/product_info_popup.xml:0
+msgid "from"
+msgstr "fra"

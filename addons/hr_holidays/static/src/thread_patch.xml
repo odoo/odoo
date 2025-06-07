@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-Thread')]" position="before">
+            <div t-if="props.thread.model === 'discuss.channel' and props.thread.correspondent?.persona.outOfOfficeText" class="alert alert-primary rounded-0" t-esc="props.thread.correspondent.persona.outOfOfficeText" role="alert"/>
+        </xpath>
+    </t>
+</templates>

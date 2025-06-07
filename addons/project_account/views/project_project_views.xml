@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_tree_view_account_inherit" model="ir.ui.view">
+        <field name="name">project.project.list.view.account.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_project_form_view_account_inherit" model="ir.ui.view">
+        <field name="name">project.project.form.view.account.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_embedded_action_analytic_items" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">105</field>
+        <field name="name">Analytic Items</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_open_analytic_items</field>
+        <field name="context">{"from_embedded_action": true}</field>
+        <field name="groups_ids" eval="[(4, ref('analytic.group_analytic_accounting'))]" />
+        <field name="domain">[('account_id', '!=', False)]</field>
+    </record>
+
+</odoo>

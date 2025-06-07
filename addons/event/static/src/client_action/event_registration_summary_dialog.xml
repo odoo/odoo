@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="event.EventRegistrationSummaryDialog" >
+        <Dialog t-if="!dialogState.isHidden" size="'md'" title.translate="Home">
+            <div class="row">
+                <div class="col-lg-10 w-100 fs-2">
+                    <div t-if="['confirmed_registration', 'unconfirmed_registration'].includes(registrationStatus.value)" class="alert alert-success d-flex justify-content-center" role="alert">
+                        <i class="fa fa-solid fa-check-circle align-self-center me-2 ms-0 ms-sm-5"/>
+                        <span>Successfully registered!</span>
+                        <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="undoRegistration">
+                            Undo
+                        </button>
+                    </div>
+                    <div t-else="" class="alert alert-warning d-flex justify-content-center" role="alert">
+                        <i class="fa fa-solid fa-exclamation-circle me-2 align-self-center ms-0 ms-sm-5"/>
+                        <t t-if="registrationStatus.value === 'need_manual_confirmation'">
+                            <span>This ticket is for another event!<br/>
+                            Confirm attendance?</span>
+                        </t>
+                        <t t-elif="registrationStatus.value === 'not_ongoing_event'">
+                            <span>This ticket is not for an ongoing event</span>
+                        </t>
+                        <t t-elif="registrationStatus.value === 'canceled_registration'">
+                            <span>Cancelled registration</span>
+                        </t>
+                        <t t-elif="registrationStatus.value == 'already_registered'">
+                            <span>Ticket already scanned!</span>
+                        </t>
+                        <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="undoRegistration">
+                            Undo
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row fs-1">
+                <div class="col-lg-12 d-flex align-items-baseline gap-3">
+                    <t t-set="guest_label">Guest #</t>
+                    <t t-if="registration.name" t-out="registration.name"/>
+                    <t t-else="" t-out="guest_label + registration.id"/>
+                    <t t-if="registration.sale_status_value">
+                        <span class="badge rounded-pill" t-att-class="registration.has_to_pay ? 'text-bg-danger' : 'text-bg-success'">
+                            <t t-out="registration.sale_status_value"/>
+                        </span>
+                    </t>
+                </div>
+            </div>
+            <div id="registration_information" class="row mt-4">
+                <div class="col-lg-12">
+                    <table class="table table-striped fs-4">
+                        <tr t-if="registration.company_name"><td>Company</td><td><t t-out="registration.company_name"/></td></tr>
+                        <tr><td>Event</td><td><t t-out="registration.event_display_name"/></td></tr>
+                        <tr t-if="registration.ticket_name"><td>Ticket Type</td><td><t t-out="registration.ticket_name"/></td></tr>
+                        <tr t-if="registration.registration_answers &amp;&amp; registration.registration_answers.length > 0">
+                            <td class="d-flex">Answers</td>
+                            <td>
+                                <div class="d-flex flex-wrap p-0">
+                                    <span t-foreach="registration.registration_answers" t-as="registration_answer" t-key="registration_answer_index"
+                                    t-attf-class="o_tag o_tag_badge_text o_tag_color_#{registration_answer_index % 10} badge rounded-pill text-truncate p-1 me-1 mb-1"
+                                    t-out="registration_answer"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <select t-if="useIotPrinter" type="select" class="form-select w-75" t-model.number="printSettings.iotPrinterId" t-on-change="savePrintSettings">
+                    <option value="" disabled="true" t-att-selected="!printSettings.iotPrinterId">Select printer...</option>
+                    <option t-foreach="registration.iot_printers" t-as="printer" t-key="printer.id" t-att-value="printer.id">
+                        <t t-esc="printer.name" />
+                    </option>
+                </select>
+                <div t-if="useIotPrinter" class="form-check">
+                    <input id="autoprint" type="checkbox" class="form-check-input" t-model="printSettings.autoPrint" t-on-change="savePrintSettings"></input>
+                    <label for="autoprint" class="form-check-label">Auto-Print</label>
+                </div>
+            </div>
+            <t t-set-slot="footer">
+                <button t-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
+                <button t-att-disabled="!hasSelectedPrinter()" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
+                <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>

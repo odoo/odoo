@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ProjectRightSidePanel">
+        <div t-if="panelVisible" class="o_rightpanel ps-0 pt-0 bg-view border-start border-bottom overflow-auto">
+            <ProjectRightSidePanelSection
+                name="'stat_buttons'"
+                header="false"
+                show="!!state.data.buttons"
+                dataClassName="'ps-3'"
+            >
+                <div class="o_form_view">
+                    <div
+                        class="oe_button_box o-form-buttonbox d-print-none d-grid"
+                        t-attf-style="grid-template-columns: repeat({{ state.gridTemplateColumns }}, 1fr);"
+                    >
+                        <t t-foreach="state.data.buttons" t-as="button" t-key="button.sequence">
+                            <ViewButton
+                                t-if="button.show"
+                                defaultRank="'oe_stat_button'"
+                                className="'h-auto py-2 border border-start-0 border-top-0 text-start rounded-0'"
+                                icon="`fa-${button.icon}`"
+                                title="button.text"
+                                clickParams="_getStatButtonClickParams(button)"
+                                record="_getStatButtonRecordParams()"
+                            >
+                                <t t-set-slot="contents">
+                                    <div class="o_field_widget o_stat_info">
+                                        <span class="o_stat_value text-start">
+                                            <t t-esc="button.number"/>
+                                        </span>
+                                        <span class="o_stat_text">
+                                            <t t-esc="button.text"/>
+                                        </span>
+                                    </div>
+                                </t>
+                            </ViewButton>
+                        </t>
+                    </div>
+                </div>
+            </ProjectRightSidePanelSection>
+            <ProjectRightSidePanelSection
+                name="'milestones'"
+                show="!!state.data.milestones &amp;&amp; !!state.data.milestones.data"
+                dataClassName="'my-3'"
+                headerClassName="'border-bottom'"
+            >
+                <t t-set-slot="header">
+                    <span class="btn btn-secondary">
+                        <div class="o_add_milestone">
+                            <a t-on-click="addMilestone">Add Milestone</a>
+                        </div>
+                    </span>
+                </t>
+                <t t-set-slot="title">
+                    Milestones
+                </t>
+                <div t-foreach="state.data.milestones.data" t-as="milestone" t-key="milestone.id" class="o_rightpanel_data_row">
+                    <ProjectMilestone context="context" milestone="milestone" open.bind="openFormViewDialog" load.bind="loadMilestones"/>
+                </div>
+                <div t-if="state.data.milestones.data.length === 0" class="ps-3">
+                    <span class="text-muted fst-italic">
+                        Track major progress points that must be reached to achieve success.
+                    </span>
+                </div>
+            </ProjectRightSidePanelSection>
+            <ProjectRightSidePanelSection
+                name="'profitability'"
+                show="state.data.show_project_profitability_helper"
+            >
+                <t t-set-slot="title">
+                    Profitability
+                </t>
+                <ProjectProfitability
+                    t-if="showProjectProfitability"
+                    data="state.data.profitability_items"
+                    labels="state.data.profitability_labels"
+                    formatMonetary="formatMonetary.bind(this)"
+                    onProjectActionClick="onProjectActionClick.bind(this)"
+                    onClick="(params) => this.onProjectActionClick(params)"
+                />
+                <div t-elif="state.data.show_project_profitability_helper" class="ps-3">
+                    <span class="text-muted fst-italic">
+                        Track project costs, revenues, and margin by setting the analytic account associated with the project on relevant documents.
+                    </span>
+                </div>
+            </ProjectRightSidePanelSection>
+        </div>
+        <!-- If this is called from notif, multiples updates but no specific project -->
+        <div t-else=""/>
+    </t>
+
+</templates>

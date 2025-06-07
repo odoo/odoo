@@ -1,0 +1,120 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* crm_iap_enrich
+# 
+# Translators:
+# Wil Odoo, 2024
+# Aleš Pipan, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-26 21:55+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Aleš Pipan, 2025\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid ""
+"<span> No company data found based on the email address or email address is "
+"one of an email provider. No credit was consumed. </span>"
+msgstr ""
+"<span> Na podlagi e-poštnega naslova ni bilo mogoče najti nobenih podatkov o"
+" podjetju ali pa e-poštni naslov pripada ponudniku e-pošte. Kredit ni bil "
+"porabljen. </span>"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+msgid ""
+"<span>Enrichment could not be done because the email address does not look "
+"valid.</span>"
+msgstr ""
+"<span>Obogatitve ni bilo mogoče izvesti, ker e-poštni naslov ni videti "
+"veljaven.</span>"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "Dovoli ročno obogatitev"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "An error occurred during lead enrichment"
+msgstr "Med obogatitvijo svinca je prišlo do napake"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.ir_cron_lead_enrichment_ir_actions_server
+msgid "CRM: enrich leads (IAP)"
+msgstr "CRM: obogatitev potencialnih strank (IAP)"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "Uredi nastavitve"
+
+#. module: crm_iap_enrich
+#: model:ir.actions.server,name:crm_iap_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "Obogatitev"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich lead with company data"
+msgstr "Obogatite potencialne stranke s podatki podjetja"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.crm_lead_view_form
+msgid "Enrich opportunity with company data"
+msgstr "Obogatite priložnost s podatki o podjetju"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,field_description:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid "Enrichment done"
+msgstr "Obogatitev opravljena"
+
+#. module: crm_iap_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_no_email
+#: model_terms:ir.ui.view,arch_db:crm_iap_enrich.mail_message_lead_enrich_notfound
+msgid "Lead Enrichment (based on email address)"
+msgstr "Obogatitev potencialnih strank (na podlagi e-poštnega naslova)"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Lead enriched based on email address"
+msgstr "Obogatitev potencialnih strank na podlagi e-poštnega naslova"
+
+#. module: crm_iap_enrich
+#: model:ir.model,name:crm_iap_enrich.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Indic/Priložnost"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "Not enough credits for Lead Enrichment"
+msgstr "Ni dovolj kreditov za obogatitev svinca"
+
+#. module: crm_iap_enrich
+#. odoo-python
+#: code:addons/crm_iap_enrich/models/crm_lead.py:0
+msgid "The leads/opportunities have successfully been enriched"
+msgstr "Potencialne stranke/priložnosti so bile uspešno obogatene"
+
+#. module: crm_iap_enrich
+#: model:ir.model.fields,help:crm_iap_enrich.field_crm_lead__iap_enrich_done
+msgid ""
+"Whether IAP service for lead enrichment based on email has been performed on"
+" this lead."
+msgstr ""
+"Ali je bila za to potencialno stranko izvedena storitev IAP za obogatitev "
+"potencialnih strank na podlagi e-pošte."

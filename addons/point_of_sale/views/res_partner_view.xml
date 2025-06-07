@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <record id="view_partner_property_form" model="ir.ui.view">
+            <field name="name">res.partner.pos.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="4"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button" type="object" name="action_view_pos_order"
+                        groups="point_of_sale.group_pos_user"
+                        context="{'default_partner_id': id}"
+                        invisible="pos_order_count == 0"
+                        icon="fa-shopping-bag">
+                        <field string="PoS Orders" name="pos_order_count" widget="statinfo"/>
+                    </button>
+                </div>
+                <xpath expr="//group[@name='purchase']" position="after">
+                    <group string="Point Of Sale" name="point_of_sale" groups="point_of_sale.group_pos_user">
+                        <field name="barcode"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_pos_kanban" model="ir.ui.view">
+            <field name="name">res.partner.pos.kanban.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//footer/div" position="inside">
+                    <a t-if="record.pos_order_count.value>0" type="object" name="action_view_pos_order" groups="point_of_sale.group_pos_user" class="btn btn-sm btn-link smaller" role="button">
+                        <i class="fa fa-fw fa-shopping-bag me-1" aria-label="Shopping cart" role="img" title="Shopping cart"/>
+                        <field name="pos_order_count"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+        <record id="res_partner_action_edit_pos" model="ir.actions.act_window">
+            <field name="name">Edit Partner</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="base.view_partner_form"/>
+        </record>
+</odoo>

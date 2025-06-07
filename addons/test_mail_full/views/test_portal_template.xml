@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="test_portal_template" name="Test Portal" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <!-- chatter -->
+            <div>
+                <h3>Communication history</h3>
+                <t t-call="portal.message_thread"/>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.KanbanRecordQuickCreate">
+        <KanbanQuickCreateController t-if="state.isLoaded" t-props="quickCreateProps" />
+    </t>
+
+    <t t-name="web.KanbanQuickCreateController">
+        <div
+            class="o_kanban_quick_create o_field_highlight shadow"
+            t-att-class="{ o_disabled: state.disabled, 'w-100 mx-0': props.listIsGrouped }"
+            t-ref="root"
+        >
+            <t t-component="props.Renderer" class="'o_form_view o_xxs_form_view o_kanban_quick_create_form p-0'" record="model.root" Compiler="props.Compiler" archInfo="props.archInfo"/>
+            <div class="d-flex flex-wrap justify-content-end gap-1">
+                <button class="btn btn-primary o_kanban_add me-1" t-on-click="() => this.validate('add')">
+                    Add
+                </button>
+                <button class="btn btn-secondary o_kanban_edit me-1" t-on-click="() => this.validate('edit')">
+                    Edit
+                </button>
+                <span class="flex-grow-1"></span>
+                <button class="btn btn-secondary o_kanban_cancel" t-on-click="() => this.cancel(true)">
+                    <i class="fa fa-trash" />
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

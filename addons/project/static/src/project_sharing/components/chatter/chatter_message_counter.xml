@@ -1,0 +1,16 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-name="project.ChatterMessageCounter">
+        <div class="o_message_counter d-flex justify-content-center align-items-center">
+            <t t-if="props.count">
+                <span class="fa fa-comments" />
+                <span class="o_message_count px-1"> <t t-esc="props.count"/> </span>
+                comments
+            </t>
+            <span t-else="">
+                There are no comments for now.
+            </span>
+        </div>
+    </t>
+
+</templates>

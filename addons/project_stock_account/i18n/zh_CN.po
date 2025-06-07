@@ -1,0 +1,93 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* project_stock_account
+# 
+# Translators:
+# 何彬 <vnsoft.he@gmail.com>, 2024
+# Wil Odoo, 2024
+# Chloe Wang, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Chloe Wang, 2025\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/stock_move.py:0
+msgid ""
+"'%(missing_plan_names)s' analytic plan(s) required on the project "
+"'%(project_name)s' linked to the stock picking."
+msgstr "'%(missing_plan_names)s' 分析计划的需求在与库存调拨关联的项目 '%(project_name)s' 中。"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_stock_picking_type__analytic_costs
+msgid "Analytic Costs"
+msgstr "分析成本"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "分析行"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_account_analytic_applicability
+msgid "Analytic Plan's Applicabilities"
+msgstr "分析方案的适用性"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_line__category
+msgid "Category"
+msgstr "类别"
+
+#. module: project_stock_account
+#: model:ir.model.fields,field_description:project_stock_account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "域"
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_line__category__picking_entry
+msgid "Inventory Transfer"
+msgstr "库存转移"
+
+#. module: project_stock_account
+#. odoo-python
+#: code:addons/project_stock_account/models/project_project.py:0
+msgid "Materials"
+msgstr "材料"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_picking_type
+msgid "Picking Type"
+msgstr "拣货类型"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_project_project
+msgid "Project"
+msgstr "项目"
+
+#. module: project_stock_account
+#: model:ir.model,name:project_stock_account.model_stock_move
+msgid "Stock Move"
+msgstr "库存移动"
+
+#. module: project_stock_account
+#: model:ir.model.fields.selection,name:project_stock_account.selection__account_analytic_applicability__business_domain__stock_picking
+msgid "Stock Picking"
+msgstr "库存拣货"
+
+#. module: project_stock_account
+#: model:ir.model.fields,help:project_stock_account.field_stock_picking_type__analytic_costs
+msgid ""
+"Validating stock pickings will generate analytic entries for the selected "
+"project. Products set for re-invoicing will also be billed to the customer."
+msgstr "验证库存调拨将为选定项目生成分析条目。设定为重新开具发票的产品也将向客户开立账单。"

@@ -1,0 +1,9 @@
+.s_text_cover {
+    // Needed to be able to stretch the inner container so that
+    // the snippet works with the 50% and 100% height
+    > *:not(.o_scroll_button) {
+        &, > .row {
+            min-height: inherit;
+        }
+    }
+}

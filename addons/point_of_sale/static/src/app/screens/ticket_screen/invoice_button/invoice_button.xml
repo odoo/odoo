@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.InvoiceButton">
+        <button class="control-button btn btn-light btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.click()" t-ref="invoice-button">
+            <i class="fa fa-file-pdf-o me-1"></i>
+            <span> </span>
+            <span><t t-esc="commandName"></t></span>
+        </button>
+    </t>
+
+</templates>

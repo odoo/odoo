@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StatusBarButtons">
+        <div class="o_statusbar_buttons d-flex align-items-center align-content-around flex-wrap gap-1">
+            <t t-foreach="visibleSlotNames" t-as="slot" t-key="slot">
+                <t t-slot="{{ slot }}" />
+            </t>
+        </div>
+    </t>
+
+</templates>

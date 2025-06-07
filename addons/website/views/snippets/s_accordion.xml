@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_accordion" name="Accordion">
+<t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+    <div t-attf-class="s_accordion" data-name="Accordion">
+        <div id="myCollapse" t-attf-class="{{extra_classes}} accordion">
+            <div class="accordion-item position-relative z-1" data-name="Accordion Item">
+                <button type="button" t-attf-id="accordion-button{{uniq}}_1" class="accordion-header accordion-button justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_1" t-attf-aria-controls="myCollapseTab{{uniq}}_1" data-bs-toggle="collapse" aria-expanded="true"><span class="flex-grow-1">What services does your company offer ?</span></button>
+                <div t-attf-id="myCollapseTab{{uniq}}_1" class="accordion-collapse collapse show" data-bs-parent="#myCollapse" role="region" t-attf-aria-labelledby="accordion-button{{uniq}}_1">
+                    <div class="accordion-body">
+                        <p>Our company specializes in consulting, product development, and customer support. We tailor our services to fit the unique needs of businesses across various sectors, helping them grow and succeed in a competitive market.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item position-relative z-1" data-name="Accordion Item">
+                <button type="button" t-attf-id="accordion-button{{uniq}}_2" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_2" t-attf-aria-controls="myCollapseTab{{uniq}}_2" data-bs-toggle="collapse" aria-expanded="false"><span class="flex-grow-1">How can I contact customer support ?</span></button>
+                <div t-attf-id="myCollapseTab{{uniq}}_2" class="accordion-collapse collapse" data-bs-parent="#myCollapse" role="region" t-attf-aria-labelledby="accordion-button{{uniq}}_2">
+                    <div class="accordion-body">
+                        <p>You can reach our customer support team by emailing info@yourcompany.example.com, calling +1 555-555-5556, or using the live chat on our website. Our dedicated team is available 24/7 to assist with any inquiries or issues.</p>
+                        <p>We’re committed to providing prompt and effective solutions to ensure your satisfaction.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item position-relative z-1" data-name="Accordion Item">
+                <button type="button" t-attf-id="accordion-button{{uniq}}_3" class="accordion-header accordion-button collapsed justify-content-between gap-2 bg-transparent h6-fs fw-bold text-decoration-none text-reset transition-none" t-attf-data-bs-target="#myCollapseTab{{uniq}}_3" t-attf-aria-controls="myCollapseTab{{uniq}}_3" data-bs-toggle="collapse" aria-expanded="false"><span class="flex-grow-1">What is your return policy ?</span></button>
+                <div t-attf-id="myCollapseTab{{uniq}}_3" class="accordion-collapse collapse" data-bs-parent="#myCollapse" role="region" t-attf-aria-labelledby="accordion-button{{uniq}}_3">
+                    <div class="accordion-body">
+                        <p>We offer a 30-day return policy for all products. Items must be in their original condition, unused, and include the receipt or proof of purchase. Refunds are processed within 5-7 business days of receiving the returned item.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_accordion_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_accordion" data-target=".accordion">
+            <we-select string="Style">
+                <we-button title="Boxed" data-name="accordion_style_boxed_opt" data-select-class="">Boxed</we-button>
+                <we-button title="Highlight Active" data-select-class="s_accordion_highlight">Highlight Active</we-button>
+            </we-select>
+            <we-checkbox string="Hide Borders" class="o_we_sublevel_1" data-select-class="accordion-flush" data-dependencies="accordion_style_boxed_opt"/>
+            <we-input string="Round Corners" class="o_we_sublevel_1"
+                data-css-property="--accordion-border-radius"
+                data-unit="px"
+                data-select-style="0"
+                data-apply-to=".accordion-item"
+                />
+            <we-button-group string="Icon Position" data-apply-to=".accordion-header">
+                <we-button title="Left" data-select-class="justify-content-end flex-row-reverse"
+                    data-img="/website/static/src/img/snippets_options/pos_left.svg"/>
+                <we-button title="Right" data-select-class="justify-content-between"
+                    data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
+            </we-button-group>
+        </div>
+        <div data-selector=".s_accordion .accordion-item">
+            <we-colorpicker string="Colors"
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="bg-"
+                data-select-color-combination=""
+                data-with-combinations="selectColorCombination"
+                data-with-gradients="true"
+                data-prevent-important="true"
+            />
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_accordion_000_scss" model="ir.asset">
+    <field name="name">Accordion 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_accordion/000.scss</field>
+</record>
+
+</odoo>

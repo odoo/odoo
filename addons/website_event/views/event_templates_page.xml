@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Event -->
+<template id="layout" name="Event">
+    <t t-call="website.layout">
+        <!-- Options -->
+        <t t-set="opt_events_list_categories" t-value="is_view_active('website_event.opt_events_list_categories')"/>
+        <div id="wrap" t-attf-class="o_wevent_event js_event d-flex flex-column h-100 #{'o_wevent_hide_sponsors' if hide_sponsors else ''}">
+            <t t-if="not hide_submenu" t-call="website_event.navbar"/>
+            <t t-out="0"/>
+            <t t-set="editor_sub_message">Following content will appear on all events.</t>
+            <div class="oe_structure oe_empty" id="oe_structure_website_event_layout_1" t-att-data-editor-sub-message="editor_sub_message"/>
+        </div>
+
+        <!-- The registration modal is available in any event page  -->
+        <t t-call="website_event.modal_ticket_registration"/>
+    </t>
+</template>
+
+<template id="navbar" name="Event Navbar">
+    <t t-set="is_rendering_cta" t-value="event.event_registrations_open and not hide_register_cta"/>
+
+    <section id="o_wevent_event_submenu">
+        <!-- Mobile -->
+        <div id="o_wevent_submenu_mobile" class="container d-flex d-lg-none align-items-center mt-3 mb-3 mb-lg-2">
+            <a t-if="navbar__back_url" t-att-href="navbar__back_url" t-att-title="navbar__back_title or 'Go back'">
+                <i class="oi oi-chevron-left"/>
+                <span t-out="navbar__back_text or 'Go back'"/>
+            </a>
+            <a t-else="" href="/event" title="All Events">
+                <i class="oi oi-chevron-left"/>
+                <span>All Events</span>
+            </a>
+            <!-- Add Register additional CTA button, in addition to menus -->
+            <a t-if="is_rendering_cta"
+                t-att-href="'/event/%s/register' % (slug(event))"
+                t-attf-class="btn btn-primary ms-auto"
+                title="Registration">
+                Registration
+            </a>
+
+            <t t-call="website_event.navbar_dropdown"/>
+        </div>
+
+        <!-- Desktop -->
+        <div id="o_wevent_submenu_desktop" class="d-none d-lg-block mt-3 mb-3 mb-lg-2">
+            <div class="container">
+                <div class="d-flex align-items-center justify-content-between">
+                    <nav class="d-flex flex-wrap justify-content-between align-items-center gap-2 flex-grow-1">
+                        <ul class="breadcrumb p-0 m-0">
+                            <li class="breadcrumb-item">
+                                <a href="/event" title="Back to All Events">All Events</a>
+                            </li>
+                            <t t-if="navbar__back_url">
+                                <li class="breadcrumb-item">
+                                    <a t-attf-href="/event/{{slug(event)}}" t-attf-title="Back to {{event.name}}" t-field="event.name"/>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a t-att-href="navbar__back_url" t-att-title="navbar__back_title" t-out="navbar__back_text"/>
+                                </li>
+                            </t>
+                            <t t-else="">
+                                <li class="breadcrumb-item active" aria-current="page"><span class="pe-3" t-field="event.name"/></li>
+                            </t>
+                        </ul>
+                        <ul t-if="not navbar__back_url" class="nav" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+                            <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                                <t t-call="website.submenu">
+                                    <t t-set="item_class" t-value="'nav-item'"/>
+                                    <t t-set="link_class" t-value="'nav-link text-nowrap'"/>
+                                </t>
+                            </t>
+                        </ul>
+                    </nav>
+
+                    <!-- Workaround to avoid flickering while navigating between pages with and without CTA -->
+                    <span t-if="not is_rendering_cta" aria-hidden="true" class="btn invisible w-0 px-0">&#160;</span>
+
+                    <div t-else="" class="ms-3">
+                        <t t-call="website_event.registration_template"/>
+                    </div>
+
+                    <t t-if="navbar__back_url" t-call="website_event.navbar_dropdown"/>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="navbar_dropdown" name="Event Navbar Dropdown">
+   <div t-if="len(event.menu_id.child_id) &gt; 1" t-attf-class="dropdown o-dropdown--no-caret {{not is_rendering_cta and 'ms-auto' or 'ms-2'}}">
+        <button class="dropdown-toggle o-no-caret btn btn-light" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa fa-bars" role="img"/>
+        </button>
+        <ul class="dropdown-menu" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id" role="menu">
+            <li><h6 class="dropdown-header" t-field="event.name"/></li>
+
+            <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                <t t-call="website.submenu">
+                    <t t-set="link_class" t-value="'dropdown-item ps-4'"/>
+                </t>
+            </t>
+        </ul>
+    </div>
+</template>
+
+</odoo>

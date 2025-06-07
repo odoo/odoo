@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_mega_menu_thumbnails" name="Menu - Thumbnails" groups="base.group_user">
+    <section class="s_mega_menu_thumbnails pt24 o_colored_level o_cc o_cc1">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8 pt32 px-0">
+                    <div class="container">
+                        <div class="row">
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_1"/>
+                                <t t-set="_text">Laptops</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_2"/>
+                                <t t-set="_text">Mouse</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_3"/>
+                                <t t-set="_text">Keyboards</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_4"/>
+                                <t t-set="_text">Printers</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_5"/>
+                                <t t-set="_text">Storage</t>
+                            </t>
+
+                            <div class="w-100 d-none d-lg-block"/>
+
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_6"/>
+                                <t t-set="_text">Tablets</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_7"/>
+                                <t t-set="_text">Phones</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_8"/>
+                                <t t-set="_text">Screens</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_9"/>
+                                <t t-set="_text">Gaming</t>
+                            </t>
+                            <t t-call="website.s_mega_menu_thumbnails_item">
+                                <t t-set="_img_src" t-valuef="/web/image/website.s_mega_menu_thumbnails_default_image_10"/>
+                                <t t-set="_text">Sound</t>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 text-center py-2">
+                    <a href="#" class="nav-link p-0 o_default_snippet_text" data-name="Menu Item">
+                        <img class="img-fluid rounded shadow" src="/web/image/website.s_mega_menu_thumbnails_default_image_11" alt=""/>
+                        <span class="d-block p-2 small">
+                            <b>Discover our new products</b>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="s_mega_menu_thumbnails_footer px-0">
+            <div class="container row mx-auto px-0 w-100 align-items-center">
+                <div class="col-12 col-lg-3 d-flex justify-content-center align-items-center py-2">
+                    <p class="text-muted align-middle m-0">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-cube me-2"></i> Free returns
+                    </p>
+                </div>
+                <div class="col-12 col-lg-3 d-flex justify-content-center align-items-center py-2">
+                    <p class="text-muted align-middle m-0">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-shopping-basket me-2"></i> Pickup in store
+                    </p>
+                </div>
+                <div class="col-12 col-lg-3 d-flex justify-content-center align-items-center py-2">
+                    <p class="text-muted align-middle m-0">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-truck me-2"></i> Express delivery
+                    </p>
+                </div>
+                <div class="col-12 col-lg-3 py-2">
+                    <a href="#" class="btn btn-secondary d-block o_default_snippet_text">
+                        <i class="s_mega_menu_thumbnails_icon fa fa-comments me-2"></i> Contact us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_mega_menu_thumbnails_item">
+    <div class="col-6 col-lg-2 text-center py-2">
+        <a href="#" class="nav-link o_default_snippet_text p-0" data-name="Menu Item">
+            <img class="img-fluid rounded shadow" t-att-src="_img_src" alt=""/>
+            <br/>
+            <span class="d-block p-2 small">
+                <b>
+                    <t t-esc="_text"/>
+                </b>
+            </span>
+        </a>
+    </div>
+</template>
+
+<record id="website.s_mega_menu_thumbnails_000_scss" model="ir.asset">
+    <field name="name">Menu - Thumbnails 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_mega_menu_thumbnails/000.scss</field>
+</record>
+
+</odoo>

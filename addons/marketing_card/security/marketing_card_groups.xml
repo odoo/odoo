@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+    <record id="module_category_marketing_card" model="ir.module.category">
+        <field name="name">Marketing Card</field>
+        <field name="description">Helps you manage marketing card campaigns.</field>
+        <field name="sequence">18</field>
+    </record>
+
+    <record id="marketing_card_group_user" model="res.groups">
+        <field name="name">Marketing Card User</field>
+        <field name="category_id" ref="module_category_marketing_card"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('mass_mailing.group_mass_mailing_user'))]"/>
+    </record>
+
+    <record id="marketing_card_group_manager" model="res.groups">
+        <field name="name">Marketing Card Manager</field>
+        <field name="category_id" ref="module_category_marketing_card"/>
+        <field name="implied_ids" eval="[(4, ref('marketing_card_group_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="marketing_card_campaign_manager_own_rule" model="ir.rule">
+        <field name="name">Manager may access and edit any card campaign</field>
+        <field name="model_id" ref="model_card_campaign"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('marketing_card_group_manager'))]"></field>
+    </record>
+
+    <record id="marketing_card_campaign_user_owl_rule" model="ir.rule">
+        <field name="name">Users may only edit their own card campaigns</field>
+        <field name="model_id" ref="model_card_campaign"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('marketing_card_group_user'))]"></field>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

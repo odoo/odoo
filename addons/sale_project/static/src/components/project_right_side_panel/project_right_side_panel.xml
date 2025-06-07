@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="sale_project.ProjectRightSidePanel" t-inherit="project.ProjectRightSidePanel" t-inherit-mode="extension">
+        <xpath expr="//ProjectProfitability" position="replace">
+            <ProjectProfitability
+                t-if="showProjectProfitability"
+                data="state.data.profitability_items"
+                labels="state.data.profitability_labels"
+                formatMonetary="formatMonetary.bind(this)"
+                onProjectActionClick="onProjectActionClick.bind(this)"
+                onClick="(params) => this.onProjectActionClick(params)"
+                projectId="projectId"
+                context="context"
+            />
+        </xpath>
+    </t>
+</templates>

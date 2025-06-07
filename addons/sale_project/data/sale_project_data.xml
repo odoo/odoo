@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Project Task export template -->
+    <record id="project_task_export_template_line_sale_line_id" model="ir.exports.line">
+        <field name="export_id" ref="project.project_task_export_template"/>
+        <field name="name">sale_line_id</field>
+    </record>
+
+    <!-- Product template export template -->
+    <record id="services_template_export_template" model="ir.exports">
+        <field name="name">Services</field>
+        <field name="resource">product.template</field>
+    </record>
+
+    <record id="services_template_export_template_line_id" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">id</field>
+    </record>
+
+    <record id="services_template_export_template_line_name" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">name</field>
+    </record>
+
+    <record id="services_template_export_template_line_product_tag_ids" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">product_tag_ids</field>
+    </record>
+
+    <record id="services_template_export_template_line_list_price" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">list_price</field>
+    </record>
+
+    <record id="services_template_export_template_line_type" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">type</field>
+    </record>
+
+    <record id="services_template_export_template_line_uom_id" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">uom_id</field>
+    </record>
+
+    <record id="services_template_export_template_invoice_policy" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">service_policy</field>
+    </record>
+
+    <record id="services_template_export_template_service_tracking" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">service_tracking</field>
+    </record>
+
+    <record id="services_template_export_template_project_id" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">project_id</field>
+    </record>
+
+    <record id="services_template_export_template_project_template_id" model="ir.exports.line">
+        <field name="export_id" ref="services_template_export_template"/>
+        <field name="name">project_template_id</field>
+    </record>
+</odoo>

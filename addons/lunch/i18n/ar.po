@@ -1,0 +1,2432 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* lunch
+# 
+# Translators:
+# Wil Odoo, 2024
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2024
+# Malaz Abuidris <msea@odoo.com>, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 20:36+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_temaki
+msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
+msgstr "1 أفوكادو - 1 سلمون - 1 بيض - 1 تونا "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_chirashi
+msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
+msgstr "2 تيمبورا - ملفوف - بصل - صلصة السمسم "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_4formaggi
+msgid "4 Formaggi"
+msgstr "4 جبن "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_salmon
+msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
+msgstr "4 سلمون سوشي - 6 سلمون ماكي - 4 سلمون ساشيمي "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_maki
+msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
+msgstr "6 سلمون ماكي - 6 سلمون ماكي - 6 روبيان ماكي/أفوكادو "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"Receive button\"/>"
+msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Receive button\" "
+"title=\"زر الاستلام \"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
+msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"التاريخ \"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
+"title=\"Send notification\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
+"title=\"إرسال إشعار \"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_report_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"Amount\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Amount\" title=\"المبلغ \"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"Money\"/>"
+msgstr "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Money\" title=\"النقود \"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
+"title=\"Send button\"/>"
+msgstr ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
+"title=\"زر الإرسال \"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" "
+"title=\"Order button\"/>"
+msgstr ""
+"<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Order button\" title=\"زر"
+" الطلب \"/>"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel button\"/>"
+msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"زر الإلغاء \"/>"
+
+#. module: lunch
+#: model:mail.template,body_html:lunch.lunch_order_mail_supplier
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Lunch Order</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"        <p>\n"
+"        Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
+"        </p><p>\n"
+"        Here is, today orders for <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
+"        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>Location</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
+"\n"
+"        <table>\n"
+"            <thead>\n"
+"                <tr style=\"background-color:rgb(233,232,233);\">\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Product</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Comments</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Person</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Site</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Qty</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Price</strong></th>\n"
+"                </tr>\n"
+"            </thead>\n"
+"            <tbody>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">Sushi salmon</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">Soy sauce</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">With wasabi.</div>\n"
+"                    </t>\n"
+"                    </td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">Office 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Total</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"        </table>\n"
+"\n"
+"        <p>Do not hesitate to contact us if you have any questions.</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
+msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">طلب الغداء</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\" t-if=\"not user.company_id.uses_default_logo\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"        <p>\n"
+"        عزيزتنا <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>،\n"
+"        </p><p>\n"
+"        إليك طلبات اليوم لـ <t t-out=\"order.get('company_name', '')\">شركة الغداء</t>:\n"
+"        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>الموقع</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
+"\n"
+"        <table>\n"
+"            <thead>\n"
+"                <tr style=\"background-color:rgb(233,232,233);\">\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>المنتج</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>التعليقات</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>الشخص</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>الموقع</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>الكمية</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>السعر</strong></th>\n"
+"                </tr>\n"
+"            </thead>\n"
+"            <tbody>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">سوشي سلمون</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">صلصة الصويا</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">مع الواسابي.</div>\n"
+"                    </t>\n"
+"                    </td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">مكتب 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>الإجمالي</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"        </table>\n"
+"\n"
+"        <p>لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">شركتك</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        مشغل بواسطة <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">أودو</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
+msgid ""
+"A cashmove can either be an expense or a payment.<br>\n"
+"            An expense is automatically created at the order receipt.<br>\n"
+"            A payment represents the employee reimbursement to the company."
+msgstr ""
+"يمكن أن تكون حركة الأموال إما نفقة أو دفعة.<br>\n"
+"            يتم إنشاء النفقة تلقائياً في إيصال الطلب.<br>\n"
+"            تشكل الدفعة إعادة الموظف للأموال إلى الشركة. "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
+msgid "A product is defined by its name, category, price and vendor."
+msgstr "يتم تعريف المنتج باسمه، وفئته، وسعره، ومورده."
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__am
+msgid "AM"
+msgstr "صباحاً "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction
+msgid "Action Needed"
+msgstr "إجراء مطلوب"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__active
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__active
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+msgid "Active"
+msgstr "نشط"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_ids
+msgid "Activities"
+msgstr "الأنشطة"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "زخرفة استثناء النشاط"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_state
+msgid "Activity State"
+msgstr "حالة النشاط"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "أيقونة نوع النشاط"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Add To Cart"
+msgstr "إضافة إلى العربة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__address
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Address"
+msgstr "العنوان"
+
+#. module: lunch
+#: model:res.groups,name:lunch.group_lunch_manager
+msgid "Administrator"
+msgstr "المدير "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__name
+msgid "Alert Name"
+msgstr "اسم التنبيه"
+
+#. module: lunch
+#: model:lunch.alert,name:lunch.alert_office_3
+msgid "Alert for Office 3"
+msgstr "التنبيه للمكتب 3 "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
+msgid "Alert in app"
+msgstr "التنبيه في التطبيق "
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_alert_menu
+msgid "Alerts"
+msgstr "التنبيهات"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "Already Paid"
+msgstr "مدفوع بالفعل "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__amount
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__amount
+msgid "Amount"
+msgstr "مبلغ"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_search
+msgid "Archived"
+msgstr "مؤرشف"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_1
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_2
+#: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_3
+msgid "Are extras available for this product"
+msgstr "هل الإضافات متاحة لهذا المنتج "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: lunch
+#: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
+msgid "Automatic Email Sending Time should be between 0 and 12"
+msgstr "يجب أن يكون وقت إرسال البريد الإلكتروني التلقائي بين 0 و 12 "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Availability"
+msgstr "التوافر"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_on_date
+msgid "Available On Date"
+msgstr "متاح بتاريخ "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Available Today"
+msgstr "متاح اليوم "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_1
+msgid "Available Toppings 1"
+msgstr "الإضافات المتاحة 1"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_2
+msgid "Available Toppings 2"
+msgstr "الإضافات المتاحة 2 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_3
+msgid "Available Toppings 3"
+msgstr "الإضافات المتاحة 3 "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_bacon
+#: model:lunch.product,name:lunch.product_bacon_0
+msgid "Bacon"
+msgstr "اللحم المقدد "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_bacon
+#: model_terms:lunch.product,description:lunch.product_bacon_0
+msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
+msgstr "لحم بقري، اللحم المقدد، سلطة، جبنة تشيدر، بصل مقلي، صلصة الشواء "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_burger_0
+#: model_terms:lunch.product,description:lunch.product_cheeseburger
+msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
+msgstr "لحم بقري، سلطة، جبنة تشيدر، بصل مقلي، صلصة الشواء "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Bolognese
+msgid "Bolognese Pasta"
+msgstr "معكرونة بولونيز "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_country
+msgid "Brie, Honey, Walnut Kernels"
+msgstr "جبن أبيض، عسل، قطع الجوز "
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_burger
+msgid "Burger"
+msgstr "شطيرة برغر "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
+msgid "By Employee"
+msgstr "حسب الموظف"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
+msgid "By User"
+msgstr "حسب المستخدم "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Cancel"
+msgstr "إلغاء"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__cancelled
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Cancelled"
+msgstr "تم الإلغاء "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_supplier.py:0
+msgid "Cannot send an email to this supplier!"
+msgstr "تعذذر إرسال بريد إلكتروني إلى هذا البائع! "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
+msgid "Cash Moves"
+msgstr "حركات الأموال "
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_cashmove_report
+msgid "Cashmoves report"
+msgstr "تقرير حركات الأموال "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Categories"
+msgstr "الفئات"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Category"
+msgstr "الفئة "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__chat
+msgid "Chat notification"
+msgstr "إشعار الدردشة "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_ham
+msgid "Cheese And Ham"
+msgstr "الجبن واللحم "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_cheese_burger_0
+#: model:lunch.product,name:lunch.product_cheeseburger
+msgid "Cheese Burger"
+msgstr "شطيرة برغر بالجبن "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_cheese_ham
+msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
+msgstr "جبنة، لحم، سلطة، طماطم، خيار، بيض "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_chicken_curry
+msgid "Chicken Curry"
+msgstr "كاري الدجاج "
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_chirashi
+msgid "Chirashi"
+msgstr "تشيراشي "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "City"
+msgstr "المدينة"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
+msgid ""
+"Click on the <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> to announce that the order is ordered.<br>\n"
+"            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
+"            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
+msgstr ""
+"اضغط على <span class=\"fa fa-phone text-success\" title=\"زر الطلب \"></span> للإعلان بأن الطلب قد تم.<br>\n"
+"            اضغط على <span class=\"fa fa-check text-success\" title=\"زر الاستلام \"></span> للإعلان بأن الطلب قت تم استلامه.<br>\n"
+"            اضغط على <span class=\"fa fa-times-circle text-danger\" title=\"زر الإلغاء \"></span> علامة X الحمراء للإعلان بأن الطلب غير متوفر. "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_club
+#: model:lunch.product,name:lunch.product_club_0
+msgid "Club"
+msgstr "كلوب "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_coke_0
+msgid "Coca Cola"
+msgstr "كوكا كولا "
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_res_company
+msgid "Companies"
+msgstr "الشركات"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__company_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__company_id
+msgid "Company"
+msgstr "الشركة "
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_res_config_settings
+msgid "Config Settings"
+msgstr "تهيئة الإعدادات "
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_config
+msgid "Configuration"
+msgstr "التهيئة "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/mixins/lunch_renderer_mixin.js:0
+msgid "Configure Your Order"
+msgstr "قم بتهيئة طلبك "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Confirm"
+msgstr "تأكيد"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Confirm Orders"
+msgstr "تأكيد الطلبات"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_control_accounts
+msgid "Control Accounts"
+msgstr "التحكم في الحسابات"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_action_control_suppliers
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_control_suppliers
+msgid "Control Vendors"
+msgstr "التحكم في الموردين"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__country_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Country"
+msgstr "الدولة"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
+msgid "Create a new payment"
+msgstr "إنشاء دفعة جديدة"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
+msgid "Create a new product category"
+msgstr "إنشاء فئة منتج جديدة "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
+msgid "Create a new product for lunch"
+msgstr "إنشاء منتج جديد للغداء"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
+msgid "Create new lunch alerts"
+msgstr "إنشاء تنبيهات غداء جديدة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__create_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__create_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__cron_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__cron_id
+msgid "Cron"
+msgstr "Cron"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__currency_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__currency_id
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__currency_id
+msgid "Currency"
+msgstr "العملة"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+msgid "Currently inactive"
+msgstr "غير نشط حالياً "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__date
+msgid "Date"
+msgstr "التاريخ"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__delivery
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__delivery
+msgid "Delivery"
+msgstr "التوصيل "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__description
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__description
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__product_description
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__description
+msgid "Description"
+msgstr "الوصف"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Discard"
+msgstr "إهمال "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__mode
+msgid "Display"
+msgstr "عرض"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_add_button
+msgid "Display Add Button"
+msgstr "عرض زر الإضافة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__display_name
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__display_name
+msgid "Display Name"
+msgstr "اسم العرض "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
+msgid "Display Reorder Button"
+msgstr "عرض زر إعادة الطلب "
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_drinks
+msgid "Drinks"
+msgstr "المشروبات "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "Edit order"
+msgstr "تحرير الطلب "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__send_by__mail
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
+msgid "Employee who ordered last month"
+msgstr "الموظف الذي طلب الشهر الماضي "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_week
+msgid "Employee who ordered last week"
+msgstr "الموظف الذي طلب الأسبوع الماضي "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_year
+msgid "Employee who ordered last year"
+msgstr "الموظف الذي طلب السنة الماضية "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__everyone
+msgid "Everyone"
+msgstr "الجميع"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_1
+msgid "Extra 1 Label"
+msgstr "ملصق إضافي 1 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_1
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_1
+msgid "Extra 1 Quantity"
+msgstr "كمية 1 إضافية "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_2
+msgid "Extra 2 Label"
+msgstr "2 ملصق إضافي "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_2
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_2
+msgid "Extra 2 Quantity"
+msgstr "2 كمية إضافية "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_3
+msgid "Extra 3 Label"
+msgstr "3 ملصق إضافي "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_3
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_3
+msgid "Extra 3 Quantity"
+msgstr "3 كمية إضافية "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__display_toppings
+msgid "Extras"
+msgstr "الإضافات "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_1
+msgid "Extras 1"
+msgstr "الإضافات 1 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_2
+msgid "Extras 2"
+msgstr "الإضافات 2 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_3
+msgid "Extras 3"
+msgstr "الإضافات 3 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_users__favorite_lunch_product_ids
+msgid "Favorite Lunch Product"
+msgstr "منتج الغداء المفضل "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__favorite_user_ids
+msgid "Favorite User"
+msgstr "المستخدم المفضل "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_follower_ids
+msgid "Followers"
+msgstr "المتابعين"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعين (الشركاء) "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "أيقونة من Font awesome مثال: fa-tasks "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__email_formatted
+msgid "Format email address \"Name <email@domain>\""
+msgstr "تنسيق البريد الإلكتروني \"الاسم <email@domain>\""
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email_formatted
+msgid "Formatted Email"
+msgstr "البريد الإلكتروني المنسق"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_italiana
+msgid "Fresh Tomatoes, Basil, Mozzarella"
+msgstr "طماطم طازجة، ريحان، جبنة موتزاريلا "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__fri
+msgid "Fri"
+msgstr "الجمعة"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Friday"
+msgstr "الجمعة"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_gouda
+msgid "Gouda Cheese"
+msgstr "جبنة غودا "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Group By"
+msgstr "تجميع حسب"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_club
+#: model_terms:lunch.product,description:lunch.product_club_0
+msgid "Ham, Cheese, Vegetables"
+msgstr "لحم، جبنة، خضروات "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
+msgid "Has Message"
+msgstr "يحتوي على رسالة "
+
+#. module: lunch
+#: model:ir.module.category,description:lunch.module_lunch_category
+msgid ""
+"Helps you handle your lunch needs, if you are a manager you will be able to "
+"create new products, cashmoves and to confirm or cancel orders."
+msgstr ""
+"يساعدك على التعامل مع احتياجاتك للغداء، إذا كنت مديرًا ستتمكن من إنشاء "
+"منتجات أو حركات نقدية جديدة، وكذلك تأكيد أو إلغاء الطلبات."
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
+msgid "Here you can access all categories for the lunch products."
+msgstr "من هنا يمكنك الوصول لكل فئات منتجات الغداء."
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
+msgid "Here you can see today's orders grouped by vendors."
+msgstr "من هنا يمكنك رؤية طلبات اليوم مرتبة حسب الموردين."
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
+msgid ""
+"Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
+"            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
+msgstr ""
+"يمكنك رؤية حركات أموالك هنا.<br>يمكن أن تكون حركة الأموال إما نفقة أو دفعة.\n"
+"            يتم إنشاء النفقة تلقائياً عند استلام طلب، بينما تشكل الدفعة إعادة الموظف للأموال إلى الشركة، مشفراً من قِبَل المدير. "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__id
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_exception_icon
+msgid "Icon"
+msgstr "الأيقونة"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "الأيقونة للإشارة إلى النشاط المستثنى. "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها. "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1920
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_1920
+msgid "Image"
+msgstr "صورة"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_1024
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_1024
+msgid "Image 1024"
+msgstr "صورة 1024"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__image_128
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_128
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_128
+msgid "Image 128"
+msgstr "صورة 128"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__image_1920
+msgid "Image 1920"
+msgstr "صورة 1920 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_256
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_256
+msgid "Image 256"
+msgstr "صورة 256"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__image_512
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__image_512
+msgid "Image 512"
+msgstr "صورة 512"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "Information, allergens, ..."
+msgstr "المعلومات، مسببات الحساسية، ... "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__available_today
+msgid "Is Displayed Today"
+msgstr "معروض اليوم "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
+msgid "Is Favorite"
+msgstr "مفضل "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_is_follower
+msgid "Is Follower"
+msgstr "متابع"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
+msgid "Is New"
+msgstr "جديد "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
+msgid "Last Lunch Location"
+msgstr "موقع آخر غداء "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__last_order_date
+msgid "Last Order Date"
+msgstr "تاريخ آخر طلب "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__write_uid
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__write_date
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__location_ids
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_location_ids
+msgid "Location"
+msgstr "الموقع "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_location__name
+msgid "Location Name"
+msgstr "اسم الموقع "
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_location_menu
+msgid "Locations"
+msgstr "المواقع "
+
+#. module: lunch
+#: model:ir.module.category,name:lunch.module_lunch_category
+#: model:ir.ui.menu,name:lunch.menu_lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Lunch"
+msgstr "الغداء"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_alert
+msgid "Lunch Alert"
+msgstr "تنبيه غداء"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_alert_action
+msgid "Lunch Alerts"
+msgstr "تنبيهات الغداء "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_cashmove.py:0
+#: code:addons/lunch/report/lunch_cashmove_report.py:0
+#: model:ir.model,name:lunch.model_lunch_cashmove
+msgid "Lunch Cashmove"
+msgstr "الحركات النقدية للغداء "
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_topping
+msgid "Lunch Extras"
+msgstr "إضافات الغداء "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__lunch_location_id
+msgid "Lunch Location"
+msgstr "موقع الغداء "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_location_action
+#: model:ir.model,name:lunch.model_lunch_location
+msgid "Lunch Locations"
+msgstr "مواقع الغداء "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_maki
+msgid "Lunch Maki 18pc"
+msgstr "ماكي الغداء 18 قطعة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
+msgid "Lunch Minimum Threshold"
+msgstr "الحد الأدنى للغداء "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
+msgid "Lunch Notify Message"
+msgstr "رسالة إشعار الغداء"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_order
+msgid "Lunch Order"
+msgstr "طلب غداء"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Lunch Overdraft"
+msgstr "السحب الزائد في الغداء "
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product
+msgid "Lunch Product"
+msgstr "منتج الغداء"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_product_category
+msgid "Lunch Product Category"
+msgstr "فئة منتج الغداء"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_salmon
+msgid "Lunch Salmon 20pc"
+msgstr "سلمون الغداء 20 قطعة "
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_lunch_supplier
+msgid "Lunch Supplier"
+msgstr "مزود الغداء "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_temaki
+msgid "Lunch Temaki mix 3pc"
+msgstr "مشكل تيماكي الغداء 3 قطع "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+msgid "Lunch notification"
+msgstr "إشعار الغداء"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
+msgid "Lunch notification message"
+msgstr "رسالة إشعار الغداء"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_action_cancel
+msgid "Lunch: Cancel meals"
+msgstr "الغداء: إلغاء الوجبات "
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_action_confirm
+msgid "Lunch: Receive meals"
+msgstr "الغداء: استلام الوجبات "
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_order_action_notify
+msgid "Lunch: Send notifications"
+msgstr "الغداء: إرسال الإشعارات "
+
+#. module: lunch
+#: model:mail.template,name:lunch.lunch_order_mail_supplier
+msgid "Lunch: Supplier Order"
+msgstr "الغداء: طلب المورد"
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_228
+msgid "Lunch: alert chat notification (Alert for Office 3)"
+msgstr "الغداء: إشعار تنبيه الدردشة (التنبيه للمكتب 3) "
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_229
+msgid "Lunch: send automatic email to Coin gourmand"
+msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى Coin Gourmand "
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_224
+msgid "Lunch: send automatic email to Lunch Supplier"
+msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً لمزود الغداء "
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_230
+msgid "Lunch: send automatic email to Pizza Inn"
+msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى Pizza Inn "
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_232
+msgid "Lunch: send automatic email to Sushi Shop"
+msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى Sushi Shop "
+
+#. module: lunch
+#: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_231
+msgid "Lunch: send automatic email to The Corner"
+msgstr "الغداء: أرسل بريداً إلكترونياً تلقائياً إلى The Corner "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_res_config_settings__currency_id
+msgid "Main currency of the company."
+msgstr "العملة الرئيسية للشركة."
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_admin
+msgid "Manager"
+msgstr "المدير"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
+msgid "Maximum Allowed Overdraft"
+msgstr "الحد الأقصى المسموح به للسحب الزائد "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Maximum overdraft that your employees can reach"
+msgstr "الحد الأقصى للسحب الزائد الذي بوسع موظفيك الوصول إليه "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
+msgid "Message"
+msgstr "الرسالة"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسائل"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_ids
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
+msgid "Moment"
+msgstr "وهلة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__mon
+msgid "Mon"
+msgstr "الإثنين "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Monday"
+msgstr "الاثنين"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_mozzarella
+msgid "Mozzarella"
+msgstr "موتزاريلا "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_mozzarella
+msgid "Mozzarella, Pesto, Tomatoes"
+msgstr "موتزاريلا، بيستو، طماطم "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
+msgid "My Account"
+msgstr "حسابي"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_form
+msgid "My Account History"
+msgstr "سِجل حسابي "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
+msgid "My Account grouped"
+msgstr "حسابي مجمعًا"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "الموعد النهائي لنشاطاتي "
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_title
+msgid "My Lunch"
+msgstr "غدائي"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
+msgid "My Order History"
+msgstr "سِجل طلباتي "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_action
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "My Orders"
+msgstr "طلباتي"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__name
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__name
+msgid "Name"
+msgstr "الاسم"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_Napoli
+msgid "Napoli Pasta"
+msgstr "معكرونة نابولي "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
+msgid "New"
+msgstr "جديد"
+
+#. module: lunch
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_form
+msgid "New Order"
+msgstr "طلب جديد"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
+msgid "New Until"
+msgstr "جديد حتى "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "الفعالية التالية في تقويم الأنشطة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "الموعد النهائي للنشاط التالي"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_summary
+msgid "Next Activity Summary"
+msgstr "ملخص النشاط التالي"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_type_id
+msgid "Next Activity Type"
+msgstr "نوع النشاط التالي"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__no_delivery
+msgid "No Delivery"
+msgstr "لا يوجد توصيل "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
+msgid "No cash move yet"
+msgstr "لم يتم إنشاء حركة نقدية بعد"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+msgid "No location found"
+msgstr "لم يتم العثور على موقع "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "No lunch location available."
+msgstr "لا يوجد مكان متاح لتناول الغداء. "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
+msgid "No lunch order yet"
+msgstr "لم يتم إنشاء طلب غداء بعد"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
+msgid "No previous order found"
+msgstr "لم يتم العثور على طلبات سابقة "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__0_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__0_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__0_more
+msgid "None or More"
+msgstr "لا شيء أو المزيد "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Not Received"
+msgstr "لم يتم الاستلام "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__note
+msgid "Notes"
+msgstr "الملاحظات"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
+msgid "Nothing to order today"
+msgstr "لا يوجد شيء لطلبه اليوم "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
+msgid "Notification Moment"
+msgstr "لحظة الإشعار "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
+msgid "Notification Time"
+msgstr "وقت الإشعار "
+
+#. module: lunch
+#: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
+msgid "Notification time must be between 0 and 12"
+msgstr "يجب أن يكون وقت الإشعار بين 0 و 12 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
+msgid "Notified"
+msgstr "تم الإخطار "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1_more
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1_more
+msgid "One or More"
+msgstr "واحد أو أكثر "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1
+msgid "Only One"
+msgstr "واحد فقط "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid "Order"
+msgstr "الطلب"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__date
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Order Date"
+msgstr "تاريخ الطلب "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__order_deadline_passed
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__order_deadline_passed
+msgid "Order Deadline Passed"
+msgstr "تجاوز الموعد النهائي للطلب"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "Order Now"
+msgstr "اطلب الآن "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
+msgid "Order Time"
+msgstr "وقت الطلب "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_product_action_order
+msgid "Order Your Lunch"
+msgstr "اطلب غداءك "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Order lines List"
+msgstr "قائمة بنود الطلب "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__ordered
+msgid "Ordered"
+msgstr "تم طلبه"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Orders"
+msgstr "الطلبات "
+
+#. module: lunch
+#: model:mail.template,subject:lunch.lunch_order_mail_supplier
+msgid "Orders for {{ ctx['order']['company_name'] }}"
+msgstr "الطلبات لـ {{ ctx['order']['company_name'] }} "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Overdraft"
+msgstr "السحب الزائد "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
+msgid "PM"
+msgstr "مساءً "
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pasta
+msgid "Pasta"
+msgstr "معكرونة "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
+msgid "Payment"
+msgstr "الدفع "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
+msgid ""
+"Payments are used to register liquidity movements. You can process those "
+"payments by your own means or by using installed facilities."
+msgstr ""
+"تُستخدم الدفعات في تسجيل حركات السيولة النقدية. يمكنك معالجة هذه الدفعات "
+"بطريقتك أو باستخدام الوسائل المثبتة. "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__phone
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__send_by__phone
+msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_pizza
+msgid "Pizza"
+msgstr "بيتزا "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_funghi
+msgid "Pizza Funghi"
+msgstr "بيتزا بالفطر "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_italiana
+msgid "Pizza Italiana"
+msgstr "بيتزا إيطالية "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_margherita
+#: model:lunch.product,name:lunch.product_pizza_0
+msgid "Pizza Margherita"
+msgstr "بيتزا مارغريتا "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_vege
+msgid "Pizza Vegetarian"
+msgstr "بيتزا نباتية "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/views/no_content_helper.xml:0
+msgid "Please create a location to start ordering."
+msgstr "يُرجى إنشاء موقع لبدء الطلب. "
+
+#. module: lunch
+#: model_terms:lunch.alert,message:lunch.alert_office_3
+msgid "Please order"
+msgstr "اطلب رجاءً "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__price
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__price
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Price"
+msgstr "السعر"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__product_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Product"
+msgstr "المنتج"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__is_available_at
+msgid "Product Availability"
+msgstr "توفر المنتج"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_product_category_action
+#: model:ir.ui.menu,name:lunch.lunch_product_category_menu
+msgid "Product Categories"
+msgstr "فئات المنتجات"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
+msgid "Product Categories Form"
+msgstr "استمارة فئات المنتج "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__category_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__name
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
+msgid "Product Category"
+msgstr "فئة المنتج"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product_category__product_count
+msgid "Product Count"
+msgstr "عدد المنتجات"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__product_image
+#: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban
+msgid "Product Image"
+msgstr "صورة المنتج"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__name
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__name
+msgid "Product Name"
+msgstr "اسم المنتج"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Product Search"
+msgstr "البحث عن منتج"
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+msgid "Product is no longer available."
+msgstr "لم يعد المنتج متوفراً. "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_product_action
+#: model:ir.actions.act_window,name:lunch.lunch_product_action_statbutton
+#: model:ir.ui.menu,name:lunch.lunch_product_menu
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_kanban
+msgid "Products"
+msgstr "المنتجات"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
+msgid "Products Form"
+msgstr "استمارة المنتجات "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_tree
+msgid "Products List"
+msgstr "قائمة المنتجات "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__quantity
+msgid "Quantity"
+msgstr "الكمية"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Re-order"
+msgstr "إعادة الطلب "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Receive"
+msgstr "استلام "
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__confirmed
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Received"
+msgstr "تم الاستلام "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Reception notification"
+msgstr "إشعار الاستلام "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__recipients
+msgid "Recipients"
+msgstr "المستلمين"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_action_payment
+msgid "Register a payment"
+msgstr "تسجيل دفعة"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Reset"
+msgstr "إعادة الضبط "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__responsible_id
+msgid "Responsible"
+msgstr "المسؤول "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_user_id
+msgid "Responsible User"
+msgstr "المستخدم المسؤول"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_chirashi
+msgid "Salmon and Avocado"
+msgstr "سلمون وأفوكادو "
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sandwich
+msgid "Sandwich"
+msgstr "شطيرة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sat
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__sat
+msgid "Sat"
+msgstr "السبت"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Saturday"
+msgstr "السبت"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Search"
+msgstr "بحث"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+msgid "Send"
+msgstr "إرسال"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Send Notification"
+msgstr "إرسال إشعار "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
+msgid "Send Order By"
+msgstr "إرسال الطلب عن طريق "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Send Orders"
+msgstr "إرسال الطلبات"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
+msgid "Send this message to your users when their order has been delivered."
+msgstr "أرسل هذه الرسالة إلى المستخدمين عندما يتم تسليم طلباتهم."
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__sent
+msgid "Sent"
+msgstr "تم الإرسال"
+
+#. module: lunch
+#: model:mail.template,description:lunch.lunch_order_mail_supplier
+msgid "Sent to vendor with the order of the day"
+msgstr "يتم إرسالها إلى المورّد وتحتوي على طلب اليوم "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
+#: model:ir.ui.menu,name:lunch.lunch_settings_menu
+msgid "Settings"
+msgstr "الإعدادات"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_confirm_button
+msgid "Show Confirm Button"
+msgstr "إظهار زر التأكيد"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_order_button
+msgid "Show Order Button"
+msgstr "إظهار زر الطلب"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
+msgid "Show Until"
+msgstr "إظهار حتى "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_spicy_tuna
+msgid "Spicy Tuna"
+msgstr "تونا حرّاقة "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "State"
+msgstr "الحالة"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__state
+msgid "Status"
+msgstr "الحالة"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"الأنشطة المعتمدة على الحالة\n"
+"المتأخرة: تاريخ الاستحقاق مر\n"
+"اليوم: تاريخ النشاط هو اليوم\n"
+"المخطط: الأنشطة المستقبلية."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street
+msgid "Street"
+msgstr "الشارع"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Street 2..."
+msgstr "الشارع 2..."
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Street..."
+msgstr "الشارع..."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__street2
+msgid "Street2"
+msgstr "الشارع 2"
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
+msgid "Summary of all lunch orders, grouped by vendor and by date."
+msgstr "ملخص لجميع طلبات الغداء، مجمعة حسب المورد وحسب التاريخ."
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__sun
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__sun
+msgid "Sun"
+msgstr "الأحد"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Sunday"
+msgstr "الأحد"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
+msgid "Supplier"
+msgstr "المزود "
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_sushi
+msgid "Sushi"
+msgstr "سوشي "
+
+#. module: lunch
+#: model:lunch.product.category,name:lunch.categ_temaki
+msgid "Temaki"
+msgstr "تيماكي "
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_country
+msgid "The Country"
+msgstr "الدولة "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_product.py:0
+msgid ""
+"The following product categories are archived. You should either unarchive the categories or change the category of the product.\n"
+"%s"
+msgstr ""
+"فئات المنتج التالية مؤرشفة. عليك إما إلغاء أرشفة الفئات أو تغيير فئة المنتج. \n"
+"%s"
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_product.py:0
+msgid ""
+"The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n"
+"%s"
+msgstr ""
+"المزودين التالين مؤرشفين. عليك إما إلغاء أرشفة المزودين أو تغيير مزود المنتج. \n"
+"%s"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_product_category__product_count
+msgid "The number of products related to this category"
+msgstr "عدد المنتجات المتعلقة بهذه الفئة "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid "The orders for this vendor have already been sent."
+msgstr "تم إرسال الطلبات الخاصة بهذا المورّد بالفعل. "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_supplier.py:0
+msgid "The orders have been confirmed!"
+msgstr "تم تأكيد الطلبات!"
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_supplier.py:0
+msgid "The orders have been sent!"
+msgstr "تم إرسال الطلبات!"
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
+msgid ""
+"The responsible is the person that will order lunch for everyone. It will be"
+" used as the 'from' when sending the automatic email."
+msgstr ""
+"المسؤول هو الشخص الذي سيقوم بطلب الغداء للجميع. سوف ايم استخدامه كالطرف "
+"المرسل عند إرسال رسائل البريد الإلكتروني التلقائية. "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+msgid ""
+"The vendor related to this order is not available at the selected date."
+msgstr "المورد المرتبط بهذا المنتج غير متوفر في التاريخ المحدد. "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+msgid "The vendor related to this order is not available today."
+msgstr "المورد المرتبط بهذا المنتج غير متوفر اليوم. "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
+msgid ""
+"There is no previous order recorded. Click on \"My Lunch\" and then create a"
+" new lunch order."
+msgstr ""
+"لا توجد أي طلبات سابقة مسجلة. اضغط على \"غدائي\" ثم قم بإنشاء طلب غداء جديد."
+" "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
+msgid "There is no product available today"
+msgstr "ليس هناك منتج متوفر اليوم "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__recurrency_end_date
+msgid "This field is used in order to "
+msgstr "يُستخدم هذا الحقل حتى تتمكن من "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
+msgid "This is True when if the supplier is available today"
+msgstr "يكون هذا صحيحاً إذا كان المورد متاحاً اليوم "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__thu
+msgid "Thu"
+msgstr "الخميس"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Thursday"
+msgstr "الخميس"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__tz
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__tz
+msgid "Timezone"
+msgstr "المنطقة الزمنية"
+
+#. module: lunch
+#: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__new
+msgid "To Order"
+msgstr "بحاجة إلى الطلب "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "To Pay"
+msgstr "للدفع "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
+msgid "To add some money to your wallet, please contact your lunch manager."
+msgstr "لإضافة بعض المال إلى محفظتك، يرجى التواصل مع مدير الغداء لديك. "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
+msgid "To see some locations, create one using the create button"
+msgstr "لرؤية بعض المواقع، قم بإنشاء واحد باستخدام زر الإنشاء "
+
+#. module: lunch
+#: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
+msgid ""
+"To see some products, check if your vendors are available today and that you"
+" have configured some products"
+msgstr ""
+"لرؤية بعض المنتجات، تحقق ما إذا كان موردوك متاحون اليوم وأنك قد قمت بتهيئة "
+"بعض المنتجات "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Today"
+msgstr "اليوم "
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_order_action_by_supplier
+#: model:ir.ui.menu,name:lunch.lunch_order_menu_by_supplier
+msgid "Today's Orders"
+msgstr "طلبات اليوم"
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_4formaggi
+msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
+msgstr "صلصة الطماطم، زيت زيتون، طماطم طازجة، بصل، خضروات، بارميزان "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_Napoli
+msgid "Tomatoes, Basil"
+msgstr "طماطم، ريحان "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_margherita
+#: model_terms:lunch.product,description:lunch.product_pizza_0
+msgid "Tomatoes, Mozzarella"
+msgstr "طماطم، موتزاريلا "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_vege
+msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
+msgstr "طماطم، موتزاريلا، فطر، فلفل، زيتون "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_funghi
+msgid "Tomatoes, Mushrooms, Mozzarella"
+msgstr "طماطم، فطر، موتزاريلا "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
+msgid "Topping Category"
+msgstr "فئة الإضافات "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_1
+msgid "Topping Ids 1"
+msgstr "معرف الإضافة 1 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_2
+msgid "Topping Ids 2"
+msgstr "معرف الإضافة 2 "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_3
+msgid "Topping Ids 3"
+msgstr "معرف الإضافة 3 "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
+msgid "Total"
+msgstr "الإجمالي"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__price
+msgid "Total Price"
+msgstr "إجمالي السعر "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__tue
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__tue
+msgid "Tue"
+msgstr "الثلاثاء"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Tuesday"
+msgstr "الثلاثاء"
+
+#. module: lunch
+#: model:lunch.product,name:lunch.product_tuna
+msgid "Tuna"
+msgstr "تونا "
+
+#. module: lunch
+#: model_terms:lunch.product,description:lunch.product_tuna
+msgid "Tuna, Mayonnaise"
+msgstr "تونا، مايونيز "
+
+#. module: lunch
+#: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "نوع النشاط المستثنى في السجل. "
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__recurrency_end_date
+msgid "Until"
+msgstr "حتى"
+
+#. module: lunch
+#: model:ir.model,name:lunch.model_res_users
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_cashmove_report__user_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__user_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "User"
+msgstr "المستخدم"
+
+#. module: lunch
+#: model:res.groups,name:lunch.group_lunch_user
+msgid "User : Order your meal"
+msgstr "المستخدم: اطلب وجبتك"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_product__supplier_id
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__partner_id
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "Vendor"
+msgstr "المورد"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
+msgid "Vendor Orders by Date"
+msgstr "طلبات المورد حسب التاريخ"
+
+#. module: lunch
+#: model:ir.actions.act_window,name:lunch.lunch_vendors_action
+#: model:ir.ui.menu,name:lunch.lunch_vendors_menu
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Vendors"
+msgstr "الموردين"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_alert__wed
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__wed
+msgid "Wed"
+msgstr "الأربعاء"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
+msgid "Wednesday"
+msgstr "الأربعاء"
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/controllers/main.py:0
+msgid ""
+"You are trying to impersonate another user, but this can only be done by a "
+"lunch manager"
+msgstr "أنت تحاول تقليد موظف آخر، ولكن وحده مدير الغداء بوسعه القيام بذلك "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+msgid "You have to order one and only one %s"
+msgstr "عليك طلب %s واحد فقط "
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+msgid "You should order at least one %s"
+msgstr "عليك طلب %s واحد على الأقل "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "Your Account"
+msgstr "حسابك"
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "Your Cart ("
+msgstr "عربة تسوقك ("
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_alert.py:0
+msgid "Your Lunch Order"
+msgstr "طلب الغداء الخاص بك "
+
+#. module: lunch
+#. odoo-javascript
+#: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
+msgid "Your Order"
+msgstr "طلبك"
+
+#. module: lunch
+#. odoo-python
+#: code:addons/lunch/models/lunch_order.py:0
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
+msgid ""
+"Your wallet does not contain enough money to order that. To add some money "
+"to your wallet, please contact your lunch manager."
+msgstr ""
+"لا تحتوي محفظتك على المال الكافي لطلب ذلك. لإضافة المزيد من المال إلى "
+"محفظتك، يرجى التواصل مع مدير الغداء. "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "ZIP"
+msgstr "الرمز البريدي"
+
+#. module: lunch
+#: model:ir.model.fields,field_description:lunch.field_lunch_supplier__zip_code
+msgid "Zip"
+msgstr "الرمز البريدي"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "alert form"
+msgstr "التنبيه من "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_form
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
+msgid "cashmove form"
+msgstr "استمارة الحركة النقدية "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
+msgid "cashmove list"
+msgstr "قائمة الحركات النقدية "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
+msgid "e.g. Order before 11am"
+msgstr "مثال: اطلب قبل الساعة 11 صباحاً "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
+msgid "e.g. The Pizzeria Inn"
+msgstr "مثال: The Pizzeria Inn "
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
+msgid "lunch cashmove"
+msgstr "حركات الغداء النقدية"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
+msgid "lunch employee payment"
+msgstr "مدفوعات غداء الموظف"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
+msgid "on"
+msgstr "في"
+
+#. module: lunch
+#: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban
+msgid "to"
+msgstr "إلى"

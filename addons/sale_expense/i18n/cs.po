@@ -1,0 +1,134 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_expense
+# 
+# Translators:
+# Wil Odoo, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-01-05 12:32+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Wil Odoo, 2024\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_count
+msgid "# of Expenses"
+msgstr "počet výdajů"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__can_be_reinvoiced
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__can_be_reinvoiced
+msgid "Can be reinvoiced"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense__sale_order_id
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_split__sale_order_id
+msgid "Customer to Reinvoice"
+msgstr "Zákazník přefakturuje"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense
+msgid "Expense"
+msgstr "Výdaj"
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_product_product__expense_policy_tooltip
+#: model:ir.model.fields,field_description:sale_expense.field_product_template__expense_policy_tooltip
+msgid "Expense Policy Tooltip"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Výkaz výdajů"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_hr_expense_split
+msgid "Expense Split"
+msgstr "Rozdělení výdaje"
+
+#. module: sale_expense
+#: model:ir.actions.act_window,name:sale_expense.hr_expense_action_from_sale_order
+#: model:ir.model.fields,field_description:sale_expense.field_sale_order__expense_ids
+#: model_terms:ir.ui.view,arch_db:sale_expense.sale_order_form_view_inherit
+msgid "Expenses"
+msgstr "Náklady"
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+msgid "Expenses of this category may not be added to a Sales Order."
+msgstr ""
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+msgid ""
+"Expenses will be added to the Sales Order at their actual cost when posted."
+msgstr ""
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/product_template.py:0
+msgid ""
+"Expenses will be added to the Sales Order at their sales price (product "
+"price, pricelist, etc.) when posted."
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,help:sale_expense.field_hr_expense__sale_order_id
+msgid ""
+"If the category has an expense policy, it will be reinvoiced on this sales "
+"order"
+msgstr ""
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.product_product_view_form_inherit_sale_expense
+msgid "Invoicing"
+msgstr "Fakturace"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move
+msgid "Journal Entry"
+msgstr "Účetní záznam"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_account_move_line
+msgid "Journal Item"
+msgstr "Účetní položka"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_product_template
+msgid "Product"
+msgstr "Produkt"
+
+#. module: sale_expense
+#. odoo-python
+#: code:addons/sale_expense/models/hr_expense_sheet.py:0
+msgid "Reinvoiced Sales Orders"
+msgstr ""
+
+#. module: sale_expense
+#: model:ir.model.fields,field_description:sale_expense.field_hr_expense_sheet__sale_order_count
+msgid "Sale Order Count"
+msgstr "Počet prodejních objednávek"
+
+#. module: sale_expense
+#: model:ir.model,name:sale_expense.model_sale_order
+msgid "Sales Order"
+msgstr "Prodejní objednávka"
+
+#. module: sale_expense
+#: model_terms:ir.ui.view,arch_db:sale_expense.hr_expense_sheet_view_form
+msgid "Sales Orders"
+msgstr "Prodejní objednávky"

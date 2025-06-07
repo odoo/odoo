@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="sale_project.ProjectProfitability" t-inherit="project.ProjectProfitability" t-inherit-mode="extension">
+       <xpath expr="//tr[hasclass('revenue_section')]" position="replace">
+            <ProjectProfitabilitySection
+                revenue="revenue"
+                labels="props.labels"
+                formatMonetary="props.formatMonetary.bind(this)"
+                onProjectActionClick="props.onProjectActionClick.bind(this)"
+                onClick="(params) => this.props.onProjectActionClick(params)"
+                projectId="this.props.projectId"
+                context="this.props.context"
+            />
+        </xpath>
+    </t>
+</templates>

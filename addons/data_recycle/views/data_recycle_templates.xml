@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="notification">
+We've identified <t t-esc="records_count" /> records to clean with the '<t t-esc="res_model_label" />' recycling rule.<br/>
+You can validate those changes <a t-attf-href="/odoo/{{recycle_model_id}}/action-data_recycle.action_data_recycle_record_notification?menu_id={{menu_id}}">here</a>.
+    </template>
+</odoo>

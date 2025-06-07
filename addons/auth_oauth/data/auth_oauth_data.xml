@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="provider_openerp" model="auth.oauth.provider">
+            <field name="name">Odoo.com Accounts</field>
+            <field name="auth_endpoint">https://accounts.odoo.com/oauth2/auth</field>
+            <field name="scope">userinfo</field>
+            <field name="validation_endpoint">https://accounts.odoo.com/oauth2/tokeninfo</field>
+            <field name="css_class">fa fa-fw o_custom_icon</field>
+            <field name="body">Log in with Odoo.com</field>
+            <field name="enabled" eval="True"/>
+        </record>
+        <record id="provider_facebook" model="auth.oauth.provider">
+            <field name="name">Facebook Graph</field>
+            <field name="auth_endpoint">https://www.facebook.com/dialog/oauth</field>
+            <field name="scope">public_profile,email</field>
+            <field name="validation_endpoint">https://graph.facebook.com/me</field>
+            <field name="data_endpoint">https://graph.facebook.com/me?fields=id,name,email</field>
+            <field name="css_class">fa fa-fw fa-facebook-square</field>
+            <field name="body">Log in with Facebook</field>
+        </record>
+        <record id="provider_google" model="auth.oauth.provider">
+            <field name="name">Google OAuth2</field>
+            <field name="auth_endpoint">https://accounts.google.com/o/oauth2/auth</field>
+            <field name="scope">openid profile email</field>
+            <field name="validation_endpoint">https://www.googleapis.com/oauth2/v3/userinfo</field>
+            <field name="css_class">fa fa-fw fa-google</field>
+            <field name="body">Log in with Google</field>
+        </record>
+
+        <!-- Use database uuid as client_id for OpenERP oauth provider -->
+        <function model="auth.oauth.provider" name="write">
+            <value eval="[ref('auth_oauth.provider_openerp')]"/>
+            <value model="ir.config_parameter" eval="{
+                'client_id': obj().env['ir.config_parameter'].get_param('database.uuid'),
+            }"/>
+        </function>
+    </data>
+</odoo>

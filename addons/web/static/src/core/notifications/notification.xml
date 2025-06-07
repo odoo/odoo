@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.NotificationWowl">
+        <div t-on-mouseenter="this.props.freeze" t-on-mouseleave="this.props.refresh" t-attf-class="o_notification {{props.className}} d-flex mb-2 position-relative rounded shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <span t-attf-class="o_notification_bar bg-{{props.type}} rounded-start"/>
+            <div class="w-100 py-3 ps-3 pe-5 border border-start-0 rounded-end text-break">
+                <h5 t-if="props.title" class="o_notification_title m-0" t-out="props.title"/>
+                <button type="button" class="o_notification_close btn-close position-absolute top-0 end-0 mt-3 me-3" aria-label="Close" t-on-click="props.close"/>
+                <div class="o_notification_body" t-att-class="{'mt-2' : props.title}">
+                    <div t-if="props.message" class="me-auto o_notification_content" t-out="props.message"/>
+                    <div t-if="props.buttons.length" class="o_notification_buttons d-flex gap-2 mt-3">
+                        <button t-foreach="props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-secondary'}}" t-on-click="button.onClick">
+                            <t t-if="button.icon">
+                                <i t-if="button.icon.indexOf('fa-') === 0" role="img" t-att-aria-label="button.name" t-att-title="button.name" t-attf-class="fa fa-fw {{button.icon}} me-1"/>
+                                <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
+                            </t>
+                            <span t-esc="button.name"/>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

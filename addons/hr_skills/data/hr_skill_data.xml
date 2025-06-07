@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="hr_skill_type_lang" model="hr.skill.type">
+            <field name="name">Languages</field>
+        </record>
+        <record id="hr_skill_type_softskill" model="hr.skill.type">
+            <field name="name">Soft Skills</field>
+        </record>
+        
+        <!-- Skills -->
+        <!-- Languages -->
+        <record id="hr_skill_french" model="hr.skill">
+            <field name="name">French</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_spanish" model="hr.skill">
+            <field name="name">Spanish</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_english" model="hr.skill">
+            <field name="name">English</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_german" model="hr.skill">
+            <field name="name">German</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_filipino" model="hr.skill">
+            <field name="name">Filipino</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_arabic" model="hr.skill">
+            <field name="name">Arabic</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_bengali" model="hr.skill">
+            <field name="name">Bengali</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_mandarin_chinese" model="hr.skill">
+            <field name="name">Mandarin Chinese</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_wu_chinese" model="hr.skill">
+            <field name="name">Wu Chinese</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_hindi" model="hr.skill">
+            <field name="name">Hindi</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_russian" model="hr.skill">
+            <field name="name">Russian</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_portuguese" model="hr.skill">
+            <field name="name">Portuguese</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_indonesian" model="hr.skill">
+            <field name="name">Indonesian</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_urdu" model="hr.skill">
+            <field name="name">Urdu</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_japanese" model="hr.skill">
+            <field name="name">Japanese</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_punjabi" model="hr.skill">
+            <field name="name">Punjabi</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_javanese" model="hr.skill">
+            <field name="name">Javanese</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_telugu" model="hr.skill">
+            <field name="name">Telugu</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_turkish" model="hr.skill">
+            <field name="name">Turkish</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_korean" model="hr.skill">
+            <field name="name">Korean</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_marathi" model="hr.skill">
+            <field name="name">Marathi</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+
+        <!-- Soft Skills -->
+        <record id="hr_skill_communication" model="hr.skill">
+            <field name="name">Communication</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_teamwork" model="hr.skill">
+            <field name="name">Teamwork</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_problem_solving" model="hr.skill">
+            <field name="name">Problem-Solving</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_time_management" model="hr.skill">
+            <field name="name">Time Management</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_critical_thinking" model="hr.skill">
+            <field name="name">Critical Thinking</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_decision_making" model="hr.skill">
+            <field name="name">Decision-Making</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_organizational" model="hr.skill">
+            <field name="name">Organizational</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_stress_management" model="hr.skill">
+            <field name="name">Stress management</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_adaptability" model="hr.skill">
+            <field name="name">Adaptability</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_conflict_management" model="hr.skill">
+            <field name="name">Conflict Management</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_leadership" model="hr.skill">
+            <field name="name">Leadership</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_creativity" model="hr.skill">
+            <field name="name">Creativity</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_resourcefulness" model="hr.skill">
+            <field name="name">Resourcefulness</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_persuasion" model="hr.skill">
+            <field name="name">Persuasion</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_openness_to_criticism" model="hr.skill">
+            <field name="name">Openness to criticism</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+
+        <!--Skill Levels-->
+        <!--Languages -->
+        <record id="hr_skill_level_a1" model="hr.skill.level">
+            <field name="name">A1</field>
+            <field name="level_progress">10</field>
+            <field name="default_level">1</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_a2" model="hr.skill.level">
+            <field name="name">A2</field>
+            <field name="level_progress">40</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_b1" model="hr.skill.level">
+            <field name="name">B1</field>
+            <field name="level_progress">60</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_b2" model="hr.skill.level">
+            <field name="name">B2</field>
+            <field name="level_progress">75</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_c1" model="hr.skill.level">
+            <field name="name">C1</field>
+            <field name="level_progress">85</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+        <record id="hr_skill_level_c2" model="hr.skill.level">
+            <field name="name">C2</field>
+            <field name="level_progress">100</field>
+            <field name="skill_type_id" ref="hr_skill_type_lang"/>
+        </record>
+
+        <!--Soft Skills-->
+        <record id="hr_skill_level_beginner_softskill" model="hr.skill.level">
+            <field name="name">Beginner</field>
+            <field name="default_level">1</field>
+            <field name="level_progress">15</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_elementary_softskill" model="hr.skill.level">
+            <field name="name">Elementary</field>
+            <field name="level_progress">25</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_intermediate_softskill" model="hr.skill.level">
+            <field name="name">Intermediate</field>
+            <field name="level_progress">50</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_advanced_softskill" model="hr.skill.level">
+            <field name="name">Advanced</field>
+            <field name="level_progress">80</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+        <record id="hr_skill_level_expert_softskill" model="hr.skill.level">
+            <field name="name">Expert</field>
+            <field name="level_progress">100</field>
+            <field name="skill_type_id" ref="hr_skill_type_softskill"/>
+        </record>
+    </data>
+</odoo>

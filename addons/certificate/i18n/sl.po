@@ -1,0 +1,503 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* certificate
+# 
+# Translators:
+# Wil Odoo, 2024
+# Aleš Pipan, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"PO-Revision-Date: 2024-09-29 00:00+0000\n"
+"Last-Translator: Aleš Pipan, 2025\n"
+"Language-Team: Slovenian (https://app.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "A private key is required to decrypt data."
+msgstr "Za dešifriranje podatkov je potreben zasebni ključ."
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__active
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete certificates."
+msgstr "Dodajanje, urejanje in brisanje potrdil."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Add, edit and delete keys."
+msgstr "Dodajanje, urejanje in brisanje ključev."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Archived certificates"
+msgstr "Arhivirana potrdila"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Archived keys"
+msgstr "Arhivirani ključi"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_start
+msgid "Available date"
+msgstr "Razpoložljiv datum"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Certificate"
+msgstr "Potrdilo"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pkcs12_password
+msgid "Certificate Password"
+msgstr "Geslo za potrdilo"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__pem_certificate
+msgid "Certificate in PEM format"
+msgstr "Potrdilo v formatu PEM"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__scope
+msgid "Certificate scope"
+msgstr "Obseg potrdila"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_certificate_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates"
+msgstr "Potrdila"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Certificates and Keys"
+msgstr "Potrdila in ključi"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__company_id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__company_id
+msgid "Company"
+msgstr "Podjetje"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__country_code
+msgid "Country Code"
+msgstr "Koda države"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_certificate_action_view_list
+msgid "Create a first certificate"
+msgstr "Ustvarite prvo potrdilo"
+
+#. module: certificate
+#: model_terms:ir.actions.act_window,help:certificate.certificate_key_action_view_list
+msgid "Create a first key"
+msgstr "Ustvarite prvi ključ"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__create_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: certificate
+#: model:ir.model,name:certificate.model_certificate_key
+msgid "Cryptographic Keys"
+msgstr "Kriptografski ključi"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__der
+msgid "DER"
+msgstr "DER"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__display_name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__date_end
+msgid "Expiration date"
+msgstr "Datum izteka"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__scope__general
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General"
+msgstr "Splošno"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "General certificates"
+msgstr "Splošna potrdila"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__id
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__id
+msgid "ID"
+msgstr "ID"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Invalid"
+msgstr "Neveljavno"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "Key"
+msgstr "Ključ"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__pem_key
+msgid "Key bytes in PEM format"
+msgstr "Ključni bajti v formatu PEM"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__content
+msgid "Key file"
+msgstr "Ključna datoteka"
+
+#. module: certificate
+#: model:ir.actions.act_window,name:certificate.certificate_key_action_view_list
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Keys"
+msgstr "Ključi"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_uid
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__write_date
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__loading_error
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__loading_error
+msgid "Loading error"
+msgstr "Napaka pri nalaganju"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "Make sure to use a private key to sign documents."
+msgstr "Za podpisovanje dokumentov obvezno uporabite zasebni ključ."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your certificates"
+msgstr "Upravljajte svoja potrdila"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
+msgid "Manage your keys"
+msgstr "Upravljajte svoje ključe"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__name
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"No private key linked to the certificate, it is required to sign documents."
+msgstr ""
+"Zasebni ključ ni povezan s potrdilom, potreben je za podpisovanje "
+"dokumentov."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Not valid certificates"
+msgstr "Neveljavna potrdila"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__content_format
+msgid "Original certificate format"
+msgstr "Izvirna oblika potrdila"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pem
+msgid "PEM"
+msgstr "PEM"
+
+#. module: certificate
+#: model:ir.model.fields.selection,name:certificate.selection__certificate_certificate__content_format__pkcs12
+msgid "PKCS12"
+msgstr "PKCS12"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__pkcs12_password
+msgid "Password to decrypt the PKS file."
+msgstr "Geslo za dešifriranje datoteke PKS."
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Private"
+msgstr "Zasebno"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__private_key_id
+msgid "Private Key"
+msgstr "Privatni ključ"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__password
+msgid "Private key password"
+msgstr "Geslo za zasebni ključ"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "Public"
+msgstr "Javno"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__public_key_id
+msgid "Public Key"
+msgstr "Javni ključ"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_key__public
+msgid "Public/Private key"
+msgstr "Javni/zasebni ključ"
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__serial_number
+msgid "Serial number"
+msgstr "Serijska številka"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__active
+msgid "Set active to false to archive the certificate"
+msgstr "Za arhiviranje potrdila nastavite aktivno na false."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_key__active
+msgid "Set active to false to archive the key."
+msgstr "Za arhiviranje ključa nastavite »active« na »false«."
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__subject_common_name
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Subject Name"
+msgstr "Ime subjekta"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__country_code
+msgid ""
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
+msgstr ""
+"ISO koda države v dveh znakih. \n"
+"To polje lahko uporabiš za hitro iskanje."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and private key are not compatible."
+msgstr "Potrdilo in zasebni ključ nista združljiva."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The certificate and public key are not compatible."
+msgstr "Potrdilo in javni ključ nista združljiva."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
+msgid "The date on which the certificate expires (UTC)"
+msgstr "Datum poteka veljavnosti potrdila (UTC)"
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
+msgid "The date on which the certificate starts to be valid (UTC)"
+msgstr "Datum začetka veljavnosti potrdila (UTC)"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The key size should be at least 512 bytes."
+msgstr "Velikost ključa mora biti vsaj 512 bajtov."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The private key could not be loaded."
+msgstr "Zasebnega ključa ni bilo mogoče naložiti."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public exponent should be 65537 (or 3 for legacy purposes)."
+msgstr "Javni eksponent mora biti 65537 (ali 3 za starejše namene)."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid "The public key could not be loaded."
+msgstr "Javnega ključa ni bilo mogoče naložiti."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "The public key from the certificate could not be loaded."
+msgstr "Javnega ključa iz potrdila ni bilo mogoče naložiti."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__serial_number
+msgid "The serial number to add to electronic documents"
+msgstr "Serijska številka, ki jo je treba dodati elektronskim dokumentom"
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid ""
+"This certificate could not be loaded. Either the content or the password is "
+"erroneous."
+msgstr "Tega potrdila ni bilo mogoče naložiti. Vsebina ali geslo je napačno."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/certificate.py:0
+msgid "This certificate is not valid, its validity has expired."
+msgstr "To potrdilo ni veljavno, njegova veljavnost je potekla."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"This key could not be loaded. Either its content or its password is "
+"erroneous."
+msgstr ""
+"Tega ključa ni bilo mogoče naložiti. Ali njegova vsebina ali geslo je "
+"napačno."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"decryption: RSA."
+msgstr ""
+"Nepodprt algoritem asimetrične kriptografije '%s'. Trenutno podprto za "
+"dešifriranje: RSA."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
+"signature: EC and RSA."
+msgstr ""
+"Nepodprt algoritem asimetrične kriptografije '%s'. Trenutno podprto za "
+"podpis: EC in RSA."
+
+#. module: certificate
+#. odoo-python
+#: code:addons/certificate/models/key.py:0
+msgid ""
+"Unsupported asymmetric cryptography algorithm '%s'. Currently supported: EC,"
+" RSA."
+msgstr ""
+"Nepodprt algoritem asimetrične kriptografije '%s'. Trenutno podprto: EC, "
+"RSA."
+
+#. module: certificate
+#: model:ir.model.fields,help:certificate.field_certificate_certificate__public_key_id
+msgid ""
+"Used to set a public key in case the one self-contained in the certificate is erroneus.\n"
+"                When a public key is set this way, it will be used instead of the one in the certificate.\n"
+"             "
+msgstr ""
+"Uporablja se za nastavitev javnega ključa v primeru, da je tisti, ki je samostojen v potrdilu, napačen.\n"
+"                Ko je javni ključ nastavljen na ta način, bo uporabljen namesto tistega v potrdilu.\n"
+"             "
+
+#. module: certificate
+#: model:ir.model.fields,field_description:certificate.field_certificate_certificate__is_valid
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid"
+msgstr "Velja"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "Valid certificates"
+msgstr "Veljavna potrdila"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "Validity"
+msgstr "Veljavnost"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "certificate form"
+msgstr "obrazec potrdila"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_list
+msgid "certificate list"
+msgstr "seznam potrdil"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_search
+msgid "certificate search"
+msgstr "iskanje potrdil"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_certificate_view_form
+msgid "e.g. New Certificate"
+msgstr "npr. novo potrdilo"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_form
+msgid "key form"
+msgstr "ključna oblika"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_list
+msgid "key list"
+msgstr "seznam ključev"
+
+#. module: certificate
+#: model_terms:ir.ui.view,arch_db:certificate.certificate_key_view_search
+msgid "key search"
+msgstr "iskanje ključev"

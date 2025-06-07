@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="portal.Chatter">
+    <div t-if="state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex pt-2" t-att-class="{ 'row':props.twoColumns, 'flex-column':!props.twoColumns }" t-on-scroll="onScrollDebounced" t-ref="root">
+        <div t-if="props.composer" class="o-mail-Chatter-top position-sticky top-0" t-att-class="{ 'col-lg-6':props.twoColumns, 'bg-view':env.inFrontendPortalChatter }" t-att-style="(!props.twoColumns and env.inFrontendPortalChatter and !env.projectSharingId) and 'top: -1px !important; margin-top:-15px; padding-top: 20px'" t-ref="top">
+            <Composer composer="state.thread.composer" mode="'extended'" onPostCallback.bind="onPostCallback" dropzoneRef="rootRef" t-key="props.threadId" type="'message'"/>
+        </div>
+        <div class="o-mail-Chatter-content" t-att-class="{ 'col-lg-6':props.twoColumns }">
+            <Thread thread="state.thread" t-key="state.thread.localId" order="'desc'" scrollRef="rootRef" jumpPresent="state.jumpThreadPresent"/>
+        </div>
+    </div>
+</t>
+
+</templates>

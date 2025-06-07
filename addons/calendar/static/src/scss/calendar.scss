@@ -1,0 +1,100 @@
+.o_cw_popover .o_cw_popover_fields_secondary {
+    max-height: 75vh;
+
+    & > li > div {
+        min-width: 0;
+    }
+}
+
+
+.o_cw_body .o_field_copy {
+    max-width: calc(100% - 6rem);
+    width: unset !important;
+}
+
+.o_cw_body .o_clipboard_button {
+    padding-top: 0px !important;
+}
+
+.o_field_many2manyattendeeexpandable .o_field_tags {
+    flex-direction: column;
+
+    span.badge {
+        width: fit-content;
+    }
+}
+
+.o_calendar_renderer .fc-event {
+    &:not(.o_event_dot) {
+        &.o_attendee_status_active {
+            --o-bg-opacity: 1;
+        }
+
+        &.o_attendee_status_tentative {
+            --o-bg-opacity: .5;
+        }
+
+        &.o_attendee_status_alone,
+        &.o_attendee_status_needsAction {
+            --o-bg-opacity: .5;
+        }
+
+        &.o_attendee_status_declined {
+            --o-bg-opacity: 0;
+        }
+    }
+
+    &.o_event_dot {
+        &.o_attendee_status_needsAction, &.o_event_hatched {
+            &:before {
+                content: "\f1db"; // fa-circle-thin
+            }
+        }
+
+        &.o_attendee_status_tentative:before {
+            content: "\f059"; // fa-question-circle
+        }
+
+        &.o_attendee_status_declined:before {
+            content: "\f05e"; // fa-ban
+        }
+
+        &.o_attendee_status_alone {
+            content: "\f06a"; // fa-exclamation-circle
+        }
+    }
+
+    &.o_attendee_status_declined, &.o_event_striked {
+        .fc-event-main {
+            text-decoration: line-through;
+        }
+    }
+}
+
+.btn:hover .o_calendar_check {
+    display: none;
+}
+
+.btn:hover .o_calendar_pause {
+    display: none;
+}
+
+.btn:not(:hover) .o_calendar_stop {
+    display: none;
+}
+
+.btn-group .btn.active {
+    z-index: 2;
+}
+
+.o_text_green {
+    color: green;
+}
+
+.o_text_red {
+    color: red;
+}
+
+.o_text_orange {
+    color: orange;
+}

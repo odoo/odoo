@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  MAILING LIST -->
+    <record model="ir.ui.view" id="mailing_list_view_search">
+        <field name="name">mailing.list.view.search</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <search string="Mailing Lists">
+                <field name="name"/>
+                <field name="create_date"/>
+                <filter name="inactive" string="Archived" domain="[('active','=',False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Creation Period" name="group_create_date"
+                        context="{'group_by': 'create_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_list_view_tree">
+        <field name="name">mailing.list.view.list</field>
+        <field name="model">mailing.list</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <list string="Mailing Lists" sample="1">
+                <field name="name"/>
+                <field name="is_public"/>
+                <field name="mailing_count" string="Mailings"/>
+                <field name="contact_pct_bounce" string="Bounce (%)"/>
+                <field name="contact_pct_opt_out" string="Opt-out (%)"/>
+                <field name="contact_pct_blacklisted" string="Blacklist (%s)"/>
+                <field name="contact_count" string="Recipients"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mailing_list_view_form">
+        <field name="name">mailing.list.form</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <form string="Contact List">
+                <header>
+                    <button name="action_send_mailing" string="Send Mailing"
+                        type="object" class="btn btn-primary"/>
+                    <button name="action_open_import" string="Import Contacts"
+                        type="object" class="btn btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_contacts"
+                                type="object" icon="fa-user" class="oe_stat_button">
+                            <field name="contact_count" string="Recipients" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_mailings"
+                                type="object" icon="fa-envelope-o" class="oe_stat_button">
+                            <field name="mailing_count" string="Mailings" widget="statinfo"/>
+                        </button>
+                        <button name="action_view_contacts_bouncing"
+                                type="object" icon="fa-exchange" class="oe_stat_button">
+                                <field name="contact_pct_bounce" widget="statinfo" string="% Bounce"/>
+                        </button>
+                        <button name="action_view_contacts_opt_out"
+                                type="object" icon="fa-bell-slash-o" class="oe_stat_button">
+                                <field name="contact_pct_opt_out" widget="statinfo" string="% Opt-out"/>
+                        </button>
+                        <button name="action_view_contacts_blacklisted"
+                                type="object" icon="fa-ban" class="oe_stat_button">
+                                <field name="contact_pct_blacklisted" widget="statinfo" string="% Blacklist"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" class="text-break" placeholder="e.g. Consumer Newsletter"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="active" invisible="1"/>
+                        <field name="is_public"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_list_view_form_simplified" model="ir.ui.view">
+        <field name="name">mailing.list.form.simplified</field>
+        <field name="model">mailing.list</field>
+        <field name="priority" eval="25"/>
+        <field name="arch" type="xml">
+            <form string="Contact List">
+                <div class="oe_title">
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. Consumer Newsletter"/>
+                    </h1>
+                </div>
+                <group>
+                    <field name="is_public"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_list_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.list.view.kanban</field>
+        <field name="model">mailing.list</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile o_kanban_mailing_list" sample="1">
+                <field name="active"/>
+                <templates>
+                    <t t-name="card">
+                        <!-- Card when the Kanban view is grouped  -->
+                        <div class="o_mailing_list_kanban_grouped d-flex flex-column h-100">
+                            <field name="name" class="fw-bold fs-2 mb-3 text-truncate"/>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-primary me-3" name="action_view_contacts" type="object">
+                                    <field name="contact_count"/> <span>Contacts</span>
+                                </button>
+                                <div class="flex-grow-1 d-flex flex-column align-items-end o_mass_mailing_kanban_contact_links">
+                                    <a name="action_view_contacts_email" type="object">
+                                        <span>Valid Email Recipients</span>
+                                        <field name="contact_count_email" class="ms-3"/>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 d-flex mt-4 row g-0">
+                                <div class="col-3 border-end">
+                                    <a name="action_view_mailings" type="object" class="d-flex flex-column align-items-center">
+                                        <field name="mailing_count"/>
+                                        <span class="text-muted">Mailings</span>
+                                    </a>
+                                </div>
+                                <div class="col-3 border-end">
+                                    <a name="action_view_contacts_bouncing" type="object" class="d-flex flex-column align-items-center">
+                                        <span><field name="contact_pct_bounce"/>%</span>
+                                        <span class="text-muted">Bounce</span>
+                                    </a>
+                                </div>
+                                <div class="col-3 border-end">
+                                    <a name="action_view_contacts_opt_out" type="object" class="d-flex flex-column align-items-center">
+                                        <span><field name="contact_pct_opt_out"/>%</span>
+                                        <span class="text-muted">Opt-out</span>
+                                    </a>
+                                </div>
+                                <div class="col-3">
+                                    <a name="action_view_contacts_blacklisted" type="object" class="d-flex flex-column align-items-center">
+                                        <span><field name="contact_pct_blacklisted"/>%</span>
+                                        <span class="text-muted">Blacklist</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card when the Kanban view is not grouped -->
+                        <div class="o_mailing_list_kanban_ungrouped d-flex gap-1 flex-row justify-content-between align-items-center flex-wrap">
+                            <div class="col-lg-3 col-sm-6 col-12 py-0 my-auto">
+                                <span class="d-inline-block text-truncate fs-2 fw-normal lh-sm" t-att-title="record.name.value">
+                                    <field name="name"/>
+                                </span>
+                            </div>
+                            <div class="col-lg-1 col-6 my-auto d-flex">
+                                <div class="d-flex flex-row justify-content-start justify-content-md-end">
+                                    <button name="action_view_contacts" type="object"
+                                        class="o_mailing_list_kanban_button o_mailing_list_kanban_big_nb text-primary fw-bold">
+                                        <field name="contact_count"/>
+                                    </button>
+                                    <button name="action_view_contacts" type="object"
+                                        class="o_mailing_list_kanban_button fs-4 lh-1 text-start ms-2">
+                                        Total <br/>Contacts
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="o_mailing_list_kanban_stats order-4 order-lg-3 col-lg-5 col-sm-12 col-12 py-0 my-3 my-sm-auto d-flex justify-content-sm-between justify-content-start flex-wrap">
+                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
+                                    name="action_view_contacts_email" type="object">
+                                    <field name="contact_count_email" class="fw-normal"/>
+                                    <br/>
+                                    <span class="text-muted">
+                                        <i class="fa fa-envelope-o"/> Contacts
+                                    </span>
+                                </a>
+                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
+                                    name="action_view_mailings" type="object">
+                                    <field name="mailing_count" class="fw-normal"/>
+                                    <br/>
+                                    <span class="text-muted">Mailings</span>
+                                </a>
+                                <hr class="w-100 d-block d-sm-none opacity-0 m-0 p-0"/>
+                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
+                                    name="action_view_contacts_bouncing" type="object">
+                                    <span class="fw-normal">
+                                        <field name="contact_pct_bounce"/> %
+                                    </span>
+                                    <br/>
+                                    <span class="text-muted">Bounce</span>
+                                </a>
+                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
+                                    name="action_view_contacts_opt_out" type="object">
+                                    <span class="fw-normal">
+                                        <field name="contact_pct_opt_out"/> %
+                                    </span>
+                                    <br/>
+                                    <span class="text-muted">Opt-Out</span>
+                                </a>
+                                <a class="me-sm-0 me-3 fs-4 fw-light lh-1" tabindex="-1"
+                                    name="action_view_contacts_blacklisted" type="object">
+                                    <span class="fw-normal">
+                                        <field name="contact_pct_blacklisted"/> %
+                                    </span>
+                                    <br/>
+                                    <span class="text-muted">Blacklist</span>
+                                </a>
+                            </div>
+                            <div class="order-3 order-lg-4 col-5 col-lg-2 py-0 my-auto d-none d-md-flex flex-wrap justify-content-end gap-1">
+                                <button name="action_open_import" string="Import Contacts"
+                                    type="object" class="btn btn-secondary text-nowrap">
+                                    Import Contacts
+                                </button>
+                                <button name="action_send_mailing" string="Send Mailing"
+                                    type="object" class="btn btn-secondary text-nowrap">
+                                    Send Mailing
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_view_mass_mailing_lists">
+        <field name="name">Mailing Lists</field>
+        <field name="res_model">mailing.list</field>
+        <field name="path">mailing-lists</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a Mailing List
+          </p><p>
+            No need to import mailing lists, you can send mailings to contacts saved in other Odoo apps.
+          </p>
+        </field>
+    </record>
+</odoo>

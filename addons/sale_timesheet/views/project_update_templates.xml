@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="project_update_default_description" inherit_id="project.project_update_default_description">
+        <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+        <xpath expr="//div[@name='milestone']" position="after">
+<br/>
+
+<div name="profitability" t-if="show_profitability">
+<t t-if="project.account_id and project.allow_billable and user.has_group('project.group_project_manager')" name="costs">
+<h3 style="font-weight: bolder"><u>Profitability</u></h3>
+
+<div t-if="profitability['costs']['data'] or profitability['revenues']['data']" name="profitability_detail" class="mt-4">
+<table class="table table-striped">
+<thead class="border-2 border-start-0 border-end-0">
+<tr>
+<th class="fw-bolder" style="width: 55%">Revenues</th>
+<th class="fw-bolder text-end" style="width: 15%">Expected</th>
+<th class="fw-bolder text-end" style="width: 15%">To Invoice</th>
+<th class="fw-bolder text-end" style="width: 15%">Invoiced</th>
+</tr>
+</thead>
+<tbody>
+<tr t-foreach="profitability['revenues']['data']" t-as="revenue">
+<td t-out="profitability['labels'][revenue['id']]"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'] + revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['to_invoice'])"/>
+<td class="text-end" t-out="format_monetary(revenue['invoiced'])"/>
+</tr>
+<tfoot>
+<td class="fw-bolder text-end">Total</td>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'] + profitability['revenues']['total']['to_invoice'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['to_invoice'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['revenues']['total']['invoiced'])"/>
+</tfoot>
+</tbody>
+</table>
+
+<table class="table table-striped mt-4">
+<thead class="border-2 border-start-0 border-end-0">
+<tr>
+<th class="fw-bolder" style="width: 55%">Costs</th>
+<th class="fw-bolder text-end" style="width: 15%">Expected</th>
+<th class="fw-bolder text-end" style="width: 15%">To Bill</th>
+<th class="fw-bolder text-end" style="width: 15%">Billed</th>
+</tr>
+</thead>
+<tbody>
+<tr t-foreach="profitability['costs']['data']" t-as="cost">
+<td t-out="profitability['labels'][cost['id']]"/>
+<td class="text-end" t-out="format_monetary(cost['billed'] + cost['to_bill'])"/>
+<td class="text-end" t-out="format_monetary(cost['to_bill'])"/>
+<td class="text-end" t-out="format_monetary(cost['billed'])"/>
+</tr>
+<tfoot>
+<td class="fw-bolder text-end">Total</td>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'] + profitability['costs']['total']['to_bill'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['to_bill'])"/>
+<td class="fw-bolder text-end" t-out="format_monetary(profitability['costs']['total']['billed'])"/>
+</tfoot>
+</tbody>
+</table>
+
+<table class="table table-sm mt-4">
+<tr>
+<td class="fw-bolder">Margin</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['margin'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
+<t t-out="format_monetary(profitability['total']['margin'])"/><br/>
+    <t t-if="profitability['expected_percentage']">
+
+        <t t-out="profitability['expected_percentage']"/><t>%</t>
+    </t>
+</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['revenues'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
+    <t t-out="format_monetary(profitability['total']['revenues'])"/><br/>
+    <t t-if="profitability['to_bill_to_invoice_percentage']">
+
+        <t t-out="profitability['to_bill_to_invoice_percentage']"/><t>%</t>
+    </t>
+</td>
+<td t-attf-class="#{'text-danger' if profitability['total']['costs'] &lt; 0 else 'text-success'}" style="text-align: right; font-weight: bolder">
+    <t t-out="format_monetary(profitability['total']['costs'])"/><br/>
+    <t t-if="profitability['billed_invoiced_percentage']">
+
+        <t t-out="profitability['billed_invoiced_percentage']"/><t>%</t>
+    </t>
+</td>
+</tr>
+</table>
+</div>
+</t>
+</div>
+        </xpath>
+    </template>
+
+</odoo>

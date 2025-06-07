@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="goal_definition_list_action" model="ir.actions.act_window">
+        <field name="name">Goal Definitions</field>
+        <field name="res_model">gamification.goal.definition</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new goal definition
+            </p><p>
+                A goal definition is a technical specification of a condition to reach.
+                The dates, values to reach or users are defined in goal instance.
+            </p>
+        </field>
+    </record>
+
+    <record id="goal_definition_list_view" model="ir.ui.view">
+        <field name="name">Goal Definitions List</field>
+        <field name="model">gamification.goal.definition</field>
+        <field name="arch" type="xml">
+            <list string="Goal Definitions">
+                <field name="name"/>
+                <field name="computation_mode"/>
+            </list>
+        </field>
+    </record>
+
+
+    <record id="goal_definition_form_view" model="ir.ui.view">
+        <field name="name">Goal Definitions Form</field>
+        <field name="model">gamification.goal.definition</field>
+        <field name="arch" type="xml">
+            <form string="Goal definitions">
+                <sheet>
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Get started" class="w-100"/>
+                        </h1>
+                        <label for="description"/>
+                        <div>
+                            <field name="description" placeholder="e.g. Register to the platform" class="w-100"/>
+                        </div>
+
+                        <group string="How is the goal computed?" name="compute_details">
+
+                            <field widget="radio" name="computation_mode"/>
+
+                            <!-- Hide the fields below if manually -->
+                            <field name="model_id" class="oe_inline"
+                                invisible="computation_mode not in ('sum', 'count')"
+                                required="computation_mode in ('sum', 'count')"/>
+                            <field name="model_inherited_ids" invisible="1"/>
+                            <field name="field_id" class="oe_inline" options="{'no_create': True}"
+                                invisible="computation_mode != 'sum'"
+                                required="computation_mode == 'sum'"/>
+                            <field name="field_date_id" class="oe_inline" invisible="computation_mode not in ('sum', 'count')"/>
+                            <field name="domain" invisible="computation_mode not in ('sum', 'count')" required="computation_mode in ('sum', 'count')" class="oe_inline"/>
+                            <field name="compute_code" invisible="computation_mode != 'python'" required="computation_mode == 'python'"/>
+                            <field name="condition" widget="radio"/>
+                        </group>
+                        <group string="Optimisation" name="optimisation" invisible="computation_mode not in ('sum', 'count')">
+                            <field name="batch_mode" />
+                            <div colspan="2">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
+                            <field name="batch_distinctive_field" invisible="not batch_mode" required="batch_mode"
+                                domain="[('model_id', '=', model_id)]" class="oe_inline" />
+                            <field name="batch_user_expression" invisible="not batch_mode" required="batch_mode" class="oe_inline"
+                                placeholder="e.g. user.partner_id.id"/>
+                        </group>
+                        <group string="Formatting Options" name="format_options">
+                            <field name="display_mode" widget="radio" />
+                            <field name="suffix" placeholder="e.g. days" class="oe_inline"/>
+                            <field name="monetary"/>
+                        </group>
+                        <group string="Clickable Goals" name="clickable_goals" invisible="computation_mode == 'manually'">
+                            <field name="action_id"  class="oe_inline"/>
+                            <field name="res_id_field"  invisible="not action_id" class="oe_inline"/>
+                        </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="goal_definition_search_view" model="ir.ui.view">
+        <field name="name">Goal Definition Search</field>
+        <field name="model">gamification.goal.definition</field>
+        <field name="arch" type="xml">
+            <search string="Search Goal Definitions">
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="field_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Computation Mode" name="computationmode" domain="[]" context="{'group_by':'computation_mode'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

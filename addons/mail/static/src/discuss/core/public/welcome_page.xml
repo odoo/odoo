@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.WelcomePage">
+    <div class="o-mail-WelcomePage h-100 w-100 d-flex flex-column justify-content-center align-items-center bg-light">
+        <h1 class="fw-light">
+            <span t-if="this.store.discuss_public_thread.defaultDisplayMode === 'video_full_screen'">You've been invited to a meeting!</span>
+            <span t-else="">You've been invited to a chat!</span>
+        </h1>
+        <h2 class="m-5" t-esc="store.companyName"/>
+        <div class="d-flex justify-content-center gap-5" t-att-class="{'flex-column': ui.isSmall}">
+            <div t-if="this.store.discuss_public_thread.defaultDisplayMode === 'video_full_screen'" class="position-relative d-flex justify-content-center" t-ref="root">
+                <video class="shadow rounded bg-dark" t-attf-height="{{ui.isSmall ? 240 : 480}}" t-attf-width="{{ui.isSmall ? 320 : 640}}" autoplay="" t-ref="video"/>
+                <p t-if="hasRtcSupport and !state.videoStream" class="position-absolute bottom-50 text-light">
+                    Camera is off
+                </p>
+                <p t-if="!hasRtcSupport" class="position-absolute bottom-50 text-light">
+                    Your browser does not support videoconference
+                </p>
+                <div class="position-absolute bottom-0">
+                    <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.audioStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickMic">
+                        <i class="fa" t-attf-class="{{ state.audioStream ? 'fa-microphone' : 'fa-microphone-slash' }}"/>
+                    </button>
+                    <button class="btn fa-stack align-self-end p-0 m-3 rounded-circle fs-1 shadow" t-attf-class="{{ state.videoStream ? 'btn-dark' : 'btn-danger' }}" t-on-click="onClickVideo">
+                        <i class="fa fa-camera"/>
+                    </button>
+                </div>
+                <audio autoplay="" t-ref="audio"/>
+            </div>
+            <div class="d-flex flex-column justify-content-center">
+                <t t-if="store.self.type === 'guest'">
+                    <label class="text-center fs-4" >What's your name?</label>
+                    <input class="form-control mb-3 bg-white rounded" type="text" placeholder="Your name" t-model="state.userName" t-on-keydown="onKeydownInput"/>
+                </t>
+                <p t-if="store.self.type === 'partner'" class="fs-4" t-esc="getLoggedInAsText()"/>
+                <button class="btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="store.self.type === 'guest' and state.userName.trim() === ''" t-on-click="joinChannel">
+                    <i class="oi oi-arrow-right"/>
+                </button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

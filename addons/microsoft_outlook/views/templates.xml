@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="microsoft_outlook_oauth_error">
+        <t t-call-assets="web.assets_frontend" t-js="false"/>
+        <div class="py-5">
+            <div class="alert alert-warning w-50 mx-auto" role="alert">
+                <t t-esc="error"/>
+                <br/>
+                <a t-attf-href="/odoo/{{model_name}}/{{rec_id}}">
+                    Go back to your mail server
+                </a>
+            </div>
+        </div>
+    </template>
+</odoo>

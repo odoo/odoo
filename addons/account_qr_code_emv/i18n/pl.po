@@ -1,0 +1,110 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_qr_code_emv
+# 
+# Translators:
+# Wil Odoo, 2024
+# Marta Wacławek, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Marta Wacławek, 2024\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "A bank account is required for EMV QR Code generation."
+msgstr "Do wygenerowania kodu QR EMV wymagane jest konto bankowe."
+
+#. module: account_qr_code_emv
+#: model:ir.model,name:account_qr_code_emv.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Konta bankowe"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__display_qr_setting
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__display_qr_setting
+msgid "Display Qr Setting"
+msgstr "Wyświetl ustawienia QR"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "EMV Merchant-Presented QR-code"
+msgstr "Kod QR EMV okazany przez Sprzedawcę"
+
+#. module: account_qr_code_emv
+#: model_terms:ir.ui.view,arch_db:account_qr_code_emv.view_partner_bank_form_inherit_account
+msgid "EMV QR Configuration"
+msgstr "Konfiguracja EMV QR"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include Reference"
+msgstr "Załącz referencję"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,help:account_qr_code_emv.field_account_setup_bank_manual_config__include_reference
+#: model:ir.model.fields,help:account_qr_code_emv.field_res_partner_bank__include_reference
+msgid "Include the reference in the QR code."
+msgstr "Załącz referencję w kodzie QR."
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Merchant Account Information."
+msgstr "Brakuje informacji o koncie sprzedawcy"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Merchant City."
+msgstr "Brakuje miasta sprzeddawcy"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Proxy Type."
+msgstr "Brakuje typu proxy"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid "Missing Proxy Value."
+msgstr "Brakuje wartości proxy"
+
+#. module: account_qr_code_emv
+#. odoo-python
+#: code:addons/account_qr_code_emv/models/res_bank.py:0
+msgid ""
+"No EMV QR Code is available for the country of the account "
+"%(account_number)s."
+msgstr "Żaden kod QR EMV nie jest dostępny dla kraju konta%(account_number)s."
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields.selection,name:account_qr_code_emv.selection__res_partner_bank__proxy_type__none
+msgid "None"
+msgstr "Brak"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_type
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_type
+msgid "Proxy Type"
+msgstr "Typ proxy"
+
+#. module: account_qr_code_emv
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_account_setup_bank_manual_config__proxy_value
+#: model:ir.model.fields,field_description:account_qr_code_emv.field_res_partner_bank__proxy_value
+msgid "Proxy Value"
+msgstr "Wartość proxy"

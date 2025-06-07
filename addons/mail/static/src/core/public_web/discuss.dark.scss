@@ -1,0 +1,25 @@
+.o-mail-Discuss {
+    --mail-Discuss-coreBgColor: #{mix($body-bg, $gray-200, 75%)};
+}
+
+.o-mail-Discuss-header {
+    background-color: mix($o-gray-100, $o-gray-200, 15%);
+}
+
+.o-mail-Discuss-headerActions button {
+    background-color: mix($gray-100, $gray-200);
+
+    &:not(.o-isActive):hover {
+        background-color: mix($gray-200, $gray-300);
+    }
+    &.o-isActive {
+        background-color: $gray-300;
+    }
+    &.o-isActive:hover {
+        background-color: mix($gray-300, $gray-400);
+    }
+}
+
+.o-mail-Discuss-headerActionsGroup {
+    --border-opacity: .1;
+}

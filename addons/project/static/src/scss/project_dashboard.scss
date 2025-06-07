@@ -1,0 +1,69 @@
+.o_project_kanban .o_kanban_renderer {
+
+    .o_project_kanban_main {
+        // Prevents the kanban settings menu from overflowing and creating a scrollbar.
+        .o_kanban_card_manage_pane .o_kanban_card_manage_section a {
+            white-space: normal;
+        }
+    }
+
+    .o_project_kanban_boxes {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+
+        .o_project_kanban_box {
+            position: relative;
+            text-align: center;
+            padding: 0 0 0 0;
+            margin: 0 5px;
+
+            &:first-child {
+                 margin: 0 5px 0 0;
+             }
+
+            .o_value {
+                font-weight: 800;
+            }
+
+            > div {
+                font-weight: 500;
+
+                button.o_needaction {
+                    font-size: small;
+                    font-weight: 400;
+                    margin-left: 4px;
+                    @include o-hover-opacity(0.5, 1);
+
+                    &:before {
+                        content: "/ ";
+                    }
+
+                    &:after {
+                        content: "\f086";
+                        font: normal normal normal 14px/1 FontAwesome;
+                    }
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        .o_view_nocontent {
+            top: 15%;
+        }
+    }
+}
+
+.o_dow_widget {
+    th {
+        padding: 10px 10px 0 10px;
+    }
+
+    .o_dow_days {
+        td {
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+}

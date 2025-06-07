@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_analytic_line_tree" model="ir.ui.view">
+        <field name="name">account.analytic.line.list</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <list string="Analytic Items" multi_edit="1">
+                <field name="company_id" column_invisible="True"/>
+                <field name="product_uom_category_id" column_invisible="True"/>
+                <field name="date" optional="show"/>
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="unit_amount" sum="Quantity" optional="hide"/>
+                <field name="product_uom_id" optional="hide"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="amount" sum="Total" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_filter" model="ir.ui.view">
+        <field name="name">account.analytic.line.select</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Analytic Lines">
+                <field name="name"/>
+                <field name="date"/>
+                <separator/>
+                <filter name="month" string="Date" date="date"/>
+                <group string="Group By..." expand="0" name="groupby">
+                    <separator/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="account_analytic_line_action">
+        <field name="context">{'search_default_group_date': 1}</field>
+        <field name="domain">[('auto_account_id','=', active_id)]</field>
+        <field name="name">Gross Margin</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="view_id" ref="view_account_analytic_line_tree"/>
+        <field name="search_view_id" ref="view_account_analytic_line_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No activity yet on this account
+            </p><p>
+                In Odoo, sales orders and projects are implemented using
+                analytic accounts. You can track costs and revenues to analyse
+                your margins easily.
+            </p><p>
+                Costs will be created automatically when you register supplier
+                invoices, expenses or timesheets.
+            </p><p>
+                Revenues will be created automatically when you create customer
+                invoices. Customer invoices can be created based on sales orders
+                (fixed price invoices), on timesheets (based on the work done) or
+                on expenses (e.g. reinvoicing of travel costs).
+            </p>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_form" model="ir.ui.view">
+        <field name="name">account.analytic.line.form</field>
+        <field name="model">account.analytic.line</field>
+        <field name="priority">1</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Item">
+            <field name="company_id" invisible="1"/>
+            <sheet>
+                <group>
+                    <group name="analytic_item" string="Analytic Item">
+                        <field name="name"/>
+                        <field name="account_id"/>
+                        <field name="date"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group name="amount" string="Amount">
+                        <field name="amount"/>
+                        <field name="unit_amount"/>
+                        <field name="product_uom_category_id" invisible="1"/>
+                        <field name="product_uom_id" class="oe_inline"/>
+                        <field name="currency_id" invisible="1"/>
+                    </group>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_graph" model="ir.ui.view">
+        <field name="name">account.analytic.line.graph</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <graph string="Analytic Items" sample="1">
+                <field name="account_id"/>
+                <field name="unit_amount" type="measure" widget="float_time"/>
+                <field name="amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_pivot" model="ir.ui.view">
+        <field name="name">account.analytic.line.pivot</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <pivot string="Analytic Items" sample="1">
+                <field name="account_id"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_line_kanban" model="ir.ui.view">
+        <field name="name">account.analytic.line.kanban</field>
+        <field name="model">account.analytic.line</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="account_id"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between" >
+                            <field class="fw-bold fs-5" name="name"/>
+                            <field class="text-end fw-bold fs-5" name="date"/>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <field class="text-muted" name="account_id"/>
+                            <field class="justify-content-end" name="amount" widget="monetary"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="account_analytic_line_action_entries">
+        <field name="name">Analytic Items</field>
+        <field name="res_model">account.analytic.line</field>
+        <field name="view_mode">list,kanban,form,graph,pivot</field>
+        <field name="view_id" ref="view_account_analytic_line_tree"/>
+        <field name="search_view_id" ref="analytic.view_account_analytic_line_filter"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+               No activity yet
+            </p><p>
+                In Odoo, sales orders and projects are implemented using
+                analytic accounts. You can track costs and revenues to analyse
+                your margins easily.
+            </p><p>
+                Costs will be created automatically when you register supplier
+                invoices, expenses or timesheets.
+            </p><p>
+                Revenues will be created automatically when you create customer
+                invoices. Customer invoices can be created based on sales orders
+                (fixed price invoices), on timesheets (based on the work done) or
+                on expenses (e.g. reinvoicing of travel costs).
+            </p>
+        </field>
+    </record>
+</odoo>

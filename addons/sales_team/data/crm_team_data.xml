@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="team_sales_department" model="crm.team">
+            <field name="name">Sales</field>
+            <field name="sequence">0</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="crm_team_member_admin_sales" model="crm.team.member" forcecreate="0">
+            <field name="crm_team_id" ref="team_sales_department"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <record id="salesteam_website_sales" model="crm.team">
+            <field name="name">Website</field>
+            <field name="company_id" eval="False"/>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="pos_sales_team" model="crm.team">
+            <field name="name">Point of Sale</field>
+            <field name="company_id" eval="False"/>
+            <field name="active" eval="False"/>
+        </record>
+
+        <function model="crm.team" name="message_unsubscribe"
+            eval="[
+            ref('sales_team.team_sales_department'),
+            ref('sales_team.salesteam_website_sales'),
+            ref('sales_team.pos_sales_team')],
+            [ref('base.partner_root')]"/>
+    </data>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.web.turnstile</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="turnstile_warning" position="replace">
+                <div class="content-group" id="cfturnstile_configuration_settings">
+                    <span class="o_form_label" for="">Cloudflare Turnstile</span>
+                    <div class="mt16 row">
+                        <label for="turnstile_site_key" class="col-3 o_light_label"/>
+                        <field name="turnstile_site_key"/>
+                    </div>
+                    <div class="mt16 row">
+                        <label for="turnstile_secret_key" class="col-3 o_light_label"/>
+                        <field name="turnstile_secret_key"/>
+                    </div>
+                    <div>
+                        <a href="https://blog.cloudflare.com/turnstile-private-captcha-alternative/" class="oe_link" target="_blank">
+                            <i class="oi oi-arrow-right"/> More info
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_timeline_list" name="Timeline List">
+    <section class="s_timeline_list pt32 pb88">
+        <div class="o_container_small">
+            <div class="row">
+                <div class="col-lg-12 pb24 text-center" data-name="Heading">
+                    <h2 class="h3-fs">What's new</h2>
+                    <p class="lead">Highlight your history, showcase growth and key milestones.</p>
+                </div>
+            </div>
+            <div class="s_timeline_list_wrapper d-flex justify-content-center pt-3">
+                <div>
+                    <div class="s_timeline_list_row position-relative pb-4" data-name="Milestone">
+                        <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                        <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                        <small class="text-muted">Feb 11, 2024</small>
+                        <strong>Enhanced User Interface for Better Navigation</strong>
+                    </div>
+                    <div class="s_timeline_list_row position-relative pb-4" data-name="Milestone">
+                        <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                        <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                        <small class="text-muted">Apr 03, 2024</small>
+                        <strong>New Dashboard Features for Custom Reports</strong>
+                    </div>
+                    <div class="s_timeline_list_row position-relative pb-4" data-name="Milestone">
+                        <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                        <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                        <small class="text-muted">Jun 15, 2024</small>
+                        <strong>Integrated Multi-Language Support Added</strong>
+                    </div>
+                    <div class="s_timeline_list_row position-relative pb-4" data-name="Milestone">
+                        <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                        <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                        <small class="text-muted">Aug 27, 2024</small>
+                        <strong>Improved Security Protocols Implemented</strong>
+                    </div>
+                    <div class="s_timeline_list_row position-relative pb-4" data-name="Milestone">
+                        <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                        <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                        <small class="text-muted">Oct 09, 2024</small>
+                        <strong>Mobile App Compatibility Expanded</strong>
+                    </div>
+                    <div class="s_timeline_list_row position-relative pb-4" data-name="Milestone">
+                        <div class="o_dot_line position-absolute top-0 bottom-0 w-0 mb-1 border-start pe-none"/>
+                        <span class="o_dot o_not_editable position-absolute translate-middle-x rounded-circle pe-none text-o-color-1" contenteditable="false"/>
+                        <small class="text-muted">Dec 22, 2024</small>
+                        <strong>Advanced Analytics Tools Introduced</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_timeline_list_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='website.snippet_options_background_options']" position="before">
+        <div data-js="MultipleItems" data-selector=".s_timeline_list">
+            <we-row string="Milestones">
+                <we-button data-add-item="" data-item=".s_timeline_list_row:first" data-select-item="" data-add-before="true" data-no-preview="true" class="o_we_bg_brand_primary">
+                    Add New
+                </we-button>
+            </we-row>
+        </div>
+    </xpath>
+    <xpath expr="." position="inside">
+        <div data-selector=".s_timeline_list_row" data-drop-near=".s_timeline_list_row"/>
+        <div data-selector=".s_timeline_list">
+            <we-button-group string="Alignment" title="Alignment" data-apply-to=".s_timeline_list_wrapper">
+                <we-button title="Align Left"
+                        data-select-class="justify-content-start"
+                        class="fa fa-align-left"/>
+                <we-button title="Align Center"
+                        data-select-class="justify-content-center"
+                        class="fa fa-align-center"/>
+                <we-button title="Align Right"
+                        data-select-class="justify-content-end"
+                        class="fa fa-align-right"/>
+            </we-button-group>
+        </div>
+    </xpath>
+    <xpath expr="//t[@t-set='o_dot_color_selector']" position="attributes">
+        <attribute name="t-valuef" add=".s_timeline_list .s_timeline_list_row" separator=", "/>
+    </xpath>
+    <xpath expr="//t[@t-set='o_dot_line_color_selector']" position="attributes">
+        <attribute name="t-valuef" add=".s_timeline_list" separator=", "/>
+    </xpath>
+    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
+        <attribute name="data-selector" add=".s_timeline_list_row" separator=","/>
+    </xpath>
+</template>
+
+<record id="website.s_timeline_list_000_scss" model="ir.asset">
+    <field name="name">Timeline List 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_timeline_list/000.scss</field>
+</record>
+
+</odoo>

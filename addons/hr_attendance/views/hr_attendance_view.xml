@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- views -->
+
+    <record id="view_attendance_tree" model="ir.ui.view">
+        <field name="name">hr.attendance.list</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <list
+                js_class="attendance_list_view"
+                string="Employee attendances"
+                decoration-success="color == 10"
+                decoration-danger="color == 1"
+                duplicate="false">
+                <header>
+                    <button class="btn-secondary" string="Approve Extra Hours" name="action_approve_overtime" type="object"/>
+                    <button class="btn-secondary" string="Refuse Extra Hours" name="action_refuse_overtime" type="object"/>
+                </header>
+                <field name="employee_id" widget="many2one_avatar_user"/>
+                <field name="check_in"/>
+                <field name="check_out" options="{}"/>
+                <field name="worked_hours" string="Worked Hours" widget="float_time"/>
+                <field name="overtime_hours" string="Worked Extra Hours" optional="show" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Extra Hours" optional="show" widget="float_time"/>
+                <field name="overtime_status" optional="hidden" widget="badge" decoration-warning="overtime_status == 'to_approve'" decoration-success="overtime_status == 'approved'" decoration-danger="overtime_status == 'refused'"/>
+                <field name="in_mode" string="Input Mode (In)" optional="hidden"/>
+                <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
+                <field name="in_latitude" string="Latitude (In)" optional="hidden"/>
+                <field name="in_longitude" string="Longitude (In)" optional="hidden"/>
+                <field name="out_latitude" string="Latitude (Out)" optional="hidden"/>
+                <field name="out_longitude" string="Longitude (Out)" optional="hidden"/>
+                <field name="in_city" string="City (In)" optional="hidden"/>
+                <field name="out_city" string="City (Out)" optional="hidden"/>
+                <field name="in_country_name" string="Country (In)" optional="hidden"/>
+                <field name="out_country_name" string="Country (Out)" optional="hidden"/>
+                <field name="create_uid" optional="hidden"/>
+                <field name="write_uid" optional="hidden"/>
+                <field name="write_date" optional="hidden"/>
+                <field name="color" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_attendance_kanban" model="ir.ui.view">
+        <field name="name">hr.attendance.kanban</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="employee_id" widget="many2one_avatar_user" options="{'display_avatar_name': True}" class="fs-5 fw-bold mb-2"/>
+                        <hr class="mt4 mb8"/>
+                        <div>
+                            <i class="fa fa-calendar me-1" aria-label="Period" role="img" title="Period"></i>
+                            <field name="check_in" /> - <field name="check_out" />
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_form" model="ir.ui.view">
+        <field name="name">hr.attendance.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Employee attendances" duplicate="false">
+                <header>
+                    <field name="overtime_status" widget="statusbar" invisible="no_validated_overtime_hours" readonly="0" options="{'clickable': '1'}"/>
+                    <field name="overtime_status" widget="statusbar" invisible="not no_validated_overtime_hours" statusbar_visible="approved,refused" readonly="0" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group colspan="2">
+                            <group col="1">
+                                <field name="employee_id" widget="many2one_avatar_user"/>
+                                <field name="check_in" options="{'rounding': 0}"/>
+                                <field name="check_out" options="{'rounding': 0}" placeholder="Currently Working"/>
+                            </group>
+                            <group col="2">
+                                <field name="worked_hours" string="Worked Time" widget="float_time"/>
+                                <field name="overtime_hours" widget="float_time" string="Worked Extra Hours" invisible="overtime_hours == validated_overtime_hours"/>
+                                <label for="validated_overtime_hours"/>
+                                <div class="o_row">
+                                <field
+                                    name="validated_overtime_hours"
+                                    class="o_hr_narrow_field-4"
+                                    widget="float_time"
+                                    string="Extra Hours"
+                                    readonly="overtime_status == 'refused'"
+                                    />
+                                    <button class="oe_stat_button" string="Approve" invisible="overtime_status not in ['to_approve', 'refused'] or no_validated_overtime_hours" name="action_approve_overtime" icon="fa-check" type="object"/>
+                                    <button class="oe_stat_button" string="Refuse" invisible="overtime_status not in ['to_approve', 'approved'] or no_validated_overtime_hours" name="action_refuse_overtime" icon="fa-times" type="object"/>
+                                </div>
+                            </group>
+                        </group>
+                        <separator string="Check In"/>
+                        <group name="check_in_group" colspan="2">
+                            <group>
+                                <group>
+                                    <field name="in_mode"/>
+                                    <field name="in_ip_address" invisible="in_mode == 'manual'"/>
+                                    <field name="in_browser" invisible="in_mode == 'manual'"/>
+                                </group>
+                            </group>
+                            <group invisible="in_mode == 'manual'">
+                                <label for="in_country_name" string="Localisation"/>
+                                <div class="o_row" name="in_location_info">
+                                    <span>
+                                        <field name="in_country_name"/>
+                                    </span>
+                                    <span>
+                                        <field name="in_city" invisible="in_city == 'Unknown'" nolabel="1"/>
+                                    </span>
+                                </div>
+
+                                <label for="in_latitude" string="GPS Coordinates"/>
+                                <div>
+                                    <div class="o_row">
+                                        <span>
+                                            <field name="in_latitude"/>
+                                        </span>,
+                                        <span>
+                                            <field name="in_longitude" nolabel="1"/>
+                                        </span>
+                                    </div>
+                                    <button
+                                        name="action_in_attendance_maps"
+                                        type="object"
+                                        class="btn btn-link ps-0 pt-0 pb-2"
+                                        icon="oi-arrow-right"
+                                        string="View on Maps"
+                                        colspan="2"/>
+                                </div>
+                            </group>
+                        </group>
+                        <separator string="Check Out" name="check_out_separator" invisible="not check_out"/>
+                        <group colspan="2" name="check_out_group" invisible="not check_out">
+                            <group>
+                                <group>
+                                    <field name="out_mode" string="Mode"/>
+                                    <field name="out_ip_address" string="IP Address" invisible="in_mode == 'manual'"/>
+                                    <field name="out_browser" string="Browser" invisible="in_mode == 'manual'"/>
+                                </group>
+                            </group>
+                            <group invisible="out_mode == 'manual'">
+                                <label for="out_country_name" string="Localisation"/>
+                                <div class="o_row" name="out_location_info" >
+                                    <span>
+                                        <field name="out_country_name"/>
+                                    </span>
+                                    <span>
+                                        <field name="out_city" invisible="out_city == 'Unknown'" nolabel="1"/>
+                                    </span>
+                                </div>
+
+                                <label for="out_latitude" string="GPS Coordinates"/>
+                                <div>
+                                    <div class="o_row">
+                                        <span>
+                                            <field name="out_latitude"/>
+                                        </span>,
+                                        <span>
+                                            <field name="out_longitude" nolabel="1"/>
+                                        </span>
+                                    </div>
+                                    <button
+                                        name="action_out_attendance_maps"
+                                        type="object"
+                                        class="btn btn-link ps-0 pt-0 pb-2"
+                                        icon="oi-arrow-right"
+                                        string="View on Maps"
+                                        colspan="2"/>
+                                </div>
+                            </group>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_graph" model="ir.ui.view">
+        <field name="name">hr.attendance.graph</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <graph string="Worked Hours" type="line" stacked="0" sample="1">
+                <field name="employee_id" type="row"/>
+                <field name="check_in" interval="week" type="col"/>
+                <field name="overtime_hours" widget="float_time"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_pivot" model="ir.ui.view">
+        <field name="name">hr.attendance.pivot</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <pivot string="Worked Hours">
+                <field name="employee_id" type="row"/>
+                <field name="check_in" type="col" interval="month"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
+                <field name="expected_hours" type="measure" widget="float_time"/>
+                <field name="overtime_hours" string="Difference" type="measure" widget="float_time"/>
+                <field name="validated_overtime_hours" string="Balance" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Hr Attendance Search">
+                <field name="employee_id"/>
+                <field name="department_id" operator="child_of"/>
+                <field name="check_in"/>
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
+                <filter string="Errors" name="errors"
+                        domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=',  (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Automatically Checked-Out" name="auto_check"
+                        domain="[('out_mode', '=', 'auto_check_out')]"/>
+                <separator/>
+                <filter string="Date" name="check_in_filter" date="check_in"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <separator invisible="1"/>
+                <filter string="Last 3 Months" invisible="1" name="last_three_months" domain="[(
+                    'check_in','&gt;=', (
+                        context_today() + datetime.timedelta(days=-90)
+                        )
+                    )]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                    <filter string="Departement" name="departement" context="{'group_by': 'department_id'}"/>
+                    <filter string="Manager" name="manager" context="{'group_by': 'manager_id'}"/>
+                    <filter string="Method" name="groupby_mode_in" context="{'group_by': 'in_mode'}"/>
+                    <filter string="Date" name="groupby_name" context="{'group_by': 'check_in:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- actions -->
+
+    <record id="action_try_kiosk" model="ir.actions.server">
+        <field name="name">Try kiosk</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_try_kiosk()</field>
+    </record>
+
+    <record id="action_load_demo_data" model="ir.actions.server">
+        <field name="name">Load demo data</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="state">code</field>
+        <field name="code">action = model._load_demo_data()</field>
+    </record>
+
+    <record id="hr_attendance_action" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="path">attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">
+            {
+                "search_default_groupby_name": 1,
+                "search_default_employee": 2
+            }
+        </field>
+        <field name="search_view_id" ref="hr_attendance_view_filter"/>
+        <field name="help">
+        </field>
+    </record>
+
+    <record id="hr_attendance_reporting" model="ir.actions.act_window">
+        <field name="name">Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="search_view_id" ref="hr_attendance_view_filter"/>
+        <field name="context">
+            {
+                "search_default_groupby_name" : 1,
+                "search_default_employee": 2,
+                "search_default_activeemployees": 1,
+                "search_default_last_three_months": 1
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance reporting of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_attendance_management_view_filter" model="ir.ui.view">
+        <field name="name">hr_attendance_management_view_filter</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="department_id" operator="child_of"/>
+                <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
+                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve'), ('overtime_hours', '!=', 0)]"/>
+                <filter string="Approved" name="approved" domain="[('overtime_status','=', 'approved')]"/>
+                <filter string="Refused" name="refused" domain="[('overtime_status','=', 'refused')]"/>
+                <separator/>
+                <filter
+                    string="Active Employees"
+                    name="activeemployees"
+                    domain="[('employee_id.active', '=', True)]"/>
+                <filter
+                    string="Archived Employees"
+                    name="archivedemployees"
+                    domain="[('employee_id.active', '=', False)]"/>
+                <group string="Group By">
+                    <filter string="Employee" name="employee" context="{'group_by': 'employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_attendance_tree_management" model="ir.ui.view">
+        <field name="name">hr.attendance.list</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <list string="Employee attendances" create="0">
+                <header>
+                    <button class="btn-secondary" string="Approve" name="action_approve_overtime" type="object"/>
+                    <button class="btn-secondary" string="Refuse" name="action_refuse_overtime" type="object"/>
+                </header>
+                <field name="employee_id" widget="many2one_avatar_user" readonly="1"/>
+                <field name="check_in" readonly="1"/>
+                <field name="check_out" readonly="1"/>
+                <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
+                <field name="overtime_hours" string="Worked Extra Hours" widget="float_time"/>
+                <field name="validated_overtime_hours" readonly="overtime_status == 'refused'" string="Extra Hours" widget="float_time"/>
+                <field name="overtime_status" widget="badge" decoration-warning="overtime_status == 'to_approve'" decoration-success="overtime_status == 'approved'" decoration-danger="overtime_status == 'refused'"/>
+                <button class="oe_stat_button" string="Approve" invisible="overtime_status not in ['to_approve', 'refused']" name="action_approve_overtime" icon="fa-check" type="object"/>
+                <button class="oe_stat_button" string="Refuse" invisible="overtime_status not in ['to_approve', 'approved']" name="action_refuse_overtime" icon="fa-times" type="object"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_attendance_management_action" model="ir.actions.act_window">
+        <field name="name">Management</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_attendance_management_view_filter"/>
+        <field name="view_id" ref="view_attendance_tree_management"/>
+        <field name="context">
+            {
+                "search_default_to_approve" : 1,
+                "search_default_activeemployees": 1,
+            }
+        </field>
+        <field name="domain">[('check_out', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No attendance records found
+            </p><p>
+                The attendance reporting of your employees will be displayed here.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_attendance_action_greeting_message" model="ir.actions.client">
+        <field name="name">Message</field>
+        <field name="tag">hr_attendance_greeting_message</field>
+    </record>
+
+    <!-- not used anymore, will be removed in master -->
+    <record id="hr_attendance_action_install_kiosk_pwa" model="ir.actions.client">
+        <field name="name">Attendance Kiosk</field>
+        <field name="target">new</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="tag">install_kiosk_pwa</field>
+        <field name="context">{'app_id': 'hr_attendance', 'footer': false}</field>
+    </record>
+
+    <record model="ir.actions.server" id="open_kiosk_url">
+        <field name="name">Open Kiosk Url</field>
+        <field name="model_id" ref="hr_attendance.model_res_company"/>
+        <field name="path">attendance-kiosk</field>
+        <field name="binding_model_id" ref="hr_attendance.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model._action_open_kiosk_mode()
+        </field>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
+    <!-- Menus -->
+
+    <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="205" groups="hr_attendance.group_hr_attendance_officer" web_icon="hr_attendance,static/description/icon.png"/>
+
+    <menuitem id="menu_action_open_form" name="Kiosk Mode" action="open_kiosk_url" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_manager"/>
+
+    <menuitem id="menu_hr_attendance_reporting" name="Reporting" action="hr_attendance_reporting" parent="menu_hr_attendance_root" sequence="15" groups="hr_attendance.group_hr_attendance_officer"/>
+
+    <menuitem id="menu_hr_attendance_view_attendances" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_action"/>
+
+    <menuitem id="menu_hr_attendance_view_attendances_management" name="Management" parent="menu_hr_attendance_root" sequence="6" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_management_action"/>
+</odoo>

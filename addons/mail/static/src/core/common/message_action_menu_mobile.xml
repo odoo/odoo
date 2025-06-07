@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="mail.MessageActionMenuMobile">
+        <Dialog size="'lg'" header="false" footer="false" contentClass="'o-discuss-mobileContextMenu d-flex position-absolute bottom-0 rounded-0 h-50 bg-100'" modalRef="modalRef" withBodyPadding="false">
+            <div class="btn-group d-flex flex-column rounded-3 gap-1 p-3" t-on-click.stop="">
+                <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
+                    <button class="btn px-3 py-3 d-flex align-items-center rounded-0 btn-group-item gap-3 user-select-none bg-200" t-att-class="{ 'rounded-top-3': action_first, 'rounded-bottom-3': action_last }" t-on-click="() => this.onClickAction(action)">
+                        <i class="fa-lg fa-fw fs-2" t-att-class="action.icon"/>
+                        <span class="fs-4" t-esc="action.title"/>
+                    </button>
+                </t>
+            </div>
+        </Dialog>
+    </t>
+</templates>

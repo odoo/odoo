@@ -1,0 +1,35 @@
+<templates xml:space="preserve">
+    <t t-name="html_editor.Toolbar">
+        <div class="o-we-toolbar d-flex align-items-center m-0" t-on-pointerdown.prevent="" style="overflow-x: auto; overflow-y:hidden"  t-att-class="props.class">
+            <t t-foreach="this.getFilteredButtonGroups()" t-as="buttonGroup" t-key="buttonGroup.id">
+                <span class="o-we-toolbar-vertical-seperator"></span>
+                <div class="btn-group" t-att-name="buttonGroup.id">
+                    <t t-foreach="buttonGroup.buttons" t-as="button" t-key="button.id">
+                        <t t-if="state.buttonsAvailableState[button.id]">
+                            <t t-if="button.Component">
+                                <t t-component="button.Component"
+                                    t-props="button.props"
+                                    title="button.title"
+                                    getSelection.bind="props.toolbar.getSelection"/>
+                            </t>
+                            <button t-else=""
+                                class="btn btn-light"
+                                t-att-class="{
+                                    active: state.buttonsActiveState[button.id],
+                                    disabled: state.buttonsDisabledState[button.id]
+                                }"
+                                t-att-disabled="state.buttonsDisabledState[button.id]"
+                                t-att-title="button.title"
+                                t-att-name="button.id"
+                                t-on-click="() => this.onButtonClick(button)"
+                            >
+                                <span t-if="button.icon" class="fa fa-fw" t-att-class="button.icon"/>
+                                <span t-if="button.text" t-esc="button.text"/>
+                            </button>
+                        </t>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

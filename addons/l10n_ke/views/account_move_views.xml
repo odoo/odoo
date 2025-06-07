@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="l10n_ke.view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale_info_group']/field[@name='delivery_date']" position="after">
+                <div invisible="country_code != 'KE' or move_type != 'out_invoice' or payment_state != 'paid'">
+                    <field name="l10n_ke_wh_certificate_number"/>
+                    <field name="l10n_ke_wh_certificate_date"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

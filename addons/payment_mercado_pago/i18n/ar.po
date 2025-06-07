@@ -1,0 +1,235 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_mercado_pago
+# 
+# Translators:
+# Wil Odoo, 2024
+# Malaz Abuidris <msea@odoo.com>, 2024
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-26 08:56+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2024\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_mercado_pago
+#: model_terms:ir.ui.view,arch_db:payment_mercado_pago.payment_provider_form
+msgid "Access Token"
+msgstr "رمز الوصول "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"Call your card issuer to activate your card or use another payment method. "
+"The phone number is on the back of your card."
+msgstr ""
+"اتصل بالجهة المصدرة لبطاقتك حتى تقوم بتفعيلها او لاستخدام طريقة دفع أخرى. "
+"ستجد رقم الهاتف على ظهر البطاقة. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check expiration date."
+msgstr "تحقق من تاريخ انتهاء الصلاحية "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the card number."
+msgstr "تحقق من رقم البطاقة. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the card security code."
+msgstr "تحقق من رمز أمان البطاقة. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Check the data."
+msgstr "تحقق من البيانات. "
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__code
+msgid "Code"
+msgstr "رمز "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid "Could not establish the connection to the API."
+msgstr "تعذر إنشاء الاتصال بالواجهة البرمجية للتطبيق. "
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields.selection,name:payment_mercado_pago.selection__payment_provider__code__mercado_pago
+msgid "Mercado Pago"
+msgstr "Mercado Pago"
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,field_description:payment_mercado_pago.field_payment_provider__mercado_pago_access_token
+msgid "Mercado Pago Access Token"
+msgstr "رمز وصول Mercado Pago "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "No transaction found matching reference %s."
+msgstr "لم يتم العثور على معاملة تطابق المرجع %s. "
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_provider
+msgid "Payment Provider"
+msgstr "مزود الدفع "
+
+#. module: payment_mercado_pago
+#: model:ir.model,name:payment_mercado_pago.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة الدفع "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Payment was not processed, use another card or contact issuer."
+msgstr ""
+"لم تتم معالجة الدفع. استخدم بطاقة أخرى أو تواصل مع الجهة المُصدرة لبطاقتك. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with invalid status: %s"
+msgstr "تم استلام البيانات مع حالة غير صالحة: %s  "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing payment id."
+msgstr "تم استلام البيانات دون معرّف الدفع. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing reference."
+msgstr "تم استلام البيانات دون مرجع. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_transaction.py:0
+msgid "Received data with missing status."
+msgstr "تم استلام البيانات دون حالة. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. Mercado Pago gave us the following "
+"information: '%(error_message)s' (code %(error_code)s)"
+msgstr ""
+"The communication with the API failed. Mercado Pago gave us the following "
+"information: '%(error_message)s' (code %(error_code)s)"
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/models/payment_provider.py:0
+msgid ""
+"The communication with the API failed. The response is empty. Please verify "
+"your access token."
+msgstr ""
+"فشل التواصل مع الواجهة البرمجية للتطبيق. الرد فارغ. يرجى التحقق من رمز "
+"الوصول الخاص بك. "
+
+#. module: payment_mercado_pago
+#: model:ir.model.fields,help:payment_mercado_pago.field_payment_provider__code
+msgid "The technical code of this payment provider."
+msgstr "الكود التقني لمزود الدفع هذا. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "This payment method does not process payments in installments."
+msgstr "لا يمكن استخدام طريقة الدفع هذه لمعالجة المدفوعات بالأقساط. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We are processing your payment. Don't worry, in less than 2 business days, "
+"we will notify you by e-mail if your payment has been credited."
+msgstr ""
+"نحن نقوم بمعالجة مدفوعاتك. لا تقلق، سنخطرك عبر البريد الإلكتروني في أقل من "
+"يومي عمل إذا تم إيداع دفعتك. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We are processing your payment. Don't worry, less than 2 business days we "
+"will notify you by e-mail if your payment has been credited or if we need "
+"more information."
+msgstr ""
+"نحن نقوم بمعالجة مدفوعاتك. لا تقلق، سنخطرك عبر البريد الإلكتروني في أقل من "
+"يومي عمل إذا تم إيداع دفعتك أو إذا كنا بحاجة إلى مزيد من المعلومات. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"We were unable to process your payment, please check your card information."
+msgstr "لم نتمكن من معالجة دفعتك، يرجى التحقق من معلوماتك. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "We were unable to process your payment, please use another card."
+msgstr "لم نتمكن من معالجة دفعتك، يرجى استخدام بطاقة أخرى. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"You have already made a payment for that value. If you need to pay again, "
+"use another card or another payment method."
+msgstr ""
+"لقد قمت بدفع هذه القيمة بالفعل. إذا كنت بحاجة إلى الدفع مرة أخرى، استخدم "
+"بطاقة أخرى أو طريقة دفع أخرى. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"You have reached the limit of allowed attempts. Choose another card or other"
+" means of payment."
+msgstr ""
+"لقد وصلت إلى الحد الأقصى المسموح به من المحاولات. اختر بطاقة أخرى أو وسيلة "
+"دفع أخرى. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "You must authorize the payment with this card."
+msgstr "يجب عليك السماح بالدفع باستخدام هذه البطاقة. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid "Your card has not enough funds."
+msgstr "لا تحتوي بطاقتك على الرصيد الكافي. "
+
+#. module: payment_mercado_pago
+#. odoo-python
+#: code:addons/payment_mercado_pago/const.py:0
+msgid ""
+"Your payment has been credited. In your summary you will see the charge as a"
+" statement descriptor."
+msgstr ""
+"لقد تم إيداع المدفوعات الخاصة بك. في الملخص الخاص بك، سترى الرسوم كوصف بيان."
+" "

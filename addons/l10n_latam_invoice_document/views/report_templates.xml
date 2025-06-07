@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard" >
+        <!-- support for custom header -->
+        <xpath expr="//img/../.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//img/../.." position="after">
+            <div t-attf-class="header o_company_#{company.id}_layout"
+                 t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+
+        <!-- support for custom footer -->
+        <div class="o_footer_content d-flex border-top pt-2" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+
+        <div class="o_footer_content d-flex border-top pt-2" position="after">
+            <div class="o_footer_content border-top pt-2"
+                 t-if="custom_footer and company._localization_use_documents()">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_bold" inherit_id="web.external_layout_bold" >
+        <!-- support for custom header -->
+        <xpath expr="//img/../.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//img/../.." position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+
+        <!-- support for custom footer -->
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div class="o_footer_content border-top pt-2" t-attf-class="{{'d-flex' if is_html_empty(company.report_header) else 'row' }}"
+                 t-if="custom_footer and company._localization_use_documents()">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="external_layout_boxed" inherit_id="web.external_layout_boxed" >
+        <!-- support for custom header -->
+        <xpath expr="//img/../.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//img/../.." position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+
+        <!-- support for custom footer -->
+        <xpath expr="//div[hasclass('o_footer_content')]" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('o_footer_content')]" position="after">
+            <div class="o_footer_content border-top pt-2" t-attf-class="{{'d-flex' if is_html_empty(company.report_header) else 'row' }}"
+                 t-if="custom_footer and company._localization_use_documents()">
+                <t t-out="custom_footer"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="external_layout_striped" inherit_id="web.external_layout_striped" >
+        <!-- support for custom header -->
+        <xpath expr="//img/../.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//img/../.." position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+
+        <!-- support for custom footer -->
+        <div class="o_footer_content border-top pt-2 text-center" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div class="o_footer_content border-top pt-2 text-center" position="after">
+            <div class="o_footer_content border-top pt-2 text-center"
+                 t-if="custom_footer and company._localization_use_documents()">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_bubble" inherit_id="web.external_layout_bubble">
+        <!-- support for custom header -->
+        <xpath expr="//img/../.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//img/../.." position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center" position="after">
+            <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-4 text-center"
+                 t-if="custom_footer and company._localization_use_documents()">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_wave" inherit_id="web.external_layout_wave">
+        <!-- support for custom header -->
+        <xpath expr="//img/../.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//img/../.." position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+
+        <!-- support for custom footer -->
+        <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center" position="after">
+            <div t-attf-class="o_footer_content {{report_type != 'pdf' and 'position-absolute end-0 start-0 bottom-0 mx-5'}} pt-5 text-center"
+                 t-if="custom_footer and company._localization_use_documents()">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+
+    <template id="external_layout_folder" inherit_id="web.external_layout_folder">
+        <!-- support for custom header -->
+        <xpath expr="//img/../.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        <xpath expr="//img/../.." position="after">
+            <div t-if="custom_header and company._localization_use_documents()">
+                <t t-call="#{custom_header}"/>
+            </div>
+        </xpath>
+
+        <!-- support for custom footer -->
+        <div class="o_footer_content d-flex border-top pt-2" position="attributes">
+            <attribute name="t-if">not custom_footer</attribute>
+        </div>
+        <div class="o_footer_content d-flex border-top pt-2" position="after">
+            <div class="o_footer_content border-top pt-2"
+                 t-if="custom_footer and company._localization_use_documents()">
+                <t t-out="custom_footer"/>
+            </div>
+        </div>
+    </template>
+</odoo>

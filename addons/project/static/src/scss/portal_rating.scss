@@ -1,0 +1,46 @@
+.o_portal_project_rating {
+    .thumbnail{
+        height: 240px;
+    }
+    .o_top_partner_rating_image {
+        height: 15px;
+    }
+    .o_top_partner_image {
+        height: 30px;
+        width: 30px;
+    }
+    .o_top_partner_feedback{
+        word-wrap: break-word;
+    }
+    .o_vertical_separator {
+        border-left: 1px solid #eeeeee
+    }
+    .o_rating_progress {
+        margin-bottom: 10px;
+    }
+    .o_rating_count {
+        display: inline-block;
+        min-width: 22px
+    }
+    .o_smiley_no_padding_left {
+        padding-left: 0;
+    }
+    .o_smiley_no_padding_right {
+        padding-right: 0;
+    }
+    .o_lighter_smileys {
+        opacity: 0.4
+    }
+}
+
+.o_status {
+    display: block;
+    background-color: map-get($grays, '200');
+    height: 12px;
+    width: 12px;
+    box-shadow: inset 0 0 0 1px rgba($black, .2);
+
+    .dropdown-item > & {
+        transform: translateX(-50%);
+    }
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.StatusBarDropdownItems">
+        <t t-foreach="visibleSlotNames" t-as="slot" t-key="slot">
+            <DropdownItem class="'o-dropdown-item-unstyled-button'">
+                <t t-slot="{{ slot }}" />
+            </DropdownItem>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,19 @@
+/**
+ * This file includes all the t-transition mixins.
+ */
+
+/*
+  Fade in and out with t-transition
+  Usage:
+    scss: @include owl-fade(0.5s, 'o_notification')
+    xml: <tag t-transition="o_notification_fade" />
+ */
+@mixin owl-fade($time, $name) {
+  .#{$name}_fade {
+    transition: all $time;
+  }
+
+  .#{$name}_fade-enter {
+    opacity: 0;
+  }
+}

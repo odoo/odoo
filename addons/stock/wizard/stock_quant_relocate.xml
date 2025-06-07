@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_quant_relocate_view_form" model="ir.ui.view">
+        <field name="name">Stock Relocation</field>
+        <field name="model">stock.quant.relocate</field>
+        <field name="arch" type="xml">
+            <form string="Relocate your stock">
+                <group>
+                    <field name="quant_ids" invisible="1"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="dest_location_id" string="To Location" options="{'no_create': True}"/>
+                    <field name="dest_package_id_domain" invisible="1"/>
+                    <field name="dest_package_id" string="To Package" groups="stock.group_tracking_lot" readonly="is_multi_location"/>
+                    <field name="message" placeholder="Product Relocated"/>
+                </group>
+                <field name="is_partial_package" invisible="1"/>
+                <field name="is_multi_location" invisible="1"/>
+                <div class="alert alert-danger mb8" role="alert" groups="stock.group_tracking_lot" invisible="not is_partial_package">
+                    You are about to move quantities in a package without moving the full package.
+                    Those quantities will be removed from the following package(s):
+                    <field name="partial_package_names"/>
+                </div>
+                <div class="alert alert-danger mb8" role="alert" groups="stock.group_tracking_lot" invisible="not is_multi_location">
+                    The quantities selected do not all belong to the same location.
+                    You may not assign them a package without moving them to a common location.
+                </div>
+                <footer>
+                    <button name="action_relocate_quants" string="Confirm" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

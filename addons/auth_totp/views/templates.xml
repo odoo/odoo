@@ -1,0 +1,50 @@
+<odoo>
+
+    <template id="auth_totp_form" name="Two-Factor Authentication">
+        <t t-call="web.login_layout">
+            <t t-set="disable_footer">1</t>
+            <div class="oe_login_form">
+                <h5 class="card-title">Two-factor Authentication</h5>
+                <form method="POST" action="" class="">
+                    <div class="mb-2 mt-2 text-muted">
+                        To login, enter below the six-digit authentication code provided by your Authenticator app.
+                        <br/>
+                        <a href="https://www.odoo.com/documentation/master/applications/general/auth/2fa.html"
+                           title="Learn More" target="_blank">Learn More</a>
+                    </div>
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <input type="hidden" name="redirect" t-att-value="redirect"/>
+                    <div class="mb-3">
+                        <label class="fw-bold" for="totp_token">Authentication Code</label>
+                        <input id="totp_token" name="totp_token" class="form-control mb-2"
+                                autocomplete="off" inputmode="numeric" autofocus="autofocus" required="required" placeholder="e.g. 123456"/>
+                    </div>
+                    <div class="text-center py-2 border-top">
+                        <p class="alert alert-danger" t-if="error" role="alert">
+                            <t t-esc="error"/>
+                        </p>
+                    <div class="mb-2 mt-2 text-muted">
+                        <input type="checkbox" name="remember" id="switch-remember" value="1"/>
+                        <label for="switch-remember">Don't ask again on this device</label>
+                    </div>
+                        <div t-attf-class="clearfix oe_login_buttons text-center d-grid mb-1">
+                            <button type="submit" class="btn btn-primary">
+                                Log in
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+
+                <form method="POST" action="/web/session/logout">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="w-100 text-center">
+                        <button type="submit" class="btn btn-link btn-sm mb-2">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+</odoo>

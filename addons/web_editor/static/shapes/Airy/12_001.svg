@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1400 1400">
+	<style type="text/css">
+		@keyframes wave {
+			0%, 100% {transform: scale(1, 1);}
+			50%      {transform: scale(1, 1.15);}
+		}
+		@keyframes scale_h {
+			0%, 100% {transform: scale(1, 1);}
+			50%      {transform: scale(1.15, 1);}
+		}
+		g {
+			transform-origin: center top;
+			animation: wave 15s cubic-bezier(.445, .05, .55, .95) infinite;
+		}
+		path {transform-origin: center;}
+		#path_1 {fill:#F6F6F6;}
+		#path_2, #path_3, #path_4 {opacity:0.24;fill:none;stroke:#3AADAA;stroke-width:2;}
+		#path_2 {animation: scale_h 15s .5s cubic-bezier(.445, .05, .55, .95) infinite;}
+		#path_3 {animation: scale_h 15s cubic-bezier(.445, .05, .55, .95) infinite;}
+		#path_4 {animation: scale_h 15s 2s cubic-bezier(.445, .05, .55, .95) infinite;}
+		#path_5 {
+			fill:none;stroke:#3AADAA;stroke-width:2;
+			animation: rotate 15s 1.5s cubic-bezier(.445, .05, .55, .95) infinite;
+		}
+	</style>
+	<g>
+		<path id="path_1" class="st0" d="M350,51.4c152.8,0,350,44.3,350,44.3S897.2,140,1050,140c148.9,0,339.8-42,349.6-44.2V0H0.4v95.6 C10.2,93.4,201.1,51.4,350,51.4z"/>
+		<path id="path_2" class="st1" d="M0,95.2c0,0,197.2-44.5,350-44.5s350,44.5,350,44.5s197.2,44.5,350,44.5s350-44.5,350-44.5"/>
+		<path id="path_3" class="st2" d="M0,95.2c0,0,197.2-22.3,350-22.3s350,22.3,350,22.3s197.2,22.3,350,22.3s350-22.3,350-22.3"/>
+		<path id="path_4" class="st2" d="M0,95.2c0,0,197.2-89.1,350-89.1s350,89.1,350,89.1s197.2,89.1,350,89.1s350-89.1,350-89.1"/>
+		<path id="path_5" class="st3" d="M0,95.2c0,0,197.2-66.8,350-66.8s350,66.8,350,66.8S897.2,162,1050,162s350-66.8,350-66.8"/>
+	</g>
+</svg>

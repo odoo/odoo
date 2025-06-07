@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CalendarCommonPopover">
+        <t t-if="env.isSmall">
+            <Dialog title="props.record.title" contentClass="'o_calendar_color_'+ props.record.colorIndex">
+                <t t-call="{{ constructor.subTemplates.body }}" />
+                <t t-set-slot="footer">
+                    <t t-call="{{ constructor.subTemplates.footer }}" />
+                </t>
+            </Dialog>
+        </t>
+        <t t-else="">
+            <t t-call="{{ constructor.subTemplates.popover }}" />
+        </t>
+    </t>
+
+    <t t-name="web.CalendarCommonPopover.popover">
+        <div class="card-header d-flex justify-content-between py-2 pe-2">
+            <span class="popover-header border-0 text-truncate" t-esc="props.record.title" t-att-data-tooltip="props.record.title"/>
+            <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
+                <i class="fc-close fc-icon fc-icon-x" />
+            </span>
+        </div>
+        <div class="o_cw_body">
+            <t t-call="{{ constructor.subTemplates.body }}" />
+            <div class="card-footer d-flex gap-1 border-top" t-att-class="{ 'o_footer_shrink': !hasFooter }">
+                <t t-call="{{ constructor.subTemplates.footer }}" />
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.CalendarCommonPopover.body">
+        <ul class="list-group list-group-flush">
+            <li t-if="date" class="list-group-item">
+                <i class="fa fa-fw fa-calendar text-400" />
+                <span class="fw-bold ms-2" t-esc="date" /> <small t-if="dateDuration != 'All day'"><b t-esc="dateDuration" /></small>
+            </li>
+            <li t-if="time" class="list-group-item">
+                <i class="fa fa-fw fa-clock-o text-400" />
+                <span class="fw-bold ms-2" t-esc="time" /> <small t-if="timeDuration"><b t-esc="`(${timeDuration})`" /></small>
+            </li>
+        </ul>
+        <ul class="list-group list-group-flush o_cw_popover_fields_secondary">
+            <Record resModel="props.model.resModel" resId="props.record.id" fields="props.model.fields" activeFields="activeFields" mode="'readonly'" values="props.record.rawRecord" t-slot-scope="slot">
+                <t t-foreach="Object.keys(props.model.popoverFieldNodes)" t-as="fieldId" t-key="fieldId">
+                    <t t-set="fieldInfo" t-value="props.model.popoverFieldNodes[fieldId]"/>
+                    <t t-set="fieldType" t-value="props.model.fields[fieldId].type"/>
+                    <t t-if="!isInvisible(fieldInfo, slot.record)">
+                        <li class="list-group-item d-flex text-nowrap align-items-center" t-att-class="fieldInfo.attrs.class"  t-att-data-tooltip="fieldType === 'html' ? '' : getFormattedValue(fieldId, slot.record)">
+                            <span class="fw-bold me-2" t-if="!fieldInfo.options.noLabel and fieldInfo.type !== 'properties'">
+                                <t t-if="fieldInfo.options.icon">
+                                    <i t-attf-class="fa-fw {{fieldInfo.options.icon}} text-400" />
+                                </t>
+                                <t t-else="">
+                                    <t t-esc="fieldInfo.string" />
+                                </t>
+                            </span>
+                            <div class="flex-grow-1 o_cw_popover_field overflow-hidden">
+                                <Field name="fieldInfo.name" record="slot.record" fieldInfo="fieldInfo" type="fieldInfo.widget" />
+                            </div>
+                        </li>
+                    </t>
+                </t>
+            </Record>
+        </ul>
+    </t>
+
+    <t t-name="web.CalendarCommonPopover.footer">
+        <t t-if="isEventEditable">
+            <a href="#" class="btn btn-primary o_cw_popover_edit" t-on-click="onEditEvent">Edit</a>
+        </t>
+        <t t-if="isEventDeletable">
+            <a href="#" class="btn btn-secondary o_cw_popover_delete" t-on-click="onDeleteEvent">Delete</a>
+        </t>
+    </t>
+
+</templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.l10n.gr.edi</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <page name="general_info" position="after">
+                <page string="MyDATA" name="l10n_gr_edi_mydata" invisible="country_code != 'GR'">
+                    <group>
+                        <field name="l10n_gr_edi_test_env"/>
+                        <field name="l10n_gr_edi_aade_id"/>
+                        <field name="l10n_gr_edi_aade_key"/>
+                        <field name="l10n_gr_edi_branch_number"/>
+                    </group>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>

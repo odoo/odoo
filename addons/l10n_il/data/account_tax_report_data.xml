@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo auto_sequence="1">
+    <record id="vat_report" model="account.report">
+        <field name="name">VAT Report (PCN874)</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.il"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="vat_report_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_out_base_title" model="account.report.line">
+                <field name="name">VAT SALES (BASE)</field>
+                <field name="aggregation_formula">ILTAX_OUT_BASE.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_out_base" model="account.report.line">
+                        <field name="name">VAT SALES (BASE)</field>
+                        <field name="code">ILTAX_OUT_BASE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_out_base_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT SALES (BASE)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_vat_sales_tax" model="account.report.line">
+                <field name="name">VAT SALES (TAX)</field>
+                <field name="code">ILTAX_OUT_BALANCE</field>
+                <field name="aggregation_formula">ILTAX_OUT_BALANCE_00.balance+ILTAX_OUT_BALANCE_PA.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_out_balance" model="account.report.line">
+                        <field name="name">VAT Sales</field>
+                        <field name="code">ILTAX_OUT_BALANCE_00</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_out_balance_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Sales</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_out_balance_pa" model="account.report.line">
+                        <field name="name">VAT PA Sales</field>
+                        <field name="code">ILTAX_OUT_BALANCE_PA</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_out_balance_pa_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT PA Sales</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_out_base_exempt_title" model="account.report.line">
+                <field name="name">VAT Exempt Sales (BASE)</field>
+                <field name="aggregation_formula">ILTAX_OUT_BASE_exempt.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_out_base_exempt" model="account.report.line">
+                        <field name="name">VAT Exempt Sales (BASE)</field>
+                        <field name="code">ILTAX_OUT_BASE_exempt</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_out_base_exempt_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Exempt Sales (BASE)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_in_balance" model="account.report.line">
+                <field name="name">VAT INPUTS (TAX)</field>
+                <field name="code">ILTAX_IN_BALANCE</field>
+                <field name="aggregation_formula">ILTAX_IN_BALANCE_17.balance+ILTAX_IN_BALANCE_18.balance+ILTAX_IN_BALANCE_2_3.balance+ILTAX_IN_BALANCE_1_4.balance+ILTAX_IN_BALANCE_PA.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_in_balance_17" model="account.report.line">
+                        <field name="name">VAT Inputs 17%</field>
+                        <field name="code">ILTAX_IN_BALANCE_17</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_in_balance_17_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Inputs 17%</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_in_balance_18" model="account.report.line">
+                        <field name="name">VAT Inputs 18%</field>
+                        <field name="code">ILTAX_IN_BALANCE_18</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_in_balance_18_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Inputs 18%</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_in_balance_pa_16" model="account.report.line">
+                        <field name="name">VAT Inputs PA 16%</field>
+                        <field name="code">ILTAX_IN_BALANCE_PA</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_in_balance_pa_16_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Inputs PA 16%</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_in_balance_2_3" model="account.report.line">
+                        <field name="name">VAT Inputs 2/3</field>
+                        <field name="code">ILTAX_IN_BALANCE_2_3</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_in_balance_2_3_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Inputs 2/3</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_in_balance_1_4" model="account.report.line">
+                        <field name="name">VAT Inputs 1/4</field>
+                        <field name="code">ILTAX_IN_BALANCE_1_4</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_in_balance_1_4_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT Inputs 1/4</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_vat_in_fa_title" model="account.report.line">
+                <field name="name">VAT INPUTS (fixed assets)</field>
+                <field name="aggregation_formula">ILTAX_VAT_IN_FA.balance</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_vat_in_fa" model="account.report.line">
+                        <field name="name">VAT INPUTS (fixed assets)</field>
+                        <field name="code">ILTAX_VAT_IN_FA</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_vat_in_fa_tag" model="account.report.expression">
+                                <field name="label">balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">VAT INPUTS (fixed assets)</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_vat_due" model="account.report.line">
+                <field name="name">VAT DUE</field>
+                <field name="code">ILTAX_VAT_DUE</field>
+                <field name="aggregation_formula">(ILTAX_OUT_BALANCE_00.balance + ILTAX_OUT_BALANCE_PA.balance) - (ILTAX_IN_BALANCE_17.balance + ILTAX_IN_BALANCE_18.balance + ILTAX_IN_BALANCE_2_3.balance + ILTAX_IN_BALANCE_1_4.balance + ILTAX_IN_BALANCE_PA.balance) - ILTAX_VAT_IN_FA.balance</field>
+                <field name="hierarchy_level">0</field>
+            </record>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.ActionpadWidget">
+        <div class="actionpad d-flex flex-column gap-2">
+            <div t-if="ui.isSmall" class="d-flex gap-2">
+                <BackButton t-if="!props.showActionButton and pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
+                <t t-if="props.onClickMore">
+                    <SelectPartnerButton partner="props.partner"/>
+                    <button t-if="this.pos.showSaveOrderButton" t-att-disabled="this.pos.get_order().is_empty()" class="btn btn-light btn-lg" t-on-click="() => this.pos.clickSaveOrder()">
+                        <i class="fa fa-upload"/>
+                    </button>
+                    <button class="button mobile-more-button btn btn-light btn-lg flex-fill" t-on-click="props.onClickMore">
+                        <span>Actions</span>
+                    </button>
+                </t>
+            </div>
+            <div t-if="props.showActionButton" class="validation d-flex gap-2">
+                <BackButton t-if="pos.showBackButton()" onClick="() => pos.onClickBackButton()"/>
+                <button class="pay pay-order-button button btn btn-primary btn-lg py-3 d-flex align-items-center justify-content-center flex-fill"
+                    t-on-click="props.actionToTrigger"
+                    t-esc="props.actionName"
+                />
+            </div>
+        </div>
+    </t>
+
+</templates>

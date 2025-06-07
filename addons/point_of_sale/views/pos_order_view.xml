@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <form string="Point of Sale Orders" create="0">
+                <header>
+                    <button name="%(action_pos_payment)d" string="Payment" class="oe_highlight" type="action" invisible="state != 'draft'" />
+                    <button name="action_pos_order_invoice" string="Invoice" type="object"
+                            invisible="state != 'paid'"/>
+                    <button name="refund" string="Return Products" type="object"
+                        invisible="state == 'draft' or not has_refundable_lines"/>
+                    <field name="state" widget="statusbar" invisible="state == 'cancel'" statusbar_visible="draft,paid,done"/>
+                    <field name="state" widget="statusbar" invisible="state != 'cancel'" statusbar_visible="draft,cancel"/>
+                    <field name="has_refundable_lines" invisible="1" />
+                </header>
+                <sheet>
+                <field name="failed_pickings" invisible="1"/>
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_stock_picking"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        invisible="picking_count == 0">
+                        <field name="picking_count" widget="statinfo" string="Pickings" invisible="failed_pickings"/>
+                        <field name="picking_count" widget="statinfo" string="Pickings" class="text-danger" invisible="not failed_pickings"/>
+                    </button>
+                    <button name="action_view_invoice"
+                        string="Invoice"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-pencil-square-o"
+                        invisible="state != 'invoiced'">
+                    </button>
+                    <button name="action_view_refund_orders"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-undo"
+                        invisible="refund_orders_count == 0">
+                        <field name="refund_orders_count" widget="statinfo" string="Refunds" />
+                    </button>
+                    <button name="action_view_refunded_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-shopping-cart "
+                        invisible="not refunded_order_id">
+                        <field name="refunded_order_id" widget="statinfo" string="Refunded Orders" />
+                    </button>
+                </div>
+                <group col="4" colspan="4" name="order_fields">
+                    <field name="name"/>
+                    <field name="date_order"/>
+                    <field name="session_id"  readonly="state != 'draft'"/>
+                    <field string="User" name="user_id" readonly="state in ['done', 'invoiced']"/>
+                    <field name="order_edit_tracking" invisible="1"/>
+                    <field name="is_edited" readonly="1" invisible="not order_edit_tracking"/>
+                    <field name="partner_id" context="{'res_partner_search_mode': 'customer'}" readonly="state == 'invoiced'"/>
+                    <field name="fiscal_position_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                </group>
+                <notebook colspan="4">
+                    <page string="Products" name="products">
+                      <field name="lines" colspan="4" nolabel="1" readonly="state != 'draft'" mode="list,kanban">
+                            <kanban class="o_kanban_mobile">
+                                <t t-name="card" class="row g-0">
+                                    <aside class="col-2 pe-3">
+                                        <field name="product_id" widget="image" options="{'preview_image': 'image_128'}"/>
+                                    </aside>
+                                    <main class="col">
+                                        <div class="d-flex">
+                                            <field name="full_product_name" class="fw-bolder"/>
+                                            <field name="price_subtotal_incl" widget="monetary" class="ms-auto me-3"/>
+                                        </div>
+                                        <div class="text-muted">
+                                            Quantity: <field name="qty"/> <field name="product_uom_id"/>
+                                        </div>
+                                        <div class="text-muted">
+                                            Unit price: <field name="price_unit" widget="monetary"/>
+                                        </div>
+                                    </main>
+                                </t>
+                            </kanban>
+                            <list string="Order lines" editable="bottom">
+                                <field name="name" column_invisible="True"/>
+                                <field name="full_product_name" optional="hide" readonly="1"/>
+                                <field name="product_id" widget="product_label_section_and_note_field" />
+                                <field name="is_edited" readonly="1" column_invisible="not parent.order_edit_tracking"/>
+                                <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
+                                <field name="qty"/>
+                                <field name="customer_note" optional="hide"/>
+                                <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
+                                <field name="price_unit" widget="monetary"/>
+                                <field name="is_total_cost_computed" column_invisible="True"/>
+                                <field name="total_cost" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
+                                <field name="margin" invisible="not is_total_cost_computed" optional="hide" widget="monetary"/>
+                                <field name="margin_percent" invisible="not is_total_cost_computed" optional="hide" widget="percentage"/>
+                                <field name="discount" width="50px" string="Disc.%"/>
+                                <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
+                                <field name="tax_ids" widget="many2many_tags" column_invisible="True"/>
+                                <field name="price_subtotal" widget="monetary" force_save="1"/>
+                                <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="refunded_qty" optional="hide" />
+                            </list>
+                            <form string="Order lines">
+                                <group col="4">
+                                    <field name="product_id" />
+                                    <field name="qty"/>
+                                    <field name="discount"/>
+                                    <field name="price_unit" widget="monetary"/>
+                                    <field name="price_subtotal" invisible="1" widget="monetary" force_save="1"/>
+                                    <field name="price_subtotal_incl" invisible="1" widget="monetary" force_save="1"/>
+                                    <field name="tax_ids_after_fiscal_position" widget="many2many_tags" string="Taxes"/>
+                                    <field name="tax_ids" widget="many2many_tags" invisible="1"/>
+                                    <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
+                                    <field name="notice"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="full_product_name" readonly="1" />
+                                </group>
+                            </form>
+                        </field>
+                        <group class="oe_subtotal_footer" colspan="2" name="order_total">
+                            <field name="amount_tax"
+                                   force_save="1"
+                                   widget="monetary"/>
+                            <field name="amount_total"
+                                   force_save="1"
+                                   class="h3"
+                                   widget="monetary"/>
+                            <div class="oe_inline o_td_label">
+                                <label class="o_form_label_readonly" for="amount_paid" string="Total Paid (with rounding)"/>
+                            </div>
+                            <field name="amount_paid"
+                                nolabel="1"
+                                widget="monetary"
+                                class="h3"
+                                invisible="amount_paid == 'amount_total'"
+                                readonly="state != 'draft'"/>
+                            <label for="margin"/>
+                            <div class="text-nowrap">
+                                <field name="margin" class="oe_inline" invisible="not is_total_cost_computed"/>
+                                <span class="oe_inline" invisible="not is_total_cost_computed">
+                                    (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
+                                </span>
+                                <span class="float-end" invisible="is_total_cost_computed">To be determined</span>
+                            </div>
+                            <field name="is_total_cost_computed" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <div class="clearfix"/>
+                    </page>
+                    <page string="Payments" name="payments">
+                        <field name="payment_ids" colspan="4" nolabel="1" readonly="state in ['invoiced', 'done'] or nb_print > 0">
+                            <list string="Payments" create="1" editable="bottom">
+                                <field name="currency_id" column_invisible="True" />
+                                <field name="payment_date"/>
+                                <field name="payment_method_id" domain="[('id', 'in', parent.available_payment_method_ids)]" />
+                                <field name="amount"/>
+                                <field name="payment_method_payment_mode" optional="hide"/>
+                                <field name="card_no" invisible="not card_no"/>
+                                <field name="card_brand" string="Card's Brand" invisible="not card_brand or not card_no"/>
+                                <field name="cardholder_name" invisible="not cardholder_name or not card_no"/>
+                            </list>
+                        </field>
+                        <group class="oe_subtotal_footer" colspan="2" name="order_total">
+                            <field name="amount_total" class="h3" widget="monetary"/>
+                            <field name="amount_paid" widget="monetary" class="h3" readonly="1" />
+                            <field name="amount_difference" widget="monetary" force_save="1" />
+                        </group>
+                    </page>
+                    <page name="extra" string="Extra Info">
+                        <group >
+                            <group
+                                string="Accounting"
+                                groups="account.group_account_manager"
+                                invisible="not session_move_id or state == 'invoiced'">
+                                <field name="session_move_id" readonly="1" />
+                            </group>
+                            <group string="Other Information" name="other_information">
+                                <field name="pos_reference"/>
+                                <field name="tracking_number"/>
+                                <field name="country_code" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="pricelist_id" groups="product.group_product_pricelist" readonly="state != 'draft'"/>
+                                <field name="floating_order_name" invisible="not floating_order_name"/>
+                            </group>
+                            <group string="Contact Info">
+                                <group class="w-75">
+                                    <label for="email"/>
+                                    <div class="o_row">
+                                        <field name="email"/>
+                                        <button name="action_send_mail" icon="fa-envelope fa-lg" type="object" class="btn-link" title="email" invisible="not email"/>
+                                    </div>
+                                    <label for="mobile"/>
+                                    <div class="o_row">
+                                        <field name="mobile"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="General Notes" name="notes">
+                        <field name="general_note" readonly="1"/>
+                    </page>
+                </notebook>
+            </sheet>
+            <chatter groups="point_of_sale.group_pos_manager"/>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_pos_order_kanban">
+        <field name="name">pos.order.kanban</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-baseline mb-1">
+                            <span t-if="record.partner_id.value">
+                                <field name="partner_id" class="fw-bolder me-2"/>
+                            </span>
+                            <span t-else="">
+                                <field name="name" class="fw-bolder me-2"/>
+                            </span>
+                            <field name="amount_total" widget="monetary" class="fw-bolder ms-auto flex-shrink-0"/>
+                        </div>
+                        <field name="pos_reference" />
+                        <footer class="flex-wrap">
+                            <field name="date_order" class="text-muted text-nowrap"/>
+                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default',
+                            'invoiced': 'success', 'cancel': 'danger'}}" class="ms-auto text-truncate"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_pos_order_pivot">
+        <field name="name">pos.order.pivot</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <pivot string="PoS Orders" sample="1">
+                <field name="date_order" type="row"/>
+                <field name="margin"/>
+                <field name="margin_percent" invisible="1"/>
+                <field name="amount_total" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_pos_pos_form" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="res_model">pos.order</field>
+        <field name="path">pos-orders</field>
+        <field name="view_mode">list,form,kanban,pivot</field>
+        <field name="view_id" eval="False"/>
+        <field name="domain">[]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No orders found
+            </p><p>
+                To record new orders, start a new session.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_pos_sale_graph" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="res_model">pos.order</field>
+        <field name="view_mode">graph,list,form,kanban,pivot</field>
+        <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Create a new POS order
+            </p>
+        </field>
+    </record>
+
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.list</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <list string="POS Orders" create="0" sample="1" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" duplicate="0">
+                <field name="currency_id" column_invisible="True"/>
+                <field name="name" decoration-bf="1"/>
+                <field name="session_id"  readonly="state != 'draft'"/>
+                <field name="date_order"/>
+                <field name="config_id" />
+                <field name="pos_reference"/>
+                <field name="tracking_number" optional="hide"/>
+                <field name="partner_id"/>
+                <field name="user_id" widget="many2one_avatar_user" readonly="state in ['done', 'invoiced']"/>
+                <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
+                <field name="is_edited" readonly="1" optional="hide"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_pos_order_tree_no_session_id" model="ir.ui.view">
+        <field name="name">pos.order.tree_no_session_id</field>
+        <field name="model">pos.order</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='session_id']" position="replace"></xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order_search" model="ir.ui.view">
+        <field name="name">pos.order.search.view</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <search string="Point of Sale Orders">
+                <field name="name"/>
+                <field name="config_id"/>
+            </search>
+        </field>
+    </record>
+
+    <menuitem id="menu_point_ofsale" parent="menu_point_of_sale" action="action_pos_pos_form" sequence="2" groups="group_pos_manager,group_pos_user"/>
+
+    <record id="view_pos_order_line" model="ir.ui.view">
+        <field name="name">pos.order.line.list</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <list string="POS Order lines">
+                <field name="product_id" readonly="1"/>
+                <field name="qty" readonly="1" sum="Total qty"/>
+                <field name="discount" readonly="1"/>
+                <field name="price_unit" readonly="1" widget="monetary"/>
+                <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
+                <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
+                <field name="create_date" readonly="1"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_pos_order_line_form" model="ir.ui.view">
+        <field name="name">pos.order.line.form</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <form string="POS Order line">
+                <group col="4">
+                    <field name="product_id" />
+                    <field name="qty" />
+                    <field name="discount"/>
+                    <field name="price_unit" widget="monetary"/>
+                    <field name="create_date" />
+                    <field name="currency_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_pos_order_line" model="ir.actions.act_window">
+        <field name="name">Sale line</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_pos_order_line"/>
+    </record>
+
+    <record id="action_pos_order_line_form" model="ir.actions.act_window">
+        <field name="name">Sale line</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_mode">form,list</field>
+        <field name="view_id" ref="view_pos_order_line_form"/>
+    </record>
+
+    <record id="action_pos_order_line_day" model="ir.actions.act_window">
+        <field name="name">Sale line</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_pos_order_line"/>
+        <field name="domain">[('create_date', '&gt;=', time.strftime('%Y-%m-%d 00:00:00')),('create_date', '&lt;=', time.strftime('%Y-%m-%d 23:59:59'))]</field>
+    </record>
+
+    <record id="view_pos_order_tree_all_sales_lines" model="ir.ui.view">
+        <field name="name">pos.order.line.all.sales.list</field>
+        <field name="model">pos.order.line</field>
+        <field name="arch" type="xml">
+            <list string="POS Orders lines">
+                <field name="order_id" />
+                <field name="create_date" />
+                <field name="product_id" />
+                <field name="qty" />
+                <field name="price_unit" widget="monetary"/>
+                <field name="currency_id" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+     <record id="action_pos_all_sales_lines" model="ir.actions.act_window">
+        <field name="name">All sales lines</field>
+        <field name="res_model">pos.order.line</field>
+        <field name="view_id" ref="view_pos_order_tree_all_sales_lines" />
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.list.select</field>
+        <field name="model">pos.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Sales Order">
+                <field name="name"/>
+                <field name="pos_reference"/>
+                <field name="date_order"/>
+                <field name="tracking_number"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <field name="session_id"/>
+                <field name="config_id"/>
+                <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>
+                <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
+                <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
+                <separator/>
+                <filter string="Order Date" name="order_date" date="date_order"/>
+                <group expand="0" string="Group By">
+                    <filter string="Session" name="session" domain="[]" context="{'group_by': 'session_id'}"/>
+                    <filter string="User" name="user_id" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Point of Sale" name="config_id" domain="[]" context="{'group_by': 'config_id'}"/>
+                    <filter string="Customer" name="customer" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Order Date" name="order_month" domain="[]" context="{'group_by': 'date_order'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- REMOVE IN MASTER -->
+    <record id="pos_rounding_form_view_inherited" model="ir.ui.view">
+        <field name="name">pos.cash.rounding.form.inherited</field>
+        <field name="model">account.cash.rounding</field>
+        <field name="inherit_id" ref="account.rounding_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="o_notification_alert alert alert-warning" role="alert" invisible="1">
+                  The Point of Sale only supports the "add a rounding line" rounding strategy.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_send_mail" model="ir.actions.server">
+        <field name="name">Send Email</field>
+        <field name="model_id" ref="model_pos_order"/>
+        <field name="binding_model_id" ref="model_pos_order"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_send_mail()
+        </field>
+    </record>
+    <record model="ir.actions.server" id="pos_order_set_cancel">
+        <field name="name">Cancel Order</field>
+        <field name="model_id" ref="point_of_sale.model_pos_order"/>
+        <field name="groups_id" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
+        <field name="binding_model_id" ref="point_of_sale.model_pos_order" />
+        <field name="state">code</field>
+        <field name="binding_view_types">list,form</field>
+        <field name="code">
+if records:
+    action = records.action_pos_order_cancel()
+        </field>
+    </record>
+</odoo>

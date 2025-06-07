@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="sale_order_template_form" model="ir.ui.view">
+        <field name="name">sale.order.template.form</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page name="pdf_quote" string="Quote Builder">
+                    <field
+                        name="quotation_document_ids"
+                        mode="kanban"
+                        widget="quotation_document_many2many"
+                        class="w-100"
+                        nolabel="1"
+                        options="{'create': False}"
+                        context="{
+                            'kanban_view_ref': 'sale_pdf_quote_builder.quotation_document_kanban',
+                        }"
+                    />
+                    <p class="text-muted">
+                        Provide header pages and footer pages to compose an attractive quotation with more information
+                        about your company, your products and you services. <br/>
+                        The pdf of your quotes will be built by putting together header pages, product descriptions,
+                        details of the quote and then the footer pages. <br/>
+                        If empty, it will use those define in the company settings. <br/>
+                        <widget
+                            name="documentation_link"
+                            path="/_downloads/c2c6ce32294dfddffcfefcf2775f7a09/pdfquotebuilderexamples.zip"
+                            icon="fa-arrow-right"
+                            label=" Download examples"
+                        />
+                    </p>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

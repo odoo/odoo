@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_report_form_inherit_account" model="ir.ui.view">
+        <field name="name">ir.actions.report.form.inherit.account</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+            <field name="paperformat_id" position="after">
+                <field name="is_invoice_report" invisible="model != 'account.move'"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,40 @@
+.o_kanban_project_tasks .o_kanban_renderer {
+    .oe_kanban_bottom_right > div.o_field_many2many_avatar_user[name="user_ids"] {
+        margin-left: 6px;
+    }
+
+    .rating_face {
+        font-weight: bold;
+        padding-top: 2px;
+        padding-right: 3px;
+        font-size: 16px;
+    }
+
+    .o_kanban_record {
+        @include media-breakpoint-up(sm) {
+            &:hover {
+                .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+                    visibility: hidden;
+                }
+            }
+        }
+    }
+
+    .o_kanban_record footer {
+        @include media-breakpoint-up(sm) {
+            &:hover {
+                .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+                    visibility: visible;
+                }
+            }
+        }
+    }
+
+    .o_kanban_header .o_column_progress .bg-success-done {
+        --bs-bg-opacity: 1;
+        background-color: rgba(25, 135, 84, var(--bs-bg-opacity)) !important;
+    }
+    .o_kanban_group {
+        @include o-kanban-css-filter(success-done, rgba(25, 135, 84, 1));
+    }
+}

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+     <t t-name="account.JournalDashboardActivity">
+        <t t-foreach="info.activities" t-as="activity" t-key="activity_index">
+            <div class="row">
+                <div class="col o_mail_activity">
+                    <a href="#"
+                       t-att-class="(activity.status == 'late' ? 'text-danger ' : ' ') + (activity.activity_category == 'tax_report' ? 'o_open_vat_report' : 'see_activity')"
+                       t-att-data-res-id="activity.res_id" t-att-data-id="activity.id" t-att-data-model="activity.res_model"
+                       t-on-click.stop.prevent="() => this.openActivity(activity)">
+                        <t t-out="activity.name"/>
+                    </a>
+                </div>
+                <div class="col text-end text-nowrap">
+                    <span><t t-out="activity.date"/></span>
+                </div>
+            </div>
+        </t>
+        <a t-if="info.more_activities" class="float-end see_all_activities" href="#" t-on-click.stop.prevent="(ev) => this.openAllActivities(ev)">See all activities</a>
+    </t>
+
+</templates>

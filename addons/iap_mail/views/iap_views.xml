@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="iap_account_view_form" model="ir.ui.view">
+            <field name="name">iap.account.view.form</field>
+            <field name="model">iap.account</field>
+            <field name="inherit_id" ref="iap.iap_account_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet" position="after">
+                    <chatter/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

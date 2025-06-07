@@ -1,0 +1,997 @@
+///
+/// This file regroups basic style rules for web_editor enable page edition and
+/// backend utils.
+/// TODO many of those rules should probably not be declared for the backend.
+/// in particular the o_ccX rules, see code linked to the variable named
+/// 'prevent-backend-colors-alteration'.
+///
+
+:root {
+    @each $color, $value in $grays {
+        @include print-variable($color, $value);
+    }
+
+    // Most of the keys of the color combination color should be null. We have
+    // to indicate their fallback values.
+    @for $index from 1 through length($o-color-combinations) {
+        $-bg-color: o-color(map-get($colors, 'o-cc#{$index}-bg'));
+
+        $-text: map-get($colors, 'o-cc#{$index}-text') or color-contrast(o-color('o-cc#{$index}-bg'));
+        $-headings: map-get($colors, 'o-cc#{$index}-headings') or $-text;
+        $-h2: map-get($colors, 'o-cc#{$index}-h2') or $-headings;
+        $-h3: map-get($colors, 'o-cc#{$index}-h3') or $-headings;
+        $-h4: map-get($colors, 'o-cc#{$index}-h4') or $-headings;
+        $-h5: map-get($colors, 'o-cc#{$index}-h5') or $-headings;
+        $-h6: map-get($colors, 'o-cc#{$index}-h6') or $-headings;
+
+        @if not map-get($colors, 'o-cc#{$index}-text') {
+            @include print-variable('o-cc#{$index}-text', $-text);
+        }
+        @if not map-get($colors, 'o-cc#{$index}-headings') {
+            @include print-variable('o-cc#{$index}-headings', $-headings);
+        }
+        @if not map-get($colors, 'o-cc#{$index}-h2') {
+            @include print-variable('o-cc#{$index}-h2', $-h2);
+        }
+        @if not map-get($colors, 'o-cc#{$index}-h3') {
+            @include print-variable('o-cc#{$index}-h3', $-h3);
+        }
+        @if not map-get($colors, 'o-cc#{$index}-h4') {
+            @include print-variable('o-cc#{$index}-h4', $-h4);
+        }
+        @if not map-get($colors, 'o-cc#{$index}-h5') {
+            @include print-variable('o-cc#{$index}-h5', $-h5);
+        }
+        @if not map-get($colors, 'o-cc#{$index}-h6') {
+            @include print-variable('o-cc#{$index}-h6', $-h6);
+        }
+
+        $-link: map-get($colors, 'o-cc#{$index}-link');
+        $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
+        @include print-variable('o-cc#{$index}-link', auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link'));
+
+        $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
+        @if not $-btn-primary {
+            @include print-variable('o-cc#{$index}-btn-primary', map-get($theme-colors, 'primary'));
+            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast(map-get($theme-colors, 'primary')));
+        } @else {
+            @include print-variable('o-cc#{$index}-btn-primary-text', color-contrast($-btn-primary));
+        }
+        @if not map-get($colors, 'o-cc#{$index}-btn-primary-border') {
+            @include print-variable('o-cc#{$index}-btn-primary-border', $-btn-primary or map-get($theme-colors, 'primary'));
+        }
+
+        $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
+        @if not $-btn-secondary {
+            @include print-variable('o-cc#{$index}-btn-secondary', map-get($theme-colors, 'secondary'));
+            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast(map-get($theme-colors, 'secondary')));
+        } @else {
+            @include print-variable('o-cc#{$index}-btn-secondary-text', color-contrast($-btn-secondary));
+        }
+        @if not map-get($colors, 'o-cc#{$index}-btn-secondary-border') {
+            @include print-variable('o-cc#{$index}-btn-secondary-border', $-btn-secondary or map-get($theme-colors, 'secondary'));
+        }
+    }
+
+    @include print-variable('o-grid-gutter-width', $grid-gutter-width);
+    @include print-variable('o-md-container-max-width', map-get($container-max-widths, md));
+    @include print-variable('o-we-content-to-translate-color', $o-we-content-to-translate-color);
+    @include print-variable('o-we-translated-content-color', $o-we-translated-content-color);
+    @include print-variable('o-system-fonts', $o-system-fonts);
+
+    @include print-variable('display-1-font-size', map-get($display-font-sizes, 1));
+    @include print-variable('display-2-font-size', map-get($display-font-sizes, 2));
+    @include print-variable('display-3-font-size', map-get($display-font-sizes, 3));
+    @include print-variable('display-4-font-size', map-get($display-font-sizes, 4));
+    @include print-variable('h1-font-size', $h1-font-size);
+    @include print-variable('h2-font-size', $h2-font-size);
+    @include print-variable('h3-font-size', $h3-font-size);
+    @include print-variable('h4-font-size', $h4-font-size);
+    @include print-variable('h5-font-size', $h5-font-size);
+    @include print-variable('h6-font-size', $h6-font-size);
+    @include print-variable('font-size-base', $font-size-base);
+    @include print-variable('small-font-size', $small-font-size);
+    @include print-variable('lead-font-size', $lead-font-size);
+}
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+pre {    
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius;
+    background-color: $gray-100;
+    color: $gray-900;
+}
+
+*[contenteditable=true] {
+    outline: none;
+}
+[contenteditable] {
+    overflow-wrap: unset !important;
+}
+
+.css_non_editable_mode_hidden {
+    display: none !important;
+}
+.editor_enable .css_editable_mode_hidden {
+    display: none !important;
+}
+
+/* ----- GENERIC LAYOUTING HELPERS ---- */
+/* table */
+#wrapwrap, .o_editable {
+    // Only style editor-made tables (shop/portal/... tables are not supposed to
+    // use table-bordered...)
+    table.table.table-bordered {
+        table-layout: fixed;
+        overflow-wrap: break-word;
+        td {
+            min-width: 20px;
+        }
+    }
+    @include media-breakpoint-down(md) {
+        .table-responsive > table.table {
+            table-layout: auto;
+        }
+    }
+}
+
+// List
+ul.o_checklist {
+    list-style: none;
+
+    >li {
+        list-style: none;
+        position: relative;
+        margin-left: $o-checklist-margin-left;
+        margin-right: $o-checklist-margin-left;
+
+        &:not(.oe-nested)::before {
+            content: '';
+            position: absolute;
+            left: - $o-checklist-margin-left;
+            display: block;
+            height: $o-checklist-before-size;
+            width: $o-checklist-before-size;
+            top: 4px;
+            border: 1px solid;
+            text-align: center;
+            cursor: pointer;
+        }
+        &.o_checked {
+            text-decoration: line-through;
+            &::before {
+                content: "✓";
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding-left: 1px #{"/*rtl:ignore*/"};
+                padding-top: 1px;
+            }
+        }
+    }
+}
+/*rtl:begin:ignore*/
+ul.o_checklist[dir="rtl"] li:not(.oe-nested)::before {
+    left: auto;
+    right: - $o-checklist-margin-left;
+    text-align: right;
+}
+ul.o_checklist[dir="ltr"] li:not(.oe-nested)::before {
+    right: auto;
+    left: - $o-checklist-margin-left;
+    text-align: left;
+}
+/*rtl:end:ignore*/
+ol > li.o_indent, ul > li.o_indent {
+    margin-left: 0;
+    list-style: none;
+    &::before {
+        content: none;
+    }
+}
+
+// Stars widget
+.o_stars .fa.fa-star {
+    color: gold;
+}
+
+// Medias
+img.o_we_custom_image {
+    // Images added with the editor are .img-fluid by default but should
+    // still behave like inline content.
+    display: inline-block;
+}
+
+img.shadow {
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
+}
+img.padding-small, .img.padding-small, span.fa.padding-small, iframe.padding-small {
+    padding: 4px;
+}
+img.padding-medium, .img.padding-medium, span.fa.padding-medium, iframe.padding-medium {
+    padding: 8px;
+}
+img.padding-large, .img.padding-large, span.fa.padding-large, iframe.padding-large {
+    padding: 16px;
+}
+img.padding-xl, .img.padding-xl, span.fa.padding-xl, iframe.padding-xl {
+    padding: 32px;
+}
+img.ms-auto, img.mx-auto {
+    display: block;
+}
+
+.fa-6x {
+    font-size: 6em;
+}
+.fa-7x {
+    font-size: 7em;
+}
+.fa-8x {
+    font-size: 8em;
+}
+.fa-9x {
+    font-size: 9em;
+}
+.fa-10x {
+    font-size: 10em;
+}
+.fa.mx-auto {
+    display: block;
+    text-align: center;
+}
+.fa.card-img, .fa.card-img-top, .fa.card-img-bottom {
+    width: auto;
+}
+
+%o-small-font-size {
+    @include font-size($o-small-font-size);
+}
+// Dedicated class to be able to keep the default "small" behavior of bootstrap:
+// being "smaller" that the context where it is used (em units). Here we want to
+// define a specific fixed font-size for a smaller font-size than the base font
+// size. Note that this class is designed to work as the display-x classes: an
+// extra "styling" class to go on an element. For the "font-size class"
+// equivalent, see o_small-fs below.
+.o_small {
+    @extend %o-small-font-size;
+}
+
+@for $index from 1 through 4 {
+    .display-#{$index}-fs {
+        @include font-size(map-get($display-font-sizes, $index));
+    }
+}
+.h1-fs {
+    @include font-size($h1-font-size);
+}
+.h2-fs {
+    @include font-size($h2-font-size);
+}
+.h3-fs {
+    @include font-size($h3-font-size);
+}
+.h4-fs {
+    @include font-size($h4-font-size);
+}
+.h5-fs {
+    @include font-size($h5-font-size);
+}
+.h6-fs {
+    @include font-size($h6-font-size);
+}
+.base-fs {
+    @include font-size($font-size-base);
+}
+// Equivalent "font-size" only for the Odoo own "o_small" class. Note that the
+// "o_small" class currently also changes the font-size only but this is to stay
+// consistent with the other classes which act that way (as display-x).
+.o_small-fs {
+    @include font-size($small-font-size);
+}
+
+div.media_iframe_video {
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    min-width: 100px;
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        @include o-position-absolute($top: 0);
+        margin: 0 auto;
+        margin-left: -50%;
+    }
+    &.padding-small iframe {
+        padding: 4px;
+    }
+    &.padding-medium iframe {
+        padding: 8px;
+    }
+    &.padding-large iframe {
+        padding: 16px;
+    }
+    &.padding-xl iframe {
+        padding: 32px;
+    }
+
+    .media_iframe_video_size {
+        padding-bottom: 66.5%;
+        position: relative;
+        width: 100%;
+        height: 0;
+    }
+
+    .css_editable_mode_display {
+        @include o-position-absolute(0,0,0,0);
+        width: 100%;
+        height: 100%;
+        display: none;
+        z-index: 2;
+    }
+}
+
+// Fields
+address {
+    .fa.fa-mobile-phone {
+        margin: 0 3px 0 2px;
+    }
+    .fa.fa-file-text-o {
+        margin-right: 1px;
+    }
+}
+
+span[data-oe-type="monetary"] {
+    white-space: nowrap;
+}
+
+// Menus
+// TODO should not be here but used by web_studio so must stay here for now
+ul.oe_menu_editor {
+    .oe_menu_placeholder {
+        outline: 1px dashed #4183C4;
+    }
+    ul {
+        list-style: none;
+    }
+    li div {
+        @include o-grab-cursor;
+
+        :active {
+            cursor: grabbing;
+        }
+    }
+}
+
+// Generate all spacings for all sizes
+@mixin o-spacing-all($factor: 1) {
+    // Generate vertical margin/padding classes used by the editor
+    @for $i from 0 through (256 / 8) {
+        @include o-vspacing($i * 8, $factor);
+    }
+    @include o-vspacing(4, $factor);
+
+    // 92px vertical margin is kept for compatibility
+    @include o-vmargins(92, $factor);
+
+    // Some horizontal margin classes defined for convenience
+    // (and compatibility)
+    @include o-hmargins(0, $factor);
+    @include o-hmargins(4, $factor);
+    @include o-hmargins(8, $factor);
+    @include o-hmargins(16, $factor);
+    @include o-hmargins(32, $factor);
+    @include o-hmargins(64, $factor);
+}
+
+// Generate all spacings for one size, scalled by a given factor
+// (0 <= factor <= 1)
+@mixin o-vspacing($name, $factor: 1) {
+    @include o-vmargins($name, $factor);
+    @include o-vpaddings($name, $factor);
+}
+@mixin o-vmargins($name, $factor: 1) {
+    @include o-vmargins-define($name, $factor * $name);
+}
+@mixin o-vpaddings($name, $factor: 1) {
+    @include o-vpaddings-define($name, $factor * $name);
+}
+@mixin o-hspacing($name, $factor: 1) {
+    @include o-hmargins($name, $factor);
+    @include o-hpaddings($name, $factor);
+}
+@mixin o-hmargins($name, $factor: 1) {
+    @include o-hmargins-define($name, $factor * $name);
+}
+@mixin o-hpaddings($name, $factor: 1) {
+    @include o-hpaddings-define($name, $factor * $name);
+}
+
+// Generate all spacings for one size, given the name of the spacing and
+// intended size
+@mixin o-vmargins-define($name, $size: $name) {
+    .mt#{$name} { margin-top: $size * 1px !important; }
+    .mb#{$name} { margin-bottom: $size * 1px !important; }
+}
+@mixin o-vpaddings-define($name, $size: $name) {
+    .pt#{$name} { padding-top: $size * 1px !important; }
+    .pb#{$name} { padding-bottom: $size * 1px !important; }
+}
+@mixin o-hmargins-define($name, $size: $name) {
+    .ml#{$name} { margin-left: $size * 1px !important; }
+    .mr#{$name} { margin-right: $size * 1px !important; }
+}
+@mixin o-hpaddings-define($name, $size: $name) {
+    .pl#{$name} { padding-left: $size * 1px !important; }
+    .pr#{$name} { padding-right: $size * 1px !important; }
+}
+
+// Generate all margins
+@include o-spacing-all;
+
+// Underline
+a.o_underline {
+    text-decoration: underline;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.o_nocontent_help {
+    @include o-nocontent-empty;
+
+    .o_empty_folder_image:before {
+        @extend %o-nocontent-empty-document;
+    }
+}
+
+.o_we_search_prompt {
+    position: relative;
+    min-height: 250px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    & > h2 {
+        max-width: 500px;
+        text-align: center;
+        margin-left: 150px;
+    }
+
+    &::before {
+        transform: scale(-1, 1);
+        content: "";
+        @include o-position-absolute($top: 0, $left: 50px);
+        width: 100px;
+        height: 150px;
+        opacity: .5;
+        filter: var(--WebEditor__SearchPromptArrow-filter, invert(0));
+        background-image: url('/web_editor/static/src/img/curved_arrow.svg');
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+}
+
+@include media-breakpoint-down(md) {
+    odoo-wysiwyg-container {
+        .btn-group {
+            position: static;
+        }
+    }
+    // modal select media
+    .o_technical_modal.o_web_editor_dialog {
+        // see template 'web_editor.FieldTextHtml.fullscreen'
+        z-index: $o-we-technical-modal-zindex;
+
+        > .o_select_media_dialog {
+            max-width: inherit !important;
+            z-index: $o-we-technical-modal-zindex;
+
+            .modal-dialog, .model-content {
+                height: 100%;
+            }
+
+            .modal-body {
+                .nav .nav-item.search {
+                    width: 100%;
+
+                    .btn-group {
+                        display: flex;
+                        justify-content: space-around;
+                        padding: 5px;
+                    }
+                }
+
+                // center pictogram
+                .font-icons-icons {
+                    text-align: center;
+                }
+
+                // fix search image
+                .form-control.o_we_search {
+                    height: inherit;
+                }
+
+                // attachment cells
+                .o_we_existing_attachments > .row {
+                    flex-direction: column;
+
+                    > .o_existing_attachment_cell {
+                        flex: initial;
+                        max-width: 100%;
+
+                        > .o_existing_attachment_remove {
+                            opacity: inherit;
+                            top: 10px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// BS4 blockquote has no style anymore, except bloquote <footer>
+blockquote {
+    padding: $spacer/2 $spacer;
+    border-left: 5px solid;
+    border-color: map-get($grays, '300');
+    font-style: italic;
+}
+
+pre {
+    white-space: pre-wrap;
+
+    p {
+        margin-bottom: 0px;
+    }
+}
+
+// Extend bootstrap to create background and text utilities for some colors
+// outside of the $theme-colors too (but not btn-, alert-, etc).
+@for $index from 1 through 5 {
+    $-color-name: 'o-color-#{$index}';
+    $-color: map-get($colors, $-color-name);
+    @include bg-variant(".bg-#{$-color-name}", $-color);
+    @include text-emphasis-variant(".text-#{$-color-name}", $-color);
+}
+
+// Bg/text color classes generation
+.o_cc {
+    #{$o-color-extras-nesting-selector} {
+        // Re-force dropdown-item colors inside presets otherwise the presets
+        // 'link' colors take over.
+        .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
+                                        // .dropdown-menu to counter a:not(.btn)
+            &, h6 { // Quick fix: sometimes we use h6 in dropdowns
+                color: $dropdown-link-color !important;
+
+                &:hover, &:focus {
+                    color: $dropdown-link-hover-color !important;
+                }
+                &.active, &:active {
+                    // Restore BS default custom property to allow contextual
+                    // active state. (see bootstrap_review_frontend.scss)
+                    color: var(--dropdown-link-active-color, #{$dropdown-link-active-color}) !important;
+                }
+            }
+            &.disabled,
+            &:disabled {
+                &, h6 { // Quick fix: sometimes we use h6 in dropdowns
+                    color: $dropdown-link-disabled-color !important;
+                }
+            }
+            .btn-link {
+                // Some search autocomplete results use btn-link for extra
+                // information that can be navigated to. (e.g. products give
+                // access to their categories)
+                // These need to be reset in case a dark palette is applied.
+                color: $btn-link-color;
+
+                &:hover {
+                    color: $btn-link-hover-color;
+                }
+                &:disabled {
+                    color: $btn-link-disabled-color;
+                }
+            }
+        }
+        .dropdown-menu .dropdown-item-text .text-muted {
+            a {
+                // Search autocomplete's fuzzy matched term is shown as a link
+                // within an information message.
+                color: $link-color;
+
+                &:hover {
+                    color: $link-hover-color;
+                }
+            }
+        }
+    }
+}
+@for $index from 1 through length($o-color-combinations) {
+    $-bg: map-get($colors, 'o-cc#{$index}-bg');
+    $-text: map-get($colors, 'o-cc#{$index}-text');
+    $-headings: map-get($colors, 'o-cc#{$index}-headings');
+    $-h2: map-get($colors, 'o-cc#{$index}-h2');
+    $-h3: map-get($colors, 'o-cc#{$index}-h3');
+    $-h4: map-get($colors, 'o-cc#{$index}-h4');
+    $-h5: map-get($colors, 'o-cc#{$index}-h5');
+    $-h6: map-get($colors, 'o-cc#{$index}-h6');
+    $-link: map-get($colors, 'o-cc#{$index}-link');
+    $-btn-primary: map-get($colors, 'o-cc#{$index}-btn-primary');
+    $-btn-primary-border: map-get($colors, 'o-cc#{$index}-btn-primary-border');
+    $-btn-secondary: map-get($colors, 'o-cc#{$index}-btn-secondary');
+    $-btn-secondary-border: map-get($colors, 'o-cc#{$index}-btn-secondary-border');
+
+    // Those color classes color multiple elements when applied on a snippet.
+    // Those rules are not important so that they can be overridden through
+    // bg and text utility classes. **
+    .o_cc#{$index} {
+        // Background & Text
+        $-bg-color: o-color($-bg);
+        @include o-bg-color($-bg-color, o-color($-text), $important: false, $yiq-min-opacity-threshold: 0);
+
+        // In the future, we might want to use CSS variables to define all
+        // colors for all components of o_cc and use them here. That way there
+        // would be way less CSS rules and more advantages. For now, this only
+        // exposes the background color which is needed in some snippets.
+        --o-cc-bg: #{$-bg-color};
+
+        #{$o-color-extras-nesting-selector} {
+            // Headings
+            h1, h2, h3, h4, h5, h6 {
+                // 'inherit' comes from the o-bg-color mixin
+                color: o-color($-headings);
+            }
+            h2 {
+                color: o-color($-h2);
+            }
+            h3 {
+                color: o-color($-h3);
+            }
+            h4 {
+                color: o-color($-h4);
+            }
+            h5 {
+                color: o-color($-h5);
+            }
+            h6 {
+                color: o-color($-h6);
+            }
+
+            // Links
+            $-link-color: if($-link, o-color($-link), map-get($theme-colors, 'primary'));
+            $-link-hover-color: darken($-link-color, 15%);
+            a:not(.btn), .btn-link {
+                color: auto-contrast($-link-color, $-bg-color, 'o-cc#{$index}-link');
+
+                &:hover {
+                    color: auto-contrast($-link-hover-color, $-bg-color, 'o-cc#{$index}-link');
+                }
+            }
+
+            // Buttons
+
+            // Primary
+            $-btn-primary-color: if($-btn-primary, o-color($-btn-primary), map-get($theme-colors, 'primary'));
+            $-btn-primary-border-color: if($-btn-primary-border, o-color($-btn-primary-border), $-btn-primary-color);
+            .btn-fill-primary {
+                @include button-variant($-btn-primary-color, $-btn-primary-border-color);
+            }
+            .btn-outline-primary {
+                @include button-outline-variant($-btn-primary-border-color);
+            }
+
+            // Secondary
+            $-btn-secondary-color: if($-btn-secondary, o-color($-btn-secondary), map-get($theme-colors, 'secondary'));
+            $-btn-secondary-border-color: if($-btn-secondary-border, o-color($-btn-secondary-border), $-btn-secondary-color);
+            .btn-fill-secondary {
+                @include button-variant($-btn-secondary-color, $-btn-secondary-border-color);
+            }
+            .btn-outline-secondary {
+                @include button-outline-variant($-btn-secondary-border-color);
+            }
+
+            // 'Active' states. Note: this only emulates very common components
+            // used in snippets. This might need to be more complex the day we
+            // can apply color combinations anywhere (page-item, ...).
+            .nav-pills {
+                .nav-link.active,
+                .show > .nav-link {
+                    background-color: $-btn-primary-color;
+                    color: color-contrast($-btn-primary-color);
+                }
+            }
+            a.list-group-item {
+                color: $-btn-primary-color;
+
+                &.active {
+                    background-color: $-btn-primary-color;
+                    color: color-contrast($-btn-primary-color);
+                    border-color: $-btn-primary-color;
+                }
+            }
+        }
+    }
+}
+
+// Buttons with custom colors
+.btn-custom:hover, .btn-fill-custom:hover {
+    filter: invert(0.2);
+}
+.btn-outline-custom:not(:hover) {
+    // Custom buttons have their fill color or gradient specified in their
+    // element style. They must only be shown on hover for outline buttons.
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+// Base snippet rules
+%o-we-background-layer-parent {
+    &, & > * {
+        // Allow background layers to be placed accordingly and snippet content
+        // to be displayed on top. Note: we cannot just position the layers
+        // with z-index: -1, otherwise it would go under the snippet own
+        // background. Adding a z-index: 0 on the snippet to create its own
+        // stacking context won't solve that either as, in that case, any BS
+        // component inside would be using that stacking context (e.g. a
+        // dropdown inside snippet 1 of the page would go under snippet 2
+        // when opened since the dropdown z-index would be confined into
+        // snippet 1's stacking context.
+        position: relative;
+    }
+}
+%o-we-background-layer {
+    @include o-position-absolute(0, 0, 0, 0);
+    position: absolute !important;
+    display: block;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    pointer-events: none;
+}
+
+section, .oe_img_bg, [data-oe-shape-data] {
+    @extend %o-we-background-layer-parent;
+}
+.o_we_bg_filter {
+    @extend %o-we-background-layer;
+}
+
+.o_full_screen_height {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-height: 100vh !important;
+}
+.o_half_screen_height {
+    @extend .o_full_screen_height;
+    min-height: 55vh !important;
+}
+
+// TODO remove cover_full and cover_mid classes (kept for compatibility for now)
+.cover_full {
+    @extend .o_full_screen_height;
+}
+.cover_mid {
+    @extend .o_half_screen_height;
+}
+// Smaller container
+.o_container_small {
+    @extend .container;
+    @include media-breakpoint-up(lg) {
+        max-width: map-get($container-max-widths, md);
+    }
+}
+
+// Background Images
+.oe_img_bg {
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    &.o_bg_img_opt_repeat {
+        background-size: auto;
+        background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
+    }
+    &.o_bg_img_origin_border_box {
+        background-origin: border-box;
+    }
+}
+
+// Gradient
+// TODO should be in the editor lib since it is handled there... but could not
+// find the right place for it.
+.text-gradient {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    // FIXME (or wait for a fix in Chrome): the code below is needed to make
+    // animated and highlighted text work with gradient background on Chrome.
+    // It is not based on ".text-gradient *" only to avoid a side effect that
+    // makes text nodes wrapped in a span (e.g. bold, italic) no longer have the
+    // "gradient crossing the whole text" on them but their own gradient.
+    .o_animated_text, .o_animated_text *, &.o_animated_text *,
+    .o_text_highlight, .o_text_highlight *, &.o_text_highlight * {
+        background-image: inherit;
+        -webkit-background-clip: inherit;
+        -webkit-text-fill-color: inherit;
+    }
+
+    // On Iphone (Safari & Chrome) and Mac (only Safari), the font awesome icons
+    // are not rendered (invisible) when inside a gradient.
+    .fa {
+        display: inherit;
+    }
+}
+
+/* QWEB */
+
+.odoo-editor-editable.odoo-editor-qweb, .o_readonly {
+    t,
+    [t-if],
+    [t-elif],
+    [t-else],
+    [t-foreach] {
+        background-color: rgba(0, 0, 102, 0.1) !important;
+    }
+    t,
+    [t-esc],
+    [t-out],
+    [t-raw] {
+        border-radius: 2px;
+    }
+    [t-esc],
+    [t-out],
+    [t-raw] {
+        background-color: rgba(36, 154, 255, 0.16) !important;
+    }
+    [t-esc]:empty::before {
+        content: attr(t-esc);
+    }
+    [t-raw]:empty::before {
+        content: attr(t-raw);
+    }
+    [t-out]:empty::before {
+        content: attr(t-out);
+    }
+    t[t-set] {
+        display: none;
+    }
+    t[data-oe-t-inline] {
+        display: inline;
+    }
+    t:not([data-oe-t-inline]) {
+        display: block;
+    }
+    t[data-oe-t-inline]:not([data-oe-t-group-active]) {
+        display: unset;
+    }
+    [data-oe-t-group]:not([data-oe-t-group-active]) {
+        display: none !important;
+    }
+    [data-oe-t-group][data-oe-t-selectable] {
+        outline: 1px dashed rgba(0, 0, 102, 0.4) !important;
+    }
+}
+
+.oe-qweb-select {
+    position: absolute;
+    // Bootstrap sets .modal z-index at 1055.
+    // Ensure qweb-select is visible in modals.
+    z-index: 1056;
+    background-color: white;
+}
+
+// Background shapes
+@function compute-shape-url-params($colors, $color-to-cc-bg-map) {
+    $url-params: '';
+    @each $i in $colors {
+        $mapped-color: map-get($color-to-cc-bg-map, $i);
+        $color: encode-color(#{o-color($mapped-color)});
+        $url-params: '#{$url-params}&c#{$i}=#{$color}';
+    }
+    @return $url-params;
+}
+
+.o_we_shape {
+    @extend %o-we-background-layer;
+
+    &.o_we_animated {
+        will-change: transform;
+    }
+
+    // Default map to use to map shape file colors to color combination
+    // background colors.
+    $default-color-to-cc-bg-map: (
+        1: 4,
+        2: 3,
+        3: 2,
+        4: 1,
+        5: 5,
+    );
+    @each $module, $shapes in $o-bg-shapes {
+        @each $shape, $style in $shapes {
+            $colors: map-get($style, 'colors');
+            $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, map-get($style, 'color-to-cc-bg-map') or ());
+            $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
+            $extra-mappings: map-get($style, 'extra-mappings') or ();
+
+            // eg: o_website_shape_bg_1
+            &.o_#{$module}_#{str-replace($shape, '/', '_')} {
+                // When the shape is not customized, this URL, built in SCSS,
+                // allows for the shape to respond to palette changes.
+                // Mainly useful for default pages built by the configurator.
+                background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
+                background-position: map-get($style, 'position');
+                background-size: map-get($style, 'size');
+                background-repeat:
+                    if(map-get($style, 'repeat-x'), repeat, no-repeat)
+                    if(map-get($style, 'repeat-y'), repeat, no-repeat);
+
+                @each $mapping-name, $mapping in $extra-mappings {
+                    $color-to-cc-bg-map: map-merge($default-color-to-cc-bg-map, $mapping or ());
+                    $url-params: compute-shape-url-params($colors, $color-to-cc-bg-map);
+
+                    &.o_#{$mapping-name}_extra_shape_mapping {
+                        background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Autocomplete dropdowns
+.ui-autocomplete {
+    max-height: 45vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .ui-menu-item {
+        padding: 0;
+        > .ui-state-active {
+            border: none;
+            font-weight: normal;
+            margin: 0;
+        }
+    }
+    .fw-bold {
+        // Needed because the font-family is not "system fonts everywhere" as
+        // elements around it. TODO: use "system fonts everywhere" for
+        // the 'ui-autocomplete' and remove this line.
+        font-weight: 700 !important;
+    }
+}
+
+.o_editor_banner {
+    // force margin to ensure vertical center alignment in correlation with icon
+    p, h1, h2, h3, ul, ol {
+        margin-bottom: 1rem;
+    }
+    ol ol, ul ul, ol ul, ul ol {
+        margin-bottom: 0;
+    }
+    ul.o_checklist>li:not(.oe-nested)::before {
+        top: 0px!important;
+    }
+}
+
+code.o_inline_code {
+    padding: .2em .4em;
+    border-radius: $border-radius;
+    background-color: var(--WebEditor__inlineCode-bg, #{$gray-200});
+    font-size: 85%;
+    color: $gray-900;
+}

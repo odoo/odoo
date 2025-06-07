@@ -1,0 +1,303 @@
+///
+/// This file regroups the variables that style odoo components.
+/// They are available in every asset bundle.
+///
+
+// Contrast ratio
+$o-frontend-min-contrast-ratio: 2.9 !default;
+
+// Media
+$o-webclient-media: screen !default;
+
+// Color-scheme
+$o-webclient-color-scheme: bright !default;
+
+// Font sizes
+$o-root-font-size: 1rem !default;
+$o-font-size-base: o-to-rem(14px) !default;
+$o-font-size-base-touch: o-to-rem(16px) !default;
+$o-font-size-base-small: o-to-rem(13px) !default;
+$o-font-size-base-smaller: o-to-rem(12px) !default;
+$o-line-height-base: 1.5 !default; // This is BS default
+$o-line-height-sm : 1.25 !default;
+$o-line-height-lg : 2 !default;
+
+// Global sans-serif fonts stack, defined here as we need to process
+// it before actually using it (to add more unicode support with the special
+// Odoo font for example). Adding unicode support is not done directly here as
+// this font can be used by the website where the unicode support is already
+// automatically added.
+$o-system-fonts: (-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji") !default;
+
+
+// Font weights
+// Caution: These values represent the desired font weights, but they may vary
+// depending on the user's operating system.
+// Because we rely on system fonts, the browser will interpret these values
+// based on the available fonts on the user's device.
+// If the exact font weight is unavailable, the browser will attempt to assign
+// a suitable weight using the fallowing fallback scheme.
+// https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight#fallback_weights
+
+$o-font-weight-normal: 400 !default;
+$o-font-weight-medium: 500 !default;
+$o-font-weight-bold: 700 !default;
+
+// Colors
+// This is BS default
+$o-white: #FFFFFF !default;
+$o-black: #000000 !default;
+
+$o-gray-100: #f8f9fa !default;
+$o-gray-200: #e9ecef !default;
+$o-gray-300: #dee2e6 !default;
+$o-gray-400: #ced4da !default;
+$o-gray-500: #adb5bd !default;
+$o-gray-600: #6c757d !default;
+$o-gray-700: #495057 !default;
+$o-gray-800: #343a40 !default;
+$o-gray-900: #212529 !default;
+
+$o-grays: (
+    100: $o-gray-100,
+    200: $o-gray-200,
+    300: $o-gray-300,
+    400: $o-gray-400,
+    500: $o-gray-500,
+    600: $o-gray-600,
+    700: $o-gray-700,
+    800: $o-gray-800,
+    900: $o-gray-900,
+) !default;
+
+$o-community-color: #71639e !default;
+$o-enterprise-color: #714B67 !default;
+$o-enterprise-action-color: #017e84 !default;
+
+$o-brand-odoo: $o-community-color !default;
+$o-brand-primary: $o-community-color !default;
+
+$o-brand-secondary: #8f8f8f !default;
+$o-brand-lightsecondary: $o-gray-100 !default;
+
+$o-action: $o-brand-primary !default;
+$o-success: #28a745 !default;
+$o-info: #17a2b8 !default;
+$o-warning: #ffac00 !default;
+$o-danger: #dc3545 !default;
+
+// Fine-tune contextual text colors.
+// Overrides $theme-colors generated 'text-x' classes only.
+// Custom colors are set by $o-text-colors-custom
+$o-theme-text-colors: (
+    "success": #008818,
+    "info": #0180a5,
+    "warning": #9a6b01,
+    "danger": #d23f3a,
+)!default;
+
+// Opacities
+$o-opacity-disabled: .5 !default;
+$o-opacity-muted: .76 !default;
+
+$o-opacities: (
+    0: 0,
+    25: .25,
+    50: .5,
+    75: .75,
+    100: 1,
+    disabled: $o-opacity-disabled,
+    muted: $o-opacity-muted,
+) !default;
+
+// Font families
+$o-font-family-sans-serif: o-add-unicode-support-font($o-system-fonts) !default;
+$o-font-family-monospace: o-add-unicode-support-font((SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace)) !default;
+
+$o-headings-font-family: o-add-unicode-support-font(("SF Pro Display", $o-system-fonts)) !default;
+
+// Font colors
+$o-main-text-color: $o-gray-700 !default;
+$o-main-color-muted: rgba($o-main-text-color, $o-opacity-muted) !default;
+$o-main-headings-color: $o-gray-900 !default;
+$o-main-link-color: darken($o-brand-primary, 5%) !default;
+$o-main-favorite-color: #f3cc00 !default;
+$o-main-code-color: #d2317b !default;
+
+// Tables
+$o-table-cell-padding-x-sm: .3rem !default;
+$o-table-cell-padding-y-sm: .5rem !default;
+
+// Components colors
+$o-component-active-color:  $o-gray-900 !default;
+$o-component-active-bg: mix($o-action, $o-gray-100, 20%) !default;
+$o-component-active-border: $o-action !default;
+
+$o-view-background-color: white !default;
+$o-shadow-color: #303030 !default;
+
+$o-form-lightsecondary: #ccc !default;
+
+$o-list-footer-bg-color: transparent !default;
+$o-list-footer-font-weight: bold !default;
+
+// Custom colors generation maps
+$o-text-colors-custom: (
+    "action": $o-action,
+    "favourite": $o-main-favorite-color,
+) !default;
+
+$o-bg-colors-custom: (
+    "action": $o-action,
+    "view": $o-view-background-color,
+    "favourite": $o-main-favorite-color,
+) !default;
+
+$o-btn-custom: (
+    "favourite": $o-main-favorite-color,
+) !default;
+
+// Components (BS)
+
+
+// Forms
+
+// o-inputs
+$o-input-padding-y: 2px !default;
+$o-input-padding-x: 4px !default;
+
+$o-input-bg: transparent !default;
+$o-input-invalid-bg: mix($o-danger, $o-input-bg, 10%) !default;
+$o-input-border-required: $o-brand-primary !default;
+
+// Layout
+//
+// Extension of BS4. This is not redefining the BS4 variable directly as we only
+// need the extra ones for media queries (not creating new breakpoint classes).
+// Note: default BS4 values are hardcoded here while it should be possible to
+// merge with the default BS variable (but we would have to take care of
+// ordering & cie).
+$o-extra-grid-breakpoints: (
+    xs: 0,
+    vsm: 475px,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1534px,
+) !default;
+$o-spacer: 16px !default; // = 1rem
+$o-form-spacing-unit: 5px !default;
+$o-horizontal-padding: $o-spacer !default;
+$o-dropdown-hpadding: 20px !default;
+$o-dropdown-vpadding: 3px !default;
+$o-dropdown-max-height: 70vh !default;
+
+$o-statbutton-height: 44px !default;
+$o-statbutton-spacing: 6px !default;
+
+$o-modal-lg: 980px !default;
+$o-modal-md: 650px !default;
+
+// Needed for having no spacing between sheet and mail body in mass_mailing:
+// Different required cancel paddings between web and web_enterprise
+$o-sheet-cancel-tpadding: 0px !default;
+
+$o-statusbar-height: 33px !default;
+
+$o-label-font-size-factor: 0.8 !default;
+
+
+// == List group
+
+$o-list-group-active-color: $o-gray-900 !default;
+$o-list-group-active-bg: lighten(saturate(adjust-hue($o-info, 15), 1.8), 50) !default;
+
+// Breadcrumbs
+
+$o-breadcrumb-item-padding-x: .5rem !default;
+
+
+// == Badges
+
+// Define a minimum width. This value is arbitrary and strictly font-related.
+$o-badge-min-width: 3ch !default;
+
+$o-base-settings-mobile-tabs-height: 40px !default;
+
+$o-card-body-bg-opacity: 0.9 !default;
+
+// Border-radius
+
+$o-border-radius: o-to-rem(4px) !default;
+$o-border-radius-sm: o-to-rem(3px) !default;
+$o-border-radius-lg: o-to-rem(6px) !default;
+
+// touch
+$o-touch-btn-padding: 7px 14px !default;
+$o-touch-btn-with-icon-padding: 7px 10px !default;
+
+// == Buttons
+// Map of customized values for each button. If a button's design is defined
+// here, the relative values will take priority over default BS ones.
+// Notice: each map's entry is passed directly to the Bootstrap mixin, meaning
+// that all states must be defined, there can't be omissions.
+$o-btns-bs-override: () !default;
+$o-btns-bs-override: map-merge((
+    "primary": (
+        background: $o-brand-primary,
+        border: $o-brand-primary,
+        color: $o-white,
+
+        hover-background: darken($o-brand-primary, 10%),
+        hover-border: darken($o-brand-primary, 20%),
+        hover-color: $o-white,
+
+        active-background: darken($o-brand-primary, 20%),
+        active-border: darken($o-brand-primary, 20%),
+        active-color: $o-white,
+    ),
+    "secondary": (
+        background: $o-gray-300,
+        border: $o-gray-300,
+        color: $o-gray-800,
+
+        hover-background: $o-gray-400,
+        hover-border: $o-gray-400,
+        hover-color: $o-gray-900,
+
+        active-background: $o-component-active-bg,
+        active-border:  $o-component-active-border,
+        active-color: $o-component-active-color,
+    ),
+    "light": (
+        background: $o-white,
+        border: $o-white,
+        color: $o-gray-700,
+
+        hover-background: $o-gray-200,
+        hover-border: $o-gray-200,
+        hover-color: $o-gray-900,
+
+        active-background: $o-component-active-bg,
+        active-border:  $o-component-active-border,
+        active-color: $o-component-active-color,
+    ),
+), $o-btns-bs-override);
+
+$o-btns-bs-outline-override: () !default;
+$o-btns-bs-outline-override: map-merge((
+    "secondary": (
+        background: transparent,
+        border: $o-gray-300,
+        color: $o-gray-700,
+
+        hover-background: $o-gray-200,
+        hover-border: $o-gray-300,
+        hover-color: $o-gray-800,
+
+        active-background: $o-component-active-bg,
+        active-border:  $o-component-active-border,
+        active-color: $o-component-active-color,
+    ),
+), $o-btns-bs-outline-override);

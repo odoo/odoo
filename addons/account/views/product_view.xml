@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_view_tree" model="ir.ui.view">
+            <field name="name">product.template.list</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <list string="Products" sample="1">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="list_price"/>
+                    <field name="taxes_id" widget="many2many_tags"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="product_product_action_sellable" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,list,form,activity</field>
+            <field name="context">{'search_default_filter_to_sell': 1}</field>
+            <field name="view_id" ref="product_template_view_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Create a new sellable product
+                </p>
+            </field>
+        </record>
+
+        <record id="product_product_action_purchasable" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,list,form,activity</field>
+            <field name="context">{'search_default_filter_to_purchase': 1}</field>
+            <field name="view_id" ref="product_template_view_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Create a new purchasable product
+                </p>
+            </field>
+        </record>
+
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <div name="options" position='inside'>
+                    <span class="d-inline-flex" invisible="type == 'combo'">
+                        <field name="purchase_ok"/>
+                        <label for="purchase_ok"/>
+                    </span>
+                </div>
+                <xpath expr="//field[@name='company_id']" position="after">
+                    <field name="fiscal_country_codes" invisible="1"/>
+                </xpath>
+                <page name="inventory" position="after">
+                    <page string="Accounting" name="invoicing" groups="account.group_account_readonly">
+                        <group name="properties" groups="account.group_account_readonly">
+                            <group string="Receivables">
+                                <field name="property_account_income_id"
+                                    groups="account.group_account_readonly"/>
+                            </group>
+                            <group string="Payables" name="payables">
+                                <field name="property_account_expense_id"
+                                    groups="account.group_account_readonly"/>
+                            </group>
+                        </group>
+                        <group name="accounting" groups="account.group_account_readonly,account.group_account_invoice"/>
+                    </page>
+                </page>
+                <div name="list_price_uom" position="after">
+                    <label for="taxes_id" invisible="type == 'combo'"/>
+                    <div name="taxes_div" class="o_row" invisible="type == 'combo'">
+                        <field
+                            name="taxes_id"
+                            widget="many2many_tags"
+                            class="oe_inline"
+                            context="{
+                                'default_type_tax_use': 'sale',
+                                'search_default_sale': 1,
+                                'search_default_service': type == 'service',
+                                'search_default_goods': type == 'consu',
+                            }"
+                        />
+                        <field name="tax_string" class="oe_inline"/>
+                    </div>
+                </div>
+                <div name="standard_price_uom" position="after">
+                    <field name="supplier_taxes_id"
+                        invisible="not purchase_ok or type == 'combo'"
+                        widget="many2many_tags"
+                        context="{
+                            'default_type_tax_use':'purchase',
+                            'search_default_purchase': 1,
+                            'search_default_service': type == 'service',
+                            'search_default_goods': type == 'consu',
+                        }"
+                    />
+                </div>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group name="account_property" >
+                        <group string="Account Properties" groups="account.group_account_readonly">
+                            <field name="property_account_income_categ_id"/>
+                            <field name="property_account_expense_categ_id"/>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

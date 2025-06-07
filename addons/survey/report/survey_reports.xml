@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Paper Format -->
+        <record id="paperformat_survey_certification" model="report.paperformat">
+            <field name="name">Survey Certification</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+        <!-- QWeb Reports -->
+        <record id="certification_report" model="ir.actions.report">
+            <field name="name">Certifications</field>
+            <field name="model">survey.user_input</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">survey.certification_report_view</field>
+            <field name="report_file">survey.certification_report_view</field>
+            <field name="print_report_name">'Certification - %s' % (object.survey_id.display_name)</field>
+            <field name="attachment">'certification.pdf'</field>
+            <field name="binding_model_id" ref="model_survey_user_input"/>
+            <field name="binding_type">report</field>
+            <field name="paperformat_id" ref="paperformat_survey_certification"/>
+        </record>
+    </data>
+</odoo>

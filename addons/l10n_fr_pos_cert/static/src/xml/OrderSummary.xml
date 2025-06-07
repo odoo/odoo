@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="l10n_fr_pos_cert.OrderSummary" t-inherit="point_of_sale.OrderSummary" t-inherit-mode="extension">
+		<xpath expr="//Orderline" position="inside" >
+            <t t-if="pos.is_french_country() !== false and line.price_type === 'manual'">
+                <li class="info">
+                    Old unit price:
+                    <span class="oldPrice">
+                        <s>
+                            <t t-esc="env.utils.formatCurrency(line.get_taxed_lst_unit_price())" /> / Units
+                        </s>
+                    </span>
+                </li>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

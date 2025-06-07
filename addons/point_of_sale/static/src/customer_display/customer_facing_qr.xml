@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.CustomerFacingQR">
+        <Dialog
+            footer="false"
+            header="false"
+            bodyClass="'w-100 h-100 d-flex flex-column justify-content-center align-items-center'"
+        >
+            <div class="text-center">
+                <p t-out="title"/>
+                <img class="pos-customer_payment_qr_code my-1" t-att-src="props.qrCode" alt="QR Code"/>
+            </div>
+            <div class="text-center">
+                <div>
+                    <strong>Amount: </strong>
+                    <span t-esc="props.amount"/>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

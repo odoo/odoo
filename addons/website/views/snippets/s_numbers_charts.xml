@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_numbers_charts" name="Numbers Charts">
+    <section class="s_numbers_charts pt48 pb48">
+        <div class="container">
+            <div class="row o_grid_mode" data-row-count="12">
+                <div class="o_grid_item g-col-lg-6 g-height-5 col-lg-6" style="grid-area: 1 / 1 / 6 / 7; z-index: 1">
+                    <h3>Key Metrics of Company's<br/>Achievements</h3>
+                    <p class="lead">Our key metrics, from revenue growth to customer retention and market expansion, highlight our strategic prowess and commitment to sustainable business success.</p>
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-3 col-lg-5" style="grid-area: 6 / 1 / 9 / 6; z-index: 3">
+                    <p class="h2-fs">$ 32M</p>
+                    <p>Clients saved $32 million with our services.</p>
+                    <div class="s_progress_bar s_progress_bar_label_hidden" data-display="inline" data-vcss="001" data-snippet="s_progress_bar">
+                        <div class="s_progress_bar_wrapper d-flex gap-2">
+                            <div class="progress" role="progressbar" aria-label="Progress bar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar overflow-visible bg-o-color-2" style="width: 80%; min-width: 3%"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_grid_item g-col-lg-5 g-height-3 col-lg-5" style="grid-area: 10 / 1 / 13 / 6; z-index: 2;">
+                    <p class="h2-fs">+25.000</p>
+                    <p>We proudly serves over 25,000 clients.</p>
+                    <div class="s_progress_bar s_progress_bar_label_hidden" data-display="inline" data-vcss="001" data-snippet="s_progress_bar">
+                        <div class="s_progress_bar_wrapper d-flex gap-2">
+                            <div class="progress" role="progressbar" aria-label="Progress bar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar overflow-visible bg-o-color-2" style="width: 45%; min-width: 3%"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_grid_item o_cc o_cc2 g-col-lg-5 g-height-12 col-lg-5 rounded" style="grid-area: 1 / 8 / 13 / 13; --grid-item-padding-y: 80px; --grid-item-padding-x: 40px; z-index: 4;">
+                    <div class="s_chart" data-type="doughnut" data-legend-position="none" data-tooltip-display="false" data-stacked="false" data-border-width="2" data-data='{"labels":["First","Second"],"datasets":[{"label":"One","data":["25","75"],"backgroundColor":["o-color-3","o-color-2"],"borderColor":["",""]}]}' data-snippet="s_chart" data-name="Chart">
+                        <p><br/></p>
+                        <canvas style="box-sizing: border-box;" width="456" height="228"/>
+                    </div>
+                    <!-- Placeholder chart, to be displayed in the preview modal -->
+                    <svg class="s_dialog_preview d-block mx-auto" width="450" height="230" viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="40" fill="transparent" stroke="transparent" stroke-width="25"/>
+                        <circle cx="50" cy="55" r="40" fill="transparent" stroke="var(--o-color-2)" stroke-width="25"  stroke-dasharray="251.2" stroke-dashoffset="62.8"/>
+                    </svg>
+                    <!-- End of placeholder -->
+                    <p><br/></p>
+                    <p class="display-1" style="text-align: center;">75%</p>
+                    <p class="o_small text-600" style="text-align: center;">75% of clients use the service for over a decade consistently.<br/>This showcases remarkable loyalty and satisfaction with the quality provided.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>

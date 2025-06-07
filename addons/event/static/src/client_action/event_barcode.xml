@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="event.EventScanView">
+        <div class="o_event_barcode_bg o_home_menu_background">
+            <div class="o_event_barcode_main bg-view">
+                <a t-if="!isDisplayStandalone" href="#" class="o_event_previous_menu float-start"><i class="oi oi-chevron-left fa-lg mt-3" t-on-click.prevent="() => this.onClickBackToEvents()"></i></a>
+                <div class="mt48">
+                    <h1 t-out="data.name"/>
+                    <p>
+                        <t t-if="data.city and data.country">
+                            <t t-out="data.city"/> - <t t-out="data.country"/>
+                        </t>
+                        <t t-if="data.city and !data.country" t-out="data.city"/>
+                        <t t-if="data.country and !data.city" t-out="data.country"/>
+                    </p>
+                    <h2><small>Welcome to</small> <t t-out="data.company_name"/></h2>
+                    <img t-if="data.company_id" t-attf-src="/web/image/res.company/{{data.company_id}}/logo_web" alt="Company Logo" class="o_event_barcode_company_image"/>
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <div class="mt16">
+                        <BarcodeScanner onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
+                        <h5 class="my-5 text-muted">Scan or Tap</h5>
+                    </div>
+                    <div>
+                        <h4 class="mt0 mb8"><i>or</i></h4>
+                    </div>
+                    <div class="mt32">
+                        <button class="o_event_select_attendee btn btn-primary w-100 mb16" t-on-click="() => this.onClickSelectAttendee()">
+                            <div class="mb16 mt16">Select Attendee</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="event.EventScanViewNoKiosk">
+        <div class="o_event_barcode_bg o_home_menu_background">
+            <div class="o_event_barcode_main container d-flex flex-column h-100 h-sm-auto bg-view shadow">
+                <div class="d-flex align-items-center justify-content-between my-3">
+                    <a t-if="!isDisplayStandalone" href="#" class="o_event_previous_menu float-start"><i class="oi oi-chevron-left fa-lg" t-on-click.prevent="() => this.onClickBackToEvents()"></i></a>
+                    <span class="fs-2 me-auto ms-2" t-out="data.name"/>
+                    <a t-if="!isDisplayStandalone" class="btn btn-secondary d-flex align-items-center justify-content-center fw-bolder" href="/scoped_app?app_id=event&amp;path=scoped_app/registration-desk" target="_blank">Install</a>
+                </div>
+                <div class="flex-grow-1 d-flex flex-column justify-content-center align-items-center vh-50">
+                    <BarcodeScanner onBarcodeScanned="(ev) => this.onBarcodeScanned(ev)"/>
+                    <div class="my-5 text-center">
+                        <h5 class="mt8 text-muted">Scan or Tap</h5>
+                    </div>
+                </div>
+                <div>
+                    <button class="o_event_select_attendee btn btn-primary w-100" t-on-click="() => this.onClickSelectAttendee()">
+                        <div class="fw-bolder mb16 mt16">Select Attendee</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

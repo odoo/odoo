@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- wizard view -->
+        <record model="ir.ui.view" id="mail_wizard_invite_form">
+            <field name="name">Add Followers</field>
+            <field name="model">mail.wizard.invite</field>
+            <field name="arch" type="xml">
+                <form string="Add Followers">
+                    <group>
+                        <field name="res_model" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="partner_ids" widget="many2many_tags_email"
+                                placeholder="Add contacts"
+                                options="{'no_quick_create': True}"
+                                context="{'show_email': True, 'form_view_ref': 'base.view_partner_simple_form'}"/>
+                        <field name="notify" widget="boolean_toggle"/>
+                    </group>
+                    <field name="message"
+                           invisible="not notify"
+                           placeholder="Extra Comments ..."
+                           widget="html_mail"
+                           options="{'no-attachment': true}"
+                           class="o_mail_extra_comments border p-1 ps-1 pe-5"/>
+                    <footer>
+                        <button string="Add and close"
+                            name="add_followers" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

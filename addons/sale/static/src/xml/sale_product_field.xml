@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="sale.SaleProductField" t-inherit="account.ProductLabelSectionAndNoteField" t-inherit-mode="primary">
+        <!-- Show configuration button for custom lines/products -->
+        <xpath expr="//button[@t-if='hasExternalButton']" position="before">
+            <t t-if="hasConfigurationButton">
+                <button
+                    type="button"
+                    class="btn btn-secondary fa fa-pencil px-2"
+                    tabindex="-1"
+                    draggable="false"
+                    t-att-aria-label="configurationButtonHelp"
+                    t-att-data-tooltip="configurationButtonHelp"
+                    t-on-click="onEditConfiguration"/>
+            </t>
+        </xpath>
+        <!-- Show the product quantity next to the product name for combo lines. -->
+        <t t-out="productName" position="after">
+            <t t-if="isCombo">
+                x <t t-out="props.record.data.product_uom_qty"/>
+            </t>
+        </t>
+        <span t-esc="productName" class="text-truncate" position="after">
+            <t t-if="isCombo">
+                x <t t-out="props.record.data.product_uom_qty"/>
+            </t>
+        </span>
+    </t>
+
+</templates>

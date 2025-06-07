@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+
+    <t t-inherit="website_sale_stock.product_availability" t-inherit-mode="extension">
+        <div id="out_of_stock_message" position="replace">
+            <t t-if="!in_store_stock">$0</t>
+        </div>
+        <div id="threshold_message" position="attributes">
+            <attribute name="t-elif" add="!in_store_stock" separator=" and "/>
+        </div>
+    </t>
+
+</templates>

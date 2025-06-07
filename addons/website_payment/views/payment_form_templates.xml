@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Insert the donation form inside the payment form's <form/> element. -->
+    <template id="website_payment.payment_form" inherit_id="payment.form">
+        <xpath expr="//div[@id='o_payment_form_options']" position="before">
+            <div class="mb-3" t-if="is_donation">
+                <t t-call="website_payment.donation_information"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Display of /donation/pay -->
+    <template id="website_payment.donation_pay" name="Donation payment">
+        <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Donation'"/>
+            <t t-set="additional_title"><t t-out="page_title"/></t>
+            <div class="wrap">
+                <div class="oe_structure" id="oe_structure_website_payment_donation_1"/>
+                <div class="container mb-3">
+                    <!-- Portal breadcrumb -->
+                    <t t-call="payment.portal_breadcrumb"/>
+                    <!-- Payment page -->
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div t-if="not amount" class="alert alert-info">
+                                There is nothing to pay.
+                            </div>
+                            <div t-elif="not currency" class="alert alert-warning">
+                                <strong>Warning</strong> The currency is missing or incorrect.
+                            </div>
+                            <t t-else="" t-call="payment.form"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="oe_structure" id="oe_structure_website_payment_donation_2"/>
+            </div>
+        </t>
+    </template>
+
+    <template id="website_payment.donation_information" name="Donation Information">
+        <h3 class="o_page_header mt16 mb4">Donation</h3>
+        <div class="row">
+            <div t-attf-class="mb-3 #{error.get('name') and 'o_has_error' or ''} col-lg-12 div_name">
+                <label class="col-form-label fw-bold" for="name">Name
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <input t-att-readonly="'1' if 'name' in partner_details and partner_id else None" type="text" name="name" t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}" t-att-value="partner_details.get('name')" />
+            </div>
+            <div class="w-100"/>
+            <div t-attf-class="mb-3 #{error.get('email') and 'o_has_error' or ''} col-lg-6" id="div_email">
+                <label class="col-form-label fw-bold" for="email">Email
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <input t-att-readonly="'1' if 'email' in partner_details and partner_id else None" type="email" name="email" t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}" t-att-value="partner_details.get('email')" />
+            </div>
+            <t t-set="country_id" t-value="partner_details.get('country_id')"/>
+            <div t-attf-class="mb-3 #{error.get('country_id') and 'o_has_error' or ''} col-lg-6 div_country">
+                <label class="col-form-label fw-bold" for="country_id">Country
+                    <span class="s_website_form_mark"> *</span>
+                </label>
+                <select t-att-disabled="'1' if country_id and partner_id else None" id="country_id" name="country_id" t-attf-class="form-select #{error.get('country_id') and 'is-invalid' or ''}">
+                    <option value="">Country...</option>
+                    <t t-foreach="countries" t-as="c">
+                        <option t-att-value="c.id" t-att-selected="c.id == (country_id or -1)">
+                            <t t-out="c.name" />
+                        </option>
+                    </t>
+                </select>
+            </div>
+            <div class="w-100"/>
+            <div class="mb-3 col-lg-12 o_donation_payment_form">
+                <div class="col-lg-6 px-0">
+                    <label class="col-form-label fw-bold">Amount (<t t-out="currency.symbol"/>)</label>
+                    <t t-set="donation_layout" t-value="donation_options.get('customAmount')"/>
+                    <t t-set="prefilled_options" t-value="donation_options.get('prefilledOptions')"/>
+                    <t t-if="prefilled_options">
+                        <t t-foreach="donation_amounts" t-as="donation_amount">
+                            <div class="form-check my-2">
+                                <t t-set="is_checked" t-value="float(amount) == float(donation_amount)"/>
+                                <t t-set="has_checked" t-value="has_checked or is_checked"/>
+                                <input name="o_donation_amount"
+                                       class="form-check-input"
+                                       type="radio"
+                                       t-attf-id="amount_#{donation_amount_index}"
+                                       t-att-value="donation_amount"
+                                       t-att-checked="is_checked or None"
+                                />
+                                <label class="form-check-label mt-0" t-attf-for="amount_#{donation_amount_index}">
+                                    <t t-out="donation_amount"/>
+                                    <span t-if="donation_options.get('descriptions')" class="text-muted fst-italic ms-1">
+                                        - <t t-out="donation_descriptions[donation_amount_index]"/>
+                                    </span>
+                                </label>
+                            </div>
+                        </t>
+                        <div t-attf-class="form-check my-2 #{not donation_layout and 'd-none' or ''}">
+                            <input class="form-check-input" type="radio" id="other_amount" name="amount"
+                                t-att-value="amount" t-att-checked="not has_checked or None"/>
+                            <label class="form-check-label mt-0 d-block" for="other_amount"/>
+                            <t t-call="website_payment.donation_input">
+                                <t t-set="amount" t-value="not has_checked and amount or ''"/>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call="website_payment.donation_input"/>
+                    </t>
+                </div>
+                <div class="col-lg-12 px-0">
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" value="" id="donation_comment_checkbox"/>
+                        <label class="form-check-label" for="donation_comment_checkbox">Write us a comment</label>
+                    </div>
+                    <textarea class="form-control d-none mt-2" id="donation_comment" placeholder="Your comment"/>
+                </div>
+            </div>
+            <input type="hidden" name="donation_recipient_email" t-att-value="donation_options.get('donationEmail')"/>
+            <div class="w-100"/>
+        </div>
+        <h3 class="o_page_header mt16 mb4">Payment Details</h3>
+    </template>
+
+    <template id="website_payment.donation_input" name="Donation input">
+        <input name="o_donation_amount"
+               type="number"
+               class="form-control o_amount_input"
+               t-att-min="donation_options.get('minimumAmount')"
+               t-att-max="donation_options.get('maximumAmount')"
+               t-att-value="amount"
+               placeholder="Custom Amount"
+               id="other_amount_value"
+        />
+    </template>
+
+</odoo>

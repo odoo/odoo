@@ -1,0 +1,179 @@
+.o-mail-Message {
+    transition: background-color .2s ease-out, opacity .5s ease-out, box-shadow .5s ease-out, transform .2s ease-out;
+
+    &.o-card {
+        outline: $border-width solid rgba($border-color, .35);
+        outline-offset: -$border-width;
+        background-color: $o-view-background-color;
+        --border-opacity: .5;
+    }
+
+    &.o-highlighted {
+        transform: translateY(-#{map-get($spacers, 3)});
+    }
+
+    &.o-actionMenuMobileOpen {
+        background-color: rgba($o-action, .1);
+        outline: 1px solid rgba($o-action, .15);
+        outline-offset: -1px;
+    }
+}
+
+.o-mail-Message-date {
+    opacity: 50%;
+}
+
+.o-mail-Message-seenContainer {
+    font-size: 0.65rem;
+    right: 2px;
+    bottom: -2px;
+}
+
+.o-mail-Message-sidebar {
+    flex-basis: $o-mail-Message-sidebarWidth;
+    max-width: $o-mail-Message-sidebarWidth;
+
+    &.o-inChatWindow {
+        flex-basis: $o-mail-Message-sidebarSmallWidth;
+        max-width: $o-mail-Message-sidebarSmallWidth;
+    }
+}
+
+.o-mail-Message-avatarContainer {
+    width: $o-mail-Avatar-size;
+    height: $o-mail-Avatar-size;
+
+    &.o-inChatWindow {
+        width: $o-mail-Avatar-sizeSmall;
+        height: $o-mail-Avatar-sizeSmall;
+    }
+}
+
+@font-face {
+    font-family: "text-emoji";
+    src: local('Segoe UI'),
+         local('Apple Color Emoji'),
+         local('Android Emoji'),
+         local('Noto Color Emoji'),
+         local('Twitter Color Emoji'),
+         local('Twitter Color'),
+         local('EmojiOne Color'),
+         local('EmojiOne'),
+         local(EmojiSymbols),
+         local(Symbola);
+    unicode-range: U+231A-231B, U+23E9-23EC, U+23F0, U+23F3, U+25FD-25FE, U+2614-2615, U+2648-2653, U+267F, U+2693, U+26A1, U+26AA-26AB, U+26BD-26BE, U+26C4-26C5, U+26CE, U+26D4, U+26EA, U+26F2-26F3, U+26F5, U+26FA, U+26FD, U+2705, U+270A-270B, U+2728, U+274C, U+274E, U+2753-2755, U+2757, U+2795-2797, U+27B0, U+27BF, U+2B1B-2B1C, U+2B50, U+2B55, U+FE0F, U+1F004, U+1F0CF, U+1F18E, U+1F191-1F19A, U+1F1E6-1F1FF, U+1F201, U+1F21A, U+1F22F, U+1F232-1F236, U+1F238-1F23A, U+1F250-1F251, U+1F300-1F320, U+1F32D-1F335, U+1F337-1F393, U+1F3A0-1F3CA, U+1F3CF-1F3D3, U+1F3E0-1F3F0, U+1F3F4, U+1F3F8-1F43E, U+1F440, U+1F442-1F4FC, U+1F4FF-1F53D, U+1F54B-1F567, U+1F57A, U+1F595-1F596, U+1F5A4, U+1F5FB-1F64F, U+1F680-1F6CC, U+1F6D0-1F6D2, U+1F6D5-1F6D7, U+1F6DC-1F6DF, U+1F6EB-1F6EC, U+1F6F4-1F6FC, U+1F7E0-1F7EB, U+1F7F0, U+1F90C-1F93A, U+1F93C-1F945, U+1F947-1FA7C, U+1FA80-1FAC5, U+1FACE-1FADB, U+1FAE0-1FAE8, U+1FAF0-1FAF8;
+    size-adjust: 121%;
+}
+
+.o-mail-Message-body {
+    font-family: "text-emoji", $font-family-base;
+
+    &:not(.o-note) {
+        padding-left: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+        padding-right: (map-get($spacers, 2) + map-get($spacers, 3)) / 2;
+
+        .o-mail-Message.o-editing & {
+            padding-left: map-get($spacers, 1);
+            padding-right: map-get($spacers, 1);
+        }
+    }
+
+    & > p {
+        margin-bottom: 0 !important;
+    }
+
+    // overflow: auto can break rendering of next element of a frequent broken Outlook 365
+    // warning table. If detected, we prevent the issue by removing flotation.
+    table[align="left"][width="100%"] {
+        float: none;
+    }
+}
+
+.o-mail-Message-bubble {
+    &.o-blue {
+        background-color: mix($o-view-background-color, $info, 87.5%) !important;
+        border-color: darken(mix($o-view-background-color, $info, 87.5%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $info, 87.5%)) !important;
+        }
+    }
+    &.o-green {
+        background-color: mix($o-view-background-color, $success, 87.5%) !important;
+        border-color: darken(mix($o-view-background-color, $success, 87.5%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $success, 87.5%)) !important;
+        }
+    }
+    &.o-orange {
+        background-color: mix($o-view-background-color, $warning, 75%) !important;
+        border-color: darken(mix($o-view-background-color, $warning, 75%), 10%) !important;
+
+        &.o-muted {
+            background-color: mix($white, mix($o-view-background-color, $warning, 75%), 85%) !important;
+        }
+    }
+}
+
+.o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
+    flex-direction: row-reverse;
+
+    .o-mail-Message-core, .o-mail-Message-textContent {
+        flex-direction: row-reverse;
+    }
+    .o-mail-Message-header {
+        justify-content: flex-end;
+    }
+    .o-mail-Message-author {
+        display: none;
+    }
+}
+
+.o-mail-Message-actions {
+    z-index: $o-mail-NavigableList-zIndex - 3;
+
+    &.o-expanded {
+        z-index: $o-mail-NavigableList-zIndex - 2;
+    }
+
+    button {
+        opacity: 50%;
+
+        &:hover, &.focus, &.show {
+            opacity: 100%;
+            color: var(--mail-Message-actionIconHoveredColor, black);
+        }
+    }
+}
+
+.o-mail-Message-moreMenu {
+    z-index: $o-mail-NavigableList-zIndex;
+}
+
+.o-mail-Message-openActionMobile:active {
+    opacity: 75% !important;
+}
+
+.o-mail-Message-pendingProgress {
+    animation: o-mail-message-pendingProgress-animation 0s ease-in 0.5s forwards;
+    visibility: hidden;
+}
+
+@keyframes o-mail-message-pendingProgress-animation {
+    to {
+        visibility: visible;
+    }
+}
+
+.o-mail-Message-searchHighlight {
+    background: rgba($warning, 0.75);
+}
+
+.o-mail-Message-starred {
+    color: $o-main-favorite-color;
+}
+
+.o-mail-Message-translated {
+    color: $o-enterprise-action-color;
+}

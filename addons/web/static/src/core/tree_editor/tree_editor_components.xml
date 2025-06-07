@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="web.TreeEditor.Input">
+        <input type="text" class="o_input" t-att-value="props.startEmpty ? '' : props.value" t-on-change="(ev) => props.update(ev.target.value)" />
+    </t>
+
+    <t t-name="web.TreeEditor.Select">
+        <select class="o_input pe-3 text-truncate" t-on-change="(ev) => props.update(deserialize(ev.target.value))">
+            <option t-if="props.addBlankOption" hidden="true" />
+            <t t-foreach="props.options" t-as="option" t-key="serialize(option[0])">
+                <option t-att-value="serialize(option[0])" t-att-selected="!props.addBlankOption and option[0] === props.value" t-esc="option[1]" />
+            </t>
+        </select>
+    </t>
+
+    <t t-name="web.TreeEditor.Range">
+        <div class="d-flex align-items-center">
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
+                <t t-set="info" t-value="props.editorInfo" />
+                <t t-set="value" t-value="props.value[0]" />
+                <t t-set="update" t-value="(val) => this.update(0, val)" />
+            </t>
+            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
+                <t t-set="info" t-value="props.editorInfo" />
+                <t t-set="value" t-value="props.value[1]" />
+                <t t-set="update" t-value="(val) => this.update(1, val)" />
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.Within">
+        <div class="d-flex align-items-center gap-2">
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
+                <t t-set="info" t-value="props.amountEditorInfo" />
+                <t t-set="value" t-value="props.value[0]" />
+                <t t-set="update" t-value="(val) => this.update(0, val)" />
+            </t>
+            <t t-call="web.TreeEditor.Editor">
+                <t t-set="_classes" t-value="'overflow-hidden flex-grow-1'"/>
+                <t t-set="info" t-value="props.optionEditorInfo" />
+                <t t-set="value" t-value="props.value[1]" />
+                <t t-set="update" t-value="(val) => this.update(1, val)" />
+            </t>
+        </div>
+    </t>
+
+    <t t-name="web.TreeEditor.List">
+        <div class="o_input d-flex flex-wrap gap-1">
+            <TagsList tags="tags"/>
+            <div class="flex-grow-1">
+                <t t-call="web.TreeEditor.Editor">
+                    <t t-set="info" t-value="props.editorInfo" />
+                    <t t-set="value" t-value="props.editorInfo.defaultValue()" />
+                    <t t-set="update" t-value="(val) => this.update(val)" />
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

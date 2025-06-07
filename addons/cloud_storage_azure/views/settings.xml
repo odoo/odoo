@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="cloud_storage_config_settings_view_form" model="ir.ui.view">
+        <field name="name">cloud_storage_config_settings_view_form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='cloud_storage_provider']" position="inside">
+                <div class="content-group mt16" invisible="cloud_storage_provider != 'azure'">
+                    <label for="cloud_storage_azure_account_name" class="o_light_label mr8"/>
+                    <field name="cloud_storage_azure_account_name"/>
+                    <br/>
+                    <label for="cloud_storage_azure_container_name" class="o_light_label mr8"/>
+                    <field name="cloud_storage_azure_container_name"/>
+                    <br/>
+                    <label for="cloud_storage_azure_tenant_id" class="o_light_label mr8"/>
+                    <field name="cloud_storage_azure_tenant_id"/>
+                    <br/>
+                    <label for="cloud_storage_azure_client_id" class="o_light_label mr8"/>
+                    <field name="cloud_storage_azure_client_id"/>
+                    <br/>
+                    <label for="cloud_storage_azure_client_secret" class="o_light_label mr8"/>
+                    <field name="cloud_storage_azure_client_secret"/>
+                    <label for="cloud_storage_azure_invalidate_user_delegation_key" class="o_light_label mr8"/>
+                    <field name="cloud_storage_azure_invalidate_user_delegation_key"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="delivery_report_saleorder_document" inherit_id="sale.report_saleorder_document">
+        <span name="order_note" position="before">
+            <p t-if="doc.carrier_id.carrier_description" id="carrier_description">
+                <strong>Shipping Description</strong>
+                <div t-out="doc.carrier_id.carrier_description"/>
+            </p>
+        </span>
+    </template>
+
+</odoo>

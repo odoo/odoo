@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="product_pricelist_view_search">
+        <field name="name">product.pricelist.search</field>
+        <field name="model">product.pricelist</field>
+        <field name="arch" type="xml">
+            <search string="Products Price Search">
+                <field name="name" string="Products Price"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_pricelist_view_tree" model="ir.ui.view">
+        <field name="name">product.pricelist.list</field>
+        <field name="model">product.pricelist</field>
+        <field name="arch" type="xml">
+            <list string="Products Price List" sample="1">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="country_group_ids"
+                    widget="many2many_tags"
+                    placeholder="All countries"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="product_pricelist_view_kanban" model="ir.ui.view">
+        <field name="name">product.pricelist.kanban</field>
+        <field name="model">product.pricelist</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" sample="1">
+                <templates>
+                    <t t-name="card" class="flex-row fw-bolder">
+                        <field name="name"/>
+                        <div class="ms-auto align-items-center">
+                            <i class="fa fa-money" role="img" aria-label="Currency" title="Currency"></i> <field name="currency_id"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="product_pricelist_view" model="ir.ui.view">
+        <field name="name">product.pricelist.form</field>
+        <field name="model">product.pricelist</field>
+        <field name="arch" type="xml">
+            <form string="Products Price List">
+                <header>
+                    <button name="action_open_pricelist_report" type="object" string="Print"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. USD Retailers"/></h1>
+                    </div>
+                    <group>
+                        <group name="pricelist_settings">
+                            <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="country_group_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="pricelist_rules" string="Price Rules">
+                            <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
+                                <list string="Pricelist Rules">
+                                    <field name="product_tmpl_id" column_invisible="True"/>
+                                    <field name="name" string="Apply on"/>
+                                    <field name="price" string="Price"/>
+                                    <field name="min_quantity"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="base" column_invisible="True"/>
+                                    <field name="price_discount" column_invisible="True"/>
+                                    <field name="applied_on" column_invisible="True"/>
+                                    <field name="compute_price" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_pricelist_action2" model="ir.actions.act_window">
+        <field name="name">Pricelists</field>
+        <field name="res_model">product.pricelist</field>
+        <field name="path">pricelists</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="product_pricelist_view_search" />
+        <field name="context">{"default_base":'list_price'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a new pricelist
+            </p><p>
+            A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.
+            This is the perfect tool to handle several pricings, seasonal discounts, etc.
+            </p><p>
+            You can assign pricelists to your customers or select one when creating a new sales quotation.
+            </p>
+        </field>
+    </record>
+
+    <record id="product_pricelist_item_action" model="ir.actions.act_window">
+        <field name="name">Price Rules</field>
+        <field name="res_model">product.pricelist.item</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

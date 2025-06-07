@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="spreadsheet.SpreadsheetBinaryField" t-inherit="web.BinaryField" t-inherit-mode="primary">
+        <xpath expr="//t[@name='download']" position="replace"></xpath>
+        <xpath expr="//span[hasclass('fa-download')]" position="replace">
+            <span class="fa fa-file-text-o me-2" />
+        </xpath>
+    </t>
+</templates>

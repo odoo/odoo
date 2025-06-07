@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_vn_edi_cancellation_form" model="ir.ui.view">
+        <field name="name">l10n_vn_edi_viettel.cancellation.form</field>
+        <field name="model">l10n_vn_edi_viettel.cancellation</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="reason" placeholder="Reason..."/>
+                    <field name="agreement_document_name" placeholder="Agreement document name..."/>
+                    <field name="agreement_document_date" placeholder="Agreement document date..."/>
+                </group>
+                <footer>
+                    <button string="Request Cancellation" name="button_request_cancel" type="object" default_focus="1" class="btn-primary"/>
+                    <button string="Close" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

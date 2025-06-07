@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_stock_report" model="ir.actions.client">
+        <field name="name">Traceability Report</field>
+        <field name="tag">stock_report_generic</field>
+        <field name="context">{'url': '/stock/output_format/stock?active_id=:active_id&amp;active_model=:active_model', 'model': 'stock.traceability.report'}</field>
+    </record>
+
+</odoo>

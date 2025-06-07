@@ -1,0 +1,16 @@
+[data-embedded="video"] {
+    position: relative;
+    &:has( iframe) {
+        aspect-ratio: 16 / 9;
+    }
+    margin: 0 auto;
+    width: 100%;
+    max-width: 750px;
+
+    iframe {
+        @include o-position-absolute(0, 0, 0, 0);
+        width: 100% !important;
+        height: 100%;
+        min-height: auto !important;
+    }
+}

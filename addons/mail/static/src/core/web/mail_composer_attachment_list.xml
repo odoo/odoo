@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="mail.MailComposerAttachmentList">
+        <ul class="list-unstyled m-0">
+            <li t-foreach="files" t-as="file" t-key="file_index" class="d-flex align-items-center bg-200 p-1 ps-3 my-2">
+                <a t-att-href="getUrl(file.id)" t-out="file.name" class="flex-grow-1 text-truncate"/>
+                <button class="btn flex-shrink-0" t-on-click.stop="() => this.onFileRemove(file.id)">
+                    <i class="fa fa-fw fa-times"/>
+                </button>
+            </li>
+        </ul>
+    </t>
+</templates>

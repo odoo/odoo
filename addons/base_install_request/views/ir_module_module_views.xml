@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_module_module_view_kanban" model="ir.ui.view">
+        <field name="name">ir.module.module.view.kanban.inherit.mail</field>
+        <field name="model">ir.module.module</field>
+        <field name="inherit_id" ref="base.module_view_kanban"/>
+        <field name="arch" type="xml">
+            <button name="button_immediate_install" position="after">
+                <button type="object" class="btn btn-primary btn-sm" name="action_open_install_request" invisible="state != 'uninstalled'" t-if="!record.to_buy.raw_value" groups="!base.group_system">Request Access</button>
+            </button>
+        </field>
+    </record>
+
+    <record id="base.menu_management" model="ir.ui.menu">
+        <field name="groups_id" eval="[(5, 0, 0)]"/>
+    </record>
+</odoo>

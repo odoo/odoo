@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_event_view_form_inherit_pos_event" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.pos.event</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <field name="image_1024" widget="image" class="oe_avatar me-4"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_newsletter_block_sms_template" groups="base.group_user">
+    <div class="row">
+        <div class="col-lg-6">
+            <h2 class="h4-fs">Always First.</h2>
+            <p class="text-muted">Be the first to find out all the latest news, products, and trends.</p>
+        </div>
+        <div class="s_newsletter_subscribe_form s_subscription_list js_subscribe col-lg-5 offset-lg-1" data-vxml="001" data-list-id="0" data-name="Newsletter Form">
+            <div class="js_subscribed_wrap d-none">
+                <p class="h4-fs text-center text-success"><i class="fa fa-check-circle-o" role="img"/> Thanks for registering!</p>
+            </div>
+            <div class="js_subscribe_wrap">
+                <div class="input-group">
+                    <!-- input name must be an existing 'mailing.contact' field -->
+                    <input type="tel" name="mobile" class="js_subscribe_value form-control" placeholder="+1 555-555-1234"/>
+                    <a role="button" href="#" class="btn btn-primary js_subscribe_btn o_submit">Subscribe</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="newsletter_subscribe_options" name="Newsletter Subscribe Options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='NewsletterLayout']/we-select/we-button[@data-select-data-attribute='email']" position="after">
+        <we-button title="SMS Newsletter" string="SMS Subscription"
+                   data-select-template="website_mass_mailing_sms.s_newsletter_block_sms_template"
+                   data-select-data-attribute="sms" data-name="sms_opt"/>
+    </xpath>
+</template>
+
+</odoo>

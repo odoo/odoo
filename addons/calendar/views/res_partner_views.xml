@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <!-- Partner kanban view inherit -->
+        <record id="res_partner_kanban_view" model="ir.ui.view">
+            <field name="name">res.partner.view.kanban.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <xpath expr="//footer/div" position="inside">
+                    <a t-if="record.meeting_count.value>0" type="object" name="schedule_meeting" class="btn btn-sm btn-link smaller" role="button">
+                        <i class="fa fa-calendar me-1" aria-label="Meetings" role="img" title="Meetings"/>
+                        <field name="meeting_count"/>
+                    </a>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Add contextual button on partner form view -->
+        <record id="view_partners_form" model="ir.ui.view">
+            <field name="name">res_partner.view.form.calendar</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <div name="button_box" position="inside">
+                        <button class="oe_stat_button" type="object"
+                            name="schedule_meeting"
+                            icon="fa-calendar"
+                            context="{'partner_id': id, 'partner_name': name}">
+                            <field string="Meetings" name="meeting_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                </data>
+            </field>
+        </record>
+
+</odoo>

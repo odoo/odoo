@@ -1,0 +1,463 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_edi
+# 
+# Translators:
+# zakariya moradi, 2025
+# Tiffany Chang, 2025
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 08:39+0000\n"
+"PO-Revision-Date: 2024-09-25 09:41+0000\n"
+"Last-Translator: Tiffany Chang, 2025\n"
+"Language-Team: Persian (https://app.transifex.com/odoo/teams/41243/fa/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "%(count)s Electronic invoicing error(s)"
+msgstr ""
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "%(count)s Electronic invoicing info(s)"
+msgstr ""
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "%(count)s Electronic invoicing warning(s)"
+msgstr ""
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "A cancellation of the EDI has been requested."
+msgstr "لغو EDI درخواست شده است."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid "A request for cancellation of the EDI has been called off."
+msgstr "درخواست برای لغو EDI لغو شده است."
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr "سند حسابداری ارسال شد"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid ""
+"Are you sure you want to cancel this invoice without waiting for the EDI "
+"document to be canceled?"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_ir_attachment
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__attachment_id
+msgid "Attachment"
+msgstr "پیوست"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__blocking_level
+msgid "Blocking Level"
+msgstr "میزان بلوکه کردن"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__blocking_level
+msgid ""
+"Blocks the current operation of the document depending on the error severity:\n"
+"  * Info: the document is not blocked and everything is working as it should.\n"
+"  * Warning: there is an error that doesn't prevent the current Electronic Invoicing operation to succeed.\n"
+"  * Error: there is an error that blocks the current Electronic Invoicing operation."
+msgstr ""
+"عملیات فعلی سند را بسته به شدت خطا متوقف می‌کند:\n"
+"اطلاعات: سند متوقف نشده و همه چیز همان‌طور که باید در جریان است.\n"
+"هشدار: خطایی وجود دارد که مانع موفقیت عملیات صدور فاکتور الکترونیک نمی‌شود.\n"
+"خطا: خطایی وجود دارد که عملیات فعلی صدور فاکتور الکترونیک را متوقف می‌کند."
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Call off EDI Cancellation"
+msgstr "کنسل کردن فرآیند لغو تبادل الکترونیک داده‌ها"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__cancelled
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__cancelled
+msgid "Cancelled"
+msgstr "لغو شد"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_journal.py:0
+msgid ""
+"Cannot deactivate (%s) on this journal because not all documents are "
+"synchronized"
+msgstr ""
+"نمی توان (%s) را در این روزنامه غیرفعال کرد زیرا همه اسناد همگام نیستند"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
+msgid "Code"
+msgstr "کد"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__compatible_edi_ids
+msgid "Compatible Edi"
+msgstr "تبادل الکترونیک سازگار داده‌ها"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_uid
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_uid
+msgid "Created by"
+msgstr "ایجاد شده توسط"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__create_date
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__create_date
+msgid "Created on"
+msgstr "ایجادشده در"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__display_name
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__display_name
+msgid "Display Name"
+msgstr "نام نمایش داده شده"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Download"
+msgstr "دانلود"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "EDI Documents"
+msgstr "اسناد EDI"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_edi_format
+msgid "EDI format"
+msgstr "فرمت تبادل الکترونیک داده‌ها"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
+msgid "EDI format that support moves in this journal"
+msgstr "فرمت EDI که از انتقالات در این روزنامه پشتیبانی می کند"
+
+#. module: account_edi
+#: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
+msgid "EDI: Perform web services operations"
+msgstr "تبادل الکترونیک داده‌ها: اجرای عملیات‌های سرویس‌های اینترنتی"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_blocking_level
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_blocking_level
+msgid "Edi Blocking Level"
+msgstr "سطح توقف تبادل الکترونیک داده‌ها"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_content
+msgid "Edi Content"
+msgstr "محتوای تبادل الکترونیک داده‌ها"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_document_ids
+msgid "Edi Document"
+msgstr "سند Edi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_count
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_count
+msgid "Edi Error Count"
+msgstr "تعداد خطاهای Edi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_error_message
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
+msgid "Edi Error Message"
+msgstr "پیام خطا در تبادل الکترونیک داده‌ها"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
+msgid "Edi Format"
+msgstr "فرمت Edi"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_abandon_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_abandon_cancel_button
+msgid "Edi Show Abandon Cancel Button"
+msgstr "دکمه‌ی لغو تبادل الکترونیک داده‌ها "
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_cancel_button
+msgid "Edi Show Cancel Button"
+msgstr "Edi نمایش دکمه لغو"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_show_force_cancel_button
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_show_force_cancel_button
+msgid "Edi Show Force Cancel Button"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_web_services_to_process
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
+msgid "Edi Web Services To Process"
+msgstr "خدمات وب Edi برای پردازش"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_edi_document
+msgid "Electronic Document for an account.move"
+msgstr "سند الکترونیکی برای یک account.move"
+
+#. module: account_edi
+#: model:ir.actions.act_window,name:account_edi.action_open_edi_documents
+#: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_state
+#: model:ir.model.fields,field_description:account_edi.field_account_journal__edi_format_ids
+#: model:ir.model.fields,field_description:account_edi.field_account_move__edi_state
+msgid "Electronic invoicing"
+msgstr "صورتحساب الکترونیکی"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing processing needed"
+msgstr "صدور فاکتور باید به صورت الکترونیک انجام شود"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing state"
+msgstr "وضعیت صدور فاکتور الکترونیک"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__error
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__error
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__error
+msgid "Error"
+msgstr "خطا"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Force Cancel"
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_name
+msgid "Format Name"
+msgstr "نام فرمت"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_error_count
+#: model:ir.model.fields,help:account_edi.field_account_move__edi_error_count
+msgid "How many EDIs are in error for this move?"
+msgstr "در این سند چند خطا در رابطه با تبادل الکترونیک داده‌ها وجود دارد؟"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__id
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__info
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__info
+msgid "Info"
+msgstr "اطلاعات"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid ""
+"Invalid invoice configuration:\n"
+"\n"
+"%s"
+msgstr ""
+"پیکربندی فاکتور نامعتبر:\n"
+"\n"
+"%s"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_journal
+msgid "Journal"
+msgstr "روزنامه"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_move
+msgid "Journal Entry"
+msgstr "سند دفترروزنامه‌"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_uid
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_uid
+msgid "Last Updated by"
+msgstr "آخرین بروز رسانی توسط"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__write_date
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__write_date
+msgid "Last Updated on"
+msgstr "آخرین بروز رسانی در"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__move_id
+msgid "Move"
+msgstr "جابجایی"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__name
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_format__name
+msgid "Name"
+msgstr "نام"
+
+#. module: account_edi
+#: model:ir.model.constraint,message:account_edi.constraint_account_edi_document_unique_edi_document_by_move_by_format
+msgid "Only one edi document by move by format"
+msgstr "فقط یک سند edi بر اساس انتقال بر اساس قالب"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Process now"
+msgstr "اکنون پردازش کنید"
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_account_resequence_wizard
+msgid "Remake the sequence of Journal Entries."
+msgstr "بازسازی توالی اسناد دفتر روزنامه."
+
+#. module: account_edi
+#: model:ir.model,name:account_edi.model_ir_actions_report
+msgid "Report Action"
+msgstr "اکشن گزارش"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Request EDI Cancellation"
+msgstr "درخواست لغو EDI"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "Retry"
+msgstr "تلاش مجدد"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
+msgid "Send XML/EDI invoices"
+msgstr "فاکتورهای XML/EDI را ارسال کنید"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__sent
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__sent
+msgid "Sent"
+msgstr "ارسال"
+
+#. module: account_edi
+#: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
+msgid "State"
+msgstr "استان"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_state
+#: model:ir.model.fields,help:account_edi.field_account_move__edi_state
+msgid "The aggregated state of all the EDIs with web-service of this move"
+msgstr ""
+"وضعیت کلی تمام تبادلات الکترونیک داده‌ها همراه با خدمات اینترنتی این سند"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__attachment_id
+msgid ""
+"The file generated by edi_format_id when the invoice is posted (and this "
+"document is processed)."
+msgstr ""
+"فایلی که توسط edi_format_id هنگام ارسال فاکتور (و این سند پردازش می شود) "
+"ایجاد می شود."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/wizard/account_resequence.py:0
+msgid ""
+"The following documents have already been sent and cannot be resequenced: %s"
+msgstr "اسناد زیر قبلاً ارسال شده‌اند و نمی‌توان دوباره شماره‌گذاری کرد: %s"
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "The invoice will soon be sent to"
+msgstr "فاکتور به زودی به ... ارسال می‌شود"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
+msgstr "متن آخرین خطای رخ داده در حین عملیات فاکتور الکترونیکی."
+
+#. module: account_edi
+#: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
+msgid "This code already exists"
+msgstr "این کد از قبل وجود دارد"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_edi_document.py:0
+msgid "This document is being sent by another process already. "
+msgstr "این سند قبلاً با فرآیند دیگری ارسال شده است."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid ""
+"This invoice was canceled while the EDIs %s still had a pending cancellation"
+" request."
+msgstr ""
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_cancel
+msgid "To Cancel"
+msgstr "برای لغو"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_send
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_state__to_send
+msgid "To Send"
+msgstr "برای ارسال"
+
+#. module: account_edi
+#: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__blocking_level__warning
+#: model:ir.model.fields.selection,name:account_edi.selection__account_move__edi_blocking_level__warning
+msgid "Warning"
+msgstr "هشدار"
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/account_move.py:0
+msgid ""
+"You can't edit the following journal entry %s because an electronic document"
+" has already been sent. Please use the 'Request EDI Cancellation' button "
+"instead."
+msgstr ""
+"شما نمی توانید ورودی روزنامه %s زیر را ویرایش کنید زیرا یک سند الکترونیکی "
+"قبلا ارسال شده است. لطفاً به جای آن از دکمه «درخواست لغو EDI» استفاده کنید."
+
+#. module: account_edi
+#. odoo-python
+#: code:addons/account_edi/models/ir_attachment.py:0
+msgid ""
+"You can't unlink an attachment being an EDI document sent to the government."
+msgstr ""
+"نمی‌توانید پیوستی را که یک سند EDI ارسال شده به دولت است، لغو لینک کنید."
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
+msgid "⇒ See errors"
+msgstr "⇒ خطاها را ببینید"

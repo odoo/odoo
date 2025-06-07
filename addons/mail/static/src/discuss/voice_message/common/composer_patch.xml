@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Composer.sendButton" t-inherit-mode="extension">
+        <xpath expr="//button[hasclass('o-mail-Composer-send')]" position="replace">
+            <VoiceRecorder t-if="thread?.model === 'discuss.channel' and allowUpload"
+                composer="props.composer"
+                attachmentUploader="attachmentUploader"
+                onchangeRecording.bind="() => this.state.recording = !this.state.recording"/>
+            <t>$0</t>
+        </xpath>
+    </t>
+</templates>

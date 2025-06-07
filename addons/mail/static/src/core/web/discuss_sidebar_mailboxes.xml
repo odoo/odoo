@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussSidebarMailboxes">
+        <div class="d-flex flex-column flex-grow-0 o-gap-0_5 mt-2">
+            <Mailbox mailbox="store.inbox"/>
+            <Mailbox mailbox="store.starred"/>
+            <Mailbox mailbox="store.history"/>
+        </div>
+    </t>
+
+    <t t-name="mail.Mailbox">
+        <Dropdown t-if="store.discuss.isSidebarCompact" state="floating" position="'right-middle'" menuClass="'o-mail-DiscussSidebar-floatingMenu bg-100 border border-secondary p-2 mx-2 my-2 min-w-0 shadow-sm'" manual="true">
+            <t t-call="mail.Mailbox.main"/>
+            <t t-set-slot="content">
+                <div class="overflow-hidden" t-ref="floating">
+                    <span class="text-muted user-select-none" t-esc="mailbox.name"/>
+                </div>
+            </t>
+        </Dropdown>
+        <t t-else="" t-call="mail.Mailbox.main"/>
+    </t>
+
+    <t t-name="mail.Mailbox.main">
+        <button
+            class="o-mail-DiscussSidebar-item o-mail-Mailbox btn d-flex align-items-center px-0 mx-2 border-0 rounded-2 fw-normal text-reset"
+            t-att-class="{
+                'bg-inherit': mailbox.notEq(store.discuss.thread),
+                'o-active': mailbox.eq(store.discuss.thread),
+                'justify-content-center position-relative o-compact': store.discuss.isSidebarCompact,
+                'o-py-0_5': !store.discuss.isSidebarCompact,
+                'o-unread': mailbox.counter,
+            }"
+            t-on-click="(ev) => this.openThread(ev)"
+            t-ref="root"
+        >
+            <ThreadIcon className="'bg-inherit ' + (store.discuss.isSidebarCompact ? '' : 'mx-2')" thread="mailbox"/>
+            <t t-if="!store.discuss.isSidebarCompact">
+                <div class="me-2 text-truncate small" style="line-height: 1.65;" t-esc="mailbox.name"/>
+                <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
+            </t>
+            <span
+                t-if="mailbox.counter > 0"
+                class="o-mail-DiscussSidebar-badge o-discuss-badge badge rounded-pill fw-bold"
+                t-att-class="{ 'o-muted': mailbox.id === 'starred', 'mx-1': !store.discuss.isSidebarCompact, 'position-absolute top-0 o-compact': store.discuss.isSidebarCompact }"
+                t-esc="mailbox.counter"
+            />
+        </button>
+    </t>
+
+</templates>

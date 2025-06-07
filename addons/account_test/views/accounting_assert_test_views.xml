@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record model="ir.ui.view" id="account_assert_tree">
+            <field name="name">accounting.assert.test.list</field>
+            <field name="model">accounting.assert.test</field>
+            <field name="arch" type="xml">
+                <list string="Tests">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="desc"/>
+                </list>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="account_assert_form">
+            <field name="name">accounting.assert.test.form</field>
+            <field name="model">accounting.assert.test</field>
+            <field name="arch" type="xml">
+                <form string="Tests">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="active" widget="boolean_toggle"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description" name="description">
+                                <field name="desc" nolabel="1"/>
+                            </page>
+                            <page string="Expression" name="expression">
+                                <group string="Python Code">
+                                    <field colspan="2" name="code_exec" nolabel="1"/>
+                                </group>
+                                <group string="Code Help">
+                                    <div colspan="2">
+                                        <pre style="white-space: pre-wrap;">
+Code should always set a variable named `result` with the result of your test, that can be a list or a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will try to translate and print what is inside `result`. If the result of your test is a dictionary, you can set a variable named `column_order` to choose in
+what order you want to print `result`'s content.
+Should you need them, you can also use the following variables into your code:
+    * cr: cursor to the database
+    * uid: ID of the current user
+In any ways, the code must be legal python statements with correct indentation (if needed).
+Example:
+    sql = '''SELECT id, name, ref, date
+             FROM account_move_line
+             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')
+          '''
+    cr.execute(sql)
+    result = cr.dictfetchall()
+                                        </pre>
+                                    </div>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="accounting_assert_test_view_search" model="ir.ui.view">
+            <field name="name">accounting.assert.test.view.search</field>
+            <field name="model">accounting.assert.test</field>
+            <field name="arch" type="xml">
+                <search string="Search Account Test">
+                    <field string="Name" name="name"/>
+                    <field string="Description" name="desc"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_accounting_assert">
+            <field name="name">Accounting Tests</field>
+            <field name="res_model">accounting.assert.test</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="accounting_assert_test_view_search"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new accounting test
+              </p>
+            </field>
+        </record>
+
+        <menuitem name="Accounting Tests" parent="account.menu_finance_reports" id="menu_action_license" action="action_accounting_assert" sequence="50" groups="base.group_no_one"/>
+
+</odoo>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record model="ir.rule" id="website_blog_post_public">
+        <field name="name">Blog Post: public: published only</field>
+        <field name="model_id" ref="model_blog_post"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="website_blog_public">
+        <field name="name">Blog: active only</field>
+        <field name="model_id" ref="model_blog_blog"/>
+        <field name="domain_force">[('active', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+
+</odoo>

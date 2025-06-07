@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_presence" model="mail.template">
+            <field name="name">HR: Employee Absence email</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="subject">Unexpected Absence</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="email_to">{{ (object.user_id.email_formatted or object.work_email) }}</field>
+            <field name="auto_delete" eval="False"/>
+            <field name="description">Sent manually in presence module when an employee wasn't working despite not being off</field>
+            <field name="body_html" type="html">
+                <div>
+                    Dear <t t-out="object.name or ''">Abigail Peterson</t>,<br/><br/>
+We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.
+Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.
+Thank you for your prompt attention to this matter.
+                    <br/>Best Regards,<br/><br/>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

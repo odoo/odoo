@@ -1,0 +1,43 @@
+///
+/// Backend Custom Utility Classes
+/// ==============================================================================
+
+$utilities: map-merge(
+    $utilities,
+    (
+        // Limit 'text-X' classes generation.
+        // See bootstrap_review_backend.scss
+        "color": (
+            property: color,
+            class: text,
+            local-vars: (
+                "text-opacity": 1
+            ),
+            values: (
+                "body": $body-color,
+                "muted": $text-muted,
+                "reset": inherit,
+            ),
+        ),
+
+        // Disable 'bg-X' classes generation.
+        // See bootstrap_review_backend.scss
+        "background-color": null,
+
+        "width": map-merge(
+            map-get($utilities, "width"),
+            ( print: true ),
+        ),
+    )
+);
+
+// Generate paddings print classes.
+@each $-padding-type in ("padding", "padding-x", "padding-y", "padding-top", "padding-end", "padding-bottom", "padding-start") {
+    $utilities: map-merge(
+        $utilities,
+        (
+            $-padding-type: map-merge(map-get($utilities, $-padding-type), ( print: true )),
+        )
+    );
+}
+
