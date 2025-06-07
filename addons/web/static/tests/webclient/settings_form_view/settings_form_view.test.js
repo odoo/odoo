@@ -430,13 +430,13 @@ test("settings views does not read existing id when coming back in breadcrumbs",
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            views: [[2, "list"]],
+            views: [[false, "list"]],
         },
     ]);
 
@@ -457,8 +457,6 @@ test("settings views does not read existing id when coming back in breadcrumbs",
             <field name="display_name"/>
         </list>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
     onRpc(({ method }) => {
         if (method && method !== "has_group") {
             expect.step(method);
@@ -567,7 +565,7 @@ test("settings views does not read existing id when reload", async () => {
             views: [["view_ref", "form"]],
         },
     ]);
-    ResConfigSettings._views.form = /* xml */ `
+    ResConfigSettings._views["form,1"] = /* xml */ `
         <form string="Settings" js_class="base_settings">
             <app string="CRM" name="crm">
                 <block>
@@ -579,13 +577,11 @@ test("settings views does not read existing id when reload", async () => {
             </app>
         </form>
     `;
-    Task._views.form = /* xml */ `
+    Task._views["form,view_ref"] = /* xml */ `
         <form>
             <field name="display_name"/>
         </form>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     onRpc(({ method }) => {
         expect.step(method);
@@ -624,13 +620,13 @@ test("settings views ask for confirmation when leaving if dirty", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            views: [["view_ref", "form"]],
+            views: [[false, "form"]],
         },
     ]);
     ResConfigSettings._views.form = /* xml */ `
@@ -644,13 +640,11 @@ test("settings views ask for confirmation when leaving if dirty", async () => {
             </app>
         </form>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
     Task._views.form = /* xml */ `
         <form>
             <field name="display_name"/>
         </form>
     `;
-    Task._views.search = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
@@ -762,7 +756,7 @@ test("settings views does not write the id on the url", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
     ]);
     ResConfigSettings._views.form = /* xml */ `
@@ -781,8 +775,6 @@ test("settings views does not write the id on the url", async () => {
             <field name="display_name"/>
         </list>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
 
@@ -807,13 +799,13 @@ test("settings views can search when coming back in breadcrumbs", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            views: [[2, "list"]],
+            views: [[false, "list"]],
         },
     ]);
     ResConfigSettings._views.form = /* xml */ `
@@ -833,8 +825,6 @@ test("settings views can search when coming back in breadcrumbs", async () => {
             <field name="display_name"/>
         </list>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
@@ -854,13 +844,13 @@ test("search for default label when label has empty string", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            views: [[2, "list"]],
+            views: [[false, "list"]],
         },
     ]);
     ResConfigSettings._views.form = /* xml */ `
@@ -880,8 +870,6 @@ test("search for default label when label has empty string", async () => {
             <field name="display_name"/>
         </list>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
 
@@ -902,13 +890,13 @@ test("clicking on any button in setting should show discard warning if setting f
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            views: [[2, "list"]],
+            views: [[false, "list"]],
         },
     ]);
 
@@ -929,8 +917,6 @@ test("clicking on any button in setting should show discard warning if setting f
             <field name="display_name"/>
         </list>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     onRpc("/web/dataset/call_button/*/<string:method>", async (request, { method }) => {
         expect.step(method);
@@ -992,13 +978,13 @@ test("header field don't dirty settings", async () => {
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            views: [[2, "list"]],
+            views: [[false, "list"]],
         },
     ]);
     ResConfigSettings._views.form = /* xml */ `
@@ -1012,8 +998,6 @@ test("header field don't dirty settings", async () => {
         </form>
     `;
     Task._views.list = /* xml */ `<list><field name="display_name"/></list>`;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual({ foo: true }, { message: "should create a record with foo=true" });
@@ -1231,13 +1215,13 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
             id: 1,
             name: "Settings view",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
         {
             id: 4,
             name: "Other action",
             res_model: "task",
-            views: [[2, "list"]],
+            views: [[false, "list"]],
         },
     ]);
 
@@ -1254,8 +1238,6 @@ test("clicking on a button with noSaveDialog will not show discard warning", asy
         </form>
     `;
     Task._views.list = /* xml */ `<list><field name="display_name"/></list>`;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     await mountWithCleanup(WebClient);
 
@@ -1406,8 +1388,6 @@ test("execute action from settings view with several actions in the breadcrumb",
         </form>
     `;
     Task._views[["list", 3]] = /* xml */ `<list><field name="display_name"/></list>`;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     let def;
     onRpc("web_save", async () => {
@@ -1493,9 +1473,6 @@ test('call "call_button/execute" when clicking on a button in dirty settings', a
             </app>
         </form>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.list = /* xml */ `<list/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     onRpc("/web/dataset/call_button/*/<string:method>", async (request, { method }) => {
         expect.step(method);
@@ -1550,9 +1527,6 @@ test("Discard button clean the settings view", async () => {
             </app>
         </form>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
-    Task._views.list = /* xml */ `<list/>`;
-    Task._views.search = /* xml */ `<search/>`;
 
     stepAllNetworkCalls();
 
@@ -1750,6 +1724,7 @@ test("highlight Element with inner html/fields", async () => {
     );
 });
 
+test.tags("focus required");
 test("settings form doesn't autofocus", async () => {
     ResConfigSettings._fields.textField = fields.Char();
 
@@ -1859,7 +1834,6 @@ test("server actions are called with the correct context", async () => {
             </app>
         </form>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
 
     onRpc("/web/action/run", async (request) => {
         const {
@@ -1958,7 +1932,7 @@ test("Open settings from url, with app anchor", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
     ]);
     ResConfigSettings._views.form = /* xml */ `
@@ -1979,7 +1953,6 @@ test("Open settings from url, with app anchor", async () => {
             </app>
         </form>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
 
     redirect("/odoo/settings#crm");
     await mountWithCleanup(WebClient);
@@ -1995,7 +1968,7 @@ test("Open settings from url, with setting id anchor", async () => {
             name: "Settings view",
             path: "settings",
             res_model: "res.config.settings",
-            views: [[1, "form"]],
+            views: [[false, "form"]],
         },
     ]);
     ResConfigSettings._views.form = /* xml */ `
@@ -2016,7 +1989,6 @@ test("Open settings from url, with setting id anchor", async () => {
             </app>
         </form>
     `;
-    ResConfigSettings._views.search = /* xml */ `<search/>`;
 
     redirect("/odoo/settings#setting_id");
     await mountWebClient();

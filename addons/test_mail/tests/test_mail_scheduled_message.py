@@ -144,6 +144,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                 scheduled_date='2022-12-24 14:00:00',
                 partner_ids=self.test_record.customer_id,
                 body="success",
+                subject="Test subject",
             ).id
             # cron should be triggered at scheduled date
             self.assertEqual(capt.records['call_at'], FieldDatetime.to_datetime('2022-12-24 14:00:00'))
@@ -196,7 +197,7 @@ class TestScheduledMessageBusiness(TestScheduledMessage, CronMixinCase):
                         'author_id': self.partner_employee,
                         'model': self.test_record._name,
                         'res_id': self.test_record.id,
-                        'subject': self.test_record._message_compute_subject(),
+                        'subject': "Test subject",
                     },
                     'notif': [
                         {'partner': self.test_record.customer_id, 'type': 'email'}

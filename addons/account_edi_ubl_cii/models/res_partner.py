@@ -118,6 +118,11 @@ class ResPartner(models.Model):
             ('9919', "Kennziffer des Unternehmensregisters"),
             ('9951', "San Marino VAT"),
             ('9953', "Vatican VAT"),
+            ('AN', "O.F.T.P. (ODETTE File Transfer Protocol)"),
+            ('AQ', "X.400 address for mail text"),
+            ('AS', "AS2 exchange"),
+            ('AU', "File Transfer Protocol"),
+            ('EM', "Electronic mail"),
         ]
     )
 

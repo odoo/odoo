@@ -66,7 +66,6 @@ class Animal extends models.Model {
         toy: /* xml */ `<toy>Arch content (id=false)</toy>`,
         "toy,1": /* xml */ `<toy>Arch content (id=1)</toy>`,
         "toy,2": /* xml */ `<toy js_class="toy_imp">Arch content (id=2)</toy>`,
-        other: /* xml */ `<other/>`,
         search: /* xml */ `<search/>`,
         "search,1": /* xml */ `
             <search>

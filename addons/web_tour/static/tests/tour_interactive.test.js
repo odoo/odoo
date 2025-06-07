@@ -28,7 +28,6 @@ class Partner extends models.Model {
     m2o = fields.Many2one({ relation: "product" });
 
     _views = {
-        search: `<search/>`,
         form: `<form>
             <field name="m2o"/>
         </form>`,

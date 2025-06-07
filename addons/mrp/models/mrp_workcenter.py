@@ -521,6 +521,8 @@ class MrpWorkcenterProductivity(models.Model):
 
     @api.onchange('duration')
     def _duration_changed(self):
+        if not self.date_end:
+            return
         self.date_start = self.date_end - timedelta(minutes=self.duration)
         self._loss_type_change()
 

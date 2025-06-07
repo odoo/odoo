@@ -15,7 +15,7 @@ beforeEach(() => {
         },
     ];
     ProjectProject._views = {
-        "kanban,false": `
+        kanban: `
             <kanban class="o_kanban_test" edit="0">
                 <template>
                     <t t-name="card">
@@ -53,7 +53,7 @@ test("Check is_favorite field is readonly if the field is readonly", async () =>
         expect.step("web_save");
     });
 
-    ProjectProject._views["kanban,false"] = ProjectProject._views["kanban,false"].replace(
+    ProjectProject._views["kanban"] = ProjectProject._views["kanban"].replace(
         'widget="project_is_favorite"',
         'widget="project_is_favorite" readonly="1"'
     );

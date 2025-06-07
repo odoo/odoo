@@ -76,7 +76,7 @@ export function oeTab(size, contenteditable = true) {
     return (
         `<span class="oe-tabs"` +
         (contenteditable ? "" : ' contenteditable="false"') +
-        (size ? ` style="width: ${size.toFixed(1)}px;"` : "") +
+        (size ? ` style="width: ${Number(size.toFixed(1))}px;"` : "") +
         `>\u0009</span>\u200B`
     );
 }

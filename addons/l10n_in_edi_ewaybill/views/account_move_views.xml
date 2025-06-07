@@ -35,6 +35,9 @@
                                 domain="[('vat','not in', ['', False]), ('country_id.code','=','IN')]"
                                 invisible="l10n_in_mode != '0'"
                                 required="l10n_in_mode == '0'"/>
+                            <field name="l10n_in_transporter_id"
+                                domain="[('country_id.code','=','IN')]"
+                                invisible="l10n_in_mode != '1'"/>
                             <field name="l10n_in_transportation_doc_no" 
                                 invisible="l10n_in_mode not in ('2', '3', '4')"
                                 required="l10n_in_mode in ('2', '3', '4')"

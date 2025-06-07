@@ -279,8 +279,15 @@ class SaleOrderLine(models.Model):
             title = self.product_id.name
             description = '<br/>'.join(sale_line_name_parts)
         else:
-            if len(sale_line_name_parts) > 1 and sale_line_name_parts[1]:
-                # if there's multiple lines, skip the product name part
+            default_name = self.with_context(
+                lang=self.order_id._get_lang(),
+            )._get_sale_order_line_multiline_description_sale()
+            if (
+                self.name != default_name
+                and len(sale_line_name_parts) > 1
+                and sale_line_name_parts[1]
+            ):
+                # if there's a custom line description, skip the product name part when possible
                 sale_line_name_parts.pop(0)
             title = sale_line_name_parts[0]
             description = '<br/>'.join(sale_line_name_parts[1:])

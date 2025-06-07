@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import base_document_layout
+from . import mail_compose_message
 from . import mass_cancel_orders
 from . import payment_link_wizard
 from . import payment_provider_onboarding_wizard

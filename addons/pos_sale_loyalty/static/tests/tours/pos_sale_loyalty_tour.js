@@ -19,3 +19,13 @@ registry.category("web_tour.tours").add("PosSaleLoyaltyTour1", {
             ReceiptScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_pos_sale_loyalty_ignored_in_pos", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            PosSale.settleNthOrder(1),
+            ProductScreen.totalAmountIs(90),
+        ].flat(),
+});
