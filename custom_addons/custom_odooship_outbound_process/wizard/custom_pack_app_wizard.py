@@ -1207,8 +1207,25 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             _logger.info(f"[ONETRAKER][SINGLE PICK RESPONSE] {json.dumps(response_json, indent=4)}")
 
             generic = response_json.get("genericResponse", {})
-            
-            if generic.get("apiStatusCode") != 200 or generic.get("apiSuccessStatus") != "True":
+            status_code = generic.get("apiStatusCode")
+            status_message = generic.get("apiStatusMessage", "").lower()
+            status_error_code = generic.get("apiStatusErrorCode", "")
+
+            # If order already present, allow process to continue
+            if (
+                    status_code == 400
+                    and "order already present with order number" in status_message
+                    and status_error_code == "order_insert_failed"
+            ):
+                _logger.warning(f"[ONETRAKER] Order already present: {status_message}. Allowing process to continue.")
+                # Extract the order number if needed
+                order_number = status_message.split("order number")[-1].strip()
+                # Continue to pick validation and all remaining steps
+                label_url = None
+                con_id = ''
+                return label_url, con_id
+
+            if status_code != 200 or generic.get("apiSuccessStatus") != "True":
                 raise UserError(_(generic.get("apiStatusMessage", "Unknown error from OneTraker")))
 
             label_url = response_json.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
@@ -1396,8 +1413,42 @@ class PackDeliveryReceiptWizard(models.TransientModel):
             resp_data = response.json()
 
             _logger.info(f"[ONETRAKER][MULTI-PICK RESPONSE] {json.dumps(resp_data, indent=4)}")
-            if resp_data.get("genericResponse", {}).get("apiSuccessStatus") != "True":
-                raise ValidationError(resp_data.get("genericResponse", {}).get("apiStatusMessage", "Unknown error"))
+            generic = resp_data.get("genericResponse", {})
+            status_code = generic.get("apiStatusCode")
+            status_message = generic.get("apiStatusMessage", "").lower()
+            status_error_code = generic.get("apiStatusErrorCode", "")
+
+            if (
+                    status_code == 400
+                    and "order already present with order number" in status_message
+                    and status_error_code == "order_insert_failed"
+            ):
+                _logger.warning(
+                    f"[ONETRAKER][MULTI] Order already present: {status_message}. Allowing process to continue.")
+                order_number = status_message.split("order number")[-1].strip()
+                label_url = None
+                con_id = ''
+                # continue with post-label processing: update pick, update SO, release container
+                picking.write({'current_state': 'pack'})
+                sale.write({
+                    'carrier': carrier,
+                    'pick_status': 'packed',
+                    'consignment_number': con_id,
+                    'status': label_url,
+                    'tracking_url': f'https://auspost.com.au/mypost/track/details/{con_id}',
+                })
+                picking.button_validate()
+                self.send_tracking_update_to_ot_orders(
+                    so_number=sale.name,
+                    con_id=con_id,
+                    carrier=carrier,
+                    origin=sale.origin or "N/A",
+                    tenant_code=sale.tenant_code_id.name if sale.tenant_code_id else "N/A"
+                )
+                return True
+
+            if generic.get("apiSuccessStatus") != "True":
+                raise ValidationError(generic.get("apiStatusMessage", "Unknown error"))
 
             label_url = resp_data.get("order", {}).get("shipment", {}).get("documents", {}).get("shipping_label",
                                                                                                 {}).get("url")
