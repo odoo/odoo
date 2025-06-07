@@ -371,6 +371,9 @@ export class HistoryPlugin extends Plugin {
      * @returns { HistoryMutationRecord[] }
      */
     processNewRecords(mutationRecords) {
+        if (this.observer.takeRecords().length) {
+            throw new Error("MutationObserver has pending records");
+        }
         mutationRecords = this.filterMutationRecords(mutationRecords);
         /** @type {HistoryMutationRecord[]} */
         const records = mutationRecords
@@ -488,28 +491,46 @@ export class HistoryPlugin extends Plugin {
     }
 
     /**
-     * @todo: handle characterData mutations
+     * Mutation records of type "attribute" and "characterData" provide the old
+     * value, but not the new value. When multiple mutations occur in the same
+     * batch for an element's attribute or characterData, we only know the final
+     * value of the accumulated changes, which is the DOM's current state.
+     *
+     *  The oldValue provided by mutations after the first one are intermediate
+     *  states that we do not care about. Discarding them allows us to store a
+     *  single record representing the accumulated changes, instead of
+     *  reconstructing the new value introduced by each mutation.
      *
      * @param { MutationRecord[] } records
      */
     filterOutIntermediateStateMutationRecords(records) {
+        // Keep track of visited attributes of each node
         /** @type {Map<Node, Set<string>>} */
         const nodeToAttributes = new Map();
+        // Keep track of visited nodes for characterData mutations
+        /** @type {Set<Node>} */
+        const visitedNodesCharData = new Set();
         const filteredRecords = [];
         for (const record of records) {
-            if (record.type !== "attributes") {
+            if (record.type === "attributes") {
+                // Add entry for current target if not already present.
+                if (!nodeToAttributes.has(record.target)) {
+                    nodeToAttributes.set(record.target, new Set());
+                }
+                const visitedAttributes = nodeToAttributes.get(record.target);
+                // Keep only the first mutation record for each attribute.
+                if (!visitedAttributes.has(record.attributeName)) {
+                    filteredRecords.push(record);
+                    visitedAttributes.add(record.attributeName);
+                }
+            } else if (record.type === "characterData") {
+                // Keep only the first charData mutation record for each node.
+                if (!visitedNodesCharData.has(record.target)) {
+                    filteredRecords.push(record);
+                    visitedNodesCharData.add(record.target);
+                }
+            } else {
                 filteredRecords.push(record);
-                continue;
-            }
-            // Add entry for current target if not already present.
-            if (!nodeToAttributes.has(record.target)) {
-                nodeToAttributes.set(record.target, new Set());
-            }
-            const visitedAttributes = nodeToAttributes.get(record.target);
-            // Keep only the first mutation record for each attribute.
-            if (!visitedAttributes.has(record.attributeName)) {
-                filteredRecords.push(record);
-                visitedAttributes.add(record.attributeName);
             }
         }
         return filteredRecords;
