@@ -5,7 +5,6 @@ import { DashboardLoader, Status } from "./dashboard_loader";
 import { SpreadsheetComponent } from "@spreadsheet/actions/spreadsheet_component";
 import { useSetupAction } from "@web/search/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
-import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
 import { useService } from "@web/core/utils/hooks";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/share_button";
@@ -24,7 +23,6 @@ export class SpreadsheetDashboardAction extends Component {
         ControlPanel,
         SpreadsheetComponent,
         DashboardMobileSearchPanel,
-        MobileFigureContainer,
         SpreadsheetShareButton,
         DashboardSearchBar,
     };

@@ -1,6 +1,6 @@
 import { contains, mockService } from "@web/../tests/web_test_helpers";
 import { defineSpreadsheetModels } from "@spreadsheet/../tests/helpers/data";
-import { describe, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 
 import { mountPublicSpreadsheet } from "@spreadsheet/../tests/helpers/ui";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
@@ -8,7 +8,6 @@ import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 import { freezeOdooData } from "@spreadsheet/helpers/model";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
-describe.current.tags("headless");
 defineSpreadsheetModels();
 
 let data;
@@ -67,6 +66,7 @@ test("click close button in filter panel will close the panel", async function (
     expect(fixture.querySelector(".o-public-spreadsheet-filters")).toBe(null);
 });
 
+test.tags("desktop");
 test("Hides the download button when the downloadExcelUrl is not provided", async function () {
     const { model } = await createModelWithDataSource();
     data = await freezeOdooData(model);
