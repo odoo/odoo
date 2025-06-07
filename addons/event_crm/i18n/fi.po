@@ -5,6 +5,7 @@
 # Translators:
 # Wil Odoo, 2024
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-01-20 08:41+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,12 +41,12 @@ msgstr "(päivitetty)"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.crm_lead_view_form
 msgid "<span class=\"o_stat_text\"> Attendees</span>"
-msgstr "<span class=\"o_stat_text\"> Osallistujat</span>"
+msgstr "<span class=\"o_stat_text\">Osallistujat</span>"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_registration_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr "<span class=\"o_stat_text\">Liidiä</span>"
+msgstr "<span class=\"o_stat_text\">Liidit</span>"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__active
@@ -61,12 +62,12 @@ msgstr "Arkistoitu"
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__create
 msgid "Attendees are created"
-msgstr "Osallistujat luodaan"
+msgstr "Osallistujat on luotu"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__confirm
 msgid "Attendees are registered"
-msgstr "Osallistujat ovat rekisteröityneet"
+msgstr "Osallistujat on rekisteröity"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_trigger__done
@@ -93,7 +94,7 @@ msgstr "Vastuuta luodut liidit automaattisesti tälle myyjälle."
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Aww! No Leads created, check your Lead Generation Rules and try again."
 msgstr ""
-"Liidejä ei onnistuttu luomaan. Tarkista myyntiliidien luomisen säännöt ja "
+"Voi kenkku! Liidejä ei voitu luoda. Tarkista myyntiliidien luomissäännöt ja "
 "yritä uudelleen."
 
 #. module: event_crm
@@ -104,7 +105,7 @@ msgstr "Yritys"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_count
 msgid "Counter for the registrations linked to this lead"
-msgstr "Tähän leadiin liittyvien rekisteröintien laskuri"
+msgstr "Tähän liidiin liittyvien rekisteröintien laskuri"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
@@ -114,7 +115,7 @@ msgstr "Luo"
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
 msgid "Create a Lead Generation Rule"
-msgstr "Luo liidien luontisääntö"
+msgstr "Luo liidien luomissääntö"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_ids
@@ -134,7 +135,7 @@ msgstr "Luotu"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Creation Type"
-msgstr "Luomisen tyyppi"
+msgstr "Luomistyyppi"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_trigger
@@ -220,8 +221,8 @@ msgid ""
 "not set, no event category restriction will be applied."
 msgstr ""
 "Suodata osallistujat niin, että ne sisältävät tämän tietyn "
-"tapahtumakategorian osallistujat. Jos sitä ei ole asetettu, "
-"tapahtumaluokkarajoitusta ei sovelleta."
+"tapahtumakategorian osallistujat. Jos ei asetettu, tapahtumakategorian "
+"rajoitusta ei sovelleta."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
@@ -230,8 +231,7 @@ msgid ""
 " event restriction will be applied."
 msgstr ""
 "Suodata osallistujat niin, että ne sisältävät tämän tietyn tapahtuman "
-"osallistujat. Jos sitä ei ole asetettu, mitään tapahtumarajoitusta ei "
-"sovelleta."
+"osallistujat. Jos ei asetettu, mitään tapahtumarajoituksia ei sovelleta."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -256,7 +256,7 @@ msgstr "Olemme ottaneet pyyntösi huomioon. Liidit luodaan pian!"
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__id
 #: model:ir.model.fields,field_description:event_crm.field_event_registration__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -282,28 +282,28 @@ msgstr "Liidi"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Creation Type"
-msgstr "Leadin luontityyppi"
+msgstr "Liidin luontityyppi"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Default Values"
-msgstr "Lyijyn oletusarvot"
+msgstr "Liidin oletusarvot"
 
 #. module: event_crm
 #: model:ir.ui.menu,name:event_crm.event_lead_rule_menu
 msgid "Lead Generation"
-msgstr "Liidien muodostus"
+msgstr "Liidien luominen"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_lead_rule_action
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
 msgid "Lead Generation Rule"
-msgstr "Liidien luontisääntö"
+msgstr "Liidien luomissääntö"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_tree
 msgid "Lead Generation Rules"
-msgstr "Liidien luontisäännöt"
+msgstr "Liidien luomissäännöt"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_type
@@ -322,7 +322,7 @@ msgstr "Liidit"
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__lead_ids
 msgid "Leads generated from this event"
-msgstr "Tästä tapahtumasta syntyneet liidit"
+msgstr "Tästä tapahtumasta luodut liidit"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -349,29 +349,29 @@ msgstr "Rekisteröintiä ei löytynyt"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_event__has_lead_request
 msgid "Ongoing Generation Request"
-msgstr "Jatkuva luontipyyntö"
+msgstr "Käynnissä oleva luontipyyntö"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Only Event Managers are allowed to re-generate all leads."
-msgstr "Vain tapahtumavastaavat saavat luoda kaikki liidit uudelleen."
+msgstr "Vain tapahtumavastaavat voivat luoda kaikki liidit uudelleen."
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__opportunity
 msgid "Opportunity"
-msgstr "Mahdollisuus"
+msgstr "Myyntimahdollisuus"
 
 #. module: event_crm
 #. odoo-python
 #: code:addons/event_crm/models/event_registration.py:0
 msgid "Participants"
-msgstr "Ilmoittautuneita yhteensä"
+msgstr "Osallistujat"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__attendee
 msgid "Per Attendee"
-msgstr "Osallistujaa kohti"
+msgstr "Per osallistuja"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_creation_basis
@@ -379,13 +379,13 @@ msgid ""
 "Per Attendee: A Lead is created for each Attendee (B2C).\n"
 "Per Order: A single Lead is created per Ticket Batch/Sale Order (B2B)"
 msgstr ""
-"Osallistujaa kohti: (B2C).\n"
-"Tilausta kohti: Yksi liidi luodaan kutakin lippuerää tai myyntitilausta kohden (B2B)"
+"Per osallistuja: Liidi luodaan jokaisesta osallistujasta (B2C).\n"
+"Per tilaus: Yksi liidi luodaan kutakin lippuerää/myyntitilausta kohden (B2B)"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_creation_basis__order
 msgid "Per Order"
-msgstr "Tilauskohtainen"
+msgstr "Per tilaus"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_request__processed_registration_id
@@ -405,7 +405,7 @@ msgstr "Rekisteröintisääntö:"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__event_registration_filter
 msgid "Registrations Domain"
-msgstr "Rekisteröintien toimialue"
+msgstr "Rekisteröintien domain"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__registration_ids
@@ -419,7 +419,7 @@ msgid ""
 "If not set, no company restriction will be applied."
 msgstr ""
 "Rajoita tämän säännön laukaiseminen koskemaan vain tiettyyn yritykseen kuuluvia tapahtumia.\n"
-"Jos sitä ei ole asetettu, yritysrajoitusta ei sovelleta."
+"Jos sitä ei ole asetettu, yritysrajoituksia ei sovelleta."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
@@ -429,7 +429,7 @@ msgstr "Säännön nimi"
 #. module: event_crm
 #: model:event.lead.rule,name:event_crm.event_lead_rule_0
 msgid "Rule on @example.com"
-msgstr "Sääntö osoitteessa @example.com"
+msgstr "Sääntö kohtteessa @example.com"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_crm_lead__event_lead_rule_id
@@ -449,13 +449,13 @@ msgstr "Myyjä"
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Search Lead Generation Rules"
-msgstr "Etsi liidien luontisääntöjä"
+msgstr "Etsi liidien luomissääntöjä"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_event__has_lead_request
 msgid "Set to True when a Lead Generation Request is currently running."
 msgstr ""
-"Asetetaan arvoksi True, kun liidien luontipyyntö on parhaillaan käynnissä."
+"Asetetaan arvoksi tosi, kun liidien luomispyyntö on parhaillaan käynnissä."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__event_id
@@ -478,8 +478,8 @@ msgid ""
 "The ID of the last processed event.registration, used to know where to "
 "resume."
 msgstr ""
-"Viimeksi käsitellyn event.registration-tapahtuman tunnus, jota käytetään, "
-"jotta tiedetään, mistä jatketaan."
+"Viimeksi käsitellyn event.registration -tapahtuman tunnus, jota käytetään "
+"merkitsemään, mistä jatketaan."
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -489,7 +489,7 @@ msgstr "Liidit luodaan automaattisesti, kun osallistujat rekisteröityvät."
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
 msgid "Trigger Type"
-msgstr "Liipaisin-tyyppi"
+msgstr "Käynnistävä toimintotyyppi"
 
 #. module: event_crm
 #. odoo-python
@@ -506,12 +506,12 @@ msgstr "Milloin"
 #. odoo-python
 #: code:addons/event_crm/models/event_event.py:0
 msgid "Yee-ha, %(leads_count)s Leads have been created!"
-msgstr "Jumprahuti, %(leads_count)s liidiä saatiin luotua!"
+msgstr "Jipii, %(leads_count)s liidiä on luotu!"
 
 #. module: event_crm
 #: model:ir.model.constraint,message:event_crm.constraint_event_lead_request_uniq_event
 msgid "You can only have one generation request per event at a time."
-msgstr "Tapahtumaa kohti voi olla kerrallaan vain yksi liidien luontipyyntö."
+msgstr "Tapahtumaa kohti voi olla kerrallaan vain yksi liidien luomispyyntö."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form

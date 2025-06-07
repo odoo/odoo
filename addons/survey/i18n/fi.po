@@ -4,9 +4,8 @@
 # 
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2025
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2025
-# Jessica Jakara, 2025
 # Wil Odoo, 2025
+# Jessica Jakara, 2025
 # 
 msgid ""
 msgstr ""
@@ -14,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-07 20:36+0000\n"
 "PO-Revision-Date: 2024-12-24 16:06+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Jessica Jakara, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -83,7 +82,7 @@ msgstr "%s (kopio)"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "%s Votes"
-msgstr "%s Ääniä"
+msgstr "%s Ääntä"
 
 #. module: survey
 #. odoo-python
@@ -95,7 +94,7 @@ msgstr "%s sertifiointi suoritettu"
 #. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 msgid "%s challenge certification"
-msgstr "%s haastesertifikaatti"
+msgstr "%s haasteen sertifikaatti"
 
 #. module: survey
 #: model:ir.actions.report,print_report_name:survey.certification_report
@@ -165,7 +164,7 @@ msgstr "3700 km"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_403_page
 msgid "403: Forbidden"
-msgstr "403: Pääsy evätty"
+msgstr "403: Pääsy kielletty"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q2_sug4
@@ -193,7 +192,7 @@ msgid ""
 "<b>Certificate</b>\n"
 "                            <br/>"
 msgstr ""
-"<b>Todistus</b>\n"
+"<b>Sertifikaatti</b>\n"
 "                            <br/>"
 
 #. module: survey
@@ -269,7 +268,7 @@ msgstr ""
 "                       <strong t-out=\"object.survey_id.display_name or ''\">Huonekalujen luominen</strong>\n"
 "                    sertifiointi\n"
 "                </p>\n"
-"                <p>Onnittelut testin läpäisystä pistemäärällä <strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
+"                <p>Onnittelut testin läpäisystä: pistemääräsi oli <strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -315,10 +314,10 @@ msgstr ""
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hyvä <t t-out=\"object.partner_id.name or 'participant'\">osallistuja</t><br/><br/>\n"
 "       <t t-if=\"object.survey_id.certification\">\n"
-"            Sinut on kutsuttu uuteen sertifiointiin.\n"
+"            Sinut on kutsuttu tekemään uusi sertifiointi.\n"
 "       </t>\n"
 "       <t t-else=\"\">\n"
-"            Teemme parhaillaan kyselyä, ja vastauksesi olisi tervetullut.\n"
+"            Luomme parhaillamme kyselyä ja vastauksesi olisi tervetullut.\n"
 "       </t>\n"
 "        </p><div style=\"margin: 16px 0px 16px 0px;\">\n"
 "            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
@@ -331,13 +330,13 @@ msgstr ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Vastaa kyselyyn <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t> mennessä.<br/><br/>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            Toivotamme sinulle onnea!\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Kiitos etukäteen osallistumisestanne.\n"
+"            Kiitos etukäteen osallistumisesta.\n"
 "        </t>\n"
 "    \n"
 "</div>\n"
@@ -351,12 +350,12 @@ msgstr "<i class=\"fa fa-bar-chart\"/> Tulokset"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg me-2\"/>answer"
-msgstr "<i class=\"fa fa-check-square-o fa-lg me-2\"/>vastaa"
+msgstr "<i class=\"fa fa-check-square-o fa-lg me-2\"/>vastaus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg me-2\"/>answer"
-msgstr "<i class=\"fa fa-circle-o  fa-lg me-2\"/>vastaa"
+msgstr "<i class=\"fa fa-circle-o  fa-lg me-2\"/>vastaus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -375,7 +374,7 @@ msgstr "<i class=\"fa fa-close\"/> Sulje"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-dot-circle-o fa-lg me-2\"/>answer"
-msgstr "<i class=\"fa fa-dot-circle-o fa-lg me-2\"/>vastaa"
+msgstr "<i class=\"fa fa-dot-circle-o fa-lg me-2\"/>vastaus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -393,7 +392,8 @@ msgid ""
 "pass this assessment because no question is configured to give any points."
 msgstr ""
 "<i class=\"fa fa-exclamation-triangle\"/> Tällä hetkellä tätä arviointia ei "
-"ole mahdollista läpäistä, koska yksikään kysymys ei anna pisteitä."
+"ole mahdollista läpäistä, koska yktäkään kysymystä ei ole konfiguroitu "
+"antamaan pisteitä."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -416,7 +416,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
-msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>vastaa"
+msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>vastaus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
@@ -430,7 +430,7 @@ msgid ""
 "pt-1\">Avg</span>"
 msgstr ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
-"pt-1\">Keskimäärin </span>"
+"pt-1\">Keskimääräinen</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -438,8 +438,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
 "pt-1\">Max</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Enintään "
-"</span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 "
+"pt-1\">Enintään</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -447,8 +447,8 @@ msgid ""
 "<span class=\"badge text-bg-secondary only_left_radius px-2 "
 "pt-1\">Min</span>"
 msgstr ""
-"<span class=\"badge text-bg-secondary only_left_radius px-2 pt-1\">Vähintään"
-" </span>"
+"<span class=\"badge text-bg-secondary only_left_radius px-2 "
+"pt-1\">Vähintään</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -493,7 +493,7 @@ msgid ""
 "                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Certification</span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"certifications_company_count &lt; 2\">Sertifikaatit</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Sertifiointi</span>"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_company_count &gt; 1\">Sertifikaatti</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.res_partner_view_form
@@ -502,7 +502,7 @@ msgid ""
 "                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Certification</span>"
 msgstr ""
 "<span class=\"o_stat_text\" invisible=\"certifications_count &lt; 2\">Sertifikaatit</span>\n"
-"                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Sertifiointi</span>"
+"                        <span class=\"o_stat_text\" invisible=\"certifications_count &gt; 1\">Sertifikaatti</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -612,17 +612,17 @@ msgstr "<span>%</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>All surveys</span>"
-msgstr "<span>Kaikki tutkimukset</span>"
+msgstr "<span>Kaikki kyselyt</span>"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q6
 msgid "<span>Best time to do it, is the right time to do it.</span>"
-msgstr "<span>Paras aika tehdä se on oikea aika tehdä se.</span>"
+msgstr "<span>Paras aika tehdä se on myös oikea aika tehdä se.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Completed surveys</span>"
-msgstr "<span>Täytetyt kyselyt</span>"
+msgstr "<span>Tehdyt kyselyt</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -637,7 +637,7 @@ msgstr "<span>Pidätkö siitä?</span><br/>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Failed only</span>"
-msgstr "<span>Epäonnistui vain</span>"
+msgstr "<span>Vain epäonnistuneet</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -679,7 +679,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "<span>Number of attempts left</span>:"
-msgstr "<span>Yritysiä jäljellä</span>:"
+msgstr "<span>Yrityskertoja jäljellä</span>:"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p2_q1
@@ -701,7 +701,7 @@ msgstr "<span>Hyväksytty ja hylätty</span>"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<span>Passed only</span>"
-msgstr "<span>Vain läpäisty</span>"
+msgstr "<span>Vain läpäistyt</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -748,7 +748,7 @@ msgid ""
 "<span>for successfully completing</span>\n"
 "                                <br/>"
 msgstr ""
-"<span>menestyksekkäästä suorittamisesta</span>\n"
+"<span>onnistuneesta suorittamisesta</span>\n"
 "                                <br/>"
 
 #. module: survey
@@ -760,7 +760,7 @@ msgstr "\"Sitrus\" voi antaa sinulle ..."
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "A label must be attached to only one question."
-msgstr "Merkintä on liitettävä vain yhteen kysymykseen."
+msgstr "Nimike on liitettävä vain yhteen kysymykseen."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_len_max
@@ -784,7 +784,7 @@ msgid ""
 "A positive default time limit is required when the session rewards quick "
 "answers."
 msgstr ""
-"Positiivinen oletusaika on tarpeen, kun istunnossa palkitaan nopeista "
+"Positiivinen oletusaika vaaditaan, kun istunnossa palkitaan nopeista "
 "vastauksista."
 
 #. module: survey
@@ -805,7 +805,7 @@ msgstr "On ilmennyt ongelma"
 #. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 msgid "A question can either be skipped or answered, not both."
-msgstr "Kysymyksen voi joko ohittaa tai vastata, ei molempia."
+msgstr "Kysymyksen voi joko ohittaa tai siihen voi vastata, ei molempia."
 
 #. module: survey
 #. odoo-python
@@ -831,7 +831,7 @@ msgstr "Tietoja sinusta"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_access_mode
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_mode
 msgid "Access Mode"
-msgstr "Pääsytila"
+msgstr "Käyttötila"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__access_token
@@ -876,7 +876,7 @@ msgstr "Toimenpiteen tila"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_icon
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Toimenpiteen ikoni"
+msgstr "Toimenpidetyypin kuvake"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -919,8 +919,8 @@ msgid ""
 "After watching this video, will you swear that you are not going to "
 "procrastinate to trim your hedge this year?"
 msgstr ""
-"Kun olet katsonut tämän videon, lupaatko, että et aio viivytellä pensasaidan"
-" leikkaamisessa tänä vuonna?"
+"Kun olet katsonut tämän videon, lupaatko, että et lykkää pensasaidan "
+"leikkaamista tänä vuonna?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col3
@@ -933,7 +933,7 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Date\" questions "
 "need an answer"
 msgstr ""
-"Kaikki \"Onko pisteytetty kysymys = True\" ja \"Kysymyksen tyyppi: "
+"Kaikki \"Onko pisteytetty kysymys = Tosi\" ja \"Kysymyksen tyyppi: "
 "Päivämäärä\" kysymykset tarvitsevat vastauksen"
 
 #. module: survey
@@ -942,7 +942,7 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Datetime\" "
 "questions need an answer"
 msgstr ""
-"Kaikki \"Onko pisteytetty kysymys = True\" ja \"Kysymyksen tyyppi: "
+"Kaikki \"Onko pisteytetty kysymys = Tosi\" ja \"Kysymyksen tyyppi: "
 "Päivämäärä ja aika\" tarvitsevat vastauksen"
 
 #. module: survey
@@ -953,13 +953,13 @@ msgstr "Kaikki kysymykset"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "All surveys"
-msgstr "Kaikki tutkimukset"
+msgstr "Kaikki kyselyt"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_is_time_limited_have_time_limit
 msgid "All time-limited questions need a positive time limit"
 msgstr ""
-"Kaikille määräaikaisille kysymyksille on annettava positiivinen aikaraja"
+"Kaikille aikarajoitetuille kysymyksille on annettava positiivinen aikaraja"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -990,8 +990,7 @@ msgstr "Pääsykoodin on oltava yksilöllinen!"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_positive_answer_score
 msgid "An answer score for a non-multiple choice question cannot be negative!"
 msgstr ""
-"Muiden kuin monivalintakysymysten vastauspisteet eivät voi olla "
-"negatiivisia!"
+"Muiden kuin monivalintakysymysten pistemäärä ei voi olla negatiivinen!"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3
@@ -1013,7 +1012,7 @@ msgstr "Vastaus"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_type
 msgid "Answer Type"
-msgstr "Vastauksen tyyppi"
+msgstr "Vastaustyyppi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__deadline
@@ -1026,8 +1025,8 @@ msgid ""
 "Answer label as either the value itself if not empty or a letter "
 "representing the index of the answer otherwise."
 msgstr ""
-"Vastausmerkki joko itse arvona, jos se ei ole tyhjä, tai vastauksen indeksiä"
-" kuvaavana kirjaimena, jos se ei ole tyhjä."
+"Vastausmerkintä joko itse arvona, jos se ei ole tyhjä, tai muutoin "
+"vastauksen indeksiä kuvaavana kirjaimena."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__user_input_line_ids
@@ -1078,7 +1077,7 @@ msgstr "Oletko kasvissyöjä?"
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p1_q1_sug4
 msgid "Art & Culture"
-msgstr "Taide ja kulttuuri"
+msgstr "Taide & kulttuuri"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p4_q1_sug1
@@ -1111,18 +1110,18 @@ msgstr "Liitteet"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__attempts_number
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Attempt n°"
-msgstr "Yritys nro"
+msgstr "Yrityskerta nro"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_done_count
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Attempts"
-msgstr "Yritykset"
+msgstr "Yrityskerrat"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__attempts_count
 msgid "Attempts Count"
-msgstr "Yritysten määrä"
+msgstr "Yrityskertojen määrä"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__nickname
@@ -1131,7 +1130,7 @@ msgid ""
 "leaderboard."
 msgstr ""
 "Osallistujan lempinimi, jota käytetään pääasiassa osallistujan "
-"tunnistamiseen kyselyistunnon tulostaululla."
+"tunnistamiseen kyselyistunnon pistetaulukko."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -1155,7 +1154,7 @@ msgid ""
 "containing their certification document."
 msgstr ""
 "Käyttäjälle lähetetään automaattinen sähköpostiviesti, joka sisältää hänen "
-"sertifiointiasiakirjansa, kun hän onnistuu sertifioinnissa."
+"sertifiointiasiakirjansa, kun he läpäisevät sertifioinnin."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug3
@@ -1165,7 +1164,7 @@ msgstr "Syksy"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 msgid "Average"
-msgstr "Keskinkertainen"
+msgstr "Keskinmääräinen"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_duration_avg
@@ -1176,7 +1175,7 @@ msgstr "Keskimääräinen kesto"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 msgid "Average Score"
-msgstr "Keskimääräiset pisteet"
+msgstr "Keskimääräinen pistemäärä"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__answer_duration_avg
@@ -1208,7 +1207,7 @@ msgstr "Taustan URL"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "Badge"
-msgstr "Nimilappu"
+msgstr "Ansiomerkki"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q3_sug3
@@ -1234,7 +1233,7 @@ msgstr "Sininen kynä"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body_has_template_value
 msgid "Body content is the same as the template"
-msgstr "Rungon sisältö on sama kuin mallissa"
+msgstr "Rungon sisältö on sama kuin mallipohjan"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q4_sug4
@@ -1254,13 +1253,13 @@ msgstr "Bryssel, Belgia"
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_burger_quiz
 msgid "Burger Quiz"
-msgstr "Purilaistietokilpailu"
+msgstr "Purilaistietovisa"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "But first, keep listening to the host."
-msgstr "Mutta kuuntele ensin isäntää."
+msgstr "Mutta kuuntele ensin isännöijää."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_3
@@ -1280,7 +1279,7 @@ msgstr "Voi muokata runkoa"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q3
 msgid "Can Humans ever directly see a photon?"
-msgstr "Voivatko ihmiset koskaan nähdä suoraan fotonin?"
+msgstr "Voivatko ihmiset koskaan nähdä fotonia paljain silmin?"
 
 #. module: survey
 #. odoo-python
@@ -1303,7 +1302,8 @@ msgstr "Sertifiointimerkki "
 #. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 msgid "Certification Badge is not configured for the survey %(survey_name)s"
-msgstr "Sertifiointimerkkiä ei ole määritetty kyselyä varten %(survey_name)s"
+msgstr ""
+"Sertifioinnin ansiomerkkiä ei ole määritetty kyselylle %(survey_name)s"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -1313,12 +1313,12 @@ msgstr "Sertifiointi epäonnistui"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Certification n°"
-msgstr "Sertifikaatti nro"
+msgstr "Sertifioinnin nro"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_report_layout
 msgid "Certification template"
-msgstr "Sertifiointimalli"
+msgstr "Sertifioinnin mallipohja"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
@@ -1335,12 +1335,12 @@ msgstr "Sertifioinnit"
 #: model:ir.model.fields,field_description:survey.field_res_partner__certifications_count
 #: model:ir.model.fields,field_description:survey.field_res_users__certifications_count
 msgid "Certifications Count"
-msgstr "Sertifikaattien määrä"
+msgstr "Sertifiointien määrä"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.res_partner_action_certifications
 msgid "Certifications Succeeded"
-msgstr "Onnistuneet sertifikaatit"
+msgstr "Onnistuneet sertifioinnit"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -1362,7 +1362,7 @@ msgstr "Tuolin lattian suoja"
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "Cheating on your neighbors will not help!"
-msgstr "Naapurien pettäminen ei auta!"
+msgstr "Naapurien juksaaminen ei auta!"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__is_attempts_limited
@@ -1376,7 +1376,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/boolean_update_flag_field/boolean_update_flag_fields.js:0
 msgid "Checkbox updating comparison flag"
-msgstr "Valintaruutu, joka päivittää vertailulippua"
+msgstr "Valintaruutu päivittää vertailulippua"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug2
@@ -1458,7 +1458,7 @@ msgid ""
 "Combining roaming and \"Scoring with answers after each page\" is not possible; please update the following surveys:\n"
 "- %(survey_names)s"
 msgstr ""
-"\"Vaelluksen\" ja \"Pisteytys vastausten kanssa jokaisen sivun jälkeen\" yhdistäminen ei ole mahdollista; päivitä seuraavat kyselyt:\n"
+"Verkkosvierailun ja \"Pisteytys ja vastaukset jokaisen sivun jälkeen\" yhdistäminen ei ole mahdollista; päivitä seuraavat kyselyt:\n"
 "- %(survey_names)s"
 
 #. module: survey
@@ -1474,7 +1474,7 @@ msgstr "Kommentti"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comments_message
 msgid "Comment Message"
-msgstr "Palauteviesti"
+msgstr "Kommenttiviesti"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__comment_count_as_answer
@@ -1485,7 +1485,7 @@ msgstr "Kommentti on vastaus"
 #: model:ir.model.fields,field_description:survey.field_res_partner__certifications_company_count
 #: model:ir.model.fields,field_description:survey.field_res_users__certifications_company_count
 msgid "Company Certifications Count"
-msgstr "Yrityksen sertifikaatit lasketaan"
+msgstr "Yrityksen sertifikointien määrä"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__done
@@ -1508,7 +1508,7 @@ msgstr "Luo sähköposti"
 #. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 msgid "Computing score requires a question in arguments."
-msgstr "Pisteiden laskeminen edellyttää kysymystä argumenteista."
+msgstr "Pisteiden laskeminen edellyttää kysymystä argumenteissa."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1544,7 +1544,7 @@ msgstr "Onneksi olkoon, olet nyt MyCompanyn virallinen myyjä"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "Congratulations, you have passed the test!"
-msgstr "Onnittelut, olet läpäissyt kokeen!"
+msgstr "Onnittelut, olet läpäissyt testin!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1661,7 +1661,7 @@ msgstr "Luo live-istunto"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Create a custom survey from scratch"
-msgstr "Luo mukautettu kysely tyhjästä"
+msgstr "Luo räätälöity kysely tyhjästä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__create_uid
@@ -1704,7 +1704,7 @@ msgstr ""
 #: code:addons/survey/models/survey_survey.py:0
 msgid "Creating token for closed/archived surveys is not allowed."
 msgstr ""
-"Merkkien luominen suljettuja/arkistoituja kyselyitä varten ei ole sallittua."
+"Tunnusten luominen suljettuihin/arkistoituihin kyselyihin ei ole sallittua."
 
 #. module: survey
 #. odoo-python
@@ -1713,8 +1713,8 @@ msgid ""
 "Creating token for external people is not allowed for surveys requesting "
 "authentication."
 msgstr ""
-"Tunnisteen luominen ulkopuolisille henkilöille ei ole sallittua todennusta "
-"pyytävissä kyselyissä."
+"Tunnusten luominen ulkopuolisille henkilöille ei ole sallittua kyselyissä, "
+"jotka pyytävät todennusta."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_question_id
@@ -1740,7 +1740,7 @@ msgstr "Tällä hetkellä tuetaan vain live-istuntoja."
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__custom
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Custom"
-msgstr "Mukautettu"
+msgstr "Räätälöi"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -1748,18 +1748,18 @@ msgid ""
 "Customers will receive a new token and be able to completely retake the "
 "survey."
 msgstr ""
-"Asiakkaat saavat uuden tunnisteen ja voivat suorittaa kyselyn kokonaan "
+"Asiakkaat saavat uuden tunnuksen ja voivat suorittaa kyselyn kokonaan "
 "uudelleen."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Customers will receive the same token."
-msgstr "Asiakkaat saavat saman merkin."
+msgstr "Asiakkaat saavat saman tunnuksen."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_5
 msgid "Customizable Lamp"
-msgstr "Mukautettava lamppu"
+msgstr "Räätälöitävissä oleva lamppu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_time_customized
@@ -1791,13 +1791,14 @@ msgstr "Päivämäärä ja aika"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
 msgid "Datetime answer"
-msgstr "Vastaus päivämääränä ja aikana"
+msgstr "Päivämäärän ja ajan vastaus"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
 msgstr ""
-"Päivämäärä, johon mennessä asiakas voi avata kyselyn ja lähettää vastaukset"
+"Päivämäärä ja aika, johon saakka asiakas voi suorittaa kyselyn ja lähettää "
+"vastaukset"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -1861,7 +1862,7 @@ msgstr "Näyttönimi"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
 msgid "Display Progress as"
-msgstr "Näytä edistyminen seuraavasti"
+msgstr "Näytä edistyminen"
 
 #. module: survey
 #. odoo-javascript
@@ -1887,7 +1888,7 @@ msgstr "Onko sinulla muita kommentteja, kysymyksiä tai huolenaiheita?"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
 msgid "Do you think we have missing products in our catalog? (not rated)"
-msgstr "Puuttuuko kuvastostamme mielestäsi tuotteita? (ei arvioitu)"
+msgstr "Puuttuuko tuoteluettelostamme mielestäsi tuotteita? (ei arvioitu)"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q2_sug2
@@ -1927,7 +1928,7 @@ msgstr "Muokkaa kyselyä"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
 msgid "Edit in backend"
-msgstr "Muokkaa hallinnassa"
+msgstr "Muokkaa palvelinpuolen taustajärjestelmässä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__email
@@ -1975,7 +1976,7 @@ msgstr "Eurooppa"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug3
 msgid "European Yew"
-msgstr "Pihlaja"
+msgstr "Marjakuusi"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -2010,7 +2011,7 @@ msgstr "Epäonnistui"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Failed only"
-msgstr "Epäonnistui vain"
+msgstr "Vain epäonnistuneet"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_2
@@ -2027,7 +2028,7 @@ msgstr "Palautelomake"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q5_row2
 msgid "Ficus"
-msgstr "Fiikus"
+msgstr "Viikuna"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_choice
@@ -2035,7 +2036,7 @@ msgstr "Fiikus"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 #: model_terms:ir.ui.view,arch_db:survey.question_result_text
 msgid "Filter surveys"
-msgstr "Suodata tutkimukset"
+msgstr "Suodata kyselyitä"
 
 #. module: survey
 #. odoo-javascript
@@ -2065,7 +2066,7 @@ msgstr "Seuraajat (kumppanit)"
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_type_icon
 #: model:ir.model.fields,help:survey.field_survey_user_input__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome -ikoni esim.. fa-tasks"
+msgstr "Font awesome -kuvake, esim. fa-tasks"
 
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_food_preferences
@@ -2100,7 +2101,7 @@ msgstr "Hedelmät ja vihannekset"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
 msgid "Functional Training"
-msgstr "Toiminnallinen harjoittelu"
+msgstr "Käytännönharjoittelu"
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
@@ -2126,7 +2127,7 @@ msgstr "Maantiede"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_give_badge
 msgid "Give Badge"
-msgstr "Anna merkki"
+msgstr "Anna ansiomerkki"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q3
@@ -2142,7 +2143,7 @@ msgstr "Hyvä"
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "Good luck!"
-msgstr "Onnea!"
+msgstr "Onnea matkaan!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug4
@@ -2182,7 +2183,7 @@ msgstr "Käsittele nykyisiä"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "Handle quiz &amp; certifications"
-msgstr "Käsittele tietokilpailu &; todistukset"
+msgstr "Käsittele tietovisa &; todistukset"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q3_sug1
@@ -2198,7 +2199,7 @@ msgstr "Sisältää viestin"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__has_image_only_suggested_answer
 msgid "Has image only suggested answer"
-msgstr "Onko kuva vain ehdotettu vastaus"
+msgstr "Sisiältää ehdotetun 'vain kuva' vastauksen"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_2
@@ -2208,7 +2209,7 @@ msgstr "Korkeus"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Help Participants know what to write"
-msgstr "Auta osallistujia tietämään, mitä kirjoittaa"
+msgstr "Auta osallistujia keksimään, mitä kirjoittaa"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug3
@@ -2277,7 +2278,7 @@ msgstr "Kuinka monta päivää on rahat takaisin -takuu?"
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "How many orders did you pass during the last 6 months?"
-msgstr "Kuinka monta tilausta annoitte viimeisten 6 kuukauden aikana?"
+msgstr "Kuinka monta tilausta käsittelitte viimeisten 6 kuukauden aikana?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q4
@@ -2297,7 +2298,7 @@ msgstr "Kuinka monta vuotta satavuotinen sota kesti?"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_1
 msgid "How much do we sell our Cable Management Box?"
-msgstr "Kuinka paljon myymme kaapelinhallintalaatikkoamme?"
+msgstr "Kuinka paljon myymme johtolaatikoitamme?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q5
@@ -2315,8 +2316,8 @@ msgid ""
 "I actually don't like thinking. I think people think I like to think a lot. "
 "And I don't. I do not like to think at all."
 msgstr ""
-"En oikeastaan pidä ajattelusta. Luulen, että ihmiset luulevat, että pidän "
-"paljon ajattelusta. Enkä ajattele. En pidä ajattelusta lainkaan."
+"En oikeastaan pidä ajattelusta. Luulen, että ihmiset ajattelevat, että pidän"
+" paljonkin ajattelusta. Mutta ei, en pidä ajattelusta lainkaan."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug2
@@ -2330,7 +2331,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row5
 msgid "I have added products to my wishlist"
-msgstr "Olen lisännyt tuotteita toivomuslistalleni"
+msgstr "Olen lisännyt tuotteita toivelistalleni"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p5_q1_sug4
@@ -2340,7 +2341,7 @@ msgstr "Minulla ei ole aavistustakaan, olen koira!"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p5_q3_sug3
 msgid "I've been noticing gravity since I was very young!"
-msgstr "Olen huomannut painovoiman jo pienestä pitäen!"
+msgstr "Olen huomannut painovoiman olemassaolon jo lapsena!"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__id
@@ -2354,7 +2355,7 @@ msgstr "Olen huomannut painovoiman jo pienestä pitäen!"
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__id
 msgid "ID"
-msgstr "ID"
+msgstr "Tunnus"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_icon
@@ -2366,12 +2367,12 @@ msgstr "Kuvake"
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_icon
 #: model:ir.model.fields,help:survey.field_survey_user_input__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Kuvake joka kertoo poikkeustoiminnosta."
+msgstr "Kuvake, joka kertoo poikkeustoiminnosta."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__access_token
 msgid "Identification token"
-msgstr "Tunnusmerkki"
+msgstr "Tunnisteavain"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__progression_mode
@@ -2379,7 +2380,7 @@ msgid ""
 "If Number is selected, it will display the number of questions answered on "
 "the total number of question to answer."
 msgstr ""
-"Jos numero on valittuna, se näyttää vastattujen kysymysten määrän suhteessa "
+"Jos numero on valittu, se näyttää vastattujen kysymysten määrän suhteessa "
 "vastattavien kysymysten kokonaismäärään."
 
 #. module: survey
@@ -2450,7 +2451,7 @@ msgid ""
 "If randomized is selected, add the number of random questions next to the "
 "section."
 msgstr ""
-"Jos satunnaistettu on valittu, lisää satunnaisten kysymysten määrä jakson "
+"Jos satunnaistettu on valittu, lisää satunnaisten kysymysten määrä osion "
 "viereen."
 
 #. module: survey
@@ -2499,7 +2500,7 @@ msgstr "Epäkäytännöllinen"
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input__state__in_progress
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "In Progress"
-msgstr "Käynnissä"
+msgstr "Kesken"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q5
@@ -2517,8 +2518,8 @@ msgid ""
 "Include this question as part of quiz scoring. Requires an answer and answer"
 " score to be taken into account."
 msgstr ""
-"Sisällytä tämä kysymys osaksi tietokilpailun pisteytystä. Vaatii vastauksen "
-"ja vastauspisteytyksen huomioon ottamista."
+"Sisällytä tämä kysymys osaksi tietovisan pisteytystä. Vaatii vastauksen ja "
+"vastauspisteytyksen huomioon ottamista."
 
 #. module: survey
 #. odoo-javascript
@@ -2547,7 +2548,7 @@ msgstr "Kokonaisluku, joka päivittää vertailulippua"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__invite_token
 msgid "Invite token"
-msgstr "Kutsun pääsytunniste"
+msgstr "Kutsuavain"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__access_mode__token
@@ -2569,7 +2570,7 @@ msgstr "On seuraaja"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Is a Certification"
-msgstr "Onko sertifiointi"
+msgstr "On sertifiointi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_page
@@ -2594,7 +2595,7 @@ msgstr "Ei ole sertifiointi"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__is_session_answer
 msgid "Is that user input part of a survey session or not."
-msgstr "Onko tuo käyttäjän syöttö osa kyselyistuntoa vai ei."
+msgstr "Onko käyttäjän syöttö osa kyselyistuntoa vai ei."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q3
@@ -2639,19 +2640,19 @@ msgstr "Se auttaa osallistujia muistamaan esityksesi sisällön"
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "It is a small bit of text, displayed to help participants answer"
 msgstr ""
-"Se on pieni tekstinpätkä, joka näytetään osallistujien auttamiseksi "
-"vastaamaan seuraaviin kysymyksiin"
+"Se on pieni tekstinpätkä, joka näytetään avustamaan osallistujien seuraaviin"
+" kysymyksiin vastaamisessa"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "It is an option that can be different for each Survey"
-msgstr "Se on vaihtoehto, joka voi olla erilainen jokaisessa tutkimuksessa"
+msgstr "Se on vaihtoehto, joka voi olla erilainen jokaisessa kyselyssä"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row2
 msgid "It is easy to find the product that I want"
-msgstr "On helppo löytää haluamani tuote"
+msgstr "Etsimäni tuotteen löytäminen on helppoa"
 
 #. module: survey
 #. odoo-python
@@ -2676,8 +2677,9 @@ msgid ""
 "I’ve never really wanted to go to Japan. Simply because I don’t like eating "
 "fish. And I know that’s very popular out there in Africa."
 msgstr ""
-"En ole koskaan halunnut mennä Japaniin. Yksinkertaisesti siksi, etten pidä "
-"kalan syömisestä. Ja tiedän, että se on hyvin suosittua Afrikassa."
+"En ole koskaan halunnut mennä Japaniin. Yksinkertaisesti siksi, että "
+"mielestäni kala ei maistu hyvältä. Ja tiedän, että se on hyvin suosittua "
+"Afrikassa."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q2_sug1
@@ -2707,17 +2709,17 @@ msgstr "Kurt Cobain"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Label"
-msgstr "Otsikko"
+msgstr "Nimike"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__sequence
 msgid "Label Sequence order"
-msgstr "Etikettien järjestys"
+msgstr "Nimikkeiden järjestys"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__matrix_row_ids
 msgid "Labels used for proposed choices: rows of matrix"
-msgstr "Valintaehdotuksissa käytetyt etiketit: matriisin rivit"
+msgstr "Valintaehdotuksissa käytetyt nimikkeet: matriisin rivit"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__suggested_answer_ids
@@ -2725,8 +2727,8 @@ msgid ""
 "Labels used for proposed choices: simple choice, multiple choice and columns"
 " of matrix"
 msgstr ""
-"Valintaehdotusten etiketit: yksinkertainen valinta, monivalinta ja matriisin"
-" sarakkeet"
+"Valintaehdotusten nimikkeet: yksinkertainen valinta, monivalinta ja "
+"matriisin sarakkeet"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__lang
@@ -2777,12 +2779,12 @@ msgstr "Käynnistä istunto"
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_inner
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
 msgid "Leaderboard"
-msgstr "Tulostaulu"
+msgstr "Pistetaulukko"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_access_error
 msgid "Leave"
-msgstr "Poissaolo"
+msgstr "Poistu"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_4
@@ -2804,7 +2806,7 @@ msgstr "Aloitetaan!"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Let's give it a spin!"
-msgstr "Kokeillaan sitä!"
+msgstr "Kokeillaan!"
 
 #. module: survey
 #. odoo-javascript
@@ -2841,33 +2843,33 @@ msgstr "Rajoitettu määrä yrityksiä"
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Live Session"
-msgstr "Suora istunto"
+msgstr "Live-istunto"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__session_available
 msgid "Live Session available"
-msgstr "Suora istunto saatavilla"
+msgstr "Live-istunto saatavilla"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Live Sessions"
-msgstr "Suorat istunnot"
+msgstr "Live-istunnot"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__survey_type__live_session
 msgid "Live session"
-msgstr "Suora istunto"
+msgstr "Live-istunto"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_available
 msgid "Live session available"
-msgstr "Suora istunto saatavilla"
+msgstr "Live-istunto saatavilla"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Load a <b>sample Survey</b> to get started quickly."
-msgstr "Lataa <b>näytekysely</b>, jotta pääset nopeasti alkuun."
+msgstr "Lataa <b>esimerkkikysely</b>, jotta pääset nopeasti alkuun."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -2888,7 +2890,7 @@ msgstr "Pakollinen vastaus"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__matrix
 msgid "Matrix"
-msgstr "Taulukko"
+msgstr "Matriisi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__matrix_row_ids
@@ -2898,7 +2900,7 @@ msgstr "Matriisirivit"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__matrix_subtype
 msgid "Matrix Type"
-msgstr "Taulukon tyyppi"
+msgstr "Matriisin tyyppi"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_date
@@ -2908,7 +2910,9 @@ msgstr "Maksimipäivämäärä ei voi olla pienempi kuin minimipäivämäärä!"
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_datetime
 msgid "Max datetime cannot be smaller than min datetime!"
-msgstr "Max datetime ei voi olla pienempi kuin min datetime!"
+msgstr ""
+"Maksimipäivämäärä ja -aika ei voi olla pienempi kuin minimipäivämäärä ja "
+"-aika!"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_length
@@ -2924,7 +2928,7 @@ msgstr "Maksimiarvo ei voi olla pienempi kuin minimiarvo!"
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Maximum"
-msgstr "Enimmäismäärä"
+msgstr "Maksimi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_date
@@ -2934,7 +2938,7 @@ msgstr "Maksimipäivä"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_datetime
 msgid "Maximum Datetime"
-msgstr "Enimmäisaika"
+msgstr "Maksimipäivämäärä ja -aika"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_max
@@ -2944,7 +2948,7 @@ msgstr "Tekstin maksimipituus"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_max_obtainable
 msgid "Maximum obtainable score"
-msgstr "Saavutettava enimmäispistemäärä"
+msgstr "Saavutettava maksimipistemäärä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_float_value
@@ -2977,7 +2981,7 @@ msgstr "Vähimmäis- ja enimmäisrajat"
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Minimum"
-msgstr "Vähimmäismäärä"
+msgstr "Minimi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_date
@@ -2987,7 +2991,7 @@ msgstr "Minimipäivä"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_datetime
 msgid "Minimum Datetime"
-msgstr "Vähimmäispäivämäärä"
+msgstr "Minimipäivämäärä ja -aika"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
@@ -3057,17 +3061,17 @@ msgstr "Monivalinta, jossa on yksi vastaus"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__multiple_choice
 msgid "Multiple choice: multiple answers allowed"
-msgstr "Monivalinta: monta vastausta sallittu"
+msgstr "Monivalinta: monta vastausta sallitaan"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__simple_choice
 msgid "Multiple choice: only one answer"
-msgstr "Monivalinta: vain yksi vastaus sallittu"
+msgstr "Monivalinta: vain yksi vastaus sallitaan"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__multiple
 msgid "Multiple choices per row"
-msgstr "Useita valintoja riviä kohden"
+msgstr "Useita valintoja per rivi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__my_activity_date_deadline
@@ -3117,7 +3121,7 @@ msgstr "Uusi kutsu"
 #. module: survey
 #: model:mail.message.subtype,description:survey.mt_survey_survey_user_input_completed
 msgid "New participation completed."
-msgstr "Uusi osallistuminen valmistunut."
+msgstr "Uusi osallistuminen valmis."
 
 #. module: survey
 #. odoo-javascript
@@ -3136,13 +3140,13 @@ msgstr "Seuraavan toimenpiteen kalenterimerkintä"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_date_deadline
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Seuraavan toimenpiteen eräpäivä"
+msgstr "Seuraavan toimenpiteen määräaika"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_summary
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_summary
 msgid "Next Activity Summary"
-msgstr "Seuraavan toimenpiteen kuvaus"
+msgstr "Seuraavan toimenpiteen tiivitelmä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_type_id
@@ -3176,7 +3180,7 @@ msgstr "Ei vielä kysymyksiä!"
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
 msgid "No Survey Found"
-msgstr "Ei kyselyä löydetty"
+msgstr "Kyselyitä ei löydetty"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_user_input
@@ -3188,7 +3192,7 @@ msgstr "Ei vielä vastauksia!"
 #. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 msgid "No attempts left."
-msgstr "Yrityksiä ei ole jäljellä."
+msgstr "Yrityskertoja ei ole jäljellä."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -3259,7 +3263,7 @@ msgstr "Toimenpiteiden määrä"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__attempts_limit
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__attempts_limit
 msgid "Number of attempts"
-msgstr "Yritysten määrä"
+msgstr "Yrityskertojen määrä"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_5
@@ -3298,12 +3302,12 @@ msgstr "Numeerinen vastaus"
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "Object-Directed Open Organization"
-msgstr "Kohdeohjattu avoin organisaatio"
+msgstr "Kohdeohjattu avoin järjestys"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 msgid "Occurrence"
-msgstr "Esiintyminen"
+msgstr "Esiintymä"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -3333,8 +3337,8 @@ msgstr "Usein (1-3 kertaa viikossa)"
 msgid ""
 "On Survey questions, one can define \"placeholders\". But what are they for?"
 msgstr ""
-"Tutkimuksen kysymyksissä voidaan määritellä \"paikanvaraaja\". Mutta mitä "
-"varten ne ovat?"
+"Kyselyn kysymyksissä voi määritellä \"paikanvaraajan\". Mutta mitä varten ne"
+" ovat?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p1_q3_sug1
@@ -3361,29 +3365,29 @@ msgstr "Kerran vuodessa"
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__matrix_subtype__simple
 msgid "One choice per row"
-msgstr "Yksi valinta riviä kohti"
+msgstr "Yksi valinta per rivi"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "One needs to answer at least half the questions correctly"
-msgstr "Vähintään puolet kysymyksistä on vastattava oikein"
+msgstr "Vähintään puoleen kysymyksistä on vastattava oikein"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "One needs to get 50% of the total score"
-msgstr "On saatava 50% of kokonaispistemäärää"
+msgstr "On saatava 50% kokonaispistemääräästä"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_question
 msgid "One page per question"
-msgstr "Yksi sivu kysymystä kohden"
+msgstr "Yksi sivu per kysymys"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__page_per_section
 msgid "One page per section"
-msgstr "Yksi sivu jaksoa kohti"
+msgstr "Yksi sivu per osio"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_layout__one_page
@@ -3402,7 +3406,7 @@ msgstr "Vain yksi kysymys jäljellä!"
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
 #: model_terms:ir.ui.view,arch_db:survey.question_result_text
 msgid "Only show survey results having selected this answer"
-msgstr "Näytä vain ne tutkimustulokset, jotka ovat valinneet tämän vastauksen"
+msgstr "Näytä vain ne kyselytulokset, jotka ovat valinneet tämän vastauksen"
 
 #. module: survey
 #. odoo-python
@@ -3427,13 +3431,13 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Open Session Manager"
-msgstr "Avaa Session Manager"
+msgstr "Avaa Istunnon hallinta"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/question_page/description_page_field.xml:0
 msgid "Open section"
-msgstr "Avoin osa"
+msgstr "Avoin osio"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3450,8 +3454,8 @@ msgid ""
 msgstr ""
 "Valinnainen käännöskieli (ISO-koodi), joka valitaan sähköpostia "
 "lähetettäessä. Jos sitä ei ole asetettu, käytetään englanninkielistä "
-"versiota. Tämän pitäisi yleensä olla sijoitusilmaus, joka antaa sopivan "
-"kielen, esim. {{ object.partner_id.lang }}."
+"versiota. Tämän pitäisi yleensä olla paikanvarauslauseke, joka antaa sopivan"
+" kielen, esim. {{ object.partner_id.lang }}."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -3469,12 +3473,12 @@ msgstr "Organisaation kehittäminen operatiivisille toimihenkilöille"
 #. odoo-python
 #: code:addons/survey/models/survey_question.py:0
 msgid "Other (see comments)"
-msgstr "Muu (ks. huomautukset)"
+msgstr "Muu (ks. kommentit)"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2
 msgid "Our Company in a few questions ..."
-msgstr "Yrityksemme muutama kysymys ..."
+msgstr "Yrityksestämme muutamalla kysymyksellä ..."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__mail_server_id
@@ -3490,7 +3494,7 @@ msgstr "Yleinen suorituskyky"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug5
 msgid "Overpriced"
-msgstr "Törkeän kallis"
+msgstr "Ylihinnoiteltu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__page_id
@@ -3528,18 +3532,18 @@ msgstr "Osallistuja"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Participants"
-msgstr "Ilmoittautuneita yhteensä"
+msgstr "Osallistujat"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 msgid "Participate to %(survey_name)s"
-msgstr "Osallistu %(survey_name)s"
+msgstr "Osallistu kyselyyn %(survey_name)s"
 
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to {{ object.survey_id.display_name }} survey"
-msgstr "Osallistu {{ object.survey_id.display_name }} tutkimukseen"
+msgstr "Osallistu {{ object.survey_id.display_name }} kyselyyn"
 
 #. module: survey
 #: model:mail.message.subtype,name:survey.mt_survey_survey_user_input_completed
@@ -3568,22 +3572,23 @@ msgstr "Kumppani"
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Passed"
-msgstr "Hyväksytty"
+msgstr "Läpäisty"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Passed and Failed"
-msgstr "Hyväksytty ja hylätty"
+msgstr "Läpäisty ja hylätty"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "Passed only"
-msgstr "Vain läpäisty"
+msgstr "Vain läpäistyt"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
 msgid "Pay attention to the host screen until the next question."
-msgstr "Kiinnitä huomiota isännän näyttöön seuraavaan kysymykseen asti."
+msgstr ""
+"Kiinnitä huomiota isännöijän näyttöön, kunnes seuraava kysymys näytetään."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__progression_mode__percent
@@ -3594,7 +3599,7 @@ msgstr "Jäljellä oleva prosenttiosuus"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_result.js:0
 msgid "Performance by Section"
-msgstr "Suorituskyky jaksoittain"
+msgstr "Suorituskyky osioittain"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q6_sug3
@@ -3609,7 +3614,7 @@ msgstr "Peter W. Higgs"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Pick a Badge..."
-msgstr "Valitse merkki..."
+msgstr "Valitse ansiomerkki..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -3619,7 +3624,7 @@ msgstr "Valitse tyyli..."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Pick a Template..."
-msgstr "Valitse malli..."
+msgstr "Valitse mallipohja..."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p1_q1
@@ -3643,7 +3648,7 @@ msgstr "Pinaceae"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_placeholder
 msgid "Placeholder"
-msgstr "Paikanpitäjä"
+msgstr "Paikanvaraaja"
 
 #. module: survey
 #. odoo-python
@@ -3652,8 +3657,8 @@ msgid ""
 "Please complete this very short survey to let us know how satisfied your are"
 " with our products."
 msgstr ""
-"Ole hyvä ja täytä tämä hyvin lyhyt kysely, jotta saamme tietää, kuinka "
-"tyytyväinen olet tuotteisiimme."
+"Ole hyvä ja täytä tämä hyvin lyhyt kysely, jotta saamme palautetta siitä, "
+"kuinka tyytyväinen olet tuotteisiimme."
 
 #. module: survey
 #. odoo-python
@@ -3664,7 +3669,7 @@ msgstr "Syötä vähintään yksi kelvollinen vastaanottaja."
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_food_preferences
 msgid "Please give us your preferences for this event's dinner!"
-msgstr "Ilmoittakaa meille toiveenne tämän tapahtuman illallisesta!"
+msgstr "Ilmoittakaa meille tämän tapahtuman illallistoiveenne!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_void_content
@@ -3672,8 +3677,8 @@ msgid ""
 "Please make sure you have at least one question in your survey. You also "
 "need at least one section if you chose the \"Page per section\" layout.<br/>"
 msgstr ""
-"Varmista, että kyselyssäsi on vähintään yksi kysymys. Tarvitset myös "
-"vähintään yhden jakson, jos valitsit \"Sivu per jakso\" -asettelun.<br/>"
+"Varmista, että kyselysi sisältää vähintään yhden kysymyksen. Tarvitset myös "
+"vähintään yhden osion, jos valitsit \"Sivu per osio\" -asettelun.<br/>"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3
@@ -3774,13 +3779,13 @@ msgstr "Kysymysten valinta"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__question_time_limit_reached
 msgid "Question Time Limit Reached"
-msgstr "Kyselytunnin aikaraja saavutettu"
+msgstr "Kysymyksen aikaraja saavutettu"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__question_type
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__question_type
 msgid "Question Type"
-msgstr "Kysymyksen tyyppi"
+msgstr "Kysymystyyppi"
 
 #. module: survey
 #. odoo-python
@@ -3815,28 +3820,28 @@ msgstr ""
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_quiz
 msgid "Quiz about our Company"
-msgstr "Tietokilpailu yrityksestämme"
+msgstr "Tietovisa yrityksestämme"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__scoring_success
 msgid "Quizz Passed"
-msgstr "Tietokilpailu läpäisty"
+msgstr "Tietovisa läpäisty"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Quizz passed"
-msgstr "Tietokilpailu läpäisty"
+msgstr "Tietovisa läpäisty"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/views/widgets/radio_selection_with_filter/radio_selection_field_with_filter.js:0
 msgid "Radio for Selection With Filter"
-msgstr "Radio valintaa varten suodattimella"
+msgstr "Valintanappula suodattimella"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__random
 msgid "Randomized per Section"
-msgstr "Satunnaistettu jaksoittain"
+msgstr "Satunnaistettu per osio"
 
 #. module: survey
 #. odoo-python
@@ -3848,18 +3853,18 @@ msgstr "Harvoin (1-3 kertaa kuukaudessa)"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__rating_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__rating_ids
 msgid "Ratings"
-msgstr "Arviointi"
+msgstr "Arvioinnit"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__session_state__ready
 msgid "Ready"
-msgstr "Valmis siirrettäväksi"
+msgstr "Valmis"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Ready to change the way you <b>gather data</b>?"
-msgstr "Oletko valmis muuttamaan <b>tiedonkeruutapojasi</b>?"
+msgstr "Oletko valmis muuttamaan tapaa, jolla <b>keräät tietoja</b>?"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -3898,7 +3903,7 @@ msgstr "Avaa uudelleen"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__survey_users_login_required
 #: model:ir.model.fields,field_description:survey.field_survey_survey__users_login_required
 msgid "Require Login"
-msgstr "Vaadi kirjautuminen"
+msgstr "Vaadi kirjautumista"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__scoring_success_min
@@ -3930,7 +3935,7 @@ msgstr "Vastuuhenkilö"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_user_id
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__activity_user_id
 msgid "Responsible User"
-msgstr "Vastuuhenkilö"
+msgstr "Vastuukäyttäjä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__restrict_user_ids
@@ -3996,7 +4001,7 @@ msgstr "Salicaceae"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_email
 msgid "Save as user email"
-msgstr "Tallenna käyttäjän sähköpostiosoitteena"
+msgstr "Tallenna käyttäjän sähköpostiosoitteeksi"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__save_as_nickname
@@ -4007,12 +4012,12 @@ msgstr "Tallenna käyttäjän lempinimeksi"
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__scale
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Scale"
-msgstr "Skaala"
+msgstr "Asteikko"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max_label
 msgid "Scale Maximum Label"
-msgstr "Mittakaava Maksimi Merkintä"
+msgstr "Asteikon maksimimerkintä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_max
@@ -4027,12 +4032,12 @@ msgstr "Asteikon enimmäisarvo (0-10)"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_mid_label
 msgid "Scale Middle Label"
-msgstr "Asteikon keskimmäinen otsikko"
+msgstr "Asteikon keskimmäinen merkintä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_min_label
 msgid "Scale Minimum Label"
-msgstr "Asteikon alin otsikko"
+msgstr "Asteikon alin merkintä"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__scale_min
@@ -4120,23 +4125,23 @@ msgstr "Etsi kysymys"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
 msgid "Search Survey User Inputs"
-msgstr "Hakukyselyn käyttäjän syötteet"
+msgstr "Hae kyselyn käyttäjän syötteitä"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_line_view_search
 msgid "Search User input lines"
-msgstr "Haku Käyttäjän syöttämät rivit"
+msgstr "Hae käyttäjän syöttörivit"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__page_id
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Section"
-msgstr "Osa"
+msgstr "Osio"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__question_and_page_ids
 msgid "Sections and Questions"
-msgstr "Jaksot ja kysymykset"
+msgstr "Osiot ja kysymykset"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -4153,8 +4158,7 @@ msgstr "Nähdään pian!"
 #: model:survey.question,title:survey.vendor_certification_page_1_question_3
 msgid "Select all the available customizations for our Customizable Desk"
 msgstr ""
-"Valitse kaikki käytettävissä olevat räätälöitävissä olevat räätälöitävät "
-"työpöydät"
+"Valitse kaikki räätälöitäviksi saatavilla olevat räätälöitävät työpöydät"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_2
@@ -4169,7 +4173,7 @@ msgstr "Valitse kaikki tuotteet, joiden myyntihinta on vähintään 100 dollaria
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q3
 msgid "Select trees that made more than 20K sales this year"
-msgstr "Valitse puita, jotka tekivät yli 20 000 myyntiä tänä vuonna"
+msgstr "Valitse puut, jotka myivät yli 20 000 arvosta tänä vuonna"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -4220,7 +4224,7 @@ msgstr "Istunnon tila"
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_session_code_unique
 msgid "Session code should be unique"
-msgstr "Istuntokoodin on oltava yksilöllinen"
+msgstr "Istunnon koodin on oltava yksilöllinen"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q2_sug1
@@ -4265,7 +4269,7 @@ msgstr "Näytä lopullinen pistetaulukko"
 #. odoo-javascript
 #: code:addons/survey/static/src/js/survey_session_manage.js:0
 msgid "Show Leaderboard"
-msgstr "Näytä tulostaulu"
+msgstr "Näytä pistetaulukko"
 
 #. module: survey
 #. odoo-javascript
@@ -4276,12 +4280,14 @@ msgstr "Näytä tulokset"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__session_show_leaderboard
 msgid "Show Session Leaderboard"
-msgstr "Näytä istunnon tulostaulu"
+msgstr "Näytä istunnon pistetaulukko"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Show all records which has next action date is before today"
-msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä"
+msgstr ""
+"Näytä kaikki kirjaukset, joiden seuraavan toimenpiteen määräaika on "
+"menneisyydessä"
 
 #. module: survey
 #. odoo-python
@@ -4313,7 +4319,7 @@ msgstr "Pehmeä"
 #. odoo-python
 #: code:addons/survey/wizard/survey_invite.py:0
 msgid "Some emails you just entered are incorrect: %s"
-msgstr "Osa juuri syöttämistäsi sähköposteista ovat virheellisiä: %s"
+msgstr "Osa juuri syöttämistäsi sähköpostiosoitteista ovat virheellisiä: %s"
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p1
@@ -4321,7 +4327,7 @@ msgid ""
 "Some general information about you. It will be used internally for "
 "statistics only."
 msgstr ""
-"Joitakin yleisiä tietoja sinusta. Niitä käytetään sisäisesti vain "
+"Joitakin yleistietoja sinusta. Niitä käytetään sisäisesti vain "
 "tilastointiin."
 
 #. module: survey
@@ -4421,12 +4427,12 @@ msgstr ""
 "Tila aktiviteetin perusteella\n"
 "Myöhässä: Eräpäivä on menneisyydessä\n"
 "Tänään: Eräpäivä on tänään\n"
-"Suunniteltu: Tulevaisuudessa."
+"Suunniteltu: Toimenpiteitä tulevaisuudessa."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_food_preferences_q4_sug1
 msgid "Steak with french fries"
-msgstr "Pihvi ranskalaisilla perunoilla"
+msgstr "Pihvi ja ranskikset"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_row2
@@ -4519,7 +4525,7 @@ msgstr "Kysely"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_access_error
 msgid "Survey Access Error"
-msgstr "Kyselyyn pääsyn virhe"
+msgstr "Kyselyyn pääsyvirhe"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_response_line_view_tree
@@ -4529,12 +4535,12 @@ msgstr "Kyselyn vastausrivi"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__survey_first_submitted
 msgid "Survey First Submitted"
-msgstr "Kyselyn ensimmäinen toimitettu"
+msgstr "Ensimmäinen palautettu kysely"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_gamification_badge__survey_ids
 msgid "Survey Ids"
-msgstr "Tutkimuksen tunnukset"
+msgstr "Kyselyn tunnukset"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_invite
@@ -4550,13 +4556,13 @@ msgstr "Kyselyn otsikko"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Survey Link"
-msgstr "Tutkimuslinkki"
+msgstr "Kyselyn linkki"
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/models/survey_user_input.py:0
 msgid "Survey Participant"
-msgstr "Kyselyyn osallistuja"
+msgstr "Kyselyn osallistuja"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
@@ -4593,7 +4599,7 @@ msgstr "Kyselyn URL"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr "Käyttäjäsyöte kyselyssä"
+msgstr "Kyselyn käyttäjän syötteet"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input_line
@@ -4614,7 +4620,7 @@ msgstr "Kysely: Sertifioinnin onnistuminen"
 #. module: survey
 #: model:mail.template,name:survey.mail_template_user_input_invite
 msgid "Survey: Invite"
-msgstr "Tutkimus: Kutsu"
+msgstr "Kysely: Kutsu"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_form
@@ -4631,7 +4637,7 @@ msgstr "Takaaki Kajita"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_retake
 msgid "Take Again"
-msgstr "Ota uudelleen"
+msgstr "Koita uudelleen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -4711,7 +4717,7 @@ msgid ""
 "The access of the following surveys is restricted. Make sure their responsible still has access to it: \n"
 "%(survey_names)s\n"
 msgstr ""
-"Seuraaviin tutkimuksiin pääsyä on rajoitettu. Varmista, että niiden vastuuhenkilöillä on edelleen pääsy siihen:\n"
+"Seuraavien kyselyiden pääsyä on rajoitettu. Varmista, että niiden vastuuhenkilöillä on edelleen pääsy siihen:\n"
 "%(survey_names)s\n"
 
 #. module: survey
@@ -4739,12 +4745,12 @@ msgstr ""
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_badge_uniq
 msgid "The badge for each survey should be unique!"
-msgstr "Jokaisen kyselyn tunnuksen on oltava yksilöllinen!"
+msgstr "Jokaisen kyselyn ansiomerkin on oltava yksilöllinen!"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row4
 msgid "The checkout process is clear and secure"
-msgstr "Maksu kassalla on selkeä ja turvallinen prosessi"
+msgstr "Maksuprosessi on selkeä ja turvallinen"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_print
@@ -4754,7 +4760,7 @@ msgstr "Oikea vastaus oli:"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_question_id
 msgid "The current question of the survey session."
-msgstr "Tutkimusistunnon nykyinen kysymys."
+msgstr "Kyselyistunnon nykyinen kysymys."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description
@@ -4764,7 +4770,7 @@ msgid ""
 "start it."
 msgstr ""
 "Kuvaus näytetään kyselyn etusivulla. Voit käyttää sitä antaaksesi "
-"ehdokkaille tarkoituksen ja ohjeet ennen kuin he aloittavat kyselyn."
+"ehdokkaille tavoitteen ja ohjeet ennen kuin he aloittavat kyselyn."
 
 #. module: survey
 #. odoo-python
@@ -4812,7 +4818,7 @@ msgstr "Kysymyksellä on aikaraja"
 #: model:ir.model.constraint,message:survey.constraint_survey_question_scale
 msgid ""
 "The scale must be a growing non-empty range between 0 and 10 (inclusive)"
-msgstr "Asteikon on oltava kasvava ei-tyhjä alue välillä 0-10 (mukaan lukien)"
+msgstr "Asteikon on oltava kasvava ei-tyhjä vaihteluväli 0-10 (mukaan lukien)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
@@ -4822,18 +4828,18 @@ msgstr "Istunto ei vielä alkanut."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "The session will begin automatically when the host starts."
-msgstr "Istunto alkaa automaattisesti, kun isäntä käynnistyy."
+msgstr "Istunto alkaa automaattisesti, kun isännöijä aloittaa."
 
 #. module: survey
 #. odoo-python
 #: code:addons/survey/controllers/main.py:0
 msgid "The survey has already started."
-msgstr "Tutkimus on jo aloitettu."
+msgstr "Kysely on jo aloitettu."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__is_time_limited
 msgid "The survey is limited in time"
-msgstr "Tutkimuksella on aikaraja"
+msgstr "Kyselyllä on aikaraja"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_question_start_time
@@ -4841,14 +4847,14 @@ msgid ""
 "The time at which the current question has started, used to handle the timer"
 " for attendees."
 msgstr ""
-"Ajankohta, jolloin nykyinen kysymys on alkanut; käytetään osallistujien "
-"ajastimen käsittelyyn."
+"Aika, kun nykyisen kysymyksen vastausaika on alkanut; käytetään "
+"osallistujien ajastimen käsittelyyn."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_time_limit_check
 msgid ""
 "The time limit needs to be a positive number if the survey is time limited."
-msgstr "Aikarajan on oltava positiivinen luku, jos kysely on määräaikainen."
+msgstr "Aikarajan on oltava positiivinen luku, jos kyselyllä on aikaraja."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_row3
@@ -4878,7 +4884,7 @@ msgstr ""
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid ""
 "They are technical parameters that guarantees the responsiveness of the page"
-msgstr "Ne ovat teknisiä parametreja, jotka takaavat sivun reagointikyvyn"
+msgstr "Ne ovat teknisiä parametreja, jotka takaavat sivun reagoinnin"
 
 #. module: survey
 #. odoo-python
@@ -4911,7 +4917,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_button_form_view
 msgid "This is a Test Survey Entry."
-msgstr "Tämä on testitutkimusmerkintä."
+msgstr "Tämä on testikyselyvastaus."
 
 #. module: survey
 #. odoo-javascript
@@ -4940,7 +4946,7 @@ msgstr "Tämä viesti tulee näkyviin, kun kysely on valmis"
 #: model_terms:ir.ui.view,arch_db:survey.question_container
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "This question requires an answer."
-msgstr "Kysymykseen ei voi jättää vastaamatta."
+msgstr "Tähän kysymykseen vaaditaan vastaus."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_print
@@ -4954,7 +4960,7 @@ msgid ""
 "qualifying your answers."
 msgstr ""
 "Tässä osiossa on yleisiä tietoja sinusta. Niihin vastaaminen auttaa "
-"vastauksiesi pätevöittämisessä."
+"vastauksiesi kvalifioinnissa."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_feedback_p2
@@ -4965,7 +4971,7 @@ msgstr "Tämä osio koskee itse verkkokauppakokemusta."
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
-msgstr "Tämä pieni tietokilpailu testaa tietosi yrityksestämme. Ole valmis!"
+msgstr "Tämä pieni tietovisa testaa tietosi yrityksestämme. Olethan valmiina!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback
@@ -4973,7 +4979,7 @@ msgid ""
 "This survey allows you to give a feedback about your experience with our products.\n"
 "    Filling it helps us improving your experience."
 msgstr ""
-"Tämän kyselyn avulla voit antaa palautetta kokemuksistasi tuotteistamme.\n"
+"Tämän kyselyn avulla voit antaa palautetta tuotteistamme.\n"
 "    Sen täyttäminen auttaa meitä parantamaan kokemustasi."
 
 #. module: survey
@@ -4984,23 +4990,22 @@ msgid ""
 " user accounts or update survey access mode accordingly."
 msgstr ""
 "Tähän kyselyyn eivät voi osallistua ulkopuoliset henkilöt. Sinun tulisi "
-"luoda käyttäjätunnukset tai päivittää kyselyyn pääsytila vastaavasti."
+"luoda käyttäjätunnus tai päivittää kyselyn pääsyoikeuden tilaa vastaavasti."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest!"
-msgstr "Tämä kysely on nyt suljettu. Kiitos kiinnostuksestanne!"
+msgstr "Tämä kysely on nyt suljettu. Kiitos mielenkiinnostusta!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
 msgid "This survey is open only to registered people. Please"
-msgstr ""
-"Tämä kysely on avoin vain rekisteröityneille henkilöille. Ole hyvä ja lähetä"
+msgstr "Tämä kysely on avoin vain rekisteröityneille henkilöille. Pyydämme"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Time & Scoring"
-msgstr "Aika ja pisteytys"
+msgstr "Aika & pisteytys"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5026,7 +5031,7 @@ msgstr "Aikaraja (sekuntia)"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
 msgid "Time limit for this certification:"
-msgstr "Tämän todistuksen määräaika:"
+msgstr "Tämän todistuksen aikaraja:"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_start
@@ -5054,7 +5059,7 @@ msgid ""
 "To take this survey, please close all other tabs on <strong class=\"text-"
 "danger\"/>."
 msgstr ""
-"Jos haluat vastata tähän kyselyyn, sulje kaikki muut välilehdet osoitteessa "
+"Jos haluat vastata tähän kyselyyn, sulje kaikki muut välilehdet kohteessa "
 "<strong class=\"text-danger\"/>."
 
 #. module: survey
@@ -5095,7 +5100,7 @@ msgstr "Puut"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_answer_ids
 msgid "Triggering Answers"
-msgstr "Vastausten laukaiseminen"
+msgstr "Käynnistävät vastaukset"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__triggering_question_ids
@@ -5109,7 +5114,7 @@ msgid ""
 "Triggers based on the following questions will not work because they are positioned after this question:\n"
 "\"%s\"."
 msgstr ""
-"Seuraaviin kysymyksiin perustuvat käynnistimet eivät toimi, koska ne on sijoitettu tämän kysymyksen jälkeen:\n"
+"Seuraaviin kysymyksiin perustuvat laukaisijat eivät toimi, koska ne on sijoitettu tämän kysymyksen jälkeen:\n"
 "\"%s\"."
 
 #. module: survey
@@ -5121,12 +5126,12 @@ msgstr "Tyyppi"
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
 #: model:ir.model.fields,help:survey.field_survey_user_input__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Poikkeusaktiviteetin tyyppi tietueella."
+msgstr "Kirjattu poikkeustoimenpiteen tyyppi."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__suggested_answer_ids
 msgid "Types of answers"
-msgstr "Vastausten tyypit"
+msgstr "Vastaustyypit"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug2
@@ -5189,18 +5194,18 @@ msgstr "Käytä hauskaa visuaalista tukea, kuten live-esitystä"
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "Use humor and make jokes"
-msgstr "Käytä huumoria ja vitsaile"
+msgstr "Käytä huumoria ja kerro vitsejä"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Use template"
-msgstr "Käytä mallia"
+msgstr "Käytä mallipohjaa"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 msgid "Use the breadcrumbs to quickly go back to the dashboard."
-msgstr "Käytä leivänmuruja palataksesi nopeasti takaisin kojelaudalle."
+msgstr "Käytä linkkipolkua palataksesi nopeasti takaisin koontinäytölle."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__description
@@ -5208,8 +5213,8 @@ msgid ""
 "Use this field to add additional explanations about your question or to "
 "illustrate it with pictures or a video"
 msgstr ""
-"Käytä tätä kenttää lisäselvitysten lisäämiseen kysymyksestäsi tai sen "
-"havainnollistamiseen kuvilla tai videolla"
+"Käytä tätä kenttää antaaksesi tarkemman selvityksen kysymyksestäsi tai sen "
+"havainnollistamiseksi kuvilla tai videolla"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__random_questions_count
@@ -5217,8 +5222,8 @@ msgid ""
 "Used on randomized sections to take X random questions from all the "
 "questions of that section."
 msgstr ""
-"Käytetään satunnaistetuissa osioissa ottamaan X satunnaista kysymystä "
-"kaikista kyseisen osion kysymyksistä."
+"Käytetään satunnaistetuissa osioissa poimimaan X määrä satunnaisia "
+"kysymyksiä kaikista kyseisen osion kysymyksistä."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q1_sug2
@@ -5278,12 +5283,12 @@ msgstr "Vahvista syöte"
 #: code:addons/survey/static/src/question_page/question_page_one2many_field.js:0
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_error_msg
 msgid "Validation Error"
-msgstr "Tarkistusvirhe"
+msgstr "Vahvistusvirhe"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question_answer__value_label
 msgid "Value Label"
-msgstr "Tosi-arvon otsake"
+msgstr "Arvon nimike"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug2
@@ -5313,7 +5318,7 @@ msgstr "Vietnam"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_open
 msgid "Waiting for attendees..."
-msgstr "Osallistujia odotellessa...."
+msgstr "Odotetaan osallistujia..."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_in_progress
@@ -5321,8 +5326,8 @@ msgid ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
 msgstr ""
-"Olemme rekisteröineet vastauksesi! Odota, että isäntä siirtyy seuraavaan "
-"kysymykseen."
+"Olemme rekisteröineet vastauksesi! Odota, että isännnöijä siirtyy seuraavaan"
+" kysymykseen."
 
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p4
@@ -5334,19 +5339,19 @@ msgstr "Me sanomme, että omena ei putoa kauas puusta, joten tässä on puita."
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p5
 msgid "We may be interested by your input."
-msgstr "Saatamme olla kiinnostuneita panoksestasi."
+msgstr "Saatamme olla kiinnostuneita mielipiteestäsi."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__website_message_ids
 msgid "Website Messages"
-msgstr "Verkkosivun ilmoitukset"
+msgstr "Verkkosivun viestit"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__website_message_ids
 #: model:ir.model.fields,help:survey.field_survey_user_input__website_message_ids
 msgid "Website communication history"
-msgstr "Verkkosivun viestihistoria"
+msgstr "Verkkosivun viestintähistoria"
 
 #. module: survey
 #. odoo-python
@@ -5365,7 +5370,7 @@ msgid ""
 "customer service (not rated)?"
 msgstr ""
 "Minä päivänä ja mihin kellonaikaan asiakkaat todennäköisimmin soittavat "
-"asiakaspalveluun (ei luokiteltu)?"
+"asiakaspalveluun (ei arvostella)?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_3_question_4
@@ -5374,7 +5379,7 @@ msgid ""
 "rated)?"
 msgstr ""
 "Mikä päivä on mielestänne paras päivä aloittaa vuosittainen myynti (ei "
-"luokiteltu)?"
+"arvostella)?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q2
@@ -5384,7 +5389,7 @@ msgstr "Mitä mieltä olet uudesta verkkokaupastamme?"
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_2_question_3
 msgid "What do you think about our prices (not rated)?"
-msgstr "Mitä mieltä olet hinnoistamme (ei luokiteltu)?"
+msgstr "Mitä mieltä olet hinnoistamme (ei arvostella)?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p5_q1
@@ -5413,7 +5418,7 @@ msgstr "Mikä on yleinen virhe, jonka julkiset puhujat tekevät?"
 #. odoo-python
 #: code:addons/survey/models/survey_survey_template.py:0
 msgid "What is the best way to catch the attention of an audience?"
-msgstr "Mikä on paras tapa herättää yleisön huomio?"
+msgstr "Mikä on paras tapa kiinnittää yleisön huomio?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q2
@@ -5443,12 +5448,12 @@ msgstr "Milloin Tšingis-kaani kuoli?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q2
 msgid "When did precisely Marc Demo crop its first apple tree?"
-msgstr "Milloin juuri Marc Demo viljeli ensimmäistä omenapuuta?"
+msgstr "Milloin tarkalleen Marc Demo korjasi ensimmäisen omenapuunsa sadon?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q6
 msgid "When do you harvest those fruits"
-msgstr "Milloin keräätte sadon noista hedelmistä"
+msgstr "Milloin keräätte noiden hedelmien sadon"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q1
@@ -5458,7 +5463,7 @@ msgstr "Milloin Mitchell Admin on syntynyt?"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q2
 msgid "When is your date of birth?"
-msgstr "Milloin olet syntynyt?"
+msgstr "Mikä on syntymäpäiväsi?"
 
 #. module: survey
 #. odoo-javascript
@@ -5480,7 +5485,8 @@ msgstr "Missä asut?"
 #: model:ir.model.fields,help:survey.field_survey_survey__session_show_leaderboard
 msgid ""
 "Whether or not we want to show the attendees leaderboard for this survey."
-msgstr "Haluammeko näyttää tämän kyselyn osallistujien tulostaulun vai emme."
+msgstr ""
+"Haluammeko näyttää tämän kyselyn osallistujien pistetaulukon vai emme."
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q1
@@ -5490,7 +5496,7 @@ msgstr "Kuka muusikko ei kuulu 27. klubiin?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q1
 msgid "Which category does a tomato belong to"
-msgstr "Mihin luokkaan tomaatti kuuluu"
+msgstr "Mihin kategoriaan tomaatti kuuluu"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
@@ -5510,7 +5516,7 @@ msgstr "Mitä seuraavista käyttäisit pölyttämiseen"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q2
 msgid "Which painting/drawing was not made by Pablo Picasso?"
-msgstr "Mitä maalausta tai piirustusta Pablo Picasso ei tehnyt?"
+msgstr "Mitä maalausta tai piirrosta Pablo Picasso ei tehnyt?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q3
@@ -5542,8 +5548,7 @@ msgstr ""
 msgid ""
 "Why should you consider making your presentation more fun with a small quiz?"
 msgstr ""
-"Miksi sinun pitäisi harkita esityksen tekemistä hauskemmaksi pienellä "
-"tietokilpailulla?"
+"Miksi sinun pitäisi harkita esityksen piristämistä pienellä tietovisalla?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_3_choice_3
@@ -5617,8 +5622,8 @@ msgid ""
 "You can share your links through different means: email, invite shortcut, "
 "live presentation, ..."
 msgstr ""
-"Voit jakaa linkkejäsi eri tavoin: sähköpostitse, kutsua pikakuvakkeen, live-"
-"esityksen, ..."
+"Voit jakaa linkkejäsi eri tavoin: sähköposti, kutsun pikakuvake, live-"
+"esitys, ..."
 
 #. module: survey
 #. odoo-python
@@ -5627,8 +5632,8 @@ msgid ""
 "You cannot delete questions from surveys \"%(survey_names)s\" while live "
 "sessions are in progress."
 msgstr ""
-"Et voi poistaa kysymyksiä kyselytutkimuksista \"%(survey_names)s\" suorien "
-"istuntojen ollessa käynnissä."
+"Et voi poistaa kysymyksiä kyselyistä \"%(survey_names)s\" live-istuntojen "
+"ollessa käynnissä."
 
 #. module: survey
 #. odoo-python
@@ -5654,7 +5659,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/survey/models/survey_survey.py:0
 msgid "You cannot send an invitation for a survey that has no questions."
-msgstr "Et voi lähettää kutsua kyselyyn jossa ei ole kysymyksiä."
+msgstr "Et voi lähettää kutsua kyselyyn, jossa ei ole kysymyksiä."
 
 #. module: survey
 #. odoo-python
@@ -5665,7 +5670,7 @@ msgstr "Et voi lähettää kutsuja suljettuihin kyselyihin."
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
 msgid "You received the badge"
-msgstr "Sait merkin"
+msgstr "Sait ansiomerkin"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -5684,7 +5689,7 @@ msgid ""
 "Your responses will help us improve our product range to serve you even "
 "better."
 msgstr ""
-"Vastauksesi auttavat meitä parantamaan tuotevalikoimaamme, jotta voimme "
+"Palautteesi auttavat meitä parantamaan tuotevalikoimaamme, jotta voimme "
 "palvella sinua entistä paremmin."
 
 #. module: survey
@@ -5719,18 +5724,18 @@ msgstr "vastaus"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
 msgid "answered"
-msgstr "vastatuista"
+msgstr "vastattuja"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "attempts"
-msgstr "yritykset"
+msgstr "yrityskerrat"
 
 #. module: survey
 #. odoo-javascript
 #: code:addons/survey/static/src/xml/survey_image_zoomer_templates.xml:0
 msgid "close"
-msgstr "sulkemista"
+msgstr "sulje"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -5763,12 +5768,12 @@ msgstr "esim. 4812"
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "e.g. Guidelines, instructions, picture, ... to help attendees answer"
 msgstr ""
-"esim. ohjeet, ohjeet, kuva, ..., jotka auttavat osallistujia vastaamaan"
+"esim. opastus, ohjeet, kuva, ..., jotka auttavat osallistujia vastaamaan"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
 msgid "e.g. No one can solve challenges like you do"
-msgstr "esim. Kukaan ei pysty ratkaisemaan haasteita kuten sinä"
+msgstr "esim. Kukaan ei pysty ratkaisemaan haasteita, kuten sinä"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.gamification_badge_form_view_simplified
@@ -5798,7 +5803,7 @@ msgstr "minuutit"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
 msgid "of"
-msgstr "of"
+msgstr " "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.certification_report_view_general
@@ -5826,7 +5831,7 @@ msgstr "tai paina ⌘+Enter"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_progression
 msgid "pages"
-msgstr "sivuista"
+msgstr "sivua"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
@@ -5854,5 +5859,5 @@ msgid ""
 "⚠️ This question is positioned before some or all of its triggers and could "
 "be skipped."
 msgstr ""
-"⚠️ Tämä kysymys on sijoitettu ennen joitakin tai kaikkia sen laukaisevia "
-"tekijöitä, ja se voidaan jättää väliin."
+"⚠️ Tämä kysymys on sijoitettu ennen joitakin tai kaikkia sen käynnistäviä "
+"tekijöitä, ja sen voi jättää väliin."
