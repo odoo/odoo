@@ -166,8 +166,9 @@ class SendSMS(models.TransientModel):
     @api.depends('composition_mode', 'res_model', 'res_id', 'template_id')
     def _compute_body(self):
         for record in self:
+            additional_context = record._get_additional_render_context()
             if record.template_id and record.composition_mode == 'comment' and record.res_id:
-                record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True)[record.res_id]
+                record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True, add_context=additional_context)[record.res_id]
             elif record.template_id:
                 record.body = record.template_id.body
 
@@ -289,11 +290,8 @@ class SendSMS(models.TransientModel):
         recipients_info = records._sms_get_recipients_info(force_field=self.number_field_name)
         return recipients_info
 
-    def _get_body_additional_context(self):
-        return dict()
-
     def _prepare_body_values(self, records):
-        additional_context = self._get_body_additional_context()
+        additional_context = self._get_additional_render_context()
         if self.template_id and self.body == self.template_id.body:
             all_bodies = self.template_id._render_field('body', records.ids, compute_lang=True, add_context=additional_context)
         else:
@@ -354,6 +352,13 @@ class SendSMS(models.TransientModel):
         }
 
     # ------------------------------------------------------------
+    # Render
+    # ------------------------------------------------------------
+
+    def _get_additional_render_context(self):
+        return dict()
+
+    # ------------------------------------------------------------
     # Tools
     # ------------------------------------------------------------
 
@@ -361,8 +366,9 @@ class SendSMS(models.TransientModel):
         result = {}
         if composition_mode == 'comment':
             if not body and template_id and res_id:
+                additional_context = self._get_additional_render_context()
                 template = self.env['sms.template'].browse(template_id)
-                result['body'] = template._render_template(template.body, res_model, [res_id])[res_id]
+                result['body'] = template._render_template(template.body, res_model, [res_id], add_context=additional_context)[res_id]
             elif template_id:
                 template = self.env['sms.template'].browse(template_id)
                 result['body'] = template.body
