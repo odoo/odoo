@@ -3335,12 +3335,12 @@ msgstr "時段郵件排程工具"
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "如果活動有多個時段，你必須選擇適用的時段。"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
 msgid "Slot-based communication"
-msgstr ""
+msgstr "按時段通訊"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -3354,7 +3354,7 @@ msgstr "時段"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
 msgid "Slots Count"
-msgstr ""
+msgstr "時段數目"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -3548,6 +3548,8 @@ msgid ""
 "The following slots cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
+"以下時段已連結至一項或多項報名註冊，因此無法刪除：\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -3556,7 +3558,7 @@ msgid ""
 "The following tickets cannot be deleted while they have one or more registrations linked to them:\n"
 "- %s"
 msgstr ""
-"當下列入場券有一個或多個報名資料連結時，不能刪除它們：\n"
+"以下門票已連結至一項或多項報名註冊，因此無法刪除：\n"
 "- %s"
 
 #. module: event
@@ -3573,7 +3575,7 @@ msgstr "結束日期不能早於開始日期。 請檢查門票 %(ticket_name)s"
 msgid ""
 "There are more registrations than this limit, the event will be sold out and"
 " the extra registrations will remain."
-msgstr ""
+msgstr "報名人數超過此上限，活動門票將會售罄，未能成功報名的申請將保留。"
 
 #. module: event
 #. odoo-python
@@ -3582,6 +3584,8 @@ msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"活動 %(event_name)s 沒有足夠名額：\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
@@ -3603,6 +3607,8 @@ msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"以下活動不可有編排在活動時間範圍以外的時段：\n"
+"%(event_names)s"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__ticket_instructions
@@ -3745,7 +3751,7 @@ msgstr "參加者總數"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
 msgid "Total Registration"
-msgstr ""
+msgstr "報名總人數"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3836,7 +3842,7 @@ msgstr "即將到來的 或 執行中的"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "更新報名人數上限？"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -3943,7 +3949,7 @@ msgstr "這張門票是否沒有座位。"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "此時段的名額是否已售完。"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form

@@ -71,6 +71,8 @@ msgid ""
 "<br/>\n"
 "                                In Belgium, electronic invoicing is <u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
+"<br/>\n"
+"                                比利時將<u>由 2026 年 1 月起強制使用</u>電子發票。建議你不要等待，立即註冊。"
 
 #. module: account_peppol
 #: model:mail.template,body_html:account_peppol.mail_template_peppol_registration
@@ -146,6 +148,7 @@ msgid ""
 "content (e.g. some part has not been acknowledged, or the digest associated "
 "does not match the signature digest, for NRR)."
 msgstr ""
+"收到由產生此錯誤的 MSH 較早前所發送訊息的收據，但內容與訊息內容不符。（例如：某些部份尚未確認收到，或相關聯的摘要不符合 NRR 的簽名摘要。）"
 
 #. module: account_peppol
 #. odoo-python
@@ -153,7 +156,7 @@ msgstr ""
 msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
-msgstr ""
+msgstr "未收到由產生此錯誤的 MSH 較早前所發送訊息的收據。"
 
 #. module: account_peppol
 #. odoo-python
@@ -161,7 +164,7 @@ msgstr ""
 msgid ""
 "A fragment is received but a previously received fragment message had the "
 "same values for GroupId and FragmentNum"
-msgstr ""
+msgstr "收到一個片段，但與較早前收到的片段訊息的 GroupId 及 FragmentNum 值相同"
 
 #. module: account_peppol
 #. odoo-python
@@ -169,7 +172,7 @@ msgstr ""
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for a compression element."
-msgstr ""
+msgstr "收到一個片段，但同一組片段內有多於一個片段訊息，同時為壓縮元素指定了值。"
 
 #. module: account_peppol
 #. odoo-python
@@ -177,14 +180,14 @@ msgstr ""
 msgid ""
 "A fragment is received but more than one fragment message in a group of "
 "fragments specifies a value for this element."
-msgstr ""
+msgstr "收到一個片段，但同一組片段內有多於一個片段訊息，同時為此元素指定了值。"
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid ""
 "A fragment is received that relates to a group that was previously rejected."
-msgstr ""
+msgstr "收到一個片段，它與先前被拒絕的組別相關。"
 
 #. module: account_peppol
 #. odoo-python
@@ -192,7 +195,7 @@ msgstr ""
 msgid ""
 "A message unit in a bundle was not processed because a related message unit "
 "in the bundle caused an error."
-msgstr ""
+msgstr "由於捆綁組合內有相關的訊息單元引致錯誤，因此組合中有訊息單元未處理。"
 
 #. module: account_peppol
 #. odoo-python
@@ -216,7 +219,7 @@ msgstr "接收 Peppol 文件必須使用採購日記賬。"
 msgid ""
 "A responding MSH indicates that it applies the alternate MEP binding to the "
 "response message."
-msgstr ""
+msgstr "回應的 MSH 指出，它會將替代的 MEP 綁定組合，套用至回應訊息。"
 
 #. module: account_peppol
 #. odoo-python
@@ -224,7 +227,7 @@ msgstr ""
 msgid ""
 "A value is set for FragmentCount, but a previously received fragment had a "
 "greature value."
-msgstr ""
+msgstr "FragmentCount 已有設定值，但較早前收到的片段的值更大。"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -305,7 +308,7 @@ msgid ""
 "Although the message document is well formed and schema valid, some "
 "element/attribute contains a value that could not be recognized and "
 "therefore could not be used by the MSH."
-msgstr ""
+msgstr "雖然訊息文件格式妥當、資料架構有效，但有部份元素/屬性包含 MSH 未能識別的值，因此 MSH 無法使用。"
 
 #. module: account_peppol
 #. odoo-python
@@ -314,7 +317,7 @@ msgid ""
 "Although the message document is well formed and schema valid, some "
 "element/attribute value cannot be processed as expected because the related "
 "feature is not supported by the MSH."
-msgstr ""
+msgstr "雖然訊息文件格式妥當、資料架構有效，但有部份元素/屬性的值未能按預期方式處理，因為 MSH 不支援相關功能。"
 
 #. module: account_peppol
 #. odoo-python
@@ -325,6 +328,8 @@ msgid ""
 "element/attribute, or with the processing mode of the MSH, or with the "
 "normative requirements of the ebMS specification."
 msgstr ""
+"雖然訊息文件格式妥當、資料架構有效，但有部份元素/屬性的值與其他元素/屬性的內容不一致，或未能與 MSH 處理模式配合，或未能符合 ebMS "
+"規格的規範要求。"
 
 #. module: account_peppol
 #. odoo-python
@@ -333,7 +338,7 @@ msgid ""
 "Although the message document is well formed and schema valid, the presence "
 "or absence of some element/ attribute is not consistent with the capability "
 "of the MSH, with respect to supported features."
-msgstr ""
+msgstr "雖然訊息文件格式妥當、資料架構有效，但就 MSH 支援的功能而言，部份元素/屬性的出現或缺漏，導致未能配合 MSH 的處理功能。"
 
 #. module: account_peppol
 #. odoo-python
@@ -342,7 +347,7 @@ msgid ""
 "Although the message was sent under Guaranteed delivery requirement, the "
 "Reliability module could not get assurance that the message was properly "
 "delivered, in spite of resending efforts."
-msgstr ""
+msgstr "雖然訊息是按照保證傳遞要求的規定去發送，但可靠性模組未能取得訊息已正確傳遞的確認，即使重新發送訊息也一樣。"
 
 #. module: account_peppol
 #. odoo-python
@@ -403,7 +408,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_peppol/exceptions.py:0
 msgid "An internal error occurred"
-msgstr ""
+msgstr "發生內部錯誤"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__available_peppol_edi_formats
@@ -889,7 +894,7 @@ msgstr "Peppol：更新參與者狀態"
 #. module: account_peppol
 #: model:ir.actions.server,name:account_peppol.ir_cron_peppol_webhook_keepalive_ir_actions_server
 msgid "PEPPOL: webhook keep alive"
-msgstr ""
+msgstr "PEPPOL：網絡鈎子保持生效"
 
 #. module: account_peppol
 #. odoo-python
@@ -1018,7 +1023,7 @@ msgstr "Peppol 警告"
 #. module: account_peppol
 #: model:mail.template,name:account_peppol.mail_template_peppol_registration
 msgid "Peppol: Registration update"
-msgstr ""
+msgstr "Peppol：註冊更新"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
