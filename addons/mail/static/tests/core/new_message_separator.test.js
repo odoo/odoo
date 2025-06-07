@@ -49,12 +49,12 @@ test("keep new message separator when message is deleted", async () => {
     await click("[title='Expand']", {
         parent: [".o-mail-Message", { text: "message 0" }],
     });
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 0" });
     await click("[title='Expand']", {
         parent: [".o-mail-Message", { text: "message 0" }],
     });
-    await click(".o-mail-Message-moreMenu [title='Delete']");
+    await click(".o-dropdown-item:contains('Delete')");
     await click("button", { text: "Delete" });
     await contains(".o-mail-Message", { text: "message 0", count: 0 });
     await contains(".o-mail-Thread-newMessage ~ .o-mail-Message", { text: "message 1" });
@@ -218,7 +218,7 @@ test("keep new message separator until current user sends a message", async () =
     await triggerHotkey("Enter");
     await contains(".o-mail-Message", { text: "hello" });
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-mail-Thread-newMessage:contains('New')");
     await insertText(".o-mail-Composer-input", "hey!");
     await press("Enter");
@@ -235,7 +235,7 @@ test("keep new message separator when switching between chat window and discuss 
     await insertText(".o-mail-Composer-input", "Very important message!");
     await triggerHotkey("Enter");
     await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message-moreMenu [title='Mark as Unread']");
+    await click(".o-dropdown-item:contains('Mark as Unread')");
     await contains(".o-mail-Thread-newMessage");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");

@@ -364,7 +364,7 @@ test("reply to message from inbox (message linked to document)", async () => {
     await contains(".o-mail-Message");
     await contains(".o-mail-Message-header small", { text: "on Refactoring" });
     await click("[title='Expand']");
-    await click("[title='Reply']");
+    await click(".o-dropdown-item:contains('Reply')");
     await contains(".o-mail-Message.o-selected");
     await contains(".o-mail-Composer");
     await contains(".o-mail-Composer-coreHeader", { text: "on: Refactoring" });
@@ -721,21 +721,20 @@ test("Unfollow message", async function () {
     await contains(".o-mail-Message:eq(0)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
-    await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("[title='Unfollow']", { count: 1 });
+    await contains(".o-mail-Message-moreMenu");
+    await contains(".o-dropdown-item:contains('Unfollow')");
     await click(".o-mail-Message:eq(1) [title='Expand']");
     await contains(".o-mail-Message:eq(1)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],
     });
-    await contains(".o-mail-Message-moreMenu", { count: 1 });
-    await contains("[title='Unfollow']", { count: 1 });
+    await contains(".o-dropdown-item:contains('Unfollow')");
     await contains(".o-mail-Message:eq(2) [title='Expand']", { count: 0 });
     await contains(".o-mail-Message:eq(2)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread not followed" }]],
     });
     await contains(".o-mail-Message:eq(2) [title='Unfollow']", { count: 0 });
     await click(".o-mail-Message:eq(0) [title='Expand']");
-    await click("[title='Unfollow']");
+    await click(".o-dropdown-item:contains('Unfollow')");
     await contains(".o-mail-Message", { count: 2 }); // Unfollowing message 0 marks it as read -> Message removed
     await contains(".o-mail-Message:eq(0)", {
         contains: [[".o-mail-Message-header small", { text: "on Thread followed" }]],

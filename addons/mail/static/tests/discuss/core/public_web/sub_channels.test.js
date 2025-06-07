@@ -69,15 +69,15 @@ test("create sub thread from existing message", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message-actions [title='Expand']");
-    await click("[title='Create Thread']");
+    await click(".o-dropdown-item:contains('Create Thread')");
     await contains(".o-mail-Discuss-threadName", { value: "Selling a training session and" });
     await contains(".o-mail-Message", {
         text: "Selling a training session and selling the products after the training session is more efficient.",
     });
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await click(".o-mail-Message-actions [title='Expand']");
-    await contains("[title='Create Thread']", { count: 0 });
-    await click("[title='View Thread']");
+    await contains(".o-dropdown-item:contains('Create Thread')", { count: 0 });
+    await click(".o-dropdown-item:contains('View Thread')");
     await contains(".o-mail-Discuss-threadName", { value: "Selling a training session and" });
 });
 
@@ -94,7 +94,7 @@ test("create sub thread from existing message (slow network)", async () => {
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message-actions [title='Expand']");
-    await click("[title='Create Thread']");
+    await click(".o-dropdown-item:contains('Create Thread')");
     await animationFrame();
     createSubChannelDef.resolve();
     await contains(".o-mail-Discuss-threadName", { value: "Selling a training session and" });
