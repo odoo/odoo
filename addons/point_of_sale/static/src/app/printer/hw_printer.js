@@ -17,6 +17,7 @@ export class HWPrinter extends BasePrinter {
     }
 
     sendAction(data) {
+        //console.log('data',data);
         return rpc(`${this.url}/hw_proxy/default_printer_action`, { data });
     }
 
@@ -31,6 +32,7 @@ export class HWPrinter extends BasePrinter {
      * @override
      */
     sendPrintingJob(img) {
+        console.log('img',img);
         return this.sendAction({ action: "print_receipt", receipt: img });
     }
 }

@@ -241,6 +241,7 @@ export class PosOrder extends Base {
     }
 
     export_for_printing(baseUrl, headerData) {
+    console.log("export_for_printing", baseUrl, headerData);
         const paymentlines = this.payment_ids
             .filter((p) => !p.is_change)
             .map((p) => p.export_for_printing());
@@ -322,6 +323,7 @@ export class PosOrder extends Base {
      * without impacting the other tools.
      */
     updateLastOrderChange() {
+        console.log("updateLastOrderChange");
         const orderlineIdx = [];
         this.lines.forEach((line) => {
             if (!line.skip_change) {
@@ -546,6 +548,7 @@ export class PosOrder extends Base {
      * @returns {boolean} true if the line was removed, false otherwise
      */
     removeOrderline(line) {
+        console.log("removeOrderline", line);
         const linesToRemove = line.getAllLinesInCombo();
         for (const lineToRemove of linesToRemove) {
             if (lineToRemove.refunded_orderline_id?.uuid in this.uiState.lineToRefund) {

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+        <t t-name="custom_sale_details_report" t-inherit="point_of_sale.ReceiptHeader" t-inherit-mode="extension">
+
+        <xpath expr="//div[hasclass('pos-receipt-contact')]" position="replace">
+            <div class="pos-receipt-contact">
+                <!-- contact address -->
+                <div t-if="props.data.company.name" t-esc="props.data.company.name" />
+                <t t-if="props.data.company.phone">
+                    <div>Tel:<t t-esc="props.data.company.phone" /></div>
+                </t>
+                <t t-if="props.data.company.vat">
+                    <div t-esc="vatText"/>
+                </t>
+                <div t-if="props.data.company.email" t-esc="props.data.company.email" />
+                <div t-if="props.data.company.website" t-esc="props.data.company.website" />
+                <div t-if="props.data.header" style="white-space:pre-line" t-esc="props.data.header" />
+                <div t-if="props.data.cashier" class="cashier">
+                    <div>--------------------------------</div>
+                    <div t-esc="props.data.cashier" />
+                </div>
+                <div t-if="props.data.ticket_number ">
+                    <span class="tracking-number fs-1" t-esc="props.data.ticket_number" />
+                </div>
+            </div>
+
+        </xpath>
+    </t>
+</templates>

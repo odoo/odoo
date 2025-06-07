@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="remove_refund_priceList_cancel.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+        <xpath expr="//button[@class='o_pricelist_button btn btn-secondary btn-lg py-5']" position="replace">
+            <button class="o_pricelist_button btn btn-secondary btn-lg py-5" t-on-click="() => this.clickPricelist()" t-att-disabled="pos.get_cashier()?._role !== 'manager'">
+                    <i class="fa fa-th-list me-2" role="img" aria-label="Price list" title="Price list" />
+                    <t t-if="currentOrder?.pricelist_id" t-esc="currentOrder.pricelist_id.display_name" />
+                    <t t-else="">Pricelist</t>
+            </button>
+        </xpath>
+        <xpath expr="//button[@t-on-click='() => this.clickRefund()']" position="replace">
+           <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.clickRefund()" t-att-disabled="pos.get_cashier()?._role !== 'manager'">
+                    <i class="fa fa-undo me-1" role="img" aria-label="Refund" title="Refund" />
+                    Refund
+                </button>
+        </xpath>
+        <xpath expr="//button[@t-on-click='() => this.pos.onDeleteOrder(this.pos.get_order())']" position="replace">
+            <button class="btn btn-secondary btn-lg py-5" t-on-click="() => this.pos.onDeleteOrder(this.pos.get_order())" t-att-disabled="pos.get_cashier()?._role !== 'manager'">
+                    <i class="fa fa-trash me-1" role="img" /> Cancel Order
+                </button>
+        </xpath>
+    </t>
+</templates>

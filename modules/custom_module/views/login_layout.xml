@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="custom_web_layout" inherit_id="web.layout" name="Custom Web Layout">
+        <xpath expr="//title" position="replace">
+            <title>Menupro Restaurant</title>
+        </xpath>
+
+        <xpath expr="//link[@rel='shortcut icon']" position="replace">
+            <link type="image/x-icon" rel="shortcut icon" href="/custom_module/static/src/img/favicon.ico"/>
+        </xpath>
+    </template>
+</odoo>

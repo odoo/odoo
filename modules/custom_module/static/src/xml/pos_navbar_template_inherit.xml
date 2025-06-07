@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    
+    <t t-name="point_of_sale.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        
+        <xpath expr="//DropdownItem[contains(@onSelected, 'TicketScreen')]" position="replace">
+            <DropdownItem t-if="showOrdersButton" onSelected="() => this.pos.showScreen('TicketScreen')">
+                Orders <span t-if="orderCount gt 0" class="badge text-bg-info rounded-pill py-1 ms-2 float-end" t-esc="orderCount"/>
+            </DropdownItem>
+        </xpath>
+
+        <xpath expr="//DropdownItem[contains(@onSelected, 'cashMove')]" position="replace">
+            <DropdownItem t-if="showCashMoveButton and showCashInOutButton" onSelected="() => this.pos.cashMove()">
+                Cash In/Out
+            </DropdownItem>
+        </xpath>
+        
+    </t>
+
+</templates>

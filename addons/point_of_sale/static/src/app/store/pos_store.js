@@ -1568,6 +1568,7 @@ export class PosStore extends Reactive {
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, cancelled = false) {
+        console.log("sendOrderInPreparation", order);
         if (this.printers_category_ids_set.size) {
             try {
                 const orderChange = changesToOrder(
@@ -1585,6 +1586,7 @@ export class PosStore extends Reactive {
         order.updateLastOrderChange();
     }
     async sendOrderInPreparationUpdateLastChange(o, cancelled = false) {
+        console.log("sendOrderInPreparationUpdateLastChange", o);
         // Always display a "ConnectionLostError" when the user tries to send an order to the kitchen while offline
         if (this.data.network.offline) {
             this.data.network.warningTriggered = false;
@@ -1696,6 +1698,7 @@ export class PosStore extends Reactive {
     }
 
     preparePrintingData(order, changes) {
+        console.log("preparePrintingData");
         const order_modifications = {};
         const pdisChangedLines = order.last_order_preparation_change.lines;
 
@@ -2097,6 +2100,7 @@ export class PosStore extends Reactive {
     }
 
     getReceiptHeaderData(order) {
+        console.log("order",order);
         return {
             company: this.company,
             cashier: _t("Served by %s", order?.getCashierName() || this.get_cashier()?.name),

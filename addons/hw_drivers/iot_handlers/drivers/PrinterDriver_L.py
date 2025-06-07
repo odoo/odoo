@@ -412,7 +412,8 @@ class PrinterController(http.Controller):
         if printer:
             iot_devices[printer].action(data)
             return True
-        return False
+        False
+        return
 
 
 proxy_drivers['printer'] = PrinterDriver

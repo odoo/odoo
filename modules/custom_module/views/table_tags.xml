@@ -1,0 +1,16 @@
+ <odoo>
+    <record id="view_table_tags_form" model="ir.ui.view">
+        <field name="name">table.tags.form</field>
+        <field name="model">table.tags</field>
+        <field name="arch" type="xml">
+            <form string="Table Tags">
+                <group>
+                    <!-- FIXME: If we have another available languages -->
+                    <field name="name" context="{'lang': 'fr_FR'}"/>
+                    <field name="menupro_id" invisible="1"/>
+                    <field name="status" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>
