@@ -121,22 +121,19 @@ export class CollaborationPlugin extends Plugin {
      */
     onExternalHistorySteps(newSteps) {
         let stepIndex = 0;
-        let selectionData;
-        this.dependencies.history.ignoreDOMMutations(() => {
-            selectionData = this.dependencies.selection.getSelectionData();
+        const selectionData = this.dependencies.selection.getSelectionData();
 
-            const steps = this.dependencies.history.getHistorySteps();
-            for (const newStep of newSteps) {
-                // todo: add a test that no 2 history_missing_parent_step_handlers
-                // are called in same stack.
-                const insertIndex = this.getInsertStepIndex(steps, newStep);
-                if (typeof insertIndex === "undefined") {
-                    continue;
-                }
-                this.dependencies.history.addExternalStep(newStep, insertIndex);
-                stepIndex++;
+        const steps = this.dependencies.history.getHistorySteps();
+        for (const newStep of newSteps) {
+            // todo: add a test that no 2 history_missing_parent_step_handlers
+            // are called in same stack.
+            const insertIndex = this.getInsertStepIndex(steps, newStep);
+            if (typeof insertIndex === "undefined") {
+                continue;
             }
-        });
+            this.dependencies.history.addExternalStep(newStep, insertIndex);
+            stepIndex++;
+        }
         if (selectionData.documentSelectionIsInEditable) {
             this.dependencies.selection.rectifySelection(selectionData.editableSelection);
         }
