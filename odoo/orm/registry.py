@@ -238,6 +238,11 @@ class Registry(Mapping[str, type["BaseModel"]]):
         # field inverses
         self.many2many_relations: defaultdict[tuple[str, str, str], OrderedSet[tuple[str, str]]] = defaultdict(OrderedSet)
 
+        # field setup dependents: this enables to invalidate the setup of
+        # related fields when some of their dependencies are invalidated
+        # (for incremental model setup)
+        self.field_setup_dependents: Collector[Field, Field] = Collector()
+
         # company dependent
         self.many2one_company_dependents: Collector[str, Field] = Collector()  # {model_name: (field1, field2, ...)}
 
@@ -394,6 +399,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
         if model_names is None:
             self.many2many_relations.clear()
+            self.field_setup_dependents.clear()
 
             # mark all models for setup
             for model_cls in self.models.values():
@@ -403,6 +409,29 @@ class Registry(Mapping[str, type["BaseModel"]]):
             # only mark impacted models for setup
             for model_name in self.descendants(model_names, '_inherit', '_inherits'):
                 self[model_name]._setup_done__ = False
+
+            # recursively mark fields to re-setup
+            todo = [
+                field
+                for model_cls in self.models.values()
+                if not model_cls._setup_done__
+                for field in model_cls._fields.values()
+            ]
+            for field in todo:
+                if field._setup_done and field._base_fields__:
+                    # the field has been created by model_classes._setup() as
+                    # Field(_base_fields__=...); restore it to force its setup
+                    base_fields = field._base_fields__
+                    model_cls = self[field.model_name]
+                    name = field.name
+
+                    field.__dict__.clear()
+                    field.__init__(_base_fields__=base_fields)
+                    field._toplevel = True
+                    field.__set_name__(model_cls, name)
+                    field._setup_done = False
+
+                todo.extend(self.field_setup_dependents.pop(field, ()))
 
         self.many2one_company_dependents.clear()
 
