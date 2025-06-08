@@ -35,10 +35,7 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
             'group_ids': [Command.link(cls.group_user.id)],
         })
 
-        cls.provider = cls.env['payment.provider'].search(
-            [('company_id', '=', cls.company_b.id), ('name', '=', 'Dummy Provider')],
-            limit=1,
-        )
+        cls.provider = cls.dummy_provider.copy({'company_id': cls.company_b.id})
         cls.provider.state = 'test'
 
     def test_pay_logged_in_another_company(self):

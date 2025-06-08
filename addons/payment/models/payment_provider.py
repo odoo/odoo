@@ -683,8 +683,19 @@ class PaymentProvider(models.Model):
         return self.redirect_form_view_id
 
     @api.model
-    def _setup_provider(self, provider_code):
-        """ Perform module-specific setup steps for the provider.
+    def _get_provider_domain(self, provider_code, **kwargs):
+        """ Return the payment provider domain.
+
+        :param str provider_code: The code of the provider to search for.
+        :param dict kwargs: Additional keyword arguments.
+        :return: The domain to search for the provider.
+        :rtype: list[tuple]
+        """
+        return [('code', '=', provider_code)]
+
+    @api.model
+    def _setup_provider(self, provider_code, **kwargs):
+        """ Perform module-specific and multi-company setup steps for the provider.
 
         This method is called after the module of a provider is installed, with its code passed as
         `provider_code`.
@@ -692,11 +703,11 @@ class PaymentProvider(models.Model):
         :param str provider_code: The code of the provider to setup.
         :return: None
         """
-        return
-
-    @api.model
-    def _get_removal_domain(self, provider_code, **kwargs):
-        return [('code', '=', provider_code)]
+        main_provider = self.search(self._get_provider_domain(provider_code, **kwargs), limit=1)
+        for company in self.env['res.company'].search([]):
+            if company != main_provider.company_id and not company.parent_id:
+                # Create a copy of the provider for each company.
+                main_provider.copy({'company_id': company.id})
 
     @api.model
     def _remove_provider(self, provider_code, **kwargs):
@@ -705,7 +716,7 @@ class PaymentProvider(models.Model):
         :param str provider_code: The code of the provider whose data to remove.
         :return: None
         """
-        providers = self.search(self._get_removal_domain(provider_code, **kwargs))
+        providers = self.search(self._get_provider_domain(provider_code, **kwargs))
         providers.write(self._get_removal_values())
 
     def _get_removal_values(self):
