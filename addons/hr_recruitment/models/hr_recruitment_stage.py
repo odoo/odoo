@@ -24,6 +24,8 @@ class HrRecruitmentStage(models.Model):
         help="This stage is folded in the kanban view when there are no records in that stage to display.")
     hired_stage = fields.Boolean('Hired Stage',
         help="If checked, this stage is used to determine the hire date of an applicant")
+    rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Day count before applicants in this stage become stale. \
+        Set to 0 to disable.  Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda self: _('Blocked'), translate=True, required=True)
     legend_waiting = fields.Char(
