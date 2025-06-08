@@ -33,6 +33,7 @@ class HrApplicant(models.Model):
                'mail.activity.mixin',
                'utm.mixin',
                'mail.tracking.duration.mixin',
+               'mail.rotting.resource.mixin'
     ]
     _rec_name = "partner_name"
     _mailing_enabled = True
@@ -483,6 +484,15 @@ class HrApplicant(models.Model):
                 applicant.delay_close = applicant.day_close - applicant.day_open
             else:
                 applicant.delay_close = False
+
+    @api.depends('kanban_state', 'application_status', 'date_closed')
+    def _compute_rotting(self):
+        super()._compute_rotting()
+
+    def _resource_is_not_rotting_hook(self, applicant):
+        if applicant.application_status != 'ongoing' or applicant.kanban_state == 'blocked' or applicant.date_closed:
+            return True
+        return super()._resource_is_not_rotting_hook(applicant)
 
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')
