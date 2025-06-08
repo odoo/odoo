@@ -19,9 +19,9 @@ class ResCompany(models.Model):
     def create(self, vals_list):
         companies = super().create(vals_list)
 
-        # Duplicate providers in the new companies.
+        # Duplicate installed providers in the new companies.
         providers_sudo = self.env['payment.provider'].sudo().search(
-            [('company_id', '=', self.env.user.company_id.id)]
+            [('company_id', '=', self.env.user.company_id.id), ('module_state', '=', 'installed')]
         )
         for company in companies:
             if company.parent_id:  # The company is a branch.
