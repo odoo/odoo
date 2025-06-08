@@ -34,10 +34,12 @@
                 <field name="email_from" readonly="1" optional="hide"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="job_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
-                <field name="stage_id" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
+                <field name="stage_id" widget="badge_rotting" optional="show" column_invisible="context.get('default_talent_pool_ids')"/>
                 <field name="priority" widget="priority" nolabel="1" optional="show"/>
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="is_rotting" column_invisible="True"/>
+                <field name="rotting_days" column_invisible="True"/>
                 <field name="type_id" column_invisible="True"/>
                 <field name="application_status" optional="hide" invisible="application_status == 'ongoing'"/>
                 <field name="refuse_reason_id" optional='hide'/>
@@ -84,12 +86,14 @@
             <field name="email_normalized" invisible="1"/>
             <field name="partner_phone_sanitized" invisible="1"/>
             <field name="emp_is_active" invisible="1"/>
+            <field name="is_rotting" invisible="1"/>
+            <field name="rotting_days" invisible="1"/>
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr.group_hr_user"
                         class="o_create_employee" invisible="employee_id or not active or not date_closed"/>
                 <button string="Refuse" name="archive_applicant" type="object" invisible="not active or is_pool_applicant" data-hotkey="d"/>
                 <button string="Restore" name="action_unarchive" type="object" invisible="active" data-hotkey="x"/>
-                <field name="stage_id" widget="statusbar_duration" options="{'clickable': '1'}" invisible="(not active and not employee_id) or is_pool_applicant"/>
+                <field name="stage_id" widget="rotting_statusbar_duration" options="{'clickable': '1'}" invisible="(not active and not employee_id) or is_pool_applicant"/>
                 <button string="Create Applications" name="action_job_add_applicants" type="object" invisible="not is_pool_applicant"/>
                 <button string="Add to Pool" name="action_talent_pool_add_applicants" type="object" invisible="is_pool_applicant or is_applicant_in_pool"/>
             </header>
@@ -279,6 +283,7 @@
                 <filter string="Ready for Next Stage" name="done" domain="[('kanban_state', '=', 'done')]"/>
                 <filter string="Waiting" name="waiting" domain="[('kanban_state', '=', 'waiting')]"/>
                 <filter string="Blocked" name="blocked" domain="[('kanban_state', '=', 'blocked')]"/>
+                <filter string="Rotting" name="filter_rotting" domain="[('is_rotting', '=', True)]"/>
                 <separator/>
                 <filter string="Directly Available" name="applicant_availability" domain="['|',('availability', '&lt;=', 'today'),('availability','=', False)]"/>
                 <separator/>
@@ -363,7 +368,8 @@
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1">
+            <kanban  highlight_color="color" default_group_by="stage_id" class="o_kanban_applicant o_search_matching_applicant" quick_create_view="hr_recruitment.quick_create_applicant_form" sample="1" 
+                js_class="rotting_kanban">
                 <header>
                     <button
                         name="action_talent_pool_add_applicants"
@@ -408,6 +414,8 @@
                         <footer>
                             <field name="priority" widget="priority"/>
                             <field class="ms-1 align-items-center" name="activity_ids" widget="kanban_activity"/>
+                            <field name="is_rotting" invisible="1"/>
+                            <field name="rotting_days" class="d-flex" widget="rotting"/>
                             <div class="d-flex ms-auto align-items-center">
                                 <a name="action_open_attachments" type="object">
                                     <i class='fa fa-paperclip' role="img" aria-label="Documents"/>

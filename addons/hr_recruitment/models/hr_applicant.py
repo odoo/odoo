@@ -490,6 +490,15 @@ class HrApplicant(models.Model):
             else:
                 applicant.delay_close = False
 
+    def _get_rotting_depends_fields(self):
+        return super()._get_rotting_depends_fields() + ['application_status', 'date_closed']
+
+    def _get_rotting_domain(self):
+        return super()._get_rotting_domain() & Domain([
+            ('application_status', '=', 'ongoing'),
+            ('date_closed', '=', False),
+        ])
+
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')
     def _compute_meeting_display(self):
@@ -669,6 +678,9 @@ class HrApplicant(models.Model):
                         applicant.job_id.no_of_recruitment -= 1
                 elif not new_stage.hired_stage and applicant.stage_id.hired_stage:
                     applicant.job_id.no_of_recruitment += 1
+        # kanban_state: also set date_last_stage_update
+        if 'kanban_state' in vals:
+            vals['date_last_stage_update'] = fields.Datetime.now()
         res = super().write(vals)
 
         for applicant in self:
