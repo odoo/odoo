@@ -45,7 +45,7 @@ msgstr " עלות המוצר התעדכנה מ %(previous)s ל %(new_cost)s."
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr "[נרשם בתאריך %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -414,7 +414,7 @@ msgstr "שורת חשבונית"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__price_diff_value
 msgid "Invoice value correction with invoice currency"
-msgstr ""
+msgstr "תיקון ערך חשבונית במטבע החשבונית"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_journal_id
@@ -739,6 +739,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"שדה טכני להצגה נכונה של המטבע של החברה הנבחרת כרגע, התואם לערך המצטבר של "
+"שכבות הערכת המוצר."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -814,6 +816,8 @@ msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
+" ערך של שכבת הערכת מלאי לא יכול להיות שלילי.\n"
+"ניתן להשתמש בהעמסת עלויות כדי לתקן העברה ספציפית."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -822,6 +826,8 @@ msgid ""
 "There are no valuation layers. Valuation layers are created when there are "
 "product moves that impact the valuation of the stock."
 msgstr ""
+"אין שכבות הערכה שווי. שכבות הערכת שווי נוצרות כאשר יש תנועות מוצר שמשפיעות "
+"על הערכת המלאי."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
@@ -978,6 +984,9 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
+"בעת ביצוע הערכת מלאי אוטומטית, פריטי היומן נגדיים עבור כל תנועות המלאי היוצאות יירשמו בחשבון זה,\n"
+"         אלא אם כן מוגדר חשבון הערכה ספציפי במיקום היעד. זהו הערך הברירת מחדל עבור כל המוצרים בקטגוריה זו.\n"
+"ניתן גם להגדיר זאת ישירות עבור כל מוצר ומוצר."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -985,11 +994,13 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"בעת ביצוע הערכת מלאי אוטומטית, זה היומן החשבונאי שבו יירשמו הרשומות באופן "
+"אוטומטי כאשר תנועות מלאי מעובדות."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
 msgid "Wizard model to reavaluate a stock inventory for a product"
-msgstr ""
+msgstr "מודל אשף להערכת מלאי מחדש עבור מוצר."
 
 #. module: stock_account
 #. odoo-python
@@ -1014,6 +1025,8 @@ msgid ""
 "to the creation of a journal entry, for which you don't have the access "
 "rights."
 msgstr ""
+"אינך יכול לעדכן את עלות המוצר בהערכת מלאי אוטומטית מכיוון שזה יוביל ליצירת "
+"פקודת יומן, שאליה אין לך הרשאות גישה."
 
 #. module: stock_account
 #. odoo-python
@@ -1023,6 +1036,8 @@ msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
 msgstr ""
+"אין לך חשבון הערכת כניסה מוגדר בקטגוריית המוצרים שלך. עליך להגדיר אחד לפני "
+"ביצוע פעולה זו."
 
 #. module: stock_account
 #. odoo-python
@@ -1072,7 +1087,7 @@ msgstr ""
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."
-msgstr ""
+msgstr "עליך להגדיר חשבון נגדי בקטגוריית המוצרים שלך."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

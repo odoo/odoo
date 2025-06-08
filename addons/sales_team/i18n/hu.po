@@ -322,6 +322,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Ha igaz, akkor a felhasználók több értékesítési csapat tagjai is lehetnek. "
+"Egyéb esetben a tagság csak egy értékesítési csapatra korlátozódik."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -350,6 +352,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Ha az aktív mező hamisra van állítva, akkor el lehet rejteni az értékesítési"
+" csapatot annak eltávolítása nélkül."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -405,6 +409,8 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Felhasználó fő értékesítési csapata. Felhasználásra kerül például a folyamat"
+" megjelenítésében, számlázás során és előfizetések kezelésekor."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -657,6 +663,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Ezek jelenítik meg az elvégzendő dolgok különféle kategóriáit (pl: \"Hívás\""
+" vagy \"Találkozó előkészítése\")."
 
 #. module: sales_team
 #. odoo-python
@@ -677,12 +685,16 @@ msgstr "Képzés"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: duplikálódás elkerülése céljából a kiválasztott csapatba nem lehet "
+"felhasználót adni"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
 msgstr ""
+"UX: korlátozás csapat vállalatára vagy az összesre, ha nincs vállalat "
+"kiválasztva"
 
 #. module: sales_team
 #. odoo-python
@@ -690,13 +702,15 @@ msgstr ""
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Undefined graph model for Sales Team: %s"
-msgstr ""
+msgstr "Nem definiált grafikon modell értékesítési csapathoz: %s"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Használjon értékesítési csapatokat az értékesítés megszervezéséhez és "
+"kimutatások elkészítéséhez."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -705,6 +719,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Használjon értékesítési csapatokat az értékesítés megszervezeéséhez.\n"
+"                Minden csapat saját folyamatban dolgozhat."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -712,6 +728,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Használjon címkéket a lehetőségek kezeléséhez és nyomonkövetéséhez (termék "
+"struktúra, értékesítés típus, ...)"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
