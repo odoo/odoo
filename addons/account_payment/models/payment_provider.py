@@ -103,9 +103,9 @@ class PaymentProvider(models.Model):
     #=== BUSINESS METHODS ===#
 
     @api.model
-    def _setup_provider(self, code):
+    def _setup_provider(self, code, **kwargs):
         """ Override of `payment` to create the payment method of the provider. """
-        super()._setup_provider(code)
+        super()._setup_provider(code, **kwargs)
         self._setup_payment_method(code)
 
     @api.model
