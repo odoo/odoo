@@ -482,6 +482,15 @@ class HrApplicant(models.Model):
             else:
                 applicant.delay_close = False
 
+    def _get_rotting_depends_fields(self):
+        return super()._get_rotting_depends_fields() + ['application_status', 'date_closed']
+
+    def _get_rotting_domain(self):
+        return super()._get_rotting_domain() + [
+            ('application_status', '=', 'ongoing'),
+            ('date_closed', '=', False),
+        ]
+
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')
     def _compute_meeting_display(self):
