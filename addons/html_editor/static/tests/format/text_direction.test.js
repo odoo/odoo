@@ -4,6 +4,7 @@ import { insertText, switchDirection } from "../_helpers/user_actions";
 import { animationFrame } from "@odoo/hoot-mock";
 import { press, queryAllTexts } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 test("should switch direction on a collapsed range", async () => {
     await testEditor({
@@ -116,13 +117,13 @@ test("should switch the direction from the powerbox", async () => {
     await insertText(editor, "/Switchdirection");
     await animationFrame();
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
     await press("Enter");
     expect(getContent(el)).toBe(`<p dir="rtl">a[]</p>`);
     await insertText(editor, "/Switchdirection");
     await animationFrame();
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Switch direction"]);
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
     await press("Enter");
     expect(getContent(el)).toBe(`<p>a[]</p>`);
 });

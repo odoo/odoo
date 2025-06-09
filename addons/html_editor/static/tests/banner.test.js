@@ -29,13 +29,12 @@ test("should insert a banner with focus inside followed by a paragraph", async (
 
     await insertText(editor, "/");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
 
     await insertText(editor, "banner");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0, {
-        message: "shouldn't be possible to add a banner inside a banner",
-    });
+    await expectElementCount(".o-we-powerbox", 0);
+
 });
 
 test("press 'ctrl+a' inside a banner should select all the banner content", async () => {

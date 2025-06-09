@@ -1,5 +1,6 @@
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { HtmlMailField } from "@mail/views/web/fields/html_mail_field/html_mail_field";
 import { after, before, beforeEach, expect, test } from "@odoo/hoot";
 import { press, queryOne } from "@odoo/hoot-dom";
@@ -109,11 +110,11 @@ test("HtmlMail don't have access to column commands", async function () {
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
 
     await insertText(htmlEditor, "column");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
 });
 
 test("HtmlMail add icon and save inline html", async function () {
