@@ -210,7 +210,11 @@ class StockLocation(models.Model):
                 having=[('quantity:sum', '>', 0)]
             )
         ]
-        return [('id', 'not in', location_ids)]
+        view_location_ids_to_excluded = self.env['stock.location'].search([
+            ('usage', '=', 'view'),
+            ('warehouse_id', '=', False)
+        ]).ids
+        return [('id', 'not in', location_ids + view_location_ids_to_excluded)]
 
     def write(self, values):
         if 'company_id' in values:
