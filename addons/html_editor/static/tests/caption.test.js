@@ -308,7 +308,7 @@ test("can't use the powerbox in a caption", async () => {
             expect(editor.document.activeElement).toBe(input);
             await press("/");
             await animationFrame();
-            expect(".o-we-powerbox").toHaveCount(0);
+            await expectElementCount(".o-we-powerbox", 0);
             const heading = queryOne("h1");
             await click(heading);
             await animationFrame(); // Wait for the selection to change.
