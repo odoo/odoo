@@ -4,13 +4,14 @@ import re
 from pytz import UTC
 from collections import defaultdict
 from datetime import timedelta, datetime, time
+from lxml import html
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.fields import Command, Date, Domain
 from odoo.addons.rating.models import rating_data
 from odoo.addons.html_editor.tools import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_list, SQL, LazyTranslate
+from odoo.tools import format_list, SQL, LazyTranslate, html_sanitize
 from odoo.addons.resource.models.utils import filter_domain_leaf
 from odoo.addons.project.controllers.project_sharing_chatter import ProjectSharingChatter
 from odoo.addons.mail.tools.discuss import Store
@@ -1748,8 +1749,24 @@ class ProjectTask(models.Model):
            and message.subtype_id == self._creation_subtype()
            and self.partner_id == message.author_id
            and msg_vals['message_type'] == 'email'
+           and msg_vals.get('body')
         ):
-            self.description = message.body
+            # Remove the signature from the email body
+            source_html = msg_vals.get('body')
+            doc = html.fromstring(source_html)
+
+            signature_xpath = (
+                '//*[@id="Signature"] | '
+                '//*[@data-smartmail="gmail_signature"] | '
+                '//span[normalize-space(.) = "--"]'
+            )
+
+            for element in doc.xpath(signature_xpath):
+                element.getparent().remove(element)
+
+            cleaned_html = html.tostring(doc, encoding='unicode').strip()
+            self.description = html_sanitize(cleaned_html)
+
         return super()._message_post_after_hook(message, msg_vals)
 
     def _get_projects_to_make_billable_domain(self, additional_domain=None):

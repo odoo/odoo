@@ -13,6 +13,9 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        # set high threshold to be sure to not hit mail limit during tests for a model
+        cls.env['ir.config_parameter'].sudo().set_param('mail.gateway.loop.threshold', 50)
+
         # be sure to test emails
         cls.user_employee.notification_type = 'email'
         cls.user_projectuser.notification_type = 'email'
@@ -594,3 +597,65 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
         self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
         # internal users in cc of mail shoudl be added in email_cc field
         self.assertEqual(task.email_cc, new_user.email, "The internal user in CC is not added into email_cc field")
+
+    def test_task_creation_removes_email_signatures(self):
+        """
+        Tests that email signature is correctly removed from a task
+        description when a task is created from an email alias.
+        """
+
+        gmail_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+To: {self.project_followers_alias.alias_full_name}
+Subject: Test Gmail Signature Removal
+Content-Type: text/html;
+
+<p>This is the main email content that should be kept.</p>
+<p>Some more important content here.</p>
+<span>--</span>
+<div data-smartmail="gmail_signature">
+<p>John Doe</p>
+<p>Software Engineer</p>
+</div>
+"""
+
+        outlook_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+To: {self.project_followers_alias.alias_full_name}
+Subject: Test Outlook Signature Removal
+Content-Type: text/html;
+
+<p>This is the main email content that should be kept.</p>
+<p>Some more important content here.</p>
+<div id="Signature">
+<p>John Smith</p>
+<p>Software Developer</p>
+</div>
+"""
+
+        with self.mock_mail_gateway():
+            gmail_task_id = self.env['mail.thread'].message_process(
+                model='project.task',
+                message=gmail_email_source,
+                custom_values={'project_id': self.project_followers.id}
+            )
+            outlook_task_id = self.env['mail.thread'].message_process(
+                model='project.task',
+                message=outlook_email_source,
+                custom_values={'project_id': self.project_followers.id}
+            )
+
+        # Verify Gmail signature removal
+        self.assertTrue(gmail_task_id, "Gmail task creation should return a valid ID.")
+        gmail_task = self.env['project.task'].browse(gmail_task_id)
+
+        self.assertIn("This is the main email content that should be kept", gmail_task.description)
+        self.assertNotIn("--", gmail_task.description, "The Gmail signature separator should have been removed.")
+        self.assertNotIn("John Doe", gmail_task.description, "The Gmail signature should have been removed.")
+        self.assertNotIn("Software Engineer", gmail_task.description, "The Gmail signature should have been removed.")
+
+        # Verify Outlook signature removal
+        self.assertTrue(outlook_task_id, "Outlook task creation should return a valid ID.")
+        outlook_task = self.env['project.task'].browse(outlook_task_id)
+
+        self.assertIn("This is the main email content that should be kept", outlook_task.description)
+        self.assertNotIn("John Smith", outlook_task.description, "The Outlook signature should have been removed.")
+        self.assertNotIn("Software Developer", outlook_task.description, "The Outlook signature should have been removed.")
