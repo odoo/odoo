@@ -3,10 +3,12 @@
 import json
 import logging
 
+from datetime import timedelta
+
 from odoo import api, fields, models, _
 from odoo.fields import Command
 from odoo.exceptions import UserError
-from odoo.tools import float_compare
+
 
 _logger = logging.getLogger(__name__)
 
@@ -249,6 +251,18 @@ class SaleOrder(models.Model):
                 filtered_documents[(parent, responsible)] = rendering_context
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
         return super()._action_cancel()
+
+    def _is_portal_return_allowed(self):
+        """Return whether we should allow return on sale order portal or not."""
+        self.ensure_one()
+        return (
+            self.company_id.allow_spontaneous_returns
+            and self.state == "sale"
+            and self.effective_date
+            and self.effective_date >= (
+                fields.Datetime.now() - timedelta(days=self.company_id.return_validity_days)
+            )
+        )
 
     def _get_action_view_picking(self, pickings):
         '''

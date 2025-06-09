@@ -25,7 +25,8 @@ Preferences
         'views/sale_order_views.xml',
         'views/sale_order_line_views.xml',
         'views/stock_route_views.xml',
-        'views/res_config_settings_views.xml',
+        'views/return_reason_views.xml',
+        'views/res_config_settings_views.xml',  # Needs return_reason_views
         'views/sale_stock_portal_template.xml',
         'views/stock_lot_views.xml',
         'views/res_users_views.xml',
@@ -33,8 +34,10 @@ Preferences
         'views/stock_reference_views.xml',
 
         'report/stock_report_deliveryslip.xml',
+        'report/return_label.xml',
 
         'data/mail_templates.xml',
+        'data/return_reason_data.xml',
         'data/sale_stock_data.xml',
 
         'wizard/stock_rules_report_views.xml',
@@ -44,6 +47,13 @@ Preferences
     'assets': {
         'web.assets_backend': [
             'sale_stock/static/src/**/*',
+            ('remove', 'sale_stock/static/src/interactions/*'),
+            ('remove', 'sale_stock/static/src/return_order_dialog/*'),
+        ],
+        'web.assets_frontend': [
+            'sale/static/src/js/quantity_buttons/*',
+            'sale_stock/static/src/interactions/*',
+            'sale_stock/static/src/return_order_dialog/*',
         ],
         'web.assets_tests': [
             'sale_stock/static/tests/tours/*.js',

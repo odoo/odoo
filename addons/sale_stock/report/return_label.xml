@@ -1,0 +1,105 @@
+<odoo>
+    <template id="return_label">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="picking">
+                <div class="page">
+                    <t t-call="web.external_layout">
+                        <t
+                            t-set="picking"
+                            t-value="picking.with_context(lang=picking._get_report_lang())"
+                        />
+                        <div class="oe_structure"/>
+                        <div>
+                            <img
+                                t-if="picking.company_id.logo"
+                                t-att-src="image_data_uri(picking.company_id.logo)"
+                                style="height:30%; padding-top: 4pt; padding-bottom: 2pt"
+                            />
+                        </div>
+                        <div class="row mt-3">
+                            <t t-call="stock.return_label_header"/>
+                            <div class="col-4 text-center mt-1">
+                                <div
+                                    t-field="picking.name"
+                                    t-options="{
+                                        'widget': 'barcode',
+                                        'img_style': 'width:200px;height:40px',
+                                        'humanreadable': 1,
+                                    }"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Return reason -->
+                        <div class="row mt-4">
+                            <div class="col-8">
+                                <strong>Return reason</strong>
+                                <div t-out="return_reason.name"/>
+                            </div>
+                            <div class="col-4 text-center mt-1">
+                                <t
+                                    t-set="return_barcode"
+                                    t-value="'OBTRETU:%s' % (return_reason.id)"
+                                />
+                                <div
+                                    t-out="return_barcode"
+                                    t-options="{
+                                        'widget': 'barcode',
+                                        'img_style': 'width:200px;height:40px',
+                                        'humanreadable': 1,
+                                    }"
+                                />
+                            </div>
+                        </div>
+
+                        <!-- Product list -->
+                        <div class="mt-4">
+                            <strong>Returned products</strong>
+                            <div
+                                t-foreach="move_qty_by_picking[picking]"
+                                t-as="move"
+                                class="d-flex mt-2 align-items-center"
+                            >
+                                <img
+                                    t-att-src="(
+                                        move.product_id.image_128
+                                        and image_data_uri(move.product_id.image_128)
+                                        or '/web/static/img/placeholder.png'
+                                    )"
+                                    style="width: 64px; height: 64px; object-fit: contain;"
+                                />
+                                <div class="flex-grow-1 ms-2">
+                                    <strong
+                                        t-out="move.product_id.with_context(
+                                            display_default_code=False
+                                        ).display_name"
+                                    />
+                                    <br/>
+                                    Quantity:
+                                    <span t-out="move_qty_by_picking[picking][move]"/><br/>
+                                    <t t-if="move.lot_ids">
+                                        Lot/Serial Number:
+                                        <span t-out="', '.join(move.lot_ids.mapped('name'))"/>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_return_label" model="ir.actions.report">
+        <field name="name">Return Label</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale_stock.return_label</field>
+        <field name="report_file">sale_stock.return_label</field>
+        <field name="print_report_name">"Return - %s" % (object.name)</field>
+        <field name="binding_model_id" eval="False"/> <!-- Don't display it under Print menu -->
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

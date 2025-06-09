@@ -1929,6 +1929,14 @@ class SaleOrderLine(models.Model):
 
     # === HOOKS ===#
 
+    def _is_product_line(self):
+        """Return whether it is a product line.
+
+        A product line is not a section/note, not a combo sub-line , and not a delivery.
+        """
+        self.ensure_one()
+        return not self.display_type and not self.combo_item_id and not self._is_delivery()
+
     def _is_delivery(self):
         self.ensure_one()
         return False

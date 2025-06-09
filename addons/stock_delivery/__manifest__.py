@@ -28,6 +28,11 @@ When creating invoices from picking, the system is able to add and compute the s
         'views/stock_move_line_views.xml',
         'report/product_templates.xml',
     ],
+    'assets': {
+        'web.assets_frontend': [
+            'stock_delivery/static/src/return_order_dialog/*',
+        ],
+    },
     'demo': ['data/delivery_demo.xml'],
     'auto_install': True,
     'author': 'Odoo S.A.',
