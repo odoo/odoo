@@ -23,15 +23,12 @@
                         <button string="Products"
                                 class="oe_stat_button" icon="fa-th-list"
                                 type="action" name="stock.act_product_location_open"/>
-                        <button string="Current Stock"
-                                class="oe_stat_button"
-                                icon="fa-cubes" name="%(stock_quant_action)d" type="action" context="{'search_default_location_id': id}"/>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <label for="name"/>
-                    <h1><field name="name" placeholder="e.g. Spare Stock"/></h1>
+                    <h1><field name="name" placeholder="e.g. Shelf 1"/></h1>
                     <label for="location_id"/>
-                    <h2><field name="location_id" placeholder="e.g. Physical Locations" options="{'no_create': True}"/></h2>
+                    <h2><field name="location_id" placeholder="e.g. Aisle 1" options="{'no_create': True}"/></h2>
 
                     <group>
                         <group string="Additional Information" name="additional_info">
@@ -51,11 +48,10 @@
                             <field name="last_inventory_date"/>
                             <field name="next_inventory_date" invisible="not active"/>
                         </group>
-                        <group string="Logistics">
-                            <field name="removal_strategy_id" widget="radio" options="{'no_create': True}" invisible="usage in ('supplier', 'customer', 'inventory', 'production') or scrap_location or usage == 'transit' and not company_id"/>
+                        <group string="Logistics" invisible="usage not in ('view', 'internal', 'transit') or (usage == 'transit' and not company_id)">
+                            <field name="removal_strategy_id" widget="radio" options="{'no_create': True}"/>
                         </group>
                     </group>
-                    <field name="comment" placeholder="External note..."/>
                 </sheet>
             </form>
         </field>
@@ -80,8 +76,10 @@
                 <field name="complete_name" string="Stock Locations"/>
                 <filter name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
                 <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
-                <filter name="prod_inv_location" string="Production" domain="[('usage', 'in', ['inventory', 'production'])]" help="Production Locations"/>
+                <filter name="inventory" string="Inventory Loss" domain="[('usage', '=', 'inventory')]" help="Inventory Loss Locations"/>
+                <filter name="prod_inv_location" string="Production" domain="[('usage', '=', 'production')]" help="Production Locations"/>
                 <filter name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>
+                <filter name="view" string="Virtual" domain="[('usage', '=', 'view')]" help="Virtual Locations"/>
                 <separator/>
                 <filter name="empty_location" string="Empty Locations" domain="[('is_empty', '=', True)]"/>
                 <field name="location_id" string="Parent Location"/>
