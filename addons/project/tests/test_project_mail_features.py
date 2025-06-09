@@ -552,3 +552,67 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
             'Task Created', copied_task.message_ids[0].preview,
             "Expected 'Task Created' message not found in copied task's chatter."
         )
+
+    def test_task_creation_removes_email_signatures(self):
+        """
+        Tests that email signature is correctly removed from a task
+        description when a task is created from an email alias.
+        """
+
+        # Test Gmail signature removal
+        gmail_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+To: {self.project_followers_alias.alias_full_name}
+Subject: Test Gmail Signature Removal
+Content-Type: text/html;
+
+<p>This is the main email content that should be kept.</p>
+<p>Some more important content here.</p>
+<span>--</span>
+<div data-smartmail="gmail_signature">
+<p>John Doe</p>
+<p>Software Engineer</p>
+</div>
+"""
+        with self.mock_mail_gateway():
+            gmail_task_id = self.env['mail.thread'].message_process(
+                model='project.task',
+                message=gmail_email_source,
+                custom_values={'project_id': self.project_followers.id}
+            )
+
+        self.assertTrue(gmail_task_id, "Gmail task creation should return a valid ID.")
+        gmail_task = self.env['project.task'].browse(gmail_task_id)
+
+        # Verify Gmail signature removal
+        self.assertIn("This is the main email content that should be kept", gmail_task.description)
+        self.assertNotIn("--", gmail_task.description, "The Gmail signature separator should have been removed.")
+        self.assertNotIn("John Doe", gmail_task.description, "The Gmail signature should have been removed.")
+        self.assertNotIn("Software Engineer", gmail_task.description, "The Gmail signature should have been removed.")
+
+        # Test Outlook signature removal
+        outlook_email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+To: {self.project_followers_alias.alias_full_name}
+Subject: Test Outlook Signature Removal
+Content-Type: text/html;
+
+<p>This is the main email content that should be kept.</p>
+<p>Some more important content here.</p>
+<div id="Signature">
+<p>John Smith</p>
+<p>Software Developer</p>
+</div>
+"""
+        with self.mock_mail_gateway():
+            outlook_task_id = self.env['mail.thread'].message_process(
+                model='project.task',
+                message=outlook_email_source,
+                custom_values={'project_id': self.project_followers.id}
+            )
+
+        self.assertTrue(outlook_task_id, "Outlook task creation should return a valid ID.")
+        outlook_task = self.env['project.task'].browse(outlook_task_id)
+
+        # Verify Outlook signature removal
+        self.assertIn("This is the main email content that should be kept", outlook_task.description)
+        self.assertNotIn("John Smith", outlook_task.description, "The Outlook signature should have been removed.")
+        self.assertNotIn("Software Developer", outlook_task.description, "The Outlook signature should have been removed.")
