@@ -37,21 +37,21 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             'name': 'einvoice_a.json',
             'res_model': 'account.move',
             'res_id': cls.invoice_a.id,
+            'res_field': 'l10n_in_edi_attachment_file',
             'raw': b'{"Irn": "1234567890"}',
         })
         attachment_b = cls.env['ir.attachment'].create({
             'name': 'einvoice_b.json',
             'res_model': 'account.move',
             'res_id': cls.invoice_b.id,
+            'res_field': 'l10n_in_edi_attachment_file',
             'raw': b'{"Irn": "1234567890"}',
         })
         cls.invoice_a.write({
             "l10n_in_edi_status": "sent",
-            "l10n_in_edi_attachment_id": attachment_a.id,
         })
         cls.invoice_b.write({
             "l10n_in_edi_status": "sent",
-            "l10n_in_edi_attachment_id": attachment_b.id,
         })
         cls.invoice_b.l10n_in_gst_treatment = 'overseas'
 

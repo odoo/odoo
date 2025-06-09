@@ -44,7 +44,15 @@ class AccountMoveSend(models.AbstractModel):
 
     def _get_invoice_extra_attachments(self, invoice):
         # EXTENDS 'account'
-        return super()._get_invoice_extra_attachments(invoice) + invoice.l10n_in_edi_attachment_id
+        # Fetch all EDI attachments(eInvoice) related to the invoice.
+        attachemnt = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice._name),
+            ('res_field', '=', 'l10n_in_edi_attachment_file'),
+            ('res_id', 'in', invoice._origin.ids)
+        ])
+        # If the number of attachments is odd, return the first one (newest eInvoice file created).
+        # If even, return nothing (new eInvoice file not yet created).
+        return super()._get_invoice_extra_attachments(invoice) + (attachemnt[0] if len(attachemnt) % 2 == 1 else attachemnt.browse())
 
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         # EXTENDS 'account'

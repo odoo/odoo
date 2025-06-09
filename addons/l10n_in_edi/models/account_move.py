@@ -36,15 +36,6 @@ class AccountMove(models.Model):
         tracking=True,
         readonly=True,
     )
-    l10n_in_edi_attachment_id = fields.Many2one(
-        comodel_name='ir.attachment',
-        string="E-Invoice(IN) Attachment",
-        compute=lambda self: self._compute_linked_attachment_id(
-            'l10n_in_edi_attachment_id',
-            'l10n_in_edi_attachment_file'
-        ),
-        depends=['l10n_in_edi_attachment_file']
-    )
     l10n_in_edi_attachment_file = fields.Binary(
         string="E-Invoice(IN) File",
         attachment=True,
@@ -160,8 +151,8 @@ class AccountMove(models.Model):
 
     def _get_l10n_in_edi_response_json(self):
         self.ensure_one()
-        if self.l10n_in_edi_attachment_id:
-            return json.loads(self.l10n_in_edi_attachment_id.sudo().raw.decode("utf-8"))
+        if self.l10n_in_edi_attachment_file:
+            return json.loads(base64.b64decode(self.l10n_in_edi_attachment_file).decode("utf-8"))
         return {}
 
     def _l10n_in_lock_invoice(self):
