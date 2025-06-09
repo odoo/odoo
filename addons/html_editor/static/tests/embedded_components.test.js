@@ -41,6 +41,7 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
 import { dispatchClean, dispatchCleanForSave } from "./_helpers/dispatch";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 function getConfig(components) {
     return {
@@ -894,7 +895,7 @@ describe("In-editor manipulations", () => {
             }
         );
         await animationFrame();
-        expect(".o-we-toolbar").toHaveCount(1);
+        await expectElementCount(".o-we-toolbar", 1);
         expect(getContent(el)).toBe(
             `<div><p>[a]</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span></div>`
         );
@@ -906,7 +907,7 @@ describe("In-editor manipulations", () => {
         expect(getContent(el)).toBe(
             `<div><p>a</p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">C[ou]nter:0</span></span></div>`
         );
-        expect(".o-we-toolbar").toHaveCount(0);
+        await expectElementCount(".o-we-toolbar", 0);
     });
 
     test("should remove embedded elements children during clean for save (on a clone)", async () => {
