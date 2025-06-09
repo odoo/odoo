@@ -19,17 +19,17 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillUnmount, useEffect, useRef, onWillStart, markup } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { cookie } from "@web/core/browser/cookie";
 import { createElementWithContent } from "@web/core/utils/html";
 import { ReportViewMeasures } from "@web/views/view_components/report_view_measures";
 import { Widget } from "@web/views/widgets/widget";
 import { getCurrency } from "@web/core/currency";
 import { rpc } from "@web/core/network/rpc";
+import { session } from "@web/session";
 
 const NO_DATA = _t("No data");
 const formatters = registry.category("formatters");
 
-const colorScheme = cookie.get("color_scheme");
+const colorScheme = session.color_scheme;
 const GRAPH_LEGEND_COLOR = getCustomColor(colorScheme, "#111827", "#ffffff");
 const GRAPH_GRID_COLOR = getCustomColor(colorScheme, "rgba(0,0,0,.1)", "rgba(255,255,255,.15");
 const GRAPH_LABEL_COLOR = getCustomColor(colorScheme, "#111827", "#E4E4E4");
@@ -585,10 +585,7 @@ export class GraphRenderer extends Component {
             type: "linear",
             title: {
                 text: measures[measure].string,
-                color:
-                    cookie.get("color_scheme") === "dark"
-                        ? getColor(15, cookie.get("color_scheme"))
-                        : null,
+                color: session.color_scheme === "dark" ? getColor(15, session.color_scheme) : null,
             },
             ticks: {
                 callback: (value) => this.formatValue(value, false, fieldAttrs[measure]?.widget),

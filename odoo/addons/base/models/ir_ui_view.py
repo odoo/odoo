@@ -2633,7 +2633,7 @@ class ResetViewArchWizard(models.TransientModel):
                     (view_arch, get_table_name(view.view_id) if view.reset_mode == 'other_view' else _("Current Arch")),
                     (diff_to, diff_to_name),
                     custom_style=False,
-                    dark_color_scheme=request and request.cookies.get('color_scheme') == 'dark',
+                    dark_color_scheme=request and request.env.user.color_scheme == 'dark',
                 )
                 view.has_diff = view_arch != diff_to
 

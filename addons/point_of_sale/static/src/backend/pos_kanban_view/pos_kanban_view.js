@@ -1,6 +1,5 @@
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
-import { cookie } from "@web/core/browser/cookie";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { onWillStart, useState, onWillRender } from "@odoo/owl";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
@@ -9,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
+import { session } from "@web/session";
 
 async function updatePosKanbanViewState(orm, stateObj) {
     const result = await orm.call("pos.config", "get_pos_kanban_view_state");
@@ -75,7 +75,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
     }
 
     get isDarkTheme() {
-        return cookie.get("color_scheme") === "dark";
+        return session.color_scheme === "dark";
     }
 
     async callWithViewUpdate(func) {

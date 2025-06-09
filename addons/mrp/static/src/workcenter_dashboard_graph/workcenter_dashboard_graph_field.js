@@ -1,15 +1,15 @@
 import { _t } from "@web/core/l10n/translation";
-import { cookie } from "@web/core/browser/cookie";
 import { getColor, hexToRGBA, darkenColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import { JournalDashboardGraphField } from "@web/views/fields/journal_dashboard_graph/journal_dashboard_graph_field";
+import { session } from "@web/session";
 
 export class WorkcenterDashboardGraphField extends JournalDashboardGraphField{
     getBarChartConfig() {
         const labels = this.data[0].labels;
-        const color19 = getColor(1, cookie.get("color_scheme"), "odoo");
-        const color13 = getColor(2, cookie.get("color_scheme"), "odoo");
-        const color10 = getColor(3, cookie.get("color_scheme"), "odoo");
+        const color19 = getColor(1, session.color_scheme, "odoo");
+        const color13 = getColor(2, session.color_scheme, "odoo");
+        const color10 = getColor(3, session.color_scheme, "odoo");
         const loadBarColor = this.data[0].is_sample_data ? hexToRGBA(color19, 0.1) : color19;
         const excessBarColor = this.data[0].is_sample_data ? hexToRGBA(color13, 0.1) : color13;
         const maxLoadLineColor = this.data[0].is_sample_data ? hexToRGBA(color10, 0.1) : hexToRGBA(color10, 0.5);

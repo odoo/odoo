@@ -4,8 +4,8 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { cookie } from "@web/core/browser/cookie";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
+import { session } from "@web/session";
 
 const MAX_FONT_SIZE = 144;
 
@@ -40,7 +40,7 @@ export class FontSizeSelector extends Component {
                 }
 
                 this.fontSizeInput = iframeDoc.createElement("input");
-                const isDarkMode = cookie.get("color_scheme") === "dark";
+                const isDarkMode = session.color_scheme === "dark";
                 const htmlStyle = getHtmlStyle(this.props.document);
                 const backgroundColor = getCSSVariableValue(
                     isDarkMode ? "gray-200" : "white",
