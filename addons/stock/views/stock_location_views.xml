@@ -105,7 +105,7 @@
                 <field name="active" column_invisible="True"/>
                 <field name="complete_name" string="Location"/>
                 <field name="usage"/>
-                <field name="is_empty" invisible="usage not in ['internal', 'transit']"/>
+                <field name="is_empty" optional="hide" invisible="usage not in ['internal', 'transit']"/>
                 <field name="storage_category_id" readonly="usage != 'internal'" groups="stock.group_stock_multi_locations"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>
