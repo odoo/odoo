@@ -10,9 +10,10 @@
                 contenteditable="false"
                 role="article"
             >
+                <t t-out="cover_image_url"/>
                 <img
                     loading="lazy"
-                    t-attf-src="/web/image/product.public.category/{{category.id}}/image_1920"
+                    t-att-src="category.cover_image_url"
                     alt="Category Image"
                     class="s_category_image img-fluid position-absolute w-100 h-100 object-fit-cover"
                 />
@@ -28,7 +29,10 @@
             </div>
         </t>
     </t>
-    <t t-name="website_sale.dynamic_filter_template_categories_clickable_items" t-inherit="website_sale.dynamic_filter_template_categories">
+    <t
+        t-name="website_sale.dynamic_filter_template_categories_clickable_items"
+        t-inherit="website_sale.dynamic_filter_template_categories"
+    >
         <xpath expr="//div[hasclass('s_dynamic_category_item')]" position="attributes">
             <attribute name="class" add="opacity-trigger-hover" separator=" "/>
         </xpath>
@@ -36,7 +40,10 @@
             <attribute name="t-attf-class" add="z-0" separator=" "/>
         </xpath>
         <xpath expr="//h3" position="before">
-            <span class="s_category_filter position-absolute start-0 top-0 end-0 bottom-0 bg-black-25 transition-base z-n1" aria-hidden="true"/>
+            <span
+                class="s_category_filter position-absolute start-0 top-0 end-0 bottom-0 bg-black-25 transition-base z-n1"
+                aria-hidden="true"
+            />
         </xpath>
         <xpath expr="//h3" position="attributes">
             <attribute name="class" add="mb-0" separator=" "/>
@@ -45,7 +52,11 @@
             <attribute name="class" add="transition-base" separator=" "/>
         </xpath>
         <xpath expr="//a[hasclass('s_dynamic_category_button')]" position="attributes">
-            <attribute name="class" add="stretched-link h-0 p-0 opacity-0 o_not_editable o_not-animable" separator=" "/>
+            <attribute
+                name="class"
+                add="stretched-link h-0 p-0 opacity-0 o_not_editable o_not-animable"
+                separator=" "
+            />
             <attribute name="contenteditable">false</attribute>
         </xpath>
         <xpath expr="//a[hasclass('s_dynamic_category_button')]" position="after">
