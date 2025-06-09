@@ -209,7 +209,7 @@ test("toolbar should be closed when you open the emojipicker", async () => {
     await click("i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await animationFrame();
-    expect(".o-EmojiPicker").toHaveCount(1);
+    await expectElementCount(".o-EmojiPicker", 1);
     await expectElementCount(".o-we-toolbar", 0);
 });
 
@@ -230,7 +230,7 @@ test("toolbar should be closed when you open the emojipicker (iframe)", async ()
     await click(":iframe i.o_editor_banner_icon");
     await waitFor(".o-EmojiPicker");
     await animationFrame();
-    expect(".o-EmojiPicker").toHaveCount(1);
+    await expectElementCount(".o-EmojiPicker", 1);
     await expectElementCount(".o-we-toolbar", 0);
 });
 
