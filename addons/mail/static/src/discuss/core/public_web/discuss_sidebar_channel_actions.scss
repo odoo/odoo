@@ -1,11 +1,13 @@
 .o-mail-DiscussSidebarChannelActions {
     .o-dropdown-item {
-        opacity: 75%;
+        opacity: 65%;
         &.focus {
             opacity: 100%;
+            outline: 1px solid $gray-300;
+            background-color: var(--mail-DiscussSidebarChannelActions-activeBgColor, $white) !important;
         }
     }
     hr {
-        opacity: 10%;
+        opacity: 0%;
     }
 }

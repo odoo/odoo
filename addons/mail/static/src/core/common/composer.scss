@@ -32,11 +32,11 @@
     }
 
     .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) * 5 / 4;
+        margin-top: map-get($spacers, 1);
     }
 
     &.o-chatWindow .o-mail-Composer-mainActions {
-        margin-top: map-get($spacers, 1) / 2;
+        margin-top: map-get($spacers, 1) / 4;
     }
 
     &:not(.o-focused) {
@@ -54,12 +54,12 @@
 
     button {
         &.o-small {
-            margin: map-get($spacers, 1) / 2 !important;
-            padding: map-get($spacers, 1) / 2 !important;
+            margin: 0 !important;
+            padding: map-get($spacers, 1) !important;
         }
         &.o-large {
-            padding: map-get($spacers, 1) !important;
-            margin: map-get($spacers, 1) !important;
+            margin: 0 !important;
+            padding: map-get($spacers, 2) !important;
         }
         &:disabled {
             opacity: 25% !important;

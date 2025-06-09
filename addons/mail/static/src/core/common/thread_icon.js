@@ -19,10 +19,12 @@ export class ThreadIcon extends Component {
         thread: { type: Thread },
         size: { optional: true, validate: (size) => ["small", "medium", "large"].includes(size) },
         className: { type: String, optional: true },
+        title: { type: Boolean, optional: true },
     };
     static defaultProps = {
         size: "medium",
         className: "",
+        title: true,
     };
 
     setup() {
