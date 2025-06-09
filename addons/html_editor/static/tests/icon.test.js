@@ -4,6 +4,7 @@ import { setupEditor } from "./_helpers/editor";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { undo } from "./_helpers/user_actions";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 test("icon toolbar is displayed", async () => {
     const { el } = await setupEditor(`<p><span class="fa fa-glass"></span></p>`);
@@ -173,7 +174,7 @@ test("Can set icon color", async () => {
     expect(".o_font_color_selector").toHaveCount(1);
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+    await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect("span.fa-glass").toHaveStyle({ color: "rgb(107, 173, 222)" });
 });
