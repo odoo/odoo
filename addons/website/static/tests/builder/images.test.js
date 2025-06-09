@@ -12,6 +12,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder, dummyBase64Img } from "./website_helpers";
 import { testImg } from "./image_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
+import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 
 defineWebsiteModels();
 
@@ -22,12 +23,11 @@ test("click on Image shouldn't open toolbar", async () => {
     const editor = getEditor();
     const p = editor.editable.querySelector("p");
     setSelection({ anchorNode: p, anchorOffset: 0, focusNode: p, focusOffset: 1 });
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveCount(1);
+    await expectElementCount(".o-we-toolbar", 1);
 
     await contains(":iframe img.a_nice_img").click();
     await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(0);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test("double click on Image", async () => {

@@ -19,6 +19,7 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
 import { execCommand } from "./_helpers/userCommands";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -32,8 +33,7 @@ test("can set foreground color", async () => {
 
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+    await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(`<p><font style="color: rgb(107, 173, 222);">[test]</font></p>`);
 });
@@ -50,8 +50,7 @@ test("can set background color", async () => {
 
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+    await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
         `<p><font style="background-color: rgba(107, 173, 222, 0.6);">[test]</font></p>`
@@ -68,8 +67,7 @@ test("should add opacity to custom background colors but not to theme colors", a
     expect(".o_font_color_selector").toHaveCount(1);
 
     await contains(".o_color_button[data-color='#FF0000']").click(); // Select a custom color.
-    await waitFor(".o-we-toolbar");
-    expect(".o-we-toolbar").toHaveCount(1);
+    await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0);
     // Verify custom color applies RGBA with 0.6 opacity.
     expect(getContent(el)).toBe(
@@ -815,7 +813,7 @@ describe("color preview", () => {
                 </tbody>
             </table>
         `);
-        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+        await expectElementCount(".o-we-toolbar", 1);
     });
 
     test("should preview color in table on hover in custom tab", async () => {
@@ -883,6 +881,6 @@ describe("color preview", () => {
                 </tbody>
             </table>
         `);
-        expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+        await expectElementCount(".o-we-toolbar", 1);
     });
 });

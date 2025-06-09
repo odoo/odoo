@@ -5,6 +5,7 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { setSelection } from "../_helpers/selection";
 import { execCommand } from "../_helpers/userCommands";
 import { expandToolbar } from "../_helpers/toolbar";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 function insertTable(editor, cols, rows) {
     execCommand(editor, "insertTable", { cols, rows });
@@ -37,7 +38,7 @@ test("can color cells", async () => {
 
     await click(".o_color_button[data-color='#6BADDE']");
     await animationFrame();
-    expect(".o-we-toolbar").toHaveCount(1); // toolbar still open
+    await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
 
     // Collapse selection to deselect cells
