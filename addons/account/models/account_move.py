@@ -5136,6 +5136,10 @@ class AccountMove(models.Model):
             'posted_before': True,
         })
 
+        if not self.env.user.has_group('account.group_partial_purchase_deductibility') and \
+                self.filtered(lambda move: move.move_type == 'in_invoice' and move.invoice_line_ids.filtered(lambda l: l.deductible_amount != 100)):
+            self.env.user.sudo().group_ids = [Command.link(self.env.ref('account.group_partial_purchase_deductibility').id)]
+
         # Add the move number to the non_deductible lines for easier auditing
         if non_deductible_lines := self.line_ids.filtered(lambda line: (line.display_type in ('non_deductible_product_total', 'non_deductible_tax'))):
             for line in non_deductible_lines:
