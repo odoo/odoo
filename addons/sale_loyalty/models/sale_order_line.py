@@ -163,3 +163,6 @@ class SaleOrderLine(models.Model):
 
     def _can_be_edited_on_portal(self):
         return super()._can_be_edited_on_portal() and not self.is_reward_line
+
+    def _is_product_line(self):
+        return not self._is_discount_line() and super()._is_product_line()

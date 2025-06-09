@@ -58,6 +58,19 @@ class StockMove(models.Model):
         keys = super(StockMove, self)._key_assign_picking()
         return keys + (self.sale_line_id.order_id.carrier_id,)
 
+    def _prepare_return_data(self):
+        """Override of `sale.stock` to include label url if set on the delivery method."""
+        data = super()._prepare_return_data()
+        if (
+            self.picking_id.carrier_id.get_return_label_from_portal
+            and self.picking_id.return_label_ids
+        ):
+            label = self.picking_id.return_label_ids[:1]
+            data["shipping_label_url"] = (
+                f"/web/content/{label.id}?access_token={label.access_token or ''}"
+            )
+        return data
+
 
 class StockMoveLine(models.Model):
     _inherit = 'stock.move.line'

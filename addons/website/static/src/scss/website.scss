@@ -3609,3 +3609,11 @@ img.o_image_popup {
         transition: none;
     }
 }
+
+/*
+The modal title has the fs-3 class, which results
+in a huge font size since it isn’t redefined for the frontend.
+*/
+.modal .modal-content .modal-header .modal-title.fs-3 {
+    font-size: 1.35rem !important;
+}
