@@ -141,7 +141,7 @@ describe("buttons", () => {
         await setupEditor("<p>[]<br></p>");
         click(".o_we_power_buttons .power_button.fa-ellipsis-v");
         await animationFrame();
-        expect(".o-we-powerbox").toHaveCount(1);
+        await expectElementCount(".o-we-powerbox", 1);
     });
 });
 
