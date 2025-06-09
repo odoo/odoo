@@ -5,6 +5,7 @@ import { getContent } from "../_helpers/selection";
 import { insertText } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 import { press, waitFor, queryOne } from "@odoo/hoot-dom";
+import { expectElementCount } from "../_helpers/ui_expectations";
 
 function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
@@ -13,7 +14,7 @@ function expectContentToBe(el, html) {
 test.tags("desktop");
 test("can add a table using the powerbox and keyboard", async () => {
     const { el, editor } = await setupEditor("<p>a[]</p>");
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     expectContentToBe(el, `<p>a[]</p>`);
 
     // open powerbox
@@ -28,12 +29,12 @@ test("can add a table using the powerbox and keyboard", async () => {
     // press enter to open tablepicker
     await press("Enter");
     await waitFor(".o-we-tablepicker");
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
 
     // press enter to validate current dimension (3x3)
     await press("Enter");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     expect(".o-we-tablepicker").toHaveCount(0);
     expectContentToBe(
         el,
@@ -83,7 +84,7 @@ test("in iframe, can add a table using the powerbox and keyboard", async () => {
     const { el, editor } = await setupEditor("<p>a[]</p>", {
         props: { iframe: true },
     });
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     expect(getContent(el)).toBe(`<p>a[]</p>`);
     expect(":iframe .o_table").toHaveCount(0);
 
@@ -99,12 +100,12 @@ test("in iframe, can add a table using the powerbox and keyboard", async () => {
     // press enter to open tablepicker
     await press("Enter");
     await waitFor(".o-we-tablepicker");
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
 
     // press enter to validate current dimension (3x3)
     await press("Enter");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     expect(".o-we-tablepicker").toHaveCount(0);
     expect(":iframe .o_table").toHaveCount(1);
 });
@@ -164,12 +165,12 @@ test("add table inside empty list", async () => {
     // press enter to open tablepicker
     await press("Enter");
     await waitFor(".o-we-tablepicker");
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
 
     // press enter to validate current dimension (3x3)
     await press("Enter");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     expect(".o-we-tablepicker").toHaveCount(0);
     expectContentToBe(
         el,
@@ -217,12 +218,12 @@ test("add table inside non-empty list", async () => {
     // press enter to open tablepicker
     await press("Enter");
     await waitFor(".o-we-tablepicker");
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
 
     // press enter to validate current dimension (3x3)
     await press("Enter");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(0);
+    await expectElementCount(".o-we-powerbox", 0);
     expect(".o-we-tablepicker").toHaveCount(0);
     expectContentToBe(
         el,
