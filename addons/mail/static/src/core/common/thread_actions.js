@@ -11,7 +11,8 @@ threadActionsRegistry
         condition(component) {
             return component.props.chatWindow;
         },
-        icon: "fa fa-fw fa-minus",
+        icon: "oi oi-fw oi-minus",
+        iconLarge: "oi oi-fw fa-lg oi-minus",
         name(component) {
             return !component.props.chatWindow?.isOpen ? _t("Open") : _t("Fold");
         },
@@ -33,6 +34,7 @@ threadActionsRegistry
             );
         },
         icon: "fa fa-fw fa-pencil",
+        iconLarge: "fa fa-lg fa-fw fa-pencil",
         name: _t("Rename Thread"),
         open(component) {
             component.state.editingName = true;
@@ -45,6 +47,7 @@ threadActionsRegistry
             return component.props.chatWindow;
         },
         icon: "oi fa-fw oi-close",
+        iconLarge: "oi fa-lg fa-fw oi-close",
         name: _t("Close Chat Window (ESC)"),
         open(component) {
             component.close();
