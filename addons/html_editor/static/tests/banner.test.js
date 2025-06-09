@@ -7,6 +7,7 @@ import { insertText } from "./_helpers/user_actions";
 import { loader } from "@web/core/emoji_picker/emoji_picker";
 import { execCommand } from "./_helpers/userCommands";
 import { unformat } from "./_helpers/format";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 test("should insert a banner with focus inside followed by a paragraph", async () => {
     const { el, editor } = await setupEditor("<p>Test[]</p>");
@@ -210,7 +211,7 @@ test("toolbar should be closed when you open the emojipicker", async () => {
     await waitFor(".o-EmojiPicker");
     await animationFrame();
     expect(".o-EmojiPicker").toHaveCount(1);
-    expect(".o-we-toolbar").toHaveCount(0);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test.tags("desktop", "iframe");
@@ -231,7 +232,7 @@ test("toolbar should be closed when you open the emojipicker (iframe)", async ()
     await waitFor(".o-EmojiPicker");
     await animationFrame();
     expect(".o-EmojiPicker").toHaveCount(1);
-    expect(".o-we-toolbar").toHaveCount(0);
+    await expectElementCount(".o-we-toolbar", 0);
 });
 
 test("add banner inside empty list", async () => {
