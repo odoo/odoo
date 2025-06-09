@@ -854,7 +854,7 @@ test("A new MediaDialog after switching record in a Form view should have the co
     setSelectionInHtmlField();
     await insertText(htmlEditor, "/Media");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
     expect(".active .o-we-command-name").toHaveText("Media");
 
     await press("Enter");
@@ -891,7 +891,7 @@ test("Embed video by pasting video URL", async () => {
     pasteText(htmlEditor, "https://www.youtube.com/watch?v=qxb74CMR748");
     await animationFrame();
     expect(anchorNode.outerHTML).toBe("<p>https://www.youtube.com/watch?v=qxb74CMR748</p>");
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
     expect(queryAllTexts(".o-we-command-name")).toEqual(["Embed Youtube Video", "Paste as URL"]);
 
     // Press Enter to select first option in the powerbox ("Embed Youtube Video").
