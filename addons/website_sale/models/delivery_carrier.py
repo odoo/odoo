@@ -26,6 +26,7 @@ class DeliveryCarrier(models.Model):
                 'currency': 'res.currency', # the price currency
                 'free_over_threshold': Optional[float], # optionnaly, the dict can contain the best
                                                         # free over threshold for the country
+                'states': list of 'res.country.state',  # list of states if available
             }
         :rtype: dict['res.country', dict[str, float | 'delivery.carrier']]
         """
@@ -40,14 +41,24 @@ class DeliveryCarrier(models.Model):
         best_delivery_by_country = defaultdict(lambda: {
             'price': float('inf'),
             'currency': tmp_order.currency_id,
+            'states': [],
         })
+        states = self.env['res.country.state'].search([])
+
         for dm in self:
             if dm.country_ids:
                 filtered_countries = dm.country_ids & countries
             else:
                 filtered_countries = countries
             for country in filtered_countries:
+
+                # Filter only the states belonging to this country
+                country_states = states.filtered(lambda s: s.country_id == country)
+                filtered_states = dm.state_ids & country_states if dm.state_ids else []
+
                 tmp_partner.country_id = country
+                tmp_partner.state_id = filtered_states[:1] if filtered_states else None
+
                 if not dm._match(tmp_partner, tmp_order):
                     continue
                 shipment_rate = dm.rate_shipment(tmp_order)
@@ -55,7 +66,9 @@ class DeliveryCarrier(models.Model):
                     continue
                 if shipment_rate['price'] < best_delivery_by_country[country]['price']:
                     best_delivery_by_country[country].update(
-                        price=shipment_rate['price'], delivery_method=dm,
+                        price=shipment_rate['price'],
+                        delivery_method=dm,
+                        states=filtered_states,
                     )
                 if (
                     dm.free_over
