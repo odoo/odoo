@@ -192,6 +192,7 @@ threadActionsRegistry
             !component.thread?.mute_until_dt,
         open: (component) => component.thread.markAsRead(),
         icon: "fa fa-fw fa-check",
+        iconLarge: "fa fa-lg fa-fw fa-check",
         name: _t("Mark Read"),
         partition: false,
         sidebarSequence: 10,

@@ -21,6 +21,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
     background-color: $body-bg !important;
 }
 
+.o-border-opacity-50 {
+    --border-opacity: 0.5;
+}
+
 .o-discuss-badge {
     &, & .o-innerBadge {
         --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
@@ -45,7 +49,7 @@ $o-discuss-talkingColor: lighten($success, 10%);
 }
 
 .o-discuss-separator {
-    opacity: $hr-opacity / 3;
+    opacity: $hr-opacity / 2;
 }
 
 .o-discuss-badge, .o-discuss-badgeShape {
@@ -104,6 +108,10 @@ $o-discuss-talkingColor: lighten($success, 10%);
 .o-py-1_5 {
     padding-top: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
     padding-bottom: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
+}
+
+.o-p-1_5 {
+    padding: map-get($spacers, 1) + map-get($spacers, 1) / 2 !important;
 }
 
 .o-pt-0_5 {
