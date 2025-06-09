@@ -5,6 +5,7 @@ import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 test("Can replace an image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => {
@@ -81,7 +82,7 @@ test("Can insert an image, and selection should be collapsed after it", async ()
     const { editor, el } = await setupEditor("<p>a[]bc</p>", { env });
     await insertText(editor, "/image");
     await animationFrame();
-    expect(".o-we-powerbox").toHaveCount(1);
+    await expectElementCount(".o-we-powerbox", 1);
     await press("Enter");
     await animationFrame();
     await click("img.o_we_attachment_highlight");
