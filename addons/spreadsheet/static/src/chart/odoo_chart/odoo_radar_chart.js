@@ -10,6 +10,7 @@ const {
     CHART_COMMON_OPTIONS,
     getChartLayout,
     getChartTitle,
+    getEvaluatedChartTitle,
     getChartShowValues,
     getRadarChartScales,
     getRadarChartLegend,
@@ -50,10 +51,13 @@ function createOdooChartRuntime(chart, getters) {
     const definition = chart.getDefinition();
     const locale = getters.getLocale();
 
+    const evaluatedChartTitle = getEvaluatedChartTitle(getters, definition.title);
+
     const chartData = {
         labels,
         dataSetsValues: datasets.map((ds) => ({ data: ds.data, label: ds.label })),
         locale,
+        evaluatedChartTitle,
     };
 
     const config = {
@@ -67,7 +71,7 @@ function createOdooChartRuntime(chart, getters) {
             layout: getChartLayout(definition, chartData),
             scales: getRadarChartScales(definition, chartData),
             plugins: {
-                title: getChartTitle(definition),
+                title: getChartTitle(definition, chartData),
                 legend: getRadarChartLegend(definition, chartData),
                 tooltip: getRadarChartTooltip(definition, chartData),
                 chartShowValuesPlugin: getChartShowValues(definition, chartData),
