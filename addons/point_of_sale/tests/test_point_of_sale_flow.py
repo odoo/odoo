@@ -178,6 +178,42 @@ class TestPointOfSaleFlow(CommonPosTest):
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.state, 'closed')
 
+    def test_pos_orders_count(self):
+        parent_partner = self.env['res.partner'].create({
+            'name': 'Parent Partner',
+            'company_type': 'person',
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Partner',
+            'parent_id': parent_partner.id
+        })
+        order_1, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': parent_partner.id,
+            },
+            'line_data': [
+                {'product_id': self.twenty_dollars_with_15_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 20},
+            ],
+        })
+        order_2, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': child_partner.id,
+            },
+            'line_data': [
+                {'product_id': self.ten_dollars_with_10_incl.product_variant_id.id},
+            ],
+            'payment_data': [
+                {'payment_method_id': self.credit_payment_method.id, 'amount': 10},
+            ],
+        })
+        self.assertEqual(len(order_1), 1, "Expected 1 order directly on parent partner")
+        self.assertEqual(len(order_2), 1, "Expected 1 order directly on child partner")
+        self.assertEqual(parent_partner.pos_order_count, 2, "Parent partner should see 2 orders including child’s")
+        self.assertEqual(child_partner.pos_order_count, 1, "Child partner should see only their own order")
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders

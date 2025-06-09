@@ -107,10 +107,8 @@ class ResPartner(models.Model):
         This function returns an action that displays the pos orders from partner.
         '''
         action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
-        if self.is_company:
-            action['domain'] = [('partner_id.commercial_partner_id', '=', self.id)]
-        else:
-            action['domain'] = [('partner_id', '=', self.id)]
+        # If the partner has any children (including grandchildren)
+        action['domain'] = [('partner_id', 'child_of', self.id)]
         return action
 
     def open_commercial_entity(self):
