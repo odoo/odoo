@@ -7,6 +7,7 @@ import { getContent } from "./_helpers/selection";
 import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
+import { expectElementCount } from "./_helpers/ui_expectations";
 
 test("Can replace an image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
@@ -127,7 +128,7 @@ describe("(non-)editable media", () => {
             );
             await click("img");
             await animationFrame();
-            expect(".o-we-toolbar").toHaveCount(1);
+            await expectElementCount(".o-we-toolbar", 1);
             // Now pressing the delete button should remove the image.
             await click(".o-we-toolbar button[name='image_delete']");
             cleanHints(editor);
@@ -141,7 +142,7 @@ describe("(non-)editable media", () => {
             );
             await click("img");
             await animationFrame();
-            expect(".o-we-toolbar").toHaveCount(0);
+            await expectElementCount(".o-we-toolbar", 0);
             expect(getContent(editor.editable)).toBe(
                 `<div contenteditable="false">[<img src="${base64Img}">]</div>`
             );
@@ -152,7 +153,7 @@ describe("(non-)editable media", () => {
             );
             await click("img");
             await animationFrame();
-            expect(".o-we-toolbar").toHaveCount(1);
+            await expectElementCount(".o-we-toolbar", 1);
             // Now pressing the delete button should remove the image.
             await click(".o-we-toolbar button[name='image_delete']");
             expect(getContent(editor.editable)).toBe(`<div contenteditable="false">[]<br></div>`);
