@@ -11,7 +11,6 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { useActionLinks } from "@web/views/view_hook";
 import { computeViewClassName } from "./utils";
 import { loadBundle } from "@web/core/assets";
-import { cookie } from "@web/core/browser/cookie";
 import {
     Component,
     markRaw,
@@ -345,7 +344,7 @@ export class View extends Component {
             : props.jsClass || type;
         if (!viewRegistry.contains(jsClass)) {
             await loadBundle(
-                cookie.get("color_scheme") === "dark"
+                session.color_scheme === "dark"
                     ? "web.assets_backend_lazy_dark"
                     : "web.assets_backend_lazy"
             );
