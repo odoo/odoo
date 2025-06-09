@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.fields import Command
-from odoo.tests import tagged, TransactionCase
+from odoo.tests import Form, tagged, TransactionCase
 from odoo.tools import float_compare
 
 
@@ -149,3 +149,15 @@ class TestSeller(TransactionCase):
         vendors.write({'product_id': False})
         self.assertEqual(vendors, self.product_consu.seller_ids,
             "Setting the product_id to False shouldn't affect seller_ids.")
+
+    def test_supplierinfo_without_uom_and_product_template(self):
+        supplier_info = self.env['product.supplierinfo'].create({
+            'partner_id': self.asustec.id,
+        })
+
+        with Form(supplier_info.with_context(visible_product_tmpl_id=False)) as supplier_info_form:
+            supplier_info_form.product_tmpl_id = self.product_consu.product_tmpl_id
+            supplier_info_form.product_uom_id = self.env['uom.uom']
+            supplier_info_form.product_tmpl_id = self.env['product.template']
+        self.assertFalse(supplier_info_form.product_uom_id)
+        self.assertFalse(supplier_info_form.product_tmpl_id)
