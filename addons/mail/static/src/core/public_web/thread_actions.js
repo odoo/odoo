@@ -8,6 +8,7 @@ threadActionsRegistry.add("leave", {
         !(component.env.inChatWindow && !component.ui.isSmall) &&
         (component.thread?.canLeave || component.thread?.canUnpin),
     icon: "fa fa-fw fa-sign-out text-danger",
+    iconLarge: "fa fa-fw fa-lg fa-sign-out text-danger",
     name: (component) =>
         component.thread.canLeave ? _t("Leave Channel") : _t("Unpin Conversation"),
     nameClass: "text-danger",

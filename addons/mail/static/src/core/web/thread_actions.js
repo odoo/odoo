@@ -48,6 +48,7 @@ threadActionsRegistry
             component.actionService = useService("action");
         },
         icon: "fa fa-fw fa-expand",
+        iconLarge: "fa fa-lg fa-fw fa-expand",
         name: _t("Open Form View"),
         open(component) {
             component.actionService.doAction({

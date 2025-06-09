@@ -9,6 +9,7 @@ threadActionsRegistry.add("restart", {
         return component.thread?.chatbot?.canRestart;
     },
     icon: "fa fa-fw fa-refresh",
+    iconLarge: "fa fa-lg fa-fw fa-refresh",
     name: _t("Restart Conversation"),
     open(component) {
         component.thread.chatbot.restart();

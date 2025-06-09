@@ -12,6 +12,7 @@ threadActionsRegistry.add("open-hr-profile", {
         );
     },
     icon: "fa fa-fw fa-id-card",
+    iconLarge: "fa fa-lg fa-fw fa-id-card",
     name: _t("Open Profile"),
     async open(component) {
         component.actionService.doAction({
