@@ -551,18 +551,27 @@ class SaleOrder(models.Model):
         """ For service and consumable, we only take the min dates. This method is extended in sale_stock to
             take the picking_policy of SO into account.
         """
-        self.mapped("order_line")  # Prefetch indication
-        for order in self:
-            if order.state == 'cancel':
-                order.expected_date = False
-                continue
-            dates_list = order.order_line.filtered(
-                lambda line: not line.display_type and not line._is_delivery()
-            ).mapped(lambda line: line and line._expected_date())
+        self.expected_date = False
+        # Default value is set to `order.date_order` or now, as this is the behaviour of `_expected_date`
+        grouped_sos = {order._origin: [] for order in self}
+        # This search is replacing a `filtered`. For SOs with many lines, we have to perform
+        # multiple queries in the DB, as `PREFETCH_MAX` is set to 1000.
+        # The search should remove plenty of lines already, and at worst it should
+        # perform similarly as the filtered.
+        lines_with_customer_lead = self.env["sale.order.line"].search(
+            [
+                ("order_id", "in", self.ids),
+                ("state", "!=", "cancel"),
+                ("display_type", "=", False),
+            ]
+        )
+        for line in lines_with_customer_lead:
+            if not line._is_delivery():
+                grouped_sos[line.order_id].append(line._expected_date())
+
+        for order, dates_list in grouped_sos.items():
             if dates_list:
                 order.expected_date = order._select_expected_date(dates_list)
-            else:
-                order.expected_date = False
 
     def _select_expected_date(self, expected_dates):
         self.ensure_one()
