@@ -74,3 +74,10 @@ class AccountChartTemplate(models.AbstractModel):
         # as possible in case it's modified so it's missing and not replaced.
         be_account = self.with_company(company).ref('a6560', raise_if_not_found=False)
         return be_account or super()._get_bank_fees_reco_account(company)
+
+    def _post_load_data(self, template_code, company, template_data):
+        super()._post_load_data(template_code, company, template_data)
+        if template_code in ('be_comp', 'be_asso') and \
+                (purchase_journal := self.ref('purchase', raise_if_not_found=False)) and \
+                (non_deductible_account := self.ref('a416', raise_if_not_found=False)):
+            purchase_journal.non_deductible_account_id = non_deductible_account
