@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_salary_certificate" model="ir.actions.report">
+        <field name="name">Today's order report</field>
+        <field name="model">lunch.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">lunch.todays_order_report</field>
+        <field name="report_file">lunch.todays_order_report</field>
+        <field name="print_report_name">"Today's order report"</field>
+        <field name="binding_model_id" ref="lunch.model_lunch_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="todays_order_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-call="lunch.todays_order"/>
+            </t>
+        </t>
+    </template>
+
+    <template id="todays_order">
+        <div class="container m-0 p-0">
+            <t t-set="total_amount" t-value="0"/>
+            <table class="table table-borderless m-0 p-0">
+                <thead>
+                    <tr>
+                        <th name="th_product">Product</th>
+                        <th name="th_quantity" class="text-end">Quantity</th>
+                        <th name="th_priceunit" class="text-end">Unit Price</th>
+                        <th name="th_total" class="text-end o_subtotal">
+                            <span>Amount</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="total_amount" t-value="0"/>
+                    <tr t-foreach="docs" t-as="o">
+                        <t t-set="total_amount" t-value="total_amount + o.price"/>
+                        <td name="td_product">
+                            <t t-out="o.name">Product Name</t>
+                        </td>
+                        <td class="text-end" name="td_quantity">
+                            <t t-out="o.quantity">Product Quantity</t>
+                        </td>
+                        <td class="text-end" name="td_priceunit">
+                            <span t-out="o.price/o.quantity"
+                                t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">
+                                    Product Price Unit
+                            </span>
+                        </td>
+                        <td class="text-end o_subtotal" name="td_total">
+                            <span t-out="o.price"
+                                t-options="{'widget': 'monetary', 'display_currency': o.currency_id}">
+                                    Product Subtotal
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <div class="offset-6 col-6">
+                    <table class="o_total_table table table-borderless">
+                        <tr class="o_total">
+                            <th><strong>Total</strong></th>
+                            <td class="text-end">
+                                <strong t-out="total_amount"
+                                    t-options='{"widget": "monetary", "display_currency": o.currency_id}'>
+                                        Total Amount
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </template>
+
+</odoo>
