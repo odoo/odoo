@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models, api
+from odoo.tools.translate import html_translate
 
 
 class ResConfigSettings(models.TransientModel):
@@ -10,6 +11,7 @@ class ResConfigSettings(models.TransientModel):
     allow_out_of_stock_order = fields.Boolean(
         string='Continue selling when out-of-stock',
         default=True)
+    out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
     available_threshold = fields.Float(
         string='Show Threshold',
         default=5.0)
@@ -28,6 +30,7 @@ class ResConfigSettings(models.TransientModel):
 
         IrDefault.set('product.template', 'allow_out_of_stock_order', self.allow_out_of_stock_order)
         IrDefault.set('product.template', 'available_threshold', self.available_threshold)
+        IrDefault.set('product.template', 'out_of_stock_message', self.out_of_stock_message)
         IrDefault.set('product.template', 'show_availability', self.show_availability)
 
     @api.model
@@ -39,5 +42,6 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             allow_out_of_stock_order=allow_out_of_stock_order if allow_out_of_stock_order is not None else True,
             available_threshold=IrDefaultGet('product.template', 'available_threshold') or 5.0,
+            out_of_stock_message=IrDefaultGet('product.template', 'out_of_stock_message') or '',
             show_availability=IrDefaultGet('product.template', 'show_availability') or False)
         return res
