@@ -553,3 +553,44 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
             'Task Created', copied_task.message_ids[0].preview,
             "Expected 'Task Created' message not found in copied task's chatter."
         )
+
+    def test_task_creation_removes_email_signatures(self):
+        """
+        Tests that email signature is correctly removed from a task
+        description when a task is created from an email alias.
+
+        Test Cases:
+        ===========
+        1) Define a sample email with main body content and a signature block.
+        2) Process the email to create a task via the alias.
+        3) Verify that the task is successfully created.
+        4) Confirm that the task description includes only the main content, with the signature removed.
+        """
+
+        email_source = f"""From: "{self.user_portal.name}" <{self.user_portal.email_formatted}>
+To: {self.project_followers_alias.alias_full_name}
+Subject: Test Email Signature Removal
+Content-Type: text/html;
+
+<p>This is the main email content that should be kept.</p>
+<p>Some more important content here.</p>
+<span>--</span>
+<div data-smartmail="gmail_signature">
+    <p>John Doe</p>
+    <p>Software Engineer</p>
+</div>
+"""
+        with self.mock_mail_gateway():
+            task_id = self.env['mail.thread'].message_process(
+                model='project.task',
+                message=email_source,
+                custom_values={'project_id': self.project_followers.id}
+            )
+
+        self.assertTrue(task_id, "Task creation should return a valid ID.")
+        task = self.env['project.task'].browse(task_id)
+
+        self.assertIn("This is the main email content that should be kept", task.description)
+        self.assertNotIn("--", task.description, "The signature should have been removed.")
+        self.assertNotIn("John Doe", task.description, "The signature should have been removed.")
+        self.assertNotIn("Software Engineer", task.description, "The signature should have been removed.")
