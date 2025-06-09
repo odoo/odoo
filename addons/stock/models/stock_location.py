@@ -31,21 +31,21 @@ class StockLocation(models.Model):
     complete_name = fields.Char("Full Location Name", compute='_compute_complete_name', recursive=True, store=True)
     active = fields.Boolean('Active', default=True, help="By unchecking the active field, you may hide a location without deleting it.")
     usage = fields.Selection([
-        ('supplier', 'Vendor Location'),
-        ('view', 'View'),
-        ('internal', 'Internal Location'),
-        ('customer', 'Customer Location'),
+        ('supplier', 'Vendor'),
+        ('view', 'Virtual'),
+        ('internal', 'Internal'),
+        ('customer', 'Customer'),
         ('inventory', 'Inventory Loss'),
         ('production', 'Production'),
-        ('transit', 'Transit Location')], string='Location Type',
+        ('transit', 'Transit')], string='Location Type',
         default='internal', index=True, required=True,
-        help="* Vendor Location: Virtual location representing the source location for products coming from your vendors"
-             "\n* View: Virtual location used to create a hierarchical structures for your warehouse, aggregating its child locations ; can't directly contain products"
-             "\n* Internal Location: Physical locations inside your own warehouses,"
-             "\n* Customer Location: Virtual location representing the destination location for products sent to your customers"
-             "\n* Inventory Loss: Virtual location serving as counterpart for inventory operations used to correct stock levels (Physical inventories)"
-             "\n* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products"
-             "\n* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations")
+        help="* Vendor: Virtual location representing the source location for products coming from your vendors"
+             "\n* Virtual: Virtual location used to create a hierarchical structure for your warehouse by aggregating its child locations. Can't directly contain products"
+             "\n* Internal: Physical locations inside your warehouses,"
+             "\n* Customer: Virtual location representing the destination location for products sent to your customers"
+             "\n* Inventory Loss: Virtual location serving as the counterpart for inventory operations done to correct stock levels (Physical inventories)"
+             "\n* Production: Virtual counterpart location for production operations. I.e. This location consumes components and produces finished products"
+             "\n* Transit: Counterpart location that should be used for inter-company or inter-warehouses operations")
     location_id = fields.Many2one(
         'stock.location', 'Parent Location', index=True, check_company=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.")
@@ -57,15 +57,14 @@ class StockLocation(models.Model):
         recursive=True,
         help='This location (if it\'s internal) and all its descendants filtered by type=Internal.'
     )
-    comment = fields.Html('Additional Information')
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company, index=True,
         help='Let this field empty if this location is shared between companies')
     scrap_location = fields.Boolean('Is a Scrap Location?', default=False, help='Check this box to allow using this location to put scrapped/damaged goods.')
-    replenish_location = fields.Boolean('Replenish Location', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
-                                        help='Activate this function to get all quantities to replenish at this particular location')
+    replenish_location = fields.Boolean('Replenishments', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
+                                        help='Trigger replenishment suggestions for this location when required')
     removal_strategy_id = fields.Many2one(
         'product.removal', 'Removal Strategy',
         help="Defines the default method used for suggesting the exact location (shelf) "
