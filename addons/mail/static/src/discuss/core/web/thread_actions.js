@@ -19,6 +19,7 @@ threadActionsRegistry
             component.actionService = useService("action");
         },
         icon: "fa fa-fw fa-expand",
+        iconLarge: "fa fa-lg fa-fw fa-expand",
         name: _t("Open in Discuss"),
         shouldClearBreadcrumbs(component) {
             return false;
@@ -50,6 +51,7 @@ threadActionsRegistry
             });
         },
         icon: "fa fa-fw fa-gear",
+        iconLarge: "fa fa-lg fa-fw fa-gear",
         name: _t("Advanced Settings"),
         partition: false,
         setup(action) {

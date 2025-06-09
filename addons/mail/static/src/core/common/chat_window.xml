@@ -121,38 +121,44 @@
 <t t-name="mail.ThreadActionsAsDropdownContent">
     <t t-if="quick?.length > 0">
         <t t-set="groupBefore" t-value="true"/>
-        <t t-foreach="quick" t-as="action" t-key="action.id">
-            <t t-call="mail.ThreadActionsAsDropdownContent.action">
-                <t t-set="action" t-value="action"/>
+        <div class="d-flex flex-column rounded-3" t-att-class="{ 'border border-secondary shadow-sm o-border-opacity-50': !env.inChatWindow }">
+            <t t-foreach="quick" t-as="action" t-key="action.id">
+                <t t-call="mail.ThreadActionsAsDropdownContent.action">
+                    <t t-set="action" t-value="action"/>
+                </t>
             </t>
-        </t>
+        </div>
     </t>
     <t t-else="" t-set="groupBefore" t-value="false"/>
     <t t-if="group?.length > 0">
         <hr t-if="groupBefore" class="mx-2 my-1"/>
         <t t-set="groupBefore" t-value="true"/>
         <t t-foreach="group" t-as="group" t-key="group_index">
-            <t t-foreach="group" t-as="action" t-key="action.id">
-                <t t-call="mail.ThreadActionsAsDropdownContent.action">
-                    <t t-set="action" t-value="action"/>
+            <div class="d-flex flex-column rounded-3" t-att-class="{ 'border border-secondary shadow-sm o-border-opacity-50': !env.inChatWindow }">
+                <t t-foreach="group" t-as="action" t-key="action.id">
+                    <t t-call="mail.ThreadActionsAsDropdownContent.action">
+                        <t t-set="action" t-value="action"/>
+                    </t>
                 </t>
-            </t>
+            </div>
             <hr t-if="!group_last" class="mx-2 my-1"/>
         </t>
     </t>
     <t t-else="" t-set="groupBefore" t-value="false"/>
     <t t-if="other?.length">
         <hr t-if="groupBefore" class="mx-2 my-1"/>
-        <t t-foreach="other" t-as="action" t-key="action.id">
-            <t t-call="mail.ThreadActionsAsDropdownContent.action">
-                <t t-set="action" t-value="action"/>
+        <div class="d-flex flex-column rounded-3" t-att-class="{ 'border border-secondary shadow-sm o-border-opacity-50': !env.inChatWindow }">
+            <t t-foreach="other" t-as="action" t-key="action.id">
+                <t t-call="mail.ThreadActionsAsDropdownContent.action">
+                    <t t-set="action" t-value="action"/>
+                </t>
             </t>
-        </t>
+        </div>
     </t>
 </t>
 
 <t t-name="mail.ThreadActionsAsDropdownContent.action">
-    <DropdownItem class="'btn d-flex align-items-baseline m-0 rounded-0 ' + (env.inChatWindow ? 'o-mail-ChatWindow-command p-2' : 'rounded-4 px-2 py-1 smaller')" onSelected="() => action.onSelect()">
+    <DropdownItem class="'btn d-flex align-items-baseline m-0 ' + (env.inChatWindow ? 'o-mail-ChatWindow-command rounded-0 p-2' : ('rounded-3 px-2 py-1 bg-200 smaller ' + (!action_first ? 'rounded-top-0' : !action_last ? 'rounded-bottom-0' : '')))" onSelected="() => action.onSelect()">
         <i t-att-class="action.icon"/>
         <span t-att-class="{ 'mx-2': env.inChatWindow, 'mx-1': !env.inChatWindow }" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
     </DropdownItem>
