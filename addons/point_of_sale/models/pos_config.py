@@ -207,8 +207,17 @@ class PosConfig(models.Model):
         static_records = {}
 
         for model, ids in records.items():
+<<<<<<< 011c6a36c54a33351b86b67672114e64cdb36d70
             records = self.env[model].browse(ids).exists()
             static_records[model] = self.env[model]._load_pos_data_read(records, self)
+||||||| 7e9c53e2c49d4e8576be9233a51629e8e4f55890
+            static_records[model] = self.env[model]._read_pos_record(ids, self.id)
+=======
+            if not len(ids):
+                static_records[model] = []
+                continue
+            static_records[model] = self.env[model]._read_pos_record(ids, self.id)
+>>>>>>> c43c36e1d32ce5e96041d9d28764a44b4a43de33
 
         self._notify('SYNCHRONISATION', {
             'static_records': static_records,
