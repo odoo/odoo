@@ -716,7 +716,7 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
             if (route === '/web_editor/attachment/add_data') {
                 // Check that the correct record model and id were sent.
                 assert.equal(args.res_model, 'partner');
-                assert.equal(args.res_id, 1);
+                assert.equal(args.res_id, undefined);
                 return {
                     image_src: '/test_image_url.png',
                     access_token: '1234',
