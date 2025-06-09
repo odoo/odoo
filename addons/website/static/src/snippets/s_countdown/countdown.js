@@ -67,6 +67,7 @@ export class Countdown extends Interaction {
         // exist anymore if the interaction target has just been deleted
         this.el.querySelector(".s_countdown_canvas_wrapper")?.classList.remove("d-none");
         clearInterval(this.setInterval);
+        window.removeEventListener("resize", this.onResize);
     }
 
     /**
@@ -268,8 +269,10 @@ export class Countdown extends Interaction {
             for (const val of this.timeDiff) {
                 const canvas = val.canvas.querySelector("canvas");
                 const ctx = canvas.getContext("2d");
-                ctx.canvas.width = this.width;
-                ctx.canvas.height = this.size;
+                const dpr = window.devicePixelRatio || 1;
+                ctx.canvas.width = this.width * dpr;
+                ctx.canvas.height = this.size * dpr;
+                ctx.scale(dpr, dpr);
                 this.clearCanvas(ctx);
 
                 canvas.classList.toggle("d-none", this.shouldHideCountdown);
@@ -295,6 +298,11 @@ export class Countdown extends Interaction {
         if (this.isFinished) {
             clearInterval(this.setInterval);
             this.handleEndCountdownAction();
+            // Re-render on resize when the countdown is finished.
+            if (!this.onResize) {
+                this.onResize = () => this.render();
+                window.addEventListener("resize", this.onResize);
+            }
         }
     }
 
@@ -313,16 +321,22 @@ export class Countdown extends Interaction {
      */
     drawText(canvas, textNb, textUnit, full = false) {
         const ctx = canvas.getContext("2d");
+        const dpr = window.devicePixelRatio || 1;
         const nbSize = this.size / 4;
         ctx.font = `${nbSize}px Arial`;
         ctx.fillStyle = this.textColor;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(textNb, canvas.width / 2, canvas.height / 2);
+        ctx.fillText(textNb, canvas.width / dpr / 2, canvas.height / dpr / 2);
 
         const unitSize = this.size / 12;
         ctx.font = `${unitSize}px Arial`;
-        ctx.fillText(textUnit, canvas.width / 2, canvas.height / 2 + nbSize / 1.5, this.width);
+        ctx.fillText(
+            textUnit,
+            canvas.width / dpr / 2,
+            canvas.height / dpr / 2 + nbSize / 1.5,
+            this.width
+        );
 
         if (
             this.layout === "boxes" &&
