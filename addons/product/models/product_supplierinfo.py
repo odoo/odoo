@@ -114,7 +114,7 @@ class ProductSupplierinfo(models.Model):
         self._sanitize_vals(vals)
         res = super().write(vals)
         for supplier in self:
-            if not supplier.product_uom_id:
+            if supplier.product_tmpl_id and not supplier.product_uom_id:
                 supplier.product_uom_id = supplier.product_tmpl_id.uom_id
         return res
 
