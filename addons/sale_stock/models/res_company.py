@@ -7,6 +7,8 @@ from odoo import fields, models
 class ResCompany(models.Model):
     _inherit = 'res.company'
 
+    allow_spontaneous_returns = fields.Boolean(string="Allow Spontaneous Returns")
+    return_validity_days = fields.Integer(string="Return Validity days", default=14)
     security_lead = fields.Float(
         'Sales Safety Days', default=0.0, required=True,
         help="Margin of error for dates promised to customers. "

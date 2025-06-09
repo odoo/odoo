@@ -77,17 +77,12 @@ class SaleOrderLine(models.Model):
                                 self.env['decimal.precision'].precision_get('Product Unit'))
         return int(rounded_uom_qty) == rounded_uom_qty and int(rounded_uom_qty) or rounded_uom_qty
 
-    def _show_in_cart(self):
-        self.ensure_one()
-        # Exclude delivery & section/note lines from showing up in the cart
-        return not self.is_delivery and not bool(self.display_type) and not bool(self.combo_item_id)
-
     def _is_reorder_allowed(self):
         self.ensure_one()
         return (
             bool(self.product_id)
             and self.product_id._is_add_to_cart_allowed()
-            and self._show_in_cart()
+            and self._has_regular_product()
         )
 
     def _get_cart_display_price(self):

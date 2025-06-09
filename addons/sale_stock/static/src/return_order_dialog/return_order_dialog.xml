@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="sale_stock.ReturnOrderDialog">
+        <Dialog
+            t-if="this.state.products.length"
+            size="size"
+            title="title"
+            contentClass="'o_return_order_dialog'"
+        >
+            <table class="table table-sm table-borderless position-relative mb-0">
+                <tbody class="sale_tbody">
+                    <t t-foreach="this.state.products" t-as="product" t-key="product_index">
+                        <tr class="js_product">
+                            <td class="py-3 p-0">
+                                <div class="d-flex align-items-start gap-2">
+                                    <img
+                                        t-att-alt="product.name"
+                                        t-attf-src="/web/image/product.product/{{product.product_id}}/image_128"
+                                        class="border rounded d-block"
+                                    />
+                                    <div>
+                                        <h5 t-out="product.name"/>
+                                        <span
+                                            class="text-muted d-none d-md-inline-block"
+                                            t-if="product.description_sale"
+                                            t-out="product.description_sale"
+                                        />
+                                        <div t-if="product.lot_name">
+                                            Lot/Serial Number: <t t-out="product.lot_name"/>
+                                        </div>
+                                        <div t-if="product.delivery_name">
+                                            Delivery: <t t-out="product.delivery_name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="w-25 py-3 px-0 text-end">
+                                <div
+                                    class="d-md-flex gap-2 align-items-baseline justify-content-end"
+                                >
+                                    <span
+                                        t-out="formatCurrency(
+                                            product.price, product.currency
+                                        )"
+                                        class="h5 text-nowrap fw-bold text-end h6 mb-2 d-block"
+                                    />
+                                </div>
+                                <QuantityButtons
+                                    quantity="product.quantity or 0"
+                                    setQuantity="quantity => this.setQuantity(product, quantity)"
+                                    isMinusButtonDisabled="product.quantity === 0"
+                                    isPlusButtonDisabled="product.quantity == product.delivered_qty"
+                                />
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <t t-set-slot="footer">
+                <div class="w-100 d-flex gap-2">
+                    <select
+                        name="return_reason"
+                        class="form-select"
+                        required=""
+                        t-on-change="onReturnReasonChange"
+                    >
+                        <option value="" disabled="disabled" selected="selected">
+                            Select a return reason...
+                        </option>
+                        <t t-foreach="content.reasons" t-as="reason" t-key="reason.id">
+                            <option t-att-value="reason.id" t-out="reason.name"/>
+                        </t>
+                    </select>
+                    <button
+                        name="continue"
+                        class="btn btn-primary"
+                        t-on-click="onContinue"
+                    >
+                        Continue
+                    </button>
+                </div>
+            </t>
+        </Dialog>
+        <WarningDialog
+            t-else=""
+            message.translate="No products are available to return."
+            close="props.close"
+        />
+    </t>
+</templates>
