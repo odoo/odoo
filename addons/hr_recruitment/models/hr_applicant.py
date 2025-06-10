@@ -142,6 +142,7 @@ class HrApplicant(models.Model):
     is_applicant_in_pool = fields.Boolean(
         compute="_compute_is_applicant_in_pool", search="_search_is_applicant_in_pool"
     )
+    is_obsolete = fields.Boolean()
     talent_pool_count = fields.Integer(compute="_compute_talent_pool_count")
 
     _job_id_stage_id_idx = models.Index("(job_id, stage_id) WHERE active IS TRUE")
@@ -307,6 +308,14 @@ class HrApplicant(models.Model):
             count = len(related_ids)
 
             applicant.application_count = max(0, count)
+
+    def _make_similar_applications_obsolete(self):
+        domain = self._get_similar_applicants_domain(ignore_talent=True)
+        domain &= Domain("is_obsolete", "=", False)
+        matching_applicants = self.env["hr.applicant"].search(domain)
+        for applicant in matching_applicants:
+            if applicant.id != self.id:
+                applicant.is_obsolete = True
 
     @api.depends("talent_pool_ids")
     def _compute_is_pool(self):
@@ -632,6 +641,9 @@ class HrApplicant(models.Model):
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
 
+        for applicant in applicants:
+            applicant._make_similar_applications_obsolete()
+
         if (applicants.interviewer_ids.partner_id - self.env.user.partner_id):
             for applicant in applicants:
                 interviewers_to_notify = applicant.interviewer_ids.partner_id - self.env.user.partner_id
@@ -672,6 +684,8 @@ class HrApplicant(models.Model):
         res = super().write(vals)
 
         for applicant in self:
+            if not applicant.is_obsolete:
+                applicant._make_similar_applications_obsolete()
             if applicant.pool_applicant_id and applicant != applicant.pool_applicant_id and (not applicant.is_pool_applicant):
                 if 'email_from' in vals:
                     applicant.pool_applicant_id.email_from = vals['email_from']
