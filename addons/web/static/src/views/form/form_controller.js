@@ -345,8 +345,12 @@ export class FormController extends Component {
             isDomainSelected: this.model.root.isDomainSelected,
             resModel: this.model.root.resModel,
             domain: this.props.domain,
-            onActionExecuted: () =>
-                this.model.load({ resId: this.model.root.resId, resIds: this.model.root.resIds }),
+            onActionExecuted: ({ noReload } = {}) => {
+                if (!noReload) {
+                    const { resId, resIds } = this.model.root;
+                    return this.model.load({ resId: resId, resIds: resIds });
+                }
+            },
             shouldExecuteAction: this.shouldExecuteAction.bind(this),
         };
     }
