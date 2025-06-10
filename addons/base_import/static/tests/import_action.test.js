@@ -28,6 +28,8 @@ import { redirect } from "@web/core/utils/urls";
 import { ImportAction } from "../src/import_action/import_action";
 import { ImportBlockUI } from "../src/import_block_ui";
 import { ImportDataProgress } from "../src/import_data_progress/import_data_progress";
+import { IMPORT_LANGUAGE_SEPARATOR } from "@base_import/import_model";
+import { user } from "@web/core/user";
 
 const FAKE_PREVIEW_HEADERS = ["Foo", "Bar", "Display name"];
 const FAKE_PREVIEW_DATA = [
@@ -37,7 +39,7 @@ const FAKE_PREVIEW_DATA = [
 ];
 
 class Partner extends models.Model {
-    name = fields.Char();
+    name = fields.Char({ translate: true });
     foo = fields.Char();
     bar = fields.Boolean({ model_name: "partner" });
     selection = fields.Selection({
@@ -74,7 +76,30 @@ class Partner extends models.Model {
 
 onRpc("has_group", () => true);
 
-defineModels([Partner]);
+class ResLang extends models.Model {
+    name = fields.Char();
+    code = fields.Char();
+    active = fields.Boolean();
+
+    get_installed() {
+        return this._filter([["active", "!=", false]]).map((val) => [val.code, val.name]);
+    }
+
+    _records = [
+        {
+            name: "English (US)",
+            code: "en_US",
+            active: true,
+        },
+        {
+            name: "French / Français",
+            code: "fr_FR",
+            active: false,
+        },
+    ];
+}
+
+defineModels([Partner, ResLang]);
 
 defineActions([
     {
@@ -137,14 +162,18 @@ function getFieldsTree() {
         id: k,
         fields: [],
     }));
-    return mappedFields.filter((e) => !["id", "__last_update", "name"].includes(e.id));
+    return mappedFields.filter((e) => !["id", "__last_update"].includes(e.id));
 }
 
 function getMatches(headers) {
     // basic implementation for testing purposes which matches if the first line is the
     // name of a field, or corresponds to the string value of a field from Partner
     const matches = [];
-    for (const header of headers) {
+    for (let header of headers) {
+        if (header.includes(IMPORT_LANGUAGE_SEPARATOR)) {
+            header = header.split(IMPORT_LANGUAGE_SEPARATOR)[0];
+        }
+
         if (Partner._fields[header]) {
             matches.push([header]);
         }
@@ -164,6 +193,14 @@ async function parsePreview(opts, overrides = {}) {
     const preview =
         overrides.preview ?? (opts.has_headers ? data : data.map((c, i) => [headers[i], ...c]));
     totalRows = overrides.rowCount ?? [...preview].sort((a, b) => b.length - a.length)[0].length;
+
+    const languages = headers.map((val) =>
+        opts.has_headers
+            ? val.includes(IMPORT_LANGUAGE_SEPARATOR)
+                ? val.split(IMPORT_LANGUAGE_SEPARATOR)[1]
+                : false
+            : false
+    );
 
     const errorValues = ["#NULL!", "#DIV/0!", "#VALUE!", "#REF!", "#NAME?", "#NUM!", "#N/A"];
     const error = preview.flat().find((cell) => errorValues.includes(cell));
@@ -188,6 +225,7 @@ async function parsePreview(opts, overrides = {}) {
             sheets: ["Template", "Template 2"],
         },
         preview,
+        languages,
     };
 }
 
@@ -1610,6 +1648,64 @@ describe("Import view", () => {
         await animationFrame();
         expect(".o_import_report.alert-danger").toHaveText("Incorrect value");
         expect.verifySteps(["Import failed: see errors below"]);
+    });
+
+    test("show translation column if more than one lang active", async () => {
+        // Enable French language
+        ResLang._records[1].active = true;
+        patchWithCleanup(user, {
+            lang: "en-US",
+        });
+        onRpc("base_import.import", "parse_preview", ({ args }) =>
+            parsePreview(args[1], {
+                headers: ["id", "name", "name@fr_FR"],
+                data: ["test_lang", "Normal name", "Nom en français"],
+            })
+        );
+        onRpc("base_import.import", "execute_import", ({ args }) => {
+            expect.step("execute_import");
+            expect(args[1]).toEqual([false, "name", "name@fr_FR"]);
+            expect(args[2]).toEqual(["id", "name", "name@fr_fr"]);
+        });
+        redirect("/odoo/action-2");
+        await mountWebClient();
+        await getService("action").doAction(1);
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+        await contains(".o_control_panel_main_buttons .o_import_file").click();
+        await setInputFiles([file]);
+        await animationFrame();
+
+        expect(".o_import_data_content table th").toHaveCount(4, {
+            message: "A new column should be present for the selection of the language",
+        });
+
+        expect(
+            ".o_import_data_content table tr:is(:nth-child(2), :nth-child(3)) td:nth-child(2)"
+        ).toHaveText("Name");
+        expect(".o_import_data_content table tr:nth-child(2) td:nth-child(3)").toHaveText(
+            "English (US)"
+        );
+        expect(
+            ".o_import_data_content table tr:nth-child(2) td:nth-child(3) .o_select_menu_toggler_slot span"
+        ).toHaveClass("text-muted");
+        expect(".o_import_data_content table tr:nth-child(3) td:nth-child(3)").toHaveText(
+            "French / Français"
+        );
+        await contains(
+            ".o_import_data_content table tr:nth-child(3) td:nth-child(3) .fa.fa-times"
+        ).click();
+        expect(".o_import_data_content table tr:nth-child(3) td:nth-child(3)").toHaveText(
+            "English (US)"
+        );
+        await contains(
+            ".o_import_data_content table tr:nth-child(3) td:nth-child(3) button"
+        ).click();
+        await contains(`.o-dropdown-item :contains("French / Français")`).click();
+
+        await contains(".o_control_panel_main_buttons button:first-child").click();
+        expect.verifySteps(["execute_import"]);
     });
 });
 

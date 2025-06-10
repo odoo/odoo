@@ -42,11 +42,13 @@
                     <ImportDataContent
                         columns="this.model.columns"
                         onFieldChanged.bind="this.onFieldChanged"
+                        onFieldLanguageChanged.bind="this.onFieldLanguageChanged"
                         onOptionChanged.bind="this.onOptionChanged"
                         options="this.importOptions"
                         isFieldSet.bind="this.isFieldSet"
                         previewError="this.state.previewError"
                         importMessages="this.model.importMessages"
+                        languagesInstalled="this.model.languagesInstalled"
                     />
                 </t>
                 <div t-else="" class="o_view_nocontent">
