@@ -1,6 +1,6 @@
 {
     'name': 'Passkeys',
-    'version': '1.0',
+    'version': '1.1',
     'summary': 'Log in with a Passkey',
     'description': """
 The implementation of Passkeys using the webauthn protocol.
