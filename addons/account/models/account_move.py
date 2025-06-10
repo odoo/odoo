@@ -503,9 +503,14 @@ class AccountMove(models.Model):
         required=True,
         compute='_compute_currency_id', inverse='_inverse_currency_id', store=True, readonly=False, precompute=True,
     )
+    expected_currency_rate = fields.Float(
+        compute="_compute_expected_currency_rate",
+        digits=0,
+    )
     invoice_currency_rate = fields.Float(
         string='Currency Rate',
         compute='_compute_invoice_currency_rate', store=True, precompute=True,
+        readonly=False,
         copy=False,
         digits=0,
         help="Currency rate from company currency to document currency.",
@@ -1048,18 +1053,23 @@ class AccountMove(models.Model):
         return self.invoice_date or fields.Date.context_today(self)
 
     @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
+    def _compute_expected_currency_rate(self):
+        for move in self:
+            if move.currency_id:
+                move.expected_currency_rate = move.env['res.currency']._get_conversion_rate(
+                    from_currency=move.company_currency_id,
+                    to_currency=move.currency_id,
+                    company=move.company_id,
+                    date=move._get_invoice_currency_rate_date(),
+                )
+            else:
+                move.expected_currency_rate = 1
+
+    @api.depends('currency_id', 'company_currency_id', 'company_id', 'invoice_date')
     def _compute_invoice_currency_rate(self):
         for move in self:
             if move.is_invoice(include_receipts=True):
-                if move.currency_id:
-                    move.invoice_currency_rate = self.env['res.currency']._get_conversion_rate(
-                        from_currency=move.company_currency_id,
-                        to_currency=move.currency_id,
-                        company=move.company_id,
-                        date=move._get_invoice_currency_rate_date(),
-                    )
-                else:
-                    move.invoice_currency_rate = 1
+                move.invoice_currency_rate = move.expected_currency_rate
 
     @api.depends('move_type')
     def _compute_direction_sign(self):
@@ -5448,6 +5458,21 @@ class AccountMove(models.Model):
                         if line.display_type == 'product'
                     ]
                 })
+
+    def get_currency_rate(self, company_id, to_currency_id, date):
+        company = self.env['res.company'].browse(company_id)
+        to_currency = self.env['res.currency'].browse(to_currency_id)
+
+        return self.env['res.currency']._get_conversion_rate(
+            from_currency=company.currency_id,
+            to_currency=to_currency,
+            company=company,
+            date=date,
+        )
+
+    def refresh_invoice_currency_rate(self):
+        for move in self:
+            move.invoice_currency_rate = move.expected_currency_rate
 
     def action_register_payment(self):
         if any(m.state != 'posted' for m in self):
