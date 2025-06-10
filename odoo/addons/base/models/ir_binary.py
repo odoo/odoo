@@ -7,7 +7,6 @@ from odoo import models
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import Stream, request
 from odoo.tools import file_open, replace_exceptions
-from odoo.tools.image import image_process, image_guess_size_from_field_name
 from odoo.tools.mimetypes import guess_mimetype, get_extension
 from odoo.tools.misc import verify_limited_field_access_token
 
@@ -216,6 +215,7 @@ class IrBinary(models.AbstractModel):
             stream.mimetype = 'application/octet-stream'
 
         if (width, height) == (0, 0):
+            from odoo.tools.image import image_guess_size_from_field_name  # noqa: PLC0415
             width, height = image_guess_size_from_field_name(field_name)
 
         if isinstance(stream.etag, str):
@@ -229,6 +229,7 @@ class IrBinary(models.AbstractModel):
         )
 
         if modified and (width or height or crop):
+            from odoo.tools.image import image_process  # noqa: PLC0415
             if stream.type == 'path':
                 with open(stream.path, 'rb') as file:
                     stream.type = 'data'

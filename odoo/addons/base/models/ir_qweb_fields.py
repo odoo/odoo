@@ -9,7 +9,6 @@ from io import BytesIO
 import babel
 import babel.dates
 from markupsafe import Markup, escape, escape_silent
-from PIL import Image
 from lxml import etree, html
 
 from odoo import api, fields, models, tools
@@ -436,6 +435,7 @@ class IrQwebFieldImage(models.AbstractModel):
         if img_b64 and guess_mimetype(img_b64, '') == 'image/webp':
             return self.env["ir.qweb"]._get_converted_image_data_uri(value)
 
+        from PIL import Image  # noqa: PLC0415
         try:
             image = Image.open(BytesIO(img_b64))
             image.verify()
@@ -444,7 +444,7 @@ class IrQwebFieldImage(models.AbstractModel):
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content") from None
 
-        return "data:%s;base64,%s" % (Image.MIME[image.format], value.decode('ascii'))
+        return f"data:{Image.MIME[image.format]};base64,{value.decode('ascii')}"
 
     @api.model
     def value_to_html(self, value, options):

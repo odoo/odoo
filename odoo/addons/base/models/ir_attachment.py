@@ -18,7 +18,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.fields import Domain
 from odoo.http import Stream, root, request
-from odoo.tools import config, consteq, human_size, image, split_every, str2bool
+from odoo.tools import config, consteq, human_size, split_every, str2bool
 from odoo.tools.mimetypes import guess_mimetype, fix_filename_extension
 from odoo.tools.misc import limited_field_access_token
 
@@ -330,6 +330,7 @@ class IrAttachment(models.Model):
             # Can be set to 0 to skip the resize
             max_resolution = ICP('base.image_autoresize_max_px', '1920x1920')
             if str2bool(max_resolution, True):
+                from odoo.tools import image
                 try:
                     if is_raw:
                         img = image.ImageProcess(values['raw'], verify_resolution=False)

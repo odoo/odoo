@@ -6,8 +6,6 @@ import io
 from typing import Tuple, Union
 
 from PIL import Image, ImageOps
-# We can preload Ico too because it is considered safe
-from PIL import IcoImagePlugin
 try:
     from PIL.Image import Transpose, Palette, Resampling
 except ImportError:
@@ -23,9 +21,6 @@ from odoo.tools.translate import LazyTranslate
 __all__ = ["image_process"]
 _lt = LazyTranslate('base')
 
-# Preload PIL with the minimal subset of image formats we need
-Image.preinit()
-Image._initialized = 2
 
 # Maps only the 6 first bits of the base64 data, accurate enough
 # for our purpose and faster than decoding the full blob first

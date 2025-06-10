@@ -3,13 +3,10 @@ import importlib
 import io
 import re
 import unicodedata
-import sys
 from datetime import datetime
 from hashlib import md5
 from logging import getLogger
 from zlib import compress, decompress, decompressobj
-
-from PIL import Image, PdfImagePlugin
 
 from odoo.tools.arabic_reshaper import reshape
 from odoo.tools.parse_version import parse_version
@@ -89,10 +86,6 @@ _logger = getLogger(__name__)
 DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
 REGEX_SUBTYPE_UNFORMATED = re.compile(r'^\w+/[\w-]+$')
 REGEX_SUBTYPE_FORMATED = re.compile(r'^/\w+#2F[\w-]+$')
-
-
-# Disable linter warning: this import is needed to make sure a PDF stream can be saved in Image.
-PdfImagePlugin.__name__
 
 
 # make sure values are unwrapped by calling the specialized __getitem__
@@ -211,6 +204,7 @@ def to_pdf_stream(attachment) -> io.BytesIO:
     if attachment.mimetype == 'application/pdf':
         return stream
     elif attachment.mimetype.startswith('image'):
+        from PIL import Image  # noqa: PLC0415
         output_stream = io.BytesIO()
         Image.open(stream).convert("RGB").save(output_stream, format="pdf")
         return output_stream
@@ -226,6 +220,7 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=SENTINEL):
     :param thickness (float):       The thickness of the banner in pixels (default: 2cm).
     :return (BytesIO):              The modified PDF stream.
     """
+    from PIL import Image  # noqa: PLC0415
     from reportlab.lib import colors  # noqa: PLC0415
     from reportlab.lib.utils import ImageReader  # noqa: PLC0415
     from reportlab.pdfgen import canvas  # noqa: PLC0415
