@@ -84,6 +84,7 @@ export function getDomainDisplayedOperators(fieldDef, params = {}) {
             ];
         case "json":
             return ["=", "!=", "ilike", "not ilike", "set", "not_set"];
+        case "binary":
         case "properties":
             return ["set", "not_set"];
         case "date_option":
