@@ -128,6 +128,10 @@ class AccountMove(models.Model):
         # In Hungary, the currency rate should be based on the delivery date.
         super()._compute_invoice_currency_rate()
 
+    @api.depends('delivery_date')
+    def _compute_expected_currency_rate(self):
+        super()._compute_expected_currency_rate()
+
     def _get_invoice_currency_rate_date(self):
         self.ensure_one()
         if self.country_code == 'HU' and self.delivery_date:
