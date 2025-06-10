@@ -3,6 +3,7 @@
 
     <t t-name="web.KanbanRecord">
         <article
+            role="link"
             t-att-class="getRecordClasses()"
             t-att-data-id="props.record.id"
             t-att-tabindex="props.record.model.useSampleModel ? -1 : 0"
