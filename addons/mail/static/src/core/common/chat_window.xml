@@ -150,7 +150,7 @@
 </t>
 
 <t t-name="mail.ThreadActionsAsDropdownContent.action">
-    <DropdownItem class="'btn d-flex align-items-baseline m-0 ' + (env.inChatWindow ? 'o-mail-ChatWindow-command rounded-0 p-2' : ('rounded-3 px-2 py-1 bg-200 smaller ' + (!action_first ? 'rounded-top-0' : !action_last ? 'rounded-bottom-0' : '')))" onSelected="() => action.onSelect()">
+    <DropdownItem class="'btn d-flex align-items-baseline m-0 ' + (env.inChatWindow ? 'o-mail-ChatWindow-command rounded-0 p-2' : ('rounded-3 px-2 py-1 bg-200 ' + (!action_first ? 'rounded-top-0' : !action_last ? 'rounded-bottom-0' : '')))" onSelected="() => action.onSelect()">
         <i t-att-class="action.icon"/>
         <span t-att-class="{ 'mx-2': env.inChatWindow, 'mx-1': !env.inChatWindow }" t-attf-class="{{ action.nameClass }}" t-out="action.name"/>
     </DropdownItem>
