@@ -9,7 +9,7 @@ from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
 from stdnum.util import clean
 
 from odoo import api, models, fields
-from odoo.tools import _, zeep, LazyTranslate
+from odoo.tools import _, LazyTranslate
 from odoo.exceptions import ValidationError
 from odoo.addons.base.models.res_partner import EU_EXTRA_VAT_CODES
 
@@ -183,6 +183,7 @@ class ResPartner(models.Model):
             if partner.parent_id and partner.parent_id.vat == partner.vat:
                 partner.vies_valid = partner.parent_id.vies_valid
                 continue
+            from odoo.tools import zeep  # noqa: PLC0415
             try:
                 vies_valid = check_vies(partner.vat, timeout=10)
                 partner.vies_valid = vies_valid['valid']
