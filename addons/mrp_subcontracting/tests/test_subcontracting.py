@@ -1860,3 +1860,59 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         })
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id, searchVariant=False)
         self.assertTrue(report_values)
+
+    def test_subcontracting_multiple_backorders(self):
+        """
+        Check that processing multiple backorders in a raw for a
+        subcontracted prodcut is well behaved.
+        """
+        subcontracted_produt = self.env['product.product'].create({
+            'name': 'Lovely product',
+            'is_storable': True,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': subcontracted_produt.product_tmpl_id.id,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.set(self.subcontractor.ids)],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.in_type_id.create_backorder = 'always'
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': warehouse.in_type_id.id,
+            'partner_id': self.subcontractor.id,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'move_ids': [Command.create({
+                'name': subcontracted_produt.name,
+                'product_id': subcontracted_produt.id,
+                'product_uom_qty': 100,
+                'product_uom': subcontracted_produt.uom_id.id,
+                'location_id': self.ref('stock.stock_location_suppliers'),
+                'location_dest_id': warehouse.lot_stock_id.id,
+            })],
+        })
+        receipt.action_confirm()
+        with Form(receipt) as picking_form:
+            with picking_form.move_ids_without_package.edit(0) as move:
+                move.quantity = 5.0
+        self.assertRecordValues(receipt.move_line_ids, [
+            {'quantity': 5.0, 'state': 'partially_available', 'picked': True}
+        ])
+        receipt.button_validate()
+        backorder = receipt.backorder_ids
+        with Form(backorder) as picking_form:
+            with picking_form.move_ids_without_package.edit(0) as move:
+                move.quantity = 3.0
+        self.assertRecordValues(backorder.move_line_ids, [
+            {'quantity': 3.0, 'state': 'partially_available', 'picked': True}
+        ])
+        backorder.button_validate()
+        backorder_backorder = backorder.backorder_ids
+        with Form(backorder_backorder) as picking_form:
+            with picking_form.move_ids_without_package.edit(0) as move:
+                move.quantity = 1.0
+        self.assertRecordValues(backorder_backorder.move_line_ids, [
+            {'quantity': 1.0, 'state': 'partially_available', 'picked': True}
+        ])
+        backorder_backorder.button_validate()
+        self.assertEqual(subcontracted_produt.qty_available, 9.0)
