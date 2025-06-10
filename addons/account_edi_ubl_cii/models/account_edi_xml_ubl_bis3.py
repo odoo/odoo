@@ -124,13 +124,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
     def _get_partner_party_identification_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_21
-        vals = super()._get_partner_party_identification_vals_list(partner)
-
         if partner.country_code == 'NL':
-            vals.append({
+            return [{
                 'id': partner.peppol_endpoint,
-            })
-        return vals
+            }]
+        return super()._get_partner_party_identification_vals_list(partner)
 
     def _get_delivery_vals_list(self, invoice):
         # EXTENDS account.edi.xml.ubl_21

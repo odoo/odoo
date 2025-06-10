@@ -55,17 +55,18 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_partner_party_identification_vals_list(self, partner):
         # EXTENDS account.edi.xml.ubl_21
-        vals = super()._get_partner_party_identification_vals_list(partner)
         # Nilvera will reject any <ID> without a <schemeID>, so remove all items not
         # having the following structure : {'id': '...', 'id_attrs': {'schemeID': '...'}}
-        vals = [v for v in vals if v.get('id') and v.get('id_attrs', {}).get('schemeID')]
-        vals.append({
-            'id_attrs': {
-                'schemeID': 'VKN' if partner.is_company else 'TCKN',
-            },
-            'id': partner.vat,
-        })
-        return vals
+        if partner.country_code == 'TR':
+            return [{
+                'id_attrs': {
+                    'schemeID': 'VKN' if partner.is_company else 'TCKN',
+                },
+                'id': partner.vat,
+            }]
+        else:
+            vals = super()._get_partner_party_identification_vals_list(partner)
+            return [v for v in vals if v.get('id') and v.get('id_attrs', {}).get('schemeID')]
 
     def _get_partner_address_vals(self, partner):
         # EXTENDS account.edi.xml.ubl_21
