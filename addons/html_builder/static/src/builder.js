@@ -45,6 +45,7 @@ export class Builder extends Component {
         editableSelector: { type: String },
         themeTabDisplayName: { type: String, optional: true },
         slots: { type: Object, optional: true },
+        getCustomizeTranslationTab: { type: Function, optional: true },
     };
     static defaultProps = {
         config: {},
@@ -53,6 +54,7 @@ export class Builder extends Component {
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();
+        this.CustomizeTranslationTab = this.props.getCustomizeTranslationTab?.();
         // const actionService = useService("action");
         this.builder_sidebarRef = useRef("builder_sidebar");
         this.state = useState({
@@ -259,7 +261,7 @@ export class Builder extends Component {
     }
 
     get displayOnlyCustomizeTab() {
-        return !!this.props.config.customizeTab;
+        return this.props.config.isTranslationMode;
     }
 
     getInvisibleSelector(isMobile = this.props.isMobile) {

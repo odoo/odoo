@@ -12,6 +12,7 @@ import {
     setupWebsiteBuilder,
 } from "./website_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
+import { uniqueId } from "@web/core/utils/functions";
 
 defineWebsiteModels();
 
@@ -59,12 +60,9 @@ test("systray in translate mode", async () => {
     expect(".o_popover .o_edit_website_dropdown_item:contains('Edit')").toHaveCount(1);
 });
 
-test("snippets menu in translate mode", async () => {
+test("hide snippets menu in translate mode", async () => {
     await setupSidebarBuilderForTranslation({ websiteContent: `<h1> Homepage </h1>` });
-    expect(".o-snippets-tabs button:contains('Blocks')").toHaveAttribute("disabled");
-    expect(".o-snippets-tabs button:contains('THEME')").toHaveAttribute("disabled");
-    expect(".o-snippets-tabs button:contains('Style')").toHaveClass("active");
-    expect(".o-snippets-tabs button:contains('Style')").not.toHaveAttribute("disabled");
+    expect(".o-snippets-tabs").toHaveCount(0);
 });
 
 test("invisible elements in translate mode", async () => {
@@ -169,8 +167,7 @@ test("translate attribute history", async () => {
     await contains(".modal .modal-body input").edit("titre");
     await contains(".modal .btn:contains(Ok)").click();
     const getImg = ({ titleName, translated }) =>
-        `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable o_translatable_attribute${
-            translated ? " oe_translated" : ""
+        `<img src="/web/image/website.s_text_image_default_image" class="img img-fluid o_editable o_translatable_attribute${translated ? " oe_translated" : ""
         }" loading="lazy" title="${titleName}" style="" data-oe-translation-state="to_translate"></img>`;
     expect(editable).toHaveInnerHTML(getImg({ titleName: "titre", translated: true }));
     await contains(".o-snippets-menu button.fa-undo").click();
@@ -291,6 +288,25 @@ test("table of content snippet headings' translation updates its navbar items", 
     expect(":iframe .s_table_of_content_navbar .table_of_content_link:first-child").toHaveText(
         "New title"
     );
+});
+
+test("'Translate to' button should be visible in translate mode", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
+    });
+    onRpc("/html_editor/generate_text", () =>
+        JSON.stringify([
+            {
+                id: "t_" + parseInt(uniqueId() - 1),
+                text: "Bonjour",
+            },
+        ])
+    );
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expectElementCount("button[data-action-id='translateWebpageAI']", 1);
+    await contains("button[data-action-id='translateWebpageAI']").click();
+    await animationFrame();
+    expect(":iframe .o_editable").toHaveText("Bonjour");
 });
 
 function getTranslateEditable({ inWrap, oeId = "526", sourceSha = "sourceSha" }) {
