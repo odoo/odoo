@@ -45,14 +45,6 @@ class ProjectProject(models.Model):
     reinvoiced_sale_order_id = fields.Many2one('sale.order', string='Sales Order', groups='sales_team.group_sale_salesman', copy=False, domain="[('partner_id', '=', partner_id)]",
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
-    linked_product_ids = fields.One2many('product.template', 'project_id', string='Linked Products', default=lambda self: self.env['product.template'].search([
-        ('service_tracking', '!=', 'no'),
-        ('project_id', '=', self.id),
-    ]))
-    linked_product_templates_ids = fields.One2many('product.template', 'project_template_id', string='Linked Products templates', default=lambda self: self.env['product.template'].search([
-        ('service_tracking', '!=', 'no'),
-        ('project_template_id', '=', self.id),
-    ]))
 
     @api.model
     def default_get(self, fields_list):
@@ -150,29 +142,37 @@ class ProjectProject(models.Model):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
+    def _fetch_linked_products(self, project_id):
+        prods = self.env["product.template"].search([
+            ("service_tracking", "!=", "no"),
+            "|",
+                ("project_id", "=", project_id),
+                ("project_template_id", "=", project_id),
+        ])
+        return prods
+
     @api.onchange('allow_billable')
     def _onchange_allow_billable(self):
         """ show warning to user that linked products will be unlinked """
         message = None
         for project in self:
-            if not project.allow_billable and (project.linked_product_ids or project.linked_product_templates_ids):
-                message = {
-                    'warning': {
-                        'title': _('Warning'),
-                        'message': _("Making this project non-billable will unlink it from any products that create tasks in it or use it as a template. Are you sure you want to continue?"),
-                    },
-                }
+            if not project.allow_billable:
+                linked_product_ids = self._fetch_linked_products(project.id.origin)
+                if linked_product_ids:
+                    message = {
+                        'warning': {
+                            'title': _('Warning'),
+                            'message': _("Making this project non-billable will unlink it from any products that create tasks in it or use it as a template. Are you sure you want to continue?"),
+                        },
+                    }
         return message
 
     def _unlink_billable_products(self):
         for project in self:
-            if not project.allow_billable:
-                if project.linked_product_ids:
-                    for product in project.linked_product_ids:
-                        product.write({'service_tracking': 'no', 'project_id': False})
-                if project.linked_product_templates_ids:
-                    for product in project.linked_product_templates_ids:
-                        product.write({'service_tracking': 'no', 'project_template_id': False})
+            linked_product_ids = self._fetch_linked_products(project.id)
+            if linked_product_ids:
+                for product in linked_product_ids:
+                    product.write({'service_tracking': 'no', 'project_id': False, 'project_template_id': False})
 
     def action_customer_preview(self):
         self.ensure_one()
@@ -221,7 +221,8 @@ class ProjectProject(models.Model):
 
     def write(self, vals):
         project = super().write(vals)
-        self._unlink_billable_products()
+        if vals.get('allow_billable') is False:
+            self._unlink_billable_products()
         if sol_id := vals.get('sale_line_id'):
             self._ensure_sale_order_linked([sol_id])
         return project
