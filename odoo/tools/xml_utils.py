@@ -8,7 +8,6 @@ import re
 import zipfile
 from io import BytesIO
 
-import requests
 from lxml import etree
 
 from odoo.exceptions import UserError
@@ -232,6 +231,7 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
     :rtype: odoo.api.ir.attachment | bool
     :return: every XSD attachment created/fetched or False if an error occurred (see warning logs)
     """
+    import requests
     try:
         _logger.info("Fetching file/archive from given URL: %s", url)
         response = requests.get(url, timeout=request_max_timeout)
