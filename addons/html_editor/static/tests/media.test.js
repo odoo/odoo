@@ -123,3 +123,47 @@ describe("Powerbox search keywords", () => {
         }
     });
 });
+<<<<<<< f6bfc6f7a171d56ebf8e071fceea75b43f62c16e
+||||||| c315f5af7bbe47d6fa73d0dd0ba31ab6f93cfd03
+
+test("cropper should not open for external image", async () => {
+    onRpc("/html_editor/get_image_info", () => {
+        return {
+            original: false,
+        };
+    });
+
+    await setupEditor(
+        `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
+    );
+    await waitFor('div[name="image_transform"]');
+
+    await click('div[name="image_transform"] > .btn');
+    await animationFrame();
+
+    await click('.btn[name="image_crop"]');
+    await waitFor(".o_notification_manager .o_notification");
+    expect("img.o_we_cropper_img").toHaveCount(0);
+});
+=======
+
+test("cropper should not open for external image", async () => {
+    onRpc("/html_editor/get_image_info", () => {
+        return {
+            original: false,
+        };
+    });
+
+    await setupEditor(
+        `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
+    );
+    await waitFor('div[name="image_transform"]');
+
+    await click('div[name="image_transform"] > .btn');
+    await animationFrame();
+
+    await click('.btn[name="image_crop"]');
+    await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+    expect("img.o_we_cropper_img").toHaveCount(0);
+});
+>>>>>>> f7e12c3349fbc700a78589149fb64603440cbc62
