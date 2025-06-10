@@ -1,7 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
+from freezegun import freeze_time
 
 import pytz
 
@@ -76,3 +77,27 @@ class TestMailActivityMixin(MailCommon):
 
             self.assertFalse(act1.active, "activity marked as done should be archived")
             self.assertTrue(ev1.exists(), "event of done activity must not be deleted")
+
+    @tests.users("employee")
+    @freeze_time("2023-03-27")
+    def test_reschedule_activity_calendar_event_id(self):
+        """ Test that rescheduling the activity updates the meeting accordingly. """
+        start = datetime(2023, 3, 25, 8, 0)
+        end = datetime(2023, 3, 25, 18, 25)
+        meeting = self.env["calendar.event"].create({
+            "name": "Test Event",
+            "start": start,
+            "stop": end,
+        })
+        test_record = self.test_record.with_user(self.env.user)
+        activity = test_record.activity_schedule("calendar.calendar_activity_test_default", date_deadline=start.date(), user_id=self.env.uid)
+        activity.calendar_event_id = meeting
+
+        duration = meeting.duration  # duration before the reschedule
+        activity.action_reschedule_tomorrow()
+
+        expected_start_date = datetime.combine(activity.date_deadline, start.time())
+        expected_end_date = expected_start_date + timedelta(hours=duration)
+        self.assertEqual(meeting.start, expected_start_date, "The meeting should be rescheduled to match the activity's date")
+        self.assertEqual(meeting.stop, expected_end_date)
+        self.assertEqual(meeting.duration, duration)

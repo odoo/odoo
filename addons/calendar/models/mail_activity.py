@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime, timedelta
+
 from odoo import models, fields, tools, _
 from odoo.tools import is_html_empty
 from odoo.addons.mail.tools.discuss import Store
@@ -45,6 +47,29 @@ class MailActivity(models.Model):
                 )
                 event.write({'description': description})
         return messages, activities
+
+    def action_reschedule_today(self):
+        super().action_reschedule_today()
+        self._action_reschedule_meeting()
+
+    def action_reschedule_tomorrow(self):
+        super().action_reschedule_tomorrow()
+        self._action_reschedule_meeting()
+
+    def action_reschedule_nextweek(self):
+        super().action_reschedule_nextweek()
+        self._action_reschedule_meeting()
+
+    def _action_reschedule_meeting(self):
+        meeting_activities = self.filtered(lambda act: act.active and act.calendar_event_id)
+        for activity in meeting_activities:
+            meeting = activity.calendar_event_id
+            start_date = datetime.combine(activity.date_deadline, meeting.start.time())
+            end_date = start_date + timedelta(hours=meeting.duration)
+            meeting.write({
+                "start": start_date,
+                "stop": end_date,
+            })
 
     def unlink_w_meeting(self):
         events = self.mapped('calendar_event_id')
