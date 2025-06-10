@@ -1020,7 +1020,7 @@ registerWebsitePreviewTour("website_form_nested_forms", {
         noPrepend: true,
     },
     {
-        trigger: ".o-website-builder_sidebar .o_snippet[name='Form'].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion)",
+        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Form'].o_draggable .o_snippet_thumbnail",
         content: "Try to drag the form into another form",
         run: "drag_and_drop :iframe .o_customer_address_fill a",
     },
