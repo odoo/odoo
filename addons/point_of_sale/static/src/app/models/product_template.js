@@ -18,6 +18,13 @@ import { accountTaxHelpers } from "@account/helpers/account_tax";
 export class ProductTemplate extends Base {
     static pythonModel = "product.template";
 
+    setup(_vals) {
+        super.setup(...arguments);
+        this.uiState = {
+            applicablePricelistRules: {},
+        };
+    }
+
     prepareProductBaseLineForTaxesComputationExtraValues(
         price,
         pricelist = false,
@@ -160,6 +167,29 @@ export class ProductTemplate extends Base {
         return current;
     }
 
+    getApplicablePricelistRules(pricelist) {
+        const productTmplRules = this["<-product.pricelist.item.product_tmpl_id"] || [];
+        const rulesIds = [...new Set([...productTmplRules])].map((rule) => rule.id);
+        if (
+            this.uiState.applicablePricelistRules[pricelist.id] &&
+            (!rulesIds.length ||
+                this.uiState.applicablePricelistRules[pricelist.id].includes(rulesIds[0]))
+        ) {
+            return this.uiState.applicablePricelistRules[pricelist.id];
+        }
+
+        const parentCategoryIds = this.parentCategories;
+        const availableRules =
+            pricelist.item_ids?.filter(
+                (rule) =>
+                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
+                    (!rule.product_tmpl_id || rule.product_tmpl_id.id === this.id) &&
+                    (!rule.categ_id || parentCategoryIds.includes(rule.categ_id.id))
+            ) || [];
+        this.uiState.applicablePricelistRules[pricelist.id] = availableRules.map((rule) => rule.id);
+        return this.uiState.applicablePricelistRules[pricelist.id];
+    }
+
     // Port of _get_product_price on product.pricelist.
     //
     // Anything related to UOM can be ignored, the POS will always use
@@ -186,24 +216,33 @@ export class ProductTemplate extends Base {
         }
 
         const product = variant;
-        const productTmpl = variant.product_tmpl_id || this;
         const standardPrice = variant ? variant.standard_price : this.standard_price;
         const basePrice = variant ? variant.lst_price : this.list_price;
+<<<<<<< 55bd341121cfd9c648b26effc1ff7bfc8277c1ae
         const productTmplRules =
             productTmpl.backLink("<-product.pricelist.item.product_tmpl_id") || [];
         const productRules =
             (product && product.backLink("<-product.pricelist.item.product_id")) || [];
         const rulesIds = [...productTmplRules, ...productRules].map((rule) => rule.id);
 
+||||||| f15ab145a35805d7a850658801825dfe8e55a5a7
+        const productTmplRules = productTmpl["<-product.pricelist.item.product_tmpl_id"] || [];
+        const productRules = product["<-product.pricelist.item.product_id"] || [];
+        const rulesIds = [...productTmplRules, ...productRules].map((rule) => rule.id);
+
+=======
+>>>>>>> 0a63f3264f043102b804160d3565546d6f55d830
         let price = basePrice + (price_extra || 0);
-        const rules =
-            pricelist?.item_ids?.filter(
-                (rule) =>
-                    (rulesIds.includes(rule.id) || (!rule.product_id && !rule.product_tmpl_id)) &&
-                    (!rule.min_quantity || quantity >= rule.min_quantity) &&
-                    (!rule.product_id || rule.product_id.id === product?.id) &&
-                    (!rule.categ_id || productTmpl.parentCategories.includes(rule.categ_id.id))
-            ) || [];
+        let rules = [];
+        if (pricelist) {
+            if (product) {
+                rules = product.getApplicablePricelistRules(pricelist);
+            } else {
+                rules = this.getApplicablePricelistRules(pricelist);
+            }
+            rules = this.models["product.pricelist.item"].readMany(rules);
+            rules = rules.filter((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+        }
 
         const rule = rules.length && rules[0];
         if (!rule) {
