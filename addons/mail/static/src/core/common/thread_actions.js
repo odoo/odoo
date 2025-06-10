@@ -183,7 +183,17 @@ function transformAction(component, id, action) {
          * - In action definition: indicate whether the action is elligible as partition actions. @see useThreadActions::partition
          * - While action is being used: indicate that the action is being used as a partitioned action.
          */
-        partition: action.partition ?? true,
+        get partition() {
+            if (action._partition) {
+                return action._partition;
+            }
+            return typeof action.partition === "function"
+                ? action.partition(component)
+                : action.partition ?? true;
+        },
+        set partition(partition) {
+            action._partition = partition;
+        },
         /** Determines whether this is a popover linked to this action. */
         popover: null,
         /** Determines the order of this action (smaller first). */

@@ -4,15 +4,14 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 threadActionsRegistry.add("leave", {
-    condition: (component) =>
-        !(component.env.inChatWindow && !component.ui.isSmall) &&
-        (component.thread?.canLeave || component.thread?.canUnpin),
+    condition: (component) => component.thread?.canLeave || component.thread?.canUnpin,
     icon: "fa fa-fw fa-sign-out text-danger",
     name: (component) =>
         component.thread.canLeave ? _t("Leave Channel") : _t("Unpin Conversation"),
     nameClass: "text-danger",
     open: (component) =>
         component.thread.canLeave ? component.thread.leaveChannel() : component.thread.unpin(),
+    partition: (component) => component.env.inChatWindow,
     sequence: 10,
     sequenceGroup: 40,
     setup() {
