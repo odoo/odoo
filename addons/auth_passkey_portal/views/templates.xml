@@ -1,0 +1,28 @@
+<odoo>
+    <template id="passkeys_portal_hook" name="Passkeys Portal hook" inherit_id="portal.portal_my_security">
+        <xpath expr="//section[@name='portal_revoke_all_devices_popup']" position="before">
+            <section name="portal_passkey_management">
+            <h4>Passkeys</h4>
+                <t t-set="path"/>
+                <div class="d-flex flex-wrap">
+                    <t t-foreach="user_id.auth_passkey_key_ids" t-as="key">
+                        <div class="o_passkey">
+                            <input name="id" type="hidden" t-att-value="key.id"/>
+                            <button class="o_passkey_dropdown_btn"><span class="oi oi-ellipsis-v"></span></button>
+                            <div class="o_passkey_dropdown d-none">
+                                <a name="rename" href="#">Rename</a>
+                                <a name="delete" href="#">Delete</a>
+                            </div>
+                            <span class="o_passkey_name" t-esc="key.name"></span>
+                            <small>Created: <span t-esc="key.create_date.strftime('%d/%m/%Y  %H:%M:%S')"></span></small>
+                            <small>Last used: <span t-esc="key.write_date.strftime('%d/%m/%Y  %H:%M:%S')"></span></small>
+                        </div>
+                    </t>
+                </div>
+                <button type="button" class="btn btn-light mt-1" id="portal_passkey_add">
+                    Add Passkey
+                </button>
+            </section>
+        </xpath>
+    </template>
+</odoo>

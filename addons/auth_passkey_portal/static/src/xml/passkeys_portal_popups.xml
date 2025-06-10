@@ -1,0 +1,22 @@
+<templates>
+    <t t-name="auth_passkey_portal.create">
+        <form string="Key Create">
+            <h3><strong>Name your key</strong></h3>
+            <input type="text" class="form-control col-10 col-md-6" name="keyname" required="required"/>
+        </form>
+    </t>
+    <t t-name="auth_passkey_portal.rename">
+        <form string="Key Rename">
+            <h3><strong>Rename your key</strong></h3>
+            <!--
+                !! REVIEW !!
+                no clue why this doesnt work, t-att-placeholder works fine,
+                it also works fine if you set the type to hidden,
+                must be some magic fuckery going on here that I don't know about
+
+                but yeah t-att-value is just completely blank for now :/
+            -->
+            <input type="text" class="form-control col-10 col-md-6" name="keyname" required="required" t-att-value="oldname"/>
+        </form>
+    </t>
+</templates>

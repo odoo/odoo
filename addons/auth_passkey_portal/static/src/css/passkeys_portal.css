@@ -1,0 +1,53 @@
+.o_passkey {
+    width: calc(50% - 10px);
+    height: 80px;
+    margin-bottom: 20px;
+    border: 1px solid #d8dadd;
+    padding: 8px;
+    position: relative;
+}
+
+.o_passkey small {
+    display: block;
+}
+
+.o_passkey:nth-child(odd) {
+    margin-right: auto;
+}
+
+.o_passkey_name {
+    display: inline-block;
+    font-weight: bold;
+    max-width: calc(100% - 24px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.o_passkey_dropdown_btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: none;
+    border: none;
+}
+
+.o_passkey_dropdown {
+    position: absolute;
+    right: 0px;
+    top: 28px;
+    background-color: white;
+    border: 1px #d8dadd solid;
+    border-radius: 0.25rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    width: 100px;
+    height: 66px;
+    padding-left: 20px;
+    padding-top: 8px;
+}
+
+.o_passkey_dropdown a {
+    color: black;
+    display: block;
+    padding-bottom: 4px;
+}

@@ -138,6 +138,10 @@ class AuthPasskeyKey(models.Model):
                     key.create_uid.login, key.create_uid.id,
                     request.httprequest.environ['REMOTE_ADDR'] if request else 'n/a'
                 )
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'soft_reload',
+        }
 
     def action_rename_passkey(self):
         return {
