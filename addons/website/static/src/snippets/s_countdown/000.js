@@ -171,7 +171,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         }
     },
     /**
-     * Returns weither or not the countdown should be displayed for the given
+     * Returns whether or not the countdown should be displayed for the given
      * unit (days, sec..).
      *
      * @private
@@ -294,7 +294,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      * @private
      * @param {HTMLCanvasElement} canvas
      * @param {string} textNb - text to display in the center of the canvas, in big
-     * @param {string} textUnit - text to display bellow `textNb` in small
+     * @param {string} textUnit - text to display below `textNb` in small
      * @param {boolean} full - if true, the shape will be drawn up to the progressbar
      */
     _drawText: function (canvas, textNb, textUnit, full = false) {
@@ -366,7 +366,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      * @param {RenderingContext} ctx - Context of the canvas
      * @param {string} nbUnit - how many unit should fill progress bar
      * @param {string} totalUnit - number of unit to do a complete progress bar
-     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     * @param {boolean} thinLine - if true, the progress bar will be thinner
      */
     _drawProgressBar: function (ctx, nbUnit, totalUnit, thinLine) {
         ctx.strokeStyle = this.progressBarColor;
@@ -402,7 +402,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      *
      * @private
      * @param {RenderingContext} ctx - Context of the canvas
-     * @param {boolean} thinLine - if true, the progress bar will be thiner
+     * @param {boolean} thinLine - if true, the progress bar will be thinner
      */
     _drawProgressBarBg: function (ctx, thinLine) {
         ctx.strokeStyle = this.progressBarColor;
