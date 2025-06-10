@@ -125,64 +125,144 @@ describe("HTML builder tests", () => {
         expect.verifySteps(["prepare"]);
     });
 
-    test("reload action: apply, clean save and reload are called in the right order (async)", async () => {
+    describe("reload action: apply, clean save and reload are called in the right order (async)", () => {
         let reloadDef;
-        patchWithCleanup(SavePlugin.prototype, {
-            async save() {
-                expect.step("save sync");
-                await super.save();
-                expect.step("save async");
-            },
-            async saveView() {
-                return new Promise((resolve) => setTimeout(resolve, 10));
-            },
-        });
-        patchWithCleanup(Builder.prototype, {
-            setup() {
-                super.setup();
-                this.editor.config.reloadEditor = async () => {
-                    await new Promise((resolve) => setTimeout(resolve, 10));
-                    expect.step("reload");
-                    reloadDef.resolve();
-                };
-            },
-        });
-        addBuilderAction({
-            testReloadAction: {
-                reload: {},
-                isApplied: ({ editingElement }) => editingElement.dataset.applied === "true",
-                apply: async ({ editingElement }) => {
-                    expect.step("apply sync");
-                    await new Promise((resolve) => setTimeout(resolve, 100));
-                    expect.step("apply async");
-                    editingElement.dataset.applied = "true";
+        beforeEach(() => {
+            reloadDef = undefined;
+            patchWithCleanup(SavePlugin.prototype, {
+                async save() {
+                    expect.step("save sync");
+                    await super.save();
+                    expect.step("save async");
                 },
-                clean: async ({ editingElement }) => {
-                    expect.step("clean sync");
-                    await new Promise((resolve) => setTimeout(resolve, 100));
-                    expect.step("clean async");
-                    editingElement.dataset.applied = "false";
+                async saveView() {
+                    return new Promise((resolve) => setTimeout(resolve, 10));
                 },
-            },
+            });
+            patchWithCleanup(Builder.prototype, {
+                setup() {
+                    super.setup();
+                    this.editor.config.reloadEditor = async () => {
+                        await new Promise((resolve) => setTimeout(resolve, 10));
+                        expect.step("reload");
+                        reloadDef.resolve();
+                    };
+                },
+            });
+            addBuilderAction({
+                testReloadAction: {
+                    reload: {},
+                    isApplied: ({ editingElement }) => editingElement.dataset.applied === "true",
+                    apply: async ({ editingElement }) => {
+                        expect.step("apply sync");
+                        await new Promise((resolve) => setTimeout(resolve, 100));
+                        expect.step("apply async");
+                        editingElement.dataset.applied = "true";
+                    },
+                    clean: async ({ editingElement }) => {
+                        expect.step("clean sync");
+                        await new Promise((resolve) => setTimeout(resolve, 100));
+                        expect.step("clean async");
+                        delete editingElement.dataset.applied;
+                    },
+                },
+            });
         });
 
-        addBuilderOption({
-            selector: ".test-options-target",
-            template: xml`<BuilderButton action="'testReloadAction'">Click</BuilderButton>`,
+        test("single BuilderButton (useClickableBuilderComponent)", async () => {
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`<BuilderButton action="'testReloadAction'">Click</BuilderButton>`,
+            });
+            await setupHTMLBuilder(`<section class="test-options-target">Test</section>`);
+            await contains(":iframe .test-options-target").click();
+
+            // Apply
+            reloadDef = new Deferred();
+            await contains("[data-action-id='testReloadAction']").click();
+            await expect(reloadDef).resolves.toBe();
+            expect.verifySteps(["apply sync", "apply async", "save sync", "save async", "reload"]);
+
+            // Clean
+            reloadDef = new Deferred();
+            await contains("[data-action-id='testReloadAction']").click();
+            await expect(reloadDef).resolves.toBe();
+            expect.verifySteps(["clean sync", "clean async", "save sync", "save async", "reload"]);
         });
-        await setupHTMLBuilder(`<section class="test-options-target">Test</section>`);
-        await contains(":iframe .test-options-target").click();
 
-        // Apply
-        reloadDef = new Deferred();
-        await contains("[data-action-id='testReloadAction']").click();
-        await reloadDef;
-        expect.verifySteps(["apply sync", "apply async", "save sync", "save async", "reload"]);
+        test("BuilderButtonGroup (useSelectableComponent, useClickableBuilderComponent)", async () => {
+            addBuilderAction({
+                invertAction: {
+                    isApplied: ({ editingElement }) => editingElement.dataset.applied !== "true",
+                    apply: async () => {
+                        expect.step("invert apply sync");
+                        await new Promise((resolve) => setTimeout(resolve, 100));
+                        expect.step("invert apply async");
+                    },
+                    clean: async () => {
+                        expect.step("invert clean sync");
+                        await new Promise((resolve) => setTimeout(resolve, 100));
+                        expect.step("invert clean async");
+                    },
+                },
+            });
+            addBuilderOption({
+                selector: ".test-options-target",
+                template: xml`
+                    <BuilderButtonGroup>
+                        <BuilderButton action="'testReloadAction'">Click</BuilderButton>
+                        <BuilderButton action="'invertAction'">Click</BuilderButton>
+                    </BuilderButtonGroup>
+                `,
+            });
+            await setupHTMLBuilder(`<section class="test-options-target">Test</section>`);
+            await contains(":iframe .test-options-target").click();
 
-        // Clean
-        reloadDef = new Deferred();
-        await contains("[data-action-id='testReloadAction']").click();
-        await reloadDef;
-        expect.verifySteps(["clean sync", "clean async", "save sync", "save async", "reload"]);
+            // Apply
+            reloadDef = new Deferred();
+            await contains("[data-action-id='testReloadAction']").click();
+            await expect(reloadDef).resolves.toBe();
+            expect.verifySteps([
+                // Preview
+                "invert clean sync",
+                "invert clean async",
+
+                // Commit
+                "invert clean sync",
+                "invert clean async",
+                "apply sync",
+                "apply async",
+
+                // Reload
+                "save sync",
+                "save async",
+                "reload",
+            ]);
+
+            // Manually refresh options state after fake reload
+            await contains(".o-snippets-tabs [data-name='blocks']").click();
+            await contains(":iframe .test-options-target").click();
+
+            // Clean
+            reloadDef = new Deferred();
+            await contains("[data-action-id='invertAction']").click();
+            await expect(reloadDef).resolves.toBe();
+            expect.verifySteps([
+                // Preview
+                "invert apply sync",
+                "invert apply async",
+
+                // Commit
+                "clean sync",
+                "clean async",
+                "invert apply sync",
+                "invert apply async",
+
+                // Reload
+                "save sync",
+                "save async",
+                "reload",
+            ]);
+        });
     });
 });
