@@ -1,15 +1,10 @@
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, dblclick } from "@odoo/hoot-dom";
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { onRpc } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
 test("double click on video", async () => {
-    onRpc("/api/oembed.json", async () => ({
-        // Those lead to 404 but it's fine for the test
-        thumbnailSrc: "/hello/world.jpg",
-    }));
     await setupWebsiteBuilder(`
         <div>
             <div class="media_iframe_video o_snippet_drop_in_only">
