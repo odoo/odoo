@@ -19,12 +19,17 @@ export class Attachment extends FileModelMixin(Record) {
         return attachment;
     }
 
+    composer = fields.One("Composer", { inverse: "attachments" });
     thread = fields.One("Thread", { inverse: "attachments" });
     /** @type {string} */
     raw_access_token;
     res_name;
     message = fields.One("mail.message", { inverse: "attachment_ids" });
     create_date = fields.Datetime();
+
+    get gifPaused() {
+        return this.thread ? !this.thread.isFocused : !this.composer?.isFocused;
+    }
 
     get isDeletable() {
         if (this.message && !this.store.self.isInternalUser) {

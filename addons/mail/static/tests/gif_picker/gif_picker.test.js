@@ -3,6 +3,7 @@ import {
     click,
     contains,
     defineMailModels,
+    focus,
     insertText,
     openDiscuss,
     openFormView,
@@ -22,7 +23,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { GifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, queryFirst } from "@odoo/hoot-dom";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -166,25 +167,23 @@ test("Open a GIF category trigger the search for the category", async () => {
 test("Can have GIF categories with same name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    onRpc("/discuss/gif/categories", () => {
-        return {
-            locale: "en",
-            tags: [
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-            ],
-        };
-    });
+    onRpc("/discuss/gif/categories", () => ({
+        locale: "en",
+        tags: [
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+        ],
+    }));
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
@@ -282,4 +281,21 @@ test("Scrolling at the bottom should trigger the search to load more gif, even a
     await contains(".o-discuss-Gif", { count: 4 });
     await scroll(".o-discuss-GifPicker-content", "bottom");
     await contains(".o-discuss-Gif", { count: 8 });
+});
+
+test("Pause GIF when thread is not focused", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    onRpc("/discuss/gif/categories", () => rpc.categories);
+    onRpc("/discuss/gif/search", () => rpc.search);
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add GIFs']");
+    await click("img[data-src='https://media.tenor.com/6uIlQAHIkNoAAAAM/cry.gif']");
+    await click("img[data-src='https://media.tenor.com/np49Y1vrJO8AAAAM/crying-cry.gif']:eq(0)");
+    await contains(".o-mail-LinkPreviewImage");
+    queryFirst(".o-mail-Thread").blur();
+    await contains(".o-mail-LinkPreviewImage img[data-paused]");
+    await focus(".o-mail-Thread");
+    await contains(".o-mail-LinkPreviewImage img:not([data-paused])");
 });
