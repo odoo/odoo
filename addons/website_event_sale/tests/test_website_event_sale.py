@@ -20,7 +20,7 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
         email_question = event_questions.filtered(lambda q: q.question_type == 'email')
         phone_question = event_questions.filtered(lambda q: q.question_type == 'phone')
         existing_so = self.env['sale.order'].search([])
-        self.url_open(f'/event/{self.event.id}/registration/confirm', data={
+        self.url_open(f'/event/{self.event.id}/registration/attendee-details/confirm', data={
             f'1-name-{name_question.id}': 'Bob',
             f'1-email-{email_question.id}': 'bob@test.lan',
             f'1-phone-{phone_question.id}': '8989898989',
@@ -44,7 +44,7 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
         name_question = event_questions.filtered(lambda q: q.question_type == 'name')
         email_question = event_questions.filtered(lambda q: q.question_type == 'email')
         phone_question = event_questions.filtered(lambda q: q.question_type == 'phone')
-        self.url_open(f'/event/{self.event.id}/registration/confirm', data={
+        self.url_open(f'/event/{self.event.id}/registration/attendee-details/confirm', data={
             f'1-name-{name_question.id}': 'Bob',
             f'1-email-{email_question.id}': 'bob@test.lan',
             f'1-phone-{phone_question.id}': '8989898989',

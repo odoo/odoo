@@ -71,6 +71,7 @@
             'website_event/static/src/interactions/*.js',
             'website_event/static/src/snippets/**/*.js',
             ('remove', 'website_event/static/src/snippets/**/options.js'),
+            'website_event/static/src/xml/*.xml',
         ],
         'website.assets_wysiwyg': [
             'website_event/static/src/snippets/s_events/options.js',
