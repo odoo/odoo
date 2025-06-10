@@ -18,7 +18,7 @@ from odoo import tools
 from .test_token_access import TestTokenAccess
 
 
-@tagged('odoo2google', 'calendar_performance')
+@tagged('odoo2google', 'calendar_performance', 'is_query_count')
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
 class TestSyncOdoo2Google(TestSyncGoogle):
 
