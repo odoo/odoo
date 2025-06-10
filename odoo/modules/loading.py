@@ -212,7 +212,6 @@ def load_module_graph(
             # Can't put this line out of the loop: ir.module.module will be
             # registered by init_models() above.
             module = env['ir.module.module'].browse(module_id)
-            module._check()
 
             idref: dict = {}
 

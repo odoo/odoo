@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
+import contextlib
 import logging
 import os
 import shutil
@@ -19,7 +20,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.parse_version import parse_version
-from odoo.tools.misc import topological_sort, get_flag
+from odoo.tools.misc import topological_sort, get_flag, file_path
 from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
 from odoo.http import request
 from odoo.modules import get_module_path
@@ -837,11 +838,6 @@ class IrModuleModule(models.Model):
         }
         mod_names = topological_sort(mod_dict)
         self.env['ir.module.module']._load_module_terms(mod_names, filter_lang, overwrite)
-
-    def _check(self):
-        for module in self:
-            if not module.description_html:
-                _logger.warning('module %s: description is empty!', module.name)
 
     def _get(self, name):
         """ Return the (sudoed) `ir.module.module` record with the given name.
