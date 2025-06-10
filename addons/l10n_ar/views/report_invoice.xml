@@ -224,11 +224,7 @@
                     <t t-if="o.invoice_incoterm_id">
                         <br/>
                         <strong>Incoterm:</strong>
-                        <p t-if="o.incoterm_location">
-                            <span t-field="o.invoice_incoterm_id.code"/> <br/>
-                            <span t-field="o.incoterm_location"/>
-                        </p>
-                        <p t-else="" t-field="o.invoice_incoterm_id.name" class="m-0"/>
+                        <span t-field="o.invoice_incoterm_id.code"/><span t-if="o.incoterm_location" t-out="' - %s' % o.incoterm_location"/>
                     </t>
 
                 </div>
