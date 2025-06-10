@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentView">
-        <div t-if="state.thread.attachmentsInWebClientView.length > 0" class="o-mail-Attachment">
+        <div t-if="state.thread.hasFile" class="o-mail-Attachment">
             <div class="o_attachment_control popout d-print-none cursor-pointer"
                  t-on-click="onClickPopout"
                  data-tooltip="Open preview in a separate window."

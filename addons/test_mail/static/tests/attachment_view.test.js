@@ -250,3 +250,42 @@ test.skip("Attachment view / chatter popout across multiple records test", async
     await click("button i[title='Pop out Attachments']");
     await navigateRecords();
 });
+
+test("Display main_attachment if no attachments", async () => {
+    const pyEnv = await startServer();
+    const pdfId = pyEnv["ir.attachment"].create({
+        mimetype: "application/pdf",
+        res_model: "mail.test.simple.main.attachment",
+    });
+    const recordId = pyEnv["mail.test.simple.main.attachment"].create({
+        display_name: "first partner",
+        message_attachment_count: 0,
+    });
+    pyEnv["mail.message"].create([
+        {
+            body: "Dont you want to easily read that sweet sweet PDF ???",
+            model: "mail.test.simple.main.attachment",
+            res_id: recordId,
+            attachment_ids: [pdfId],
+        },
+    ]);
+    pyEnv["mail.test.simple.main.attachment"].write([recordId], {message_main_attachment_id : pdfId});
+
+    registerArchs({
+        "mail.test.simple.main.attachment,false,form": `
+                <form string="Test document">
+                    <div class="o_popout_holder"/>
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                    <div class="o_attachment_preview"/>
+                    <chatter/>
+                </form>`,
+    });
+
+    patchUiSize({ size: SIZES.XXL });
+    await start();
+    await openFormView("mail.test.simple.main.attachment", recordId);
+    await contains(".o_attachment_preview");
+    await contains(".o-mail-Attachment > iframe"); // There should be iframe for PDF viewer
+});

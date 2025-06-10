@@ -881,6 +881,13 @@ export class Thread extends Record {
     }
 
     /**
+     * @returns {boolean}
+     */
+    get hasFile() {
+        return this.attachmentsInWebClientView.length > 0 || this.message_main_attachment_id;
+    }
+
+    /**
      * Following a load more or load around, listing of messages contains persistent messages.
      * Transient messages are missing, so this function puts known transient messages at the
      * right place in message list of thread.
