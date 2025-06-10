@@ -1,4 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import functools
 import io
 import json
 import logging
@@ -6,6 +7,7 @@ import os
 import re
 import subprocess
 import tempfile
+import typing
 import unittest
 from ast import literal_eval
 from collections import OrderedDict
@@ -35,10 +37,6 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 _logger = logging.getLogger(__name__)
 
 
-def _get_wkhtmltopdf_bin():
-    return find_in_path('wkhtmltopdf')
-
-
 def _run_wkhtmltopdf(args):
     """
     Runs the given arguments against the wkhtmltopdf binary.
@@ -46,16 +44,13 @@ def _run_wkhtmltopdf(args):
     Returns:
         The process
     """
+    bin_path = _wkhtml().bin
     return subprocess.run(
-        [_get_wkhtmltopdf_bin(), *args],
+        [bin_path, *args],
         capture_output=True,
         encoding='utf-8',
         check=False,
     )
-
-
-def _get_wkhtmltoimage_bin():
-    return find_in_path('wkhtmltoimage')
 
 
 def _split_table(tree, max_rows):
@@ -78,53 +73,79 @@ def _split_table(tree, max_rows):
             prev.addnext(sibling)
             prev = sibling
 
-# Check the presence of Wkhtmltopdf and return its version at Odoo start-up
-wkhtmltopdf_state = 'install'
-wkhtmltopdf_dpi_zoom_ratio = False
-try:
-    process = subprocess.Popen(
-        [_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
-    )
-except (OSError, IOError):
-    _logger.info('You need Wkhtmltopdf to print a pdf version of the reports.')
-else:
-    _logger.info('Will use the Wkhtmltopdf binary at %s' % _get_wkhtmltopdf_bin())
-    out, err = process.communicate()
-    match = re.search(b'([0-9.]+)', out)
-    if match:
-        version = match.group(0).decode('ascii')
-        if parse_version(version) < parse_version('0.12.0'):
-            _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
-            wkhtmltopdf_state = 'upgrade'
+
+class WkhtmlInfo(typing.NamedTuple):
+    state: typing.Literal['install', 'ok']
+    dpi_zoom_ratio: bool
+    bin: str
+    version: str
+    wkhtmltoimage_bin: str
+    wkhtmltoimage_version: tuple[str, ...] | None
+
+
+@functools.lru_cache(1)
+def _wkhtml() -> WkhtmlInfo:
+    state = 'install'
+    bin_path = 'wkhtmltopdf'
+    version = ''
+    dpi_zoom_ratio = False
+    try:
+        bin_path = find_in_path('wkhtmltopdf')
+        process = subprocess.Popen(
+            [bin_path, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+    except OSError:
+        _logger.info('You need Wkhtmltopdf to print a pdf version of the reports.')
+    else:
+        _logger.info('Will use the Wkhtmltopdf binary at %s', bin_path)
+        out, _err = process.communicate()
+        version = out.decode('ascii')
+        match = re.search(r'([0-9.]+)', version)
+        if match:
+            version = match.group(0)
+            if parse_version(version) < parse_version('0.12.0'):
+                _logger.info('Upgrade Wkhtmltopdf to (at least) 0.12.0')
+                state = 'upgrade'
+            else:
+                state = 'ok'
+            if parse_version(version) >= parse_version('0.12.2'):
+                dpi_zoom_ratio = True
+
+            if config['workers'] == 1:
+                _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
+                state = 'workers'
         else:
-            wkhtmltopdf_state = 'ok'
-        if parse_version(version) >= parse_version('0.12.2'):
-            wkhtmltopdf_dpi_zoom_ratio = True
+            _logger.info('Wkhtmltopdf seems to be broken.')
+            state = 'broken'
 
-        if config['workers'] == 1:
-            _logger.info('You need to start Odoo with at least two workers to print a pdf version of the reports.')
-            wkhtmltopdf_state = 'workers'
+    wkhtmltoimage_version = None
+    image_bin_path = 'wkhtmltoimage'
+    try:
+        image_bin_path = find_in_path('wkhtmltoimage')
+        process = subprocess.Popen(
+            [image_bin_path, '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+    except OSError:
+        _logger.info('You need Wkhtmltoimage to generate images from html.')
     else:
-        _logger.info('Wkhtmltopdf seems to be broken.')
-        wkhtmltopdf_state = 'broken'
+        _logger.info('Will use the Wkhtmltoimage binary at %s', image_bin_path)
+        out, _err = process.communicate()
+        match = re.search(rb'([0-9.]+)', out)
+        if match:
+            wkhtmltoimage_version = parse_version(match.group(0).decode('ascii'))
+            if config['workers'] == 1:
+                _logger.info('You need to start Odoo with at least two workers to convert images to html.')
+        else:
+            _logger.info('Wkhtmltoimage seems to be broken.')
 
-wkhtmltoimage_version = None
-try:
-    process = subprocess.Popen(
-        [_get_wkhtmltoimage_bin(), '--version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    return WkhtmlInfo(
+        state=state,
+        dpi_zoom_ratio=dpi_zoom_ratio,
+        bin=bin_path,
+        version=version,
+        wkhtmltoimage_bin=image_bin_path,
+        wkhtmltoimage_version=wkhtmltoimage_version,
     )
-except OSError:
-    _logger.info('You need Wkhtmltoimage to generate images from html.')
-else:
-    _logger.info('Will use the Wkhtmltoimage binary at %s', _get_wkhtmltoimage_bin())
-    out, err = process.communicate()
-    match = re.search(b'([0-9.]+)', out)
-    if match:
-        wkhtmltoimage_version = parse_version(match.group(0).decode('ascii'))
-        if config['workers'] == 1:
-            _logger.info('You need to start Odoo with at least two workers to convert images to html.')
-    else:
-        _logger.info('Wkhtmltoimage seems to be broken.')
 
 
 class IrActionsReport(models.Model):
@@ -254,7 +275,7 @@ class IrActionsReport(models.Model):
 
         :return: wkhtmltopdf_state
         '''
-        return wkhtmltopdf_state
+        return _wkhtml().state
 
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
@@ -319,7 +340,7 @@ class IrActionsReport(models.Model):
                     dpi = paperformat_id.dpi
             if dpi:
                 command_args.extend(['--dpi', str(dpi)])
-                if wkhtmltopdf_dpi_zoom_ratio:
+                if _wkhtml().dpi_zoom_ratio:
                     command_args.extend(['--zoom', str(96.0 / dpi)])
 
             if specific_paperformat_args and specific_paperformat_args.get('data-report-header-spacing'):
@@ -443,6 +464,7 @@ class IrActionsReport(models.Model):
         """
         if (modules.module.current_test or tools.config['test_enable']) and not self.env.context.get('force_image_rendering'):
             return [None] * len(bodies)
+        wkhtmltoimage_version = _wkhtml().wkhtmltoimage_version
         if not wkhtmltoimage_version or wkhtmltoimage_version < parse_version('0.12.0'):
             raise UserError(_('wkhtmltoimage 0.12.0^ is required in order to render images from html'))
         command_args = [
@@ -462,7 +484,7 @@ class IrActionsReport(models.Model):
             for input_file, output_file in files:
                 # smaller bodies may be held in a python buffer until close, force flush
                 input_file.flush()
-                wkhtmltoimage = [_get_wkhtmltoimage_bin()] + command_args + [input_file.name, output_file.name]
+                wkhtmltoimage = [_wkhtml().wkhtmltoimage_bin, *command_args, input_file.name, output_file.name]
                 # start and block, no need for parallelism for now
                 completed_process = subprocess.run(wkhtmltoimage, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=False)
                 if completed_process.returncode:
@@ -588,8 +610,8 @@ class IrActionsReport(models.Model):
                     pass
                 case 1:
                     if len(bodies) > 1:
-                        v = subprocess.run([_get_wkhtmltopdf_bin(), '--version'], stdout=subprocess.PIPE, check=True, encoding="utf-8")
-                        if '(with patched qt)' not in v.stdout:
+                        wk_version = _wkhtml().version
+                        if '(with patched qt)' not in wk_version:
                             if modules.module.current_test:
                                 raise unittest.SkipTest("Unable to convert multiple documents via wkhtmltopdf using unpatched QT")
                             raise UserError(_("Tried to convert multiple documents in wkhtmltopdf using unpatched QT"))
