@@ -580,6 +580,7 @@ export class Message extends Record {
         });
         this.body = "";
         this.attachment_ids = [];
+        this.composer = undefined;
     }
 
     async setDone() {
