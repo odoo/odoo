@@ -290,6 +290,7 @@ export class FontPlugin extends Plugin {
 
         /** Processors */
         clipboard_content_processors: this.processContentForClipboard.bind(this),
+        before_insert_processors: this.handleInsertWithinPre.bind(this),
 
         format_splittable_class: (className) =>
             [...FONT_SIZE_CLASSES, "o_default_font_size"].includes(className),
@@ -588,5 +589,34 @@ export class FontPlugin extends Plugin {
             }
         }
         return clonedContents;
+    }
+
+    handleInsertWithinPre(insertContainer, block) {
+        if (block.nodeName !== "PRE") {
+            return insertContainer;
+        }
+        for (const cb of this.getResource("before_insert_within_pre_processors")) {
+            insertContainer = cb(insertContainer);
+        }
+        const isDeepestBlock = (node) =>
+            isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
+        let linebreak;
+        const processNode = (node) => {
+            const children = childNodes(node);
+            if (isDeepestBlock(node) && node.nextSibling) {
+                linebreak = this.document.createTextNode("\n");
+                node.append(linebreak);
+            }
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                unwrapContents(node);
+            }
+            for (const child of children) {
+                processNode(child);
+            }
+        };
+        for (const node of childNodes(insertContainer)) {
+            processNode(node);
+        }
+        return insertContainer;
     }
 }
