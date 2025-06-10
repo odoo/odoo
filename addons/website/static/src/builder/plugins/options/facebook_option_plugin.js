@@ -20,6 +20,7 @@ class FacebookOptionPlugin extends Plugin {
             CheckFacebookLinkAction,
         },
         normalize_handlers: this.normalize.bind(this),
+        force_not_editable_selector: ".o_facebook_page",
     };
 
     normalize(root) {

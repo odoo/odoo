@@ -453,6 +453,10 @@
                 t-image-preview="/website/static/src/img/snippets_previews/s_instagram_preview.webp">
                 <keywords>social media, ig, feed</keywords>
             </t>
+            <t t-snippet="website.s_facebook_page" string="Facebook Page" group="social"
+                t-image-preview="/website/static/src/img/snippets_previews/s_facebook_preview.webp">
+                <keywords>social media, fb, feed</keywords>
+            </t>
             <!-- TODO: remove 'snippet_google_map_hook', it does not seem to be used -->
             <t id="snippet_google_map_hook"/>
             <t t-set="google_maps_api_key" t-value="request.env['website'].get_current_website().google_maps_api_key"/>
@@ -486,6 +490,7 @@
             <t t-snippet="website.s_share" string="Share" t-thumbnail="/website/static/src/img/snippets_thumbs/s_share.svg"/>
             <t t-snippet="website.s_social_media" string="Social Media" t-thumbnail="/website/static/src/img/snippets_thumbs/s_social_media.svg"/>
             <t t-snippet="website.s_facebook_page" string="Facebook" t-thumbnail="/website/static/src/img/snippets_thumbs/s_facebook_page.svg"/>
+            <t t-snippet="website.s_instagram_page" string="Instagram" t-thumbnail="/website/static/src/img/snippets_thumbs/s_instagram_page.svg"/>
             <t t-snippet="website.s_searchbar_input" string="Search" t-thumbnail="/website/static/src/img/snippets_thumbs/s_searchbar_inline.svg" t-forbid-sanitize="form" t-grid-column-span="5"/>
             <t id="mass_mailing_newsletter_hook"/>
             <t id="mail_group_hook"/>
