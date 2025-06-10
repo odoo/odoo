@@ -3,6 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { deleteForward, insertText, tripleClick } from "../_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 /**
  * content of the "deleteForward" sub suite in editor.test.js
@@ -722,8 +723,13 @@ describe("Selection collapsed", () => {
     });
 
     describe("Pre", () => {
+        // Test raw `pre`, without the syntax highlighting plugin.
+        const config = {
+            Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+        };
         test("should delete a character in a pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>ab[]cd</pre>",
                 stepFunction: deleteForward,
                 contentAfter: "<pre>ab[]d</pre>",
@@ -732,6 +738,7 @@ describe("Selection collapsed", () => {
 
         test("should delete a character in a pre (space before)", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>     ab[]cd</pre>",
                 stepFunction: deleteForward,
                 contentAfter: "<pre>     ab[]d</pre>",
@@ -740,6 +747,7 @@ describe("Selection collapsed", () => {
 
         test("should delete a character in a pre (space after)", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>ab[]cd     </pre>",
                 stepFunction: deleteForward,
                 contentAfter: "<pre>ab[]d     </pre>",
@@ -748,6 +756,7 @@ describe("Selection collapsed", () => {
 
         test("should delete a character in a pre (space before and after)", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>     ab[]cd     </pre>",
                 stepFunction: deleteForward,
                 contentAfter: "<pre>     ab[]d     </pre>",
@@ -756,6 +765,7 @@ describe("Selection collapsed", () => {
 
         test("should delete a space in a pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>  []   ab</pre>",
                 stepFunction: deleteForward,
                 contentAfter: "<pre>  []  ab</pre>",
@@ -764,6 +774,7 @@ describe("Selection collapsed", () => {
 
         test("should delete a newline in a pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>ab[]\ncd</pre>",
                 stepFunction: deleteForward,
                 contentAfter: "<pre>ab[]cd</pre>",
@@ -772,6 +783,7 @@ describe("Selection collapsed", () => {
 
         test("should delete all leading space in a pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>[]     ab</pre>",
                 stepFunction: async (BasicEditor) => {
                     deleteForward(BasicEditor);
@@ -786,6 +798,7 @@ describe("Selection collapsed", () => {
 
         test("should delete all trailing space in a pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>ab[]     </pre>",
                 stepFunction: async (BasicEditor) => {
                     deleteForward(BasicEditor);
