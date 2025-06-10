@@ -126,6 +126,7 @@ class SerialDriver(Driver):
             with serial_connection(self.device_identifier, self._protocol) as connection:
                 self._connection = connection
                 self._do_action(data)
+        event_manager.device_changed(self, data)  # Make response available to /event route or websocket
 
     def run(self):
         """Continuously gets new measures from the device."""
