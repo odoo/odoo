@@ -78,26 +78,26 @@ export class DashboardSearchBar extends Component {
                     ];
                     break;
                 }
-                if (filterValues.period?.year === undefined) {
+                if (filterValues?.year === undefined) {
                     values = [""];
                     break;
                 }
-                const year = String(filterValues.period.year);
+                const year = String(filterValues.year);
                 switch (filterValues.type) {
                     case "year":
                         values = [year];
                         break;
                     case "month": {
                         const month = DateTime.local()
-                            .set({ month: filterValues.period.month })
+                            .set({ month: filterValues.month })
                             .toFormat("LLLL");
                         values = [`${month} ${year}`];
                         break;
                     }
                     case "quarter": {
-                        const period = QUARTER_OPTIONS[filterValues.period.period];
-                        if (period) {
-                            values = [`${period.description} ${year}`];
+                        const quarter = QUARTER_OPTIONS[filterValues.quarter];
+                        if (quarter) {
+                            values = [`${quarter.description} ${year}`];
                         } else {
                             values = [year];
                         }
