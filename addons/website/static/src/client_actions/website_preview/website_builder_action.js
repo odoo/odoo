@@ -222,7 +222,7 @@ export class WebsiteBuilderClientAction extends Component {
                         this.state.showSidebar = show ?? !this.state.showSidebar;
                     },
                 },
-                customizeTab: this.translation ? "website.CustomizeTranslationTab" : "",
+                isTranslationMode: this.translation,
             },
         };
         return { translation: this.translation, builderProps };
