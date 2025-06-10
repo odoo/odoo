@@ -9,6 +9,10 @@ export class MessageLinkPreview extends Record {
     message_id = fields.One("mail.message", { inverse: "message_link_preview_ids" });
     link_preview_id = fields.One("mail.link.preview", { inverse: "message_link_preview_ids" });
 
+    get gifPaused() {
+        return !this.message_id.thread?.isFocused;
+    }
+
     hide() {
         rpc("/mail/link_preview/hide", { message_link_preview_ids: [this.id] });
     }

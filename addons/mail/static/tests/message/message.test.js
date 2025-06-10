@@ -2024,3 +2024,30 @@ test("display the notification message's posting date and time", async () => {
         text: "Tom Riddle joined the channel1:00 PM",
     });
 });
+
+test("Pause GIF when thread is not focused", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "image/gif",
+        name: "foo.gif",
+        type: "binary",
+        res_id: channelId,
+        res_model: "discuss.channel",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message");
+    await focus(".o-mail-Thread");
+    await contains(".o-mail-AttachmentImage:not([data-paused])");
+    queryFirst(".o-mail-Thread").blur();
+    await contains(".o-mail-AttachmentImage[data-paused]");
+    await focus(".o-mail-Thread");
+    await contains(".o-mail-AttachmentImage:not([data-paused])");
+});

@@ -29,6 +29,10 @@ export class LinkPreview extends Record {
     /** @type {string} */
     source_url;
 
+    get isGif() {
+        return [this.og_mimetype, this.image_mimetype].includes("image/gif");
+    }
+
     get imageUrl() {
         return this.og_image ? this.og_image : this.source_url;
     }

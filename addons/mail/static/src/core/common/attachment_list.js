@@ -1,3 +1,5 @@
+import { Gif } from "@mail/core/common/gif";
+
 import { Component } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
@@ -30,7 +32,7 @@ class Actions extends Component {
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static components = { Actions };
+    static components = { Actions, Gif };
     static props = ["attachments", "unlinkAttachment", "messageSearch?"];
     static template = "mail.AttachmentList";
 
@@ -148,10 +150,6 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     showUploaded(attachment) {
-        return (
-            !attachment.isImage &&
-            !attachment.uploading &&
-            this.env.inComposer
-        );
+        return !attachment.isImage && !attachment.uploading && this.env.inComposer;
     }
 }

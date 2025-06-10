@@ -23,8 +23,15 @@
                      role="menuitem"
                 >
                     <!-- display of image attachments-->
+                    <Gif
+                        t-if="attachment.mimetype === 'image/gif'"
+                        src="getImageUrl(attachment)"
+                        paused="attachment.gifPaused"
+                        alt="attachment.name"
+                        class="'o-mail-AttachmentImage img img-fluid object-fit-cover w-100 rounded-3'"
+                    />
                     <img
-                        t-if="attachment.isImage"
+                        t-elif="attachment.isImage"
                         class="o-mail-AttachmentImage img img-fluid object-fit-cover w-100 rounded-3"
                         t-att-src="getImageUrl(attachment)"
                         t-att-alt="attachment.name"

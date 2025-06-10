@@ -1,3 +1,5 @@
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+import { markup } from "@odoo/owl";
 import {
     authenticate,
     getKwArgs,
@@ -523,12 +525,18 @@ async function mail_link_preview(request) {
 
     const { message_id } = await parseRequestParams(request);
     const [message] = MailMessage.search_read([["id", "=", message_id]]);
-    if (message.body.includes("https://make-link-preview.com")) {
+    const link = createDocumentFragmentFromContent(markup(message.body)).querySelector(
+        "a[href^='https://tenor.com'], a[href='https://make-link-preview.com']"
+    );
+    if (link) {
+        const isGifPreview = link.href.startsWith("https://tenor.com");
         const linkPreviewId = MailLinkPreview.create({
-            og_description: "test description",
-            og_title: "Article title",
-            og_type: "article",
-            source_url: "https://make-link-preview.com",
+            og_description: isGifPreview ? "Click to view the GIF" : "test description",
+            og_image: isGifPreview ? link.href : undefined,
+            og_mimetype: isGifPreview ? "image/gif" : undefined,
+            og_title: isGifPreview ? "Gif title" : "Article title",
+            og_type: isGifPreview ? "video.other" : "article",
+            source_url: isGifPreview ? link.href : "https://make-link-preview.com",
         });
         MailMessageLinkPreview.create({
             message_id: message.id,
