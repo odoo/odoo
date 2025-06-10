@@ -78,36 +78,49 @@ export function totalAmountContains(value) {
         },
     ];
 }
-export function totalAmountWithTipContains(value, tip) {
+export function totalAmountWithTipContains(value, tip, { tip15, tip20, tip25 } = {}) {
     const steps = [];
 
     // No tip
     if (tip === null) {
         steps.push({
-            isActive: ["desktop"],
             trigger: `.receipt-screen .o_payment_successful:contains("${value}")`,
         });
         steps.push({
-            isActive: ["desktop"],
             trigger: `.receipt-screen .o_payment_successful:not(:contains("tip"))`,
         });
     }
+
     // Has tip
     else {
         steps.push({
-            isActive: ["desktop"],
             trigger: `.receipt-screen .o_payment_successful:contains("${value} +")`,
         });
         steps.push({
-            isActive: ["desktop"],
             trigger: `.receipt-screen .o_payment_successful:contains("${tip} tip")`,
         });
     }
-    // Fallback mobile
-    steps.push({
-        isActive: ["mobile"],
-        trigger: `.receipt-screen`,
-    });
+
+    // Tip 15%
+    if (tip15) {
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .tip-form .percentage-options .option:nth-child(1) .amount:contains("${tip15}")`,
+        });
+    }
+
+    // Tip 20%
+    if (tip20) {
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .tip-form .percentage-options .option:nth-child(2) .amount:contains("${tip20}")`,
+        });
+    }
+
+    // Tip 25%
+    if (tip25) {
+        steps.push({
+            trigger: `.receipt-screen .pos-receipt .tip-form .percentage-options .option:nth-child(3) .amount:contains("${tip25}")`,
+        });
+    }
 
     return steps;
 }
