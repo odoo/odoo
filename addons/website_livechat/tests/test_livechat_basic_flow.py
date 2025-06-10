@@ -339,6 +339,32 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             ),
         )
 
+    def test_livechat_not_available_with_hide_button_rule(self):
+        self.env["im_livechat.channel.rule"].create([
+            {
+                "channel_id": self.livechat_channel.id,
+                "regex_url": "/show",
+                "action": "display_button",
+            },
+            {
+                "channel_id": self.livechat_channel.id,
+                "action": "hide_button",
+                "regex_url": "/hide",
+            },
+        ])
+        result = self.make_jsonrpc_request(
+            "/mail/action",
+            {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
+            headers={"Referer": "/show"},
+        )
+        self.assertEqual(result["Store"]["livechat_available"], True)
+        result = self.make_jsonrpc_request(
+            "/mail/action",
+            {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
+            headers={"Referer": "/hide"},
+        )
+        self.assertEqual(result["Store"]["livechat_available"], False)
+
 
 @tests.tagged('post_install', '-at_install')
 class TestLivechatBasicFlowHttpCaseMobile(HttpCaseWithUserDemo, TestLivechatCommon):
