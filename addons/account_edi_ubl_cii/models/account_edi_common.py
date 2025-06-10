@@ -654,8 +654,9 @@ class AccountEdiCommon(models.AbstractModel):
         discount = 0
         amount_fixed_taxes = sum(d['tax_amount'] * billed_qty for d in fixed_taxes_list)
         if billed_qty * price_unit != 0 and price_subtotal is not None:
-            inferred_discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / (billed_qty * price_unit))
-            discount = inferred_discount if not float_is_zero(inferred_discount, 2) else 0.0
+            currency = invoice_line.currency_id or self.env.company.currency_id
+            inferred_discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / currency.round(billed_qty * price_unit))
+            discount = inferred_discount if not float_is_zero(inferred_discount, currency.decimal_places) else 0.0
 
         # Sometimes, the xml received is very bad; e.g.:
         #   * unit price = 0, qty = 0, but price_subtotal = -200
