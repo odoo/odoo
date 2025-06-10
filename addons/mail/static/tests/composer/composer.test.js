@@ -768,6 +768,27 @@ test("Show 'No recipient found.' with 0 followers.", async () => {
     await contains(".o-mail-Chatter-top", { text: "To: No recipient" });
 });
 
+test("Show display_name of recipients without name in the recipient list.", async () => {
+    const pyEnv = await startServer();
+    const [parentPartner, partner] = pyEnv["res.partner"].create([
+        { name: "Test Partner", email: "test1@odoo.com" },
+        { type: "invoice" },
+    ]);
+    pyEnv["res.partner"].write(partner, { parent_id: parentPartner });
+    pyEnv["mail.followers"].create({
+        is_active: true,
+        partner_id: partner,
+        res_id: parentPartner,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", parentPartner);
+    await click("button", { text: "Send message" });
+    await contains(".o-mail-Chatter span.text-muted", {
+        text: "Test Partner, Invoice Address",
+    });
+});
+
 test("Uploading multiple files in the composer create multiple temporary attachments", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });

@@ -1887,9 +1887,22 @@ class MailThread(models.AbstractModel):
             return result
         if partner and partner.email:  # complete profile: id, name <email>
             email_normalized = ','.join(email_normalize_all(partner.email))
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name or '', 'email': email_normalized})
+            recipient_data.update(
+                {
+                    "partner_id": partner.id,
+                    "name": partner.name or "",
+                    "email": email_normalized,
+                    "display_name": partner.display_name,
+                }
+            )
         elif partner:  # incomplete profile: id, name
-            recipient_data.update({'partner_id': partner.id, 'name': partner.name})
+            recipient_data.update(
+                {
+                    "partner_id": partner.id,
+                    "name": partner.name,
+                    "display_name": partner.display_name,
+                }
+            )
         else:  # unknown partner, we are probably managing an email address
             _, parsed_email_normalized = parse_contact_from_email(email)
             partner_create_values = self._get_customer_information().get(parsed_email_normalized, {})

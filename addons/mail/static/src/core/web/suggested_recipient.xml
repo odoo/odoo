@@ -5,7 +5,7 @@
             <div class="form-check">
                 <input t-attf-id="{{ props.recipient.id }}_checkbox" class="form-check-input" type="checkbox" t-att-checked="props.recipient.checked" t-on-change="onChangeCheckbox"/>
                 <label class="form-check-label" t-attf-for="{{ props.recipient.id }}_checkbox">
-                    <t t-if="props.recipient.name" t-esc="props.recipient.name"/>
+                    <t t-if="name" t-esc="name"/>
                     <t t-if="props.recipient.email and props.recipient.email !== props.recipient.name">
                         (<t t-esc="props.recipient.email"/>)
                     </t>
