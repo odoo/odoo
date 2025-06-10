@@ -39,6 +39,7 @@ class PosSelfOrderControllerRazorpay(PosSelfOrderController):
 
             if order.config_id.self_ordering_mode == 'kiosk':
                 self.call_bus_service(order, payment_result='Success')
+                order._send_order()
         elif payment_status == "FAILED" or not payment_status:
             self.call_bus_service(order, payment_result='fail')
         return razorpay_status_response

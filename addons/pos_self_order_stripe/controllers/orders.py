@@ -51,6 +51,7 @@ class PosSelfOrderControllerStripe(PosSelfOrderController):
                         'pos.order.line': order.lines.read(order._load_pos_self_data_fields(order.config_id.id), load=False),
                     }
                 })
+                order._send_order()
         else:
             order.config_id._notify('PAYMENT_STATUS', {
                 'payment_result': 'fail',
