@@ -194,9 +194,9 @@ export class HistoryPlugin extends Plugin {
             ],
         }),
         shortcuts: [
-            { hotkey: "control+z", commandId: "historyUndo" },
-            { hotkey: "control+y", commandId: "historyRedo" },
-            { hotkey: "control+shift+z", commandId: "historyRedo" },
+            { hotkey: "control+z", commandId: "historyUndo", allowInProtected: true },
+            { hotkey: "control+y", commandId: "historyRedo", allowInProtected: true },
+            { hotkey: "control+shift+z", commandId: "historyRedo", allowInProtected: true },
         ],
         start_edition_handlers: () => {
             this.enableObserver();
