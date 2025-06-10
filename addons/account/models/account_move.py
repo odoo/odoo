@@ -878,7 +878,11 @@ class AccountMove(models.Model):
     @api.depends('move_type')
     def _compute_is_storno(self):
         for move in self:
-            move.is_storno = move.is_storno or (move.move_type in ('out_refund', 'in_refund') and move.company_id.account_storno)
+            move.is_storno = move.is_storno or (move.company_id.account_storno and (
+                (move.move_type in ('out_refund', 'in_refund')) or
+                 move.reversed_entry_id or
+                (hasattr(move, 'reversed_pos_order_id') and move.reversed_pos_order_id)
+                ))
 
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
@@ -1110,6 +1114,7 @@ class AccountMove(models.Model):
                         total += line.balance
                         total_currency += line.amount_currency
 
+            is_storno_move = move.company_id.account_storno and total < 0
             sign = move.direction_sign
             move.amount_untaxed = sign * total_untaxed_currency
             move.amount_tax = sign * total_tax_currency
@@ -1118,9 +1123,9 @@ class AccountMove(models.Model):
             move.amount_untaxed_signed = -total_untaxed
             move.amount_untaxed_in_currency_signed = -total_untaxed_currency
             move.amount_tax_signed = -total_tax
-            move.amount_total_signed = abs(total) if move.move_type == 'entry' else -total
+            move.amount_total_signed = total if is_storno_move else (abs(total) if move.move_type == 'entry' else -total)
             move.amount_residual_signed = total_residual
-            move.amount_total_in_currency_signed = abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total)
+            move.amount_total_in_currency_signed = move.amount_total if is_storno_move else (abs(move.amount_total) if move.move_type == 'entry' else -(sign * move.amount_total))
 
     @api.depends('amount_residual', 'move_type', 'state', 'company_id', 'matched_payment_ids.state')
     def _compute_payment_state(self):
@@ -4930,6 +4935,7 @@ class AccountMove(models.Model):
             Command.update(line.id, {
                 'balance': -line.balance,
                 'amount_currency': -line.amount_currency,
+                'expected_amount': -line.expected_amount,
             })
             for line in reverse_moves.line_ids
             if line.move_id.move_type == 'entry' or line.display_type == 'cogs'
