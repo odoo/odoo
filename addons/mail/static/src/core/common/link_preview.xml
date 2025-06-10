@@ -43,7 +43,8 @@
     <t t-name="mail.LinkPreviewImage">
         <div class="o-mail-LinkPreviewImage position-relative mb-2 rounded" t-att-class="{ 'me-2': env.inChatter }" t-attf-class="{{ className }}">
             <a t-if="props.linkPreview.imageUrl" t-att-href="props.linkPreview.imageUrl" target="_blank">
-                <img class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl" t-on-load="onImageLoaded"/>
+                <Gif t-if="props.linkPreview.isGif" paused="props.gifPaused" class="'h-auto w-auto rounded'" src="props.linkPreview.imageUrl" onLoad.bind="onImageLoaded"/>
+                <img t-else="" class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl" t-on-load="onImageLoaded"/>
             </a>
             <t t-if="props.delete" t-call="mail.LinkPreview.aside">
                 <t t-set="className" t-value="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>

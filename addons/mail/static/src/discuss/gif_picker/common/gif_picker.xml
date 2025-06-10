@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="discuss.GifPicker">
-        <div class="o-discuss-GifPicker d-flex flex-column" t-attf-class="{{ props.className }}" t-att-class="{ 'h-100': props.mobile }">
+        <div class="o-discuss-GifPicker d-flex flex-column" t-attf-class="{{ props.className }}" t-att-class="{ 'h-100': props.mobile }" t-on-focusin="() => state.focused = true" t-on-focusout="() => state.focused = false">
             <div t-if="!store.hasGifPickerFeature and store.self.isAdmin" class="d-flex flex-column align-items-center justify-content-center m-3 h-100">
                 <span class="o-discuss-GifPicker-bigEmoji">🧑‍🍳🌶️</span>
                 <span class="fs-5 text-muted">Want to spice up your conversations with GIFs? Activate the feature in the settings!</span>
@@ -63,12 +63,12 @@
                         <div class="d-flex gap-1">
                             <div>
                                 <t t-foreach="state.evenGif.gifs" t-as="gif" t-key="gif_index">
-                                    <t t-call="discuss.Gif"/>
+                                    <t t-call="discuss.GifPicker.gif"/>
                                 </t>
                             </div>
                             <div>
                                 <t t-foreach="state.oddGif.gifs" t-as="gif" t-key="gif_index">
-                                    <t t-call="discuss.Gif"/>
+                                    <t t-call="discuss.GifPicker.gif"/>
                                 </t>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
         </div>
     </t>
 
-    <t t-name="discuss.Gif">
+    <t t-name="discuss.GifPicker.gif">
         <div class="o-discuss-Gif position-relative mt-1 fs-5 cursor-pointer rounded overflow-hidden">
             <i
                 t-if="store.self.type === 'partner'"
@@ -93,14 +93,7 @@
                 t-att-class="{ 'o-text-white fa-star-o': !isFavorite(gif_value), 'fa-star o-starred': isFavorite(gif_value) }"
                 t-on-click="() => this.onClickFavorite(gif_value)"
             />
-            <img
-                class="img-fluid"
-                t-att-src="gif_value.media_formats.tinygif.url"
-                t-on-click="() => this.onClickGif(gif_value)"
-                loading="lazy"
-                alt="GIF"
-                t-att-style="style"
-            />
+            <Gif class="'img-fluid'" style="style" alt="'GIF'" onClick="() => this.onClickGif(gif_value)" src="gif_value.media_formats.tinygif.url" loading="'lazy'" paused="!state.focused"/>
         </div>
     </t>
 
