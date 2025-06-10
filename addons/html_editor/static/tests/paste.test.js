@@ -8,6 +8,7 @@ import { cleanLinkArtifacts, unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
 import { pasteHtml, pasteOdooEditorHtml, pasteText, undo } from "./_helpers/user_actions";
 import { createBaseContainer } from "@html_editor/utils/base_container";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 function isInline(node) {
     return ["I", "B", "U", "S", "EM", "STRONG", "IMG", "BR", "A", "FONT"].includes(node);
@@ -35,7 +36,14 @@ describe("Html Paste cleaning - whitelist", () => {
                     ? `a<${tagName}>b</${tagName}>c`
                     : `a</p><${tagName}>b</${tagName}><p>c`;
 
+                // Test raw `pre`, without the syntax highlighting plugin.
+                const config = {
+                    Plugins: [
+                        ...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting"),
+                    ],
+                };
                 await testEditor({
+                    config,
                     contentBefore: "<p>123[]4</p>",
                     stepFunction: async (editor) => {
                         pasteHtml(editor, `a<${tagDescription}>b</${tagName}>c`);
@@ -254,7 +262,12 @@ describe("Simple text", () => {
         });
 
         test("should paste text and understand \\n newlines within PRE element", async () => {
+            // Test raw `pre`, without the syntax highlighting plugin.
+            const config = {
+                Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+            };
             await testEditor({
+                config,
                 contentBefore: "<pre>[]<br></pre>",
                 stepFunction: async (editor) => {
                     pasteText(editor, "a\nb\nc");
@@ -786,7 +799,12 @@ describe("Simple html elements containing <br>", () => {
         });
 
         test("should not split pre with <br>", async () => {
+            // Test raw `pre`, without the syntax highlighting plugin.
+            const config = {
+                Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+            };
             await testEditor({
+                config,
                 contentBefore: "<p>[]<br></p>",
                 stepFunction: async (editor) => {
                     pasteHtml(editor, "<pre>abc<br>def</pre>");
@@ -2413,8 +2431,13 @@ describe("pasting within blockquote", () => {
 });
 
 describe("pasting within pre", () => {
-    test("should paste paragraph releted elements within pre", async () => {
+    // Test raw `pre`, without the syntax highlighting plugin.
+    const config = {
+        Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+    };
+    test("should paste paragraph related elements within pre", async () => {
         await testEditor({
+            config,
             contentBefore: "<pre>[]<br></pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
@@ -2422,6 +2445,7 @@ describe("pasting within pre", () => {
             contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
         });
         await testEditor({
+            config,
             contentBefore: "<pre>x[]</pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
@@ -2429,6 +2453,7 @@ describe("pasting within pre", () => {
             contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
         });
         await testEditor({
+            config,
             contentBefore: "<pre>[]x</pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
@@ -2436,6 +2461,7 @@ describe("pasting within pre", () => {
             contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</pre>",
         });
         await testEditor({
+            config,
             contentBefore: "<pre>x[]y</pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
@@ -2688,7 +2714,12 @@ describe("link", () => {
         });
 
         test("should paste and not transform an URL in a pre tag", async () => {
+            // Test raw `pre`, without the syntax highlighting plugin.
+            const config = {
+                Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+            };
             await testEditor({
+                config,
                 contentBefore: "<pre>[]<br></pre>",
                 stepFunction: async (editor) => {
                     pasteText(editor, "http://www.xyz.com");

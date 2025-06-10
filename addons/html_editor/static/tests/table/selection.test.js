@@ -6,6 +6,7 @@ import { getContent, setSelection } from "../_helpers/selection";
 import { press, queryAll, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { nodeSize } from "@html_editor/utils/position";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 function expectContentToBe(el, html) {
     expect(getContent(el)).toBe(unformat(html));
@@ -792,8 +793,13 @@ describe("select columns on cross over", () => {
             });
         });
 
-        test("should remove any height or width of the table without loosing the style of the element inside it.", async () => {
+        test("should remove any height or width of the table without losing the style of the element inside it.", async () => {
+            // Test raw `pre`, without the syntax highlighting plugin.
+            const config = {
+                Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+            };
             await testEditor({
+                config,
                 contentBefore: `<table class="table table-bordered o_table" style="width: 472.182px; height: 465.403px;"><tbody>
                                     <tr style="height: 104.872px;">
                                         <td style="width: 191.273px;"><h1>[]TESTTEXT</h1></td>

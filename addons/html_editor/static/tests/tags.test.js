@@ -4,6 +4,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, tripleClick, undo } from "./_helpers/user_actions";
 import { animationFrame } from "@odoo/hoot-mock";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 function setTag(tagName) {
     return (editor) => editor.shared.dom.setTag({ tagName });
@@ -337,8 +338,13 @@ describe("to heading 3", () => {
 });
 
 describe("to pre", () => {
+    // Test raw `pre`, without the syntax highlighting plugin.
+    const config = {
+        Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+    };
     test("should turn a heading 1 into a pre", async () => {
         await testEditor({
+            config,
             contentBefore: "<h1>ab[]cd</h1>",
             stepFunction: setTag("pre"),
             contentAfter: "<pre>ab[]cd</pre>",
@@ -347,6 +353,7 @@ describe("to pre", () => {
 
     test("should turn a heading 1 into a pre (character selected)", async () => {
         await testEditor({
+            config,
             contentBefore: "<h1>a[b]c</h1>",
             stepFunction: setTag("pre"),
             contentAfter: "<pre>a[b]c</pre>",
@@ -355,6 +362,7 @@ describe("to pre", () => {
 
     test("should turn a heading 1 a pre and a paragraph into three pres", async () => {
         await testEditor({
+            config,
             contentBefore: "<h1>a[b</h1><pre>cd</pre><p>e]f</p>",
             stepFunction: setTag("pre"),
             contentAfter: "<pre>a[b</pre><pre>cd</pre><pre>e]f</pre>",
@@ -363,6 +371,7 @@ describe("to pre", () => {
 
     test("should turn three table cells with paragraph to table cells with pre", async () => {
         await testEditor({
+            config,
             contentBefore:
                 "<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>",
             stepFunction: setTag("pre"),
@@ -374,6 +383,7 @@ describe("to pre", () => {
 
     test("should turn a paragraph into pre preserving the cursor position", async () => {
         await testEditor({
+            config,
             contentBefore: "<p>abcd<br>[]<br></p>",
             stepFunction: setTag("pre"),
             contentAfter: "<pre>abcd<br>[]<br></pre>",
@@ -382,6 +392,7 @@ describe("to pre", () => {
 
     test("should not transfer attributes of list to pre", async () => {
         await testEditor({
+            config,
             contentBefore: '<ul><li class="nav-item" id="test">[abcd]</li></ul>',
             stepFunction: setTag("pre"),
             contentAfter: '<ul><li class="nav-item" id="test"><pre>[abcd]</pre></li></ul>',
@@ -389,7 +400,7 @@ describe("to pre", () => {
     });
 
     test("apply 'Code' command", async () => {
-        const { el, editor } = await setupEditor("<p>ab[]cd</p>");
+        const { el, editor } = await setupEditor("<p>ab[]cd</p>", { config });
         await insertText(editor, "/code");
         await animationFrame();
         expect(".active .o-we-command-name").toHaveText("Code");

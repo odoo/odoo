@@ -9,6 +9,7 @@ import {
     setSelection,
 } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
+import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 test("hints are removed when editor is destroyed", async () => {
     const { el, editor } = await setupEditor("<p>[]</p>", {});
@@ -144,7 +145,12 @@ test("hint should only Be display for focused empty block element", async () => 
 });
 
 test("hint for code section should have the same padding as its text content", async () => {
-    const { el, editor } = await setupEditor("<pre>[]</pre>");
+    // Test raw `pre`, without the syntax highlighting plugin.
+    const { el, editor } = await setupEditor("<pre>[]</pre>", {
+        config: {
+            Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+        },
+    });
     expect(getContent(el)).toBe(`<pre o-we-hint-text="Code" class="o-we-hint">[]</pre>`);
     const pre = el.firstElementChild;
     const hintStyle = getComputedStyle(pre, "::after");

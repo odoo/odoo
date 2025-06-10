@@ -102,7 +102,12 @@ describe("collapsed selection", () => {
     });
 
     test("should not split a pre to insert another pre but just insert the text", async () => {
+        // Test raw `pre`, without the syntax highlighting plugin.
+        const config = {
+            Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+        };
         await testEditor({
+            config,
             contentBefore: "<pre>abc[]<br>ghi</pre>",
             stepFunction: async (editor) => {
                 editor.shared.dom.insert(parseHTML(editor.document, "<pre>def</pre>"));

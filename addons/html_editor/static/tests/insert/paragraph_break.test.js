@@ -115,8 +115,13 @@ describe("Selection collapsed", () => {
     });
 
     describe("Pre", () => {
+        // Test raw `pre`, without the syntax highlighting plugin.
+        const config = {
+            Plugins: [...MAIN_PLUGINS.filter((plugin) => plugin.id !== "syntaxHighlighting")],
+        };
         test("should insert a line break within the pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>ab[]cd</pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre>ab<br>[]cd</pre>",
@@ -124,6 +129,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a line break within the pre containing inline element", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>a<strong>b[]c</strong>d</pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre>a<strong>b<br>[]c</strong>d</pre>",
@@ -131,6 +137,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a line break within the pre containing inline elementd", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre><em>a<strong>b[]c</strong>d</em></pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre><em>a<strong>b<br>[]c</strong>d</em></pre>",
@@ -139,6 +146,7 @@ describe("Selection collapsed", () => {
 
         test("should insert a new paragraph after the pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>abc[]</pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre>abc</pre><p>[]<br></p>",
@@ -146,6 +154,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a new paragraph after the pre containing inline element", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>ab<strong>c[]</strong></pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre>ab<strong>c</strong></pre><p>[]<br></p>",
@@ -153,6 +162,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a new paragraph after the pre containing inline elements", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre><em>ab<strong>c[]</strong></em></pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre><em>ab<strong>c</strong></em></pre><p>[]<br></p>",
@@ -161,6 +171,7 @@ describe("Selection collapsed", () => {
 
         test("should be able to break out of an empty pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre>[]<br></pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre><br></pre><p>[]<br></p>",
@@ -168,6 +179,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a new line within the pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre><p>abc</p><p>def[]</p></pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre><p>abc</p><p>def</p><p>[]<br></p></pre>",
@@ -175,6 +187,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a new line after pre", async () => {
             await testEditor({
+                config,
                 contentBefore: "<pre><p>abc</p><p>def</p><p>[]<br></p></pre>",
                 stepFunction: splitBlock,
                 contentAfter: "<pre><p>abc</p><p>def</p></pre><p>[]<br></p>",
@@ -182,6 +195,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a new paragraph after a pre tag with rtl direction", async () => {
             await testEditor({
+                config,
                 contentBefore: `<pre dir="rtl">ab[]</pre>`,
                 stepFunction: splitBlock,
                 contentAfter: `<pre dir="rtl">ab</pre><p dir="rtl">[]<br></p>`,
@@ -189,6 +203,7 @@ describe("Selection collapsed", () => {
         });
         test("should insert a new paragraph after a pre tag with rtl direction (2)", async () => {
             await testEditor({
+                config,
                 contentBefore: `<pre><p dir="rtl">abc</p><p dir="rtl">[]<br></p></pre>`,
                 stepFunction: splitBlock,
                 contentAfter: `<pre><p dir="rtl">abc</p></pre><p dir="rtl">[]<br></p>`,
