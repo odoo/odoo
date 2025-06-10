@@ -171,18 +171,8 @@ class AccountTestInvoicingCommon(ProductCommon):
 
         # ==== Payment methods ====
         bank_journal = cls.company_data['default_journal_bank']
-        in_outstanding_account = cls.env['account.account'].create({
-            'name': "Outstanding Receipts",
-            'code': 'OSTR00',
-            'reconcile': True,
-            'account_type': 'asset_current'
-        })
-        out_outstanding_account = cls.env['account.account'].create({
-            'name': "Outstanding Payments",
-            'code': 'OSTP00',
-            'reconcile': True,
-            'account_type': 'asset_current'
-        })
+        in_outstanding_account = cls.env['account.chart.template'].ref('account_journal_payment_debit_account_id', raise_if_not_found=False)
+        out_outstanding_account = cls.env['account.chart.template'].ref('account_journal_payment_credit_account_id', raise_if_not_found=False)
         if bank_journal:
             cls.inbound_payment_method_line = bank_journal.inbound_payment_method_line_ids[0]
             cls.inbound_payment_method_line.payment_account_id = in_outstanding_account
