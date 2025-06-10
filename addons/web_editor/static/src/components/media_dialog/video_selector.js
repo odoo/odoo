@@ -224,12 +224,16 @@ export class VideoSelector extends Component {
      */
     async prepareVimeoPreviews() {
         return Promise.all(this.props.vimeoPreviewIds.map(async (videoId) => {
-            const { thumbnail_url: thumbnailSrc } = await this.http.get(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`);
-            this.state.vimeoPreviews.push({
-                id: videoId,
-                thumbnailSrc,
-                src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`
-            });
+            try {
+                const { thumbnail_url: thumbnailSrc } = await this.http.get(`https://vimeo.com/api/oembed.json?url=http%3A//vimeo.com/${encodeURIComponent(videoId)}`);
+                this.state.vimeoPreviews.push({
+                    id: videoId,
+                    thumbnailSrc,
+                    src: `https://player.vimeo.com/video/${encodeURIComponent(videoId)}`
+                });
+            } catch (error) {
+                console.warn(`Error loading thumbnail for video id ${videoId}`, error);
+            }
         }));
     }
 }
