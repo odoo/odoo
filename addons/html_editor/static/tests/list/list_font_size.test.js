@@ -7,6 +7,7 @@ import {
     toggleUnorderedList,
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
+import { unformat } from "../_helpers/format";
 
 before(() => {
     return document.fonts.add(new FontFace(
@@ -22,6 +23,32 @@ test("should apply font-size to completely selected list item", async () => {
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setFontSize("56px"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
+    });
+    await testEditor({
+        styleContent: ":root { font: 14px Roboto }",
+        contentBefore: unformat(`
+            <ol>
+                <li>[abc</li>
+                <li class="oe-nested">
+                    <ol>
+                        <li>def</li>
+                    </ol>
+                </li>
+                <li>ghi]</li>
+            </ol>
+        `),
+        stepFunction: setFontSize("64px"),
+        contentAfter: unformat(`
+            <ol style="padding-inline-start: 68px;">
+                <li style="font-size: 64px;">[abc</li>
+                <li class="oe-nested">
+                    <ol style="padding-inline-start: 67px;">
+                        <li style="font-size: 64px;">def</li>
+                    </ol>
+                </li>
+                <li style="font-size: 64px;">ghi]</li>
+            </ol>
+        `),
     });
 });
 
