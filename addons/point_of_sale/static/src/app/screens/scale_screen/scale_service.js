@@ -15,6 +15,8 @@ export class PosScaleService extends Reactive {
     setup(env, deps) {
         this.env = env;
         this.hardwareProxy = deps.hardware_proxy;
+        this.lastWeight = null;
+        this.weight = 0;
         this.reset();
     }
 
@@ -27,13 +29,17 @@ export class PosScaleService extends Reactive {
     }
 
     reset() {
-        this.weight = 0;
         this.tare = 0;
         this.tareRequested = false;
         this.loading = false;
         this.isMeasuring = false;
         this.product = null;
         this.onError = null;
+    }
+
+    confirmWeight() {
+        this.lastWeight = this.weight;
+        return this.netWeight;
     }
 
     async _readWeightContinuously() {
@@ -54,6 +60,7 @@ export class PosScaleService extends Reactive {
         try {
             this._checkScaleIsConnected();
             this.weight = await this._getWeightFromScale();
+            this._clearLastWeightIfValid();
         } catch (error) {
             this.isMeasuring = false;
             this.onError?.(error.message);
@@ -78,6 +85,12 @@ export class PosScaleService extends Reactive {
         }
     }
 
+    _clearLastWeightIfValid() {
+        if (this.lastWeight && this.isWeightValid) {
+            this.lastWeight = null;
+        }
+    }
+
     requestTare() {
         this.tareRequested = true;
         if (this.isManualMeasurement && !this.loading) {
@@ -85,6 +98,16 @@ export class PosScaleService extends Reactive {
         } else {
             setTimeout(() => this._setTareIfRequested(), TARE_TIMEOUT_MS);
         }
+    }
+
+    get isWeightValid() {
+        // LNE requires that the weight changes from the previously
+        // added value before another product is allowed to be added.
+        return (
+            !this.lastWeight ||
+            roundDecimals(this.weight, this.product.decimalAccuracy) !==
+                roundDecimals(this.lastWeight, this.product.decimalAccuracy)
+        );
     }
 
     get isManualMeasurement() {
