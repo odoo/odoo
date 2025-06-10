@@ -1,17 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import warnings
-from collections import defaultdict, OrderedDict
-from decorator import decorator
-from textwrap import dedent
 import logging
 import os
 import shutil
+from collections import defaultdict, OrderedDict
+from decorator import decorator
+from textwrap import dedent
 
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
-from docutils.writers.html4css1 import Writer
 import lxml.html
 import psycopg2
 
@@ -116,15 +114,6 @@ class MyFilterMessages(Transform):
             node.parent.remove(node)
 
 
-class MyWriter(Writer):
-    """
-    Custom docutils html4ccs1 writer that doesn't add the warnings to the
-    output document.
-    """
-    def get_transforms(self):
-        return [MyFilterMessages, writer_aux.Admonitions]
-
-
 STATES = [
     ('uninstallable', 'Uninstallable'),
     ('uninstalled', 'Not Installed'),
@@ -184,7 +173,10 @@ class IrModuleModule(models.Model):
                     'xml_declaration': False,
                     'file_insertion_enabled': False,
                 }
-                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
+                from docutils.writers.html4css1 import Writer  # noqa: PLC0415
+                w = Writer()
+                w.get_transforms = lambda _=None: [MyFilterMessages, writer_aux.Admonitions]
+                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=w)
                 module.description_html = _apply_description_images(output)
 
     @api.depends('name')
