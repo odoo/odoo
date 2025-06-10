@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TranslateWebpageOption">
+    <BuilderContext preview="false">
+        <BuilderRow label.translate="Translate to"
+            tooltip.translate="Translate the whole content with AI">
+            <BuilderButton action="'translateWebpageAI'">
+                <t t-if="translationState.isLoading">
+                    <i class="fa fa-circle-o-notch fa-spin me-2"/><b>Translating...</b>
+                </t>
+                <t t-else="">
+                    <t t-esc="env.services.website.currentWebsite.metadata.langName"/>
+                </t>
+            </BuilderButton>
+        </BuilderRow>
+    </BuilderContext>
+</t>
+
+</templates>

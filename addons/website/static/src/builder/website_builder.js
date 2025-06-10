@@ -25,6 +25,8 @@ import { CoreBuilderActionPlugin } from "@html_builder/core/core_builder_action_
 import { CarouselOptionTranslationPlugin } from "./plugins/carousel_option_translation_plugin";
 import { ThemeTab } from "./plugins/theme/theme_tab";
 import { BuilderContentEditablePlugin } from "@html_builder/core/builder_content_editable_plugin";
+import { CustomizeTranslationTab } from "@website/builder/translation_components/customize_translation_tab";
+import { CustomizeTranslationTabPlugin } from "./translation_components/customize_translation_tab_plugin";
 
 const TRANSLATION_PLUGINS = [
     BuilderOptionsTranslationPlugin,
@@ -46,6 +48,7 @@ const TRANSLATION_PLUGINS = [
     EditInteractionPlugin,
     CarouselOptionTranslationPlugin,
     BuilderContentEditablePlugin,
+    CustomizeTranslationTabPlugin,
 ];
 
 export class WebsiteBuilder extends Component {
@@ -73,6 +76,10 @@ export class WebsiteBuilder extends Component {
             "SearchPowerboxPlugin",
             "YoutubePlugin",
             "ImagePlugin",
+            "AlignPlugin",
+            "ListPlugin",
+            "FontPlugin",
+            "FontFamilyPlugin",
         ];
         const pluginsToRemove = this.props.translation
             ? [...builderPluginsToRemove, ...pluginsBlockedInTranslationMode]
@@ -104,6 +111,8 @@ export class WebsiteBuilder extends Component {
             };
         };
         builderProps.getThemeTab = () => this.websiteService.isDesigner && ThemeTab;
+        builderProps.getCustomizeTranslationTab = () =>
+            this.websiteService.isDesigner && CustomizeTranslationTab;
         return builderProps;
     }
 }

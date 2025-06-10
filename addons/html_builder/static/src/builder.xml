@@ -37,7 +37,9 @@
                 <BlockTab snippetsName="props.snippetsName" />
             </t>
             <t t-if="state.activeTab === 'customize'">
-                <t t-if="!!props.config.customizeTab" t-call="{{props.config.customizeTab}}"/>
+                <t t-if="!!props.config.customizeTab">
+                    <t t-component="CustomizeTranslationTab"/>
+                </t>
                 <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
             </t>
             <t t-if="state.activeTab === 'theme'">
