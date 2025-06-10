@@ -122,3 +122,11 @@ class AccountMoveLine(models.Model):
     def _compute_name(self):
         amls = self.filtered(lambda l: not l.move_id.pos_session_ids)
         super(AccountMoveLine, amls)._compute_name()
+
+    def _compute_is_storno(self):
+        # EXTENDS 'account'
+        super()._compute_is_storno()
+        for line in self:
+            line.is_storno = line.is_storno or (
+                line.company_id.account_storno and line.move_id.reversed_pos_order_id
+            )
