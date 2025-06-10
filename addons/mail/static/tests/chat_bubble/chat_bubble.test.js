@@ -9,6 +9,7 @@ import {
     hover,
     insertText,
     onRpcBefore,
+    openDiscuss,
     openFormView,
     setupChatHub,
     start,
@@ -18,6 +19,7 @@ import {
 } from "../mail_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
+import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -309,6 +311,19 @@ test("Can close all chat windows at once", async () => {
     await click(".o-dropdown-item", { text: "Close all conversations" });
     await contains(".o-mail-ChatBubble", { count: 0 });
     assertChatHub({});
+});
+
+test("Don't show chat hub in discuss app", async () => {
+    const pyEnv = await startServer();
+    const channelIds = pyEnv["discuss.channel"].create(
+        range(0, 20).map((i) => ({ name: String(i) }))
+    );
+    setupChatHub({ folded: channelIds.reverse() });
+    await start();
+    await contains(".o-mail-ChatBubble", { count: 8 }); // max reached
+    await contains(".o-mail-ChatBubble", { text: "+13" });
+    await openDiscuss();
+    await contains(".o-mail-ChatBubble", { count: 0 });
 });
 
 test("Can compact chat hub", async () => {
