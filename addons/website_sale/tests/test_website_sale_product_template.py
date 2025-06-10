@@ -45,3 +45,16 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
 
         self.assertEqual(configurator_data['category_name'], "Test category")
         self.assertEqual(configurator_data['currency_name'], 'EUR')
+
+    def test_remove_archived_products_from_cart(self):
+        """Archived products shouldn't appear in carts"""
+        self.product.action_archive()
+        self.assertNotIn(
+            self.product, self.cart.order_line.product_id,
+            "Archived product should be deleted from the cart.",
+        )
+        self.service_product.product_tmpl_id.action_archive()
+        self.assertNotIn(
+            self.service_product, self.cart.order_line.product_id,
+            "All products from archived product templates should be removed from the cart.",
+        )
