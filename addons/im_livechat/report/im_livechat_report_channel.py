@@ -62,6 +62,16 @@ class Im_LivechatReportChannel(models.Model):
     chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
     chatbot_answers_path_str = fields.Char("Chatbot Answers (String)", readonly=True)
     session_expertises = fields.Char("Expertises used in this session", readonly=True)
+    agent_requesting_help_history = fields.Many2one(
+        "im_livechat.channel.member.history",
+        related="channel_id.livechat_agent_requesting_help_history",
+        readonly=True,
+    )
+    agent_providing_help_history = fields.Many2one(
+        "im_livechat.channel.member.history",
+        related="channel_id.livechat_agent_providing_help_history",
+        readonly=True,
+    )
 
     @property
     def _unknown_chatbot_answer_name(self):

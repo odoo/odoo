@@ -64,6 +64,18 @@ class DiscussChannel(models.Model):
         string="Customers (Guests)",
         compute="_compute_livechat_customer_guest_ids",
     )
+    livechat_agent_requesting_help_history = fields.Many2one(
+        "im_livechat.channel.member.history",
+        string="Help Requested (Agent)",
+        compute="_compute_livechat_agent_requesting_help_history",
+        store=True,
+    )
+    livechat_agent_providing_help_history = fields.Many2one(
+        "im_livechat.channel.member.history",
+        string="Help Provided (Agent)",
+        compute="_compute_livechat_agent_providing_help_history",
+        store=True,
+    )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
     chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
@@ -181,6 +193,26 @@ class DiscussChannel(models.Model):
         for channel in self:
             channel.livechat_customer_guest_ids = (
                 channel.livechat_customer_history_ids.guest_id
+            )
+
+    @api.depends("livechat_agent_history_ids")
+    def _compute_livechat_agent_requesting_help_history(self):
+        for channel in self:
+            channel.livechat_agent_requesting_help_history = (
+                channel.livechat_agent_history_ids.sorted(lambda h: (h.create_date, h.id))[0]
+                if channel.livechat_is_escalated
+                else None
+            )
+
+    @api.depends("livechat_agent_history_ids")
+    def _compute_livechat_agent_providing_help_history(self):
+        for channel in self:
+            channel.livechat_agent_providing_help_history = (
+                channel.livechat_agent_history_ids.sorted(
+                    lambda h: (h.create_date, h.id), reverse=True
+                )[0]
+                if channel.livechat_is_escalated
+                else None
             )
 
     def _sync_field_names(self):
