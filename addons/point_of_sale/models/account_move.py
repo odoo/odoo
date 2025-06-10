@@ -80,6 +80,12 @@ class AccountMove(models.Model):
                             'pos_payment_name': pos_payment.payment_method_id.name,
                         })
 
+    def _compute_is_storno(self):
+        # EXTENDS 'account'
+        super()._compute_is_storno()
+        for move in self:
+            move.is_storno = move.is_storno or (move.company_id.account_storno and move.reversed_pos_order_id)
+
     def _compute_amount(self):
         super()._compute_amount()
         for move in self:

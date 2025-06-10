@@ -878,7 +878,11 @@ class AccountMove(models.Model):
     @api.depends('move_type')
     def _compute_is_storno(self):
         for move in self:
-            move.is_storno = move.is_storno or (move.move_type in ('out_refund', 'in_refund') and move.company_id.account_storno)
+            move.is_storno = move.is_storno or (
+                move.company_id.account_storno and (
+                    move.move_type in ('out_refund', 'in_refund')
+                    or move.reversed_entry_id
+                ))
 
     @api.depends('company_id', 'invoice_filter_type_domain')
     def _compute_suitable_journal_ids(self):
@@ -4930,6 +4934,7 @@ class AccountMove(models.Model):
             Command.update(line.id, {
                 'balance': -line.balance,
                 'amount_currency': -line.amount_currency,
+                'expected_amount': -line.expected_amount,
             })
             for line in reverse_moves.line_ids
             if line.move_id.move_type == 'entry' or line.display_type == 'cogs'
