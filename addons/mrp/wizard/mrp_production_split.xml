@@ -59,7 +59,7 @@
                     </field>
                     <field name="production_split_multi_id" invisible="1"/>
                     <field name="valid_details" invisible="1"/>
-                    <div class="alert alert-danger" role="alert" invisible="valid_details or max_batch_size &lt;= 0">
+                    <div class="alert alert-danger" role="alert" invisible="valid_details and max_batch_size &gt; 0">
                         The total should be equal to the quantity to produce.
                     </div>
                     <footer>
