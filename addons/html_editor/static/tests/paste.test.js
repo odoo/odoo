@@ -2473,34 +2473,93 @@ describe("pasting within blockquote", () => {
 });
 
 describe("pasting within pre", () => {
-    test("should paste paragraph releted elements within pre", async () => {
+    test("should paste paragraph related elements within pre as plain text", async () => {
         await testEditor({
             contentBefore: "<pre>[]<br></pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
             },
-            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
+            contentAfter: "<pre>abc\ndef\nghi[]</pre>",
         });
         await testEditor({
             contentBefore: "<pre>x[]</pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
             },
-            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3></pre>",
+            contentAfter: "<pre>xabc\ndef\nghi[]</pre>",
         });
         await testEditor({
             contentBefore: "<pre>[]x</pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
             },
-            contentAfter: "<pre><h1>abc</h1><h2>def</h2><h3>ghi[]</h3>x</pre>",
+            contentAfter: "<pre>abc\ndef\nghi[]x</pre>",
         });
         await testEditor({
             contentBefore: "<pre>x[]y</pre>",
             stepFunction: async (editor) => {
                 pasteHtml(editor, "<h1>abc</h1><h2>def</h2><h3>ghi</h3>");
             },
-            contentAfter: "<pre>x<h1>abc</h1><h2>def</h2><h3>ghi[]</h3>y</pre>",
+            contentAfter: "<pre>xabc\ndef\nghi[]y</pre>",
+        });
+    });
+    test("should paste as plain text within pre", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    '<div class="o-paragraph">a<strong>bcd</strong><font style="color: rgb(255, 0, 0);">efg</font><font style="background-color: rgba(255, 156, 0, 0.6);">hij</font><span class="display-3-fs">klm</span>no</div>'
+                );
+            },
+            contentAfter: "<pre>abcdefghijklmno[]</pre>",
+        });
+    });
+    test("should paste lists within pre as plain text and keep the list style and indentation", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    '<ol><li>abc</li><li>def</li><li class="oe-nested"><ol><li>ghi</li><li class="oe-nested"><ol><li>jkl</li></ol></li><li>mno</li></ol></li><li>pqr</li></ol>'
+                );
+            },
+            contentAfter:
+                "<pre>1. abc\n2. def\n    1. ghi\n        1. jkl\n    2. mno\n3. pqr[]</pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    '<ul><li>abc</li><li>def</li><li class="oe-nested"><ul><li>ghi</li><li class="oe-nested"><ul><li>jkl</li></ul></li><li>mno</li></ul></li><li>pqr</li></ul>'
+                );
+            },
+            contentAfter: "<pre>* abc\n* def\n    * ghi\n        * jkl\n    * mno\n* pqr[]</pre>",
+        });
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    '<ul class="o_checklist"><li>abc</li><li>def</li><li class="oe-nested"><ul class="o_checklist"><li>ghi</li><li class="oe-nested"><ul class="o_checklist"><li>jkl</li></ul class="o_checklist"></li><li>mno</li></ul class="o_checklist"></li><li>pqr</li></ul class="o_checklist">'
+                );
+            },
+            contentAfter:
+                "<pre>[] abc\n[] def\n    [] ghi\n        [] jkl\n    [] mno\n[] pqr[]</pre>",
+        });
+    });
+    test("should paste nested lists of different types within pre as plain text and keep the list style and indentation", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => {
+                pasteHtml(
+                    editor,
+                    '<ol><li>ab</li><li class="oe-nested"><ul><li>cd</li><li class="oe-nested"><ul class="o_checklist"><li>ef</li><li class="oe-nested"><ol><li>gh</li></ol></li><li>ij</li></ul></li><li>kl</li></ul></li><li>mn</li></ol>'
+                );
+            },
+            contentAfter:
+                "<pre>1. ab\n    * cd\n        [] ef\n            1. gh\n        [] ij\n    * kl\n2. mn[]</pre>",
         });
     });
 });
