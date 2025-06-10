@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-06-06 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -3644,6 +3644,8 @@ msgid "Bank: Balance"
 msgstr "은행: 잔고"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 #: model:ir.ui.menu,name:account.account_banks_menu
 msgid "Banks"
 msgstr "은행"
@@ -8730,6 +8732,7 @@ msgstr "tax_tags 엔진의 expression_ids  생성 시간을 단축하기 위한 
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Internal link"
 msgstr "내부 링크"
@@ -10826,6 +10829,12 @@ msgstr "결제 분개 항목 없음"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "선택한 항목에 대해 진행할 수 있는 활동이 없습니다."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "No search more"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -15172,6 +15181,13 @@ msgid ""
 msgstr "전표에 대해 참조 모델과 참조 유형을 조합시키도록 구현되지 않았습니다."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "이 유통 항목이 속해 있는 회사입니다."
@@ -18191,6 +18207,14 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr "이 계정에 외화를 설정할 수 없습니다. 이미 다른 외화가 전표에 입력되어 있습니다."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
 
 #. module: account
 #. odoo-python

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-06-06 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Manon Rondou, 2025\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -3781,6 +3781,8 @@ msgid "Bank: Balance"
 msgstr "Banque : Solde"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 #: model:ir.ui.menu,name:account.account_banks_menu
 msgid "Banks"
 msgstr "Banques"
@@ -9048,6 +9050,7 @@ msgstr ""
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Internal link"
 msgstr "Lien interne"
@@ -11193,6 +11196,12 @@ msgstr "Pas d'écritures de paiement"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "Aucune action possible pour les lignes sélectionnées."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "No search more"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -15711,6 +15720,15 @@ msgstr ""
 " n'est pas implémentée."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+"Le partenaire commercial a été mis à jour pour toutes les écritures "
+"comptables associées."
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "La société à laquelle appartient cette ligne de distribution."
@@ -19013,6 +19031,16 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas choisir une devise pour ce compte car il existe déjà des "
 "pièces dans le journal ayant des devises différentes."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
+"Vous ne pouvez pas définir un partenaire comme adresse de facturation d’un "
+"autre s’ils ont un %(vat_label)s différent."
 
 #. module: account
 #. odoo-python

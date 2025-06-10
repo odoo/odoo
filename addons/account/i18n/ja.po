@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-06-06 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Junko Augias, 2025\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
@@ -3629,6 +3629,8 @@ msgid "Bank: Balance"
 msgstr "銀行：残高"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 #: model:ir.ui.menu,name:account.account_banks_menu
 msgid "Banks"
 msgstr "銀行"
@@ -8697,6 +8699,7 @@ msgstr "tax_tagsエンジンのexpression_ids作成を短縮する内部フィ�
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Internal link"
 msgstr "内部リンク"
@@ -10790,6 +10793,12 @@ msgstr "支払仕訳はありません"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "可能なアクションが、選択された行に対して見つかりませんでした。"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "No search more"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -15118,6 +15127,13 @@ msgid ""
 msgstr "ジャーナルの参照モデルと参照型の組み合わせが実装されていません。"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "この配分明細に属する会社。"
@@ -18101,6 +18117,14 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr "このアカウントには、異なる外貨を持つ仕訳がすでにいくつかあるため、通貨を設定することはできません。"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
 
 #. module: account
 #. odoo-python

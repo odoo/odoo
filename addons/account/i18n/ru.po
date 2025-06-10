@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 18:36+0000\n"
+"POT-Creation-Date: 2025-06-06 18:37+0000\n"
 "PO-Revision-Date: 2024-12-24 16:05+0000\n"
 "Last-Translator: Thomas Becquevort, 2025\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
@@ -3729,6 +3729,8 @@ msgid "Bank: Balance"
 msgstr "Банк: Баланс"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
 #: model:ir.ui.menu,name:account.account_banks_menu
 msgid "Banks"
 msgstr "Банки"
@@ -8954,6 +8956,7 @@ msgstr "Внутреннее поле для упрощения создания
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
 #: code:addons/account/static/src/components/product_label_section_and_note_field/product_label_section_and_note_field.xml:0
 msgid "Internal link"
 msgstr "Внутренняя ссылка"
@@ -11089,6 +11092,12 @@ msgstr "Нет записей журнала платежей"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "Не найдено ни одного возможного действия с выбранными строками."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "No search more"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__non_trade
@@ -15567,6 +15576,13 @@ msgid ""
 msgstr "Сочетание модели ссылки и типа ссылки в журнале не реализовано"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Компания, которой принадлежит эта линия распределения."
@@ -18839,6 +18855,14 @@ msgid ""
 msgstr ""
 "Вы не можете установить валюту для этого счёта, так как он уже содержит "
 "записи журнала с другой иностранной валютой."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
 
 #. module: account
 #. odoo-python
