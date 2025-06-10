@@ -12,7 +12,7 @@ class VerticalAlignmentOptionPlugin extends Plugin {
             withSequence(VERTICAL_ALIGNMENT, {
                 OptionComponent: VerticalAlignmentOption,
                 selector:
-                    ".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image",
+                    ".s_text_image, .s_image_text, .s_three_columns, .s_showcase, .s_numbers, .s_faq_collapse, .s_references, .s_accordion_image, .s_shape_image, .s_key_images, .s_cards_soft, .s_cards_grid",
                 applyTo: ".row",
                 props: {
                     level: 1,
@@ -20,7 +20,7 @@ class VerticalAlignmentOptionPlugin extends Plugin {
             }),
             withSequence(BOX_BORDER_SHADOW, {
                 OptionComponent: VerticalAlignmentOption,
-                selector:".s_attributes_horizontal_col",
+                selector: ".s_attributes_horizontal_col",
                 applyTo: ":scope > .row",
                 props: {
                     level: 0,
