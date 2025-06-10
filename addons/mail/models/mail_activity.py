@@ -73,6 +73,7 @@ class MailActivity(models.Model):
     note = fields.Html('Note', sanitize_style=True)
     date_deadline = fields.Date('Due Date', index=True, required=True, default=fields.Date.context_today)
     date_done = fields.Date('Done Date', compute='_compute_date_done', store=True)
+    feedback = fields.Text('Feedback')
     automated = fields.Boolean(
         'Automated activity', readonly=True,
         help='Indicates this activity has been created automatically and not by any user.')
@@ -557,6 +558,8 @@ class MailActivity(models.Model):
 
         # once done, archive to keep history without keeping them alive
         self.action_archive()
+        if feedback:
+            self.feedback = feedback
         return messages, next_activities
 
     @api.readonly
