@@ -196,7 +196,7 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
 
             # employee record an activity and check the deadline
-            self.env['mail.activity'].create({
+            activity = self.env['mail.activity'].create({
                 'summary': 'Test Activity',
                 'date_deadline': date.today() + relativedelta(days=1),
                 'activity_type_id': self.env.ref('mail.mail_activity_data_email').id,
@@ -213,7 +213,8 @@ class TestActivityFlow(TestActivityCommon):
             self.assertEqual(test_record.activity_state, 'today')
 
             # activity is done
-            test_record.activity_ids.action_feedback(feedback='So much feedback')
+            activity.action_feedback(feedback='So much feedback')
+            self.assertEqual(activity.feedback, 'So much feedback')
             self.assertEqual(test_record.activity_ids, self.env['mail.activity'])
             self.assertEqual(test_record.message_ids[0].subtype_id, self.env.ref('mail.mt_activities'))
 
