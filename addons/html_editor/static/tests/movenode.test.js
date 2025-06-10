@@ -1,9 +1,11 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { hover } from "@odoo/hoot-dom";
+import { hover, click } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { base64Img, setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
+import { unformat } from "./_helpers/format";
+import { expectElementCount } from "./_helpers/ui_expectations";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 describe.current.tags("desktop");
@@ -270,5 +272,98 @@ describe("drag", () => {
         expect(getContent(el)).toBe(
             `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
         );
+    });
+});
+
+describe("click", () => {
+    test("should select the text when clicked on a hook", async () => {
+        const { el } = await setupEditor(`<p>some text</p><p>[]other text</p>`, {
+            styleContent: styles,
+        });
+        await animationFrame();
+        const firstP = el.querySelector("p");
+        await hover(firstP);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>[some text]</p><p>other text</p>`);
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should select the table when clicked on a hook", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `),
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const firstTable = el.querySelector("table");
+        await hover(firstTable);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <table class="o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p>[<br></p></td>
+                            <td class="o_selected_td"><p><br></p></td>
+                            <td class="o_selected_td"><p>]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
+    test("should select a non-editable element completely when clicked on a hook", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<p>abc</p><div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+                        <p>Some</p>
+                        <p>text[]</p>
+                    </div>
+                </div><p>def</p>`
+            ),
+            { styleContent: styles }
+        );
+        await animationFrame();
+        const banner = el.querySelector(".o_editor_banner");
+        await hover(banner);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p>abc</p>[<div class="o_editor_banner user-select-none o-contenteditable-false lh-1 d-flex align-items-center alert alert-info pb-0 pt-3" data-oe-role="status" contenteditable="false" role="status">
+                    <i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="Banner Info" aria-label="Banner Info">💡</i>
+                    <div class="o_editor_banner_content o-contenteditable-true w-100 px-3" contenteditable="true">
+                        <p>Some</p>
+                        <p>text</p>
+                    </div>
+                </div>]<p>def</p>
+            `)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
     });
 });
