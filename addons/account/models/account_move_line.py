@@ -83,7 +83,7 @@ class AccountMoveLine(models.Model):
     )
     is_storno = fields.Boolean(
         string="Company Storno Accounting",
-        related='move_id.is_storno',
+        compute='_compute_is_storno', store=True, readonly=False, precompute=True,
         help="Utility field to express whether the journal item is subject to storno accounting",
     )
     sequence = fields.Integer(compute='_compute_sequence', store=True, readonly=False, precompute=True)
@@ -687,6 +687,18 @@ class AccountMoveLine(models.Model):
 
         return [('account_id', operator, value)]
 
+    @api.depends('move_id.is_storno', 'price_unit', 'quantity')
+    def _compute_is_storno(self):
+        for line in self:
+            if not line.company_id.account_storno:
+                continue
+            line.is_storno = line.is_storno or line.move_id.is_storno
+
+            # For invoice lines, we want to set is_storno based on the sign of the line if the entire move is not storno (not refund)
+            # This allows setting is_storno to true or false depending on quantity and price_unit
+            if not line.move_id.is_storno and line in line.move_id.invoice_line_ids and line.quantity * line.price_unit:
+                line.is_storno = line.quantity * line.price_unit < 0
+
     @api.depends('move_id')
     def _compute_balance(self):
         for line in self:
@@ -706,7 +718,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.balance = 0
 
-    @api.depends('balance', 'move_id.is_storno')
+    @api.depends('balance')
     def _compute_debit_credit(self):
         for line in self:
             if not line.is_storno:
@@ -1288,6 +1300,7 @@ class AccountMoveLine(models.Model):
     @api.onchange('debit')
     def _inverse_debit(self):
         for line in self:
+            line.is_storno = line.debit < 0
             if line.debit:
                 line.credit = 0
             line.balance = line.debit - line.credit
@@ -1295,6 +1308,7 @@ class AccountMoveLine(models.Model):
     @api.onchange('credit')
     def _inverse_credit(self):
         for line in self:
+            line.is_storno = line.credit < 0
             if line.credit:
                 line.debit = 0
             line.balance = line.debit - line.credit
@@ -1554,11 +1568,15 @@ class AccountMoveLine(models.Model):
     def _sanitize_vals(self, vals):
         if 'debit' in vals or 'credit' in vals:
             vals = vals.copy()
-            if 'balance' in vals:
-                vals.pop('debit', None)
-                vals.pop('credit', None)
-            else:
-                vals['balance'] = vals.pop('debit', 0) - vals.pop('credit', 0)
+
+            # This is used for negative amounts in debit/credit for manual inputs (to stay in same debit/credit as input)
+            if vals.get('move_id') and self.env['account.move'].browse(vals['move_id']).company_id.account_storno:
+                vals['is_storno'] = vals.get('is_storno', False) or (vals.get('debit', 0) < 0 or vals.get('credit', 0) < 0)
+
+            debit = vals.pop('debit', 0)
+            credit = vals.pop('credit', 0)
+            if 'balance' not in vals:
+                vals['balance'] = debit - credit
         if (
             vals.get('matching_number')
             and not vals['matching_number'].startswith('I')

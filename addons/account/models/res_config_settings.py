@@ -150,6 +150,7 @@ class ResConfigSettings(models.TransientModel):
 
     # Storno Accounting
     account_storno = fields.Boolean(string="Storno accounting", readonly=False, related='company_id.account_storno')
+    display_account_storno = fields.Boolean(related='company_id.display_account_storno')
 
     # Allows for the use of a different delivery address
     group_sale_delivery_address = fields.Boolean("Customer Addresses", implied_group='account.group_delivery_invoice_address')

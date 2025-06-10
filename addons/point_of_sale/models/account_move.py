@@ -90,6 +90,14 @@ class AccountMove(models.Model):
     def _compute_tax_totals(self):
         return super(AccountMove, self.with_context(linked_to_pos=bool(self.sudo().pos_order_ids)))._compute_tax_totals()
 
+    def _compute_is_storno(self):
+        # EXTENDS 'account'
+        super()._compute_is_storno()
+        for move in self:
+            move.is_storno = move.is_storno or (
+                move.company_id.account_storno and move.reversed_pos_order_id
+            )
+
     def action_view_source_pos_orders(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.action_pos_pos_form')
