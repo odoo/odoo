@@ -301,6 +301,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                     expected_all = [
                         {  # last message recipient is proposed
                             'create_values': {},
+                            'display_name': author.display_name,
                             'email': 'new.author@test.agrolait.com',
                             'name': 'New Author',
                             'partner_id': author.id,  # already created by project upon initial email reception
@@ -310,6 +311,7 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                     expected_all = [
                         {  # customer is proposed, even if follower, because shared
                             'create_values': {},
+                            'display_name': self.user_portal.partner_id.display_name,
                             'email': self.user_portal.email_normalized,
                             'name': self.user_portal.name,
                             'partner_id': self.user_portal.partner_id.id,
@@ -318,12 +320,14 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
                 expected_all += [
                     {  # mail.thread.cc: email_cc field
                         'create_values': {},
+                        'display_name': new_partner_cc.display_name,
                         'email': 'new.cc@test.agrolait.com',
                         'name': 'New Cc',
                         'partner_id': new_partner_cc.id,
                     },
                     {  # incoming email other recipients (new.customer)
                         'create_values': {},
+                        'display_name': new_partner_customer.display_name,
                         'email': 'new.customer@test.agrolait.com',
                         'name': 'New Customer',
                         'partner_id': new_partner_customer.id,

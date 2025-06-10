@@ -1,4 +1,5 @@
 import { Record } from "@mail/core/common/record";
+import { _t } from "@web/core/l10n/translation";
 
 export class Follower extends Record {
     static _name = "mail.followers";
@@ -24,6 +25,10 @@ export class Follower extends Record {
     /** @type {boolean} */
     is_active;
     partner = Record.one("Persona");
+
+    get displayName() {
+        return this.partner.name || this.display_name || _t("Unnamed");
+    }
 
     /** @returns {boolean} */
     get isEditable() {

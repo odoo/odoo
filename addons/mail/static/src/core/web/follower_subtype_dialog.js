@@ -74,6 +74,6 @@ export class FollowerSubtypeDialog extends Component {
     }
 
     get title() {
-        return _t("Edit Subscription of %(name)s", { name: this.props.follower.partner.name });
+        return _t("Edit Subscription of %(name)s", { name: this.props.follower.displayName });
     }
 }

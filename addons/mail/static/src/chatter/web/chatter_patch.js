@@ -204,6 +204,7 @@ patch(Chatter.prototype, {
             return;
         }
         this.state.thread.suggestedRecipients = recipients.map((result) => ({
+            display_name: result.display_name,
             email: result.email,
             partner_id: result.partner_id,
             name: result.name || result.email,

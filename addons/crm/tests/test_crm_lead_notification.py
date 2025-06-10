@@ -133,6 +133,7 @@ class NewLeadNotification(TestCrmCommon):
                 },
             ], [
                 {
+                    'display_name': 'Planet Express, Philip J Fry',
                     'partner_id': self.contact_1.id,
                     'name': 'Philip J Fry',
                     'email': 'philip.j.fry@test.example.com',
@@ -140,6 +141,7 @@ class NewLeadNotification(TestCrmCommon):
                 },
             ], [
                 {
+                    'display_name': 'Test Partner',
                     'partner_id': partner_no_email.id,
                     'name': 'Test Partner',
                     'email': False,
@@ -147,6 +149,7 @@ class NewLeadNotification(TestCrmCommon):
                 },
             ], [
                 {
+                    'display_name': 'Test Partner',
                     'partner_id': partner_no_email.id,
                     'email': False,
                     'name': 'Test Partner',
