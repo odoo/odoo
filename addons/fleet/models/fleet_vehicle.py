@@ -144,6 +144,14 @@ class FleetVehicle(models.Model):
     range_unit = fields.Selection([('km', 'km'), ('mi', 'mi')],
         compute='_compute_range_unit', store=True, readonly=False, default="km", required=True)
 
+    def _compute_display_name(self):
+        show_custom_label = self.env.context.get('custom_vehicle_name')
+        for record in self:
+            if show_custom_label:
+                record.display_name = (record.model_id.brand_id.name or '') + '/' + (record.model_id.name or '')
+            else:
+                record.display_name = record.name
+
     @api.depends('log_services')
     def _compute_service_activity(self):
         for vehicle in self:
