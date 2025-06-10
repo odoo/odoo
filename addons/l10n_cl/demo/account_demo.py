@@ -30,6 +30,7 @@ class AccountChartTemplate(models.AbstractModel):
             move_data['demo_invoice_8']['l10n_latam_document_type_id'] = foreign_invoice
             move_data['demo_invoice_equipment_purchase']['l10n_latam_document_type_id'] = foreign_invoice
             move_data['demo_invoice_9']['l10n_latam_document_type_id'] = foreign_invoice
+            move_data['demo_invoice_10']['l10n_latam_document_type_id'] = foreign_invoice
             move_data['demo_move_auto_reconcile_1']['l10n_latam_document_type_id'] = foreign_credit_note
             move_data['demo_move_auto_reconcile_2']['l10n_latam_document_type_id'] = foreign_credit_note
             move_data['demo_move_auto_reconcile_3']['l10n_latam_document_type_id'] = foreign_credit_note

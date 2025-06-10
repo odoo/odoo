@@ -74,17 +74,16 @@
         <record id="res_partner_3" model="res.partner">
             <field name="name">Gemini Furniture</field>
             <field eval="[Command.set([ref('res_partner_category_8'), ref('res_partner_category_14')])]" name="category_id"/>
-            <field name="is_company">1</field>
-            <field name="street">317 Fairchild Dr</field>
-            <field name="city">Fairfield</field>
-            <field name="state_id" ref='state_us_5'/>
-            <field name="zip">94535</field>
-            <field name="country_id" ref="base.us"/>
+            <field name="is_company" eval="True"/>
+            <field name="street">Via Industria 21</field>
+            <field name="city">Serravalle</field>
+            <field name="zip">47899</field>
+            <field name="country_id" ref="base.sm"/>
             <field name="email">gemini_furniture@fake.geminifurniture.com</field>
-            <field name="phone">(941)-284-4875</field>
+            <field name="phone">+378 0549 885555</field>
             <field name="website">http://www.gemini-furniture.com/</field>
             <field name="image_1920" type="base64" file="base/static/img/res_partner_3-image.png"/>
-            <field name="vat">US12345674</field>
+            <field name="vat">SM12345</field>
         </record>
 
         <record id="res_partner_4" model="res.partner">
@@ -105,7 +104,7 @@
 
         <record id="res_partner_5" model="res.partner">
             <field name="city">Wiltz</field>
-            <field name="country_id" ref="base.lu"/>
+            <field name="country_id" ref="base.li"/>
             <field name="email">wow@example.com</field>
             <field name="image_1920" file="base/static/img/partner_open_wood.png" type="base64"/>
             <field name="is_company" eval="True"/>
@@ -118,7 +117,7 @@
 
         <record id="res_partner_6" model="res.partner">
             <field name="city">Uuearu</field>
-            <field name="country_id" ref="base.ee"/>
+            <field name="country_id" ref="base.me"/>
             <field name="email">lightsup@example.com</field>
             <field name="image_1920" file="base/static/img/partner_lightsup.png" type="base64"/>
             <field name="is_company" eval="True"/>
