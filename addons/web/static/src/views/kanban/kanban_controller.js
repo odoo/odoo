@@ -253,7 +253,11 @@ export class KanbanController extends Component {
             items: this.actionMenuItems,
             isDomainSelected: this.model.root.isDomainSelected,
             resModel: this.model.root.resModel,
-            onActionExecuted: () => this.model.load(),
+            onActionExecuted: ({ noReload } = {}) => {
+                if (!noReload) {
+                    return this.model.load();
+                }
+            },
         };
     }
 
