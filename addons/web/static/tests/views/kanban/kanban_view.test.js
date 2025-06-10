@@ -36,6 +36,7 @@ import {
     clickModalButton,
     contains,
     createKanbanRecord,
+    defineActions,
     defineModels,
     defineParams,
     discardKanbanRecord,
@@ -13728,4 +13729,85 @@ test("hide pager in the kanban view with sample data", async () => {
 
     expect(".o_content").toHaveClass("o_view_sample_data");
     expect(".o_cp_pager").not.toBeVisible();
+});
+
+test(`kanban with custom cog action that has a confirmation target="new" action`, async () => {
+    const contextualAction = {
+        id: 80,
+        name: "Sort of confirmation dialog",
+        res_model: "partner",
+        context: "{}",
+        views: [[false, "form"]],
+        type: "ir.actions.act_window",
+        target: "new",
+    };
+    Partner._toolbar = {
+        action: [contextualAction],
+        print: [],
+    };
+    Partner._views = {
+        kanban: `
+            <kanban>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </kanban>`,
+        form: `
+            <form>
+                Are you sure blablabla
+                <footer>
+                    <button name="my_action" type="action" string="Do it"/>
+                </footer>
+            </form>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [[false, "kanban"]],
+        },
+        {
+            id: 2,
+            name: "Partner",
+            res_model: "partner",
+            views: [[false, "form"]],
+            res_id: 1,
+            xml_id: "my_action",
+        },
+        contextualAction,
+    ]);
+
+    stepAllNetworkCalls();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_view").toHaveCount(1);
+
+    await keyDown("alt");
+    await contains(".o_kanban_record:nth-of-type(1)").click();
+    expect(".o_selection_box").toHaveCount(1);
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
+    expect(".o_dialog").toHaveCount(1);
+
+    await contains(".o_dialog footer button:contains(Do it)").click();
+    expect(".o_dialog").toHaveCount(0);
+    expect(".o_form_view").toHaveCount(1);
+
+    // should not reload the list view when confirming with Do it
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "has_group",
+        "/web/action/load",
+        "get_views",
+        "onchange",
+        "web_save",
+        "/web/action/load",
+        "get_views",
+        "web_read",
+    ]);
 });
