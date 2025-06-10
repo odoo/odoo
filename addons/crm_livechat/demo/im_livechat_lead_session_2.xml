@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="im_livechat_lead_session_2_channel_demo" model="discuss.channel">
+            <field name="channel_type">livechat</field>
+            <field name="livechat_channel_id" ref="im_livechat.im_livechat_channel_data"/>
+            <field name="livechat_operator_id" ref="base.partner_admin"/>
+            <field name="name">Visitor #112, Mitchell Admin</field>
+            <field name="anonymous_name">Visitor #112</field>
+            <field name="create_date" eval="DateTime.today() + relativedelta(days=-10)"/> </record>
+        <record id="im_livechat_lead_session_2_member_admin_demo" model="discuss.channel.member">
+            <field name="partner_id" ref="base.partner_admin"/>
+            <field name="channel_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="unpin_dt" eval="DateTime.today()"/>
+            <field name="last_interest_dt" eval="DateTime.today() + relativedelta(days=-10)"/>
+            <field name="livechat_member_type">agent</field>
+        </record>
+        <record id="im_livechat_lead_session_2_guest_demo" model="mail.guest">
+            <field name="name">Visitor #112</field>
+        </record>
+        <record id="im_livechat_lead_session_2_member_guest_demo" model="discuss.channel.member">
+            <field name="guest_id" ref="im_livechat_lead_session_2_guest_demo"/>
+            <field name="channel_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="livechat_member_type">visitor</field>
+        </record>
+
+        <record id="im_livechat_lead_session_2_message_1_demo" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="message_type">email</field>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="body">Hello! How can I help you?</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field eval="DateTime.today() + relativedelta(days=-10, minutes=1)" name="date"/>
+        </record>
+        <record id="im_livechat_lead_session_2_message_2_demo" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="author_guest_id" ref="im_livechat_lead_session_2_guest_demo"/>
+            <field name="author_id"/>
+            <field name="email_from">Visitor</field>
+            <field name="body">I'm looking for a 'Website Builder'. Can you tell me more?</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field eval="DateTime.today() + relativedelta(days=-10, minutes=2)" name="date"/>
+        </record>
+        <record id="im_livechat_lead_session_2_message_3_demo" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="body">Certainly! Our website builder helps you create a website that is easy to use and looks great. What kind of website are you looking to create?</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field eval="DateTime.today() + relativedelta(days=-10, minutes=3)" name="date"/>
+        </record>
+        <record id="im_livechat_lead_session_2_message_4_demo" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="author_guest_id" ref="im_livechat_lead_session_2_guest_demo"/>
+            <field name="author_id"/>
+            <field name="email_from">Visitor</field>
+            <field name="body">A website to sell my products.</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field eval="DateTime.today() + relativedelta(days=-10, minutes=4)" name="date"/>
+        </record>
+        <record id="im_livechat_lead_session_2_message_5_demo" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="body">Perfect! Our website builder is ideal for that. I'll create a lead for you and a sales specialist will reach out to discuss your specific needs.</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field eval="DateTime.today() + relativedelta(days=-10, minutes=5)" name="date"/>
+        </record>
+        <record id="im_livechat_lead_session_2_message_6_demo" model="mail.message">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="im_livechat_lead_session_2_channel_demo"/>
+            <field name="author_guest_id" ref="im_livechat_lead_session_2_guest_demo"/>
+            <field name="author_id"/>
+            <field name="email_from">Visitor</field>
+            <field name="body">Thank you!</field>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field eval="DateTime.today() + relativedelta(days=-10, minutes=6)" name="date"/>
+        </record>
+
+        <record id="im_livechat_lead_session_2_lead_demo" model="crm.lead">
+            <field name="name">Website Builder Inquiry</field>
+            <field name="partner_name">Visitor #112</field>
+            <field name="email_from">data.user@example.com</field>
+            <field name="origin_channel_id" ref="im_livechat_lead_session_2_channel_demo"/>
+        </record>
+    </data>
+</odoo>

@@ -14,6 +14,11 @@
         "views/discuss_channel_views.xml",
         "security/crm_livechat_security.xml",
     ],
+    'demo': [
+        "demo/im_livechat_lead_session_1.xml",
+        "demo/im_livechat_lead_session_2.xml",
+        "demo/im_livechat_lead_session_3.xml",
+    ],
     'depends': [
         'crm',
         'im_livechat'
