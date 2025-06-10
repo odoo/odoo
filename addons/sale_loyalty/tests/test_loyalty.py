@@ -1065,3 +1065,23 @@ class TestLoyalty(TestSaleCouponCommon):
         order._update_programs_and_rewards()
         rewards = [value.ids for value in order._get_claimable_rewards().values()]
         self.assertTrue(any(loyalty_program_tag.reward_ids[0].id in r for r in rewards))
+
+    def test_apply_other_user_coupon(self):
+        """
+        Check that coupon target for specific user wont be apply for another user
+        """
+
+        program = self.code_promotion_program
+        user_b = new_test_user(self.env, login='user_b', company_id=self.env.company.id)
+        coupon = self.env['loyalty.card'].create({
+            'program_id': program.id, 'points': 1, 'code': 'GIFT_CARD', 'partner_id': self.partner.id
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': user_b.id,
+            'order_line': [Command.create({'product_id': self.product_A.id})]
+        })
+
+        expect_error = {'error': 'This coupon does not apply to current customer'}
+        error = order._try_apply_code(coupon.code)
+        not_applied_message = "The coupon code should not have been applied because the order's partner id not match coupon's partner id"
+        self.assertEqual(expect_error, error, not_applied_message)
