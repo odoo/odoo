@@ -47,14 +47,9 @@ class StockMove(models.Model):
         super()._compute_description_picking()
         for move in self:
             if move.purchase_line_id:
-                selected_seller = move.purchase_line_id.product_id._select_seller(
-                    partner_id=move.purchase_line_id.partner_id,
-                    quantity=move.purchase_line_id.product_qty,
-                    date=move.purchase_line_id.order_id.date_order and move.purchase_line_id.order_id.date_order.date() or fields.Date.context_today(move.purchase_line_id),
-                    uom_id=move.purchase_line_id.product_uom_id,
-                    params=move.purchase_line_id._get_select_sellers_params())
-                vendor_reference = f'[{selected_seller.product_code}]' if selected_seller.product_code else ''
-                vendor_reference += f' {selected_seller.product_name}' if selected_seller.product_name else ''
+                seller = move.purchase_line_id.selected_seller_id
+                vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
+                vendor_reference += f' {seller.product_name}' if seller.product_name else ''
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.product_no_variant_attribute_value_ids)
                 move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + move.description_picking).strip()
 

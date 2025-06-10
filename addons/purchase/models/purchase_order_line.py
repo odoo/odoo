@@ -73,6 +73,7 @@ class PurchaseOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     is_downpayment = fields.Boolean()
+    selected_seller_id = fields.Many2one('product.supplierinfo', compute='_compute_selected_seller_id', help='Technical field to get the vendor pricelist used to generate this line')
 
     _accountable_required_fields = models.Constraint(
         'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND product_uom_id IS NOT NULL AND date_planned IS NOT NULL))',
@@ -182,6 +183,21 @@ class PurchaseOrderLine(models.Model):
                 line.qty_received_manual = line.qty_received
             else:
                 line.qty_received_manual = 0.0
+
+    @api.depends('product_id', 'product_id.seller_ids', 'partner_id', 'product_qty', 'order_id.date_order', 'product_uom_id')
+    def _compute_selected_seller_id(self):
+        for line in self:
+            if line.product_id:
+                params = line._get_select_sellers_params()
+                seller = line.product_id._select_seller(
+                    partner_id=line.partner_id,
+                    quantity=line.product_qty,
+                    date=line.order_id.date_order and line.order_id.date_order.date() or fields.Date.context_today(line),
+                    uom_id=line.product_uom_id,
+                    params=params)
+                line.selected_seller_id = seller.id if seller else False
+            else:
+                line.selected_seller_id = False
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -297,18 +313,12 @@ class PurchaseOrderLine(models.Model):
             if not line.product_id or line.invoice_lines or not line.company_id or self.env.context.get('skip_uom_conversion'):
                 continue
             params = line._get_select_sellers_params()
-            seller = line.product_id._select_seller(
-                partner_id=line.partner_id,
-                quantity=line.product_qty,
-                date=line.order_id.date_order and line.order_id.date_order.date() or fields.Date.context_today(line),
-                uom_id=line.product_uom_id,
-                params=params)
 
-            if seller or not line.date_planned:
-                line.date_planned = line._get_date_planned(seller).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            if line.selected_seller_id or not line.date_planned:
+                line.date_planned = line._get_date_planned(line.selected_seller_id).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
             # If not seller, use the standard price. It needs a proper currency conversion.
-            if not seller:
+            if not line.selected_seller_id:
                 unavailable_seller = line.product_id.seller_ids.filtered(
                     lambda s: s.partner_id == line.order_id.partner_id)
                 if not unavailable_seller and line.price_unit and line.product_uom_id == line._origin.product_uom_id:
@@ -332,12 +342,12 @@ class PurchaseOrderLine(models.Model):
                 )
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
 
-            elif seller:
-                price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
-                price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
+            elif line.selected_seller_id:
+                price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if line.selected_seller_id else 0.0
+                price_unit = line.selected_seller_id.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order or fields.Date.context_today(line), False)
                 price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
-                line.price_unit = seller.product_uom_id._compute_price(price_unit, line.product_uom_id)
-                line.discount = seller.discount or 0.0
+                line.price_unit = line.selected_seller_id.product_uom_id._compute_price(price_unit, line.product_uom_id)
+                line.discount = line.selected_seller_id.discount or 0.0
 
             # record product names to avoid resetting custom descriptions
             default_names = []
@@ -348,7 +358,7 @@ class PurchaseOrderLine(models.Model):
                 product_ctx = {'seller_id': vendor.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 default_names.append(line._get_product_purchase_description(line.product_id.with_context(product_ctx)))
             if not line.name or line.name in default_names:
-                product_ctx = {'seller_id': seller.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
+                product_ctx = {'seller_id': line.selected_seller_id.id, 'lang': get_lang(line.env, line.partner_id.lang).code}
                 line.name = line._get_product_purchase_description(line.product_id.with_context(product_ctx))
 
     @api.depends('product_uom_id', 'product_qty', 'product_id.uom_id')

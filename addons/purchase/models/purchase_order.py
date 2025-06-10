@@ -385,10 +385,7 @@ class PurchaseOrder(models.Model):
         new_pos = super().copy(default=default)
         for line in new_pos.order_line:
             if line.product_id:
-                seller = line.product_id._select_seller(
-                    partner_id=line.partner_id, quantity=line.product_qty,
-                    date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom_id)
-                line.date_planned = line._get_date_planned(seller)
+                line.date_planned = line._get_date_planned(line.selected_seller_id)
         return new_pos
 
     def _must_delete_date_planned(self, field_name):
@@ -655,14 +652,9 @@ class PurchaseOrder(models.Model):
                 supplierinfo = self._prepare_supplier_info(partner, line, price, line.currency_id)
                 # In case the order partner is a contact address, a new supplierinfo is created on
                 # the parent company. In this case, we keep the product name and code.
-                seller = line.product_id._select_seller(
-                    partner_id=line.partner_id,
-                    quantity=line.product_qty,
-                    date=line.order_id.date_order and line.order_id.date_order.date(),
-                    uom_id=line.product_uom_id)
-                if seller:
-                    supplierinfo['product_name'] = seller.product_name
-                    supplierinfo['product_code'] = seller.product_code
+                if line.selected_seller_id:
+                    supplierinfo['product_name'] = line.selected_seller_id.product_name
+                    supplierinfo['product_code'] = line.selected_seller_id.product_code
                     supplierinfo['product_uom_id'] = line.product_uom.id
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
@@ -1253,14 +1245,9 @@ class PurchaseOrder(models.Model):
                 'product_qty': quantity,
                 'sequence': ((self.order_line and self.order_line[-1].sequence + 1) or 10),  # put it at the end of the order
             })
-            seller = pol.product_id._select_seller(
-                partner_id=pol.partner_id,
-                quantity=pol.product_qty,
-                date=pol.order_id.date_order and pol.order_id.date_order.date() or fields.Date.context_today(pol),
-                uom_id=pol.product_uom_id)
-            if seller:
+            if pol.selected_seller_id:
                 # Fix the PO line's price on the seller's one.
-                pol.price_unit = seller.price_discounted
+                pol.price_unit = pol.selected_seller_id.price_discounted
         return pol.price_unit_discounted
 
     def _create_update_date_activity(self, updated_dates):
