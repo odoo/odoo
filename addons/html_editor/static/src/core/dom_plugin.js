@@ -127,8 +127,9 @@ export class DomPlugin extends Plugin {
             container.replaceChildren(content);
         }
 
+        const block = closestBlock(selection.anchorNode);
         for (const cb of this.getResource("before_insert_processors")) {
-            container = cb(container);
+            container = cb(container, block);
         }
         selection = this.dependencies.selection.getEditableSelection();
 
@@ -160,13 +161,9 @@ export class DomPlugin extends Plugin {
         }
 
         startNode = startNode || this.dependencies.selection.getEditableSelection().anchorNode;
-        const block = closestBlock(selection.anchorNode);
 
         const shouldUnwrap = (node) =>
-            (isParagraphRelatedElement(node) ||
-                isListItemElement(node) ||
-                // TODO remove: PRE should be a paragraphRelatedElement
-                node.nodeName === "PRE") &&
+            (isParagraphRelatedElement(node) || isListItemElement(node)) &&
             !isEmptyBlock(block) &&
             !isEmptyBlock(node) &&
             (isContentEditable(node) ||
@@ -175,10 +172,7 @@ export class DomPlugin extends Plugin {
             (node.nodeName === block.nodeName ||
                 (this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
                     this.dependencies.baseContainer.isCandidateForBaseContainer(block)) ||
-                // TODO add: when PRE is considered as a paragraphRelatedElement
-                // again, consider unwrapping in PRE by re-enabling the
-                // following condition:
-                // block.nodeName === "PRE" ||
+                block.nodeName === "PRE" ||
                 (block.nodeName === "DIV" && this.dependencies.split.isUnsplittable(block))) &&
             // If the selection anchorNode is the editable itself, the content
             // should not be unwrapped.
@@ -574,11 +568,7 @@ export class DomPlugin extends Plugin {
                 block.isContentEditable
         );
         for (const block of deepestSelectedBlocks) {
-            if (
-                isParagraphRelatedElement(block) ||
-                block.nodeName === "PRE" || // TODO remove: PRE should be a paragraphRelatedElement
-                isListItemElement(block)
-            ) {
+            if (isParagraphRelatedElement(block) || isListItemElement(block)) {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
