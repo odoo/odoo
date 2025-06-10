@@ -23,6 +23,7 @@ class TestReorderingRule(TransactionCase):
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
+        cls.env.user.group_ids += cls.env.ref('uom.group_uom')
 
         # create product and set the vendor
         product_form = Form(cls.env['product.product'])
