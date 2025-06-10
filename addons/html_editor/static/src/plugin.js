@@ -1,5 +1,8 @@
 import { isProtected, isProtecting, isUnprotecting } from "./utils/dom_info";
 
+export const isValidTargetForDomListener = (target) =>
+    !isProtecting(target) && (!isProtected(target) || isUnprotecting(target));
+
 /**
  * @typedef { import("./editor").Editor } Editor
  * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
@@ -41,7 +44,7 @@ export class Plugin {
     setup() {}
 
     isValidTargetForDomListener(ev) {
-        return !isProtecting(ev.target) && (!isProtected(ev.target) || isUnprotecting(ev.target));
+        return isValidTargetForDomListener(ev.target);
     }
 
     /**
