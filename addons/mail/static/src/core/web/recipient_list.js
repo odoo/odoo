@@ -27,7 +27,7 @@ export class RecipientList extends Component {
     getRecipientText(recipient) {
         return (
             recipient.partner.email ||
-            sprintf(_t("[%(name)s] (no email address)"), { name: recipient.partner.name })
+            sprintf(_t("[%(name)s] (no email address)"), { name: recipient.displayName })
         );
     }
 }
