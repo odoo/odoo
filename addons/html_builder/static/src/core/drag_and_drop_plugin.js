@@ -131,12 +131,12 @@ export class DragAndDropPlugin extends Plugin {
                 return draggedEl;
             },
             onDragStart: ({ x, y }) => {
-                this.dependencies.operation.next(
-                    async () => {
-                        await new Promise((resolve) => (dragAndDropResolve = () => resolve()));
-                    },
-                    { withLoadingEffect: false }
+                const dragAndDropProm = new Promise(
+                    (resolve) => (dragAndDropResolve = () => resolve())
                 );
+                this.dependencies.operation.next(async () => await dragAndDropProm, {
+                    withLoadingEffect: false,
+                });
                 const restoreDragSavePoint = this.dependencies.history.makeSavePoint();
                 this.cancelDragAndDrop = () => {
                     // Undo the changes needed to ease the drag and drop.
