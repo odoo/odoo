@@ -1,0 +1,59 @@
+.o_code_toolbar {
+    position: absolute;
+    top: 3px;
+    right: 1px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 25px;
+    font-size: 11.5px;
+
+    button {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        height: 20px;
+        padding-right: 6px;
+        padding-left: 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+        font-size: 12px;
+        flex-shrink: 0;
+        line-height: 1.2;
+        min-width: 0px;
+        margin-right: 5px;
+    }
+}
+
+.o_syntax_highlighting {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    font-synthesis: weight style small-caps;
+    tab-size: 4;
+
+    pre {
+        font: inherit;
+        font-synthesis: inherit;
+        tab-size: inherit;
+        white-space: pre;
+    }
+
+    textarea.o_prism_source {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        color: transparent;
+        cursor: text;
+        caret-color: black;
+        white-space: pre;
+        border: 0;
+        outline: none;
+        background: transparent;
+        resize: none;
+    }
+}
