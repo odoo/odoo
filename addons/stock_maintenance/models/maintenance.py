@@ -29,5 +29,16 @@ class MaintenanceEquipment(models.Model):
         if not action:
             return True
         action_dict = action._get_action_dict()
-        action_dict['context'] = {'search_default_name': self.serial_no}
+        matching_serials = self.env['stock.lot'].search([('name', '=', self.serial_no)])
+        if len(matching_serials) == 1:
+            action_dict.update({
+                'views': [(False, 'form')],
+                'res_id': matching_serials.id,
+            })
+        else:
+            action_dict.update({
+                'context': {},
+                'views': [(False, 'list'), (False, 'form')],
+                'domain': [('id', 'in', matching_serials.ids)],
+            })
         return action_dict
