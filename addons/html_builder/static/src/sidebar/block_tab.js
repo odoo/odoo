@@ -219,12 +219,12 @@ export class BlockTab extends Component {
                 return draggedEl;
             },
             onDragStart: ({ element }) => {
-                this.shared.operation.next(
-                    async () => {
-                        await new Promise((resolve) => (dragAndDropResolve = () => resolve()));
-                    },
-                    { withLoadingEffect: false }
+                const dragAndDropProm = new Promise(
+                    (resolve) => (dragAndDropResolve = () => resolve())
                 );
+                this.shared.operation.next(async () => await dragAndDropProm, {
+                    withLoadingEffect: false,
+                });
                 const restoreDragSavePoint = this.shared.history.makeSavePoint();
                 this.cancelDragAndDrop = () => {
                     // Undo the changes needed to ease the drag and drop.
