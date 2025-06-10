@@ -83,7 +83,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",
                 [["id", "in", selectedPartnerIds]],
-                ["email", "id", "lang", "name"]
+                ["email", "id", "lang", "name", "display_name"]
             );
 
             /**
@@ -138,6 +138,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
                     ];
                     if (!allRecipients.some((recipient) => recipient.partner_id === partner.id)) {
                         thread.additionalRecipients.push({
+                            display_name: partner.display_name,
                             email: partner.email,
                             lang: partner.lang,
                             name: partner.name,
