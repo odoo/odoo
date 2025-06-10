@@ -1,8 +1,8 @@
 import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
-import { endPos } from "@html_editor/utils/position";
+import { endPos, nodeSize } from "@html_editor/utils/position";
 import { xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
-import { ancestors, closestElement } from "../utils/dom_traversal";
+import { ancestors, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
@@ -262,9 +262,21 @@ export class MoveNodePlugin extends Plugin {
         this.services.tooltip.add(this.moveWidget, {
             template: xml`
                 <div class="o-tooltip tooltip-inner text-start px-3">
-                    ${_t("Drag to move")}
+                    ${_t("Drag to move")}<br/>
+                    ${_t("Click to select")}
                 </div>`,
             arrow: true,
+        });
+
+        this.addDomListener(this.moveWidget, "click", () => {
+            const anchorNode = firstLeaf(movableElement);
+            const focusNode = lastLeaf(movableElement);
+            this.dependencies.selection.setSelection({
+                anchorNode,
+                anchorOffset: 0,
+                focusNode,
+                focusOffset: nodeSize(focusNode),
+            });
         });
 
         if (this.scrollableElement) {

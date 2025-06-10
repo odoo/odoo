@@ -1,9 +1,10 @@
 import { describe, expect, getFixture, test } from "@odoo/hoot";
-import { hover } from "@odoo/hoot-dom";
+import { hover, click, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
+import { unformat } from "./_helpers/format";
 
 describe.current.tags("desktop");
 
@@ -158,5 +159,66 @@ describe("drag", () => {
         expect(getContent(el)).toBe(
             `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
         );
+    });
+});
+
+describe("click", () => {
+    test("should select the text when clicked on a hook", async () => {
+        const { el } = await setupEditor(`<p>some text</p><p>[]other text</p>`, {
+            styleContent: styles,
+        });
+        await animationFrame();
+        const firstP = el.querySelector("p");
+        await hover(firstP);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>[some text]</p><p>other text</p>`);
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveCount(1);
+    });
+
+    test("should select the table when clicked on a hook", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><p>[]<br></p></td>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `),
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const firstTable = el.querySelector("p");
+        await hover(firstTable);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <table class="o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p>[<br></p></td>
+                            <td class="o_selected_td"><p><br></p></td>
+                            <td class="o_selected_td"><p>]<br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `)
+        );
+        await waitFor(".o-we-toolbar");
+        expect(".o-we-toolbar").toHaveCount(1);
     });
 });
