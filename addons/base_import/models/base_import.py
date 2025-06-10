@@ -19,7 +19,6 @@ from collections.abc import Sequence
 
 import chardet
 import psycopg2
-import requests
 from PIL import Image
 
 from odoo import api, fields, models
@@ -28,7 +27,6 @@ from odoo.tools import (
     DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_DATETIME_FORMAT,
     config,
-    parse_version,
 )
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
@@ -1271,6 +1269,7 @@ class Base_ImportImport(models.TransientModel):
             elif field['type'] == 'binary' and field.get('attachment') and any(f in name for f in IMAGE_FIELDS) and name in import_fields:
                 index = import_fields.index(name)
 
+                import requests  # noqa: PLC0415
                 with requests.Session() as session:
                     session.stream = True
 
