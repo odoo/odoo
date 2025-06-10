@@ -38,6 +38,24 @@
                         groups="base.group_no_one"
                         string="Download EDI JSON"/>
             </xpath>
+            <xpath expr="//div[@name='journal_div']" position="after">
+                <field name="l10n_in_edi_status" invisible="not l10n_in_edi_status or state == 'draft'"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_invoice_list_inherit_l10n_in_edi" model="ir.ui.view">
+        <field name="name">view.invoice.list.inherit.l10n.in.edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='amount_total_in_currency_signed']" position="after">
+                <field name="l10n_in_edi_status"
+                       widget="badge"
+                       decoration-success="l10n_in_edi_status == 'sent'"
+                       decoration-info="l10n_in_edi_status == 'to_send'"
+                       decoration-danger="l10n_in_edi_status == 'cancelled'"/>
+                <field name="l10n_in_edi_error" string="India Edi Error Message"/>
+            </xpath>
         </field>
     </record>
     <record id="l10n_in_edi_inherit_account_move_search_view" model="ir.ui.view">
