@@ -86,10 +86,10 @@ export class RecipientsInput extends Component {
                         [
                             ["id", "not in", Array.from(partnerIds)],
                             "|",
-                            ["name", "ilike", name],
+                            ["display_name", "ilike", name],
                             email ? ["email_normalized", "ilike", email] : [0, "=", 1], // if no email, use a false leaf
                         ],
-                        ["email", "id", "lang", "name"],
+                        ["display_name", "email", "id", "lang", "name"],
                         { limit }
                     );
 
@@ -97,12 +97,14 @@ export class RecipientsInput extends Component {
                         ...matches.map((match) => ({
                             label: match.email
                                 ? _t("%(partner_name)s <%(partner_email)s>", {
-                                      partner_name: match.name || _t("Unnamed"),
+                                      partner_name:
+                                          match.name || match.display_name || _t("Unnamed"),
                                       partner_email: match.email,
                                   })
-                                : match.name || _t("Unnamed"),
+                                : match.name || match.display_name || _t("Unnamed"),
                             onSelect: () => {
                                 this.insertAdditionalRecipient({
+                                    display_name: match.display_name,
                                     email: match.email,
                                     name: match.name,
                                     partner_id: match.id,
@@ -171,15 +173,15 @@ export class RecipientsInput extends Component {
     getTagsFromMailThread() {
         const tags = [];
         const createTagForRecipient = (recipient, recipientField) => {
-            const tooltip = `${recipient.name || _t("Unnamed")} ${
+            const tooltip = `${recipient.name || recipient.display_name || _t("Unnamed")} ${
                 recipient.email ? "<" + recipient.email + ">" : ""
             }`;
             tooltip.trim();
             tags.push({
                 id: uniqueId("tag_"),
                 resId: recipient.partner_id,
-                text: recipient.name || recipient.email || _t("Unnamed"),
-                name: recipient.name || _t("Unnamed"),
+                text: recipient.name || recipient.display_name || recipient.email || _t("Unnamed"),
+                name: recipient.name || recipient.display_name || _t("Unnamed"),
                 email: recipient.email || "",
                 tooltip,
                 onDelete: () => {
