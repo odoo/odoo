@@ -82,27 +82,32 @@ export class RecipientsInput extends Component {
                     const options = [];
 
                     const limit = 8;
-                    const matches = await this.orm.searchRead(
-                        "res.partner",
-                        [
-                            ["id", "not in", Array.from(partnerIds)],
-                            ["display_name", "ilike", term],
-                        ],
-                        ["email", "id", "lang", "name", "parent_name", "display_name"],
-                        { limit, context: { formatted_display_name: true, show_email: true } }
-                    );
+                    const matches = await this.orm.call("res.partner", "web_name_search", [], {
+                        name: term,
+                        specification: {
+                            email: {},
+                            lang: {},
+                            name: {},
+                            parent_name: {},
+                            display_name: {},
+                        },
+                        limit,
+                        domain: [["id", "not in", Array.from(partnerIds)]],
+                        context: { show_email: true },
+                    });
 
                     options.push(
                         ...matches.map((match) => ({
                             label: match.display_name
                                 ? highlightText(
                                       term,
-                                      odoomark(match.display_name),
+                                      odoomark(match.__formatted_display_name),
                                       "fw-bolder text-primary"
                                   )
                                 : _t("Unnamed"),
                             onSelect: () => {
                                 this.insertAdditionalRecipient({
+                                    display_name: match.display_name,
                                     email: match.email,
                                     name: match.name,
                                     partner_id: match.id,
@@ -172,15 +177,15 @@ export class RecipientsInput extends Component {
     getTagsFromMailThread() {
         const tags = [];
         const createTagForRecipient = (recipient, recipientField) => {
-            const tooltip = `${recipient.name || _t("Unnamed")} ${
+            const tooltip = `${recipient.name || recipient.display_name || _t("Unnamed")} ${
                 recipient.email ? "<" + recipient.email + ">" : ""
             }`;
             tooltip.trim();
             tags.push({
                 id: uniqueId("tag_"),
                 resId: recipient.partner_id,
-                text: recipient.name || recipient.email || _t("Unnamed"),
-                name: recipient.name || _t("Unnamed"),
+                text: recipient.name || recipient.display_name || recipient.email || _t("Unnamed"),
+                name: recipient.name || recipient.display_name || _t("Unnamed"),
                 email: recipient.email || "",
                 tooltip,
                 onDelete: () => {
