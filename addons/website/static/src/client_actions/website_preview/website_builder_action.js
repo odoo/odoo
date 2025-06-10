@@ -71,7 +71,6 @@ export class WebsiteBuilder extends Component {
                 [this.websiteContext]
             );
         });
-        this.translation = !!this.props.action.context.params?.edit_translations;
 
         this.overlayRef = useChildRef();
         useSubEnv({
@@ -484,6 +483,10 @@ export class WebsiteBuilder extends Component {
 
     onResourceEditorResize(width) {
         browser.localStorage.setItem("ace_editor_width", width);
+    }
+
+    get translation() {
+        return this.websiteService.currentWebsite.metadata.translatable;
     }
 
     /**
