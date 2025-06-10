@@ -5218,6 +5218,12 @@ export class OdooEditor extends EventTarget {
             // Instantiate DOMPurify with the correct window.
             this.DOMPurify ??= DOMPurify(this.document.defaultView);
             this.DOMPurify.sanitize(fragment, { IN_PLACE: true });
+            const selection = this.document.getSelection();
+            if (selection?.anchorNode && closestElement(selection.anchorNode, ".o_text_highlight")) {
+                for (const textHighlight of fragment.querySelectorAll(".o_text_highlight")) {
+                    unwrapContents(textHighlight);
+                }
+            }
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
