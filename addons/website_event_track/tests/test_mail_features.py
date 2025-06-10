@@ -105,6 +105,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
             [
                 {
                     'create_values': {},
+                    'display_name': self.event_customer.display_name,
                     'email': self.event_customer.email_normalized,
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
@@ -114,6 +115,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
             [
                 {
                     'create_values': {},
+                    'display_name': self.event_customer.display_name,
                     'email': self.event_customer.email_normalized,
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
@@ -128,6 +130,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
             [
                 {
                     'create_values': {},
+                    'display_name': self.event_customer.display_name,
                     'email': self.event_customer.email_normalized,
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
@@ -142,6 +145,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
             [
                 {
                     'create_values': {},
+                    'display_name': self.event_customer_wrongemail.display_name,
                     'email': self.event_customer_wrongemail.email_normalized,
                     'name': self.event_customer_wrongemail.name,
                     'partner_id': self.event_customer_wrongemail.id,

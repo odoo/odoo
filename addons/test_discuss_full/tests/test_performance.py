@@ -1645,7 +1645,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     }
                 )
             if also_notification:
-                res["name"] = "Ernest Employee"
+                res.update({
+                    "displayName": "Ernest Employee",
+                    "name": "Ernest Employee",
+                })
+
             return res
         if user == self.users[1]:
             res = {

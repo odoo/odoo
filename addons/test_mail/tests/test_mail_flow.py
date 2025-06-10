@@ -116,6 +116,7 @@ class TestMailFlow(MailCommon, TestRecipients):
         )
         self.assertEqual(recipients, [{
             'create_values': {},
+            'display_name': self.customer_zboing.display_name,
             'email': self.customer_zboing.email_normalized,
             'name': self.customer_zboing.name,
             'partner_id': self.customer_zboing.id,
@@ -318,24 +319,28 @@ class TestMailFlow(MailCommon, TestRecipients):
         expected_all = [
             {  # existing partners come first
                 'create_values': {},
+                'display_name': self.customer_portal_zboing.display_name,
                 'email': 'portal@zboing.com',
                 'name': 'Portal Zboing',
                 'partner_id': self.customer_portal_zboing.id,
             },
             {  # primary email comes first
                 'create_values': {},
+                'display_name': partner_sylvie.display_name,
                 'email': 'sylvie.lelitre@zboing.com',
                 'name': 'Sylvie Lelitre (Zboing)',
                 'partner_id': partner_sylvie.id,
             },
             {  # mail.thread.cc: email_cc field
                 'create_values': {},
+                'display_name': partner_pay.display_name,
                 'email': 'pay@zboing.com',
                 'name': 'pay@zboing.com',
                 'partner_id': partner_pay.id,
             },
             {  # reply message
                 'create_values': {},
+                'display_name': partner_accounting.display_name,
                 'email': 'accounting@zboing.com',
                 'name': 'Josiane Quichopoils',
                 'partner_id': partner_accounting.id,

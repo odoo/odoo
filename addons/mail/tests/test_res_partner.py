@@ -459,6 +459,7 @@ class TestPartner(MailCommon):
                 suggested = partner._message_get_suggested_recipients()
                 self.assertEqual(suggested, [{
                     'create_values': {},
+                    'display_name': partner.display_name,
                     'email': partner.email_normalized,
                     'name': partner.name,
                     'partner_id': partner.id,
