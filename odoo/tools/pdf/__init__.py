@@ -211,14 +211,14 @@ def to_pdf_stream(attachment) -> io.BytesIO:
     _logger.warning("mimetype (%s) not recognized for %s", attachment.mimetype, attachment)
 
 
-def add_banner(pdf_stream, text=None, logo=False, thickness=SENTINEL):
+def add_banner(pdf_stream: io.BytesIO, text: str=None, logo: bool=False, thickness: float=SENTINEL) -> io.BytesIO:
     """ Add a banner on a PDF in the upper right corner, with Odoo's logo (optionally).
 
-    :param pdf_stream (BytesIO):    The PDF stream where the banner will be applied.
-    :param text (str):              The text to be displayed.
-    :param logo (bool):             Whether to display Odoo's logo in the banner.
-    :param thickness (float):       The thickness of the banner in pixels (default: 2cm).
-    :return (BytesIO):              The modified PDF stream.
+    :param pdf_stream:    The PDF stream where the banner will be applied.
+    :param text:              The text to be displayed.
+    :param logo:             Whether to display Odoo's logo in the banner.
+    :param thickness:       The thickness of the banner in pixels (default: 2cm).
+    :return:              The modified PDF stream.
     """
     from PIL import Image  # noqa: PLC0415
     from reportlab.lib import colors  # noqa: PLC0415
