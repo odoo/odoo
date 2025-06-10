@@ -10,7 +10,6 @@
 # sixsix six, 2024
 # Tamás Dombos, 2024
 # A . <tibor@inventati.org>, 2024
-# Tamás Németh <ntomasz81@gmail.com>, 2024
 # Martin Trigaux, 2024
 # krnkris, 2024
 # Ákos Nagy <akos.nagy@oregional.hu>, 2024
@@ -18,13 +17,14 @@
 # Eiler Attila, 2025
 # Valics Lehel, 2025
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2025
+# Tamás Németh <ntomasz81@gmail.com>, 2025
 # gezza <geza.nagy@oregional.hu>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:39+0000\n"
+"POT-Creation-Date: 2025-06-06 18:38+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2025\n"
 "Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
@@ -2428,6 +2428,11 @@ msgid "Email"
 msgstr "Email"
 
 #. module: sale
+#: model:ir.model,name:sale.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "E-mail összeállító varázsló"
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
 msgstr "Email-t kap az ügyfél a számla elkészültéről."
@@ -4568,6 +4573,11 @@ msgid "Salespersons"
 msgstr "Értékesítők"
 
 #. module: sale
+#: model:ir.model,name:sale.model_mail_scheduled_message
+msgid "Scheduled Message"
+msgstr "Ütemezett üzenet"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Search Sales Order"
@@ -5641,12 +5651,6 @@ msgstr "Termékváltozat táblázat"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "View Details"
 msgstr "Részletek megtekintése"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-msgid "View Order"
-msgstr "Rendelés megtekintése"
 
 #. module: sale
 #. odoo-python
