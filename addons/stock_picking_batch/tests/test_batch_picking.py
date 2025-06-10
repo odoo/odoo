@@ -787,17 +787,17 @@ class TestBatchPicking02(TransactionCase):
         batch_form.picking_ids.add(picking)
         batch = batch_form.save()
         batch.action_confirm()
-        confirmed_form = Form(batch)
+        batch.action_see_packages()
         # Adding a new line should not raise an error
-        confirmed_form.move_line_ids.new()
+        batch.move_line_ids.new()
         # Adding a line should work also for users in multi_locations (former storage categories) group
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
         batch_form = Form(self.env['stock.picking.batch'])
         batch_form.picking_ids.add(picking)
         batch = batch_form.save()
         batch.action_confirm()
-        confirmed_form = Form(batch)
-        confirmed_form.move_line_ids.new()
+        batch.action_see_packages()
+        batch.move_line_ids.new()
 
     def test_batch_validation_without_backorder(self):
         loc1, loc2 = self.stock_location.child_ids

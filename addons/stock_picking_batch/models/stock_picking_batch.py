@@ -67,6 +67,7 @@ class StockPickingBatch(models.Model):
     estimated_shipping_volume = fields.Float(
         "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
     properties = fields.Properties('Properties', definition='picking_type_id.batch_properties_definition', copy=True)
+    has_package = fields.Boolean(string='Has Package', compute='_compute_has_package')
 
     @api.depends('description')
     @api.depends_context('add_to_existing_batch')
@@ -155,6 +156,11 @@ class StockPickingBatch(models.Model):
     def _compute_scheduled_date(self):
         for rec in self:
             rec.scheduled_date = min(rec.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+
+    def _compute_has_package(self):
+        for batch in self:
+            # Check if there is any picking that has a result_package_id
+            batch.has_package = any(batch.picking_ids.move_line_ids.mapped('result_package_id'))
 
     @api.onchange('scheduled_date')
     def onchange_scheduled_date(self):
@@ -309,6 +315,26 @@ class StockPickingBatch(models.Model):
                 'default_move_ids': self.move_ids.ids,
                 'default_move_quantity': 'move'},
         }
+
+    def action_batch_detailed_operations(self):
+        view_id = self.env.ref('stock_picking_batch.view_move_line_tree').id
+        return {
+            'name': _('Detailed Operations'),
+            'view_mode': 'list',
+            'type': 'ir.actions.act_window',
+            'res_model': 'stock.move.line',
+            'views': [(view_id, 'list')],
+            'domain': [('id', 'in', self.move_line_ids.ids)],
+            'context': {'show_lots_text': self.show_lots_text},
+        }
+
+    def action_see_packages(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_package_view")
+        packages = self.move_line_ids.mapped('result_package_id')
+        action['domain'] = [('id', 'in', packages.ids)]
+        action['context'] = {'picking_id': self.picking_ids.ids}
+        return action
 
     # -------------------------------------------------------------------------
     # Miscellaneous

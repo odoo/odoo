@@ -12,28 +12,20 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>
                 </header>
             </xpath>
+             <xpath expr="//chatter" position="replace"/>
         </field>
     </record>
 
-    <record id="view_picking_move_tree_inherited" model="ir.ui.view">
-        <field name="name">stock_picking_batch.picking.move.list</field>
+    <record id="view_stock_move_operations" model="ir.ui.view">
+        <field name="name">stock.move.operations.stock_picking_batch</field>
         <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_picking_move_tree"/>
-        <field name="mode">primary</field>
-        <field name="priority" eval="1000"/>
+        <field name="inherit_id" ref="stock.view_stock_move_operations"/>
         <field name="arch" type="xml">
-            <xpath expr="//list" position="attributes">
-                <attribute name="delete">0</attribute>
+            <xpath expr="//group/group[1]/field[@name='product_id']" position="before">
+                <field name="picking_id" string="Transfer" readonly="True"/>
             </xpath>
-            <xpath expr="//field[@name='product_id']" position="after">
-                <field name="picking_id"
-                    required="1"
-                    readonly="id"
-                    domain="[('id', 'in', parent.picking_ids)]"
-                    options="{'no_create_edit': True}"/>
-            </xpath>
-            <xpath expr="//field[@name='quantity']" position="attributes">
-                <attribute name="readonly">1</attribute>
+            <xpath expr="//field[@name='show_lots_m2o']" position="after">
+                <field name="quantity" invisible="1"/>
             </xpath>
         </field>
     </record>
@@ -42,15 +34,15 @@
         <field name="name">stock_picking_batch.move.line.list</field>
         <field name="model">stock.move.line</field>
         <field name="arch" type="xml">
-            <list editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="location_id">
+            <list editable="top" decoration-muted="state == 'cancel'" string="Move Lines" default_order="result_package_id desc, location_id asc, location_dest_id asc, picking_id asc, id">
                 <field name="tracking" column_invisible="True"/>
                 <field name="state" column_invisible="True"/>
                 <field name="company_id" column_invisible="True"/>
                 <field name="product_id" context="{'default_is_storable': True}" required="1" readonly="id"/>
                 <field name="picking_id" required="1" readonly="id"
                     options="{'no_create_edit': True}" domain="[('id', 'in', parent.picking_ids)]"/>
-                <field name="lot_id"   groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="parent.show_lots_text" />
-                <field name="lot_name" groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="not parent.show_lots_text"/>
+                <field name="lot_id"   groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="not context.get('show_lots_text', False)" />
+                <field name="lot_name" groups="stock.group_production_lot" readonly="tracking not in ['lot', 'serial']" column_invisible="context.get('show_lots_text', False)"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
@@ -95,6 +87,18 @@
                             class="oe_stat_button" icon="fa-list"
                             invisible="not show_allocation"
                             groups="stock.group_reception_report"/>
+                        <button name="action_see_packages" string="Packages" type="object"
+                            class="oe_stat_button" icon="fa-cubes"
+                            invisible="not has_package"/>
+                        <button name="action_batch_detailed_operations"
+                            class="oe_stat_button"
+                            icon="fa-bars"
+                            type="object"
+                            help="List view of batch detailed operations">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Detailed Operations</span>
+                            </div>
+                        </button>
                     </div>
                     <div class="oe_title">
                         <h1><field name="name" class="oe_inline"/></h1>
@@ -110,12 +114,25 @@
                         <field name="properties" nolabel="1" columns="2" hideAddButton="1"/>
                     </group>
                     <notebook>
-                        <page string="Detailed Operations" name="page_detailed_operations" invisible="state == 'draft'">
-                            <field name="move_line_ids" context="{'list_view_ref': 'stock_picking_batch.view_move_line_tree'}" readonly="state not in ['draft', 'in_progress']"/>
-                            <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel')" groups="stock.group_tracking_lot"/>
-                        </page>
                         <page string="Operations" name="page_operations" invisible="state == 'draft'">
-                            <field name="move_ids" context="{'list_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>
+                            <field name="move_ids" readonly="state == 'cancel' or state == 'done'"
+                                widget="stock_move_one2many"
+                                context="{'form_view_ref': 'stock.view_stock_move_operations'}">
+                                <list delete="0" create="0" editable="bottom">
+                                    <field name="show_details_visible" column_invisible="True"/>
+                                    <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
+                                    <field name="product_packaging_id" groups="product.group_stock_packaging"
+                                        context="{'default_product_id': product_id}"
+                                        readonly="not product_id"/>
+                                    <field name="picking_id" required="1" readonly="id" domain="[('id', 'in', parent.picking_ids)]" options="{'no_create_edit': True}"/>
+                                    <field name="product_uom_qty" string="Demand" readonly="not is_initial_demand_editable"/>
+                                    <field name="quantity" string="Quantity" readonly="1" column_invisible="parent.state=='draft'" decoration-danger="product_uom_qty and quantity > product_uom_qty and parent.state not in ['done', 'cancel']"/>
+                                    <field name="picked" column_invisible="parent.state=='draft'" readonly="1"/>
+                                    <field name="product_uom" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" string="Unit of Measue" groups="uom.group_uom"/>
+                                </list>
+                            </field>
+                            <button class="btn-primary float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel') or has_package" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
+                            <button class="btn-secondary float-end" name="action_put_in_pack" type="object" string="Put in Pack" invisible="state in ('draft', 'done', 'cancel') or not has_package" groups="stock.group_tracking_lot" data-hotkey="shift+g"/>
                         </page>
                         <page string="Transfers" name="page_transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
@@ -223,7 +240,7 @@
         <field name="path">batch-transfers</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('is_wave', '=', False)]</field>
-        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True}</field>
+        <field name="context">{'search_default_draft': True, 'search_default_in_progress': True, 'show_partner_name_in_display': True}</field>
         <field name="search_view_id" ref="stock_picking_batch_filter"/>
         <field name="help" type="html">
             <div class="container mt-5">

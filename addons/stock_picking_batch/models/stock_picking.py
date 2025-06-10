@@ -91,6 +91,14 @@ class StockPicking(models.Model):
         help='Batch associated to this transfer', index=True, copy=False)
     batch_sequence = fields.Integer(string='Sequence')
 
+    @api.depends('partner_id')
+    def _compute_display_name(self):
+        for picking in self:
+            if self.env.context.get('show_partner_name_in_display') and picking.partner_id:
+                picking.display_name = f"{picking.name} - {picking.partner_id.name}"
+            else:
+                picking.display_name = picking.name
+
     @api.model_create_multi
     def create(self, vals_list):
         pickings = super().create(vals_list)
@@ -310,5 +318,6 @@ class StockPicking(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'stock.picking.batch',
             'res_id': self.batch_id.id,
-            'view_mode': 'form'
+            'view_mode': 'form',
+            'context': {'show_partner_name_in_display': True}
         }
