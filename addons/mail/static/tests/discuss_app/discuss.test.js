@@ -659,8 +659,17 @@ test("basic top bar rendering", async () => {
     await contains("button:disabled", { text: "Unstar all" });
     await contains(".o-mail-Discuss-threadName", { value: "Starred" });
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Discuss-header button[title='Invite People']");
     await contains(".o-mail-Discuss-threadName", { value: "General" });
+    await contains(".o-mail-Discuss-header button", { count: 9 });
+    await contains(".o-mail-Discuss-header button[title='Start Video Call']");
+    await contains(".o-mail-Discuss-header button[title='Start Call']");
+    await contains(".o-mail-Discuss-header button[title='Notification Settings']");
+    await contains(".o-mail-Discuss-header button[title='Invite People']");
+    await contains(".o-mail-Discuss-header button[title='Search Messages']");
+    await contains(".o-mail-Discuss-header button[title='Threads']");
+    await contains(".o-mail-Discuss-header button[title='Attachments']");
+    await contains(".o-mail-Discuss-header button[title='Pinned Messages']");
+    await contains(".o-mail-Discuss-header button[title='Members']");
 });
 
 test("rendering of inbox message", async () => {
