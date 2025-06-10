@@ -186,7 +186,7 @@ test("chat window: basic rendering", async () => {
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
-    await contains(".o-mail-ChatWindow-command", { count: 15 });
+    await contains(".o-mail-ChatWindow-command", { count: 16 });
     await contains(".o-dropdown-item", { text: "Open in Discuss" });
     await contains(".o-dropdown-item", { text: "Attachments" });
     await contains(".o-dropdown-item", { text: "Pinned Messages" });
@@ -197,6 +197,7 @@ test("chat window: basic rendering", async () => {
     await contains(".o-dropdown-item", { text: "Rename Thread" });
     await contains(".o-dropdown-item", { text: "Notification Settings" });
     await contains(".o-dropdown-item", { text: "Call Settings" });
+    await contains(".o-dropdown-item", { text: "Leave Channel" });
 });
 
 test.skip("Fold state of chat window is sync among browser tabs", async () => {
