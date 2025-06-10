@@ -366,7 +366,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
     if (snippet.groupName) {
         insertSnippetSteps.push({
             content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
-            trigger: `#snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion) .o_snippet_thumbnail_area`,
+            trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail_area`,
             tooltipPosition: position,
             run: "click",
         },
@@ -382,7 +382,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
     } else {
         insertSnippetSteps.push({
             content: markup(_t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)),
-            trigger: `#snippet_content .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion)`,
+            trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_content .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail`,
             tooltipPosition: position,
             run: "drag_and_drop :iframe #wrapwrap > footer",
         });

@@ -50,7 +50,7 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Click on the Custom category block",
-        trigger: "#snippet_groups .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion) .o_snippet_thumbnail_area",
+        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail .o_snippet_thumbnail_area",
         run: "click",
     },
     {
@@ -87,7 +87,7 @@ registerWebsitePreviewTour('test_custom_snippet', {
     },
     {
         content: "Click on the Custom category block",
-        trigger: "#snippet_groups .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail:not(.o_we_ongoing_insertion) .o_snippet_thumbnail_area",
+        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name='Custom'].o_draggable .o_snippet_thumbnail .o_snippet_thumbnail_area",
         run: "click",
     },
     {
