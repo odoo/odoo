@@ -153,6 +153,7 @@ export async function handleCheckIdentity(wrapped, ormService, dialogService) {
     return wrapped.then((r) => {
         if (
             !(
+                r &&
                 r.type &&
                 r.type === "ir.actions.act_window" &&
                 r.res_model === "res.users.identitycheck"
