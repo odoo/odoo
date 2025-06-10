@@ -1606,8 +1606,8 @@ class AccountMoveLine(models.Model):
                     aggregates=['id:recordset'],
                 )) if matching2lines is None else matching2lines
                 if (
-                    # allow changing the partner or/and the account on all the lines of a reconciliation together
-                    changing_fields - {'partner_id', 'account_id'}
+                    # allow changing the account on all the lines of a reconciliation together
+                    changing_fields - {'account_id'}
                     or not all(reconciled_line in self for reconciled_line in matching2lines[line.matching_number])
                 ):
                     lines_to_unreconcile += line
@@ -3124,7 +3124,7 @@ class AccountMoveLine(models.Model):
         """
         tax_fnames = ['balance', 'tax_line_id', 'tax_ids', 'tax_tag_ids']
         fiscal_fnames = tax_fnames + ['account_id', 'journal_id', 'amount_currency', 'currency_id', 'partner_id']
-        reconciliation_fnames = ['account_id', 'date', 'balance', 'amount_currency', 'currency_id', 'partner_id']
+        reconciliation_fnames = ['account_id', 'date', 'balance', 'amount_currency', 'currency_id']
         return {
             'tax': tax_fnames,
             'fiscal': fiscal_fnames,

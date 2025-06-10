@@ -5637,7 +5637,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """ bank move doesn't have partner_id set on the account.move, but has it only on account.move.line"""
         inv = self.env['account.move'].create([{
             'move_type': 'entry',
-            'partner_id': self.partner_a.id,
             'line_ids': [
                 Command.create({
                     'debit': 0.0,
