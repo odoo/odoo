@@ -63,7 +63,7 @@
                                    }"
                         >
                             <div class="o-mail-Message-content o-min-width-0" t-att-class="{ 'w-100': isEditing, 'opacity-50': message.isPending, 'pt-1': message.isNote }">
-                                <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing }">
+                                <div class="o-mail-Message-textContent position-relative d-flex" t-att-class="{ 'w-100': isEditing and !message.isEmpty }">
                                     <t t-if="message.message_type === 'notification' and message.richBody" t-call="mail.Message.bodyAsNotification" name="bodyAsNotification"/>
                                     <t t-if="message.isEmpty or (message.message_type !== 'notification' and !message.is_transient and (message.hasTextContent or message.subtype_id?.description or isEditing or message.edited))">
                                         <MessageLinkPreviewList t-if="!isEditing and message.linkPreviewSquash" messageLinkPreviews="message.message_link_preview_ids"/>
@@ -79,7 +79,7 @@
                                                 </svg>
                                             </div>
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block text-body" t-att-class="{
-                                                'w-100': isEditing,
+                                                'w-100': isEditing and !message.isEmpty,
                                                 'shadow-sm': message.bubbleColor,
                                                 'o-rounded-bubble': message.bubbleColor and props.squashed,
                                                 'o-rounded-bottom-bubble': message.bubbleColor and !props.squashed,
@@ -100,8 +100,8 @@
                                                             'p-1': message.isNote,
                                                             'fs-1': !isEditing and !env.inChatter and message.onlyEmojis,
                                                             'mb-0': !message.isNote,
-                                                            'py-2': !message.isNote and !isEditing,
-                                                            'pt-2 pb-1': !message.isNote and isEditing,
+                                                            'py-2': !message.isNote and (!isEditing or message.isEmpty),
+                                                            'pt-2 pb-1': !message.isNote and isEditing and !message.isEmpty,
                                                             'o-note': message.isNote,
                                                             'o-rounded-bubble': props.squashed,
                                                             'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.isNote and !props.squashed,
