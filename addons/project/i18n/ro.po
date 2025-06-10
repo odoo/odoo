@@ -6,14 +6,15 @@
 # Larisa Pop, 2024
 # Lyall Kindmurr, 2024
 # Wil Odoo, 2025
+# Flavia0320, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-16 13:39+0000\n"
+"POT-Creation-Date: 2025-05-14 20:46+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
+"Last-Translator: Flavia0320, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -361,6 +362,19 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Dragă <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/><br/>\n"
+"    Vă mulțumim că ne-ați contactat. Apreciem interesul dumneavoastră față de produsele/serviciile noastre.<br/>\n"
+"    Echipa noastră analizează în prezent solicitarea dvs. și va răspunde la e-mail cât mai curând posibil.<br/>\n"
+"    Dacă aveți alte întrebări sau nelămuriri între timp, nu ezitați să ne anunțați. Suntem aici pentru a vă ajuta.<br/><br/>\n"
+"    Vă mulțumim pentru răbdare.<br/>\n"
+"    Toate cele bune,\n"
+"    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\" data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -5616,12 +5630,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "state to mark the task as complete."
-msgstr ""
-
-#. module: project
-#. odoo-javascript
-#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
-msgid "state.message"
 msgstr ""
 
 #. module: project

@@ -136,7 +136,7 @@ msgstr "+123456789"
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr "- \"%(event_name)s\": %(nb_too_many)i stoelen ontbreken."
+msgstr "- \"%(event_name)s\": %(nb_too_many)i ontbreken plaatsen."
 
 #. module: event
 #. odoo-python
@@ -145,8 +145,8 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
-"- het ticket \"%(ticket_name)s\" (%(event_name)s): %(nb_too_many)i stoelen "
-"ontbreken."
+"- het ticket \"%(ticket_name)s\" (%(event_name)s): %(nb_too_many)i ontbreken"
+" plaatsen."
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -181,7 +181,7 @@ msgstr "5-10"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x134
 msgid "96x134mm (Badge Printer)"
-msgstr "96x134mm (badgeprinter)"
+msgstr "96x134mm (Badgeprinter)"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__96x82
@@ -635,7 +635,7 @@ msgstr ""
 "                <tr><td valign=\"middle\">\n"
 "                    <span style=\"font-size: 10px;\">Je registratie</span><br/>\n"
 "                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                        <t t-out=\"object.name or 'Guest'\"/>\n"
+"                        <t t-out=\"object.name or 'Gast'\"/>\n"
 "                    </span>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <a t-attf-href=\"/event/{{ object.event_id.id }}/my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}\" target=\"_blank\" style=\"padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
@@ -1121,7 +1121,7 @@ msgstr ""
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collectie Online Onthulling</strong>\n"
 "                        </t>\n"
-"                        gaat <strong t-out=\"object.event_date_range or ''\">vandaag</strong> van start.\n"
+"                        <strong t-out=\"object.event_date_range or ''\">vandaag</strong> van start gaat.\n"
 "                    </div>\n"
 "                    <div>\n"
 "                        <br/>\n"
@@ -1585,10 +1585,10 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <div>\n"
 "                        Hallo <t t-out=\"object.name or 'Guest'\"/>,<br/><br/>\n"
-"                        We zijn blij om je registratie voor het evenement te bevestigen\n"
+"                        We zijn blij om je registratie voor het evenement \n"
 "                        <t t-if=\"is_online\">\n"
 "                            <a t-att-href=\"object.event_id.website_url\" style=\"color:#875A7B;text-decoration:none;font-weight:bold;\" t-out=\"object.event_id.name or ''\">OpenWood Collectie Online Onthulling</a>\n"
-"                        </t>\n"
+"                        </t> te bevestigen\n"
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or ''\">OpenWood Collectie Online Onthulling</strong>\n"
 "                        </t>.\n"
@@ -2887,7 +2887,7 @@ msgstr "Evenement: Registratiebadge"
 #. module: event
 #: model:mail.template,name:event.event_subscription
 msgid "Event: Registration Confirmation"
-msgstr "Evenement: registratiebevestiging"
+msgstr "Evenement: Registratiebevestiging"
 
 #. module: event
 #: model:mail.template,name:event.event_reminder
@@ -3009,7 +3009,7 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
-"Voor elk evenement kun je een maximaal aantal inschrijvingen of plaats "
+"Voor elk evenement kun je een maximaal aantal inschrijvingen of plaatsen "
 "(aantal deelnemers) opgeven. Boven dit cijfer worden inschrijvingen niet "
 "meer geaccepteerd."
 
@@ -3790,7 +3790,7 @@ msgstr "Aantal registraties"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_taken
 msgid "Number of Taken Seats"
-msgstr "Aantal ingenomen zitplaatsen"
+msgstr "Aantal bezette plaatsen"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -4547,7 +4547,7 @@ msgstr "Genomen"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_taken
 msgid "Taken Seats"
-msgstr "Zitplaatsen ingenomen"
+msgstr "Bezette plaatsen"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -4978,7 +4978,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used
 msgid "Used Seats"
-msgstr "Gebruikte stoelen"
+msgstr "Gebruikte plaatsen"
 
 #. module: event
 #: model:res.groups,name:event.group_event_user
@@ -5102,7 +5102,7 @@ msgstr "Of het mogelijk is om deze tickets te verkopen"
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr "Of er geen zitplaatsen beschikbaar zijn voor dit ticket."
+msgstr "Of er geen plaatsen beschikbaar zijn voor dit ticket."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
