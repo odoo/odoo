@@ -1,5 +1,4 @@
 import { Builder } from "@html_builder/builder";
-import { WebsiteBuilder } from "@website/client_actions/website_preview/website_builder_action";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
@@ -208,15 +207,10 @@ async function setupSidebarBuilderForTranslation(options) {
             this.websiteContext = this.websiteService.context;
         },
     });
-    patchWithCleanup(WebsiteBuilder.prototype, {
-        setup() {
-            super.setup();
-            this.translation = true;
-        },
-    });
     const { getEditor, getEditableContent, getIframeEl, openBuilderSidebar } =
         await setupWebsiteBuilder(websiteContent, {
             openEditor: false,
+            translateMode: true,
         });
     websiteServiceInTranslateMode.pageDocument = getIframeEl().contentDocument;
     await openBuilderSidebar();
