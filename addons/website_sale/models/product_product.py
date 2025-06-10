@@ -184,3 +184,13 @@ class ProductProduct(models.Model):
                 'reviewCount': self.rating_count,
             }
         return markup_data
+
+    def write(self, vals):
+        if 'active' in vals and not vals['active']:
+            # unlink draft lines containing the archived product
+            self.env['sale.order.line'].sudo().search([
+                ('state', '=', 'draft'),
+                ('product_id', 'in', self.ids),
+                ('order_id', 'any', [('website_id', '!=', False)]),
+            ]).unlink()
+        return super().write(vals)
