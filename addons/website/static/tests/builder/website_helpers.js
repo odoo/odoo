@@ -85,6 +85,7 @@ export async function setupWebsiteBuilder(
         styleContent,
         headerContent = "",
         beforeWrapwrapContent = "",
+        translateMode = false,
     } = {}
 ) {
     // TODO: fix when the iframe is reloaded and become empty (e.g. discard button)
@@ -142,6 +143,9 @@ export async function setupWebsiteBuilder(
                 });
             }
             await resolveEditAssetsLoaded();
+        },
+        get translation() {
+            return translateMode;
         },
     });
     patchWithCleanup(WebsiteSystrayItem.prototype, {
