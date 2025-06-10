@@ -48,6 +48,7 @@ class TestConfigureShops(TestPoSCommon):
             form.pos_config_id = pos_config1
             form.pos_is_header_or_footer = True
             form.pos_receipt_header = 'xxxxx'
+            form.account_tax_periodicity_journal_id = self.invoice_journal
 
         self.assertEqual(pos_config1.receipt_header, 'xxxxx')
         self.assertEqual(pos_config2.receipt_header, False)
@@ -57,6 +58,7 @@ class TestConfigureShops(TestPoSCommon):
             form.pos_config_id = pos_config2
             form.pos_is_header_or_footer = True
             form.pos_receipt_header = 'yyyyy'
+            form.account_tax_periodicity_journal_id = self.invoice_journal
 
         self.assertEqual(pos_config1.receipt_header, 'xxxxx')
         self.assertEqual(pos_config2.receipt_header, 'yyyyy')
@@ -75,6 +77,7 @@ class TestConfigureShops(TestPoSCommon):
         with Form(self.env['res.config.settings']) as form:
             form.pos_config_id = pos_config
             form.pos_is_header_or_footer = False
+            form.account_tax_periodicity_journal_id = self.invoice_journal
 
         self.assertEqual(pos_config.receipt_header, False)
         self.assertEqual(pos_config.receipt_footer, False)
