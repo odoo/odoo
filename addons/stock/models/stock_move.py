@@ -1627,12 +1627,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         be used in move/po creation.
         """
         self.ensure_one()
-        # group_id = self.group_id or False
-        # if self.rule_id:
-        #     if self.rule_id.group_propagation_option == 'fixed' and self.rule_id.group_id:
-        #         group_id = self.rule_id.group_id
-        #     elif self.rule_id.group_propagation_option == 'none':
-        #         group_id = False
 
         product_id = self.product_id.with_context(lang=self._get_lang())
         dates_info = {'date_planned': self._get_mto_procurement_date()}

@@ -59,10 +59,6 @@ class StockRule(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If unchecked, it will allow you to hide the rule without removing it.")
-    group_propagation_option = fields.Selection([
-        ('none', 'Leave Empty'),
-        ('propagate', 'Propagate'),
-        ('fixed', 'Fixed')], string="Propagation of Procurement Group", default='propagate')
     action = fields.Selection(
         selection=[('pull', 'Pull From'), ('push', 'Push To'), ('pull_push', 'Pull & Push')], string='Action',
         default='pull', required=True, index=True)
@@ -320,11 +316,6 @@ class StockRule(models.Model):
 
         :rtype: dictionary
         '''
-        # group_id = False
-        # if self.group_propagation_option == 'propagate':
-        #     group_id = values.get('group_id', False) and values['group_id'].id
-        # elif self.group_propagation_option == 'fixed':
-        #     group_id = self.group_id.id
 
         date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
