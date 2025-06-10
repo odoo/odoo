@@ -61,7 +61,7 @@
                 },
                 "A19": {
                     "style": 1,
-                    "content": "[Top Invoices](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[[\"move_type\",\"=\",\"out_invoice\"]],\"context\":{\"group_by\":[]},\"modelName\":\"account.move\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices\"})",
+                    "content": "[Top Invoices](odoo://view/{\"viewType\":\"list\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],[\"move_type\",\"=\",\"out_invoice\"]],\"context\":{\"group_by\":[]},\"modelName\":\"account.move\",\"views\":[[false,\"list\"],[false,\"kanban\"],[false,\"form\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices\"})",
                     "border": 1
                 },
                 "A20": {
@@ -123,7 +123,7 @@
                 },
                 "A32": {
                     "style": 1,
-                    "content": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"country_id\",\"!=\",false],[\"price_subtotal\",\">=\",0]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
+                    "content": "[Top Countries](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"country_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"country_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"country_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
                     "border": 1
                 },
                 "A33": {
@@ -185,7 +185,7 @@
                 },
                 "A45": {
                     "style": 1,
-                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_id\",\"!=\",false],[\"price_subtotal\",\">=\",0]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
+                    "content": "[Top Products](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"product_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
                     "border": 1
                 },
                 "A46": {
@@ -713,7 +713,7 @@
                 },
                 "E32": {
                     "style": 1,
-                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_categ_id\",\"!=\",false],[\"price_subtotal\",\">=\",0]],\"context\":{\"group_by\":[\"product_categ_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_categ_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
+                    "content": "[Top Categories](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"product_categ_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"product_categ_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"product_categ_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
                     "border": 1
                 },
                 "E33": {
@@ -775,7 +775,7 @@
                 },
                 "E45": {
                     "style": 1,
-                    "content": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"invoice_user_id\",\"!=\",false],[\"price_subtotal\",\">=\",0]],\"context\":{\"group_by\":[\"invoice_user_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"invoice_user_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
+                    "content": "[Top Salespeople](odoo://view/{\"viewType\":\"pivot\",\"action\":{\"domain\":[\"&\",[\"state\",\"not in\",[\"draft\",\"cancel\"]],\"&\",[\"invoice_user_id\",\"!=\",false],[\"move_type\",\"in\",[\"out_invoice\",\"out_refund\"]]],\"context\":{\"group_by\":[\"invoice_user_id\"],\"pivot_measures\":[\"price_subtotal\"],\"pivot_column_groupby\":[],\"pivot_row_groupby\":[\"invoice_user_id\"]},\"modelName\":\"account.invoice.report\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"list\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Invoices Analysis\"})",
                     "border": 1
                 },
                 "E46": {
@@ -1624,9 +1624,9 @@
                     false
                 ],
                 [
-                    "price_subtotal",
-                    ">=",
-                    0
+                    "move_type",
+                    "in",
+                    ["out_invoice", "out_refund"]
                 ]
             ],
             "id": "1",
@@ -1674,9 +1674,9 @@
                     false
                 ],
                 [
-                    "price_subtotal",
-                    ">=",
-                    0
+                    "move_type",
+                    "in",
+                    ["out_invoice", "out_refund"]
                 ]
             ],
             "id": "2",
@@ -1724,9 +1724,9 @@
                     false
                 ],
                 [
-                    "price_subtotal",
-                    ">=",
-                    0
+                    "move_type",
+                    "in",
+                    ["out_invoice", "out_refund"]
                 ]
             ],
             "id": "3",
@@ -1774,9 +1774,9 @@
                     false
                 ],
                 [
-                    "price_subtotal",
-                    ">=",
-                    0
+                    "move_type",
+                    "in",
+                    ["out_invoice", "out_refund"]
                 ]
             ],
             "id": "4",
