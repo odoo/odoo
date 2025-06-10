@@ -19,12 +19,16 @@ export class ForecastedDetails extends Component {
         this.splittedIncomingLines = {};
         this.reservedOnHand = this.props.docs.lines.filter((line => !line.document_in && !line.reservation && !line.in_transit && line.replenishment_filled && line.document_out));
         this.reservedOnHandTotalQty = this.reservedOnHand.reduce((sum, line) => sum + line.quantity, 0);
+
+        if (this.multipleProducts) {
+            this.props.docs.lines.sort((a, b) => (a.product.id || 0) - (b.product.id || 0));
+        }
         let j = 0;
         for(let i = 0; i < this.props.docs.lines.length-1; i++){
             const index = i-j;
             const line = this.props.docs.lines[index];
             const nextLine = this.props.docs.lines[i + 1];
-            if (!((line.document_in && nextLine.document_in && line.document_in.id === nextLine.document_in.id && line.document_in._name === nextLine.document_in._name) || (this.reservedOnHand.includes(line) && this.reservedOnHand.includes(nextLine)))) {
+            if (line.product.id != nextLine.product.id || !((line.document_in && nextLine.document_in && line.document_in.id === nextLine.document_in.id && line.document_in._name === nextLine.document_in._name) || (this.reservedOnHand.includes(line) && this.reservedOnHand.includes(nextLine)))) {
                 j = 0;
                 continue;
             }
@@ -72,6 +76,10 @@ export class ForecastedDetails extends Component {
 
     canReserveOperation(line){
         return line.move_out?.picking_id;
+    }
+
+    get multipleProducts() {
+        return this.props.docs.multiple_product;
     }
 
     get futureVirtualAvailable() {
