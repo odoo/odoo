@@ -36,10 +36,8 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         has_optional_products = bool(product_template.optional_product_ids.filtered(
             lambda op: self._should_show_product(op, combination)
         ))
-        force_dialog = request.website.add_to_cart_action == 'force_dialog'
         return (
-            force_dialog
-            or has_optional_products
+            has_optional_products
             or not (single_product_variant.get('product_id') or is_product_configured)
         )
 

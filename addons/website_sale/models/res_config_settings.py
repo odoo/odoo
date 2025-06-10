@@ -30,7 +30,6 @@ class ResConfigSettings(models.TransientModel):
 
     # Modules
     module_account = fields.Boolean("Invoicing")
-    module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
     module_website_sale_autocomplete = fields.Boolean("Address Autocomplete")
     module_website_sale_collect = fields.Boolean("Click & Collect")
 
