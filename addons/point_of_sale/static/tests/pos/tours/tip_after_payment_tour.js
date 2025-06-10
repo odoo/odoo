@@ -4,14 +4,18 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as ReceiptScreen from "@point_of_sale/../tests/pos/tours/utils/receipt_screen_util";
 import * as TipScreen from "@point_of_sale/../tests/pos/tours/utils/tip_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+import * as NumberPopup from "@point_of_sale/../tests/generic_helpers/number_popup_util";
+
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
     steps: () =>
         [
-            // Bank --> Open TipScren (15%)
+            // Open PoS
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+
+            // Bank --> Open TipScren (15%)
             ProductScreen.addOrderline("Desk Pad", "1", "2", "2.00"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
@@ -160,6 +164,77 @@ registry.category("web_tour.tours").add("PosTipAfterPaymentTour", {
                 tip15: "$ 2.40",
                 tip20: "$ 3.20",
                 tip25: "$ 4.00",
+            }),
+            ReceiptScreen.clickNextOrder(),
+
+            // Bank + Already tipped --> Open ReceiptScreen
+            ProductScreen.addOrderline("Desk Pad", "4", "25", "100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickTipButton(),
+            NumberPopup.enterValue("10"),
+            NumberPopup.isShown("$ 10"),
+            Dialog.confirm(),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            ReceiptScreen.totalAmountWithTipContains("100.00", "10.00", {
+                tip15: "$ 15.00",
+                tip20: "$ 20.00",
+                tip25: "$ 25.00",
+            }),
+            ReceiptScreen.clickNextOrder(),
+
+            // Bank + Delete Tip --> Open TipScreen --> No Tip
+            ProductScreen.addOrderline("Desk Pad", "4", "25", "100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickTipButton(),
+            NumberPopup.enterValue("25"),
+            NumberPopup.isShown("$ 25"),
+            NumberPopup.hasTypeSelected("fixed"),
+            NumberPopup.clickType("percent"),
+            NumberPopup.hasTypeSelected("percent"),
+            NumberPopup.isShown("25 %"),
+            Dialog.confirm(),
+            PaymentScreen.clickTipButton(),
+            NumberPopup.enterValue("⌫"),
+            NumberPopup.isShown("%"),
+            Dialog.confirm(),
+            PaymentScreen.clickValidate(),
+            TipScreen.isShown(),
+            TipScreen.totalAmountIs("100.00"),
+            TipScreen.percentAmountIs("15%", "15.00"),
+            TipScreen.percentAmountIs("20%", "20.00"),
+            TipScreen.percentAmountIs("25%", "25.00"),
+            TipScreen.inputAmountIs(""),
+            TipScreen.clickSettle(),
+            ReceiptScreen.totalAmountWithTipContains("100.00", null, {
+                tip15: "$ 15.00",
+                tip20: "$ 20.00",
+                tip25: "$ 25.00",
+            }),
+            ReceiptScreen.clickNextOrder(),
+
+            // Bank + 0 tip --> Open TipScreen --> No Tip
+            ProductScreen.addOrderline("Desk Pad", "4", "25", "100.00"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickTipButton(),
+            NumberPopup.enterValue("0"),
+            NumberPopup.isShown("$ 0"),
+            Dialog.confirm(),
+            PaymentScreen.clickValidate(),
+            TipScreen.isShown(),
+            TipScreen.totalAmountIs("100.00"),
+            TipScreen.percentAmountIs("15%", "15.00"),
+            TipScreen.percentAmountIs("20%", "20.00"),
+            TipScreen.percentAmountIs("25%", "25.00"),
+            TipScreen.inputAmountIs(""),
+            TipScreen.clickSettle(),
+            ReceiptScreen.totalAmountWithTipContains("100.00", null, {
+                tip15: "$ 15.00",
+                tip20: "$ 20.00",
+                tip25: "$ 25.00",
             }),
             ReceiptScreen.clickNextOrder(),
         ].flat(),
