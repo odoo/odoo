@@ -1425,7 +1425,7 @@ class CalendarEvent(models.Model):
     def find_partner_customer(self):
         self.ensure_one()
         return next(
-            (attendee.partner_id for attendee in self.attendee_ids.sorted('create_date')
+            (attendee.partner_id for attendee in self.attendee_ids
              if attendee.partner_id != self.user_id.partner_id),
             self.env['calendar.attendee']
         )
