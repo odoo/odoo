@@ -470,7 +470,7 @@ class AccountPayment(models.Model):
                 payment.amount_company_currency_signed = sum(liquidity_lines.mapped('balance'))
             else:
                 payment.amount_company_currency_signed = payment.currency_id._convert(
-                    from_amount=payment.amount,
+                    from_amount=payment.amount_signed,
                     to_currency=payment.company_currency_id,
                     company=payment.company_id,
                     date=payment.date,
