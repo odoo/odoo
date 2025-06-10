@@ -3,6 +3,7 @@ import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { ImportDataColumnError } from "../import_data_column_error/import_data_column_error";
 import { ImportDataOptions } from "../import_data_options/import_data_options";
 import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
 
 export class ImportDataContent extends Component {
     static template = "ImportDataContent";
@@ -14,12 +15,19 @@ export class ImportDataContent extends Component {
     static props = {
         columns: { type: Array },
         isFieldSet: { type: Function },
+        languagesInstalled: { type: Array },
         onOptionChanged: { type: Function },
         onFieldChanged: { type: Function },
+        onFieldLanguageChanged: { type: Function },
         options: { type: Object },
         importMessages: { type: Object },
         previewError: { type: String, optional: true },
     };
+
+    setup() {
+        this.hasMultipleLanguages = this.props.languagesInstalled.length > 1;
+        this.userLanguage = user.lang.replace("-", "_");
+    }
 
     getGroups(column) {
         const groups = [
@@ -90,5 +98,20 @@ export class ImportDataContent extends Component {
         ];
         const fieldInfo = fields.find((f) => f.fieldPath === fieldPath);
         this.props.onFieldChanged(column, fieldInfo);
+    }
+
+    getLanguages() {
+        return this.props.languagesInstalled.map((val) => ({
+            value: val[0],
+            label: val[1],
+        }));
+    }
+
+    getLanguagesLabel(value) {
+        return this.props.languagesInstalled.find((val) => val[0] === value)?.[1];
+    }
+
+    setLanguage(column, language) {
+        this.props.onFieldLanguageChanged(column, language);
     }
 }
