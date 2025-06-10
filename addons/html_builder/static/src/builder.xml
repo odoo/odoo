@@ -13,7 +13,7 @@
                 <t t-if="props.slots?.extraActions" t-slot="extraActions"/>
             </div>
         </div>
-        <div class="o-snippets-tabs position-relative">
+        <div t-if="!props.config.isTranslationMode" class="o-snippets-tabs position-relative">
             <div
                 class="o-snippets-tabs-highlighter position-absolute start-50 h-100 pe-none"
                 t-att-class="{
@@ -44,7 +44,7 @@
                 <BlockTab snippetsName="props.snippetsName" />
             </t>
             <t t-if="state.activeTab === 'customize'">
-                <t t-if="!!props.config.customizeTab" t-call="{{props.config.customizeTab}}"/>
+                <t t-if="props.config.isTranslationMode" t-component="CustomizeTranslationTab"/>
                 <CustomizeTab t-else="" currentOptionsContainers="state.currentOptionsContainers" snippetModel="snippetModel"/>
             </t>
             <t t-if="state.activeTab === 'theme'">
