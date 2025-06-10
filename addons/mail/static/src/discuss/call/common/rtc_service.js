@@ -236,7 +236,21 @@ export class Rtc extends Record {
             return this.iceServers ? this.iceServers : DEFAULT_ICE_SERVERS;
         },
     });
+    /**
+     * The RtcSession of the current user for the call hosted by this tab, this is only set if
+     * the current tab is the cross-tab host (the tab that is maintaining the connections and streams).
+     *
+     * If you want a reference to the RtcSession of the call, regardless of where it is hosted,
+     * as long as it is on the same browser, use `selfSession`.
+     */
     localSession = Record.one("discuss.channel.rtc.session");
+    /**
+     * The RtcSession shared between tabs, this is set if any of the tabs of that browser is in a call.
+     *
+     * For most use cases, this is the RtcSession you want to use (to ensure cross-tab consistency),
+     * unless you need to access actual connection data (connection stats, streams,...), which can only
+     * be accessed from the tab that is hosting the call.
+     */
     selfSession = Record.one("discuss.channel.rtc.session", {
         compute() {
             return (
