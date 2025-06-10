@@ -1,0 +1,42 @@
+<odoo>
+    <template id="passkeys_portal_hook" name="Passkeys Portal hook" inherit_id="portal.portal_my_security">
+        <xpath expr="//section[@name='portal_revoke_all_devices_popup']" position="before">
+            <section name="portal_passkey_management">
+                <h4>
+                    Passkeys
+                </h4>
+                <div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Created</th>
+                                <th>Last Used</th>
+                                <th/>
+                                <th/>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="user_id.auth_passkey_key_ids" t-as="key">
+                                <tr class="o_passkey_portal_entry" t-att-id="key.id">
+                                    <td><span t-field="key.name" class="o_passkey_name"/></td>
+                                    <td><span t-field="key.create_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
+                                    <td><span t-field="key.write_date" t-options='{"widget": "datetime", "format": "short"}'/></td>
+                                    <td>
+                                        <i class="fa fa-pencil o_passkey_portal_rename" type="button"/>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-trash text-danger o_passkey_portal_delete" type="button"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+                <button type="button" class="btn btn-light mt-1" id="portal_passkey_add">
+                    Add Passkey
+                </button>
+            </section>
+        </xpath>
+    </template>
+</odoo>
