@@ -180,6 +180,8 @@ export class WebsiteBuilder extends Component {
              },
             getThemeTab: () =>
                 odoo.loader.modules.get("@website/builder/plugins/theme/theme_tab").ThemeTab,
+            getCustomizeTranslationTab: () =>
+                odoo.loader.modules.get("@website/builder/plugins/translate/customize_translation_tab").CustomizeTranslationTab,
         };
     }
 
