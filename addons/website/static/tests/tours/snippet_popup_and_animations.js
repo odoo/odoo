@@ -96,7 +96,7 @@ registerWebsitePreviewTour("snippet_popup_and_animations", {
     },
     {
         content: "Drag the Columns snippet group and drop it at the bottom of the popup.",
-        trigger: '#oe_snippets .oe_snippet[name="Columns"] .oe_snippet_thumbnail:not(.o_we_ongoing_insertion)',
+        trigger: ".o_block_tab:not(.o_we_ongoing_insertion) #oe_snippets .oe_snippet[name='Columns'] .oe_snippet_thumbnail",
         run: "drag_and_drop :iframe #wrap .s_popup .modal-content.oe_structure .oe_drop_zone:last",
     },
     {

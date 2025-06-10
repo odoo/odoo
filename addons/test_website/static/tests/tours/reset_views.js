@@ -21,7 +21,7 @@ registerWebsitePreviewTour(
         {
             content: "Drag the Intro snippet group and drop it in #oe_structure_test_website_page.",
             trigger:
-                "#snippet_groups .o_snippet[name='Intro'] .o_snippet_thumbnail:not(.o_we_ongoing_insertion) .o_snippet_thumbnail_area",
+                ".o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name='Intro'] .o_snippet_thumbnail .o_snippet_thumbnail_area",
             // id starting by 'oe_structure..' will actually create an inherited view
             run: "drag_and_drop :iframe #oe_structure_test_website_page",
         },
