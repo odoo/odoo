@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Utilities for generating, parsing and checking XML/XSD files on top of the lxml.etree module."""
 
 import base64
@@ -8,7 +7,6 @@ import re
 import zipfile
 from io import BytesIO
 
-import requests
 from lxml import etree
 
 from odoo.exceptions import UserError
@@ -232,6 +230,7 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
     :rtype: odoo.api.ir.attachment | bool
     :return: every XSD attachment created/fetched or False if an error occurred (see warning logs)
     """
+    import requests  # noqa: PLC0415
     try:
         _logger.info("Fetching file/archive from given URL: %s", url)
         response = requests.get(url, timeout=request_max_timeout)

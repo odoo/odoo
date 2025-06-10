@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import ast
 import base64
 import json
@@ -6,7 +5,6 @@ import logging
 import lxml
 import os
 import pathlib
-import requests
 import sys
 import zipfile
 from collections import defaultdict
@@ -391,6 +389,7 @@ class IrModuleModule(models.Model):
                 'offset': offset,
             }
         }
+        import requests  # noqa: PLC0415
         try:
             resp = self._call_apps(json.dumps(payload))
             resp.raise_for_status()
@@ -420,6 +419,7 @@ class IrModuleModule(models.Model):
     @ormcache('payload')
     def _call_apps(self, payload):
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        import requests  # noqa: PLC0415
         return requests.post(
                 f"{APPS_URL}/loempia/listdatamodules",
                 data=payload,
@@ -430,6 +430,7 @@ class IrModuleModule(models.Model):
     @api.model
     @ormcache()
     def _get_industry_categories_from_apps(self):
+        import requests  # noqa: PLC0415
         try:
             resp = requests.post(
                 f"{APPS_URL}/loempia/listindustrycategory",
@@ -447,6 +448,7 @@ class IrModuleModule(models.Model):
         if not self.env.is_admin():
             raise AccessDenied()
         module_name = self.env.context.get('module_name')
+        import requests  # noqa: PLC0415
         try:
             resp = requests.get(
                 f"{APPS_URL}/loempia/download/data_app/{module_name}/{major_version}",

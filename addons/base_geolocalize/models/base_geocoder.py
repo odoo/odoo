@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import requests
 import logging
 
 from odoo import api, fields, models, modules, tools, _
@@ -86,6 +84,7 @@ class BaseGeocoder(models.AbstractModel):
         if not addr:
             _logger.info('invalid address given')
             return None
+        import requests  # noqa: PLC0415
         url = 'https://nominatim.openstreetmap.org/search'
         try:
             headers = {'User-Agent': 'Odoo (http://www.odoo.com/contactus)'}
@@ -113,6 +112,7 @@ class BaseGeocoder(models.AbstractModel):
             return None
         if tools.config['test_enable'] or modules.module.current_test:
             raise UserError(_("OpenStreetMap calls disabled in testing environment."))
+        import requests  # noqa: PLC0415
         try:
             headers = {"User-Agent": "Odoo (http://www.odoo.com/contactus)"}
             response = requests.get(
@@ -148,6 +148,7 @@ class BaseGeocoder(models.AbstractModel):
         params = {'sensor': 'false', 'address': addr, 'key': apikey}
         if kw.get('force_country'):
             params['components'] = 'country:%s' % kw['force_country']
+        import requests  # noqa: PLC0415
         try:
             result = requests.get(url, params).json()
         except Exception as e:

@@ -9,7 +9,6 @@ from collections import defaultdict
 from functools import reduce
 from operator import getitem
 
-import requests
 from pytz import timezone
 
 from odoo import api, fields, models, tools
@@ -951,6 +950,7 @@ class IrActionsServer(models.Model):
         json_values = json.dumps(vals, sort_keys=True, default=str)
         _logger.info("Webhook call to %s", url)
         _logger.debug("POST JSON data for webhook call: %s", json_values)
+        import requests  # noqa: PLC0415
         try:
             # 'send and forget' strategy, and avoid locking the user if the webhook
             # is slow or non-functional (we still allow for a 1s timeout so that
