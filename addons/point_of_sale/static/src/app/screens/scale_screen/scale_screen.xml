@@ -44,7 +44,7 @@
                     <i t-if="scale.loading and !scale.tareRequested" class="fa fa-spinner fa-spin"/>
                     <t t-else="">Get Weight</t>
                 </button>
-                <button class="buy-product btn btn-lg btn-primary d-flex align-items-center justify-content-center mx-2 mb-2 cursor-pointer w-100" t-on-click="confirm">
+                <button class="buy-product btn btn-lg btn-primary d-flex align-items-center justify-content-center mx-2 mb-2 cursor-pointer w-100" t-on-click="confirm" t-att-disabled="!scale.isWeightValid">
                     Order
                     <i class="fa fa-angle-double-right ms-2"/>
                 </button>
