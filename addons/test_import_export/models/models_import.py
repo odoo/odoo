@@ -152,3 +152,18 @@ class PathToProperty(models.Model):
     def _compute_all_import_properties(self):
         for record in self:
             record.all_properties_ids = record.properties_id | record.another_properties_id
+
+
+class ImportBaseTranslation(models.Model):
+    _name = _description = 'import.base.translation'
+
+    name = fields.Char(translate=True)
+    description = fields.Char(translate=True)
+    html = fields.Html(translate=True)
+    related_description = fields.Many2one('import.base.translation.related')
+
+
+class ImportBaseTranslationRelated(models.Model):
+    _name = _description = 'import.base.translation.related'
+
+    description = fields.Char(translate=True)
