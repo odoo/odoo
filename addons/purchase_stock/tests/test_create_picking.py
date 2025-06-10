@@ -246,8 +246,6 @@ class TestCreatePicking(ProductVariantsCommon):
         mto_route = self.env.ref('stock.route_warehouse0_mto')
         mto_route.active = True
         mto_route.rule_ids.procure_method = 'mts_else_mto'
-        buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
-        buy_route.rule_ids.group_propagation_option = 'propagate'
         self.product_id_1 = self.env['product.product'].create({
             'name': 'ProductA',
             'is_storable': True,
