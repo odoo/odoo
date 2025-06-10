@@ -43,6 +43,7 @@ export function getDomainDisplayedOperators(fieldDef, params = {}) {
             return ["in", "not in", "ilike", "not ilike", "set", "not set"];
         case "json":
             return ["=", "!=", "ilike", "not ilike", "set", "not set"];
+        case "binary":
         case "properties":
             return ["set", "not set"];
         case undefined:
