@@ -124,5 +124,5 @@ class MailNotification(models.Model):
             "mail_message_id",
             "notification_status",
             "notification_type",
-            Store.One("res_partner_id", ["name", "email"], rename="persona"),
+            Store.One("res_partner_id", ["name", "display_name", "email"], rename="persona"),
         ]

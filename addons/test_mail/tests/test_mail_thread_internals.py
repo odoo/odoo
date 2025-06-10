@@ -529,6 +529,7 @@ class TestAPI(ThreadRecipients):
         self.assertEqual(len(suggestions), 2)
         for suggestion, expected in zip(suggestions, [{
             'create_values': {},
+            'display_name': self.partner_employee.display_name,
             'email': self.user_employee.email_normalized,
             'name': self.user_employee.name,
             'partner_id': self.partner_employee.id,
@@ -584,6 +585,7 @@ class TestAPI(ThreadRecipients):
                         suggestions[0],
                         {
                             'create_values': {},
+                            'display_name': sugg_partner.display_name,
                             'email': sugg_partner.email_normalized,
                             'name': sugg_partner.name,
                             'partner_id': sugg_partner.id,
@@ -650,6 +652,7 @@ class TestAPI(ThreadRecipients):
             [
                 {
                     'create_values': {},
+                    'display_name': self.test_partner.display_name,
                     'email': self.test_partner.email_normalized,
                     'name': self.test_partner.name,
                     'partner_id': self.test_partner.id,
@@ -659,6 +662,7 @@ class TestAPI(ThreadRecipients):
             [
                 {
                     'create_values': {},
+                    'display_name': self.test_partner_archived.display_name,
                     'email': self.test_partner_archived.email_normalized,
                     'name': self.test_partner_archived.name,
                     'partner_id': self.test_partner_archived.id,
@@ -724,6 +728,7 @@ class TestAPI(ThreadRecipients):
         for recipient, expected in zip(recipients, [
             {  # partner first: author of message
                 'create_values': {},
+                'display_name': self.user_portal.partner_id.display_name,
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
@@ -751,6 +756,7 @@ class TestAPI(ThreadRecipients):
         for recipient, expected in zip(recipients, [
             {  # partner first: recipient of message
                 'create_values': {},
+                'display_name': self.user_portal.partner_id.display_name,
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
@@ -795,20 +801,24 @@ class TestAPI(ThreadRecipients):
         for recipient, expected in zip(recipients, [
             {  # partner first: author of message
                 'create_values': {},
+                'display_name': self.user_portal.partner_id.display_name,
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
             }, {  # override of model for email_cc
+                'display_name': new_to.display_name,
                 'email': test_cc_tuples[0][1],
                 'name': test_cc_tuples[0][0],
                 'partner_id': new_to.id,
                 'create_values': {},
             }, {  # replying message to
+                'display_name': new_cc_0.display_name,
                 'email': test_to_tuples[0][1],
                 'name': test_to_tuples[0][0],
                 'partner_id': new_cc_0.id,
                 'create_values': {},
             }, {  # replying message  cc
+                'display_name': new_cc_1.display_name,
                 'email': test_cc_tuples[1][1],
                 'name': test_cc_tuples[1][0],
                 'partner_id': new_cc_1.id,
@@ -866,11 +876,13 @@ class TestAPI(ThreadRecipients):
                 },
                 [{
                     'create_values': {},
+                    'display_name': self.user_portal.partner_id.display_name,
                     'email': self.user_portal.email_normalized,
                     'name': self.user_portal.name,
                     'partner_id': self.user_portal.partner_id.id,
                 }, {
                     'create_values': {},
+                    'display_name': self.user_employee.partner_id.display_name,
                     'email': self.user_employee.email_normalized,
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
@@ -885,11 +897,13 @@ class TestAPI(ThreadRecipients):
                 },
                 [{
                     'create_values': {},
+                    'display_name': self.user_portal.display_name,
                     'email': self.user_portal.email_normalized,
                     'name': self.user_portal.name,
                     'partner_id': self.user_portal.partner_id.id,
                 }, {
                     'create_values': {},
+                    'display_name': self.user_employee.display_name,
                     'email': self.user_employee.email_normalized,
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
