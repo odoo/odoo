@@ -1062,7 +1062,10 @@ export class ListPlugin extends Plugin {
                 li.parentElement.nodeName === "UL" ? markerWidth * 2 : markerWidth;
             // For smaller font sizes, doubling the width of the dot marker is still lower than the
             // default. The default is kept in that case.
-            return Math.max(defaultPadding, paddingForMarker);
+            // Fallback to default if marker is missing (e.g., in li.oe-nested).
+            return isNaN(paddingForMarker)
+                ? defaultPadding
+                : Math.max(defaultPadding, paddingForMarker);
         });
         const largestPadding = Math.max(...requiredPaddings);
         if (largestPadding > defaultPadding) {
