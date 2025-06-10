@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.HtmlComposer" t-inherit-mode="extension">
+        <xpath expr="//AttachmentList" position="after">
+            <div t-if="thread?.model === 'discuss.channel' and !compact" class="o-discuss-Typing d-flex">
+                <Typing channel="thread" size="'medium'"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

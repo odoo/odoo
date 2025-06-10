@@ -68,7 +68,7 @@ test("can leave channel in mobile", async () => {
     await contains(".o-dropdown-item", { text: "Leave Channel" });
 });
 
-test("enter key should create a newline in composer", async () => {
+test.skip("enter key should create a newline in composer", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();

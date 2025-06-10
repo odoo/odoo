@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Write something in composer",
             trigger: ".o-mail-Composer-input",
-            run: "edit blahblah @Not && click body",
+            run: "composer blahblah @Not && click body",
         },
         {
             content: "Mention a partner",
@@ -105,7 +105,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 const files = [new File(["hi there"], "file2.txt", { type: "text/plain" })];
                 await dragenterFiles(".o_mail_composer_form_view .o_form_renderer", files);
                 await dropFiles(".o-Dropzone", files);
-            }
+            },
         },
         {
             content: "Check the attachment is listed",
@@ -174,12 +174,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 if ((bodyContent.match(/--\nErnest/g) || []).length !== 1) {
                     console.log("Full composer should contain the user's signature once.");
                 }
-            }
+            },
         },
         {
             content: "Write something in full composer",
             trigger: ".note-editable",
-            run: "editor keep the content",
+            run: "composer keep the content",
         },
         {
             content: "Close full composer",
@@ -195,7 +195,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
             content: "Check full composer text is kept",
             trigger: ".o-mail-Composer-input",
             run() {
-                if (this.anchor.value !== "keep the content") {
+                if (this.anchor.textContent !== "keep the content") {
                     console.error(
                         "Composer in chatter should contain full composer text after discarding."
                     );
@@ -221,7 +221,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 if ((bodyContent.match(/--\nErnest/g) || []).length !== 0) {
                     console.error("The composer should not contain the user's signature.");
                 }
-            }
+            },
         },
         {
             content: "Close full composer",
@@ -236,7 +236,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Send message from chatter",
             trigger: ".o-mail-Composer-send",
-            run: "click"
+            run: "click",
         },
         {
             content: "Check message is shown",
@@ -252,12 +252,12 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
         {
             content: "Write a message",
             trigger: ".o-mail-Composer-input",
-            run: "edit hello world",
+            run: "composer hello world",
         },
         {
             content: "Send message from chatter",
             trigger: ".o-mail-Composer-send",
-            run: "click"
+            run: "click",
         },
         {
             content: "Check message is shown",

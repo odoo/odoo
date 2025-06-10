@@ -11,7 +11,10 @@ patch(Message.prototype, {
             this.messageBody.el?.querySelector(".o-mail-ellipsis")?.remove();
         });
     },
-
+    onClickEdit() {
+        this.messageBody.el?.querySelector(".o-mail-read-more-less")?.remove();
+        super.onClickEdit(...arguments);
+    },
     /**
      * @override
      * @param {HTMLElement} bodyEl

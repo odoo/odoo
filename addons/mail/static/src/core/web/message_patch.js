@@ -20,6 +20,11 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import { messageActionOpenFullComposer } from "./message_actions_patch";
+import { HtmlComposer } from "./html_composer";
+
+patch(Message, {
+    components: { ...Message.components, HtmlComposer },
+});
 
 patch(Message.prototype, {
     setup() {

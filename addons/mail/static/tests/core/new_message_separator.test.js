@@ -276,6 +276,7 @@ test("show new message separator when message is received in chat window", async
     pyEnv["discuss.channel.member"].write([memberId], { new_message_separator: messageId + 1 });
     setupChatHub({ opened: [channelId] });
     await start();
+    await contains(".o-mail-Message", { text: "not empty" });
     // simulate receiving a message
     withUser(userId, () =>
         rpc("/mail/message/post", {

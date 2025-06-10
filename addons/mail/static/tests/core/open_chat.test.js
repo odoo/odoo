@@ -57,7 +57,7 @@ test("openChat: open existing chat for user", async () => {
     });
     setupChatHub({ opened: [channelId] });
     await start();
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input:not(:focus)");
+    await contains(".o-mail-ChatWindow .o-mail-Composer:not(.o-focused)");
     getService("mail.store").openChat({ partnerId });
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
+    await contains(".o-mail-ChatWindow .o-mail-Composer.o-focused");
 });

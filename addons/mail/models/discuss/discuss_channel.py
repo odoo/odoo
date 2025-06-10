@@ -1284,7 +1284,7 @@ class DiscussChannel(models.Model):
             {
                 "channel_type": self.channel_type,
                 "from_message_id": message.id,
-                "name": name or (message.body.striptags()[:30] if message.body else _("New Thread")),
+                "name": name or (message.body and message.body.striptags()[:30]) or _("New Thread"),
                 "parent_channel_id": self.id,
             }
         )

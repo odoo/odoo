@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+ <t t-inherit="mail.ComposerField" t-inherit-mode="extension">
+    <xpath expr="//Composer" position="replace">
+        <t t-if="composerSwitch.htmlEnabled">
+            <HtmlComposer t-props="props"/>
+        </t>
+        <t t-else="">$0</t>
+    </xpath>
+</t>
+
+</templates>

@@ -176,6 +176,39 @@ export class TourHelpers {
     }
 
     /**
+     * Edit only editable HTML composer element given by **{@link Selector}**
+     * @param {string} text
+     * @param {Selector} selector
+     */
+    async composer(text, selector) {
+        const element = this._get_action_element(selector);
+        const InEditor = Boolean(element.closest(".odoo-editor-editable"));
+        if (!InEditor) {
+            throw new Error("run 'composer' always on an element in an editor");
+        }
+        await hoot.click(element);
+        element.textContent = "";
+        this._set_range(element, "start");
+        for (const char of text) {
+            element.textContent += char;
+            this._set_range(element, "stop");
+            hoot.manuallyDispatchProgrammaticEvent(element, "keydown", { key: char });
+            // InputEvent is required to simulate the insert text.
+            hoot.manuallyDispatchProgrammaticEvent(element, "beforeinput", {
+                inputType: "insertText",
+                data: char,
+            });
+            hoot.manuallyDispatchProgrammaticEvent(element, "input", {
+                inputType: "insertText",
+                data: char,
+            });
+            // KeyUpEvent is not required but is triggered like the browser would.
+            hoot.manuallyDispatchProgrammaticEvent(element, "keyup", { key: char });
+        }
+        await hoot.manuallyDispatchProgrammaticEvent(element, "change");
+    }
+
+    /**
      * Fills the **{@link Selector}** with the given `value`.
      * @description This helper is intended for `<input>` and `<textarea>` elements,
      * with the exception of `"checkbox"` and `"radio"` types, which should be

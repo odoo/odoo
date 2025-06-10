@@ -101,7 +101,7 @@ test("Message post in chat window of chatter should log a note", async () => {
         text: "A needaction message to have it in messaging menu",
         contains: [".o-mail-Message-bubble"], // bubble = "Send message" mode
     });
-    await contains(".o-mail-Composer [placeholder='Log an internal note…']");
+    await contains(".o-mail-Composer p[o-we-hint-text='Log an internal note…']");
     await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message", {
@@ -423,7 +423,7 @@ test("open 2 different chat windows: enough screen width", async () => {
     await click(".o-mail-NotificationItem", { text: "Channel_1" });
     await contains(".o-mail-ChatWindow", {
         text: "Channel_1",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Channel_2" });
@@ -431,7 +431,7 @@ test("open 2 different chat windows: enough screen width", async () => {
     await contains(".o-mail-ChatWindow", { text: "Channel_1" });
     await contains(".o-mail-ChatWindow", {
         text: "Channel_2",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 
@@ -456,7 +456,7 @@ test("focus next visible chat window when closing current chat window with ESCAP
     await contains(".o-mail-ChatWindow");
     await contains(".o-mail-ChatWindow", {
         text: "General",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 
@@ -477,24 +477,24 @@ test("chat window: switch on TAB", async () => {
     await contains(".o-mail-ChatWindow", { count: 1 });
     await contains(".o-mail-ChatWindow", {
         text: "channel1",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "channel1",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "channel2" });
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow", {
         text: "channel2",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "channel1",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 
@@ -523,17 +523,17 @@ test("chat window: TAB cycle with 3 open chat windows", async () => {
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "MyTeam",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "General",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "MyProject",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 
@@ -673,7 +673,7 @@ test("chat window: composer state conservation on toggle discuss", async () => {
     await contains(".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", {
         count: 2,
     });
-    await contains(".o-mail-Composer-input", { value: "XDU for the win !" });
+    await contains(".o-mail-Composer-input", { text: "XDU for the win !" });
 });
 
 test("don't show chat hub options when discuss is open", async () => {
@@ -861,7 +861,7 @@ test("keyboard navigation ArrowUp/ArrowDown on message action dropdown in chat w
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow .o-mail-Composer-input:focus");
+    await contains(".o-mail-ChatWindow .o-mail-Composer.o-focused");
     await click(".o-mail-Message [title='Expand']");
     await contains(".o-mail-Message-moreMenu.dropdown-menu");
     await focus(".o-mail-Message [title='Expand']"); // necessary otherwise focus is in composer input
@@ -907,9 +907,9 @@ test("mark as read when opening chat window", async () => {
     await click(".o-mail-NotificationItem", { text: "bob" });
     await contains(".o-mail-ChatWindow .o-mail-ChatWindow-header", { text: "bob" });
     // composer is focused by default, we remove that focus
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
     document.querySelector(".o-mail-Composer-input").blur();
-    await contains(".o-mail-Composer-input:not(:focus");
+    await contains(".o-mail-Composer:not(.o-focused)");
     await withUser(bobUserId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -987,9 +987,10 @@ test("Chat window should be closed when leaving the channel", async () => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { text: "general" });
     await insertText(".o-mail-Composer-input", "/leave");
-    await contains(".o-mail-NavigableList-active strong", { text: "leave" });
+    await contains(".o-mail-Composer-suggestion", { text: "leave" });
     triggerHotkey("Enter");
-    await contains(".o-mail-Composer-input", { value: "/leave " });
+    await contains(".o-mail-Composer-suggestion", { count: 0 });
+    await contains(".o-mail-Composer-input", { text: "/leave" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "general", count: 0 });
 });
@@ -1010,9 +1011,10 @@ test("Chat window should be closed when leaving a chat", async () => {
     await click(".o-mail-NotificationItem");
     await contains(".o-mail-ChatWindow", { text: "Demo" });
     await insertText(".o-mail-Composer-input", "/leave");
-    await contains(".o-mail-NavigableList-active strong", { text: "leave" });
+    await contains(".o-mail-Composer-suggestion", { text: "leave" });
     triggerHotkey("Enter");
-    await contains(".o-mail-Composer-input", { value: "/leave " });
+    await contains(".o-mail-Composer-suggestion", { count: 0 });
+    await contains(".o-mail-Composer-input", { text: "/leave" });
     triggerHotkey("Enter");
     await contains(".o-mail-ChatWindow", { text: "Demo", count: 0 });
 });

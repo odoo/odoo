@@ -3,9 +3,10 @@ import { isEmpty } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { HtmlMailField, htmlMailField } from "../html_mail_field/html_mail_field";
-import { MentionPlugin } from "./mention_plugin";
+import { SuggestionPlugin } from "@mail/core/web/plugins/suggestion_plugin";
 import { ContentExpandablePlugin } from "./content_expandable_plugin";
 import { SIGNATURE_CLASS } from "@html_editor/main/signature_plugin";
+import { markup } from "@odoo/owl";
 
 export class HtmlComposerMessageField extends HtmlMailField {
     setup() {
@@ -24,16 +25,19 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 this.editor.editable.after(elContent);
                 // TODO: the following legacy regex may not have the desired effect as it
                 // agglomerates multiple newLines together.
-                const text = elContent.innerText.replace(/(\t|\n)+/g, "\n");
+                const body = markup(elContent.innerHTML);
                 elContent.remove();
-                ev.detail.onSaveContent({ text, emailAddSignature });
+                ev.detail.onSaveContent({ body, emailAddSignature });
             });
         }
     }
 
     getConfig() {
         const config = super.getConfig(...arguments);
-        config.Plugins = [...config.Plugins, MentionPlugin];
+        config.Plugins = [...config.Plugins, SuggestionPlugin];
+        config.suggestionPLuginDependencies = {
+            suggestionService: this.env.services["mail.suggestion"],
+        };
         if (this.props.record.data.composition_comment_option === "reply_all") {
             config.Plugins.push(ContentExpandablePlugin);
         }

@@ -11,6 +11,7 @@ import {
     onRpcBefore,
     openDiscuss,
     openFormView,
+    runComposerTests,
     scroll,
     setupChatHub,
     start,
@@ -38,18 +39,26 @@ import { rpc } from "@web/core/network/rpc";
 describe.current.tags("desktop");
 defineMailModels();
 
-test("dragover files on thread with composer", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        group_public_id: false,
-        name: "General",
-    });
-    const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
-    await start();
-    await openDiscuss(channelId);
-    await dragenterFiles(".o-mail-Thread", [text3]);
-    await contains(".o-Dropzone");
+const threadTests = [];
+
+threadTests.push({
+    title: "dragover files on thread with composer",
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_type: "channel",
+            group_public_id: false,
+            name: "General",
+        });
+        const text3 = new File(["hello, world"], "text3.txt", { type: "text/plain" });
+        await start({ useHtmlComposer });
+        await openDiscuss(channelId);
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input");
+        }
+        await dragenterFiles(".o-mail-Thread", [text3]);
+        await contains(".o-Dropzone");
+    },
 });
 
 test("load more messages from channel (auto-load on scroll)", async () => {
@@ -252,72 +261,96 @@ test("thread is still scrolling after scrolling up then to bottom", async () => 
     await contains(".o-mail-Thread", { scroll: "bottom" });
 });
 
-test("mention a channel with space in the name", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General good boy " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect", { text: "General good boy" });
+threadTests.push({
+    title: "mention a channel with space in the name",
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
+        await start({ useHtmlComposer });
+        await openDiscuss(channelId);
+        await insertText(".o-mail-Composer-input", "#");
+        await click(".o-mail-Composer-suggestion");
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input", { text: "#General good boy" });
+            await contains(".o-mail-Composer-suggestion", { count: 0 });
+        } else {
+            await contains(".o-mail-Composer-input", { value: "#General good boy " });
+        }
+        await press("Enter");
+        await contains(".o-mail-Message-body .o_channel_redirect", { text: "General good boy" });
+    },
 });
 
-test('mention a channel with "&" in the name', async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
-    await click(".o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#General & good " });
-    await press("Enter");
-    await contains(".o-mail-Message-body .o_channel_redirect", { text: "General & good" });
+threadTests.push({
+    title: 'mention a channel with "&" in the name',
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
+        await start({ useHtmlComposer });
+        await openDiscuss(channelId);
+        await insertText(".o-mail-Composer-input", "#");
+        await click(".o-mail-Composer-suggestion");
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input", { text: "#General & good" });
+            await contains(".o-mail-Composer-suggestion", { count: 0 });
+        } else {
+            await contains(".o-mail-Composer-input", { value: "#General & good " });
+        }
+        await press("Enter");
+        await contains(".o-mail-Message-body .o_channel_redirect", { text: "General & good" });
+    },
 });
 
-test("mark channel as fetched when a new message is loaded", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        email: "fred@example.com",
-        name: "Fred",
-    });
-    const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-        channel_type: "chat",
-    });
-    onRpcBefore("/discuss/channel/mark_as_read", (args) => {
-        expect(args.channel_id).toBe(channelId);
-        asyncStep("rpc:mark_as_read");
-    });
-    onRpc("discuss.channel", "channel_fetched", ({ args }) => {
-        expect(args[0][0]).toBe(channelId);
-        asyncStep("rpc:channel_fetch");
-    });
-    setupChatHub({ opened: [channelId] });
-    listenStoreFetch(["init_messaging", "discuss.channel"]);
-    await start();
-    await waitStoreFetch(["init_messaging", "discuss.channel"]);
-    await contains(".o_menu_systray i[aria-label='Messages']");
-    // send after init_messaging because bus subscription is done after init_messaging
-    withUser(userId, () =>
-        rpc("/mail/message/post", {
-            post_data: { body: "Hello!", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
-    );
-    await contains(".o-mail-Message");
-    await waitForSteps(["rpc:channel_fetch"]);
-    await contains(".o-mail-ChatWindow .badge:contains(1)");
-    await contains(".o-mail-Message:contains('Hello!')");
-    await focus(".o-mail-Composer-input");
-    await waitForSteps(["rpc:mark_as_read"]);
+threadTests.push({
+    title: "mark channel as fetched when a new message is loaded",
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            email: "fred@example.com",
+            name: "Fred",
+        });
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["discuss.channel"].create({
+            name: "test",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+            channel_type: "chat",
+        });
+        onRpcBefore("/discuss/channel/mark_as_read", (args) => {
+            expect(args.channel_id).toBe(channelId);
+            asyncStep("rpc:mark_as_read");
+        });
+        onRpc("discuss.channel", "channel_fetched", ({ args }) => {
+            expect(args[0][0]).toBe(channelId);
+            asyncStep("rpc:channel_fetch");
+        });
+        setupChatHub({ opened: [channelId] });
+        listenStoreFetch(["init_messaging", "discuss.channel"]);
+        await start({ useHtmlComposer });
+        await waitStoreFetch(["init_messaging", "discuss.channel"]);
+        await contains(".o_menu_systray i[aria-label='Messages']");
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input");
+            // composer is focused by default, we remove that focus
+            queryFirst(".o-mail-Composer-input").blur();
+        }
+        // send after init_messaging because bus subscription is done after init_messaging
+        withUser(userId, () =>
+            rpc("/mail/message/post", {
+                post_data: { body: "Hello!", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        );
+        await contains(".o-mail-Message");
+        await waitForSteps(["rpc:channel_fetch"]);
+        await contains(".o-mail-ChatWindow .badge:contains(1)");
+        await contains(".o-mail-Message:contains('Hello!')");
+        await focus(".o-mail-Composer-input");
+        await waitForSteps(["rpc:mark_as_read"]);
+    },
 });
 
 test.tags("focus required");
@@ -439,75 +472,95 @@ test("show empty placeholder when thread contains no message", async () => {
     await contains(".o-mail-Message", { count: 0 });
 });
 
-test("Mention a partner with special character (e.g. apostrophe ')", async () => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({
-        email: "usatyi@example.com",
-        name: "Pynya's spokesman",
-    });
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId }),
-        ],
-    });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
-    await insertText(".o-mail-Composer-input", "Pyn");
-    await click(".o-mail-Composer-suggestion", { text: "Pynya's spokesman" });
-    await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
-    await press("Enter");
-    await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
-        { text: "@Pynya's spokesman" }
-    );
+threadTests.push({
+    title: "Mention a partner with special character (e.g. apostrophe ')",
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            email: "usatyi@example.com",
+            name: "Pynya's spokesman",
+        });
+        const channelId = pyEnv["discuss.channel"].create({
+            name: "test",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId }),
+            ],
+        });
+        await start({ useHtmlComposer });
+        await openDiscuss(channelId);
+        await insertText(".o-mail-Composer-input", "@");
+        await insertText(".o-mail-Composer-input", "Pyn");
+        await click(".o-mail-Composer-suggestion", { text: "Pynya's spokesman" });
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input", { text: "@Pynya's spokesman" });
+            await contains(".o-mail-Composer-suggestion", { count: 0 });
+        } else {
+            await contains(".o-mail-Composer-input", { value: "@Pynya's spokesman " });
+        }
+        await press("Enter");
+        await contains(
+            `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId}"][data-oe-model="res.partner"]`,
+            { text: "@Pynya's spokesman" }
+        );
+    },
 });
 
-test("mention 2 different partners that have the same name", async () => {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        {
-            email: "partner1@example.com",
-            name: "TestPartner",
-        },
-        {
-            email: "partner2@example.com",
-            name: "TestPartner",
-        },
-    ]);
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "test",
-        channel_member_ids: [
-            Command.create({ partner_id: serverState.partnerId }),
-            Command.create({ partner_id: partnerId_1 }),
-            Command.create({ partner_id: partnerId_2 }),
-        ],
-    });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@Te");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@TestPartner " });
-    await insertText(".o-mail-Composer-input", "@Te");
-    await click(":nth-child(2 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
-    await press("Enter");
-    await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]`,
-        { text: "@TestPartner" }
-    );
-    await contains(
-        `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]`,
-        { text: "@TestPartner" }
-    );
+threadTests.push({
+    title: "Mention 2 different partners that have the same name",
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            {
+                email: "partner1@example.com",
+                name: "TestPartner",
+            },
+            {
+                email: "partner2@example.com",
+                name: "TestPartner",
+            },
+        ]);
+        const channelId = pyEnv["discuss.channel"].create({
+            name: "test",
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId_1 }),
+                Command.create({ partner_id: partnerId_2 }),
+            ],
+        });
+        await start({ useHtmlComposer });
+        await openDiscuss(channelId);
+        await insertText(".o-mail-Composer-input", "@Te");
+        await click(":nth-child(1 of .o-mail-Composer-suggestion");
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input", { text: "@TestPartner" });
+        } else {
+            await contains(".o-mail-Composer-input", { value: "@TestPartner " });
+        }
+        await insertText(".o-mail-Composer-input", "@Te");
+        await click(":nth-child(2 of .o-mail-Composer-suggestion");
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input", { text: "@TestPartner @TestPartner" });
+            await contains(".o-mail-Composer-suggestion", { count: 0 });
+        } else {
+            await contains(".o-mail-Composer-input", { value: "@TestPartner @TestPartner " });
+        }
+        await press("Enter");
+        await contains(
+            `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_1}"][data-oe-model="res.partner"]`,
+            { text: "@TestPartner" }
+        );
+        await contains(
+            `.o-mail-Message-body .o_mail_redirect[data-oe-id="${partnerId_2}"][data-oe-model="res.partner"]`,
+            { text: "@TestPartner" }
+        );
+    },
 });
 
 test("mention a channel on a second line when the first line contains #", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-    await start();
+    await start({ useHtmlComposer: false });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#blabla\n#");
     await click(".o-mail-Composer-suggestion");
@@ -519,7 +572,7 @@ test("mention a channel on a second line when the first line contains #", async 
 test("mention a channel when replacing the space after the mention by another char", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
-    await start();
+    await start({ useHtmlComposer: false });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "#");
     await click(".o-mail-Composer-suggestion");
@@ -531,36 +584,48 @@ test("mention a channel when replacing the space after the mention by another ch
     await contains(".o-mail-Message-body .o_channel_redirect", { text: "General good" });
 });
 
-test("mention 2 different channels that have the same name", async () => {
-    const pyEnv = await startServer();
-    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
-        {
-            channel_type: "channel",
-            group_public_id: false,
-            name: "my channel",
-        },
-        {
-            channel_type: "channel",
-            name: "my channel",
-        },
-    ]);
-    await start();
-    await openDiscuss(channelId_1);
-    await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(1 of .o-mail-Composer-suggestion)");
-    await contains(".o-mail-Composer-input", { value: "#my channel " });
-    await insertText(".o-mail-Composer-input", "#m");
-    await click(":nth-child(2 of .o-mail-Composer-suggestion");
-    await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
-    await press("Enter");
-    await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]`,
-        { text: "my channel" }
-    );
-    await contains(
-        `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]`,
-        { text: "my channel" }
-    );
+threadTests.push({
+    title: "mention 2 different channels that have the same name",
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
+            {
+                channel_type: "channel",
+                group_public_id: false,
+                name: "my channel",
+            },
+            {
+                channel_type: "channel",
+                name: "my channel",
+            },
+        ]);
+        await start({ useHtmlComposer });
+        await openDiscuss(channelId_1);
+        await insertText(".o-mail-Composer-input", "#m");
+        await click(":nth-child(1 of .o-mail-Composer-suggestion)");
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input", { text: "#my channel" });
+        } else {
+            await contains(".o-mail-Composer-input", { value: "#my channel " });
+        }
+        await insertText(".o-mail-Composer-input", "#m");
+        await click(":nth-child(2 of .o-mail-Composer-suggestion");
+        if (useHtmlComposer) {
+            await contains(".o-mail-Composer-input", { text: "#my channel #my channel" });
+            await contains(".o-mail-Composer-suggestion", { count: 0 });
+        } else {
+            await contains(".o-mail-Composer-input", { value: "#my channel #my channel " });
+        }
+        await press("Enter");
+        await contains(
+            `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_1}"][data-oe-model="discuss.channel"]`,
+            { text: "my channel" }
+        );
+        await contains(
+            `.o-mail-Message-body .o_channel_redirect[data-oe-id="${channelId_2}"][data-oe-model="discuss.channel"]`,
+            { text: "my channel" }
+        );
+    },
 });
 
 test("Post a message containing an email address followed by a mention on another line", async () => {
@@ -576,7 +641,7 @@ test("Post a message containing an email address followed by a mention on anothe
             Command.create({ partner_id: partnerId }),
         ],
     });
-    await start();
+    await start({ useHtmlComposer: false });
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "email@odoo.com\n@Te");
     await click(".o-mail-Composer-suggestion");
@@ -614,48 +679,55 @@ test("basic rendering of canceled notification", async () => {
     await contains(".o-mail-MessageNotificationPopover", { text: "Someone (test@test.be)" });
 });
 
-test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused", async () => {
-    // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
-    // Indeed that would trigger set_last_seen_message no matter what, which is already covered by other tests.
-    // The goal of this test is to cover the conditions specific to transient messages,
-    // and the conditions from focus would otherwise shadow them.
-    const pyEnv = await startServer();
-    // Needed partner & user to allow simulation of message reception
-    const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
-    const userId = pyEnv["res.users"].create({
-        name: "Foreigner user",
-        partner_id: partnerId,
-    });
-    const channelId = pyEnv["discuss.channel"].create({
-        channel_type: "channel",
-        name: "General",
-        channel_member_ids: [
-            Command.create({ partner_id: partnerId }),
-            Command.create({ partner_id: serverState.partnerId }),
-        ],
-    });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "not empty");
-    await press("Enter");
-    await contains(".o-mail-Message", { text: "not empty" });
-    // send a command that leads to receiving a transient message
-    await insertText(".o-mail-Composer-input", "/who");
-    await press("Enter");
-    await contains(".o-mail-Message", { count: 2 });
-    // composer is focused by default, we remove that focus
-    queryFirst(".o-mail-Composer-input").blur();
-    // simulate receiving a message
-    withUser(userId, () =>
-        rpc("/mail/message/post", {
-            post_data: { body: "test", message_type: "comment" },
-            thread_id: channelId,
-            thread_model: "discuss.channel",
-        })
-    );
-    await contains(".o-mail-Message", { count: 3 });
-    await contains(".o-mail-Thread-newMessage:contains('New')");
-    await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
+threadTests.push({
+    title: "first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused",
+    fn: async ({ useHtmlComposer }) => {
+        // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
+        // Indeed that would trigger set_last_seen_message no matter what, which is already covered by other tests.
+        // The goal of this test is to cover the conditions specific to transient messages,
+        // and the conditions from focus would otherwise shadow them.
+        const pyEnv = await startServer();
+        // Needed partner & user to allow simulation of message reception
+        const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+        const userId = pyEnv["res.users"].create({
+            name: "Foreigner user",
+            partner_id: partnerId,
+        });
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_type: "channel",
+            name: "General",
+            channel_member_ids: [
+                Command.create({ partner_id: partnerId }),
+                Command.create({ partner_id: serverState.partnerId }),
+            ],
+        });
+        await start();
+        await openDiscuss(channelId);
+        await insertText(".o-mail-Composer-input", "not empty");
+        await press("Enter");
+        await contains(".o-mail-Message", { text: "not empty" });
+        // send a command that leads to receiving a transient message
+        await insertText(".o-mail-Composer-input", "/who");
+        if (useHtmlComposer) {
+            await press("Enter");
+            await contains(".o-mail-Composer-suggestion", { count: 0 });
+        }
+        await press("Enter");
+        await contains(".o-mail-Message", { count: 2 });
+        // composer is focused by default, we remove that focus
+        queryFirst(".o-mail-Composer-input").blur();
+        // simulate receiving a message
+        withUser(userId, () =>
+            rpc("/mail/message/post", {
+                post_data: { body: "test", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
+            })
+        );
+        await contains(".o-mail-Message", { count: 3 });
+        await contains(".o-mail-Thread-newMessage:contains('New')");
+        await contains(".o-mail-Message[aria-label='Note'] + .o-mail-Thread-newMessage");
+    },
 });
 
 test.tags("focus required");
@@ -666,7 +738,7 @@ test("composer should be focused automatically after clicking on the send button
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Dummy Message");
     await press("Enter");
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
 });
 
 test("chat window header should not have unread counter for non-channel thread", async () => {
@@ -870,19 +942,26 @@ test("New message separator not appearing after showing composer on thread", asy
     await contains(".o-mail-Thread-newMessage", { count: 0 });
 });
 
-test("Transient messages are added at the end of the thread", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
-    await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Dummy Message");
-    await press("Enter");
-    await contains(".o-mail-Message");
-    await insertText(".o-mail-Composer-input", "/help");
-    await press("Enter");
-    await contains(".o-mail-Message", { count: 2 });
-    await contains(":nth-child(1 of .o-mail-Message)", { text: "Mitchell Admin" });
-    await contains(":nth-child(2 of .o-mail-Message)", { text: "OdooBot" });
+threadTests.push({
+    title: "Transient messages are added at the end of the thread",
+    fn: async ({ useHtmlComposer }) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        await start();
+        await openDiscuss(channelId);
+        await insertText(".o-mail-Composer-input", "Dummy Message");
+        await press("Enter");
+        await contains(".o-mail-Message");
+        await insertText(".o-mail-Composer-input", "/help");
+        if (useHtmlComposer) {
+            await press("Enter");
+            await contains(".o-mail-Composer-suggestion", { count: 0 });
+        }
+        await press("Enter");
+        await contains(".o-mail-Message", { count: 2 });
+        await contains(":nth-child(1 of .o-mail-Message)", { text: "Mitchell Admin" });
+        await contains(":nth-child(2 of .o-mail-Message)", { text: "OdooBot" });
+    },
 });
 
 test("Can scroll to notification", async () => {
@@ -929,7 +1008,7 @@ test("Update unread counter when receiving new message", async () => {
         channel_member_ids: [
             Command.create({
                 message_unread_counter: 1,
-                partner_id: serverState.partnerId
+                partner_id: serverState.partnerId,
             }),
             Command.create({ partner_id: partnerId }),
         ],
@@ -958,3 +1037,5 @@ test("Update unread counter when receiving new message", async () => {
     );
     await contains(".o-discuss-badge", { text: "2" });
 });
+
+runComposerTests(threadTests);

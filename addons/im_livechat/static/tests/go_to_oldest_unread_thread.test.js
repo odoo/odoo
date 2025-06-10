@@ -151,7 +151,9 @@ test("Tab livechat picks ended livechats last", async () => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem", { text: "Visitor 4" });
     await contains(".o-mail-ChatWindow:contains('Visitor 4') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 4') .o-mail-Composer.o-focused");
+    await contains(
+        ".o-mail-Composer.o-focused .o-mail-Composer-input p[o-we-hint-text='Message Visitor 4…']"
+    );
     await contains(".o-mail-ChatWindow:contains('Visitor 4') .badge", { count: 0 });
     await advanceTime(5_000);
     await withGuest(guestIds[1], () =>
@@ -194,12 +196,16 @@ test("Tab livechat picks ended livechats last", async () => {
     await press("Tab");
     await contains(".o-mail-ChatWindow", { count: 2 });
     await contains(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Composer.o-focused");
+    await contains(
+        ".o-mail-Composer.o-focused .o-mail-Composer-input p[o-we-hint-text='Message Visitor 0…']"
+    );
     await contains(".o-mail-ChatWindow:contains('Visitor 0') .badge", { count: 0 });
     await press("Tab");
     await contains(".o-mail-ChatWindow", { count: 3 });
     await contains(".o-mail-ChatWindow:contains('Visitor 2') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 2') .o-mail-Composer.o-focused");
+    await contains(
+        ".o-mail-Composer.o-focused .o-mail-Composer-input p[o-we-hint-text='Message Visitor 2…']"
+    );
     await contains(".o-mail-ChatWindow:contains('Visitor 2') .badge", { count: 0 });
     await advanceTime(5_000);
     await withGuest(guestIds[0], () =>
@@ -227,10 +233,14 @@ test("Tab livechat picks ended livechats last", async () => {
      */
     await press("Tab");
     await contains(".o-mail-ChatWindow:contains('Visitor 3') .o-mail-Message:contains('Hello')");
-    await contains(".o-mail-ChatWindow:contains('Visitor 3') .o-mail-Composer.o-focused");
+    await contains(
+        ".o-mail-Composer.o-focused .o-mail-Composer-input p[o-we-hint-text='Message Visitor 3…']"
+    );
     await contains(".o-mail-ChatWindow:contains('Visitor 3') .badge", { count: 0 });
     await press("Tab");
-    await contains(".o-mail-ChatWindow:contains('Visitor 0') .o-mail-Composer.o-focused");
+    await contains(
+        ".o-mail-Composer.o-focused .o-mail-Composer-input p[o-we-hint-text='Message Visitor 0…']"
+    );
     await contains(".o-mail-ChatWindow:contains('Visitor 0') .badge", { count: 0 });
     await press("Tab");
     await contains(".o-mail-ChatWindow:contains('Visitor 1') .o-mail-Message:contains('Hello')");
@@ -284,7 +294,7 @@ test("switching to folded chat window unfolds it", async () => {
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "Visitor 12",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 
@@ -342,7 +352,7 @@ test("switching to hidden chat window unhides it", async () => {
     triggerHotkey("Tab");
     await contains(".o-mail-ChatWindow", {
         text: "Visitor 11",
-        contains: [".o-mail-Composer-input:focus"],
+        contains: [".o-mail-Composer.o-focused"],
     });
 });
 

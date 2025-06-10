@@ -31,7 +31,7 @@ class Actions extends Component {
  */
 export class AttachmentList extends Component {
     static components = { Actions };
-    static props = ["attachments", "unlinkAttachment", "messageSearch?"];
+    static props = ["attachments", "unlinkAttachment", "messageSearch?", "displayAllImg?"];
     static template = "mail.AttachmentList";
 
     setup() {
@@ -148,10 +148,6 @@ export class AttachmentList extends Component {
      * @param {import("models").Attachment} attachment
      */
     showUploaded(attachment) {
-        return (
-            !attachment.isImage &&
-            !attachment.uploading &&
-            this.env.inComposer
-        );
+        return !attachment.isImage && !attachment.uploading && this.env.inComposer;
     }
 }

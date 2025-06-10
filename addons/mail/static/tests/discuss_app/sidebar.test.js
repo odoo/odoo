@@ -266,7 +266,7 @@ test("sidebar: open pinned channel", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "General" });
-    await contains(".o-mail-Composer-input[placeholder='Message #General…']");
+    await contains(".o-mail-Composer-input p[o-we-hint-text='Message #General…']");
     await contains(".o-mail-Discuss-threadName", { value: "General" });
 });
 
@@ -305,7 +305,7 @@ test("sidebar: unpin chat from bus", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
-    await contains(".o-mail-Composer-input[placeholder='Message Demo…']");
+    await contains(".o-mail-Composer-input p[o-we-hint-text='Message Demo…']");
     await contains(".o-mail-Discuss-threadName", { value: "Demo" });
     // Simulate receiving a unpin chat notification
     // (e.g. from user interaction from another device or browser tab)
@@ -1047,7 +1047,7 @@ test("chat should be sorted by last activity time", async () => {
     );
     await click(".o-mail-DiscussSidebarChannel", { text: "Demo" });
     // post a new message on the last channel
-    await insertText(".o-mail-Composer-input[placeholder='Message Demo…']", "Blabla");
+    await insertText(".o-mail-Composer-input", "Blabla");
     await press("Enter");
     await contains(".o-mail-Message", { text: "Blabla" });
     await contains(

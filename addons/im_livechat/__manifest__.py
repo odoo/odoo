@@ -184,6 +184,7 @@ Help your customers with this chat, and analyse their feedback.
         ],
         "mail.assets_public": [
             "im_livechat/static/src/core/common/**/*",
+            "im_livechat/static/src/core/public/**/*",
             "im_livechat/static/src/core/public_web/**/*",
         ],
     },

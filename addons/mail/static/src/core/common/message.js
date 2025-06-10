@@ -1,5 +1,4 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
-import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { MessageInReply } from "@mail/core/common/message_in_reply";
 import { MessageLinkPreviewList } from "@mail/core/common/message_link_preview_list";
@@ -41,6 +40,7 @@ import { rpc } from "@web/core/network/rpc";
 import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
+import { ComposerField } from "./composer_field";
 
 /**
  * @typedef {Object} Props
@@ -62,7 +62,7 @@ export class Message extends Component {
     static components = {
         ActionSwiper,
         AttachmentList,
-        Composer,
+        ComposerField,
         Dropdown,
         DropdownItem,
         ImStatus,

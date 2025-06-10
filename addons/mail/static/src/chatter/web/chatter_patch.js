@@ -26,6 +26,7 @@ import { useMessageSearch } from "@mail/core/common/message_search_hook";
 import { usePopoutAttachment } from "@mail/core/common/attachment_view";
 import { rpc } from "@web/core/network/rpc";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import { ComposerField } from "@mail/core/common/composer_field";
 
 export const DELAY_FOR_SPINNER = 1000;
 
@@ -40,6 +41,7 @@ Object.assign(Chatter.components, {
     ScheduledMessage,
     SearchMessageInput,
     SearchMessageResult,
+    ComposerField,
 });
 
 Chatter.props.push(

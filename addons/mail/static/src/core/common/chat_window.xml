@@ -80,7 +80,7 @@
                             <Typing channel="thread" size="'medium'"/>
                         </div>
                     </div>
-                    <Composer composer="thread.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
+                    <ComposerField composer="thread.composer" autofocus="isMobileOS ? undefined : props.chatWindow.autofocus" mode="'compact'" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef" type="composerType"/>
                 </t>
             </t>
         </div>

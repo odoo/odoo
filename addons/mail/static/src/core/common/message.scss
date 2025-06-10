@@ -57,6 +57,16 @@
         margin-bottom: 0 !important;
     }
 
+    .o_checklist > li {
+        pointer-events: none;
+        cursor: default;
+    }
+
+    .o_checklist > li a {
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
     // overflow: auto can break rendering of next element of a frequent broken Outlook 365
     // warning table. If detected, we prevent the issue by removing flotation.
     table[align="left"][width="100%"] {

@@ -1,5 +1,5 @@
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
-import { after, before, expect, getFixture, registerDebugInfo } from "@odoo/hoot";
+import { after, before, test, expect, getFixture, registerDebugInfo } from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import {
@@ -308,6 +308,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  *  asTab?: boolean;
  *  authenticateAs?: any | { login: string; password: string; };
  *  env?: Partial<OdooEnv>;
+ *  useHtmlComposer?: boolean;
  * }} [options]
  */
 export async function start(options) {
@@ -355,6 +356,11 @@ export async function start(options) {
         env = await makeMockEnv({}, { makeNew: true });
     } else {
         env = getMockEnv() || (await makeMockEnv({}));
+    }
+    if (options?.useHtmlComposer) {
+        env.services["mail.composer_switch_service"].setComposerType("html");
+    } else {
+        env.services["mail.composer_switch_service"].setComposerType("textarea");
     }
     env.testEnv = true;
     await mountWithCleanup(WebClient, { env, target });
@@ -898,4 +904,17 @@ export function patchVoiceMessageAudio() {
         });
     });
     return res;
+}
+
+/**
+ * Run composer tests with and without HtmlComposer.
+ * @param {Array<{title: string, fn: Function}>} tests
+ */
+export function runComposerTests(tests) {
+    for (const t of tests) {
+        test(t.title, async () => t.fn({ useHtmlComposer: false }));
+    }
+    for (const t of tests) {
+        test("[HtmlComposer] " + t.title, async () => t.fn({ useHtmlComposer: true }));
+    }
 }

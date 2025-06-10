@@ -1,5 +1,4 @@
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
-import { Composer } from "@mail/core/common/composer";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
@@ -15,6 +14,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { ComposerField } from "../common/composer_field";
 
 export class Discuss extends Component {
     static components = {
@@ -23,7 +23,7 @@ export class Discuss extends Component {
         DiscussSidebar,
         Thread,
         ThreadIcon,
-        Composer,
+        ComposerField,
         FileUploader,
         ImStatus,
         MessagingMenu,

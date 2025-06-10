@@ -6,6 +6,7 @@ import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { Deferred } from "@web/core/utils/concurrency";
+import { isMarkup } from "../../utils/common/format";
 
 /**
  * @typedef SuggestedRecipient
@@ -839,11 +840,13 @@ export class Thread extends Record {
                 tmpData.parent_id = this.store["mail.message"].get(parentId);
             }
             const prettyContent = await prettifyMessageContent(body, {
-                validMentions: this.store.getMentionsFromText(body, {
-                    mentionedChannels,
-                    mentionedPartners,
-                    mentionedRoles,
-                }),
+                validMentions: isMarkup(body)
+                    ? []
+                    : this.store.getMentionsFromText(body, {
+                          mentionedChannels,
+                          mentionedPartners,
+                          mentionedRoles,
+                      }),
             });
             tmpMsg = this.store["mail.message"].insert({
                 ...tmpData,
