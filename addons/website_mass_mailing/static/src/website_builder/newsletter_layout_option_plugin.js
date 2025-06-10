@@ -39,13 +39,14 @@ export class SelectNewsletterTemplateAction extends BuilderAction {
             parentEl.dataset.newsletterTemplate === attribute
         );
     }
-    apply(action) {
-        this.getAction("selectTemplate").apply(action);
+    async apply(action) {
+        // TODO: use reloadComposite instead
+        await this.getAction("selectTemplate").apply(action);
         const parentEl = action.editingElement.parentElement;
         parentEl.dataset.newsletterTemplate = action.params.attribute;
     }
-    clean(action) {
-        return this.getAction("selectTemplate").clean(action)
+    async clean(action) {
+        return this.getAction("selectTemplate").clean(action);
     }
 }
 registry
