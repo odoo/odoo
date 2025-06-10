@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
+import binascii
 import hashlib
 from collections import OrderedDict
 from werkzeug.urls import url_quote
@@ -98,6 +100,26 @@ class Image(models.AbstractModel):
         atts["data-zoom"] = src_zoom and u'1' or None
         atts["data-zoom-image"] = src_zoom
         atts["data-no-post-process"] = options.get('data-no-post-process')
+
+        if hasattr(record, 'image_1920') and record.image_1920:
+            IrAttachment = self.env['ir.attachment']
+            try:
+                bin_data = base64.b64decode(record.image_1920) or False
+            except binascii.Error:
+                bin_data = False
+            if bin_data:
+                checksum = IrAttachment._compute_checksum(bin_data)
+                attachment = IrAttachment.sudo().search([
+                    ['checksum', '=', checksum],
+                    ['file_size', '=', len(bin_data)],
+                ], limit=1)
+
+                if attachment:
+                    original = attachment.original_id or attachment
+                    atts["data-mimetype"] = attachment.mimetype
+                    atts["data-original-id"] = original.id
+                    atts["data-mimetype-before-conversion"] = original.mimetype
+                    atts["data-original-src"] = original.image_src
 
         atts = self.env['ir.qweb']._post_processing_att('img', atts)
 

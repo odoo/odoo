@@ -42,6 +42,27 @@ const removeImg = [
     },
 ];
 
+const resizeImage = [
+    {
+        content: "Check that image tools are available for modification",
+        trigger: "we-customizeblock-options:has(we-title:contains('Format'))", // Check that the image tool is available to the user
+    },
+    {
+        content: "Open the Format selector",
+        trigger: "[data-name='format_select_opt']:has(we-toggler) we-toggler",
+        run: "click",
+    },
+    {
+        content: "Select the 512px webp format",
+        trigger: "we-selection-items we-button[data-select-format='512 image/webp']",
+        run: "click",
+    },
+    {
+        content: "Verify that the image was resized to 512",
+        trigger: ":iframe #o-carousel-product img.o_modified_image_to_save[data-resize-width='512']",
+    }
+];
+
 registerWebsitePreviewTour("add_and_remove_main_product_image_no_variant", {
     url: "/shop?search=Test Remove Image",
 }, () => [
@@ -71,4 +92,13 @@ registerWebsitePreviewTour("remove_main_product_image_with_variant", {
     ...clickOnEditAndWaitEditMode(),
     ...clickOnImgAndWaitForLoad,
     ...removeImg,
+]);
+
+registerWebsitePreviewTour("product_image_tool_enabled", {
+    url: "/shop?search=Test Remove Image",
+}, () => [
+    ...enterEditModeOfTestProduct(),
+    ...clickOnImgAndWaitForLoad,
+    ...resizeImage,
+    ...clickOnSave(),
 ]);

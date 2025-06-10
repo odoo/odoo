@@ -408,3 +408,17 @@ class TestWebsiteSaleRemoveImage(HttpCase):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'remove_main_product_image_with_variant', login='admin')
         self.assertFalse(self.template.image_1920)
         self.assertFalse(self.product.image_1920)
+
+    def test_website_sale_modify_main_product_image(self):
+        # Attachment needed to be able to fallback to the original for resizing
+        self.env['ir.attachment'].create({
+            'datas': self.template.image_1920,
+            'name': 'blue.jpg',
+        })
+        self.product = self.env['product.product'].create({
+            'product_tmpl_id': self.template.id,
+        })
+        data_length = len(self.product.image_1920)
+        url = self.env['website'].get_client_action_url('/')
+        self.start_tour(url, 'product_image_tool_enabled', login='admin')
+        self.assertLess(len(self.product.image_1920), data_length)
