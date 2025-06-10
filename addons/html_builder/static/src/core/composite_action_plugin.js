@@ -133,7 +133,7 @@ class CompositeAction extends BuilderAction {
             }
         }
     }
-    clean({
+    async clean({
         isPreviewing,
         editingElement,
         params: { mainParam: actions },
@@ -156,12 +156,12 @@ class CompositeAction extends BuilderAction {
             });
             if (!isPreviewing || isActionPreviewable(action)) {
                 if (action.has("clean")) {
-                    action.clean(actionDescr);
+                    await action.clean(actionDescr);
                 } else if (action.has("apply")) {
                     if (loadResult && loadResult[actionDef.action]) {
                         actionDescr.loadResult = loadResult[actionDef.action];
                     }
-                    action.apply(actionDescr);
+                    await action.apply(actionDescr);
                 }
             }
         }
