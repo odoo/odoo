@@ -1,8 +1,8 @@
 import { Store as BaseStore, fields, makeStore, storeInsertFns } from "@mail/core/common/record";
 import { threadCompareRegistry } from "@mail/core/common/thread_compare";
-import { cleanTerm, prettifyMessageContent } from "@mail/utils/common/format";
-
-import { reactive } from "@odoo/owl";
+import { cleanTerm, prettifyMessageContent, isMarkup } from "@mail/utils/common/format";
+import { createDocumentFragmentFromContent } from "@mail/utils/common/html";
+import { reactive, markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -458,21 +458,49 @@ export class Store extends BaseStore {
         } = {}
     ) {
         const validMentions = {};
-        validMentions.threads = mentionedChannels.filter((thread) => {
-            if (thread.parent_channel_id) {
-                return body.includes(
-                    `#${thread.parent_channel_id.displayName} > ${thread.displayName}`
-                );
-            }
-            return body.includes(`#${thread.displayName}`);
-        });
-        validMentions.partners = mentionedPartners.filter((partner) =>
-            body.includes(`@${partner.name}`)
-        );
-        validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
-        validMentions.specialMentions = this.specialMentions
-            .filter((special) => body.includes(`@${special.label}`))
-            .map((special) => special.label);
+        if (isMarkup(body)) {
+            const htmlBody = createDocumentFragmentFromContent(body);
+            const threadsInBody = htmlBody.querySelectorAll(".o_channel_redirect");
+            const partnersInBody = htmlBody.querySelectorAll(".o_mail_redirect");
+            validMentions.threads = mentionedChannels.filter((thread) =>
+                Array.from(threadsInBody).some(
+                    (t) =>
+                        t.dataset.oeModel === thread.model &&
+                        t.dataset.oeId === thread.id.toString()
+                )
+            );
+            validMentions.partners = mentionedPartners.filter((partner) =>
+                Array.from(partnersInBody).some(
+                    (p) =>
+                        p.dataset.oeId === partner.id.toString() &&
+                        p.dataset.oeModel === "res.partner"
+                )
+            );
+            validMentions.roles = mentionedRoles.filter((role) =>
+                Array.from(partnersInBody).some(
+                    (r) => r.dataset.oeId === role.id.toString() && r.dataset.oeModel === "res.role"
+                )
+            );
+            validMentions.specialMentions = this.specialMentions
+                .filter((special) => body.includes(`@${special.label}`))
+                .map((special) => special.label);
+        } else {
+            validMentions.threads = mentionedChannels.filter((thread) => {
+                if (thread.parent_channel_id) {
+                    return body.includes(
+                        `#${thread.parent_channel_id.displayName} > ${thread.displayName}`
+                    );
+                }
+                return body.includes(`#${thread.displayName}`);
+            });
+            validMentions.partners = mentionedPartners.filter((partner) =>
+                body.includes(`@${partner.name}`)
+            );
+            validMentions.roles = mentionedRoles.filter((role) => body.includes(`@${role.name}`));
+            validMentions.specialMentions = this.specialMentions
+                .filter((special) => body.includes(`@${special.label}`))
+                .map((special) => special.label);
+        }
         return validMentions;
     }
 
@@ -490,13 +518,14 @@ export class Store extends BaseStore {
             mentionedRoles,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
-        const validMentions = this.getMentionsFromText(body, {
+        let validMentions = {};
+        validMentions = this.getMentionsFromText(body, {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
         });
-        const partner_ids = validMentions?.partners.map((partner) => partner.id) ?? [];
-        const role_ids = validMentions?.roles.map((role) => role.id) ?? [];
+        const partner_ids = validMentions.partners.map((partner) => partner.id) ?? [];
+        const role_ids = validMentions.roles.map((role) => role.id) ?? [];
         const recipientEmails = [];
         if (!isNote) {
             const allRecipients = [...thread.suggestedRecipients, ...thread.additionalRecipients];
@@ -525,7 +554,7 @@ export class Store extends BaseStore {
         if (role_ids.length) {
             Object.assign(postData, { role_ids });
         }
-        if (thread.model === "discuss.channel" && validMentions?.specialMentions.length) {
+        if (thread.model === "discuss.channel" && validMentions.specialMentions?.length) {
             postData.special_mentions = validMentions.specialMentions;
         }
         const params = {
@@ -648,7 +677,9 @@ export class Store extends BaseStore {
         const { count, data, messages } = await rpc(thread.getFetchRoute(), {
             ...thread.getFetchParams(),
             fetch_params: {
-                search_term: await prettifyMessageContent(searchTerm), // formatted like message_post
+                search_term: await prettifyMessageContent(markup(searchTerm), {
+                    generateLink: false,
+                }), // formatted like message_post
                 before,
             },
         });

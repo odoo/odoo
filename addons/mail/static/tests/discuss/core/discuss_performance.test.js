@@ -9,7 +9,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
-import { Composer } from "@mail/core/common/composer";
+import { HtmlComposer } from "@mail/core/web/html_composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, test } from "@odoo/hoot";
 import { onMounted, onPatched } from "@odoo/owl";
@@ -65,6 +65,6 @@ test("posting new message should only render relevant part", async () => {
     await contains(".o-mail-Message", { count: 11 });
     posting = false;
     const result2 = stopObserve2();
-    expect(result2.get(Composer)).toBeLessThan(3); // 2: temp disabling + clear content
+    expect(result2.get(HtmlComposer)).toBeLessThan(3); // 2: temp disabling + clear content
     expect(result2.get(Message)).toBeLessThan(4); // 3: new temp msg + new genuine msg + prev msg
 });

@@ -132,12 +132,12 @@ test("return focus to thread composer on close", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello world!");
     await press("Enter");
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: "👍" });
     await press("Enter");
     await contains(".o-mail-MessageReaction", { text: "👍1" });
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer.o-focused");
 });
 
 test.tags("focus required");
@@ -148,14 +148,14 @@ test("return focus to message edition composer on close", async () => {
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello world!");
     await press("Enter");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await contains(".o-mail-Composer-input", { text: "" });
     await insertText(".o-mail-Composer-input", "Goodbye world!!");
     await press("Enter");
     await click("[title='Edit']");
-    await contains(".o-mail-Message .o-mail-Composer-input:focus");
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji:focus", { text: "👍" });
     await press("Enter");
     await contains(".o-mail-MessageReaction", { text: "👍1" });
-    await contains(".o-mail-Message .o-mail-Composer-input:focus");
+    await contains(".o-mail-Message .o-mail-Composer.o-focused");
 });

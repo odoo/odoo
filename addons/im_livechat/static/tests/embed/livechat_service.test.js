@@ -129,7 +129,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
                 })}`,
                 `/mail/message/post - ${JSON.stringify({
                     post_data: {
-                        body: "Hello!",
+                        body: "<p>Hello!</p>",
                         email_add_signature: true,
                         message_type: "comment",
                         subtype_xmlid: "mail.mt_comment",

@@ -166,25 +166,23 @@ test("Open a GIF category trigger the search for the category", async () => {
 test("Can have GIF categories with same name", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
-    onRpc("/discuss/gif/categories", () => {
-        return {
-            locale: "en",
-            tags: [
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-                {
-                    searchterm: "duplicate",
-                    path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
-                    image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
-                    name: "#duplicate",
-                },
-            ],
-        };
-    });
+    onRpc("/discuss/gif/categories", () => ({
+        locale: "en",
+        tags: [
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+            {
+                searchterm: "duplicate",
+                path: "/v2/search?q=duplicate&locale=en&component=categories&contentfilter=low",
+                image: "https://media.tenor.com/BiseY2UXovAAAAAM/duplicate.gif",
+                name: "#duplicate",
+            },
+        ],
+    }));
     onRpc("/discuss/gif/search", () => rpc.search);
     await start();
     await openDiscuss(channelId);
@@ -238,6 +236,7 @@ test("Composer GIF button should open the GIF picker keyboard in footer", async 
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-mail-Composer");
     await click("button[title='More Actions']");
     await click(".dropdown-item:contains('Add GIFs')");
     await contains(".o-mail-Composer-footer .o-discuss-GifPicker");

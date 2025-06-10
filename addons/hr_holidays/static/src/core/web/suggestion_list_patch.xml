@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.SuggestionList.Partner" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-Composer-suggestionDescription')]" position="before">
+            <span t-if="suggestion.outOfOfficeDateEndText" class="text-warning small fw-bold" t-esc="suggestion.outOfOfficeDateEndText"/>
+        </xpath>
+    </t>
+</templates>

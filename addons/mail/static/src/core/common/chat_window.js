@@ -1,4 +1,3 @@
-import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -18,6 +17,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { ComposerField } from "./composer_field";
 
 /**
  * @typedef {Object} Props
@@ -31,7 +31,7 @@ export class ChatWindow extends Component {
         Dropdown,
         DropdownItem,
         Thread,
-        Composer,
+        ComposerField,
         ThreadIcon,
         ImStatus,
         AutoresizeInput,
@@ -90,8 +90,8 @@ export class ChatWindow extends Component {
 
     get attClass() {
         return {
-            'w-100 h-100 o-mobile': this.ui.isSmall,
-            'rounded-4 border border-dark mb-2': !this.ui.isSmall,
+            "w-100 h-100 o-mobile": this.ui.isSmall,
+            "rounded-4 border border-dark mb-2": !this.ui.isSmall,
         };
     }
 

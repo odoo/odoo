@@ -27,6 +27,11 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='mail.restrict.template.rendering',
         help='Users will still be able to render templates.\n'
         'However only Mail Template Editors will be able to create new dynamic templates or modify existing ones.')
+    use_html_composer = fields.Boolean(
+        'Use HTML Composer',
+        config_parameter='mail.use_html_composer',
+        help="If set, the HTML editor will be used for internal composers. Otherwise, the plain text editor will be used.",
+    )
     use_twilio_rtc_servers = fields.Boolean(
         'Use Twilio ICE servers',
         help="If you want to use twilio as TURN/STUN server provider",

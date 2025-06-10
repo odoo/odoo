@@ -77,6 +77,7 @@ const suggestionServicePatch = {
             .map(([name, command]) => ({
                 channel_types: command.channel_types,
                 help: command.help,
+                icon: command.icon,
                 id: command.id,
                 name,
             }));

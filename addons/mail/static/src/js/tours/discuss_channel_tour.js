@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("discuss_channel_tour", {
                 )
             ),
             tooltipPosition: "top",
-            run: `edit SomeText_${new Date().getTime()}`,
+            run: `composer SomeText_${new Date().getTime()}`,
         },
         {
             trigger: ".o-mail-Composer-input",

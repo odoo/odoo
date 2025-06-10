@@ -4,5 +4,6 @@ import { registry } from "@web/core/registry";
 registry.category("discuss.channel_commands").add("history", {
     channel_types: ["livechat"],
     help: _t("See 15 last visited pages"),
+    icon: "fa-history",
     methodName: "execute_command_history",
 });

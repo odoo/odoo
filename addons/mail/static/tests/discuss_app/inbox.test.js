@@ -81,9 +81,9 @@ test("reply: discard on pressing escape", async () => {
     await contains(".o-mail-Composer");
     // Escape on suggestion prompt does not stop replying
     await insertText(".o-mail-Composer-input", "@");
-    await contains(".o-mail-Composer-suggestionList .o-open");
+    await contains(".o-mail-SuggestionList");
     triggerHotkey("Escape");
-    await contains(".o-mail-Composer-suggestionList .o-open", { count: 0 });
+    await contains(".o-mail-SuggestionList", { count: 0 });
     await contains(".o-mail-Composer");
     await click(".o-mail-Composer-input").catch(() => {});
     triggerHotkey("Escape");
@@ -117,7 +117,7 @@ test('"reply to" composer should log note if message replied to is a note', asyn
     await openDiscuss();
     await contains(".o-mail-Message");
     await click("[title='Reply']");
-    await contains(".o-mail-Composer [placeholder='Log an internal note…']");
+    await contains(".o-mail-Composer [o-we-hint-text='Log an internal note…']");
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer button[title='Log']");
     await contains(".o-mail-Composer", { count: 0 });
@@ -151,7 +151,7 @@ test('"reply to" composer should send message if message replied to is not a not
     await openDiscuss();
     await contains(".o-mail-Message");
     await click("[title='Reply']");
-    await contains(".o-mail-Composer [placeholder='Send a message to followers…']");
+    await contains(".o-mail-Composer [o-we-hint-text='Send a message to followers…']");
     await insertText(".o-mail-Composer-input", "Test");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Composer button[title='Send']", { count: 0 });

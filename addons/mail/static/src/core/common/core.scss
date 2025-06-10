@@ -185,11 +185,11 @@ $o-discuss-talkingColor: lighten($success, 10%);
 ) {
     color: #{$color} !important;
     background-color: #{$background};
-    border-color: #{$border};
+    outline-color: #{$border};
     &:hover {
         color: #{$hover-color};
         background-color: #{$hover-background};
-        border-color: #{$hover-border};
+        outline-color: #{$hover-border};
     }
     &:focus {
         box-shadow: #{to-rgb(mix($color, $border, 15%))};
@@ -197,19 +197,19 @@ $o-discuss-talkingColor: lighten($success, 10%);
     &:active {
         color: #{$active-color};
         background-color: #{$active-background};
-        border-color: #{$active-border};
+        outline-color: #{$active-border};
     }
     &:disabled {
         color: #{$disabled-color};
         background-color: #{$disabled-background};
-        border-color: #{$disabled-border};
+        outline-color: #{$disabled-border};
     }
 }
 
 a.o_mail_redirect, a.o_channel_redirect, a.o-discuss-mention {
     border-radius: $btn-border-radius-sm;
     padding: 0rem 0.1875rem;
-    border: 1px solid;
+    outline: 1px solid;
     font-weight: $font-weight-bold;
     display: inline-block;
 }

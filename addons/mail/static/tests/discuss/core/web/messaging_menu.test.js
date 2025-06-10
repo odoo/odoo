@@ -111,6 +111,9 @@ test("channel preview ignores transient message", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "/who");
+    await contains(".o-mail-Composer-suggestion", { text: "who" });
+    await press("Enter");
+    await contains(".o-mail-Composer-suggestion", { count: 0 });
     await press("Enter");
     await contains(".o_mail_notification", { text: "You are alone in this channel." });
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");

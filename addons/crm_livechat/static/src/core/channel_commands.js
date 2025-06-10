@@ -3,5 +3,6 @@ import { registry } from "@web/core/registry";
 
 registry.category("discuss.channel_commands").add("lead", {
     help: _t("Create a new lead (/lead lead title)"),
+    icon: "fa-handshake-o",
     methodName: "execute_command_lead",
 });

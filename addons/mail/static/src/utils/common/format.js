@@ -23,6 +23,8 @@ import { setAttributes } from "@web/core/utils/xml";
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
 
+const Markup = markup().constructor;
+
 /**
  * Escape < > & as html entities
  *
@@ -42,6 +44,23 @@ const _escapeEntities = (function () {
     };
 })();
 
+const _escape = function (str) {
+    if (str === undefined) {
+        return "";
+    }
+    if (typeof str === "number") {
+        return String(str);
+    }
+    [
+        ["&", "&amp;"],
+        ["<", "&lt;"],
+        [">", "&gt;"],
+    ].forEach((pairs) => {
+        str = String(str).replaceAll(pairs[0], pairs[1]);
+    });
+    return str;
+};
+
 /**
  * @param {string|ReturnType<markup>} rawBody
  * @param {Object} validMentions
@@ -49,7 +68,7 @@ const _escapeEntities = (function () {
  */
 export async function prettifyMessageContent(
     rawBody,
-    { validMentions = [], allowEmojiLoading = true } = {}
+    { generateLink = true, validMentions = [], allowEmojiLoading = true } = {}
 ) {
     let body = htmlTrim(rawBody);
     body = htmlReplace(body, /(\r|\n){2,}/g, () => markup("<br/><br/>"));
@@ -62,11 +81,19 @@ export async function prettifyMessageContent(
     // linkification a bit everywhere. Ideally we want to keep the content
     // as text internally and only make html enrichment at display time but
     // the current design makes this quite hard to do.
-    body = generateMentionsLinks(body, validMentions);
-    if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
-        body = await _generateEmojisOnHtml(body);
+    if (!isMarkup(rawBody)) {
+        body = generateMentionsLinks(body, validMentions);
+    } else {
+        body = escapeAndCompactHtmlContent(body);
     }
-    body = parseAndTransform(body, addLink);
+    if (allowEmojiLoading || odoo.loader.modules.get("@web/core/emoji_picker/emoji_data")) {
+        body = isMarkup(rawBody)
+            ? await _generateEmojisOnHtmlBody(body)
+            : await _generateEmojisOnHtml(body);
+    }
+    if (generateLink) {
+        body = parseAndTransform(body, addLink);
+    }
     return body;
 }
 
@@ -160,6 +187,21 @@ export function addLink(node, transformChildren) {
     }
     transformChildren();
     return markup(node.outerHTML);
+}
+
+export function escapeAndCompactHtmlContent(content) {
+    //Removing unwanted extra spaces from message
+    let value = content;
+    value = value.replace(/(\r|\n){2,}/g, "<br/><br/>");
+    value = value.replace(/(\r|\n)/g, "<br/>");
+
+    // prevent html space collapsing
+    value = value.replace(/ /g, "&nbsp;").replace(/([^>])&nbsp;([^<])/g, "$1 $2");
+    // remove empty <p><br></p> tags at the end of the message
+    value = value.replace(/(\s*<p>\s*<br\s*\/?>\s*<\/p>\s*)+$/g, "");
+    // remove empty <br>s of the last non-empty <p> element
+    value = value.replace(/<p>(.*?)<br\s*\/?>(\s*<br\s*\/?>)+<\/p>$/g, "<p>$1</p>");
+    return markup(value);
 }
 
 /**
@@ -257,10 +299,30 @@ async function _generateEmojisOnHtml(htmlString) {
 }
 
 /**
+ * @private
+ * @param {string|ReturnType<markup>} htmlString
+ * @returns {ReturnType<markup>}
+ */
+async function _generateEmojisOnHtmlBody(htmlString) {
+    const { emojis } = await loadEmoji();
+    for (const emoji of emojis) {
+        for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
+            const escapedSource = _escape(String(source)).replace(
+                /([.*+?=^!:${}()|[\]/\\])/g,
+                "\\$1"
+            );
+            const regexp = new RegExp("(\\s|\\>|^)(" + escapedSource + ")(?=\\s|\\<\\/|$)", "g");
+            htmlString = htmlString.replace(regexp, "$1" + emoji.codepoints);
+        }
+    }
+    return markup(htmlString);
+}
+
+/**
  * @param {string|ReturnType<markup>} body
  * @returns {ReturnType<markup>}
  */
-export function getNonEditableMentions(body) {
+export function formatMentionBlocksInBody(body) {
     const doc = createDocumentFragmentFromContent(body);
     for (const block of doc.body.querySelectorAll(".o_mail_reply_hide")) {
         block.classList.remove("o_mail_reply_hide");
@@ -268,10 +330,17 @@ export function getNonEditableMentions(body) {
     // for mentioned partner
     for (const mention of doc.body.querySelectorAll(".o_mail_redirect")) {
         mention.setAttribute("contenteditable", false);
+        mention.setAttribute("draggable", false);
     }
     // for mentioned channel
     for (const mention of doc.body.querySelectorAll(".o_channel_redirect")) {
         mention.setAttribute("contenteditable", false);
+        mention.setAttribute("draggable", false);
+    }
+    // for special mentions
+    for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
+        mention.setAttribute("contenteditable", false);
+        mention.setAttribute("draggable", false);
     }
     return markup(doc.body.innerHTML);
 }
@@ -363,4 +432,18 @@ export function decorateEmojis(content) {
         node.replaceWith(...span.childNodes);
     }
     return markup(doc.body.innerHTML);
+}
+
+export function isEmptyHtmlBody(htmlString) {
+    const htmlBody = createDocumentFragmentFromContent(
+        isMarkup(htmlString) ? htmlString : markup(htmlString)
+    );
+    return !htmlBody.body.textContent.trim() && !htmlBody.querySelector("img");
+}
+
+/**
+ * @param {unknown} object
+ */
+export function isMarkup(object) {
+    return object instanceof Markup;
 }
