@@ -450,8 +450,6 @@ export class ClipboardPlugin extends Plugin {
             if (
                 (isParagraphRelatedElement(block) ||
                     this.dependencies.baseContainer.isCandidateForBaseContainer(block)) &&
-                // TODO specific exception for "PRE" to keep everything inside one PRE.
-                // Consider removing this if PRE is to be used as a paragraph.
                 block.nodeName !== "PRE" &&
                 !block.closest("li")
             ) {
