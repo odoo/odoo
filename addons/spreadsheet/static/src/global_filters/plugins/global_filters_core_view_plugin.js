@@ -312,14 +312,14 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const year = DateTime.local().year;
         switch (filter.defaultValue) {
             case "this_year":
-                return { type: "year", period: { year } };
+                return { type: "year", year };
             case "this_month": {
                 const month = DateTime.local().month;
-                return { type: "month", period: { year, month } };
+                return { type: "month", year, month };
             }
             case "this_quarter": {
                 const quarter = Math.floor(new Date().getMonth() / 3) + 1;
-                return { type: "quarter", period: { year, quarter } };
+                return { type: "quarter", year, quarter };
             }
         }
         throw new Error(
@@ -470,27 +470,27 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
 
     _getFixedPeriodFromTo(now, offset, value) {
         let granularity = "year";
-        const noYear = value.period.year === undefined;
+        const noYear = value.year === undefined;
         if (noYear) {
             return {};
         }
-        const setParam = { year: value.period.year };
+        const setParam = { year: value.year };
         const plusParam = {};
         switch (value.type) {
             case "year":
                 plusParam.year = offset;
                 break;
             case "month":
-                if (value.period.month !== undefined) {
+                if (value.month !== undefined) {
                     granularity = "month";
-                    setParam.month = value.period.month;
+                    setParam.month = value.month;
                     plusParam.month = offset;
                 }
                 break;
             case "quarter":
-                if (value.period.quarter !== undefined) {
+                if (value.quarter !== undefined) {
                     granularity = "quarter";
-                    setParam.quarter = value.period.quarter;
+                    setParam.quarter = value.quarter;
                     plusParam.quarter = offset;
                 }
                 break;

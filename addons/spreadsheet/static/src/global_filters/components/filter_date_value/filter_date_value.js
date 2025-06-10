@@ -52,24 +52,22 @@ export class DateFilterValue extends Component {
         if (!this.value) {
             this.value = {
                 type: "year",
-                period: {
-                    year: undefined,
-                },
+                year: undefined,
             };
         }
         /** @type {number|undefined} */
         // date should be undefined if we don't have the year
         this.date =
-            this.value.period.year !== undefined
-                ? DateTime.local().set({ year: this.value.period.year })
+            this.value.year !== undefined
+                ? DateTime.local().set({ year: this.value.year })
                 : undefined;
         this.selectedPeriodId = undefined;
         switch (this.value.type) {
             case "quarter":
-                this.selectedPeriodId = `quarter_${this.value.period.quarter}`;
+                this.selectedPeriodId = `quarter_${this.value.quarter}`;
                 break;
             case "month":
-                this.selectedPeriodId = `month_${this.value.period.month}`;
+                this.selectedPeriodId = `month_${this.value.month}`;
                 break;
         }
     }
@@ -105,18 +103,14 @@ export class DateFilterValue extends Component {
         if (value.startsWith("month_")) {
             this.value = {
                 type: "month",
-                period: {
-                    year: this.value.period.year || DateTime.local().year,
-                    month: Number.parseInt(value.replace("month_", ""), 10),
-                },
+                year: this.value.year || DateTime.local().year,
+                month: Number.parseInt(value.replace("month_", ""), 10),
             };
         } else {
             this.value = {
                 type: "quarter",
-                period: {
-                    year: this.value.period.year || DateTime.local().year,
-                    quarter: Number.parseInt(value.replace("quarter_", ""), 10),
-                },
+                year: this.value.year || DateTime.local().year,
+                quarter: Number.parseInt(value.replace("quarter_", ""), 10),
             };
         }
         this._updateFilter();
@@ -125,11 +119,8 @@ export class DateFilterValue extends Component {
     onYearChanged(date) {
         this.date = date;
         this.value = {
-            type: this.value.type,
-            period: {
-                ...this.value.period,
-                year: date.year,
-            },
+            ...this.value,
+            year: date.year,
         };
         this._updateFilter();
     }
