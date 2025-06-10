@@ -1,3 +1,4 @@
+import { isProtected, isProtecting, isUnprotecting } from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 
 /**
@@ -32,17 +33,27 @@ export class ShortCutPlugin extends Plugin {
         }
         for (const shortcut of this.getResource("shortcuts")) {
             const command = this.dependencies.userCommand.getCommand(shortcut.commandId);
-            this.addShortcut(shortcut.hotkey, () => {
-                command.run(shortcut.commandParams);
-            });
+            let isAvailable;
+            if (shortcut.restricted) {
+                isAvailable = (target) =>
+                    !isProtecting(target) && (!isProtected(target) || isUnprotecting(target));
+            }
+            this.addShortcut(
+                shortcut.hotkey,
+                () => {
+                    command.run(shortcut.commandParams);
+                },
+                isAvailable
+            );
         }
     }
 
-    addShortcut(hotkey, action) {
+    addShortcut(hotkey, action, isAvailable) {
         this.services.hotkey.add(hotkey, action, {
             area: () => this.editable,
             bypassEditableProtection: true,
             allowRepeat: true,
+            isAvailable,
         });
     }
 }
