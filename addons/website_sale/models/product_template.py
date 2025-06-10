@@ -700,6 +700,14 @@ class ProductTemplate(models.Model):
         """
         return []
 
+    def action_archive(self):
+        # unlink draft lines containing the archived product
+        self.env['sale.order.line'].sudo().search([
+            ('state', '=', 'draft'),
+            ('product_id', 'in', self.product_variant_ids.ids),
+            ('order_id', 'any', [('website_id', '!=', False)]),
+        ]).unlink()
+        return super().action_archive()
     # ---------------------------------------------------------
     # Rating Mixin API
     # ---------------------------------------------------------
