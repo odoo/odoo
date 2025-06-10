@@ -51,6 +51,7 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    stepAllNetworkCalls,
     toggleActionMenu,
     toggleMenuItem,
     toggleSearchBarMenu,
@@ -2985,6 +2986,83 @@ test(`form views in dialogs do not have class o_xxl_form_view`, async () => {
     await getService("action").doAction(1);
     expect(`.o_dialog .o_form_view`).toHaveCount(1);
     expect(`.o_dialog .o_form_view`).not.toHaveClass("o_xxl_form_view");
+});
+
+test(`form with custom cog action that has a confirmation target="new" action`, async () => {
+    PartnerType._views = {
+        form: `
+            <form>
+                Are you sure blablabla
+                <footer>
+                    <button name="my_action" type="action" string="Do it"/>
+                </footer>
+            </form>`,
+    };
+    const contextualAction = {
+        id: 80,
+        name: "Sort of confirmation dialog",
+        res_model: "partner.type",
+        context: "{}",
+        views: [[false, "form"]],
+        type: "ir.actions.act_window",
+        target: "new",
+    };
+    Partner._toolbar = {
+        action: [contextualAction],
+        print: [],
+    };
+    Partner._views = {
+        form: `<form><field name="foo"/></form>`,
+        list: `<list><field name="foo"/></list>`,
+        search: `<search/>`,
+    };
+    defineActions([
+        {
+            id: 1,
+            name: "Partner",
+            res_model: "partner",
+            views: [[false, "form"]],
+            res_id: 1,
+        },
+        {
+            id: 2,
+            name: "Partner",
+            res_model: "partner",
+            views: [[false, "list"]],
+            xml_id: "my_action",
+        },
+        contextualAction,
+    ]);
+
+    stepAllNetworkCalls();
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_form_view").toHaveCount(1);
+
+    await contains(`.o_cp_action_menus button:has(.fa-cog)`).click();
+    await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
+    expect(".o_dialog").toHaveCount(1);
+
+    await contains(".o_dialog footer button:contains(Do it)").click();
+    expect(".o_dialog").toHaveCount(0);
+    expect(".o_list_view").toHaveCount(1);
+
+    // should not reload the first form view when confirming with Do it
+    expect.verifySteps([
+        "/web/webclient/translations",
+        "/web/webclient/load_menus",
+        "/web/action/load",
+        "get_views",
+        "web_read",
+        "/web/action/load",
+        "get_views",
+        "onchange",
+        "web_save",
+        "/web/action/load",
+        "get_views",
+        "web_search_read",
+        "has_group",
+    ]);
 });
 
 test.tags("desktop");
