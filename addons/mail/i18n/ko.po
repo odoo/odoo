@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2025
-# Wil Odoo, 2025
 # Sarah Park, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Sarah Park, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1227,6 +1227,12 @@ msgid "Advanced Options"
 msgstr "고급 옵션"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
+msgid "Advanced Settings"
+msgstr "고급 설정"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
 msgstr "계획일 이후"
@@ -2297,10 +2303,17 @@ msgstr "이 유형과 관련된 활동의 배경색을 변경합니다."
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__channel
+#: model:ir.ui.menu,name:mail.menu_channel
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "Channel"
 msgstr "채널"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Channel Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
@@ -2349,14 +2362,9 @@ msgstr "채널 이름"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
-msgid "Channel settings"
-msgstr "채널 설정"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app_model_patch.js:0
+#: model:ir.actions.act_window,name:mail.discuss_channel_action
 #: model:ir.model.fields,field_description:mail.field_mail_guest__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
@@ -2378,6 +2386,12 @@ msgstr "채널/구성원"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 msgid "Chat"
 msgstr "채팅"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Chat Actions"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2798,11 +2812,6 @@ msgstr "선택한 바로가기를 자동으로 대체할 콘텐츠입니다. 메
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__body
 msgid "Contents"
 msgstr "콘텐츠"
-
-#. module: mail
-#: model:ir.ui.menu,name:mail.main_menu_discuss
-msgid "Conversations"
-msgstr "대화"
 
 #. module: mail
 #. odoo-javascript
@@ -3408,6 +3417,7 @@ msgstr "취소"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_tree
 msgid "Disconnect"
 msgstr "연결 해제"
@@ -3421,6 +3431,7 @@ msgstr "서버에서 RTC 호출 연결이 해제되었습니다."
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
+#: model:ir.ui.menu,name:mail.main_menu_discuss
 #: model:ir.ui.menu,name:mail.menu_root_discuss
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -5621,12 +5632,6 @@ msgstr "초대하기"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-msgid "Invite to Channel"
-msgstr "채널 초대"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite to Group Chat"
 msgstr "그룹 채팅 초대"
 
@@ -6043,8 +6048,6 @@ msgid "Layout"
 msgstr "배치"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Leave"
@@ -6052,7 +6055,7 @@ msgstr "나가기"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Leave Channel"
 msgstr "채널 나오기"
 
@@ -6484,6 +6487,12 @@ msgstr "완료"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Mark Read"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Mark all read"
 msgstr "모두 읽음 표시"
@@ -6792,7 +6801,7 @@ msgstr "메시지 검색"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
 msgid "Messages can only be linked to one call history"
-msgstr ""
+msgstr "메시지는 하나의 통화 내역에만 연결할 수 있습니다"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -9873,7 +9882,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is tomorrow"
-msgstr ""
+msgstr "다음 활동할 날짜가 내일인 모든 레코드 표시"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -9991,6 +10000,12 @@ msgid "Starred Message"
 msgstr "별표 표시된 메시지"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start Call"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
 msgstr "통화 시작 메시지"
@@ -10003,20 +10018,14 @@ msgstr "시작 일시"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Call"
-msgstr "통화 시작"
+msgid "Start Video Call"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Start a Conversation"
 msgstr "대화 시작하기"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Video Call"
-msgstr "화상통화 시작"
 
 #. module: mail
 #. odoo-javascript
@@ -10811,7 +10820,7 @@ msgstr "%(conversationName)s 그룹의 시작입니다."
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "This is the start of direct chat with %(userName)s"
-msgstr ""
+msgstr "%(userName)s 님과 채팅을 시작합니다."
 
 #. module: mail
 #. odoo-python
@@ -10921,6 +10930,12 @@ msgstr "스레드 사용 가능"
 #: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 msgid "Threads"
 msgstr "스레드"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Threads Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
@@ -11382,14 +11397,13 @@ msgstr "이름 없음"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
 msgid "Unpin"
 msgstr "핀 고정 해제"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Unpin Conversation"
 msgstr "대화 핀고정 해제"
 
@@ -11398,12 +11412,6 @@ msgstr "대화 핀고정 해제"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "Unpin Message"
 msgstr "메시지 핀고정 해제"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Unpin Thread"
-msgstr "스레드 고정 해제"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt

@@ -4,17 +4,17 @@
 # 
 # Translators:
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2025
-# Raymond Yu <cl_yu@hotmail.com>, 2025
 # Wil Odoo, 2025
 # Chloe Wang, 2025
+# Raymond Yu <cl_yu@hotmail.com>, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Chloe Wang, 2025\n"
+"Last-Translator: Raymond Yu <cl_yu@hotmail.com>, 2025\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -219,12 +219,6 @@ msgstr "123.45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 约翰 4位"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2928,12 +2922,6 @@ msgstr "编辑"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr "编辑详情"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Edit Order Name"
-msgstr "编辑订单名称"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -8374,6 +8362,14 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr "此订单已有 %s 的退款项目。我们无法修改与其相关的客户。为新客户创建新的订单。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"This order has already been paid. You cannot set it back to draft or edit "
+"it."
+msgstr "此订单已付款。您不能将其设置为草稿或进行编辑。"
 
 #. module: point_of_sale
 #. odoo-javascript

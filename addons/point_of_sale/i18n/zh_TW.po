@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Tony Ng, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -217,12 +217,6 @@ msgstr "123.45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 林先生 4 位"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -1955,7 +1949,7 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__company_has_template
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_company_has_template
 msgid "Company has chart of accounts"
-msgstr "公司有會計科目表"
+msgstr "公司有會計賬目總表"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
@@ -2464,7 +2458,7 @@ msgstr "每日時段記載你銷售點進行的銷售。"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
-msgstr "儀表板"
+msgstr "Dashboard"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2923,12 +2917,6 @@ msgstr "編輯"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr "編輯詳細資料"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Edit Order Name"
-msgstr "編輯訂單名稱"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -8372,6 +8360,14 @@ msgid ""
 "This order already has refund lines for %s. We can't change the customer "
 "associated to it. Create a new order for the new customer."
 msgstr "此訂單已有 %s 的退款項目。我們無法更改與其關聯的客戶。為新客戶建立新訂單。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"This order has already been paid. You cannot set it back to draft or edit "
+"it."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

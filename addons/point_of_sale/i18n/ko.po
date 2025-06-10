@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Sarah Park, 2025\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -218,12 +218,6 @@ msgstr "123.45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 John 4P"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2936,12 +2930,6 @@ msgid "Edit Details"
 msgstr "세부 정보 편집"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Edit Order Name"
-msgstr "주문 이름 편집"
-
-#. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
 msgid "Edit Partner"
 msgstr "협력사 편집"
@@ -4321,7 +4309,7 @@ msgstr "최대 초과"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_combo__qty_max
 msgid "Maximum number of items to select in the combo."
-msgstr ""
+msgstr "콤보에서 선택할 수 있는 최대 항목 수입니다."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_combo__qty_max
@@ -8400,6 +8388,14 @@ msgstr ""
 "이 주문에는 이미 %s 관련 환불 내역이 있습니다. 연결되어 있는 고객을 변경할 수 없습니다. 새 고객에 대한 새로운 주문을 생성합니다."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"This order has already been paid. You cannot set it back to draft or edit "
+"it."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid ""
@@ -9351,6 +9347,10 @@ msgid ""
 "\n"
 "You can still download the receipt and print it manually."
 msgstr ""
+"데이터베이스가 등록되지 않았습니다.\n"
+"구독 제품을 구매하거나 구독 코드를 등록한 후 다시 시도하세요.\n"
+"\n"
+"영수증은 다운로드 후 수동으로 인쇄할 수 있습니다."
 
 #. module: point_of_sale
 #: model:mail.template,subject:point_of_sale.email_template_pos_receipt

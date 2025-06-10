@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2025
-# Wil Odoo, 2025
 # Abe Manyo, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Abe Manyo, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1262,6 +1262,12 @@ msgid "Advanced Options"
 msgstr "Opsi Lanjutan"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
+msgid "Advanced Settings"
+msgstr "Pengaturan Lebih Lanjut"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
 msgstr "Setelah Tanggal Rencana"
@@ -2349,10 +2355,17 @@ msgstr "Ubah warna latar belakang kegiatan-kegiatan yang terkait tipe ini."
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__channel
+#: model:ir.ui.menu,name:mail.menu_channel
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "Channel"
 msgstr "Saluran"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Channel Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
@@ -2401,14 +2414,9 @@ msgstr "Nama channel"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
-msgid "Channel settings"
-msgstr "Pengaturan channel"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app_model_patch.js:0
+#: model:ir.actions.act_window,name:mail.discuss_channel_action
 #: model:ir.model.fields,field_description:mail.field_mail_guest__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
@@ -2430,6 +2438,12 @@ msgstr "Channel/Anggota"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 msgid "Chat"
 msgstr "Chat"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Chat Actions"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2861,11 +2875,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__body
 msgid "Contents"
 msgstr "Konten"
-
-#. module: mail
-#: model:ir.ui.menu,name:mail.main_menu_discuss
-msgid "Conversations"
-msgstr "Percakapan"
 
 #. module: mail
 #. odoo-javascript
@@ -3481,6 +3490,7 @@ msgstr "Buang"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_tree
 msgid "Disconnect"
 msgstr "Disconnect"
@@ -3494,6 +3504,7 @@ msgstr "Terputus dari panggilan RTC oleh server"
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
+#: model:ir.ui.menu,name:mail.main_menu_discuss
 #: model:ir.ui.menu,name:mail.menu_root_discuss
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -5755,12 +5766,6 @@ msgstr "Undang orang-orang"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-msgid "Invite to Channel"
-msgstr "Undang ke Channel"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite to Group Chat"
 msgstr "Undang ke Group Chat"
 
@@ -6181,8 +6186,6 @@ msgid "Layout"
 msgstr "Layout"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Leave"
@@ -6190,7 +6193,7 @@ msgstr "Keluar"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Leave Channel"
 msgstr "Keluar dari Channel"
 
@@ -6628,6 +6631,12 @@ msgstr "Tandai Sebagai Dibaca"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Mark Done"
 msgstr "Tandai Selesai"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Mark Read"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10232,6 +10241,12 @@ msgid "Starred Message"
 msgstr "Pesan Berbintang"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start Call"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
 msgstr "Mulai Pesan Panggilan"
@@ -10244,20 +10259,14 @@ msgstr "Mulai Dt"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Call"
-msgstr "Mulai Call"
+msgid "Start Video Call"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Start a Conversation"
 msgstr "Mulai Percakapan"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Video Call"
-msgstr "Mulai Panggilan Video"
 
 #. module: mail
 #. odoo-javascript
@@ -11199,6 +11208,12 @@ msgid "Threads"
 msgstr "Thread-Thread"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Threads Actions"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
 msgid "Timezone"
@@ -11662,14 +11677,13 @@ msgstr "Belum ada nama"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
 msgid "Unpin"
 msgstr "Batalkan semat"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Unpin Conversation"
 msgstr "Hapus Semat untuk Percakapan"
 
@@ -11678,12 +11692,6 @@ msgstr "Hapus Semat untuk Percakapan"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "Unpin Message"
 msgstr "Hapus Semat untuk Pesan"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Unpin Thread"
-msgstr "Batalkan semat Thread"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt

@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3593,7 +3593,10 @@ msgid "Bank Feeds"
 msgstr "Banka Bilgi Akışı"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_expense_finance
+#: model:account.reconcile.model,name:account.1_bank_fees_reco
 msgid "Bank Fees"
 msgstr "Bank Fees"
 
@@ -3718,6 +3721,12 @@ msgstr ""
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Bank: Balance"
 msgstr "Banka: Bakiye"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "Banks"
+msgstr "Bankalar"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
@@ -5293,7 +5302,6 @@ msgstr "Oluşturuldu"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
-#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -5842,7 +5850,6 @@ msgstr "Gelecek ayın günleri"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
-#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 msgid "Debit"
 msgstr "Borç"
@@ -8823,6 +8830,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
+msgid "Internal link"
+msgstr "İç bağlantı"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_res_company__incoterm_id
@@ -10063,6 +10076,13 @@ msgid "Liquidity Transfer"
 msgstr "Likidite Transferi"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax__original_tax_ids
+msgid ""
+"List of taxes to replace when applying any of the stipulated fiscal "
+"positions."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
 msgid "Load More Limit"
 msgstr "Daha Fazla Yükle Sınırı"
@@ -10894,6 +10914,12 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "Seçili çizgilerle hiçbir olası eylem bulunamadı."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "No search more"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -15254,6 +15280,13 @@ msgstr ""
 "Yevmiye üzerinde referans modeli ve referans türü kombinasyonu uygulanmadı"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "Bu dağıtım satırının ait olduğu şirket."
@@ -18279,6 +18312,14 @@ msgid ""
 msgstr ""
 "Farklı para biriminde yevmiye kayıtları olduğu için bu hesap üzerinde bir "
 "para birimi tanımlayamazsınız."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
 
 #. module: account
 #. odoo-python

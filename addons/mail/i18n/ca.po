@@ -3,7 +3,6 @@
 # 	* mail
 # 
 # Translators:
-# Josep Anton Belchi, 2025
 # RGB Consulting <odoo@rgbconsulting.com>, 2025
 # Noemi Pla, 2025
 # Wil Odoo, 2025
@@ -12,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
@@ -1202,6 +1201,12 @@ msgid "Advanced Options"
 msgstr "Opcions avançades"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
+msgid "Advanced Settings"
+msgstr "Configuració avançada"
+
+#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
 msgid "After Plan Date"
 msgstr ""
@@ -2269,10 +2274,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__channel
+#: model:ir.ui.menu,name:mail.menu_channel
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "Channel"
 msgstr "Canal"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Channel Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
@@ -2321,14 +2333,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
-msgid "Channel settings"
-msgstr "Paràmetres del canal"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app_model_patch.js:0
+#: model:ir.actions.act_window,name:mail.discuss_channel_action
 #: model:ir.model.fields,field_description:mail.field_mail_guest__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
@@ -2350,6 +2357,12 @@ msgstr "Canals/Membres"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 msgid "Chat"
 msgstr "Conversa"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Chat Actions"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2773,11 +2786,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__body
 msgid "Contents"
 msgstr "Continguts"
-
-#. module: mail
-#: model:ir.ui.menu,name:mail.main_menu_discuss
-msgid "Conversations"
-msgstr "Converses"
 
 #. module: mail
 #. odoo-javascript
@@ -3386,6 +3394,7 @@ msgstr "Descartar"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_tree
 msgid "Disconnect"
 msgstr "Desconnecta"
@@ -3399,6 +3408,7 @@ msgstr "Desconnectat de la crida RTC pel servidor"
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
+#: model:ir.ui.menu,name:mail.main_menu_discuss
 #: model:ir.ui.menu,name:mail.menu_root_discuss
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -5634,12 +5644,6 @@ msgstr "Convidar gent"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-msgid "Invite to Channel"
-msgstr "Invita al canal"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite to Group Chat"
 msgstr ""
 
@@ -6052,8 +6056,6 @@ msgid "Layout"
 msgstr "Disseny"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Leave"
@@ -6061,7 +6063,7 @@ msgstr "Abandonar"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Leave Channel"
 msgstr "Surt del canal"
 
@@ -6491,6 +6493,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_without_record_access
 msgid "Mark Done"
 msgstr "Marcar fet"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Mark Read"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -10045,6 +10053,12 @@ msgid "Starred Message"
 msgstr "Missatge destacat"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start Call"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
 msgstr ""
@@ -10057,20 +10071,14 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Call"
-msgstr "Comença una trucada"
+msgid "Start Video Call"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Start a Conversation"
 msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Video Call"
-msgstr "Iniciar una trucada de vídeo"
 
 #. module: mail
 #. odoo-javascript
@@ -10978,6 +10986,12 @@ msgid "Threads"
 msgstr "Fils"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Threads Actions"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
 msgid "Timezone"
@@ -11434,14 +11448,13 @@ msgstr "Sense nom"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
 msgid "Unpin"
 msgstr "Desfixar"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Unpin Conversation"
 msgstr "No s' està despengint la conversa"
 
@@ -11449,12 +11462,6 @@ msgstr "No s' està despengint la conversa"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "Unpin Message"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Unpin Thread"
 msgstr ""
 
 #. module: mail

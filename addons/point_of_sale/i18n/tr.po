@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
@@ -212,12 +212,6 @@ msgstr "123.45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 John 4P"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -2949,12 +2943,6 @@ msgstr "Düzenle"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Edit Order Name"
-msgstr "Sipariş Adını Düzenleyin"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -8527,6 +8515,16 @@ msgid ""
 msgstr ""
 "Bu siparişte zaten %s için iade satırları var. Onunla ilişkili müşteriyi "
 "değiştiremeyiz. Yeni müşteri için yeni bir sipariş oluşturun."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"This order has already been paid. You cannot set it back to draft or edit "
+"it."
+msgstr ""
+"Bu siparişin ödemesi zaten yapıldı. Siparişi taslak haline geri döndüremez "
+"veya düzenleyemezsiniz."
 
 #. module: point_of_sale
 #. odoo-javascript

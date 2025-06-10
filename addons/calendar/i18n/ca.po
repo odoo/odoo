@@ -536,12 +536,12 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "<span class=\"fa fa-plus\"/> <span>Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/> <span>Reunió d'Odoo</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span class=\"fa fa-plus\"/><span> Odoo meeting</span>"
-msgstr ""
+msgstr "<span class=\"fa fa-plus\"/><span> Reunió d'Odoo</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -556,6 +556,9 @@ msgid ""
 "['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
 "'weekly')\">Repeat on</span>"
 msgstr ""
+"<span class=\"fw-bold text-nowrap\" invisible=\"rrule_type_ui not in "
+"['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != "
+"'weekly')\">Repetir el</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -577,12 +580,12 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span invisible=\"allday\" style=\"white-space: pre;\"> or </span>"
-msgstr ""
+msgstr "<span invisible=\"allday\" style=\"white-space: pre;\"> o </span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "<span> Attendees</span>"
-msgstr ""
+msgstr "<span> Assistents</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -615,7 +618,7 @@ msgstr "Acceptar"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__accepted_count
 msgid "Accepted Count"
-msgstr ""
+msgstr "Nombre de persones que han acceptat"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_type__category
@@ -738,7 +741,7 @@ msgstr "Assistents"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendees_count
 msgid "Attendees Count"
-msgstr ""
+msgstr "Nombre de convidats"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__current_status
@@ -759,7 +762,7 @@ msgstr "Disponible/ocupat"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__awaiting_count
 msgid "Awaiting Count"
-msgstr ""
+msgstr "Nombre de persones pendents de respondre"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -1082,7 +1085,7 @@ msgstr "Rebutja"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__declined_count
 msgid "Declined Count"
-msgstr ""
+msgstr "Nombre de persones que han rebutjat"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1139,7 +1142,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
 msgid "Describe your meeting"
-msgstr ""
+msgstr "Afegeix una descripció"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__description
@@ -1369,25 +1372,27 @@ msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s for %(count)s "
 "events"
 msgstr ""
+"Cada %(interval)s mesos el %(position)s %(weekday)s durant %(count)s "
+"esdeveniments"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid ""
 "Every %(interval)s Months on the %(position)s %(weekday)s until %(until)s"
-msgstr ""
+msgstr "Cada %(interval)s mesos el %(position)s %(weekday)s fins al %(until)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s"
-msgstr ""
+msgstr "Cada %(interval)s setmanes el %(days)s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 msgid "Every %(interval)s Weeks on %(days)s for %(count)s events"
-msgstr ""
+msgstr "Cada %(interval)s setmanes el %(days)s durant %(count)s esdeveniments"
 
 #. module: calendar
 #. odoo-python
@@ -2221,6 +2226,8 @@ msgid ""
 "Scheduling an activity using the calendar is not possible on more than one "
 "record."
 msgstr ""
+"No és possible programar una activitat amb el calendari en més d'un "
+"registre."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -2437,6 +2444,8 @@ msgid ""
 "The ending date and time cannot be earlier than the starting date and time.\n"
 "Meeting “%(name)s” starts at %(start_time)s and ends at %(end_time)s"
 msgstr ""
+"La data i l'hora de finalització no pot ser anterior a la data i l'hora d'inici.\n"
+"La reunió “%(name)s” comença a les %(start_time)s i finaitza a les  %(end_time)s"
 
 #. module: calendar
 #. odoo-python
@@ -2445,6 +2454,8 @@ msgid ""
 "The ending date cannot be earlier than the starting date.\n"
 "Meeting “%(name)s” starts on %(start_date)s and ends on %(end_date)s"
 msgstr ""
+"La data de finalització no pot ser anterior a la data d'inici.\n"
+"La reunió “%(name)s” comença el %(start_date)s i finalitza el %(end_date)s"
 
 #. module: calendar
 #. odoo-python
@@ -2539,7 +2550,7 @@ msgstr "Tipus"
 #. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 msgid "Unable to save the recurrence with \"This Event\""
-msgstr ""
+msgstr "No és possible desar la recurrència amb «aquest esdeveniment»"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__unavailable_partner_ids

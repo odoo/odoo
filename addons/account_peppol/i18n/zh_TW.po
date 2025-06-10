@@ -3,16 +3,16 @@
 # 	* account_peppol
 # 
 # Translators:
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -202,10 +202,8 @@ msgstr "由於捆綁組合內有相關的訊息單元引致錯誤，因此組合
 #: code:addons/account_peppol/models/res_company.py:0
 msgid ""
 "A participant with these details has already been registered on the network."
-" If you have previously registered to an alternative Peppol service, please "
-"deregister from that service, or request a migration key before trying "
-"again. "
-msgstr "擁有相同詳情的參加者已透過網絡註冊。如果你之前已註冊其他 Peppol 服務，請從該服務取消註冊，或在再次嘗試之前要求遷移密鑰。"
+" If you have previously registered to a Peppol service, please deregister."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1159,6 +1157,12 @@ msgstr "從 Peppol 移除"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Save"
 msgstr "儲存"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/account_move_send.py:0
+msgid "Send"
+msgstr "傳送"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form

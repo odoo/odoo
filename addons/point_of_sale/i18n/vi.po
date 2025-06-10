@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -218,12 +218,6 @@ msgstr "123,45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 John 4P"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3000,12 +2994,6 @@ msgstr "Chỉnh sửa"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr "Chỉnh sửa chi tiết"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Edit Order Name"
-msgstr "Chỉnh sửa tên đơn hàng"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -6120,6 +6108,8 @@ msgid ""
 "Preparation printers are typically used by restaurants and bars to print the\n"
 "            orders at the kitchen/bar when the waiter updates an order."
 msgstr ""
+"Máy in khâu chuẩn bị thường được sử dụng tại nhà hàng và quán bar để in \n"
+"đơn hàng trong nhà bếp hoặc quầy khi nhân viên phục vụ cập nhật đơn gọi món."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__preset_id
@@ -8601,6 +8591,14 @@ msgid ""
 msgstr ""
 "Đơn hàng này đã có chi tiết hoàn tiền cho %s. Chúng tôi không thể thay đổi "
 "khách hàng liên kết với đơn hàng. Tạo đơn  hàng mới cho khách hàng mới. "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"This order has already been paid. You cannot set it back to draft or edit "
+"it."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

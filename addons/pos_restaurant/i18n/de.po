@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -22,15 +22,15 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
-msgid ", Guests:"
-msgstr ", Gäste:"
-
-#. module: pos_restaurant
-#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "/ Guest"
 msgstr "/ Gast"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "18:45 John 4P"
+msgstr "18:45 John 4P"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -357,6 +357,7 @@ msgstr "Vor Ort essen"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Edit Order Name"
 msgstr "Bestellname bearbeiten"
 
@@ -972,10 +973,21 @@ msgstr "Raumansicht wechseln"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
-#: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
 msgstr "Tisch"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
+msgid "Table %(number)s"
+msgstr "Tisch %(number)s"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
+msgid "Table %(number)s, Guests: %(count)s"
+msgstr "Tisch %(number)s, Gäste: %(count)s"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number

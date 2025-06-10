@@ -3,16 +3,16 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:04+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,15 +22,15 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
-msgid ", Guests:"
-msgstr "，客人："
-
-#. module: pos_restaurant
-#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "/ Guest"
 msgstr "/ 客人"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "18:45 John 4P"
+msgstr "18:45 林先生 4 位"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -355,6 +355,7 @@ msgstr "堂食"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Edit Order Name"
 msgstr "編輯訂單名稱"
 
@@ -958,10 +959,21 @@ msgstr "切換平面圖檢視"
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
-#: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
 msgstr "表格"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
+msgid "Table %(number)s"
+msgstr "%(number)s 號桌"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/receipt_header_patch.js:0
+msgid "Table %(number)s, Guests: %(count)s"
+msgstr ""
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__table_number

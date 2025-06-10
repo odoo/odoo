@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-06 09:28+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Marianna Ciofani, 2025\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -24,11 +24,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
-"%s should have a KVK or OIN number: the Peppol e-address (EAS) should be "
-"'0106' or '0190'."
+"%s should have a KVK or OIN number set in Company ID field or as Peppol "
+"e-address (EAS code 0106 or 0190)."
 msgstr ""
-"%s dovrebbe avere un numero KVK o OIN: e-address Peppol (EAS) deve essere "
-"'0106' o '0190'."
+"%s dovrebbe avere un numero KVK o OIN nel campo ID azienda o come indirizzo "
+"Peppol (codice EAS 0106 o 0190)."
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -50,6 +50,11 @@ msgstr "È stato individuato un pagamento di %s."
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "A-NZ BIS Billing 3.0"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__as
+msgid "AS2 exchange"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_move_send
@@ -337,6 +342,11 @@ msgid "Each invoice line should have at least one tax."
 msgstr "Ogni riga della fattura deve avere almeno un'imposta."
 
 #. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__em
+msgid "Electronic mail"
+msgstr ""
+
+#. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_move_send.py:0
 msgid "Errors occurred while creating the EDI document (format: %s):"
@@ -375,6 +385,11 @@ msgstr "Factur-X (CII)"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
 msgid "Factur-x/XRechnung CII 2.2.0"
 msgstr "Factur-x/Fattura CII 2.2.0"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__au
+msgid "File Transfer Protocol"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0037
@@ -629,6 +644,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0192
 msgid "Norway Org.nr."
 msgstr "Nr. org. Norvegia"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__an
+msgid "O.F.T.P. (ODETTE File Transfer Protocol)"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -939,6 +959,11 @@ msgid ""
 msgstr ""
 "Quando si applica l'Imposta Indiretta Generale delle Canarie (IGIC), "
 "l'aliquota fiscale di ogni riga della fattura deve essere superiore a 0."
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__aq
+msgid "X.400 address for mail text"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__xrechnung

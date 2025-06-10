@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Larissa Manderfeld, 2025\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -219,12 +219,6 @@ msgstr "123,45"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_userlabel
 msgid "1234567890"
 msgstr "1234567890"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 John 4P"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
@@ -3009,12 +3003,6 @@ msgstr "Editar"
 #: code:addons/point_of_sale/static/src/app/screens/partner_list/partner_line/partner_line.xml:0
 msgid "Edit Details"
 msgstr "Editar detalles"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
-msgid "Edit Order Name"
-msgstr "Editar nombre del pedido"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.res_partner_action_edit_pos
@@ -8651,6 +8639,16 @@ msgid ""
 msgstr ""
 "Este pedido ya tiene líneas de reembolso para %s. No podemos cambiar el "
 "cliente asociado a ella. Cree un nuevo pedido para el nuevo cliente."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+msgid ""
+"This order has already been paid. You cannot set it back to draft or edit "
+"it."
+msgstr ""
+"Este pedido ya ha sido pagado. No puede restablecerlo a borrador ni "
+"editarlo."
 
 #. module: point_of_sale
 #. odoo-javascript

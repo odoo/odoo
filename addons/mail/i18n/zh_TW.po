@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2025
-# Wil Odoo, 2025
 # Tony Ng, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Tony Ng, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -103,13 +103,13 @@ msgstr "%(author name)s 來自 %(channel name)s"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "%(author)s started a call."
-msgstr ""
+msgstr "%(author)s 已開始通話。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(caller)s started a call"
-msgstr ""
+msgstr "%(caller)s 已開始通話"
 
 #. module: mail
 #. odoo-javascript
@@ -174,13 +174,13 @@ msgstr "另外 %(extraCount)s 人"
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 msgid "%(file1)s and %(count)d other attachments"
-msgstr ""
+msgstr "%(file1)s 及另外 %(count)d 項附件"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_model.js:0
 msgid "%(file1)s and %(count)s other attachments"
-msgstr ""
+msgstr "%(file1)s 及另外 %(count)s 項附件"
 
 #. module: mail
 #. odoo-javascript
@@ -290,7 +290,7 @@ msgstr "%(user)s 已連線。這是他們第一次連線。祝他們好運。"
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 msgid "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s."
-msgstr ""
+msgstr "%(user)s 已開始對話串：%(goto)s%(thread_name)s%(goto_end)s。"
 
 #. module: mail
 #. odoo-javascript
@@ -735,7 +735,7 @@ msgstr "只可在使用活動的模組計劃下一活動。"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_role_unique_name
 msgid "A role with the same name already exists."
-msgstr ""
+msgstr "已經有相同名稱的角色。"
 
 #. module: mail
 #. odoo-python
@@ -911,7 +911,7 @@ msgstr "活動必須連結至 res_id 值不是留空的記錄。"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_user_id_is_set_if_model
 msgid "Activities must be assigned if not attached to a document."
-msgstr ""
+msgstr "活動若不附加至文件作為附件，便必須進行指派。"
 
 #. module: mail
 #. odoo-javascript
@@ -963,7 +963,7 @@ msgstr "活動計劃"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__activity_schedule_id
 msgid "Activity Schedule"
-msgstr ""
+msgstr "活動安排"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -1216,6 +1216,12 @@ msgstr "高級"
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
 msgid "Advanced Options"
 msgstr "高級選項"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
+msgid "Advanced Settings"
+msgstr "進階設定"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
@@ -1788,7 +1794,7 @@ msgstr "背景模糊強度"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/badge_selection_icons/badge_selection_icons_field.js:0
 msgid "Badges with Icons"
-msgstr ""
+msgstr "徽章連圖示"
 
 #. module: mail
 #: model:ir.model,name:mail.model_base
@@ -2009,7 +2015,7 @@ msgstr "語音通話"
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_form
 #: model_terms:ir.ui.view,arch_db:mail.discuss_call_history_view_tree
 msgid "Call History"
-msgstr ""
+msgstr "通話記錄"
 
 #. module: mail
 #. odoo-javascript
@@ -2020,18 +2026,18 @@ msgstr "通話設定"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_channel_id_not_null_constraint
 msgid "Call history must have a channel"
-msgstr ""
+msgstr "通話記錄必須有頻道"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_start_dt_is_not_null_constraint
 msgid "Call history must have a start date"
-msgstr ""
+msgstr "通話記錄必須有開始日期"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/notification_message.js:0
 msgid "Call lasted %(duration)s."
-msgstr ""
+msgstr "通話持續時間 %(duration)s。"
 
 #. module: mail
 #. odoo-javascript
@@ -2059,7 +2065,7 @@ msgstr "允許編輯內文"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__can_edit_role
 msgid "Can Edit Role"
-msgstr ""
+msgstr "可編輯角色"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
@@ -2087,13 +2093,13 @@ msgstr "可透過 bus.bus 傳送訊息"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't launch a plan without a record."
-msgstr ""
+msgstr "沒有記錄的情況下，無法啟動計劃。"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Can't schedule activities without either a record or a user."
-msgstr ""
+msgstr "沒有記錄或使用者的情況下，無法安排活動。"
 
 #. module: mail
 #. odoo-javascript
@@ -2276,10 +2282,17 @@ msgstr "修改此類相關活動的背景色"
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__channel_id
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__channel_id
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__channel
+#: model:ir.ui.menu,name:mail.menu_channel
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_search
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "Channel"
 msgstr "群組"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Channel Actions"
+msgstr ""
 
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_channel_member
@@ -2328,14 +2341,9 @@ msgstr "頻道名稱"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_sidebar_categories_patch.js:0
-msgid "Channel settings"
-msgstr "頻道設置"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/core/web/messaging_menu_patch.xml:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_app_model_patch.js:0
+#: model:ir.actions.act_window,name:mail.discuss_channel_action
 #: model:ir.model.fields,field_description:mail.field_mail_guest__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_partner__channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__channel_ids
@@ -2357,6 +2365,12 @@ msgstr "頻道/成員"
 #: model:ir.model.fields.selection,name:mail.selection__discuss_channel__channel_type__chat
 msgid "Chat"
 msgstr "聊天"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Chat Actions"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -2774,11 +2788,6 @@ msgid "Contents"
 msgstr "內容"
 
 #. module: mail
-#: model:ir.ui.menu,name:mail.main_menu_discuss
-msgid "Conversations"
-msgstr "對話"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_actions.js:0
 msgid "Copy Link"
@@ -3093,7 +3102,7 @@ msgstr "日期"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_date_deadline
 msgid "Date Deadline"
-msgstr ""
+msgstr "截止日期"
 
 #. module: mail
 #. odoo-javascript
@@ -3380,6 +3389,7 @@ msgstr "捨棄"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.xml:0
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_rtc_session_view_tree
 msgid "Disconnect"
 msgstr "終止連線"
@@ -3393,6 +3403,7 @@ msgstr "已被伺服器終止與 RTC 召用的連線"
 #. module: mail
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
+#: model:ir.ui.menu,name:mail.main_menu_discuss
 #: model:ir.ui.menu,name:mail.menu_root_discuss
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mail.view_users_form_mail
@@ -3684,7 +3695,7 @@ msgstr "重複的電子郵件"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__duration_hour
 msgid "Duration Hour"
-msgstr ""
+msgstr "持續時間小時"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__voice_active_duration
@@ -3821,7 +3832,7 @@ msgstr "電郵按鈕顏色"
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
 msgid "Email Button Text"
-msgstr ""
+msgstr "電郵按鈕文字"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
@@ -4023,7 +4034,7 @@ msgstr "啟用追蹤命令"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__end_dt
 msgid "End Dt"
-msgstr ""
+msgstr "結束日期時間"
 
 #. module: mail
 #. odoo-javascript
@@ -4041,7 +4052,7 @@ msgstr "進入全螢幕"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_action_list.js:0
 msgid "Enter full screen!"
-msgstr ""
+msgstr "進入全螢幕"
 
 #. module: mail
 #. odoo-javascript
@@ -4590,7 +4601,7 @@ msgstr "向前"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
 msgid "Forward Message"
-msgstr ""
+msgstr "轉發訊息"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -4817,7 +4828,7 @@ msgstr "有訊息"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__has_warning
 msgid "Has Warning"
-msgstr ""
+msgstr "有警告"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_rtc_session__is_deaf
@@ -5580,12 +5591,6 @@ msgstr "邀請人員"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-msgid "Invite to Channel"
-msgstr "邀請加入頻道"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Invite to Group Chat"
 msgstr "邀請加入群組聊天"
 
@@ -5638,7 +5643,7 @@ msgstr "已隱藏"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__is_in_call
 msgid "Is In Call"
-msgstr ""
+msgstr "是正在通話中"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__is_member
@@ -5764,13 +5769,13 @@ msgstr "加入群組"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call"
-msgstr ""
+msgstr "加入通話"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
 msgid "Join the Call with Camera"
-msgstr ""
+msgstr "加入視像通話（使用相機）"
 
 #. module: mail
 #. odoo-javascript
@@ -5808,7 +5813,7 @@ msgstr "若電郵被移除，保留電郵內容副本（只限群發郵件）"
 #. module: mail
 #: model:ir.model,name:mail.model_discuss_call_history
 msgid "Keep the call history"
-msgstr ""
+msgstr "保留通話記錄"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6002,8 +6007,6 @@ msgid "Layout"
 msgstr "格式"
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_list
 msgid "Leave"
@@ -6011,7 +6014,7 @@ msgstr "退出"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Leave Channel"
 msgstr "離開頻道"
 
@@ -6030,7 +6033,7 @@ msgstr "退出此頻道"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule_line__line_description
 msgid "Line Description"
-msgstr ""
+msgstr "資料行描述"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__link_field_id
@@ -6041,7 +6044,7 @@ msgstr "連結欄位"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_link_preview__link_preview_id
 msgid "Link Preview"
-msgstr ""
+msgstr "連結預覽"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_link_preview_action
@@ -6054,7 +6057,7 @@ msgstr "連結預覽"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message_link_preview
 msgid "Link between link previews and messages"
-msgstr ""
+msgstr "連結預覽及訊息內的連結"
 
 #. module: mail
 #. odoo-javascript
@@ -6223,7 +6226,7 @@ msgstr "信件活動"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_schedule_line
 msgid "Mail Activity Schedule Line"
-msgstr ""
+msgstr "郵件活動安排資料行"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__mail_activity_type_id
@@ -6440,6 +6443,12 @@ msgstr "標記完成"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+msgid "Mark Read"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_actions.js:0
 msgid "Mark all read"
 msgstr "標記全部為已讀"
@@ -6602,7 +6611,7 @@ msgstr "訊息連結複製失敗。（權限被拒絕？）"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__message_link_preview_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__message_link_preview_ids
 msgid "Message Link Preview"
-msgstr ""
+msgstr "訊息連結預覽"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
@@ -6747,7 +6756,7 @@ msgstr "訊息搜尋"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_call_history_message_id_unique_constraint
 msgid "Messages can only be linked to one call history"
-msgstr ""
+msgstr "訊息只可連結至一項通話記錄"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_from_message_id_unique
@@ -7452,19 +7461,19 @@ msgstr "通知所有人"
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.res_role_action
 msgid "Notify multiple people at once by @-mentioning roles in conversations."
-msgstr ""
+msgstr "在對話中「@提及」整個角色，一次過通知多人。"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role"
-msgstr ""
+msgstr "通知擔任此角色的使用者"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
 msgid "Notify users with this role who have permission to view this channel"
-msgstr ""
+msgstr "通知擔任此角色並有權限查看此頻道的使用者"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction_counter
@@ -7578,7 +7587,7 @@ msgstr "離線 - %(offline_count)s"
 #: model:ir.model.fields,field_description:mail.field_res_partner__offline_since
 #: model:ir.model.fields,field_description:mail.field_res_users__offline_since
 msgid "Offline since"
-msgstr ""
+msgstr "離線自"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
@@ -7695,7 +7704,7 @@ msgstr "只限註釋類型訊息才可在 mail.channel 模型上更新其內容"
 msgid ""
 "Oops! We couldn't save your template due to an issue with this value: "
 "%(template_txt)s. Correct it and try again."
-msgstr ""
+msgstr "哎唷！由於此值有問題（%(template_txt)s），系統未能儲存你的範本。請更正後再試。"
 
 #. module: mail
 #. odoo-javascript
@@ -8061,7 +8070,7 @@ msgstr "業務夥伴"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids_all_have_email
 msgid "Partner Ids All Have Email"
-msgstr ""
+msgstr "合作夥伴識別碼全部有電郵"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
@@ -8186,7 +8195,7 @@ msgstr "規劃概要"
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
 msgid "Plan-based scheduling are available only on documents."
-msgstr ""
+msgstr "以工作規劃為基礎的安排，只在文件可用。"
 
 #. module: mail
 #. odoo-javascript
@@ -8263,7 +8272,7 @@ msgstr "計劃於"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_tree
 msgid "Planning"
-msgstr "計劃"
+msgstr "規劃"
 
 #. module: mail
 #. odoo-javascript
@@ -8280,7 +8289,7 @@ msgstr "不要使用，請聯繫我們"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
 msgid "Please provide a valid email"
-msgstr ""
+msgstr "請提供有效電郵地址"
 
 #. module: mail
 #. odoo-javascript
@@ -9007,7 +9016,7 @@ msgstr "重設範本"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/chat_hub.xml:0
 msgid "Reset initial position"
-msgstr ""
+msgstr "重設初始位置"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -9093,7 +9102,7 @@ msgstr "角色"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 msgid "Roles Search"
-msgstr ""
+msgstr "角色搜尋"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__rtc_session_ids
@@ -9194,7 +9203,7 @@ msgstr "為已選取記錄安排活動"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_schedule__plan_schedule_line_ids
 msgid "Schedule Lines"
-msgstr ""
+msgstr "預定資料行"
 
 #. module: mail
 #. odoo-javascript
@@ -9770,7 +9779,7 @@ msgstr "翻譯請求目標語言代碼的縮寫。"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show All Activities"
-msgstr ""
+msgstr "顯示所有活動"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__show_notified_bcc
@@ -9788,7 +9797,7 @@ msgstr "顯示追隨者"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/command_palette.js:0
 msgid "Show My Activities"
-msgstr ""
+msgstr "顯示我的活動"
 
 #. module: mail
 #. odoo-javascript
@@ -9812,12 +9821,12 @@ msgstr "顯示所有收件人"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is this week"
-msgstr ""
+msgstr "顯示所有下次活動日期在本週的記錄"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Show all records whose next action date is tomorrow"
-msgstr ""
+msgstr "顯示所有下次活動日期為明天的記錄"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -9934,32 +9943,32 @@ msgid "Starred Message"
 msgstr "標註星號訊息"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+msgid "Start Call"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_call_message_id
 msgid "Start Call Message"
-msgstr ""
+msgstr "開始通話訊息"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_call_history__start_dt
 msgid "Start Dt"
-msgstr ""
+msgstr "開始日期時間"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Call"
-msgstr "開始通話"
+msgid "Start Video Call"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
 msgid "Start a Conversation"
 msgstr "開始對話"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
-msgid "Start a Video Call"
-msgstr "開始視訊通話"
 
 #. module: mail
 #. odoo-javascript
@@ -9979,7 +9988,7 @@ msgstr "開始會議"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Started by %(authorName)s"
-msgstr ""
+msgstr "開始作者 %(authorName)s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -10161,7 +10170,7 @@ msgstr "一旦當前活動被標記為完成，建議這些活動。"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Suggested Next"
-msgstr ""
+msgstr "建議的下一步"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__summary
@@ -10854,6 +10863,12 @@ msgid "Threads"
 msgstr "對話串"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+msgid "Threads Actions"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
 msgid "Timezone"
@@ -11090,7 +11105,7 @@ msgstr "觸發下一個活動"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_tree
 msgid "Triggered Next"
-msgstr ""
+msgstr "觸發的下一步"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
@@ -11230,7 +11245,7 @@ msgstr "未分派"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Unassigned Activities"
-msgstr ""
+msgstr "未指派的活動"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
@@ -11314,14 +11329,13 @@ msgstr "未命名的"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message_card_list.xml:0
-#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 #: code:addons/mail/static/src/discuss/message_pin/common/message_actions.js:0
 msgid "Unpin"
 msgstr "取消置頂"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#: code:addons/mail/static/src/core/public_web/thread_actions.js:0
 msgid "Unpin Conversation"
 msgstr "取消置頂對話"
 
@@ -11330,12 +11344,6 @@ msgstr "取消置頂對話"
 #: code:addons/mail/static/src/discuss/message_pin/common/message_model_patch.js:0
 msgid "Unpin Message"
 msgstr "取消置頂訊息"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
-msgid "Unpin Thread"
-msgstr "取消置頂對話串"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
@@ -11582,7 +11590,7 @@ msgstr "用戶欄位"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__role_ids
 msgid "User Roles"
-msgstr ""
+msgstr "使用者角色"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__user_setting_id
@@ -11924,7 +11932,7 @@ msgstr "星期"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread.js:0
 msgid "Welcome to #%(channelName)s!"
-msgstr ""
+msgstr "歡迎來到 #%(channelName)s！"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -12298,7 +12306,7 @@ msgstr "連接到註冊合作夥伴的地址"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after previous activity completion date"
-msgstr ""
+msgstr "上一活動完成日期之後"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity
@@ -12668,7 +12676,7 @@ msgstr "媒體播放器錯誤"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_link_preview_list
 msgid "messages"
-msgstr ""
+msgstr "個訊息"
 
 #. module: mail
 #. odoo-javascript

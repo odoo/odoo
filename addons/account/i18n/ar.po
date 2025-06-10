@@ -3,16 +3,16 @@
 # 	* account
 # 
 # Translators:
-# Wil Odoo, 2025
 # Malaz Abuidris <msea@odoo.com>, 2025
+# Wil Odoo, 2025
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-23 18:35+0000\n"
+"POT-Creation-Date: 2025-06-06 18:35+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2025\n"
+"Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1795,7 +1795,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign VAT already exists in this country."
-msgstr ""
+msgstr "يوجد وضع مالي مع ضريبة أجنبية بالفعل في هذه الدولة. "
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3825,7 +3825,10 @@ msgid "Bank Feeds"
 msgstr "الموجزات البنكية "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_expense_finance
+#: model:account.reconcile.model,name:account.1_bank_fees_reco
 msgid "Bank Fees"
 msgstr "رسوم بنكية"
 
@@ -3950,6 +3953,12 @@ msgstr "المعاملات البنكية والمدفوعات "
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Bank: Balance"
 msgstr "البنك: الرصيد"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "Banks"
+msgstr "البنوك"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__base
@@ -4370,7 +4379,7 @@ msgstr "لا يمكن الحصول على تفاصيل التوزيع من بن�
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
 msgid "Cannot identify the invoices in the generated PDF: %s"
-msgstr ""
+msgstr "لا يمكن تمييز الفواتير في ملف PDF الذي تم إنشاؤه: %s "
 
 #. module: account
 #: model:account.account,name:account.1_capital
@@ -5520,7 +5529,6 @@ msgstr "أنشئ في"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
-#: model:ir.model.fields,field_description:account.field_account_analytic_account__credit
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -6069,7 +6077,6 @@ msgstr "أيام في الشهر التالي "
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/accrued_orders.py:0
-#: model:ir.model.fields,field_description:account.field_account_analytic_account__debit
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 msgid "Debit"
 msgstr "المدين"
@@ -7184,7 +7191,7 @@ msgstr "تمكين الحد الائتماني للشركاء. "
 #: model:ir.model.fields,help:account.field_res_company__restrictive_audit_trail
 #: model:ir.model.fields,help:account.field_res_config_settings__restrictive_audit_trail
 msgid "Enable this option to prevent deletion of journal item related logs"
-msgstr ""
+msgstr "قم بتمكين هذا الخيار لمنع حذف السجلات المتعلقة بعنصر اليومية "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -9055,6 +9062,12 @@ msgid ""
 msgstr "حقل داخلي لتقصير إنشاء expression_ids لمحرك tax_tags "
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.xml:0
+msgid "Internal link"
+msgstr "رابط داخلي "
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_incoterm_id
 #: model:ir.model.fields,help:account.field_res_company__incoterm_id
@@ -10292,6 +10305,13 @@ msgid "Liquidity Transfer"
 msgstr "حساب تحويل وسيط "
 
 #. module: account
+#: model:ir.model.fields,help:account.field_account_tax__original_tax_ids
+msgid ""
+"List of taxes to replace when applying any of the stipulated fiscal "
+"positions."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__load_more_limit
 msgid "Load More Limit"
 msgstr "تحميل المزيد من الحدود "
@@ -11122,6 +11142,12 @@ msgstr "لا توجد قيود في دفتر اليومية للدفع "
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "No possible action found with the selected lines."
 msgstr "لم يتم العثور على إجراء ممكن للبنود المحددة. "
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/many2many_tags_banks/many2many_tags_banks.js:0
+msgid "No search more"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__non_deductible_product
@@ -15480,6 +15506,13 @@ msgid ""
 msgstr "لم يتم تطبيق تركيبة نموذج المرجع مع نوع المرجع في دفتر اليومية. "
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"The commercial partner has been updated for all related accounting entries."
+msgstr "لقد قام الشريك التجاري بتحديث كافة القيود المحاسبية. "
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
 msgid "The company this distribution line belongs to."
 msgstr "الشركة التي ينتمي إليها هذا التوزيع. "
@@ -15733,6 +15766,8 @@ msgid ""
 "The incoming e-invoice notification email can only be set on purchase "
 "journals."
 msgstr ""
+"يمكن تعيين البريد الإلكتروني الخاص بإشعار الفاتورة الإلكترونية الواردة على "
+"دفاتر يومية الشراء فقط. "
 
 #. module: account
 #. odoo-python
@@ -18520,6 +18555,16 @@ msgid ""
 msgstr ""
 "لا يمكنك تعيين عملة لهذا الحساب لأنه يحتوي على قيود يومية بعملات أجنبية "
 "مختلفة. "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/partner.py:0
+msgid ""
+"You cannot set a partner as an invoicing address of another if they have a "
+"different %(vat_label)s."
+msgstr ""
+"لا يمكنك تعيين شريك كعنوان للفوترة لشريك آخر إذا كان لديه عنوان مختلف "
+"%(vat_label)s. "
 
 #. module: account
 #. odoo-python
