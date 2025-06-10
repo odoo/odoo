@@ -133,6 +133,13 @@ class MailNotification(models.Model):
     def _store_notification_fields(self, res: Store.FieldList):
         res.extend(["failure_type", "mail_message_id"])
         res.extend(["notification_status", "notification_type"])
-        res.one("res_partner_id", ["name", "email"])
+        res.one(
+            "res_partner_id",
+            [
+                "name",
+                "email",
+                Store.Attr("display_name", predicate=lambda p: not p.name),
+            ],
+        )
         if res.is_for_internal_users():
             res.append("mail_email_address")
