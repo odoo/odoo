@@ -1720,6 +1720,8 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
+"סכום התשלום המקסימלי שבו ספק התשלום הזה זמין. השאר ריק כדי לאפשר תשלום בכל "
+"סכום."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -1767,12 +1769,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__provider_ref
 msgid "The provider reference of the token of the transaction."
-msgstr ""
+msgstr "הפנייה של הספק לאסימון של העסקה."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_reference
 msgid "The provider reference of the transaction"
-msgstr ""
+msgstr " ההתייחסות של הספק לעסקה"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__image_payment_form
@@ -1794,7 +1796,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_token__payment_method_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__payment_method_code
 msgid "The technical code of this payment method."
-msgstr ""
+msgstr "הקוד הטכני של שיטת התשלום הזו."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1870,7 +1872,7 @@ msgstr "לא נוצרו אסימונים עדיין"
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "There is nothing to be paid."
-msgstr ""
+msgstr "אין דבר לתשלום."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1935,6 +1937,8 @@ msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
+"עסקה זו אושרה לאחר עיבוד פעולות הקיזוז החלקי והביטול החלקי שלה "
+"(%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2047,13 +2051,13 @@ msgstr ""
 msgid ""
 "Whether a payment token should be created when post-processing the "
 "transaction"
-msgstr ""
+msgstr "האם יש ליצור טוקן תשלום בעת עיבוד העסקה לאחר ביצועה."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr ""
+msgstr "האם כל אחד מהספקים של העסקאות תומך בקיזוז חלקי."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
@@ -2066,6 +2070,8 @@ msgid ""
 "Whether the provider is visible on the website or not. Tokens remain "
 "functional but are only visible on manage forms."
 msgstr ""
+"בין אם הספק מופיע באתר ובין אם לא . הטוקנים נשארים פעילים, אך נראים רק בטפסי"
+" הניהול."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
@@ -2091,7 +2097,7 @@ msgstr "לא ניתן לשנות את החברה של ספק תשלומים עם
 #: code:addons/payment/models/payment_method.py:0
 #, python-format
 msgid "You cannot delete the default payment method."
-msgstr ""
+msgstr "אי אפשר למחוק את אמצעי התשלום כברירת מחדל."
 
 #. module: payment
 #. odoo-python
@@ -2107,14 +2113,14 @@ msgstr "לא ניתן לבטל ספק תשלום %s;השבת אותו או הס�
 #: code:addons/payment/models/payment_provider.py:0
 #, python-format
 msgid "You cannot publish a disabled provider."
-msgstr ""
+msgstr "לא ניתן לפרסם ספק שמושבת."
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "אין לך גישה לאסימון תשלום זה."
 
 #. module: payment
 #. odoo-javascript
@@ -2218,7 +2224,7 @@ msgstr "התשלום שלך עובד בהצלחה."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Your payment has not been processed yet."
-msgstr ""
+msgstr "התשלום שלך טרם עובד."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.form
