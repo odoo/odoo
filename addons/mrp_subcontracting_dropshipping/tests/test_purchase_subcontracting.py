@@ -358,7 +358,6 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         supplier to each subcontractor.
         """
         dropship_subcontractor_route = self.env.ref('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping')
-        dropship_subcontractor_route.rule_ids.filtered(lambda r: r.action == 'buy').group_propagation_option = 'none'
 
         subcontractor01, subcontractor02, component_supplier = self.env['res.partner'].create([{
             'name': 'Super Partner %d' % i
