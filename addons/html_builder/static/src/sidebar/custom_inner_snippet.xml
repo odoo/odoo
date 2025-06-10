@@ -8,7 +8,7 @@
         t-att-name="snippet.title"
         t-att-data-id="snippet.id"
         t-att-data-tooltip="snippet.isDisabled and props.disabledTooltip">
-        <div class="o_snippet_thumbnail">
+        <div class="o_snippet_thumbnail" t-att-data-snippet="snippet.name">
             <button t-if="!snippet.isInstallable" class="o_snippet_thumbnail_area" t-on-click="props.onClickHandler" title="Insert snippet"/>
             <Img t-if="snippet.isDisabled" src="'/html_builder/static/img/snippet_disabled.svg'" class="'o_snippet_undroppable'"/>
             <div class="o_snippet_thumbnail_img" t-attf-style="background-image: url({{snippet.thumbnailSrc}});"/>
