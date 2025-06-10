@@ -60,7 +60,7 @@ class MrpWorkorder(models.Model):
         digits='Product Unit',
         copy=False,
         help="The number of products already handled by this work order")
-    qty_ready = fields.Float('Quantity Ready', compute='_compute_qty_ready', digits='Product Unit')
+    qty_ready = fields.Float('Quantity Ready', compute='_compute_qty_ready', digits='Product Unit', default=0.0)
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
     state = fields.Selection([
@@ -70,7 +70,7 @@ class MrpWorkorder(models.Model):
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
         compute='_compute_state', store=True,
-        default='ready', copy=False, index=True)
+        default='blocked', copy=False, index=True)
     leave_id = fields.Many2one(
         'resource.calendar.leaves',
         help='Slot into workcenter calendar once planned',
@@ -151,7 +151,7 @@ class MrpWorkorder(models.Model):
     @api.depends('qty_ready')
     def _compute_state(self):
         for workorder in self:
-            if not workorder.product_uom_id or workorder.state != 'blocked':
+            if not workorder.product_uom_id or workorder.state not in ('blocked', 'ready'):
                 continue
             has_qty_ready = workorder.product_uom_id.compare(workorder.qty_ready, 0) > 0
             is_fully_consumed = workorder.product_uom_id.compare(workorder.qty_remaining, 0) <= 0
@@ -246,10 +246,10 @@ class MrpWorkorder(models.Model):
                 production.qty_producing = min_wo_qty_producing
                 production._set_qty_producing(False)
 
-    @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.state')
+    @api.depends('blocked_by_workorder_ids.qty_produced', 'blocked_by_workorder_ids.state', 'production_state')
     def _compute_qty_ready(self):
         for workorder in self:
-            if workorder.state in ('cancel', 'done'):
+            if workorder.state in ('cancel', 'done') or workorder.production_state == 'draft':
                 workorder.qty_ready = 0
                 continue
             if not workorder.blocked_by_workorder_ids or all(wo.state == 'cancel' for wo in workorder.blocked_by_workorder_ids):

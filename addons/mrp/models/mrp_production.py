@@ -619,7 +619,7 @@ class MrpProduction(models.Model):
                             'workcenter_id': operation.workcenter_id.id,
                             'product_uom_id': production.product_uom_id.id,
                             'operation_id': operation.id,
-                            'state': 'ready',
+                            'state': 'blocked',
                         }]
                 workorders_dict = {wo.operation_id.id: wo for wo in production.workorder_ids.filtered(
                     lambda wo: wo.operation_id and wo.ids and wo.id not in deleted_workorders_ids)}
