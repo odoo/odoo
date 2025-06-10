@@ -10,6 +10,28 @@ from odoo.addons.point_of_sale.tests.common import CommonPosTest
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPointOfSaleFlow(CommonPosTest):
+
+    def setup_tags(self):
+        tags = self.env['account.account.tag'].create([
+            {
+                'name': f"tag{i}",
+                'applicability': 'taxes',
+                'country_id': self.company_data['company'].country_id.id,
+            }
+            for i in range(1, 5)
+        ])
+        self.twenty_dollars_with_15_excl.taxes_id = [Command.set(self.tax_sale_a.ids)]
+        self.tax_sale_a.invoice_repartition_line_ids.filtered(
+            lambda l: l.repartition_type == 'base').write({'tag_ids': tags[0].ids})
+        self.tax_sale_a.invoice_repartition_line_ids.filtered(
+            lambda l: l.repartition_type == 'tax').write({'tag_ids': tags[1].ids})
+        self.tax_sale_a.refund_repartition_line_ids.filtered(
+            lambda l: l.repartition_type == 'base').write({'tag_ids': tags[2].ids})
+        self.tax_sale_a.refund_repartition_line_ids.filtered(
+            lambda l: l.repartition_type == 'tax').write({'tag_ids': tags[3].ids})
+
+        return tags
+
     def test_order_refund(self):
         self.pos_config_usd.open_ui()
 
@@ -560,25 +582,7 @@ class TestPointOfSaleFlow(CommonPosTest):
                 - Reconcile the receivable lines from the created misc entry
                     with the ones from the created payment(s)
         """
-        tags = self.env['account.account.tag'].create([
-            {
-                'name': f"tag{i}",
-                'applicability': 'taxes',
-                'country_id': self.company_data['company'].country_id.id,
-            }
-            for i in range(1, 5)
-        ])
-
-        self.twenty_dollars_with_15_excl.taxes_id = [Command.set(self.tax_sale_a.ids)]
-        self.tax_sale_a.invoice_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'base').write({'tag_ids': tags[0].ids})
-        self.tax_sale_a.invoice_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'tax').write({'tag_ids': tags[1].ids})
-        self.tax_sale_a.refund_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'base').write({'tag_ids': tags[2].ids})
-        self.tax_sale_a.refund_repartition_line_ids.filtered(
-            lambda l: l.repartition_type == 'tax').write({'tag_ids': tags[3].ids})
-
+        tags = self.setup_tags()
         with freeze_time('2020-01-01'):
             order, _ = self.create_backend_pos_order({
                 'line_data': [
@@ -664,6 +668,107 @@ class TestPointOfSaleFlow(CommonPosTest):
                 'tax_tag_invert': False,
                 'reconciled': True
         }])
+
+    def test_sale_order_postponed_invoicing_storno(self):
+        """
+            Test the flow of creating an invoice later, after the POS session
+            has been closed and everything has been processed. Process should:
+                - Create a new misc entry, that will revert part of the POS
+                    closing entry.
+                - Create the move and associating payment(s) entry, as it would
+                    do when closing with invoice.
+                - Reconcile the receivable lines from the created misc entry
+                    with the ones from the created payment(s)
+            This test is the same as test_sale_order_postponed_invoicing but
+            with the storno feature enabled.
+        """
+        self.env.company.account_storno = True
+
+        tags = self.setup_tags()
+        with freeze_time('2020-01-01'):
+            order, _ = self.create_backend_pos_order({
+                'line_data': [
+                    {'product_id': self.twenty_dollars_with_15_excl.product_variant_id.id},
+                ],
+                'payment_data': [
+                    {'payment_method_id': self.bank_payment_method.id, 'amount': 23.0},
+                ],
+            })
+            self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+            # Check the closing entry.
+            closing_entry = order.session_move_id
+            self.assertRecordValues(closing_entry.line_ids.sorted(), [{
+                    'balance': -3.0,
+                    'debit': 0.0,
+                    'credit': 3.0,
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                    'tax_ids': [],
+                    'tax_tag_ids': tags[1].ids,
+                    'tax_tag_invert': True,
+                    'reconciled': False,
+                }, {
+                    'balance': -20.0,
+                    'debit': 0.0,
+                    'credit': 20.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'tax_ids': self.tax_sale_a.ids,
+                    'tax_tag_ids': tags[0].ids,
+                    'tax_tag_invert': True,
+                    'reconciled': False,
+                }, {
+                    'balance': 23.0,
+                    'debit': 23.0,
+                    'credit': 0.0,
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'tax_ids': [],
+                    'tax_tag_ids': [],
+                    'tax_tag_invert': False,
+                    'reconciled': True,
+            }])
+
+        with freeze_time('2020-01-03'):
+            order.partner_id = self.partner_adgu.id
+            order.action_pos_order_invoice()
+
+        # Check the reverse moves, one for the closing entry, one for the statement lines.
+        reverse_closing_entries = self.env['account.move'].search([
+            ('id', '!=', closing_entry.id),
+            ('company_id', '=', self.env.company.id),
+            ('statement_line_id', '=', False),
+            ('move_type', '=', 'entry'),
+            ('state', '=', 'posted'),
+        ])
+        self.assertRecordValues(reverse_closing_entries[0].line_ids.sorted(), [{
+                'balance': 3.0,
+                'debit': 0.0,
+                'credit': -3.0,
+                'account_id': self.company_data['default_account_tax_sale'].id,
+                'tax_ids': [],
+                'tax_tag_ids': tags[1].ids,
+                'tax_tag_invert': True,
+                'reconciled': False,
+            }, {
+                'balance': 20.0,
+                'debit': 0.0,
+                'credit': -20.0,
+                'account_id': self.company_data['default_account_revenue'].id,
+                'tax_ids': self.tax_sale_a.ids,
+                'tax_tag_ids': tags[0].ids,
+                'tax_tag_invert': True,
+                'reconciled': False,
+            }, {
+                'balance': -23.0,
+                'debit': -23.0,
+                'credit': 0.0,
+                'account_id': self.company_data['default_account_receivable'].id,
+                'tax_ids': [],
+                'tax_tag_ids': [],
+                'tax_tag_invert': False,
+                'reconciled': True,
+        }])
+        self.assertTrue(all(amount >= 0 for amount in reverse_closing_entries[1:].line_ids.mapped('debit') + reverse_closing_entries[1:].line_ids.mapped('credit')),
+                "Non-reverse entries should have positive debit or credit amounts.")
 
     def test_sale_order_postponed_invoicing_anglosaxon(self):
         """ Test the flow of creating an invoice later, after the POS session has been closed and everything has been processed
