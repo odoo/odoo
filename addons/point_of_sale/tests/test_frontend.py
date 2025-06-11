@@ -221,25 +221,25 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
         line.product_template_value_ids[0].price_extra = 2
 
-        chair_color_attribute = env['product.attribute'].create({
+        cls.chair_color_attribute = env['product.attribute'].create({
             'name': 'Color',
             'display_type': 'color',
             'create_variant': 'no_variant',
         })
-        chair_color_red = env['product.attribute.value'].create({
+        cls.chair_color_red = env['product.attribute.value'].create({
             'name': 'Red',
-            'attribute_id': chair_color_attribute.id,
+            'attribute_id': cls.chair_color_attribute.id,
             'html_color': '#ff0000',
         })
         chair_color_blue = env['product.attribute.value'].create({
             'name': 'Blue',
-            'attribute_id': chair_color_attribute.id,
+            'attribute_id': cls.chair_color_attribute.id,
             'html_color': '#0000ff',
         })
         chair_color_line = env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.configurable_chair.id,
-            'attribute_id': chair_color_attribute.id,
-            'value_ids': [(6, 0, [chair_color_red.id, chair_color_blue.id])]
+            'attribute_id': cls.chair_color_attribute.id,
+            'value_ids': [(6, 0, [cls.chair_color_red.id, chair_color_blue.id])]
         })
         chair_color_line.product_template_value_ids[0].price_extra = 1
 
@@ -262,28 +262,28 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'value_ids': [(6, 0, [chair_legs_metal.id, chair_legs_wood.id])]
         })
 
-        chair_fabrics_attribute = env['product.attribute'].create({
+        cls.chair_fabrics_attribute = env['product.attribute'].create({
             'name': 'Fabrics',
             'display_type': 'radio',
             'create_variant': 'no_variant',
         })
         chair_fabrics_leather = env['product.attribute.value'].create({
             'name': 'Leather',
-            'attribute_id': chair_fabrics_attribute.id,
+            'attribute_id': cls.chair_fabrics_attribute.id,
         })
-        chair_fabrics_wool = env['product.attribute.value'].create({
+        cls.chair_fabrics_wool = env['product.attribute.value'].create({
             'name': 'wool',
-            'attribute_id': chair_fabrics_attribute.id,
+            'attribute_id': cls.chair_fabrics_attribute.id,
         })
-        chair_fabrics_other = env['product.attribute.value'].create({
+        cls.chair_fabrics_other = env['product.attribute.value'].create({
             'name': 'Other',
-            'attribute_id': chair_fabrics_attribute.id,
+            'attribute_id': cls.chair_fabrics_attribute.id,
             'is_custom': True,
         })
         env['product.template.attribute.line'].create({
             'product_tmpl_id': cls.configurable_chair.id,
-            'attribute_id': chair_fabrics_attribute.id,
-            'value_ids': [(6, 0, [chair_fabrics_leather.id, chair_fabrics_wool.id, chair_fabrics_other.id])]
+            'attribute_id': cls.chair_fabrics_attribute.id,
+            'value_ids': [(6, 0, [chair_fabrics_leather.id, cls.chair_fabrics_wool.id, cls.chair_fabrics_other.id])]
         })
         chair_color_line.product_template_value_ids[1].is_custom = True
 
