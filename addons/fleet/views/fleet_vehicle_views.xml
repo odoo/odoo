@@ -303,7 +303,10 @@
                                 <field class="fw-bolder fs-5" name="model_id"/>
                             </div>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                            <field t-if="record.driver_id.raw_value" name="driver_id" widget="many2one_avatar" options="{'display_avatar_name': True}" class="small pt-1 pb-1"/>
+                            <div class="d-flex gap-1" t-if="record.driver_id.raw_value">
+                                <field name="driver_id" widget="many2one_avatar"/>
+                                <field name="driver_id" class="small pt-1 pb-1"/>
+                            </div>
                             <div class="small">
                                 <t t-if="record.future_driver_id.raw_value">Future Driver : <field name="future_driver_id"/></t>
                             </div>
