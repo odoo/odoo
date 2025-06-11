@@ -345,6 +345,7 @@
                         string="Package"
                         filter_domain="['|', ('move_line_ids.package_id.name', 'ilike', self), ('move_line_ids.result_package_id.name', 'ilike', self)]"
                         groups="stock.group_tracking_lot"/>
+                    <field name="product_uom_ids" string="Packaging Barcode"/>
                     <field name="lot_id" groups="stock.group_production_lot"/>
                     <field name="activity_user_id" string="Activities of"/>
                     <field name="activity_type_id" string="Activity type"/>

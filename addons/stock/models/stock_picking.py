@@ -15,6 +15,7 @@ from odoo.fields import Domain
 from odoo.osv import expression
 from odoo.tools import format_datetime, format_date, groupby, SQL
 from odoo.tools.float_utils import float_compare, float_is_zero
+from odoo.osv.expression import OR
 
 
 class StockPickingType(models.Model):
@@ -687,6 +688,7 @@ class StockPicking(models.Model):
     # Used to search on pickings
     product_id = fields.Many2one('product.product', 'Product', related='move_ids.product_id', readonly=True)
     lot_id = fields.Many2one('stock.lot', 'Lot/Serial Number', related='move_line_ids.lot_id', readonly=True)
+    product_uom_ids = fields.One2many("product.uom", compute='_compute_product_uoms', search='_search_product_uoms', store=False)
     # TODO: delete this field `show_operations`
     show_operations = fields.Boolean(related='picking_type_id.show_operations')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
@@ -1031,6 +1033,39 @@ class StockPicking(models.Model):
 
         pickings = self.env['stock.picking'].search([('state', 'not in', invalid_states)], order='id').filtered(_filter_picking_moves)
         return [('id', 'in', pickings.ids)]
+
+    @api.depends('move_ids.product_id', 'move_ids.product_uom.product_uom_ids',
+                 'move_line_ids.product_id', 'move_line_ids.product_uom_id.product_uom_ids')
+    def _compute_product_uoms(self):
+        """ Computes the product_uom_ids (packaging barcodes) for each picking """
+        for picking in self:
+            product_uom_ids = set()
+            for move in picking.move_ids:
+                product_uom_ids.update(move.product_uom.product_uom_ids.filtered(lambda uom: uom.product_id in move.product_id))
+            for m_l in picking.move_line_ids:
+                product_uom_ids.update(m_l.product_uom_id.product_uom_ids.filtered(lambda uom: uom.product_id in move.product_id))
+            picking.product_uom_ids = [(6, 0, list(product_uom_ids))]
+
+    @api.model
+    def _search_product_uoms(self, operator, value):
+        if operator not in ['any', '=', 'in', 'not any', '!=', 'not in']:
+            raise UserError(_("Invalid operator for packaging barcode search: %s", operator))
+        if isinstance(value, fields.Domain):
+            product_uom = self.env['product.uom'].search(value)
+        else:
+            product_uom = self.env['product.uom'].browse(value)
+
+        domain_clauses = []
+        for uom in product_uom:
+            domain_clauses.append([
+                ('move_ids.product_uom.product_uom_ids', 'in', [uom.id]),
+                ('move_ids.product_id', '=', uom.product_id),
+            ])
+            domain_clauses.append([
+                ('move_line_ids.product_uom_id.product_uom_ids', 'in', [uom.id]),
+                ('move_line_ids.product_id', '=', uom.product_id.id),
+            ])
+        return OR(domain_clauses) if operator not in ['not any', '!=', 'not in'] else ['!'] + OR(domain_clauses)
 
     def _get_show_allocation(self, picking_type_id):
         """ Helper method for computing "show_allocation" value.
