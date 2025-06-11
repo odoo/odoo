@@ -944,13 +944,25 @@ export class DeletePlugin extends Plugin {
      * @returns {Range}
      */
     expandRangeToIncludeNonEditables(range) {
-        const { startContainer, endContainer, commonAncestorContainer: commonAncestor } = range;
+        const {
+            startContainer,
+            startOffset,
+            endContainer,
+            endOffset,
+            commonAncestorContainer: commonAncestor,
+        } = range;
         const isNonEditable = (node) => !isContentEditable(node);
-        const startUneditable = findFurthest(startContainer, commonAncestor, isNonEditable);
+        const startUneditable =
+            startOffset === 0 &&
+            !previousLeaf(startContainer, closestBlock(startContainer)) &&
+            findFurthest(startContainer, commonAncestor, isNonEditable);
         if (startUneditable) {
             range.setStartBefore(startUneditable);
         }
-        const endUneditable = findFurthest(endContainer, commonAncestor, isNonEditable);
+        const endUneditable =
+            endOffset === nodeSize(endContainer) &&
+            !nextLeaf(endContainer, closestBlock(endContainer)) &&
+            findFurthest(endContainer, commonAncestor, isNonEditable);
         if (endUneditable) {
             range.setEndAfter(endUneditable);
         }
