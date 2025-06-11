@@ -6,7 +6,7 @@
         <field name="model">link.tracker</field>
         <field name="inherit_id" ref="link_tracker.link_tracker_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='title']" position="after">
+            <xpath expr="//field[@name='url']" position="after">
                 <field name="mass_mailing_id"/>
             </xpath>
             <xpath expr="//group" position="inside">
@@ -22,6 +22,17 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='campaign_id']" position="before">
                 <field name="mass_mailing_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="link_tracker_view_tree" model="ir.ui.view">
+        <field name="name">link.tracker.view.list.inherit.mass.mail</field>
+        <field name="model">link.tracker</field>
+        <field name="inherit_id" ref="link_tracker.link_tracker_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='campaign_id']" position="before">
+                <field name="mass_mailing_id" optional="hide"/>
             </xpath>
         </field>
     </record>

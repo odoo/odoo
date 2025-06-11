@@ -7,8 +7,7 @@
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
                 <search string="Links">
-                    <field name="url" string="Title and URL" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
-                    <field name="title"/>
+                    <field name="url" string="Link Tracker" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
                     <field name="label"/>
                     <field name="campaign_id"/>
                     <field name="medium_id"/>
@@ -36,20 +35,22 @@
                                 </div>
                             </button>
 
-                            <button type="object" class="oe_stat_button" name="action_view_statistics" icon="fa-bar-chart-o">
+                            <button type="object" class="oe_stat_button" name="action_view_statistics" icon="fa-mouse-pointer">
                                 <field name="count" string="Clicks" widget="statinfo"/>
                             </button>
                         </div>
+                        <div class="oe_title mw-100">
+                            <label for="code" string="Link Tracker"/>
+                            <h2 class="d-flex flex-wrap fw-normal">
+                                <field name="short_url_host" nolabel="1" readonly="1" class="text-break w-auto me-1"/>
+                                <field name="code" nolabel="1" readonly="not code" invisible="not code" class="o_input w-100 w-sm-50 w-lg-25"/>
+                            </h2>
+                        </div>
                         <group>
-                            <group name="url" string="URL">
+                            <group name="link" string="Link">
+                                <field name="url" string="Target Link"/>
                                 <field name="title"/>
                                 <field name="label"/>
-                                <field name="url"/>
-                                <label for="code" string="Tracked URL"/>
-                                <div>
-                                    <field name="short_url_host" nolabel="1" readonly="1" class="me-1 oe_inline"/>
-                                    <field name="code" nolabel="1" readonly="not code" class="oe_inline o_input"/>
-                                </div>
                             </group>
                             <group name="utm" string="UTM">
                                 <field name="campaign_id" options="{'create_name_field': 'title'}"/>
@@ -67,13 +68,15 @@
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
                 <list string="Links" sample="1">
-                    <field name="create_date"/>
+                    <field name="create_date" string="Create Date"/>
+                    <field name="short_url" string="Link Tracker" optional="show"/>
                     <field name="title"/>
-                    <field name="label"/>
-                    <field name="url"/>
-                    <field name="short_url" optional="hide"/>
-                    <field name="count"/>
-                    <button name="action_visit_page" type="object" string="Visit Page" icon="fa-external-link"/>
+                    <field name="url" optional="hide"/>
+                    <field name="label" optional="hide"/>
+                    <field name="count" string="# Clicks"/>
+                    <field name="campaign_id" optional="hide"/>
+                    <field name="medium_id" optional="hide"/>
+                    <field name="source_id" optional="hide"/>
                 </list>
             </field>
         </record>
