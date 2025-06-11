@@ -987,3 +987,17 @@ class TestExpenses(TestExpenseCommon):
         expense.quantity = 0
         self.assertTrue(expense.currency_id.is_zero(expense.total_amount_currency))
         self.assertEqual(expense.company_currency_id.compare_amounts(expense.price_unit, self.product_b.standard_price), 0)
+
+    def test_employee_expense_in_foreign_currency(self):
+        """ Checks that the currency of the posted entries is always the company currency """
+        expense = self.create_expenses({
+            'payment_mode': 'own_account',
+            'currency_id': self.other_currency.id,
+        })
+        expense.action_submit()
+        expense.action_approve()
+        expense._post_without_wizard()
+        self.assertRecordValues(
+            expense.account_move_id,
+            [{'amount_total': 500.0, 'currency_id': expense.account_move_id.company_currency_id.id}],
+        )
