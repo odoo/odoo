@@ -16,12 +16,14 @@ def _pre_init_mrp(cr):
           stock_move.unit_factor is terribly slow with the ORM and leads to "Out of
           Memory" crashes
     """
-    cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool;""")
+    cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool DEFAULT TRUE;""")
     cr.execute("""UPDATE stock_move
-                     SET is_done=COALESCE(state in ('done', 'cancel'), FALSE);""")
-    cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "unit_factor" double precision;""")
-    cr.execute("""UPDATE stock_move
-                     SET unit_factor=1;""")
+                    SET is_done = FALSE
+                  WHERE state NOT IN ('done', 'cancel');""")
+    cr.execute("""ALTER TABLE stock_move ALTER COLUMN is_done DROP DEFAULT;""")
+    cr.execute("""ALTER TABLE "stock_move"
+                    ADD COLUMN "unit_factor" double precision DEFAULT 1;""")
+    cr.execute("""ALTER TABLE stock_move ALTER COLUMN unit_factor DROP DEFAULT;""")
 
 def _create_warehouse_data(cr, registry):
     """ This hook is used to add a default manufacture_pull_id, manufacture
