@@ -3654,7 +3654,7 @@ test(`list view not groupable`, async () => {
 
 test("group order by count", async () => {
     let readGroupCount = 0;
-    onRpc("foo", "web_read_group", async ({ kwargs, parent }) => {
+    onRpc("foo", "web_read_group", ({ kwargs }) => {
         if (readGroupCount < 2) {
             readGroupCount++;
         } else {
@@ -3662,7 +3662,6 @@ test("group order by count", async () => {
             expect.step(`read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
             // The mock server cannot handle orderby count
             kwargs.orderby = "";
-            return parent();
         }
     });
     await mountView({
@@ -3695,7 +3694,7 @@ test("group order by count", async () => {
 
 test("order by count reset", async () => {
     let readGroupCount = 0;
-    onRpc("foo", "web_read_group", async ({ kwargs, parent }) => {
+    onRpc("foo", "web_read_group", ({ kwargs }) => {
         if (readGroupCount < 2) {
             readGroupCount++;
         } else {
@@ -3703,7 +3702,6 @@ test("order by count reset", async () => {
             expect.step(`read_group ${kwargs.groupby[0]} order by ${kwargs.orderby}`);
             // The mock server cannot handle orderby count
             kwargs.orderby = "";
-            return parent();
         }
     });
     await mountView({
@@ -4576,8 +4574,8 @@ test(`date field aggregates in grouped lists`, async () => {
     // this test simulates a scenario where a date field has a aggregator
     // and the web_read_group thus return a value for that field for each group
 
-    onRpc("web_read_group", async ({ parent }) => {
-        const res = await parent();
+    onRpc("web_read_group", ({ parent }) => {
+        const res = parent();
         res.groups[0].date = "2021-03-15";
         res.groups[1].date = "2021-02-11";
         return res;
@@ -4598,11 +4596,11 @@ test(`date field aggregates in grouped lists`, async () => {
 });
 
 test(`hide aggregated value in grouped lists when no data provided by RPC call`, async () => {
-    onRpc("web_read_group", async ({ parent }) => {
-        const res = await parent();
-        res.groups.forEach((group) => {
+    onRpc("web_read_group", ({ parent }) => {
+        const res = parent();
+        for (const group of res.groups) {
             delete group.qux;
-        });
+        }
         return res;
     });
     await mountView({
@@ -5225,7 +5223,7 @@ test(`fields are translatable in list view`, async () => {
         fr_BE: "Frenglish",
     });
 
-    onRpc("/web/dataset/call_kw/foo/get_field_translations", () => [
+    onRpc("foo", "get_field_translations", () => [
         [
             { lang: "en_US", source: "yop", value: "yop" },
             { lang: "fr_BE", source: "yop", value: "valeur français" },
@@ -9782,13 +9780,13 @@ test(`numbers in list are right-aligned`, async () => {
         `,
     });
 
-    const nbCellRight = [...queryAll(`.o_data_row:eq(0) > .o_data_cell`)].filter(
+    const nbCellRight = queryAll(`.o_data_row:eq(0) > .o_data_cell`).filter(
         (el) => window.getComputedStyle(el).textAlign === "right"
     ).length;
     expect(nbCellRight).toBe(2, { message: "there should be two right-aligned cells" });
 
     await contains(`.o_data_cell`).click();
-    const nbInputRight = [...queryAll(`.o_data_row:eq(0) > .o_data_cell input`)].filter(
+    const nbInputRight = queryAll(`.o_data_row:eq(0) > .o_data_cell input`).filter(
         (el) => window.getComputedStyle(el).textAlign === "right"
     ).length;
     expect(nbInputRight).toBe(2, { message: "there should be two right-aligned input" });
@@ -10938,7 +10936,7 @@ test(`editable list view: multi edition`, async () => {
 
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     await contains(`.o_data_row [name=int_field] input`).edit("666");
-    expect(queryOne(".modal-body").innerText.includes("those 2 records")).toBe(true, {
+    expect(".modal-body").toHaveText(/those 2 records/, {
         message: "the number of records should be correctly displayed",
     });
 
@@ -11103,7 +11101,7 @@ test.todo(`editable list view: multi edition error and cancellation handling`, a
     expect(`.o_list_record_selector input:enabled`).toHaveCount(0);
 
     await contains(`.o_selected_row [name=int_field] input`).edit("hahaha", { confirm: "blur" });
-    expect(`.modal`).toHaveCount(1, { message: "there should be an opened modal" });
+    expect(`.modal`).toHaveCount(1);
 
     await contains(`.modal .btn-primary`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
@@ -11117,7 +11115,7 @@ test.todo(`editable list view: multi edition error and cancellation handling`, a
 
     await contains(`.o_selected_row [name=foo] input`).edit("", { confirm: false });
     await contains(`.o_control_panel`).click();
-    expect(`.modal`).toHaveCount(1, { message: "there should be an opened modal" });
+    expect(`.modal`).toHaveCount(1);
 
     await contains(`.modal .btn-primary`).click();
     expect(queryAllTexts(`.o_data_row:eq(0) .o_data_cell`)).toEqual(["yop", "10"], {
@@ -11841,8 +11839,8 @@ test(`non editable list view: multi edition`, async () => {
 
     await contains(`.o_data_row:eq(0) .o_data_cell:eq(1)`).click();
     await contains(`.o_data_row [name=int_field] input`).edit("666");
-    expect(`.modal`).toHaveCount(1, { message: "there should be an opened modal" });
-    expect(queryOne(".modal").innerText.includes("those 2 records")).toBe(true, {
+    expect(`.modal`).toHaveCount(1);
+    expect(".modal").toHaveText(/those 2 records/, {
         message: "the number of records should be correctly displayed",
     });
 
@@ -14905,7 +14903,6 @@ test(`list view with optional fields from local storage being the empty array`, 
     });
 
     const verifyHeaders = (namedHeaders) => {
-        // const headers = [...queryAll(`.o_list_table thead th`)];
         expect(`.o_list_table thead th:not(.o_list_record_selector)`).toHaveCount(
             namedHeaders.length + 1
         );

@@ -225,21 +225,19 @@ test("Many2ManyTagsField with color: rendering and edition on desktop", async ()
 
     Partner._records[0].timmy = [12, 14];
     PartnerType._records.push({ id: 13, name: "red", color: 8 });
-    onRpc(({ args, method, model, kwargs, route }) => {
-        if (route === "/web/dataset/call_kw/partner/web_save") {
-            const commands = args[1].timmy;
-            expect(commands).toHaveLength(2);
-            expect(commands.map((cmd) => cmd[0])).toEqual([4, 3]);
-            expect(commands.map((cmd) => cmd[1])).toEqual([13, 14], {
-                message: "Should add 13, remove 14",
-            });
-        }
-        if ((method === "web_read" || method === "web_save") && model === "partner.type") {
-            expect(kwargs.specification).toEqual(
-                { display_name: {}, color: {} },
-                { message: "should read color field" }
-            );
-        }
+    onRpc("partner", "web_save", ({ args }) => {
+        const commands = args[1].timmy;
+        expect(commands).toHaveLength(2);
+        expect(commands.map((cmd) => cmd[0])).toEqual([4, 3]);
+        expect(commands.map((cmd) => cmd[1])).toEqual([13, 14], {
+            message: "Should add 13, remove 14",
+        });
+    });
+    onRpc("partner.type", ["web_read", "web_save"], ({ kwargs }) => {
+        expect(kwargs.specification).toEqual(
+            { display_name: {}, color: {} },
+            { message: "should read color field" }
+        );
     });
     await mountView({
         type: "form",
@@ -1615,9 +1613,9 @@ test("Many2ManyTagsField with attribute 'can_create' set to false on desktop", a
 
 test.tags("desktop");
 test("Many2ManyTagsField with arch context in form view on desktop", async () => {
-    onRpc("name_search", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("name_search", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
                 res[1] += " coucou";
@@ -1625,9 +1623,9 @@ test("Many2ManyTagsField with arch context in form view on desktop", async () =>
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }
@@ -1647,9 +1645,9 @@ test("Many2ManyTagsField with arch context in form view on desktop", async () =>
 
 test.tags("mobile");
 test("Many2ManyTagsField with arch context in form view on mobile", async () => {
-    onRpc("web_search_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_search_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("web_search_read with context given");
             for (const res of result.records) {
                 res.name += " coucou";
@@ -1657,9 +1655,9 @@ test("Many2ManyTagsField with arch context in form view on mobile", async () => 
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }
@@ -1679,9 +1677,9 @@ test("Many2ManyTagsField with arch context in form view on mobile", async () => 
 
 test.tags("desktop");
 test("Many2ManyTagsField with arch context in list view on desktop", async () => {
-    onRpc("name_search", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("name_search", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("name search with context given");
             for (const res of result) {
                 res[1] += " coucou";
@@ -1689,9 +1687,9 @@ test("Many2ManyTagsField with arch context in list view on desktop", async () =>
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }
@@ -1712,9 +1710,9 @@ test("Many2ManyTagsField with arch context in list view on desktop", async () =>
 
 test.tags("mobile");
 test("Many2ManyTagsField with arch context in list view on mobile", async () => {
-    onRpc("web_search_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_search_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("web_search_read with context given");
             for (const res of result.records) {
                 res.name += " coucou";
@@ -1722,9 +1720,9 @@ test("Many2ManyTagsField with arch context in list view on mobile", async () => 
         }
         return result;
     });
-    onRpc("web_read", async (args) => {
-        const result = await args.parent();
-        if (args.kwargs.context.append_coucou) {
+    onRpc("web_read", ({ kwargs, parent }) => {
+        const result = parent();
+        if (kwargs.context.append_coucou) {
             expect.step("read with context given");
             result[0].display_name += " coucou";
         }

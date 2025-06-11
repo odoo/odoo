@@ -88,9 +88,7 @@ test("media dialog: upload", async function () {
         return attachment;
     });
 
-    onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => {
-        return ["129a52e1-6bf2-470a-830e-8e368b022e13"];
-    });
+    onRpc("ir.attachment", "generate_access_token", () => ["129a52e1-6bf2-470a-830e-8e368b022e13"]);
     await mountView({
         type: "form",
         resId,
@@ -258,7 +256,7 @@ describe("Remove attachments", () => {
             image_height: 1,
             original_id: false,
         }));
-        onRpc("/web/dataset/call_kw/ir.attachment/generate_access_token", () => [
+        onRpc("ir.attachment", "generate_access_token", () => [
             "129a52e1-6bf2-470a-830e-8e368b022e13",
         ]);
 
