@@ -107,16 +107,6 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             "invoice_cash_rounding_id": rounding.id,
         })
         cls.invoice_cash_rounding.action_post()
-        cls.sez_partner = cls.env['res.partner'].create({
-            'name': 'SEZ Partner',
-            'vat': '36AAAAA1234AAZA',
-            'l10n_in_gst_treatment': 'special_economic_zone',
-            'street': 'Block no. 402',
-            'city': 'Some city',
-            'zip': '500002',
-            'state_id': cls.env.ref('base.state_in_gj').id,
-            'country_id': cls.env.ref('base.in').id,
-        })
         cls.invoice_with_intra_igst = cls.init_invoice(
             "out_invoice", partner=cls.sez_partner, post=False, products=cls.product_a
         )
@@ -400,4 +390,116 @@ class TestEdiJson(L10nInTestInvoicingCommon):
             json_value,
             expected_with_overseas,
             "Indian EDI with Overseas sent json value is not matched"
+        )
+
+        # =================================== RCM Tax test =============================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_with_rcm)
+        self.assertEqual(
+            json_value['TranDtls'],
+            {
+                "TaxSch": "GST",
+                "SupTyp": "B2B",
+                "RegRev": "Y",
+                "IgstOnIntra": "N"
+            },
+            "Indian EDI with RCM tax TranDtls json value is not matched"
+        )
+        self.assertDictEqual(
+            json_value['ItemList'][0],
+            {
+                "SlNo": "1",
+                "PrdDesc": "product_a",
+                "IsServc": "N",
+                "HsnCd": "111111",
+                "Qty": 1.0,
+                "Unit": "UNT",
+                "UnitPrice": 1000.0,
+                "TotAmt": 1000.0,
+                "Discount": 0.0,
+                "AssAmt": 1000.0,
+                "GstRt": 18.0,
+                "IgstAmt": 180.0,
+                "CgstAmt": 0.0,
+                "SgstAmt": 0.0,
+                "CesRt": 0.0,
+                "CesAmt": 0.0,
+                "CesNonAdvlAmt": 0.0,
+                "StateCesRt": 0.0,
+                "StateCesAmt": 0.0,
+                "StateCesNonAdvlAmt": 0.0,
+                "OthChrg": 0.0,
+                "TotItemVal": 1000.0
+            },
+            "Indian EDI with RCM tax ItemList json value is not matched"
+        )
+        self.assertDictEqual(
+            json_value['ValDtls'],
+            {
+                "AssVal": 1000.0,
+                "CgstVal": 0.0,
+                "SgstVal": 0.0,
+                "IgstVal": 180.0,
+                "CesVal": 0.0,
+                "StCesVal": 0.0,
+                "Discount": 0.0,
+                "RndOffAmt": 0.0,
+                "TotInvVal": 1000.0
+            },
+            "Indian EDI with RCM tax ValDtls json value is not matched"
+        )
+
+        # =================================== SEZ LUT Tax test =============================================
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(self.invoice_with_sez_lut)
+        self.assertEqual(
+            json_value['TranDtls'],
+            {
+                "TaxSch": "GST",
+                "SupTyp": "SEZWP",
+                "RegRev": "N",
+                "IgstOnIntra": "Y"
+            },
+            "Indian EDI with SEZ LUT tax TranDtls json value is not matched"
+        )
+        self.assertDictEqual(
+            json_value['ItemList'][0],
+            {
+                "SlNo": "1",
+                "PrdDesc": "product_a",
+                "IsServc": "N",
+                "HsnCd": "111111",
+                "Qty": 1.0,
+                "Unit": "UNT",
+                "UnitPrice": 1000.0,
+                "TotAmt": 1000.0,
+                "Discount": 0.0,
+                "AssAmt": 1000.0,
+                "GstRt": 18.0,
+                "IgstAmt": 180.0,
+                "CgstAmt": 0.0,
+                "SgstAmt": 0.0,
+                "CesRt": 0.0,
+                "CesAmt": 0.0,
+                "CesNonAdvlAmt": 0.0,
+                "StateCesRt": 0.0,
+                "StateCesAmt": 0.0,
+                "StateCesNonAdvlAmt": 0.0,
+                "OthChrg": 0.0,
+                "TotItemVal": 1000.0
+            },
+            "Indian EDI with SEZ LUT tax ItemList json value is not matched"
+        )
+        self.assertDictEqual(
+            json_value['ValDtls'],
+            {
+                "AssVal": 1000.0,
+                "CgstVal": 0.0,
+                "SgstVal": 0.0,
+                "IgstVal": 180.0,
+                "CesVal": 0.0,
+                "StCesVal": 0.0,
+                "Discount": 0.0,
+                "RndOffAmt": 0.0,
+                "TotInvVal": 1000.0
+            },
+            "Indian EDI with SEZ LUT tax ValDtls json value is not matched"
         )
