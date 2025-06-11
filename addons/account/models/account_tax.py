@@ -1531,12 +1531,13 @@ class AccountTax(models.Model):
         :param company:         The company owning the base line.
         :param rounding_method: The rounding method to be used. If not specified, it will be taken from the company.
         """
+        rounding_method = rounding_method or company.tax_calculation_rounding_method
         price_unit_after_discount = base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))
         taxes_computation = base_line['tax_ids']._get_tax_details(
             price_unit=price_unit_after_discount,
             quantity=base_line['quantity'],
             precision_rounding=base_line['currency_id'].rounding,
-            rounding_method=rounding_method or company.tax_calculation_rounding_method,
+            rounding_method=rounding_method,
             product=base_line['product_id'],
             special_mode=base_line['special_mode'],
             manual_tax_amounts=base_line['manual_tax_amounts'],
@@ -1549,13 +1550,13 @@ class AccountTax(models.Model):
             'raw_total_included': taxes_computation['total_included'] / rate if rate else 0.0,
             'taxes_data': [],
         }
-        if company.tax_calculation_rounding_method == 'round_per_line':
+        if rounding_method == 'round_per_line':
             tax_details['raw_total_excluded'] = company.currency_id.round(tax_details['raw_total_excluded'])
             tax_details['raw_total_included'] = company.currency_id.round(tax_details['raw_total_included'])
         for tax_data in taxes_computation['taxes_data']:
             tax_amount = tax_data['tax_amount'] / rate if rate else 0.0
             base_amount = tax_data['base_amount'] / rate if rate else 0.0
-            if company.tax_calculation_rounding_method == 'round_per_line':
+            if rounding_method == 'round_per_line':
                 tax_amount = company.currency_id.round(tax_amount)
                 base_amount = company.currency_id.round(base_amount)
             tax_details['taxes_data'].append({
