@@ -529,6 +529,31 @@ class TestHrEmployee(TestHrCommon):
         self.assertEqual(self.employee.resource_calendar_id, old_calendar)
         self.assertEqual(self.employee.resource_id.calendar_id, old_calendar)
 
+    def test_job_title(self):
+        first_job = self.env['hr.job'].create({'name': "first job"})
+        second_job = self.env['hr.job'].create({'name': "second job"})
+
+        with Form(self.employee_without_image) as employee_form:
+            # Assign first job to employee, job title should be job name
+            employee_form.job_id = first_job
+            self.assertEqual(employee_form.job_title, first_job.name)
+
+            # Change job title, job name should not change
+            employee_form.job_title = "custom job title"
+            self.assertEqual(first_job.name, "first job")
+
+            # Change the name of the first job, job title should not be updated
+            first_job.name = "first job modified"
+            self.assertEqual(employee_form.job_title, "custom job title")
+            employee_form.save()
+
+            # Assign second job to employee, job title should be second job name
+            employee_form.job_id = second_job
+            self.assertEqual(employee_form.job_title, second_job.name)
+
+            # Switch back to first job, job title should be first job name
+            employee_form.job_id = first_job
+            self.assertEqual(employee_form.job_title, first_job.name)
 
 @tagged('-at_install', 'post_install')
 class TestHrEmployeeWebJson(HttpCase):
