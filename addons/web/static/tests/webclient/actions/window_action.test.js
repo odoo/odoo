@@ -2291,6 +2291,7 @@ test("executing a window action with onchange warning does not hide it", async (
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     await clickListNew();
+    await waitFor(".modal.o_technical_modal");
     expect(".modal.o_technical_modal").toHaveCount(1, {
         message: "Warning modal should be opened",
     });
