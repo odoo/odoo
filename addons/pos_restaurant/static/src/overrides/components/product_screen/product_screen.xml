@@ -3,7 +3,7 @@
     <t t-name="pos_restaurant.ProductScreen" t-inherit="point_of_sale.ProductScreen" t-inherit-mode="extension">
         <!-- add a showOrderButton here (using the computeOrderChange method) -->
         <xpath expr="//button[hasclass('pay-button')]" position="replace">
-            <t t-if="!pos.scanning">
+            <t t-if="!pos.scanning" class="order-buttons">
                 <button
                     t-if="this.swapButton"
                     class="btn-switchpane pay-button btn btn-lg w-50 position-relative lh-sm overflow-hidden"
