@@ -854,7 +854,7 @@ test("check kwargs of a rpc call with a domain", async () => {
     expect(searchBar.env.searchModel.domain).toEqual([["company", "=", 5]]);
 });
 
-test("should wait label promises for one2many search defaults", async () => {
+test("should wait label promises for many2one search defaults", async () => {
     const def = new Deferred();
     onRpc("read", () => def);
 
@@ -871,6 +871,31 @@ test("should wait label promises for one2many search defaults", async () => {
     await animationFrame();
     expect(`.o_cp_searchview`).toHaveCount(1);
     expect(getFacetTexts()[0].replace("\n", "")).toBe("CompanyFirst record");
+});
+
+test("should wait label promises for many2many search defaults", async () => {
+    Partner._fields.m2m = fields.Many2many({ relation: "partner" });
+    const def = new Deferred();
+    onRpc("read", () => def);
+
+    mountWithSearch(SearchBar, {
+        resModel: "partner",
+        searchMenuTypes: [],
+        searchViewId: false,
+        searchViewArch: `
+            <search>
+                <field name="m2m"/>
+            </search>
+        `,
+        context: { search_default_m2m: [1, 2] },
+    });
+    await animationFrame();
+    expect(`.o_cp_searchview`).toHaveCount(0);
+
+    def.resolve();
+    await animationFrame();
+    expect(`.o_cp_searchview`).toHaveCount(1);
+    expect(getFacetTexts()[0].replace("\n", "")).toBe("M2mFirst record or Second record");
 });
 
 test("globalContext keys in name_search", async () => {
