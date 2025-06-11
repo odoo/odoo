@@ -389,13 +389,12 @@ from pathlib import Path
 from odoo import api, models, tools
 from odoo.modules import get_module_path
 from odoo.modules.registry import _REGISTRY_CACHES
-from odoo.tools import config, safe_eval, pycompat
+from odoo.tools import config, safe_eval
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
 from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool, file_open, file_path
-from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
 from odoo.tools.translate import FORMAT_REGEX
 from odoo.http import request
 from odoo.tools.profiler import QwebTracker
@@ -897,6 +896,7 @@ class IrQweb(models.AbstractModel):
     # values for running time
 
     def _get_converted_image_data_uri(self, base64_source):
+        from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD  # noqa: PLC0415
         if self.env.context.get('webp_as_jpg'):
             mimetype = FILETYPE_BASE64_MAGICWORD.get(base64_source[:1], 'png')
             if 'webp' in mimetype:

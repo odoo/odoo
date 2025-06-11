@@ -1,17 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import warnings
-from collections import defaultdict, OrderedDict
-from decorator import decorator
-from textwrap import dedent
+import contextlib
 import logging
 import os
 import shutil
+from collections import defaultdict, OrderedDict
+from decorator import decorator
+from textwrap import dedent
 
 from docutils import nodes
 from docutils.core import publish_string
 from docutils.transforms import Transform, writer_aux
-from docutils.writers.html4css1 import Writer
 import lxml.html
 import psycopg2
 
@@ -21,7 +20,7 @@ from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.parse_version import parse_version
-from odoo.tools.misc import topological_sort, get_flag
+from odoo.tools.misc import topological_sort, get_flag, file_path
 from odoo.tools.translate import TranslationImporter, get_po_paths, get_datafile_translation_path
 from odoo.http import request
 from odoo.modules import get_module_path
@@ -116,15 +115,6 @@ class MyFilterMessages(Transform):
             node.parent.remove(node)
 
 
-class MyWriter(Writer):
-    """
-    Custom docutils html4ccs1 writer that doesn't add the warnings to the
-    output document.
-    """
-    def get_transforms(self):
-        return [MyFilterMessages, writer_aux.Admonitions]
-
-
 STATES = [
     ('uninstallable', 'Uninstallable'),
     ('uninstalled', 'Not Installed'),
@@ -184,7 +174,10 @@ class IrModuleModule(models.Model):
                     'xml_declaration': False,
                     'file_insertion_enabled': False,
                 }
-                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=MyWriter())
+                from docutils.writers.html4css1 import Writer  # noqa: PLC0415
+                w = Writer()
+                w.get_transforms = lambda _=None: [MyFilterMessages, writer_aux.Admonitions]
+                output = publish_string(source=module.description if not module.application and module.description else '', settings_overrides=overrides, writer=w)
                 module.description_html = _apply_description_images(output)
 
     @api.depends('name')
@@ -845,11 +838,6 @@ class IrModuleModule(models.Model):
         }
         mod_names = topological_sort(mod_dict)
         self.env['ir.module.module']._load_module_terms(mod_names, filter_lang, overwrite)
-
-    def _check(self):
-        for module in self:
-            if not module.description_html:
-                _logger.warning('module %s: description is empty!', module.name)
 
     def _get(self, name):
         """ Return the (sudoed) `ir.module.module` record with the given name.

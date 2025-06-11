@@ -14,21 +14,10 @@ from email.message import EmailMessage
 from email.utils import make_msgid
 from socket import gaierror, timeout
 
-from OpenSSL import crypto as SSLCrypto
-from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
-from OpenSSL.SSL import Error as SSLError, VERIFY_PEER, VERIFY_FAIL_IF_NO_PEER_CERT
-from urllib3.contrib.pyopenssl import PyOpenSSLContext, get_subj_alt_name
-
 from odoo import api, fields, models, tools, _, modules
 from odoo.exceptions import UserError
 from odoo.tools import formataddr, email_normalize, encapsulate_email, email_domain_extract, email_domain_normalize, human_size
 
-try:
-    # urllib3 1.26 (ubuntu jammy and up, debian bullseye and up)
-    from urllib3.util.ssl_match_hostname import CertificateError, match_hostname
-except ImportError:
-    # urllib3 1.25 and below
-    from urllib3.packages.ssl_match_hostname import CertificateError, match_hostname
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -122,6 +111,13 @@ def _verify_check_hostname_callback(cnx, x509, err_no, err_depth, return_code, *
         return False
 
     if err_depth == 0:  # leaf certificate
+        from urllib3.contrib.pyopenssl import get_subj_alt_name  # noqa: PLC0415
+        try:
+            # urllib3 1.26 (ubuntu jammy and up, debian bullseye and up)
+            from urllib3.util.ssl_match_hostname import match_hostname
+        except ImportError:
+            # urllib3 1.25 and below
+            from urllib3.packages.ssl_match_hostname import match_hostname
         peercert = {
             "subject": ((("commonName", x509.get_subject().CN),),),
             "subjectAltName": get_subj_alt_name(x509),
@@ -303,6 +299,13 @@ class IrMail_Server(models.Model):
             the server doesn't support the auto-detection of email max size
         """
         for server in self:
+            from OpenSSL.SSL import Error as SSLError  # noqa: PLC0415
+            try:
+                # urllib3 1.26 (ubuntu jammy and up, debian bullseye and up)
+                from urllib3.util.ssl_match_hostname import CertificateError
+            except ImportError:
+                # urllib3 1.25 and below
+                from urllib3.packages.ssl_match_hostname import CertificateError
             smtp = False
             try:
                 smtp = self.connect(mail_server_id=server.id, allow_archived=True)
@@ -409,6 +412,7 @@ class IrMail_Server(models.Model):
                archived record (using mail_server_id param). It can be set to True for testing so that the exception is
                no longer raised.
         """
+        # noqa: PLC0415
         # Do not actually connect while running in test mode
         if self._disable_send():
             return None
@@ -438,6 +442,10 @@ class IrMail_Server(models.Model):
             from_filter = mail_server.from_filter
 
             if mail_server.smtp_authentication == "certificate":
+                from OpenSSL import crypto as SSLCrypto
+                from OpenSSL.crypto import Error as SSLCryptoError, FILETYPE_PEM
+                from OpenSSL.SSL import Error as SSLError, VERIFY_PEER, VERIFY_FAIL_IF_NO_PEER_CERT
+                from urllib3.contrib.pyopenssl import PyOpenSSLContext
                 try:
                     ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
                     if mail_server.smtp_encryption in ('ssl_strict', 'starttls_strict'):
@@ -488,6 +496,9 @@ class IrMail_Server(models.Model):
             smtp_ssl_private_key_filename = ssl_private_key or tools.config.get('smtp_ssl_private_key_filename')
 
             if smtp_ssl_certificate_filename and smtp_ssl_private_key_filename:
+                from OpenSSL.crypto import Error as SSLCryptoError
+                from OpenSSL.SSL import Error as SSLError
+                from urllib3.contrib.pyopenssl import PyOpenSSLContext
                 try:
                     ssl_context = PyOpenSSLContext(ssl.PROTOCOL_TLS)
                     ssl_context.verify_mode = ssl.CERT_NONE

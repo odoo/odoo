@@ -14,7 +14,6 @@ from itertools import islice
 from urllib.parse import urlparse
 
 import lxml.html
-from PIL import Image, ImageFile
 from lxml import etree
 from markupsafe import Markup
 
@@ -28,9 +27,6 @@ from odoo.tools.barcode import check_barcode_encoding, createBarcodeDrawing, get
 from odoo.tools.misc import find_in_path
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
 from odoo.tools.safe_eval import safe_eval, time
-
-# Allow truncated images
-ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 _logger = logging.getLogger(__name__)
 
@@ -800,6 +796,7 @@ class IrActionsReport(models.Model):
 
                         # Ensure the stream can be saved in Image.
                         if attachment.mimetype.startswith('image'):
+                            from PIL import Image  # noqa: PLC0415
                             img = Image.open(stream)
                             new_stream = io.BytesIO()
                             img.convert("RGB").save(new_stream, format="pdf")
