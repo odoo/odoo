@@ -10,7 +10,7 @@ const prom = createPublicRoot(WebsiteRoot).then(async rootInstance => {
     // restricted editor user.
     if (window.frameElement) {
         if (window.frameElement.dataset.loadWysiwyg === 'true') {
-            await loadBundle("website.assets_all_wysiwyg");
+            await loadBundle("website.assets_all_wysiwyg_inside");
         }
         window.dispatchEvent(new CustomEvent('PUBLIC-ROOT-READY', {detail: {rootInstance}}));
     }
