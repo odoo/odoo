@@ -153,7 +153,7 @@
 </t>
 
 <t t-name="mail.Message.actions">
-    <div t-if="props.hasActions and message.hasActions and !isEditing" class="o-mail-Message-actions d-print-none d-flex align-items-start"
+    <div t-if="props.hasActions and message.hasActions and !isEditing and !env.inChatter?.disabled" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{
             'start-0': isAlignedRight,
             'mx-1': !isMobileOS,

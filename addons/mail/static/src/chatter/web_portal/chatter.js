@@ -31,6 +31,7 @@ export class Chatter extends Component {
             /** @type {import("models").Thread} */
             thread: undefined,
             aside: false,
+            disabled: !this.props.threadId,
         });
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
@@ -38,6 +39,7 @@ export class Chatter extends Component {
 
         onMounted(this._onMounted);
         onWillUpdateProps((nextProps) => {
+            this.state.disabled = !nextProps.threadId;
             if (
                 this.props.threadId !== nextProps.threadId ||
                 this.props.threadModel !== nextProps.threadModel
