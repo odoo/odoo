@@ -203,6 +203,7 @@ registry.category("web_tour.tours").add("test_cash_in_out", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            Chrome.freezeDateTime(1749965940000),
             Chrome.doCashMove("10", "MOBT in"),
             Chrome.doCashMove("5", "MOBT out"),
             Chrome.clickMenuOption("Close Register"),
@@ -211,6 +212,7 @@ registry.category("web_tour.tours").add("test_cash_in_out", {
             CashMoveList.checkNumberOfRows(2),
             CashMoveList.checkCashMoveShown("10"),
             CashMoveList.checkCashMoveShown("5"),
+            CashMoveList.checkCashMoveDateTime(),
             CashMoveList.deleteCashMove("10"),
             CashMoveList.checkNumberOfRows(1),
             CashMoveList.checkCashMoveShown("5"),
