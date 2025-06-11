@@ -1,13 +1,10 @@
 import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { DashboardFacet } from "../dashboard_facet/dashboard_facet";
 import { useService } from "@web/core/utils/hooks";
-import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
-import { QUARTER_OPTIONS } from "@web/search/utils/dates";
 import { _t } from "@web/core/l10n/translation";
 import { DashboardSearchDialog } from "../dashboard_search_dialog/dashboard_search_dialog";
-
-const { DateTime } = luxon;
+import { dateFilterValueToString } from "@spreadsheet/global_filters/helpers";
 
 export class DashboardSearchBar extends Component {
     static template = "spreadsheet_dashboard.DashboardSearchBar";
@@ -54,7 +51,7 @@ export class DashboardSearchBar extends Component {
     async getFacetFor(filter) {
         const filterValues = this.props.model.getters.getGlobalFilterValue(filter.id);
         let values;
-        let separator = _t("or");
+        const separator = _t("or");
         switch (filter.type) {
             case "boolean":
             case "text":
@@ -64,45 +61,7 @@ export class DashboardSearchBar extends Component {
                 if (!filterValues) {
                     throw new Error("Should be defined at this point");
                 }
-                if (filter.rangeType === "from_to") {
-                    const from = filterValues.from;
-                    const to = filterValues.to;
-                    values = [from, to];
-                    separator = _t("to");
-                    break;
-                }
-                if (typeof filterValues === "string") {
-                    values = [
-                        RELATIVE_DATE_RANGE_TYPES.find((type) => type.type === filterValues)
-                            .description,
-                    ];
-                    break;
-                }
-                if (filterValues?.year === undefined) {
-                    values = [""];
-                    break;
-                }
-                const year = String(filterValues.year);
-                switch (filterValues.type) {
-                    case "year":
-                        values = [year];
-                        break;
-                    case "month": {
-                        const month = DateTime.local()
-                            .set({ month: filterValues.month })
-                            .toFormat("LLLL");
-                        values = [`${month} ${year}`];
-                        break;
-                    }
-                    case "quarter": {
-                        const quarter = QUARTER_OPTIONS[filterValues.quarter];
-                        if (quarter) {
-                            values = [`${quarter.description} ${year}`];
-                        } else {
-                            values = [year];
-                        }
-                    }
-                }
+                values = [dateFilterValueToString(filterValues)];
                 break;
             }
             case "relation":

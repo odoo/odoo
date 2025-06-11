@@ -1,9 +1,7 @@
 /** @ts-check */
 
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
-import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
-import { DateFilterValue } from "../filter_date_value/filter_date_value";
-import { DateFromToValue } from "../filter_date_from_to_value/filter_date_from_to_value";
+import { DateFilterValue } from "../date_filter_value/date_filter_value";
 
 import { Component, onWillStart } from "@odoo/owl";
 import { components } from "@odoo/o-spreadsheet";
@@ -20,12 +18,11 @@ const { ValidationMessages } = components;
 export class FilterValue extends Component {
     static template = "spreadsheet.FilterValue";
     static components = {
-        DateFilterValue,
-        DateFromToValue,
-        MultiRecordSelector,
         TextFilterValue,
-        ValidationMessages,
+        DateFilterValue,
+        MultiRecordSelector,
         BooleanMultiSelector,
+        ValidationMessages,
     };
     static props = {
         filter: Object,
@@ -38,7 +35,6 @@ export class FilterValue extends Component {
 
     setup() {
         this.getters = this.props.model.getters;
-        this.relativeDateRangesTypes = RELATIVE_DATE_RANGE_TYPES;
         this.nameService = useService("name");
         this.fieldService = useService("field");
         this.isValid = false;

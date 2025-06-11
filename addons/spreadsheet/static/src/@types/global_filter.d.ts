@@ -2,16 +2,50 @@ import { Range, RangeData } from "@odoo/o-spreadsheet";
 import { DomainListRepr } from "@web/core/domain";
 
 declare module "@spreadsheet" {
-    export type RangeType = "fixedPeriod" | "relative" | "from_to";
-    export type FixedPeriods = "quarter" | "month";
-    export type RelativePeriod =
+    export type DateDefaultValue =
         | "last_7_days"
         | "last_30_days"
         | "last_90_days"
+        | "this_month"
+        | "this_quarter"
         | "last_12_months"
+        | "this_year"
         | "year_to_date";
 
-    export type DateFilterTimePeriod = RelativePeriod | "this_month" | "this_quarter" | "this_year";
+    export interface MonthDateValue {
+        type: "month";
+        year: number;
+        month: number; // 1-12
+    }
+
+    export interface QuarterDateValue {
+        type: "quarter";
+        year: number;
+        quarter: number; // 1-4
+    }
+
+    export interface YearDateValue {
+        type: "year";
+        year: number;
+    }
+
+    export interface RelativeDateValue {
+        type: "relative";
+        period: "last_7_days" | "last_30_days" | "last_90_days" | "last_12_months" | "year_to_date";
+    }
+
+    export interface DateRangeValue {
+        type: "range";
+        from?: string;
+        to?: string;
+    }
+
+    export type DateValue =
+        | MonthDateValue
+        | QuarterDateValue
+        | YearDateValue
+        | RelativeDateValue
+        | DateRangeValue;
 
     export interface FieldMatching {
         chain: string;
@@ -31,32 +65,12 @@ declare module "@spreadsheet" {
         rangesOfAllowedValues?: RangeData[];
     }
 
-    export interface DateGlobalFilterCommon {
+    export interface DateGlobalFilter {
         type: "date";
         id: string;
         label: string;
+        defaultValue?: DateDefaultValue;
     }
-
-    export interface FromToDateGlobalFilter extends DateGlobalFilterCommon {
-        rangeType: "from_to";
-        defaultValue?: number[];
-    }
-
-    export interface RelativeDateGlobalFilter extends DateGlobalFilterCommon {
-        rangeType: "relative";
-        defaultValue?: DateFilterTimePeriod;
-    }
-
-    export interface FixedPeriodDateGlobalFilter extends DateGlobalFilterCommon {
-        rangeType: "fixedPeriod";
-        defaultValue?: "this_month" | "this_quarter" | "this_year";
-        disabledPeriods?: FixedPeriods[];
-    }
-
-    export type DateGlobalFilter =
-        | FromToDateGlobalFilter
-        | RelativeDateGlobalFilter
-        | FixedPeriodDateGlobalFilter;
 
     export interface RelationalGlobalFilter {
         type: "relation";
@@ -68,6 +82,13 @@ declare module "@spreadsheet" {
         domainOfAllowedValues?: DomainListRepr | string;
     }
 
-    export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter;
-    export type CmdGlobalFilter = CmdTextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter;
+    export interface BooleanGlobalFilter {
+        type: "boolean";
+        id: string;
+        label: string;
+        defaultValue?: boolean[];
+    }
+
+    export type GlobalFilter = TextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter;
+    export type CmdGlobalFilter = CmdTextGlobalFilter | DateGlobalFilter | RelationalGlobalFilter | BooleanGlobalFilter;
 }

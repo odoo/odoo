@@ -207,7 +207,8 @@ test("Can clear filter date filter value that defaults to current period", async
     const year = luxon.DateTime.local().year;
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year));
     await contains(".o_searchview_facet_label").click();
-    await contains("input.o_datetime_input").edit(String(year - 1));
+    await contains(".o-filter-value input").click();
+    await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
     await contains(".modal-footer .btn-primary").click();
 
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year - 1));
@@ -276,7 +277,8 @@ test("Changing filter values will create a new share", async function () {
     const year = luxon.DateTime.local().year;
     expect(".o_control_panel_actions .o_facet_value").toHaveText(String(year));
     await contains(".o_searchview_facet_label").click();
-    await contains("input.o_datetime_input").edit(String(year - 1));
+    await contains(".o-filter-value input").click();
+    await contains(".o-dropdown-item[data-id='year'] .btn-previous").click();
     await contains(".modal-footer .btn-primary").click();
 
     await contains("i.fa-share-alt").click();

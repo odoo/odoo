@@ -1,18 +1,31 @@
 /** @ts-check */
-import { describe, expect, test } from "@odoo/hoot";
-import { getDateDomain, getRelativeDateFromTo } from "@spreadsheet/global_filters/helpers";
+import { describe, expect, test, beforeEach } from "@odoo/hoot";
+import {
+    getDateDomain,
+    getRelativeDateFromTo,
+    dateFilterValueToString,
+} from "@spreadsheet/global_filters/helpers";
 import {
     getDateDomainDurationInDays,
     assertDateDomainEqual,
 } from "@spreadsheet/../tests/helpers/date_domain";
+import { patchTranslations } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
 
 const { DateTime } = luxon;
 
-function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldType) {
-    const { from, to } = getRelativeDateFromTo(now, offset, rangeType);
+beforeEach(() => {
+    patchTranslations();
+});
+
+function getRelativeDateDomain(now, offset, period, fieldName, fieldType) {
+    const { from, to } = getRelativeDateFromTo(now, offset, period);
     return getDateDomain(from, to, fieldName, fieldType);
+}
+
+function valueToString(value) {
+    return dateFilterValueToString(value).toString();
 }
 
 test("getRelativeDateDomain > year_to_date (year to date)", async function () {
@@ -109,4 +122,42 @@ test("getRelativeDateDomain > with offset > simple date time", async function ()
     const domain = getRelativeDateDomain(now, -1, "last_7_days", "field", "datetime");
     expect(getDateDomainDurationInDays(domain)).toBe(7);
     assertDateDomainEqual("field", "2022-05-03 00:00:00", "2022-05-09 23:59:59", domain);
+});
+
+test("dateFilterValueToString > relative periods", function () {
+    expect(valueToString({ type: "relative", period: "last_7_days" })).toBe("Last 7 Days");
+    expect(valueToString({ type: "relative", period: "last_30_days" })).toBe("Last 30 Days");
+    expect(valueToString({ type: "relative", period: "last_90_days" })).toBe("Last 90 Days");
+    expect(valueToString({ type: "relative", period: "year_to_date" })).toBe("Year to Date");
+    expect(valueToString({ type: "relative", period: "last_12_months" })).toBe("Last 12 Months");
+});
+test("dateFilterValueToString > month", function () {
+    expect(valueToString({ type: "month", year: 2022, month: 5 })).toBe("May 2022");
+});
+
+test("dateFilterValueToString > quarter", function () {
+    expect(valueToString({ type: "quarter", year: 2022, quarter: 2 })).toBe("Q2 2022");
+});
+
+test("dateFilterValueToString > year", function () {
+    expect(valueToString({ type: "year", year: 2022 })).toBe("2022");
+});
+
+test("dateFilterValueToString > range", function () {
+    expect(valueToString({ type: "range", from: "2022-01-01", to: "2022-12-31" })).toBe(
+        "2022-01-01 to 2022-12-31"
+    );
+    expect(valueToString({ type: "range", from: "2022-01-01" })).toBe("2022-01-01 to all time");
+    expect(valueToString({ type: "range", to: "2022-12-31" })).toBe("All time to 2022-12-31");
+    expect(valueToString({ type: "range" })).toBe("All time");
+});
+
+test("dateFilterValueToString > all time", function () {
+    expect(valueToString({ type: undefined })).toBe("All time");
+    expect(valueToString({})).toBe("All time");
+});
+
+test("dateFilterValueToString > invalid value", function () {
+    expect(valueToString({ type: "invalid" })).toBe("All time");
+    expect(valueToString(undefined)).toBe("All time");
 });
