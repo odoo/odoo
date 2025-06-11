@@ -31,7 +31,9 @@ export function fixInvalidHTML(content) {
     // TODO: improve the regex to support nodes with data-attributes containing
     // `/` and `>` characters.
     const regex = /<\s*(a|strong|t|span)[^<]*?\/\s*>/g;
-    return content.replace(regex, (match, g0) => match.replace(/\/\s*>/, `></${g0}>`));
+    return content
+        .replace(regex, (match, g0) => match.replace(/\/\s*>/, `></${g0}>`))
+        .replace(/<!--[\s\S]*?-->/g, ""); // remove comments
 }
 
 let Markup = null;
