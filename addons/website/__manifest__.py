@@ -365,6 +365,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_variables-dark.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'website/static/src/scss/website.wysiwyg.fonts.scss',
             'website/static/src/scss/website.wysiwyg.scss',
             'website/static/src/scss/website.edit_mode.scss',
             'website/static/src/js/editor/snippets.editor.js',
@@ -427,6 +428,16 @@
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js',
             'website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.xml',
             'website/static/src/snippets/s_embed_code/options.js',
+        ],
+        # TODO: in master, we should revisit this and probably opt-in what is
+        # to be added in the iframe instead of excluding what should not be.
+        'website.assets_wysiwyg_inside': [
+            ('include', 'website.assets_wysiwyg'),
+            ('remove', 'website/static/src/scss/website.wysiwyg.fonts.scss'),
+        ],
+        'website.assets_all_wysiwyg_inside': [
+            ('include', 'website.assets_all_wysiwyg'),
+            ('remove', 'website/static/src/scss/website.wysiwyg.fonts.scss'),
         ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/*',
