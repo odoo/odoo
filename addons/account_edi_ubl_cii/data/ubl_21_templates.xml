@@ -22,6 +22,16 @@
                 <cbc:PaymentDueDate t-out="vals.get('payment_due_date')"/>
             </t>
         </xpath>
+        <xpath expr="//*[local-name()='Amount']" position="after">
+            <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+               xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-set="settlement_period" t-value="vals.get('settlement_period', {})"/>
+                <cac:SettlementPeriod>
+                    <cbc:StartDate><t t-out="settlement_period.get('start_date')"/></cbc:StartDate>
+                    <cbc:EndDate><t t-out="settlement_period.get('end_date')"/></cbc:EndDate>
+                </cac:SettlementPeriod>
+            </t>
+        </xpath>
     </template>
 
     <template id="ubl_21_PartyType" inherit_id="account_edi_ubl_cii.ubl_20_PartyType">

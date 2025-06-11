@@ -1,0 +1,952 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#   * l10n_dk_nemhandel
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-30 13:24+0000\n"
+"PO-Revision-Date: 2025-06-30 13:24+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/account_move_send_wizard.py:0
+msgid " (Customer not on Nemhandel)"
+msgstr " (Kunde ikke på Nemhandel)"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/account_move_send_wizard.py:0
+msgid " (Demo)"
+msgstr " (Demo)"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/account_move_send_wizard.py:0
+msgid " (Test)"
+msgstr " (Test)"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/account_move_send_wizard.py:0
+msgid " (no VAT)"
+msgstr " (ingen Moms)"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.l10n_dk_nemhandel_view_move_form
+msgid ""
+"<span class=\"mx-1\" invisible=\"'demo_' not in nemhandel_message_uuid\"> (Demo)</span>\n"
+"                    <span class=\"text-muted mx-3\" invisible=\"nemhandel_move_state != 'to_send'\">\n"
+"                        The invoice will be sent automatically via Nemhandel\n"
+"                    </span>"
+msgstr ""
+"<span class=\"mx-1\" invisible=\"'demo_' not in nemhandel_message_uuid\"> (Demo)</span>\n"
+"                    <span class=\"text-muted mx-3\" invisible=\"nemhandel_move_state != 'to_send'\">\n"
+"                        Fakturaen vil blive sendt automatisk via Nemhandel\n"
+"                    </span>"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid ""
+"<span class=\"o_form_label\">\n"
+"                                        Nemhandel Details\n"
+"                                    </span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\"/>"
+msgstr ""
+"<span class=\"o_form_label\">\n"
+"                                        Nemhandel Detaljer\n"
+"                                    </span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Værdier angivet her er virksomhedsspecifikke.\"/>"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid ""
+"A participant with these details has already been registered on the network."
+" If you have previously registered to an alternative Nemhandel service, "
+"please deregister"
+msgstr ""
+"En deltager med disse detaljer er allerede registreret på netværket. Hvis du tidligere har registreret dig til en alternativ Nemhandel-tjeneste, bedes du afregistrere dig."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/res_company.py:0
+msgid "A purchase journal must be used to receive Nemhandel documents."
+msgstr "En købskladde skal bruges til at modtage Nemhandel-dokumenter."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_account_edi_proxy_client_user
+msgid "Account EDI proxy user"
+msgstr "Konto EDI proxy-bruger"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_account_move_send
+msgid "Account Move Send"
+msgstr "Send kontobevægelse"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_account_move_send_batch_wizard
+msgid "Account Move Send Batch Wizard"
+msgstr "Kontobevægelse Send Batch-guide"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_account_move_send_wizard
+msgid "Account Move Send Wizard"
+msgstr "Kontobevægelse Send guide"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__invoice_sending_method__nemhandel
+msgid "By Nemhandel"
+msgstr "Via Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid ""
+"By clicking the button below I accept that Odoo may process my e-invoices."
+msgstr "Ved at klikke på knappen nedenfor accepterer jeg, at Odoo må behandle mine e-fakturaer."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_identifier_type__0184
+msgid "CVR"
+msgstr "CVR"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_company__l10n_dk_nemhandel_proxy_state__receiver
+msgid "Can send and receive"
+msgstr "Kan sende og modtage"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.l10n_dk_nemhandel_view_move_form
+msgid "Cancel Nemhandel"
+msgstr "Annuller Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move.py:0
+msgid "Cannot cancel an entry that has already been sent to Nemhandel"
+msgstr "Kan ikke annullere en postering, der allerede er sendt til Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_verification_state__not_valid_format
+msgid "Cannot receive this format"
+msgstr "Kan ikke modtage dette format"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Cannot register a user with a %s application"
+msgstr "Kan ikke registrere en bruger med en %s applikation"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move_send.py:0
+msgid "Check Partner(s)"
+msgstr "Tjek partner(e)"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_nemhandel_registration__identifier_value
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_company__nemhandel_identifier_value
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_config_settings__nemhandel_identifier_value
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_partner__nemhandel_identifier_value
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_users__nemhandel_identifier_value
+msgid "Code used to identify the Endpoint on Nemhandel"
+msgstr "Kode brugt til at identificere slutpunktet på Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_res_company
+msgid "Companies"
+msgstr "Virksomheder"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__company_id
+msgid "Company"
+msgstr "Virksomhed"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Company settings"
+msgstr "Virksomhedsindstillinger"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationsindstillinger"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "Connection error, please try again later."
+msgstr "Forbindelsesfejl, prøv venligst igen senere."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "Contact details were updated."
+msgstr "Kontaktoplysninger blev opdateret."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/res_config_settings.py:0
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Contact email and phone number are required."
+msgstr "Kontakt-e-mail og telefonnummer er påkrævet."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__create_uid
+msgid "Created by"
+msgstr "Oprettet af"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__create_date
+msgid "Created on"
+msgstr "Oprettet den"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move_send.py:0
+msgid "Customer is on Nemhandel but did not enable receiving documents."
+msgstr "Kunden er på Nemhandel, men har ikke aktiveret modtagelse af dokumenter."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__nemhandel_registration__edi_mode__demo
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__nemhandel_registration__edi_mode_constraint__demo
+msgid "Demo"
+msgstr "Demo"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "Deregister"
+msgstr "Afregistrer"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "Discard"
+msgstr "Kassér"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__display_name
+msgid "Display Name"
+msgstr "Visningsnavn"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__account_move__nemhandel_move_state__done
+msgid "Done"
+msgstr "Udført"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_identifier_type__0088
+msgid "EAN/GLN"
+msgstr "EAN/GLN"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__edi_mode
+msgid "EDI mode"
+msgstr "EDI-tilstand"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_edi_mode
+msgid "EDI operating mode"
+msgstr "EDI-driftsmodus"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__edi_user_id
+msgid "EDI user"
+msgstr "EDI-bruger"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "EDI user should be of type Nemhandel"
+msgstr "EDI-bruger skal være af typen Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__edi_mode_constraint
+msgid "Edi Mode Constraint"
+msgstr "Edi-tilstandsbegrænsning"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid "Email"
+msgstr "E-mail"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_partner_form_l10n_dk_nemhandel
+msgid "Endpoint"
+msgstr "Endepunkt"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__account_move__nemhandel_move_state__error
+msgid "Error"
+msgstr "Fejl"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move_send.py:0
+msgid "Errors occurred while creating the EDI document (format: %s):"
+msgstr "Fejl opstod under oprettelse af EDI-dokumentet (format: %s):"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.account_journal_dashboard_kanban_view
+msgid "Fetch Nemhandel invoice status"
+msgstr "Hent Nemhandel fakturastatus"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.account_journal_dashboard_kanban_view
+msgid "Fetch from Nemhandel"
+msgstr "Hent fra Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid "Fill in the code below that we sent you by SMS to"
+msgstr "Udfyld koden nedenfor, som vi sendte dig via SMS til"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_identifier_type__9918
+msgid "IBAN"
+msgstr "IBAN"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__id
+msgid "ID"
+msgstr "ID"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid "Identifier Type"
+msgstr "Identifikatortype"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid "Identifier Value"
+msgstr "Identifikatorværdi"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid ""
+"In demo mode sending invoices is simulated.\n"
+"                            There will be no communication with the Nemhandel network."
+msgstr ""
+"I demotilstand simuleres afsendelse af fakturaer.\n"
+"                            Der vil ikke være kommunikation med Nemhandel-netværket."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_company__l10n_dk_nemhandel_proxy_state__in_verification
+msgid "In verification"
+msgstr "Under verifikation"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "Incoming Invoices Journal"
+msgstr "Indgående faktura kladde"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__invoice_sending_method
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_users__invoice_sending_method
+msgid "Invoice sending"
+msgstr "Fakturasending"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__is_using_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_users__is_using_nemhandel
+msgid "Is Using Nemhandel"
+msgstr "Bruger Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_account_journal
+msgid "Journal"
+msgstr "Kladde"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_account_move
+msgid "Journal Entry"
+msgstr "Kladdeindgang"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_journal__is_nemhandel_journal
+msgid "Journal used for Nemhandel"
+msgstr "Kladde brugt til Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__write_uid
+msgid "Last Updated by"
+msgstr "Sidst opdateret af"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__write_date
+msgid "Last Updated on"
+msgstr "Sidst opdateret den"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__nemhandel_registration__edi_mode__prod
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__nemhandel_registration__edi_mode_constraint__prod
+msgid "Live"
+msgstr "Live"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__account_edi_proxy_client_user__proxy_type__nemhandel
+msgid "Nemhandel"
+msgstr "Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_partner_form_l10n_dk_nemhandel
+msgid "Nemhandel Address"
+msgstr "Nemhandel adresse"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__contact_email
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__nemhandel_contact_email
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_contact_email
+msgid "Nemhandel Contact email"
+msgstr "Nemhandel kontakt email"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "Nemhandel E-Delivery"
+msgstr "Nemhandel E-levering"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_edi_user
+msgid "Nemhandel Edi User"
+msgstr "Nemhandel EDI-bruger"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__identifier_value
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__nemhandel_identifier_value
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_identifier_value
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__nemhandel_identifier_value
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_users__nemhandel_identifier_value
+msgid "Nemhandel Endpoint"
+msgstr "Nemhandel slutpunkt"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__identifier_type
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__nemhandel_identifier_type
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_identifier_type
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__nemhandel_identifier_type
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_users__nemhandel_identifier_type
+msgid "Nemhandel Endpoint Type"
+msgstr "Nemhandel slutpunktstype"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__phone_number
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__nemhandel_phone_number
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_phone_number
+msgid "Nemhandel Phone number (for validation)"
+msgstr "Nemhandel telefonnummer (til validering)"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__nemhandel_purchase_journal_id
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_purchase_journal_id
+msgid "Nemhandel Purchase Journal"
+msgstr "Nemhandel købskladde"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_view_account_invoice_filter
+msgid "Nemhandel Ready"
+msgstr "Nemhandel klar"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_nemhandel_registration
+msgid "Nemhandel Registration"
+msgstr "Nemhandel registrering"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_edi_proxy_client_user__nemhandel_verification_code
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__verification_code
+msgid "Nemhandel SMS verification code"
+msgstr "Nemhandel SMS verifikationskode"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "Nemhandel document (UUID: %(uuid)s) has been received successfully."
+msgstr "Nemhandel-dokument (UUID: %(uuid)s) er modtaget korrekt."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__nemhandel_verification_state
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_users__nemhandel_verification_state
+msgid "Nemhandel endpoint verification"
+msgstr "Nemhandel slutpunkt verifikation"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "Nemhandel error: %s"
+msgstr "Nemhandel fejl: %s"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__nemhandel_edi_identification
+msgid "Nemhandel identification"
+msgstr "Nemhandel identifikation"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_bank_statement_line__nemhandel_message_uuid
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move__nemhandel_message_uuid
+msgid "Nemhandel message ID"
+msgstr "Nemhandel besked-ID"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "Nemhandel participant status:"
+msgstr "Nemhandel deltagerstatus:"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_bank_statement_line__nemhandel_move_state
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_journal__l10n_dk_nemhandel_proxy_state
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_move__nemhandel_move_state
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_nemhandel_registration__l10n_dk_nemhandel_proxy_state
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_company__l10n_dk_nemhandel_proxy_state
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_config_settings__l10n_dk_nemhandel_proxy_state
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_view_account_invoice_filter
+msgid "Nemhandel status"
+msgstr "Nemhandel status"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "Nemhandel status update: %s"
+msgstr "Nemhandel statusopdatering: %s"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.actions.server,name:l10n_dk_nemhandel.ir_cron_nemhandel_get_new_documents_ir_actions_server
+msgid "Nemhandel: retrieve new documents"
+msgstr "Nemhandel: Hent nye dokumenter"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.actions.server,name:l10n_dk_nemhandel.ir_cron_nemhandel_get_message_status_ir_actions_server
+msgid "Nemhandel: update message status"
+msgstr "Nemhandel: opdater beskedstatus"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.actions.server,name:l10n_dk_nemhandel.ir_cron_nemhandel_webhook_keepalive_ir_actions_server
+msgid "Nemhandel: webhook keep alive"
+msgstr "Nemhandel: webhook hold i live"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_verification_state__not_valid
+msgid "Not on Nemhandel"
+msgstr "Ikke på Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_company__l10n_dk_nemhandel_proxy_state__not_registered
+msgid "Not registered"
+msgstr "Ikke registreret"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_verification_state__not_verified
+msgid "Not verified yet"
+msgstr "Ikke verificeret endnu"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model,name:l10n_dk_nemhandel.model_account_edi_xml_oioubl_21
+msgid "OIOUBL 2.01"
+msgstr "OIOUBL 2.01"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__invoice_edi_format__oioubl_21
+msgid "OIOUBL 2.1"
+msgstr "OIOUBL 2.1"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/res_partner.py:0
+msgid "On Nemhandel, only OIOUBL 2.1 is supported."
+msgstr "På Nemhandel understøttes kun OIOUBL 2.1."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/account_move_send_wizard.py:0
+msgid "Partner doesn't have a valid Nemhandel configuration."
+msgstr "Partneren har ikke en gyldig Nemhandel-konfiguration."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__account_move__nemhandel_move_state__processing
+msgid "Pending Reception"
+msgstr "Afventer modtagelse"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid "Phone"
+msgstr "Telefon"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid ""
+"Please do not hesitate to contact our support if you need further "
+"assistance."
+msgstr "Tøv ikke med at kontakte vores support, hvis du har brug for yderligere assistance."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/tools/demo_utils.py:0
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Please enter a phone number to verify your application."
+msgstr "Indtast venligst et telefonnummer for at verificere din ansøgning."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/tools/demo_utils.py:0
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Please enter a primary contact email to verify your application."
+msgstr "Indtast venligst en primær kontakt-e-mail for at verificere din ansøgning."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/res_company.py:0
+msgid ""
+"Please enter the phone number in the correct international format.\n"
+"For example: +32123456789, where +32 is the country code.\n"
+"Currently, only European countries are supported."
+msgstr ""
+"Indtast venligst telefonnummeret i det korrekte internationale format.\n"
+"For eksempel: +32123456789, hvor +32 er landekoden.\n"
+"I øjeblikket understøttes kun europæiske lande."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "Please fill in the Identifier Type and Value."
+msgstr "Udfyld venligst identifikatortypen og værdien."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Please fill in your company's VAT"
+msgstr "Udfyld venligst din virksomheds CVR-nummer"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid ""
+"Please first verify your phone number by clicking on 'Send a registration "
+"code by SMS'."
+msgstr "Verificer venligst først dit telefonnummer ved at klikke på 'Send en registreringskode via SMS'."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/res_company.py:0
+msgid "Please install the phonenumbers library."
+msgstr "Installer venligst phonenumbers-biblioteket."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move_send.py:0
+msgid "Please verify partner configuration in partner settings."
+msgstr "Kontroller venligst partnerkonfigurationen i partnerindstillingerne."
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "Primary contact email"
+msgstr "Primær kontakt e-mail"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_nemhandel_registration__contact_email
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_company__nemhandel_contact_email
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_config_settings__nemhandel_contact_email
+msgid "Primary contact email for Nemhandel-related communication"
+msgstr "Primær kontakt-e-mail til Nemhandel-relateret kommunikation"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_account_edi_proxy_client_user__proxy_type
+msgid "Proxy Type"
+msgstr "Proxy-type"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__account_move__nemhandel_move_state__to_send
+msgid "Queued"
+msgstr "I kø"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__account_move__nemhandel_move_state__ready
+msgid "Ready to send"
+msgstr "Klar til at sende"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "Register"
+msgstr "Registrer"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "Register (Demo)"
+msgstr "Registrer (Demo)"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "Register (Test)"
+msgstr "Registrer (Test)"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "Register on Nemhandel."
+msgstr "Registrer på Nemhandel."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/tools/demo_utils.py:0
+msgid "Registered to receive documents via Nemhandel (demo)."
+msgstr "Registreret til at modtage dokumenter via Nemhandel (demo)."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Registered to receive documents."
+msgstr "Registreret til at modtage dokumenter."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_company__l10n_dk_nemhandel_proxy_state__rejected
+msgid "Rejected"
+msgstr "Afvist"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_identifier_type__0198
+msgid "SE"
+msgstr "SE"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid "Send a registration code by SMS"
+msgstr "Send en registreringskode via SMS"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Send again"
+msgstr "Send igen"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Send via Nemhandel"
+msgstr "Send via Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "Start sending via Nemhandel"
+msgstr "Begynd at sende via Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__nemhandel_registration__edi_mode__test
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__nemhandel_registration__edi_mode_constraint__test
+msgid "Test"
+msgstr "Test"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid ""
+"Test mode allows sending e-invoices through the test Nemhandel network.\n"
+"                            By clicking the button below I accept that Odoo may process my e-invoices."
+msgstr ""
+"Testtilstand tillader afsendelse af e-fakturaer via Nemhandel-testnetværket.\n"
+"                            Ved at klikke på knappen nedenfor accepterer jeg, at Odoo må behandle mine e-fakturaer."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "The Nemhandel service that is used is likely to be %s."
+msgstr "Den Nemhandel-tjeneste, der bruges, er sandsynligvis %s."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/tools/demo_utils.py:0
+msgid ""
+"The Nemhandel status of the documents has been reset when switching from "
+"Demo to Live."
+msgstr "Nemhandel-status for dokumenterne er blevet nulstillet ved skift fra demo til live."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_xml_oioubl_21.py:0
+msgid "The company registry is required for french partner: %s"
+msgstr "Virksomhedsregistrering er påkrævet for fransk partner: %s"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move_send.py:0
+msgid ""
+"The document has been sent to the Nemhandel Access Point for processing"
+msgstr "Dokumentet er sendt til Nemhandel Access Point til behandling"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_xml_oioubl_21.py:0
+msgid "The following partner's street number is missing: %s"
+msgstr "Følgende partners husnummer mangler: %s"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move_send.py:0
+msgid "The partner is missing Nemhandel Endpoint Type or Value."
+msgstr "Partneren mangler Nemhandel Endepunktstype eller Værdi."
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "The rejection reason has been sent to you via email."
+msgstr "Årsagen til afvisningen er sendt til dig via e-mail."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_config_settings__nemhandel_edi_identification
+msgid "The unique id that identifies this user, typically the vat"
+msgstr "Den unikke id, der identificerer denne bruger, typisk momsnummeret"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "The verification code is not correct"
+msgstr "Verifikationskoden er ikke korrekt"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "The verification code should contain six digits."
+msgstr "Verifikationskoden skal indeholde seks cifre."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "This verification code has expired. Please request a new one."
+msgstr "Denne verifikationskode er udløbet. Anmod venligst om en ny."
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "This will delete your Nemhandel registration."
+msgstr "Dette vil slette din Nemhandel-registrering."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid "Too many attempts to request an SMS code. Please try again later."
+msgstr "For mange forsøg på at anmode om en SMS-kode. Prøv venligst igen senere."
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_nemhandel_registration__identifier_type
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_company__nemhandel_identifier_type
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_config_settings__nemhandel_identifier_type
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_partner__nemhandel_identifier_type
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_users__nemhandel_identifier_type
+msgid "Unique identifier used by OIOUBL and Nemhandel"
+msgstr "Unik identifikator brugt af OIOUBL og Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Update contact details"
+msgstr "Opdater kontaktoplysninger"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_nemhandel_registration__edi_mode_constraint
+msgid ""
+"Using the config params, this field specifies which edi modes may be "
+"selected from the UI"
+msgstr "Ved hjælp af konfigurationsparametrene specificerer dette felt, hvilke EDI-tilstande der kan vælges fra brugergrænsefladen"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields.selection,name:l10n_dk_nemhandel.selection__res_partner__nemhandel_verification_state__valid
+msgid "Valid"
+msgstr "Gyldig"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_partner_form_l10n_dk_nemhandel
+msgid "Verify"
+msgstr "Verificer"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.actions.server,name:l10n_dk_nemhandel.partner_action_verify_l10n_dk_nemhandel
+msgid "Verify Nemhandel"
+msgstr "Verificer Nemhandel"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_partner_form_l10n_dk_nemhandel
+msgid "Verify partner's Nemhandel endpoint"
+msgstr "Verificer partners Nemhandel slutpunkt"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_move_send.py:0
+msgid "View Partner(s)"
+msgstr "Vis partner(e)"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/models/account_edi_proxy_user.py:0
+msgid ""
+"We could not find a user with this information on our server. Please check "
+"your information."
+msgstr "Vi kunne ikke finde en bruger med disse oplysninger på vores server. Tjek venligst dine oplysninger."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/tools/demo_utils.py:0
+msgid "You can now fake sending invoices in demo mode."
+msgstr "Du kan nu simulere afsendelse af fakturaer i demo-tilstand."
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "You can now receive documents via Nemhandel."
+msgstr "Du kan nu modtage dokumenter via Nemhandel."
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid ""
+"You need to register in order to Send Customer Invoices on the Nemhandel "
+"network."
+msgstr "Du skal registrere dig for at sende kundefakturaer på Nemhandel-netværket."
+
+#. module: l10n_dk_nemhandel
+#. odoo-javascript
+#: code:addons/l10n_dk_nemhandel/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid ""
+"You will not be able to send or receive Nemhandel documents in Odoo anymore."
+" Are you sure you want to proceed?"
+msgstr ""
+"Du vil ikke længere kunne sende eller modtage Nemhandel-dokumenter i Odoo. Er du sikker på, at du vil fortsætte?"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_nemhandel_registration__phone_number
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_company__nemhandel_phone_number
+#: model:ir.model.fields,help:l10n_dk_nemhandel.field_res_config_settings__nemhandel_phone_number
+msgid "You will receive a verification code to this phone number"
+msgstr "Du vil modtage en verifikationskode på dette telefonnummer"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.res_config_settings_view_form
+msgid "Your Nemhandel identification is:"
+msgstr "Din Nemhandel-identifikation er:"
+
+#. module: l10n_dk_nemhandel
+#. odoo-python
+#: code:addons/l10n_dk_nemhandel/wizard/nemhandel_registration.py:0
+msgid "Your confirmation code is"
+msgstr "Din bekræftelseskode er"
+
+#. module: l10n_dk_nemhandel
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_partner__invoice_edi_format
+#: model:ir.model.fields,field_description:l10n_dk_nemhandel.field_res_users__invoice_edi_format
+msgid "eInvoice format"
+msgstr "eFaktura format"
+
+#. module: l10n_dk_nemhandel
+#: model_terms:ir.ui.view,arch_db:l10n_dk_nemhandel.nemhandel_registration_form
+msgid "for validation purposes"
+msgstr "til valideringsformål"
