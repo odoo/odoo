@@ -438,3 +438,6 @@ class StockPickingBatch(models.Model):
             'description': self.description,
             'scheduled_date': self.scheduled_date,
         }
+
+    def _get_picking_batch_action(self):
+        return self.env['ir.actions.act_window']._for_xml_id("stock_picking_batch.stock_picking_batch_action")
