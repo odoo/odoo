@@ -389,7 +389,8 @@ class IrModel(models.Model):
         # ordering has been changed, reload registry to reflect update + signaling
         if 'order' in vals or 'fold_name' in vals:
             self.env.flush_all()  # _setup_models__ need to fetch the updated values from the db
-            self.pool._setup_models__(self._cr)
+            # incremental setup will reload custom models
+            self.pool._setup_models__(self._cr, [])
         return res
 
     @api.model_create_multi
@@ -401,7 +402,8 @@ class IrModel(models.Model):
         if manual_models:
             # setup models; this automatically adds model in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr)
+            # incremental setup will reload custom models
+            self.pool._setup_models__(self._cr, [])
             # update database schema
             self.pool.init_models(self._cr, manual_models, dict(self._context, update_custom_fields=True))
         return res
@@ -981,7 +983,7 @@ class IrModelFields(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this re-initializes models in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr)
+            self.pool._setup_models__(self._cr, model_names)
             # update database schema of model and its descendant models
             models = self.pool.descendants(model_names, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
@@ -991,7 +993,6 @@ class IrModelFields(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         IrModel = self.env['ir.model']
-        models = set()
         for vals in vals_list:
             if 'model_id' in vals:
                 vals['model'] = IrModel.browse(vals['model_id']).model
@@ -1000,7 +1001,7 @@ class IrModelFields(models.Model):
         self.env.registry.clear_cache()
 
         res = super(IrModelFields, self).create(vals_list)
-        models = set(res.mapped('model'))
+        models = OrderedSet(res.mapped('model'))
 
         for vals in vals_list:
             if vals.get('state', 'manual') == 'manual':
@@ -1018,7 +1019,7 @@ class IrModelFields(models.Model):
         if any(model in self.pool for model in models):
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr)
+            self.pool._setup_models__(self._cr, models)
             # update database schema of models and their descendants
             models = self.pool.descendants(models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
@@ -1097,7 +1098,8 @@ class IrModelFields(models.Model):
         if column_rename or patched_models or translate_only:
             # setup models, this will reload all manual fields in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr)
+            model_names = OrderedSet(self.mapped('model'))
+            self.pool._setup_models__(self._cr, model_names)
 
         if patched_models:
             # update the database schema of the models to patch
@@ -1601,13 +1603,15 @@ class IrModelFieldsSelection(models.Model):
                                   'preferably through a custom addon!'))
         recs = super().create(vals_list)
 
-        if any(
-            model in self.pool and name in self.pool[model]._fields
+        model_names = OrderedSet(
+            model
             for model, name in field_names
-        ):
+            if model in self.pool and name in self.pool[model]._fields
+        )
+        if model_names:
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr)
+            self.pool._setup_models__(self._cr, model_names)
 
         return recs
 
@@ -1641,7 +1645,8 @@ class IrModelFieldsSelection(models.Model):
 
         # setup models; this re-initializes model in registry
         self.env.flush_all()
-        self.pool._setup_models__(self._cr)
+        model_names = self.field_id.model_id.mapped('model')
+        self.pool._setup_models__(self._cr, model_names)
 
         return result
 
@@ -1657,6 +1662,7 @@ class IrModelFieldsSelection(models.Model):
                               'preferably through a custom addon!'))
 
     def unlink(self):
+        model_names = self.field_id.model_id.mapped('model')
         self._process_ondelete()
         result = super().unlink()
 
@@ -1665,7 +1671,7 @@ class IrModelFieldsSelection(models.Model):
         if not self._context.get(MODULE_UNINSTALL_FLAG):
             # setup models; this re-initializes model in registry
             self.env.flush_all()
-            self.pool._setup_models__(self._cr)
+            self.pool._setup_models__(self._cr, model_names)
 
         return result
 
