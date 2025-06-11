@@ -579,7 +579,12 @@
                                     <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                                 </t>
                             </div>
-                            <field name="partner_id" class="ms-2 text-truncate" />
+                            <div class="d-flex" invisible="not partner_id">
+                                <field name="partner_id" widget="many2one_avatar" class="text-truncate" readonly="1" options="{'no_create': 1, 'no_open': 1}"/>
+                                <field name="partner_id" class="ms-2 text-truncate"/>
+                            </div>
+                            <field name="contact_name" invisible="partner_id"/>
+                            <field name="partner_name" invisible="partner_id or contact_name"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="lead_properties" widget="properties"/>
                             <footer class="pt-1">
