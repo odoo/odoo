@@ -158,12 +158,14 @@ export class HistoryPlugin extends Plugin {
                 description: _t("Undo"),
                 icon: "fa-undo",
                 run: this.undo.bind(this),
+                plainTextCompatible: true,
             },
             {
                 id: "historyRedo",
                 description: _t("Redo"),
                 icon: "fa-repeat",
                 run: this.redo.bind(this),
+                plainTextCompatible: true,
             },
         ],
         ...(hasTouch() && {

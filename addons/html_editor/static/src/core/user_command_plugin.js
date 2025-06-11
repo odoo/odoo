@@ -1,3 +1,4 @@
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "../plugin";
 
 /**
@@ -29,6 +30,12 @@ export class UserCommandPlugin extends Plugin {
             if (command.id in this.commands) {
                 throw new Error(`Duplicate user command id: ${command.id}`);
             }
+            if (!command.plainTextCompatible) {
+                const isAvailable = command.isAvailable;
+                command.isAvailable = isAvailable
+                    ? (selection) => isAvailable(selection) && isSelectionInHtmlContent(selection)
+                    : isSelectionInHtmlContent;
+            }
             this.commands[command.id] = command;
         }
         Object.freeze(this.commands);
@@ -46,4 +53,14 @@ export class UserCommandPlugin extends Plugin {
         }
         return command;
     }
+}
+
+export function isSelectionInHtmlContent(selection) {
+    return !closestElement(
+        selection.focusNode,
+        // TODO: which selector should be used ?:
+        // '[data-oe-model]:not([data-oe-field="arch"]):not([data-oe-type="html"]),[data-oe-translation-id]'
+        // '[data-oe-model]:not([data-oe-field="arch"],[data-oe-field="arch_db"]):not([data-oe-type="html"])'
+        '[data-oe-model]:not([data-oe-type="html"]):not([data-oe-field="arch"]):not([data-oe-translation-source-sha])'
+    );
 }

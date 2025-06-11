@@ -19,6 +19,7 @@ export class EmojiPlugin extends Plugin {
                 description: _t("Add an emoji"),
                 icon: "fa-smile-o",
                 run: this.showEmojiPicker.bind(this),
+                plainTextCompatible: true,
             },
         ],
         powerbox_items: [

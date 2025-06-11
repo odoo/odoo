@@ -110,8 +110,12 @@ export const toolbarButtonProps = {
  */
 export function composeToolbarButton(userCommand, toolbarItem) {
     return {
-        ...pick(userCommand, "description", "icon", "isAvailable"),
+        ...pick(userCommand, "description", "icon"),
         ...omit(toolbarItem, "commandId", "commandParams"),
         run: () => userCommand.run(toolbarItem.commandParams),
+        isAvailable: (selection) =>
+            [userCommand.isAvailable, toolbarItem.isAvailable]
+                .filter(Boolean)
+                .every((predicate) => predicate(selection)),
     };
 }

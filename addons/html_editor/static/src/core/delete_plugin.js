@@ -76,12 +76,36 @@ export class DeletePlugin extends Plugin {
     static shared = ["deleteBackward", "deleteForward", "deleteRange", "deleteSelection", "delete"];
     resources = {
         user_commands: [
-            { id: "deleteBackward", run: () => this.delete("backward", "character") },
-            { id: "deleteForward", run: () => this.delete("forward", "character") },
-            { id: "deleteBackwardWord", run: () => this.delete("backward", "word") },
-            { id: "deleteForwardWord", run: () => this.delete("forward", "word") },
-            { id: "deleteBackwardLine", run: () => this.delete("backward", "line") },
-            { id: "deleteForwardLine", run: () => this.delete("forward", "line") },
+            {
+                id: "deleteBackward",
+                run: () => this.delete("backward", "character"),
+                plainTextCompatible: true,
+            },
+            {
+                id: "deleteForward",
+                run: () => this.delete("forward", "character"),
+                plainTextCompatible: true,
+            },
+            {
+                id: "deleteBackwardWord",
+                run: () => this.delete("backward", "word"),
+                plainTextCompatible: true,
+            },
+            {
+                id: "deleteForwardWord",
+                run: () => this.delete("forward", "word"),
+                plainTextCompatible: true,
+            },
+            {
+                id: "deleteBackwardLine",
+                run: () => this.delete("backward", "line"),
+                plainTextCompatible: true,
+            },
+            {
+                id: "deleteForwardLine",
+                run: () => this.delete("forward", "line"),
+                plainTextCompatible: true,
+            },
         ],
         shortcuts: [
             { hotkey: "backspace", commandId: "deleteBackward" },
