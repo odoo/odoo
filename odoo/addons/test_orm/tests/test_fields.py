@@ -245,7 +245,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             WHERE model = 'x_test_10_compute_store_x_name' AND name = 'x_name'
         """)
         # setting up models should not crash
-        self.registry._setup_models__(self.cr)
+        self.registry._setup_models__(self.cr, ['x_test_10_compute_store_x_name'])
 
     def test_10_context_dependent_related(self):
         self.env['res.lang']._activate_lang('fr_FR')
@@ -608,7 +608,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
 
         # this must re-evaluate the field's dependencies
         self.env.flush_all()
-        self.registry._setup_models__(self.cr)
+        self.registry._setup_models__(self.cr, ['test_orm.compute.dynamic.depends'])
         self.assertEqual(self.registry.field_depends[Model.full_name], ('name1', 'name2'))
 
     def test_12_one2many_reference_domain(self):
@@ -4437,7 +4437,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
         add_to_registry(self.registry, Foo)
 
         with self.assertRaises(ValueError):
-            self.registry._setup_models__(self.env.cr)
+            self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_default_no_default(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4454,7 +4454,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
         add_to_registry(self.registry, Foo)
 
         with self.assertRaises(AssertionError):
-            self.registry._setup_models__(self.env.cr)
+            self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_value_no_valid(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4471,7 +4471,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
         add_to_registry(self.registry, Foo)
 
         with self.assertRaises(AssertionError):
-            self.registry._setup_models__(self.env.cr)
+            self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_required_null_explicit(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4488,7 +4488,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
         add_to_registry(self.registry, Foo)
 
         with self.assertRaises(ValueError):
-            self.registry._setup_models__(self.env.cr)
+            self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
     def test_ondelete_required_null_implicit(self):
         from odoo.orm.model_classes import add_to_registry  # noqa: PLC0415
@@ -4505,7 +4505,7 @@ class TestSelectionOndeleteAdvanced(TransactionCase):
         add_to_registry(self.registry, Foo)
 
         with self.assertRaises(ValueError):
-            self.registry._setup_models__(self.env.cr)
+            self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
 class TestFieldParametersValidation(TransactionCase):
@@ -4522,7 +4522,7 @@ class TestFieldParametersValidation(TransactionCase):
         self.addCleanup(self.registry.__delitem__, Foo._name)
 
         with self.assertLogs('odoo.fields', level='WARNING') as cm:
-            self.registry._setup_models__(self.env.cr)
+            self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
         self.assertTrue(cm.output[0].startswith(
             "WARNING:odoo.fields:Field test_orm.field_parameter_validation.name: "
@@ -4867,7 +4867,7 @@ class TestWrongRelatedError(TransactionCase):
             "test_orm.wrong_related_path.foo_non_existing does not exist."
         )
         with self.assertRaisesRegex(KeyError, errMsg):
-            self.registry._setup_models__(self.env.cr)
+            self.registry._setup_models__(self.env.cr, [])  # incremental setup
 
 
 class TestPrecomputeModel(TransactionCase):
@@ -4882,7 +4882,7 @@ class TestPrecomputeModel(TransactionCase):
         self.addCleanup(self.registry.reset_changes)
         self.patch(Model.upper, 'precompute', False)
         with self.assertWarns(UserWarning):
-            self.registry._setup_models__(self.cr)
+            self.registry._setup_models__(self.cr, ['test_orm.precompute'])
             self.registry.field_computed
 
     def test_precompute_dependencies_base(self):
@@ -4901,7 +4901,7 @@ class TestPrecomputeModel(TransactionCase):
         self.patch(Model.upper, 'precompute', False)
 
         with self.assertWarns(UserWarning):
-            self.registry._setup_models__(self.cr)
+            self.registry._setup_models__(self.cr, ['test_orm.precompute'])
             self.registry.get_trigger_tree(Model._fields.values())
 
     def test_precompute_dependencies_many2one(self):
@@ -4925,7 +4925,7 @@ class TestPrecomputeModel(TransactionCase):
         self.patch(Model.size, 'precompute', True)
         self.patch(Line.size, 'precompute', False)
         with self.assertWarns(UserWarning):
-            self.registry._setup_models__(self.cr)
+            self.registry._setup_models__(self.cr, ['test_orm.precompute', 'test_orm.precompute.line'])
             self.registry.get_trigger_tree(Model._fields.values())
 
 
