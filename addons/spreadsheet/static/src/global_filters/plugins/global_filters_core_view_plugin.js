@@ -5,6 +5,8 @@
  * @typedef {import("@spreadsheet").FieldMatching} FieldMatching
  * @typedef {import("@spreadsheet").DateGlobalFilter} DateGlobalFilter
  * @typedef {import("@spreadsheet").RelationalGlobalFilter} RelationalGlobalFilter
+ * @typedef {import("@spreadsheet").DateValue} DateValue
+ * @typedef {import("@spreadsheet").DateDefaultValue} DateDefaultValue
  */
 
 import { _t } from "@web/core/l10n/translation";
@@ -17,7 +19,7 @@ import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import {
     checkFilterValueIsValid,
     getDateDomain,
-    getRelativeDateFromTo,
+    getDateRange,
 } from "@spreadsheet/global_filters/helpers";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { getItemId } from "../../helpers/model";
@@ -87,21 +89,12 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "EDIT_GLOBAL_FILTER": {
                 const filter = cmd.filter;
                 const id = filter.id;
-                if (
-                    filter.type === "date" &&
-                    this.values[id] &&
-                    this.values[id].rangeType !== filter.rangeType
-                ) {
-                    delete this.values[id];
-                } else if (!checkFilterValueIsValid(filter, this.values[id]?.value)) {
-                    delete this.values[id];
-                }
                 this.recordsDisplayName[id] = filter.defaultValueDisplayNames;
                 break;
             }
             case "SET_GLOBAL_FILTER_VALUE":
                 this.recordsDisplayName[cmd.id] = cmd.displayNames;
-                if (!cmd.value) {
+                if (cmd.value === undefined) {
                     this._clearGlobalFilterValue(cmd.id);
                 } else {
                     this._setGlobalFilterValue(cmd.id, cmd.value);
@@ -165,13 +158,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "boolean":
                 return filter.defaultValue;
             case "date":
-                if (filter.rangeType === "fixedPeriod") {
-                    return this._getValueOfCurrentPeriod(filterId);
-                }
-                if (filter.rangeType === "relative") {
-                    return filter.defaultValue;
-                }
-                throw new Error("from_to should not have a default value");
+                return this._getDateValueFromDefaultValue(filter.defaultValue);
             case "relation":
                 if (filter.defaultValue === "current_user") {
                     return [user.userId];
@@ -292,39 +279,10 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {string|Array<string>|Object} value Current value to set
      */
     _setGlobalFilterValue(id, value) {
-        const filter = this.getters.getGlobalFilter(id);
         this.values[id] = {
             preventDefaultValue: false,
             value,
-            rangeType: filter.type === "date" ? filter.rangeType : undefined,
         };
-    }
-
-    /**
-     * Get the filter value corresponding to the current period, depending of the type of range of the filter.
-     * For example if rangeType === "month", the value will be the current month of the current year.
-     *
-     * @param {string} filterId a global filter
-     * @return {Object} filter value
-     */
-    _getValueOfCurrentPeriod(filterId) {
-        const filter = this.getters.getGlobalFilter(filterId);
-        const year = DateTime.local().year;
-        switch (filter.defaultValue) {
-            case "this_year":
-                return { type: "year", year };
-            case "this_month": {
-                const month = DateTime.local().month;
-                return { type: "month", year, month };
-            }
-            case "this_quarter": {
-                const quarter = Math.floor(new Date().getMonth() / 3) + 1;
-                return { type: "quarter", year, quarter };
-            }
-        }
-        throw new Error(
-            "Unsupported default value for fixed period date filter: " + filter.defaultValue
-        );
     }
 
     /**
@@ -333,11 +291,9 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {string} id Id of the filter
      */
     _clearGlobalFilterValue(id) {
-        const filter = this.getters.getGlobalFilter(id);
         this.values[id] = {
             preventDefaultValue: true,
             value: undefined,
-            rangeType: filter.type === "date" ? filter.rangeType : undefined,
         };
     }
 
@@ -346,7 +302,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     // -------------------------------------------------------------------------
 
     _getDateFilterDisplayValue(filter) {
-        const { from, to } = this._getDateRange(filter);
+        const { from, to } = getDateRange(this.getGlobalFilterValue(filter.id));
         const locale = this.getters.getLocale();
         const _from = {
             value: from ? toNumber(serializeDate(from), locale) : "",
@@ -357,6 +313,40 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             format: locale.dateFormat,
         };
         return [[_from], [_to]];
+    }
+
+    /**
+     * Get the value derived from the default value of a date filter.
+     * e.g. if the default value is "this_year", it returns the actual current
+     * year. If it's a relative period, it returns the period as value.
+     *
+     * @param {DateDefaultValue} defaultValue
+     * @returns {DateValue|undefined}
+     */
+    _getDateValueFromDefaultValue(defaultValue) {
+        const year = DateTime.local().year;
+        switch (defaultValue) {
+            case "this_year":
+                return { type: "year", year };
+            case "this_month": {
+                const month = DateTime.local().month;
+                return { type: "month", year, month };
+            }
+            case "this_quarter": {
+                const quarter = Math.floor(new Date().getMonth() / 3) + 1;
+                return { type: "quarter", year, quarter };
+            }
+            case "last_7_days":
+            case "last_30_days":
+            case "last_90_days":
+            case "last_12_months":
+            case "year_to_date":
+                return {
+                    type: "relative",
+                    period: defaultValue,
+                };
+        }
+        return undefined;
     }
 
     _getRelationFilterDisplayValue(filter, value) {
@@ -376,27 +366,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     }
 
     /**
-     * @returns {{ from?: DateTime, to?: DateTime }}
-     */
-    _getDateRange(filter, offset = 0) {
-        const value = this.getGlobalFilterValue(filter.id);
-        if (!value) {
-            return {};
-        }
-        const now = DateTime.local();
-
-        if (filter.rangeType === "from_to") {
-            const from = value.from && DateTime.fromISO(value.from).startOf("day");
-            const to = value.to && DateTime.fromISO(value.to).endOf("day");
-            return { from, to };
-        }
-        if (filter.rangeType === "relative") {
-            return getRelativeDateFromTo(now, offset, value);
-        }
-        return this._getFixedPeriodFromTo(now, offset, value);
-    }
-
-    /**
      * Get the domain relative to a date field
      *
      * @private
@@ -413,7 +382,7 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const field = fieldMatching.chain;
         const type = /** @type {"date" | "datetime"} */ (fieldMatching.type);
         const offset = fieldMatching.offset || 0;
-        const { from, to } = this._getDateRange(filter, offset);
+        const { from, to } = getDateRange(this.getGlobalFilterValue(filter.id), offset);
         return getDateDomain(from, to, field, type);
     }
 
@@ -466,45 +435,6 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             return new Domain([[field, "=", toBoolean(value[0])]]);
         }
         return new Domain([[field, "in", [toBoolean(value[0]), toBoolean(value[1])]]]);
-    }
-
-    _getFixedPeriodFromTo(now, offset, value) {
-        let granularity = "year";
-        const noYear = value.year === undefined;
-        if (noYear) {
-            return {};
-        }
-        const setParam = { year: value.year };
-        const plusParam = {};
-        switch (value.type) {
-            case "year":
-                plusParam.year = offset;
-                break;
-            case "month":
-                if (value.month !== undefined) {
-                    granularity = "month";
-                    setParam.month = value.month;
-                    plusParam.month = offset;
-                }
-                break;
-            case "quarter":
-                if (value.quarter !== undefined) {
-                    granularity = "quarter";
-                    setParam.quarter = value.quarter;
-                    plusParam.quarter = offset;
-                }
-                break;
-        }
-        if ("quarter" in setParam) {
-            // Luxon does not consider quarter key in setParam (like moment did)
-            setParam.month = setParam.quarter * 3 - 2; // start of the quarter
-            delete setParam.quarter;
-        }
-        const date = now.set(setParam).plus(plusParam || {});
-        return {
-            from: date.startOf(granularity),
-            to: date.endOf(granularity),
-        };
     }
 
     /**

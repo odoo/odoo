@@ -58,7 +58,6 @@ test("Chart is impacted by global filter in dashboard mode", async function () {
         id: "42",
         type: "date",
         label: "Last Year",
-        rangeType: "fixedPeriod",
     };
     await addGlobalFilter(model, filter, {
         chart: { [chartId]: { chain: "date", type: "date" } },

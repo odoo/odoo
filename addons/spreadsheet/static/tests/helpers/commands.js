@@ -33,6 +33,10 @@ export function addGlobalFilterWithoutReload(model, filter, fieldMatchings = {})
     return model.dispatch("ADD_GLOBAL_FILTER", { filter, ...fieldMatchings });
 }
 
+export function setGlobalFilterValueWithoutReload(model, payload) {
+    return model.dispatch("SET_GLOBAL_FILTER_VALUE", payload);
+}
+
 /**
  * Add a global filter and ensure the data sources are completely reloaded
  * @param {import("@spreadsheet").OdooSpreadsheetModel} model
