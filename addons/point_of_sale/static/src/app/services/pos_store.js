@@ -500,6 +500,43 @@ export class PosStore extends WithLazyGetterTrap {
                 products[i].available_in_pos = false;
             }
         }
+
+        this.productAttributesExclusion = this.computeProductAttributesExclusion();
+    }
+
+    computeProductAttributesExclusion(ptav_ids = false) {
+        const exclusions = this.productAttributesExclusion || new Map();
+
+        const addExclusion = (key, value) => {
+            if (!exclusions.has(key)) {
+                exclusions.set(key, new Set());
+            }
+            exclusions.get(key).add(value);
+        };
+
+        for (const ptav of ptav_ids || this.models["product.template.attribute.value"].getAll()) {
+            const excluded_value_ids = ptav.excluded_value_ids;
+            const ptavId = ptav.id;
+            for (const { id: valueId } of excluded_value_ids) {
+                addExclusion(ptavId, valueId);
+                addExclusion(valueId, ptavId);
+            }
+        }
+        return exclusions;
+    }
+
+    doHaveConflictWith(value, selectedValues) {
+        const exclusions = this.productAttributesExclusion.get(value.id);
+        if (!exclusions) {
+            return false;
+        }
+        const selectedValueIds = new Set(selectedValues.map((v) => v.id));
+        for (const exclusionId of exclusions) {
+            if (selectedValueIds.has(exclusionId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     async onDeleteOrder(order) {
@@ -599,6 +636,9 @@ export class PosStore extends WithLazyGetterTrap {
             [odoo.pos_config_id, domain, offset, limit],
             {},
             false
+        );
+        this.productAttributesExclusion = this.computeProductAttributesExclusion(
+            result["product.template.attribute.value"]
         );
         return result;
     }
