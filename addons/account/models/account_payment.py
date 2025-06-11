@@ -659,7 +659,7 @@ class AccountPayment(models.Model):
         ''', {
             'payment_ids': tuple(stored_payments.ids)
         })
-        query_res = dict((payment_id, statement_line_ids) for payment_id, statement_line_ids in self._cr.fetchall())
+        query_res = dict(self._cr.fetchall())
 
         for pay in self:
             statement_line_ids = query_res.get(pay.id, [])

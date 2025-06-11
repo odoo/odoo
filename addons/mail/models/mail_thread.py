@@ -286,9 +286,9 @@ class MailThread(models.AbstractModel):
                 else:
                     threads_no_subtype += thread
             if threads_no_subtype:
-                bodies = dict(
-                    (thread.id, thread._creation_message())
-                    for thread in threads_no_subtype)
+                bodies = {
+                    thread.id: thread._creation_message()
+                    for thread in threads_no_subtype}
                 threads_no_subtype._message_log_batch(bodies=bodies)
 
         # post track template if a tracked field changed
@@ -623,8 +623,8 @@ class MailThread(models.AbstractModel):
 
             # find subtypes and post messages or log if no subtype found
             subtype = record._track_subtype(
-                dict((col_name, initial_values_dict[record.id][col_name])
-                     for col_name in changes)
+                {col_name: initial_values_dict[record.id][col_name]
+                     for col_name in changes}
             )
             author_id = authors[record.id].id if record.id in authors else None
             # _set_log_message takes priority over _track_get_default_log_message even if it's an empty string
@@ -1893,7 +1893,7 @@ class MailThread(models.AbstractModel):
     def _message_get_suggested_recipients(self):
         """ Returns suggested recipients for ids. Those are a list of
         tuple (partner_id, partner_name, reason, default_create_value), to be managed by Chatter. """
-        result = dict((res_id, []) for res_id in self.ids)
+        result = {res_id: [] for res_id in self.ids}
         user_field = self._fields.get('user_id')
         if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
             for obj in self.sudo():  # SUPERUSER because of a read on res.users that would crash otherwise
@@ -3938,12 +3938,12 @@ class MailThread(models.AbstractModel):
         # - action (deprecated), token (assign), access_token (view)
         # - auth_signup: auth_signup_token and auth_login
         # - portal: pid, hash
-        params.update(dict(
+        params.update(
             (key, value)
             for key, value in kwargs.items()
             if key in ('action', 'token', 'access_token', 'auth_signup_token',
                        'auth_login', 'pid', 'hash')
-        ))
+        )
 
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
             base_link = '/mail/%s' % link_type
@@ -4044,7 +4044,7 @@ class MailThread(models.AbstractModel):
         else:
             self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
-                partner_ids, subtypes=dict((pid, subtype_ids) for pid in partner_ids),
+                partner_ids, subtypes=dict.fromkeys(partner_ids, subtype_ids),
                 customer_ids=customer_ids, check_existing=True, existing_policy='replace')
 
         return True

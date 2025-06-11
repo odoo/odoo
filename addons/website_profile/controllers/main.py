@@ -269,7 +269,7 @@ class WebsiteProfile(http.Controller):
             position_map = self._get_user_tracking_karma_gain_position(position_domain, users.ids, group_by)
         else:
             position_results = users._get_karma_position(position_domain)
-            position_map = dict((user_data['user_id'], dict(user_data)) for user_data in position_results)
+            position_map = {user_data['user_id']: dict(user_data) for user_data in position_results}
         return position_map
 
     def _get_user_tracking_karma_gain_position(self, domain, user_ids, group_by):
@@ -283,7 +283,7 @@ class WebsiteProfile(http.Controller):
         else:
             from_date = None
         results = request.env['res.users'].browse(user_ids)._get_tracking_karma_gain_position(domain, from_date=from_date, to_date=to_date)
-        return dict((item['user_id'], dict(item)) for item in results)
+        return {item['user_id']: dict(item) for item in results}
 
     # User and validation
     # --------------------------------------------------

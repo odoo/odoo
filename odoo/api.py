@@ -760,7 +760,7 @@ class Environment(Mapping):
         try:
             protected.pushmap()
             if records is not None:  # Handle first signature
-                ids_by_field = {field: records._ids for field in what}
+                ids_by_field = dict.fromkeys(what, records._ids)
             else:  # Handle second signature
                 ids_by_field = defaultdict(list)
                 for fields, what_records in what:

@@ -265,7 +265,7 @@ class Team(models.Model):
         # on singleton record set, do not bother doing a specific message per team)
         log_action = _("Lead Assignment requested by %(user_name)s", user_name=self.env.user.name)
         log_message = Markup("<p>%s<br /><br />%s</p>") % (log_action, html_message)
-        self._message_log_batch(bodies=dict((team.id, log_message) for team in self))
+        self._message_log_batch(bodies={team.id: log_message for team in self})
 
         return {
             'type': 'ir.actions.client',

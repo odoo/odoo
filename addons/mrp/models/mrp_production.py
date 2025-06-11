@@ -1647,7 +1647,7 @@ class MrpProduction(models.Model):
             # log an activity on Parent MO if child MO is cancelled.
             finish_moves = production.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             if finish_moves:
-                production._log_downside_manufactured_quantity({finish_move: (production.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
+                production._log_downside_manufactured_quantity(dict.fromkeys(finish_moves, (production.product_uom_qty, 0.0)), cancel=True)
 
         self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))

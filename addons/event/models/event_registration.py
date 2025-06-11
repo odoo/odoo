@@ -157,7 +157,7 @@ class EventRegistration(models.Model):
             contact_id = partner.address_get().get('contact', False)
             if contact_id:
                 contact = self.env['res.partner'].browse(contact_id)
-                return dict((fname, contact[fname]) for fname in fnames if contact[fname])
+                return {fname: contact[fname] for fname in fnames if contact[fname]}
         return {}
 
     @api.onchange('phone', 'event_id', 'partner_id')

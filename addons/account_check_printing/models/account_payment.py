@@ -289,7 +289,7 @@ class AccountPayment(models.Model):
         invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)
 
         # Group partials by invoices.
-        invoice_map = {invoice: self.env['account.partial.reconcile'] for invoice in invoices}
+        invoice_map = dict.fromkeys(invoices, self.env['account.partial.reconcile'])
         for partial in term_lines.matched_debit_ids:
             invoice = partial.debit_move_id.move_id
             if invoice in invoice_map:

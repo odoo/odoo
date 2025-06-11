@@ -315,11 +315,10 @@ class Channel(models.Model):
 
     def _subscribe_users_automatically_get_members(self):
         """ Return new members per channel ID """
-        return dict(
-            (channel.id,
-             ((channel.group_ids.users.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids))
+        return {
+            channel.id: ((channel.group_ids.users.partner_id.filtered(lambda p: p.active) - channel.channel_partner_ids).ids)
                 for channel in self
-            )
+            }
 
     def action_unfollow(self):
         self._action_unfollow(self.env.user.partner_id)
@@ -1218,7 +1217,7 @@ class Channel(models.Model):
         if not self:
             return []
         channels_last_message_ids = self._channel_last_message_ids()
-        channels_preview = dict((r['message_id'], r) for r in channels_last_message_ids)
+        channels_preview = {r['message_id']: r for r in channels_last_message_ids}
         last_messages = self.env['mail.message'].browse(channels_preview).message_format()
         for message in last_messages:
             channel = channels_preview[message['id']]

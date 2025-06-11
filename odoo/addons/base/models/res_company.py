@@ -102,8 +102,8 @@ class Company(models.Model):
         return ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
 
     def _get_company_address_update(self, partner):
-        return dict((fname, partner[fname])
-                    for fname in self._get_company_address_field_names())
+        return {fname: partner[fname]
+                for fname in self._get_company_address_field_names()}
 
     @api.depends('parent_path')
     def _compute_parent_ids(self):

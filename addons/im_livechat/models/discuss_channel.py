@@ -48,7 +48,7 @@ class DiscussChannel(models.Model):
             :rtype : list(dict)
         """
         channel_infos = super()._channel_info()
-        channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+        channel_infos_dict = {c['id']: c for c in channel_infos}
         for channel in self:
             if channel.chatbot_current_step_id:
                 # sudo: chatbot.script.step - returning the current script of the channel

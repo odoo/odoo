@@ -13,12 +13,12 @@ class Followers(models.Model):
             return recipients_data
 
         if pids is None and records:
-            records_pids = dict(
-                (rec_id, partners.ids)
+            records_pids = {
+                rec_id: partners.ids
                 for rec_id, partners in records._mail_get_partners().items()
-            )
+            }
         elif pids and records:
-            records_pids = dict((record.id, pids) for record in records)
+            records_pids = {record.id: pids for record in records}
         else:
             records_pids = {0: pids if pids else []}
         for rid, rdata in recipients_data.items():

@@ -91,11 +91,11 @@ class Followers(models.Model):
         # mail_mail_res_partner_rel is the join table for the m2m recipient_ids field
         self.env.cr.execute("""
             SELECT message.model, message.res_id, mail_partner.res_partner_id
-              FROM mail_mail mail        
+              FROM mail_mail mail
               JOIN mail_mail_res_partner_rel mail_partner ON mail_partner.mail_mail_id = mail.id
               JOIN mail_message message ON mail.mail_message_id = message.id AND message.model != 'discuss.channel'
-              JOIN mail_followers follower ON message.model = follower.res_model 
-               AND message.res_id = follower.res_id 
+              JOIN mail_followers follower ON message.model = follower.res_model
+               AND message.res_id = follower.res_id
                AND mail_partner.res_partner_id = follower.partner_id
              WHERE mail.id IN %(mail_ids)s
         """, {'mail_ids': tuple(mail_ids)})
@@ -302,7 +302,7 @@ class Followers(models.Model):
             res = []
 
         res_ids = records.ids if records else [0]
-        doc_infos = dict((res_id, {}) for res_id in res_ids)
+        doc_infos = {res_id: {} for res_id in res_ids}
         for (partner_id, is_active, lang, pshare, uid, ushare, notif, groups, res_id, is_follower) in res:
             to_update = [res_id] if res_id else res_ids
             for res_id_to_update in to_update:
@@ -442,7 +442,7 @@ GROUP BY fol.id%s%s""" % (
         if partner_ids and customer_ids is None:
             customer_ids = self.env['res.partner'].sudo().search([('id', 'in', partner_ids), ('partner_share', '=', True)]).ids
 
-        p_stypes = dict((pid, external.ids if pid in customer_ids else default.ids) for pid in partner_ids)
+        p_stypes = {pid: external.ids if pid in customer_ids else default.ids for pid in partner_ids}
 
         return self._add_followers(res_model, res_ids, partner_ids, p_stypes, check_existing=check_existing, existing_policy=existing_policy)
 
@@ -476,7 +476,7 @@ GROUP BY fol.id%s%s""" % (
           * update: gives an update dict allowing to add missing subtypes (no subtype removal);
         """
         _res_ids = res_ids or [0]
-        data_fols, doc_pids = dict(), dict((i, set()) for i in _res_ids)
+        data_fols, doc_pids = {}, {i: set() for i in _res_ids}
 
         if check_existing and res_ids:
             for fid, rid, pid, sids in self._get_subscription_data([(res_model, res_ids)], partner_ids or None):

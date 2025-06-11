@@ -131,14 +131,14 @@ class MailTestGatewayGroups(models.Model):
         return ['customer_id']
 
     def _message_get_default_recipients(self):
-        return dict(
-            (record.id, {
+        return {
+            record.id: {
                 'email_cc': False,
                 'email_to': record.email_from if not record.customer_id.ids else False,
                 'partner_ids': record.customer_id.ids,
-            })
+            }
             for record in self
-        )
+        }
 
 
 class MailTestStandard(models.Model):
@@ -218,14 +218,14 @@ class MailTestTicket(models.Model):
         return f"Ticket for {self.name} on {self.datetime.strftime('%m/%d/%Y, %H:%M:%S')}"
 
     def _message_get_default_recipients(self):
-        return dict(
-            (record.id, {
+        return {
+            record.id: {
                 'email_cc': False,
                 'email_to': record.email_from if not record.customer_id.ids else False,
                 'partner_ids': record.customer_id.ids,
-            })
+            }
             for record in self
-        )
+        }
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Activate more groups to test query counters notably (and be backward
@@ -379,14 +379,14 @@ class MailTestContainer(models.Model):
         return ['customer_id']
 
     def _message_get_default_recipients(self):
-        return dict(
-            (record.id, {
+        return {
+            record.id: {
                 'email_cc': False,
                 'email_to': False,
                 'partner_ids': record.customer_id.ids,
-            })
+            }
             for record in self
-        )
+        }
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=None):
         """ Activate more groups to test query counters notably (and be backward

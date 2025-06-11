@@ -36,7 +36,7 @@ class SlideQuestion(models.Model):
     @api.depends('slide_id')
     def _compute_statistics(self):
         slide_partners = self.env['slide.slide.partner'].sudo().search([('slide_id', 'in', self.slide_id.ids)])
-        slide_stats = dict((s.slide_id.id, dict({'attempts_count': 0, 'attempts_unique': 0, 'done_count': 0})) for s in slide_partners)
+        slide_stats = {s.slide_id.id: {'attempts_count': 0, 'attempts_unique': 0, 'done_count': 0} for s in slide_partners}
 
         for slide_partner in slide_partners:
             slide_stats[slide_partner.slide_id.id]['attempts_count'] += slide_partner.quiz_attempts_count

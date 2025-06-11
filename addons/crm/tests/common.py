@@ -364,10 +364,10 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         # country + phone information
         if country_ids:
-            cid_to_country = dict(
-                (country.id, country)
+            cid_to_country = {
+                country.id: country
                 for country in self.env['res.country'].browse([cid for cid in country_ids if cid])
-            )
+            }
             for idx, lead_data in enumerate(leads_data):
                 country_id = country_ids[idx % len(country_ids)]
                 country = cid_to_country.get(country_id, self.env['res.country'])
@@ -471,11 +471,11 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         # save opportunity value before being modified by merge process
         fields_all = self.FIELDS_FIRST_SET + self.merge_fields
-        original_opp_values = dict(
-            (fname, opportunity[fname])
+        original_opp_values = {
+            fname: opportunity[fname]
             for fname in fields_all
             if fname in opportunity
-        )
+        }
 
         def _find_value(lead, fname):
             if lead == opportunity:

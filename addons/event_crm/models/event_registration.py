@@ -115,10 +115,10 @@ class EventRegistration(models.Model):
             # if partner has been updated -> update registration contact information
             # as they are computed (and therefore not given to write values)
             if 'partner_id' in new_vals:
-                new_vals.update(**dict(
+                new_vals.update(
                     (field, registration[field])
                     for field in self._get_lead_contact_fields()
-                    if field != 'partner_id')
+                    if field != 'partner_id'
                 )
 
             lead_values = {}
@@ -287,11 +287,13 @@ class EventRegistration(models.Model):
 
         Tracked values are therefore the union of those two field sets. """
         tracked_fields = list(set(self._get_lead_contact_fields()) | set(self._get_lead_description_fields()))
-        return dict(
-            (registration.id,
-             dict((field, self._convert_value(registration[field], field)) for field in tracked_fields)
-            ) for registration in self
-        )
+        return {
+            registration.id: {
+                field: self._convert_value(registration[field], field)
+                for field in tracked_fields
+            }
+            for registration in self
+        }
 
     def _get_lead_grouping(self, rules, rule_to_new_regs):
         """ Perform grouping of registrations in order to enable order-based
@@ -324,11 +326,11 @@ class EventRegistration(models.Model):
             for create_date, sub_registrations in registrations.grouped('create_date').items()
         }
 
-        return dict(
-            (rule, [(False, key, (registrations & rule_to_new_regs[rule]).sorted('id'))
-                    for key, registrations in grouped_registrations.items()])
+        return {
+            rule: [(False, key, (registrations & rule_to_new_regs[rule]).sorted('id'))
+                    for key, registrations in grouped_registrations.items()]
             for rule in rules
-        )
+        }
 
     # ------------------------------------------------------------
     # TOOLS

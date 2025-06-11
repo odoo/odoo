@@ -973,7 +973,7 @@ class ModuleDependency(models.Model):
         mods = self.env['ir.module.module'].search([('name', 'in', names)])
 
         # index modules by name, and assign dependencies
-        name_mod = dict((mod.name, mod) for mod in mods)
+        name_mod = {mod.name: mod for mod in mods}
         for dep in self:
             dep.depend_id = name_mod.get(dep.name)
 

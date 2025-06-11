@@ -98,7 +98,7 @@ def _mock_deregister_participant(func, self, *args, **kwargs):
     demo_moves.message_main_attachment_id.unlink()
     demo_moves.ubl_cii_xml_id.unlink()
     log_message = _('The peppol status of the documents has been reset when switching from Demo to Live.')
-    demo_moves._message_log_batch(bodies=dict((move.id, log_message) for move in demo_moves))
+    demo_moves._message_log_batch(bodies={move.id: log_message for move in demo_moves})
 
     # also unlink the demo vendor bill
     self.env['account.move'].search([

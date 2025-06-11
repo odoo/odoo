@@ -629,10 +629,10 @@ class TestBaseAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=1, employee=1):
             records._message_log_batch(
-                bodies=dict(
-                    (record.id, Markup('<p>Test _message_log</p>'))
+                bodies={
+                    record.id: Markup('<p>Test _message_log</p>')
                     for record in records
-                ),
+                },
                 message_type='comment')
 
     @users('admin', 'employee')

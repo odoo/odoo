@@ -1961,10 +1961,10 @@ actual arch.
             or any(self.is_node_branded(child) for child in node.iterdescendants())
 
     def _pop_view_branding(self, element):
-        distributed_branding = dict(
-            (attribute, element.attrib.pop(attribute))
+        distributed_branding = {
+            attribute: element.attrib.pop(attribute)
             for attribute in MOVABLE_BRANDING
-            if element.get(attribute))
+            if element.get(attribute)}
         return distributed_branding
 
     def distribute_branding(self, e, branding=None, parent_xpath='',

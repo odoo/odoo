@@ -102,10 +102,10 @@ class BaseModel(models.AbstractModel):
           customers to contact;
         """
         partner_fields = self._mail_get_partner_fields(introspect_fields=introspect_fields)
-        return dict(
-            (record.id, self.env['res.partner'].union(*[record[fname] for fname in partner_fields]))
+        return {
+            record.id: self.env['res.partner'].union(*[record[fname] for fname in partner_fields])
             for record in self
-        )
+        }
 
     @api.model
     def _mail_get_primary_email_field(self):
@@ -255,7 +255,7 @@ class BaseModel(models.AbstractModel):
                 company_to_res_ids[company].append(record_id)
         else:
             company_to_res_ids = {self.env.company: _res_ids}
-            record_ids_to_company = {_res_id: self.env.company for _res_id in _res_ids}
+            record_ids_to_company = dict.fromkeys(_res_ids, self.env.company)
 
         # begin with aliases (independent from company, alias_domain_id on alias wins)
         reply_to_email = {}
@@ -278,7 +278,7 @@ class BaseModel(models.AbstractModel):
                 if company.catchall_email:
                     left_ids = set(record_ids) - set(reply_to_email)
                     if left_ids:
-                        reply_to_email.update({rec_id: company.catchall_email for rec_id in left_ids})
+                        reply_to_email.update(dict.fromkeys(left_ids, company.catchall_email))
 
         # compute name of reply-to ("Company Document" <alias@domain>)
         reply_to_formatted = dict.fromkeys(_res_ids, default)

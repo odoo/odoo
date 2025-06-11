@@ -54,10 +54,10 @@ class CrmTeamMember(models.Model):
         ])
         duplicates = self.env['crm.team.member']
 
-        active_records = dict(
-            (membership.user_id.id, membership.crm_team_id.id)
+        active_records = {
+            membership.user_id.id: membership.crm_team_id.id
             for membership in self if membership.active
-        )
+        }
         for membership in self:
             potential = existing.filtered(lambda m: m.user_id == membership.user_id and \
                 m.crm_team_id == membership.crm_team_id and m.id != membership.id

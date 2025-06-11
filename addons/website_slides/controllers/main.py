@@ -212,7 +212,7 @@ class WebsiteSlides(WebsiteProfile):
     def _get_channel_progress(self, channel, include_quiz=False):
         """ Replacement to user_progress. Both may exist in some transient state. """
         slides = request.env['slide.slide'].sudo().search([('channel_id', '=', channel.id)])
-        channel_progress = dict((sid, dict()) for sid in slides.ids)
+        channel_progress = {sid: {} for sid in slides.ids}
         if not request.env.user._is_public() and channel.is_member:
             slide_partners = request.env['slide.slide.partner'].sudo().search([
                 ('channel_id', '=', channel.id),
@@ -1425,7 +1425,7 @@ class WebsiteSlides(WebsiteProfile):
             if (file_size / 1024.0 / 1024.0) > 25:
                 return {'error': _('File is too big. File size cannot exceed 25MB')}
 
-        values = dict((fname, post[fname]) for fname in self._get_valid_slide_post_values() if post.get(fname))
+        values = {fname: post[fname] for fname in self._get_valid_slide_post_values() if post.get(fname)}
 
         # handle exception during creation of slide and sent error notification to the client
         # otherwise client slide create dialog box continue processing even server fail to create a slide

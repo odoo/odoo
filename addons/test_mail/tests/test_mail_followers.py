@@ -774,16 +774,16 @@ class RecipientsNotificationTest(MailCommon):
             pids=self.partner_admin.ids
         )
         # 0: portal is follower but does not follow comment + common partner (+ admin as pid)
-        recipients_data_1 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[0:1].ids)
+        recipients_data_1 = {r: recipients_data[r] for r in recipients_data if r in test_records[0:1].ids}
         self.assertRecipientsData(recipients_data_1, test_records[0:1], self.env.user.partner_id + self.common_partner + self.partner_admin)
         # 1: portal is follower with comment + common partner (+ admin as pid)
-        recipients_data_1 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[1:2].ids)
+        recipients_data_1 = {r: recipients_data[r] for r in recipients_data if r in test_records[1:2].ids}
         self.assertRecipientsData(recipients_data_1, test_records[1:2], self.env.user.partner_id + self.common_partner + self.partner_portal + self.partner_admin)
         # 2-3: common partner (+ admin as pid)
-        recipients_data_2 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[2:4].ids)
+        recipients_data_2 = {r: recipients_data[r] for r in recipients_data if r in test_records[2:4].ids}
         self.assertRecipientsData(recipients_data_2, test_records[2:4], self.env.user.partner_id + self.common_partner + self.partner_admin)
         # 4+: env user partner (+ admin as pid)
-        recipients_data_3 = dict((r, recipients_data[r]) for r in recipients_data if r in  test_records[4:].ids)
+        recipients_data_3 = {r: recipients_data[r] for r in recipients_data if r in test_records[4:].ids}
         self.assertRecipientsData(recipients_data_3, test_records[4:], self.env.user.partner_id + self.partner_admin)
 
         # multi mode, pids only

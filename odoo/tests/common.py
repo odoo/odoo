@@ -656,12 +656,12 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             elif diff_type == 'additional_record':
                 errors += [
                     '\n==== Additional record ====',
-                    pprint.pformat(dict((k, v[0]) for k, v in diff.items())),
+                    pprint.pformat({k: v[0] for k, v in diff.items()}),
                 ]
             elif diff_type == 'missing_record':
                 errors += [
                     '\n==== Missing record ====',
-                    pprint.pformat(dict((k, v[1]) for k, v in diff.items())),
+                    pprint.pformat({k: v[1] for k, v in diff.items()}),
                 ]
 
         self.fail('\n'.join(errors))

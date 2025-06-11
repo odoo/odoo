@@ -461,7 +461,7 @@ class Meeting(models.Model):
     @api.depends('recurrence_id', 'recurrency', 'rrule_type_ui')
     def _compute_recurrence(self):
         recurrence_fields = self._get_recurrent_fields()
-        false_values = {field: False for field in recurrence_fields}  # computes need to set a value
+        false_values = dict.fromkeys(recurrence_fields, False)  # computes need to set a value
         defaults = self.env['calendar.recurrence'].default_get(recurrence_fields)
         default_rrule_values = self.recurrence_id.default_get(recurrence_fields)
         for event in self:

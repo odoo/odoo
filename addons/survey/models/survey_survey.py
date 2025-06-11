@@ -222,7 +222,7 @@ class Survey(models.Model):
             'answer_count': 0, 'answer_done_count': 0, 'success_count': 0,
             'answer_score_avg': 0.0, 'success_ratio': 0.0
         }
-        stat = dict((cid, dict(default_vals, answer_score_avg_total=0.0)) for cid in self.ids)
+        stat = {cid: dict(default_vals, answer_score_avg_total=0.0) for cid in self.ids}
         UserInput = self.env['survey.user_input']
         base_domain = [('survey_id', 'in', self.ids)]
 

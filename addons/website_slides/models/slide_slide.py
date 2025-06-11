@@ -372,7 +372,7 @@ class Slide(models.Model):
         # Do not use dict.fromkeys(self.ids, dict()) otherwise it will use the same dictionnary for all keys.
         # Therefore, when updating the dict of one key, it updates the dict of all keys.
         keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
-        default_vals = dict((key, 0) for key in keys + ['total_slides'])
+        default_vals = dict.fromkeys(keys + ['total_slides'], 0)
 
         res = self.env['slide.slide']._read_group(
             [('is_published', '=', True), ('category_id', 'in', self.filtered('is_category').ids), ('is_category', '=', False)],
@@ -999,7 +999,7 @@ class Slide(models.Model):
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
-        slide_partners_map = dict((sp.slide_id.id, sp) for sp in slide_partners)
+        slide_partners_map = {sp.slide_id.id: sp for sp in slide_partners}
         for slide in self:
             if not slide.question_ids:
                 gains = [0]

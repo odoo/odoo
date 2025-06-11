@@ -189,10 +189,10 @@ class TeamMember(models.Model):
         if auto_commit:
             self._cr.commit()
         # log results and return
-        result_data = dict(
-            (member_info["team_member"], {"assigned": member_info["assigned"]})
+        result_data = {
+            member_info["team_member"]: {"assigned": member_info["assigned"]}
             for member_id, member_info in members_data.items()
-        )
+        }
         _logger.info('Assigned %s leads to %s salesmen', len(leads_done_ids), len(members))
         for member, member_info in result_data.items():
             _logger.info('-> member %s: assigned %d leads (%s)', member.id, len(member_info["assigned"]), member_info["assigned"])

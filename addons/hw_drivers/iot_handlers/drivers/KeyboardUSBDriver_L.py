@@ -65,7 +65,7 @@ class KeyboardUSBDriver(Driver):
             69: 'num_lock',
             100: 'alt_gr', # right alt
         }
-        self._tracked_modifiers = {modifier: False for modifier in self._scancode_to_modifier.values()}
+        self._tracked_modifiers = dict.fromkeys(self._scancode_to_modifier.values(), False)
 
         if not KeyboardUSBDriver.available_layouts:
             KeyboardUSBDriver.load_layouts_list()

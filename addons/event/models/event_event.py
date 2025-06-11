@@ -256,8 +256,8 @@ class EventEvent(models.Model):
             'open': 'seats_reserved',
             'done': 'seats_used',
         }
-        base_vals = dict((fname, 0) for fname in state_field.values())
-        results = dict((event_id, dict(base_vals)) for event_id in self.ids)
+        base_vals = dict.fromkeys(state_field.values(), 0)
+        results = {event_id: dict(base_vals) for event_id in self.ids}
         if self.ids:
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration

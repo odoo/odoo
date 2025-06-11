@@ -429,7 +429,7 @@ class MailRenderMixin(models.AbstractModel):
             # the raw content, so even if we failed to detect dynamic code,
             # non "mail_template_editor" users will not gain rendering tools available
             # only for template specific group users
-            return {record_id: template_instructions[0][0] for record_id in res_ids}
+            return dict.fromkeys(res_ids, template_instructions[0][0])
 
         # prepare template variables
         variables = self._render_eval_context()
@@ -508,7 +508,7 @@ class MailRenderMixin(models.AbstractModel):
             behavior is to remove them. It is used notably for browser-specific
             code implemented like comments;
 
-        :return dict: {res_id: string of rendered template based on record}
+        :return: {res_id: string of rendered template based on record}
         """
         if options is None:
             options = {}
@@ -555,15 +555,12 @@ class MailRenderMixin(models.AbstractModel):
           Odoo model given by model;
         :param string engine: inline_template or qweb_view;
 
-        :return dict: {res_id: lang code (i.e. en_US)}
+        :return: {res_id: lang code (i.e. en_US)}
         """
         self.ensure_one()
 
         rendered_langs = self._render_template(self.lang, self.render_model, res_ids, engine=engine)
-        return dict(
-            (res_id, lang)
-            for res_id, lang in rendered_langs.items()
-        )
+        return rendered_langs
 
     def _classify_per_lang(self, res_ids, engine='inline_template'):
         """ Given some record ids, return for computed each lang a contextualized
@@ -585,10 +582,10 @@ class MailRenderMixin(models.AbstractModel):
             for res_id, lang in self._render_lang(res_ids, engine=engine).items():
                 lang_to_res_ids.setdefault(lang, []).append(res_id)
 
-        return dict(
-            (lang, (self.with_context(lang=lang) if lang else self, lang_res_ids))
+        return {
+            lang: (self.with_context(lang=lang) if lang else self, lang_res_ids)
             for lang, lang_res_ids in lang_to_res_ids.items()
-        )
+        }
 
     def _render_field(self, field, res_ids, engine='inline_template',
                       compute_lang=False, set_lang=False,
@@ -647,8 +644,8 @@ class MailRenderMixin(models.AbstractModel):
         if options:
             field_options.update(**options)
 
-        return dict(
-            (res_id, rendered)
+        return {
+            res_id: rendered
             for lang, (template, tpl_res_ids) in templates_res_ids.items()
             for res_id, rendered in template._render_template(
                 template[field],
@@ -658,4 +655,4 @@ class MailRenderMixin(models.AbstractModel):
                 add_context=add_context,
                 options=field_options,
             ).items()
-        )
+        }

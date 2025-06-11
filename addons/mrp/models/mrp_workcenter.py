@@ -86,7 +86,7 @@ class MrpWorkcenter(models.Model):
     def _compute_workorder_count(self):
         MrpWorkorder = self.env['mrp.workorder']
         result = {wid: {} for wid in self._ids}
-        result_duration_expected = {wid: 0 for wid in self._ids}
+        result_duration_expected = dict.fromkeys(self._ids, 0)
         # Count Late Workorder
         data = MrpWorkorder._read_group(
             [('workcenter_id', 'in', self.ids), ('state', 'in', ('pending', 'waiting', 'ready')), ('date_start', '<', datetime.now().strftime('%Y-%m-%d'))],

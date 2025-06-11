@@ -429,9 +429,9 @@ class SurveyUserInput(models.Model):
                 }]
             }
         }"""
-        res = dict((user_input, {
+        res = {user_input: {
             'by_section': {}
-        }) for user_input in self)
+        } for user_input in self}
 
         scored_questions = self.mapped('predefined_question_ids').filtered(lambda question: question.is_scored_question)
 

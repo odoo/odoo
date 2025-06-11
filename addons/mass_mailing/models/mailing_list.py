@@ -413,10 +413,7 @@ class MassMailingList(models.Model):
         for mass_mailing in self:
             # adds default 0 values for ids that don't have statistics
             if mass_mailing.id not in contact_counts:
-                contact_counts[mass_mailing.id] = {
-                    field: 0
-                    for field in mass_mailing._get_contact_statistics_fields()
-                }
+                contact_counts[mass_mailing.id] = dict.fromkeys(mass_mailing._get_contact_statistics_fields(), 0)
 
         return contact_counts
 

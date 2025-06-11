@@ -57,7 +57,7 @@ class Partner(models.Model):
     # ------------------------------------------------------------
 
     def _mail_get_partners(self, introspect_fields=False):
-        return dict((partner.id, partner) for partner in self)
+        return {partner.id: partner for partner in self}
 
     def _message_get_suggested_recipients(self):
         recipients = super(Partner, self)._message_get_suggested_recipients()

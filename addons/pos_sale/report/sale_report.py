@@ -98,7 +98,7 @@ class SaleReport(models.Model):
         :param values: dictionary of values to fill
         :type values: dict
         """
-        filled_fields = {x: 'NULL' for x in additional_fields}
+        filled_fields = dict.fromkeys(additional_fields, 'NULL')
         for fname, value in self._available_additional_pos_fields().items():
             if fname in additional_fields:
                 filled_fields[fname] = value

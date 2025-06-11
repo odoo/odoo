@@ -421,7 +421,7 @@ class Message(models.Model):
                 )
 
         # Read mail_message.ids to have their values
-        message_values = dict((message_id, {}) for message_id in self.ids)
+        message_values = {message_id: {} for message_id in self.ids}
 
         self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])

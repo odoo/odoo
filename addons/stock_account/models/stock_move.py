@@ -254,7 +254,7 @@ class StockMove(models.Model):
 
     def _action_done(self, cancel_backorder=False):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
-        valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
+        valued_moves = dict.fromkeys(self._get_valued_types(), self.env['stock.move'])
         for move in self:
             if move.state == 'done':
                 continue

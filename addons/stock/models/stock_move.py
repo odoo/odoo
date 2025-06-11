@@ -1660,7 +1660,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         available_move_lines = {key: grouped_move_lines_in[key] - grouped_move_lines_out.get(key, 0) for key in grouped_move_lines_in}
         # pop key if the quantity available amount to 0
         rounding = self.product_id.uom_id.rounding
-        return dict((k, v) for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0)
+        return {k: v for k, v in available_move_lines.items() if float_compare(v, 0, precision_rounding=rounding) > 0}
 
     def _action_assign(self, force_qty=False):
         """ Reserve stock moves by creating their stock move lines. A stock move is

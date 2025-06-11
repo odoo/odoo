@@ -117,7 +117,7 @@ class Job(models.Model):
 
     def _compute_document_ids(self):
         applicants = self.mapped('application_ids').filtered(lambda self: not self.emp_id)
-        app_to_job = dict((applicant.id, applicant.job_id.id) for applicant in applicants)
+        app_to_job = {applicant.id: applicant.job_id.id for applicant in applicants}
         attachments = self.env['ir.attachment'].search([
             '|',
             '&', ('res_model', '=', 'hr.job'), ('res_id', 'in', self.ids),

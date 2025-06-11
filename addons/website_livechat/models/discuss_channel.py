@@ -29,7 +29,7 @@ class DiscussChannel(models.Model):
         at the top of the livechat channel discussion view in discuss module.
         """
         channel_infos = super()._channel_info()
-        channel_infos_dict = dict((c['id'], c) for c in channel_infos)
+        channel_infos_dict = {c['id']: c for c in channel_infos}
         for channel in self.filtered('livechat_visitor_id'):
             visitor = channel.livechat_visitor_id
             try:

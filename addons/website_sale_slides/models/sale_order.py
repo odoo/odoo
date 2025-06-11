@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
         )
         channel_products = related_channels.mapped('product_id')
 
-        channels_per_so = {sale_order: self.env['slide.channel'] for sale_order in self}
+        channels_per_so = dict.fromkeys(self, self.env['slide.channel'])
         for so_line in so_lines:
             if so_line.product_id in channel_products:
                 for related_channel in related_channels:

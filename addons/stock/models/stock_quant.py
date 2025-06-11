@@ -889,7 +889,7 @@ class StockQuant(models.Model):
             else:
                 return available_quantity if float_compare(available_quantity, 0.0, precision_rounding=rounding) >= 0.0 else 0.0
         else:
-            availaible_quantities = {lot_id: 0.0 for lot_id in list(set(quants.mapped('lot_id'))) + ['untracked']}
+            availaible_quantities = dict.fromkeys([*set(quants.mapped('lot_id')), 'untracked'], 0.0)
             for quant in quants:
                 if not quant.lot_id and strict and lot_id:
                     continue

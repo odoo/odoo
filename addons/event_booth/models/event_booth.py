@@ -72,10 +72,10 @@ class EventBooth(models.Model):
         to_confirm = self.filtered(lambda booth: booth.state == 'available')
         wpartner = {}
         if 'state' in vals or 'partner_id' in vals:
-            wpartner = dict(
-                (booth, booth.partner_id.ids)
+            wpartner = {
+                booth: booth.partner_id.ids
                 for booth in self.filtered(lambda booth: booth.partner_id)
-            )
+            }
 
         res = super(EventBooth, self).write(vals)
 

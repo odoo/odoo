@@ -566,9 +566,9 @@ class Channel(models.Model):
     def _compute_slides_statistics(self):
         default_vals = dict(total_views=0, total_votes=0, total_time=0, total_slides=0)
         keys = ['nbr_%s' % slide_category for slide_category in self.env['slide.slide']._fields['slide_category'].get_values(self.env)]
-        default_vals.update(dict((key, 0) for key in keys))
+        default_vals.update((key, 0) for key in keys)
 
-        result = dict((cid, dict(default_vals)) for cid in self.ids)
+        result = {cid: dict(default_vals) for cid in self.ids}
         read_group_res = self.env['slide.slide']._read_group(
             [('active', '=', True), ('is_published', '=', True), ('channel_id', 'in', self.ids), ('is_category', '=', False)],
             ['channel_id', 'slide_category'],
@@ -597,7 +597,7 @@ class Channel(models.Model):
         current_user_info = self.env['slide.channel.partner'].sudo().search(
             [('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)]
         )
-        mapped_data = dict((info.channel_id.id, (info.member_status == 'completed', info.completed_slides_count)) for info in current_user_info)
+        mapped_data = {info.channel_id.id: (info.member_status == 'completed', info.completed_slides_count) for info in current_user_info}
         for record in self:
             completed, completed_slides_count = mapped_data.get(record.id, (False, 0))
             record.completed = completed

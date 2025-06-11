@@ -321,7 +321,7 @@ class MailPluginController(http.Controller):
 
         fields_list = ['id', 'name', 'phone', 'mobile', 'email', 'website']
 
-        company_values = dict((fname, company[fname]) for fname in fields_list)
+        company_values = {fname: company[fname] for fname in fields_list}
         company_values['address'] = {'street': company.street,
                                      'city': company.city,
                                      'zip': company.zip,
@@ -390,7 +390,7 @@ class MailPluginController(http.Controller):
 
         fields_list = ['id', 'name', 'email', 'phone', 'mobile', 'is_company']
 
-        partner_values = dict((fname, partner[fname]) for fname in fields_list)
+        partner_values = {fname: partner[fname] for fname in fields_list}
         partner_values['image'] = partner.image_128
         partner_values['title'] = partner.function
         partner_values['enrichment_info'] = None
