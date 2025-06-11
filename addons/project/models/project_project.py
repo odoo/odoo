@@ -98,7 +98,7 @@ class ProjectProject(models.Model):
         'res.users', 'project_favorite_user_rel', 'project_id', 'user_id',
         string='Members', export_string_translation=False, copy=False)
     is_favorite = fields.Boolean(compute='_compute_is_favorite', readonly=False, search='_search_is_favorite',
-        compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False)
+        compute_sudo=True, string='Show Project on Dashboard', export_string_translation=False, copy=True)
     label_tasks = fields.Char(string='Use Tasks as', default=lambda s: s.env._('Tasks'), translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...")
     tasks = fields.One2many('project.task', 'project_id', string="Task Activities")
