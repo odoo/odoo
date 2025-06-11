@@ -5,6 +5,7 @@ import requests
 import time
 import urllib.parse
 import websocket
+import netifaces
 
 from threading import Thread
 
@@ -35,6 +36,26 @@ def send_to_controller(device_type, params, server_url=None):
         _logger.exception('Could not reach confirmation status URL: %s', server_url)
 
 
+def check_mac_address(mac_addresses):
+    """Check if the provided MAC addresses match any
+    of the network interfaces on the device.
+
+    This is a quick fix to ensure that the IoT box processes
+    websocket messages even if internet connectivity changes
+    (e.g. from Ethernet to Wi-Fi). (This fix is not required
+    after ``saas-18.4``)
+
+    :param list[str] mac_addresses: List of MAC addresses to check against
+    :return: True if any of the MAC addresses match, False otherwise
+    :rtype: bool
+    """
+    interfaces = netifaces.interfaces()
+    return any(
+        netifaces.ifaddresses(interface).get(netifaces.AF_LINK, [{}])[0].get('addr') in mac_addresses
+        for interface in interfaces
+    )
+
+
 def on_message(ws, messages):
     """
         Synchronously handle messages received by the websocket.
@@ -46,7 +67,7 @@ def on_message(ws, messages):
         message_type = message['message']['type']
         if message_type == 'iot_action':
             payload = message['message']['payload']
-            if iot_mac in payload['iotDevice']['iotIdentifiers']:
+            if check_mac_address(payload['iotDevice']['iotIdentifiers']):
                 for device in payload['iotDevice']['identifiers']:
                     device_identifier = device['identifier']
                     if device_identifier in main.iot_devices:
@@ -112,9 +133,9 @@ class WebsocketClient(Thread):
         #   is offline while attempting the new connection
         while True:
             try:
-                run_res = self.ws.run_forever(reconnect=10)
+                run_res = self.ws.run_forever(reconnect=5)
                 _logger.debug("websocket run_forever return with %s", run_res)
             except Exception:
                 _logger.exception("An unexpected exception happened when running the websocket")
-            _logger.debug('websocket will try to restart in 10 seconds')
-            time.sleep(10)
+            _logger.debug('websocket will try to restart in 5 seconds')
+            time.sleep(5)
