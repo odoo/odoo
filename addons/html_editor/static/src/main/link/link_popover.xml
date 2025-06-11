@@ -5,7 +5,8 @@
             <div t-if="state.editing" class="container-fluid d-flex vertical-center p-2" t-ref="editing-wrapper">
                 <div t-if="state.isImage" class="col p-2" style="max-width: 250px;">
                     <div class="input-group mb-1">
-                        <input t-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL" t-on-keydown="onKeydownEnter"/>
+                        <input t-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model="state.url" title="URL" placeholder="Type your URL"
+                            t-on-keydown="onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': state.type ===  ''}" t-on-click="onClickApply">Apply</button>
                     </div>
                 </div>
@@ -26,7 +27,7 @@
                                 title="URL"
                                 placeholder="e.g. https://www.odoo.com"
                                 t-on-keydown="onKeydownEnter"
-                                t-on-input="onChange"/>
+                                t-on-input="this.onChange"/>
                             <span class="ms-1" t-if="props.canUpload and !state.url">
                                 or <button class="btn btn-light btn-sm" t-on-click="uploadFile"><i class="fa fa-upload"/></button>
                             </span>
@@ -85,10 +86,22 @@
                             </div>
                         </t>
                         <t t-if="props.allowTargetBlank">
-                            <div class="d-flex mb-1 target-blank-option">
-                                <input class="me-1" type="checkbox" t-att-checked="state.linkTarget === '_blank'" t-on-change="(ev)=>this.state.linkTarget = ev.target.checked ? '_blank' : ''"/>
-                                <label>Open in new window</label>
-                            </div>
+                            <t t-if="state.isDocument">
+                                <CheckBox
+                                    value="state.directDownload"
+                                    onChange="onClickDirectDownload.bind(this)"
+                                    className="'direct-download-option'">
+                                    Direct download
+                                </CheckBox>
+                            </t>
+                            <t t-if="!state.isDocument || (state.isDocument and !state.directDownload)">
+                                <CheckBox
+                                    value="state.linkTarget === '_blank'"
+                                    onChange="onClickNewWindow.bind(this)"
+                                    className="'target-blank-option'">
+                                    Open in new window
+                                </CheckBox>
+                            </t>
                         </t>
                         <div class="mt-3">
                             <button class="o_we_apply_link btn btn-sm btn-primary" t-att-disabled="!state.url" t-on-click="onClickApply">Apply</button>

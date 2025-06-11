@@ -1261,6 +1261,29 @@ describe("upload file via link popover", () => {
         );
     });
 
+    test("direct download option works as expected", async () => {
+        const { editor } = await setupEditor("<p>[]<br></p>", {
+            config: { allowTargetBlank: true },
+        });
+        execCommand(editor, "openLinkTools");
+        await contains("input.o_we_href_input_link").fill(
+            "/web/content/1?unique=123&download=true",
+            { confirm: false }
+        );
+        expect(".direct-download-option input").toBeChecked();
+
+        await contains("input.o_we_href_input_link").edit("/web/content/1?unique=123", {
+            confirm: false,
+        });
+        expect(".direct-download-option input").not.toBeChecked();
+
+        await contains(".direct-download-option input").check();
+        expect("input.o_we_href_input_link").toHaveValue("/web/content/1?unique=123&download=true");
+
+        await contains(".direct-download-option input").uncheck();
+        expect("input.o_we_href_input_link").toHaveValue("/web/content/1?unique=123");
+    });
+
     test("label input does not get filled on file upload if it is already filled", async () => {
         const { editor } = await setupEditor("<p>[]<br></p>");
         const mockedUpload = patchUpload(editor);
