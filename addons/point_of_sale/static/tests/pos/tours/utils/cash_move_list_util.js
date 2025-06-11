@@ -28,3 +28,11 @@ export function checkNumberOfRows(number) {
         },
     };
 }
+export function checkCashMoveDateTime() {
+    const date = "Today";
+    const time = "11:09";
+    return {
+        content: `Check has cash move with Date: ${date} and Time: ${time}`,
+        trigger: `.cash-move-list .cash-move-row:has(.cash-move-date:contains(${date})):has(.cash-move-time:contains(${time}))`,
+    };
+}
