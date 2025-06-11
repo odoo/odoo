@@ -6,4 +6,14 @@ patch(PosOrder.prototype, {
     get eventRegistrations() {
         return this.lines.flatMap((line) => line.event_registration_ids);
     },
+    setPricelist(pricelist) {
+        super.setPricelist(pricelist);
+        // Restore original ticket price for event tickets orderlines, overriding pricelist-based changes
+        for (const line of this.lines) {
+            const ticket = line.event_ticket_id;
+            if (ticket) {
+                line.setUnitPrice(ticket.price ?? line.price_unit);
+            }
+        }
+    },
 });
