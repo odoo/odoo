@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-dom";
 import {
     defineModels,
     getService,
@@ -23,26 +24,26 @@ class Notcurrency extends models.Model {}
 defineModels([Currency, Notcurrency]);
 
 test("reload currencies when updating a res.currency", async () => {
-    onRpc(({ route }) => {
-        expect.step(route);
+    onRpc(({ model, method }) => {
+        expect.step([model, method]);
     });
     await makeMockEnv();
     expect.verifySteps([]);
     await getService("orm").read("res.currency", [32]);
-    expect.verifySteps(["/web/dataset/call_kw/res.currency/read"]);
+    expect.verifySteps([["res.currency", "read"]]);
     await getService("orm").unlink("res.currency", [32]);
     expect.verifySteps([
-        "/web/dataset/call_kw/res.currency/unlink",
-        "/web/dataset/call_kw/res.currency/get_all_currencies",
+        ["res.currency", "unlink"],
+        ["res.currency", "get_all_currencies"],
     ]);
     await getService("orm").unlink("notcurrency", [32]);
-    expect.verifySteps(["/web/dataset/call_kw/notcurrency/unlink"]);
+    expect.verifySteps([["notcurrency", "unlink"]]);
     expect(Object.keys(currencies)).toEqual(["1"]);
 });
 
 test("do not reload webclient when updating a res.currency, but there is an error", async () => {
-    onRpc("/web/dataset/call_kw/res.currency/get_all_currencies", ({ url }) => {
-        expect.step(new URL(url).pathname);
+    onRpc("get_all_currencies", ({ method }) => {
+        expect.step(method);
     });
     await makeMockEnv();
     expect.verifySteps([]);
@@ -51,7 +52,8 @@ test("do not reload webclient when updating a res.currency, but there is an erro
         settings: {},
         result: {},
     });
-    expect.verifySteps(["/web/dataset/call_kw/res.currency/get_all_currencies"]);
+    await animationFrame();
+    expect.verifySteps(["get_all_currencies"]);
     rpcBus.trigger("RPC:RESPONSE", {
         data: { params: { model: "res.currency", method: "write" } },
         settings: {},
