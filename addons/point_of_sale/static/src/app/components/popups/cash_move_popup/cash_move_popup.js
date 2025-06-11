@@ -108,7 +108,10 @@ export class CashMovePopup extends Component {
             this.pos.session.id,
         ]);
         this.dialog.add(CashMoveListPopup, {
-            cashMoves: cashMoves.map((m) => ({ ...m, date: DateTime.fromSQL(m.date) })),
+            cashMoves: cashMoves.map((m) => ({
+                ...m,
+                date: DateTime.fromSQL(m.date, { zone: "UTC" }).setZone("local"),
+            })),
             partnerId: this.partnerId,
         });
     }
