@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import Command, api
 
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
-from odoo.tests import tagged
+from odoo.tests import tagged, loaded_demo_data
 from odoo.addons.account.tests.common import TestTaxCommon, AccountTestInvoicingHttpCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from datetime import date, timedelta
@@ -2513,6 +2513,22 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_automatic_receipt_printing', login="pos_user")
+
+    def test_load_pos_demo_data(self):
+        """ Test that the demo data can be loaded by admin but not by user. """
+
+        if loaded_demo_data(self.env):
+            self.skipTest('Cannot test with demo data.')
+
+        # Unlink existing product records
+        Product = self.env['product.product']
+        pos_product_domain = [('available_in_pos', '=', True)]
+        Product.search(pos_product_domain).action_archive()
+
+        # cannot load by pos user
+        self.start_pos_tour('test_load_pos_demo_data_by_pos_user', login='pos_user')
+        pos_products = Product.search(pos_product_domain)
+        self.assertFalse(pos_products, 'Demo data should not be loaded by user.')
 
 
 # This class just runs the same tests as above but with mobile emulation
