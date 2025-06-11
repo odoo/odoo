@@ -1968,6 +1968,14 @@ export class PosStore extends WithLazyGetterTrap {
         );
     }
     async loadSampleData() {
+        const isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
+        if (!isPosManager) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Access Denied"),
+                body: _t("It seems like you don't have enough rights to load data."),
+            });
+            return;
+        }
         await this.data.call("pos.config", "load_demo_data", [[this.config.id]]);
         await this.reloadData(true);
     }
