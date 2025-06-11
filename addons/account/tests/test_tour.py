@@ -87,3 +87,22 @@ class TestUi(AccountTestInvoicingHttpCommon):
         product.supplier_taxes_id = new_tax
 
         self.start_tour("/odoo", 'account_tax_group', login="admin")
+
+    def test_branch_chart_of_accounts_access_tour(self):
+        branch_company = self.env['res.company'].create({
+            'name': 'Branch Co',
+            'parent_id': self.company_data['company'].id,
+        })
+        test_user = self.env['res.users'].with_context(no_reset_password=True).create({
+            'name': 'Branch User',
+            'login': 'branch.user@test.com',
+            'email': 'branch.user@test.com',
+            'company_id': branch_company.id,
+            'company_ids': [Command.set([self.company_data['company'].id, branch_company.id])],
+            'groups_id': [
+                Command.link(self.env.ref('base.group_user').id),
+                Command.link(self.env.ref('account.group_account_manager').id),
+            ],
+        })
+
+        self.start_tour("/web", 'chart_of_accounts_branch_access_tour', login=test_user.login)

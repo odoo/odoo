@@ -171,7 +171,7 @@
     <record id="account_comp_rule" model="ir.rule">
         <field name="name">Account multi-company</field>
         <field name="model_id" ref="model_account_account"/>
-        <field name="domain_force">[('company_ids', 'parent_of', company_ids)]</field>
+        <field name="domain_force">[('company_ids', 'in', [user.company_id.id])]</field>
     </record>
 
     <record id="account_group_comp_rule" model="ir.rule">
