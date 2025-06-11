@@ -24,6 +24,7 @@ class TtuRoot(models.Model):
     def _get_produced_qty(self):
         for r in self:
             r.qty_produced = sum(r.mapped('move_finished_ids.move_line_ids.qty_done'))
+
     @api.onchange('qty_producing')
     def _onchange_producing(self):
         production_move = self.move_finished_ids.filtered(
@@ -93,7 +94,7 @@ class TtuChild(models.Model):
     _description = 'ttu.child'
 
     product_id = fields.Many2one('ttu.product')
-    unit_factor = fields.Integer(default=1, required=True) # should be computed but we can ignore that
+    unit_factor = fields.Integer(default=1, required=True)  # should be computed but we can ignore that
     quantity_done = fields.Integer(
         compute='_quantity_done_compute',
         inverse='_quantity_done_set'
