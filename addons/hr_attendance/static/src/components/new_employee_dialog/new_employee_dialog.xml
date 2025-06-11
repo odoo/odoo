@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_attendance.NewEmployeeDialog" owl="1">
+        <Dialog title="props.title" footer="props.footer" bodyClass="'overflow-visible'">
+            <div class="p-3">
+                <div class="mb-3">
+                    <label class="form-label">Create the name of the new employee below</label>
+                    <div class="d-flex">
+                        <input type="text" t-model="state.name" class="form-control me-2" placeholder="e.g. John Doe"/>
+                        <button class="btn btn-primary" t-on-click="onCreate">Confirm</button>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Select Employee Without Badge</label>
+                    <div class="o_select_employee">
+                        <t t-if="state.selectedEmployee">
+                            <div class="form-control d-flex align-items-center w-100" t-on-click="() => this.clearSelection()">
+                                <img t-attf-src="/web/image/hr.employee.public/{{state.selectedEmployee.id}}/avatar_128"
+                                     loading="lazy"
+                                     class="rounded-circle me-2"
+                                     width="24" height="24"/>
+                                <span t-on-click="() => this.clearSelection()"><t t-out="state.selectedEmployee.name"/></span>
+                            </div>
+                        </t>
+                        <t t-else="">
+                           <div class="o_select_employee_option p-0">
+                                <AutoComplete
+                                    placeholder="props.placeholder || 'Select an employee'"
+                                    sources="sources"
+                                    value="state.searchQuery"
+                                    dropdown="true"
+                                    autofocus="true">
+                                    <t t-set-slot="option" t-slot-scope="optionScope">
+                                        <div class="d-flex align-items-center">
+                                            <img t-attf-src="/web/image/hr.employee.public/{{optionScope.data.id}}/avatar_128"
+                                                 loading="lazy"
+                                                 class="rounded-circle me-2"
+                                                 width="24" height="24"/>
+                                            <t t-out="optionScope.label"/>
+                                        </div>
+                                    </t>
+                                </AutoComplete>
+                                <i class="fa fa-caret-down dropdown-caret-icon"></i>
+                            </div>
+                        </t>
+                        <input type="text" t-model="state.badge" class="form-control me-2" placeholder="Enter Badge Number"/>
+                        <button class="btn btn-primary" style="white-space: nowrap;" t-on-click="onSetBadge">Set the Badge</button>
+                    </div>
+                </div>
+            </div>
+        </Dialog>
+    </t>
+</templates>

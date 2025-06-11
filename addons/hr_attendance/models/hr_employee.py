@@ -224,3 +224,10 @@ class HrEmployee(models.Model):
             },
             "domain": [('employee_id', '=', self.id), ('overtime_status', '=', 'approved')]
         }
+
+    def open_barcode_scanner(self):
+        return {
+            "type": "ir.actions.client",
+            "tag": "employee_barcode_scanner",
+            "name": "Badge Scanner"
+        }
