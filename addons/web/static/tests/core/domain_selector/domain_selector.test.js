@@ -3280,6 +3280,35 @@ test("hide today, next, last operators when allowExpressions = False", async () 
     ]);
 });
 
+test(`hide "This day"/"This month" when allowExpressions = False`, async () => {
+    await makeDomainSelector({
+        domain: `[("datetime.day_of_month", "=", 1), ("datetime.month_number", "=", 1) ]`,
+        allowExpressions: false,
+        update(domain) {
+            expect.step(domain);
+        },
+    });
+    const range = [];
+    for (let i = 1; i <= 31; i++) {
+        range.push(String(i));
+    }
+    expect(getValueOptions()).toEqual(range);
+    expect(getValueOptions(1)).toEqual([
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ]);
+});
+
 test("many2one: placeholders for in operator", async () => {
     await makeDomainSelector({
         domain: `[("product_id", "in", [])]`,
