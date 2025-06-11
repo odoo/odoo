@@ -56,8 +56,6 @@ class ImageToolOptionPlugin extends Plugin {
         builder_actions: {
             CropImageAction,
             ResetCropAction,
-            TransformImageAction,
-            ResetTransformImageAction,
             ReplaceMediaAction,
             SetLinkAction,
             SetUrlAction,
@@ -190,25 +188,6 @@ export class ResetCropAction extends BuilderAction {
     }
 }
 
-export class TransformImageAction extends BuilderAction {
-    static id = "transformImage";
-    static dependencies = ["userCommand"];
-    isApplied({ editingElement }) {
-        return editingElement.matches(`[style*="transform"]`);
-    }
-    apply() {
-        return this.dependencies.userCommand.getCommand("transformImage").run();
-    }
-}
-export class ResetTransformImageAction extends BuilderAction {
-    static id = "resetTransformImage";
-    apply({ editingElement }) {
-        editingElement.setAttribute(
-            "style",
-            (editingElement.getAttribute("style") || "").replace(/[^;]*transform[\w:]*;?/g, "")
-        );
-    }
-}
 export class ReplaceMediaAction extends BuilderAction {
     static id = "replaceMedia";
     static dependencies = ["media_website"];
