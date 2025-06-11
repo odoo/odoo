@@ -166,3 +166,27 @@ test("Containers fallback to a valid ancestor if the target disappears and resto
     expect(".options-container[data-container-title='Ancestor']").toHaveCount(1);
     expect(".options-container[data-container-title='Target 1']").toHaveCount(1);
 });
+
+test("Do not activate/update containers if the element clicked is excluded", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderButton classAction="'test'">Test</BuilderButton>`,
+    });
+    await setupWebsiteBuilder(`
+        <div data-name="Target 1" class="test-options-target target1 o_we_no_overlay">
+            Homepage
+        </div>
+        <div data-name="Target 2" class="test-options-target target2">
+            Homepage2
+        </div>
+
+    `);
+
+    await contains(":iframe .target1").click();
+    expect(".options-container").toHaveCount(0);
+    await contains(":iframe .target2").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+    expect(".options-container [data-class-action='test']").toHaveCount(1);
+    await contains(":iframe .target1").click();
+    expect(".options-container").toHaveAttribute("data-container-title", "Target 2");
+});

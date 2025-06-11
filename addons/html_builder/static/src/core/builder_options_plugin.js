@@ -72,6 +72,20 @@ export class BuilderOptionsPlugin extends Plugin {
             const el = this.editable.querySelector(this.config.initialTarget);
             this.updateContainers(el);
         }
+
+        // Selector of elements that should not update/have containers when they
+        // are clicked.
+        this.notActivableElementsSelector = [
+            "#web_editor-top-edit",
+            "#oe_manipulators",
+            ".oe_drop_zone",
+            ".o_notification_manager",
+            ".o_we_no_overlay",
+            ".ui-autocomplete",
+            ".modal .btn-close",
+            ".transfo-container",
+            ".o_datetime_picker",
+        ].join(", ");
     }
 
     destroy() {
@@ -112,6 +126,9 @@ export class BuilderOptionsPlugin extends Plugin {
             return;
         }
         if (target) {
+            if (target.closest(this.notActivableElementsSelector)) {
+                return;
+            }
             this.target = target;
         }
         if (!this.target || !this.target.isConnected) {
