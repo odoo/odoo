@@ -402,3 +402,53 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation_form.holiday_status_id = self.leave_type
         allocation = allocation_form.save()
         self.assertTrue(allocation)
+
+    def test_hr_leave_allocation_balance(self):
+        """
+            This test makes sure that the time off balance showed on the time off management kanban card is correct
+        """
+        leave_type = self.env.ref('hr_holidays.leave_type_compensatory_days')
+
+        invalid_allocation = self.env['hr.leave.allocation'].sudo().create({
+            'name': 'Alloc',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 5,
+            'allocation_type': 'regular',
+            'date_from': date(2024, 1, 1),
+            'date_to': date(2024, 4, 30)
+        })
+        invalid_allocation.action_approve()
+
+        first_valid_allocation = self.env['hr.leave.allocation'].sudo().create({
+            'name': 'Alloc',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 10,
+            'allocation_type': 'regular',
+            'date_from': date(2024, 1, 1),
+            'date_to': False
+        })
+        first_valid_allocation.action_approve()
+
+        second_valid_allocation = self.env['hr.leave.allocation'].sudo().create({
+            'name': 'Alloc',
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'number_of_days': 12,
+            'allocation_type': 'regular',
+            'date_from': date(2025, 1, 1),
+            'date_to': date.today()
+        })
+        second_valid_allocation.action_approve()
+
+        leave = self.env['hr.leave'].create({
+            'employee_id': self.employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2025, 1, 1),
+            'request_date_to': date(2025, 1, 10)
+        })
+        leave._action_validate()
+
+        self.assertEqual(leave.max_leaves, 22)
+        self.assertEqual(leave.virtual_remaining_leaves, 14)
