@@ -13,10 +13,14 @@ This is the base module to manage the accounting chart for Malaysia in Odoo.
     """,
     'depends': [
         'account',
+        'account_tax_python',
     ],
     'auto_install': ['account'],
     'data': [
         'data/account_tax_report_data.xml',
+        'data/account.account.tag.csv',
+
+        'views/product_template_view.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
