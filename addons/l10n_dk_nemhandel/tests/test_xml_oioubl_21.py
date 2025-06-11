@@ -1,15 +1,17 @@
 from freezegun import freeze_time
+from requests import PreparedRequest, Response, Session
+from unittest.mock import patch
 
-from odoo import Command, fields
-from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
-from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged
-from odoo.tools import file_open
+
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
+from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
+class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod
     @TestUBLCommon.setup_country('dk')
@@ -40,8 +42,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'phone': '+45 32 12 35 56',
             'street': 'Paradisæblevej, 11',
             'country_id': cls.env.ref('base.dk').id,
-            'invoice_edi_format': 'oioubl_201',
-            'peppol_endpoint': False,
+            'invoice_edi_format': 'oioubl_21',
         })
         cls.partner_b.write({
             'name': 'SUPER BELGIAN PARTNER',
@@ -51,8 +52,10 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'country_id': cls.env.ref('base.be').id,
             'phone': '061928374',
             'vat': 'BE0897223670',
-            'invoice_edi_format': 'oioubl_201',
-            'peppol_endpoint': False,
+            'invoice_edi_format': 'oioubl_21',
+            'nemhandel_identifier_type': '0088',
+            'nemhandel_identifier_value': '5798009811512',
+
         })
         cls.partner_c = cls.env["res.partner"].create({
             'name': 'SUPER FRENCH PARTNER',
@@ -63,8 +66,9 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             'phone': '+33 1 23 45 67 89',
             'vat': 'FR23334175221',
             'company_registry': '123 568 941 00056',
-            'invoice_edi_format': 'oioubl_201',
-            'peppol_endpoint': False,
+            'invoice_edi_format': 'oioubl_21',
+            'nemhandel_identifier_type': '0088',
+            'nemhandel_identifier_value': '5798009811639',
         })
         cls.dk_local_sale_tax_1 = cls.env["account.chart.template"].ref('tax_s1y')
         cls.dk_local_sale_tax_2 = cls.env["account.chart.template"].ref('tax_s1')
@@ -108,24 +112,47 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             ],
         })
         invoice.action_post()
-        wizard = self.env['account.move.send.wizard'] \
-            .with_context(active_model=invoice._name, active_ids=invoice.ids) \
-            .create({})
-        wizard.action_send_and_print()
+        with patch('odoo.addons.l10n_dk_nemhandel.models.res_partner.ResPartner._get_nemhandel_verification_state', return_value='not_valid'):
+            wizard = self.env['account.move.send.wizard'] \
+                .with_context(active_model=invoice._name, active_ids=invoice.ids) \
+                .create({})
+            wizard.action_send_and_print()
         return invoice
+
+    @classmethod
+    def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
+        response = Response()
+        response.status_code = 200
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0184%3A12345674'):
+            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0208:0477472701</id:ParticipantIdentifier>'
+            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp.nemhandel.dk/iso6523-actorid-upis%3A%3A0184%3A12345674/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
+            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
+            return response
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A5798009811639'):
+            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0088:5798009811639</id:ParticipantIdentifier>
+            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp.nemhandel.dk/iso6523-actorid-upis%3A%3A0208%3A5798009811639/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
+            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
+            return response
+        if r.url.endswith('iso6523-actorid-upis%3A%3A0208%3A5798009811512'):
+            response._content = b"""<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n<smp:ServiceGroup xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:id="http://busdox.org/transport/identifiers/1.0/" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:smp="http://busdox.org/serviceMetadata/publishing/1.0/"><id:ParticipantIdentifier scheme="iso6523-actorid-upis">0088:5798009811512</id:ParticipantIdentifier>
+            '<smp:ServiceMetadataReferenceCollection><smp:ServiceMetadataReference href="http://smp.nemhandel.dk/iso6523-actorid-upis%3A%3A0088%3A5798009811512/services/busdox-docid-qns%3A%3Aurn%3Aoasis%3Anames%3Aspecification%3Aubl%3Aschema%3Axsd%3AInvoice-2%3A%3AInvoice%23%23urn%3Acen.eu%3Aen16931%3A2017%23compliant%23urn%3Afdc%3Apeppol.eu%3A2017%3Apoacc%3Abilling%3A3.0%3A%3A2.1"/>'
+            '</smp:ServiceMetadataReferenceCollection></smp:ServiceGroup>"""
+            return response
+
+        return super()._request_handler(s, r, **kw)
 
     #########
     # EXPORT
     #########
 
     @freeze_time('2017-01-01')
-    def test_export_invoice_two_line_partner_dk(self):
+    def test_export_invoice_partner_dk(self):
         invoice = self.create_post_and_send_invoice()
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
 
     @freeze_time('2017-01-01')
-    def test_export_invoice_two_line_foreign_partner_be(self):
+    def test_export_invoice_foreign_partner_be(self):
         # Set peppol endpoint to have schemeID of 'GLN'
         self.company_data['company'].partner_id.peppol_endpoint = '0239843188'
         invoice = self.create_post_and_send_invoice(partner=self.partner_b)
@@ -133,19 +160,19 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_be.xml")
 
     @freeze_time('2017-01-01')
-    def test_export_invoice_two_line_foreign_partner_fr(self):
+    def test_export_invoice_foreign_partner_fr(self):
         invoice = self.create_post_and_send_invoice(partner=self.partner_c)
         self.assertTrue(invoice.ubl_cii_xml_id)
         self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_foreign_partner_fr.xml")
 
     @freeze_time('2017-01-01')
-    def test_export_credit_note_two_line_partner_dk(self):
+    def test_export_credit_note_partner_dk(self):
         refund = self.create_post_and_send_invoice(move_type='out_refund')
         self.assertTrue(refund.ubl_cii_xml_id)
         self._assert_invoice_attachment(refund.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_refund_partner_dk.xml")
 
     @freeze_time('2017-01-01')
-    def test_export_credit_note_two_line_partner_fr(self):
+    def test_export_credit_note_partner_fr(self):
         refund = self.create_post_and_send_invoice(partner=self.partner_c, move_type='out_refund')
         self.assertTrue(refund.ubl_cii_xml_id)
         self._assert_invoice_attachment(refund.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_refund_foreign_partner_fr.xml")
@@ -170,22 +197,9 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             self.create_post_and_send_invoice()
 
     @freeze_time('2017-01-01')
-    def test_export_invoice_company_and_partner_without_country_code_prefix_in_vat(self):
-        self.company_data['company'].vat = '12345674'
-        self.company_data['company'].partner_id.peppol_endpoint = False
-        self.partner_a.write({
-            'vat': 'DK12345674',
-            'peppol_endpoint': False,
-            'invoice_edi_format': 'oioubl_201',
-        })
-        invoice = self.create_post_and_send_invoice()
-        self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_partner_dk.xml")
-
-    @freeze_time('2017-01-01')
     def test_export_partner_fr_without_siret_should_raise_an_error(self):
         self.partner_c.company_registry = False
-        self.partner_c.invoice_edi_format = 'oioubl_201'
+        self.partner_c.invoice_edi_format = 'oioubl_21'
         with self.assertRaisesRegex(UserError, "The company registry is required for french partner:"):
             self.create_post_and_send_invoice(partner=self.partner_c)
 
@@ -196,102 +210,7 @@ class TestUBLDK(TestUBLCommon, TestAccountMoveSendCommon):
             telling to the user that this field is missing.
         """
         self.partner_b.vat = None
-        self.partner_b.invoice_edi_format = 'oioubl_201'  # default format recomputes when vat is changed
+        self.partner_b.invoice_edi_format = 'oioubl_21'  # default format recomputes when vat is changed
         with self.assertRaises(UserError) as exception:
             self.create_post_and_send_invoice(partner=self.partner_b)
         self.assertIn(f"The field '{self.partner_b._fields['vat'].string}' is required", exception.exception.args[0])
-
-    #########
-    # IMPORT
-    #########
-
-    def import_bill_xml_file_in_purchase_journal(self, file_path):
-        file_path = f"{self.test_module}/tests/test_files/{file_path}"
-        with file_open(file_path, 'rb') as file:
-            xml_attachment = self.env['ir.attachment'].create({
-                'mimetype': 'application/xml',
-                'name': 'test_invoice.xml',
-                'raw': file.read(),
-            })
-        purchase_journal = self.company_data["default_journal_purchase"]
-        invoice = purchase_journal._create_document_from_attachment(xml_attachment.id)
-        return invoice
-
-    @freeze_time('2017-01-01')
-    def test_oioubl_import_exemple_file_1(self):
-        file_name = 'external/ADVORD_01_01_00_Invoice_v2p1.xml'
-        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
-        self.assertRecordValues(bill, ({
-            'ref': 'A00095678',
-            'invoice_date': fields.Date.from_string('2006-04-10'),
-            'amount_total': 6_250.00,
-        },))
-        self.assertRecordValues(bill.invoice_line_ids, ({
-            'name': 'Fine toy',
-            'quantity': 1,
-            'price_unit': 5_000.00,
-            'price_subtotal': 5_000.00,
-            'price_total': 6_250.00,
-            'tax_ids': self.dk_local_purchase_tax_goods.ids,
-        },))
-
-    @freeze_time('2017-01-01')
-    def test_oioubl_import_exemple_file_2(self):
-        file_name = 'external/ADVORD_02_02_00_Invoice_v2p1.xml'
-        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
-        self.assertRecordValues(bill, ({
-            'ref': 'A00095680',
-            'invoice_date': fields.Date.from_string('2006-04-10'),
-            'amount_total': 5_000.00,
-        },))
-        self.assertRecordValues(bill.invoice_line_ids, ({
-            'name': 'Superble',
-            'quantity': 800,
-            'price_unit': 5.00,
-            'price_subtotal': 4_000.00,
-            'price_total': 5_000.00,
-            'tax_ids': self.dk_local_purchase_tax_goods.ids,
-        },))
-
-    @freeze_time('2017-01-01')
-    def test_oioubl_import_exemple_file_3(self):
-        file_name = 'external/ADVORD_03_03_00_Invoice_v2p1.xml'
-        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
-        self.assertRecordValues(bill, ({
-            'ref': 'A00095678',
-            'invoice_date': fields.Date.from_string('2006-04-10'),
-            'amount_total': 6_250.00,
-        },))
-        self.assertRecordValues(bill.invoice_line_ids, ({
-            'name': 'Konsulentrapport',
-            'quantity': 1,
-            'price_unit': 5_000.00,
-            'price_subtotal': 5_000.00,
-            'price_total': 6_250.00,
-            'tax_ids': self.dk_local_purchase_tax_goods.ids,
-        },))
-
-    @freeze_time('2017-01-01')
-    def test_oioubl_import_exemple_file_4(self):
-        file_name = 'external/BASPRO_01_01_00_Invoice_v2p1.xml'
-        bill = self.import_bill_xml_file_in_purchase_journal(file_name)
-        self.assertRecordValues(bill, ({
-            'ref': 'A00095678',
-            'invoice_date': fields.Date.from_string('2005-11-20'),
-            'amount_total': 6_312.50,
-        },))
-        self.assertRecordValues(bill.invoice_line_ids, ({
-            'name': 'Hejsetavle',
-            'quantity': 1,
-            'price_unit': 5_000.00,
-            'price_subtotal': 5_000.00,
-            'price_total': 6_250.00,
-            'tax_ids': self.dk_local_purchase_tax_goods.ids,
-        }, {
-            'name': 'Beslag',
-            'quantity': 2,
-            'price_unit': 25.00,
-            'price_subtotal': 50.00,
-            'price_total': 62.50,
-            'tax_ids': self.dk_local_purchase_tax_goods.ids,
-        }))
