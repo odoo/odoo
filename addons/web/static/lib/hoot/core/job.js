@@ -42,7 +42,7 @@ function validateConfig(config) {
 /** @type {Record<keyof JobConfig, import("../hoot_utils").ArgumentType>} */
 const CONFIG_TAG_SCHEMA = {
     debug: "boolean",
-    multi: "integer",
+    multi: "number",
     only: "boolean",
     skip: "boolean",
     timeout: "number",

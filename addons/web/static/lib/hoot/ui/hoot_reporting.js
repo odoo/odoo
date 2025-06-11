@@ -271,7 +271,7 @@ export class HootReporting extends Component {
                 }
                 case "passed": {
                     matchFilter =
-                        !test.config.todo && !test.config.skip && test.results.every((r) => r.pass);
+                        !test.config.todo && !test.config.skip && test.results.some((r) => r.pass);
                     break;
                 }
                 case "skipped": {
