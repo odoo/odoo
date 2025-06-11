@@ -21,6 +21,7 @@ import { HootTechnicalValue } from "./hoot_technical_value";
  * @typedef {import("../core/expect").CaseEvent} CaseEvent
  * @typedef {import("../core/expect").CaseEventType} CaseEventType
  * @typedef {import("../core/expect").CaseResult} CaseResult
+ * @typedef {import("./setup_hoot_ui").StatusFilter} StatusFilter
  */
 
 //-----------------------------------------------------------------------------
@@ -29,13 +30,41 @@ import { HootTechnicalValue } from "./hoot_technical_value";
 
 const {
     Boolean,
-    Map,
     Object: { entries: $entries, fromEntries: $fromEntries },
 } = globalThis;
 
 //-----------------------------------------------------------------------------
 // Internal
 //-----------------------------------------------------------------------------
+
+/**
+ * @param {[number, CaseEvent][]} indexedResults
+ * @param {number} events
+ */
+function filterEvents(indexedResults, events) {
+    /** @type {Record<number, CaseEvent[]>} */
+    const filteredEvents = {};
+    for (const [i, result] of indexedResults) {
+        filteredEvents[i] = result.getEvents(events);
+    }
+    return filteredEvents;
+}
+
+/**
+ * @param {CaseEvent[]} results
+ * @param {StatusFilter} statusFilter
+ */
+function filterResults(results, statusFilter) {
+    const ordinalResults = [];
+    const hasFailed = results.some((r) => !r.pass);
+    const shouldPass = statusFilter === "passed";
+    for (let i = 0; i < results.length; i++) {
+        if (!hasFailed || results[i].pass === shouldPass) {
+            ordinalResults.push([i + 1, results[i]]);
+        }
+    }
+    return ordinalResults;
+}
 
 /**
  * @param {string} label
@@ -206,11 +235,13 @@ export class HootTestResult extends Component {
                 <t t-slot="default" />
             </button>
             <t t-if="state.showDetails and !props.test.config.skip">
-                <t t-foreach="results" t-as="result" t-key="result_index">
+                <t t-foreach="filteredResults" t-as="indexedResult" t-key="indexedResult[0]">
+                    <t t-set="index" t-value="indexedResult[0]" />
+                    <t t-set="result" t-value="indexedResult[1]" />
                     <t t-if="results.length > 1">
                         <div class="flex justify-between mx-2 my-1">
                             <span t-attf-class="text-{{ result.pass ? 'emerald' : 'rose' }}">
-                                <t t-esc="ordinal(result_index + 1)" /> run:
+                                <t t-esc="ordinal(index)" /> run:
                             </span>
                             <t t-set="timestamp" t-value="formatTime(result.duration, 'ms')" />
                             <small class="text-gray flex items-center" t-att-title="timestamp">
@@ -219,10 +250,10 @@ export class HootTestResult extends Component {
                         </div>
                     </t>
                     <div class="hoot-result-detail grid gap-1 rounded overflow-x-auto p-1 mx-2 animate-slide-down">
-                        <t t-if="!filteredEvents.get(result).length">
+                        <t t-if="!filteredEvents[index].length">
                             <em class="text-gray px-2 py-1">No test event to show</em>
                         </t>
-                        <t t-foreach="filteredEvents.get(result)" t-as="event" t-key="event_index">
+                        <t t-foreach="filteredEvents[index]" t-as="event" t-key="event_index">
                             <t t-set="sType" t-value="getTypeName(event.type)" />
                             <t t-set="eventIcon" t-value="CASE_EVENT_TYPES[sType].icon" />
                             <t t-set="eventColor" t-value="
@@ -274,23 +305,25 @@ export class HootTestResult extends Component {
     isMarkup = Markup.isMarkup;
     ordinal = ordinal;
 
+    /** @type {ReturnType<typeof filterEvents>} */
+    filteredEvents;
+    /** @type {[number, CaseEvent][]} */
+    filteredResults;
+
     setup() {
         subscribeToURLParams("*");
 
-        this.config = useState(this.env.runner.config);
+        const { runner, ui } = this.env;
+        this.config = useState(runner.config);
         this.logs = useState(this.props.test.logs);
         this.results = useState(this.props.test.results);
         this.state = useState({
             showCode: false,
             showDetails: Boolean(this.props.open),
         });
+        this.uiState = useState(ui);
 
-        /** @type {ReturnType<typeof this.getFilteredEvents>} */
-        this.filteredEvents;
-
-        onWillRender(() => {
-            this.filteredEvents = this.getFilteredEvents();
-        });
+        onWillRender(this.onWillRender.bind(this));
     }
 
     getClassName() {
@@ -324,21 +357,15 @@ export class HootTestResult extends Component {
     }
 
     /**
-     * @returns {[Record<CaseEventType, number>, Map<CaseResult, CaseEvent[]>]}
-     */
-    getFilteredEvents() {
-        const filteredEvents = new Map();
-        for (const result of this.results) {
-            filteredEvents.set(result, result.getEvents(this.config.events));
-        }
-        return filteredEvents;
-    }
-
-    /**
      * @param {number} nType
      */
     getTypeName(nType) {
         return CASE_EVENT_TYPES_INVERSE[nType];
+    }
+
+    onWillRender() {
+        this.filteredResults = filterResults(this.results, this.uiState.statusFilter);
+        this.filteredEvents = filterEvents(this.filteredResults, this.config.events);
     }
 
     /**
