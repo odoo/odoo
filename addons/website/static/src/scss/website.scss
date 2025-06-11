@@ -286,6 +286,15 @@ body {
             }
         }
     }
+
+    @include media-breakpoint-up(xl) {
+        --o-container-fluid-padding-xl: #{$container-padding-x * 2};
+        
+        .container-fluid {
+            --gutter-x: var(--o-container-fluid-padding-xl);
+
+        }
+    }
 }
 
 // We don't want the area to be visible in edit mode when we edit the popup that
@@ -858,6 +867,24 @@ table.table_desc tr td {
 //
 // Snippets
 //
+
+// allow snippets to opt out of container-fluid padding for edge-to-edge designs
+$edge-to-edge-snippets: (
+    's_color_blocks_2',
+    's_image_hexagonal',
+    's_text_cover',
+    's_freegrid',
+    's_quadrant', 
+    's_masonry_block',
+    's_website_form_cover',
+    's_split_intro'
+);
+
+@each $snippet in $edge-to-edge-snippets {
+    .#{$snippet} > .container-fluid {
+        --gutter-x: 0 !important;
+    }
+}
 
 // Variables shared between carousel snippets and s_image_gallery
 $-o-carousel-indicators-dots-size: .75rem;
@@ -1559,6 +1586,10 @@ header {
 
     .o_main_nav {
         flex-direction: inherit;
+
+        &.container-fluid .s_text_block .container {
+            padding: 0;
+        }
     }
 
     nav.navbar {

@@ -12,23 +12,33 @@ $input-border-color: $gray-400;
     &.o_wsale_page_fluid {
         @include media-breakpoint-up(xl) {
             --o-wsale-sidebar-maxwidth: 18rem;
-            --o-wsale-container-fluid-padding-xl: #{$container-padding-x * 2};
-            --gutter-x: var(--o-wsale-container-fluid-padding-xl);
 
             .o_wsale_products_main_row {
-                margin-right: calc(var(--o-wsale-container-fluid-padding-xl) * -0.5);
-                margin-left: calc(var(--o-wsale-container-fluid-padding-xl) * -0.5);
+                margin-left: calc(-1 * var(--gutter-x));
+                margin-right: calc(-1 * var(--gutter-x));
 
                 #products_grid_before, #products_grid {
                     --gutter-x: #{$container-padding-x};
                 }
 
+                &:has(#products_grid_before) {
+                    --o-wsale-grid-padding-left: 0;
+                    --o-wsale-grid-padding-right: #{$container-padding-x};
+                    --o-wsale-sidebar-padding-left: #{$container-padding-x};
+                }
+
+                &:not(:has(#products_grid_before)) {
+                    --o-wsale-grid-padding-left: #{$container-padding-x};
+                    --o-wsale-grid-padding-right: #{$container-padding-x};
+                }
+
                 #products_grid_before {
-                    padding-left: calc(var(--o-wsale-container-fluid-padding-xl) * 0.5);
+                    padding-left: var(--o-wsale-sidebar-padding-left, 0);
                 }
 
                 #products_grid {
-                    padding-right: calc(var(--o-wsale-container-fluid-padding-xl) * 0.5);
+                    padding-left: var(--o-wsale-grid-padding-left, 0);
+                    padding-right: var(--o-wsale-grid-padding-right, 0);
                 }
             }
         }
@@ -60,7 +70,7 @@ $input-border-color: $gray-400;
         --o-wsale-card-info-grow: 1;
         --o-wsale-card-padding: calc(var(--o-wsale-products-grid-gap-y) * 0.5) calc(var(--o-wsale-products-grid-gap, 16px) * 0.5);
         --o-wsale-topbar-padding-left: #{$container-padding-x * 0.5};
-        --o-wsale-topbar-padding-right: calc(var(--o-wsale-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
+        --o-wsale-topbar-padding-right: calc(var(--o-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
         --o-wsale-topbar-border-width: 0 0 #{$border-width};
         --o-border-color: #{$gray-300};
         --border-color: #{$gray-300};
@@ -138,13 +148,14 @@ $input-border-color: $gray-400;
                 --o-wsale-sidebar-border: #{$border-width} solid #{$border-color};
             }
             @include media-breakpoint-up(lg) {
-                --o-wsale-topbar-padding-left: #{$container-padding-x * 0.5};
-                --o-wsale-topbar-padding-right: #{$container-padding-x * 0.5};
-
                 #products_grid {
                     padding-left: 0;
                 }
             }
+        }
+
+        &:not(.o_wsale_has_sidebar) {
+            --o-wsale-topbar-padding-left: calc(var(--o-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
         }
 
         #o_wsale_products_grid {
@@ -646,7 +657,7 @@ body:not(.editor_enable) #category_header {
             @include media-breakpoint-up(lg) {
                 --o-wsale-card-thumb-size: calc(126px * var(--o-wsale-card-thumb-aspect-ratio, 1));
                 --o-wsale-card-info-flex-direction: row;
-                --o-wsale-card-info-padding: 0 calc(var(--o-wsale-container-fluid-padding-xl, #{$container-padding-x}) * 0.5);
+                --o-wsale-card-info-padding: 0 calc(var(--o-container-fluid-padding-xl, #{$container-padding-x}) * 0.5);
                 --o-wsale-card-sub-align-items: center;
 
                 .oe_product_image_link {
@@ -692,7 +703,7 @@ body:not(.editor_enable) #category_header {
 
 // ==== Floating Bar
 #o_wsale_floating_bar_rail {
-    --_container-gap: calc(var(--o-wsale-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
+    --_container-gap: calc(var(--o-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
     right: calc(var(--_container-gap) + #{$border-width});
     width: 0;
 
