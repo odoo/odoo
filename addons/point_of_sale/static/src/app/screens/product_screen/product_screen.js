@@ -4,6 +4,8 @@ import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { user } from "@web/core/user";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Component, onMounted, useEffect, useState, onWillRender, onWillUnmount } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
@@ -99,7 +101,17 @@ export class ProductScreen extends Component {
             useWithBarcode: true,
         });
 
-        this.doLoadSampleData = useTrackedAsync(() => this.pos.loadSampleData());
+        this.doLoadSampleData = useTrackedAsync(async () => {
+            const isPosManager = await user.hasGroup("point_of_sale.group_pos_manager");
+            if (!isPosManager) {
+                this.dialog.add(AlertDialog, {
+                    title: _t("Access Denied"),
+                    body: _t("It seems like you don't have enough rights to load data."),
+                });
+                return;
+            }
+            this.pos.loadSampleData();
+        });
 
         useEffect(
             () => {
