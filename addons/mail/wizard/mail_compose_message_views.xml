@@ -99,7 +99,7 @@
                                 invisible="(composition_mode != 'comment' or composition_batch or not scheduled_date) or partner_ids_all_have_email"/>
                         <button string="Discard" class="btn-secondary w-auto" special="cancel" data-hotkey="x" />
                         <field name="attachment_ids" widget="mail_composer_attachment_selector" invisible="not can_edit_body"/>
-                        <field name="template_id" widget="mail_composer_template_selector" invisible="composition_comment_option in ['reply_all', 'forward']"/>
+                        <field name="template_id" widget="mail_composer_template_selector"/>
                         <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_batch or composition_mode != 'comment'"/>
                     </footer>
                 </form>
