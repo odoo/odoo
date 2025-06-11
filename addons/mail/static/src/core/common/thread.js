@@ -224,7 +224,10 @@ export class Thread extends Component {
                     this.props.thread.selfMember.new_message_separator_ui - 1
                 )?.el;
                 if (el) {
-                    el.scrollIntoView({ behavior: "instant", block: "center" });
+                    el.querySelector(".o-mail-Message-jumpTarget").scrollIntoView({
+                        behavior: "instant",
+                        block: "center",
+                    });
                 }
             },
             () => [this.props.jumpToNewMessage]
@@ -610,7 +613,9 @@ export class Thread extends Component {
         const el = this.refByMessageId.get(this.messageHighlight.highlightedMessageId)?.el;
         if (el) {
             this.scrollingToHighlight = true;
-            this.messageHighlight.scrollTo(el).then(() => (this.scrollingToHighlight = false));
+            this.messageHighlight
+                .scrollTo(el.querySelector(".o-mail-Message-jumpTarget"))
+                .then(() => (this.scrollingToHighlight = false));
         }
     }
 
