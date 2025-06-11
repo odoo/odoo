@@ -24,6 +24,7 @@ import {
     nextTick,
     patchWithCleanup,
 } from "../../helpers/utils";
+import { contains } from "@web/../tests/utils";
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
 
 import { onMounted } from "@odoo/owl";
@@ -1940,11 +1941,7 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
 
             await clickListNew(target);
-            assert.containsOnce(
-                document.body,
-                ".modal.o_technical_modal",
-                "Warning modal should be opened"
-            );
+            await contains(".modal.o_technical_modal");
 
             await click(target.querySelector(".modal.o_technical_modal button.btn-primary"));
             assert.containsNone(
