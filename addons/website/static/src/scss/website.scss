@@ -1315,8 +1315,14 @@ $-o-carousel-controllers-size: map-get($spacers, 5);
     > .s_parallax_bg {
         @extend %o-we-background-layer;
     }
-    &.s_parallax_is_fixed > .s_parallax_bg {
-        background-attachment: fixed;
+    @include media-breakpoint-up(xl) {
+        // Fixed backgrounds are disabled when using a mobile/tablet device,
+        // which is not a big deal but, on some of them (iOS...), defining the
+        // background as fixed breaks the background-size/position props.
+        // So we enable this only for >= XL devices.
+        &.s_parallax_is_fixed > .s_parallax_bg {
+            background-attachment: fixed;
+        }
     }
 }
 // Keeps parallax snippet element selectable when Height = auto.
