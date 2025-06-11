@@ -29,6 +29,7 @@ from odoo.service import security
 from odoo.http import request, root
 from odoo.tools import check_barcode_encoding, config, is_html_empty, parse_version, split_every
 from odoo.tools.misc import find_in_path
+from odoo.tools.paper_muncher import can_use_paper_muncher, run_paper_muncher
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter, PdfReadError
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -530,6 +531,22 @@ class IrActionsReport(models.Model):
         :rtype: bytes
         '''
         paperformat_id = self._get_report(report_ref).get_paperformat() if report_ref else self.get_paperformat()
+
+        if can_use_paper_muncher():
+            try:
+                return run_paper_muncher(
+                    paperformat_id,
+                    bodies,
+                    header=header,
+                    footer=footer,
+                    landscape=landscape,
+                    specific_paperformat_args=specific_paperformat_args,
+                    set_viewport_size=set_viewport_size)
+            except Exception:
+                _logger.exception(
+                    "Error while running Paper Muncher falling "
+                    "back to wkhtmtopdf"
+                )
 
         # Build the base command args for wkhtmltopdf bin
         command_args = self._build_wkhtmltopdf_args(
