@@ -20,3 +20,4 @@ Hetal Solanki hs@oerp.ca https://github.com/hs-oerp
 Foram Darji fd@oerp.ca https://github.com/fd-oerp
 Mitesh Savani ms@oerp.ca https://github.com/ms-oerp
 Helena Wong hw@oerp.ca https://github.com/hw-oerp
+Nishi Patel np@oerp.ca https://github.com/np-oerp
