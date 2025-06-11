@@ -3,7 +3,6 @@
 import odoo.tests
 from odoo.tools import mute_logger
 from odoo.addons.website.tests.common import HttpCaseWithWebsiteUser
-import unittest
 
 
 @odoo.tests.common.tagged('post_install', '-at_install')
@@ -31,8 +30,6 @@ class TestRestrictedEditor(HttpCaseWithWebsiteUser):
     def test_01_restricted_editor_only(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'test_restricted_editor_only', login="website_user")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     @mute_logger('odoo.addons.http_routing.models.ir_http', 'odoo.http')
     def test_02_restricted_editor_test_admin(self):
         self.user_website_user.group_ids += self.env.ref("test_website.group_test_website_admin")
