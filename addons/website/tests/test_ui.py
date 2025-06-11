@@ -2,7 +2,6 @@
 
 import base64
 import json
-import unittest
 
 from werkzeug.urls import url_encode
 
@@ -236,8 +235,6 @@ class TestUiTranslate(odoo.tests.HttpCase):
         self.assertNotEqual(new_menu.name, 'value pa-GB', msg="The new menu should not have its value edited, only its translation")
         self.assertEqual(new_menu.with_context(lang=parseltongue.code).name, 'value pa-GB', msg="The new translation should be set")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_translate_text_options(self):
         lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
