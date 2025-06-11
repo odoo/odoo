@@ -306,7 +306,7 @@ test("properties: no access to parent", async () => {
     patchWithCleanup(formView.env.services.notification, {
         add: (message, options) => {
             expect(message).toBe(
-                "You need edit access on the parent document to update these property fields"
+                "You cannot edit the Company \"Company 1\"."
             );
         },
     });
