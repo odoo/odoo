@@ -154,7 +154,8 @@ class MailingMailing(models.Model):
         'ir.model', string='Recipients Model',
         ondelete='cascade', required=True,
         domain=[('is_mailing_enabled', '=', True)],
-        default=lambda self: self.env.ref('mass_mailing.model_mailing_list').id)
+        compute='_compute_mailing_model_id', precompute=True,
+        readonly=False, store=True)
     mailing_model_name = fields.Char(
         string='Recipients Model Name',
         related='mailing_model_id.model', readonly=True, related_sudo=True)
@@ -439,6 +440,10 @@ class MailingMailing(models.Model):
     def _compute_mailing_model_real(self):
         for mailing in self:
             mailing.mailing_model_real = 'mailing.contact' if mailing.mailing_model_id.model == 'mailing.list' else mailing.mailing_model_id.model
+
+    def _compute_mailing_model_id(self):
+        """Compute acts as default, this avoids issues when the field is made compute stored in overrides."""
+        self.filtered(lambda m: not m.mailing_model_id).mailing_model_id = self.env.ref('mass_mailing.model_mailing_list').id
 
     @api.depends('mailing_model_id')
     def _compute_mailing_on_mailing_list(self):
