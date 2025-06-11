@@ -69,4 +69,4 @@ class ProductTemplateAttributeExclusion(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config_id):
-        return ['value_ids']
+        return ['value_ids', 'product_template_attribute_value_id']
