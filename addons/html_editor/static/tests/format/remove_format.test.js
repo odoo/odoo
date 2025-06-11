@@ -5,6 +5,7 @@ import { click, queryAll, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { execCommand } from "../_helpers/userCommands";
 import { expectElementCount } from "../_helpers/ui_expectations";
+import { unformat } from "../_helpers/format";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -662,6 +663,48 @@ test("should remove font size and color styles", async () => {
         contentBefore: `<p><span style="font-size: 10px;"><font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">[abcdefg]</font></span></p>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<p>[abcdefg]</p>`,
+    });
+});
+
+test("should remove backgroundColor from selected cells using removeFormat", async () => {
+    const defaultTextColor = "color: rgb(1, 10, 100);";
+    const styleContent = `* {${defaultTextColor}}`;
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>[ab</p></td></tr>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>cd]</p></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td><p>[ab</p></td></tr>
+                <tr><td><p>cd]</p></td></tr>
+            </tbody></table>
+        `),
+        styleContent,
+    });
+});
+
+test("should remove backgroundColor from selected cells using removeFormat (2)", async () => {
+    const defaultTextColor = "color: rgb(1, 10, 100);";
+    const styleContent = `* {${defaultTextColor}}`;
+    await testEditor({
+        contentBefore: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>[<br></p></td></tr>
+                <tr><td style="background-color: rgb(255, 0, 0); ${defaultTextColor}"><p>]<br></p></td></tr>
+            </tbody></table>
+        `),
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: unformat(`
+            <table class="table table-bordered o_table"><tbody>
+                <tr><td><p>[\u200b</p></td></tr>
+                <tr><td><p>]\u200b</p></td></tr>
+            </tbody></table>
+        `),
+        styleContent,
     });
 });
 
