@@ -660,9 +660,10 @@ Contracts:
         for leave in self:
             virtual_remaining_leaves = 0
             max_leaves = 0
-            for allocation_dict in employee_days_per_allocation[leave.employee_id][leave.holiday_status_id].values():
-                max_leaves += allocation_dict['max_leaves']
-                virtual_remaining_leaves += allocation_dict['virtual_remaining_leaves']
+            for allocation, allocation_dict in employee_days_per_allocation[leave.employee_id][leave.holiday_status_id].items():
+                if allocation and (not allocation.date_to or allocation.date_to >= date_from):
+                    max_leaves += allocation_dict['max_leaves']
+                    virtual_remaining_leaves += allocation_dict['virtual_remaining_leaves']
             leave.virtual_remaining_leaves = virtual_remaining_leaves
             leave.max_leaves = max_leaves
 
