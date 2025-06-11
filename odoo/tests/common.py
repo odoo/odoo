@@ -1062,7 +1062,7 @@ class TransactionCase(BaseCase):
         cls.addClassCleanup(check_cursor_stack)
 
         if cls.freeze_time:
-            cls.startClassPatcher(freezegun.freeze_time(cls.freeze_time))
+            cls.startClassPatcher(cls.freeze_time)
 
         def forbidden(*args, **kwars):
             traceback.print_stack()
@@ -2587,28 +2587,32 @@ class freeze_time:
         It properly handles the test classes decoration
         Also, it can be used like the usual method decorator or context manager
     """
+    _freeze_time = staticmethod(freezegun.freeze_time)
 
-    def __init__(self, time_to_freeze):
-        self.freezer = None
-        self.time_to_freeze = time_to_freeze
+    def __init__(self, time_to_freeze=None, tz_offset=0, tick=False, as_kwarg='', auto_tick_seconds=0):
+        self.freezer = self._freeze_time(
+            time_to_freeze=time_to_freeze,
+            tz_offset=tz_offset,
+            tick=tick,
+            as_kwarg=as_kwarg,
+            auto_tick_seconds=auto_tick_seconds,
+        )
 
-    def __call__(self, func):
-        if isinstance(func, type) and issubclass(func, case.TestCase):
-            func.freeze_time = self.time_to_freeze
-            return func
-        else:
-            if freezegun:
-                return freezegun.freeze_time(self.time_to_freeze)(func)
-            else:
-                _logger.warning("freezegun package missing")
+    def __call__(self, arg):
+        if isinstance(arg, type) and issubclass(arg, case.TestCase):
+            arg.freeze_time = self
+            return arg
+
+        return self.freezer(arg)
 
     def __enter__(self):
-        if freezegun:
-            self.freezer = freezegun.freeze_time(self.time_to_freeze)
-            return self.freezer.start()
-        else:
-            _logger.warning("freezegun package missing")
+        return self.freezer.start()
 
     def __exit__(self, *args):
-        if self.freezer:
-            self.freezer.stop()
+        self.freezer.stop()
+
+    start = __enter__
+    stop = __exit__
+
+
+freezegun.freeze_time = freeze_time
