@@ -1,0 +1,6 @@
+<templates xml:space="preserve">
+    <t t-name="website.ImageTransformOption">
+        <BuilderButton title.translate="Transform the picture" id="'transformImage'" action="'transformImage'" actionParam="closeImageTransformation" icon="'fa-object-ungroup'" />
+        <BuilderButton title.translate="Reset transformation" action="'resetTransformImage'"  actionParam="{isImageTransformationOpen, closeImageTransformation: closeImageTransformation.bind(this) }" t-if="isActiveItem('transformImage')">Reset</BuilderButton>
+    </t>
+</templates>
