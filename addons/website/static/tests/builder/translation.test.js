@@ -2,7 +2,7 @@ import { Builder } from "@html_builder/builder";
 import { EditWebsiteSystrayItem } from "@website/client_actions/website_preview/edit_website_systray_item";
 import { setContent, setSelection } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
-import { expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent, queryAllTexts } from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, invisibleEl, setupWebsiteBuilder } from "./website_helpers";
@@ -20,10 +20,12 @@ const websiteServiceInTranslateMode = {
     },
     // Minimal context to avoid crashes.
     context: { showNewContentModal: false },
-    websites: [{
-        id: 1,
-        metadata: {},
-    }],
+    websites: [
+        {
+            id: 1,
+            metadata: {},
+        },
+    ],
 };
 
 test("systray in translate mode", async () => {
@@ -68,7 +70,7 @@ test("translate text", async () => {
         return true;
     });
     const { getEditor } = await setupSidebarBuilderForTranslation({
-        websiteContent: getTranslateEditable("Hello"),
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
     });
     const editor = getEditor();
     const textNode = editor.editable.querySelector("span").firstChild;
@@ -81,10 +83,10 @@ test("translate text", async () => {
 
 test("add text in translate mode do not split", async () => {
     const { getEditor } = await setupSidebarBuilderForTranslation({
-        websiteContent: getTranslateEditable("Hello"),
+        websiteContent: getTranslateEditable({ inWrap: "Hello" }),
     });
     const editor = getEditor();
-    setContent(editor.editable.querySelector("#wrap"), getTranslateEditable("Hello[]"));
+    setContent(editor.editable.querySelector("#wrap"), getTranslateEditable({ inWrap: "Hello[]" }));
     // Event trigger when you press "Enter" => create a new paragraph
     await manuallyDispatchProgrammaticEvent(editor.editable, "beforeinput", {
         inputType: "insertParagraph",
@@ -184,11 +186,60 @@ test("translate select", async () => {
     ]);
 });
 
-function getTranslateEditable(inWrap) {
+describe("save translation", () => {
+    beforeEach(async () => {
+        onRpc("/web_editor/field/translation/update", async (data) => {
+            const { params } = await data.json();
+            expect.step(params.translations.fr_BE);
+            return true;
+        });
+    });
+    const srcSha1 = "srcSha1";
+    const srcSha2 = "srcSha2";
+    async function modifyBothTextsAndSave(editor) {
+        await contains(".modal .btn:contains(Ok, never show me this again)").click();
+        const textFirstNode = editor.editable.querySelector(
+            `[data-oe-translation-source-sha=${srcSha1}]`
+        ).firstChild;
+        setSelection({ anchorNode: textFirstNode, anchorOffset: 1 });
+        await insertText(editor, "1");
+        const textSecondNode = editor.editable.querySelector(
+            `[data-oe-translation-source-sha=${srcSha2}]`
+        ).firstChild;
+        setSelection({ anchorNode: textSecondNode, anchorOffset: 1 });
+        await insertText(editor, "1");
+        await contains(".o-snippets-top-actions button:contains(Save)").click();
+    }
+
+    test("save translation of contents of the same view", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: `${getTranslateEditable({
+                inWrap: "abc",
+                sourceSha: srcSha1,
+            })} ${getTranslateEditable({ inWrap: "def", sourceSha: srcSha2 })}`,
+        });
+        await modifyBothTextsAndSave(getEditor());
+        expect.verifySteps([{ srcSha1: "a1bc", srcSha2: "d1ef" }]);
+    });
+
+    test("save translation of contents of different views", async () => {
+        const { getEditor } = await setupSidebarBuilderForTranslation({
+            websiteContent: `${getTranslateEditable({
+                inWrap: "abc",
+                oeId: 1,
+                sourceSha: srcSha1,
+            })} ${getTranslateEditable({ inWrap: "def", oeId: 2, sourceSha: srcSha2 })}`,
+        });
+        await modifyBothTextsAndSave(getEditor());
+        expect.verifySteps([{ srcSha1: "a1bc" }, { srcSha2: "d1ef" }]);
+    });
+});
+
+function getTranslateEditable({ inWrap, oeId = "526", sourceSha = "sourceSha" }) {
     return `
         <div class="container s_allow_columns">
             <p>
-                <span data-oe-model="ir.ui.view" data-oe-id="526" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="sourceSha" class="o_editable">${inWrap}</span>
+                <span data-oe-model="ir.ui.view" data-oe-id="${oeId}" data-oe-field="arch_db" data-oe-translation-state="to_translate" data-oe-translation-source-sha="${sourceSha}" class="o_editable">${inWrap}</span>
             </p>
         </div>`;
 }
