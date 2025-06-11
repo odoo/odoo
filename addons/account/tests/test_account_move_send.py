@@ -695,6 +695,25 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertEqual(move_send_batch_wizard.summary_data, {'email': {'count': len(invoices), 'label': 'by Email'}})
         self.assertFalse(move_send_batch_wizard.alerts)
 
+    def test_compute_value_of_send_invoice_batch_with_cc(self):
+        tmpl = self.env.ref("account.email_template_edi_invoice")
+        tmpl.write({
+            "email_cc": "example@ex.net,other@ex.net",
+            "use_default_to": False,
+        })
+
+        invoices = (
+            self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True) +
+            self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+        )
+
+        move_send_batch_wizard = Form(self.env['account.move.send.batch.wizard'].with_context(
+            active_model='account.move', active_ids=invoices.ids))
+
+        self.assertEqual(move_send_batch_wizard.move_ids.ids, invoices.ids)
+        self.assertEqual(move_send_batch_wizard.summary_data, {'email': {'count': len(invoices), 'label': 'by Email'}})
+        self.assertFalse(move_send_batch_wizard.alerts)
+
     def test_invoice_multi_email_missing(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
         invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
