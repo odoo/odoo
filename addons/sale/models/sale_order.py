@@ -1228,7 +1228,7 @@ class SaleOrder(models.Model):
 
         async_send = str2bool(self.env['ir.config_parameter'].sudo().get_param('sale.async_emails'))
         cron = self.env.ref('sale.send_pending_emails_cron', raise_if_not_found=False)
-        cron_enabled = cron and cron.active
+        cron_enabled = cron and cron.sudo().active
         if async_send and cron_enabled and allow_deferred_sending:
             # Schedule the email to be sent asynchronously.
             self.pending_email_template_id = mail_template
