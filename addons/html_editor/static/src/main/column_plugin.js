@@ -5,7 +5,7 @@ import { unwrapContents } from "@html_editor/utils/dom";
 import { closestElement, firstLeaf } from "@html_editor/utils/dom_traversal";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 
-const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?:$| )/;
+const REGEX_BOOTSTRAP_COLUMN = /(?:^| )col(-[a-zA-Z]+)?(-\d+)?(?= |$)/;
 
 function isUnremovableColumn(node, root) {
     const isColumnInnerStructure =
@@ -30,7 +30,7 @@ function columnIsAvailable(numberOfColumns) {
 
 export class ColumnPlugin extends Plugin {
     static id = "column";
-    static dependencies = ["baseContainer", "selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history", "dom"];
     resources = {
         user_commands: [
             {
@@ -87,6 +87,7 @@ export class ColumnPlugin extends Plugin {
         power_buttons_visibility_predicates: ({ anchorNode }) =>
             !closestElement(anchorNode, ".o_text_columns"),
         move_node_whitelist_selectors: ".o_text_columns",
+        move_node_blacklist_selectors: ".o_text_columns *",
         hint_targets_providers: (selectionData) => {
             const anchorNode = selectionData.editableSelection.anchorNode;
             const columnContainer = closestElement(anchorNode, "div.o_text_columns");
@@ -141,7 +142,7 @@ export class ColumnPlugin extends Plugin {
         if (!closestElement(anchor, ".container")) {
             container.classList.add("container");
         }
-        container.classList.add("o_text_columns");
+        container.classList.add("o_text_columns", "o-contenteditable-false");
         const row = this.document.createElement("div");
         row.classList.add("row");
         container.append(row);
@@ -151,22 +152,22 @@ export class ColumnPlugin extends Plugin {
         const columns = [];
         for (let i = 0; i < numberOfColumns; i++) {
             const column = this.document.createElement("div");
-            column.classList.add(`col-${columnSize}`);
+            column.classList.add(`col-${columnSize}`, "o-contenteditable-true");
             row.append(column);
             columns.push(column);
         }
-        block.before(container);
+        if (addParagraphAfter) {
+            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+            baseContainer.append(this.document.createElement("br"));
+            block.after(baseContainer);
+        }
         columns.shift().append(block);
         for (const column of columns) {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             baseContainer.append(this.document.createElement("br"));
             column.append(baseContainer);
         }
-        if (addParagraphAfter) {
-            const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-            baseContainer.append(this.document.createElement("br"));
-            container.after(baseContainer);
-        }
+        this.dependencies.dom.insert(container);
     }
 
     changeColumnsNumber(anchor, numberOfColumns) {
@@ -188,7 +189,7 @@ export class ColumnPlugin extends Plugin {
             let lastColumn = columns[columns.length - 1];
             for (let i = 0; i < diff; i++) {
                 const column = this.document.createElement("div");
-                column.classList.add(`col-${columnSize}`);
+                column.classList.add(`col-${columnSize}`, "o-contenteditable-true");
                 const baseContainer = this.dependencies.baseContainer.createBaseContainer();
                 baseContainer.append(this.document.createElement("br"));
                 column.append(baseContainer);
