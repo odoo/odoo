@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { click, edit, press, queryAllTexts, waitFor } from "@odoo/hoot-dom";
+import { click, edit, press, queryAllTexts, runAllTimers, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -10,6 +10,7 @@ import {
     getService,
     mockService,
     models,
+    mountView,
     mountViewInDialog,
     mountWithCleanup,
     onRpc,
@@ -523,4 +524,47 @@ test("close dialog with escape after modifying a field with onchange (no blur)",
     await animationFrame();
     expect(".o_dialog").toHaveCount(0);
     expect(".o_navbar_apps_menu button").toBeFocused();
+});
+
+test.tags("desktop");
+test("display a dialog if onchange result is a warning from within a dialog", async function () {
+    Instrument._views = {
+        form: `<form><field name="name" /></form>`,
+    };
+
+    onRpc("instrument", "onchange", () => {
+        expect.step("onchange warning");
+        return Promise.resolve({
+            value: {
+                name: false,
+            },
+            warning: {
+                title: "Warning",
+                message: "You must first select a partner",
+                type: "dialog",
+            },
+        });
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `<form><field name="instrument"/></form>`,
+        resId: 2,
+    });
+
+    await contains(".o_field_widget[name=instrument] input").edit("tralala", { confirm: false });
+    await runAllTimers();
+    await contains(".o_field_widget[name=instrument] .o_m2o_dropdown_option_create_edit").click();
+
+    await waitFor(".modal.o_inactive_modal");
+    expect(".modal").toHaveCount(2);
+    expect(".modal:not(.o_inactive_modal) .modal-body").toHaveText(
+        "You must first select a partner"
+    );
+
+    await contains(".modal:not(.o_inactive_modal) button").click();
+    expect(".modal").toHaveCount(1);
+    expect(".modal:not(.o_inactive_modal) .modal-title").toHaveText("Create Instruments");
+
+    expect.verifySteps(["onchange warning"]);
 });
