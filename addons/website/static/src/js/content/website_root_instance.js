@@ -12,7 +12,7 @@ const prom = createPublicRoot(WebsiteRoot).then(async rootInstance => {
         if (window.frameElement.dataset.loadWysiwyg === 'true') {
             try {
                 await Promise.all([
-                    loadBundle("website.assets_all_wysiwyg"),
+                    loadBundle("website.assets_all_wysiwyg_inside"),
                     loadBundle("website.assets_edit_frontend")
                 ]);
             } catch (e){
