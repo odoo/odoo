@@ -236,8 +236,6 @@ class TestUiTranslate(odoo.tests.HttpCase):
         self.assertNotEqual(new_menu.name, 'value pa-GB', msg="The new menu should not have its value edited, only its translation")
         self.assertEqual(new_menu.with_context(lang=parseltongue.code).name, 'value pa-GB', msg="The new translation should be set")
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_translate_text_options(self):
         lang_en = self.env.ref('base.lang_en')
         lang_fr = self.env.ref('base.lang_fr')
@@ -248,7 +246,7 @@ class TestUiTranslate(odoo.tests.HttpCase):
             'language_ids': [(6, 0, (lang_en + lang_fr).ids)],
         })
 
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_text_options', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'translate_text_options', login='admin', watch=True)
 
     def test_snippet_translation(self):
         ResLang = self.env['res.lang']
