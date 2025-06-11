@@ -445,8 +445,9 @@ def merge_sequences(*iterables: Iterable[T]) -> list[T]:
 
 def get_iso_codes(lang: str) -> str:
     if lang.find('_') != -1:
-        if lang.split('_')[0] == lang.split('_')[1].lower():
-            lang = lang.split('_')[0]
+        lang_items = lang.split('_')
+        if lang_items[0] == lang_items[1].lower():
+            lang = lang_items[0]
     return lang
 
 
