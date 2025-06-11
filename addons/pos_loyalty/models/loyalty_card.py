@@ -44,3 +44,10 @@ class LoyaltyCard(models.Model):
         count_per_coupon = {coupon.id: count for coupon, count in read_group_res}
         for card in self:
             card.use_count += count_per_coupon.get(card.id, 0)
+
+    @api.model
+    def get_loyalty_card_partner_by_code(self, code):
+        return self.env['loyalty.card'].search([
+            ('code', '=', code),
+            ('program_type', '=', 'loyalty'),
+        ], limit=1).partner_id or False

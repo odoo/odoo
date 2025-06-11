@@ -3270,3 +3270,34 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_discount_after_unknown_scan",
             login="pos_user",
         )
+
+    def test_scan_loyalty_card_select_customer(self):
+        self.env['loyalty.program'].search([]).write({'active': False})
+        self.test_partner = self.env['res.partner'].create({'name': 'AAA Test Partner'})
+
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'rule_ids': [],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'reward_product_id': self.whiteboard_pen.product_variant_id.id,
+                'reward_product_qty': 1,
+                'required_points': 5,
+            })],
+        })
+        self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.test_partner.id,
+            'points': 500,
+            'code': '0444-e050-4548',
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "test_scan_loyalty_card_select_customer",
+            login="pos_user",
+        )
