@@ -270,9 +270,11 @@ class HrEmployee(models.Model):
     def action_time_off_dashboard(self):
         action = self.env['ir.actions.act_window']._for_xml_id('hr_holidays.hr_leave_action_action_approve_department')
         action['context'] = dict(literal_eval(action['context']))
-        action['context']['search_default_employee_id'] = self.ids
+        action['context']['show_dashboard'] = True
         action['context'].pop('search_default_waiting_for_me', False)
         action['context'].pop('search_default_waiting_for_me_manager', False)
+        action['context']['default_employee_id'] = self.id
+        action['domain'] = [('employee_id', 'in', self.ids)]
         return action
 
     def _is_leave_user(self):
