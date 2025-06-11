@@ -257,9 +257,15 @@ patch(PosStore.prototype, {
             (rule) =>
                 rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code)
         );
+        const loyaltyCard = this.models["loyalty.card"].find(
+            (card) => card.code === code && card.program_id?.program_type === "loyalty"
+        );
         let claimableRewards = null;
         let coupon = null;
-        if (rule) {
+        // If the code belongs to a loyalty card we just set the partner
+        if (loyaltyCard && loyaltyCard.partner_id) {
+            order.setPartner(loyaltyCard.partner_id);
+        } else if (rule) {
             const date_order = DateTime.fromSQL(order.date_order);
             if (
                 rule.program_id.date_from &&
