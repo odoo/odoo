@@ -639,3 +639,56 @@ class TestMrpStockReports(TestReportsCommon):
         mo.move_raw_ids.filtered(lambda m: m.product_id == black_white_product and m.bom_line_id.bom_id.type != 'phantom').unlink()
         mo_report = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
         self.assertEqual(mo_report['data']['extras']['unit_bom_cost'], mo_report['data']['extras']['unit_mo_cost'] + missing_product.standard_price + black_white_product.standard_price, 'The BoM unit cost should take the missing components into account, which are the deleted MO lines')
+
+    def test_mo_overview_operation_cost(self):
+        """ Test that operations correctly compute their cost depending on their cost_mode. """
+        expedition_33 = self.product
+        lumiere = self.env['mrp.workcenter'].create({
+            'name': 'Lumière',
+            'costs_hour': 33,
+        })
+        bom_baguette = self.env['mrp.bom'].create({
+            'product_id': expedition_33.id,
+            'product_tmpl_id': expedition_33.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'operation_ids': [
+                Command.create({
+                    'name': 'Get on a boat',
+                    'workcenter_id': lumiere.id,
+                    'time_cycle': 60,
+                    'sequence': 1,
+                    'cost_mode': 'actual'
+                }),
+                Command.create({
+                    'name': 'Die on a beach',
+                    'workcenter_id': lumiere.id,
+                    'time_cycle': 60,
+                    'sequence': 2,
+                    'cost_mode': 'estimated'
+                }),
+            ],
+        })
+
+        mo = self.env['mrp.production'].create({
+            'name': 'MO',
+            'product_qty': 1.0,
+            'product_id': expedition_33.id,
+        })
+        mo.action_confirm()
+        mo.workorder_ids.duration = 10
+
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(overview_values['data']['operations']['details'][0]['mo_cost'], 33.0)
+        self.assertEqual(overview_values['data']['operations']['details'][0]['real_cost'], 5.5)
+        self.assertEqual(overview_values['data']['operations']['details'][1]['mo_cost'], 33.0)
+        self.assertEqual(overview_values['data']['operations']['details'][1]['real_cost'], 33.0)
+
+        # Costs should stay the same for a done MO and/or if the cost_mode of the operation is changed
+        mo.button_mark_done()
+        bom_baguette.operation_ids.filtered(lambda o: o.cost_mode == 'estimated').cost_mode = 'actual'
+        overview_values = self.env['report.mrp.report_mo_overview'].get_report_values(mo.id)
+        self.assertEqual(overview_values['data']['operations']['details'][0]['mo_cost'], 33.0)
+        self.assertEqual(overview_values['data']['operations']['details'][0]['real_cost'], 5.5)
+        self.assertEqual(overview_values['data']['operations']['details'][1]['mo_cost'], 33.0)
+        self.assertEqual(overview_values['data']['operations']['details'][1]['real_cost'], 33.0)
