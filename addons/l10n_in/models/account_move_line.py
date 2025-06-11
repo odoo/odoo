@@ -115,7 +115,7 @@ class AccountMoveLine(models.Model):
             transaction_type = get_transaction_type(move)
             tags = line.tax_tag_ids.ids
             is_inv = is_invoice(move)
-            amt_limit = 100000 if line.invoice_date and line.invoice_date >= date(2024, 11, 1) else 250000
+            amt_limit = 100000 if not line.invoice_date or line.invoice_date >= date(2024, 11, 1) else 250000
 
             # If no relevant tags are found, or the tags do not match any category, mark as out of scope
             if not tags or not any(tags_have_categ(tags, c) for c in tax_tags_ids):
@@ -211,6 +211,7 @@ class AccountMoveLine(models.Model):
         indian_moves_lines = self.filtered(
             lambda l: l.move_id.country_code == 'IN'
             and l.move_id.is_sale_document(include_receipts=True)
+            and l.display_type in ('product', 'tax')
         )
         if not indian_moves_lines:
             return
