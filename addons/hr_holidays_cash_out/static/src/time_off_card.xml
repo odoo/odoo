@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+    <t t-name="hr_leave_cash_out.TimeOffCardPopover" t-inherit="hr_holidays.TimeOffCardPopover" t-inherit-mode="extension">
+        <xpath expr="//ul/li[last()]" position="before">
+            <li class="d-flex justify-content-between btn-link cursor-pointer" t-on-click="() => this.navigateCashOutInfo(['validate'])">Paid: <span class="ps-1" t-esc="props.taken_leaves"/></li>
+        </xpath>
+    </t>
+</templates>
