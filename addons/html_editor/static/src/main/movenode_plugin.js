@@ -430,7 +430,7 @@ export class MoveNodePlugin extends Plugin {
 function isNodeMovable(node) {
     return (
         node.parentElement?.getAttribute("contentEditable") === "true" &&
-        !node.parentElement.closest(".o_editor_banner")
+        !node.parentElement.closest(".o_text_columns, .o_editor_banner")
     );
 }
 
