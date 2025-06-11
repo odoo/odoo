@@ -318,7 +318,6 @@ test("base rendering when chatter has no record", async () => {
     await contains(".o-mail-Message-author", { text: "Mitchell Admin" });
     await contains(".o-mail-Message-body", { text: "Creating a new record..." });
     await contains("button", { count: 0, text: "Load More" });
-    await contains(".o-mail-Message-actions");
 });
 
 test("base rendering when chatter has attachments", async () => {
@@ -575,6 +574,18 @@ test("chatter updating", async () => {
     });
     await click(".o_pager_next");
     await contains(".o-mail-Message");
+});
+
+test("chatter message actions appear only after saving the form", async () => {
+    await start();
+    await openFormView("res.partner");
+    await contains(".o-mail-Message");
+    await contains(".o-mail-Message-actions", { count: 0 });
+    await click(".o_form_button_save");
+    await click("button", { text: "Send message" });
+    await insertText(".o-mail-Composer-input", "hey");
+    await click(".o-mail-Composer-send");
+    await contains(".o-mail-Message-actions");
 });
 
 test("post message on draft record", async () => {
