@@ -946,9 +946,11 @@ class IrActionsReport(models.Model):
                         stream = io.BytesIO()
                         attachment_writer.write(stream)
                         collected_streams[res_ids_wo_stream[i]]['stream'] = stream
-
                     return collected_streams
-
+                else:
+                    for res_id in res_ids_wo_stream:
+                        individual_collected_stream = self._render_qweb_pdf_prepare_streams(report_ref=report_ref, data=data, res_ids=[res_id])
+                        collected_streams[res_id]['stream'] = individual_collected_stream[res_id]['stream']
             collected_streams[False] = {'stream': pdf_content_stream, 'attachment': None}
 
         return collected_streams
