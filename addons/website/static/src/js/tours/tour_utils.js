@@ -672,3 +672,31 @@ export function selectFullText(elementName, selector) {
         },
     };
 }
+
+/**
+ * Click button from the toolbar, if expand is true, it will
+ * first expand the toolbar.
+ * @param {string} elementName
+ * @param {string} selector
+ * @param {string} button
+ * @param {boolean} expand - Whether to expand the toolbar for more buttons.
+ * @returns {Array} The steps to click the toolbar button.
+ */
+export function clickToolbarButton(elementName, selector, button, expand = false) {
+    const steps = [
+        selectFullText(`${elementName}`, selector),
+        {
+            content: `Click on the ${button} from toolbar`,
+            trigger: `.o-we-toolbar button[title="${button}"]`,
+            run: "click",
+        },
+    ];
+    if (expand) {
+        steps.splice(1, 0, {
+            content: "Expand the toolbar for more buttons",
+            trigger: ".o-we-toolbar button[name='expand_toolbar']",
+            run: "click",
+        });
+    }
+    return steps;
+}
