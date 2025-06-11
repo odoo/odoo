@@ -26,29 +26,38 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    batch_for_taxes_computation(taxes, { special_mode = null } = {}) {
-        function sort_key(taxes) {
-            return taxes.sort((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
-        }
+     flatten_taxes_and_sort_them(taxes) {
+         function sort_key(taxes) {
+             return taxes.toSorted((t1, t2) => t1.sequence - t2.sequence || t1.id - t2.id);
+         }
 
+         const group_per_tax = {};
+         const sorted_taxes = [];
+         for (const tax of sort_key(taxes)) {
+             if (tax.amount_type === "group") {
+                 const children = sort_key(tax.children_tax_ids);
+                 for (const child of children) {
+                     group_per_tax[child.id] = tax;
+                     sorted_taxes.push(child);
+                 }
+             } else {
+                 sorted_taxes.push(tax);
+             }
+         }
+         return { sorted_taxes, group_per_tax };
+     },
+
+    /**
+     * [!] Mirror of the same method in account_tax.py.
+     * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+     */
+    batch_for_taxes_computation(taxes, { special_mode = null } = {}) {
+        const { sorted_taxes, group_per_tax } = this.flatten_taxes_and_sort_them(taxes);
         const results = {
             batch_per_tax: {},
-            group_per_tax: {},
-            sorted_taxes: [],
+            group_per_tax: group_per_tax,
+            sorted_taxes: sorted_taxes,
         };
-
-        // Flatten the taxes.
-        for (const tax of sort_key(taxes)) {
-            if (tax.amount_type === "group") {
-                const children = sort_key(tax.children_tax_ids);
-                for (const child of children) {
-                    results.group_per_tax[child.id] = tax;
-                    results.sorted_taxes.push(child);
-                }
-            } else {
-                results.sorted_taxes.push(tax);
-            }
-        }
 
         // Group them per batch.
         let batch = [];
@@ -354,8 +363,9 @@ export const accountTaxHelpers = {
 
             // Base amount.
             let base = null;
-            if (manual_tax_amounts && "base_amount_currency" in manual_tax_amounts[tax.id]) {
-                base = manual_tax_amounts[tax.id].base_amount_currency;
+            const tax_id_str = tax.id.toString();
+            if (manual_tax_amounts && "base_amount_currency" in (manual_tax_amounts[tax_id_str] || {})) {
+                base = manual_tax_amounts[tax_id_str].base_amount_currency;
             } else {
                 let total_tax_amount = taxes_data[tax.id].batch.reduce(
                     (sum, other_tax) => sum + taxes_data[other_tax.id].tax_amount,
