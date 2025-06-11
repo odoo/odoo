@@ -399,8 +399,6 @@ class TestWebsiteSaleRemoveImage(HttpCase):
         self.assertFalse(self.template.image_1920)
         self.assertFalse(self.product.image_1920)
 
-    # TODO master-mysterious-egg fix error
-    @unittest.skip("prepare mysterious-egg for merging")
     def test_website_sale_remove_main_product_image_with_variant(self):
         # Set the color attribute and values on the template.
         self.env['product.template.attribute.line'].create([{
