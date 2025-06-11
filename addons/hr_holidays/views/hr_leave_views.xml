@@ -159,9 +159,9 @@
                                             <div class="col-3 o_hr_holidays_card">
                                                 <div t-if="record.holiday_status_requires_allocation.raw_value"> <!-- To keep the same space-->
                                                     <div class="fw-bold d-flex gap-1 me-1">
-                                                        <field name="virtual_remaining_leaves"/>
+                                                        <field name="virtual_remaining_leaves" widget="float" digits="[3,2]"/>
                                                         /
-                                                        <field name="max_leaves"/>
+                                                        <field name="max_leaves" widget="float" digits="[3,2]"/>
                                                     </div>
                                                     <span>
                                                         Current balance
