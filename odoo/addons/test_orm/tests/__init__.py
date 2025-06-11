@@ -4,6 +4,7 @@ from . import (
     test_company_checks,
     test_domain,
     test_fields,
+    test_guess_mimetypes,
     test_indexed_translation,
     test_json_field,
     test_many2many,
