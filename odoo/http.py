@@ -1489,10 +1489,31 @@ class Response(Proxy):
     flatten = ProxyFunc(None)
 
     def __init__(self, *args, **kwargs):
-        response = args[0] if len(args) == 1 and isinstance(args[0], _Response) else _Response(*args, **kwargs)
+        response = None
+        if len(args) == 1:
+            arg = args[0]
+            if isinstance(arg, Response):
+                response = arg._wrapped__
+            elif isinstance(arg, _Response):
+                response = arg
+            elif isinstance(arg, werkzeug.wrappers.Response):
+                response = _Response.load(arg)
+        if response is None:
+            response = _Response(*args, **kwargs)
+
         super().__init__(response)
         if 'set_cookie' in response.__dict__:
             self.__dict__['set_cookie'] = response.__dict__['set_cookie']
+
+
+__wz_get_response = HTTPException.get_response
+
+
+def get_response(self, environ=None, scope=None):
+    return Response(__wz_get_response(self, environ, scope))
+
+
+HTTPException.get_response = get_response
 
 
 werkzeug_abort = werkzeug.exceptions.abort
