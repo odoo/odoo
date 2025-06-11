@@ -31,8 +31,8 @@ class AccountMoveLine(models.Model):
             ("sale_out_of_scope", "S Out of Scope"),
             ],
         string="GSTR Section",
-        compute="_compute_l10n_in_gstr_section",
-        store=True,
+        #compute="_compute_l10n_in_gstr_section",
+        #store=True,
         index=True,
         readonly=False,
     )
@@ -98,8 +98,7 @@ class AccountMoveLine(models.Model):
             ),
         }
 
-    @api.depends('move_id.state', 'move_id.l10n_in_gst_treatment', 'move_id.l10n_in_state_id', 'tax_tag_ids')
-    def _compute_l10n_in_gstr_section(self):
+    def _set_l10n_in_gstr_section(self):
 
         def tags_have_categ(tax_tags, category):
             return any(tag in tax_tags for tag in tax_tags_ids[category])
@@ -116,7 +115,7 @@ class AccountMoveLine(models.Model):
             transaction_type = get_transaction_type(move)
             tags = line.tax_tag_ids.ids
             is_inv = is_invoice(move)
-            amt_limit = 100000 if line.invoice_date >= date(2024, 11, 1) else 250000
+            amt_limit = 100000 if line.invoice_date and line.invoice_date >= date(2024, 11, 1) else 250000
 
             # If no relevant tags are found, or the tags do not match any category, mark as out of scope
             if not tags or not any(tags_have_categ(tags, c) for c in tax_tags_ids):
@@ -212,11 +211,12 @@ class AccountMoveLine(models.Model):
         indian_moves_lines = self.filtered(
             lambda l: l.move_id.country_code == 'IN'
             and l.move_id.is_sale_document(include_receipts=True)
-            and l.parent_state == 'posted'
         )
-        (self - indian_moves_lines).l10n_in_gstr_section = False
         if not indian_moves_lines:
             return
         tax_tags_ids = self.get_l10n_in_tax_tag_ids()
         for move_line in indian_moves_lines:
-            move_line.l10n_in_gstr_section = get_section(move_line)
+            move_line.write({'l10n_in_gstr_section': get_section(move_line)})
+
+
+

@@ -3,6 +3,7 @@ import logging
 import json
 import re
 
+from contextlib import contextmanager
 from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
@@ -701,3 +702,16 @@ class AccountMove(models.Model):
             url,
             _("Buy Credits")
         )
+
+    @contextmanager
+    def _sync_dynamic_lines(self, container):
+        with (
+            super()._sync_dynamic_lines(container),
+            self._disable_recursion(container, 'l10n_in_skip_invoice_sync') as disabled
+        ):
+            yield
+            if disabled:
+                return
+            for invoice in container['records']:
+                # we set the section on the invoice lines
+                invoice.line_ids._set_l10n_in_gstr_section()
