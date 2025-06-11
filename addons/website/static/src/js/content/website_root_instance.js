@@ -11,7 +11,7 @@ const prom = createPublicRoot(WebsiteRoot).then(rootInstance => {
     if (window.frameElement) {
         let prepare = Promise.resolve();
         if (window.frameElement.dataset.loadWysiwyg === 'true') {
-            prepare = loadWysiwyg(['website.assets_wysiwyg']);
+            prepare = loadWysiwyg(['website.assets_wysiwyg_inside']);
         }
         prepare.then(() => {
             window.dispatchEvent(new CustomEvent('PUBLIC-ROOT-READY', {detail: {rootInstance}}));
