@@ -25,6 +25,21 @@ export class Follow extends Interaction {
     async willStart() {
         const jsFollowEls = this.el.querySelectorAll(".js_follow");
 
+        // TODO handle from xml in master
+        // We explicitly added the input element because
+        // groups="base.group_public" is applied to it. As a result, in
+        // internal or portal use, only the Subscribe/Unsubscribe buttons
+        // are displayed. This ensures that the input element is included if
+        // the user is not a public user.
+        if (
+            !jsFollowEls[0].querySelector(".js_follow_email") &&
+            !jsFollowEls[0].querySelector(".js_follow_icons_container")
+        ) {
+            const inputEl = document.createElement("input");
+            inputEl.setAttribute("class", "js_follow_email form-control");
+            jsFollowEls[0].prepend(inputEl);
+        }
+
         const records = {};
         for (const jsFollowEl of jsFollowEls) {
             const model = jsFollowEl.dataset.object;
