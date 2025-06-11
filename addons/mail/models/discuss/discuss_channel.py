@@ -116,13 +116,13 @@ class DiscussChannel(models.Model):
         if failing_channels := self.sudo().filtered(
             lambda c: c.from_message_id
             and (
-                c.from_message_id.res_id != c.parent_channel_id.id
+                c.from_message_id.res_id not in [c.parent_channel_id.id] + c.parent_channel_id.sub_channel_ids.ids
                 or c.from_message_id.model != "discuss.channel"
             )
         ):
             raise ValidationError(
                 _(
-                    "Cannot create %(channels)s: initial message should belong to parent channel.",
+                    "Cannot create %(channels)s: initial message should belong to parent channel or one of its sub-channels.",
                     channels=failing_channels.mapped("name"),
                 )
             )
