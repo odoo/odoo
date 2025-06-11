@@ -1,7 +1,7 @@
 .o-website-builder_sidebar {
     width: 0px;
     background-color: $o-we-sidebar-bg;
-    transition: width ease 400ms;
+    transition: width ease 400ms, border 400ms;
 
     &.o_builder_sidebar_open {
         width: $o-we-sidebar-width;
@@ -9,6 +9,7 @@
 
         .o_website_fullscreen & {
             width: 0;
+            border: none !important;
         }
 
         // Fix for Edge with 150% zoom: when entering edit mode, the page
@@ -32,6 +33,11 @@
 
     .o_builder_open & {
         transition-delay: 0ms;
+    }
+
+    &:not(.o_builder_sidebar_open) {
+        // Keep it in CSS for better transition.
+        border: none !important;
     }
 }
 
