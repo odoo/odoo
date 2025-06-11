@@ -882,3 +882,30 @@ registry.category("web_tour.tours").add("test_delete_line", {
             Chrome.endTour(),
         ].flat(),
 });
+
+function clickLoadSampleButton() {
+    return [
+        {
+            trigger:
+                '.o_view_nocontent .o_nocontent_help button.btn-primary:contains("Load Sample")',
+            content: "Click on Load Sample button",
+            run: "click",
+        },
+    ].flat();
+}
+
+registry.category("web_tour.tours").add("test_load_pos_demo_data_by_pos_user", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            clickLoadSampleButton(),
+            {
+                trigger:
+                    '.modal-content:has(.modal-title:contains("Access Denied")) .modal-footer .btn.btn-primary:contains("Ok")',
+                content: "Click Ok on the Access Denied dialog box",
+                run: "click",
+            },
+            Chrome.endTour(),
+        ].flat(),
+});
