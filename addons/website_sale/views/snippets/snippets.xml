@@ -738,4 +738,15 @@
     </xpath>
 </template>
 
+<template id="product_s_countdown_options" inherit_id="website.s_countdown_options" name="product countdown snippet options">
+    <xpath expr="//div[@data-js='countdown']/we-row/we-select" position="inside">
+        <we-button data-end-action="prevent_sale_zero_priced_product" data-name="prevent_sale_opt">Prevent Sale of Zero Priced Product</we-button>
+        <we-button data-end-action="hide_product" data-name="hide_product_opt">Hide the product</we-button>
+    </xpath>
+    <xpath expr="//we-select[@data-attribute-name='size']" position="before">
+        <we-input string="Product Names" data-dependencies="hide_product_opt" class="o_we_large" data-name="hide_product_names_opt"
+            data-attribute-name="hideProductNames" data-no-preview="true" data-select-data-attribute=""
+            placeholder="e.g. lamp,bin" title="Comma-separated list of parts of product names, barcodes or internal reference"/>
+    </xpath>
+</template>
 </odoo>
