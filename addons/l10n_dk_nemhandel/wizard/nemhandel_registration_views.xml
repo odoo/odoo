@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="nemhandel_registration_form" model="ir.ui.view">
+        <field name="name">nemhandel.registration.form</field>
+        <field name="model">nemhandel.registration</field>
+        <field name="group_ids" eval="[Command.link(ref('account.group_account_manager'))]"/>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group name="nemhandel_registration" invisible="l10n_dk_nemhandel_proxy_state not in ('not_registered', 'in_verification')">
+                        <div colspan="2" class="text-muted mb-3" invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'">
+                            Send invoices and receive bills automatically on the Nemhandel network.
+                        </div>
+
+                        <!-- business fields -->
+                        <field name="identifier_type"
+                               string="Identifier Type"
+                               nolabel="1"
+                               invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'"
+                               class="o_field_peppol_eas_selection"/>
+                        <field name="identifier_value"
+                               string="Identifier Value"
+                               nolabel="1"
+                               invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'"/>
+                        <field name="contact_email"
+                               string="Email"
+                               invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'"/>
+                        <field name="phone_number"
+                               string="Phone"
+                               required="edi_mode != 'demo'"
+                               invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'"/>
+
+                        <!-- The participant needs to fill in the SMS code they received -->
+                        <div colspan="2" name="kyc" invisible="l10n_dk_nemhandel_proxy_state != 'in_verification'" class="mb-4">
+                            <div class="text-muted mt-3">
+                                Fill in the code below that we sent you by SMS to
+                                <field name="phone_number"
+                                       class="oe_inline"
+                                       nolabel="1"
+                                       readonly="l10n_dk_nemhandel_proxy_state == 'in_verification'"/>
+                            </div>
+                            <div class="mt-1 ps-3 w-50">
+                                <field name="verification_code" widget="nemhandel_verification_code"/>
+                            </div>
+                        </div>
+                    </group>
+
+                    <!-- edi mode info -->
+                    <div colspan="2" class="row" invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'">
+                        <div class="text-muted col" invisible="edi_mode != 'prod'">
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'test'">
+                            Test mode allows sending e-invoices through the test Nemhandel network.
+                            By clicking the button below I accept that Odoo may process my e-invoices.
+                        </div>
+                        <div class="text-muted col" invisible="edi_mode != 'demo'">
+                            In demo mode sending invoices is simulated.
+                            There will be no communication with the Nemhandel network.
+                        </div>
+                    </div>
+                </sheet>
+
+                <footer>
+                    <div name="nemhandel_send_code" invisible="l10n_dk_nemhandel_proxy_state != 'not_registered'">
+                        <button string="Activate Nemhandel"
+                                name="button_nemhandel_registration_sms"
+                                type="object"
+                                class="btn-primary"
+                                data-hotkey="q"
+                                invisible="edi_mode != 'prod'"/>
+                        <button string="Activate Nemhandel (Test)"
+                                name="button_nemhandel_registration_sms"
+                                type="object"
+                                class="btn-primary"
+                                data-hotkey="q"
+                                invisible="edi_mode != 'test'"/>
+                        <button string="Activate Nemhandel (Demo)" name="button_check_nemhandel_verification_code" type="object"
+                                class="btn-primary" data-hotkey="q" invisible="edi_mode != 'demo'"/>
+                    </div>
+                    <div name="nemhandel_check_code" invisible="l10n_dk_nemhandel_proxy_state != 'in_verification'">
+                        <button string="Confirm"
+                                name="button_check_nemhandel_verification_code"
+                                type="object"
+                                class="btn-primary"
+                                data-hotkey="q"/>
+                    </div>
+                    <button string="Send again"
+                            name="send_nemhandel_verification_code"
+                            type="object"
+                            class="btn-secondary"
+                            invisible="l10n_dk_nemhandel_proxy_state != 'in_verification'"/>
+                    <button name="button_deregister_nemhandel_participant"
+                            string="Cancel Registration"
+                            type="object"
+                            class="btn-secondary"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
