@@ -27,9 +27,16 @@ class Company(models.Model):
             ('name', 'ilike', 'oss_tax_group'),
             ('module', '=', 'account'),
             ('model', '=', 'account.tax.group')])
-        for company in self:
-            # instantiate OSS taxes on the first branch with a TAX ID, default on root company
-            company = company.parent_ids.filtered(lambda c: c.vat)[-1:] or company.root_id
+        # We instantiate OSS taxes on the whole hierarchy containing `self` (branches & parent companies)
+        # but only
+        #   * on companies with Tax ID (or the root company)
+        #   * if there is no parent company with the same Tax ID
+        branches = self.env['res.company'].sudo().search([('id', 'child_of', self.ids)])
+        companies = (branches | self.parent_ids)
+        self = self.with_context(allowed_company_ids=companies.ids)  # noqa: PLW0642
+        for company in companies:
+            if company.parent_id and (not company.vat or company.vat in (company.parent_ids - company).mapped('vat')):
+                continue
             invoice_repartition_lines, refund_repartition_lines = company._get_repartition_lines_oss()
             taxes = self.env['account.tax'].search([
                 *self.env['account.tax']._check_company_domain(company),
