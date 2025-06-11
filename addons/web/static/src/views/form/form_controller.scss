@@ -517,8 +517,8 @@
 
     // Notebooks
     .o_notebook {
-        --notebook-margin-x: calc(var(--formView-sheet-padding-x) * -1);
-        --notebook-padding-x: var(--formView-sheet-padding-x);
+        --Notebook-margin-x: calc(var(--formView-sheet-padding-x) * -1);
+        --Notebook-padding-x: var(--formView-sheet-padding-x);
 
         clear: both; // For the notebook not to have alongside floating elements
         margin-top: $o-form-spacing-unit * 2;
@@ -567,15 +567,15 @@
                     &:not(.o_group), &.o_invisible_modifier {
                         .o_field_x2many.o_field_x2many_list .o_list_renderer {
                             @include media-only(screen) {
-                                --ListRenderer-margin-x: var(--notebook-margin-x);
-                                --ListRenderer-table-padding-x: var(--notebook-padding-x);
+                                --ListRenderer-margin-x: var(--Notebook-margin-x);
+                                --ListRenderer-table-padding-x: var(--Notebook-padding-x);
 
                                 margin-top: -$o-horizontal-padding;
                             }
 
                             @include media-only(print) {
                                 --ListRenderer-margin-x: 0;
-                                --ListRenderer-table-padding-x: var(--notebook-padding-x);
+                                --ListRenderer-table-padding-x: var(--Notebook-padding-x);
 
                                 margin-top: -$o-horizontal-padding * 0.5;
                             }
@@ -1043,8 +1043,8 @@
     }
 
     .o_notebook {
-        --notebook-margin-x: calc(var(--formView-sheetBg-padding-x) * -1);
-        --notebook-padding-x: var(--formView-sheetBg-padding-x);
+        --Notebook-margin-x: calc(var(--formView-sheetBg-padding-x) * -1);
+        --Notebook-padding-x: var(--formView-sheetBg-padding-x);
     }
 
     &.o_onboarding_payment_provider_wizard .o_form_renderer {

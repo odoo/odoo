@@ -6,9 +6,9 @@
     }
 
     .o_notebook {
-        --notebook-link-border-color: #{$border-color};
-        --notebook-link-border-color-hover: #{$border-color};
-        --notebook-link-border-color-active-accent: #{$o-brand-primary};
+        --Notebook__link-border-color: #{$border-color};
+        --Notebook__link-border-color--hover: #{$border-color};
+        --Notebook__link-border-top-color--active: #{$o-brand-primary};
 
         // sidebar
         .nav-link.active {
@@ -16,7 +16,7 @@
             background-color: map-get($o-btn-primary-theme-colors, "background");
             color: map-get($o-btn-primary-theme-colors, "color");
             &, &:hover, &:focus, &:active {
-                border-right-color: var(--notebook-link-border-color-active);
+                border-right-color: var(--Notebook__link-border-color--active);
             }
         }
 
