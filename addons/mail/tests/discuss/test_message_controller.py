@@ -2,6 +2,8 @@
 
 import json
 
+from urllib.parse import urlencode
+
 import odoo
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
@@ -508,17 +510,27 @@ class TestMessageLinks(MailCommon, HttpCase):
     @users('employee')
     def test_message_link_by_employee(self):
         channel_message = self.public_channel.message_post(body='Public Channel Message', message_type='comment')
-        private_message_id = self.private_group.with_user(self.user_employee_1).message_post(
+        private_message = self.private_group.with_user(self.user_employee_1).message_post(
             body='Private Message',
             message_type='comment',
-        ).id
+        )
         self.authenticate('employee', 'employee')
         with self.subTest(channel_message=channel_message):
             expected_url = self.base_url() + f'/odoo/action-mail.action_discuss?active_id={channel_message.res_id}&highlight_message_id={channel_message.id}'
-            res = self.url_open(f'/mail/message/{channel_message.id}')
+            url_params = {
+                "model": channel_message.model,
+                "res_id": channel_message.res_id,
+                "highlight_message_id": channel_message.id
+            }
+            res = self.url_open(f"/mail/view?{urlencode(url_params)}")
             self.assertEqual(res.url, expected_url)
-        with self.subTest(private_message_id=private_message_id):
-            res = self.url_open(f'/mail/message/{private_message_id}')
+        with self.subTest(private_message=private_message):
+            url_params = {
+                "model": private_message.model,
+                "res_id": private_message.res_id,
+                "highlight_message_id": private_message.id
+            }
+            res = self.url_open(f"/mail/view?{urlencode(url_params)}")
             self.assertEqual(res.status_code, 401)
 
     @users('employee')
@@ -528,5 +540,10 @@ class TestMessageLinks(MailCommon, HttpCase):
             message_type='comment',
             subtype_xmlid='mail.mt_comment'
         )
-        res = self.url_open(f'/mail/message/{message.id}')
+        url_params = {
+            "model": message.model,
+            "res_id": message.res_id,
+            "highlight_message_id": message.id
+        }
+        res = self.url_open(f"/mail/view?{urlencode(url_params)}")
         self.assertEqual(res.status_code, 200)
