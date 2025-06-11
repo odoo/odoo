@@ -74,6 +74,8 @@ def locate_node(arch, spec):
     """
     if spec.tag == 'xpath':
         expr = spec.get('expr')
+        if not expr:
+            raise ValidationError(_("Missing 'expr' attribute in <xpath> element."))
         try:
             xPath = etree.ETXPath(expr)
         except etree.XPathSyntaxError as e:
