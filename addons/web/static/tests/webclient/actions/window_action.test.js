@@ -884,7 +884,7 @@ test("execute_action of type object are handled", async () => {
     expect.assertions(4);
     serverState.userContext = { some_key: 2 };
 
-    onRpc("partner", "object", async function ({ args, kwargs }) {
+    onRpc("partner", "object", function ({ args, kwargs }) {
         expect(kwargs).toEqual(
             {
                 context: {

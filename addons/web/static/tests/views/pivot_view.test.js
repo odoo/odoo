@@ -695,9 +695,9 @@ test("pivot view grouped by date field", async () => {
     expect.assertions(2);
 
     onRpc("read_group", ({ kwargs }) => {
-        const wrongFields = kwargs.fields.filter((field) => {
-            return !(field.split(":")[0] in Partner._fields);
-        });
+        const wrongFields = kwargs.fields.filter(
+            (field) => !(field.split(":")[0] in Partner._fields)
+        );
         expect(wrongFields.length).toBe(0);
     });
 
@@ -4318,15 +4318,13 @@ test("no class 'o_view_sample_data' when real data are presented", async () => {
 });
 
 test("group by properties in pivot view", async () => {
-    onRpc("/web/dataset/call_kw/partner/web_search_read", async (request) => {
-        const { params } = await request.json();
-        if (params.kwargs.specification?.properties_definition) {
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        if (kwargs.specification?.properties_definition) {
             expect.step("fetch_definition");
         }
     });
-    onRpc("/web/dataset/call_kw/partner/read_group", async (request) => {
-        const { params } = await request.json();
-        if (params.kwargs.groupby?.includes("properties.my_char")) {
+    onRpc("partner", "read_group", ({ kwargs }) => {
+        if (kwargs.groupby?.includes("properties.my_char")) {
             expect.step("read_group");
             return [
                 {

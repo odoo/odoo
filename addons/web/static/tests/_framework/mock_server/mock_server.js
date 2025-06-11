@@ -183,6 +183,7 @@ function getCurrentMockServer() {
 
 /**
  * @param {MockServer["models"]}
+ * @returns {MockServerEnvironment}
  */
 function makeServerEnv(models) {
     const serverEnv = new MockServerBaseEnvironment();
