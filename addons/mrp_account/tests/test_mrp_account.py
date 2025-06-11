@@ -461,7 +461,7 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             'date_end': now,
             'loss_id': self.env.ref('mrp.block_reason7').id,
         })
-        workorder.button_done()
+        workorder.button_finish()
         wizard = Form(self.env['mrp.account.wip.accounting'].with_context({'active_ids': [mo.id]}))
         wizard.save().confirm()
         wip_entries1 = self.env['account.move'].search([('ref', 'ilike', 'WIP - ' + mo.name), ('id', 'not in', wip_empty_entries.ids)])
@@ -695,3 +695,27 @@ class TestMrpAccountMove(TestAccountMoveStockCommon):
             {'credit': 0.01, 'debit': 0.00},
             {'credit': 0.00, 'debit': 0.01},
         ])
+
+    def test_estimated_cost_valuation(self):
+        """ Test that operations with 'estimated' cost correctly compute the cost.
+        The cost should be equal to workcenter.costs_hour * workorder.duration_expected. """
+        self.workcenter.costs_hour = 33
+        self.bom.write({
+            'operation_ids': [
+                Command.create({'name': 'do stuff', 'workcenter_id': self.workcenter.id, 'cost_mode': 'estimated', 'sequence': 1})
+            ]
+        })
+        mo = self.env['mrp.production'].create({
+            'name': 'MO',
+            'product_qty': 1.0,
+            'product_id': self.product_A.id
+        })
+        mo.action_confirm()
+        self.bom.operation_ids.cost_mode = 'actual'
+        mo.workorder_ids.duration = 10
+        self.assertEqual(mo.workorder_ids._cal_cost(), 33.0)
+
+        # Cost should stay the same for a done MO if nothing else is changed
+        mo.button_mark_done()
+        self.workcenter.costs_hour = 333
+        self.assertEqual(mo.workorder_ids._cal_cost(), 33.0)
