@@ -551,10 +551,20 @@ class CustomerPortal(Controller):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
         elif not self._are_same_addresses(address_values, partner_sudo):
+            geolocation_changed = self._is_geolocation_field_changed(address_values, partner_sudo)
             partner_sudo.write(address_values)  # Keep the same partner if nothing changed.
             if 'phone' in address_values and hasattr(partner_sudo, '_onchange_phone_validation'):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
+            if (
+                partner_sudo.grade_id
+                and not (partner_sudo.partner_latitude and partner_sudo.partner_longitude)
+                and geolocation_changed
+            ):
+                # If the address has been updated, we need to recompute the partner's location —
+                # latitude and longitude — but only if a partner level (grade) is assigned.
+                # This prevents losing geolocation data, which is used to forward leads.
+                partner_sudo.geo_localize()
 
         if (
             'company_name' in address_values
@@ -809,6 +819,17 @@ class CustomerPortal(Controller):
                 # Skip falsy values if unset in values and on record
                 return False
         return True
+
+    def _is_geolocation_field_changed(self, address_values, partner):
+        ResPartner = request.env['res.partner']
+        for key in ['street', 'zip', 'city', 'state_id', 'country_id']:
+            if key in address_values:
+                new_val = address_values[key]
+                current_val = ResPartner._fields[key].convert_to_cache(partner[key], ResPartner)
+                if new_val != current_val and (new_val or current_val):
+                    # Skip falsy values if unset in values and on record
+                    return True
+        return False
 
     def _handle_extra_form_data(self, extra_form_data, address_values):
         """ Handling extra form data that were not processed on the address from.
