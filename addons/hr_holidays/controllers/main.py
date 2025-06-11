@@ -14,7 +14,7 @@ class HrHolidaysController(http.Controller):
             try:
                 record.action_approve()
             except Exception:
-                return MailController._redirect_to_messaging()
+                return MailController._redirect_to_generic_fallback('hr.leave', res_id)
         return redirect
 
     @http.route('/leave/refuse', type='http', auth='user', methods=['GET'])
@@ -24,7 +24,7 @@ class HrHolidaysController(http.Controller):
             try:
                 record.action_refuse()
             except Exception:
-                return MailController._redirect_to_messaging()
+                return MailController._redirect_to_generic_fallback('hr.leave', res_id)
         return redirect
 
     @http.route('/allocation/validate', type='http', auth='user', methods=['GET'])
@@ -34,7 +34,7 @@ class HrHolidaysController(http.Controller):
             try:
                 record.action_approve()
             except Exception:
-                return MailController._redirect_to_messaging()
+                return MailController._redirect_to_generic_fallback('hr.leave.allocation', res_id)
         return redirect
 
     @http.route('/allocation/refuse', type='http', auth='user', methods=['GET'])
@@ -44,5 +44,5 @@ class HrHolidaysController(http.Controller):
             try:
                 record.action_refuse()
             except Exception:
-                return MailController._redirect_to_messaging()
+                return MailController._redirect_to_generic_fallback('hr.leave.allocation', res_id)
         return redirect

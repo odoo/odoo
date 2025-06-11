@@ -191,6 +191,13 @@
             <field name="perm_read" eval="False"/>
         </record>
 
+        <record id="ir_rule_mail_notifications_group_portal" model="ir.rule">
+            <field name="name">mail.notifications: group_portal: own entries</field>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="groups" eval="[Command.link(ref('base.group_portal'))]"/>
+            <field name="domain_force">['|', ('res_partner_id', '=', user.partner_id.id), ('author_id', '=', user.partner_id.id)]</field>
+        </record>
+
         <record id="mail_message_subtype_rule_public" model="ir.rule">
             <field name="name">mail.message.subtype: portal/public: read public subtypes</field>
             <field name="model_id" ref="model_mail_message_subtype"/>
