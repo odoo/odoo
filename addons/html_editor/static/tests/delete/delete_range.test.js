@@ -395,52 +395,33 @@ describe("deleteSelection", () => {
 
     describe("Conditional unremovables", () => {
         describe("Bootstrap columns", () => {
-            test("should not remove bootstrap columns, but clear its content", async () => {
-                await testEditor({
-                    contentBefore: unformat(
-                        `<div class="container o_text_columns">
-                            <div class="row">
-                                <div class="col-6">a[bc</div>
-                                <div class="col-6">def</div>
-                            </div>
-                        </div>
-                        <p>gh]i</p>`
-                    ),
-                    stepFunction: deleteSelection,
-                    contentAfterEdit: unformat(
-                        `<div class="container o_text_columns">
-                            <div class="row">
-                                <div class="col-6">a[]</div>
-                                <div class="col-6"><br></div>
-                            </div>
-                        </div>
-                        <p>i</p>`
-                    ),
-                    contentAfter: unformat(
-                        `<div class="container o_text_columns">
-                            <div class="row">
-                                <div class="col-6">a[]</div>
-                                <div class="col-6"><br></div>
-                            </div>
-                        </div>
-                        <p>i</p>`
-                    ),
-                });
-            });
             test("should remove bootstrap columns", async () => {
                 await testEditor({
                     contentBefore: unformat(
                         `<p>x[yz</p>
                         <div class="container o_text_columns">
-                            <div class="row">
-                                <div class="col-6">abc</div>
-                                <div class="col-6">def</div>
+                            <div class="row o-contenteditable-false">
+                                <div class="col-6 o-contenteditable-true">abc</div>
+                                <div class="col-6 o-contenteditable-true">def</div>
                             </div>
                         </div>
                         <p>gh]i</p>`
                     ),
                     stepFunction: deleteSelection,
                     contentAfter: "<p>x[]i</p>",
+                });
+                await testEditor({
+                    contentBefore: unformat(
+                        `<div class="container o_text_columns">
+                            <div class="row o-contenteditable-false">
+                                <div class="col-6 o-contenteditable-true">a[bc</div>
+                                <div class="col-6 o-contenteditable-true">def</div>
+                            </div>
+                        </div>
+                        <p>gh]i</p>`
+                    ),
+                    stepFunction: deleteSelection,
+                    contentAfter: "<p>[]i</p>",
                 });
             });
         });
