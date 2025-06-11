@@ -425,9 +425,9 @@
                                             </div>
                                             <div class="col-3 o_hr_holidays_card">
                                                 <div class="fw-bold d-flex gap-1 me-1">
-                                                    <field name="virtual_remaining_leaves" widget="integer" options="{'type': 'number'}"/>
+                                                    <field name="virtual_remaining_leaves" widget="float" digits="[3,2]"/>
                                                     /
-                                                    <field name="max_leaves" widget="integer" options="{'type': 'number'}"/>
+                                                    <field name="max_leaves" widget="float" digits="[3,2]"/>
                                                 </div>
                                                 <span>
                                                     Current balance
