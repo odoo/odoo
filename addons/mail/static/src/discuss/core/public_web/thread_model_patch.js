@@ -65,7 +65,7 @@ const threadPatch = {
         super.delete(...arguments);
     },
     get hasSubChannelFeature() {
-        return ["channel", "group"].includes(this.channel_type) && !this.parent_channel_id;
+        return ["channel", "group"].includes(this.channel_type);
     },
     get isEmpty() {
         return !this.from_message_id && super.isEmpty;
@@ -77,7 +77,7 @@ const threadPatch = {
      */
     async createSubChannel({ initialMessage, name } = {}) {
         const { data, sub_channel } = await rpc("/discuss/channel/sub_channel/create", {
-            parent_channel_id: this.id,
+            parent_channel_id: this.parent_channel_id?.id || this.id,
             from_message_id: initialMessage?.id,
             name,
         });

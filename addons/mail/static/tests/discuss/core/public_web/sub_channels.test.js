@@ -81,6 +81,30 @@ test("create sub thread from existing message", async () => {
     await contains(".o-mail-Discuss-threadName", { value: "Selling a training session and" });
 });
 
+test("should allow creating a thread from an existing thread", async () => {
+    mockDate("2025-01-01 12:00:00", +1);
+    const pyEnv = await startServer();
+    const parent_channel_id = pyEnv["discuss.channel"].create({ name: "General" });
+    const sub_channel_id = pyEnv["discuss.channel"].create({
+        name: "sub channel",
+        parent_channel_id: parent_channel_id,
+    });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        res_id: sub_channel_id,
+        body: "<p>hello alex</p>",
+    });
+    await start();
+    await openDiscuss(sub_channel_id);
+    await click(".o-mail-Message-actions [title='Expand']");
+    await click(".o-dropdown-item:contains('Create Thread')");
+    await contains(".o-mail-Discuss-threadName", { value: "hello alex" });
+    await click(".o-mail-DiscussSidebarChannel", { name: "General" });
+    await contains(".o-mail-NotificationMessage", {
+        text: `${serverState.partnerName} started a thread: hello alex.1:00 PM`,
+    });
+});
+
 test("create sub thread from existing message (slow network)", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
