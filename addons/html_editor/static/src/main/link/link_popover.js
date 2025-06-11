@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { useColorPicker } from "@web/core/color_picker/color_picker";
+import { CheckBox } from "@web/core/checkbox/checkbox";
 
 const DEFAULT_CUSTOM_TEXT_COLOR = "#714B67";
 const DEFAULT_CUSTOM_FILL_COLOR = "#ffffff";
@@ -37,6 +38,7 @@ export class LinkPopover extends Component {
     static defaultProps = {
         canEdit: true,
     };
+    static components = { CheckBox };
     colorsData = [
         { type: "", label: _t("Link"), btnPreview: "link" },
         { type: "primary", label: _t("Button Primary"), btnPreview: "primary" },
@@ -90,6 +92,8 @@ export class LinkPopover extends Component {
                     ?.pop() ||
                 "",
             linkTarget: this.props.linkElement.target === "_blank" ? "_blank" : "",
+            directDownload: true,
+            isDocument: false,
             buttonSize: this.props.linkElement.className.match(/btn-(sm|lg)/)?.[1] || "",
             customBorderSize: computedStyle.borderWidth.replace("px", "") || "1",
             customBorderStyle: computedStyle.borderStyle || "solid",
@@ -153,7 +157,7 @@ export class LinkPopover extends Component {
                 "customBorderResetPreviewColor"
             );
         }
-
+        this.updateDocumentState();
         this.editingWrapper = useRef("editing-wrapper");
         this.inputRef = useRef(this.state.isImage ? "url" : "label");
         useEffect(
@@ -196,6 +200,7 @@ export class LinkPopover extends Component {
             this.customStyles,
             this.state.linkTarget
         );
+        this.updateDocumentState();
     }
     onClickApply() {
         this.state.editing = false;
@@ -278,9 +283,44 @@ export class LinkPopover extends Component {
         }
     }
 
+    onClickDirectDownload(checked) {
+        this.state.directDownload = checked;
+        this.state.url = this.state.url.replace("&download=true", "");
+        if (this.state.directDownload) {
+            this.state.url += "&download=true";
+        }
+    }
+
+    onClickNewWindow(checked) {
+        this.state.linkTarget = checked ? "_blank" : "";
+    }
+
     /**
      * @private
      */
+    async updateDocumentState() {
+        const url = this.state.url;
+        let urlObject = null;
+        try {
+            urlObject = new URL(url);
+        } catch {
+            // skip
+        }
+        if (
+            url &&
+            (url.startsWith("/web/content/") ||
+                (urlObject &&
+                    urlObject.pathname.startsWith("/web/content") &&
+                    urlObject.host === document.location.host))
+        ) {
+            const { type } = await this.props.getAttachmentMetadata(url);
+            this.state.isDocument = type !== "url";
+            this.state.directDownload = url.includes("&download=true");
+        } else {
+            this.state.isDocument = false;
+            this.state.directDownload = true;
+        }
+    }
     correctLink(url) {
         if (
             url &&
