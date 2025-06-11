@@ -605,3 +605,13 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
             ProductScreen.totalAmountIs("10.00"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            scan_barcode("0444-e050-4548"),
+            ProductScreen.customerIsSelected("Test Partner"),
+        ].flat(),
+});
