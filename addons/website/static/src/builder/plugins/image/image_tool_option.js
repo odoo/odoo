@@ -2,6 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 import { ImageShapeOption } from "./image_shape_option";
 import { ImageFilterOption } from "./image_filter_option";
 import { ImageFormatOption } from "./image_format_option";
+import { ImageTransformOption } from "./image_transform_option";
 
 export class ImageToolOption extends BaseOptionComponent {
     static template = "website.ImageToolOption";
@@ -9,6 +10,7 @@ export class ImageToolOption extends BaseOptionComponent {
         ImageShapeOption,
         ImageFilterOption,
         ImageFormatOption,
+        ImageTransformOption,
     };
     static props = {};
 }
