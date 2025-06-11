@@ -20,6 +20,7 @@ import {
     patchWithCleanup,
     clickSave,
 } from "../../helpers/utils";
+import { contains } from "@web/../tests/utils";
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
 import { errorService } from "../../../src/core/errors/error_service";
 import { RPCError } from "@web/core/network/rpc_service";
@@ -2196,11 +2197,7 @@ QUnit.module("ActionManager", (hooks) => {
             await doAction(webClient, 3);
 
             await click(target.querySelector(".o_list_button_add"));
-            assert.containsOnce(
-                document.body,
-                ".modal.o_technical_modal",
-                "Warning modal should be opened"
-            );
+            await contains(".modal.o_technical_modal");
 
             await click(document.querySelector(".modal.o_technical_modal button.btn-close"));
             assert.containsNone(
