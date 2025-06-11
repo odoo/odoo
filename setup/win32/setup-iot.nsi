@@ -174,7 +174,7 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
 
     DetailPrint "Configuring Sparse Checkout for IoT modules"
     nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout init --no-cone'
-    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout set addons/web addons/hw_* addons/iot_base addons/iot_box_image/configuration addons/point_of_sale/tools/posbox/configuration/requirements.txt odoo odoo-bin'
+    nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" sparse-checkout set addons/web addons/hw_* addons/iot_drivers addons/iot_base addons/iot_box_image/configuration addons/point_of_sale/tools/posbox/configuration/requirements.txt odoo odoo-bin'
 
     DetailPrint "Checking out the repository"
     nsExec::Exec '"$INSTDIR\git\cmd\git.exe" -C "$INSTDIR\odoo" checkout'
@@ -191,7 +191,7 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     # Set data_dir
     WriteIniStr "$INSTDIR\odoo.conf" "options" "data_dir" "$INSTDIR\sessions"
     # set modules to load
-    WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "hw_drivers,hw_posbox_homepage,web"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "server_wide_modules" "iot_drivers,web"
     # Configure logging
     WriteIniStr "$INSTDIR\odoo.conf" "options" "logfile" "$INSTDIR\odoo.log"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "log_handler" ":WARNING"
