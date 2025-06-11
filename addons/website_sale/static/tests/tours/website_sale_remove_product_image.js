@@ -13,7 +13,7 @@ const clickOnImgAndWaitForLoad = [
     },
     {
         content: "Check that the snippet editor of the clicked image has been loaded",
-        trigger: "we-customizeblock-options:has(we-title:contains('Re-order'))",
+        trigger: ".o_customize_tab [data-container-title='Image']",
     },
 ];
 const enterEditModeOfTestProduct = () => [
@@ -23,20 +23,24 @@ const enterEditModeOfTestProduct = () => [
         trigger: ":iframe a:contains('Test Remove Image')",
         run: "click",
     },
+    {
+        content: "Check that the product page is loaded",
+        trigger: ":iframe .o_wsale_product_page",
+    },
     ...clickOnEditAndWaitEditMode(),
 ];
 
 const removeImg = [
     {
         content: "Click on Remove",
-        trigger: "we-customizeblock-options:has(we-title:contains('Image')) we-button[data-name='media_wsale_remove']",
+        trigger: ".o_customize_tab [data-container-title='Image'] button[data-action-id='removeMedia']",
         run: "click",
     },
     // If the snippet editor is not visible, the remove process is considered as
     // finished.
     {
         content: "Check that the snippet editor is not visible",
-        trigger: ".o_we_customize_panel:not(:has(we-customizeblock-options:has(we-title:contains('Re-order'))))",
+        trigger: ".o_customize_tab:not(:has([data-container-title='Image']))",
     },
 ];
 
