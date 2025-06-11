@@ -27,6 +27,9 @@ export class CarouselEdit extends Interaction {
      * @param {Event} ev
      */
     async onControlClick(ev) {
+        // Activate the active slide.
+        this.el.querySelector(".carousel-item.active").click();
+
         // Compute to which slide the carousel will slide.
         const controlEl = ev.currentTarget;
         let direction;
