@@ -58,3 +58,10 @@ class LoyaltyCard(models.Model):
                 'loyalty.card': card.read(card_fields, load=False),
             }
         }
+
+    @api.model
+    def get_loyalty_card_partner_by_code(self, code):
+        return self.env['loyalty.card'].search([
+            ('code', '=', code),
+            ('program_type', '=', 'loyalty'),
+        ], limit=1).partner_id or False
