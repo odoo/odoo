@@ -21,7 +21,7 @@ import re
 import tarfile
 import typing
 from collections import defaultdict, namedtuple
-from collections.abc import Iterable
+from collections.abc import Iterable, Iterator
 from contextlib import suppress
 from datetime import datetime
 from os.path import join
@@ -1535,7 +1535,7 @@ class TranslationImporter:
     def _load(self, reader, lang, xmlids=None):
         if xmlids and not isinstance(xmlids, set):
             xmlids = set(xmlids)
-        valid_langs = get_base_langs(lang) + [lang]
+        valid_langs = get_base_langs(lang)
         for row in reader:
             if not row.get('value') or not row.get('src'):  # ignore empty translations
                 continue
@@ -1732,30 +1732,29 @@ def load_language(cr, lang):
     installer.lang_install()
 
 
-def get_base_langs(lang: str) -> str:
-    # properly get the base lang, including for exceptions like cr@latin and es_419
-    base_langs = [lang.split('_')[0]]
-    # Exception for Spanish locales: they have two bases, es and es_419:
-    if 'es' in base_langs and lang not in ('es_ES', 'es_419'):
-        base_langs.insert(1, 'es_419')
-    return base_langs
+def get_base_langs(lang: str) -> list[str]:
+    base_lang = lang.split('_', 1)[0]
+    langs = [base_lang]
+    # LAC (~non-peninsular) spanishes have a second base
+    if base_lang == 'es' and lang not in ('es_ES', 'es_419'):
+        langs.append('es_419')
+    if lang != base_lang:
+        langs.append(lang)
+    return langs
 
 
-def get_po_paths(module_name: str, lang: str, env: Environment | None = None):
-    base_langs = get_base_langs(lang)
-    # Load the base as a fallback in case a translation is missing:
-    po_names = base_langs + [lang]
-    po_paths = [
+def get_po_paths(module_name: str, lang: str, env: Environment | None = None) -> Iterator[str]:
+    po_paths = (
         join(module_name, dir_, filename + '.po')
-        for filename in OrderedSet(po_names)
+        for filename in get_base_langs(lang)
         for dir_ in ('i18n', 'i18n_extra')
-    ]
+    )
     for path in po_paths:
         with suppress(FileNotFoundError):
             yield file_path(path, env=env)
 
 
-def get_datafile_translation_path(module_name: str, env: Environment | None = None):
+def get_datafile_translation_path(module_name: str, env: Environment | None = None) -> Iterator[str]:
     from odoo.modules import get_manifest  # noqa: PLC0415
     manifest = get_manifest(module_name)
     for data_type in ('data', 'demo'):
