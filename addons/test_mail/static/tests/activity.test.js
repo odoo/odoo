@@ -572,10 +572,8 @@ test("activity widget: cancel an activity from the widget", async () => {
         activity_ids: [mailActivityId],
         activity_type_id: mailActivityTypeId,
     });
-    onRpc("unlink", ({ args, route }) => {
+    onRpc("mail.activity", "unlink", ({ args, route }) => {
         expect(args).toEqual([[mailActivityId]]);
-        expect(route.includes("mail.activity")).toBe(true);
-        expect(route.includes("unlink")).toBe(true);
         step("unlink");
     });
     await start();
