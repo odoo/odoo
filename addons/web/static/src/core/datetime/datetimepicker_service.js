@@ -443,6 +443,11 @@ export const datetimePickerService = {
                     )) {
                         if (el) {
                             updateInput(el, value);
+                            // Apply changes immediately if the popover is already closed.
+                            // Otherwise ´apply()´ will be called later on close.
+                            if (!popover.isOpen) {
+                                apply();
+                            }
                         }
                     }
 
