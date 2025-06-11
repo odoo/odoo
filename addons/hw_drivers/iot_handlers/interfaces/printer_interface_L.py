@@ -4,8 +4,12 @@ from cups import Connection as CupsConnection
 from re import sub
 from threading import Lock
 from urllib.parse import urlsplit, parse_qs
+import logging
+import pyudev
 
 from odoo.addons.hw_drivers.interface import Interface
+
+_logger = logging.getLogger(__name__)
 
 conn = CupsConnection()
 PPDs = conn.getPPDs()
@@ -35,16 +39,7 @@ class PrinterInterface(Interface):
                     devices.update({printer_name: printer})
 
         for path, device in devices.items():
-            identifier = self.get_identifier(path)
-            device.update({
-                'identifier': identifier,
-                'url': path,
-                'disconnect_counter': 0,
-            })
-            if device['device-class'] == 'direct':
-                device.update(self.get_usb_info(path))
-            elif device['device-class'] == 'network':
-                device['ip'] = self.get_ip(path)
+            identifier, device = self.process_device(path, device)
             discovered_devices.update({identifier: device})
         self.printer_devices.update(discovered_devices)
         # Deal with devices which are on the list but were not found during this call of "get_devices"
@@ -57,6 +52,20 @@ class PrinterInterface(Interface):
                 else:
                     self.printer_devices[device].update({'disconnect_counter': disconnect_counter + 1})
         return dict(self.printer_devices)
+
+    def process_device(self, path, device):
+        identifier = self.get_identifier(path)
+        device.update({
+            'identifier': identifier,
+            'url': path,
+            'disconnect_counter': 0,
+        })
+        if device['device-class'] == 'direct':
+            device.update(self.get_usb_info(path))
+        elif device['device-class'] == 'network':
+            device['ip'] = self.get_ip(path)
+
+        return identifier, device
 
     def get_identifier(self, path):
         """
@@ -96,3 +105,37 @@ class PrinterInterface(Interface):
             }
         else:
             return {}
+
+    def monitor_for_printers(self):
+        context = pyudev.Context()
+        monitor = pyudev.Monitor.from_netlink(context)
+        monitor.filter_by('usb')
+
+        def on_device_change(udev_device):
+            if udev_device.action != 'add' or udev_device.driver != 'usblp':
+                return
+
+            try:
+                device_id = udev_device.attributes.asstring('ieee1284_id')
+                manufacturer = udev_device.parent.attributes.asstring('manufacturer')
+                product = udev_device.parent.attributes.asstring('product')
+                serial = udev_device.parent.attributes.asstring('serial')
+            except KeyError as err:
+                _logger.warning("Could not hotplug printer, field '%s' is not present", err.args[0])
+                return
+
+            path = f"usb://{manufacturer}/{product}?serial={serial}"
+            iot_device = {
+                'device-class': 'direct',
+                'device-make-and-model': f'{manufacturer} {product}',
+                'device-id': device_id,
+            }
+            identifier, iot_device = self.process_device(path, iot_device)
+            self.add_device(identifier, iot_device)
+
+        observer = pyudev.MonitorObserver(monitor, callback=on_device_change)
+        observer.start()
+
+    def start(self):
+        super().start()
+        self.monitor_for_printers()
