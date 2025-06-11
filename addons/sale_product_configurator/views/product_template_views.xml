@@ -14,6 +14,7 @@
                     widget="many2many_tags"
                     options="{'color_field': 'color'}"
                     domain="[('id', '!=', id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                    context="{'search_product_product': True}"
                     placeholder="Recommend when 'Adding to Cart' or quotation"/>
             </group>
         </field>
