@@ -21,11 +21,12 @@ class CrmStage(models.Model):
     _description = "CRM Stages"
     _rec_name = 'name'
     _order = "sequence, name, id"
+    _inherit = ['mail.rotting.stage.mixin']
 
     name = fields.Char('Stage Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
     is_won = fields.Boolean('Is Won Stage?')
-    day_rot = fields.Integer('Days to rot', help="Highlight opportunities that haven't been updated for this many days", default=5)
+    day_rot = fields.Integer(help="Highlight opportunities that haven't been updated for this many days")
     requirements = fields.Text('Requirements', help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.")
     team_ids = fields.Many2many('crm.team', relation='crm_stage_crm_team', column1='crm_stage_id', column2='crm_team_id',
         string='Sales Team', ondelete="restrict")

@@ -49,18 +49,12 @@
                         <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger" invisible="won_status != 'lost'"/>
                         <widget name="web_ribbon" title="Won" invisible="won_status != 'won'"/>
                         <div class="oe_title mw-100">
-                            <div class="d-flex justify-content-between align-items-center flex-wrap flex-row-reverse" style="row-gap: 0.8em">
-                                <div class="badge rounded-pill o_crm_lead_rotting_bg fs-3 ms-4" invisible="not is_rotting or day_rotting == 1"
-                                    title="Day count since this lead was last updated">
-                                        Rotting: <field name="day_rotting"/> days
-                                </div>
-                                <div class="badge rounded-pill o_crm_lead_rotting_bg fs-3 ms-4" invisible="not is_rotting or day_rotting != 1"
-                                    title="Day count since this lead was last updated">
-                                        Rotting: <field name="day_rotting"/> day
-                                </div>
+                            <div class="d-flex justify-content-between align-items-center">
                                 <h1 class="flex-grow-1">
                                     <field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/>
                                 </h1>
+                                <field name="day_rotting" invisible="1"/>
+                                <field name="is_rotting" widget="rotting_form" class="d-flex"/>
                             </div>
                             <h2 class="row g-0 pb-3 pb-sm-4">
                                 <div class="col-auto pb-2 pb-md-0 w-100 w-sm-auto" invisible="type == 'lead'">
@@ -588,7 +582,7 @@
                                     <field name="recurring_plan" groups="crm.group_use_recurring_revenues"/>
                                 </t>
                             </div>
-                            <field name="partner_id" class="text-truncate" />
+                            <field name="partner_id" class="ms-2 text-truncate" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="lead_properties" widget="properties"/>
                             <footer class="pt-1">
@@ -597,9 +591,7 @@
                                     <field name="activity_ids" widget="kanban_activity"/>
                                 </div>
                                 <div class="ms-auto d-flex">
-                                    <div class="badge rounded-pill o_crm_lead_rotting_bg" invisible="not is_rotting">
-                                        <field name="day_rotting"/>d
-                                    </div>
+                                    <field name="day_rotting" class="d-flex" widget="rotting_kanban"/>
                                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="ms-2"/>
                                 </div>
                             </footer>

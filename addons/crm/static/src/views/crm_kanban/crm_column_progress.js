@@ -1,13 +1,9 @@
 import { onWillStart } from "@odoo/owl";
 import { user } from "@web/core/user";
-import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { getCurrency } from "@web/core/currency";
+import { RottingColumnProgress } from "@mail/js/rotting_mixin/rotting_column_progress";
 
-export class CrmColumnProgress extends ColumnProgress {
-    static props = {
-        ...ColumnProgress.props,
-        progressBarState: { type: Object },
-    };
+export class CrmColumnProgress extends RottingColumnProgress {
     static template = "crm.ColumnProgress";
     setup() {
         super.setup();
@@ -33,15 +29,5 @@ export class CrmColumnProgress extends ColumnProgress {
             currency = getCurrency(firstRecord.data.company_currency.id);
         }
         return { ...aggregatedValue, currency };
-    }
-    getRottingGroupCount(group) {
-        const rotField = this.props.progressBarState.progressAttributes.rotting_count_field;
-        let rotCount = { title: rotField.string, value: 0};
-        group.list.records.forEach((record ) => {
-            if (record.data[rotField.name]) {
-                rotCount.value++;
-            }
-        })
-        return rotCount;
     }
 }
