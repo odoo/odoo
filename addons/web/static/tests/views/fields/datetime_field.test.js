@@ -141,6 +141,45 @@ test("DatetimeField only triggers fieldChange when a day is picked and when an h
     expect.verifySteps(["onchange"]);
 });
 
+test("DatetimeField edit hour/minute and click away", async () => {
+    mockTimeZone(0);
+
+    onRpc("web_save", ({ args }) => {
+        expect(args[1].datetime).toBe("2017-02-08 08:30:00", {
+            message: "the correct value should be saved",
+        });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ '<form><field name="datetime"/></form>',
+    });
+
+    // Open the datepicker
+    await click(".o_field_datetime input");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
+
+    // Manually change the time without { confirm: "enter" }
+    await click(`.o_time_picker_input:eq(0)`);
+    await animationFrame();
+    await edit("8:30");
+    await animationFrame();
+    expect(".o_field_datetime input").toHaveValue("02/08/2017 10:00", {
+        message: "Input value shouldn't be updated yet",
+    });
+
+    // Close the datepicker
+    await click(document.body);
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(0);
+
+    expect(".o_field_datetime input").toHaveValue("02/08/2017 08:30");
+    await clickSave();
+});
+
 test("DatetimeField with datetime formatted without second", async () => {
     mockTimeZone(0);
 
