@@ -21,6 +21,7 @@ The actual till still requires one user but an unlimited number of employees can
     ],
     'installable': True,
     'auto_install': True,
+    'uninstall_hook': 'uninstall_hook',
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_hr/static/src/**/*',
