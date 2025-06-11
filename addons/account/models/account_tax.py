@@ -754,6 +754,34 @@ class AccountTax(models.Model):
             product=product,
         )
 
+    def _flatten_taxes_and_sort_them(self):
+        """ Flattens the taxes contained in this recordset, returning all the
+        children at the bottom of the hierarchy, in a recordset, ordered by sequence.
+          Eg. considering letters as taxes and alphabetic order as sequence :
+          [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
+
+        [!] Mirror of the same method in account_tax.js.
+        PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
+
+        :return: A tuple <sorted_taxes, group_per_tax> where:
+            - sorted_taxes is a recordset of taxes.
+            - group_per_tax maps each tax to its parent group of taxes if exists.
+        """
+        def sort_key(tax):
+            return tax.sequence, tax.id or None
+
+        group_per_tax = {}
+        sorted_taxes = self.env['account.tax']
+        for tax in self.sorted(key=sort_key):
+            if tax.amount_type == 'group':
+                children = tax.children_tax_ids.sorted(key=sort_key)
+                sorted_taxes |= children
+                for child in children:
+                    group_per_tax[child.id] = tax
+            else:
+                sorted_taxes |= tax
+        return sorted_taxes, group_per_tax
+
     def _batch_for_taxes_computation(self, special_mode=False):
         """ Group the current taxes all together like price-included percent taxes or division taxes.
 
@@ -769,24 +797,12 @@ class AccountTax(models.Model):
                             Eg. considering letters as taxes and alphabetic order as sequence :
                             [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
         """
-        def sort_key(tax):
-            return tax.sequence, tax.id
-
+        sorted_taxes, group_per_tax = self._flatten_taxes_and_sort_them()
         results = {
             'batch_per_tax': {},
-            'group_per_tax': {},
-            'sorted_taxes': self.env['account.tax'],
+            'group_per_tax': group_per_tax,
+            'sorted_taxes': sorted_taxes,
         }
-
-        # Flatten the taxes.
-        for tax in self.sorted(key=sort_key):
-            if tax.amount_type == 'group':
-                children = tax.children_tax_ids.sorted(key=sort_key)
-                results['sorted_taxes'] |= children
-                for child in children:
-                    results['group_per_tax'][child.id] = tax
-            else:
-                results['sorted_taxes'] |= tax
 
         # Group them per batch.
         batch = self.env['account.tax']
@@ -1111,8 +1127,9 @@ class AccountTax(models.Model):
                 continue
 
             # Base amount.
-            if manual_tax_amounts and 'base_amount_currency' in manual_tax_amounts.get(str(tax.id), {}):
-                base = manual_tax_amounts[str(tax.id)]['base_amount_currency']
+            tax_id_str = str(tax.id)
+            if manual_tax_amounts and 'base_amount_currency' in manual_tax_amounts.get(tax_id_str, {}):
+                base = manual_tax_amounts[tax_id_str]['base_amount_currency']
             else:
                 total_tax_amount = sum(taxes_data[other_tax.id]['tax_amount'] for other_tax in tax_data['batch'])
                 total_tax_amount += sum(
@@ -2560,19 +2577,7 @@ class AccountTax(models.Model):
     # -------------------------------------------------------------------------
 
     def flatten_taxes_hierarchy(self):
-        # Flattens the taxes contained in this recordset, returning all the
-        # children at the bottom of the hierarchy, in a recordset, ordered by sequence.
-        #   Eg. considering letters as taxes and alphabetic order as sequence :
-        #   [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
-        # If create_map is True, an additional value is returned, a dictionary
-        # mapping each child tax to its parent group
-        all_taxes = self.env['account.tax']
-        for tax in self.sorted(key=lambda r: r.sequence):
-            if tax.amount_type == 'group':
-                all_taxes += tax.children_tax_ids.flatten_taxes_hierarchy()
-            else:
-                all_taxes += tax
-        return all_taxes
+        return self._flatten_taxes_and_sort_them()[0]
 
     def get_tax_tags(self, is_refund, repartition_type):
         document_type = 'refund' if is_refund else 'invoice'
