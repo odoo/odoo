@@ -10,15 +10,15 @@
                             <t t-foreach="props.cashMoves" t-as="cm" t-key="cm.id">
                                 <tr class="cash-move-row" >
                                     <td>
-                                        <div class="fs-6 fw-bolder"><t t-esc="this.pos.getDate(cm.date)"></t></div>
-                                        <div class="small text-muted"><t t-esc="this.pos.getTime(cm.date)"></t></div>
+                                        <div class="cash-move-date fs-6 fw-bolder"><t t-esc="this.pos.getDate(cm.date)"></t></div>
+                                        <div class="cash-move-time small text-muted"><t t-esc="this.pos.getTime(cm.date)"></t></div>
                                     </td>
                                     <td>
                                         <t t-if="cm.cashier_name" t-esc="cm.cashier_name"/>
                                     </td>
                                     <td class="align-middle text-end">
                                         <t t-set="status" t-value="getStatus(cm)" />
-                                        <div t-attf-class="w-50 text-center badge rounded fs-6 text-bg-{{status === 'In' ? 'success' : 'danger'}}">
+                                        <div t-attf-class="text-center badge rounded fs-6 text-bg-{{status === 'In' ? 'success' : 'danger'}}">
                                             <t t-esc="status"></t>
                                         </div>
                                     </td>
@@ -42,8 +42,8 @@
                         <div class="container">
                             <div class="cash-move-row row">
                                 <div class="col-2 align-self-center">
-                                        <div class="fw-bolder"><t t-esc="this.pos.getDate(cm.date)"></t></div>
-                                        <div class="small text-muted"><t t-esc="this.pos.getTime(cm.date)"></t></div>
+                                        <div class="cash-move-date fw-bolder"><t t-esc="this.pos.getDate(cm.date)"></t></div>
+                                        <div class="cash-move-time small text-muted"><t t-esc="this.pos.getTime(cm.date)"></t></div>
                                 </div>
                                 <div class="col-3 align-self-center">
                                     <t t-if="cm.cashier_name" t-esc="cm.cashier_name"/>
