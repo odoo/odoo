@@ -112,6 +112,17 @@ class TestEventFlow(EventCase):
             test_reg1.state, 'draft',
             'Event: new registration should not be confirmed with auto_confirmation parameter being False')
 
+        # Flow for cancelling the event and making sure no emails go out
+        test_event.update({'stage_id': self.env.ref('event.event_stage_cancelled').id})
+
+        scheduler = self.env['event.mail'].sudo().search([
+            ('event_id', '=', test_event.id),
+            ('interval_type', '=', 'before_event'),
+            ('interval_unit', '=', 'hours')
+        ])
+        self.env['event.mail'].schedule_communications()
+        self.assertFalse(scheduler.mail_count_done)
+
     @mute_logger('odoo.addons.event.models.event_mail')
     def test_event_missed_mail_template(self):
         """ Check that error on mail sending is ignored if corresponding mail template was deleted """

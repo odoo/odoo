@@ -262,7 +262,8 @@ You receive this email because you are:
         schedulers = self.search([
             ('event_id.active', '=', True),
             ('mail_done', '=', False),
-            ('scheduled_date', '<=', fields.Datetime.now())
+            ('scheduled_date', '<=', fields.Datetime.now()),
+            ('event_id.stage_id', '!=', self.env.ref('event.event_stage_cancelled').id)
         ])
 
         for scheduler in schedulers:
