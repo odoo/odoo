@@ -1794,7 +1794,7 @@ def load_language(cr, lang):
 
 def get_base_langs(lang: str) -> str:
     # properly get the base lang, including for exceptions like cr@latin and es_419
-    base_langs = [lang.split('_')[0]]
+    base_langs = [lang.split('_', 1)[0]]
     # Exception for Spanish locales: they have two bases, es and es_419:
     if 'es' in base_langs and lang not in ('es_ES', 'es_419'):
         base_langs.insert(1, 'es_419')
@@ -1805,11 +1805,11 @@ def get_po_paths(module_name: str, lang: str, env: Environment | None = None):
     base_langs = get_base_langs(lang)
     # Load the base as a fallback in case a translation is missing:
     po_names = base_langs + [lang]
-    po_paths = [
+    po_paths = (
         join(module_name, dir_, filename + '.po')
         for filename in OrderedSet(po_names)
         for dir_ in ('i18n', 'i18n_extra')
-    ]
+    )
     for path in po_paths:
         with suppress(FileNotFoundError):
             yield file_path(path, env=env)
