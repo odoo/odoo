@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="test_stock_simple_product" model="product.product">
+            <field name="name">Simple Product</field>
+            <field name="type">product</field>
+        </record>
+        <record id="test_stock_simple_product_quant" model="stock.quant">
+            <field name="product_id" ref="test_stock_simple_product"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+            <field name="quantity">1.0</field>
+        </record>
+    </data>
+</odoo>
