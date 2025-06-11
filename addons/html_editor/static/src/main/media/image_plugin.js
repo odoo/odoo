@@ -37,7 +37,7 @@ const IMAGE_SIZE = [
 export class ImagePlugin extends Plugin {
     static id = "image";
     static dependencies = ["history", "link", "powerbox", "dom", "selection"];
-    static shared = ["getTargetedImage", "previewImage"];
+    static shared = ["getTargetedImage", "previewImage", "resetImageTransformation"];
     resources = {
         user_commands: [
             {
