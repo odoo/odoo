@@ -43,7 +43,7 @@ export class FacebookPage extends Interaction {
             iframeEl.height = params.height;
             iframeEl.width = params.width;
 
-            this.el.replaceChildren(iframeEl);
+            this.el.querySelector(".o_facebook_container").replaceChildren(iframeEl);
             this.registerCleanup(() => { iframeEl.remove(); });
 
             const src = "https://www.facebook.com/plugins/page.php?" + searchParams;
