@@ -628,8 +628,8 @@ export class Thread extends Component {
 
     get showStartMessage() {
         return (
-            ["channel", "group"].includes(this.props.thread.channel_type) ||
-            this.props.thread.channel_type === "chat"
+            this.state.mountedAndLoaded &&
+            ["channel", "group", "chat"].includes(this.props.thread.channel_type)
         );
     }
 
