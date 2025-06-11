@@ -57,4 +57,7 @@
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'data/ir_asset.xml',
+    ],
 }

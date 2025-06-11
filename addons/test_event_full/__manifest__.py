@@ -40,4 +40,7 @@ automatic lead generation, full Online support, ...
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'data/event_type_data.xml',
+    ],
 }

@@ -27,4 +27,7 @@
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'data/hr_work_entry_data.xml',
+    ],
 }

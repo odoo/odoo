@@ -32,4 +32,7 @@
     'installable': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'data/utm_source_data.xml',
+    ],
 }

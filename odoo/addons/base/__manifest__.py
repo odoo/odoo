@@ -95,4 +95,12 @@ The kernel of Odoo, needed for all installation.
     'post_init_hook': 'post_init',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        # TODO: Delete files or use them (not referenced)
+        'report/custom_view.xml',
+        'report/corporate_sxw_header.xml',
+        'report/corporate_defaults.xml',
+        'report/corporate_odt_header.xml',
+        'report/custom_report.xml',
+    ],
 }

@@ -32,4 +32,7 @@ Also:
         'demo/demo_company.xml',
     ],
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'security/ir.model.access.csv',
+    ],
 }

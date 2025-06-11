@@ -91,4 +91,7 @@
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
+    'not_used_exclude': [
+        'views/assets.xml',
+    ],
 }

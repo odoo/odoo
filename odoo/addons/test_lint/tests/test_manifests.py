@@ -3,11 +3,17 @@
 import logging
 from ast import literal_eval
 from os.path import join as opj
+from pathlib import Path
 
 from odoo.modules import get_modules
 from odoo.modules.module import _DEFAULT_MANIFEST, module_manifest, get_module_path
 from odoo.tests import BaseCase
 from odoo.tools.misc import file_open, file_path
+
+DFTL_MANIFEST_DATA_KEYS = ["data", "demo"] + [k for k in _DEFAULT_MANIFEST if k.endswith("_xml")]
+MANIFEST_DATA_DIRS = ["data", "datas", "demo", "demos", "report", "reports", "security", "template", "templates", "view", "views", "wizard", "wizards"]
+MANIFEST_DATA_EXTS = [".csv", ".xml"]
+MANIFEST_DATA_NOT_USED_EXCLUDE_KEY = "not_used_exclude"
 
 _logger = logging.getLogger(__name__)
 
@@ -18,6 +24,8 @@ MANIFEST_KEYS = {
     *_DEFAULT_MANIFEST,
     # unused "informative" keys
     'contributors', 'maintainer', 'url',
+    # to silent data file not used check
+    MANIFEST_DATA_NOT_USED_EXCLUDE_KEY,
 }
 
 
@@ -43,6 +51,7 @@ class ManifestLinter(BaseCase):
                 manifest_data = self._load_manifest(module)
                 self._test_manifest_keys(module, manifest_data)
                 self._test_manifest_values(module, manifest_data)
+                self._test_data_files(module, manifest_data)
 
     def _test_manifest_keys(self, module, manifest_data):
         manifest_keys = manifest_data.keys()
@@ -124,3 +133,51 @@ class ManifestLinter(BaseCase):
                     "Country value %s specified for the icon in manifest of module %s doesn't look like a country code"
                     "Please specify a correct value or remove this key from the manifest.",
                     value, module)
+
+    @staticmethod
+    def _get_data_filenames_from_manifest(manifest_data):
+        """Get data file names from the manifest keys"""
+        for data_key in DFTL_MANIFEST_DATA_KEYS:
+            for file_name in manifest_data.get(data_key) or []:
+                if Path(file_name).suffix.lower() not in MANIFEST_DATA_EXTS:
+                    continue
+                yield file_name
+
+    @staticmethod
+    def _get_data_filenames_from_module(module):
+        """Get data file names from the module path"""
+        module_root_path_obj = Path(file_path(module)).resolve()
+        for subpath_obj in module_root_path_obj.rglob("*"):
+            parts = subpath_obj.relative_to(module_root_path_obj).parts
+            if (
+                not subpath_obj.is_file()  # is file
+                # only depth 2 to comply with guidelines module/data/file.xml
+                # not consider different depth module/data/other/file.xml
+                or len(parts) != 2
+                or parts[0].lower() not in MANIFEST_DATA_DIRS  # only valid dir
+                or subpath_obj.suffix.lower() not in MANIFEST_DATA_EXTS  # only valid ext
+            ):
+                continue
+            yield subpath_obj.relative_to(module_root_path_obj).as_posix()
+
+    def _test_data_files(self, module, manifest_data):
+        """Check the data xml and csv files referenced from manifest files
+        vs the files present in the module data folders
+        In order to identify files created in the module but not referenced in the manifest
+        Inspired from https://github.com/OCA/odoo-pre-commit-hooks @moylop260 file-not-used check
+        """
+        manifest_filenames = set(self._get_data_filenames_from_manifest(manifest_data))
+        module_filenames = set(self._get_data_filenames_from_module(module))
+        # Support exceptions e.g. load from hooks instead of manifest data
+        exclude = set(manifest_data.get(MANIFEST_DATA_NOT_USED_EXCLUDE_KEY) or [])
+        files_not_used = module_filenames - manifest_filenames - exclude
+        mod_path = get_module_path(module, downloaded=True)
+        manifest_file = module_manifest(mod_path)
+        for file_not_used in files_not_used:
+            file_not_used_path = opj(module, file_not_used)
+            _logger.warning((
+                'File "%s" is not referenced in the manifest. If it is loaded from another source '
+                "(e.g. a post_init_hook script), just add it under the section `'%s': ['%s'],` "
+                'in %s file to be considered.'),
+                file_not_used_path, MANIFEST_DATA_NOT_USED_EXCLUDE_KEY, file_not_used, manifest_file)
+        self.assertFalse(bool(files_not_used), f"File(s) not used found in {module}")
