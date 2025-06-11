@@ -336,6 +336,9 @@ function _deepEqual(a, b, ignoreOrder, partial, cache) {
  * @returns {[string, number]}
  */
 function _formatHumanReadable(value, length, cache) {
+    if (!isSafe(value)) {
+        return `<cannot read value of ${getConstructor(value).name}>`;
+    }
     // Primitives
     switch (typeof value) {
         case "function": {
@@ -437,6 +440,9 @@ function _formatHumanReadable(value, length, cache) {
  * @returns {string}
  */
 function _formatTechnical(value, depth, isObjectValue, cache) {
+    if (!isSafe(value)) {
+        return `<cannot read value of ${getConstructor(value).name}>`;
+    }
     if (value === S_ANY || value === S_NONE) {
         // Special case: internal symbols
         return "";
@@ -1107,6 +1113,20 @@ export function isOfType(value, type) {
         default:
             return typeof value === type;
     }
+}
+
+/**
+ * @param {unknown} value
+ */
+export function isSafe(value) {
+    if (value && typeof value.valueOf === "function") {
+        try {
+            value.valueOf();
+        } catch {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**

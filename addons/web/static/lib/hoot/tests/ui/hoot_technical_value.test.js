@@ -117,4 +117,28 @@ describe(parseUrl(import.meta.url), () => {
         await animationFrame();
         expect(".hoot-technical").toHaveText(`Deferred<\nfulfilled\n:\n"oui"\n>`);
     });
+
+    test("evaluation of unsafe value does not crash", async () => {
+        const logDebug = logger.debug;
+        logger.debug = () => expect.step("debug");
+        after(() => (logger.debug = logDebug));
+
+        class UnsafeString extends String {
+            toString() {
+                return this.valueOf();
+            }
+            valueOf() {
+                throw new Error("UNSAFE");
+            }
+        }
+
+        await mountTechnicalValue(new UnsafeString("some value"));
+        await click(".hoot-object");
+
+        expect(".hoot-object").toHaveText("UnsafeString(0)", {
+            message: "size is 0 because it couldn't be evaluated",
+        });
+
+        expect.verifySteps(["debug"]);
+    });
 });
