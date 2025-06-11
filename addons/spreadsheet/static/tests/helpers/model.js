@@ -9,7 +9,6 @@ import { addRecordsFromServerData, addViewsFromServerData } from "./data";
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
  * @typedef {import("@spreadsheet/helpers/model").OdooSpreadsheetModel} OdooSpreadsheetModel
- * @typedef {import("@web/../tests/_framework/mock_server/mock_server").MockServerEnvironment} MockServerEnvironment
  */
 
 export function setupDataSourceEvaluation(model) {

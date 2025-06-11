@@ -222,6 +222,7 @@ beforeEach(() => {
             },
         },
     ];
+    serverState.userId = 1;
 });
 
 test("simple rendering", async () => {

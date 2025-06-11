@@ -59,6 +59,11 @@ import { getRunner } from "./main_runner";
  */
 
 /**
+ * @template {unknown[]} T
+ * @typedef {T extends [any, ...infer U] ? U : never} DropFirst
+ */
+
+/**
  * @template T
  * @typedef {T | Iterable<T>} MaybeIterable
  */
@@ -135,7 +140,7 @@ const $writeText = $clipboard?.writeText.bind($clipboard);
  *
  * @param {any} value
  */
-const getConstructor = (value) => {
+function getConstructor(value) {
     const { constructor } = value;
     if (constructor !== Object) {
         return constructor || { name: null };
@@ -160,12 +165,12 @@ const getConstructor = (value) => {
         );
     }
     return objectConstructors.get(className);
-};
+}
 
 /**
  * @param {(...args: any[]) => any} fn
  */
-const getFunctionString = (fn) => {
+function getFunctionString(fn) {
     if (R_CLASS.test(fn.name)) {
         return `${fn.name ? `class ${fn.name}` : "anonymous class"} { ${ELLIPSIS} }`;
     }
@@ -180,53 +185,36 @@ const getFunctionString = (fn) => {
 
     const args = fn.length ? "...args" : "";
     return `${prefix}(${args}) => { ${ELLIPSIS} }`;
-};
+}
 
 /**
  * @param {unknown} value
  */
-const getGenericSerializer = (value) => {
+function getGenericSerializer(value) {
     for (const [constructor, serialize] of GENERIC_SERIALIZERS) {
         if (value instanceof constructor) {
             return serialize;
         }
     }
     return null;
-};
+}
 
-const makeObjectCache = () => {
+function makeObjectCache() {
     const cache = new Set();
     return {
         add: (...values) => values.forEach((value) => cache.add(value)),
         has: (...values) => values.every((value) => cache.has(value)),
     };
-};
-
-/**
- * @template {(...args: any[]) => T} T
- * @param {T} instanceGetter
- * @returns {T}
- */
-const memoize = (instanceGetter) => {
-    let called = false;
-    let value;
-    return function memoized(...args) {
-        if (!called) {
-            called = true;
-            value = instanceGetter(...args);
-        }
-        return value;
-    };
-};
+}
 
 /**
  * @param {string} value
  * @param {number} [length=MAX_HUMAN_READABLE_SIZE]
  */
-const truncate = (value, length = MAX_HUMAN_READABLE_SIZE) => {
+function truncate(value, length = MAX_HUMAN_READABLE_SIZE) {
     const strValue = String(value);
     return strValue.length <= length ? strValue : strValue.slice(0, length) + ELLIPSIS;
-};
+}
 
 /**
  * @param {unknown} a
@@ -236,7 +224,7 @@ const truncate = (value, length = MAX_HUMAN_READABLE_SIZE) => {
  * @param {ReturnType<makeObjectCache>} cache
  * @returns {boolean}
  */
-const _deepEqual = (a, b, ignoreOrder, partial, cache) => {
+function _deepEqual(a, b, ignoreOrder, partial, cache) {
     // Primitives
     if (strictEqual(a, b)) {
         return true;
@@ -326,7 +314,7 @@ const _deepEqual = (a, b, ignoreOrder, partial, cache) => {
     }
 
     return true;
-};
+}
 
 /**
  * @param {unknown} value
@@ -334,7 +322,7 @@ const _deepEqual = (a, b, ignoreOrder, partial, cache) => {
  * @param {ReturnType<makeObjectCache>} cache
  * @returns {[string, number]}
  */
-const _formatHumanReadable = (value, length, cache) => {
+function _formatHumanReadable(value, length, cache) {
     // Primitives
     switch (typeof value) {
         case "function": {
@@ -426,7 +414,7 @@ const _formatHumanReadable = (value, length, cache) => {
         }
     }
     return `${constructorPrefix}{ ${truncate(content.join(", "))} }`;
-};
+}
 
 /**
  * @param {unknown} value
@@ -435,7 +423,7 @@ const _formatHumanReadable = (value, length, cache) => {
  * @param {ReturnType<makeObjectCache>} cache
  * @returns {string}
  */
-const _formatTechnical = (value, depth, isObjectValue, cache) => {
+function _formatTechnical(value, depth, isObjectValue, cache) {
     if (value === S_ANY || value === S_NONE) {
         // Special case: internal symbols
         return "";
@@ -493,7 +481,7 @@ const _formatTechnical = (value, depth, isObjectValue, cache) => {
                 `${startIndent}${key}: ${_formatTechnical(value[key], depth + 1, true, cache)},\n`
         );
     return `${baseIndent}${proto}{${content.length ? `\n${content.join("")}${endIndent}` : ""}}`;
-};
+}
 
 class QueryRegExp extends RegExp {
     /**
@@ -612,23 +600,22 @@ export async function copy(text) {
 }
 
 /**
- * @template T
- * @template {(previous: T | null) => T} F
- * @param {F} instanceGetter
+ * @template {(previous: any, ...args: any[]) => any} T
+ * @param {T} instanceGetter
  * @param {() => any} [afterCallback]
- * @returns {F}
+ * @returns {(...args: DropFirst<Parameters<T>>) => ReturnType<T>}
  */
 export function createJobScopedGetter(instanceGetter, afterCallback) {
-    /** @type {F} */
-    const getInstance = () => {
+    /** @type {(...args: DropFirst<Parameters<T>>) => ReturnType<T>} */
+    function getInstance(...args) {
         if (runner.dry) {
-            return memoized();
+            return memoized(...args);
         }
 
         const currentJob = runner.state.currentTest || runner.suiteStack.at(-1) || runner;
         if (!instances.has(currentJob)) {
             const parentInstance = [...instances.values()].at(-1);
-            instances.set(currentJob, instanceGetter(parentInstance));
+            instances.set(currentJob, instanceGetter(parentInstance, ...args));
 
             if (canCallAfter) {
                 runner.after(() => {
@@ -642,14 +629,23 @@ export function createJobScopedGetter(instanceGetter, afterCallback) {
         }
 
         return instances.get(currentJob);
-    };
+    }
 
-    const memoized = memoize(instanceGetter);
+    /** @type {(...args: DropFirst<Parameters<T>>) => ReturnType<T>} */
+    function memoized(...args) {
+        if (!memoizedCalled) {
+            memoizedCalled = true;
+            memoizedValue = instanceGetter(null, ...args);
+        }
+        return memoizedValue;
+    }
 
-    /** @type {Map<Job, T>} */
+    /** @type {Map<Job, Parameters<T>[0]>} */
     const instances = new Map();
     const runner = getRunner();
     let canCallAfter = true;
+    let memoizedCalled = false;
+    let memoizedValue;
 
     runner.after(() => instances.clear());
 
@@ -663,13 +659,13 @@ export function createReporting(parentReporting) {
     /**
      * @param {Partial<Reporting>} values
      */
-    const add = (values) => {
+    function add(values) {
         for (const [key, value] of $entries(values)) {
             reporting[key] += value;
         }
 
         parentReporting?.add(values);
-    };
+    }
 
     const reporting = reactive({
         assertions: 0,
@@ -771,7 +767,7 @@ export function batch(fn, interval) {
     let timeoutId = 0;
 
     /** @type {T} */
-    const batched = (...args) => {
+    function batched(...args) {
         currentBatch.push(() => fn(...args));
         if (timeoutId) {
             return;
@@ -780,15 +776,15 @@ export function batch(fn, interval) {
             timeoutId = 0;
             flush();
         }, interval);
-    };
+    }
 
-    const flush = () => {
+    function flush() {
         if (timeoutId) {
             clearTimeout(timeoutId);
             timeoutId = 0;
         }
         consumeCallbackList(currentBatch, "shift");
-    };
+    }
 
     return [batched, flush];
 }
@@ -1475,12 +1471,13 @@ export class Callbacks {
     add(type, callback, once) {
         if (callback instanceof Promise) {
             const promiseValue = callback;
-            callback = () =>
-                Promise.resolve(promiseValue).then((result) => {
+            callback = function () {
+                return Promise.resolve(promiseValue).then((result) => {
                     if (typeof result === "function") {
                         result();
                     }
                 });
+            };
         } else if (typeof callback !== "function") {
             return;
         }

@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { hover, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
 
 import {
     clickFieldDropdown,
@@ -11,6 +11,7 @@ import {
     fieldInput,
     fields,
     makeServerError,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -1053,7 +1054,7 @@ test("Many2ManyTagsField: select multiple records on desktop", async () => {
     expect(".o_dialog").toHaveCount(1);
     // + 1 for the select all
     expect(".o_dialog .o_list_renderer .o_list_record_selector input").toHaveCount(
-        PartnerType._records.length + 1
+        MockServer.env["partner.type"].length + 1
     );
     //multiple select tag
     await contains(".o_dialog .o_list_renderer .o_list_record_selector input").click();
@@ -1062,7 +1063,7 @@ test("Many2ManyTagsField: select multiple records on desktop", async () => {
 
     await contains(".o_dialog .o_select_button").click();
     expect("o_dialog").toHaveCount(0);
-    expect('[name="timmy"] .badge').toHaveCount(PartnerType._records.length);
+    expect('[name="timmy"] .badge').toHaveCount(MockServer.env["partner.type"].length);
 });
 
 test.tags("desktop");
@@ -1094,14 +1095,14 @@ test("Many2ManyTagsField: select multiple records doesn't show already added tag
     await selectFieldDropdownItem("timmy", "Search more...");
 
     expect(".o_dialog .o_list_renderer .o_list_record_selector input").toHaveCount(
-        PartnerType._records.length + 1
+        MockServer.env["partner.type"].length + 1
     );
 
     //multiple select tag
     await contains(".o_dialog .o_list_renderer .o_list_record_selector input").click();
     await animationFrame(); // necessary for the button to be switched to enabled.
     await contains(".o_dialog .o_select_button").click();
-    expect('[name="timmy"] .badge').toHaveCount(PartnerType._records.length);
+    expect('[name="timmy"] .badge').toHaveCount(MockServer.env["partner.type"].length);
 });
 
 test.tags("desktop");

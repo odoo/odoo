@@ -1,4 +1,4 @@
-import { realOrm } from "@web/../tests/_framework/module_set.hoot";
+import { unmockedOrm } from "@web/../tests/_framework/module_set.hoot";
 
 function removeImageSrc(xmlString) {
     const doc = new DOMParser().parseFromString(xmlString, "text/html");
@@ -17,7 +17,7 @@ function removeImageSrc(xmlString) {
 let websiteSnippetsPromise;
 export const getWebsiteSnippets = async () => {
     if (!websiteSnippetsPromise) {
-        websiteSnippetsPromise = realOrm(
+        websiteSnippetsPromise = unmockedOrm(
             "ir.ui.view",
             "render_public_asset",
             ["website.snippets"],
