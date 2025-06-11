@@ -3,8 +3,8 @@ import { Plugin } from "../plugin";
 import { childNodes, descendants, getCommonAncestor } from "../utils/dom_traversal";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { withSequence } from "@html_editor/utils/resource";
-import { Deferred } from "@web/core/utils/concurrency";
 import { toggleClass } from "@html_editor/utils/dom";
+import { execSyncOrAsync } from "@web/core/utils/concurrency";
 
 /**
  * @typedef { import("./selection_plugin").EditorSelection } EditorSelection
@@ -138,7 +138,6 @@ export class HistoryPlugin extends Plugin {
         "getHistorySteps",
         "getNodeById",
         "makePreviewableOperation",
-        "makePreviewableAsyncOperation",
         "makeSavePoint",
         "makeSnapshotStep",
         "redo",
@@ -1228,74 +1227,41 @@ export class HistoryPlugin extends Plugin {
         let revertOperation = () => {};
 
         return {
-            preview: (...args) => {
-                revertOperation();
-                revertOperation = this.makeSavePoint();
-                this.isPreviewing = true;
-                operation(...args);
-                // todo: We should not add a step on preview as it would send
-                // unnecessary steps in collaboration and let the other peer see
-                // what we preview.
-                //
-                // The operation should be similar than in the 'commit'
-                // (normalize etc...) hence the 'addStep' (but we need to remove
-                // it for the collaboration).
-                this.addStep();
-            },
-            commit: (...args) => {
-                revertOperation();
-                this.isPreviewing = false;
-                operation(...args);
-                this.addStep();
-            },
-            revert: () => {
-                revertOperation();
-                revertOperation = () => {};
-                this.isPreviewing = false;
-            },
-        };
-    }
-
-    /**
-     * Creates a set of functions to preview, apply, and revert an async operation.
-     * @param {Function} operation
-     * @returns {PreviewableOperation}
-     */
-    makePreviewableAsyncOperation(operation) {
-        let revertOperation = () => {};
-
-        return {
-            preview: async (...args) => {
-                revertOperation();
-                const def = new Deferred();
-                const revertSavePoint = this.makeSavePoint();
-                revertOperation = async () => {
-                    await def;
-                    revertSavePoint();
-                };
-                this.isPreviewing = true;
-                await operation(...args);
-                def.resolve();
-                // todo: We should not add a step on preview as it would send
-                // unnecessary steps in collaboration and let the other peer see
-                // what we preview.
-                //
-                // The operation should be similar than in the 'commit'
-                // (normalize etc...) hence the 'addStep' (but we need to remove
-                // it for the collaboration).
-                this.addStep();
-            },
-            commit: async (...args) => {
-                revertOperation();
-                this.isPreviewing = false;
-                await operation(...args);
-                this.addStep();
-            },
-            revert: async () => {
-                await revertOperation();
-                revertOperation = () => {};
-                this.isPreviewing = false;
-            },
+            preview: (...args) =>
+                execSyncOrAsync(function* () {
+                    yield revertOperation();
+                    this.isPreviewing = true;
+                    const goToSavepoint = this.makeSavePoint();
+                    const maybePromise = operation(...args);
+                    revertOperation = () =>
+                        execSyncOrAsync(function* () {
+                            yield maybePromise;
+                            goToSavepoint();
+                            this.isPreviewing = false;
+                        }, this);
+                    yield maybePromise;
+                    // todo: We should not add a step on preview as it would send
+                    // unnecessary steps in collaboration and let the other peer see
+                    // what we preview.
+                    //
+                    // The operation should be similar than in the 'commit'
+                    // (normalize etc...) hence the 'addStep' (but we need to remove
+                    // it for the collaboration).
+                    this.addStep();
+                }, this),
+            commit: (...args) =>
+                execSyncOrAsync(function* () {
+                    yield revertOperation();
+                    this.isPreviewing = false;
+                    yield operation(...args);
+                    this.addStep();
+                }, this),
+            revert: () =>
+                execSyncOrAsync(function* () {
+                    yield revertOperation();
+                    revertOperation = () => {};
+                    this.isPreviewing = false;
+                }, this),
         };
     }
 

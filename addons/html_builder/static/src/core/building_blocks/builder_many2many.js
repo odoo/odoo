@@ -27,7 +27,7 @@ export class BuilderMany2Many extends Component {
         this.fields = useService("field");
         const { getAllActions, callOperation } = getAllActionsAndOperations(this);
         this.callOperation = callOperation;
-        this.applyOperation = this.env.editor.shared.history.makePreviewableAsyncOperation(
+        this.applyOperation = this.env.editor.shared.history.makePreviewableOperation(
             this.callApply.bind(this)
         );
         this.state = useState({

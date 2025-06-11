@@ -103,13 +103,12 @@ export class Mutex {
                 };
             });
         }
-        const always = () => {
-            return Promise.resolve(action()).finally(() => {
+        const always = () =>
+            Promise.resolve(action()).finally(() => {
                 if (--this._queueSize === 0) {
                     this._unlock();
                 }
             });
-        };
         this._lock = this._lock.then(always, always);
         return this._lock;
     }
@@ -189,4 +188,53 @@ export class Deferred extends Promise {
         });
         return Object.assign(prom, { resolve, reject });
     }
+}
+
+/**
+ * Executes a generator function either synchronously or asynchronously based on
+ * the yielded values. If the generator yields a Promise, the function switches
+ * to asynchronous
+ * execution mode. Otherwise, it continues executing synchronously.
+ *
+ * @param {Function} genFunction - A generator function to execute
+ * @param {Object} [bindTo] - Optional context to bind the generator function to
+ * @returns {*|Promise<*>} The final value returned by the generator function.
+ *         If any yielded value is a Promise, the function itself returns a Promise.
+ *
+ * @example
+ * // Synchronous execution
+ * const result = execSyncOrAsync(function* () {
+ *   const a = yield 1;
+ *   const b = yield 2;
+ *   return a + b;
+ * }); // returns 3
+ *
+ * @example
+ * // Asynchronous execution
+ * const asyncResult = await execSyncOrAsync(function* () {
+ *   const data = yield fetch('https://api.example.com/data');
+ *   return data.json();
+ * }); // returns parsed JSON from the API
+ */
+export function execSyncOrAsync(genFunction, bindTo) {
+    genFunction = bindTo ? genFunction.bind(bindTo) : genFunction;
+    const generator = genFunction(bindTo);
+    let result = generator.next();
+
+    const processPromise = async (result) => {
+        if (result.done) {
+            return result.value;
+        }
+        const value = await result.value;
+        return processPromise(generator.next(value));
+    };
+
+    while (!result.done) {
+        const value = result.value;
+        if (value instanceof Promise) {
+            return value.then(generator.next.bind(generator)).then(processPromise);
+        }
+        result = generator.next(value);
+    }
+    return result.value;
 }

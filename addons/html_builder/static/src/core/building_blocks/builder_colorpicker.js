@@ -17,7 +17,7 @@ export function useColorPickerBuilderComponent() {
     const { getAllActions, callOperation } = getAllActionsAndOperations(comp);
     const getAction = comp.env.editor.shared.builderActions.getAction;
     const state = useDomState(getState);
-    const applyOperation = comp.env.editor.shared.history.makePreviewableAsyncOperation(
+    const applyOperation = comp.env.editor.shared.history.makePreviewableOperation(
         (applySpecs) => {
             const proms = [];
             for (const applySpec of applySpecs) {
