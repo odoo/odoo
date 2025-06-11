@@ -8,6 +8,7 @@ import json
 import re
 import logging
 import time
+import queue
 
 from ast import literal_eval
 from contextlib import contextmanager
@@ -27,6 +28,8 @@ from odoo.addons.mail.models.mail_mail import MailMail
 from odoo.addons.mail.models.mail_message import MailMessage
 from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import ResUsers
+from odoo.addons.mail.tools import background_task
+from odoo.addons.mail.tools.background_task import Task
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, RecordCapturer, new_test_user
 from odoo.tools import mute_logger
@@ -1047,8 +1050,61 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             if value_type not in suffix_mapping and value_type not in {'many2one', 'monetary'}:
                 self.assertEqual(1, 0, f'Tracking: unsupported tracking test on {value_type}')
 
+class FakeBackgroundTaskManager:
+    """ Fake background task manager for testing purposes.
 
-class MailCase(common.TransactionCase, MockEmail):
+    This mock avoids to create workers and pass tasks to them,
+    it simply keeps the tasks in a queue that has to be manually processed.
+
+    This allows to check query counts since we are using the same cursor
+    instead of a dedicated postcommit cursor """
+
+    def __init__(self, init_num_workers: int = 4, max_queue_size: int = 0, max_task_retries: int = 3):
+        self.max_task_retries = max_task_retries
+        self.init_num_workers = init_num_workers
+        self.max_queue_size = max_queue_size
+        self._queue = queue.Queue(maxsize=max_queue_size)
+
+    def add_task(self, func, env, *args, **kwargs):
+        task = Task(func, env, *args, **kwargs)
+        self._queue.put(task)
+        return task
+
+    def add_worker(self):
+        pass
+
+    def remove_worker(self):
+        pass
+
+    def shutdown(self):
+        pass
+
+    def process_one(self):
+        task = self._queue.get()
+        task.func(task.env["self"], *task.args, **task.kwargs)
+        self._queue.task_done()
+
+    def process_all(self):
+        while not self._queue.empty():
+            self.process_one()
+
+
+class MockBackgroundTaskManagerCase(common.BaseCase):
+    def setUp(self):
+        super().setUp()
+        self._background_task_manager = FakeBackgroundTaskManager()
+
+    @contextmanager
+    def mock_background_task_manager(self):
+        with patch.object(background_task.background_task_manager, "get_instance", lambda: self._background_task_manager):
+            yield
+            self._background_task_manager.process_all()
+
+    def tearDown(self):
+        super().tearDown()
+        self._background_task_manager.shutdown()
+
+class MailCase(common.TransactionCase, MockEmail, MockBackgroundTaskManagerCase):
     """ Tools, helpers and asserts for mail-related tests, including mail
     gateway mock and helpers (see ´´MockEmail´´).
 
@@ -1081,6 +1137,11 @@ class MailCase(common.TransactionCase, MockEmail):
         smtp = self.mock_smtplib_connection()
         smtp.__enter__()
         self.addCleanup(lambda: smtp.__exit__(None, None, None))
+
+    def _mock_background_task_manager(self):
+        task_manager = self.mock_background_task_manager()
+        task_manager.__enter__()
+        self.addCleanup(lambda: task_manager.__exit__(None, None, None))
 
     @classmethod
     def _reset_mail_context(cls, record):
@@ -1348,6 +1409,15 @@ class MailCase(common.TransactionCase, MockEmail):
                 f"\n\nExpected:\n{new_lines[0].join(found_bus_notifs.mapped(format_notif))}"
                 f"\n\nResult:\n{new_lines.join(self._new_bus_notifs.mapped(notif_to_string))}",
             )
+
+    @contextmanager
+    def assertNotInBus(self, channels=None):
+        """ Check that no bus notification was sent. """
+        try:
+            with self.mock_bus():
+                yield
+        finally:
+            self.assertNoBusNotification(channels)
 
     @contextmanager
     def assertMsgWithoutNotifications(self, mail_unlink_sent=False):
@@ -1667,6 +1737,13 @@ class MailCase(common.TransactionCase, MockEmail):
         if check_unique:
             self.assertEqual(len(bus_notifs), len(channels))
         return bus_notifs
+
+    def assertNoBusNotification(self, channels=None):
+        """ Assert no bus notifications were sent on the given channels."""
+        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
+        domain = [('channel', 'in', [json_dump(channel) for channel in channels])] if channels else []
+        bus_notifs = self.env['bus.bus'].sudo().search(domain)
+        self.assertEqual(len(bus_notifs), 0, f"Bus: unexpected bus notifications found:\n{bus_notifs.mapped('channel')}")
 
     @contextmanager
     def assertBusNotificationType(self, expected_pairs):

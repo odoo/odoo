@@ -11,6 +11,7 @@ from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
+from odoo.addons.mail.tools.background_task import background_task
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import format_list, get_lang, html_escape
@@ -751,9 +752,11 @@ class DiscussChannel(models.Model):
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {"silent"}
 
+    @background_task
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
-        rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        rdata = super()._notify_thread(message, msg_vals=msg_vals, no_background=True, **kwargs)
+        message = message.with_env(self.env)
         payload = {"data": Store(message).get_result(), "id": self.id}
         if temporary_id := self.env.context.get("temporary_id"):
             payload["temporary_id"] = temporary_id

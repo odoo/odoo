@@ -5,6 +5,7 @@ import logging
 
 from odoo import api, Command, models, fields
 from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
+from odoo.addons.mail.tools.background_task import background_task
 from odoo.tools import html2plaintext
 
 _logger = logging.getLogger(__name__)
@@ -135,10 +136,11 @@ class MailThread(models.AbstractModel):
             **kwargs
         )
 
+    @background_task
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # Main notification method. Override to add support of sending OCN notifications.
         scheduled_date = self._is_notification_scheduled(kwargs.get('scheduled_date'))
-        recipients_data = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        recipients_data = super()._notify_thread(message, msg_vals=msg_vals, no_background=True, **kwargs)
         if not scheduled_date:
             self._notify_thread_by_sms(message, recipients_data, msg_vals=msg_vals, **kwargs)
         return recipients_data
