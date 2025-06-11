@@ -231,8 +231,8 @@ class GoogleGmailMixin(models.AbstractModel):
         now_timestamp = int(time.time())
         if not self.google_gmail_access_token \
            or not self.google_gmail_access_token_expiration \
-           or self.google_gmail_access_token_expiration - GMAIL_TOKEN_VALIDITY_THRESHOLD < now_timestamp:
-
+           or self.google_gmail_access_token_expiration - GMAIL_TOKEN_VALIDITY_THRESHOLD < now_timestamp \
+           or True:  # TODO: remove (always refresh the token, for testing)
             access_token, expiration = self._fetch_gmail_access_token(self.google_gmail_refresh_token)
 
             self.write({
