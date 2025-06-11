@@ -1,8 +1,9 @@
 import datetime
 import logging
 
-from odoo import Command, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
+from odoo.fields import Command
 from odoo.tools import SQL
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import html_translate
@@ -473,6 +474,7 @@ class TestOrmRelated_Foo(models.Model):
     name = fields.Char()
     bar_id = fields.Many2one('test_orm.related_bar')
     bar_name = fields.Char('bar_name', related='bar_id.name', related_sudo=False)
+    bar_alias = fields.Many2one(related='bar_id', string='bar_alias')
 
 
 class TestOrmRelated_Bar(models.Model):
@@ -480,6 +482,7 @@ class TestOrmRelated_Bar(models.Model):
     _description = 'test_orm.related_bar'
 
     name = fields.Char()
+    active = fields.Boolean(default=True)
 
 
 class TestOrmRelated_Inherits(models.Model):

@@ -1444,6 +1444,20 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(bar.foo, oof)
         self.assertIn(bar, bar.search([('foo', 'in', oof.ids)]))
 
+    def test_25_related_many2one(self):
+        bar = self.env['test_orm.related_bar'].create({'name': 'A'})
+        foo = self.env['test_orm.related_foo'].create({'name': 'A', 'bar_id': bar.id})
+        self.assertEqual(foo.bar_id, bar)
+        self.assertEqual(foo.bar_alias, foo.bar_id)
+
+        # After deactivating the foo record, the search should be executed with
+        # context depending on searching a many2one field: active_test=False.
+        for active in (True, False):
+            with self.subTest(active=active):
+                bar.active = active
+                self.assertEqual(foo.search([('id', 'in', foo.ids), ('bar_id', 'ilike', 'A')]), foo)
+                self.assertEqual(foo.search([('id', 'in', foo.ids), ('bar_alias', 'ilike', 'A')]), foo)
+
     def test_25_one2many_inverse_related(self):
         left = self.env['test_orm.trigger.left'].create({})
         right = self.env['test_orm.trigger.right'].create({})

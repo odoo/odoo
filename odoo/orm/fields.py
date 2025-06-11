@@ -769,7 +769,12 @@ class Field(typing.Generic[T]):
         # if the value is a domain, resolve it using records' environment
         if isinstance(value, Domain):
             field, comodel = path_fields[-1]
-            value = comodel.with_env(records.env)._search(value)
+            user_comodel = comodel.with_env(records.env)
+            if field.type == 'many2one':
+                user_comodel = user_comodel.with_context(active_test=False)
+            elif field.type in ('one2many', 'many2many'):
+                user_comodel = user_comodel.with_context(**field.context)
+            value = user_comodel._search(value)
 
         # build the domain backwards with the any operator
         field, comodel = path_fields[-1]
