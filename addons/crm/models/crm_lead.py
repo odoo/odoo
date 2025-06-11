@@ -255,6 +255,7 @@ class CrmLead(models.Model):
     )
     _user_id_team_id_type_index = models.Index("(user_id, team_id, type)")
     _create_date_team_id_idx = models.Index("(create_date, team_id)")
+    _default_order_idx = models.Index('(priority DESC, id DESC) WHERE active IS TRUE')
 
     @api.constrains('probability', 'stage_id')
     def _check_won_validity(self):
