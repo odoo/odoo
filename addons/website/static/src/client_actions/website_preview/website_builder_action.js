@@ -190,30 +190,14 @@ export class WebsiteBuilder extends Component {
         };
     }
 
-    isSystrayDisplayed() {
-        // TODO: improve this. These are the minimal requirements for at least
-        // one systray item to be displayed, but it duplicates logic from the
-        // WebsiteSystrayItem component.
-        const websiteMetadata = this.websiteService.currentWebsite?.metadata;
-        return (
-            this.websiteService.websites.length > 1 ||
-            this.websiteService.isRestrictedEditor ||
-            (this.websiteService.currentWebsite && websiteMetadata &&
-                (websiteMetadata.canPublish || websiteMetadata.editableInBackend))
-        );
-    }
-
     addSystrayItems() {
-        if (
-            !websiteSystrayRegistry.contains("website.WebsiteSystrayItem") &&
-            this.isSystrayDisplayed()
-        ) {
+        if (!websiteSystrayRegistry.contains("website.WebsiteSystrayItem")) {
             websiteSystrayRegistry.add(
                 "website.WebsiteSystrayItem",
                 {
                     Component: WebsiteSystrayItem,
                     props: this.systrayProps,
-                    isDisplayed: this.isSystrayDisplayed.bind(this),
+                    isDisplayed: () => true,
                 },
                 { sequence: -100 }
             );
