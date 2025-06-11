@@ -2,13 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+import logging
 
 from ast import literal_eval
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from unittest.mock import patch
 
-from odoo import fields
+from odoo import Command, fields
+from odoo.addons.crm.models.crm_team import CrmTeam
+from odoo.addons.crm.models.crm_lead import CrmLead
 from odoo.addons.crm.tests.common import TestLeadConvertCommon
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
@@ -529,6 +532,112 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertEqual(leads[4].user_id, self.env['res.users'], 'Lost lead should not be assigned')
         self.assertEqual(leads[5].team_id, self.sales_team_convert, 'Assigned lead should not be reassigned')
         self.assertEqual(leads[5].user_id, self.user_sales_manager, 'Assigned lead should not be reassigned')
+
+    def test_cron_assign_leads_to_team(self):
+        """ Test fails at 3rd iteration in CrmTeam._allocate_leads_deduplicate to check if _allocate_leads logs its output """
+
+        users = self.env['res.users'].create([
+            {
+                'name': f'Test User {i}',
+                'login': f'testuser{i}',
+            } for i in range(4)
+        ])
+
+        self.env['crm.team'].create([
+            {
+                'name': f'Team {i}',
+                'use_leads': True,
+                'use_opportunities': True,
+                'member_ids': [Command.link(user.id)],
+            } for i, user in enumerate(users)
+        ])
+
+        self._create_leads_batch(
+            count=4,
+            additional_lead_values={'team_id': False, 'user_id': False},
+        )
+
+        call_counter = 0
+
+        def mock_allocate_leads_deduplicate(*args, **kwargs):
+            nonlocal call_counter
+            call_counter += 1
+            if call_counter == 3:
+                raise Exception('Simulated crash on third lead assignment.')
+            return {'assigned': set(self.env['crm.lead'].search([])[call_counter - 1]), 'merged': set(), 'duplicates': set()}
+
+        with patch.object(CrmTeam, '_allocate_leads_deduplicate', side_effect=mock_allocate_leads_deduplicate, autospec=True):
+            with self.assertLogs(logging.getLogger(CrmTeam.__module__)) as cm:
+                with self.assertRaises(Exception) as e:
+                    self.env['crm.team'].search([])._allocate_leads()
+
+        self.assertEqual(str(e.exception), 'Simulated crash on third lead assignment.')
+        self.assertEqual(call_counter, 3)
+
+        logs = '\n'.join(cm.output)
+        self.assertIn("## Assigned 2 leads", logs)
+
+        assigned_lines = [line for line in logs.splitlines() if "## Assigned" in line and "to team" in line]
+        num_of_leads = [int(line.split("## Assigned ")[1].split(" leads")[0]) for line in assigned_lines]
+        self.assertEqual(sum(num_of_leads), 2)
+
+        self.assertRegex(logs, r"ERROR:.*Crash while assigning lead")
+        self.assertEqual(logs.count("Crash while assigning lead"), 1)
+
+    def test_cron_assign_leads_to_member(self):
+        """ Test fails at 3rd iteration in CrmTeam.convert_opportunity to check if _assign_and_convert_leads logs its output """
+
+        users = self.env['res.users'].create([
+            {
+                'name': f'Test User {i}',
+                'login': f'testuser{i}',
+            } for i in range(4)
+        ])
+
+        teams = self.env['crm.team'].create([
+            {
+                'name': f'Team {i}',
+                'use_leads': True,
+                'use_opportunities': True,
+                'member_ids': [Command.link(user.id)],
+            } for i, user in enumerate(users)
+        ])
+
+        leads = self._create_leads_batch(
+            lead_type='lead',
+            count=4,
+            additional_lead_values={'user_id': False},
+        )
+        for lead, team in zip(leads, teams):
+            lead.team_id = team.id
+
+        call_counter = 0
+
+        def mock_convert_opportunity(*args, **kwargs):
+            nonlocal call_counter
+            call_counter += 1
+            if call_counter == 3:
+                raise Exception('Simulated crash on third lead assignment to member.')
+            return True
+
+        with patch.object(CrmLead, 'convert_opportunity', side_effect=mock_convert_opportunity):
+            with self.assertLogs(logging.getLogger(CrmTeam.__module__)) as cm:
+                with self.assertRaises(Exception) as e:
+                    teams._assign_and_convert_leads()
+
+        self.assertEqual(str(e.exception), 'Simulated crash on third lead assignment to member.')
+        self.assertEqual(call_counter, 3)
+
+        logs = '\n'.join(cm.output)
+        self.assertIn("Assigned 2 leads to 3 salesmen", logs)
+
+        member_lines = [log for log in cm.output if "-> member" in log]
+        self.assertEqual(len(member_lines), 3)
+        self.assertEqual(sum("assigned 1/1" in log for log in member_lines), 2)
+        self.assertEqual(sum("assigned 0/1" in log for log in member_lines), 1)
+
+        self.assertRegex(logs, r"ERROR:.*Crash while assigning lead")
+        self.assertEqual(logs.count("Crash while assigning lead"), 1)
 
     @mute_logger('odoo.models.unlink')
     def test_merge_assign_keep_master_team(self):
