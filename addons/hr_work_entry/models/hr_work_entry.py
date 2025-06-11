@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
@@ -98,11 +97,11 @@ class HrWorkEntry(models.Model):
                 result[work_entry.id] = 0.0
                 continue
             if (date_start, date_stop) in cached_periods:
-                result[work_entry.id] = cached_periods[(date_start, date_stop)]
+                result[work_entry.id] = cached_periods[date_start, date_stop]
             else:
                 dt = date_stop - date_start
                 duration = dt.days * 24 + dt.seconds / 3600  # Number of hours
-                cached_periods[(date_start, date_stop)] = duration
+                cached_periods[date_start, date_stop] = duration
                 result[work_entry.id] = duration
         return result
 
@@ -167,6 +166,11 @@ class HrWorkEntry(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('company_id'):
+                employee = self.env['hr.employee'].browse(vals['employee_id'])
+                if employee.company_id:
+                    vals['company_id'] = employee.company_id.id
         work_entries = super().create(vals_list)
         work_entries._check_if_error()
         return work_entries
@@ -184,10 +188,10 @@ class HrWorkEntry(models.Model):
             vals['state'] = 'draft' if vals['active'] else 'cancelled'
 
         employee_ids = self.employee_id.ids
-        if 'employee_id' in vals and vals['employee_id']:
+        if vals.get('employee_id'):
             employee_ids += [vals['employee_id']]
         with self._error_checking(skip=skip_check, employee_ids=employee_ids):
-            return super(HrWorkEntry, self).write(vals)
+            return super().write(vals)
 
     def unlink(self):
         employee_ids = self.employee_id.ids
