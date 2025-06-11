@@ -229,7 +229,6 @@ test("Renaming a pivot with a matching global filter does not retrigger RPCs", a
             label: "test",
             defaultValue: [41],
             modelName: undefined,
-            rangeType: undefined,
         },
         {
             pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },
@@ -1467,7 +1466,6 @@ test("field matching is removed when filter is deleted", async function () {
             label: "test",
             defaultValue: [41],
             modelName: undefined,
-            rangeType: undefined,
         },
         {
             pivot: { [pivotId]: { chain: "product_id", type: "many2one" } },

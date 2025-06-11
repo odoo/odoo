@@ -370,28 +370,24 @@ test("group year/quarter/month filters to a single filter type", () => {
             id: "2",
             type: "date",
             label: "a year relational filter",
-            rangeType: "fixedPeriod",
             defaultValue: "this_year",
         },
         {
             id: "3",
             type: "date",
             label: "a quarter relational filter",
-            rangeType: "fixedPeriod",
             defaultValue: "this_quarter",
         },
         {
             id: "4",
             type: "date",
             label: "a month relational filter",
-            rangeType: "fixedPeriod",
             defaultValue: "this_month",
         },
         {
             id: "5",
             type: "date",
             label: "a relative date filter",
-            rangeType: "relative",
             defaultValue: "last_7_days",
         },
     ]);
@@ -660,7 +656,7 @@ test("Default value is now undefined", () => {
     expect(migratedData.globalFilters[0].defaultValue).toBe(undefined);
 });
 
-test("last_six_month and last_three_years are removed", () => {
+test("period values are correctly renamed/removed", () => {
     const data = {
         version: 14,
         odooVersion: 5,
@@ -717,4 +713,39 @@ test("last_six_month and last_three_years are removed", () => {
     expect(filters[3].defaultValue).toBe("last_7_days");
     expect(filters[4].defaultValue).toBe("last_90_days");
     expect(filters[5].defaultValue).toBe("last_12_months");
+});
+
+test("Date filters are migrated", () => {
+    const data = {
+        version: 14,
+        odooVersion: 5,
+        globalFilters: [
+            {
+                id: "1",
+                type: "date",
+                label: "Fixed Period",
+                rangeType: "fixedPeriod",
+                disabledPeriods: ["quarter"],
+            },
+            {
+                id: "2",
+                type: "date",
+                label: "Relative",
+                rangeType: "relative",
+            },
+            {
+                id: "3",
+                type: "date",
+                label: "From/to",
+                rangeType: "fromTo",
+            },
+        ],
+    };
+    const migratedData = load(data);
+    const filters = migratedData.globalFilters;
+    expect(filters[0].rangeType).toBe(undefined);
+    expect(filters[1].rangeType).toBe(undefined);
+    expect(filters[2].rangeType).toBe(undefined);
+
+    expect(filters[0].disabledPeriods).toBe(undefined);
 });

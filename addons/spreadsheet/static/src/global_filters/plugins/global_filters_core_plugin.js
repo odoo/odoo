@@ -2,7 +2,7 @@
 
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import {
-    checkFilterValueIsValid,
+    checkFilterDefaultValueIsValid,
     globalFieldMatchingRegistry,
 } from "@spreadsheet/global_filters/helpers";
 import { _t } from "@web/core/l10n/translation";
@@ -42,7 +42,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
                 } else if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
-                if (!checkFilterValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
+                if (!checkFilterDefaultValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
                     return CommandResult.InvalidValueTypeCombination;
                 }
                 break;
@@ -55,7 +55,7 @@ export class GlobalFiltersCorePlugin extends OdooCorePlugin {
                 if (this._isDuplicatedLabel(cmd.filter.id, cmd.filter.label)) {
                     return CommandResult.DuplicatedFilterLabel;
                 }
-                if (!checkFilterValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
+                if (!checkFilterDefaultValueIsValid(cmd.filter, cmd.filter.defaultValue)) {
                     return CommandResult.InvalidValueTypeCombination;
                 }
                 break;

@@ -722,7 +722,6 @@ test("field matching is removed when filter is deleted", async function () {
             label: "test",
             defaultValue: [41],
             modelName: undefined,
-            rangeType: undefined,
         },
         {
             list: { 1: { chain: "product_id", type: "many2one" } },

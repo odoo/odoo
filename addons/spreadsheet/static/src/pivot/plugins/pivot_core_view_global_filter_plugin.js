@@ -11,7 +11,6 @@ import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 /**
  * Convert pivot period to the related filter value
  *
- * @param {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").RangeType} timeRange
  * @param {string} value
  * @returns {object}
  */
@@ -162,7 +161,7 @@ export class PivotCoreViewGlobalFilterPlugin extends OdooCoreViewPlugin {
                 const currentValue = this.getters.getGlobalFilterValue(filter.id);
                 switch (filter.type) {
                     case "date":
-                        if (filter.rangeType === "fixedPeriod" && time) {
+                        if (time) {
                             if (value === "false") {
                                 transformedValue = undefined;
                             } else {
