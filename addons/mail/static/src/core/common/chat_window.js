@@ -5,7 +5,7 @@ import { AutoresizeInput } from "@mail/core/common/autoresize_input";
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
-import { useHover, useMessageHighlight } from "@mail/utils/common/hooks";
+import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
 import { Component, toRaw, useChildSubEnv, useRef, useState, useSubEnv } from "@odoo/owl";
@@ -44,7 +44,7 @@ export class ChatWindow extends Component {
         super.setup();
         useSubEnv({ inChatWindow: true });
         this.store = useService("mail.store");
-        this.messageHighlight = useMessageHighlight();
+        this.messageHighlight = useMessageScrolling();
         this.state = useState({
             actionsMenuOpened: false,
             jumpThreadPresent: 0,
