@@ -5,7 +5,6 @@ from odoo.fields import Domain
 class MailingMailing(models.Model):
     _inherit = 'mailing.mailing'
 
-    mailing_model_id = fields.Many2one(compute="_compute_mailing_model_id", store=True, readonly=False)
     card_requires_sync_count = fields.Integer(compute="_compute_card_requires_sync_count")
     card_campaign_id = fields.Many2one('card.campaign', index='btree_not_null')
 
@@ -21,6 +20,7 @@ class MailingMailing(models.Model):
 
     @api.depends('card_campaign_id')
     def _compute_mailing_model_id(self):
+        super()._compute_mailing_model_id()
         for mailing in self.filtered('card_campaign_id'):
             mailing.mailing_model_id = self.env['ir.model']._get_id(mailing.card_campaign_id.res_model)
 
