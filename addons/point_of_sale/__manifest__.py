@@ -55,7 +55,8 @@
         'views/customer_display_index.xml',
         'views/account_move_views.xml',
         'views/pos_session_sales_details.xml',
-        'views/product_tag_views.xml'
+        'views/product_tag_views.xml',
+        'data/pos_scheduled_tasks.xml'
     ],
     'demo': [
         'data/demo_data.xml',
