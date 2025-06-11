@@ -166,8 +166,9 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
             return STRING_EDITOR;
         case "is_not_between":
         case "between": {
-            const editorInfo = getValueEditorInfo(fieldDef, "=");
+            const editorInfo = getValueEditorInfo(fieldDef, "=", params);
             const { defaultValue } = getValueEditorInfo(fieldDef, "=", {
+                ...params,
                 forBetween: true,
             });
             return {
@@ -196,7 +197,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     value,
                     update,
                     amountEditorInfo: {
-                        ...getValueEditorInfo({ type: "integer" }, "="),
+                        ...getValueEditorInfo({ type: "integer" }, "=", params),
                         isSupported: (value) => Number.isInteger(value) && value >= 0,
                         message: _t("Positive integer expected"),
                     },
@@ -222,6 +223,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                     return makeAutoCompleteEditor(fieldDef);
                 default: {
                     const editorInfo = getValueEditorInfo(fieldDef, "=", {
+                        ...params,
                         addBlankOption: true,
                         startEmpty: true,
                     });
@@ -384,7 +386,7 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
         case "date_option":
         case "datetime_option":
         case "time_option": {
-            if (fieldDef.name in OPTIONS_WITH_SELECT) {
+            if (OPTIONS_WITH_SELECT.has(fieldDef.name)) {
                 return getEditorInfoForOptionsWithSelect(fieldDef.name, params);
             } else if (fieldDef.name === "__time") {
                 return {

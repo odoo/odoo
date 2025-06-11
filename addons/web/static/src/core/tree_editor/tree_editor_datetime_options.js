@@ -24,33 +24,45 @@ function getCurrent(unit) {
 const CURRENT_MONTH = `context_today().month`;
 const CURRENT_DAY = `context_today().day`;
 
-let day_of_week_options;
-export const OPTIONS_WITH_SELECT = {
-    month_number: [
-        [CURRENT_MONTH, _t("This month")],
-        ...range(1, 12).map((month) => [
-            month,
-            luxon.DateTime.now().set({ month }).toFormat("MMMM"),
-        ]),
-    ],
-    day_of_month: [
-        [CURRENT_DAY, _t("This day")],
-        ...range(1, 31).map((day) => [day, luxon.DateTime.now().set({ day }).toFormat("d")]),
-    ],
-    quarter_number: range(1, 4).map((quarter) => [quarter, _t("Quarter %(quarter)s", { quarter })]),
-    get day_of_week() {
-        if (!day_of_week_options) {
-            const { weekStart } = localization; // we have to wait weekStart to be defined!
-            day_of_week_options = range(0, 6).map((weekday) => [
+export const OPTIONS_WITH_SELECT = new Set([
+    "month_number",
+    "day_of_month",
+    "quarter_number",
+    "day_of_week",
+]);
+
+export function getOptionsFor(name, allowExpressions = false) {
+    switch (name) {
+        case "month_number":
+            return [
+                ...(allowExpressions ? [[CURRENT_MONTH, _t("This month")]] : []),
+                ...range(1, 12).map((month) => [
+                    month,
+                    luxon.DateTime.now().set({ month }).toFormat("MMMM"),
+                ]),
+            ];
+        case "day_of_month":
+            return [
+                ...(allowExpressions ? [[CURRENT_DAY, _t("This day")]] : []),
+
+                ...range(1, 31).map((day) => [
+                    day,
+                    luxon.DateTime.now().set({ day }).toFormat("d"),
+                ]),
+            ];
+        case "quarter_number":
+            return range(1, 4).map((quarter) => [quarter, _t("Quarter %(quarter)s", { quarter })]);
+        case "day_of_week": {
+            const { weekStart } = localization;
+            return range(0, 6).map((weekday) => [
                 (weekday + weekStart) % 7,
                 luxon.DateTime.now()
                     .set({ weekday: (weekday + weekStart) % 7 })
                     .toFormat("cccc"),
             ]);
         }
-        return day_of_week_options;
-    },
-};
+    }
+}
 
 const UNITS = {
     month_number: "month",
@@ -68,7 +80,7 @@ function fromSelectValue(v) {
 }
 
 export function getEditorInfoForOptionsWithSelect(name, params) {
-    const options = OPTIONS_WITH_SELECT[name];
+    const options = getOptionsFor(name, params.allowExpressions);
     const getOption = (value) => options.find(([v]) => v === toSelectValue(value)) || null;
     return {
         component: Select,

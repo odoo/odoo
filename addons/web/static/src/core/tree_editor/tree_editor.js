@@ -42,8 +42,10 @@ export class TreeEditor extends Component {
         isDebugMode: { type: Boolean, optional: true },
         defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
         isSubTree: { type: Boolean, optional: true },
+        allowExpressions: { type: Boolean, optional: true },
     };
     static defaultProps = {
+        allowExpressions: true,
         defaultConnector: "&",
         readonly: false,
         isSubTree: false,
@@ -191,7 +193,9 @@ export class TreeEditor extends Component {
 
     getValueEditorInfo(node) {
         const fieldDef = this.getFieldDef(node.path);
-        return getValueEditorInfo(fieldDef, node.operator);
+        return getValueEditorInfo(fieldDef, node.operator, {
+            allowExpressions: this.props.allowExpressions,
+        });
     }
 
     async _updatePath(node, path) {
