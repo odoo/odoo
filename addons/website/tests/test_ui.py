@@ -199,7 +199,7 @@ class TestUiHtmlEditorWithExternal(HttpCaseWithUserDemo):
 
 @odoo.tests.tagged('-at_install', 'post_install')
 class TestUiTranslate(odoo.tests.HttpCase):
-    @unittest.skip
+
     def test_admin_tour_rte_translator(self):
         self.env['res.lang'].create({
             'name': 'Parseltongue',
