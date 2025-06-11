@@ -650,3 +650,13 @@ registry.category("web_tour.tours").add("test_discount_after_unknown_scan", {
             ProductScreen.totalAmountIs("4.50"),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_scan_loyalty_card_select_customer", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            scan_barcode("0444-e050-4548"),
+            ProductScreen.customerIsSelected("AAA Test Partner"),
+        ].flat(),
+});
