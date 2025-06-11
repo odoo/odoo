@@ -105,3 +105,23 @@ class TestUi(TestPointOfSaleHttpCommon):
         order = self.env['pos.order'].search([], order='id desc', limit=1)
         self.assertTrue(order.lines[0].event_registration_ids)
         self.assertTrue(order.lines[1].event_registration_ids)
+
+    def test_orderline_price_remain_same_as_ticket_price(self):
+        """ Test that the order line price remains the same as the ticket price when the customer added to the order. """
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+        self.main_pos_config.write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [(6, 0, [self.event_category.id])],
+        })
+        self.env['res.partner'].search([('name', '=', 'Partner Test 1')]).write({
+            'property_product_pricelist': self.main_pos_config.available_pricelist_ids.filtered(lambda pl: pl.item_ids)[0],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_orderline_price_remain_same_as_ticket_price')
+        order = self.main_pos_config.current_session_id.order_ids[0]
+        self.assertEqual(order.amount_total, 200)
+        self.assertEqual(order.lines[0].event_ticket_id.event_id.id, self.test_event.id)

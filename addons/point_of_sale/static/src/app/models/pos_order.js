@@ -457,11 +457,7 @@ export class PosOrder extends Base {
     setPricelist(pricelist) {
         this.pricelist_id = pricelist ? pricelist : false;
 
-        const lines_to_recompute = this.lines.filter(
-            (line) =>
-                line.price_type === "original" &&
-                !(line.combo_line_ids?.length || line.combo_parent_id)
-        );
+        const lines_to_recompute = this.getLinesToCompute();
 
         for (const line of lines_to_recompute) {
             const newPrice = line.product_id.getPrice(
@@ -1097,6 +1093,14 @@ export class PosOrder extends Base {
 
     get showChange() {
         return !floatIsZero(this.orderChange, this.currency.decimal_places) && this.finalized;
+    }
+
+    getLinesToCompute() {
+        return this.lines.filter(
+            (line) =>
+                line.price_type === "original" &&
+                !(line.combo_line_ids?.length || line.combo_parent_id)
+        );
     }
 }
 
