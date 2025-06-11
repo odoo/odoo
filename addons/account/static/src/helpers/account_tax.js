@@ -601,8 +601,9 @@ export const accountTaxHelpers = {
         return base_line;
     },
 
-    add_tax_details_in_base_line(base_line, company) {
-        const price_unit_after_discount = base_line.price_unit * (1 - base_line.discount / 100.0);
+    add_tax_details_in_base_line(base_line, company, { rounding_method = null } = {}) {
+        rounding_method = rounding_method || company.tax_calculation_rounding_method;
+        const price_unit_after_discount = base_line.price_unit * (1 - (base_line.discount / 100.0));
         const currency_pd = base_line.currency_id.rounding;
         const company_currency_pd = company.currency_id.rounding;
         const taxes_computation = this.get_tax_details(
@@ -611,7 +612,7 @@ export const accountTaxHelpers = {
             base_line.quantity,
             {
                 precision_rounding: currency_pd,
-                rounding_method: company.tax_calculation_rounding_method,
+                rounding_method: rounding_method,
                 product: base_line.product_id,
                 special_mode: base_line.special_mode,
                 manual_tax_amounts: base_line.manual_tax_amounts,
@@ -627,7 +628,7 @@ export const accountTaxHelpers = {
             taxes_data: [],
         });
 
-        if (company.tax_calculation_rounding_method === "round_per_line") {
+        if (rounding_method === "round_per_line") {
             tax_details.raw_total_excluded = roundPrecision(
                 tax_details.raw_total_excluded,
                 currency_pd
@@ -642,7 +643,7 @@ export const accountTaxHelpers = {
             let tax_amount = rate ? tax_data.tax_amount / rate : 0.0;
             let base_amount = rate ? tax_data.base_amount / rate : 0.0;
 
-            if (company.tax_calculation_rounding_method === "round_per_line") {
+            if (rounding_method === "round_per_line") {
                 tax_amount = roundPrecision(tax_amount, company_currency_pd);
                 base_amount = roundPrecision(base_amount, company_currency_pd);
             }
