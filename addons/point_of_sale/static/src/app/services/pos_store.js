@@ -433,6 +433,42 @@ export class PosStore extends WithLazyGetterTrap {
                 products[i].available_in_pos = false;
             }
         }
+
+        this.productAttributesExclusion = this.computeProductAttributesExclusion();
+    }
+
+    computeProductAttributesExclusion() {
+        const exclusions = new Map();
+
+        const addExclusion = (key, value) => {
+            if (!exclusions.has(key)) {
+                exclusions.set(key, new Set());
+            }
+            exclusions.get(key).add(value);
+        };
+
+        for (const exclusion of this.models["product.template.attribute.exclusion"].getAll()) {
+            const ptavId = exclusion.product_template_attribute_value_id.id;
+            for (const { id: valueId } of exclusion.value_ids) {
+                addExclusion(ptavId, valueId);
+                addExclusion(valueId, ptavId);
+            }
+        }
+        return exclusions;
+    }
+
+    doHaveConflictWith(value, selectedValues) {
+        const exclusions = this.productAttributesExclusion.get(value.id);
+        if (!exclusions) {
+            return false;
+        }
+        const selectedValueIds = new Set(selectedValues.map((v) => v.id));
+        for (const exclusionId of exclusions) {
+            if (selectedValueIds.has(exclusionId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     async onDeleteOrder(order) {

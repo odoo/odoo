@@ -57,3 +57,12 @@ export function isOptionShown(option) {
         },
     ];
 }
+
+export function isUnavailable(option) {
+    return [
+        {
+            content: `option ${option} is unavailable`,
+            trigger: `.modal .attribute span.text-muted:contains('${option}')`,
+        },
+    ];
+}

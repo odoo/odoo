@@ -14,6 +14,11 @@ export class BaseProductAttribute extends Component {
         "allSelectedValues",
     ];
 
+    setup() {
+        super.setup(...arguments);
+        this.pos = usePos();
+    }
+
     getFormatPriceExtra(val) {
         const sign = val < 0 ? "- " : "+ ";
         return sign + this.env.utils.formatCurrency(Math.abs(val));
@@ -46,6 +51,7 @@ export class MultiProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.MultiProductAttribute";
 
     setup() {
+        super.setup(...arguments);
         this.state = useState({
             is_value_selected: this.props.attribute.values().reduce((acc, value) => {
                 acc[value.id] = false;
@@ -124,7 +130,7 @@ export class ProductConfiguratorPopup extends Component {
 
         let combination;
         while ((combination = getNext()) !== null) {
-            if (!combination.some((value) => value.doHaveConflictWith(combination))) {
+            if (!combination.some((value) => this.pos.doHaveConflictWith(value, combination))) {
                 combination.forEach((value) => {
                     this.state.attributes[value.attribute_id.id].selected = value;
                 });
