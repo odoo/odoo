@@ -1,4 +1,6 @@
 from odoo.tests.common import TransactionCase
+from odoo.exceptions import AccessError
+from odoo import Command
 
 
 class TestMergePartner(TransactionCase):
@@ -99,3 +101,49 @@ class TestMergePartner(TransactionCase):
         self.assertTrue(self.partner1.exists(), "Destination partner should exist after merge")
         self.assertEqual(self.attachment1.res_id, self.partner1.id, "Attachment should be linked to the destination partner")
         self.assertEqual(self.attachment2.res_id, self.partner1.id, "Attachment should be reassigned to the destination partner")
+
+    def test_merge_partners_with_peon_user(self):
+        """ Test merging partners with a user having the bare minimum access rights"""
+        self.env["ir.model.access"].create({
+            'name': 'peon.access.merge.wizard',
+            'group_id': self.env.ref('base.group_user').id,
+            'model_id': self.env.ref('base.model_base_partner_merge_automatic_wizard').id,
+            'perm_read': 1,
+            'perm_write': 1,
+            'perm_create': 1,
+            })
+        self.env["ir.model.access"].create({
+            'name': 'peon.access.merge.wizard.line',
+            'group_id': self.env.ref('base.group_user').id,
+            'model_id': self.env.ref('base.model_base_partner_merge_line').id,
+            'perm_read': 1,
+            'perm_write': 1,
+            'perm_create': 1,
+            })
+        partner_peon = self.env['res.partner'].create({
+                'name': 'Peon',
+                'email': 'mark.peon@example.com',
+            })
+        user_peon = self.env['res.users'].create({
+                'login': 'peon',
+                'password': 'peon',
+                'partner_id': partner_peon.id,
+                'group_ids': [Command.set([self.env.ref('base.group_user').id])],
+            })
+
+        # internal user doesn't have the right to write on res.partner.bank
+        with self.assertRaises(AccessError):
+            self.bank1.with_user(user_peon).partner_id = self.partner2
+
+        wizard = self.env['base.partner.merge.automatic.wizard'].with_user(user_peon).create({})
+        src_partners = self.partner1 + self.partner3
+        wizard._merge((src_partners + self.partner2).ids, self.partner2, extra_checks=False)
+
+        self.assertFalse(src_partners.exists(), "Source partners should be deleted after merge")
+        self.assertTrue(self.partner2.exists(), "Destination partner should exist after merge")
+        self.assertRecordValues(self.partner2.bank_ids, [
+            {'acc_number': '12345'},
+            {'acc_number': '54321'},
+        ])
+        self.assertEqual(self.attachment_bank1.res_id, self.bank1.id, "Bank attachment should remain linked to the correct bank account")
+        self.assertEqual(self.attachment_bank3.res_id, self.bank1.id, "Bank attachment should be reassigned to the correct bank account")
