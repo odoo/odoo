@@ -29,7 +29,7 @@
                     t-on-mouseover="onColorHover"
                     t-on-mouseout="onColorHoverOut"
                     t-on-focusin="onColorFocusin"
-                    t-on-focusout="onColorHoverOut"/>
+                    t-on-focusout="onColorFocusout"/>
         </div>
         <!-- TODO: move the theme tab to html_builder. It shouldn't be in web. -->
         <t t-if="state.activeTab==='theme'">
@@ -38,8 +38,8 @@
                 t-on-mouseover="onColorHover"
                 t-on-mouseout="onColorHoverOut"
                 t-on-mouseleave="() => this.props.applyColorResetPreview()"
-                t-on-focusin="onColorHover"
-                t-on-focusout="onColorHoverOut"
+                t-on-focusin="onColorFocusin"
+                t-on-focusout="onColorFocusout"
                 >
                 <!-- List all Presets -->
                 <t t-foreach="[1, 2, 3, 4, 5]" t-as="number" t-key="number">
@@ -69,7 +69,7 @@
                 t-ref="solidTabRef"
                 t-on-keydown="colorPickerNavigation"
                 t-on-focusin="onColorFocusin"
-                t-on-focusout="onColorHoverOut">
+                t-on-focusout="onColorFocusout">
                 <div class="o_colorpicker_section">
                     <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
                     <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>

@@ -883,4 +883,28 @@ describe("color preview", () => {
         `);
         await expectElementCount(".o-we-toolbar", 1);
     });
+
+    test("should preview selected text color when tabbing", async () => {
+        await setupEditor(
+            `<p>
+                This is a <font style="color: rgb(255, 0, 0);">[test]</font>.
+            </p>`
+        );
+
+        await expandToolbar();
+        await animationFrame();
+        expect("i.fa-font").toHaveStyle({ borderBottomColor: "rgb(255, 0, 0)" });
+        await click(".o-select-color-foreground");
+        await animationFrame();
+        await press("Tab"); // Tab to Custom
+        await animationFrame();
+        await press("Tab"); // Tab to Gradient
+        await animationFrame();
+        await press("Tab"); // Tab to Trash
+        await animationFrame();
+        expect(queryAll("font")).toHaveLength(0); // The color was deleted
+        await press("Tab"); // Tab to 1st color
+        await animationFrame();
+        expect("font").toHaveStyle({ color: "rgb(113, 75, 103)" });
+    });
 });
