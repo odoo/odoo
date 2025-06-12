@@ -473,7 +473,7 @@ export const accountTaxHelpers = {
         if (field in extra_values) {
             return extra_values[field] || fallback;
         }
-        if (field in record) {
+        if (record && field in record) {
             return record[field] || fallback;
         }
         return fallback;
@@ -501,11 +501,10 @@ export const accountTaxHelpers = {
             discount: load('discount', 0.0),
             currency_id: currency,
             sign: load('sign', 1.0),
-            special_mode: kwargs.special_mode || null,
-            special_type: kwargs.special_type || null,
+            special_mode: load('special_mode', null),
+            special_type: load('special_type', null),
             rate: load("rate", 1.0),
-            computation_key: kwargs.computation_key || null,
-            manual_tax_amounts: kwargs.manual_tax_amounts || null,
+            manual_tax_amounts: load("manual_tax_amounts", null),
         };
     },
 
