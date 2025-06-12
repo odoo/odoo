@@ -3,13 +3,13 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { rgbToHex } from "@web/core/utils/colors";
 import { withSequence } from "@html_editor/utils/resource";
-import { FOOTER_SCROLL_TO } from "./footer_option_plugin";
+import { FOOTER_COPYRIGHT } from "./footer_option_plugin";
 import { HEADER_SCROLL_EFFECT } from "./header_option_plugin";
 import { TopMenuVisibilityOption } from "./website_page_config_option";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
 export const TOP_MENU_VISIBILITY = after(HEADER_SCROLL_EFFECT);
-export const HIDE_FOOTER = after(FOOTER_SCROLL_TO);
+export const HIDE_FOOTER = after(FOOTER_COPYRIGHT);
 
 class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
