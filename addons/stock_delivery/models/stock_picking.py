@@ -103,7 +103,6 @@ class StockPicking(models.Model):
             try:
                 if pick.carrier_id and pick.carrier_id.integration_level == 'rate_and_ship' and pick.picking_type_code != 'incoming' and not pick.carrier_tracking_ref and pick.picking_type_id.print_label:
                     pick.sudo().send_to_shipper()
-                pick._check_carrier_details_compliance()
                 if pick.carrier_id:
                     processed_carrier_picking = True
             except (UserError) as e:
@@ -156,11 +155,6 @@ class StockPicking(models.Model):
                 currency=order_currency.name)
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
-
-    def _check_carrier_details_compliance(self):
-        """Hook to check if a delivery is compliant in regard of the carrier.
-        """
-        return
 
     def print_return_label(self):
         self.ensure_one()
