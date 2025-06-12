@@ -6,6 +6,8 @@ export class ResUsers extends Record {
 
     /** @type {number} */
     id;
+    /** @type {boolean} */
+    is_admin;
     /** @type {string} */
     name;
     /** @type {boolean} false when the user is an internal user, true otherwise */

@@ -118,7 +118,6 @@ export class Persona extends Record {
     is_public;
     /** @type {'email' | 'inbox'} */
     notification_preference;
-    isAdmin = false;
     write_date = fields.Datetime();
     group_ids = fields.Many("res.groups", { inverse: "personas" });
 

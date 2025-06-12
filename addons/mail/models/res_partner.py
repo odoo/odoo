@@ -265,7 +265,7 @@ class ResPartner(models.Model):
             [
                 field
                 for field in fields
-                if field not in ["display_name", "isAdmin", "notification_type", "signature", "user"]
+                if field not in ["display_name", "is_admin", "notification_type", "signature", "user"]
             ],
         )
         for partner in self:
@@ -276,8 +276,8 @@ class ResPartner(models.Model):
                 main_user = (main_user_by_partner and main_user_by_partner.get(partner)) or partner.main_user_id
                 data["main_user_id"] = main_user.id
                 store.add(main_user, ["share"])
-                if "isAdmin" in fields:
-                    data["isAdmin"] = main_user._is_admin()
+                if "is_admin" in fields:
+                    store.add(main_user, [Store.Attr("is_admin", lambda u: u._is_admin())])
                 if "notification_type" in fields:
                     data["notification_preference"] = main_user.notification_type
                 if "signature" in fields:

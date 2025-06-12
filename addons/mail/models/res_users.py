@@ -333,7 +333,7 @@ class ResUsers(models.Model):
                     [
                         "active",
                         "avatar_128",
-                        "isAdmin",
+                        "is_admin",
                         "name",
                         "notification_type",
                         "signature",
