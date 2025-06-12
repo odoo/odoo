@@ -139,9 +139,9 @@ export class Action {
     _disabledCondition(action) {}
     /** Condition to disable the button of this action (but still display it). */
     get disabledCondition() {
-        return (
+        return Boolean(
             this._disabledCondition(this.params) ??
-            this.definition.disabledCondition?.call(this, this.params)
+                this.definition.disabledCondition?.call(this, this.params)
         );
     }
 
