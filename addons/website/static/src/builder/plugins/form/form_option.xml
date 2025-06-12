@@ -74,7 +74,7 @@
 <t t-name="website.s_website_form_form_option_add_field_button">
     <button type="button" class="btn o_we_bg_brand_primary"
         t-att-title="props.tooltip"
-        t-on-click="() => props.addField(domState.el)"
+        t-on-click="() => this.addField()"
     >
         + Field
     </button>
