@@ -135,7 +135,8 @@ messageActionsRegistry
     })
     .add("download_files", {
         condition: (component) =>
-            component.message.attachment_ids.length > 1 && component.store.self.isInternalUser,
+            component.message.attachment_ids.length > 1 &&
+            component.store.self.main_user_id?.share === false,
         icon: "fa fa-download",
         title: _t("Download Files"),
         onClick: (component) =>

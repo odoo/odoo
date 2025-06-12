@@ -32,7 +32,7 @@ export class Attachment extends FileModelMixin(Record) {
     }
 
     get isDeletable() {
-        if (this.message && !this.store.self.isInternalUser) {
+        if (this.message && this.store.self.main_user_id?.share !== false) {
             return this.message.editable;
         }
         return true;

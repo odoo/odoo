@@ -279,7 +279,9 @@ export class ResPartner extends webModels.ResPartner {
                     mainUser = users[0];
                 }
                 data.main_user_id = mainUser ? mainUser.id : false;
-                data.isInternalUser = mainUser ? !mainUser.share : false;
+                if (mainUser) {
+                    store.add(ResUsers.browse(mainUser.id), makeKwArgs({ fields: ["share"] }));
+                }
                 if (fields.includes("isAdmin")) {
                     data.isAdmin = true; // mock server simplification
                 }

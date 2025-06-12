@@ -386,7 +386,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.user_root.partner_id._get_im_status_access_token(),
-                    "isInternalUser": True,
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
@@ -398,13 +397,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "avatar_128_access_token": partner_0._get_avatar_128_access_token(),
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
-                    "isInternalUser": True,
                     "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
                     "notification_preference": "inbox",
                     "signature": ["markup", self.users[0].signature],
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
+            ),
+            "res.users": self._filter_users_fields(
+                {"id": self.user_root.id, "share": False},
+                {"id": self.users[0].id, "share": False},
             ),
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),
@@ -463,6 +465,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.users[0]),
                 self._expected_result_for_persona(self.users[14]),
                 self._expected_result_for_persona(self.users[2], only_inviting=True),
+            ),
+            "res.users": self._filter_users_fields(
+                self._res_for_user(self.users[0]),
+                self._res_for_user(self.users[14]),
             ),
             "Store": {
                 "inbox": {
@@ -585,6 +591,16 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.users[3]),
                 self._expected_result_for_persona(self.users[1], also_livechat=True),
                 self._expected_result_for_persona(self.user_root),
+            ),
+            "res.users": self._filter_users_fields(
+                self._res_for_user(self.users[0]),
+                self._res_for_user(self.users[12]),
+                self._res_for_user(self.users[14]),
+                self._res_for_user(self.users[15]),
+                self._res_for_user(self.users[2]),
+                self._res_for_user(self.users[3]),
+                self._res_for_user(self.user_root),
+                self._res_for_user(self.users[1]),
             ),
         }
 
@@ -1632,7 +1648,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "online",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
-                "isInternalUser": True,
                 "main_user_id": user.id,
                 "name": "Ernest Employee",
                 "leave_date_to": False,
@@ -1657,7 +1672,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
-                "isInternalUser": True,
                 "is_company": False,
                 "is_public": False,
                 "main_user_id": user.id,
@@ -1686,7 +1700,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
-                "isInternalUser": True,
                 "main_user_id": user.id,
                 "name": "test2",
                 "leave_date_to": False,
@@ -1701,7 +1714,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
-                "isInternalUser": True,
                 "main_user_id": user.id,
                 "name": "test3",
                 "leave_date_to": False,
@@ -1716,7 +1728,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
-                "isInternalUser": True,
                 "main_user_id": user.id,
                 "name": "test12",
                 "leave_date_to": False,
@@ -1731,7 +1742,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
-                "isInternalUser": True,
                 "main_user_id": user.id,
                 "name": "test14",
                 "leave_date_to": False,
@@ -1746,7 +1756,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status": "offline",
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
-                "isInternalUser": True,
                 "main_user_id": user.id,
                 "name": "test15",
                 "leave_date_to": False,
@@ -1756,7 +1765,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {
                 "avatar_128_access_token": user.partner_id._get_avatar_128_access_token(),
                 "id": user.partner_id.id,
-                "isInternalUser": True,
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "OdooBot",
@@ -1812,4 +1820,23 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {**common_data, "display_name": "test1 Ernest Employee"}
         if channel == self.channel_livechat_2:
             return {**common_data, "display_name": "anon 2 Ernest Employee"}
+        return {}
+
+    def _res_for_user(self, user):
+        if user == self.users[0]:
+            return {"id": user.id, "share": False}
+        if user == self.users[1]:
+            return {"id": user.id, "share": False}
+        if user == self.users[2]:
+            return {"id": user.id, "share": False}
+        if user == self.users[3]:
+            return {"id": user.id, "share": False}
+        if user == self.users[12]:
+            return {"id": user.id, "share": False}
+        if user == self.users[14]:
+            return {"id": user.id, "share": False}
+        if user == self.users[15]:
+            return {"id": user.id, "share": False}
+        if user == self.user_root:
+            return {"id": user.id, "share": False}
         return {}

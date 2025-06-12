@@ -1958,6 +1958,12 @@ class MailCommon(MailCase):
                 data.pop("leave_date_to", None)
         return list(partners_data)
 
+    def _filter_users_fields(self, /, *users_data):
+        """ Remove store user data dependant on other modules if they are not not installed.
+        Not written in a modular way to avoid complex override for a simple test tool.
+        """
+        return list(users_data)
+
     def _filter_threads_fields(self, /, *threads_data):
         """ Remove store thread data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
