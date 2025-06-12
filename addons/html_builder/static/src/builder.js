@@ -245,10 +245,6 @@ export class Builder extends Component {
      */
     onTabClick(tab) {
         this.setTab(tab);
-        // Deactivate the options when clicking on the "BLOCKS" or "THEME" tabs.
-        if (tab === "theme" || tab === "blocks") {
-            this.editor.shared["builderOptions"].deactivateContainers();
-        }
     }
 
     setTab(tab) {
