@@ -3,6 +3,7 @@ import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/cu
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
+import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 import { POSITION_BUS } from "../position/position_hook";
 
@@ -72,7 +73,7 @@ export class ColorPicker extends Component {
         this.root = useRef("root");
 
         this.defaultColor = this.props.state.selectedColor;
-        this.focusedColorBtn = null;
+        this.focusedBtn = null;
         this.state = useState({
             activeTab: this.getDefaultTab(),
             currentCustomColor: this.props.state.selectedColor,
@@ -161,14 +162,56 @@ export class ColorPicker extends Component {
         return this.root.el.contains(target) ? target : ev.target;
     }
 
+    onTabFocusin(ev) {
+        this.refocusBtnOnFocus(ev.target, this.props.applyColorResetPreview.bind(this));
+    }
+
     onColorFocusin(ev) {
-        if (!ev.target.classList.contains("o_color_button") || this.focusedColorBtn === ev.target) {
-            this.focusedColorBtn = null;
+        this.refocusBtnOnFocus(ev.target, this.onColorHover.bind(this, ev));
+    }
+
+    onColorFocusout(ev) {
+        if (ev.relatedTarget?.tagName !== "BUTTON") {
+            // Do not trigger a revert if we are in the focus loop (i.e. focus
+            // a button > selection is reset > focusout). Otherwise, the
+            // relatedTarget should always be one of the colorpicker's buttons.
             return;
         }
-        this.onColorHover(ev);
-        this.focusedColorBtn = ev.target;
-        ev.target.focus();
+        const activeEl = document.activeElement;
+        this.onColorHoverOut(ev);
+        if (document.activeElement !== activeEl) {
+            // The focus was lost during revert. Reset it where it should be.
+            ev.relatedTarget.focus();
+        }
+    }
+    /**
+     * Explicitly refocus the button that has just been focused.
+     *
+     * @param {HTMLElement} targetEl
+     * @param {Function} callback
+     */
+    refocusBtnOnFocus(targetEl, callback) {
+        // In the editor color picker, the preview and reset reapply the
+        // selection, which can remove the focus from the current button (if the
+        // node is recreated). We need to force the focus and break the infinite
+        // loop that it could trigger.
+        if (this.focusedBtn === targetEl) {
+            this.focusedBtn = null;
+            return;
+        }
+        this.focusedBtn = targetEl;
+        callback();
+        if (document.activeElement !== targetEl) {
+            // The focus was lost during revert. Reset it where it should be.
+            if (isBrowserFirefox()) {
+                // A tick is needed on Firefox. It seems that you can't trigger
+                // another focus and update the activeElement in the same tick
+                // since the last focus.
+                setTimeout(() => targetEl.focus(), 0);
+            } else {
+                targetEl.focus();
+            }
+        }
     }
 
     getCurrentGradientColor() {
@@ -206,7 +249,13 @@ export class ColorPicker extends Component {
             }
         }
         if (targetBtn && targetBtn.classList.contains("o_color_button")) {
-            targetBtn.focus();
+            if (isBrowserFirefox()) {
+                // setTimeout needed on Firefox. Limit: you cannot keep the
+                // arrow key pressed down, the focus gets lost.
+                setTimeout(() => targetBtn.focus(), 0);
+            } else {
+                targetBtn.focus();
+            }
         }
     }
 }

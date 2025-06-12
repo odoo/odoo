@@ -4,22 +4,26 @@
         <div class="my-1 d-flex">
             <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab theme-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'theme' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('theme')"
-                t-on-click="() => this.setTab('theme')">
+                t-on-click="() => this.setTab('theme')"
+                t-on-focusin="onTabFocusin">
                 Theme
             </button>
             <button t-attf-class="btn btn-sm ms-1 text-truncate btn-tab solid-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'solid' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('solid')"
-                t-on-click="() => this.setTab('solid')">
+                t-on-click="() => this.setTab('solid')"
+                t-on-focusin="onTabFocusin">
                 Solid
             </button>
             <button t-attf-class="btn btn-sm text-truncate btn-tab custom-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'custom' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('custom')"
-                t-on-click="() => this.setTab('custom')">
+                t-on-click="() => this.setTab('custom')"
+                t-on-focusin="onTabFocusin">
                 Custom
             </button>
             <button t-attf-class="btn btn-sm text-truncate btn-tab gradient-tab #{ isDarkTheme ? 'btn-secondary' : 'btn-light'} #{state.activeTab === 'gradient' ? 'active' : ''}"
                 t-if="this.props.enabledTabs.includes('gradient')"
-                t-on-click="() => this.setTab('gradient')">
+                t-on-click="() => this.setTab('gradient')"
+                t-on-focusin="onTabFocusin">
                 Gradient
             </button>
             <div class="flex-grow-1" />
@@ -29,7 +33,7 @@
                     t-on-mouseover="onColorHover"
                     t-on-mouseout="onColorHoverOut"
                     t-on-focusin="onColorFocusin"
-                    t-on-focusout="onColorHoverOut"/>
+                    t-on-focusout="onColorFocusout"/>
         </div>
         <t t-if="state.activeTab==='theme'">
             <div class="pt-2 px-2 pb-3 d-flex flex-column gap-1 o_cc_preview_wrapper"
@@ -37,8 +41,8 @@
                 t-on-mouseover="onColorHover"
                 t-on-mouseout="onColorHoverOut"
                 t-on-mouseleave="() => this.props.applyColorResetPreview()"
-                t-on-focusin="onColorHover"
-                t-on-focusout="onColorHoverOut"
+                t-on-focusin="onColorFocusin"
+                t-on-focusout="onColorFocusout"
                 >
                 <!-- List all Presets -->
                 <t t-foreach="[1, 2, 3, 4, 5]" t-as="number" t-key="number">
@@ -46,7 +50,7 @@
                     <t t-set="activeClass" t-value="this.props.state.selectedColorCombination === className ? 'selected' : ''"/>
                     <button
                             type="button"
-                            class="w-100 p-0 border-0 bg-transparent color-combination-button"
+                            class="w-100 p-0 border-0 bg-transparent o_color_combination_button"
                             t-att-class="[className, activeClass].join(' ')"
                             t-att-data-color="className"
                             t-attf-title="Preset {{number}}">
@@ -68,7 +72,7 @@
                 t-ref="solidTabRef"
                 t-on-keydown="colorPickerNavigation"
                 t-on-focusin="onColorFocusin"
-                t-on-focusout="onColorHoverOut">
+                t-on-focusout="onColorFocusout">
                 <div class="o_colorpicker_section">
                     <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
                     <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>
