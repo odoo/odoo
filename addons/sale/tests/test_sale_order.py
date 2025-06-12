@@ -291,6 +291,67 @@ class TestSaleOrder(SaleCommon):
             "Product lines with standard sales description should display the product name",
         )
 
+    def test_sol_products_invoice_time(self):
+        """ Ensure the product's `last_invoiced_date` is correctly computed
+        and well displayed alongside the product's name."""
+        today = fields.Date.today()
+        two_weeks_ago = today - timedelta(days=15)
+        three_months_ago = today - timedelta(days=90)
+        one_and_half_year_ago = today - timedelta(days=547)
+        display_context = {
+            'partner_id': self.partner1.id,
+            'prioritize_for': 'sale',
+            'formatted_display_name': True
+        }
+        # Create a product with three variants.
+        product_attr = self.env['product.attribute'].create({
+            'name': 'Grade',
+            'create_variant': 'always',
+            'value_ids': [Command.create({'name': v}) for v in 'ABC'],
+        })
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Test Product',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': product_attr.id,
+                'value_ids': [Command.set(product_attr.value_ids.ids)],
+            })]
+        })
+        product_a, product_b, product_c = product_tmpl.product_variant_ids
+        # Create and post three invoices in the past for those products.
+        self.env['account.move'].create([
+            {
+                'partner_id': self.partner1.id,
+                'move_type': 'out_invoice',
+                'invoice_date': date,
+                'line_ids': [
+                    Command.create({'product_id': p.id, 'quantity': 1}) for p in products
+                ],
+            } for (date, products) in [
+                (two_weeks_ago, (product_a)),
+                (three_months_ago, (product_a, product_b)),
+                (one_and_half_year_ago, (product_a, product_b, product_c)),
+            ]
+        ]).action_post()
+        # Check the last invoice date is not computed when not in the right context.
+        self.assertRecordValues(product_tmpl.product_variant_ids, [
+            {'display_name': 'Test Product (A)', 'last_invoice_date': False},
+            {'display_name': 'Test Product (B)', 'last_invoice_date': False},
+            {'display_name': 'Test Product (C)', 'last_invoice_date': False},
+        ])
+        # Check their last invoice date and displayed name are correctly computed.
+        self.assertRecordValues(product_tmpl.product_variant_ids.with_context(display_context), [
+            {'display_name': 'Test Product (A)\t--15d--', 'last_invoice_date': two_weeks_ago},
+            {'display_name': 'Test Product (B)\t--3mo--', 'last_invoice_date': three_months_ago},
+            {'display_name': 'Test Product (C)\t--1y--', 'last_invoice_date': one_and_half_year_ago},
+        ])
+        # Do the same check for the product template (it should take the most recent date from all variants.)
+        self.assertRecordValues(product_tmpl, [
+            {'display_name': 'Test Product', 'last_invoice_date': False},
+        ])
+        self.assertRecordValues(product_tmpl.with_context(display_context), [
+            {'display_name': 'Test Product\t--15d--', 'last_invoice_date': two_weeks_ago},
+        ])
+
     def test_state_changes(self):
         """Test some untested state changes methods & logic."""
         self.sale_order.action_quotation_sent()
