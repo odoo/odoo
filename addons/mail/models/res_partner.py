@@ -255,33 +255,24 @@ class ResPartner(models.Model):
         return [field_name]
 
     def _to_store_defaults(self):
-        return ["active", "avatar_128", "email", "im_status", "is_company", "name", "user"]
+        return [
+            "active",
+            "avatar_128",
+            "email",
+            "im_status",
+            "is_company",
+            Store.One("main_user_id", ["share"]),
+            "name",
+        ]
 
-    def _to_store(self, store: Store, fields, *, main_user_by_partner=None):
+    def _to_store(self, store: Store, fields):
         if not self.env.user._is_internal() and "email" in fields:
             fields.remove("email")
-        store.add_records_fields(
-            self,
-            [
-                field
-                for field in fields
-                if field not in ["display_name", "is_admin", "notification_type", "signature", "user"]
-            ],
-        )
+        store.add_records_fields(self, [field for field in fields if field not in ["display_name"]])
         for partner in self:
             data = {}
             if "display_name" in fields:
                 data["displayName"] = partner.display_name
-            if "user" in fields:
-                main_user = (main_user_by_partner and main_user_by_partner.get(partner)) or partner.main_user_id
-                data["main_user_id"] = main_user.id
-                store.add(main_user, ["share"])
-                if "is_admin" in fields:
-                    store.add(main_user, [Store.Attr("is_admin", lambda u: u._is_admin())])
-                if "notification_type" in fields:
-                    store.add(main_user, ["notification_type"])
-                if "signature" in fields:
-                    store.add(main_user, ["signature"])
             if data:
                 store.add(partner, data)
 

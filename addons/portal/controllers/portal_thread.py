@@ -45,7 +45,9 @@ class PortalChatter(http.Controller):
                 partner = portal_partner or partner
             store.add(thread, {"can_react": bool(can_react)}, as_thread=True)
         store.add_global_values(
-            self_partner=Store.One(partner, ["active", "avatar_128", "name", "user"])
+            self_partner=Store.One(
+                partner, ["active", "avatar_128", Store.One("main_user_id", "share"), "name"],
+            ),
         )
         if request.env.user.has_group("website.group_website_restricted_editor"):
             store.add(partner, {"is_user_publisher": True})
