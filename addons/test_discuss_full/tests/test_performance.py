@@ -398,14 +398,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.users[0].partner_id.id,
                     "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
-                    "notification_preference": "inbox",
                     "signature": ["markup", self.users[0].signature],
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
             ),
             "res.users": self._filter_users_fields(
                 {"id": self.user_root.id, "share": False},
-                {"id": self.users[0].id, "is_admin": False, "share": False},
+                {
+                    "id": self.users[0].id,
+                    "is_admin": False,
+                    "notification_type": "inbox",
+                    "share": False,
+                },
             ),
             "Store": {
                 "channel_types_with_seen_infos": sorted(["chat", "group", "livechat"]),

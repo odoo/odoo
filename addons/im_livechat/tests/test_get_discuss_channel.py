@@ -144,7 +144,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "main_user_id": test_user.id,
                     "name": "Roger",
-                    "notification_preference": "email",
                     "offline_since": False,
                     "signature": ["markup", str(test_user.signature)],
                     "user_livechat_username": False,
@@ -167,7 +166,12 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["res.users"],
             self._filter_users_fields(
                 {"id": self.user_root.id, "share": False},
-                {"id": test_user.id, "is_admin": False, "share": False},
+                {
+                    "id": test_user.id,
+                    "is_admin": False,
+                    "notification_type": "email",
+                    "share": False,
+                },
             ),
         )
         self.assertEqual(
@@ -246,7 +250,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "main_user_id": operator.id,
                     "name": "Michel",
-                    "notification_preference": "email",
                     "signature": ["markup", str(operator.signature)],
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.partner_id.write_date),
@@ -276,7 +279,12 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["res.users"],
             self._filter_users_fields(
                 {"id": self.user_root.id, "share": False},
-                {"id": operator.id, "is_admin": False, "share": False},
+                {
+                    "id": operator.id,
+                    "is_admin": False,
+                    "notification_type": "email",
+                    "share": False,
+                },
             ),
         )
 
