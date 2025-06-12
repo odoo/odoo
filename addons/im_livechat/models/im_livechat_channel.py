@@ -216,7 +216,7 @@ class Im_LivechatChannel(models.Model):
     def _get_livechat_discuss_channel_vals(
         self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, lang=None
     ):
-        user_operator = False
+        user_operator = self.env["res.users"]
         if chatbot_script:
             if chatbot_script.id not in self.browse(self.ids).mapped('rule_ids.chatbot_script_id.id'):
                 return False
@@ -238,10 +238,16 @@ class Im_LivechatChannel(models.Model):
             )
         ]
         visitor_user = False
-        if user_id:
-            visitor_user = self.env['res.users'].browse(user_id)
-            if visitor_user and visitor_user.active and user_operator and visitor_user != user_operator:  # valid session user (not public)
-                members_to_add.append(Command.create({"livechat_member_type": "visitor", 'partner_id': visitor_user.partner_id.id}))
+        if user_id and user_id != user_operator.id:
+            visitor_user = self.env["res.users"].browse(user_id)
+            members_to_add.append(
+                Command.create(
+                    {
+                        "livechat_member_type": "visitor",
+                        "partner_id": visitor_user.partner_id.id,
+                    },
+                ),
+            )
 
         if chatbot_script:
             name = chatbot_script.title

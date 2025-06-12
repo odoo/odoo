@@ -7,6 +7,7 @@ def downgrade_to_public_user():
     """Replace the request user by the public one. All the cookies are removed
     in order to ensure that the no user-specific data is kept in the request."""
     public_user = request.env.ref("base.public_user")
+    request.session.uid = None
     request.update_env(user=public_user)
     request.cookies = {}
 

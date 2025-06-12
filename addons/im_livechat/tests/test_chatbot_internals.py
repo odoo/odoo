@@ -528,3 +528,20 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                 self.chatbot_script if expected_result else self.env["chatbot.script"],
                 f"Condition: {condition}, Operator available: {operator_available}, Expected result: {expected_result}",
             )
+
+    def test_chatbot_member_type(self):
+        """Ensure livechat_member_type are correctly set when using chatbot with a logged in user."""
+        self.authenticate(self.user_employee.login, self.user_employee.login)
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session",
+            {
+                "anonymous_name": "Test Visitor",
+                "chatbot_script_id": self.chatbot_script.id,
+                "channel_id": self.livechat_channel.id,
+            },
+        )
+        discuss_channel = self.env["discuss.channel"].browse(data["channel_id"])
+        self.assertEqual(
+            discuss_channel.channel_member_ids.mapped("livechat_member_type"),
+            ["bot", "visitor"],
+        )
