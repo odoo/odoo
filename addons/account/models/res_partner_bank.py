@@ -293,7 +293,7 @@ class ResPartnerBank(models.Model):
             should_allow_changes = True  # If we were on a non-trusted account, we will allow to change (setting/... one last time before trusting)
         else:
             # If we were on a trusted account, we only allow changes if the account is moving to untrusted.
-            should_allow_changes = ('allow_out_payment' in vals and vals['allow_out_payment'] is False)
+            should_allow_changes = self.env.su or ('allow_out_payment' in vals and vals['allow_out_payment'] is False)
 
         if ('acc_number' in vals or 'partner_id' in vals) and not should_allow_changes:
             raise UserError(_("You cannot modify the account number or partner of an account that has been trusted."))
