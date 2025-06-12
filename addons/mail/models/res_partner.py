@@ -268,13 +268,7 @@ class ResPartner(models.Model):
     def _to_store(self, store: Store, fields):
         if not self.env.user._is_internal() and "email" in fields:
             fields.remove("email")
-        store.add_records_fields(self, [field for field in fields if field not in ["display_name"]])
-        for partner in self:
-            data = {}
-            if "display_name" in fields:
-                data["displayName"] = partner.display_name
-            if data:
-                store.add(partner, data)
+        store.add_records_fields(self, fields)
 
     @api.readonly
     @api.model
