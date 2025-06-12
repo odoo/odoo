@@ -37,6 +37,7 @@ class Im_LivechatReportChannel(models.Model):
     duration = fields.Float("Duration (min)", digits=(16, 2), readonly=True, aggregator="avg", help="Duration of the conversation (in minutes)")
     nbr_message = fields.Integer("Messages per Session", readonly=True, aggregator="avg", help="Number of message in the conversation")
     country_id = fields.Many2one('res.country', 'Country of the visitor', readonly=True)
+    lang_id = fields.Many2one("res.lang", related="channel_id.livechat_lang_id", string="Language", readonly=True)
     rating = fields.Integer('Rating', aggregator="avg", readonly=True)
     # TODO DBE : Use Selection field - Need : Pie chart must show labels, not keys.
     rating_text = fields.Char('Satisfaction Rate', readonly=True)
@@ -61,7 +62,13 @@ class Im_LivechatReportChannel(models.Model):
     chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
     chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
     chatbot_answers_path_str = fields.Char("Chatbot Answers (String)", readonly=True)
-    session_expertises = fields.Char("Expertises used in this session", readonly=True)
+    session_expertises = fields.Char("Expertises used in this session (String)", readonly=True)
+    session_expertise_ids = fields.Many2many(
+        "im_livechat.expertise",
+        readonly=True,
+        related="channel_id.livechat_expertise_ids",
+        string="Expertises used in this session",
+    )
     agent_requesting_help_history = fields.Many2one(
         "im_livechat.channel.member.history",
         related="channel_id.livechat_agent_requesting_help_history",
