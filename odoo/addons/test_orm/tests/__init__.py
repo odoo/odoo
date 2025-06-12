@@ -1,6 +1,7 @@
 from . import (
     test_access_monetary_related,
     test_attributes,
+    test_assetsbundle,
     test_autovacuum,
     test_bindings,
     test_check_access,
@@ -16,6 +17,8 @@ from . import (
     test_formatted_read_group,
     test_indexed_translation,
     test_ir_rules,
+    test_js_transpiler,
+    test_js_transpiler_regex,
     test_json_field,
     test_many2many,
     test_onchange,
