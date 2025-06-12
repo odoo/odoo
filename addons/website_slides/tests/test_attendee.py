@@ -108,7 +108,9 @@ class TestAttendee(common.SlidesCase):
             channel_completion=0, channel_completed=False, channel_is_member=True)
 
         # Subscribe enrolled attendees to the chatter
-        self.assertIn(user_portal_partner.id, self.channel.message_partner_ids.ids)
+        self.assertNotIn(
+            user_portal_partner, self.channel.message_partner_ids,
+            'Slides: do not add attendees in followers anymore')
 
     @users('user_officer')
     def test_invite_with_invite_email(self):
@@ -132,7 +134,9 @@ class TestAttendee(common.SlidesCase):
             channel_completion=0, channel_completed=False, channel_is_member=False)
 
         # Do not subscribe invited members to the chatter
-        self.assertFalse(user_portal_partner.id in self.channel.message_partner_ids.ids)
+        self.assertNotIn(
+            user_portal_partner, self.channel.message_partner_ids,
+            'Slides: do not add attendees in followers anymore')
 
     @users('user_officer')
     def test_invite_archived_attendee(self):
@@ -196,7 +200,9 @@ class TestAttendee(common.SlidesCase):
             user_portal_channel_partner, member_status='joined', completion=0, active=True,
             channel_completion=0, channel_completed=False, channel_is_member=True)
 
-        self.assertIn(self.user_portal.partner_id.id, self.channel.message_partner_ids.ids)
+        self.assertNotIn(
+            self.user_portal.partner_id, self.channel.message_partner_ids,
+            'Slides: do not add attendees in followers anymore')
 
     @users('user_officer')
     def test_member_default_create(self):

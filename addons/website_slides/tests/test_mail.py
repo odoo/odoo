@@ -42,7 +42,7 @@ class TestSlidesNotifications(SlidesCase):
             })
         new_msg = self._new_msgs.filtered(lambda m: m.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'))
         self.assertEqual(len(new_msg), 1)
-        self.assertEqual(new_msg.notified_partner_ids, self.test_users.partner_id)
+        self.assertFalse(new_msg.notified_partner_ids)
 
 
 class TestSlidesMail(SlidesCase):
