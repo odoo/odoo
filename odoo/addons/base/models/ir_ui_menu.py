@@ -53,7 +53,7 @@ class IrUiMenu(models.Model):
         if level <= 0:
             return '...'
         if self.parent_id:
-            return self.parent_id._get_full_name(level - 1) + MENU_ITEM_SEPARATOR + (self.name or "")
+            return (self.parent_id._get_full_name(level - 1) or "") + MENU_ITEM_SEPARATOR + (self.name or "")
         else:
             return self.name
 

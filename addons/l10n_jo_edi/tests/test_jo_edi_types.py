@@ -104,6 +104,7 @@ class TestJoEdiTypes(JoEdiCommon):
 
         invoice_vals = {
             'name': 'TestEIN022',
+            'currency_id': self.usd.id,  # should not affect values as they are reported in invoice currency
             'invoice_line_ids': [
                 Command.create({
                     'product_id': self.product_a.id,
@@ -116,41 +117,7 @@ class TestJoEdiTypes(JoEdiCommon):
         }
         refund_vals = {
             'name': 'TestEIN022R',
-            'invoice_date': '2023-11-10',
-        }
-        refund = self._l10n_jo_create_refund(invoice_vals, 'Test/Return', refund_vals)
-
-        expected_file = self._read_xml_test_file('type_4')
-        generated_file = self.env['account.edi.xml.ubl_21.jo']._export_invoice(refund)[0]
-        self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(generated_file),
-            self.get_xml_tree_from_string(expected_file)
-        )
-
-    def test_jo_sales_refund_usd(self):
-        """
-        same test as `test_jo_sales_refund`, but with price divided over 2
-        the division would compensate for the USD exchange rate
-        """
-        self.company.l10n_jo_edi_taxpayer_type = 'sales'
-        self.company.l10n_jo_edi_sequence_income_source = '16683693'
-
-        invoice_vals = {
-            'name': 'TestEIN022',
-            'currency_id': self.usd.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_a.id,
-                    'price_unit': 5,
-                    'quantity': 100,
-                    'discount': 10,
-                    'tax_ids': [Command.set(self.jo_general_tax_10.ids)],
-                }),
-            ],
-        }
-        refund_vals = {
-            'name': 'TestEIN022R',
-            'currency_id': self.usd.id,
+            'currency_id': self.usd.id,  # should not affect values as they are reported in invoice currency
             'invoice_date': '2023-11-10',
         }
         refund = self._l10n_jo_create_refund(invoice_vals, 'Test/Return', refund_vals)
@@ -168,6 +135,7 @@ class TestJoEdiTypes(JoEdiCommon):
 
         invoice_vals = {
             'name': 'TestEIN013',
+            'currency_id': self.usd.id,  # should not affect values as they are reported in invoice currency
             'invoice_date': '2023-11-10',
             'invoice_line_ids': [
                 Command.create({
@@ -204,40 +172,6 @@ class TestJoEdiTypes(JoEdiCommon):
         }
         refund_vals = {
             'name': 'TestEINReturn013',
-            'invoice_date': '2023-11-10',
-        }
-        refund = self._l10n_jo_create_refund(invoice_vals, 'Test Return', refund_vals)
-
-        expected_file = self._read_xml_test_file('type_6')
-        generated_file = self.env['account.edi.xml.ubl_21.jo']._export_invoice(refund)[0]
-        self.assertXmlTreeEqual(
-            self.get_xml_tree_from_string(generated_file),
-            self.get_xml_tree_from_string(expected_file)
-        )
-
-    def test_jo_special_refund_usd(self):
-        """
-        same test as `test_jo_special_refund`, but with price divided over 2
-        the division would compensate for the USD exchange rate
-        """
-        self.company.l10n_jo_edi_taxpayer_type = 'special'
-        self.company.l10n_jo_edi_sequence_income_source = '16683696'
-
-        invoice_vals = {
-            'name': 'TestEIN013',
-            'currency_id': self.usd.id,
-            'invoice_line_ids': [
-                Command.create({
-                    'product_id': self.product_b.id,
-                    'price_unit': 50,
-                    'quantity': 1,
-                    'tax_ids': [Command.set((self.jo_general_tax_10 | self.jo_special_tax_5).ids)],
-                }),
-            ],
-        }
-        refund_vals = {
-            'name': 'TestEINReturn013',
-            'currency_id': self.usd.id,
             'invoice_date': '2023-11-10',
         }
         refund = self._l10n_jo_create_refund(invoice_vals, 'Test Return', refund_vals)

@@ -20,6 +20,17 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         document.querySelectorAll(".js_tweet, .js_comment").forEach((el) => {
             share(el);
         });
+
+        // Updates the href of an anchor tag when tags list is empty. This will
+        // redirect to backend part of the website blog post.
+        // TODO: Remove this in the master branch as it will be directly
+        // modified in the XML code.
+        const blogPostTitleEl = this.el.querySelector("#o_wblog_post_name");
+        const emptyTagEl = this.el.querySelector(".o_wblog_sidebar_block #edit-in-backend");
+        if (blogPostTitleEl && emptyTagEl) {
+            const id = blogPostTitleEl.dataset.blogId;
+            emptyTagEl.href = `/odoo/website/blog.post/${id}`;
+        }
         return this._super.apply(this, arguments);
     },
 

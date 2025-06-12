@@ -985,3 +985,36 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(len(unbuild_fns_move), 1)
         self.assertEqual(unbuild_fns_move.state, "done")
         self.assertEqual(unbuild_fns_move.quantity, 12)
+
+    def test_putaway_strategy_with_unbuild(self):
+        """
+        Test that the putaway strategy is correctly applied when unbuilding a product
+        """
+        # Create a putaway strategy for the component product
+        putaway_strategy = self.env["stock.putaway.rule"].create({
+            "location_in_id": self.stock_location.id,
+            "location_out_id": self.stock_location_14.id,
+            'product_id': self.bom_4.bom_line_ids.product_id.id,
+        })
+
+        # Create a MO for the finished product
+        mo = self.env['mrp.production'].create({
+            'product_id': self.bom_4.product_id.id,
+            'product_qty': 1.0,
+            'bom_id': self.bom_4.id,
+            'product_uom_id': self.bom_4.product_uom_id.id,
+        })
+        mo.action_confirm()
+
+        mo.qty_producing = 1.0
+        mo.move_raw_ids.write({'quantity': 1, 'picked': True})
+        mo.button_mark_done()
+
+        # Unbuild the MO and check that the putaway strategy is applied for the component product
+        unbuild_action = mo.button_unbuild()
+        unbuild_action['context']['default_product_qty'] = 1
+        unbuild_order = Form.from_action(self.env, unbuild_action).save()
+        unbuild_order.action_unbuild()
+
+        component_move_unbuild = unbuild_order.produce_line_ids.filtered(lambda m: m.product_id == self.bom_4.bom_line_ids.product_id)
+        self.assertEqual(component_move_unbuild.move_line_ids.location_dest_id, putaway_strategy.location_out_id)

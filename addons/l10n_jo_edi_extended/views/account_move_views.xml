@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_move_form" model="ir.ui.view">
+            <field name="name">account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_jo_edi.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@id='header_right_group']" position="inside">
+                    <field name="l10n_jo_edi_invoice_type"
+                        readonly="state != 'draft'"
+                        invisible="country_code != 'JO' or move_type not in ('out_invoice', 'out_refund')"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_out_invoice_tree" model="ir.ui.view">
+            <field name="name">account.move.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_jo_edi.view_out_invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="l10n_jo_edi_state" position="before">
+                    <field name="l10n_jo_edi_invoice_type" string="JoFotara Invoice Type" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_out_credit_note_tree" model="ir.ui.view">
+            <field name="name">account.move.tree</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_jo_edi.view_out_credit_note_tree"/>
+            <field name="arch" type="xml">
+                <field name="l10n_jo_edi_state" position="before">
+                    <field name="l10n_jo_edi_invoice_type" string="JoFotara Invoice Type" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_invoice_filter" model="ir.ui.view">
+            <field name="name">account.invoice.select</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="l10n_jo_edi.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search/group/filter[@name='l10n_jo_edi_state']" position="after">
+                    <filter name="l10n_jo_edi_invoice_type" string="JoFotara Invoice Type" context="{'group_by': 'l10n_jo_edi_invoice_type'}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

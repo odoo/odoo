@@ -66,7 +66,8 @@
                         </group>
                         <notebook>
                             <page string="Activities To Create">
-                                <field name="template_ids" nolabel="1">
+                                <!-- Pass on the model to ensure the correct dynamic selection (in e.g. hr) on unsaved plans -->
+                                <field name="template_ids" nolabel="1" context="{'default_res_model': res_model}">
                                     <list>
                                         <field name="company_id" column_invisible="1"/>
                                         <field name="note" column_invisible="1"/>

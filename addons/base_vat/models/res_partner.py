@@ -167,12 +167,17 @@ class ResPartner(models.Model):
     def fix_eu_vat_number(self, country_id, vat):
         europe = self.env.ref('base.europe')
         country = self.env["res.country"].browse(country_id)
+        # In Romania, the CUI can be used as tax identifier and it is not prefixed with the country code
+        country_codes_to_not_prepend = ['RO']
         if not europe:
             europe = self.env["res.country.group"].search([('name', '=', 'Europe')], limit=1)
         if europe and country and country.id in europe.country_ids.ids:
             vat = re.sub('[^A-Za-z0-9]', '', vat).upper()
             country_code = _eu_country_vat.get(country.code, country.code).upper()
-            if vat[:2] != country_code:
+            if vat[:2] != country_code and (
+                country_code not in country_codes_to_not_prepend or
+                country_code != self.env.company.country_code
+            ):
                 vat = country_code + vat
         return vat
 

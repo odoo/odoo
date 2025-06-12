@@ -75,7 +75,7 @@ export class FilePlugin extends Plugin {
             unique: true,
             accessToken: true,
         });
-        const { name: filename, mimetype } = attachment;
-        return renderStaticFileBox(filename, mimetype, url);
+        const { name: filename, mimetype, id } = attachment;
+        return renderStaticFileBox(filename, mimetype, url, id);
     }
 }

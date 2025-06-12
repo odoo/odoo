@@ -6,6 +6,7 @@ import { click, pointerDown, pointerUp, press, queryOne, microTick } from "@odoo
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
+import { expectElementCount } from "./_helpers/ui_expectations";
 import { addStep, deleteBackward, insertText, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 
@@ -35,7 +36,7 @@ describe("reset", () => {
         await insertText(editor, "/tab");
         await press("enter");
         await animationFrame();
-        expect(".o-we-tablepicker").toHaveCount(1);
+        await expectElementCount(".o-we-tablepicker", 1);
         expect(getContent(el)).toBe(
             `<p placeholder='Type "/" for commands' class="o-we-hint">[]</p>`
         );
@@ -44,7 +45,7 @@ describe("reset", () => {
 
         await click(".odoo-editor-editable p");
         await animationFrame();
-        expect(".o-we-tablepicker").toHaveCount(0);
+        await expectElementCount(".o-we-tablepicker", 0);
         expect(historyPlugin.currentStep.mutations.length).toBe(0);
     });
 });
