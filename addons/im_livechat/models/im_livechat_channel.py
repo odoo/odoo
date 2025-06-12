@@ -255,6 +255,7 @@ class Im_LivechatChannel(models.Model):
 
         return {
             'channel_member_ids': members_to_add,
+            "livechat_lang_id": self.env["res.lang"].search([("code", "=", lang)]).id,
             'livechat_active': True,
             'livechat_operator_id': operator_partner_id,
             'livechat_channel_id': self.id,

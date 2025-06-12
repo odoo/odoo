@@ -19,10 +19,12 @@ class DiscussChannel(models.Model):
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
     duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in hours')
+    livechat_lang_id = fields.Many2one("res.lang", string="Language", help="Lang of the visitor of the channel.")
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor or operator leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', index='btree_not_null')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator', index='btree_not_null')
     livechat_channel_member_history_ids = fields.One2many("im_livechat.channel.member.history", "channel_id")
+    livechat_expertise_ids = fields.Many2many("im_livechat.expertise", related="livechat_agent_history_ids.agent_expertise_ids")
     livechat_agent_history_ids = fields.One2many(
         "im_livechat.channel.member.history",
         string="Agents (History)",
@@ -164,12 +166,17 @@ class DiscussChannel(models.Model):
             )
 
     def _search_livechat_agent_history_ids(self, operator, value):
-        if operator != "in":
+        if operator not in ("any", "in"):
             return NotImplemented
+        query = (
+            self.env["im_livechat.channel.member.history"]._search(value)
+            if isinstance(value, fields.Domain)
+            else value
+        )
         agent_history_query = self.env["im_livechat.channel.member.history"]._search(
             [
                 ("livechat_member_type", "=", "agent"),
-                ("id", "in", value),
+                ("id", "in", query),
             ],
         )
         return [("id", "in", agent_history_query.subselect("channel_id"))]
