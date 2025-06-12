@@ -8,7 +8,7 @@ import { HighlightConfigurator } from "./highlight_configurator";
 import { StackingComponent, useStackingComponentState } from "./stacking_component";
 import { formatsSpecs } from "@html_editor/utils/formatting";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
-import { removeStyle } from "@html_editor/utils/dom";
+import { removeClass, removeStyle } from "@html_editor/utils/dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
 import { getCurrentTextHighlight } from "@website/js/highlight_utils";
 import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
@@ -237,7 +237,7 @@ formatsSpecs.highlight = {
     addStyle: (node, { highlightId, thicknessToRestore, colorToRestore }) => {
         node.dispatchEvent(new Event("text_highlight_added", { bubbles: true }));
         node.classList.add("o_text_highlight", `o_text_highlight_${highlightId}`);
-        if (colorToRestore) {
+        if (colorToRestore && colorToRestore !== "currentColor") {
             node.style.setProperty("--text-highlight-color", colorToRestore);
         }
         if (thicknessToRestore) {
@@ -251,7 +251,8 @@ formatsSpecs.highlight = {
         }
     },
     removeStyle: (node) => {
-        node.classList.remove(
+        removeClass(
+            node,
             ...[...node.classList].filter((cls) => cls.startsWith("o_text_highlight"))
         );
         removeStyle(node, "--text-highlight-width");
