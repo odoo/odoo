@@ -239,6 +239,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                     "im_status_access_token": self.chatbot_script.operator_partner_id._get_im_status_access_token(),
                     "is_public": False,
                     "name": "Testing Bot",
+                    "remote_work_location_type": False,
                     "user_livechat_username": False,
                     "write_date": fields.Datetime.to_string(
                         self.chatbot_script.operator_partner_id.write_date
@@ -338,6 +339,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                                     "im_status_access_token": self.partner_employee._get_im_status_access_token(),
                                     "is_public": False,
                                     "name": "Ernest Employee",
+                                    "remote_work_location_type": False,
                                     "user_livechat_username": False,
                                     "write_date": fields.Datetime.to_string(
                                         self.partner_employee.write_date

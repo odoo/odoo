@@ -1,10 +1,11 @@
 import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart } from "@odoo/owl";
 import { useOpenChat } from "@mail/core/web/open_chat_hook";
+import { ImStatus } from "@mail/core/common/im_status";
 
 export class AvatarCardPopover extends Component {
     static template = "mail.AvatarCardPopover";
-
+    static components = { ImStatus };
     static props = {
         id: { type: Number, required: true },
         close: { type: Function, required: true },

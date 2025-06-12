@@ -407,7 +407,7 @@ test("Show IM status", async () => {
     });
     setupChatHub({ folded: [channelId] });
     await start();
-    await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is online']");
+    await contains(".o-mail-ChatBubble .fa-circle.text-success[aria-label='User is Online']");
 });
 
 test("Attachment-only message preview shows file name", async () => {

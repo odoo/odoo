@@ -261,9 +261,13 @@ class ResPartner(models.Model):
             "email",
             "im_status",
             "is_company",
-            Store.One("main_user_id", ["share"]),
+            Store.One("main_user_id", self._store_main_user_id_default_fields()),
             "name",
         ]
+
+    def _store_main_user_id_default_fields(self):
+        """ Return the default fields to store for the main_user_id field. """
+        return ["share"]
 
     def _to_store(self, store: Store, fields):
         if not self.env.user._is_internal() and "email" in fields:

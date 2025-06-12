@@ -1976,6 +1976,9 @@ class MailCommon(MailCase):
         """ Remove store partner data dependant on other modules if they are not not installed.
         Not written in a modular way to avoid complex override for a simple test tool.
         """
+        for data in partners_data:
+            if "hr.employee.location" not in self.env:
+                data.pop("remote_work_location_type", None)
         return list(partners_data)
 
     def _filter_users_fields(self, /, *users_data):

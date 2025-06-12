@@ -91,6 +91,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member.partner_id.im_status,
                                 "im_status_access_token": channel_member.partner_id._get_im_status_access_token(),
                                 "name": channel_member.partner_id.name,
+                                "remote_work_location_type": self.user_employee.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member.partner_id.write_date
                                 ),
@@ -156,6 +157,7 @@ class TestChannelRTC(MailCommon):
                         "im_status": channel_member.partner_id.im_status,
                         "im_status_access_token": channel_member.partner_id._get_im_status_access_token(),
                         "name": channel_member.partner_id.name,
+                        "remote_work_location_type": self.user_employee.remote_work_location_type,
                         "write_date": fields.Datetime.to_string(
                             channel_member.partner_id.write_date
                         ),
@@ -233,6 +235,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member.partner_id.im_status,
                                 "im_status_access_token": channel_member.partner_id._get_im_status_access_token(),
                                 "name": channel_member.partner_id.name,
+                                "remote_work_location_type": self.user_employee.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member.partner_id.write_date
                                 ),
@@ -269,6 +272,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "im_status_access_token": channel_member_test_user.partner_id._get_im_status_access_token(),
                                 "name": channel_member_test_user.partner_id.name,
+                                "remote_work_location_type": test_user.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member_test_user.partner_id.write_date
                                 ),
@@ -351,6 +355,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member.partner_id.im_status,
                                 "im_status_access_token":  channel_member.partner_id._get_im_status_access_token(),
                                 "name": channel_member.partner_id.name,
+                                "remote_work_location_type": self.user_employee.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member.partner_id.write_date
                                 ),
@@ -390,6 +395,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member.partner_id.im_status,
                                 "im_status_access_token": channel_member.partner_id._get_im_status_access_token(),
                                 "name": channel_member.partner_id.name,
+                                "remote_work_location_type": self.user_employee.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member.partner_id.write_date
                                 ),
@@ -454,6 +460,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "im_status_access_token": channel_member_test_user.partner_id._get_im_status_access_token(),
                                 "name": channel_member_test_user.partner_id.name,
+                                "remote_work_location_type": test_user.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member_test_user.partner_id.write_date
                                 ),
@@ -524,6 +531,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "im_status_access_token": channel_member_test_user.partner_id._get_im_status_access_token(),
                                 "name": channel_member_test_user.partner_id.name,
+                                "remote_work_location_type": test_user.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member_test_user.partner_id.write_date
                                 ),
@@ -566,6 +574,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "im_status_access_token": channel_member_test_user.partner_id._get_im_status_access_token(),
                                 "name": channel_member_test_user.partner_id.name,
+                                "remote_work_location_type": test_user.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member_test_user.partner_id.write_date
                                 ),
@@ -734,6 +743,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "im_status_access_token": channel_member_test_user.partner_id._get_im_status_access_token(),
                                 "name": channel_member_test_user.partner_id.name,
+                                "remote_work_location_type": test_user.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member_test_user.partner_id.write_date
                                 ),
@@ -903,6 +913,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "im_status_access_token": channel_member_test_user.partner_id._get_im_status_access_token(),
                                 "name": channel_member_test_user.partner_id.name,
+                                "remote_work_location_type": test_user.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member_test_user.partner_id.write_date
                                 ),
@@ -1009,6 +1020,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member.partner_id.im_status,
                                 "im_status_access_token": channel_member.partner_id._get_im_status_access_token(),
                                 "name": channel_member.partner_id.name,
+                                "remote_work_location_type": self.user_employee.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member.partner_id.write_date
                                 ),
@@ -1052,6 +1064,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member.partner_id.im_status,
                                 "im_status_access_token": channel_member.partner_id._get_im_status_access_token(),
                                 "name": channel_member.partner_id.name,
+                                "remote_work_location_type": self.user_employee.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member.partner_id.write_date
                                 ),
@@ -1116,6 +1129,7 @@ class TestChannelRTC(MailCommon):
                                 "im_status": channel_member_test_user.partner_id.im_status,
                                 "im_status_access_token": channel_member_test_user.partner_id._get_im_status_access_token(),
                                 "name": channel_member_test_user.partner_id.name,
+                                "remote_work_location_type": test_user.remote_work_location_type,
                                 "write_date": fields.Datetime.to_string(
                                     channel_member_test_user.partner_id.write_date
                                 ),
