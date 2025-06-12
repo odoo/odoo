@@ -10,7 +10,6 @@
             <xpath expr="//page[@name='hr_settings']" position="before">
                 <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
-                    <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d" invisible="not has_badges"/>
                     <div class="o_field_nocontent" invisible="has_badges">
                         <div class="o_nocontent_help">
                             <p class="o_view_nocontent_neutral_face"></p>
@@ -22,13 +21,12 @@
                     </div>
                     <div class="mt-2">
                         <field name="badge_ids" mode="kanban" />
-                    </div>
-                    <div class="d-flex justify-content-center mt-3" invisible="has_badges">
-                        <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
+                        <div class="d-flex justify-content-center">
+                            <button class="mt-2 grant_badge_btn o_kanban_renderer o_kanban_record o-kanban-button-new btn btn-link py-3" string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
+                        </div>
                     </div>
                 </page>
             </xpath>
-
         </field>
     </record>
 
@@ -41,7 +39,6 @@
             <page name="resume" position="after">
                 <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
-                    <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d" invisible="not has_badges"/>
                     <div class="o_field_nocontent" invisible="has_badges">
                         <div class="o_nocontent_help">
                             <p class="o_view_nocontent_neutral_face"></p>
@@ -53,9 +50,9 @@
                     </div>
                     <div class="mt-2">
                         <field name="badge_ids" mode="kanban" widget="many2many"/>
-                    </div>
-                    <div class="d-flex justify-content-center mt-3" invisible="has_badges">
-                        <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
+                        <div class="d-flex justify-content-center">
+                            <button class=" mt-2 grant_badge_btn o_kanban_renderer o_kanban_record o-kanban-button-new btn btn-link py-3" string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
+                        </div>
                     </div>
                 </page>
             </page>
