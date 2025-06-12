@@ -51,8 +51,12 @@ export const accountTaxHelpers = {
      * [!] Mirror of the same method in account_tax.py.
      * PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
      */
-    batch_for_taxes_computation(taxes, { special_mode = null } = {}) {
-        const { sorted_taxes, group_per_tax } = this.flatten_taxes_and_sort_them(taxes);
+    batch_for_taxes_computation(taxes, { special_mode = null, filter_tax_function = null } = {}) {
+        let { sorted_taxes, group_per_tax } = this.flatten_taxes_and_sort_them(taxes);
+        if (filter_tax_function) {
+            sorted_taxes = sorted_taxes.filter(filter_tax_function);
+        }
+
         const results = {
             batch_per_tax: {},
             group_per_tax: group_per_tax,
@@ -238,6 +242,7 @@ export const accountTaxHelpers = {
             product = null,
             special_mode = null,
             manual_tax_amounts = null,
+            filter_tax_function = null,
         } = {}
     ) {
         const self = this;
@@ -281,7 +286,7 @@ export const accountTaxHelpers = {
             }
         }
 
-        // Flatten the taxes and order them.
+        // Flatten the taxes, order them and filter them if necessary.
 
         function prepare_tax_extra_data(tax, kwargs = {}) {
             let price_include;
@@ -303,8 +308,9 @@ export const accountTaxHelpers = {
 
         const batching_results = this.batch_for_taxes_computation(taxes, {
             special_mode: special_mode,
+            filter_tax_function: filter_tax_function,
         });
-        const sorted_taxes = batching_results.sorted_taxes;
+        let sorted_taxes = batching_results.sorted_taxes;
         const taxes_data = {};
         const reverse_charge_taxes_data = {};
         for (const tax of sorted_taxes) {
@@ -504,7 +510,8 @@ export const accountTaxHelpers = {
             special_mode: load('special_mode', null),
             special_type: load('special_type', null),
             rate: load("rate", 1.0),
-            manual_tax_amounts: load('manual_tax_amounts', null),
+            manual_tax_amounts: load("manual_tax_amounts", null),
+            filter_tax_function: load("filter_tax_function", null),
         }
     },
 
@@ -522,7 +529,8 @@ export const accountTaxHelpers = {
                 rounding_method: rounding_method,
                 product: base_line.product_id,
                 special_mode: base_line.special_mode,
-                manual_tax_amounts: base_line.manual_tax_amounts
+                manual_tax_amounts: base_line.manual_tax_amounts,
+                filter_tax_function: base_line.filter_tax_function
             }
         );
 
