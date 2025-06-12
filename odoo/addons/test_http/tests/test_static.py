@@ -164,11 +164,12 @@ class TestHttpStatic(TestHttpStaticCommon):
             ('glyph_inline', False),
             ('glyph_related', True),
             ('glyph_compute', False),
+            ('glyph_binary_inline', False),
         ):
             with self.subTest(x_sendfile=False):
                 self.assertDownloadGizeh(
                     f'/web/content/test_http.earth?field={field}',
-                    assert_filename='Earth.png'
+                    assert_filename='Earth.png',
                 )
 
             if is_attachment:
@@ -177,7 +178,7 @@ class TestHttpStatic(TestHttpStaticCommon):
                     self.assertDownloadGizeh(
                         f'/web/content/test_http.earth?field={field}',
                         x_sendfile=is_attachment and attachment_path,
-                        assert_filename='Earth.png'
+                        assert_filename='Earth.png',
                     )
 
     def test_static10_filename(self):
