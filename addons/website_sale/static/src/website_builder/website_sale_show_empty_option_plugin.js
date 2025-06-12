@@ -12,6 +12,7 @@ class WebsiteSaleShowEmptyOptionPlugin extends Plugin {
                 selector: "#wrapwrap > header",
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
+                reloadTarget: true,
             }),
         ],
     };
