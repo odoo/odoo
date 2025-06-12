@@ -1342,6 +1342,52 @@ class TestReports(TestReportsCommon):
             }
         ])
 
+    def test_report_forecast_14_availability_same_procurement_group(self):
+        """ Test that the forecast availability is correctly computed for moves
+        that are linked to the same procurement group.
+        This is to ensure that the forecast availability is not affected by the
+        reservation of moves that are linked to other procurement group.
+        """
+        today = datetime.today()
+        one_day = timedelta(days=1)
+        one_month = timedelta(days=30)
+        receipt_form = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        receipt = receipt_form.save()
+        pg1 = self.env['procurement.group'].create({})
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 100
+        receipt = receipt_form.save()
+        receipt.move_ids_without_package[0].group_id = pg1.id
+        receipt.action_confirm()
+        delivery_form1 = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        delivery_form1.partner_id = self.partner
+        delivery_form1.picking_type_id = self.picking_type_out
+        # Create 2 deliveries with the same product but different dates, the farthest one
+        # should have a positive forecast availability because it is linked to the procurement
+        # group of the receipt.
+        with delivery_form1.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 100
+        delivery1 = delivery_form1.save()
+        delivery1.move_ids_without_package[0].write({'date': today + one_day})
+        delivery1.action_confirm()
+        delivery_form2 = Form(self.env['stock.picking'], view='stock.view_picking_form')
+        delivery_form2.partner_id = self.partner
+        delivery_form2.picking_type_id = self.picking_type_out
+        with delivery_form2.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 100
+        delivery2 = delivery_form2.save()
+        delivery2.move_ids_without_package[0].write({'group_id': pg1.id, 'date': today + one_month})
+        delivery2.action_confirm()
+        self.assertEqual(delivery1.move_ids.forecast_availability, -100)
+        self.assertEqual(delivery2.move_ids.forecast_availability, 100)
+        self.assertFalse(delivery1.move_ids.forecast_expected_date)
+        self.assertEqual(delivery2.move_ids.forecast_expected_date, receipt.move_ids.date)
+
     def test_report_reception_1_one_receipt(self):
         """ Create 2 deliveries and 1 receipt where some of the products being received
         can be reserved for the deliveries. Check that the reception report correctly
