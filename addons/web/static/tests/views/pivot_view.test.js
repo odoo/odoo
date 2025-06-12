@@ -63,7 +63,7 @@ class Partner extends models.Model {
     price_nonaggregable = fields.Monetary({
         string: "Price non-aggregable",
         aggregator: undefined,
-        currency_field: this.currency_id,
+        currency_field: "currency_id",
         groupable: false,
     });
     reference = fields.Reference({
@@ -159,6 +159,24 @@ class Product extends models.Model {
     ];
 }
 
+class Currency extends models.Model {
+    _name = "res.currency";
+
+    name = fields.Char();
+    symbol = fields.Char();
+    position = fields.Selection({
+        selection: [
+            ["after", "A"],
+            ["before", "B"],
+        ],
+    });
+
+    _records = [
+        { id: 1, name: "USD", symbol: "$", position: "before" },
+        { id: 2, name: "EUR", symbol: "€", position: "after" },
+    ];
+}
+
 class Customer extends models.Model {
     _name = "customer";
     name = fields.Char({ string: "Customer Name" });
@@ -184,7 +202,7 @@ class User extends models.Model {
     }
 }
 
-defineModels([Partner, Product, Customer, User]);
+defineModels([Partner, Product, Customer, Currency, User]);
 
 test('pivot view without "string" attribute', async () => {
     const view = await mountView({
@@ -3894,4 +3912,38 @@ test("pivot views make their control panel available directly", async () => {
     def.resolve();
     await animationFrame();
     expect(".o_pivot_view .o_pivot").toHaveCount(1);
+});
+
+test("pivot view with monetary", async () => {
+    Partner._fields.amount = fields.Monetary({ currency_field: "currency_id" });
+    Partner._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
+    Partner._records[0].amount = 500;
+    Partner._records[1].amount = 300;
+    Partner._records[2].amount = 200;
+    Partner._records[3].amount = 400;
+    Partner._records[3].currency_id = 2;
+    await mountView({
+        type: "pivot",
+        resModel: "partner",
+        arch: `
+			<pivot>
+				<field name="amount" type="measure"/>
+			</pivot>`,
+        groupBy: ["currency_id"],
+    });
+    expect(".o_pivot table tbody tr").toHaveCount(3);
+    expect(".o_pivot table tbody tr:first").toHaveText("Total \n—");
+    expect(".o_pivot table tbody tr:first .o_value b").toHaveAttribute(
+        "data-tooltip",
+        "Different currencies cannot be aggregated"
+    );
+    expect(".o_pivot table tbody tr:eq(1)").toHaveText("USD \n$ 1,000.00");
+    expect(".o_pivot table tbody tr:last").toHaveText("EUR \n400.00 €");
+    // test sorting
+    await contains("th.o_pivot_measure_row").click();
+    expect(".o_pivot table tbody tr:eq(1)").toHaveText("EUR \n400.00 €");
+    expect(".o_pivot table tbody tr:last").toHaveText("USD \n$ 1,000.00");
+    await contains("th.o_pivot_measure_row").click();
+    expect(".o_pivot table tbody tr:eq(1)").toHaveText("USD \n$ 1,000.00");
+    expect(".o_pivot table tbody tr:last").toHaveText("EUR \n400.00 €");
 });
