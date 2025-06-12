@@ -71,17 +71,16 @@
                 t-on-focusin="onColorFocusin"
                 t-on-focusout="onColorFocusout">
                 <div class="o_colorpicker_section">
-                    <button data-color="o-color-1" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-1)" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-3" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-3)" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-2" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-2)" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-4" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-4); grid-column: 5;" class="btn p-0 o_color_button"/>
-                    <button data-color="o-color-5" t-attf-style="background-color: var(--{{props.themeColorPrefix}}o-color-5)" class="btn p-0 o_color_button"/>
+                    <t t-foreach="DEFAULT_THEME_COLOR_VARS" t-as="color" t-key="color">
+                        <button t-att-data-color="color" t-att-class="{'selected': color === defaultColorSet}" 
+                            t-att-style="`background-color: var(--${props.themeColorPrefix + color})` + (color_index === 3 ? '; grid-column: 5' : '')" class="btn p-0 o_color_button"/>
+                    </t>
                 </div>
 
                 <div class="o_color_section">
                     <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
                         <t t-foreach="line" t-as="color" t-key="color_index">
-                            <button class="o_color_button btn p-0" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase()}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
+                            <button class="o_color_button btn p-0" t-att-class="{'selected': color === this.state.currentCustomColor.toUpperCase() and !defaultColorSet}" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                         </t>
                     </t>
                 </div>
@@ -93,12 +92,12 @@
                     <t t-foreach="this.usedCustomColors" t-as="color" t-key="color_index">
                         <button t-if="color !== this.state.currentCustomColor?.toLowerCase()" class="o_color_button btn p-0" t-att-data-color="color" t-attf-style="background-color: {{color}}"/>
                     </t>
-                    <button class="o_color_button btn p-0 selected" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
+                    <button t-if="!defaultColorSet" class="o_color_button btn p-0" t-att-class="{'selected': defaultColorSet === false}" t-att-data-color="this.state.currentCustomColor" t-attf-style="background-color: {{this.state.currentCustomColor}}"/>
                 </div>
                 <t t-foreach="Object.values(this.grayscales)" t-as="grayscaleColors" t-key="grayscaleColors">
                     <div class="o_colorpicker_section" t-on-click="onColorApply" t-on-mouseover="onColorHover" t-on-mouseout="onColorHoverOut" t-on-focusin="onColorFocusin" t-on-focusout="onColorHoverOut">
                         <t t-foreach="grayscaleColors" t-as="color" t-key="color">
-                            <button t-att-data-color="color" class="o_color_button btn p-0" t-att-class="{'selected': color === defaultColor}" t-attf-style="background-color: var(--{{color}})" />
+                            <button t-att-data-color="color" class="o_color_button btn p-0" t-att-class="{'selected': color === defaultColorSet}" t-attf-style="background-color: var(--{{color}})" />
                         </t>
                     </div>
                 </t>

@@ -46,11 +46,13 @@ export function useColorPickerBuilderComponent() {
         const { actionId, actionParam } = actionWithGetValue;
         const actionValue = getAction(actionId).getValue({ editingElement, params: actionParam });
         return {
+            mode: actionParam.mainParam || actionId,
             selectedColor: actionValue || comp.props.defaultColor,
             selectedColorCombination: comp.env.editor.shared.color.getColorCombination(
                 editingElement,
                 actionParam
             ),
+            getTargetedElements: () => [editingElement],
         };
     }
     function getColor(colorValue) {
