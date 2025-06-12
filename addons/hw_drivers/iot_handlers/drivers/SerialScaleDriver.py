@@ -275,6 +275,14 @@ class AdamEquipmentDriver(ScaleDriver):
             with serial_connection(device['identifier'], protocol, is_probing=True) as connection:
                 connection.write(protocol.measureCommand + protocol.commandTerminator)
                 # Checking whether writing to the serial port using the Adam protocol raises a timeout exception is about the only thing we can do.
+                #
+                # Explanation:
+                # - The serial connection for the Adam scales only sends data back after receiving the print ('P') command.
+                #   - An attempt to find some other undocumented command (by trying every possible ASCII character) was unsuccessful.
+                # - Sending this command is equivalent to pressing the 'Print' button on the device.
+                # - It will only respond if the weight is non-zero, otherwise there will just be a double beep.
+                # - It will also only give a double beep if the item has already been printed. You have to take the weight off and put it back again to print again.
+                # - Therefore, there is no way for us to detect the scale automatically as it will only respond if a user actively weighs something.
                 return True
         except serial.serialutil.SerialTimeoutException:
             pass
