@@ -6,6 +6,8 @@ from odoo import Command, tests
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.tools import mute_logger
 from odoo.tools.json import scriptsafe as json_safe
+from odoo.exceptions import AccessDenied
+from datetime import datetime, timedelta
 
 
 @tests.tagged('-at_install', 'post_install')
@@ -89,10 +91,14 @@ class TestWebEditorController(HttpCaseWithUserDemo):
 
         # Portal user cannot modify page
         with mute_logger('odoo.http'):
-            json = modify('portal', 'page-portalfail.gif', True)
-        self.assertEqual('odoo.exceptions.AccessError', json['error']['data']['name'], "Expect access error")
+            with self.assertRaises(AccessDenied):
+                json = modify('portal', 'page-portalfail.gif', True)
 
-        event = self.env['event.event'].search([], limit=1)
+        event = self.env['event.event'].create({
+            'name': 'Event',
+            'date_begin': datetime.today() - timedelta(days=1),
+            'date_end': datetime.today() + timedelta(days=1),
+        })
         attachment.res_model = 'event.event'
         attachment.res_id = event.id
 
@@ -148,5 +154,5 @@ class TestWebEditorController(HttpCaseWithUserDemo):
 
         # Portal user cannot modify event
         with mute_logger('odoo.http'):
-            json = modify('portal', 'event-portalfail.gif', True)
-        self.assertEqual('odoo.exceptions.AccessError', json['error']['data']['name'], "Expect access error")
+            with self.assertRaises(AccessDenied):
+                json = modify('portal', 'event-portalfail.gif', True)
