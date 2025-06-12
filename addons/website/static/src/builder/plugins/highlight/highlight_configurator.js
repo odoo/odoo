@@ -33,8 +33,8 @@ export class HighlightConfigurator extends Component {
     static props = {
         applyHighlight: Function,
         applyHighlightStyle: Function,
+        deleteHighlight: Function,
         getHighlightState: Function,
-        getSelection: Function,
         previewHighlight: Function,
         previewHighlightStyle: Function,
         revertHighlight: Function,
@@ -96,6 +96,11 @@ export class HighlightConfigurator extends Component {
     selectHighlightColor(color) {
         this.props.componentStack.pop();
         this.props.applyHighlightStyle("--text-highlight-color", normalizeColor(color));
+    }
+
+    deleteHighlight() {
+        this.props.deleteHighlight();
+        this.openHighlightPicker(false);
     }
 
     onThicknessChange(ev) {

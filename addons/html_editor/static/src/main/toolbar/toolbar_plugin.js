@@ -7,7 +7,6 @@ import { registry } from "@web/core/registry";
 import { ToolbarMobile } from "./mobile_toolbar";
 import { debounce } from "@web/core/utils/timing";
 import { omit } from "@web/core/utils/objects";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
@@ -356,7 +355,9 @@ export class ToolbarPlugin extends Plugin {
         }
         const isCollapsed = selectionData.editableSelection.isCollapsed;
         if (isCollapsed) {
-            return !!closestElement(selectionData.editableSelection.anchorNode, "td.o_selected_td");
+            return this.getResource("collapsed_selection_toolbar_predicate").some((fn) =>
+                fn(selectionData)
+            );
         }
         return !!this.getFilteredTargetedNodes().length;
     }
