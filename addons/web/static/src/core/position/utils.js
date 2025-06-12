@@ -227,5 +227,195 @@ export function reposition(popper, target, options) {
         popper.style[styleProperty] = target.getBoundingClientRect()[styleProperty] + "px";
     }
 
+<<<<<<< 54204e664ed1924f512ba4626be010e39c2d17a3:addons/web/static/src/core/position/utils.js
     return solution;
+||||||| 4a603c6314316716913b0c4de71affec075e15ea:addons/web/static/src/core/position_hook.js
+    options.onPositioned?.(popper, position);
+}
+
+const POSITION_BUS = Symbol("position-bus");
+
+/**
+ * Makes sure that the `popper` element is always
+ * placed at `position` from the `target` element.
+ * If doing so the `popper` element is clipped off `container`,
+ * sensible fallback positions are tried.
+ * If all of fallback positions are also clipped off `container`,
+ * the original position is used.
+ *
+ * Note: The popper element should be indicated in your template
+ *       with a t-ref reference matching the refName argument.
+ *
+ * @param {string} refName
+ *  name of the reference to the popper element in the template.
+ * @param {() => HTMLElement} getTarget
+ * @param {Options} [options={}] the options to be used for positioning
+ * @returns {PositioningControl}
+ *  control object to lock/unlock the positioning.
+ */
+export function usePosition(refName, getTarget, options = {}) {
+    const ref = useRef(refName);
+    let lock = false;
+    const update = () => {
+        const targetEl = getTarget();
+        if (!ref.el || !targetEl || lock) {
+            // No compute needed
+            return;
+        }
+
+        // Prepare
+        const iframe = getIFrame(ref.el, targetEl);
+        reposition(ref.el, targetEl, { ...DEFAULTS, ...options }, iframe);
+    };
+
+    const component = useComponent();
+    const bus = component.env[POSITION_BUS] || new EventBus();
+
+    let executingUpdate = false;
+    const batchedUpdate = async () => {
+        if (!executingUpdate) {
+            executingUpdate = true;
+            update();
+            await Promise.resolve();
+            executingUpdate = false;
+        }
+    };
+    bus.addEventListener("update", batchedUpdate);
+    onWillDestroy(() => bus.removeEventListener("update", batchedUpdate));
+
+    const isTopmost = !(POSITION_BUS in component.env);
+    if (isTopmost) {
+        useChildSubEnv({ [POSITION_BUS]: bus });
+    }
+
+    const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
+    useEffect(() => {
+        // Reposition
+        bus.trigger("update");
+
+        if (isTopmost) {
+            // Attach listeners to keep the positioning up to date
+            const scrollListener = (e) => {
+                if (ref.el?.contains(e.target)) {
+                    // In case the scroll event occurs inside the popper, do not reposition
+                    return;
+                }
+                throttledUpdate();
+            };
+            const targetDocument = getTarget()?.ownerDocument;
+            targetDocument?.addEventListener("scroll", scrollListener, { capture: true });
+            targetDocument?.addEventListener("load", throttledUpdate, { capture: true });
+            window.addEventListener("resize", throttledUpdate);
+            return () => {
+                targetDocument?.removeEventListener("scroll", scrollListener, { capture: true });
+                targetDocument?.removeEventListener("load", throttledUpdate, { capture: true });
+                window.removeEventListener("resize", throttledUpdate);
+            };
+        }
+    });
+
+    return {
+        lock: () => {
+            lock = true;
+        },
+        unlock: () => {
+            lock = false;
+            bus.trigger("update");
+        },
+    };
+=======
+    options.onPositioned?.(popper, position);
+}
+
+const POSITION_BUS = Symbol("position-bus");
+
+/**
+ * Makes sure that the `popper` element is always
+ * placed at `position` from the `target` element.
+ * If doing so the `popper` element is clipped off `container`,
+ * sensible fallback positions are tried.
+ * If all of fallback positions are also clipped off `container`,
+ * the original position is used.
+ *
+ * Note: The popper element should be indicated in your template
+ *       with a t-ref reference matching the refName argument.
+ *
+ * @param {string} refName
+ *  name of the reference to the popper element in the template.
+ * @param {() => HTMLElement} getTarget
+ * @param {Options} [options={}] the options to be used for positioning
+ * @returns {PositioningControl}
+ *  control object to lock/unlock the positioning.
+ */
+export function usePosition(refName, getTarget, options = {}) {
+    const ref = useRef(refName);
+    let lock = false;
+    const update = () => {
+        const targetEl = getTarget();
+        if (!ref.el || !targetEl || lock) {
+            // No compute needed
+            return;
+        }
+
+        // Prepare
+        const iframe = getIFrame(ref.el, targetEl);
+        reposition(ref.el, targetEl, { ...DEFAULTS, ...options }, iframe);
+    };
+
+    const component = useComponent();
+    const bus = component.env[POSITION_BUS] || new EventBus();
+
+    let executingUpdate = false;
+    const batchedUpdate = async () => {
+        if (!executingUpdate && ref.el) {
+            executingUpdate = true;
+            update();
+            await Promise.resolve();
+            executingUpdate = false;
+        }
+    };
+    bus.addEventListener("update", batchedUpdate);
+    onWillDestroy(() => bus.removeEventListener("update", batchedUpdate));
+
+    const isTopmost = !(POSITION_BUS in component.env);
+    if (isTopmost) {
+        useChildSubEnv({ [POSITION_BUS]: bus });
+    }
+
+    const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
+    useEffect(() => {
+        // Reposition
+        bus.trigger("update");
+
+        if (isTopmost) {
+            // Attach listeners to keep the positioning up to date
+            const scrollListener = (e) => {
+                if (ref.el?.contains(e.target)) {
+                    // In case the scroll event occurs inside the popper, do not reposition
+                    return;
+                }
+                throttledUpdate();
+            };
+            const targetDocument = getTarget()?.ownerDocument;
+            targetDocument?.addEventListener("scroll", scrollListener, { capture: true });
+            targetDocument?.addEventListener("load", throttledUpdate, { capture: true });
+            window.addEventListener("resize", throttledUpdate);
+            return () => {
+                targetDocument?.removeEventListener("scroll", scrollListener, { capture: true });
+                targetDocument?.removeEventListener("load", throttledUpdate, { capture: true });
+                window.removeEventListener("resize", throttledUpdate);
+            };
+        }
+    });
+
+    return {
+        lock: () => {
+            lock = true;
+        },
+        unlock: () => {
+            lock = false;
+            bus.trigger("update");
+        },
+    };
+>>>>>>> 21dd250181da4a208f24ebfbe19a789c67343131:addons/web/static/src/core/position_hook.js
 }
