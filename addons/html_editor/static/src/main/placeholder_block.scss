@@ -1,0 +1,18 @@
+.o-placeholder-block-container:not(:has(.o-placeholder-block-selected)) {
+    position: relative;
+    height: 0;
+
+    .o-placeholder-block:not(.o-placeholder-block-selected) {
+        height: 50px;
+        width: 100%;
+        position: absolute;
+
+        &.o-placeholder-block-top {
+            bottom: 0;
+        }
+
+        &.o-placeholder-block-bottom {
+            top: 0;
+        }
+    }
+}

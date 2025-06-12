@@ -52,6 +52,7 @@ export class PowerButtonsPlugin extends Plugin {
         "userCommand",
         "history",
     ];
+    static shared = ["setPowerButtonsPosition"];
     resources = {
         layout_geometry_change_handlers: this.updatePowerButtons.bind(this),
         selectionchange_handlers: this.updatePowerButtons.bind(this),
