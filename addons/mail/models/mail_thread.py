@@ -2258,7 +2258,7 @@ class MailThread(models.AbstractModel):
             author_id, email_from = False, False
         else:
             author_guest_id = False
-            author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=True)
+            author_id, email_from = self._message_compute_author(author_id, email_from)
 
         if subtype_xmlid:
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id(subtype_xmlid)
@@ -2756,7 +2756,7 @@ class MailThread(models.AbstractModel):
         # consider users mentionning themselves should receive notifications
         notif_kwargs['notify_author_mention'] = notif_kwargs.get('notify_author_mention', True)
 
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=True)
+        author_id, email_from = self._message_compute_author(author_id, email_from)
 
         # allow to link a notification to a document that does not inherit from
         # MailThread by supporting model / res_id, but then both value should be set
@@ -2878,7 +2878,7 @@ class MailThread(models.AbstractModel):
         if len(self) > 1 and (attachment_ids or tracking_value_ids):
             raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
 
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_on_email=False)
+        author_id, email_from = self._message_compute_author(author_id, email_from)
 
         base_message_values = {
             # author
@@ -2912,12 +2912,10 @@ class MailThread(models.AbstractModel):
     # MAIL.MESSAGE HELPERS
     # ------------------------------------------------------------
 
-    def _message_compute_author(self, author_id=None, email_from=None, raise_on_email=True):
+    def _message_compute_author(self, author_id=None, email_from=None):
         """ Tool method computing author information for messages. Purpose is
         to ensure maximum coherence between author / current user / email_from
         when sending emails.
-
-        :param raise_on_email: if email_from is not found, raise an UserError
 
         :return: a 2-values tuple with res.partner ID (may be False or None),
             and email_from
@@ -2935,10 +2933,6 @@ class MailThread(models.AbstractModel):
             if author_id:
                 author = self.env['res.partner'].browse(author_id)
                 email_from = author.email_formatted
-
-        # superuser mode without author email -> probably public user; anyway we don't want to crash
-        if not email_from and raise_on_email and not self.env.su:
-            raise exceptions.UserError(_("Unable to send message, please configure the sender's email address."))
 
         return author_id, email_from
 
