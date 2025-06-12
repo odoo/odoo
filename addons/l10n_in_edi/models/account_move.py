@@ -15,6 +15,11 @@ from odoo.tools import float_is_zero, float_compare
 from odoo.addons.l10n_in.models.account_invoice import EDI_CANCEL_REASON
 
 _logger = logging.getLogger(__name__)
+try:
+    import jwt
+except ImportError:
+    _logger.warning("The 'jwt' library is not installed. Decoding for duplicate IRN e-invoices will be skipped.")
+    jwt = None
 
 
 class AccountMove(models.Model):
@@ -225,7 +230,38 @@ class AccountMove(models.Model):
                         "doc_date": self.invoice_date and self.invoice_date.strftime("%d/%m/%Y"),
                     }
                 )
-                if not response.get("error"):
+                mismatch_error = []
+                decoded_response = {}
+                if jwt:
+                    try:
+                        if data := response.get('data'):
+                            signinvoice = data.get['SignedInvoice']
+                            decoded_response = jwt.decode(signinvoice, options={'verify_signature': False})
+                            decoded_response = json.loads(decoded_response['data'])
+                    except (json.JSONDecodeError, jwt.exceptions.DecodeError) as e:
+                        _logger.warning("Failed to decode SignedInvoice JWT payload: %s", str(e))
+                if decoded_response:
+                    received_gstin = decoded_response['BuyerDtls']['Gstin']
+                    expected_gstin = generate_json['BuyerDtls']['GSTIN']
+                    received_total_invoice_value = decoded_response['ValDtls']['TotInvVal']
+                    expected_total_invoice_value = generate_json['ValDtls']['TotInvVal']
+                    # Check for mismatch between decoded and expected e-invoice details:
+                    # - Buyer GSTIN must match
+                    # - Total Invoice Value must be within the allowed government tolerance range:
+                    #   For example, if the expected invoice value is 100,
+                    #   the valid range is from 99 (value - 1) to 101 (value + 1),
+                    #   i.e., 99.00 < received value < 101.00
+                    if (received_gstin != expected_gstin or
+                        not expected_total_invoice_value - 1 < received_total_invoice_value < expected_total_invoice_value + 1
+                    ):
+                        mismatch_error = [{
+                            'code': '2150',
+                            'message': _("Duplicate IRN found for this invoice, but the buyer details or invoice values do not match.")
+                        }]
+                # Handle the result based on mismatch or response error
+                if mismatch_error:
+                    error = mismatch_error
+                elif not response.get("error"):
                     error = []
                     link = Markup(
                         "<a href='https://einvoice1.gst.gov.in/Others/VSignedInvoice'>%s</a>"
