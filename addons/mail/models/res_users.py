@@ -168,13 +168,9 @@ class ResUsers(models.Model):
                     mail_values={'email_to': previous_email},
                     suggest_password_reset=False,
                 )
-        if 'notification_type' in vals:
+        if "notification_type" in vals:
             for user in user_notification_type_modified:
-                user._bus_send_store(
-                    user.partner_id,
-                    "notification_type",
-                    main_user_by_partner={user.partner_id: user},
-                )
+                user._bus_send_store(user, "notification_type")
 
         return write_res
 
@@ -333,11 +329,16 @@ class ResUsers(models.Model):
                     [
                         "active",
                         "avatar_128",
-                        "is_admin",
+                        Store.One(
+                            "main_user_id",
+                            [
+                                Store.Attr("is_admin", lambda u: u._is_admin()),
+                                "notification_type",
+                                "share",
+                                "signature",
+                            ],
+                        ),
                         "name",
-                        "notification_type",
-                        "signature",
-                        "user",
                     ],
                 ),
                 settings=settings._res_users_settings_format(),
