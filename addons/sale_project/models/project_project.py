@@ -142,37 +142,32 @@ class ProjectProject(models.Model):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
 
-    def _fetch_linked_products(self, project_id):
-        prods = self.env["product.template"].search([
+    def _fetch_linked_products(self, project_ids, limit=None):
+        return self.env["product.template"].search([
             ("service_tracking", "!=", "no"),
             "|",
-                ("project_id", "=", project_id),
-                ("project_template_id", "=", project_id),
-        ])
-        return prods
+                ("project_id", "in", project_ids),
+                ("project_template_id", "in", project_ids),
+        ], limit=limit)
 
     @api.onchange('allow_billable')
     def _onchange_allow_billable(self):
         """ show warning to user that linked products will be unlinked """
         message = None
-        for project in self:
-            if not project.allow_billable:
-                linked_product_ids = self._fetch_linked_products(project.id.origin)
-                if linked_product_ids:
-                    message = {
-                        'warning': {
-                            'title': _('Warning'),
-                            'message': _("Making this project non-billable will unlink it from any products that create tasks in it or use it as a template. Are you sure you want to continue?"),
-                        },
-                    }
+        if not self.allow_billable:
+            linked_product_ids = self._fetch_linked_products(self.ids, limit=1)
+            if linked_product_ids:
+                message = {
+                    'warning': {
+                        'title': _('Warning'),
+                        'message': _("Making this project non-billable will unlink it from any products that create tasks in it or use it as a template. Are you sure you want to continue?"),
+                    },
+                }
         return message
 
     def _unlink_billable_products(self):
-        for project in self:
-            linked_product_ids = self._fetch_linked_products(project.id)
-            if linked_product_ids:
-                for product in linked_product_ids:
-                    product.write({'service_tracking': 'no', 'project_id': False, 'project_template_id': False})
+        linked_product_ids = self._fetch_linked_products(self.ids)
+        linked_product_ids.write({'service_tracking': 'no', 'project_id': False, 'project_template_id': False})
 
     def action_customer_preview(self):
         self.ensure_one()
