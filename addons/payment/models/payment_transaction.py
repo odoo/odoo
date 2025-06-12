@@ -638,11 +638,7 @@ class PaymentTransaction(models.Model):
         :rtype: recordset of `payment.transaction`
         """
         tx = self or self._get_tx_from_notification_data(provider_code, notification_data)
-        if not tx:
-            _logger.warning(
-                "Could not find the transaction for notification data: %s.", notification_data
-            )
-        else:
+        if tx:
             tx._compare_notification_data(notification_data)
             tx._process_notification_data(notification_data)
         return tx
@@ -661,7 +657,15 @@ class PaymentTransaction(models.Model):
                 "Received notification from provider %s with missing reference", provider_code
             )
             return self
-        return self.search([('reference', '=', reference), ('provider_code', '=', provider_code)])
+        tx = self.search(self._prepare_domain_tx_from_reference(provider_code, reference))
+        if not tx:
+            _logger.warning(
+                "Could not find the transaction for notification data: %s.", notification_data
+            )
+        return tx
+
+    def _prepare_domain_tx_from_reference(self, provider_code, reference):
+        return [('reference', '=', reference), ('provider_code', '=', provider_code)]
 
     def _get_ref_from_tx_notification_data(self, provider_code, notification_data):
         """Extract the reference from the notification data.

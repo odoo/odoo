@@ -102,7 +102,6 @@ class FlutterwaveController(http.Controller):
             'flutterwave', data
         )
         if not tx_sudo:
-            _logger.warning("Unable to find the transaction for notification data: %s.", data)
             return
         try:
             # Verify the notification data.

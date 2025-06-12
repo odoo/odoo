@@ -190,6 +190,8 @@ class AdyenController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'adyen', data
         )
+        if not tx_sudo:
+            return request.redirect('/payment/status')
 
         # Overwrite the operation to force the flow to 'redirect'. This is necessary because even
         # though Adyen is implemented as a direct payment provider, it will redirect the user out
@@ -202,16 +204,16 @@ class AdyenController(http.Controller):
             "handling redirection from Adyen for transaction with reference %s with data:\n%s",
             tx_sudo.reference, pprint.pformat(data)
         )
-        if tx_sudo:
-            self.adyen_payment_details(
-                tx_sudo.provider_id.id,
-                data['merchantReference'],
-                {
-                    'details': {
-                        'redirectResult': data['redirectResult'],
-                    },
+
+        self.adyen_payment_details(
+            tx_sudo.provider_id.id,
+            data['merchantReference'],
+            {
+                'details': {
+                    'redirectResult': data['redirectResult'],
                 },
-            )
+            },
+        )
 
         # Redirect the user to the status page
         return request.redirect('/payment/status')
@@ -233,16 +235,11 @@ class AdyenController(http.Controller):
             _logger.info(
                 "notification received from Adyen with data:\n%s", pprint.pformat(notification_data)
             )
-            try:
-                # Check the integrity of the notification
-                tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                    'adyen', notification_data
-                )
-            except ValidationError:
-                # Warn rather than log the traceback to avoid noise when a POS payment notification
-                # is received and the corresponding `payment.transaction` record is not found.
-                _logger.warning("unable to find the transaction; skipping to acknowledge")
-            else:
+            # Check the integrity of the notification
+            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
+                'adyen', notification_data
+            )
+            if tx_sudo:
                 self._verify_notification_signature(notification_data, tx_sudo)
 
                 # Check whether the event of the notification succeeded and reshape the notification
@@ -260,14 +257,7 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-                try:
-                    # Handle the notification data as if they were feedback of a S2S payment request
-                    tx_sudo._handle_notification_data('adyen', notification_data)
-                except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                    _logger.exception(
-                        "unable to handle the notification data;skipping to acknowledge"
-                    )
-
+                tx_sudo._handle_notification_data('adyen', notification_data)
         return request.make_json_response('[accepted]')  # Acknowledge the notification
 
     @staticmethod
