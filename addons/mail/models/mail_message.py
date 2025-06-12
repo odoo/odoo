@@ -79,7 +79,7 @@ class MailMessage(models.Model):
         missing_author = 'author_id' in fields and 'author_id' not in res
         missing_email_from = 'email_from' in fields and 'email_from' not in res
         if missing_author or missing_email_from:
-            author_id, email_from = self.env['mail.thread']._message_compute_author(res.get('author_id'), res.get('email_from'), raise_on_email=False)
+            author_id, email_from = self.env['mail.thread']._message_compute_author(res.get('author_id'), res.get('email_from'))
             if missing_email_from:
                 res['email_from'] = email_from
             if missing_author:
@@ -664,7 +664,7 @@ class MailMessage(models.Model):
         tracking_values_list = []
         for values in vals_list:
             if 'email_from' not in values:  # needed to compute reply_to
-                _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None, raise_on_email=False)
+                _author_id, email_from = self.env['mail.thread']._message_compute_author(values.get('author_id'), email_from=None)
                 values['email_from'] = email_from
             if not values.get('message_id'):
                 values['message_id'] = self._get_message_id(values)

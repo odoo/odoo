@@ -347,7 +347,7 @@ class MailComposeMessage(models.TransientModel):
             # When changing template in raw mode or resetting also fallback.
             if composer.email_from and rendering_mode and not updated_author_id:
                 updated_author_id, _ = Thread._message_compute_author(
-                    None, composer.email_from, raise_on_email=False,
+                    None, composer.email_from,
                 )
                 if not updated_author_id:
                     updated_author_id = self.env.user.partner_id.id
