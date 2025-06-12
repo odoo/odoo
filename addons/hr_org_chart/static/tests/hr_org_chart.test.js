@@ -130,7 +130,7 @@ test("hr org chart: basic render", async () => {
                 <sheet>
                     <div id="o_employee_container">
                         <div id="o_employee_main">
-                            <div id="o_employee_right">
+                            <div id="o_employee_org_chart">
                                 <field name="child_ids" widget="hr_org_chart"/>
                                 <field name="id" invisible="1"/>
                             </div>
@@ -203,7 +203,7 @@ test("hr org chart: basic manager render", async () => {
                 <sheet>
                     <div id="o_employee_container">
                         <div id="o_employee_main">
-                            <div id="o_employee_right">
+                            <div id="o_employee_org_chart">
                                 <field name="child_ids" widget="hr_org_chart"/>
                                 <field name="id" invisible="1"/>
                             </div>
