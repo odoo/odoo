@@ -128,9 +128,12 @@ export class LinkPopover extends Component {
             stripDomain: true,
         });
 
+        const getTargetedElements = () => [this.props.linkElement];
         this.customTextColorState = useState({
             selectedColor: computedStyle.color || DEFAULT_CUSTOM_TEXT_COLOR,
             defaultTab: "solid",
+            getTargetedElements,
+            mode: "color",
         });
         this.customTextResetPreviewColor = this.customTextColorState.selectedColor;
         this.customFillColorState = useState({
@@ -141,11 +144,15 @@ export class LinkPopover extends Component {
                 computedStyle.backgroundColor ||
                 DEFAULT_CUSTOM_FILL_COLOR,
             defaultTab: "solid",
+            getTargetedElements,
+            mode: "background-color",
         });
         this.customFillResetPreviewColor = this.customFillColorState.selectedColor;
         this.customBorderColorState = useState({
             selectedColor: computedStyle.borderColor || DEFAULT_CUSTOM_TEXT_COLOR,
             defaultTab: "solid",
+            getTargetedElements,
+            mode: "border-color",
         });
         this.customBorderResetPreviewColor = this.customBorderColorState.selectedColor;
 

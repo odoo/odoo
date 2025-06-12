@@ -203,6 +203,21 @@ test("should revert preview on escape", async () => {
     expect(":iframe .test-options-target").toHaveStyle({ "background-color": "rgba(0, 0, 0, 0)" });
 });
 
+test("should mark default color as selected when it is selected", async () => {
+    addOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderColorPicker enabledTabs="['custom']" styleAction="'background-color'"/>`,
+    });
+    await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    expect(".options-container").toBeDisplayed();
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    await contains(".o-overlay-item [data-color='900']").click();
+    expect(":iframe .test-options-target").toHaveClass("bg-900");
+    await contains(".we-bg-options-container .o_we_color_preview").click();
+    expect(".o-overlay-item [data-color='900']").toHaveClass("selected");
+});
+
 test("should apply transparent color if no color is defined", async () => {
     addActionOption({
         customAction: class extends BuilderAction {
