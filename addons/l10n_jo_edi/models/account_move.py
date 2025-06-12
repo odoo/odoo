@@ -169,7 +169,10 @@ class AccountMove(models.Model):
             return {'error': _("Invalid request: %s", e)}
 
         if not response.ok:
-            return {'error': _("Request failed: %s", response.content.decode())}
+            content = response.content.decode()
+            if response.status_code == 403:
+                content = _("Access forbidden. Please verify your JoFotara credentials.")
+            return {'error': _("Request failed: %s", content)}
         dict_response = response.json()
         return dict_response
 
