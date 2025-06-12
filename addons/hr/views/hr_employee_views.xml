@@ -109,9 +109,9 @@
                             </button>
                         </div>
                         <div class="d-flex align-items-center">
-                            <div class="o_employee_avatar m-0 p-0">
+                            <div class="o_employee_avatar m-0 p-0 h-100">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
-                                <field name="image_1920" widget='image' class="oe_avatar m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                                <field name="image_1920" widget='image' class="m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
                             <div class="d-flex flex-column ms-2">
@@ -123,19 +123,27 @@
                                             <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                         </div>
                                     </h1>
-                                    <h2 class="d-flex align-items-baseline">
-                                        <i class="fa fa-suitcase fa-fw me-1 text-primary" title="Position"/>
-                                        <field name="job_id" placeholder="Job Position"/>
-                                    </h2>
+                                    <h5 class="d-flex align-items-baseline mb-0">
+                                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
+                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email" class="w-75"/>
+                                    </h5>
+                                    <h5 class="d-flex align-items-baseline mb-0">
+                                        <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
+                                        <field name="work_phone" widget="email" placeholder="Work Phone" string="Work Phone"  class="w-75"/>
+                                    </h5>
+                                    <h5 class="d-flex align-items-baseline mb-0">
+                                        <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
+                                        <field name="mobile_phone" widget="email" placeholder="Work Mobile" string="Work Mobile"  class="w-75"/>
+                                    </h5>
                                 </div>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <group>
+                        <group class="mt-2">
                             <group>
-                                <field name="category_ids" widget="many2many_tags"
-                                    options="{'color_field': 'color', 'no_create_edit': True}"
-                                    placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
+                                <field name="department_id"/>
+                                <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                <field name="job_title"/>
                                 <field name="user_id" string="User" placeholder="Create User"
                                     domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
                                     context="{
@@ -147,7 +155,13 @@
                                         'default_partner_id': work_contact_id,
                                     }"
                                     widget="many2one_avatar_user"/>
+                            </group>
+                            <group>
                                 <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="parent_id" widget="many2one_avatar_employee"/>
+                                <field name="category_ids" widget="many2many_tags"
+                                    options="{'color_field': 'color', 'no_create_edit': True}"
+                                    placeholder="e.g. Founder, Motorized, Building B, ..." groups="hr.group_hr_user"/>
                             </group>
                         </group>
                         <notebook>
@@ -158,11 +172,6 @@
                                         <field name="private_phone" widget="phone" string="Phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': work_contact_id}"
                                                options="{'no_quick_create': True}" readonly="not id"/>
-                                    </group>
-                                    <group string="Work Contact">
-                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Email"/>
-                                        <field name="work_phone" widget="phone" string="Phone"/>
-                                        <field name="mobile_phone" widget="phone" string="Mobile"/>
                                     </group>
                                     <group string="Birth Information">
                                         <field name="legal_name"/>
@@ -263,9 +272,6 @@
                                             </div>
                                         </group>
                                         <group name="organization" string="Organization">
-                                            <field name="department_id"/>
-                                            <field name="job_id" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
-                                            <field name="parent_id" widget="many2one_avatar_employee"/>
                                             <field name="coach_id" widget="many2one_avatar_employee"/>
                                         </group>
                                         <group name="application_group" string="Application Settings" invisible="1"/>
