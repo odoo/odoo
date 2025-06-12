@@ -68,7 +68,6 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         with patch.object(fields.Datetime, 'now', return_value=now_patch):
             config = self.env['res.config.settings'].create({
-                'crm_use_auto_assignment': True,
                 'crm_auto_assignment_action': 'auto',
                 'crm_auto_assignment_interval_number': 19,
                 'crm_auto_assignment_interval_type': 'hours'
@@ -102,8 +101,7 @@ class TestLeadAssign(TestLeadAssignCommon):
             self.assertEqual(self.assign_cron.nextcall, datetime(2020, 11, 1, 10, 0, 0))
 
             config.write({
-                'crm_use_auto_assignment': False,
-                'crm_auto_assignment_action': 'auto',
+                'crm_auto_assignment_action': 'incoming_emails',
             })
             config.execute()
             self.assertFalse(self.assign_cron.active)

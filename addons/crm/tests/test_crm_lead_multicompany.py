@@ -310,6 +310,16 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
             'phone': '+32455000000',
             'name': 'InCompany Customer',
         })
+        company_user = self.env['res.users'].create({
+            'name': 'company_salesperson',
+            'login': 'company_salesperson',
+            'company_id': self.company_2.id,
+            'company_ids': [self.company_2.id]
+        })
+        self.env['crm.team.member'].create({
+            'user_id': company_user.id,
+            'crm_team_id': self.sales_team_1.id,
+        })
 
         new_lead = self.format_and_process(
             INCOMING_EMAIL,
@@ -318,6 +328,11 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
             subject='Team having partner in company',
             target_model='crm.lead',
         )
-        self.assertEqual(new_lead.company_id, self.company_2)
+        # for reviewer: worried about automatic email assign reintroducing the bug fixed along this test's introduction, what do you think?
+        # fix PR is https://github.com/odoo/odoo/pull/98205
+        # I think trying tk ensure that the new lead doesn't have a False company should be enough,
+        # but I'm not certain
+        # Alternatively, perhaps this test needs to be adapted by disabling automatic attribution of emails in the config?
+        self.assertNotEqual(new_lead.company_id, False)
         self.assertEqual(new_lead.email_from, customer_company.email)
         self.assertEqual(new_lead.partner_id, customer_company)

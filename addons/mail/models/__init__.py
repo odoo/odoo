@@ -18,6 +18,8 @@ from . import mail_thread_cc
 from . import mail_thread_main_attachment
 from . import mail_tracking_duration_mixin
 from . import template_reset_mixin
+from . import mail_rotting_stage_mixin
+from . import mail_rotting_resource_mixin
 
 # mail models
 from . import fetchmail

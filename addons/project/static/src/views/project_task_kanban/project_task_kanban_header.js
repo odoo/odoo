@@ -1,9 +1,9 @@
 import { user } from "@web/core/user";
 import { useService } from '@web/core/utils/hooks';
-import { KanbanHeader } from "@web/views/kanban/kanban_header";
 import { onWillStart } from "@odoo/owl";
+import { RottingKanbanHeader } from "@mail/js/rotting_mixin/rotting_kanban_header";
 
-export class ProjectTaskKanbanHeader extends KanbanHeader {
+export class ProjectTaskKanbanHeader extends RottingKanbanHeader {
     setup() {
         super.setup();
         this.action = useService('action');

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
-    <t t-name="crm.ColumnProgress" t-inherit="web.ColumnProgress" t-inherit-mode="primary">
+    <t t-name="crm.ColumnProgress" t-inherit="mail.RottingColumnProgress" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_column_progress')]" position="attributes">
             <attribute name="class" remove="w-75" add="w-50" separator=" "/>
         </xpath>
         <b t-else="" position="after">
             <t t-if="showRecurringRevenue">
                 <t t-set="rrmAggregate" t-value="getRecurringRevenueGroupAggregate(props.group)"/>
-                <AnimatedNumber
+                <AnimatedNumber t-if="rrmAggregate.value"
                     value="rrmAggregate.value"
                     title="rrmAggregate.title"
                     duration="1000"
-                    currency="props.aggregate.currency"
+                    currency="rrmAggregate.currency"
                     animationClass="'o_animated_grow_huge'"
                 >
                     <t t-set-slot="prefix">
@@ -20,5 +20,8 @@
                 </AnimatedNumber>
             </t>
         </b>
+        <AnimatedNumber position="before">
+            <div class="ms-auto"/>
+        </AnimatedNumber>
     </t>
 </templates>

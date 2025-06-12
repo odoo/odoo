@@ -8,6 +8,7 @@ class HrRecruitmentStage(models.Model):
     _name = 'hr.recruitment.stage'
     _description = "Recruitment Stages"
     _order = 'sequence'
+    _inherit = ['mail.rotting.stage.mixin']
 
     name = fields.Char("Stage Name", required=True, translate=True)
     sequence = fields.Integer(
