@@ -782,13 +782,14 @@ class AccountTax(models.Model):
                 sorted_taxes |= tax
         return sorted_taxes, group_per_tax
 
-    def _batch_for_taxes_computation(self, special_mode=False):
+    def _batch_for_taxes_computation(self, special_mode=False, filter_tax_function=None):
         """ Group the current taxes all together like price-included percent taxes or division taxes.
 
         [!] Mirror of the same method in account_tax.js.
         PLZ KEEP BOTH METHODS CONSISTENT WITH EACH OTHERS.
 
-        :param special_mode: The special mode of the taxes computation: False, 'total_excluded' or 'total_included'.
+        :param special_mode:        The special mode of the taxes computation: False, 'total_excluded' or 'total_included'.
+        :param filter_tax_function: Optional function to filter out some taxes from the computation.
         :return: A dictionary containing:
             * batch_per_tax: A mapping of each tax to its batch.
             * group_per_tax: A mapping of each tax retrieved from a group of taxes.
@@ -798,6 +799,9 @@ class AccountTax(models.Model):
                             [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
         """
         sorted_taxes, group_per_tax = self._flatten_taxes_and_sort_them()
+        if filter_tax_function:
+            sorted_taxes = sorted_taxes.filtered(filter_tax_function)
+
         results = {
             'batch_per_tax': {},
             'group_per_tax': group_per_tax,
@@ -1000,6 +1004,7 @@ class AccountTax(models.Model):
         product=None,
         special_mode=False,
         manual_tax_amounts=None,
+        filter_tax_function=None,
     ):
         """ Compute the tax/base amounts for the current taxes.
 
@@ -1021,6 +1026,7 @@ class AccountTax(models.Model):
                             Note: You can only expect accurate symmetrical taxes computation with not rounded price_unit
                             as input and 'round_globally' computation. Otherwise, it's not guaranteed.
         :param manual_tax_amounts:  A dictionary mapping a tax_id to a custom tax/base amount.
+        :param filter_tax_function: Optional function to filter out some taxes from the computation.
         :return: A dict containing:
             'evaluation_context':       The evaluation_context parameter.
             'taxes_data':               A list of dictionaries, one per tax containing:
@@ -1069,8 +1075,8 @@ class AccountTax(models.Model):
                 'extra_base_for_base': 0.0,
             }
 
-        # Flatten the taxes and order them.
-        batching_results = self._batch_for_taxes_computation(special_mode=special_mode)
+        # Flatten the taxes, order them and filter them if necessary.
+        batching_results = self._batch_for_taxes_computation(special_mode=special_mode, filter_tax_function=filter_tax_function)
         sorted_taxes = batching_results['sorted_taxes']
         taxes_data = {}
         reverse_charge_taxes_data = {}
@@ -1320,6 +1326,10 @@ class AccountTax(models.Model):
             # base/tax amounts for the computation (E.g. down payment, combo products, global discounts etc).
             'manual_tax_amounts': load('manual_tax_amounts', None, from_base_line=True),
 
+            # Add a function allowing to filter out some taxes during the evaluation. Those taxes can't be removed from the base_line
+            # when dealing with group of taxes to maintain a correct link between the child tax and its parent.
+            'filter_tax_function': load('filter_tax_function', None, from_base_line=True),
+
             # ===== Accounting stuff =====
 
             # The sign of the business object regarding its accounting balance.
@@ -1413,6 +1423,7 @@ class AccountTax(models.Model):
             product=base_line['product_id'],
             special_mode=base_line['special_mode'],
             manual_tax_amounts=base_line['manual_tax_amounts'],
+            filter_tax_function=base_line['filter_tax_function'],
         )
         rate = base_line['rate']
         tax_details = base_line['tax_details'] = {
