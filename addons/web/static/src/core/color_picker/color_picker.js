@@ -50,7 +50,9 @@ export class ColorPicker extends Component {
             shape: {
                 selectedColor: String,
                 selectedColorCombination: { type: String, optional: true },
+                getSelectedElement: { type: Function, optional: true },
                 defaultTab: String,
+                mode: { type: String, optional: true },
             },
         },
         getUsedCustomColors: Function,
@@ -78,6 +80,8 @@ export class ColorPicker extends Component {
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
         this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES);
         this.grayscales = Object.assign(this.grayscales, this.props.grayscales);
+        this.DEFAULT_THEME_COLOR_VARS = DEFAULT_THEME_COLOR_VARS;
+        this.defaultColorSet = this.getDefaultColorSet();
         this.root = useRef("root");
 
         this.defaultColor = this.props.state.selectedColor;
@@ -208,6 +212,49 @@ export class ColorPicker extends Component {
         }
     }
 
+    getDefaultColorSet() {
+        if (!this.props.state.getSelectedElement || !this.props.state.mode) {
+            return;
+        }
+        const editingEl = this.props.state.getSelectedElement();
+        let defaultColors = this.props.enabledTabs.includes("solid")
+            ? this.DEFAULT_THEME_COLOR_VARS
+            : [];
+        for (const grayscale of Object.values(this.grayscales)) {
+            defaultColors = defaultColors.concat(grayscale);
+        }
+
+        const extractColorFromClasses = (el, prefix, defaultColors) => {
+            if (!el) {
+                return false;
+            }
+            for (const className of el.classList) {
+                const match = className.match(new RegExp(`^${prefix}-(.+)$`));
+                if (match && defaultColors.includes(match[1])) {
+                    return match[1];
+                }
+            }
+            return false;
+        };
+        switch (this.props.state.mode) {
+            case "color":
+                return extractColorFromClasses(editingEl, "text", defaultColors);
+            case "background-color":
+            case "backgroundColor":
+                return extractColorFromClasses(editingEl, "bg", defaultColors);
+            case "selectFilterColor": {
+                const filterEl = editingEl.querySelector(".o_we_bg_filter");
+                return extractColorFromClasses(filterEl, "bg", defaultColors);
+            }
+            default: {
+                const color = editingEl.dataset[this.props.state.mode];
+                return defaultColors.includes(color) ||
+                    defaultColors.includes(this.props.state.mode)
+                    ? color
+                    : false;
+            }
+        }
+    }
     toggleGradientPicker() {
         this.state.showGradientPicker = !this.state.showGradientPicker;
     }

@@ -164,7 +164,7 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 // Check the current color palette selection + Change the bg color
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc2",
-    checkBg: backgroundColors[0].hex,
+    checkBg: backgroundColors[0].code,
     changeType: 'bg',
     change: backgroundColors[1].code,
     finalSelector: `:iframe .${snippets[0].id}.o_cc2.bg-${backgroundColors[1].code}:not(.bg-${backgroundColors[0].code})`,
@@ -174,8 +174,8 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 // again. It should keep the bg color class.
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc2",
-    checkBg: backgroundColors[1].hex,
-    checkNoBg: backgroundColors[0].hex,
+    checkBg: backgroundColors[1].code,
+    checkNoBg: backgroundColors[0].code,
     changeType: 'cc',
     change: "o_cc4",
     finalSelector: `:iframe .${snippets[0].id}.o_cc4:not(.o_cc2).bg-${backgroundColors[1].code}`,
@@ -185,7 +185,7 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc4",
     checkNoCC: "o_cc2",
-    checkBg: backgroundColors[1].hex,
+    checkBg: backgroundColors[1].code,
     changeType: 'gradient',
     change: gradients[0],
     finalSelector: `:iframe .${snippets[0].id}.o_cc4:not(.bg-${backgroundColors[1].code})[style*="background-image: ${gradients[0]}"]`,
@@ -194,7 +194,7 @@ changeOption("Text - Image", "button[data-action-id='toggleBgImage']"),
 // Check the current color palette status + Replace the gradient
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc4",
-    checkNoBg: backgroundColors[1].hex,
+    checkNoBg: backgroundColors[1].code,
     checkGradient: gradients[0],
     changeType: 'gradient',
     change: gradients[1],
@@ -365,7 +365,7 @@ switchTo('gradient'),
 // Re-add a gradient
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc1",
-    checkBg: backgroundColors[1].hex,
+    checkBg: backgroundColors[1].code,
     checkNoGradient: gradients[0],
     changeType: 'gradient',
     change: gradients[1],
@@ -386,7 +386,7 @@ switchTo('gradient'),
 // Final check of color selection and removing the image
 ...checkAndUpdateBackgroundColor({
     checkCC: "o_cc1",
-    checkNoBg: backgroundColors[1].hex,
+    checkNoBg: backgroundColors[1].code,
     checkGradient: gradients[1],
 }),
 // Now removing all colors via the 'None' button (note: colorpicker still opened)
