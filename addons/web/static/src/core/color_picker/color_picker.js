@@ -2,7 +2,6 @@ import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { applyOpacityToGradient, isCSSColor, isColorGradient } from "@web/core/utils/colors";
-import { getCSSVariableValue } from "@web/core/utils/utils_css";
 import { cookie } from "@web/core/browser/cookie";
 import { GradientPicker } from "./gradient_picker/gradient_picker";
 import { POSITION_BUS } from "../position/position_hook";
@@ -61,7 +60,9 @@ export class ColorPicker extends Component {
             shape: {
                 selectedColor: String,
                 selectedColorCombination: { type: String, optional: true },
+                selectedElement: { optional: true },
                 defaultTab: String,
+                mode: { type: String, optional: true },
             },
         },
         getUsedCustomColors: Function,
@@ -89,6 +90,8 @@ export class ColorPicker extends Component {
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
         this.DEFAULT_GRAYSCALES_COLORS = DEFAULT_GRAYSCALES_COLORS;
+        this.DEFAULT_THEME_COLOR_VARS = DEFAULT_THEME_COLOR_VARS;
+        this.defaultColorSet = this.getDefaultColorSet();
         this.root = useRef("root");
 
         this.defaultColor = this.props.state.selectedColor;
@@ -198,12 +201,47 @@ export class ColorPicker extends Component {
     }
 
     getDefaultColorSet() {
-        for (const color of Object.values(this.DEFAULT_GRAYSCALES_COLORS).flat()) {
-            if (getCSSVariableValue(color) === this.state.currentCustomColor) {
-                return color;
+        if (!this.props.state.selectedElement || !this.props.state.mode) {
+            return;
+        }
+        const editingEl = this.props.state.selectedElement;
+        let defaultColors = this.props.enabledTabs.includes("solid")
+            ? this.DEFAULT_THEME_COLOR_VARS
+            : [];
+        for (const grayscale of this.props.enabledGrayscales) {
+            defaultColors = defaultColors.concat(this.DEFAULT_GRAYSCALES_COLORS[grayscale]);
+        }
+
+        const extractColorFromClasses = (el, prefix, defaultColors) => {
+            if (!el) {
+                return false;
+            }
+            for (const className of el.classList) {
+                const match = className.match(new RegExp(`^${prefix}-(.+)$`));
+                if (match && defaultColors.includes(match[1])) {
+                    return match[1];
+                }
+            }
+            return false;
+        };
+        switch (this.props.state.mode) {
+            case "color":
+                return extractColorFromClasses(editingEl, "text", defaultColors);
+            case "background-color":
+            case "backgroundColor":
+                return extractColorFromClasses(editingEl, "bg", defaultColors);
+            case "selectFilterColor": {
+                const filterEl = editingEl.querySelector(".o_we_bg_filter");
+                return extractColorFromClasses(filterEl, "bg", defaultColors);
+            }
+            default: {
+                const color = editingEl.dataset[this.props.state.mode];
+                return defaultColors.includes(color) ||
+                    defaultColors.includes(this.props.state.mode)
+                    ? color
+                    : false;
             }
         }
-        return false;
     }
     toggleGradientPicker() {
         this.state.showGradientPicker = !this.state.showGradientPicker;
