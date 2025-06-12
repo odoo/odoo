@@ -17,13 +17,13 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  * @typedef {ReturnType<typeof import("@odoo/owl").useRef>} OwlRef
  *
  * @typedef {{
- *  condensed?: boolean;
  *  createPopover?: (component: Component, options: PopoverServiceAddOptions) => PopoverHookReturnType;
  *  ensureVisibility?: () => boolean;
  *  format?: string;
  *  getInputs?: () => HTMLElement[];
  *  onApply?: (value: DateTimePickerProps["value"]) => any;
  *  onChange?: (value: DateTimePickerProps["value"]) => any;
+ *  onClose?: () => any;
  *  pickerProps?: DateTimePickerProps;
  *  showSeconds?: boolean;
  *  target: HTMLElement | string;
@@ -276,7 +276,6 @@ export const datetimePickerService = {
                     const options = { tz: pickerProps.tz, format: params.format };
                     if (operation === "format") {
                         options.showSeconds = params.showSeconds ?? true;
-                        options.condensed = params.condensed || false;
                     }
                     try {
                         return [convertFn(value, options), null];
@@ -479,6 +478,7 @@ export const datetimePickerService = {
                             restoreTargetMargin();
                             restoreTargetMargin = null;
                         }
+                        params.onClose?.();
                     },
                 });
 

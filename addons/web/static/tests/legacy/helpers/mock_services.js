@@ -16,7 +16,6 @@ import { patchWithCleanup } from "./utils";
 export const defaultLocalization = {
     dateFormat: "MM/dd/yyyy",
     timeFormat: "HH:mm:ss",
-    shortTimeFormat: "HH:mm",
     dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
     decimalPoint: ".",
     direction: "ltr",

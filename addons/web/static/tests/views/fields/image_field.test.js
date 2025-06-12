@@ -17,6 +17,7 @@ import {
     mountView,
     onRpc,
     pagerNext,
+    contains,
 } from "@web/../tests/web_test_helpers";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -834,7 +835,7 @@ test("unique in url does not change on record change if reload option is set to 
         `,
     });
     expect(getUnique(queryFirst(".o_field_image img"))).toBe("1659688620000");
-    await click("div[name='write_date'] > div > input");
+    await contains("div[name='write_date'] > div > button").click();
     await edit("2022-08-05 08:39:00", { confirm: "enter" });
     await animationFrame();
     await clickSave();

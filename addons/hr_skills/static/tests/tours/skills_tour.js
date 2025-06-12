@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
         },
         {
             content: "Choose the level",
-            trigger: ".o_field_widget[name='valid_from']",
+            trigger: "div[name='valid_from'] button",
             run: "click",
         },
         {

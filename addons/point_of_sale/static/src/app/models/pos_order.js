@@ -131,10 +131,8 @@ export class PosOrder extends Base {
     get presetDateTime() {
         return this.preset_time?.isValid
             ? this.preset_time.hasSame(this.date_order, "day")
-                ? this.preset_time.toFormat(localization.shortTimeFormat)
-                : this.preset_time.toFormat(
-                      `${localization.dateFormat} ${localization.shortTimeFormat}`
-                  )
+                ? this.preset_time.toFormat(localization.timeFormat)
+                : this.preset_time.toFormat(`${localization.dateFormat} ${localization.timeFormat}`)
             : false;
     }
 

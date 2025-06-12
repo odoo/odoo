@@ -27,17 +27,24 @@ function websiteCreateEventTourSteps() {
             tooltipPosition: "left",
         },
         {
-            trigger: ".modal-dialog div[name=date_begin]",
-            content: "Open date range picker. Pick a Start date for your event",
-            run() {
-                const el1 = document.querySelector("input[data-field='date_begin']");
-                el1.value = "09/30/2020 08:00:00";
-                el1.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
-                const el2 = document.querySelector("input[data-field='date_end']");
-                el2.value = "10/02/2020 23:00:00";
-                el2.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
-                el1.click();
-            },
+            trigger: "button[data-field='date_begin']",
+            content: "Set the start date",
+            run: "click",
+        },
+        {
+            trigger: "input[data-field='date_begin']",
+            content: "Set the start date",
+            run: "edit 09/30/2020 08:00:00",
+        },
+        {
+            trigger: "button[data-field='date_end']",
+            content: "Set the start date",
+            run: "click",
+        },
+        {
+            trigger: "input[data-field='date_end']",
+            content: "Set the start date",
+            run: "edit 10/02/2020 23:00:00",
         },
         {
             trigger:

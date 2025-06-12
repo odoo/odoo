@@ -140,8 +140,8 @@ test("Default duration rendering", async () => {
     await contains(".o-calendar-quick-create--create-btn").click();
     // This new event is the third
     await clickEvent(3);
-    expect("div[name='start'] div").toHaveText("12/15/2016 15:00");
-    expect("div[name='stop'] div").toHaveText("12/15/2016 18:15", {
+    expect("div[name='start'] div").toHaveText("Dec 15, 3:00 PM");
+    expect("div[name='stop'] div").toHaveText("Dec 15, 6:15 PM", {
         message: "The duration should be 3.25 hours",
     });
 });

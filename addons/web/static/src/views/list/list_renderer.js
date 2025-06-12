@@ -1936,7 +1936,7 @@ export class ListRenderer extends Component {
             return false;
         }
         const focusableEls = getTabableElements(cell).filter(
-            (el) => el === document.activeElement || ["INPUT", "TEXTAREA"].includes(el.tagName)
+            (el) => el === document.activeElement || ["INPUT", "BUTTON", "TEXTAREA"].includes(el.tagName)
         );
         const index = focusableEls.indexOf(document.activeElement);
         return (
