@@ -450,6 +450,38 @@ class TestHttpStatic(TestHttpStaticCommon):
                     raise AssertionError(e) from exc
                 self.assertEqual(res.content, self.gizeh_data)
 
+    def test_static24_only_one_date_header(self):
+        res = self.assertDownloadPlaceholder('/web/image')
+        # requests merge multiple headers with a same key together, it
+        # concatenates the values, hence .count(' GMT')
+        self.assertEqual(res.headers['Date'].count(' GMT'), 1,
+            "There must be only 1 Date header, not 2")
+
+    def test_static25_binary_non_base64(self):
+        self.authenticate('admin', 'admin')
+
+        # need a Binary(attachment=False) field
+        # TODO: master, add such a field on test_http.stargate
+        record = self.env['ir.mail_server'].create({
+            'name': 'dummy test_http test_static server',
+            'smtp_host': 'localhost',
+        })
+
+        for name, value, error_msg in [
+            ('raw bad padding', b'()', r"binascii\.Error: (Non-base64 digit found|Only base64 data is allowed)"),
+            ('raw good padding', b'()==', r"binascii\.Error: (Non-base64 digit found|Only base64 data is allowed)"),
+            ('b64 bad padding', b'YB', "binascii.Error: Incorrect padding"),
+        ]:
+            with self.subTest(name=name):
+                record.smtp_ssl_certificate = value
+                with self.assertLogs('odoo.http') as capture:
+                    res = self.url_open(f'/web/content/ir.mail_server/{record.id}/smtp_ssl_certificate')
+                self.assertEqual(res.status_code, 500)
+                self.assertEqual(len(capture.output), 1, capture.output)
+                self.assertRegex(capture.output[0], error_msg)
+                self.assertIn("ir.mail_server.smtp_ssl_certificate", capture.output[0])
+
+
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
     @staticmethod
