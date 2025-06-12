@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from . import common
 from odoo.tests import tagged
+
+from odoo import _
 from odoo.tools.float_utils import float_split_str
+from odoo.tools.misc import formatLang
 
 
 @tagged('post_install_l10n', '-at_install', 'post_install')
@@ -134,8 +137,16 @@ class TestManual(common.TestAr):
         })
         res1 = invoice1._l10n_ar_get_invoice_totals_for_report()
         self.assertEqual(res1.get('detail_ar_tax'), [
-            {'formatted_amount_tax': '868.51', 'name': 'VAT Content $', 'tax_amount': 868.51},
-            {'formatted_amount_tax': '142.20', 'name': 'Other National Ind. Taxes $', 'tax_amount': 142.20}])
+            {
+                'name': _('VAT Content $'),
+                'tax_amount': 868.51,
+                'formatted_amount_tax': formatLang(self.env, 868.51)
+            }, {
+                'name': _('Other National Ind. Taxes $'),
+                'tax_amount': 142.20,
+                'formatted_amount_tax': formatLang(self.env, 142.20)
+            },
+        ])
 
     def test_17_invoice_b_tax_breakdown_2(self):
         """ Display only Other Taxes (VAT taxes are 0) """
@@ -152,4 +163,9 @@ class TestManual(common.TestAr):
         })
         res2 = invoice2._l10n_ar_get_invoice_totals_for_report()
         self.assertEqual(res2.get('detail_ar_tax'), [
-            {'formatted_amount_tax': '300.00', 'name': 'Other National Ind. Taxes $', 'tax_amount': 300.00}])
+            {
+                'name': _('Other National Ind. Taxes $'),
+                'tax_amount': 300.00,
+                'formatted_amount_tax': formatLang(self.env, 300.00)
+            },
+        ])
