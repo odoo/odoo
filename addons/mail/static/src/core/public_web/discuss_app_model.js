@@ -3,6 +3,7 @@ import { browser } from "@web/core/browser/browser";
 
 const NO_MEMBERS_DEFAULT_OPEN_LS = "mail.user_setting.no_members_default_open";
 export const DISCUSS_SIDEBAR_COMPACT_LS = "mail.user_setting.discuss_sidebar_compact";
+export const DISCUSS_SIDEBAR_SHOW_MAILBOXES_LS = "mail.user_setting.discuss_sidebar_show_mailboxes";
 
 export class DiscussApp extends Record {
     INSPECTOR_WIDTH = 300;

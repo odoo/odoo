@@ -1,5 +1,6 @@
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
+import { DiscussActions } from "./discuss_actions";
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
@@ -59,6 +60,7 @@ const EDIT_CLICK_TYPE = {
 export class Composer extends Component {
     static components = {
         AttachmentList,
+        DiscussActions,
         Dropdown,
         DropdownItem,
         FileUploader,
@@ -103,6 +105,7 @@ export class Composer extends Component {
             this.thread ?? this.props.composer.message.thread,
             { composer: this.props.composer }
         );
+        this.composerRoot = useRef("composer-root");
         this.ui = useService("ui");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");

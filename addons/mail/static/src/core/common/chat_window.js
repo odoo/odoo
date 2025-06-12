@@ -1,4 +1,5 @@
 import { Composer } from "@mail/core/common/composer";
+import { DiscussActions } from "./discuss_actions";
 import { ImStatus } from "@mail/core/common/im_status";
 import { Thread } from "@mail/core/common/thread";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -18,6 +19,7 @@ import { useService } from "@web/core/utils/hooks";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 /**
  * @typedef {Object} Props
@@ -28,6 +30,7 @@ import { isMobileOS } from "@web/core/browser/feature_detection";
 export class ChatWindow extends Component {
     static components = {
         CountryFlag,
+        DiscussActions,
         Dropdown,
         DropdownItem,
         Thread,
@@ -46,12 +49,13 @@ export class ChatWindow extends Component {
         this.store = useService("mail.store");
         this.messageHighlight = useMessageScrolling();
         this.state = useState({
-            actionsMenuOpened: false,
             jumpThreadPresent: 0,
             editingGuestName: false,
             editingName: false,
         });
+        this.moreActionsState = useDropdownState();
         this.ui = useService("ui");
+        this.headerRef = useRef("header");
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions();
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
@@ -75,8 +79,7 @@ export class ChatWindow extends Component {
         return (
             this.partitionedActions.group.length > 0 ||
             this.partitionedActions.other.length > 0 ||
-            (this.ui.isSmall && this.partitionedActions.quick.length > 2) ||
-            (!this.ui.isSmall && this.partitionedActions.quick.length > 3)
+            this.partitionedActions.quick.length > 2
         );
     }
 
@@ -90,8 +93,8 @@ export class ChatWindow extends Component {
 
     get attClass() {
         return {
-            'w-100 h-100 o-mobile': this.ui.isSmall,
-            'rounded-4 border border-dark mb-2': !this.ui.isSmall,
+            "w-100 h-100 o-mobile": this.ui.isSmall,
+            "border border-dark mb-2 rounded-4": !this.ui.isSmall,
         };
     }
 
@@ -144,6 +147,7 @@ export class ChatWindow extends Component {
         }
     }
 
+    /** @deprecated */
     onClickHeader() {
         if (this.ui.isSmall || this.state.editingName || this.props.chatWindow.actionsDisabled) {
             return;
@@ -153,7 +157,7 @@ export class ChatWindow extends Component {
 
     toggleFold() {
         const chatWindow = toRaw(this.props.chatWindow);
-        if (this.state.actionsMenuOpened) {
+        if (this.moreActionsState.isOpen) {
             return;
         }
         chatWindow.fold();
@@ -182,8 +186,9 @@ export class ChatWindow extends Component {
         this.state.editingGuestName = false;
     }
 
+    /** @deprecated */
     async onActionsMenuStateChanged(isOpen) {
         // await new Promise(setTimeout); // wait for bubbling header
-        this.state.actionsMenuOpened = isOpen;
+        this.moreActionsState.isOpen = isOpen;
     }
 }

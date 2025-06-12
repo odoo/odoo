@@ -1,5 +1,25 @@
-.o-mail-discussSidebarBgColor {
-    background-color: mix($white, $o-webclient-background-color, 15%) !important;
+.o-shadow-soft {
+    box-shadow: o-shadow-soft(); // refresh with dark colors
+}
+
+.o-text-shadow-soft {
+    text-shadow: o-shadow-soft(); // refresh with dark colors
+}
+
+.o-shadow-1 {
+    box-shadow: o-shadow-1(); // refresh with dark colors
+}
+
+.o-shadow-2 {
+    box-shadow: o-shadow-2(); // refresh with dark colors
+}
+
+.o-discuss-badge {
+    @include o-discuss-badgeMixin(); // refresh with dark colors
+}
+
+.o-mail-DiscussPanel-bgColor {
+    background-color: mail-DiscussPanel-bgColor() !important; // refresh with dark colors
 }
 
 a.o_mail_redirect, a.o_channel_redirect {

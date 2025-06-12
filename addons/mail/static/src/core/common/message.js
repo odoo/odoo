@@ -42,6 +42,7 @@ import { MessageActionMenuMobile } from "./message_action_menu_mobile";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
 import { useLongPress } from "@mail/utils/common/hooks";
+import { DiscussActions } from "./discuss_actions";
 
 /**
  * @typedef {Object} Props
@@ -58,12 +59,13 @@ import { useLongPress } from "@mail/utils/common/hooks";
 export class Message extends Component {
     // This is the darken version of #71639e
     static SHADOW_LINK_COLOR = "#66598f";
-    static SHADOW_HIGHLIGHT_COLOR = "#e99d00bf";
+    static SHADOW_HIGHLIGHT_COLOR = "#e99d0045";
     static SHADOW_LINK_HOVER_COLOR = "#564b79";
     static components = {
         ActionSwiper,
         AttachmentList,
         Composer,
+        DiscussActions,
         Dropdown,
         DropdownItem,
         ImStatus,
@@ -224,8 +226,7 @@ export class Message extends Component {
         return {
             "user-select-none": isMobileOS(),
             [this.props.className]: true,
-            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark shadow-sm rounded-3":
-                this.props.asCard,
+            "o-card p-2 ps-1 mx-1 mt-1 mb-1 border border-dark shadow-sm": this.props.asCard,
             "pt-1": !this.props.asCard && !this.props.squashed,
             "o-pt-0_5": !this.props.asCard && this.props.squashed,
             "o-selfAuthored": this.message.isSelfAuthored && !this.env.messageCard,

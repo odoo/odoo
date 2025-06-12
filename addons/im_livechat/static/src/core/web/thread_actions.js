@@ -26,7 +26,8 @@ threadActionsRegistry
             );
         },
         dropdown: {
-            template: "im_livechat.LivechatStatusAction",
+            template: "im_livechat.LivechatStatusSelection",
+            templateParams: (component) => ({ thread: component.props.thread }),
             menuClass: "p-0 m-0 o-rounded-bubble",
         },
         panelOuterClass: "o-livechat-ChannelInfoList bg-inherit",
@@ -55,7 +56,7 @@ threadActionsRegistry
             };
         },
         name: (component) => component.thread.livechatStatusLabel,
-        nameClass: "fst-italic small mx-2",
+        nameClass: "fst-italic small",
         partition: (component) => !component.env.inDiscussApp,
         sequence: 5,
         sequenceGroup: 7,

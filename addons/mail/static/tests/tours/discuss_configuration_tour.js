@@ -22,7 +22,7 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: "button:contains('Mentions Only')",
+            trigger: "button:contains('Only @mentions')",
             run: "click",
         },
         {

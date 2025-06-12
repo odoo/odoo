@@ -2,43 +2,16 @@
     width: $o-mail-ChatWindow-width;
 
     z-index: $zindex-sticky;
+    &.o-mobile {
+        background-color: mail-DiscussPanel-bgColor(1);
+    }
     &:not(.o-mobile) {
+        background-color: mail-DiscussPanel-bgColor();
+        backdrop-filter: blur(8px);
         --border-opacity: .15;
-        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
+        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9);
     }
     outline: none;
-}
-
-.o-mail-ChatWindow-command {
-    color: inherit !important;
-    &.o-quick {
-        opacity: 15%;
-        .o-mail-ChatWindow.o-mobile & {
-            opacity: 50%
-        }
-    }
-    &.o-actionsMenu {
-        background-color: inherit !important;
-    }
-    &:not(.o-actionsMenu) {
-        padding: map-get($spacers, 1) / 2;
-    }
-    &:hover, &.o-active, &.o-hover {
-        color: var(--mail-ChatWindow-commandHoverColor, black) !important;
-
-        &.o-quick, &.o-actionsMenu {
-            backdrop-filter: invert(.025);
-        }
-    }
-    &:hover, &.o-active, &.o-hover {
-        border-color: transparent !important;
-    }
-    &:not(.o-active):not(.o-hover) .fa-caret-down {
-        opacity: 25%;
-    }
-    &.o-small {
-        --border-opacity: 0.5
-    }
 }
 
 .o-mail-ChatWindow-closePanel {
@@ -54,11 +27,16 @@
 }
 
 .o-mail-ChatWindow-header {
-    --border-opacity: .25;
+    z-index: $o-mail-NavigableList-zIndex;
+}
 
-    .o-mail-ChatWindow-threadAvatar img {
-        height: $o-mail-Avatar-sizeSmall;
-        width: $o-mail-Avatar-sizeSmall;
+.o-mail-ChatWindow-threadAvatar img {
+    height: 28px;
+    width: 28px;
+
+    .o-mail-ChatWindow.o-mobile & {
+        height: 36px;
+        width: 36px;
     }
 }
 

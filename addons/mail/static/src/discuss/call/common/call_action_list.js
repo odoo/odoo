@@ -1,4 +1,4 @@
-import { Component, useRef } from "@odoo/owl";
+import { Component, useRef, useSubEnv } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { CallPopover } from "@mail/discuss/call/common/call_popover";
@@ -9,9 +9,10 @@ import { CallActionButton } from "@mail/discuss/call/common/call_action_button";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { Tooltip } from "@web/core/tooltip/tooltip";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/thread_model_patch";
+import { DiscussActions } from "@mail/core/common/discuss_actions";
 
 export class CallActionList extends Component {
-    static components = { CallPopover, CallActionButton };
+    static components = { CallPopover, CallActionButton, DiscussActions };
     static props = ["thread", "fullscreen?", "compact?"];
     static template = "discuss.CallActionList";
 
@@ -26,6 +27,7 @@ export class CallActionList extends Component {
         this.popover = usePopover(Tooltip, {
             position: "top-middle",
         });
+        useSubEnv({ inCallActionList: true });
     }
 
     get isPromotingFullscreen() {

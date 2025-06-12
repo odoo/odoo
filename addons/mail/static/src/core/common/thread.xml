@@ -2,10 +2,11 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Thread">
-    <div class="o-mail-Thread position-relative flex-grow-1 d-flex flex-column overflow-auto o-scrollbar-thin bg-inherit" t-att-class="{ 'pb-5': env.inChatter?.aside, 'pb-4': !env.inChatter?.aside, 'px-2': !env.inChatter and !props.isInChatWindow, 'o-focused': state.isFocused }" t-att-data-transient="props.thread.isTransient" t-ref="messages" tabindex="-1" t-on-focusin="onFocusin" t-on-focusout="onFocusout">
+    <div class="o-mail-Thread flex-grow-1 d-flex flex-column overflow-auto o-scrollbar-thin bg-inherit" t-att-class="{ 'pb-5': env.inChatter?.aside, 'px-2': !env.inChatter and !props.isInChatWindow, 'o-focused': state.isFocused, 'mx-2': env.inDiscussApp and !ui.isSmall, 'px-3': env.inDiscussApp and ui.isSmall }" t-att-data-transient="props.thread.isTransient" t-ref="messages" tabindex="-1" t-on-focusin="onFocusin" t-on-focusout="onFocusout">
+        <div class="o-mail-Thread-banners position-absolute top-0 start-0 w-100 px-1 d-flex flex-column" t-ref="banners"/>
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column position-relative flex-grow-1 bg-inherit" t-att-class="{'justify-content-end': !env.inChatter and props.thread.model !== 'mail.box'}">
-                <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
+                <span class="position-absolute start-0 w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
                 <t t-set="currentDay" t-value="0"/>
                 <t t-if="props.order === 'asc'">
                     <t t-if="showLoadOlder" t-call="mail.Thread.loadOlder"/>
@@ -70,7 +71,7 @@
 </t>
 
 <t t-name="mail.Thread.jumpPresent">
-    <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary" t-att-class="{ 'bottom-0': env.inChatter and !env.inChatter.aside }" t-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
+    <button t-if="props.showJumpPresent and state.showJumpPresent" class="o-mail-Thread-jumpPresent position-fixed p-2 rounded-circle lh-1 m-n3 user-select-none btn btn-light shadow-sm border border-secondary o-mail-DiscussMenu-bgColor o-mail-DiscussActions-actionStyle" t-att-class="{ 'bottom-0': env.inChatter and !env.inChatter.aside }" t-ref="jump-present" t-on-click="() => this.jumpToPresent()" title="Jump to Present"><i class="oi text-muted" t-att-class="{ 'oi-chevron-down': props.order === 'asc', 'oi-chevron-up': props.order !== 'asc' }"/></button>
 </t>
 
 <t t-name="mail.Thread.loadOlder">
@@ -101,13 +102,13 @@
 </t>
 
 <t t-name="mail.Thread.startMessage">
-    <div class="pt-4" t-att-class="{ 'px-3': env.inChatWindow, 'px-1': !env.inChatWindow }">
+    <div class="pt-4" t-att-class="{ 'px-2 mx-1': env.inChatWindow, 'px-1': !env.inChatWindow }">
         <div class="d-flex align-items-end gap-2" t-att-class="{
             'mt-2 mb-1': !props.thread.parent_channel_id,
             'mt-1': props.thread.parent_channel_id,
         }">
             <div class="o-mail-Thread-avatar d-inline" t-att-class="{'o-mail-Thread-avatarChatWindow': env.inChatWindow }">
-                <img t-if="!props.thread.parent_channel_id" class="rounded-3 o_object_fit_cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image"/>
+                <img t-if="!props.thread.parent_channel_id" class="o_object_fit_cover" t-att-src="props.thread?.avatarUrl" alt="Thread Image" t-att-class="{ 'rounded-3': env.inChatWindow, 'o-rounded-bubble': !env.inChatWindow }"/>
                 <i t-else="" class="fa fa-comments-o opacity-75"/>
             </div>
             <h1 class="opacity-75" t-att-class="{ 'fs-3': env.inChatWindow, 'mb-0': env.inChatWindow, 'mb-1': !env.inChatWindow }" t-esc="startMessageTitle"/>
@@ -115,4 +116,5 @@
         <p class="text-muted mb-0 small opacity-75" t-esc="startMessageSubtitle"/>
     </div>
 </t>
+
 </templates>

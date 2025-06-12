@@ -5,8 +5,8 @@
             <div class="btn-group d-flex flex-column rounded-3 gap-1 p-3" t-on-click.stop="">
                 <t t-foreach="messageActions.actions.slice(quickActionCount)" t-as="action" t-key="action.id">
                     <button class="btn px-3 py-3 d-flex align-items-center rounded-4 btn-group-item gap-3 user-select-none bg-200" t-on-click="() => this.onClickAction(action)">
-                        <i class="fa-lg fa-fw fs-2" t-att-class="action.icon"/>
-                        <span class="fs-4" t-esc="action.title"/>
+                        <i class="fa-lg fa-fw fs-2" t-attf-class="{{ action.icon }}" t-att-class="{ 'text-danger': action.danger }"/>
+                        <span class="fs-4" t-attf-class="{{ action.nameClass }}" t-att-class="{ 'text-danger': action.danger }" t-esc="action.title"/>
                     </button>
                 </t>
             </div>

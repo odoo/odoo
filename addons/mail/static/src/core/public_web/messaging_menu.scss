@@ -2,24 +2,22 @@
     width: 475px;
     min-height: 50px;
     max-height: Min(calc(#{ $o-dropdown-max-height } - 5px), 630px); // -5px for borders
-    background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
 }
 
-.o-mail-MessagingMenu-list {
-    background-color: var(--mail-MessagingMenu-bg, $o-view-background-color);
-}
+.o-mail-MessagingMenu-navbar {
+    z-index: $o-mail-NavigableList-zIndex;
 
-.o-mail-MessagingMenu-navbar button {
-    border-top: 2px solid !important;
-    border-color: transparent !important;
-
-    &.o-active {
-        border-top-color: var(--mail-MessagingMenu-activeBorderTopColor, rgba($primary, .75)) !important;
+    button {
+        border-color: transparent !important;
     }
 }
 
+.o-mail-MessagingMenu-header .btn-link.o-active {
+    background-color: $list-group-active-bg !important;
+}
+
 .o-mail-MessagingMenu-tabCounter, .o-mail-MessagingMenu-tabUnread {
-    transform: translate(80%, 50%) !important;
+    transform: translate(80%, 25%) !important;
 }
 
 .o-discuss-badge.o-mail-MessagingMenu-tabUnread {

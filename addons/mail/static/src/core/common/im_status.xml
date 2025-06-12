@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ImStatus">
-        <div class="o-mail-ImStatus d-flex justify-content-center flex-shrink-0 align-items-center bg-inherit" t-attf-class="{{ props.className }}" t-att-style="props.style" t-att-class="{
+        <div class="o-mail-ImStatus d-flex justify-content-center flex-shrink-0 align-items-center bg-white" t-attf-class="{{ props.className }}" t-att-style="props.style" t-att-class="{
             'o-md': props.size === 'md' or props.size === 'medium',
             'o-sm': props.size === 'sm' or props.size === 'small',
             'rounded-circle': !props.member?.isTyping,

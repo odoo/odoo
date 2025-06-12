@@ -31,6 +31,7 @@ export class MessagingMenu extends Component {
         });
         this.dropdown = useDropdownState();
         this.notificationList = useRef("notification-list");
+        this.navbarRef = useRef("navbar");
 
         useExternalListener(window, "keydown", this.onKeydown, true);
     }

@@ -19,7 +19,7 @@ threadActionsRegistry.add("create-lead", {
         icon: "fa fa-handshake-o",
     }),
     condition: (component) => false,
-    panelOuterClass: "bg-100",
+    panelOuterClass: "o-mail-DiscussPanel-bgColor",
     icon: "fa fa-handshake-o",
     iconLarge: "fa-lg fa fa-handshake-o",
     name: _t("Create Lead"),
@@ -30,7 +30,8 @@ threadActionsRegistry.add("create-lead", {
         if (!component.env.inChatWindow) {
             action.popover = usePopover(LivechatCommandDialog, {
                 onClose: () => action.close(),
-                popoverClass: action.panelOuterClass,
+                popoverClass: `o-rounded-bubble m-2 ${action.panelOuterClass}`,
+                arrow: false,
             });
         }
     },

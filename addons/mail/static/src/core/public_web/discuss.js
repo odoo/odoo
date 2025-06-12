@@ -15,11 +15,13 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { MessagingMenu } from "@mail/core/public_web/messaging_menu";
+import { DiscussActions } from "../common/discuss_actions";
 
 export class Discuss extends Component {
     static components = {
         AutoresizeInput,
         CountryFlag,
+        DiscussActions,
         DiscussSidebar,
         Thread,
         ThreadIcon,
@@ -39,6 +41,8 @@ export class Discuss extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.messageHighlight = useMessageScrolling();
+        this.headerRef = useRef("header");
+        this.headerThreadContainerRef = useRef("header-thread-container");
         this.contentRef = useRef("content");
         this.root = useRef("root");
         this.state = useState({ jumpThreadPresent: 0 });
