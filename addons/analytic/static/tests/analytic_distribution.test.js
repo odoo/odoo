@@ -363,3 +363,50 @@ test("Rounding, value suggestions, keyboard only", async () => {
     await animationFrame();
     expect(".badge:contains('99.99% Time Off | 0.01% Operating Costs')").toHaveCount(1);
 });
+
+test.tags("desktop");
+test("analytic distribution popup closes when inside modal and clicking outside", async () => {
+    expect(2);
+
+    const modal = document.createElement("div");
+    modal.classList.add("modal");
+    modal.style.display = "block";
+    modal.style.position = "fixed";
+    modal.innerHTML = `<div class="click-area">Click Here</div>`;
+    document.body.appendChild(modal);
+
+    const clickTarget = modal.querySelector(".click-area");
+    onRpc("account.analytic.plan", "get_relevant_plans", function ({ model }) {
+        return this.env[model].filter(
+            (r) => !r.parent_id && r.applicability !== "unavailable" && r.all_account_count
+        );
+    });
+    await mountView({
+        type: "form",
+        resModel: "aml",
+        resId: 1,
+        arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="analytic_distribution" widget="analytic_distribution"/>
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    await animationFrame();
+
+    const widgetEl = document.querySelector(".o_field_analytic_distribution");
+    modal.appendChild(widgetEl);
+
+    await contains(widgetEl, ".o_input_dropdown").click();
+    expect(".analytic_distribution_popup", widgetEl).toHaveCount(1);
+
+    clickTarget.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await animationFrame();
+
+    expect(".analytic_distribution_popup", widgetEl).toHaveCount(0);
+
+    modal.remove();
+});
