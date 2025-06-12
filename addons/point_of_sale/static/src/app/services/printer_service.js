@@ -1,4 +1,4 @@
-import { loadAllImages } from "@point_of_sale/utils";
+import { waitImages } from "@point_of_sale/utils";
 
 import { Reactive } from "@web/core/utils/reactive";
 
@@ -22,7 +22,13 @@ export class PrinterService extends Reactive {
         this.device = newDevice;
     }
     printWeb(el) {
-        this.renderer.whenMounted({ el, callback: window.print });
+        this.renderer.whenMounted({
+            el,
+            callback: async (el) => {
+                await waitImages(el);
+                window.print(el);
+            },
+        });
         return true;
     }
     async printHtml(el, { webPrintFallback = false } = {}) {
@@ -47,7 +53,7 @@ export class PrinterService extends Reactive {
         this.state.isPrinting = true;
         const el = await this.renderer.toHtml(component, props);
         try {
-            await loadAllImages(el);
+            await waitImages(el);
         } catch (e) {
             console.error("Images could not be loaded correctly", e);
         }

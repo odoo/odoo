@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import time
+from datetime import timedelta
 from freezegun import freeze_time
-from datetime import datetime
 
 import odoo
-from odoo import fields, tools
+from odoo import fields
 from odoo.fields import Command
-from odoo.tools import float_compare, mute_logger, test_reports
 from odoo.tests import Form
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
@@ -2298,3 +2296,57 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.PosOrder.sync_from_ui(refund_values)
         refunded_order_line = self.env['pos.order.line'].search([('product_id', '=', product.id), ('qty', '=', -2)])
         self.assertEqual(refunded_order_line.total_cost, -20)
+
+    def test_cancel_order_with_past_preset(self):
+        # Test that cancelling an order with a past preset does not raise an error and does cancel the order.
+        preset_takeaway = self.env['pos.preset'].create({
+            'name': 'Takeaway',
+        })
+        self.pos_config.write({
+            'use_presets': True,
+            'default_preset_id': preset_takeaway.id,
+            'available_preset_ids': [(6, 0, [preset_takeaway.id])],
+        })
+        resource_calendar = self.env['resource.calendar'].create({
+            'name': 'Takeaway',
+            'attendance_ids': [(0, 0, {
+                'name': 'Takeaway',
+                'dayofweek': str(day),
+                'hour_from': 0,
+                'hour_to': 24,
+                'day_period': 'morning',
+            }) for day in range(7)],
+        })
+        preset_takeaway.write({
+            'use_timing': True,
+            'resource_calendar_id': resource_calendar
+        })
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': False,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.env['product.product'].search([('available_in_pos', '=', True)], limit=1).id,
+                'price_unit': 49.99,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 49.99,
+                'price_subtotal_incl': 49.99,
+            })],
+            'pricelist_id': False,
+            'amount_paid': 49.99,
+            'amount_total': 49.99,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            'last_order_preparation_change': '{}',
+            'preset_id': preset_takeaway.id,
+            'preset_time': fields.Datetime.to_string(fields.Datetime.now() + timedelta(days=-2)),
+        })
+        order.action_pos_order_cancel()
+        self.assertEqual(order.state, 'cancel')
