@@ -281,7 +281,7 @@ class ResPartner(models.Model):
                 if "notification_type" in fields:
                     store.add(main_user, ["notification_type"])
                 if "signature" in fields:
-                    data["signature"] = main_user.signature
+                    store.add(main_user, ["signature"])
             if data:
                 store.add(partner, data)
 

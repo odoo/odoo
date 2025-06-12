@@ -398,7 +398,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.users[0].partner_id.id,
                     "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
-                    "signature": ["markup", self.users[0].signature],
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
             ),
@@ -409,6 +408,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "is_admin": False,
                     "notification_type": "inbox",
                     "share": False,
+                    "signature": ["markup", str(self.users[0].signature)],
                 },
             ),
             "Store": {

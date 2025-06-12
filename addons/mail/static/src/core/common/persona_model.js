@@ -52,8 +52,6 @@ export class Persona extends Record {
         },
     });
     main_user_id = fields.One("res.users");
-    /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
-    signature = fields.Html(undefined);
     monitorPresence = fields.Attr(false, {
         compute() {
             if (!this.store.env.services.bus_service.isActive || this.id <= 0) {
