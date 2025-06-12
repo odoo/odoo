@@ -43,6 +43,8 @@ class ResPartner(models.Model):
     @api.model
     def _get_current_partner(self, **kwargs):
         """ Get main partner of the current user base on logged in user and kwargs. """
+        if self.env.user._is_public():
+            return self.env['res.partner']
         return self.env.user.partner_id
 
     def _get_delivery_address_domain(self):
