@@ -1322,12 +1322,16 @@ class ChromeBrowser:
 
     def _handle_request_paused(self, **params):
         url = params['request']['url']
+        if url.startswith(f'http://{HOST}'):
+            cmd = 'Fetch.continueRequest'
+            response = {}
+        else:
+            cmd = 'Fetch.fulfillRequest'
+            response = module.current_test.fetch_proxy(url)
         try:
-            if url.startswith(f'http://{HOST}'):
-                self._websocket_send('Fetch.continueRequest', params={'requestId': params['requestId']})
-            else:
-                response = module.current_test.fetch_proxy(url)
-                self._websocket_send('Fetch.fulfillRequest', params={'requestId': params['requestId'], **response})
+            self._websocket_send(cmd, params={'requestId': params['requestId'], **response})
+        except websocket.WebSocketConnectionClosedException:
+            pass
         except (BrokenPipeError, ConnectionResetError):
             # this can happen if the browser is closed. Just ignore it.
             _logger.info("Websocket error while handling request %s", params['request']['url'])
