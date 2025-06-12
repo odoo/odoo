@@ -323,6 +323,7 @@ function computeVariation(value, comparisonValue) {
  * @property {Object} rowGroupTree
  * @property {Object} groupDomains
  * @property {Object} measurements
+ * @property {Object} currencyIds
  * @property {Object} counts
  * @property {Object} numbering
  */
@@ -384,6 +385,7 @@ export class PivotModel extends Model {
             rowGroupTree: null,
             groupDomains: {},
             measurements: {},
+            currencyIds: {},
             counts: {},
             numbering: {},
         };
@@ -497,6 +499,7 @@ export class PivotModel extends Model {
             return newObject;
         }
         this.data.measurements = omitKeys(this.data.measurements);
+        this.data.currencyIds = omitKeys(this.data.currencyIds);
         this.data.counts = omitKeys(this.data.counts);
         this.data.groupDomains = omitKeys(this.data.groupDomains);
 
@@ -643,6 +646,7 @@ export class PivotModel extends Model {
         }
 
         this.data.measurements = twist(this.data.measurements);
+        this.data.currencyIds = twist(this.data.currencyIds);
         this.data.counts = twist(this.data.counts);
         this.data.groupDomains = twist(this.data.groupDomains);
 
@@ -928,6 +932,20 @@ export class PivotModel extends Model {
     }
     /**
      * @protected
+     * @param {Array[]} groupId
+     * @param {string} measure
+     * @param {Config} config
+     * @returns {number}
+     */
+    _getCellCurrency(groupId, measure, config) {
+        var key = JSON.stringify(groupId);
+        if (!config.data.currencyIds[key]) {
+            return;
+        }
+        return config.data.currencyIds[key][0][measure];
+    }
+    /**
+     * @protected
      * @param {string[]} rowGroupBy
      * @param {string[]} colGroupBy
      * @returns {string[]}
@@ -1042,7 +1060,10 @@ export class PivotModel extends Model {
         const { metaData } = config;
         return this._getMeasureSpecs(config).reduce((measurements, measureName) => {
             var measurement = group[measureName];
-            const fieldName = measureName.split(":")[0];
+            const [fieldName, aggregator] = measureName.split(":");
+            if (aggregator === "array_agg_distinct") {
+                return measurements;
+            }
             if (metaData.measures[fieldName].type === "boolean" && measurement instanceof Boolean) {
                 measurement = measurement ? 1 : 0;
             }
@@ -1051,6 +1072,30 @@ export class PivotModel extends Model {
             }
             measurements[fieldName] = measurement;
             return measurements;
+        }, {});
+    }
+    /**
+     * Returns the group sanitized currency id values for the measures in
+     * this.metaData.activeMeasures (only useful for monetary).
+     *
+     * @protected
+     * @param {Object} group
+     * @param {Config} config
+     * @returns {Array}
+     */
+    _getCurrencyIds(group, config) {
+        const { metaData } = config;
+        return this._getMeasureSpecs(config).reduce((currencyIds, measureName) => {
+            const [fieldName, aggregator] = measureName.split(":");
+            if (aggregator === "array_agg_distinct") {
+                return currencyIds;
+            }
+            const measureField = metaData.measures[fieldName];
+            if (measureField.type === "monetary" && measureField.currency_field) {
+                const currencies = group[measureField.currency_field + ":array_agg_distinct"];
+                currencyIds[fieldName] = currencies?.length === 1 ? currencies[0] : false;
+            }
+            return currencyIds;
         }, {});
     }
     /**
@@ -1110,6 +1155,9 @@ export class PivotModel extends Model {
                 throw new Error(
                     "No aggregate function has been provided for the measure '" + measure + "'"
                 );
+            }
+            if (field.currency_field) {
+                acc.push(field.currency_field + ":array_agg_distinct");
             }
             acc.push(measure + ":" + field.aggregator);
             return acc;
@@ -1322,12 +1370,16 @@ export class PivotModel extends Model {
             const value = this._getCellValue(groupIntersectionId, measure, originIndexes, {
                 data: this.data,
             });
+            const currencyId = this._getCellCurrency(groupIntersectionId, measure, {
+                data: this.data,
+            });
 
             const measurement = {
                 groupId: groupIntersectionId,
                 originIndexes: originIndexes,
                 measure: measure,
                 value: value,
+                currencyId: currencyId,
                 isBold: !groupIntersectionId[0].length || !groupIntersectionId[1].length,
             };
             return measurement;
@@ -1392,6 +1444,7 @@ export class PivotModel extends Model {
         data.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
         data.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
         data.measurements = {};
+        data.currencyIds = {};
         data.counts = {};
         data.groupDomains = {};
         data.numbering = {};
@@ -1499,8 +1552,12 @@ export class PivotModel extends Model {
                     data.measurements[key] = metaData.origins.map(() =>
                         this._getMeasurements({}, config)
                     );
+                    data.currencyIds[key] = metaData.origins.map(() =>
+                        this._getCurrencyIds({}, config)
+                    );
                 }
                 data.measurements[key][originIndex] = this._getMeasurements(subGroup, config);
+                data.currencyIds[key][originIndex] = this._getCurrencyIds(subGroup, config);
 
                 if (!(key in data.counts)) {
                     data.counts[key] = metaData.origins.map(function () {
