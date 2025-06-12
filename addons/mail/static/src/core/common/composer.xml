@@ -33,14 +33,22 @@
             <div t-if="showComposerAvatar" class="o-mail-Composer-sidebarMain flex-shrink-0 d-flex">
                 <img class="o-mail-Composer-avatar mx-auto o_avatar rounded-3" t-att-src="(thread?.effectiveSelf or message.effectiveSelf).avatarUrl" alt="Avatar of user"/>
             </div>
-            <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.replyToMessage">
-                <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage, props.composer.thread)">
-                    Replying to <b t-esc="props.composer.replyToMessage.authorName"/>
+            <div class="o-mail-Composer-coreHeader">
+                <div t-if="props.composer.replyToMessage" class="text-truncate small p-2">
+                    <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.composer.replyToMessage, props.composer.thread)">
+                        Replying to <b t-esc="props.composer.replyToMessage.authorName"/>
+                    </span>
+                    <span t-if="props.composer.replyToMessage.thread?.notEq(props.composer.thread)">
+                        on: <b><t t-esc="props.composer.replyToMessage.thread.displayName"/></b>
+                    </span>
+                    <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
+                </div>
+                <span t-if="props.composer.message and ui.isSmall" class="px-1" t-on-click="onClickCancelOrSaveEditText">
+                    <button class="btn btn-sm btn-secondary rounded-pill border border-secondary ps-1 pe-2 py-0 mb-1" t-att-data-type="EDIT_CLICK_TYPE.CANCEL">
+                        <i class="oi oi-close pe-2" t-att-data-type="EDIT_CLICK_TYPE.CANCEL"></i>
+                        Discard editing
+                    </button>
                 </span>
-                <span t-if="props.composer.replyToMessage.thread?.notEq(props.composer.thread)">
-                    on: <b><t t-esc="props.composer.replyToMessage.thread.displayName"/></b>
-                </span>
-                <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended or props.composer.message }">
                 <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border o-rounded-bubble"
@@ -113,8 +121,8 @@
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-2">
                     <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
-                        <span t-if="props.composer.message" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
-                        <t t-else="">
+                        <span t-if="props.composer.message and !ui.isSmall" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText" />
+                        <t t-elif="!props.composer.message">
                             <t t-call="mail.Composer.sendButton"/>
                             <span t-if="!isSendButtonDisabled and !isMobileOS" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                         </t>
