@@ -66,6 +66,7 @@ globalFieldMatchingRegistry.add("pivot", {
             .filter((pivot) => pivot.type === "ODOO")
             .map((pivot) => pivot.loadMetadata()),
     getFields: (getters, pivotId) => getters.getPivot(pivotId).getFields(),
+    isValid: (getters, pivotId) => getters.getPivot(pivotId).isValid(),
 });
 
 globalFieldMatchingRegistry.add("list", {
@@ -77,6 +78,7 @@ globalFieldMatchingRegistry.add("list", {
     waitForReady: (getters) =>
         getters.getListIds().map((listId) => getters.getListDataSource(listId).loadMetadata()),
     getFields: (getters, listId) => getters.getListDataSource(listId).getFields(),
+    isValid: (getters, pivotId) => getters.getListDataSource(pivotId).isValid(),
 });
 
 globalFieldMatchingRegistry.add("chart", {
@@ -95,6 +97,7 @@ globalFieldMatchingRegistry.add("chart", {
             .getOdooChartIds()
             .map((chartId) => getters.getChartDataSource(chartId).loadMetadata()),
     getFields: (getters, chartId) => getters.getChartDataSource(chartId).getFields(),
+    isValid: (getters, pivotId) => getters.getChartDataSource(pivotId).isValid(),
 });
 
 corePluginRegistry.add("OdooGlobalFiltersCorePlugin", GlobalFiltersCorePlugin);

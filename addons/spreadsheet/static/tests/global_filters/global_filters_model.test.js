@@ -251,6 +251,123 @@ test("Adding new DataSource with a different model won't set up its field matchi
     const fieldMatching = model.getters.getListFieldMatching("1", filterId);
     expect(fieldMatching).toBe(undefined);
 });
+
+test("generate new global matching global filter", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    insertListInSpreadsheet(model, { model: "partner", columns: ["name"] });
+    await waitForDataLoaded(model);
+    model.dispatch("AUTO_MATCH_GLOBAL_FILTERS", {
+        dataSourceType: "list",
+        dataSourceId: "1",
+        fieldNames: ["product_id"],
+    });
+    const filterId = model.getters.getGlobalFilters()[0].id;
+    expect(model.getters.getGlobalFilters()).toEqual([
+        {
+            id: filterId,
+            label: "Product",
+            modelName: "product",
+            type: "relation",
+        },
+    ]);
+    expect(model.getters.getListFieldMatching("1", filterId)).toEqual({
+        chain: "product_id",
+        type: "many2one",
+    });
+});
+
+test("auto match filter with data source of the same model", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    const filterId = "42";
+    insertListInSpreadsheet(model, { model: "product", columns: ["name"] });
+    await addGlobalFilter(model, {
+        id: filterId,
+        type: "relation",
+        label: "Product",
+        modelName: "product",
+    });
+    model.dispatch("AUTO_MATCH_GLOBAL_FILTERS", {
+        dataSourceType: "list",
+        dataSourceId: "1",
+        fieldNames: [],
+    });
+    expect(model.getters.getListFieldMatching("1", filterId)).toEqual({
+        chain: "id",
+        type: "integer",
+    });
+});
+
+test("auto match filter with fields matching the model", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    const filterId = "42";
+    insertListInSpreadsheet(model, { model: "partner", columns: ["name"] });
+    await addGlobalFilter(model, {
+        id: filterId,
+        type: "relation",
+        label: "Product",
+        modelName: "product",
+    });
+    model.dispatch("AUTO_MATCH_GLOBAL_FILTERS", {
+        dataSourceType: "list",
+        dataSourceId: "1",
+        fieldNames: ["product_id"],
+    });
+    expect(model.getters.getListFieldMatching("1", filterId)).toEqual({
+        chain: "product_id",
+        type: "many2one",
+    });
+});
+
+test("auto match preserves existing field matching", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    const filterId = "42";
+    insertListInSpreadsheet(model, { model: "partner", columns: ["name"] });
+    insertListInSpreadsheet(model, { model: "partner", columns: ["name"] });
+    await addGlobalFilter(
+        model,
+        {
+            id: filterId,
+            type: "relation",
+            label: "Product",
+            modelName: "product",
+        },
+        {
+            list: { 1: { chain: "product_id", type: "many2one" } },
+        }
+    );
+    model.dispatch("AUTO_MATCH_GLOBAL_FILTERS", {
+        dataSourceType: "list",
+        dataSourceId: "2",
+        fieldNames: ["product_id"],
+    });
+    expect(model.getters.getListFieldMatching("1", filterId)).toEqual({
+        chain: "product_id",
+        type: "many2one",
+    });
+    expect(model.getters.getListFieldMatching("2", filterId)).toEqual({
+        chain: "product_id",
+        type: "many2one",
+    });
+});
+
+test("don't auto match filter with fields of a different model", async function () {
+    const { model } = await createSpreadsheetWithPivot();
+    const filterId = "42";
+    insertListInSpreadsheet(model, { model: "partner", columns: ["name"] });
+    await addGlobalFilter(model, {
+        id: filterId,
+        type: "relation",
+        label: "Product",
+        modelName: "product",
+    });
+    model.dispatch("AUTO_MATCH_GLOBAL_FILTERS", {
+        dataSourceType: "list",
+        dataSourceId: "1",
+        fieldNames: ["currency_id"],
+    });
+    expect(model.getters.getListFieldMatching("1", filterId)).toBe(undefined);
+});
+
 test("Can save a value to an existing global filter", async function () {
     const { model } = await createSpreadsheetWithPivotAndList();
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER, {
