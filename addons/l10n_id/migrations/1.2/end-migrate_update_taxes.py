@@ -18,7 +18,7 @@ def migrate(cr, version):
                 "name": xmlid,
                 "module": "l10n_id",
                 "model": "account.tax.group",
-                "res_id": env['account.tax.group'].create({'name': name}).id,
+                "res_id": env['account.tax.group'].create({'name': name, 'country_id': env.ref('base.id').id}).id,
                 'noupdate': True
             })
 
