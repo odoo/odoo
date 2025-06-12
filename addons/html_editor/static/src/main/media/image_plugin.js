@@ -11,6 +11,8 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { closestBlock } from "@html_editor/utils/blocks";
 import { fillEmpty } from "@html_editor/utils/dom";
 import { reactive } from "@odoo/owl";
+import { registry } from "@web/core/registry";
+import { ImageTransformation } from "./image_transformation";
 
 function hasShape(imagePlugin, shapeName) {
     return () => imagePlugin.isSelectionShaped(shapeName);
@@ -76,6 +78,7 @@ export class ImagePlugin extends Plugin {
                 run: () => this.setImageShape("img-thumbnail"),
             },
             { id: "resizeImage", run: this.resizeImage.bind(this) },
+            { id: "transformImage", run: this.handleImageTransformation.bind(this) },
         ],
         toolbar_namespaces: [
             {
@@ -191,6 +194,8 @@ export class ImagePlugin extends Plugin {
 
     setup() {
         this.imageSize = reactive({ displayName: "Default" });
+        this.transformState = reactive({ active: false });
+        this.pointerDownInsideTransform = false;
         this.addDomListener(this.editable, "pointerup", (e) => {
             if (e.target.tagName === "IMG") {
                 const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesOut(e.target);
@@ -204,6 +209,32 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.fileViewer = createFileViewer();
+        // We close the image transform when we click outside any element not
+        // related to it.When the pointerdown of the click is inside the image
+        // transform and pointerup is outside while resizing or rotating the
+        // image it will consider the click as being done outside image
+        // transform.So we need to keep track if the pointerdown is inside or
+        // outside to know if we want to close the image transform component or
+        // not.
+        this.addDomListener(this.document, "pointerdown", (ev) => {
+            if (this.isNodeInsideTransform(ev.target)) {
+                this.pointerDownInsideTransform = true;
+            } else {
+                this.closeImageTransformation();
+                this.pointerDownInsideTransform = false;
+            }
+        });
+        this.addDomListener(this.document, "click", (ev) => {
+            if (!this.isNodeInsideTransform(ev.target) && !this.pointerDownInsideTransform) {
+                this.closeImageTransformation();
+            }
+            this.pointerDownInsideTransform = false;
+        });
+        // When we click on any character the image is deleted and we need to close the image transform
+        // We handle this by selectionchange
+        this.addDomListener(this.document, "selectionchange", (ev) => {
+            this.closeImageTransformation();
+        });
     }
 
     destroy() {
@@ -238,6 +269,61 @@ export class ImagePlugin extends Plugin {
         }
         targetedImg.style.width = size || "";
         this.dependencies.history.addStep();
+    }
+
+    handleImageTransformation(image = this.getTargetedImage()) {
+        if (this.isImageTransformationOpen()) {
+            this.resetImageTransformation(image);
+            this.closeImageTransformation();
+        } else {
+            this.openImageTransformation(image);
+        }
+    }
+
+    isNodeInsideTransform(node) {
+        if (!node) {
+            return false;
+        }
+        if (node.nodeType === Node.TEXT_NODE) {
+            node = node.parentElement;
+        }
+        if (node.matches('[name="image_transform"], [name="image_transform"] *')) {
+            return true;
+        }
+        if (
+            this.isImageTransformationOpen() &&
+            node.matches(
+                ".transfo-container, .transfo-container div, .transfo-container i, .transfo-container span"
+            )
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    openImageTransformation(image) {
+        this.transformState.active = true;
+        registry.category("main_components").add("ImageTransformation", {
+            Component: ImageTransformation,
+            props: {
+                image,
+                document: this.document,
+                editable: this.editable,
+                destroy: this.closeImageTransformation.bind(this),
+                onChange: this.dependencies.history.addStep.bind(this),
+            },
+        });
+    }
+
+    isImageTransformationOpen() {
+        return registry.category("main_components").contains("ImageTransformation");
+    }
+
+    closeImageTransformation() {
+        this.transformState.active = false;
+        if (this.isImageTransformationOpen()) {
+            registry.category("main_components").remove("ImageTransformation");
+        }
     }
 
     setImageShape(className, { excludeClasses = [] } = {}) {
@@ -369,12 +455,9 @@ export class ImagePlugin extends Plugin {
             id: "image_transform",
             icon: "fa-object-ungroup",
             title: _t("Transform the picture (click twice to reset transformation)"),
-            getTargetedImage: this.getTargetedImage.bind(this),
-            resetImageTransformation: this.resetImageTransformation.bind(this),
-            addStep: this.dependencies.history.addStep.bind(this),
-            document: this.document,
-            editable: this.editable,
             activeTitle: _t("Click again to reset transformation"),
+            handleImageTransformation: this.handleImageTransformation.bind(this),
+            getTransformState: () => this.transformState,
         };
     }
 
