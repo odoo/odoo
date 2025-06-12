@@ -21,7 +21,10 @@ export class RPCError extends Error {
 
 export class ConnectionLostError extends Error {
     constructor(url, ...args) {
-        super(`Connection to "${url}" couldn't be established or was interrupted`, ...args);
+        const message = url
+            ? `Connection to "${url}" couldn't be established or was interrupted`
+            : "Connection couldn't be established or was interrupted";
+        super(message, ...args);
         this.url = url;
     }
 }

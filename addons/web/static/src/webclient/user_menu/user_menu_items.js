@@ -127,6 +127,7 @@ function logOutItem(env) {
         description: _t("Log out"),
         href: `${browser.location.origin}${route}`,
         callback: () => {
+            browser.navigator.serviceWorker?.controller?.postMessage("user_logout");
             browser.location.href = route;
         },
         sequence: 70,
