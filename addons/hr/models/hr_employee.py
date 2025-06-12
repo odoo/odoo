@@ -1354,3 +1354,14 @@ class HrEmployee(models.Model):
             'domain': [('employee_id', '=', self.employee_id.id)],
             'search_view_id': self.env.ref('hr.hr_version_search_view').id
         }
+
+    def action_new_contract(self):
+        self.ensure_one()
+        if not self.contract_date_end:
+            raise UserError(self.env._("Before creating a new contract, close the current one by setting an end date."))
+        if self.current_date_version <= self.contract_date_end:
+            raise UserError(self.env._("Before creating a new contract, create a version that is set after the contract end date"))
+        self.write({
+            'contract_date_start': False,
+            'contract_date_end': False,
+        })

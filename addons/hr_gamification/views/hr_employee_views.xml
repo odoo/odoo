@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//page[@name='contract_information']" position="after">
+            <xpath expr="//page[@name='hr_settings']" position="before">
                 <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
                     <div class="o_field_nocontent" invisible="has_badges">
@@ -37,7 +37,7 @@
         <field name="inherit_id" ref="hr.hr_employee_public_view_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//page[@name='contract_information']" position="after">
+            <page name="resume" position="after">
                 <page string="Badges" name="received_badges" invisible="not user_id">
                     <field name="has_badges" invisible="1"/>
                     <div class="o_field_nocontent" invisible="has_badges">
@@ -56,7 +56,7 @@
                         <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/>
                     </div>
                 </page>
-            </xpath>
+            </page>
 
         </field>
     </record>

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority" eval="90"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
+            <button name="action_open_versions" position="before">
                 <field name="has_work_entries" invisible="1"/>
                 <button invisible="not has_work_entries" type="object" class="oe_stat_button" id="open_work_entries"
                     icon="fa-calendar" name="action_open_work_entries">
@@ -16,7 +16,7 @@
                             </span>
                         </div>
                 </button>
-            </div>
+            </button>
             <group name="contract" position="inside">
                 <field name="work_entry_source" invisible="1"/>
             </group>

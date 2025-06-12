@@ -3,3 +3,4 @@
 
 from . import hr_departure_wizard
 from . import mail_activity_schedule
+from . import hr_contract_template_wizard

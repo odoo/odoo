@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority" eval="50"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
+            <button name="action_open_versions" position="before">
                 <button name="%(maintenance.hr_equipment_action)d"
                     context="{'search_default_employee_id': id, 'default_employee_id': id}"
                     groups="maintenance.group_equipment_manager"
@@ -15,7 +15,7 @@
                     type="action">
                     <field name="equipment_count" widget="statinfo"/>
                 </button>
-            </div>
+            </button>
         </field>
     </record>
 

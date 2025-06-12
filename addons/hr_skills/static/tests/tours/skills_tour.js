@@ -26,6 +26,11 @@ registry.category("web_tour.tours").add("hr_skills_tour", {
             run: "click",
         },
         {
+            content: "Add Experience",
+            trigger: ".nav-link:contains('Resume')",
+            run: "click",
+        },
+        {
             content: "Add a new Resume experience",
             trigger: ".o_field_resume_one2many tr.o_resume_group_header button.btn-secondary",
             run: "click",
