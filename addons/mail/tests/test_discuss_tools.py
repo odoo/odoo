@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import tagged, TransactionCase
 
 
@@ -59,6 +60,27 @@ class TestDiscussTools(TransactionCase):
         store.add_model_values("key2", {"id": 1})
         self.assertEqual(store.get_result(), {"key2": [{"id": 1}]})
 
+    def test_075_store_same_related_field_twice(self):
+        """Test adding the same related field twice combines their data"""
+        user = mail_new_test_user(self.env, login="test_user", name="Test User")
+        res = Store(
+            user, [Store.One("partner_id", "name"), Store.One("partner_id", "country_id")],
+        ).get_result()
+        self.assertEqual(
+            res,
+            {
+                "res.partner": [
+                    {
+                        "id": user.partner_id.id,
+                        "name": "Test User",
+                        "country_id": False,
+                    },
+                ],
+                "res.users": [
+                    {"id": user.id, "partner_id": {"id": user.partner_id.id, "type": "partner"}},
+                ],
+            },
+        )
     # 1xx Store specific tests (singleton in ids_by_model)
 
     def test_110_store_store_singleton(self):
