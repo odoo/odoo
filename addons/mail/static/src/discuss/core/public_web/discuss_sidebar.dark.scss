@@ -1,4 +1,5 @@
 .o-mail-DiscussSidebar-item {
-    --mail-DiscussSidebar-itemActiveBgColor: #{mix($gray-200, $gray-300)};
-    --mail-DiscussSidebar-itemActiveOutlineColor: #{rgba($gray-400, .15)};
+    --mail-DiscussSidebar-hoverBgColor: #{$gray-200};
+    --mail-DiscussSidebar-hoverOutlineColor: #{$gray-300};
+    @include mail-DiscussSidebar-itemMixin; // refresh with dark colors
 }

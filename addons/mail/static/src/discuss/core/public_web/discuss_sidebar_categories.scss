@@ -75,15 +75,18 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
     margin-left: map-get($spacers, 4) + map-get($spacers, 2);
 }
 
+@mixin o-mail-DiscussSidebar-unreadIndicatorBorderedMixin() {
+    .o-mail-DiscussSidebarChannel-container.o-bordered & {
+        &.o-mail-DiscussSidebarChannel, &.o-compact {
+            filter: drop-shadow(1px 2px 0px mail-DiscussPanel-bgColor()) drop-shadow(-1px 1px 0px mail-DiscussPanel-bgColor()) drop-shadow(1px -1px 0px mail-DiscussPanel-bgColor()) drop-shadow(-1px -2px 0px mail-DiscussPanel-bgColor());
+        }
+    }
+}
+
 .o-mail-DiscussSidebar-unreadIndicator {
     font-size: 0.4rem;
     left: -3px;
-
-    .o-mail-DiscussSidebarChannel-container.o-bordered & {
-        &.o-mail-DiscussSidebarChannel, &.o-compact {
-            filter: drop-shadow(1px 2px 0px $white) drop-shadow(-1px 1px 0px $white) drop-shadow(1px -1px 0px $white) drop-shadow(-1px -2px 0px $white);
-        }
-    }
+    @include o-mail-DiscussSidebar-unreadIndicatorBorderedMixin;
 
     .o-mail-DiscussSidebarSubchannel &:not(.o-compact) {
         left: map-get($spacers, 2) + map-get($spacers, 1) / 2;
@@ -96,7 +99,7 @@ $o-mail-DiscussSidebarChannel-borderOpacity: .05;
 }
 
 .o-mail-DiscussSidebarCategories-search {
-    --border-opacity: .5;
+    --border-opacity: .75;
 
     &, & input {
         background-color: $o-view-background-color !important;
