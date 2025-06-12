@@ -51,6 +51,7 @@ export class Persona extends Record {
             return this._computeDisplayName();
         },
     });
+    main_user_id = fields.One("res.users");
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
     signature = fields.Html(undefined);
     monitorPresence = fields.Attr(false, {
@@ -86,8 +87,6 @@ export class Persona extends Record {
     country_id = fields.One("res.country");
     /** @type {string} */
     email;
-    /** @type {number} */
-    userId;
     /** @type {ImStatus} */
     im_status = fields.Attr(null, {
         onUpdate() {
@@ -148,8 +147,8 @@ export class Persona extends Record {
                 unique: this.write_date,
             });
         }
-        if (this.userId) {
-            return imageUrl("res.users", this.userId, "avatar_128", {
+        if (this.main_user_id) {
+            return imageUrl("res.users", this.main_user_id.id, "avatar_128", {
                 unique: this.write_date,
             });
         }

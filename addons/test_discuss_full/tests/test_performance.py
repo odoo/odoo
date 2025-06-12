@@ -388,9 +388,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "im_status_access_token": self.user_root.partner_id._get_im_status_access_token(),
                     "isInternalUser": True,
                     "is_company": False,
+                    "main_user_id": self.user_root.id,
                     "name": "OdooBot",
                     "leave_date_to": False,
-                    "userId": self.user_root.id,
                     "write_date": fields.Datetime.to_string(self.user_root.partner_id.write_date),
                 },
                 {
@@ -399,10 +399,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "id": self.users[0].partner_id.id,
                     "isAdmin": False,
                     "isInternalUser": True,
+                    "main_user_id": self.users[0].id,
                     "name": "Ernest Employee",
                     "notification_preference": "inbox",
                     "signature": ["markup", self.users[0].signature],
-                    "userId": self.users[0].id,
                     "write_date": fields.Datetime.to_string(self.users[0].partner_id.write_date),
                 },
             ),
@@ -1633,9 +1633,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
+                "main_user_id": user.id,
                 "name": "Ernest Employee",
                 "leave_date_to": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1660,8 +1660,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "isInternalUser": True,
                 "is_company": False,
                 "is_public": False,
+                "main_user_id": user.id,
                 "name": "test1",
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
             if also_livechat:
@@ -1687,9 +1687,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
+                "main_user_id": user.id,
                 "name": "test2",
                 "leave_date_to": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[3]:
@@ -1702,9 +1702,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
+                "main_user_id": user.id,
                 "name": "test3",
                 "leave_date_to": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(self.users[3].partner_id.write_date),
             }
         if user == self.users[12]:
@@ -1717,9 +1717,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
+                "main_user_id": user.id,
                 "name": "test12",
                 "leave_date_to": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[14]:
@@ -1732,9 +1732,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
+                "main_user_id": user.id,
                 "name": "test14",
                 "leave_date_to": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.users[15]:
@@ -1747,9 +1747,9 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "im_status_access_token": user.partner_id._get_im_status_access_token(),
                 "is_company": False,
                 "isInternalUser": True,
+                "main_user_id": user.id,
                 "name": "test15",
                 "leave_date_to": False,
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if user == self.user_root:
@@ -1758,8 +1758,8 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "id": user.partner_id.id,
                 "isInternalUser": True,
                 "is_company": False,
+                "main_user_id": user.id,
                 "name": "OdooBot",
-                "userId": user.id,
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if guest:
