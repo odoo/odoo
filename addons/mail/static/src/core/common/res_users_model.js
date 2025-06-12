@@ -1,4 +1,4 @@
-import { Record } from "@mail/core/common/record";
+import { fields, Record } from "@mail/core/common/record";
 
 export class ResUsers extends Record {
     static _name = "res.users";
@@ -14,6 +14,8 @@ export class ResUsers extends Record {
     notification_type;
     /** @type {boolean} false when the user is an internal user, true otherwise */
     share;
+    /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
+    signature = fields.Html(undefined);
 }
 
 ResUsers.register();

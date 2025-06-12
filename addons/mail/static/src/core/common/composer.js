@@ -552,7 +552,7 @@ export class Composer extends Component {
             // Reset signature when recovering an empty body.
             composer.emailAddSignature = true;
         }
-        let signature = this.store.self.signature;
+        let signature = this.store.self.main_user_id?.signature;
         if (signature) {
             const divElement = document.createElement("div");
             divElement.setAttribute("data-o-mail-quote", "1");
