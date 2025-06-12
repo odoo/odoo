@@ -29,19 +29,25 @@ class ResourceCalendarAttendance(models.Model):
     # For the hour duration, the compute function is used to compute the value
     # unambiguously, while the duration in days is computed for the default
     # value based on the day_period but can be manually overridden.
-    duration_hours = fields.Float(compute='_compute_duration_hours', string='Duration (hours)')
+    duration_hours = fields.Float(compute='_compute_duration_hours', inverse='_inverse_duration_hours',
+                                  string='Duration (hours)', store=True, readonly=False)
     duration_days = fields.Float(compute='_compute_duration_days', string='Duration (days)', store=True, readonly=False)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, index=True, ondelete='cascade')
     day_period = fields.Selection([
         ('morning', 'Morning'),
         ('lunch', 'Break'),
-        ('afternoon', 'Afternoon')], required=True, default='morning')
+        ('afternoon', 'Afternoon'),
+        ('day', 'Full Day')], required=True, default='morning')
     resource_id = fields.Many2one('resource.resource', 'Resource')
     week_type = fields.Selection([
         ('1', 'Second'),
         ('0', 'First')
         ], 'Week Number', default=False)
     two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
+    flexible_hours = fields.Boolean("Flexible hours", related='calendar_id.flexible_hours')
+    schedule_type = fields.Selection(string="Schedule Type", related='calendar_id.schedule_type')
+
+    fixed_time_with_hours = fields.Boolean("Fixed time with hours", related='calendar_id.fixed_time_with_hours')
     display_type = fields.Selection([
         ('line_section', "Section")], default=False, help="Technical field for UX purpose.")
     sequence = fields.Integer(default=10,
@@ -68,16 +74,29 @@ class ResourceCalendarAttendance(models.Model):
         # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
         return int(math.floor((date.toordinal() - 1) / 7) % 2)
 
-    @api.depends('hour_from', 'hour_to')
+    @api.depends('hour_from', 'hour_to', 'schedule_type', 'calendar_id.hours_per_day')
     def _compute_duration_hours(self):
         for attendance in self:
+            if attendance.schedule_type == "fixed_time":
+                if not attendance.fixed_time_with_hours:
+                    attendance.duration_hours = attendance.calendar_id.hours_per_day
+                continue
             attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0
+
+    def _inverse_duration_hours(self):
+        for attendance in self:
+            if attendance.schedule_type != "fixed_time":
+                continue
+            attendance.hour_from = 0
+            attendance.hour_to = attendance.duration_hours
 
     @api.depends('day_period', 'duration_hours')
     def _compute_duration_days(self):
         for attendance in self:
             if attendance.day_period == 'lunch':
                 attendance.duration_days = 0
+            elif attendance.day_period == 'day':
+                attendance.duration_days = 1
             else:
                 attendance.duration_days = 0.5 if attendance.duration_hours <= attendance.calendar_id.hours_per_day * 3 / 4 else 1
 
@@ -100,6 +119,7 @@ class ResourceCalendarAttendance(models.Model):
             'date_to': self.date_to,
             'hour_from': self.hour_from,
             'hour_to': self.hour_to,
+            'duration_hours': self.duration_hours,
             'day_period': self.day_period,
             'week_type': self.week_type,
             'display_type': self.display_type,
