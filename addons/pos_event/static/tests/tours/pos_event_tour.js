@@ -40,3 +40,27 @@ registry.category("web_tour.tours").add("SellingEventInPos", {
             ReceiptScreen.clickNextOrder(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_selling_multiple_ticket_saved", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("My Awesome Event"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket VIP"),
+            EventTourUtils.increaseQuantityOfTicket("Ticket Basic"),
+            Dialog.confirm(),
+            EventTourUtils.answerTicketSelectQuestion("1", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerTicketSelectQuestion("2", "Question1", "Q1-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question2", "Q2-Answer1"),
+            EventTourUtils.answerGlobalSelectQuestion("Question3", "Q3-Answer1"),
+            Dialog.confirm(),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank", true, { remaining: "0.00" }),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+            EventTourUtils.printTicket("full"),
+            EventTourUtils.printTicket("badge"),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});

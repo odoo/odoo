@@ -170,7 +170,7 @@ const deepSerialization = (
                         uuidMapping[targetModel][record.uuid][fieldName] = record[fieldName].uuid;
                     }
                 }
-                serialized[relatedModel][record[fieldName].uuid] = record[fieldName];
+                serialized[relatedModel][record[fieldName].uuid] = record[fieldName].uuid;
             }
             if (typeof recordId === "number" && recordId >= 0) {
                 result[fieldName] = record[fieldName].id;
