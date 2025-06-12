@@ -108,11 +108,13 @@ class ResUsers(models.Model):
                 user.is_out_of_office = (user.out_of_office_from <= now)
         (self - todo).is_out_of_office = False
 
-    @api.depends("manual_im_status", "presence_ids.status")
+    @api.depends("active", "manual_im_status", "presence_ids.status")
     def _compute_im_status(self):
         for user in self:
             user.im_status = (
-                "offline"
+                "archived"
+                if not user.active
+                else "offline"
                 if user.presence_ids.status in ["offline", False]
                 else user.manual_im_status or user.presence_ids.status
             )
