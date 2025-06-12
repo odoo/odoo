@@ -92,3 +92,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
         self.assertEqual(len(event_registration.registration_answer_ids), 3)
         self.assertEqual(event_answer_name, ['Q1-Answer1', 'Q2-Answer1', 'Q3-Answer1'])
+
+    def test_selling_multiple_ticket_saved(self):
+        self.pos_user.write({
+            'group_ids': [
+                (4, self.env.ref('event.group_event_user').id),
+            ]
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_selling_multiple_ticket_saved', login="pos_user")
+
+        order = self.env['pos.order'].search([], order='id desc', limit=1)
+        self.assertTrue(order.lines[0].event_registration_ids)
+        self.assertTrue(order.lines[1].event_registration_ids)
