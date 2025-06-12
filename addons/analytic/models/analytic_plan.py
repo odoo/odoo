@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
+
 from random import randint
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import ormcache, make_index_name, create_index
+
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class AccountAnalyticPlan(models.Model):
@@ -35,6 +39,7 @@ class AccountAnalyticPlan(models.Model):
     root_id = fields.Many2one(
         'account.analytic.plan',
         compute='_compute_root_id',
+        search='_search_root_id',
     )
     children_ids = fields.One2many(
         'account.analytic.plan',
@@ -126,6 +131,11 @@ class AccountAnalyticPlan(models.Model):
     def _compute_root_id(self):
         for plan in self.sudo():
             plan.root_id = int(plan.parent_path[:-1].split('/')[0]) if plan.parent_path else plan
+
+    def _search_root_id(self, operator, value):
+        if operator != '=':
+            return NotImplemented
+        return [('parent_path', '=like', f'{value}/%')]
 
     @api.depends('name', 'parent_id.complete_name')
     def _compute_complete_name(self):
@@ -250,10 +260,42 @@ class AccountAnalyticPlan(models.Model):
     def unlink(self):
         # Remove the dynamic field created with the plan (see `_inverse_name`)
         self._find_plan_column().unlink()
-        return super().unlink()
+        related_fields = self._find_related_field()
+        res = super().unlink()
+        related_fields.filtered(lambda f: not self._is_subplan_field_used(f)).unlink()
+        self.env.registry.clear_cache()
+        return res
+
+    def _hierarchy_name(self):
+        depth = self.parent_path.count('/') - 1
+        fname = f"{self._column_name()}_{depth}"
+        if fname.startswith('account_id'):
+            fname = f'x_{fname}'
+        return depth, fname
+
+    def _is_subplan_field_used(self, field):
+        """Return `True` if there are analytic plans still on the same hierarchy level as what the field was created for.
+
+        :param field: the recordset of a field created to group by sub plan
+        :rtype: bool
+        """
+        assert '_id_' in field.name
+        root_name, depth = field.name.rsplit('_', maxsplit=1)
+        plan_id_match = re.search(r'\d+', root_name)
+        plan_id = int(plan_id_match.group() if plan_id_match else next(self._get_all_plans()))
+        return bool(self.env['account.analytic.plan'].search([
+            ('root_id', '=', plan_id),
+            ('parent_path', 'like', '%'.join('/' * (int(depth) + 1))),
+        ]))
 
     def _find_plan_column(self, model=False):
         domain = [('name', 'in', [plan._strict_column_name() for plan in self])]
+        if model:
+            domain.append(('model', '=', model))
+        return self.env['ir.model.fields'].sudo().search(domain)
+
+    def _find_related_field(self, model=False):
+        domain = [('name', 'in', [plan._hierarchy_name()[1] for plan in self])]
         if model:
             domain.append(('model', '=', model))
         return self.env['ir.model.fields'].sudo().search(domain)
@@ -266,30 +308,58 @@ class AccountAnalyticPlan(models.Model):
     def _sync_plan_column(self, model):
         # Create/delete a new field/column on related models for this plan, and keep the name in sync.
         for plan in self:
-            prev = plan._find_plan_column(model)
-            if plan.parent_id and prev:
-                prev.unlink()
-            elif prev:
-                prev.field_description = plan.name
-            elif not plan.parent_id:
-                column = plan._strict_column_name()
-                field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
-                    'name': column,
-                    'field_description': plan.name,
-                    'state': 'manual',
-                    'model': model,
-                    'model_id': self.env['ir.model']._get_id(model),
-                    'ttype': 'many2one',
-                    'relation': 'account.analytic.account',
-                    'copied': True,
-                    'on_delete': 'restrict',
-                })
-                Model = self.env[model]
-                if Model._auto:
-                    tablename = Model._table
-                    indexname = make_index_name(tablename, column)
-                    create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
-                    field['index'] = True
+            prev_stored = plan._find_plan_column(model)
+            depth, name_related = plan._hierarchy_name()
+            prev_related = plan._find_related_field(model)
+            if plan.parent_id:
+                # If there is a parent, we just need to make sure there is a field to group by the hierarchy level
+                # of this plan, allowing to group by sub plan
+                if prev_stored:
+                    prev_stored.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                description = f"{plan.root_id.name} ({depth})"
+                if not prev_related:
+                    self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
+                        'name': name_related,
+                        'field_description': description,
+                        'state': 'manual',
+                        'model': model,
+                        'model_id': self.env['ir.model']._get_id(model),
+                        'ttype': 'many2one',
+                        'relation': 'account.analytic.plan',
+                        'related': plan._column_name() + '.plan_id' + '.parent_id' * (depth - 1),
+                        'store': False,
+                        'readonly': True,
+                    })
+                else:
+                    prev_related.field_description = description
+            else:
+                # If there is no parent, then we need to create a new stored field as this is the root plan
+                if prev_related:
+                    prev_related.with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                description = plan.name
+                if not prev_stored:
+                    column = plan._strict_column_name()
+                    field = self.env['ir.model.fields'].with_context(update_custom_fields=True).sudo().create({
+                        'name': column,
+                        'field_description': description,
+                        'state': 'manual',
+                        'model': model,
+                        'model_id': self.env['ir.model']._get_id(model),
+                        'ttype': 'many2one',
+                        'relation': 'account.analytic.account',
+                        'copied': True,
+                        'on_delete': 'restrict',
+                    })
+                    Model = self.env[model]
+                    if Model._auto:
+                        tablename = Model._table
+                        indexname = make_index_name(tablename, column)
+                        create_index(self.env.cr, indexname, tablename, [column], 'btree', f'{column} IS NOT NULL')
+                        field['index'] = True
+                else:
+                    prev_stored.field_description = description
+        if self.children_ids:
+            self.children_ids._sync_plan_column(model)
 
     def write(self, vals):
         new_parent = self.env['account.analytic.plan'].browse(vals.get('parent_id'))
