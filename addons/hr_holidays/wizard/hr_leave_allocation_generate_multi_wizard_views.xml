@@ -5,7 +5,7 @@
         <field name="arch" type="xml">
             <form string="Generate time off allocations for multiple employees">
                     <group>
-                        <field name="allocation_mode" string="Grant"/>
+                        <field name="allocation_mode" string="Grant" groups="hr_holidays.group_hr_holidays_user"/>
                         <field name="employee_ids" invisible="allocation_mode != 'employee'" widget="many2many_avatar_employee" placeholder="All Employees"/>
                         <field name="company_id" invisible="allocation_mode != 'company'"/>
                         <field name="department_id" invisible="allocation_mode != 'department'" required="allocation_mode == 'department'"/>

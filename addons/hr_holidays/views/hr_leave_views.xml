@@ -96,7 +96,7 @@
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d"
                         string="New Group Time Off" class="btn btn-secondary"
-                        groups="hr_holidays.group_hr_holidays_user" display="always"
+                        groups="hr_holidays.group_hr_holidays_responsible" display="always"
                     />
                 </header>
                 <field name="supported_attachment_ids_count"/>
@@ -537,7 +537,7 @@
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d"
                         string="New Group Time Off" class="btn btn-secondary"
-                        groups="hr_holidays.group_hr_holidays_user" display="always"
+                        groups="hr_holidays.group_hr_holidays_responsible" display="always"
                     />
                 </header>
                 <field name="employee_id" widget="many2one_avatar_employee" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />

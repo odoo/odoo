@@ -178,6 +178,21 @@ A user without any rights on Time Off will be able to see the application, creat
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
+    <record id="hr_leave_allocation_rule_responsible_update" model="ir.rule">
+        <field name="name">Allocations: Responsible: create/write</field>
+        <field name="model_id" ref="model_hr_leave_allocation"/>
+        <field name="domain_force">[
+            '|',
+                '&amp;',
+                    ('employee_id.user_id', '=', user.id),
+                    ('state', '!=', 'validate'),
+                ('employee_id.leave_manager_id', '=', user.id),
+        ]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="groups" eval="[(4, ref('hr_holidays.group_hr_holidays_responsible'))]"/>
+    </record>
+
     <record id="hr_leave_allocation_rule_officer_read" model="ir.rule">
         <field name="name">Allocations: see all time off: read all</field>
         <field name="model_id" ref="model_hr_leave_allocation"/>
