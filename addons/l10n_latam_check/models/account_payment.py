@@ -225,7 +225,7 @@ class AccountPayment(models.Model):
                         ('bank_id', '=', check.bank_id.id),
                         ('issuer_vat', '=', check.issuer_vat),
                         ('name', '=', check.name),
-                        ('payment_id.state', '!=', 'draft'),
+                        ('payment_id.state', 'not in', ['draft', 'canceled']),
                         ('id', '!=', check._origin.id)], limit=1)
                 if same_checks:
                     msgs.append(
