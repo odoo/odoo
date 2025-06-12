@@ -10,70 +10,70 @@ class TestJsTranspiler(TransactionCase):
     maxDiff = None
 
     def test_01_alias(self):
-        input_content = """/** @odoo-module alias=test_assetsbundle.Alias **/"""
-        result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
+        input_content = """/** @odoo-module alias=test_orm.Alias **/"""
+        result = transpile_javascript("/test_orm/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', [], function (require) {
+        expected_result = """odoo.define('@test_orm/alias', [], function (require) {
 'use strict';
 let __exports = {};
-/** @odoo-module alias=test_assetsbundle.Alias **/
+/** @odoo-module alias=test_orm.Alias **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
-                        return require('@test_assetsbundle/alias')[Symbol.for("default")];
+odoo.define(`test_orm.Alias`, ['@test_orm/alias'], function (require) {
+                        return require('@test_orm/alias')[Symbol.for("default")];
                         });
 """
 
         self.assertEqual(result, expected_result)
 
     def test_02_default(self):
-        input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=False **/"""
-        result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
+        input_content = """/** @odoo-module alias=test_orm.Alias default=False **/"""
+        result = transpile_javascript("/test_orm/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', [], function (require) {
+        expected_result = """odoo.define('@test_orm/alias', [], function (require) {
 'use strict';
 let __exports = {};
-/** @odoo-module alias=test_assetsbundle.Alias default=False **/
+/** @odoo-module alias=test_orm.Alias default=False **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
-                        return require('@test_assetsbundle/alias');
+odoo.define(`test_orm.Alias`, ['@test_orm/alias'], function (require) {
+                        return require('@test_orm/alias');
                         });
 """
 
         self.assertEqual(result, expected_result)
 
-        input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=0 **/"""
-        result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
+        input_content = """/** @odoo-module alias=test_orm.Alias default=0 **/"""
+        result = transpile_javascript("/test_orm/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', [], function (require) {
+        expected_result = """odoo.define('@test_orm/alias', [], function (require) {
 'use strict';
 let __exports = {};
-/** @odoo-module alias=test_assetsbundle.Alias default=0 **/
+/** @odoo-module alias=test_orm.Alias default=0 **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
-                        return require('@test_assetsbundle/alias');
+odoo.define(`test_orm.Alias`, ['@test_orm/alias'], function (require) {
+                        return require('@test_orm/alias');
                         });
 """
 
         self.assertEqual(result, expected_result)
 
-        input_content = """/** @odoo-module alias=test_assetsbundle.Alias default=false **/"""
-        result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
+        input_content = """/** @odoo-module alias=test_orm.Alias default=false **/"""
+        result = transpile_javascript("/test_orm/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', [], function (require) {
+        expected_result = """odoo.define('@test_orm/alias', [], function (require) {
 'use strict';
 let __exports = {};
-/** @odoo-module alias=test_assetsbundle.Alias default=false **/
+/** @odoo-module alias=test_orm.Alias default=false **/
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
-                        return require('@test_assetsbundle/alias');
+odoo.define(`test_orm.Alias`, ['@test_orm/alias'], function (require) {
+                        return require('@test_orm/alias');
                         });
 """
 
@@ -90,9 +90,9 @@ export class Boat extends Vehicule {}
 
 export const Ferrari = class Ferrari extends Car {};
 """
-        result = transpile_javascript("/test_assetsbundle/static/src/classes.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/classes.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/classes', [], function (require) {
+        expected_result = """odoo.define('@test_orm/classes', [], function (require) {
 'use strict';
 let __exports = {};
 const Nice = __exports[Symbol.for("default")] = class Nice {}
@@ -143,9 +143,9 @@ const aaa = "keep!";
   comments
  */
 """
-        result = transpile_javascript("/test_assetsbundle/static/src/comments.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/comments.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/comments', [], function (require) {
+        expected_result = """odoo.define('@test_orm/comments', [], function (require) {
 'use strict';
 let __exports = {};
 /**
@@ -203,9 +203,9 @@ export default function sayHelloDefault() {
   console.log("Hello Default");
 }
 """
-        result = transpile_javascript("/test_assetsbundle/static/src/functions.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/functions.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/functions', [], function (require) {
+        expected_result = """odoo.define('@test_orm/functions', [], function (require) {
 'use strict';
 let __exports = {};
 __exports.sayHello = sayHello; function sayHello() {
@@ -265,22 +265,22 @@ const test = `import { Line14, Notification } from "../src/Dialog";`
 import Line15 from "test/Dialog";
 import Line16 from "test.Dialog.error";
 """
-        result = transpile_javascript("/test_assetsbundle/static/src/import.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/import.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/import', ['@test_assetsbundle/Dialog', 'Dialog', '@tests/Dialog', 'test.Dialog', 'test.Dialog2', 'legacy.module', '@new_module/file', '@test.Dialog', 'test/Dialog', 'test.Dialog.error'], function (require) {
+        expected_result = """odoo.define('@test_orm/import', ['@test_orm/Dialog', 'Dialog', '@tests/Dialog', 'test.Dialog', 'test.Dialog2', 'legacy.module', '@new_module/file', '@test.Dialog', 'test/Dialog', 'test.Dialog.error'], function (require) {
 'use strict';
 let __exports = {};
 /**
  * import { Dialog, Notification } from "../src/Dialog";
  */
-const { Line1 } = require("@test_assetsbundle/Dialog");
-const { Line2, Notification } = require("@test_assetsbundle/Dialog");
+const { Line1 } = require("@test_orm/Dialog");
+const { Line2, Notification } = require("@test_orm/Dialog");
 const { Line3, Notification } = require("Dialog");
 const { Line4, Notification } = require("@tests/Dialog");
-const { Line5, Notification } = require("@test_assetsbundle/Dialog");
-const { Line6, Notification } = require("@test_assetsbundle/Dialog")
-const Line7 = require("@test_assetsbundle/Dialog")[Symbol.for("default")];
-const Line8 = require("@test_assetsbundle/Dialog")[Symbol.for("default")];
+const { Line5, Notification } = require("@test_orm/Dialog");
+const { Line6, Notification } = require("@test_orm/Dialog")
+const Line7 = require("@test_orm/Dialog")[Symbol.for("default")];
+const Line8 = require("@test_orm/Dialog")[Symbol.for("default")];
 
 const Line9 = require("test.Dialog");
 const { Line10, Notification } = require('test.Dialog2');
@@ -319,9 +319,9 @@ import * as b from "@tests/dir";
 import c from "@tests/dir/index/";
 
 import d from "@tests";"""
-        result = transpile_javascript("/test_assetsbundle/static/src/index.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/index.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle', ['@tests/dir', '@tests'], function (require) {
+        expected_result = """odoo.define('@test_orm', ['@tests/dir', '@tests'], function (require) {
 'use strict';
 let __exports = {};
 const a = __exports.a = 5;
@@ -361,9 +361,9 @@ export {c as cc, d, e as ee} from "@tests/Dialog";
 
 export * from "@tests/Dialog";
 """
-        result = transpile_javascript("/test_assetsbundle/static/src/list.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/list.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/list', ['@tests/Dialog', '@test_assetsbundle/Dialog'], function (require) {
+        expected_result = """odoo.define('@test_orm/list', ['@tests/Dialog', '@test_orm/Dialog'], function (require) {
 'use strict';
 let __exports = {};
 Object.assign(__exports, {a,  b});
@@ -383,7 +383,7 @@ Object.assign(__exports, {
 export {a, aReallyVeryLongNameWithSomeExtra /* a comment must not cause catastrophic backtracking, even if not supported */};
 
 {const {c, d} = require("@tests/Dialog");Object.assign(__exports, {c,  d})};
-{const {e} = require("@test_assetsbundle/Dialog");Object.assign(__exports, {e})};
+{const {e} = require("@test_orm/Dialog");Object.assign(__exports, {e})};
 
 {const {c, d, e} = require("@tests/Dialog");Object.assign(__exports, {cc: c,  d, ee:  e})};
 
@@ -408,9 +408,9 @@ export default 100;
 
 export default a;
 """
-        result = transpile_javascript("/test_assetsbundle/static/src/variables.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/variables.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/variables', [], function (require) {
+        expected_result = """odoo.define('@test_orm/variables', [], function (require) {
 'use strict';
 let __exports = {};
 const v = __exports.v = 5;
@@ -433,12 +433,12 @@ return __exports;
     def test_10_qunit_module_test(self):
         input_content = """QUnit.test("Tests", function (assert) {{}})"""
 
-        result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
+        result = transpile_javascript("/test_orm/static/tests/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], function (require) {
+        expected_result = """odoo.define('@test_orm/../tests/alias', [], function (require) {
 'use strict';
 let __exports = {};
-QUnit.module("test_assetsbundle", function() {QUnit.test("Tests", function (assert) {{}})});
+QUnit.module("test_orm", function() {QUnit.test("Tests", function (assert) {{}})});
 return __exports;
 });
 """
@@ -448,12 +448,12 @@ return __exports;
     def test_11_qunit_module_debug(self):
         input_content = """QUnit.debug("Tests", function (assert) {{}})"""
 
-        result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
+        result = transpile_javascript("/test_orm/static/tests/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], function (require) {
+        expected_result = """odoo.define('@test_orm/../tests/alias', [], function (require) {
 'use strict';
 let __exports = {};
-QUnit.module("test_assetsbundle", function() {QUnit.debug("Tests", function (assert) {{}})});
+QUnit.module("test_orm", function() {QUnit.debug("Tests", function (assert) {{}})});
 return __exports;
 });
 """
@@ -463,9 +463,9 @@ return __exports;
     def test_12_qunit_no_module(self):
         input_content = """let a = 1 + 1;"""
 
-        result = transpile_javascript("/test_assetsbundle/static/tests/alias.js", input_content)
+        result = transpile_javascript("/test_orm/static/tests/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/../tests/alias', [], function (require) {
+        expected_result = """odoo.define('@test_orm/../tests/alias', [], function (require) {
 'use strict';
 let __exports = {};
 let a = 1 + 1;
@@ -494,9 +494,9 @@ const dialog = require("@test/Dialog2")
 */
 """
 
-        result = transpile_javascript("/test_assetsbundle/static/src/alias.js", input_content)
+        result = transpile_javascript("/test_orm/static/src/alias.js", input_content)
 
-        expected_result = """odoo.define('@test_assetsbundle/alias', ['@test/Dialog', '@test/Dialog2'], function (require) {
+        expected_result = """odoo.define('@test_orm/alias', ['@test/Dialog', '@test/Dialog2'], function (require) {
 'use strict';
 let __exports = {};
 

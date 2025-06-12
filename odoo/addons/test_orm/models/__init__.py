@@ -1,4 +1,5 @@
 from . import (
+    ir_qweb,
     test_access_rights,
     test_action_bindings,
     test_auth_custom,

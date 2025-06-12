@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Component } from "@odoo/owl";
 
 export class LazyTestComponent extends Component {
-    static template = "test_assetsbundle.LazyTestComponent";
+    static template = "test_orm.LazyTestComponent";
     static props = ["*"];
     setup() {
         this.props.onCreated();
