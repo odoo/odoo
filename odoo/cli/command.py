@@ -5,16 +5,21 @@ import sys
 from inspect import cleandoc
 from pathlib import Path
 
-import odoo.init  # import first for core setup
 import odoo.cli
+import odoo.init  # import first for core setup
 from odoo.modules import initialize_sys_path, load_script
 from odoo.tools import config
-
 
 COMMAND_NAME_RE = re.compile(r'^[a-z][a-z0-9_]*$', re.I)
 PROG_NAME = Path(sys.argv[0]).name
 commands = {}
+
 """All loaded commands"""
+
+
+class SubcommandHelpFormatter(argparse.RawTextHelpFormatter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs, max_help_position=80)
 
 
 class Command:

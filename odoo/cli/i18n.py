@@ -1,4 +1,3 @@
-import argparse
 import logging
 import sys
 import textwrap
@@ -6,7 +5,7 @@ from pathlib import Path
 
 from odoo import SUPERUSER_ID
 from odoo.api import Environment
-from odoo.cli.command import Command
+from odoo.cli.command import Command, SubcommandHelpFormatter
 from odoo.modules import get_module_path
 from odoo.modules.registry import Registry
 from odoo.tools import OrderedSet, config
@@ -16,11 +15,6 @@ _logger = logging.getLogger(__name__)
 
 EXPORT_EXTENSIONS = ['.po', '.pot', '.tgz', '.csv']
 IMPORT_EXTENSIONS = ['.po', '.csv']
-
-
-class SubcommandHelpFormatter(argparse.RawTextHelpFormatter):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs, max_help_position=80)
 
 
 class I18n(Command):
