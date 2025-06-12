@@ -536,7 +536,12 @@ class Stream:
     def from_binary_field(cls, record, field_name):
         """ Create a :class:`~Stream`: from a binary field. """
         data_b64 = record[field_name]
-        data = base64.b64decode(data_b64) if data_b64 else b''
+        try:
+            data = base64.b64decode(data_b64, validate=True) if data_b64 else b''
+        except ValueError as exc:
+            e = ("Expected base64 encoded content, but it looks like "
+                 f"{record._name}.{field_name} contains raw bytes.")
+            raise ValueError(e) from exc
         return cls(
             type='data',
             data=data,
