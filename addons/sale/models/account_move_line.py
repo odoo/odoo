@@ -24,7 +24,7 @@ class AccountMoveLine(models.Model):
         # EXTENDS 'account'
         vals = super()._related_analytic_distribution()
         if self.sale_line_ids and not self.analytic_distribution:
-            vals |= self.sale_line_ids.analytic_distribution or {}
+            vals |= self.sale_line_ids[0].analytic_distribution or {}
         return vals
 
     def _prepare_analytic_lines(self):
