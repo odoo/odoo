@@ -44,6 +44,7 @@ test("avatar card preview with hr", async () => {
     onRpc("res.users", "read", (request) => {
         expect.step("user read");
         expect(request.args[1]).toEqual([
+            "active",
             "name",
             "email",
             "phone",

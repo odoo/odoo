@@ -20,7 +20,7 @@ export class AvatarCardPopover extends Component {
     }
 
     get fieldNames() {
-        return ["name", "email", "phone", "im_status", "share", "partner_id"];
+        return ["active", "name", "email", "phone", "im_status", "share", "partner_id"];
     }
 
     get email() {
