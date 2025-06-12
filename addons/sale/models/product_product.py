@@ -1,22 +1,60 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
     sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit')
+    last_invoice_date = fields.Date(compute='_compute_last_invoice_date')
 
     # Catalog related fields
     product_catalog_product_is_in_sale_order = fields.Boolean(
         compute='_compute_product_is_in_sale_order',
         search='_search_product_is_in_sale_order',
     )
+
+    @api.depends_context('partner_id')
+    def _compute_last_invoice_date(self):
+        self.last_invoice_date = False
+        partner_id = self.env.context.get('partner_id')
+        if not partner_id:
+            return
+
+        today = fields.Date.today()
+        prioritized_product_and_time = self.env['product.template']._get_products_and_most_recent_invoice_date(partner_id, 'sale', self.ids)
+        dates_by_product = defaultdict(lambda: False)
+        for data in prioritized_product_and_time:
+            date = data['invoice_date']
+            product = self.browse(data['product_id'])
+            if not dates_by_product[product] or date > dates_by_product[product]:
+                dates_by_product[product] = date if date <= today else today
+        for (product, date) in dates_by_product.items():
+            product.last_invoice_date = date
+
+    @api.depends_context('formatted_display_name', 'partner_id', 'prioritize_for')
+    def _compute_display_name(self):
+        super()._compute_display_name()
+
+        # Add last invoiced date beside the product's name.
+        if self.env.context.get('formatted_display_name') and\
+            self.env['product.template']._must_prioritize_invoiced_product():
+            today = fields.Date.today()
+            for product in self:
+                if product.last_invoice_date:
+                    days_count = (today - product.last_invoice_date).days
+                    if days_count > 365:
+                        day_value_str = self.env._('%(years_count)sy', years_count=(days_count // 365))
+                    elif days_count > 30:
+                        day_value_str = self.env._('%(months_count)smo', months_count=(days_count // 30))
+                    else:
+                        day_value_str = self.env._('%(days_count)sd', days_count=days_count)
+                    product.display_name += f'\t`{day_value_str}`'
 
     def _compute_sales_count(self):
         r = {}
@@ -113,7 +151,7 @@ class ProductProduct(models.Model):
             so_lines.product_uom_id = to_uom_id
         return super()._update_uom(to_uom_id)
 
-    def _trigger_uom_warning(self):        
+    def _trigger_uom_warning(self):
         res = super()._trigger_uom_warning()
         if res:
             return res

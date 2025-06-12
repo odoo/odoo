@@ -204,8 +204,8 @@ class ProductTemplate(models.Model):
         return (self.env.context.get('partner_id'), self.env.context.get('prioritize_for'))
 
     @api.model
-    def _get_prioritized_products_sql_query(self, partner_id: int, journal_type: str, product_ids: list) -> SQL:
-        return SQL("""
+    def _get_products_and_most_recent_invoice_date(self, partner_id: int, journal_type: str, product_ids: list) -> SQL:
+        sql_query = SQL("""
             SELECT product_id, product_tmpl_id, invoice_date
             FROM(
                 SELECT DISTINCT ON (aml.product_id)
@@ -227,6 +227,8 @@ class ProductTemplate(models.Model):
             journal_type=journal_type,
             product_ids=tuple(product_ids)
         )
+        self.env.cr.execute(sql_query)
+        return self.env.cr.dictfetchall()
 
     @api.model
     def _get_prioritized_products(self, partner_id, journal_type, is_product=False, domain=None, limit=0):
@@ -241,9 +243,7 @@ class ProductTemplate(models.Model):
         # First search of the products to respect the initial domain.
         all_products = res_model.search(domain)
         product_variants = all_products if is_product else all_products.product_variant_ids
-        sql_query = self._get_prioritized_products_sql_query(partner_id, journal_type, product_variants.ids)
-        self.env.cr.execute(sql_query)
-        prioritized_product_and_time = self.env.cr.dictfetchall()
+        prioritized_product_and_time = self._get_products_and_most_recent_invoice_date(partner_id, journal_type, product_variants.ids)
 
         if limit:
             prioritized_product_and_time = prioritized_product_and_time[:limit]
