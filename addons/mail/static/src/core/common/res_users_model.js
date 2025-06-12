@@ -10,6 +10,8 @@ export class ResUsers extends Record {
     is_admin;
     /** @type {string} */
     name;
+    /** @type {"email" | "inbox"} */
+    notification_type;
     /** @type {boolean} false when the user is an internal user, true otherwise */
     share;
 }

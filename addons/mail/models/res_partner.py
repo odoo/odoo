@@ -279,7 +279,7 @@ class ResPartner(models.Model):
                 if "is_admin" in fields:
                     store.add(main_user, [Store.Attr("is_admin", lambda u: u._is_admin())])
                 if "notification_type" in fields:
-                    data["notification_preference"] = main_user.notification_type
+                    store.add(main_user, ["notification_type"])
                 if "signature" in fields:
                     data["signature"] = main_user.signature
             if data:

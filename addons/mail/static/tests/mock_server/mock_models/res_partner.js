@@ -285,8 +285,11 @@ export class ResPartner extends webModels.ResPartner {
                 if (mainUser && fields.includes("is_admin")) {
                     store.add(ResUsers.browse(mainUser.id), { is_admin: true }); // mock server simplification
                 }
-                if (fields.includes("notification_type")) {
-                    data.notification_preference = mainUser.notification_type;
+                if (mainUser && fields.includes("notification_type")) {
+                    store.add(
+                        ResUsers.browse(mainUser.id),
+                        makeKwArgs({ fields: ["notification_type"] })
+                    );
                 }
             }
             store.add(this.browse(partner.id), data);
