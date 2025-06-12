@@ -1488,10 +1488,6 @@ def format_datetime(
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
         dt_format = '%s %s' % (date_format, time_format)
-    elif dt_format == 'short':
-        short_date_format = posix_to_ldml(lang.short_date_format, locale=locale)
-        short_time_format = posix_to_ldml(lang.short_time_format, locale=locale)
-        dt_format = '%s %s' % (short_date_format, short_time_format)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
@@ -1542,8 +1538,6 @@ def format_time(
     locale = babel_locale_parse(lang.code)
     if not time_format or time_format == 'medium':
         time_format = posix_to_ldml(lang.time_format, locale=locale)
-    elif time_format == 'short':
-        time_format = posix_to_ldml(lang.short_time_format, locale=locale)
 
     return babel.dates.format_time(localized_time, format=time_format, locale=locale)
 

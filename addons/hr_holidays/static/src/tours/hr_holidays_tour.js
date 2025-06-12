@@ -30,7 +30,7 @@ registry.category("web_tour.tours").add("hr_holidays_tour", {
             run: "click",
         },
         {
-            trigger: "input[data-field=request_date_from]",
+            trigger: "div[name=request_date_from] button",
             content: _t("You can select the period you need to take off"),
             tooltipPosition: "right",
             run: "click",

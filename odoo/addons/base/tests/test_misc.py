@@ -362,14 +362,14 @@ class TestFormatLang(TransactionCase):
         self.env["res.lang"].create({
             "name": "formatLang Lang",
             "code": "fLT",
-            "grouping": "[3,2,-1]",
+            "grouping": "[3,0]",
             "decimal_point": "!",
             "thousands_sep": "?",
         })
 
         self.env['res.lang']._activate_lang('fLT')
 
-        self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=True), '10000?00?000!00')
+        self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=True), '1?000?000?000!00')
         self.assertEqual(misc.formatLang(self.env['res.lang'].with_context(lang='fLT').env, 1000000000, grouping=False), '1000000000!00')
 
     def test_decimal_precision(self):

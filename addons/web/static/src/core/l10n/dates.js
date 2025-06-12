@@ -15,8 +15,6 @@ const { DateTime, Settings } = luxon;
  * @property {string} [format]
  *  Format used to format a DateTime or to parse a formatted string.
  *  > Default: the session localization format.
- * @property {boolean} [condensed] if true, months, days and hours will be formatted without
- *  leading 0.
  *
  * @typedef {luxon.DateTime} DateTime
  *
@@ -312,25 +310,6 @@ export function today() {
 // Formatting
 //-----------------------------------------------------------------------------
 
-const condensedFormats = {};
-/**
- * Given a date(time) format, returns a format where months, days and hours are
- * displayed without the leading 0 (e.g. 03/05/2024 08:00:00 => 3/5/2024 8:00:00).
- *
- * @param {string} format
- * @returns string
- */
-export function getCondensedFormat(format) {
-    const originalFormat = format;
-    if (!condensedFormats[originalFormat]) {
-        format = format.replace(/(^|[^M])M{2}([^M]|$)/, "$1M$2");
-        format = format.replace(/(^|[^d])d{2}([^d]|$)/, "$1d$2");
-        format = format.replace(/(^|[^H])H{2}([^H]|$)/, "$1H$2");
-        condensedFormats[originalFormat] = format;
-    }
-    return condensedFormats[originalFormat];
-}
-
 /**
  * Formats a DateTime object to a date string
  *
@@ -341,13 +320,7 @@ export function formatDate(value, options = {}) {
     if (!value) {
         return "";
     }
-    let format = options.format;
-    if (!format) {
-        format = localization.dateFormat;
-        if (options.condensed) {
-            format = getCondensedFormat(format);
-        }
-    }
+    let format = options.format || localization.dateFormat;
     return value.toFormat(format);
 }
 
@@ -361,18 +334,42 @@ export function formatDateTime(value, options = {}) {
     if (!value) {
         return "";
     }
-    let format = options.format;
-    if (!format) {
-        if (options.showSeconds === false) {
-            format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
-        } else {
-            format = localization.dateTimeFormat;
-        }
-        if (options.condensed) {
-            format = getCondensedFormat(format);
-        }
-    }
+    let format = options.format || localization.dateTimeFormat;
     return value.setZone(options.tz || "default").toFormat(format);
+}
+
+export function toLocaleDateString(value) {
+    if (!value) {
+        return;
+    }
+    let format = {...DateTime.DATE_MED};
+    if (today().year === value.year) {
+        delete format.year
+    }
+    return value.toLocaleString(format);
+}
+
+export function toLocaleDateTimeString(value, options) {
+    if (!value) {
+        return;
+    }
+    let format = {...DateTime.DATETIME_MED_WITH_SECONDS}
+    if (!options.showSeconds) {
+        delete format.second
+    }
+    if (options.onlyTime) {
+        delete format.day
+        delete format.month
+        delete format.year
+    }
+    if (options.showTime === false) {
+        delete format.hour
+        delete format.minute
+    }
+    if (today().year === value.year) {
+        delete format.year;
+    }
+    return value.setZone(options.tz || "default").toLocaleString(format);
 }
 
 /**

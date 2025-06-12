@@ -39,6 +39,10 @@ registry.category("web_tour.tours").add('crm_forecast', {
         content: "edit lead",
         run: "click",
     }, {
+        trigger: "div[name=date_deadline] button",
+        content: "open date picker",
+        run: "click",
+    }, {
         trigger: "div[name=date_deadline] input",
         content: "complete expected closing",
         run: `edit ${today.toFormat("MM/dd/yyyy")}`,
@@ -62,6 +66,10 @@ registry.category("web_tour.tours").add('crm_forecast', {
         trigger: ".o_kanban_record:contains('Test Opportunity 1')",
         content: "edit lead",
         run: "click"
+    }, {
+        trigger: "div[name=date_deadline] button",
+        content: "open date picker",
+        run: "click",
     }, {
         trigger: ".o_field_widget[name=date_deadline] input",
         content: "complete expected closing",
