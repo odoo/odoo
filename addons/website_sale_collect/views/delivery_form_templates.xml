@@ -24,10 +24,9 @@
                     <t t-out="order_line.product_id.name"/>
                     ( <t t-out="order_line.shop_warning"/> )
                     <div name="o_wsale_unavailable_line_button_container">
-                        <a
+                        <button
                             title="Remove from cart"
-                            href='#'
-                            class="js_wsc_delete_product d-none d-md-inline-block small"
+                            class="js_wsc_delete_product d-none d-md-inline-block small btn btn-link"
                             aria-label="Remove from cart"
                         >
                             <span
@@ -36,7 +35,7 @@
                             >
                                 Remove
                             </span>
-                        </a>
+                        </button>
                         <button
                             title="Remove from cart"
                             class="js_wsc_delete_product btn btn-light d-inline-block d-md-none"
