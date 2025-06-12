@@ -1,18 +1,18 @@
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
-import { Component, xml, useRef, reactive } from "@odoo/owl";
+import { Component, xml, useRef, reactive, useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { HighlightConfigurator } from "./highlight_configurator";
 import { StackingComponent, useStackingComponentState } from "./stacking_component";
 import { formatsSpecs } from "@html_editor/utils/formatting";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { removeStyle } from "@html_editor/utils/dom";
 import { isTextNode } from "@html_editor/utils/dom_info";
-import { omit } from "@web/core/utils/objects";
 import { getCurrentTextHighlight } from "@website/js/highlight_utils";
 import { isCSSColor, rgbaToHex } from "@web/core/utils/colors";
+import { nodeSize } from "@html_editor/utils/position";
 
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
@@ -26,14 +26,18 @@ export class HighlightPlugin extends Plugin {
                 description: _t("Apply highlight"),
                 Component: HighlightToolbarButton,
                 props: {
-                    applyHighlight: this.applyHighlight.bind(this),
-                    previewHighlight: this.previewHighlight.bind(this),
-                    revertHighlight: this.revertHighlight.bind(this),
-                    applyHighlightStyle: this.applyHighlightStyle.bind(this),
-                    previewHighlightStyle: this.previewHighlightStyle.bind(this),
-                    revertHighlightStyle: this.revertHighlightStyle.bind(this),
-                    getHighlightState: () => this.highlightState,
-                    getUsedCustomColors: this.getUsedCustomColors.bind(this),
+                    highlightConfiguratorProps: {
+                        applyHighlight: this.applyHighlight.bind(this),
+                        previewHighlight: this.previewHighlight.bind(this),
+                        revertHighlight: this.revertHighlight.bind(this),
+                        applyHighlightStyle: this.applyHighlightStyle.bind(this),
+                        previewHighlightStyle: this.previewHighlightStyle.bind(this),
+                        revertHighlightStyle: this.revertHighlightStyle.bind(this),
+                        getHighlightState: () => this.highlightState,
+                        getUsedCustomColors: this.getUsedCustomColors.bind(this),
+                        deleteHighlight: this.deleteSelectedHighlight.bind(this),
+                    },
+                    onClick: this.completeHighlightSelection.bind(this),
                 },
             },
         ],
@@ -59,6 +63,8 @@ export class HighlightPlugin extends Plugin {
         },
         format_splittable_class: (className) => className.startsWith("o_text_highlight"),
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
+        collapsed_selection_toolbar_predicate: (selectionData) =>
+            !!closestElement(selectionData.editableSelection.anchorNode, ".o_text_highlight"),
     };
 
     setup() {
@@ -76,17 +82,19 @@ export class HighlightPlugin extends Plugin {
     }
 
     updateSelectedHighlight() {
-        const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
-        if (nodes.length === 0) {
+        const nodes = this.getSelectedHighlightNodes();
+        const uniqueNodes = new Set(nodes);
+        this.highlightState.isDisabled = uniqueNodes.size > 1;
+        if (uniqueNodes.size != 1) {
+            this.highlightState.highlightId = undefined;
+            this.highlightState.color = "";
+            this.highlightState.thickness = undefined;
             return;
         }
-        const el = closestElement(nodes[0]);
-        if (!el) {
-            return;
-        }
-        this.highlightState.highlightId = getCurrentTextHighlight(el);
+
+        this.highlightState.highlightId = getCurrentTextHighlight(nodes[0]);
         if (this.highlightState.highlightId) {
-            const style = getComputedStyle(el);
+            const style = getComputedStyle(nodes[0]);
             this.highlightState.color = style.getPropertyValue("--text-highlight-color");
             const thickness = style.getPropertyValue("--text-highlight-width");
             this.highlightState.thickness = thickness ? parseInt(thickness) : "";
@@ -94,13 +102,7 @@ export class HighlightPlugin extends Plugin {
     }
 
     _applyHighlight(highlightId) {
-        const highlightedNodes = this.dependencies.selection
-            .getTargetedNodes()
-            .map((n) => {
-                const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
-                return el.closest(".o_text_highlight");
-            })
-            .filter(Boolean);
+        const highlightedNodes = this.getSelectedHighlightNodes();
         for (const node of new Set(highlightedNodes)) {
             for (const svg of node.querySelectorAll(".o_text_highlight_svg")) {
                 svg.remove();
@@ -134,16 +136,8 @@ export class HighlightPlugin extends Plugin {
     }
 
     _applyHighlightStyle(style, value) {
-        const highlightedNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => {
-                    const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
-                    return el.closest(".o_text_highlight");
-                })
-                .filter(Boolean)
-        );
-        for (const node of highlightedNodes) {
+        const highlightedNodes = this.getSelectedHighlightNodes();
+        for (const node of new Set(highlightedNodes)) {
             node.style.setProperty(style, value);
         }
         this.updateSelectedHighlight();
@@ -169,6 +163,69 @@ export class HighlightPlugin extends Plugin {
             }
         }
         return usedCustomColors;
+    }
+
+    getSelectedHighlightNodes() {
+        return this.dependencies.selection
+            .getTargetedNodes()
+            .map((n) => {
+                const el = n.nodeType === Node.ELEMENT_NODE ? n : n.parentElement;
+                return el.closest(".o_text_highlight");
+            })
+            .filter(Boolean);
+    }
+    /**
+     * This method completes the selection by ensuring that the selection
+     * always cover all the text nodes within the highlighted elements.
+     */
+    completeHighlightSelection() {
+        const targetedNodes = this.dependencies.selection
+            .getTargetedNodes()
+            .map(
+                (n) =>
+                    closestElement(n, ".o_text_highlight") ||
+                    n?.querySelector?.(".o_text_highlight")
+            );
+        let { startContainer, startOffset, endContainer, endOffset, direction } =
+            this.dependencies.selection.getEditableSelection();
+
+        if (targetedNodes.length > 0) {
+            if (targetedNodes[0]?.matches?.(".o_text_highlight")) {
+                const firstTextNode = descendants(targetedNodes[0]).filter(isTextNode)[0];
+                startContainer = firstTextNode;
+                startOffset = 0;
+            }
+            if (targetedNodes.at(-1)?.matches?.(".o_text_highlight")) {
+                const lastTextNode = descendants(targetedNodes.at(-1)).filter(isTextNode).at(-1);
+                endContainer = lastTextNode;
+                endOffset = nodeSize(endContainer);
+            }
+        }
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = direction
+            ? [startContainer, startOffset, endContainer, endOffset]
+            : [endContainer, endOffset, startContainer, startOffset];
+        this.dependencies.selection.setSelection({
+            anchorNode,
+            anchorOffset,
+            focusNode,
+            focusOffset,
+        });
+        this.dependencies.selection.focusEditable();
+        this.dependencies.history.stageSelection();
+    }
+
+    deleteSelectedHighlight() {
+        const highlightedNodes = this.getSelectedHighlightNodes();
+        for (const node of new Set(highlightedNodes)) {
+            for (const svg of node.querySelectorAll(".o_text_highlight_svg")) {
+                svg.remove();
+            }
+        }
+
+        this.dependencies.format.formatSelection("highlight", {
+            applyStyle: false,
+        });
+        this.updateSelectedHighlight();
     }
 }
 registry.category("website-plugins").add(HighlightPlugin.id, HighlightPlugin);
@@ -204,29 +261,24 @@ formatsSpecs.highlight = {
 
 class HighlightToolbarButton extends Component {
     static props = {
-        applyHighlight: Function,
-        applyHighlightStyle: Function,
-        getHighlightState: Function,
-        getSelection: Function,
-        previewHighlight: Function,
-        previewHighlightStyle: Function,
-        revertHighlight: Function,
-        revertHighlightStyle: Function,
-        getUsedCustomColors: Function,
+        highlightConfiguratorProps: Object,
+        onClick: Function,
         title: String,
+        getSelection: Function,
     };
     static template = xml`
-        <button t-ref="root" class="btn btn-light o-select-highlight" t-on-click="openHighlightConfigurator" t-att-title="props.title">
+        <button t-ref="root" t-attf-class="btn btn-light o-select-highlight {{highlightState.isDisabled ? 'disabled' : ''}}" t-on-click="openHighlightConfigurator" t-att-title="highlightState.isDisabled ? 'Highlighting is disabled when your selection overlaps more than one highlight' : props.title">
             <i class="fa oi oi-text-effect oi-fw py-1"/>
         </button>
     `;
 
     setup() {
+        this.highlightState = useState(this.props.highlightConfiguratorProps.getHighlightState());
         this.root = useRef("root");
         this.componentStack = useStackingComponentState();
         this.componentStack.push(HighlightConfigurator, {
             componentStack: this.componentStack,
-            ...omit(this.props, "title"),
+            ...this.props.highlightConfiguratorProps,
         });
         this.configuratorPopover = usePopover(StackingComponent, {
             onClose: () => {
@@ -237,6 +289,10 @@ class HighlightToolbarButton extends Component {
         });
     }
     openHighlightConfigurator() {
+        if (this.highlightState.isDisabled) {
+            return;
+        }
+        this.props.onClick();
         this.configuratorPopover.open(this.root.el, {
             stackState: this.componentStack,
             style: "max-height: 275px; width: 262px",
