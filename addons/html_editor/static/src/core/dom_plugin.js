@@ -230,9 +230,10 @@ export class DomPlugin extends Plugin {
             }
         }
 
+        let textNode;
         if (startNode.nodeType === Node.ELEMENT_NODE) {
             if (selection.anchorOffset === 0) {
-                const textNode = this.document.createTextNode("");
+                textNode = this.document.createTextNode("");
                 if (isSelfClosingElement(startNode)) {
                     startNode.parentNode.insertBefore(textNode, startNode);
                 } else {
@@ -454,6 +455,9 @@ export class DomPlugin extends Plugin {
             { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
             { normalize: false }
         );
+        if (textNode) {
+            textNode.remove();
+        }
         return firstInsertedNodes.concat(insertedNodes).concat(lastInsertedNodes);
     }
 
