@@ -31,8 +31,8 @@ class AccountMoveLine(models.Model):
             ("sale_out_of_scope", "S Out of Scope"),
             ],
         string="GSTR Section",
-        #compute="_compute_l10n_in_gstr_section",
-        #store=True,
+        compute="_compute_l10n_in_gstr_section",
+        store=True,
         index=True,
         readonly=False,
     )
@@ -98,8 +98,11 @@ class AccountMoveLine(models.Model):
             ),
         }
 
-    def _set_l10n_in_gstr_section(self):
+    @api.depends('tax_tag_ids')
+    def _compute_l10n_in_gstr_section(self):
+        self.filtered(lambda l: l.parent_state != 'draft')._set_l10n_in_gstr_section()
 
+    def _set_l10n_in_gstr_section(self):
         def tags_have_categ(tax_tags, category):
             return any(tag in tax_tags for tag in tax_tags_ids[category])
 
@@ -195,7 +198,7 @@ class AccountMoveLine(models.Model):
                         move.debit_origin_id and move.debit_origin_id.amount_total > amt_limit
                         or move.reversed_entry_id and move.reversed_entry_id.amount_total > amt_limit
                         or not move.reversed_entry_id and not move.is_inbound()
-                    )
+                    ) and l.display_type in ('product', 'tax')
                 ):
                     return 'sale_cdnur_b2cl'
                 # CDN for exports with payment and without payment
@@ -213,11 +216,9 @@ class AccountMoveLine(models.Model):
             and l.move_id.is_sale_document(include_receipts=True)
             and l.display_type in ('product', 'tax')
         )
+        print("checked for", len(indian_moves_lines))
         if not indian_moves_lines:
             return
         tax_tags_ids = self.get_l10n_in_tax_tag_ids()
         for move_line in indian_moves_lines:
-            move_line.write({'l10n_in_gstr_section': get_section(move_line)})
-
-
-
+            move_line.l10n_in_gstr_section = get_section(move_line)
