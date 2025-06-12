@@ -1,13 +1,15 @@
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, press, waitFor } from "@odoo/hoot-dom";
+import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "./_helpers/dispatch";
 import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
+import { delay } from "@web/core/utils/concurrency";
+import { ImageCrop } from "@html_editor/main/media/image_crop";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -275,5 +277,40 @@ test("cropper should not open for external image", async () => {
 
     await click('.btn[name="image_crop"]');
     await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+    expect("img.o_we_cropper_img").toHaveCount(0);
+});
+
+test("Image cropper disappear on backspace", async () => {
+    const base64Image =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
+
+    // This promise is needed to ensure that the `show` method has completed
+    // before destroying the cropper as it sets `isCropperActive` true
+    // at the end. In `closeCropper` method `isCropperActive` must be true
+    // to close the cropper.
+    const cropperReadyPromise = new Promise((resolve) => {
+        patchWithCleanup(ImageCrop.prototype, {
+            async show(...args) {
+                await super.show(...args);
+                resolve();
+            },
+        });
+    });
+    // Mock backend image RPCs
+    onRpc("/html_editor/get_image_info", async () => {
+        await delay(50);
+        return {
+            original: { image_src: base64Image },
+        };
+    });
+    await setupEditor(`<p>[<img src="${base64Image}">]</p>`);
+    await waitFor(".o-we-toolbar");
+
+    await contains('.o-we-toolbar .btn[name="image_crop"]').click();
+    await waitFor(".o_we_crop_widget", { timeout: 1000 });
+    expect("img.o_we_cropper_img").toHaveCount(1);
+    await cropperReadyPromise;
+    press("backspace");
+    await waitForNone(".o_we_crop_widget", { timeout: 1000 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
