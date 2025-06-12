@@ -97,9 +97,11 @@ export class BuilderOptionsPlugin extends Plugin {
     }
 
     getReloadSelector(editingElement) {
+        console.log("GET RELOAD SELECTOR:", editingElement);
         for (const container of [...this.lastContainers].reverse()) {
             for (const option of container.options) {
                 if (option.reloadTarget) {
+                    console.log("RELOAD TARGET:", option.reloadTarget);
                     return option.selector;
                 }
             }
@@ -111,6 +113,7 @@ export class BuilderOptionsPlugin extends Plugin {
             return "main";
         }
         if (editingElement.closest("footer")) {
+            console.log("FOOTER");
             return "footer";
         }
         return null;
