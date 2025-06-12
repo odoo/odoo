@@ -150,13 +150,14 @@ class Store:
         if not fields:
             return self
         fields = self._format_fields(records, fields)
-        for record, record_data in zip(records, self._get_records_data(records, fields)):
-            if as_thread:
-                self.add_model_values(
-                    "mail.thread", {"id": record.id, "model": record._name, **record_data}
-                )
-            else:
-                self.add_model_values(record._name, {"id": record.id, **record_data})
+        for record, record_data_list in zip(records, self._get_records_data_list(records, fields)):
+            for record_data in record_data_list:
+                if as_thread:
+                    self.add_model_values(
+                        "mail.thread", {"id": record.id, "model": record._name, **record_data},
+                    )
+                else:
+                    self.add_model_values(record._name, {"id": record.id, **record_data})
         return self
 
     def add_singleton_values(self, model_name, values):
@@ -239,18 +240,21 @@ class Store:
             return [f for field in fields for f in records._field_store_repr(field)]
         return fields
 
-    def _get_records_data(self, records, fields):
+    def _get_records_data_list(self, records, fields):
         abstract_fields = [field for field in fields if isinstance(field, (dict, Store.Attr))]
-        records_data = records._read_format(
-            [f for f in fields if f not in abstract_fields], load=False
-        )
-        for record, data in zip(records, records_data):
+        records_data_list = [
+            [data_dict]
+            for data_dict in records._read_format(
+                [f for f in fields if f not in abstract_fields], load=False,
+            )
+        ]
+        for record, record_data_list in zip(records, records_data_list):
             for field in abstract_fields:
                 if isinstance(field, dict):
-                    data.update(field)
+                    record_data_list.append(field)
                 elif not field.predicate or field.predicate(record):
-                    data[field.field_name] = field._get_value(record)
-        return records_data
+                    record_data_list.append({field.field_name: field._get_value(record)})
+        return records_data_list
 
     def _get_record_index(self, model_name, values):
         ids = ids_by_model[model_name]
