@@ -1234,7 +1234,7 @@ class AccountTax(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_base_line_field_value_from_record(self, record, field, extra_values, fallback):
+    def _get_base_line_field_value_from_record(self, record, field, extra_values, fallback, from_base_line=False):
         """ Helper to extract a default value for a record or something looking like a record.
 
         Suppose field is 'product_id' and fallback is 'self.env['product.product']'
@@ -1246,12 +1246,14 @@ class AccountTax(models.Model):
         :param field:           The name of the field to extract.
         :param extra_values:    The extra kwargs passed in addition of 'record'.
         :param fallback:        The value to return if not found in record or extra_values.
+        :param from_base_line:  Indicate if the value has to be retrieved automatically from the base_line and not the record.
+                                False by default.
         :return:                The field value corresponding to 'field'.
         """
         need_origin = isinstance(fallback, models.Model)
         if field in extra_values:
             value = extra_values[field] or fallback
-        elif isinstance(record, models.Model) and field in record._fields:
+        elif isinstance(record, models.Model) and field in record._fields and not from_base_line:
             value = record[field]
         elif isinstance(record, dict):
             value = record.get(field, fallback)
@@ -1275,8 +1277,8 @@ class AccountTax(models.Model):
         :param kwargs:  The extra values to override some values that will be taken from the record.
         :return:        A dictionary representing a base line.
         """
-        def load(field, fallback):
-            return self._get_base_line_field_value_from_record(record, field, kwargs, fallback)
+        def load(field, fallback, from_base_line=False):
+            return self._get_base_line_field_value_from_record(record, field, kwargs, fallback, from_base_line=from_base_line)
 
         currency = (
             load('currency_id', None)
@@ -1303,14 +1305,14 @@ class AccountTax(models.Model):
             # - False for the normal behavior.
             # - total_included to force all taxes to be price included.
             # - total_excluded to force all taxes to be price excluded.
-            'special_mode': kwargs.get('special_mode', False),
+            'special_mode': load('special_mode', False, from_base_line=True),
 
             # A special typing of base line for some custom behavior:
             # - False for the normal behavior.
             # - early_payment if the base line represent an early payment in mixed mode.
             # - cash_rounding if the base line is a delta to round the business object for the cash rounding feature.
             # - non_deductible if the base line is used to compute non deductible amounts in bills.
-            'special_type': kwargs.get('special_type', False),
+            'special_type': load('special_type', False, from_base_line=True),
 
             # All computation are managing the foreign currency and the local one.
             # This is the rate to be applied when generating the tax details (see '_add_tax_details_in_base_line').
@@ -1318,7 +1320,7 @@ class AccountTax(models.Model):
 
             # For all computation that are inferring a base amount in order to reach a total you know in advance, you have to force some
             # base/tax amounts for the computation (E.g. down payment, combo products, global discounts etc).
-            'manual_tax_amounts': kwargs.get('manual_tax_amounts', None),
+            'manual_tax_amounts': load('manual_tax_amounts', None, from_base_line=True),
 
             # ===== Accounting stuff =====
 
