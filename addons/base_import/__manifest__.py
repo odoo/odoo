@@ -35,8 +35,8 @@ Re-implement Odoo's file import system:
             'base_import/static/src/**/*.js',
             'base_import/static/src/**/*.xml',
         ],
-        'web.qunit_suite_tests': [
-            'base_import/static/tests/**/*',
+        'web.assets_unit_tests': [
+            'base_import/static/tests/**/*.test.js',
         ],
     },
     'author': 'Odoo S.A.',
