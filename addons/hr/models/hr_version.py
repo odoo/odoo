@@ -103,7 +103,9 @@ class HrVersion(models.Model):
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
     job_id = fields.Many2one('hr.job', check_company=True, tracking=True)
-    job_title = fields.Char(related='job_id.name', readonly=False, string="Job Title", groups="hr.group_hr_user", tracking=True)
+    job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
+        string="Job Title", tracking=True, groups="hr.group_hr_user")
+    is_custom_job_title = fields.Boolean(default=False, groups="hr.group_hr_user")
     address_id = fields.Many2one(
         'res.partner',
         string='Work Address',
@@ -156,7 +158,6 @@ class HrVersion(models.Model):
     wage = fields.Monetary('Wage', tracking=True, help="Employee's monthly gross wage.", aggregator="avg",
                            groups="hr.group_hr_user")
     contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage', groups="hr.group_hr_user")
-    notes = fields.Html('Notes', groups="hr.group_hr_user")
     company_country_id = fields.Many2one('res.country', string="Company country",
                                          related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
@@ -186,6 +187,16 @@ class HrVersion(models.Model):
         for version in self:
             if version.employee_id:
                 version.company_id = version.employee_id.company_id
+
+    @api.depends('job_id.name')
+    def _compute_job_title(self):
+        for version in self.filtered('job_id'):
+            if version._origin.job_id != version.job_id or not version.is_custom_job_title:
+                version.job_title = version.job_id.name
+
+    def _inverse_job_title(self):
+        for version in self:
+            version.is_custom_job_title = version.job_title != version.job_id.name
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
     def _check_dates(self):

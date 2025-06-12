@@ -35,65 +35,64 @@
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
                 <form string="Employee" create="0" write="0" js_class="hr_employee_form">
-                    <field name="image_128" invisible="1" />
                     <header/>
                     <sheet>
-                        <field name="user_id" invisible="1"/>
-                        <field name="user_partner_id" invisible="1"/>
-                        <field name="active" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <!-- Used by other modules-->
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <div class="row justify-content-between position-relative w-100 m-0 mb-2">
-                            <div class="oe_title ps-0 pe-2">
-                                <label for="name" string="Employee Name"/>
-                                <h1 class="d-flex flex-row">
-                                    <span class="me-2" invisible="not context.get('chat_icon')">
-                                        <widget name="hr_employee_chat"/>
-                                    </span>
-                                    <field name="name" placeholder="e.g. John Doe" required="True"
-                                        style="font-size: min(4vw, 2.6rem);"/>
-                                </h1>
-                                <h2>
-                                    <field name="job_id" placeholder="Job Position" options="{'no_open': True}"/>
-                                </h2>
-                            </div>
-                            <div class="o_employee_avatar m-0 p-0">
-                                <field name="avatar_1920" widget='image' class="oe_avatar" options='{"zoom": true, "preview_image":"avatar_128"}'/>
-                                <field name="show_hr_icon_display" invisible="1" />
+                        <div class="row align-items-center">
+                            <div class="o_employee_avatar ms-2 p-0 h-100 mw-25">
                                 <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                                <field name="image_1920" widget='image' class="m-0" options='{"zoom": true, "preview_image":"avatar_128"}'/>
+                                <field name="show_hr_icon_display" invisible="1" />
+                            </div>
+                            <div class="col">
+                                <div class="oe_title mw-75 ps-0 pe-2">
+                                    <h1 class="d-flex flex-row align-items-center">
+                                        <div invisible="not user_id" class="me-2">
+                                            <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                        </div>
+                                        <field name="name" placeholder="Employee's Name"
+                                            required="True" style="font-size: min(4vw, 2.6rem);"/>
+                                    </h1>
+                                    <p class="d-flex align-items-baseline mb-0">
+                                        <i class="fa fa-envelope fa-fw me-1 text-primary" title="Work Email"/>
+                                        <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email" class="w-75"/>
+                                    </p>
+                                    <p class="d-flex align-items-baseline mb-0">
+                                        <i class="fa fa-phone fa-fw me-1 text-primary" title="Work Phone"/>
+                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"  class="w-75"/>
+                                    </p>
+                                    <p class="d-flex align-items-baseline mb-0">
+                                        <i class="fa fa-mobile fa-fw me-1 text-primary" title="Work Mobile"/>
+                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"  class="w-75"/>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        <group>
-                            <group>
-                                <field name="mobile_phone" widget="phone"/>
-                                <field name="work_phone" widget="phone"/>
-                                <field name="work_email" widget="email"/>
-                            </group>
-                            <group>
-                                <field name="department_id" context="{'open_employees_kanban': 1}"/>
-                                <field name="job_id" options="{'no_open': True}"/>
-                                <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
-                                <field name="parent_id" widget="many2one_avatar_employee"/>
-                                <field name="coach_id" widget="many2one_avatar_employee"/>
-                            </group>
-                        </group>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <notebook>
-                            <page name="contract_information" string="Work Information">
-                                <div id="o_work_employee_container" class="d-lg-flex"> <!-- These two div are used to position org_chart -->
-                                    <div id="o_work_employee_main" class="flex-grow-1">
+                            <page name="work_information" string="Work">
+                                <div id="o_work_employee_container" class="row"> <!-- These two div are used to position org_chart -->
+                                    <div id="o_work_employee_main" class="col-lg-7 d-flex flex-column">
+                                        <group string="work">
+                                            <field name="company_id" groups="base.group_multi_company"/>
+                                            <field name="department_id"/>
+                                            <field name="job_id" string="Job Position" context="{'default_no_of_recruitment': 0, 'default_is_favorite': False}" placeholder="e.g. Sales Manager"/>
+                                            <field name="parent_id" widget="many2one_avatar_employee"/>
+                                        </group>
                                         <group string="Location" name="location">
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"highlight_first_line": True}'/>
                                             <field name="work_location_id"/>
                                         </group>
-                                        <group name="managers" string="Approvers" invisible="1">
-                                            <!-- overridden in other modules -->
-                                        </group>
                                     </div>
+                                    <div id="o_employee_org_chart" class="col-lg-5"></div>
                                 </div>
+                            </page>
+                            <page name="resume" string="Resume">
+                                <!-- overridden in other modules -->
                             </page>
                         </notebook>
                     </sheet>

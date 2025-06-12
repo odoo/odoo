@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="priority">110</field>
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='button_box']" position="inside">
+            <button name="action_open_versions" position="before">
                 <field name="attendance_state" invisible="1"/>
                 <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_officer" invisible="1"/>
                 <button name="action_open_last_month_attendances"
@@ -53,12 +53,9 @@
                         <span class="o_stat_text">Extra Hours</span>
                     </div>
                 </button>
-            </xpath>
+            </button>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="attendance_manager_id" string="Attendance" widget="many2one_avatar_user" groups="hr_attendance.group_hr_attendance_manager"/>
-            </xpath>
-            <xpath expr="//group[@name='managers']" position="attributes">
-                <attribute name="invisible">0</attribute>
             </xpath>
         </field>
     </record>
