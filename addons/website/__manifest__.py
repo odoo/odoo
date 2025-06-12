@@ -250,6 +250,7 @@
         ],
         'web.assets_backend': [
             ('include', 'website.assets_editor'),
+            ('include', 'html_editor.assets_link_popover'),
             'website/static/src/scss/color_palettes.scss',
             'website/static/src/scss/view_hierarchy.scss',
             'website/static/src/scss/website.backend.scss',
