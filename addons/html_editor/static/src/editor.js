@@ -25,7 +25,6 @@ import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
  * @property { boolean } [allowInlineAtRoot]
  * @property { string } [baseContainer]
  * @property { PluginConstructor[] } [Plugins]
- * @property { boolean } [disableFloatingToolbar]
  * @property { string[] } [classList]
  * @property { Object } [localOverlayContainers]
  * @property { Object } [embeddedComponentInfo]
