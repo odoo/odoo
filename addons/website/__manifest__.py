@@ -180,6 +180,7 @@
         'views/snippets/s_freegrid.xml',
         'views/snippets/s_card_offset.xml',
         'views/snippets/s_image.xml',
+        'views/snippets/s_icon.xml',
         'views/snippets/s_video.xml',
         'views/snippets/s_cta_badge.xml',
         'views/snippets/s_unveil.xml',
