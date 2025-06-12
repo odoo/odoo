@@ -8,7 +8,9 @@
             'o-compact': props.compact and !isMobileOs,
             'o-minimized': minimized,
             'o-pip': props.isPip,
-            'position-relative rounded-2 o-mx-0_5 o-mt-0_5 p-1': !state.isFullscreen and !props.isPip,
+            'position-relative mx-1 mt-2 mb-0 p-1': !state.isFullscreen and !props.isPip,
+            'rounded-4': !state.isFullscreen and !props.isPip and env.inDiscussApp,
+            'o-rounded-bubble': !state.isFullscreen and !props.isPip and !env.inDiscussApp,
         }">
             <div class="o-discuss-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto o-scrollbar-thin" t-on-mouseleave="onMouseleaveMain">
                 <div

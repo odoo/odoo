@@ -33,7 +33,7 @@
         <span t-if="livechatThread.channel_type === 'livechat' and (['waiting', 'need_help'].includes(livechatThread.livechat_status) or livechatThread.livechat_end_dt)" class="o-livechat-LivechatStatusLabel fa fa-stack" t-att-title="livechatThread.livechatStatusLabel" t-att-class="{
             'position-absolute top-0 start-0 z-1': env.inDiscussSidebar or env.inChatBubble,
             'm-n1': env.inDiscussSidebar,
-            'm-n2': env.inChatBubble,
+            'm-n2 o-mail-ChatBubble-part': env.inChatBubble,
             'o-warning': livechatThread.livechat_status === 'waiting',
             'o-info': livechatThread.livechat_status === 'need_help',
         }">

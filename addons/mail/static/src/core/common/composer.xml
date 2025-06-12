@@ -7,23 +7,23 @@
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
-    <t t-set="roundedClass" t-value="env.inChatter or props.composer.message ? 'o-rounded-bubble' : 'rounded-4'"/>
+    <t t-set="roundedClass" t-value="env.inChatter and !props.composer.message ? 'o-rounded-bubble' : 'rounded-4'"/>
     <t t-set="actionsContainerClass" t-value="'o-mail-Composer-actions d-flex ' + roundedClass"/>
-    <div t-ref="root">
+    <div t-ref="root" class="position-relative">
         <div class="o-mail-Composer d-grid flex-shrink-0 pt-0"
                 t-att-class="{
                     'pb-2': extended and !props.composer.message,
                     'o-extended': extended,
                     'o-isUiSmall': ui.isSmall,
-                    'ps-2 pe-4 pb-2': normal,
+                    'ps-3 pe-4 pb-0': normal,
                     'o-hasSelfAvatar': showComposerAvatar,
                     'o-focused': props.composer.isFocused,
                     'o-editing': props.composer.message,
-                    'o-chatWindow mx-2': env.inChatWindow,
-                    'mb-3': env.inChatWindow and !props.composer.message,
-                    'o-discussApp pt-1': env.inDiscussApp,
-                    'm-1': env.inChatWindow,
-                }" t-attf-class="{{ props.className }}">
+                    'o-chatWindow px-2': env.inChatWindow,
+                    'pb-2': env.inChatWindow and !props.composer.message,
+                    'o-discussApp': env.inDiscussApp,
+                    'o-floating pt-2 position-absolute bottom-0 mx-0 w-100 border-top border-secondary': (env.inDiscussApp or env.inChatWindow) and !props.composer.message?.threadAsInEdition,
+                }" t-attf-class="{{ props.className }}" t-ref="composer-root">
             <FileUploader t-if="allowUpload" multiUpload="isMultiUpload" onUploaded.bind="(data) => { attachmentUploader.uploadData(data) }">
                 <t t-set-slot="toggler">
                     <button t-att-disabled="!state.active or areAllActionsDisabled" class="d-none" title="Attach files" aria-label="Attach files" t-ref="file-uploader"><i class="fa fa-fw fa-paperclip"/></button>
@@ -42,30 +42,35 @@
                 <i class="fa fa-lg fa-times-circle rounded-circle p-0 ms-1 cursor-pointer" title="Stop replying" t-on-click="() => (props.composer.replyToMessage = undefined)"/>
             </div>
             <div class="o-mail-Composer-coreMain d-flex flex-nowrap align-items-start flex-grow-1" t-att-class="{ 'flex-column' : extended or props.composer.message }">
-                <div class="o-mail-Composer-inputContainer o-mail-Composer-bg d-flex flex-grow-1 border border-secondary shadow-sm"
+                <div class="o-mail-Composer-inputContainer d-flex flex-grow-1 border border-secondary"
                     t-att-class="{
                         [roundedClass]: true,
                         'o-iosPwa': isIosPwa,
                         'align-self-stretch' : extended,
                         'w-100': props.composer.message,
+                        'shadow-sm': !props.composer.isFocused,
+                        'o-shadow-soft o-focused': props.composer.isFocused,
                     }"
                     t-ref="input-container"
                 >
                     <div t-if="!extended" t-attf-class="{{ actionsContainerClass }}">
-                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column py-0 bg-100 border border-secondary'">
+                        <Dropdown t-if="partitionedActions.other.length > 0" position="'top-start'" menuClass="'d-flex flex-column py-0 o-mail-DiscussMenu-bgColor border border-secondary rounded-4'">
                             <t t-call="mail.Composer.moreActions"/>
                             <t t-set-slot="content">
-                                <t t-call="mail.Composer.dropdownActions"/>
+                                <t t-call="mail.DiscussActions">
+                                    <t t-set="dropdown" t-value="true"/>
+                                    <t t-set="group" t-value="[partitionedActions.other]"/>
+                                </t>
                             </t>
                         </Dropdown>
                     </div>
                     <div class="position-relative flex-grow-1">
                         <t t-set="inputClasses" t-value="{
-                            [roundedClass]: true,
+                            'rounded-0': true,
                             'o-mail-Composer-inputStyle form-control border-0': true,
                             'ps-2': partitionedActions.other.length === 0
                         }"/>
-                        <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin text-body user-select-auto"
+                        <textarea class="o-mail-Composer-input shadow-none overflow-auto o-scrollbar-thin text-body user-select-auto"
                             t-att-class="inputClasses"
                             t-ref="textarea"
                             t-on-keydown="onKeydown"
@@ -101,7 +106,7 @@
                     unlinkAttachment.bind="(...args) => attachmentUploader.unlink(...args)"/>
                 <div t-if="!extended and !props.composer.message" class="o-mail-Composer-pickerContainer" t-att-class="{ 'o-active': composerActions.activePicker and ui.isSmall }" t-ref="picker-container">
                     <div t-if="partitionedActions.pickers.length > 1 and composerActions.activePicker and ui.isSmall" class="o-mail-Composer-pickerSelection btn-group w-100">
-                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onClick(ev)" t-att-class="{
+                        <button t-foreach="partitionedActions.pickers" t-as="pickerAction" t-key="'PICKER_' + pickerAction.id" class="btn btn-secondary" t-esc="pickerAction.pickerName" t-on-click="(ev) => pickerAction.onSelected(ev)" t-att-class="{
                             'active': pickerAction.picker.isOpen
                         }"/>
                     </div>
@@ -138,12 +143,12 @@
         t-att-aria-label="SEND_TEXT"
     >
         <t t-if="thread and thread.model !== 'discuss.channel'" t-out="SEND_TEXT"/>
-        <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o"/></t>
+        <t t-else=""><i class="fa fa-fw fa-lg fa-paper-plane-o" t-att-class="{ 'o-text-shadow-soft': !isSendButtonDisabled }"/></t>
     </button>
 </t>
 
 <t t-name="mail.Composer.quickActions">
-    <div class="o-mail-Composer-quickActions o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions" t-att-class="{ 'pe-1': props.composer.message or !extended, 'pe-2': extended }">
+    <div class="o-mail-Composer-quickActions" t-attf-class="{{ actionsContainerClass }}" t-ref="quick-actions" t-att-class="{ 'pe-0': props.composer.message or !extended, 'pe-2': extended }">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-foreach="partitionedActions.quick" t-as="action" t-key="action.id">
                 <t t-call="mail.Composer.quickAction"/>
@@ -158,11 +163,11 @@
 </t>
 
 <t t-name="mail.Composer.quickActionButton">
-    <button class="btn border-0 rounded-circle" t-if="showQuickAction" t-att-class="{ 'o-large': ui.isSmall and env.inChatWindow, 'o-small': !ui.isSmall or !env.inChatWindow }" t-attf-class="{{ action.btnClass }}" t-att-title="action.name" t-on-click="(ev) => action.onClick?.(ev)" t-att-data-hotkey="action.hotkey" t-att-disabled="action.disabledCondition or areAllActionsDisabled" t-att-name="action.id" t-ref="{{ action.id }}" tabindex="0"><i class="fa-fw fa-lg" t-att-class="action.icon"/></button>
+    <button class="btn border-0 rounded-circle" t-if="showQuickAction" t-att-class="{ 'o-large': ui.isSmall and env.inChatWindow, 'o-small': !ui.isSmall or !env.inChatWindow }" t-attf-class="{{ action.btnClass }}" t-att-title="action.name" t-on-click="(ev) => action.onSelected?.(ev)" t-att-data-hotkey="action.hotkey" t-att-disabled="action.disabledCondition or areAllActionsDisabled" t-att-name="action.id" t-ref="{{ action.id }}" tabindex="0"><i class="fa-fw fa-lg" t-att-class="action.icon"/></button>
 </t>
 
 <t t-name="mail.Composer.moreActions">
-    <div class="o-mail-Composer-bg" t-attf-class="{{ actionsContainerClass }}">
+    <div class="" t-attf-class="{{ actionsContainerClass }}">
         <div class="o-mail-Composer-mainActions d-flex flex-grow-1 align-items-baseline">
             <t t-set="moreName">More Actions</t>
             <t t-call="mail.Composer.quickAction">
@@ -178,7 +183,7 @@
 
 <t t-name="mail.Composer.dropdownActions">
     <t t-foreach="partitionedActions.other" t-as="action" t-key="action.id">
-        <DropdownItem tag="'button'" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0'" onSelected="(ev) => action.onClick?.(ev)" attrs="{ 'name': action.id, 'data-hotkey': action.hotkey, 'disabled': action.disabledCondition or areAllActionsDisabled }">
+        <DropdownItem tag="'button'" class="'btn rounded-0 d-flex align-items-center px-2 py-2 m-0'" onSelected="(ev) => action.onSelected?.(ev)" attrs="{ 'name': action.id, 'data-hotkey': action.hotkey, 'disabled': action.disabledCondition or areAllActionsDisabled }">
             <i class="fa-fw" t-att-class="action.icon"/>
             <span class="mx-2" t-out="action.name"/>
         </DropdownItem>

@@ -943,7 +943,7 @@ test("Notification settings rendering in chatwindow", async () => {
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item", { text: "Notification Settings" });
     await contains("button", { text: "All Messages" });
-    await contains("button", { text: "Mentions Only", count: 2 }); // the extra is in the Use Default as subtitle
+    await contains("button", { text: "Only @mentions", count: 2 }); // the extra is in the Use Default as subtitle
     await contains("button", { text: "Nothing" });
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button", { text: "Mute Conversation" });

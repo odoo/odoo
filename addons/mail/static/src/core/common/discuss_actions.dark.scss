@@ -1,0 +1,35 @@
+@function o-mail-DiscussActions-dangerBgColor() {
+    @return rgba(saturate($danger, 20%), .5);
+}
+
+@function o-mail-DiscussActions-dangerOutlineColor() {
+    @return rgba(saturate($danger, 20%), .25);
+}
+
+@function o-mail-DiscussActions-successBgColor() {
+    @return rgba(saturate($success, 20%), .5);
+}
+
+@function o-mail-DiscussActions-successOutlineColor() {
+    @return rgba(saturate($success, 20%), .25);
+}
+
+.o-mail-DiscussActions {
+    --mail-DiscussSidebarChannelActions-activeColor: #{white};
+
+    button {    
+        @include mail-DiscussActions-buttonMixin; // refresh with dark colors
+    }
+}
+
+@function o-mail-DiscussActions-groupOutline() {
+    @return 1px solid rgba(mix($gray-200, $gray-300), .75);
+}
+
+.o-mail-DiscussActions-group {
+    @include o-mail-DiscussActions-groupMixin; // refresh for dark colors
+}
+
+.o-mail-DiscussActions-actionStyle {
+    @include mail-DiscussActions-buttonMixin; // refresh for dark colors
+}

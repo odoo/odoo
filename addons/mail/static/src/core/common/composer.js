@@ -85,6 +85,7 @@ export class Composer extends Component {
         "type?",
         "showFullComposer?",
         "allowUpload?",
+        "paddingCompensation?",
     ];
     static template = "mail.Composer";
 
@@ -103,6 +104,7 @@ export class Composer extends Component {
             this.thread ?? this.props.composer.message.thread,
             { composer: this.props.composer }
         );
+        this.composerRoot = useRef("composer-root");
         this.ui = useService("ui");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
@@ -218,6 +220,7 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
+        this.props.paddingCompensation?.setup(this.composerRoot);
     }
 
     get areAllActionsDisabled() {

@@ -3,7 +3,7 @@
 
     <t t-name="mail.Message">
         <ActionSwiper onRightSwipe="hasTouch() and props.thread?.eq(store.inbox) ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
-            <div class="o-mail-Message position-relative rounded-0 bg-inherit"
+            <div class="o-mail-Message position-relative rounded-0 bg-transparent"
                 t-att-data-starred="message.starred"
                 t-att-data-persistent="message.persistent"
                 t-att-class="attClass"
@@ -36,7 +36,7 @@
                     <div class="w-100 o-min-width-0" t-att-class="{ 'flex-grow-1': isEditing }" t-ref="messageContent">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1" t-att-class="{ 'mb-1': !message.isNote, 'pe-2': props.asCard and isMobileOS }" name="header">
                             <span t-if="message.authorName and shouldDisplayAuthorName" class="o-mail-Message-author smaller" t-att-class="getAuthorAttClass()">
-                                <strong class="me-1" t-esc="message.authorName"/>
+                                <strong class="me-1 o-fw-600" t-esc="message.authorName"/>
                             </span>
                             <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <small t-if="!message.is_transient" class="o-mail-Message-date o-xsmaller" t-att-title="message.datetimeShort">
@@ -83,17 +83,17 @@
                                             </div>
                                             <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block text-body" t-att-class="{
                                                 'w-100': isEditing,
-                                                'shadow-sm': message.bubbleColor,
-                                                'o-rounded-bubble': message.bubbleColor and props.squashed,
-                                                'o-rounded-bottom-bubble': message.bubbleColor and !props.squashed,
-                                                'o-rounded-start-bubble': message.bubbleColor and !props.squashed and isAlignedRight,
-                                                'o-rounded-end-bubble': message.bubbleColor and !props.squashed and !isAlignedRight,
+                                                'o-shadow-soft': message.bubbleColor,
+                                                'o-rounded-bubble-2': message.bubbleColor and props.squashed,
+                                                'o-rounded-bottom-bubble-2': message.bubbleColor and !props.squashed,
+                                                'o-rounded-start-bubble-2': message.bubbleColor and !props.squashed and isAlignedRight,
+                                                'o-rounded-end-bubble-2': message.bubbleColor and !props.squashed and !isAlignedRight,
                                             }">
                                                 <div t-if="message.bubbleColor" class="o-mail-Message-bubble position-absolute top-0 start-0 w-100 h-100 border" t-att-class="{
-                                                    'o-rounded-bubble': props.squashed,
-                                                    'o-rounded-bottom-bubble': !props.squashed,
-                                                    'o-rounded-start-bubble': !props.squashed and isAlignedRight,
-                                                    'o-rounded-end-bubble': !props.squashed and !isAlignedRight,
+                                                    'o-rounded-bubble-2': props.squashed,
+                                                    'o-rounded-bottom-bubble-2': !props.squashed,
+                                                    'o-rounded-start-bubble-2': !props.squashed and isAlignedRight,
+                                                    'o-rounded-end-bubble-2': !props.squashed and !isAlignedRight,
                                                     'o-blue': message.bubbleColor === 'blue',
                                                     'o-green': message.bubbleColor === 'green',
                                                     'o-orange': message.bubbleColor === 'orange',
@@ -106,8 +106,8 @@
                                                             'py-2': !message.isNote and !isEditing,
                                                             'pt-2 pb-1': !message.isNote and isEditing,
                                                             'o-note': message.isNote,
-                                                            'o-rounded-bubble': props.squashed,
-                                                            'align-self-start o-rounded-end-bubble o-rounded-bottom-bubble': !isEditing and !message.isNote and !props.squashed,
+                                                            'o-rounded-bubble-2': props.squashed,
+                                                            'align-self-start o-rounded-end-bubble-2 o-rounded-bottom-bubble-2': !isEditing and !message.isNote and !props.squashed,
                                                             'flex-grow-1': isEditing,
                                                             }" t-ref="body">
                                                     <i t-if="message.isEmpty" class="text-muted opacity-75" t-out="message.inlineBody"/>
@@ -176,7 +176,7 @@
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }"/>
-                    <button t-else="" class="btn border-0 p-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
+                    <button t-else="" class="btn border-0 p-0 rounded-0" t-att-title="action.name" t-att-name="action.id" t-on-click.stop="(ev) => action.onSelected(ev)" t-att-class="{
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }">
@@ -184,17 +184,12 @@
                     </button>
                 </t>
                 <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
-                    <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu bg-100 border-secondary'" >
+                    <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? (props.message.isAlignedRight ? 'top-end' : 'top-start') : (props.message.isAlignedRight ? 'bottom-end' : 'bottom-start')" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu o-mail-DiscussMenu-bgColor border-secondary rounded-4'" >
                         <t t-call="mail.Message.expandAction"/>
                         <t t-set-slot="content">
-                            <t t-foreach="messageActions.actions.slice(quickActionCount - 1)" t-as="action" t-key="action.id">
-                                <DropdownItem class="'px-2 py-1 d-flex align-items-baseline rounded-0 ' + action.btnClass" onSelected="action.onClick">
-                                    <t t-if="action.component" t-component="action.component" t-props="action.props"/>
-                                    <t t-else="">
-                                        <i class="fa-fw" t-att-class="action.icon"/>
-                                        <span class="mx-2" t-esc="action.title"/>
-                                    </t>
-                                </DropdownItem>
+                            <t t-call="mail.DiscussActions">
+                                <t t-set="dropdown" t-value="true"/>
+                                <t t-set="group" t-value="[messageActions.actions.slice(quickActionCount - 1)]"/>
                             </t>
                         </t>
                     </Dropdown>

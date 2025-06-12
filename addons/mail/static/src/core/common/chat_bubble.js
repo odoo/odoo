@@ -44,7 +44,7 @@ export class ChatBubble extends Component {
             animation: false,
             position: "left-middle",
             popoverClass:
-                "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
+                "o-mail-ChatBubble-previewPopover dropdown-menu border-0 p-0 overflow-visible o-rounded-bubble mx-1",
             onClose: () => (this.state.showClose = false),
             ref: popoverRef,
         });
@@ -56,10 +56,10 @@ export class ChatBubble extends Component {
         });
         this.hover = useHover(["root", popoverRef], {
             onHover: () => {
+                this.state.showClose = true;
                 this.env.bus.trigger("ChatBubble:preview-will-open", this);
                 this.popover.open(this.rootRef.el, { chatWindow: this.props.chatWindow });
             },
-            onHovering: [100, () => (this.state.showClose = true)],
             onAway: () => this.popover.close(),
         });
         this.rootRef = useRef("root");

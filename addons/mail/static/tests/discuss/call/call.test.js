@@ -57,8 +57,8 @@ test("basic rendering", async () => {
     await contains("[title='More']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await click("[title='More']");
-    await contains("[title='Raise Hand']");
-    await contains("[title='Enter Full Screen']");
+    await contains(".o-dropdown-item:contains('Raise Hand')");
+    await contains(".o-dropdown-item:contains('Enter Full Screen')");
     // screen sharing not available in mobile OS
     mockUserAgent("Chrome/0.0.0 Android (OdooMobile; Linux; Android 13; Odoo TestSuite)");
     expect(isMobileOS()).toBe(true);
@@ -75,7 +75,7 @@ test("keep the `more` popover active when hovering it", async () => {
     await contains(".o-discuss-CallActionList");
     await click("[title='More']");
     const enterFullScreenSelector =
-        ".o-discuss-CallActionList-dropdownItem[title='Enter Full Screen']";
+        ".o-discuss-CallActionList-dropdownItem:contains('Enter Full Screen')";
     await contains(enterFullScreenSelector);
     await hover(queryFirst(enterFullScreenSelector));
     await contains(enterFullScreenSelector);
@@ -343,7 +343,7 @@ test("Systray icon shows latest action", async () => {
     await contains(".o-discuss-CallMenu-buttonContent .fa-desktop");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
     await click("[title='More']");
-    await click("[title='Raise Hand']");
+    await click(".o-dropdown-item:contains('Raise Hand')");
     await contains(".o-discuss-CallMenu-buttonContent .fa-hand-paper-o");
 });
 

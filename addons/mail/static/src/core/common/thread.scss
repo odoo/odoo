@@ -1,10 +1,11 @@
-.o-mail-Thread:focus-visible {
-    outline: 0;
+.o-mail-Thread {
+    &:focus-visible {
+        outline: 0;
+    }
 }
 
 .o-mail-Thread-jumpPresent {
     z-index: $o-mail-NavigableList-zIndex - 1;
-    --border-opacity: .5;
 }
 
 .o-mail-Thread-newMessage {
@@ -60,11 +61,20 @@
     }
 }
 
-.o-mail-Thread-banner {
+.o-mail-Thread-banners {
     z-index: $o-mail-NavigableList-zIndex - 1;
-    --border-opacity: 0.35;
+}
+
+.o-mail-Thread-banner {
+    --bg-opacity: .5;
+    --border-opacity: .25;
+    backdrop-filter: blur(8px);
+    &.bg-warning {
+        --border-opacity: .25;
+        --bg-opacity: .25;
+    }
 }
 
 .o-mail-Thread-bannerHover:hover {
-    filter: brightness(98%);
+    background-color: rgba(0, 0, 0, .1);
 }

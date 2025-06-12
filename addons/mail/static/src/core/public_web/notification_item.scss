@@ -1,14 +1,15 @@
-.o-mail-NotificationItem {
+@mixin mail-NotificationItem-mixin {
     outline: 1px solid transparent;
     outline-offset: -1px;
     background-color: var(--mail-NotificationItem-bg, mix($gray-100, $o-view-background-color, 95%));
 
     &.o-important {
-        background-color: mix($o-view-background-color, lighten($info, 5%), 87.5%);
-        border-color: darken(mix($o-view-background-color, $info, 87.5%), 7.5%) !important;
+        // background-color: mail-DiscussSidebar-activeItemBgColor();
+        background-color: mail-DiscussSidebar-activeItemBgColor-transparent();
+        border-color: mail-DiscussSidebar-activeItemOutlineColor() !important;
     }
     &:not(.o-important) {
-        --border-opacity: .35;
+        --border-opacity: .65;
     }
     &.o-active {
         outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
@@ -17,9 +18,36 @@
         background-color: mix($o-gray-100, $o-gray-200) !important;
 
         &.o-important {
-            background-color: mix($o-gray-100, $o-info, 87.5%) !important;
+            background-color: mail-DiscussSidebar-activeHoveredItemBgColor() !important;
+            outline-color: mail-DiscussSidebar-activeHoveredItemOutlineColor() !important;
+            box-shadow: o-shadow-2() !important;
         }
     }
+}
+
+.o-mail-NotificationItem {
+    @include mail-NotificationItem-mixin;
+    // outline: 1px solid transparent;
+    // outline-offset: -1px;
+    // background-color: var(--mail-NotificationItem-bg, mix($gray-100, $o-view-background-color, 95%));
+
+    // &.o-important {
+    //     background-color: mail-DiscussSidebar-activeItemBgColor();
+    //     border-color: mail-DiscussSidebar-activeItemOutlineColor() !important;
+    // }
+    // &:not(.o-important) {
+    //     --border-opacity: .65;
+    // }
+    // &.o-active {
+    //     outline-color: rgba($o-action, var(--mail-NotificationItem-activeOutlineOpacity, 0.5));
+    // }
+    // &:hover, &.o-active {
+    //     background-color: mix($o-gray-100, $o-gray-200) !important;
+
+    //     &.o-important {
+    //         background-color: mix($o-gray-100, $o-info, 87.5%) !important;
+    //     }
+    // }
 }
 
 .o-mail-NotificationItem-avatarContainer {
