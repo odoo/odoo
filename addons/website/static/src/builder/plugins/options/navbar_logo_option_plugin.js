@@ -14,6 +14,7 @@ class NavbarLogoOptionPlugin extends Plugin {
                 title: _t("Navbar Logo"),
                 editableOnly: false,
                 groups: ["website.group_website_designer"],
+                reloadTarget: true,
             }),
         ],
     };
