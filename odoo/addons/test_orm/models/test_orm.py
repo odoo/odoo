@@ -2366,3 +2366,14 @@ class OnchangePartialView(models.Model):
     name = fields.Char()
     company_id = fields.Many2one('res.company', default=lambda r: r.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
+
+
+class BinaryTest(models.Model):
+    _name = _description = "binary.test"
+
+    img = fields.Image()
+    bin1 = fields.Binary()
+    bin2 = fields.Binary(compute="_compute_bin2")
+
+    def _compute_bin2(self):
+        self.bin2 = {}
