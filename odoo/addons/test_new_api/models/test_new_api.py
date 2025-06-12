@@ -2285,3 +2285,14 @@ class Test_New_ViewStrId(models.Model):
     _table_query = "SELECT 'hello' AS id, 'test' AS name"
 
     name = fields.Char()
+
+
+class BinaryTest(models.Model):
+    _name = _description = "binary.test"
+
+    img = fields.Image()
+    bin1 = fields.Binary()
+    bin2 = fields.Binary(compute="_compute_bin2")
+
+    def _compute_bin2(self):
+        self.bin2 = {}
