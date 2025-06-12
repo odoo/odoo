@@ -114,7 +114,7 @@ class TestWebsiteSaleCartRecoveryServer(TransactionCase):
         sent_mail = {}
         for order in orders:
             mail = self.env["mail.mail"].search([
-                ('record_name', '=', order['name'])
+                ('res_id', '=', order['id'])
             ])
             sent_mail.update({order: mail})
 

@@ -36,11 +36,6 @@ class PaymentTransaction(models.Model):
             body = self.env['mail.render.mixin'].with_context(lang=self.partner_id.lang)._render_encapsulate(
                 'mail.mail_notification_light',
                 body,
-                add_context={
-                    # the 'mail_notification_light' expects a mail.message 'message' context, let's give it one
-                    'message': self.env['mail.message'].sudo().new(dict(body=body, record_name=self.display_name)),
-                    'company': self.company_id,
-                },
                 context_record=self,
             )
             self.env['mail.mail'].sudo().create({

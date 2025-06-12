@@ -324,7 +324,6 @@ class TestWebPushNotification(SMSCommon):
                     self.record_simple.with_user(self.user_admin).message_notify(
                         body='Test Push Body',
                         partner_ids=recipient.partner_id.ids,
-                        record_name=self.record_simple.display_name,
                         subject='Test Push Notification',
                     )
                 # not using cron, as max 1 push notif -> direct send
@@ -445,7 +444,6 @@ class TestWebPushNotification(SMSCommon):
             partner_ids=self.user_inbox.partner_id.ids,
             body='Test message send via Web Push',
             subject='Test Activity',
-            record_name=self.record_simple._name,
         )
 
         self._assert_notification_count_for_cron(5)
@@ -461,7 +459,6 @@ class TestWebPushNotification(SMSCommon):
                 partner_ids=self.user_inbox.partner_id.ids,
                 body='Test message send via Web Push',
                 subject='Test Activity',
-                record_name=self.record_simple._name,
             )
 
         self._assert_notification_count_for_cron(0)
@@ -479,7 +476,6 @@ class TestWebPushNotification(SMSCommon):
             partner_ids=self.user_inbox.partner_id.ids,
             body='Test message send via Web Push',
             subject='Test Activity',
-            record_name=self.record_simple._name,
         )
 
         self._assert_notification_count_for_cron(0)
@@ -540,7 +536,6 @@ class TestWebPushNotification(SMSCommon):
             partner_ids=self.user_inbox.partner_id.ids,
             body='',
             subject='Test Payload',
-            record_name=self.record_simple._name,
         )
         base_payload_size = len(thread_push_mock.call_args.kwargs['payload'].encode())
         effective_payload_size_limit = self.env['mail.thread']._truncate_payload_get_max_payload_length()
@@ -572,7 +567,6 @@ class TestWebPushNotification(SMSCommon):
                     partner_ids=self.user_inbox.partner_id.ids,
                     body=body,
                     subject='Test Payload',
-                    record_name=self.record_simple._name,
                 )
 
                 encrypted_payload = session_post_mock.call_args.kwargs['data']
@@ -612,7 +606,6 @@ class TestWebPushNotification(SMSCommon):
             partner_ids=self.user_inbox.partner_id.ids,
             body="",
             subject='Test Payload',
-            record_name=self.record_simple._name,
         )
         base_payload = thread_push_mock.call_args.kwargs['payload'].encode()
         base_payload_size = len(base_payload)
@@ -639,7 +632,6 @@ class TestWebPushNotification(SMSCommon):
                     partner_ids=self.user_inbox.partner_id.ids,
                     body=body,
                     subject='Test Payload',
-                    record_name=self.record_simple._name,
                 )
                 payload_at_push = thread_push_mock.call_args.kwargs['payload']
                 payload_before_encrypt = web_push_encrypt_payload_mock.call_args.args[0]

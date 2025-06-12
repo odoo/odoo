@@ -136,7 +136,7 @@ class MailThread(models.AbstractModel):
         )
 
     def _notify_thread(self, message, msg_vals=False, **kwargs):
-        # Main notification method. Override to add support of sending OCN notifications.
+        # Main notification method. Override to add support of sending SMS notifications.
         scheduled_date = self._is_notification_scheduled(kwargs.get('scheduled_date'))
         recipients_data = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
         if not scheduled_date:
