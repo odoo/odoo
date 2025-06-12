@@ -17,17 +17,30 @@
                 </button>
             </t>
             <t t-elif="props.required or props.alwaysRange or !isEmpty(startDateField) or startDateField === props.name">
-                <input
-                    t-ref="start-date"
-                    type="text"
-                    t-att-id="showSeparator ? props.endDateField and props.id : props.id"
-                    t-att-class="'o_input cursor-pointer ' + (props.warnFuture and isDateInTheFuture(0) ? 'text-danger' : '')"
-                    autocomplete="off"
-                    t-att-placeholder="props.placeholder"
-                    t-att-data-field="startDateField"
-                    t-on-input="onInput"
-                    t-att-title="props.warnFuture and isDateInTheFuture(0) ? futureWarningMsg : ''"
-                />
+                <t t-if="picker.activeInput !== startDateField and values[0]">
+                    <button 
+                        t-ref="start-date" 
+                        t-att-id="showSeparator ? props.endDateField and props.id : props.id"
+                        t-on-focus="() => picker.activeInput = startDateField"
+                        t-att-data-field="startDateField"
+                        t-att-class="'o_input o_daterange_start w-100 text-start ' + (props.warnFuture and isDateInTheFuture(0) ? 'text-danger' : '')">
+                        <t t-esc="getFormattedValue(0)" />
+                    </button>
+                </t>
+                <t t-else="">
+                    <input
+                        t-ref="start-date"
+                        type="text"
+                        t-att-id="showSeparator ? props.endDateField and props.id : props.id"
+                        t-att-class="'o_input cursor-pointer ' + (props.warnFuture and isDateInTheFuture(0) ? 'text-danger' : '')"
+                        autocomplete="off"
+                        t-att-placeholder="props.placeholder"
+                        t-att-data-field="startDateField"
+                        t-on-input="onInput"
+                        t-on-focus="() => picker.activeInput = startDateField"
+                        t-att-title="props.warnFuture and isDateInTheFuture(0) ? futureWarningMsg : ''"
+                    />
+                </t>
             </t>
 
             <!-- Separator -->
@@ -50,17 +63,30 @@
                     </button>
                 </t>
                 <t t-elif="props.required or props.alwaysRange or !isEmpty(endDateField) or endDateField === props.name">
-                    <input
-                        t-ref="end-date"
-                        type="text"
-                        t-att-id="props.startDateField and props.id"
-                        t-att-class="'o_input cursor-pointer ' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')"
-                        autocomplete="off"
-                        t-att-placeholder="props.placeholder"
-                        t-att-data-field="endDateField"
-                        t-on-input="onInput"
-                        t-att-title="props.warnFuture and isDateInTheFuture(1) ? futureWarningMsg : ''"
-                    />
+                    <t t-if="picker.activeInput !== endDateField and values[1]">
+                        <button 
+                            t-ref="end-date" 
+                            t-on-focus="() => picker.activeInput = endDateField" 
+                            t-att-id="props.startDateField and props.id"
+                            t-att-data-field="endDateField"
+                            t-att-class="'o_input o_daterange_end w-100 text-start ' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')">
+                            <t t-esc="getFormattedValue(1)" />
+                        </button>
+                    </t>
+                    <t t-else="">
+                        <input
+                            t-ref="end-date"
+                            type="text"
+                            t-att-id="props.startDateField and props.id"
+                            t-att-class="'o_input cursor-pointer ' + (props.warnFuture and isDateInTheFuture(1) ? 'text-danger' : '')"
+                            autocomplete="off"
+                            t-att-placeholder="props.placeholder"
+                            t-att-data-field="endDateField"
+                            t-on-input="onInput"
+                            t-on-focus="() => picker.activeInput = endDateField"
+                            t-att-title="props.warnFuture and isDateInTheFuture(1) ? futureWarningMsg : ''"
+                        />
+                    </t>
                 </t>
             </t>
         </div>

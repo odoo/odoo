@@ -877,8 +877,8 @@ test("one2many with date and datetime", async () => {
             </form>`,
         resId: 1,
     });
-    expect("td:eq(0)").toHaveText("01/25/2017");
-    expect("td:eq(1)").toHaveText("12/12/2016 12:55");
+    expect("td:eq(0)").toHaveText("Jan 25, 2017");
+    expect("td:eq(1)").toHaveText("Dec 12, 2016, 12:55 PM");
 });
 
 test("rendering with embedded one2many", async () => {
@@ -4565,7 +4565,7 @@ test("one2many and default_get (with date)", async () => {
             </form>`,
     });
 
-    expect(".o_data_cell").toHaveText("10/08/2017");
+    expect(".o_data_cell").toHaveText("Oct 8, 2017");
 });
 
 test("one2many and onchange (with integer)", async () => {
@@ -4615,7 +4615,7 @@ test("one2many and onchange (with date)", async () => {
             </form>`,
         resId: 1,
     });
-    expect("td:eq(0)").toHaveText("01/25/2017");
+    expect("td:eq(0)").toHaveText("Jan 25, 2017");
 
     contains("td:eq(0)").click();
     await contains("td:eq(0) .o_field_date input").click();
@@ -9649,6 +9649,7 @@ test("no deadlock when leaving a one2many line with uncommitted changes", async 
 });
 
 test("one2many with extra field from server not in form", async () => {
+    mockTimeZone(0);
     onRpc("web_save", (args) => {
         args.args[1].p[0][2].datetime = "2018-04-05 12:00:00";
     });
@@ -9688,7 +9689,7 @@ test("one2many with extra field from server not in form", async () => {
     // Redo asserts in RO mode after saving
     expect(".o_data_row").toHaveCount(1);
     cells = queryAll(".o_data_cell");
-    expect(cells[0]).toHaveText("04/05/2018 13:00");
+    expect(cells[0]).toHaveText("Apr 5, 2018, 12:00 PM");
     expect(cells[1]).toHaveText("michelangelo");
 });
 

@@ -149,7 +149,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             'boolean_test': "No",
             'char_test': self.sale_order.name,
             'date_test': "11/04/2020",
-            'datetime_test': "12/21/2121 13:21:12",
+            'datetime_test': "12/21/2121 01:21:12 PM",
             'float_test': "4.99",
             'integer_test': "10",
             'selection_test': "Quotation",

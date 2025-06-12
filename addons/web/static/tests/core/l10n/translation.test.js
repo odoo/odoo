@@ -117,13 +117,12 @@ test("[cache] write into the cache", async () => {
             direction: "ltr",
             grouping: "[3,0]",
             time_format: "%H:%M:%S",
-            short_time_format: "%H:%M",
             thousands_sep: ",",
             week_start: 7,
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } },
         multi_lang: false,
-        hash: "cf48f5f2",
+        hash: "ab5379cf",
     };
     expect.verifySteps([
         "hash: ",
@@ -144,7 +143,6 @@ test("[cache] read from cache, and don't wait to render", async () => {
                     direction: "ltr",
                     grouping: "[3,0]",
                     time_format: "%H:%M:%S",
-                    short_time_format: "%H:%M",
                     thousands_sep: ",",
                     week_start: 7,
                 },
@@ -181,7 +179,6 @@ test("[cache] update the cache if hash are different - template", async () => {
                     direction: "ltr",
                     grouping: "[3,0]",
                     time_format: "%H:%M:%S",
-                    short_time_format: "%H:%M",
                     thousands_sep: ",",
                     week_start: 7,
                 },
@@ -217,13 +214,12 @@ test("[cache] update the cache if hash are different - template", async () => {
             direction: "ltr",
             grouping: "[3,0]",
             time_format: "%H:%M:%S",
-            short_time_format: "%H:%M",
             thousands_sep: ",",
             week_start: 7,
         },
         modules: { web: { messages: [{ id: "Hello", string: "Bonjour" }] } }, // value was updated in the cache
         multi_lang: false,
-        hash: "cf48f5f2", // hash was updated in the cache
+        hash: "ab5379cf", // hash was updated in the cache
     };
     expect.verifySteps([
         "hash: 30b", //Fetch with the hash of the translation in cache
@@ -250,7 +246,6 @@ test("[cache] update the cache if hash are different - js", async () => {
                     direction: "ltr",
                     grouping: "[3,0]",
                     time_format: "%H:%M:%S",
-                    short_time_format: "%H:%M",
                     thousands_sep: ",",
                     week_start: 7,
                 },
@@ -300,7 +295,6 @@ test("[cache] update the cache if hash are different - js", async () => {
             direction: "ltr",
             grouping: "[3,0]",
             time_format: "%H:%M:%S",
-            short_time_format: "%H:%M",
             thousands_sep: ",",
             week_start: 7,
         },
@@ -310,7 +304,7 @@ test("[cache] update the cache if hash are different - js", async () => {
             },
         }, // value was updated in the cache
         multi_lang: false,
-        hash: "2a52c9bf", // hash was updated in the cache
+        hash: "5a528fc2", // hash was updated in the cache
     };
     expect.verifySteps([
         "hash: 30b", //Fetch with the hash of the translation in cache

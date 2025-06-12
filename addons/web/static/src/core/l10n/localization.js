@@ -3,7 +3,6 @@
  * @property {string} dateFormat
  * @property {string} dateTimeFormat
  * @property {string} timeFormat
- * @property {string} shortTimeFormat
  * @property {string} decimalPoint
  * @property {"ltr" | "rtl"} direction
  * @property {[number, number]} grouping

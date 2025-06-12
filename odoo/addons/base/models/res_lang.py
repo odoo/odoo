@@ -15,12 +15,6 @@ from odoo.tools.misc import ReadonlyDict
 
 _logger = logging.getLogger(__name__)
 
-DEFAULT_DATE_FORMAT = '%m/%d/%Y'
-DEFAULT_SHORT_DATE_FORMAT = '%-m/%-d/%y'
-DEFAULT_TIME_FORMAT = '%H:%M:%S'
-DEFAULT_SHORT_TIME_FORMAT = '%H:%M'
-
-
 class LangData(ReadonlyDict):
     """ A ``dict``-like class which can access field value like a ``res.lang`` record.
     Note: This data class cannot store data for fields with the same name as
@@ -61,16 +55,28 @@ class ResLang(models.Model):
     _disallowed_datetime_patterns = list(tools.misc.DATETIME_FORMATS_MAP)
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
+    def _get_date_format_selection(self):
+        current_year = fields.Date.today().year
+        return [
+            ('%d/%m/%Y', '01/31/%s' % current_year),
+            ('%m/%d/%Y', '31/01/%s' % current_year),
+            ('%Y/%m/%d', '%s/31/01' % current_year),
+            ('%d-%m-%Y', '01-31-%s' % current_year),
+            ('%m-%d-%Y', '31-01-%s' % current_year),
+            ('%Y-%m-%d', '%s-31-01' % current_year),
+        ]
+
     name = fields.Char(required=True)
     code = fields.Char(string='Locale Code', required=True, help='This field is used to set/get locales for user')
     iso_code = fields.Char(string='ISO code', help='This ISO code is the name of po files to use for translations')
     url_code = fields.Char('URL Code', required=True, help='The Lang Code displayed in the URL')
     active = fields.Boolean()
     direction = fields.Selection([('ltr', 'Left-to-Right'), ('rtl', 'Right-to-Left')], required=True, default='ltr')
-    date_format = fields.Char(string='Date Format', required=True, default=DEFAULT_DATE_FORMAT)
-    short_date_format = fields.Char(string='Short Date Format', required=True, default=DEFAULT_SHORT_DATE_FORMAT)
-    time_format = fields.Char(string='Time Format', required=True, default=DEFAULT_TIME_FORMAT)
-    short_time_format = fields.Char(string='Short Time Format', required=True, default=DEFAULT_SHORT_TIME_FORMAT, help="Time Format without seconds")
+    date_format = fields.Selection(selection=_get_date_format_selection, string='Date Format', required=True, default='%m/%d/%Y')
+    time_format = fields.Selection([
+        ('%H:%M:%S', "13:00:00"),
+        ('%I:%M:%S %p', " 1:00:00 PM"),
+    ], string='Time Format', required=True, default='%H:%M:%S')
     week_start = fields.Selection([('1', 'Monday'),
                                    ('2', 'Tuesday'),
                                    ('3', 'Wednesday'),
@@ -78,11 +84,12 @@ class ResLang(models.Model):
                                    ('5', 'Friday'),
                                    ('6', 'Saturday'),
                                    ('7', 'Sunday')], string='First Day of Week', required=True, default='7')
-    grouping = fields.Char(string='Separator Format', required=True, default='[]',
-        help="The Separator Format should be like [,n] where 0 < n :starting from Unit digit. "
-             "-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500; "
-             "[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. "
-             "Provided ',' as the thousand separator in each case.")
+    grouping = fields.Selection([
+        ('[3,0]', 'International Grouping'),
+        ('[3,2,0]', 'Indian Grouping'),
+    ], string='Separator Format', required=True, default='[3,0]',
+        help="The International Grouping will represent 123456789 to be 123,456,789.00; "
+             "The Indian Grouping will represent 123456789 to be 12,34,56,789.00")
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
 
@@ -142,19 +149,6 @@ class ResLang(models.Model):
             if lang.time_format and "%H" in lang.time_format and "%p" in lang.time_format:
                 lang.time_format = lang.time_format.replace("%H", "%I")
                 return warning
-
-    @api.constrains('grouping')
-    def _check_grouping(self):
-        warning = _('The Separator Format should be like [,n] where 0 < n :starting from Unit digit. '
-                    '-1 will end the separation. e.g. [3,2,-1] will represent 106500 to be 1,06,500;'
-                    '[1,2,-1] will represent it to be 106,50,0;[3] will represent it as 106,500. '
-                    'Provided as the thousand separator in each case.')
-        for lang in self:
-            try:
-                if any(not isinstance(x, int) for x in json.loads(lang.grouping)):
-                    raise ValidationError(warning)
-            except Exception:
-                raise ValidationError(warning)
 
     def _register_hook(self):
         # check that there is at least one active language
@@ -222,7 +216,7 @@ class ResLang(models.Model):
             'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(conv['decimal_point'])),
             'thousands_sep' : fix_xa0(str(conv['thousands_sep'])),
-            'grouping' : str(conv.get('grouping', [])),
+            'grouping': str(conv.get('grouping') or '[3,0]'),
         }
         try:
             return self.create(lang_info)
@@ -264,8 +258,8 @@ class ResLang(models.Model):
         Warning: Don't add method names of ``dict`` to CACHED_FIELDS for sake of the
         implementation of LangData
         """
-        return OrderedSet(['id', 'name', 'code', 'iso_code', 'url_code', 'active', 'direction', 'date_format', 'short_date_format',
-                           'time_format', 'short_time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url'])
+        return OrderedSet(['id', 'name', 'code', 'iso_code', 'url_code', 'active', 'direction', 'date_format',
+                           'time_format', 'week_start', 'grouping', 'decimal_point', 'thousands_sep', 'flag_image_url'])
 
     def _get_data(self, **kwargs) -> LangData:
         """ Get the language data for the given field value in kwargs

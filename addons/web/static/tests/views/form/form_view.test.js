@@ -4799,7 +4799,7 @@ test(`discard changes on a dirty form view (for date field)`, async () => {
     await contains(`.o_form_button_cancel`).click();
 
     await contains(`.o_form_button_save`).click();
-    expect(`.o_field_widget input`).toHaveValue("01/25/2017");
+    expect(`.o_field_widget button`).toHaveValue("01/25/2017");
 });
 
 test.tags("desktop");
@@ -6615,13 +6615,13 @@ test(`onchanges on date(time) fields`, async () => {
         `,
         resId: 1,
     });
-    expect(`.o_field_widget[name=date] input`).toHaveValue("01/25/2017");
-    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2016 12:55");
+    expect(`.o_field_widget[name=date] button`).toHaveValue("01/25/2017");
+    expect(`.o_field_widget[name=datetime] button`).toHaveValue("12/12/2016 12:55:05");
 
     // trigger the onchange
     await contains(`.o_field_widget[name="foo"] input`).edit("coucou");
-    expect(`.o_field_widget[name=date] input`).toHaveValue("12/12/2021");
-    expect(`.o_field_widget[name=datetime] input`).toHaveValue("12/12/2021 12:55");
+    expect(`.o_field_widget[name=date] button`).toHaveValue("12/12/2021");
+    expect(`.o_field_widget[name=datetime] button`).toHaveValue("12/12/2021 12:55:05");
 });
 
 test(`onchanges are not sent for invalid values`, async () => {
@@ -11092,6 +11092,7 @@ test(`status indicator: field dirty state (date)`, async () => {
     });
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
 
+    await contains(".o_field_widget button").click();
     await contains(`.o_field_widget input`).edit("03/26/2019", { confirm: false });
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(0);
 });
@@ -11106,6 +11107,7 @@ test(`status indicator: field dirty state (datetime)`, async () => {
     });
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
 
+    await contains(".o_field_widget button").click();
     await contains(`.o_field_widget input`).edit("12/12/2012 11:55:05", { confirm: false });
     expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(0);
 });

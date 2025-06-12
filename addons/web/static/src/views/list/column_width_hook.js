@@ -1,6 +1,11 @@
 import { renderToElement } from "@web/core/utils/render";
 import { useDebounced } from "@web/core/utils/timing";
-import { formatDate, formatDateTime } from "@web/core/l10n/dates";
+import {
+    formatDate,
+    formatDateTime,
+    toLocaleDateString,
+    toLocaleDateTimeString,
+} from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 
 import {
@@ -61,22 +66,33 @@ const DEFAULT_MIN_WIDTH = 80;
 const SELECTOR_WIDTH = 20;
 const OPEN_FORM_VIEW_BUTTON_WIDTH = 54;
 const DELETE_BUTTON_WIDTH = 12;
-let _dateFieldWidth = null; // computed dynamically, lazily, see @computeOptimalDateWidths
-let _datetimeFieldWidth = null; // computed dynamically, lazily, see @computeOptimalDateWidths
+let _dateWidths = null; // computed dynamically, lazily, see @computeOptimalDateWidths
 export const FIELD_WIDTHS = Object.freeze({
     boolean: [20, 100], // [minWidth, maxWidth]
     char: [80], // only minWidth, no maxWidth
     get date() {
-        if (!_dateFieldWidth) {
+        if (!_dateWidths) {
             computeOptimalDateWidths();
         }
-        return _dateFieldWidth;
+        return _dateWidths.date;
     },
     get datetime() {
-        if (!_datetimeFieldWidth) {
+        if (!_dateWidths) {
             computeOptimalDateWidths();
         }
-        return _datetimeFieldWidth;
+        return _dateWidths.datetime;
+    },
+    get numeric_date() {
+        if (!_dateWidths) {
+            computeOptimalDateWidths();
+        }
+        return _dateWidths.numericDate;
+    },
+    get numeric_datetime() {
+        if (!_dateWidths) {
+            computeOptimalDateWidths();
+        }
+        return _dateWidths.numericDatetime;
     },
     float: 93,
     integer: 71,
@@ -92,8 +108,7 @@ export const FIELD_WIDTHS = Object.freeze({
 
 export function resetDateFieldWidths() {
     // useful for tests
-    _dateFieldWidth = null;
-    _datetimeFieldWidth = null;
+    _dateWidths = null;
 }
 
 /**
@@ -103,47 +118,56 @@ export function resetDateFieldWidths() {
  * them into the DOM and compute their width.
  */
 function computeOptimalDateWidths() {
-    const dates = [];
-    const datetimes = [];
-    const { dateFormat, timeFormat } = localization;
-    const escapedPartsRegex = /('[^']*')/g;
-    const dateFormatWoEscParts = dateFormat.replaceAll(escapedPartsRegex, "");
-    // generate a date for each month if date format contains MMMM or MMM (full or abbrev. month)
-    for (let month = 1; month <= (/MMM/.test(dateFormatWoEscParts) ? 12 : 1); month++) {
-        // generate a date for each day if date format contains cccc or ccc (full or abbrev. day)
-        for (let day = 1; day <= (/ccc/.test(dateFormatWoEscParts) ? 7 : 1); day++) {
-            dates.push(formatDate(luxon.DateTime.local(2017, month, day)));
-            datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 8, 0, 0)));
-            const timeFormatWoEscParts = timeFormat.replaceAll(escapedPartsRegex, "");
-            if (/a/.test(timeFormatWoEscParts)) {
-                // generate a date in the afternoon if time is displayed with AM/PM or equivalent
-                datetimes.push(formatDateTime(luxon.DateTime.local(2017, month, day, 20, 0, 0)));
-            }
+    const { timeFormat } = localization;
+    const values = {
+        date: [],
+        datetime: [],
+        numericDate: [],
+        numericDatetime: [],
+    };
+    // dates in the "human readable" format (must generate a date by month as width could vary)
+    for (let month = 1; month <= 12; month++) {
+        values.date.push(toLocaleDateString(luxon.DateTime.local(2017, month, 20)));
+        values.datetime.push(
+            toLocaleDateTimeString(luxon.DateTime.local(2017, month, 25, 10, 0, 0), {
+                showSeconds: true,
+            })
+        );
+        if (timeFormat === "hh:mm:ss a") {
+            // generate a date in the afternoon if time is displayed with AM/PM or equivalent
+            values.datetime.push(
+                toLocaleDateTimeString(luxon.DateTime.local(2017, month, 25, 22, 0, 0), {
+                    showSeconds: true,
+                })
+            );
         }
     }
+    // dates in the "numeric" format
+    values.numericDate.push(formatDate(luxon.DateTime.local(2017, 1, 1)));
+    values.numericDatetime.push(formatDateTime(luxon.DateTime.local(2017, 1, 1, 10, 0, 0)));
+    if (timeFormat === "hh:mm:ss a") {
+        // generate a date in the afternoon if time is displayed with AM/PM or equivalent
+        values.numericDatetime.push(formatDateTime(luxon.DateTime.local(2017, 1, 1, 22, 0, 0)));
+    }
+
     const template = xml`
         <div class="invisible" style="font-variant-numeric: tabular-nums;">
-            <div class="dates">
-                <div t-foreach="dates" t-as="date" t-key="date_index">
-                    <span t-esc="date"/>
-                </div>
-            </div>
-            <div class="datetimes">
-                <div t-foreach="datetimes" t-as="datetime" t-key="datetime_index">
-                    <span t-esc="datetime"/>
+            <div t-foreach="Object.keys(values)" t-as="key" t-key="key" t-att-class="key">
+                <div t-foreach="values[key]" t-as="value" t-key="value_index">
+                    <span t-esc="value"/>
                 </div>
             </div>
         </div>`;
-    const div = renderToElement(template, { dates, datetimes });
+    const div = renderToElement(template, { values });
     document.body.append(div);
-    const dateSpans = div.querySelectorAll(".dates span");
-    const dateWidths = [...dateSpans].map((span) => span.getBoundingClientRect().width);
-    const datetimeSpans = div.querySelectorAll(".datetimes span");
-    const datetimeWidths = [...datetimeSpans].map((span) => span.getBoundingClientRect().width);
+    _dateWidths = {};
+    for (const key in values) {
+        const spans = div.querySelectorAll(`.${key} span`);
+        const widths = [...spans].map((span) => span.getBoundingClientRect().width);
+        // add a 5% margin to cope with potential bold decorations
+        _dateWidths[key] = Math.ceil(Math.max(...widths) * 1.05);
+    }
     document.body.removeChild(div);
-    // add a 5% margin to cope with potential bold decorations
-    _dateFieldWidth = Math.ceil(Math.max(...dateWidths) * 1.05);
-    _datetimeFieldWidth = Math.ceil(Math.max(...datetimeWidths) * 1.05);
 }
 
 /**

@@ -64,7 +64,6 @@ export const localizationService = {
             Object.assign(localization, {
                 dateFormat,
                 timeFormat,
-                shortTimeFormat: strftimeToLuxonFormat(userLocalization.short_time_format),
                 dateTimeFormat: `${dateFormat} ${timeFormat}`,
                 decimalPoint: userLocalization.decimal_point,
                 direction: userLocalization.direction,
