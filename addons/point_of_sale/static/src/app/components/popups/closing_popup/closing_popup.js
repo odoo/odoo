@@ -25,7 +25,6 @@ export class ClosePosPopup extends Component {
         "default_cash_details",
         "non_cash_payment_methods",
         "is_manager",
-        "amount_authorized_diff",
         "close",
     ];
 
@@ -100,27 +99,18 @@ export class ClosePosPopup extends Component {
             await this.closeSession();
             return;
         }
-        if (this.hasUserAuthority()) {
-            const response = await ask(this.dialog, {
-                title: _t("Payments Difference"),
-                body: _t(
-                    "The money counted doesn't match what we expected. Want to log the difference for the books?"
-                ),
-                confirmLabel: _t("Proceed Anyway"),
-                cancelLabel: _t("Discard"),
-            });
-            if (response) {
-                return this.closeSession();
-            }
-            return;
-        }
-        this.dialog.add(ConfirmationDialog, {
+        const response = await ask(this.dialog, {
             title: _t("Payments Difference"),
             body: _t(
-                "The maximum difference allowed is %s.\nPlease contact your manager to accept the closing difference.",
-                this.env.utils.formatCurrency(this.props.amount_authorized_diff)
+                "The money counted doesn't match what we expected. Want to log the difference for the books?"
             ),
+            confirmLabel: _t("Proceed Anyway"),
+            cancelLabel: _t("Discard"),
         });
+        if (response) {
+            return this.closeSession();
+        }
+        return;
     }
     async cancel() {
         if (this.canCancel()) {
@@ -177,13 +167,6 @@ export class ClosePosPopup extends Component {
             ...Object.keys(this.state.payments).map((id) =>
                 Math.abs(this.getDifference(parseInt(id)))
             )
-        );
-    }
-    hasUserAuthority() {
-        return (
-            this.props.is_manager ||
-            this.props.amount_authorized_diff == null ||
-            this.getMaxDifference() <= this.props.amount_authorized_diff
         );
     }
     canCancel() {

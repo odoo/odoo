@@ -58,7 +58,6 @@ class ResConfigSettings(models.TransientModel):
     pos_printer_ids = fields.Many2many(related='pos_config_id.printer_ids', readonly=False)
 
     pos_allowed_pricelist_ids = fields.Many2many('product.pricelist', compute='_compute_pos_allowed_pricelist_ids')
-    pos_amount_authorized_diff = fields.Float(related='pos_config_id.amount_authorized_diff', readonly=False)
     pos_available_pricelist_ids = fields.Many2many('product.pricelist', string='Available Pricelists', compute='_compute_pos_pricelist_id', readonly=False, store=True)
     pos_cash_control = fields.Boolean(related='pos_config_id.cash_control')
     pos_cash_rounding = fields.Boolean(related='pos_config_id.cash_rounding', readonly=False, string="Cash Rounding (PoS)")

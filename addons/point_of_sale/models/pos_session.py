@@ -791,7 +791,6 @@ class PosSession(models.Model):
                 'type': pm.type,
             } for pm in non_cash_payment_method_ids],
             'is_manager': self.env.user.has_group("point_of_sale.group_pos_manager"),
-            'amount_authorized_diff': self.config_id.amount_authorized_diff if self.config_id.set_maximum_difference else None
         }
 
     def _create_picking_at_end_of_session(self):

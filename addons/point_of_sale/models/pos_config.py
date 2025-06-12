@@ -113,7 +113,6 @@ class PosConfig(models.Model):
     is_margins_costs_accessible_to_every_user = fields.Boolean(string='Margins & Costs', default=False,
         help='When disabled, only PoS manager can view the margin and cost of product among the Product info.')
     cash_control = fields.Boolean(string='Advanced Cash Control', compute='_compute_cash_control', help="Check the amount of the cashbox at opening and closing.")
-    set_maximum_difference = fields.Boolean('Set Maximum Difference', help="Set a maximum difference allowed between the expected and counted money during the closing of the session.")
     receipt_header = fields.Text(string='Receipt Header', help="A short text that will be inserted as a header in the printed receipt.")
     receipt_footer = fields.Text(string='Receipt Footer', help="A short text that will be inserted as a footer in the printed receipt.")
     basic_receipt = fields.Boolean(string='Basic Receipt', help="Print basic ticket without prices. Can be used for gifts.")
@@ -164,10 +163,6 @@ class PosConfig(models.Model):
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
-    amount_authorized_diff = fields.Float('Amount Authorized Difference',
-        help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
-             "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
-             "the closing of his session saying that he needs to contact his manager.")
     payment_method_ids = fields.Many2many('pos.payment.method', string='Payment Methods', default=lambda self: self._default_payment_methods(), copy=False)
     company_has_template = fields.Boolean(string="Company has chart of accounts", compute="_compute_company_has_template")
     current_user_id = fields.Many2one('res.users', string='Current Session Responsible', compute='_compute_current_session_user')
