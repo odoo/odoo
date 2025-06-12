@@ -151,24 +151,6 @@ class HrWorkEntry(models.Model):
         return self.work_entry_type_id and self.work_entry_type_id.is_leave
 
     def _get_duration_batch(self):
-        result = {}
-        cached_periods = defaultdict(float)
-        for work_entry in self:
-            date_start = work_entry.date_start
-            date_stop = work_entry.date_stop
-            if not date_start or not date_stop:
-                result[work_entry.id] = 0.0
-                continue
-            if (date_start, date_stop) in cached_periods:
-                result[work_entry.id] = cached_periods[(date_start, date_stop)]
-            else:
-                dt = date_stop - date_start
-                duration = dt.days * 24 + round(dt.total_seconds()) / 3600  # Number of hours
-                cached_periods[(date_start, date_stop)] = duration
-                result[work_entry.id] = duration
-        return result
-
-    def _get_duration_batch(self):
         no_version_work_entries = self.env['hr.work.entry']
         result = {}
         # {(date_start, date_stop): {calendar: employees}}

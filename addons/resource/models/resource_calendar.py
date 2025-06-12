@@ -923,7 +923,11 @@ class ResourceCalendar(models.Model):
         :return: A tuple of floats (hour_from, hour_to).
         """
         self.ensure_one()
-
+        if self.flexible_hours:
+            datetimes = [12.0 - self.hours_per_day / 2.0, 12.0, 12.0 + self.hours_per_day / 2.0]
+            if day_period:
+                return (datetimes[0], datetimes[1]) if day_period == 'morning' else (datetimes[1], datetimes[2])
+            return (datetimes[0], datetimes[2])
         if not target_date:
             return (8.0, 17.0)
 
@@ -951,10 +955,10 @@ class ResourceCalendar(models.Model):
 
         hour_from = next(
             (att.hour_from for att in attendances if int(att.dayofweek) == target_date.weekday() and
-            (att.week_type == week_type)), default_start)
+            (int(att.week_type) == week_type)), default_start)
         hour_to = next(
             (att.hour_to for att in attendances if int(att.dayofweek) == target_date.weekday() and
-            (att.week_type == week_type)), default_end)
+            (int(att.week_type) == week_type)), default_end)
 
         return (hour_from, hour_to)
 

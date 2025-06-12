@@ -102,6 +102,7 @@
                 <field name="supported_attachment_ids_count"/>
                 <field name="state"/>
                 <field name="employee_id"/>
+                <field name="leave_type_request_unit"/>
                 <field name="request_unit_hours"/>
                 <field name="request_unit_half"/>
                 <field name="request_date_from"/>
@@ -112,6 +113,7 @@
                 <field name="can_validate"/>
                 <field name="can_refuse"/>
                 <field name="request_date_from_period"/>
+                <field name="request_date_to_period"/>
                 <field name="holiday_status_requires_allocation"/>
                 <templates>
                     <t t-name="card" class="g-0">
@@ -133,19 +135,40 @@
                                             <div class="col-md-5 col-lg-7 col-6 o_hr_holidays_name">
                                                 <field name="holiday_status_id" class="fw-bold"/>
                                                 <div class="d-flex flex-row">
+                                                    <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
+                                                    <t t-set="leave_unit" t-value="record.leave_type_request_unit.raw_value"/>
                                                     <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                                    <t t-if="record.request_date_from.raw_value != record.request_date_to.raw_value">
-                                                        <span class="mx-1">-</span>
-                                                        <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                    <t t-if="leave_unit == 'day'">
+                                                        <t t-if="!same_day">
+                                                            <span class="mx-1">–</span>
+                                                            <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                        </t>
                                                     </t>
-                                                    <t t-if="record.request_unit_half.raw_value">
+                                                    <t t-elif="leave_unit == 'half_day'">
+                                                        <t t-set="same_period" t-value="record.request_date_from_period.raw_value == record.request_date_to_period.raw_value"/>
                                                         <span class="mx-1">-</span>
                                                         <t t-out="record.request_date_from_period.value"/>
+                                                        <t t-if="same_day">
+                                                            <t t-if="!same_period">
+                                                                <span class="mx-1">–</span>
+                                                                <t t-out="record.request_date_to_period.value"/>
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <span class="mx-1">–</span>
+                                                            <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                            <span class="mx-1">-</span>
+                                                            <t t-out="record.request_date_to_period.value"/>
+                                                        </t>
                                                     </t>
-                                                    <t t-if="record.request_unit_hours.raw_value">
+                                                    <t t-elif="leave_unit == 'hour'">
                                                         <span class="mx-1">-</span>
                                                         <field name="request_hour_from" widget="float_time_selection"/>
-                                                        <span>/</span>
+                                                        <span class="mx-1">–</span>
+                                                        <t t-if="!same_day">
+                                                            <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                            <span class="mx-1">-</span>
+                                                        </t>
                                                         <field name="request_hour_to" widget="float_time_selection"/>
                                                     </t>
                                                 </div>
@@ -206,21 +229,41 @@
                                     </div>
                                     <div class="d-flex flex-row">
                                         <div id="date_part" class="d-flex flex-row"> <!-- To be override in my_kanban-->
-                                            <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                            <t t-if="record.request_date_from.raw_value != record.request_date_to.raw_value">
-                                                <span class="mx-1">-</span>
-                                                <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
-                                            </t>
-                                            <t t-if="record.request_unit_half.raw_value">
-                                                <span class="mx-1">-</span>
-                                                <t t-out="record.request_date_from_period.value"/>
-                                            </t>
-                                            <t t-if="record.request_unit_hours.raw_value">
-                                                <span class="mx-1">-</span>
-                                                <field name="request_hour_from" widget="float_time_selection"/>
-                                                <span>/</span>
-                                                <field name="request_hour_to" widget="float_time_selection"/>
-                                            </t>
+                                                <t t-set="same_day" t-value="record.request_date_from.raw_value == record.request_date_to.raw_value"/>
+                                                <t t-set="leave_unit" t-value="record.leave_type_request_unit.raw_value"/>
+                                                <t t-out="luxon.DateTime.fromISO(record.request_date_from.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                <t t-if="leave_unit == 'day'">
+                                                    <t t-if="!same_day">
+                                                        <span class="mx-1">–</span>
+                                                        <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                    </t>
+                                                </t>
+                                                <t t-elif="leave_unit == 'half_day'">
+                                                    <t t-set="same_period" t-value="record.request_date_from_period.raw_value == record.request_date_to_period.raw_value"/>
+                                                    <span class="mx-1">-</span>
+                                                    <t t-out="record.request_date_from_period.value"/>
+                                                    <t t-if="same_day">
+                                                        <t t-if="!same_period">
+                                                            <span class="mx-1">–</span>
+                                                            <t t-out="record.request_date_to_period.value"/>
+                                                        </t>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="mx-1">–</span>
+                                                        <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                        <span class="mx-1"><t t-out="record.request_date_to_period.value"/></span>
+                                                    </t>
+                                                </t>
+                                                <t t-elif="leave_unit == 'hour'">
+                                                    <span class="mx-1">-</span>
+                                                    <field name="request_hour_from" widget="float_time_selection"/>
+                                                    <span class="mx-1">–</span>
+                                                    <t t-if="!same_day">
+                                                        <t t-out="luxon.DateTime.fromISO(record.request_date_to.raw_value).toLocaleString({ month: 'short', day: 'numeric'})"/>
+                                                        <span class="mx-1">-</span>
+                                                    </t>
+                                                    <field name="request_hour_to" widget="float_time_selection"/>
+                                                </t>
                                         </div>
                                     </div>
                                     <field name="holiday_status_id" class="text-muted"/>
