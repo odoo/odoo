@@ -385,7 +385,10 @@ class AdjustmentLines(models.Model):
     @api.depends('former_cost', 'additional_landed_cost')
     def _compute_final_cost(self):
         for line in self:
-            line.final_cost = line.former_cost + line.additional_landed_cost
+            if line.cost_id.vendor_bill_id.move_type == 'in_refund':
+                line.final_cost = line.former_cost - line.additional_landed_cost
+            else:
+                line.final_cost = line.former_cost + line.additional_landed_cost
 
     def _create_accounting_entries(self, move, qty_out):
         # TDE CLEANME: product chosen for computation ?
