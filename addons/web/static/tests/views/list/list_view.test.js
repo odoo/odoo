@@ -4512,7 +4512,8 @@ test(`monetary aggregates in grouped list`, async () => {
         arch: `
             <list>
                 <field name="foo"/>
-                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="amount" sum="Sum"/>
+                <field name="qux" widget="monetary" sum="Sum"/>
                 <field name="currency_id"/>
             </list>
         `,
@@ -4521,8 +4522,10 @@ test(`monetary aggregates in grouped list`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     await contains(`.o_group_header:first`).click();
     await contains(`.o_group_header:last`).click();
-    expect(`.o_group_header:first`).toHaveText("USD (3)\n $ 800.00");
-    expect(`.o_group_header:last`).toHaveText("EUR (1)\n 1,200.00 €");
+    // Don't handle currencies in aggregates for non monetary fields even with the widget:
+    // it is bad practice and the server won't send the information anyway
+    expect(`.o_group_header:first`).toHaveText("USD (3)\n $ 800.00 19.00");
+    expect(`.o_group_header:last`).toHaveText("EUR (1)\n 1,200.00 € 0.40");
     expect(`.o_list_footer .o_list_number span`).toHaveText("—");
     expect(`.o_list_footer .o_list_number span`).toHaveAttribute(
         "data-tooltip",
