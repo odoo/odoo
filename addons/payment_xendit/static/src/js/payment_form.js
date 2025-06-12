@@ -123,7 +123,22 @@ paymentForm.include({
                 is_multiple_use: processingValues['should_tokenize'],
                 amount: processingValues['rounded_amount'],
             },
-            (err, token) => this._xenditHandleResponse(err, token, processingValues),
+            (err, token) =>  
+                {
+                    // For multiple use tokens, we have to create an authentication first before
+                    // charging.
+                    if (processingValues['should_tokenize']) {
+                        Xendit.card.createAuthentication({
+                            amount: processingValues.amount,
+                            token_id: token.id
+                        }, (err, result) => {
+                            this._xenditHandleResponse(err, result, processingValues, 'auth')
+                        })
+                    }
+                    else {
+                        this._xenditHandleResponse(err, token, processingValues, 'token')
+                    }
+                },
         );
     },
 
@@ -134,9 +149,10 @@ paymentForm.include({
      * @param {object} err - The error with the cause.
      * @param {object} token - The created token's data.
      * @param {object} processingValues - The processing values of the transaction.
+     * @param {string} mode - The mode of the charge: 'auth' or 'token'.
      * @return {void}
      */
-    _xenditHandleResponse(err, token, processingValues) {
+    _xenditHandleResponse(err, token, processingValues, mode) {
         if (err) {
             let errMessage = err.message;
 
@@ -148,11 +164,22 @@ paymentForm.include({
             return;
         }
         if (token.status === 'VERIFIED') {
-            rpc('/payment/xendit/payment', {
+            const payload = {
                 'reference': processingValues.reference,
                 'partner_id': processingValues.partner_id,
-                'token_ref': token.id,
-            }).then(() => {
+            }
+            // Verified state could come from either authorization or tokenization. If it comes from
+            // authentication, we must pass auth_id.
+            if (mode === 'auth') {
+                Object.assign(payload, {
+                    'token_ref': token.credit_card_token_id,
+                    'auth_id': token.id,
+                });
+            }
+            else { // 'token'
+                payload['token_ref'] = token.id;
+            }
+            rpc('/payment/xendit/payment', payload).then(() => {
                 window.location = '/payment/status'
             }).catch(error => {
                 if (error instanceof RPCError) {
