@@ -31,8 +31,12 @@ messageActionsRegistry
     .add("reply-all", {
         condition: (component) => component.props.message.canReplyAll(component.props.thread),
         icon: "fa fa-reply",
-        title: _t("Reply All"),
-        onClick: async (component) => {
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Reply All"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: async (component) => {
             const message = component.props.message;
             const thread = component.props.thread;
             const recipients = await rpc("/mail/thread/recipients", {
@@ -67,8 +71,12 @@ messageActionsRegistry
     .add("forward", {
         condition: (component) => component.props.message.canForward(component.props.thread),
         icon: "fa fa-share",
-        title: _t("Forward"),
-        onClick: async (component) => {
+        /** @deprecated use `name` instead */
+        title: (comp, action) => action.name,
+        name: _t("Forward"),
+        /** @deprecated use `onSelected` instead */
+        onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+        onSelected: async (component) => {
             const message = component.props.message;
             const emailFrom = message.author?.email || message.email_from;
             const [name, email] = parseEmail(emailFrom);

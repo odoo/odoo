@@ -26,6 +26,7 @@ import {
     useExternalListener,
     toRaw,
     EventBus,
+    onPatched,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -103,6 +104,7 @@ export class Composer extends Component {
             this.thread ?? this.props.composer.message.thread,
             { composer: this.props.composer }
         );
+        this.composerRoot = useRef("composer-root");
         this.ui = useService("ui");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
@@ -218,6 +220,21 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
+        if (this.env.useThreadViewer) {
+            onMounted(() => {
+                this.discussResizeObserver = new ResizeObserver(() => {
+                    this.env.useThreadViewer.composerHeight = this.composerRoot.el.clientHeight;
+                });
+                this.discussResizeObserver.observe(this.composerRoot.el);
+            });
+            onPatched(() => {
+                this.env.useThreadViewer.composerHeight = this.composerRoot.el.clientHeight;
+            });
+            onWillUnmount(() => {
+                this.discussResizeObserver.disconnect();
+                this.env.useThreadViewer.composerHeight = 0;
+            });
+        }
     }
 
     get areAllActionsDisabled() {

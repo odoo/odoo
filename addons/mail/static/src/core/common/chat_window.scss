@@ -3,6 +3,7 @@
 
     z-index: $zindex-sticky;
     &:not(.o-mobile) {
+        border-radius: 25px;
         --border-opacity: .15;
         height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9)
     }
@@ -12,13 +13,19 @@
 .o-mail-ChatWindow-command {
     color: inherit !important;
     &.o-quick {
-        opacity: 15%;
-        .o-mail-ChatWindow.o-mobile & {
-            opacity: 50%
-        }
+        opacity: 65%;
     }
     &.o-actionsMenu {
-        background-color: inherit !important;
+        &:hover {
+            background-color: var(--mail-DiscussSidebarChannelActions-bgColor, mix($gray-100, $gray-200, 75%)) !important;
+            outline: 1px solid $gray-200;
+            outline-offset: -1px;
+        }
+        &.o-active {
+            background-color: var(--mail-DiscussSidebarChannelActions-bgColor, mix($gray-100, $gray-200)) !important;
+            outline: 1px solid mix($gray-200, $gray-300);
+            outline-offset: -1px;
+        }
     }
     &:not(.o-actionsMenu) {
         padding: map-get($spacers, 1) / 2;
@@ -32,9 +39,6 @@
     }
     &:hover, &.o-active, &.o-hover {
         border-color: transparent !important;
-    }
-    &:not(.o-active):not(.o-hover) .fa-caret-down {
-        opacity: 25%;
     }
     &.o-small {
         --border-opacity: 0.5
@@ -54,17 +58,26 @@
 }
 
 .o-mail-ChatWindow-header {
-    --border-opacity: .25;
+    z-index: $o-mail-NavigableList-zIndex;
+}
 
-    .o-mail-ChatWindow-threadAvatar img {
-        height: $o-mail-Avatar-sizeSmall;
-        width: $o-mail-Avatar-sizeSmall;
-    }
+.o-mail-ChatWindow-headerBg {
+    backdrop-filter: blur(2px);
+    @include mail-Discuss-floatingBgStyleMixin(.95);
+}
+
+.o-mail-ChatWindow-threadAvatar img {
+    height: $o-mail-Avatar-sizeSmall;
+    width: $o-mail-Avatar-sizeSmall;
 }
 
 .o-mail-ChatWindow-imStatus {
     bottom: 2px;
     right: -2px;
+}
+
+.o-mail-ChatWindow-moreActions {
+    margin-right: 2px;
 }
 
 .o-mail-ChatWindow-typing {

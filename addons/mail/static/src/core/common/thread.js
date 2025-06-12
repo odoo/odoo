@@ -468,6 +468,14 @@ export class Thread extends Component {
         toRaw(this.props.thread).fetchNewMessages();
     }
 
+    get attStyle() {
+        let res = "";
+        if (this.env.useThreadViewer) {
+            res += `padding-bottom: ${this.env.useThreadViewer.composerHeight + 8}px`;
+        }
+        return res;
+    }
+
     get viewportEl() {
         let viewportEl = this.scrollableRef.el;
         if (viewportEl && viewportEl.clientHeight > browser.innerHeight) {

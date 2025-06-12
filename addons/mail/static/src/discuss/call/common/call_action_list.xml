@@ -8,7 +8,7 @@
                     <t t-foreach="callActions.actions.slice(0, isMobileOS ? 3 : 4)" t-as="action" t-key="action_index">
                         <CallActionButton action="action" isSmall="isSmall" isActive="action.isActive"/>
                     </t>
-                    <CallPopover position="'top-end'" clickToClose="true" contentClass="'o-discuss-CallActionList-dropdown p-1'">
+                    <CallPopover position="'bottom-end'" clickToClose="true" contentClass="'o-discuss-CallActionList-dropdown rounded-4 o-mail-DiscussMenu-bgColor'">
                         <button class="btn smaller d-flex m-1 border rounded-circle opacity-100 opacity-75-hover align-items-center p-0" t-att-title="MORE" t-ref="more" t-on-mouseenter="onMouseenterMore" t-on-mouseleave="onMouseleaveMore" t-on-click="onClickMore" t-att-class="{
                             'o-discuss-CallActionList-pulse': isPromotingFullscreen,
                             'shadow': isPromotingFullscreen
@@ -16,15 +16,9 @@
                             <i class="oi oi-ellipsis-v m-2 oi-fw" t-att-class="{ 'oi-large': !isSmall }"/>
                         </button>
                         <t t-set-slot="content">
-                            <div class="d-flex flex-column py-0">
-                                <span t-foreach="callActions.actions.slice(isMobileOS ? 3 : 4)" t-as="action" t-key="action_index" class="o-discuss-CallActionList-dropdownItem cursor-pointer rounded-1 d-flex align-items-center px-2 py-2 m-0" t-att-title="action.name" t-on-click="action.select">
-                                    <i class="fa fa-fw" t-att-class="{
-                                        [action.inactiveIcon]: !action.isActive,
-                                        [action.icon]: action.isActive or !action.inactiveIcon,
-                                    }"/>
-                                    <span class="mx-2" t-out="action.name"/>
-                                </span>
-                            </div>
+                            <t t-call="mail.DiscussActions">
+                                <t t-set="group" t-value="[callActions.actions.slice(isMobileOS ? 3 : 4)]"/>
+                            </t>
                         </t>
                     </CallPopover>
                 </t>

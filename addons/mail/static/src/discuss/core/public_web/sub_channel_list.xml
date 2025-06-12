@@ -28,7 +28,7 @@
                 <div class="d-flex flex-column flex-grow-1 gap-2">
                     <t t-foreach="state.subChannels" t-as="thread" t-key="thread.localId">
                         <t t-set="message" t-value="thread.newestPersistentOfAllMessage ?? thread.from_message_id"/>
-                        <button class="o-mail-SubChannelList-thread btn btn-light-subtle d-flex flex-column border border-secondary mx-1 px-2 py-1 rounded-3 shadow-sm" t-on-click="() => this.onClickSubThread(thread)">
+                        <button class="o-mail-SubChannelList-thread btn btn-light-subtle d-flex flex-column border border-secondary mx-1 px-2 py-1 o-rounded-bubble shadow-sm" t-on-click="() => this.onClickSubThread(thread)">
                             <div class="d-flex w-100">
                                 <span class="fw-bold text-truncate small" t-esc="thread.displayName"/>
                                 <span class="flex-grow-1"/>

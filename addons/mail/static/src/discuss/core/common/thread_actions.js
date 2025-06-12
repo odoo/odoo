@@ -15,7 +15,7 @@ class ChannelActionDialog extends Component {
     static props = ["title", "contentComponent", "contentProps", "close?"];
     static components = { Dialog };
     static template = xml`
-        <Dialog size="'md'" title="props.title" footer="false" contentClass="'o-bg-body'" bodyClass="'p-1'">
+        <Dialog size="'md'" title="props.title" footer="false" contentClass="'o-bg-body rounded-4'" bodyClass="'p-1'">
             <t t-component="props.contentComponent" t-props="props.contentProps"/>
         </Dialog>
     `;
@@ -37,7 +37,8 @@ threadActionsRegistry
                     onClose: () => action.close(),
                     position: "bottom-end",
                     fixedPosition: true,
-                    popoverClass: action.panelOuterClass,
+                    popoverClass: `o-mail-NotificationSettings-popover rounded-4 m-2 ${action.panelOuterClass}`,
+                    arrow: false,
                 });
             }
             action.dialogService = useService("dialog");
@@ -74,7 +75,7 @@ threadActionsRegistry
                 : "fa fa-fw fa-lg fa-bell";
         },
         name: _t("Notification Settings"),
-        panelOuterClass: "bg-100 border border-secondary",
+        panelOuterClass: "o-mail-DiscussMenu-bgColor border border-secondary",
         sequence: 10,
         sequenceGroup: 30,
         sidebarSequence: 10,
@@ -110,7 +111,7 @@ threadActionsRegistry
         panelOuterClass(component) {
             return `o-discuss-ChannelInvitation ${
                 component.props.chatWindow ? "bg-inherit" : ""
-            } bg-100 border border-secondary`;
+            } o-mail-DiscussMenu-bgColor border border-secondary`;
         },
         icon: "fa fa-fw fa-user-plus",
         iconLarge: "fa fa-fw fa-lg fa-user-plus",
@@ -142,7 +143,8 @@ threadActionsRegistry
             if (!component.props.chatWindow) {
                 action.popover = usePopover(ChannelInvitation, {
                     onClose: () => action.close(),
-                    popoverClass: action.panelOuterClass,
+                    popoverClass: `rounded-4 m-2 ${action.panelOuterClass}`,
+                    arrow: false,
                 });
             }
             action.dialogService = useService("dialog");

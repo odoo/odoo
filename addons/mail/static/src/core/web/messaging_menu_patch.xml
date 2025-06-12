@@ -3,7 +3,7 @@
     <t t-inherit="mail.MessagingMenu" t-inherit-mode="extension">
         <xpath expr="//*[@t-name='mail.MessagingMenu']" position="inside">
             <div t-if="!env.inDiscussApp" t-att-class="discussSystray.class">
-                <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="discussSystray.menuClass">
+                <Dropdown state="dropdown" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="discussSystray.menuClass + (ui.isSmall ? '' : ' rounded-4')">
                     <button class="bg-transparent">
                         <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'main' ? 'main' : store.discuss.activeTab"></i>
                         <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
@@ -18,7 +18,7 @@
 
     <t t-inherit="mail.MessagingMenu.content" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='notification-list']" position="before">
-            <div class="o-mail-MessagingMenu-header d-flex" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
+            <div class="o-mail-MessagingMenu-header d-flex px-1" t-att-class="{'border-start-0 border-end-0': ui.isSmall, 'flex-shrink-0': !env.inDiscussApp }">
                 <t t-if="!ui.isSmall">
                     <MessagingMenuQuickSearch t-if="state.searchOpen" onClose.bind="toggleSearch"/>
                     <t t-else="">
