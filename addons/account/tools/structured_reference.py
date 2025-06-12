@@ -82,4 +82,4 @@ def is_valid_structured_reference(reference):
         is_valid_structured_reference_fi(reference) or
         is_valid_structured_reference_no_se(reference) or
         is_valid_structured_reference_iso(reference)
-    )
+    ) if reference else False
