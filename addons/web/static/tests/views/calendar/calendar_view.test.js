@@ -1703,21 +1703,21 @@ test(`create event with timezone in week mode with formViewDialog`, async () => 
     await selectTimeRange("2016-12-13 08:00:00", "2016-12-13 10:00:00");
     await contains(`.o-calendar-quick-create--input`).edit("new event", { confirm: false });
     await contains(`.o-calendar-quick-create--edit-btn`).click();
-    expect(`.o_field_widget[name='start'] input`).toHaveValue("12/13/2016 08:00");
+    expect(`.o_field_widget[name='start']`).toHaveText("Dec 13, 8:00 AM");
 
     // Set is_all_day to true in formViewDialog
     await contains(`.modal .o_field_boolean[name='is_all_day'] input`).click();
-    expect(`.o_field_widget[name='start_date'] input`).toHaveValue("12/13/2016");
+    expect(`.o_field_widget[name='start_date']`).toHaveText("Dec 13");
 
     await contains(`.modal .o_field_boolean[name='is_all_day'] input`).click();
-    expect(`.o_field_widget[name='start'] input`).toHaveValue("12/13/2016 02:00");
+    expect(`.o_field_widget[name='start']`).toHaveText("Dec 13, 2:00 AM");
 
     // use datepicker to enter a date: 12/13/2016 08:00:00
-    await contains(`.o_field_widget[name="start"] input`).click();
+    await contains(`.o_field_widget[name='start'] button`).click();
     await selectHourOnPicker("8");
 
     // use datepicker to enter a date: 12/13/2016 10:00:00
-    await contains(`.o_field_widget[name="stop"] input`).click();
+    await contains(`.o_field_widget[name='stop'] button`).click();
     await selectHourOnPicker("10");
 
     await contains(`.modal-footer .o_form_button_save`).click();
@@ -3589,22 +3589,22 @@ test(`timezone does not affect drag and drop on desktop`, async () => {
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 16, 4:00 PM");
 
     await closeCwPopOver();
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("16:00\nevent 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 4:00 PM");
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("08:00\nevent 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 });
 
 test.tags("mobile");
@@ -3636,24 +3636,24 @@ test(`timezone does not affect drag and drop on mobile`, async () => {
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
     await closeCwPopOver();
 
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/16/2016 16:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 16, 4:00 PM");
     await closeCwPopOver();
 
     await moveEventToDate(6, "2016-11-27");
     await clickEvent(6);
     expect(`.o_event[data-event-id="6"]`).toHaveText("event 6");
-    expect(`.o_field_widget[name="start"]`).toHaveText("11/27/2016 16:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Nov 27, 4:00 PM");
     await closeCwPopOver();
     expect.verifySteps(["write"]);
 
     await clickEvent(1);
     expect(`.o_event[data-event-id="1"]`).toHaveText("event 1");
-    expect(`.o_field_widget[name="start"]`).toHaveText("12/09/2016 08:00");
+    expect(`.o_field_widget[name="start"]`).toHaveText("Dec 9, 8:00 AM");
 });
 
 test.tags("desktop");
@@ -3687,7 +3687,7 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
     expect(`.o_cw_popover`).toHaveCount(1);
     expect(
         `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("12/20/2016");
+    ).toHaveText("Dec 20");
 
     await closeCwPopOver();
     await moveEventToDate(8, "2016-11-27");
@@ -3697,7 +3697,7 @@ test(`timezone does not affect calendar with date field on desktop`, async () =>
     expect(`.o_cw_popover`).toHaveCount(1);
     expect(
         `.o_cw_popover .o_cw_popover_fields_secondary .list-group-item .o_field_date`
-    ).toHaveText("11/27/2016");
+    ).toHaveText("Nov 27");
 });
 
 test.tags("mobile");
@@ -3737,7 +3737,7 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
     await clickEvent(8);
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "12/20/2016"
+        "Dec 20"
     );
 
     await closeCwPopOver();
@@ -3747,7 +3747,7 @@ test(`timezone does not affect calendar with date field on mobile`, async () => 
     await clickEvent(8);
     expect(`.modal`).toHaveCount(1);
     expect(`.modal .o_cw_popover_fields_secondary .list-group-item .o_field_date`).toHaveText(
-        "11/27/2016"
+        "Nov 27"
     );
 });
 
@@ -3794,11 +3794,11 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
     await contains(`.o_field_widget[name="is_all_day"] input`).click();
 
     // use datepicker to enter a date: 12/20/2016 07:00:00
-    await contains(`.o_field_widget[name="start"] input`).click();
+    await contains(`.o_field_widget[name="start"] button`).click();
     await selectHourOnPicker("7:00");
 
     // use datepicker to enter a date: 12/20/2016 19:00:00
-    await contains(`.o_field_widget[name="stop"] input`).click();
+    await contains(`.o_field_widget[name="stop"] button`).click();
     await selectHourOnPicker("19:00");
     await contains(`.modal .o_form_button_save`).click();
     await moveEventToDate(8, "2016-12-19");
@@ -5332,15 +5332,17 @@ test("update time while drag and drop on month mode", async () => {
 
     await clickDate("2016-12-20");
     await contains(".modal-body .o_field_widget[name=name] input").edit("An event");
+    await contains(".modal-body .o_field_widget[name=start] button").click();
     await contains(".modal-body .o_field_widget[name=start] input").edit("2016-12-20 08:00:00");
+    await contains(".modal-body .o_field_widget[name=stop] button").click();
     await contains(".modal-body .o_field_widget[name=stop] input").edit("2016-12-23 10:00:00");
     await contains(".modal .o_form_button_save").click();
     await moveEventToDate(8, "2016-12-27");
     await clickEvent(8);
     await contains(".o_cw_popover_edit").click();
 
-    expect(".o_field_widget[name='start'] input").toHaveValue("12/26/2016 08:00");
-    expect(".o_field_widget[name='stop'] input").toHaveValue("12/29/2016 10:00");
+    expect(".o_field_widget[name='start']").toHaveText("Dec 26, 8:00 AM");
+    expect(".o_field_widget[name='stop']").toHaveText("Dec 29, 10:00 AM");
 });
 
 test("html field on calendar shouldn't have a tooltip", async () => {

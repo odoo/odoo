@@ -82,10 +82,20 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             trigger: `.o_field_widget[name='holiday_status_id'] input:value("${leaveType3}")`,
         },
         {
+            trigger: "div[name=request_date_from] button",
+            content: "Let's change the start date of the leave",
+            run: "click",
+        },
+        {
             trigger: "input[data-field=request_date_from]",
             content: "Select the start date of the leave",
             tooltipPosition: "right",
             run: `edit ${firstLeaveDateFrom}`,
+        },
+        {
+            trigger: "button[data-field=request_date_to]",
+            content: "Let's change the end date of the leave",
+            run: "click",
         },
         {
             trigger: "input[data-field=request_date_to]",
@@ -147,10 +157,20 @@ registry.category("web_tour.tours").add("hr_leave_type_tour", {
             tooltipPosition: "bottom",
         },
         {
+            trigger: "div[name=request_date_from] button",
+            content: "Let's change the start date of the leave",
+            run: "click",
+        },
+        {
             trigger: "input[data-field=request_date_from]",
             content: "Select the start date of the leave",
             tooltipPosition: "right",
             run: `edit ${secondLeaveDateFrom}`,
+        },
+        {
+            trigger: "button[data-field=request_date_to]",
+            content: "Let's change the end date of the leave",
+            run: "click",
         },
         {
             trigger: "input[data-field=request_date_to]",

@@ -17,13 +17,19 @@ import {
     formatReference,
     formatText,
     formatX2many,
+    formatDate,
+    formatDateTime,
 } from "@web/views/fields/formatters";
+
+const { DateTime } = luxon;
 
 describe.current.tags("headless");
 
 beforeEach(() => {
     patchTranslations();
     patchWithCleanup(localization, {
+        dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
+        dateFormat: "MM/dd/yyyy",
         decimalPoint: ".",
         thousandsSep: ",",
         grouping: [3, 0],
@@ -197,4 +203,33 @@ test("formatReference", () => {
 test("formatMany2oneReference", () => {
     expect(formatMany2oneReference(false)).toBe("");
     expect(formatMany2oneReference({ resId: 9, displayName: "Chair" })).toBe("Chair");
+});
+
+test("formatDate", () => {
+    expect(formatDate(false)).toBe("");
+    expect(formatDate(DateTime.fromObject({ day: 22, month: 1, year: 1990 }))).toBe("Jan 22, 1990");
+    expect(
+        formatDate(DateTime.fromObject({ day: 22, month: 1, year: 1990 }), { numeric: true })
+    ).toBe("01/22/1990");
+    expect(formatDate(DateTime.fromObject({ day: 22, month: 1 }))).toBe("Jan 22");
+});
+
+test("formatDateTime", () => {
+    const datetime = DateTime.fromObject({
+        day: 22,
+        month: 1,
+        year: 1990,
+        hour: 10,
+        minute: 30,
+        second: 45,
+    });
+    expect(formatDateTime(false)).toBe("");
+    expect(formatDateTime(datetime)).toBe("Jan 22, 1990, 10:30 AM");
+    expect(formatDateTime(datetime, { showDate: false })).toBe("10:30 AM");
+    expect(formatDateTime(datetime, { showSeconds: true })).toBe("Jan 22, 1990, 10:30:45 AM");
+    expect(formatDateTime(datetime, { showTime: false })).toBe("Jan 22, 1990");
+    expect(formatDateTime(datetime, { numeric: true })).toBe("01/22/1990 10:30:45");
+    expect(formatDateTime(DateTime.fromObject({ day: 22, month: 1, hour: 10, minute: 30 }))).toBe(
+        "Jan 22, 10:30 AM"
+    );
 });

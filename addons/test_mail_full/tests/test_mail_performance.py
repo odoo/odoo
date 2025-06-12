@@ -269,7 +269,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             self.assertEqual(format_res["author_id"]["name"], record.customer_id.display_name)
             self.assertEqual(format_res['author_avatar_url'], f'/web/image/mail.message/{message.id}/author_avatar/50x50')
             self.assertEqual(format_res['date'], datetime(2023, 5, 15, 10, 30, 5))
-            self.assertEqual(' '.join(format_res['published_date_str'].split()), '05/15/2023 10:30:05')
+            self.assertEqual(' '.join(format_res['published_date_str'].split()), '05/15/2023 10:30:05 AM')
             self.assertEqual(format_res['id'], message.id)
             self.assertFalse(format_res['is_internal'])
             self.assertFalse(format_res['is_message_subtype_note'])
@@ -293,7 +293,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
             self.assertEqual(format_res['rating_id']['publisher_avatar'], f'/web/image/res.partner/{self.partner_admin.id}/avatar_128/50x50')
             self.assertEqual(format_res['rating_id']['publisher_comment'], 'Comment')
             self.assertEqual(format_res['rating_id']['publisher_id'], self.partner_admin.id)
-            self.assertEqual(" ".join(format_res['rating_id']['publisher_datetime'].split()), '05/13/2023 10:30:05')
+            self.assertEqual(" ".join(format_res['rating_id']['publisher_datetime'].split()), '05/13/2023 10:30:05 AM')
             self.assertEqual(format_res['rating_id']['publisher_name'], self.partner_admin.display_name)
             self.assertDictEqual(
                 format_res['rating_stats'],

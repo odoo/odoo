@@ -1,4 +1,9 @@
-import { formatDate as _formatDate, formatDateTime as _formatDateTime } from "@web/core/l10n/dates";
+import {
+    formatDate as _formatDate,
+    formatDateTime as _formatDateTime,
+    toLocaleDateString,
+    toLocaleDateTimeString,
+} from "@web/core/l10n/dates";
 import { localization as l10n } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -78,21 +83,32 @@ formatChar.extractOptions = ({ attrs }) => ({
     isPassword: exprToBoolean(attrs.password),
 });
 
-export function formatDate(value, options) {
-    return _formatDate(value, options);
+export function formatDate(value, options = {}) {
+    if (options.numeric) {
+        return _formatDate(value, options);
+    } else {
+        return toLocaleDateString(value);
+    }
 }
-formatDate.extractOptions = ({ options }) => ({ condensed: options.condensed });
+formatDate.extractOptions = ({ options }) => ({
+    numeric: exprToBoolean(options.numeric ?? false),
+});
 
 export function formatDateTime(value, options = {}) {
-    if (options.showTime === false) {
-        return _formatDate(value, options);
+    if (options.numeric) {
+        if (options.showTime === false) {
+            return _formatDate(value, options);
+        }
+        return _formatDateTime(value, options);
+    } else {
+        return toLocaleDateTimeString(value, options);
     }
-    return _formatDateTime(value, options);
 }
 formatDateTime.extractOptions = ({ attrs, options }) => ({
     ...formatDate.extractOptions({ attrs, options }),
     showSeconds: exprToBoolean(options.show_seconds ?? false),
     showTime: exprToBoolean(options.show_time ?? true),
+    showDate: exprToBoolean(options.show_date ?? true),
 });
 
 /**

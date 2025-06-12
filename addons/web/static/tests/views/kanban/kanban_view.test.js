@@ -7636,8 +7636,8 @@ test("rendering date and datetime (value)", async () => {
             </kanban>`,
     });
 
-    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText("01/25/2017");
-    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText("12/12/2016 11:55");
+    expect(getKanbanRecord({ index: 0 }).querySelector(".date")).toHaveText("Jan 25, 2017");
+    expect(getKanbanRecord({ index: 1 }).querySelector(".datetime")).toHaveText("Dec 12, 2016, 11:55 AM");
 });
 
 test("rendering date and datetime (raw value)", async () => {

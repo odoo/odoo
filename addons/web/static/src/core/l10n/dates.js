@@ -15,14 +15,26 @@ const { DateTime, Settings } = luxon;
  * @property {string} [format]
  *  Format used to format a DateTime or to parse a formatted string.
  *  > Default: the session localization format.
- * @property {boolean} [condensed] if true, months, days and hours will be formatted without
- *  leading 0.
  *
  * @typedef {luxon.DateTime} DateTime
  *
  * @typedef {[NullableDateTime, NullableDateTime]} NullableDateRange
  *
  * @typedef {DateTime | false | null | undefined} NullableDateTime
+ */
+
+/**
+ * @typedef ConversionLocalOptions
+ *
+ * @property {boolean} [showSeconds]
+ *  Show the seconds in the final result.
+ *  > Default: false.
+ * @property {boolean} [showTime]
+ *  Show the time in the final result.
+ *  > Default: true.
+ * @property {boolean} [showDate]
+ *  Show the date in the final result.
+ *  > Default: true.
  */
 
 /**
@@ -82,7 +94,7 @@ const smartWeekdays = {
     friday: 4,
     saturday: 5,
     sunday: 6,
-}
+};
 
 /** @type {WeakMap<DateTime, string>} */
 const dateCache = new WeakMap();
@@ -257,7 +269,7 @@ function isValidDate(date) {
  *   "+3M" will return now + 3 minutes
  *   "+3S" will return now + 3 seconds
  *   "today -1d" will return yesterday at midnight
- * 
+ *
  * Difference with python version: a simple "+1" means "+1d" for the first term,
  * the unit is optional and defaults to "d".
  *
@@ -269,21 +281,21 @@ function parseSmartDateInput(value) {
     if (!terms.length) {
         return false;
     }
-    var now = DateTime.local().startOf('second');
-    if (terms[0] == 'today') {
+    var now = DateTime.local().startOf("second");
+    if (terms[0] == "today") {
         terms.shift();
-        now = now.startOf('day');
-    } else if (terms[0] == 'now') {
+        now = now.startOf("day");
+    } else if (terms[0] == "now") {
         terms.shift();
     } else if (terms.length == 1 && /^[=+-]\d+$/.test(terms[0])) {
         // handle optional unit for simple input
-        terms[0] += 'd';
+        terms[0] += "d";
     }
 
     for (let i = 0; i < terms.length; i++) {
         const term = terms[i];
         const operator = term[0];
-        if (term.length < 3 || !['+', '-', '='].includes(operator)) {
+        if (term.length < 3 || !["+", "-", "="].includes(operator)) {
             return false;
         }
 
@@ -291,39 +303,39 @@ function parseSmartDateInput(value) {
         const weekdayNumber = smartWeekdays[term.slice(1)];
         if (weekdayNumber != undefined) {
             let weekdayOffset = weekdayNumber - now.weekday;
-            if (operator == '+' || operator == '-') {
-                if (weekdayOffset > 0 && operator == '-') {
+            if (operator == "+" || operator == "-") {
+                if (weekdayOffset > 0 && operator == "-") {
                     weekdayOffset -= 7;
-                } else if (weekdayOffset < 0 && operator == '+') {
+                } else if (weekdayOffset < 0 && operator == "+") {
                     weekdayOffset += 7;
                 }
             } else {
-                now = now.startOf('day');
+                now = now.startOf("day");
             }
-            now = now.plus({days: weekdayOffset});
+            now = now.plus({ days: weekdayOffset });
             continue;
         }
 
         // Operations on dates
         try {
-            let field_name = smartDateUnits[term[term.length - 1]];
-            let number = parseInt(term.slice(1, -1), 10);
+            const field_name = smartDateUnits[term[term.length - 1]];
+            const number = parseInt(term.slice(1, -1), 10);
             if (!field_name || isNaN(number)) {
                 return false;
             }
-            if (operator == '+') {
-                now = now.plus({[field_name]: number});
-            } else if (operator == '-') {
-                now = now.minus({[field_name]: number});
-            } else if (operator == '=') {
-                if (field_name == 'seconds' || field_name == 'minutes' || field_name == 'hours') {
+            if (operator == "+") {
+                now = now.plus({ [field_name]: number });
+            } else if (operator == "-") {
+                now = now.minus({ [field_name]: number });
+            } else if (operator == "=") {
+                if (field_name == "seconds" || field_name == "minutes" || field_name == "hours") {
                     now = now.startOf(field_name);
-                } else if (field_name == 'weeks') {
-                    return false;  // unsupported
+                } else if (field_name == "weeks") {
+                    return false; // unsupported
                 } else {
-                    now = now.startOf('day');
+                    now = now.startOf("day");
                 }
-                now = now.set({[field_name]: number});
+                now = now.set({ [field_name]: number });
             }
         } catch {
             return false;
@@ -383,25 +395,6 @@ export function today() {
 // Formatting
 //-----------------------------------------------------------------------------
 
-const condensedFormats = {};
-/**
- * Given a date(time) format, returns a format where months, days and hours are
- * displayed without the leading 0 (e.g. 03/05/2024 08:00:00 => 3/5/2024 8:00:00).
- *
- * @param {string} format
- * @returns string
- */
-export function getCondensedFormat(format) {
-    const originalFormat = format;
-    if (!condensedFormats[originalFormat]) {
-        format = format.replace(/(^|[^M])M{2}([^M]|$)/, "$1M$2");
-        format = format.replace(/(^|[^d])d{2}([^d]|$)/, "$1d$2");
-        format = format.replace(/(^|[^H])H{2}([^H]|$)/, "$1H$2");
-        condensedFormats[originalFormat] = format;
-    }
-    return condensedFormats[originalFormat];
-}
-
 /**
  * Formats a DateTime object to a date string
  *
@@ -412,13 +405,7 @@ export function formatDate(value, options = {}) {
     if (!value) {
         return "";
     }
-    let format = options.format;
-    if (!format) {
-        format = localization.dateFormat;
-        if (options.condensed) {
-            format = getCondensedFormat(format);
-        }
-    }
+    const format = options.format || localization.dateFormat;
     return value.toFormat(format);
 }
 
@@ -432,18 +419,62 @@ export function formatDateTime(value, options = {}) {
     if (!value) {
         return "";
     }
-    let format = options.format;
-    if (!format) {
-        if (options.showSeconds === false) {
-            format = `${localization.dateFormat} ${localization.shortTimeFormat}`;
-        } else {
-            format = localization.dateTimeFormat;
-        }
-        if (options.condensed) {
-            format = getCondensedFormat(format);
-        }
-    }
+    const format = options.format || localization.dateTimeFormat;
     return value.setZone(options.tz || "default").toFormat(format);
+}
+
+/**
+ * Format a DateTime object to a locale date string.
+ * e.g.: Jan 31, 2024
+ * If the year is the current one, then it's omitted
+ * from the result.
+ *
+ * @param {NullableDateTime} value
+ */
+export function toLocaleDateString(value) {
+    if (!value) {
+        return "";
+    }
+    const format = { ...DateTime.DATE_MED };
+    if (today().year === value.year) {
+        delete format.year;
+    }
+    return value.toLocaleString(format);
+}
+
+/**
+ * Format a DateTime object to a locale datetime string
+ * e.g.: Jan 31, 2024, 12:00 AM
+ * If the year is the current one, then it's omitted
+ * from the result.
+ *
+ * @param {NullableDateTime} value
+ * @param {ConversionLocalOptions} [options={}]
+ */
+export function toLocaleDateTimeString(
+    value,
+    options = { showDate: true, showTime: true, showSeconds: false }
+) {
+    if (!value) {
+        return "";
+    }
+    const format = { ...DateTime.DATETIME_MED_WITH_SECONDS };
+    if (!options.showSeconds) {
+        delete format.second;
+    }
+    if (options.showDate === false) {
+        delete format.day;
+        delete format.month;
+        delete format.year;
+    }
+    if (options.showTime === false) {
+        delete format.hour;
+        delete format.minute;
+    }
+    if (today().year === value.year) {
+        delete format.year;
+    }
+    return value.setZone(options.tz || "default").toLocaleString(format);
 }
 
 /**

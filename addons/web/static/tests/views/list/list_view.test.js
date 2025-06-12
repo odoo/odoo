@@ -7135,8 +7135,8 @@ test(`empty list with sample data`, async () => {
                 <field name="int_field"/>
                 <field name="m2o"/>
                 <field name="m2m" widget="many2many_tags"/>
-                <field name="date"/>
-                <field name="datetime"/>
+                <field name="date" options="{'numeric': true}"/>
+                <field name="datetime" options="{'numeric': true}"/>
             </list>
         `,
         context: { search_default_empty: true },
@@ -7876,8 +7876,8 @@ test(`list view, editable, without data`, async () => {
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row", {
         message: "the date field td should be in edit mode",
     });
-    expect(`tbody tr:eq(0) td:eq(1)`).toHaveText("", {
-        message: "the date field td should not have any content",
+    expect(`tbody tr:eq(0) td:eq(1)`).toHaveText("Feb 10, 2017", {
+        message: "the date field td should have the default value",
     });
     expect(`tr.o_selected_row .o_list_record_selector input`).toHaveProperty("disabled", true, {
         message: "record selector checkbox should be disabled while the record is not yet created",
@@ -8028,8 +8028,8 @@ test(`editable list view, should refocus date field`, async () => {
 
     await contains(getPickerCell("15")).click();
     expect(`.o_datetime_picker`).toHaveCount(0);
-    expect(`.o_field_widget[name=date] input`).toHaveValue("02/15/2017");
-    expect(`.o_field_widget[name=date] input`).toBeFocused();
+    expect(`.o_field_widget[name=date] button`).toHaveValue("02/15/2017");
+    expect(`.o_field_widget[name=date] button`).toBeFocused();
 });
 
 test(`text field should keep it's selection when clicking on it`, async () => {
@@ -8257,10 +8257,10 @@ test(`simple list with date and datetime`, async () => {
         type: "list",
         arch: `<list><field name="date"/><field name="datetime"/></list>`,
     });
-    expect(`.o_data_row .o_data_cell:eq(0)`).toHaveText("01/25/2017", {
+    expect(`.o_data_row .o_data_cell:eq(0)`).toHaveText("Jan 25, 2017", {
         message: "should have formatted the date",
     });
-    expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("12/12/2016 12:55", {
+    expect(`.o_data_row .o_data_cell:eq(1)`).toHaveText("Dec 12, 2016, 12:55 PM", {
         message: "should have formatted the datetime",
     });
 });
@@ -10746,11 +10746,11 @@ test(`multi edit field with daterange widget`, async () => {
         "Field:",
         "Date start",
         "Update to:",
-        "01/16/2017\n02/12/2017",
+        "Jan 16, 2017\nFeb 12, 2017",
         "Field:",
         "Date end",
         "Update to:",
-        "02/12/2017",
+        "Feb 12, 2017",
     ]);
 
     // Valid the confirm dialog
@@ -10812,7 +10812,7 @@ test(`multi edit field with daterange widget (edition without using the picker)`
         "Field:",
         "Date start",
         "Update to:",
-        "04/01/2016\n01/26/2017",
+        "Apr 1, 2016\nJan 26, 2017",
     ]);
 
     // Valid the confirm dialog
@@ -10834,7 +10834,7 @@ test(`list daterange with start date and empty end date`, async () => {
         `,
     });
     expect(queryAllTexts(`.o_data_row:eq(0) .o_field_widget[name=date] span`)).toEqual([
-        "01/25/2017",
+        "Jan 25, 2017",
         "",
     ]);
 });
@@ -10854,7 +10854,7 @@ test(`list daterange with empty start date and end date`, async () => {
         `,
     });
     expect(queryAllTexts(`.o_data_row:eq(0) .o_field_widget[name=date] span`)).toEqual([
-        "01/25/2017",
+        "Jan 25, 2017",
     ]);
 });
 
@@ -14133,12 +14133,11 @@ test(`keyboard navigation with date range`, async () => {
 
     await press("Tab");
     await animationFrame();
-    const [startDateInput, endDateInput] = queryAll(`.o_data_row:eq(0) [name=date] input`);
-    expect(startDateInput).toBeFocused();
+    expect(".o_data_row:eq(0) [name=date] input").toBeFocused();
 
     await press("Tab");
     await animationFrame();
-    expect(endDateInput).toBeFocused();
+    expect(".o_data_row:eq(0) [name=date] input").toBeFocused();
 
     await press("Tab");
     await animationFrame();
@@ -16942,7 +16941,7 @@ test(`Properties: date`, async () => {
     await contains(`.o_field_date input`).click();
     await contains(getPickerCell("19")).click();
     await contains(`.o_list_button_save`).click();
-    expect(`.o_field_cell.o_date_cell:eq(0)`).toHaveText("12/19/2022");
+    expect(`.o_field_cell.o_date_cell:eq(0)`).toHaveText("Dec 19, 2022");
     expect.verifySteps(["web_save"]);
 });
 
@@ -16991,7 +16990,7 @@ test(`Properties: datetime`, async () => {
     await contains(`.o_field_datetime input`).click();
     await contains(getPickerCell("19")).click();
     await contains(`.o_list_button_save`).click();
-    expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("12/19/2022 12:12");
+    expect(`.o_field_cell.o_datetime_cell:eq(0)`).toHaveText("Dec 19, 2022, 12:12 PM");
     expect.verifySteps(["web_save"]);
 });
 

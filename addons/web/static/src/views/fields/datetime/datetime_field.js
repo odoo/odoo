@@ -1,15 +1,14 @@
-import { Component, onWillRender, useState } from "@odoo/owl";
+import { Component, onWillRender, useState, useRef, useEffect } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { ensureArray } from "@web/core/utils/arrays";
 import { exprToBoolean } from "@web/core/utils/strings";
+import { standardFieldProps } from "../standard_field_props";
 import { FIELD_WIDTHS } from "@web/views/list/column_width_hook";
 import { formatDate, formatDateTime } from "../formatters";
-import { standardFieldProps } from "../standard_field_props";
 
 function getFormattedPlaceholder(value, type, options) {
     if (value instanceof luxon.DateTime) {
@@ -32,6 +31,7 @@ function getFormattedPlaceholder(value, type, options) {
  *  warnFuture?: boolean;
  *  showSeconds?: boolean;
  *  showTime?: boolean;
+ *  numeric?: boolean;
  *  minPrecision?: string;
  *  maxPrecision?: string;
  * }} DateTimeFieldProps
@@ -51,6 +51,7 @@ export class DateTimeField extends Component {
         required: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
+        numeric: { type: Boolean, optional: true },
         warnFuture: { type: Boolean, optional: true },
         showSeconds: { type: Boolean, optional: true },
         showTime: { type: Boolean, optional: true },
@@ -64,11 +65,11 @@ export class DateTimeField extends Component {
             optional: true,
             validate: (props) => ["days", "months", "years", "decades"].includes(props),
         },
-        condensed: { type: Boolean, optional: true },
     };
     static defaultProps = {
         showSeconds: false,
         showTime: true,
+        numeric: false,
     };
 
     static template = "web.DateTimeField";
@@ -133,12 +134,14 @@ export class DateTimeField extends Component {
         const dateTimePicker = useDateTimePicker({
             target: "root",
             showSeconds: this.props.showSeconds,
-            condensed: this.props.condensed,
             get pickerProps() {
                 return getPickerProps();
             },
             onChange: () => {
                 this.state.range = this.isRange(this.state.value);
+            },
+            onClose: () => {
+                this.picker.activeInput = "";
             },
             onApply: () => {
                 const toUpdate = {};
@@ -163,7 +166,20 @@ export class DateTimeField extends Component {
         });
         // Subscribes to changes made on the picker state
         this.state = useState(dateTimePicker.state);
+        this.picker = useState({ activeInput: "" });
         this.openPicker = dateTimePicker.open;
+
+        this.startDate = useRef("start-date");
+        this.endDate = useRef("end-date");
+
+        useEffect(() => {
+            [this.startDate, this.endDate].forEach((ref, index) => {
+                if (ref.el?.getAttribute("data-field") === this.picker.activeInput) {
+                    ref.el.focus();
+                    this.openPicker(index);
+                }
+            });
+        });
 
         onWillRender(() => this.triggerIsDirty());
 
@@ -199,16 +215,14 @@ export class DateTimeField extends Component {
         if (!value) {
             return "";
         }
-        const { condensed, showSeconds, showTime } = this.props;
+        const { numeric, showSeconds, showTime } = this.props;
         if (this.field.type === "date") {
-            return formatDate(value, { condensed });
+            return formatDate(value, { numeric });
+        } else {
+            const showDate =
+                !showTime || valueIndex !== 1 || !values[0] || !values[0].hasSame(value, "day");
+            return formatDateTime(value, { numeric, showSeconds, showTime, showDate });
         }
-        if (showTime && valueIndex === 1 && values[0] && values[0].hasSame(value, "day")) {
-            return formatDateTime(value, {
-                format: showSeconds ? localization.timeFormat : localization.shortTimeFormat,
-            });
-        }
-        return formatDateTime(value, { condensed, showSeconds, showTime });
     }
 
     /**
@@ -355,10 +369,17 @@ export const dateField = {
             ],
         },
         {
-            label: _t("Condensed display"),
-            name: "condensed",
-            type: "boolean",
-            help: _t(`Set to true to display days, months (and hours) with unpadded numbers`),
+            label: _t("Date Format"),
+            name: "numeric",
+            type: "selection",
+            help: _t("Displays the date either in 31/01/%(year)s or in Jan 31, %(year)s", {
+                year: today().year,
+            }),
+            placeholder: _t("Jan 31, %s", today().year),
+            choices: [
+                { label: _t("Jan 31, %s", today().year), value: false },
+                { label: _t("31/01/%s", today().year), value: true },
+            ],
         },
         {
             label: _t("Dynamic Placeholder"),
@@ -373,15 +394,17 @@ export const dateField = {
         maxDate: options.max_date,
         minDate: options.min_date,
         alwaysRange: exprToBoolean(options.always_range),
-        placeholder: getFormattedPlaceholder(placeholder, type, { condensed: options.condensed }),
+        placeholder: getFormattedPlaceholder(placeholder, type, { numeric: options.numeric }),
         required: dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
+        numeric: options.numeric,
         warnFuture: exprToBoolean(options.warn_future),
         minPrecision: options.min_precision,
         maxPrecision: options.max_precision,
-        condensed: options.condensed,
     }),
+    listViewWidth: ({ options }) =>
+        options.numeric ? FIELD_WIDTHS.numeric_date : FIELD_WIDTHS.date,
     fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];
         if (options[START_DATE_FIELD_OPTION]) {
@@ -423,18 +446,20 @@ export const dateTimeField = {
             ),
         },
         {
-            label: _t("Show seconds"),
-            name: "show_seconds",
-            type: "boolean",
-            default: false,
-            help: _t(`Displays or hides the seconds in the datetime value.`),
-        },
-        {
             label: _t("Show time"),
             name: "show_time",
             type: "boolean",
             default: true,
             help: _t(`Displays or hides the time in the datetime value.`),
+        },
+        {
+            label: _t("Show seconds"),
+            name: "show_seconds",
+            type: "boolean",
+            default: false,
+            help: _t(
+                `Displays or hides the seconds in the datetime value. Affect only the readable datetime format.`
+            ),
         },
         {
             label: _t("Dynamic Placeholder"),
@@ -446,20 +471,26 @@ export const dateTimeField = {
     extractProps: ({ attrs, options, placeholder, type }, dynamicInfo) => {
         const showSeconds = exprToBoolean(options.show_seconds ?? false);
         const showTime = exprToBoolean(options.show_time ?? true);
+        const numeric = exprToBoolean(options.numeric ?? false);
         return {
             ...dateField.extractProps({ attrs, options, placeholder, type }, dynamicInfo),
             placeholder: getFormattedPlaceholder(placeholder, type, {
-                condensed: options.condensed,
+                numeric,
                 showSeconds,
                 showTime,
             }),
+            numeric,
             showSeconds,
             showTime,
         };
     },
     supportedTypes: ["datetime"],
-    listViewWidth: ({ options }) =>
-        exprToBoolean(options.show_time ?? true) ? FIELD_WIDTHS.datetime : FIELD_WIDTHS.date,
+    listViewWidth: ({ options }) => {
+        if (!exprToBoolean(options.show_time ?? true)) {
+            return dateField.listViewWidth({ options });
+        }
+        return options.numeric ? FIELD_WIDTHS.numeric_datetime : FIELD_WIDTHS.datetime;
+    },
 };
 
 export const dateRangeField = {
@@ -497,12 +528,10 @@ export const dateRangeField = {
     ],
     supportedTypes: ["date", "datetime"],
     listViewWidth: ({ type, options }) => {
-        let width;
-        if (type === "datetime" && exprToBoolean(options.show_time ?? true)) {
-            width = FIELD_WIDTHS.datetime;
-        } else {
-            width = FIELD_WIDTHS.date;
-        }
+        const width =
+            type === "datetime"
+                ? dateTimeField.listViewWidth({ options })
+                : dateField.listViewWidth({ options });
         return 2 * width + 30; // 30px for the arrow and the gaps
     },
     isValid: (record, fieldname, fieldInfo) => {

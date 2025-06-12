@@ -77,25 +77,6 @@ test("formatDate/formatDateTime specs, at midnight", async () => {
     expect(formatDateTime(minus13FromLocalTZ)).toBe("05/04/2009 00:00:00");
 });
 
-test("formatDate/formatDateTime with condensed option", async () => {
-    mockDate("2009-05-03 08:00:00");
-    mockTimeZone(0);
-    const now = DateTime.now();
-
-    patchWithCleanup(localization, {
-        dateFormat: "MM/dd/yyyy",
-        dateTimeFormat: "MM/dd/yyyy HH:mm:ss",
-    });
-    expect(formatDate(now, { condensed: true })).toBe("5/3/2009");
-    expect(formatDateTime(now, { condensed: true })).toBe("5/3/2009 8:00:00");
-
-    patchWithCleanup(localization, { dateFormat: "yyyy-MM-dd" });
-    expect(formatDate(now, { condensed: true })).toBe("2009-5-3");
-
-    patchWithCleanup(localization, { dateFormat: "dd MMM yy" });
-    expect(formatDate(now, { condensed: true })).toBe("3 May 09");
-});
-
 test("formatDateTime in different timezone", async () => {
     patchWithCleanup(localization, {
         dateFormat: "MM/dd/yyyy",

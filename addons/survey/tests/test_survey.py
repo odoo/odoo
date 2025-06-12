@@ -594,7 +594,7 @@ class TestSurveyInternals(common.TestSurveyCommon, MailCase):
         expected_correct_answer = {
             qtype_mapping['numerical_box'].id: 5,
             qtype_mapping['date'].id: '10/16/2023',
-            qtype_mapping['datetime'].id: '11/17/2023 08:00:00',
+            qtype_mapping['datetime'].id: '11/17/2023 08:00:00 AM',
             qtype_mapping['simple_choice'].id:
                 qtype_mapping['simple_choice'].suggested_answer_ids.filtered_domain([('value', '=', 'SChoice0')]).ids,
             qtype_mapping['multiple_choice'].id:
