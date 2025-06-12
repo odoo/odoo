@@ -1159,11 +1159,12 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
                     float_round(results['price_unit'], precision_rounding=rounding),
                 )
 
-    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method):
+    def _create_py_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
         kwargs = {
             'product': product,
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'filter_tax_function': (lambda tax: tax.id not in excluded_tax_ids) if excluded_tax_ids else None,
         }
         results = {'results': taxes._get_tax_details(price_unit, quantity, **kwargs)}
         if rounding_method == 'round_globally':
@@ -1181,7 +1182,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             )
         return results
 
-    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method):
+    def _create_js_sub_test_taxes_computation(self, taxes, price_unit, quantity, product, precision_rounding, rounding_method, excluded_tax_ids):
         return {
             'test': 'taxes_computation',
             'taxes': [self._jsonify_tax(tax) for tax in taxes],
@@ -1190,6 +1191,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             'product': self._jsonify_product(product, taxes),
             'precision_rounding': precision_rounding,
             'rounding_method': rounding_method,
+            'excluded_tax_ids': excluded_tax_ids,
         }
 
     def assert_taxes_computation(
@@ -1202,6 +1204,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
         precision_rounding=0.01,
         rounding_method='round_per_line',
         excluded_special_modes=None,
+        excluded_tax_ids=None,
     ):
         def extra_function(results):
             results['excluded_special_modes'] = excluded_special_modes
@@ -1220,6 +1223,7 @@ class TestTaxCommon(AccountTestInvoicingHttpCommon):
             product,
             precision_rounding,
             rounding_method,
+            excluded_tax_ids,
             extra_function=extra_function,
         )
 
