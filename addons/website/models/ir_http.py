@@ -354,7 +354,24 @@ class IrHttp(models.AbstractModel):
             ('url_from', 'in', [req_page_with_qs, req_page.rstrip('/'), req_page + '/'])
         ]
         domain += request.website.website_domain()
-        return request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        redirect = request.env['website.rewrite'].sudo().search(domain, order='url_from DESC', limit=1)
+        # if not redirect:
+        #     return False
+        # user_groups = request.env.user.group_ids
+        # apply_to = redirect.apply_to_group
+        # rule_groups = redirect.user_group_ids
+        # if apply_to == '0':
+        #     # apply to all users
+        #     return redirect
+        # elif apply_to == '1' and user_groups & rule_groups:
+        #     # If the user has one of the allowed groups, redirect to the URL
+        #     # specified in the rewrite rule.
+        #     return redirect
+        # elif apply_to == '2' and not (user_groups & rule_groups):
+        #     # If the user is not part of groups mentioned in the redirect rule,
+        #     # redirect to the URL specified in the rewrite rule.
+        #     return redirect
+        return False
 
     @classmethod
     def _serve_fallback(cls):

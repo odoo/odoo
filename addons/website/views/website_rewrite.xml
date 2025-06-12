@@ -23,6 +23,8 @@
                                 <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                                 <field name="active" widget="boolean_toggle"/>
                                 <field name="sequence" groups="base.group_no_one"/>
+                                <field name="apply_to_group"/>
+                                <field name="user_group_ids" string="" invisible="apply_to_group not in ('1','2')"/>
                             </group>
                         </group>
                     </sheet>

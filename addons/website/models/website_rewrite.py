@@ -70,6 +70,20 @@ class WebsiteRewrite(models.Model):
         404 Not Found: If you want remove a specific page/controller (e.g. Ecommerce is installed, but you don't want /shop on a specific website)
         308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)
     ''')
+    apply_to_group = fields.Selection([
+        ('0', 'All users'),
+        ('1', 'If has group'),
+        ('2', 'If not in group'),
+    ], string='User groups', default="0",
+        help='''Apply the rewrite rule to the user group:\n
+        All users: The rule will always be applied, regardless of the user group.
+        If has group: The rule will only be applied if the user belongs to the specified group.
+        If not in group: The rule will only be applied if the user does not belong to the specified group.
+    ''')
+    user_group_ids = fields.Many2many(
+        'res.groups',
+        string='groups',
+    )
 
     sequence = fields.Integer()
 
