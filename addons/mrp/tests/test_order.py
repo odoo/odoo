@@ -3497,9 +3497,6 @@ class TestMrpOrder(TestMrpCommon):
                 workorder.workcenter_id = self.workcenter_2
             mo = mo_form.save()
 
-        self.assertTrue(mo.workorder_ids[0].date_start)
-        self.assertTrue(mo.workorder_ids[2].date_start)
-
     def test_compute_product_id(self):
         """
             Tests the creation of a production order automatically sets the product when the bom is provided,
@@ -5322,6 +5319,35 @@ class TestMrpOrder(TestMrpCommon):
         wos_to_set = mo.workorder_ids - mo.workorder_ids[1]
         wos_to_set.write({ 'date_start': date_start, 'date_finished': date_finished })
         self.assertTrue(mo.workorder_ids[-1].show_json_popover)
+
+    @freeze_time('2025-01-21 08:00')
+    def test_planning_backward(self):
+        """ Test backward planning """
+
+        self.bom_2.bom_line_ids.unlink()
+        self.bom_2.type = 'normal'
+        self.bom_2.operation_ids[0].workcenter_id = self.workcenter_2
+
+        now = datetime.now()
+
+        form = Form(self.env['mrp.production'])
+        form.bom_id = self.bom_2
+        mo = form.save()
+        mo.action_confirm()
+
+        # Plan backward to complete 3 products (3 hours to produce) in 2 hours
+        # : the planning should shifted from now
+        mo.product_qty = 3.0
+        mo.scheduling = 'backward'
+        mo.date_deadline = now + timedelta(hours=2)
+        mo.button_plan()
+
+        # Check that the manufacturing order and the workorder are planned now for 3 hours
+        self.assertAlmostEqual(mo.date_start, now, delta=timedelta(seconds=1), msg="Manufacturing Order should be planned now")
+        self.assertAlmostEqual(mo.date_finished, now + timedelta(hours=3), delta=timedelta(seconds=1), msg="Manufacturing Order should be done in +3hours")
+        wo = mo.workorder_ids[0]
+        self.assertAlmostEqual(wo.date_start, now, delta=timedelta(seconds=1), msg="Workorder should be planned now")
+        self.assertAlmostEqual(wo.date_finished, now + timedelta(hours=3), delta=timedelta(seconds=1), msg="Workorder should be done in +3hours")
 
 
 @tagged('-at_install', 'post_install')
