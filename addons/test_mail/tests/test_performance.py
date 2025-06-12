@@ -1598,7 +1598,6 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                     "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
                                     "is_company": False,
                                     "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
@@ -1616,6 +1615,9 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "id": self.user_follower_emp_inbox.partner_id.id,
                                     "name": "Isabelle Follower Inbox",
                                 },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {"id": self.env.user.id, "share": False},
                             ),
                         },
                     },
@@ -1711,7 +1713,6 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                 {
                                     "avatar_128_access_token": self.env.user.partner_id._get_avatar_128_access_token(),
                                     "id": self.env.user.partner_id.id,
-                                    "isInternalUser": True,
                                     "is_company": False,
                                     "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
@@ -1729,6 +1730,9 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "id": self.user_follower_emp_inbox.partner_id.id,
                                     "name": "Isabelle Follower Inbox",
                                 },
+                            ),
+                            "res.users": self._filter_users_fields(
+                                {"id": self.env.user.id, "share": False},
                             ),
                         },
                     },

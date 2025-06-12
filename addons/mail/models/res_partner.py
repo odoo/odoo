@@ -275,7 +275,7 @@ class ResPartner(models.Model):
             if "user" in fields:
                 main_user = (main_user_by_partner and main_user_by_partner.get(partner)) or partner.main_user_id
                 data["main_user_id"] = main_user.id
-                data["isInternalUser"] = not main_user.share if main_user else False
+                store.add(main_user, ["share"])
                 if "isAdmin" in fields:
                     data["isAdmin"] = main_user._is_admin()
                 if "notification_type" in fields:
