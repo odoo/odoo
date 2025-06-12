@@ -594,7 +594,7 @@ export class Store extends BaseStore {
         }
         if (partnerId) {
             const partner = this.Persona.insert({ id: partnerId, type: "partner" });
-            if (!partner.userId) {
+            if (!partner.main_user_id) {
                 const [userId] = await this.env.services.orm.silent.search(
                     "res.users",
                     [["partner_id", "=", partnerId]],
@@ -607,7 +607,9 @@ export class Store extends BaseStore {
                     );
                     return;
                 }
-                partner.userId = userId;
+                if (!partner.main_user_id) {
+                    partner.main_user_id = userId;
+                }
             }
             return partner;
         }

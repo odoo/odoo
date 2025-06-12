@@ -278,7 +278,7 @@ export class ResPartner extends webModels.ResPartner {
                 } else if (users.length > 0) {
                     mainUser = users[0];
                 }
-                data.userId = mainUser ? mainUser.id : false;
+                data.main_user_id = mainUser ? mainUser.id : false;
                 data.isInternalUser = mainUser ? !mainUser.share : false;
                 if (fields.includes("isAdmin")) {
                     data.isAdmin = true; // mock server simplification

@@ -48,6 +48,7 @@ export class Thread extends Record {
     }
 
     autofocus = 0;
+    create_uid = fields.One("res.users");
     /** @type {number} */
     id;
     /** @type {string} */
@@ -902,7 +903,11 @@ export class Thread extends Record {
     }
 
     async leaveChannel({ force = false } = {}) {
-        if (this.channel_type !== "group" && this.create_uid === this.store.self.userId && !force) {
+        if (
+            this.channel_type !== "group" &&
+            this.create_uid?.eq(this.store.self.main_user_id) &&
+            !force
+        ) {
             await this.askLeaveConfirmation(
                 _t("You are the administrator of this channel. Are you sure you want to leave?")
             );
