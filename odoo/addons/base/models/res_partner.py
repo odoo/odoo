@@ -5,6 +5,7 @@ import base64
 import collections
 import datetime
 import pytz
+import re
 
 from collections import defaultdict
 from random import randint
@@ -1037,6 +1038,8 @@ class ResPartner(models.Model):
                     else:
                         name = f"{name} - {partner.vat}"
 
+            # Remove extra empty lines
+            name = re.sub(r'\s+\n', '\n', name)
             partner.display_name = name.strip()
 
     @api.model
