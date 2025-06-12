@@ -60,3 +60,23 @@ class TestPartnerFormatAddress(FormatAddressCase):
     def test_address_view(self):
         self.env.company.country_id = self.env.ref('base.us')
         self.assertAddressView('res.partner')
+
+    def test_display_name_address_formatting(self):
+        france = self.env.ref('base.fr')
+
+        partner = self.env['res.partner'].create({
+            'name': 'John Doe',
+            'street': '123 Main Street',
+            'street2': '',
+            'city': 'Paris',
+            'country_id': france.id,
+        })
+
+        # Default display_name without context
+        self.assertIn('John Doe', partner.display_name)
+
+        # display_name with show_address context
+        display_name = partner.with_context(show_address=True).display_name
+        self.assertIn('123 Main Street', display_name)
+        self.assertIn('Paris', display_name)
+        self.assertNotIn('\n\n', display_name)
