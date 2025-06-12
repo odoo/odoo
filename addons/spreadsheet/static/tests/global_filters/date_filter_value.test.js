@@ -165,17 +165,21 @@ test("All the options should be displayed", async function () {
     });
     await contains("input").click();
     const options = fixture.querySelectorAll(".o-date-filter-value .o-date-option-label");
-    expect(options.length).toBe(10);
-    expect(options[0].textContent).toBe("Last 7 Days");
-    expect(options[1].textContent).toBe("Last 30 Days");
-    expect(options[2].textContent).toBe("Last 90 Days");
-    expect(options[3].textContent).toBe("Month");
-    expect(options[4].textContent).toBe("Quarter");
-    expect(options[5].textContent).toBe("Year to Date");
-    expect(options[6].textContent).toBe("Last 12 Months");
-    expect(options[7].textContent).toBe("Year");
-    expect(options[8].textContent).toBe("All time");
-    expect(options[9].textContent).toBe("Custom Range");
+    expect(options.length).toBe(14);
+    expect(options[0].textContent).toBe("Today");
+    expect(options[1].textContent).toBe("Yesterday");
+    expect(options[2].textContent).toBe("Last 7 Days");
+    expect(options[3].textContent).toBe("Last 30 Days");
+    expect(options[4].textContent).toBe("Last 90 Days");
+    expect(options[5].textContent).toBe("Month to Date");
+    expect(options[6].textContent).toBe("Last Month");
+    expect(options[7].textContent).toBe("Month");
+    expect(options[8].textContent).toBe("Quarter");
+    expect(options[9].textContent).toBe("Year to Date");
+    expect(options[10].textContent).toBe("Last 12 Months");
+    expect(options[11].textContent).toBe("Year");
+    expect(options[12].textContent).toBe("All time");
+    expect(options[13].textContent).toBe("Custom Range");
 });
 
 test("Can select a relative period", async function () {

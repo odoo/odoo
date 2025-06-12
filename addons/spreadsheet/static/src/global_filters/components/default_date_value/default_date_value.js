@@ -6,6 +6,15 @@ import { _t } from "@web/core/l10n/translation";
 
 const DATE_OPTIONS = [
     {
+        id: "today",
+        label: RELATIVE_PERIODS["today"],
+    },
+    {
+        id: "yesterday",
+        label: RELATIVE_PERIODS["yesterday"],
+        separator: true,
+    },
+    {
         id: "last_7_days",
         label: RELATIVE_PERIODS["last_7_days"],
     },
@@ -17,6 +26,14 @@ const DATE_OPTIONS = [
         id: "last_90_days",
         label: RELATIVE_PERIODS["last_90_days"],
         separator: true,
+    },
+    {
+        id: "month_to_date",
+        label: RELATIVE_PERIODS["month_to_date"],
+    },
+    {
+        id: "last_month",
+        label: RELATIVE_PERIODS["last_month"],
     },
     {
         id: "this_month",
