@@ -119,9 +119,9 @@ class AccountReconcileModel(models.Model):
         check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
     match_amount = fields.Selection(selection=[
-        ('lower', 'Is Lower Than'),
-        ('greater', 'Is Greater Than'),
-        ('between', 'Is Between'),
+        ('lower', 'Is lower than or equal to'),
+        ('greater', 'Is greater than or equal to'),
+        ('between', 'Is between'),
     ], string='Amount', tracking=True,
         help='The reconciliation model will only be applied when the amount being lower than, greater than or between specified amount(s).')
     match_amount_min = fields.Float(string='Amount Min Parameter', tracking=True)
