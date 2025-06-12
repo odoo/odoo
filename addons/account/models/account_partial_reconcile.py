@@ -633,6 +633,7 @@ class AccountPartialReconcile(models.Model):
             )\
             .create(moves_to_create)
         moves._post(soft=False)
+        moves.modified(['name'])
 
         # Reconcile the tax lines being on a reconcile tax basis transfer account.
         reconciliation_plan = []
