@@ -1,12 +1,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
+from odoo.exceptions import AccessError
+from odoo.fields import Domain
+
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
 class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     _name = 'hr.leave.allocation.generate.multi.wizard'
     _description = 'Generate time off allocations for multiple employees'
+
+    def _get_employee_domain(self):
+        domain = Domain([('company_id', 'in', self.env.companies.ids)])
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            domain &= Domain(['|', ('leave_manager_id', '=', self.env.user.id), ('user_id', '=', self.env.user.id)])
+        return domain
 
     name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
@@ -24,7 +33,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
              "\n- By Company: all employees of the specified company"
              "\n- By Department: all employees of the specified department"
              "\n- By Employee Tag: all employees of the specific employee group category")
-    employee_ids = fields.Many2many('hr.employee', string='Employees', domain="[('company_id', '=', company_id)]")
+    employee_ids = fields.Many2many('hr.employee', string='Employees', domain=lambda self: self._get_employee_domain())
     company_id = fields.Many2one('res.company', default=lambda self: self.env.company, required=True)
     department_id = fields.Many2one('hr.department')
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag')
@@ -46,8 +55,8 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     def _get_title(self):
         self.ensure_one()
         if not self.holiday_status_id:
-            return _("Allocation Request")
-        return _(
+            return self.env._("Allocation Request")
+        return self.env._(
             '%(name)s (%(duration)s %(request_unit)s(s))',
             name=self.holiday_status_id.name,
             duration=self.duration,
@@ -57,7 +66,7 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
     def _get_employees_from_allocation_mode(self):
         self.ensure_one()
         if self.allocation_mode == 'employee':
-            employees = self.employee_ids or self.env['hr.employee'].search([('company_id', 'in', self.env.companies)])
+            employees = self.employee_ids or self.env['hr.employee'].search(self._get_employee_domain())
         elif self.allocation_mode == 'category':
             employees = self.category_id.employee_ids.filtered(lambda e: e.company_id in self.env.companies)
         elif self.allocation_mode == 'company':
@@ -92,15 +101,25 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         if vals_list:
             allocations = self.env['hr.leave.allocation'].with_context(
                 mail_notify_force_send=False,
-                mail_activity_automation_skip=True
+                mail_activity_automation_skip=True,
             ).create(vals_list)
-            allocations.filtered(lambda c: c.validation_type != 'no_validation').action_approve()
+            allocations.filtered(lambda c: c.validation_type not in ('no_validation', 'hr')).action_approve()
+            if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+                allocations.filtered(lambda c: c.validation_type == 'hr').action_approve()
 
             return {
                 'type': 'ir.actions.act_window',
-                'name': _('Generated Allocations'),
+                'name': self.env._('Generated Allocations'),
                 "views": [[self.env.ref('hr_holidays.hr_leave_allocation_view_tree').id, "list"], [self.env.ref('hr_holidays.hr_leave_allocation_view_form_manager').id, "form"]],
                 'view_mode': 'list',
                 'res_model': 'hr.leave.allocation',
-                'domain': [('id', 'in', allocations.ids)]
+                'domain': [('id', 'in', allocations.ids)],
             }
+        return None
+
+    @api.constrains('allocation_mode')
+    def _check_allocation_mode(self):
+        is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
+        for record in self:
+            if record.allocation_mode != 'employee' and not is_manager:
+                raise AccessError(self.env._("As Time Off Responsible, you can only use the allocation mode 'By Employee'."))
