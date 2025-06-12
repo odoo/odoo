@@ -67,3 +67,39 @@ test("Changing highlight keep the color and the width", async () => {
         "--text-highlight-width": "2px",
     });
 });
+
+test("Selecting partially a highlight select all the highlight", async () => {
+    const { editor } = await setupEditor(
+        ` 
+        <p>
+            <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">h[i]ghlight</span>
+        </p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin] } }
+    );
+    await expandToolbar();
+    expect(".o-select-highlight").toHaveCount(1);
+    let selectionData = editor.shared.selection.getEditableSelection();
+    expect(selectionData.anchorOffset).toBe(1);
+    expect(selectionData.focusOffset).toBe(2);
+    await click(".o-we-toolbar .o-select-highlight");
+    selectionData = editor.shared.selection.getEditableSelection();
+    expect(selectionData.anchorOffset).toBe(0);
+    expect(selectionData.focusOffset).toBe(9);
+});
+
+test("Can remove an highlight with the trash button", async () => {
+    await setupEditor(
+        ` 
+        <p>
+            <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">h[i]ghlight</span>
+        </p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin] } }
+    );
+    await expandToolbar();
+    expect(".o-select-highlight").toHaveCount(1);
+    expect(".o_text_highlight").toHaveCount(1);
+    await click(".o-we-toolbar .o-select-highlight");
+    await waitFor("button[title='Reset']");
+    await click("button[title='Reset']");
+    expect(".o_text_highlight").toHaveCount(0);
+});
