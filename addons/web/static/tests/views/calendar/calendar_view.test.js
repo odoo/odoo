@@ -3813,7 +3813,7 @@ test(`drag and drop on month mode with all_day mapping`, async () => {
 });
 
 test(`drag and drop on month mode with date_start and date_delay`, async () => {
-    onRpc("write", ({ args }) => {
+    onRpc("write", async ({ args }) => {
         expect.step("write");
         expect(args[1].delay).toBe(undefined);
     });

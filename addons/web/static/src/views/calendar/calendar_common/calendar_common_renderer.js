@@ -163,6 +163,12 @@ export class CalendarCommonRenderer extends Component {
         }
     }
 
+    isSameDay(date1, date2) {
+        const date_str_1 = new Date(date1).toDateString();
+        const date_str_2 = new Date(date2).toDateString();
+        return date_str_1 === date_str_2;
+    }
+
     getStartTime(record) {
         const timeFormat = is24HourFormat() ? "HH:mm" : "hh:mm a";
         return record.start.toFormat(timeFormat);
@@ -324,7 +330,14 @@ export class CalendarCommonRenderer extends Component {
     }
     onEventDrop(info) {
         this.fc.api.unselect();
-        this.props.model.updateRecord(this.fcEventToRecord(info.event), { moved: true });
+        const updatedRecord = this.fcEventToRecord(info.event);
+        let show_all_events = true;
+        if (info.event.id){
+            const newStart = updatedRecord.start;
+            const oldStart = this.props.model.records[info.event.id].start;
+            show_all_events = this.isSameDay(oldStart, newStart);
+        }
+        this.props.model.updateRecord(updatedRecord, show_all_events, { moved: true });
     }
     onEventResize(info) {
         this.fc.api.unselect();
