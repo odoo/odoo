@@ -1,13 +1,15 @@
 import { EDITABLE_MEDIA_CLASS } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
-import { click, press, waitFor } from "@odoo/hoot-dom";
+import { click, press, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
-import { makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { cleanHints } from "./_helpers/dispatch";
 import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
+import { delay } from "@web/core/utils/concurrency";
+import { ImageCrop } from "@html_editor/main/media/image_crop";
 
 test("Can replace an image", async () => {
     onRpc("ir.attachment", "search_read", () => [
@@ -275,5 +277,38 @@ test("cropper should not open for external image", async () => {
 
     await click('.btn[name="image_crop"]');
     await waitFor(".o_notification_manager .o_notification", { timeout: 1000 });
+    expect("img.o_we_cropper_img").toHaveCount(0);
+});
+
+test("Image cropper disappear on backspace", async () => {
+    /**
+     * show() is async, so before isCropperActive = true, backspace may
+     * trigger selection change causing early `closeCropper()` exit due
+     * to isCropperActive=false flag; no delay used to avoid flakiness.
+     */
+    patchWithCleanup(ImageCrop.prototype, {
+        closeCropper(...args) {
+            this.isCropperActive = true;
+            super.closeCropper(...args);
+        },
+    });
+    onRpc("/html_editor/get_image_info", () => ({
+        original: {
+            image_src: "#",
+        },
+    }));
+    onRpc("/web/image/__odoo__unknown__src__/", async () => {
+        await delay(50);
+        return {};
+    });
+
+    await setupEditor(`<p>[<img src="#">]</p>`);
+    await waitFor(".o-we-toolbar");
+
+    await contains('.o-we-toolbar .btn[name="image_crop"]').click();
+    await waitFor(".o_we_crop_widget", { timeout: 1000 });
+    expect("img.o_we_cropper_img").toHaveCount(1);
+    press("backspace");
+    await waitForNone(".o_we_crop_widget", { timeout: 1000 });
     expect("img.o_we_cropper_img").toHaveCount(0);
 });
