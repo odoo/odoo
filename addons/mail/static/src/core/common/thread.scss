@@ -1,10 +1,14 @@
-.o-mail-Thread:focus-visible {
-    outline: 0;
+.o-mail-Thread {
+    &:focus-visible {
+        outline: 0;
+    }
+    &.o-discussApp {
+        padding-bottom: map-get($spacers, 5) * 2;
+    }
 }
 
 .o-mail-Thread-jumpPresent {
     z-index: $o-mail-NavigableList-zIndex - 1;
-    --border-opacity: .5;
 }
 
 .o-mail-Thread-newMessage {

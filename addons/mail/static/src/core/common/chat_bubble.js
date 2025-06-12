@@ -44,7 +44,7 @@ export class ChatBubble extends Component {
             animation: false,
             position: "left-middle",
             popoverClass:
-                "dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
+                "o-mail-ChatBubble-previewPopover dropdown-menu bg-view border-0 p-0 overflow-visible o-rounded-bubble mx-1",
             onClose: () => (this.state.showClose = false),
             ref: popoverRef,
         });

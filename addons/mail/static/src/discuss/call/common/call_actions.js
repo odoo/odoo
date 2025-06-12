@@ -11,11 +11,13 @@ callActionsRegistry
         name: (component) => (component.rtc.selfSession.isMute ? _t("Unmute") : _t("Mute")),
         isActive: (component) => component.rtc.selfSession?.isMute,
         isTracked: true,
-        inactiveIcon: "fa-microphone",
-        icon: "fa-microphone-slash",
+        inactiveIcon: "fa fa-microphone",
+        icon: "fa fa-microphone-slash",
         activeClass: "text-danger",
         hotkey: "shift+m",
-        select: (component) => component.rtc.toggleMicrophone(),
+        /** @deprecated use `onSelected` instead */
+        select: (ev, component, action) => action.onSelected(component, action, ev),
+        onSelected: (component) => component.rtc.toggleMicrophone(),
         sequence: 10,
     })
     .add("deafen", {
@@ -23,11 +25,13 @@ callActionsRegistry
         name: (component) => (component.rtc.selfSession.is_deaf ? _t("Undeafen") : _t("Deafen")),
         isActive: (component) => component.rtc.selfSession?.is_deaf,
         isTracked: true,
-        inactiveIcon: "fa-headphones",
-        icon: "fa-deaf",
+        inactiveIcon: "fa fa-headphones",
+        icon: "fa fa-deaf",
         activeClass: "text-danger",
         hotkey: "shift+d",
-        select: (component) => component.rtc.toggleDeafen(),
+        /** @deprecated use `onSelected` instead */
+        select: (ev, component, action) => action.onSelected(component, action, ev),
+        onSelected: (component) => component.rtc.toggleDeafen(),
         sequence: 20,
     })
     .add("camera-on", {
@@ -43,9 +47,11 @@ callActionsRegistry
         },
         isActive: (component) => component.rtc.selfSession?.is_camera_on,
         isTracked: true,
-        icon: "fa-video-camera",
+        icon: "fa fa-video-camera",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("camera", { env: component.env }),
+        /** @deprecated use `onSelected` instead */
+        select: (ev, component, action) => action.onSelected(component, action, ev),
+        onSelected: (component) => component.rtc.toggleVideo("camera", { env: component.env }),
         sequence: 30,
     })
     .add("raise-hand", {
@@ -54,8 +60,10 @@ callActionsRegistry
             component.rtc.selfSession.raisingHand ? _t("Lower Hand") : _t("Raise Hand"),
         isActive: (component) => component.rtc.selfSession?.raisingHand,
         isTracked: true,
-        icon: "fa-hand-paper-o",
-        select: (component) => component.rtc.raiseHand(!component.rtc.selfSession.raisingHand),
+        icon: "fa fa-hand-paper-o",
+        /** @deprecated use `onSelected` instead */
+        select: (ev, component, action) => action.onSelected(component, action, ev),
+        onSelected: (component) => component.rtc.raiseHand(!component.rtc.selfSession.raisingHand),
         sequence: 50,
     })
     .add("share-screen", {
@@ -71,9 +79,11 @@ callActionsRegistry
         },
         isTracked: true,
         isActive: (component) => component.rtc.selfSession?.is_screen_sharing_on,
-        icon: "fa-desktop",
+        icon: "fa fa-desktop",
         activeClass: "text-success",
-        select: (component) => component.rtc.toggleVideo("screen", { env: component.env }),
+        /** @deprecated use `onSelected` instead */
+        select: (ev, component, action) => action.onSelected(component, action, ev),
+        onSelected: (component) => component.rtc.toggleVideo("screen", { env: component.env }),
         sequence: 40,
     })
     .add("blur-background", {
@@ -85,8 +95,10 @@ callActionsRegistry
         name: (component) =>
             component.store.settings.useBlur ? _t("Remove Blur") : _t("Blur Background"),
         isActive: (component) => component.store?.settings?.useBlur,
-        icon: "fa-photo",
-        select: (component) => {
+        icon: "fa fa-photo",
+        /** @deprecated use `onSelected` instead */
+        select: (ev, component, action) => action.onSelected(component, action, ev),
+        onSelected: (component) => {
             component.store.settings.useBlur = !component.store.settings.useBlur;
         },
         sequence: 60,
@@ -96,9 +108,11 @@ callActionsRegistry
         name: (component) =>
             component.props.fullscreen.isActive ? _t("Exit Fullscreen") : _t("Enter Full Screen"),
         isActive: (component) => component.props.fullscreen.isActive,
-        inactiveIcon: "fa-arrows-alt",
-        icon: "fa-compress",
-        select: (component) => {
+        inactiveIcon: "fa fa-arrows-alt",
+        icon: "fa fa-compress",
+        /** @deprecated use `onSelected` instead */
+        select: (ev, component, action) => action.onSelected(component, action, ev),
+        onSelected: (component) => {
             if (component.props.fullscreen.isActive) {
                 component.props.fullscreen.exit();
             } else {
@@ -156,9 +170,13 @@ function transformAction(component, id, action) {
             return typeof action.icon === "function" ? action.icon(component) : action.icon;
         },
         activeClass: action.activeClass,
+        /** @deprecated use `onSelected` instead */
+        select(ev) {
+            action.select?.(ev, component, this);
+        },
         /**  Action to execute when this action is selected */
-        select() {
-            action.select(component);
+        onSelected(ev) {
+            return action.onSelected?.(component, this, ev);
         },
         /** Determines the order of this action (smaller first) */
         get sequence() {

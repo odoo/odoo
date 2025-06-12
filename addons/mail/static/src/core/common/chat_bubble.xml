@@ -21,9 +21,13 @@
     </t>
 
     <t t-name="mail.ChatBubblePreview">
-        <div class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 shadow-sm border border-secondary bg-100 o-rounded-bubble">
+        <t t-set="message" t-value="thread?.newestPersistentOfAllMessage"/>
+        <div class="o-mail-ChatBubble-preview o-mail-ChatBubble-menu px-0 py-1 border border-secondary o-mail-DiscussMenu-bgColor o-rounded-bubble" t-att-class="{
+            'o-blue': message?.bubbleColor === 'blue',
+            'o-green': message?.bubbleColor === 'green',
+            'o-orange': message?.bubbleColor === 'orange',
+        }">
             <div class="text-truncate base-fs fw-bolder mb-0 mx-2 px-1" t-esc="props.chatWindow.displayName"/>
-            <t t-set="message" t-value="thread?.newestPersistentOfAllMessage" />
             <div t-if="previewText" class="text-truncate small mx-2 px-1 text-muted">
                 <t t-call="mail.message_preview_prefix">
                     <t t-set="message" t-value="message"/>

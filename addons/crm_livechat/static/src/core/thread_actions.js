@@ -30,7 +30,8 @@ threadActionsRegistry.add("create-lead", {
         if (!component.env.inChatWindow) {
             action.popover = usePopover(LivechatCommandDialog, {
                 onClose: () => action.close(),
-                popoverClass: action.panelOuterClass,
+                popoverClass: `rounded-4 m-2 ${action.panelOuterClass}`,
+                arrow: false,
             });
         }
     },

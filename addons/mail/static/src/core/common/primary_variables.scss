@@ -39,3 +39,137 @@ $o-mail-CallMenu-bgColor-lighter: #374151FF !default;
         background: none;
     }
 }
+
+@function mail-DiscussMenu-bgColor() {
+    @return $gray-100;
+}
+
+@function mail-DiscussMenu-activeItemBgColor() {
+    @return mix($gray-200, $gray-300);
+}
+
+@function mail-DiscussMenu-activeItemColor() {
+    @return black;
+}
+
+@function mail-DiscussMenu-activeItemOutlineColor() {
+    @return mix($gray-300, $gray-400, 75%);
+}
+
+@function mail-DiscussPanel-bgColor() {
+    @return $white;
+}
+
+@function mail-DiscussSidebar-activeItemBgColor() {
+    @return mix($o-view-background-color, $o-action, 90%);
+}
+
+@function mail-DiscussSidebar-activeItemOutlineColor() {
+    @return rgba($o-action, .15);
+}
+
+@function mail-DiscussSidebar-activeItemOutlineColor-compact() {
+    @return rgba(darken($o-action, 10%), .25);
+}
+
+@function mail-Message-blueBubbleBgColor() {
+    @return mix($o-view-background-color, lighten($info, 5%), 85.5%);
+}
+
+@function mail-Message-blueBubbleBgColor-muted() {
+    @return mix($white, mix($o-view-background-color, lighten($info, 5%), 90.5%));
+}
+
+@function mail-Message-blueBubbleBorderColor() {
+    @return mix(darken(mix($o-view-background-color, lighten($info, 5%), 85.5%), 10%), white, 92.5%);
+}
+
+@function mail-Message-blueBubbleBorderColor-highContrast() {
+    @return mix(darken(mix($o-view-background-color, lighten($info, 5%), 85.5%), 35%), white, 92.5%);
+}
+
+@function mail-Message-greenBubbleBgColor() {
+    @return mix($o-view-background-color, lighten($success, 2.5%), 85.5%);
+}
+
+@function mail-Message-greenBubbleBgColor-muted() {
+    @return mix($white, mix($o-view-background-color, lighten($success, 5%), 90.5%));
+}
+
+@function mail-Message-greenBubbleBorderColor() {
+    @return mix(darken(mix($o-view-background-color, lighten($success, 2.5%), 85.5%), 10%), white, 92.5%);
+}
+
+@function mail-Message-greenBubbleBorderColor-highContrast() {
+    @return mix(darken(mix($o-view-background-color, lighten($success, 2.5%), 85.5%), 35%), white, 92.5%);
+}
+
+@function mail-Message-orangeBubbleBgColor() {
+    @return mix($o-view-background-color, lighten($warning, 2.5%), 75%);
+}
+
+@function mail-Message-orangeBubbleBgColor-muted() {
+    @return mix($white, mix($o-view-background-color, $warning, 75%), 85%);
+}
+
+@function mail-Message-orangeBubbleBorderColor() {
+    @return mix(darken(mix($o-view-background-color, lighten($warning, 2.5%), 75%), 10%), white, 87.5%);
+}
+
+@function mail-Message-orangeBubbleBorderColor-highContrast() {
+    @return mix(darken(mix($o-view-background-color, lighten($warning, 2.5%), 75%), 35%), white, 87.5%);
+}
+
+@mixin o-mail-Message-bubbleMixin() {
+    &.o-blue {
+        background-color: mail-Message-blueBubbleBgColor() !important;
+        border-color: mail-Message-blueBubbleBorderColor() !important;
+
+        &.o-muted {
+            background-color: mail-Message-blueBubbleBgColor-muted() !important;
+        }
+    }
+    &.o-green {
+        background-color: mail-Message-greenBubbleBgColor() !important;
+        border-color: mail-Message-greenBubbleBorderColor() !important;
+
+        &.o-muted {
+            background-color: mail-Message-greenBubbleBgColor-muted() !important;
+        }
+    }
+    &.o-orange {
+        background-color: mail-Message-orangeBubbleBgColor() !important;
+        border-color: mail-Message-orangeBubbleBorderColor() !important;
+
+        &.o-muted {
+            background-color: mail-Message-orangeBubbleBgColor-muted() !important;
+        }
+    }
+}
+
+@mixin o-mail-Message-bubbleTailMixin() {
+    &.o-blue {
+        .o-mail-Message-bubbleTailBg {
+            color: mail-Message-blueBubbleBgColor() !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mail-Message-blueBubbleBorderColor() !important;
+        }
+    }
+    &.o-green {
+        .o-mail-Message-bubbleTailBg {
+            color: mail-Message-greenBubbleBgColor() !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mail-Message-greenBubbleBorderColor() !important;
+        }
+    }
+    &.o-orange {
+        .o-mail-Message-bubbleTailBg {
+            color: mail-Message-orangeBubbleBgColor() !important;
+        }
+        .o-mail-Message-bubbleTailBorder {
+            color: mail-Message-orangeBubbleBorderColor() !important;
+        }
+    }
+}

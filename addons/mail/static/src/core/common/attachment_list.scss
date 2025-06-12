@@ -5,6 +5,16 @@
     .o-mail-AttachmentCard-aside:hover .o-mail-AttachmentCard-unlink.o-inComposer {
         transform: translateX(0);
     }
+    .o-mail-ImageActions .btn {
+        &:hover, &.show {
+            background-color: $o-view-background-color;
+            border-color: darken($gray-500, 5%);
+        }
+        &:not(:hover):not(.show) {
+            background-color: rgba($o-view-background-color, .5);
+            border-color: rgba(darken($gray-500, 5%), .5);
+        }
+    }
 }
 
 .o-mail-AttachmentCard-aside {

@@ -10,6 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ChatBubble } from "./chat_bubble";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 
 export class ChatHub extends Component {
     static components = { ChatBubble, ChatWindow, Dropdown, DropdownItem };
@@ -38,7 +39,7 @@ export class ChatHub extends Component {
             isDragging: false,
             top: "unset",
             left: "unset",
-            bottom: `${this.chatHub.BUBBLE_OUTER}px;`,
+            bottom: `${this.chatHub.BUBBLE_OUTER + (this.isMobileOS ? 35 : 0)}px;`,
             right: `${this.chatHub.BUBBLE_OUTER + this.chatHub.BUBBLE_START}px;`,
         });
         this.onResize();
@@ -61,6 +62,33 @@ export class ChatHub extends Component {
             onDragEnd: () => (this.position.isDragging = false),
             onDrop: this.onDrop.bind(this),
         });
+    }
+
+    get optionActions() {
+        const actions = [];
+        if (this.chatHub.showConversations && !this.chatHub.compact) {
+            actions.push({
+                id: "hide-all",
+                name: _t("Hide all conversations"),
+                icon: "fa fa-eye-slash",
+                onSelected: () => this.chatHub.hideAll(),
+            });
+            actions.push({
+                id: "close-all",
+                name: _t("Close all conversations"),
+                icon: "oi oi-close",
+                onSelected: () => this.chatHub.closeAll(),
+            });
+        }
+        if (this.position.dragged) {
+            actions.push({
+                id: "reset-position",
+                name: _t("Reset initial position"),
+                icon: "fa fa-undo",
+                onSelected: () => this.resetPosition(),
+            });
+        }
+        return actions;
     }
 
     get isMobileOS() {

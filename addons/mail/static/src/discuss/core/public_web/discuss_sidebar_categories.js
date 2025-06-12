@@ -117,6 +117,7 @@ export class DiscussSidebarChannel extends Component {
             "position-relative justify-content-center o-compact mt-0 p-1":
                 this.store.discuss.isSidebarCompact,
             "px-0": !this.store.discuss.isSidebarCompact,
+            "o-showingActions": this.showingActions.isOpen,
         };
     }
 

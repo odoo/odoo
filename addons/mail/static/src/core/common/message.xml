@@ -186,7 +186,7 @@
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }"/>
-                    <button t-else="" class="btn border-0 p-0 rounded-0" t-att-title="action.title" t-att-name="action.id" t-on-click.stop="action.onClick" t-att-class="{
+                    <button t-else="" class="btn border-0 p-0 rounded-0" t-att-title="action.name" t-att-name="action.id" t-on-click.stop="(ev) => action.onSelected(ev)" t-att-class="{
                         'rounded-start-1': isStart,
                         'rounded-end-1': isEnd,
                     }">
@@ -194,17 +194,12 @@
                     </button>
                 </t>
                 <div t-if="messageActions.actions.length gt quickActionCount" class="d-flex rounded-0">
-                    <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? 'top-start' : 'bottom-start'" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu bg-100 border-secondary'" >
+                    <Dropdown state="optionsDropdown" position="props.message.threadAsNewest  ? (props.message.isAlignedRight ? 'top-end' : 'top-start') : (props.message.isAlignedRight ? 'bottom-end' : 'bottom-start')" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu o-mail-DiscussMenu-bgColor border-secondary rounded-4'" >
                         <t t-call="mail.Message.expandAction"/>
                         <t t-set-slot="content">
-                            <t t-foreach="messageActions.actions.slice(quickActionCount - 1)" t-as="action" t-key="action.id">
-                                <DropdownItem class="'px-2 py-1 d-flex align-items-baseline rounded-0 ' + action.btnClass" onSelected="action.onClick">
-                                    <t t-if="action.component" t-component="action.component" t-props="action.props"/>
-                                    <t t-else="">
-                                        <i class="fa-fw" t-att-class="action.icon"/>
-                                        <span class="mx-2" t-esc="action.title"/>
-                                    </t>
-                                </DropdownItem>
+                            <t t-call="mail.DiscussActions">
+                                <t t-set="dropdown" t-value="true"/>
+                                <t t-set="group" t-value="[messageActions.actions.slice(quickActionCount - 1)]"/>
                             </t>
                         </t>
                     </Dropdown>

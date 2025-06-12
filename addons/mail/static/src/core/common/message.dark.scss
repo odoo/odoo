@@ -11,55 +11,45 @@
 }
 
 .o-mail-Message-bubble {
-    &.o-blue {
-        background-color: mix($gray-100, darken($info, 10%), 85.5%) !important;
-        border-color: mix(lighten(mix($gray-100, darken($info, 10%), 85.5%), 2.5%), black, 75%) !important;
-    
-        &.o-muted {
-            background-color: darken(mix($gray-100, darken($info, 10%), 87.5%), 5%) !important;
-        }
-    }
-    &.o-green {
-        background-color: mix($gray-100, darken($success, 2.5%), 85.5%) !important;
-        border-color: mix(lighten(mix($gray-100, darken($success, 2.5%), 85.5%), 2.5%), black, 75%) !important;
-    
-        &.o-muted {
-            background-color: darken(mix($gray-100, darken($success, 2.5%), 85.5%), 5%) !important;
-        }
-    }
-    &.o-orange {
-        background-color: mix($gray-100, darken($warning, 5%), 70.5%) !important;
-        border-color: mix(lighten(mix($gray-100, darken($warning, 5%), 70.5%), 2.5%), black, 75%) !important;
-    
-        &.o-muted {
-            background-color: darken(mix($gray-100,  darken($warning, 5%), 70.5%), 10%) !important;
-        }
-    }
+    @include o-mail-Message-bubbleMixin; // refresh with dark colors
 }
 
 .o-mail-Message-bubbleTail {
-     &.o-blue {
-        .o-mail-Message-bubbleTailBg {
-            color: mix($gray-100, darken($info, 10%), 85.5%) !important;
-        }
-        .o-mail-Message-bubbleTailBorder {
-            color: mix(lighten(mix($gray-100, darken($info, 10%), 85.5%), 2.5%), black, 75%) !important;
-        }
-    }
-    &.o-green {
-        .o-mail-Message-bubbleTailBg {
-            color: mix($gray-100, darken($success, 2.5%), 85.5%) !important;
-        }
-        .o-mail-Message-bubbleTailBorder {
-            color: mix(lighten(mix($gray-100, darken($success, 2.5%), 85.5%), 2.5%), black, 75%) !important;
-        }
-    }
-    &.o-orange {
-        .o-mail-Message-bubbleTailBg {
-            color: mix($gray-100, darken($warning, 5%), 70.5%) !important;
-        }
-        .o-mail-Message-bubbleTailBorder {
-            color: mix(lighten(mix($gray-100, darken($warning, 5%), 70.5%), 2.5%), black, 75%) !important;
-        }
-    }
+    @include o-mail-Message-bubbleTailMixin; // refresh with dark colors
+}
+
+@function mail-Message-blueBubbleBgColor() {
+    @return mix($gray-100, darken($info, 10%), 85.5%);
+}
+
+@function mail-Message-blueBubbleBgColor-muted() {
+    @return darken(mix($gray-100, darken($info, 10%), 87.5%), 5%);
+}
+
+@function mail-Message-blueBubbleBorderColor() {
+    @return mix(darken(mix($o-view-background-color, lighten($info, 5%), 85.5%), 10%), white, 92.5%);
+}
+
+@function mail-Message-greenBubbleBgColor() {
+    @return mix($gray-100, darken($success, 2.5%), 85.5%);
+}
+
+@function mail-Message-greenBubbleBgColor-muted() {
+    @return darken(mix($gray-100, darken($success, 2.5%), 85.5%), 5%);
+}
+
+@function mail-Message-greenBubbleBorderColor() {
+    @return mix(lighten(mix($gray-100, darken($success, 2.5%), 85.5%), 2.5%), black, 75%);
+}
+
+@function mail-Message-orangeBubbleBgColor() {
+    @return mix($gray-100, darken($warning, 5%), 70.5%);
+}
+
+@function mail-Message-orangeBubbleBgColor-muted() {
+    @return darken(mix($gray-100,  darken($warning, 5%), 70.5%), 10%);
+}
+
+@function mail-Message-orangeBubbleBorderColor() {
+    @return mix(lighten(mix($gray-100, darken($warning, 5%), 70.5%), 2.5%), black, 75%);
 }

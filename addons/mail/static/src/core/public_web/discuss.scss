@@ -16,43 +16,9 @@
 .o-mail-Discuss-threadName {
     max-width: 75%;
 }
+
 .o-mail-Discuss-header {
-    background-color: $white;
-    box-shadow: 0px 1px 6px -3px rgba(50, 50, 50, 0.15);
-    --border-opacity: .25;
-}
-
-.o-mail-Discuss-headerActions button {
-    --btn-disabled-opacity: 0.25;
-    background-color: transparent !important;
-
-    i {
-        opacity: 65%;
-    }
-
-    &:hover, &.o-isActive {
-        i {
-            opacity: 100%;
-        }
-    }
-    &:not(.o-isActive):hover {
-        background-color: $gray-200 !important;
-    }
-    &.o-isActive {
-        background-color: $gray-200 !important;
-        outline: $border-width solid mix($gray-300, $gray-400);
-        outline-offset: -$border-width;
-        opacity: 100%;
-    }
-    &.o-isActive:hover {
-        background-color: $gray-300 !important;
-    }
-}
-
-.o-mail-Discuss-headerActionsGroup {
-    background-color: mix($gray-100, $gray-200, 65%);
-    outline: 1px solid $gray-200;
-    outline-offset: -1px;
+    z-index: $o-mail-NavigableList-zIndex;
 }
 
 .o-mail-Discuss-headerCountry {
@@ -65,13 +31,14 @@
 }
 
 .o-mail-Discuss-panelContainer {
-    --border-opacity: .25;
+    margin-top: 68px !important;
+    z-index: $o-mail-NavigableList-zIndex;
 }
 
 .o-mail-Discuss-threadAvatar {
     img {
-        height: $o-mail-Avatar-size;
-        width: $o-mail-Avatar-size;
+        height: 42px;
+        width: 42px;
     }
 
     a {
@@ -89,6 +56,11 @@
     }
 }
 
-.o_web_client:has(.o-mail-Discuss) .o_control_panel {
-    --ControlPanel-border-bottom: #{$border-width} solid #{rgba($border-color, .25)};
+.o_web_client:has(.o-mail-Discuss) {
+    .o_control_panel {
+        --ControlPanel-border-bottom: #{$border-width} solid #{rgba($border-color, .35)};
+    }
+    .o_control_panel, .o_main_navbar {
+        background-color: unset !important;
+    }
 }

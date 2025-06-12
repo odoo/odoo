@@ -6,7 +6,11 @@ messageActionsRegistry.add("pin", {
         component.store.self.type === "partner" &&
         component.props.thread?.model === "discuss.channel",
     icon: "fa fa-thumb-tack",
-    title: (component) => (component.props.message.pinned_at ? _t("Unpin") : _t("Pin")),
-    onClick: (component) => component.props.message.pin(),
+    /** @deprecated use `name` instead */
+    title: (comp, action) => action.name,
+    name: (component) => (component.props.message.pinned_at ? _t("Unpin") : _t("Pin")),
+    /** @deprecated use `onSelected` instead */
+    onClick: (component, action, ...args) => action.onSelected(component, action, ...args),
+    onSelected: (component) => component.props.message.pin(),
     sequence: 65,
 });

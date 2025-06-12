@@ -8,10 +8,8 @@
 
     &.o-mobile {
         margin-right: $o-mail-ChatHub-bubblesMargin + 5px;
-        transform: translateY(-35px);
 
         body:has(.o-mail-Discuss):not(:has(.o-mail-ChatWindow)) &, body:has(.o-mail-MessagingMenu):not(:has(.o-mail-ChatWindow)) &  {
-            transform: translateY(-65px);
             z-index: $zindex-modal + 5;
         }
     }

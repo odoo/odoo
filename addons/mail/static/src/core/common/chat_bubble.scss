@@ -31,6 +31,7 @@
 .o-mail-ChatBubble-avatar {
     width: $o-mail-ChatBubble-size;
     height: $o-mail-ChatBubble-size;
+    outline: 1px solid rgba($white, .5);
 
     &.o-big {
         width: $o-mail-ChatBubble-sizeBig;
@@ -70,24 +71,71 @@
     outline: 1px solid $gray-300;
 }
 
+@mixin o-mail-ChatBubble-previewMixin() {
+    &.o-blue {
+        background-color: mail-Message-blueBubbleBgColor() !important;
+        border-color: mail-Message-blueBubbleBorderColor-highContrast() !important;
+        & + .popover-arrow {
+            &::before {
+                border-left-color: mail-Message-blueBubbleBorderColor-highContrast() !important;
+            }
+
+            &::after {
+                border-left-color: mail-Message-blueBubbleBgColor() !important;
+            }
+        }
+    }
+    &.o-green {
+        background-color: mail-Message-greenBubbleBgColor() !important;
+        border-color: mail-Message-greenBubbleBorderColor-highContrast() !important;
+        & + .popover-arrow {
+            &::before {
+                border-left-color: mail-Message-greenBubbleBorderColor-highContrast() !important;
+            }
+
+            &::after {
+                border-left-color: mail-Message-greenBubbleBgColor() !important;
+            }
+        }
+    }
+    &.o-orange {
+        background-color: mail-Message-orangeBubbleBgColor() !important;
+        border-color: mail-Message-orangeBubbleBorderColor-highContrast() !important;
+        & + .popover-arrow {
+            &::before {
+                border-left-color: mail-Message-orangeBubbleBorderColor-highContrast() !important;
+            }
+
+            &::after {
+                border-left-color: mail-Message-orangeBubbleBgColor() !important;
+            }
+        }
+    }
+}
+
 .o-mail-ChatBubble-preview {
     max-width: 225px;
     right: $o-mail-ChatHub-bubblesWidth;
     z-index: $o-mail-ChatBubble-zindex - 1;
     border-color: $o-gray-300 !important;
-    
+    @include o-mail-ChatBubble-previewMixin;
+
     & + .popover-arrow {
         // puts arrow above preview border
         z-index: 1 !important;
         &::before {
-            border-left-color: $o-gray-300 !important;
             right: 1px !important;
+            border-left-color: $gray-300 !important;
         }
         &::after {
-            border-left-color: $gray-100 !important;
             right: 2px !important;
+            border-left-color: $gray-100 !important;
         }
     }
+}
+
+.o-mail-ChatBubble-previewPopover {
+    filter: drop-shadow($box-shadow);
 }
 
 .o-mail-ChatBubble-status {
