@@ -30,7 +30,7 @@ class ProductTemplate(models.Model):
         compute='_compute_valuation',
     )
     lot_valuated = fields.Boolean(
-        "Valuation by Lot/Serial number",
+        string="Valuation by Lot/Serial",
         compute='_compute_lot_valuated', store=True, readonly=False,
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
