@@ -1258,3 +1258,44 @@ class TestPoSBasicConfig(TestPoSCommon):
         self.assertEqual(order.picking_count, 1, 'Order should have one picking')
         self.assertEqual(len(order.payment_ids), 1, 'Order should have one payment')
         self.assertEqual(self.env['account.move'].search_count([('ref', '=', order.name)]), 1, 'Order should have one invoice')
+
+    def test_copy_multiple_pos_configs(self):
+        """Copying multiple POS configs should duplicate each independently with valid payment methods."""
+        config2 = self.basic_config.copy()
+        copied_configs = (self.basic_config + config2).copy()
+
+        self.assertEqual(len(copied_configs), 2)
+        self.assertTrue(all(len(copy.payment_method_ids) == 1 for copy in copied_configs))
+        self.assertTrue(all(pm.is_cash_count for pm in copied_configs.mapped('payment_method_ids')))
+
+    def test_copy_pos_config_end_with_copy(self):
+        """When copying a POS config, the copied config should have '(copy)' appended to its name."""
+        copied_pos = self.basic_config.copy()
+        self.assertEqual(copied_pos.name, self.basic_config.name + ' (copy)')
+
+    def test_cash_assignment_prefers_unused_then_creates(self):
+        """If one unused cash method is available, it should be assigned, and a new one created for the other copy."""
+        config2 = self.basic_config.copy()
+        cash_pm = self.basic_config.payment_method_ids.filtered(lambda pm: pm.is_cash_count)
+        cash_pm[0].config_ids = False
+        unused_cash_pm = cash_pm[0]
+        copied_configs = (self.basic_config + config2).copy()
+
+        self.assertEqual(len(copied_configs), 2)
+        copied_methods = copied_configs.mapped('payment_method_ids')
+
+        self.assertEqual(len(copied_methods), 2)
+        self.assertIn(unused_cash_pm, copied_methods)
+
+        new_methods = copied_methods - unused_cash_pm
+        self.assertEqual(len(new_methods), 1)
+        self.assertTrue(all(pm.is_cash_count for pm in new_methods))
+
+    def test_no_cash_available_creates_new_one(self):
+        """If no cash methods exist, a new one should be created when POS is copied."""
+        count = self.env['pos.payment.method'].search_count([('is_cash_count', '=', True), ('config_ids', '=', False)])
+        self.assertEqual(count, 0, "There should be no cash payment methods available.")
+
+        copy = self.basic_config.copy()
+        self.assertEqual(len(copy.payment_method_ids), 1)
+        self.assertTrue(copy.payment_method_ids.is_cash_count)
