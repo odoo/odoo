@@ -12,6 +12,17 @@ const { DateTime } = luxon;
 
 const DATE_OPTIONS = [
     {
+        id: "today",
+        type: "relative",
+        label: RELATIVE_PERIODS["today"],
+    },
+    {
+        id: "yesterday",
+        type: "relative",
+        label: RELATIVE_PERIODS["yesterday"],
+        separator: true,
+    },
+    {
         id: "last_7_days",
         type: "relative",
         label: RELATIVE_PERIODS["last_7_days"],
@@ -26,6 +37,16 @@ const DATE_OPTIONS = [
         type: "relative",
         label: RELATIVE_PERIODS["last_90_days"],
         separator: true,
+    },
+    {
+        id: "month_to_date",
+        type: "relative",
+        label: RELATIVE_PERIODS["month_to_date"],
+    },
+    {
+        id: "last_month",
+        type: "relative",
+        label: RELATIVE_PERIODS["last_month"],
     },
     {
         id: "month",

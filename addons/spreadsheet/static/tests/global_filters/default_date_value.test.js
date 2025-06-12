@@ -74,16 +74,20 @@ test("All the options should be displayed", async function () {
     });
     await contains("input").click();
     const options = fixture.querySelectorAll(".o-dropdown-item");
-    expect(options.length).toBe(9);
-    expect(options[0].textContent).toBe("Last 7 Days");
-    expect(options[1].textContent).toBe("Last 30 Days");
-    expect(options[2].textContent).toBe("Last 90 Days");
-    expect(options[3].textContent).toBe("Current Month");
-    expect(options[4].textContent).toBe("Current Quarter");
-    expect(options[5].textContent).toBe("Year to Date");
-    expect(options[6].textContent).toBe("Last 12 Months");
-    expect(options[7].textContent).toBe("Current Year");
-    expect(options[8].textContent).toBe("All time");
+    expect(options.length).toBe(13);
+    expect(options[0].textContent).toBe("Today");
+    expect(options[1].textContent).toBe("Yesterday");
+    expect(options[2].textContent).toBe("Last 7 Days");
+    expect(options[3].textContent).toBe("Last 30 Days");
+    expect(options[4].textContent).toBe("Last 90 Days");
+    expect(options[5].textContent).toBe("Month to Date");
+    expect(options[6].textContent).toBe("Last Month");
+    expect(options[7].textContent).toBe("Current Month");
+    expect(options[8].textContent).toBe("Current Quarter");
+    expect(options[9].textContent).toBe("Year to Date");
+    expect(options[10].textContent).toBe("Last 12 Months");
+    expect(options[11].textContent).toBe("Current Year");
+    expect(options[12].textContent).toBe("All time");
 });
 
 test("Can select a relative period", async function () {

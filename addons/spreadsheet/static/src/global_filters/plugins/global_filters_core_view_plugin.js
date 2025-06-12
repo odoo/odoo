@@ -336,9 +336,13 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
                 const quarter = Math.floor(new Date().getMonth() / 3) + 1;
                 return { type: "quarter", year, quarter };
             }
+            case "today":
+            case "yesterday":
             case "last_7_days":
             case "last_30_days":
             case "last_90_days":
+            case "month_to_date":
+            case "last_month":
             case "last_12_months":
             case "year_to_date":
                 return {
