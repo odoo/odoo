@@ -438,7 +438,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 ('visibility', '=', 'visible'),
             ]))
         else:
-            attributes = lazy(lambda: ProductAttribute.browse(attribute_ids))
+            attributes = lazy(lambda: ProductAttribute.browse(attribute_ids).sorted())
 
         if website.viewref('website_sale.products_list_view').active:
             layout_mode = 'list'
