@@ -1141,6 +1141,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.product_b.write({
             'uom_id': uom_m_id,
             'uom_po_id': uom_m_id,
+            'type': 'consu'
         })
 
         so = self._get_new_sale_order(product=self.product_a)
