@@ -157,7 +157,7 @@ export class DiscussCommandPalette {
         if (self.type !== "guest") {
             personas = Object.values(this.store.Persona.records).filter(
                 (persona) =>
-                    persona.isInternalUser &&
+                    persona.main_user_id?.share === false &&
                     cleanTerm(persona.displayName).includes(this.cleanedTerm) &&
                     (!filtered || !filtered.has(persona))
             );

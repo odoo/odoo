@@ -72,7 +72,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.partner_root._get_im_status_access_token(),
-                    "isInternalUser": True,
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
@@ -89,10 +88,15 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "is_public": False,
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.write_date),
-                }
+                },
             ),
         )
-
+        self.assertEqual(
+            data["res.users"],
+            self._filter_users_fields(
+                {"id": self.user_root.id, "share": False},
+            ),
+        )
         # ensure visitor info are correct with real user
         self.authenticate(test_user.login, self.password)
         data = self.make_jsonrpc_request('/im_livechat/get_session', {
@@ -124,7 +128,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.partner_root._get_im_status_access_token(),
-                    "isInternalUser": True,
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
@@ -139,7 +142,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "im_status": "offline",
                     "im_status_access_token": test_user.partner_id._get_im_status_access_token(),
                     "isAdmin": False,
-                    "isInternalUser": True,
                     "is_public": False,
                     "main_user_id": test_user.id,
                     "name": "Roger",
@@ -160,6 +162,13 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "user_livechat_username": "Michel Operator",
                     "write_date": fields.Datetime.to_string(operator.write_date),
                 },
+            ),
+        )
+        self.assertEqual(
+            data["res.users"],
+            self._filter_users_fields(
+                {"id": self.user_root.id, "share": False},
+                {"id": test_user.id, "share": False},
             ),
         )
         self.assertEqual(
@@ -222,7 +231,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.partner_id.id,
                     "im_status": "bot",
                     "im_status_access_token": self.partner_root._get_im_status_access_token(),
-                    "isInternalUser": True,
                     "is_company": False,
                     "main_user_id": self.user_root.id,
                     "name": "OdooBot",
@@ -237,7 +245,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "im_status": "offline",
                     "im_status_access_token": operator.partner_id._get_im_status_access_token(),
                     "isAdmin": False,
-                    "isInternalUser": True,
                     "is_public": False,
                     "main_user_id": operator.id,
                     "name": "Michel",
@@ -266,6 +273,13 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "channel_id": {"id": channel_info["id"], "model": "discuss.channel"},
                 },
             ],
+        )
+        self.assertEqual(
+            data["res.users"],
+            self._filter_users_fields(
+                {"id": self.user_root.id, "share": False},
+                {"id": operator.id, "share": False},
+            ),
         )
 
     def _open_livechat_discuss_channel(self):

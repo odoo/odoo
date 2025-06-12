@@ -119,7 +119,6 @@ export class Persona extends Record {
     /** @type {'email' | 'inbox'} */
     notification_preference;
     isAdmin = false;
-    isInternalUser = false;
     write_date = fields.Datetime();
     group_ids = fields.Many("res.groups", { inverse: "personas" });
 
@@ -129,7 +128,7 @@ export class Persona extends Record {
 
     get avatarUrl() {
         const accessTokenParam = {};
-        if (!this.store.self.isInternalUser) {
+        if (this.store.self.main_user_id?.share !== false) {
             accessTokenParam.access_token = this.avatar_128_access_token;
         }
         if (this.type === "partner") {
