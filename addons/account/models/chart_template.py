@@ -35,6 +35,13 @@ SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'G
                   'CD', 'SN', 'TD', 'TG']
 
 
+def get_python_translation(module, lang, value):
+    value_translated = code_translations.get_python_translations(module, lang).get(value)
+    if not value_translated:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
+        value_translated = code_translations.get_python_translations(module, lang.split('_')[0]).get(value)
+    return value_translated
+
+
 def preserve_existing_tags_on_taxes(env, module):
     ''' This is a utility function used to preserve existing previous tags during upgrade of the module.'''
     xml_records = env['ir.model.data'].search([('model', '=', 'account.account.tag'), ('module', 'like', module)])
@@ -1455,9 +1462,12 @@ class AccountChartTemplate(models.AbstractModel):
                         continue
                     value_translated = None
                     for code_module in ([module, 'account'] if module != 'account' else ['account']):
-                        value_translated = code_translations.get_python_translations(code_module, lang).get(value_en_US)
-                        if not value_translated:  # manage generic locale (i.e. `fr` instead of `fr_BE`)
-                            value_translated = code_translations.get_python_translations(code_module, lang.split('_')[0]).get(value_en_US)
+                        value_translated = get_python_translation(code_module, lang, value_en_US)
+                        if not value_translated and (re.match(r"<div>.*</div>", value_en_US)):
+                            # Manage HTML fields sanitized when no html tag was provided
+                            value_translated = get_python_translation(code_module, lang, value_en_US[5:-6])
+                            if value_translated:
+                                value_translated = f"<div>{value_translated}</div>"
                         if value_translated:
                             translation_importer.model_translations[mname][field][xml_id][lang] = value_translated
                             break
