@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
-from odoo.osv import expression
+from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class ResPartner(models.Model):
@@ -30,7 +30,7 @@ class ResPartner(models.Model):
             ['parent_id'],
         )
         sale_order_groups = self.env['sale.order']._read_group(
-            domain=expression.AND([self._get_sale_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
+            domain=Domain.AND([self._get_sale_order_domain_count(), [('partner_id', 'in', all_partners.ids)]]),
             groupby=['partner_id'], aggregates=['__count']
         )
         self_ids = set(self._ids)
@@ -47,14 +47,14 @@ class ResPartner(models.Model):
             return data_list
         for partner in self.filtered('sale_order_count'):
             data_list[partner.id].append(
-                {'iconClass': 'fa-usd', 'value': partner.sale_order_count, 'label': _('Sale Orders')}
+                {'iconClass': 'fa-usd', 'value': partner.sale_order_count, 'label': self.env._('Sale Orders')}
             )
         return data_list
 
     def _has_order(self, partner_domain):
         self.ensure_one()
         sale_order = self.env['sale.order'].sudo().search(
-            expression.AND([
+            Domain.AND([
                 partner_domain,
                 [
                     ('state', 'in', ('sent', 'sale')),

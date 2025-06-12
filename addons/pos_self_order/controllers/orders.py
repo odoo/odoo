@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 from odoo import http, fields
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import float_round
-from odoo.osv import expression
 from werkzeug.exceptions import NotFound, BadRequest, Unauthorized
+
 
 class PosSelfOrderController(http.Controller):
     @http.route("/pos-self-order/process-order/<device_type>/", auth="public", type="jsonrpc", website=True)
@@ -151,22 +151,19 @@ class PosSelfOrderController(http.Controller):
         pos_config = self._verify_pos_config(access_token)
         session = pos_config.current_session_id
         table = pos_config.env["restaurant.table"].search([('identifier', '=', table_identifier)], limit=1)
-        domain = False
 
         if not table_identifier:
-            domain = [(False, '=', True)]
+            domain = Domain.FALSE
         else:
-            domain = ['&', '&',
+            domain = Domain([
                 ('table_id', '=', table.id),
                 ('state', '=', 'draft'),
                 ('access_token', 'not in', [data.get('access_token') for data in order_access_tokens])
-            ]
+            ])
 
         for data in order_access_tokens:
-            domain = expression.OR([domain, ['&',
-                ('access_token', '=', data.get('access_token')),
-                ('write_date', '>', data.get('write_date'))
-            ]])
+            domain |= Domain('access_token', '=', data.get('access_token')) \
+                & Domain('write_date', '>', data.get('write_date'))
 
         orders = session.order_ids.filtered_domain(domain)
         if not orders:
