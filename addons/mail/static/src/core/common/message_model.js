@@ -166,7 +166,7 @@ export class Message extends Record {
      * @returns {boolean}
      */
     get allowsEdition() {
-        return this.store.self.isAdmin || this.isSelfAuthored;
+        return this.store.self.main_user_id?.is_admin || this.isSelfAuthored;
     }
 
     get bubbleColor() {

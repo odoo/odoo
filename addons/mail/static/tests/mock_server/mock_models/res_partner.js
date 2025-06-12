@@ -247,7 +247,7 @@ export class ResPartner extends webModels.ResPartner {
                             "avatar_128",
                             "country_id",
                             "display_name",
-                            "isAdmin",
+                            "is_admin",
                             "notification_type",
                             "user",
                         ].includes(field)
@@ -282,8 +282,8 @@ export class ResPartner extends webModels.ResPartner {
                 if (mainUser) {
                     store.add(ResUsers.browse(mainUser.id), makeKwArgs({ fields: ["share"] }));
                 }
-                if (fields.includes("isAdmin")) {
-                    data.isAdmin = true; // mock server simplification
+                if (mainUser && fields.includes("is_admin")) {
+                    store.add(ResUsers.browse(mainUser.id), { is_admin: true }); // mock server simplification
                 }
                 if (fields.includes("notification_type")) {
                     data.notification_preference = mainUser.notification_type;

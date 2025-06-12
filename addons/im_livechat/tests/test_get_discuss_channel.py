@@ -141,7 +141,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": test_user.partner_id.id,
                     "im_status": "offline",
                     "im_status_access_token": test_user.partner_id._get_im_status_access_token(),
-                    "isAdmin": False,
                     "is_public": False,
                     "main_user_id": test_user.id,
                     "name": "Roger",
@@ -168,7 +167,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["res.users"],
             self._filter_users_fields(
                 {"id": self.user_root.id, "share": False},
-                {"id": test_user.id, "share": False},
+                {"id": test_user.id, "is_admin": False, "share": False},
             ),
         )
         self.assertEqual(
@@ -244,7 +243,6 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": operator.partner_id.id,
                     "im_status": "offline",
                     "im_status_access_token": operator.partner_id._get_im_status_access_token(),
-                    "isAdmin": False,
                     "is_public": False,
                     "main_user_id": operator.id,
                     "name": "Michel",
@@ -278,7 +276,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             data["res.users"],
             self._filter_users_fields(
                 {"id": self.user_root.id, "share": False},
-                {"id": operator.id, "share": False},
+                {"id": operator.id, "is_admin": False, "share": False},
             ),
         )
 

@@ -71,6 +71,7 @@ export class Store extends BaseStore {
     /** This is the current logged partner / guest */
     self_partner = fields.One("Persona");
     self_guest = fields.One("Persona");
+    /** @returns {import("models").Persona} */
     get self() {
         return this.self_partner || this.self_guest;
     }

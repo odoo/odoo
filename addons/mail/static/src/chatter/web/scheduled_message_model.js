@@ -32,11 +32,11 @@ export class ScheduledMessage extends Record {
     thread = fields.One("Thread");
     // Editors of the records can delete scheduled messages
     get deletable() {
-        return this.store.self.isAdmin || this.thread.hasWriteAccess;
+        return this.store.self.main_user_id?.is_admin || this.thread.hasWriteAccess;
     }
 
     get editable() {
-        return this.store.self.isAdmin || this.isSelfAuthored;
+        return this.store.self.main_user_id?.is_admin || this.isSelfAuthored;
     }
 
     get isSelfAuthored() {
