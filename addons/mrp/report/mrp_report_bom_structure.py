@@ -407,7 +407,7 @@ class ReportBomStructure(models.AbstractModel):
             if byproduct._skip_byproduct_line(product):
                 continue
             line_quantity = (bom_quantity / (bom.product_qty or 1.0)) * byproduct.product_qty
-            cost_share = byproduct.cost_share / 100
+            cost_share = byproduct.cost_share / 100 if byproduct.product_qty > 0 else 0
             byproduct_cost_portion += cost_share
             price = byproduct.product_id.uom_id._compute_price(byproduct.product_id.with_company(company).standard_price, byproduct.product_uom_id) * line_quantity
             byproducts.append({
