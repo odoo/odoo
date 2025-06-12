@@ -3727,6 +3727,45 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
         self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
 
+    def test_out_invoice_caba_move_name(self):
+        """Tests whether the `move_name` on account move lines is correctly computed for tax cash basis entries."""
+
+        self.env.company.tax_exigibility = True
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+            'reconcile': True,
+        })
+        caba_tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(caba_tax.ids)],
+                })
+            ],
+        })
+        invoice.action_post()
+
+        payment_register = Form(self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=invoice.ids
+        )).save()
+        payment_register.action_create_payments()
+
+        caba_move = invoice.tax_cash_basis_created_move_ids
+        self.assertRecordValues(
+            caba_move.line_ids,
+            [{'move_name': caba_move.name}] * len(caba_move.line_ids)
+        )
 
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a

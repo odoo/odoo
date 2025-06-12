@@ -5542,6 +5542,11 @@ class AccountMove(models.Model):
     # HELPER METHODS
     # -------------------------------------------------------------------------
 
+    def _get_fnames_to_flush_for_locked_increment(self):
+        fnames = super()._get_fnames_to_flush_for_locked_increment()
+        fnames.extend(['made_sequence_gap', 'posted_before'])
+        return fnames
+
     @api.model
     def get_invoice_types(self, include_receipts=False):
         return self.get_sale_types(include_receipts) + self.get_purchase_types(include_receipts)
