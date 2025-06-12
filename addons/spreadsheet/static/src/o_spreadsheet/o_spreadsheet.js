@@ -3935,19 +3935,26 @@
                 .filter(({ row }) => !this.env.model.getters.isRowHidden(sheetId, row))
                 .map(({ col, row }) => { var _a; return (_a = this.env.model.getters.getCell(sheetId, col, row)) === null || _a === void 0 ? void 0 : _a.formattedValue; });
             const filterValues = this.env.model.getters.getFilterValues(sheetId, position.col, position.row);
-            const strValues = [...cellValues, ...filterValues];
-            const normalizedFilteredValues = filterValues.map(toLowerCase);
-            // Set with lowercase values to avoid duplicates
-            const normalizedValues = [...new Set(strValues.map(toLowerCase))];
-            const sortedValues = normalizedValues.sort((val1, val2) => val1.localeCompare(val2, undefined, { numeric: true, sensitivity: "base" }));
-            return sortedValues.map((normalizedValue) => {
-                const checked = normalizedFilteredValues.findIndex((filteredValue) => filteredValue === normalizedValue) ===
-                    -1;
-                return {
-                    checked,
-                    string: strValues.find((val) => toLowerCase(val) === normalizedValue) || "",
-                };
-            });
+            const normalizedFilteredValues = new Set(filterValues.map(toLowerCase));
+            const set = new Set();
+            const values = [];
+            const addValue = (value) => {
+                const normalizedValue = toLowerCase(value);
+                if (!set.has(normalizedValue)) {
+                    values.push({
+                        string: value || "",
+                        checked: !normalizedFilteredValues.has(normalizedValue),
+                        normalizedValue,
+                    });
+                    set.add(normalizedValue);
+                }
+            };
+            cellValues.forEach(addValue);
+            filterValues.forEach(addValue);
+            return values.sort((val1, val2) => val1.normalizedValue.localeCompare(val2.normalizedValue, undefined, {
+                numeric: true,
+                sensitivity: "base",
+            }));
         }
         checkValue(value) {
             var _a;
@@ -26066,7 +26073,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         handleMissingValue(parentElement, missingElementName, optionalArgs) {
             if (optionalArgs === null || optionalArgs === void 0 ? void 0 : optionalArgs.required) {
-                if (optionalArgs === null || optionalArgs === void 0 ? void 0 : optionalArgs.default) {
+                if ((optionalArgs === null || optionalArgs === void 0 ? void 0 : optionalArgs.default) !== undefined) {
                     this.warningManager.addParsingWarning(`Missing required ${missingElementName} in element <${parentElement.tagName}> of ${this.currentFile}, replacing it by the default value ${optionalArgs.default}`);
                 }
                 else {
@@ -34031,9 +34038,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const filteredValues = (_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[filter.id]) === null || _b === void 0 ? void 0 : _b.map(toLowerCase);
                 if (!filteredValues || !filter.filteredZone)
                     continue;
+                const filteredValuesSet = new Set(filteredValues);
                 for (let row = filter.filteredZone.top; row <= filter.filteredZone.bottom; row++) {
                     const value = this.getCellValueAsString(sheetId, filter.col, row);
-                    if (filteredValues.includes(value)) {
+                    if (filteredValuesSet.has(value)) {
                         hiddenRows.add(row);
                     }
                 }
@@ -43857,9 +43865,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.71';
-    __info__.date = '2025-05-13T17:55:53.089Z';
-    __info__.hash = '2ff9f1a';
+    __info__.version = '16.0.72';
+    __info__.date = '2025-06-12T10:50:57.982Z';
+    __info__.hash = 'fb0036b';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
