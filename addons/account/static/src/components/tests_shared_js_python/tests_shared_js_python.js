@@ -20,10 +20,16 @@ export class TestsSharedJsPython extends Component {
 
     processTest(params) {
         if (params.test === "taxes_computation") {
+            let filter_tax_function = null;
+            if (params.excluded_tax_ids && params.excluded_tax_ids.length) {
+                filter_tax_function = (tax) => !params.excluded_tax_ids.includes(tax.id);
+            }
+
             const kwargs = {
                 product: params.product,
                 precision_rounding: params.precision_rounding,
                 rounding_method: params.rounding_method,
+                filter_tax_function: filter_tax_function,
             };
             const results = {
                 results: accountTaxHelpers.get_tax_details(
