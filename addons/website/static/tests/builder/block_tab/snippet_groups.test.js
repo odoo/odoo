@@ -15,13 +15,22 @@ import {
 
 defineWebsiteModels();
 
-function getBasicSection(content, { name, withColoredLevelClass = false } = {}) {
-    const className = withColoredLevelClass ? "s_test o_colored_level" : "s_test";
-    return unformat(`<section class="${className}" data-snippet="s_test" ${
-        name ? `data-name="${name}"` : ""
-    }>
-        <div class="test_a o-paragraph">${content}</div>
-    </section>`);
+function getBasicSection(
+    content,
+    { name, snippet = "s_test", withColoredLevelClass = false, additionalClassOnRoot = "" } = {}
+) {
+    let classes = snippet;
+    if (withColoredLevelClass) {
+        classes += " o_colored_level";
+    }
+    if (additionalClassOnRoot) {
+        classes += ` ${additionalClassOnRoot}`;
+    }
+    return unformat(
+        `<section class="${classes}" data-snippet="${snippet}" ${
+            name ? `data-name="${name}"` : ""
+        }><div class="test_a o-paragraph">${content}</div></section>`
+    );
 }
 
 let snippets;
@@ -292,6 +301,77 @@ test("search snippet in add snippet dialog", async () => {
     ).toEqual(
         [snippetsDescriptionProcessed[1], snippetsDescriptionProcessed[2]].map((s) => s.content)
     );
+});
+
+test("search snippet by class", async () => {
+    const snippetsDescription = (withName = false) => [
+        {
+            name: "foo_bar",
+            groupName: "a",
+            content: getBasicSection("content 1", {
+                name: "foo_bar",
+                snippet: "s_foo_bar",
+                additionalClassOnRoot: "s_additional_class",
+            }),
+            keywords: [],
+        },
+        {
+            name: "foo",
+            groupName: "a",
+            content: getBasicSection(`<div class="s_class_on_child">content 2</div>`, {
+                name: "foo",
+                snippet: "s_foo",
+            }),
+            keywords: [],
+        },
+        {
+            name: "bar",
+            groupName: "a",
+            content: getBasicSection("content 3", {
+                name: "bar",
+                snippet: "s_bar",
+            }),
+            keywords: [],
+        },
+    ];
+    const snippetsDescriptionProcessed = snippetsDescription(true);
+
+    await setupWebsiteBuilder("<div><p>Text</p></div>", {
+        snippets: {
+            snippet_groups: [
+                '<div name="A" data-oe-thumbnail="a.svg" data-oe-snippet-id="123" data-o-snippet-group="a"><section data-snippet="s_snippet_group"></section></div>',
+            ],
+            snippet_structure: snippetsDescription().map((snippetDesc) =>
+                getSnippetStructure(snippetDesc)
+            ),
+        },
+    });
+    await click(
+        queryFirst(
+            ".o-snippets-menu #snippet_groups .o_snippet_thumbnail .o_snippet_thumbnail_area"
+        )
+    );
+    await waitForSnippetDialog();
+
+    // Search among classes of root node
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("s_bar");
+    expect(
+        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap")
+            .innerHTML
+    ).toEqual(snippetsDescriptionProcessed[2].content);
+
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("s_additional_class");
+    expect(
+        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap")
+            .innerHTML
+    ).toEqual(snippetsDescriptionProcessed[0].content);
+
+    // Search among classes of child nodes
+    await contains(".o_add_snippet_dialog aside input[type='search']").edit("s_class_on_child");
+    expect(
+        queryFirst(".o_add_snippet_dialog .o_add_snippet_iframe:iframe .o_snippet_preview_wrap")
+            .innerHTML
+    ).toEqual(snippetsDescriptionProcessed[1].content);
 });
 
 test("add snippet dialog with imagePreview", async () => {
