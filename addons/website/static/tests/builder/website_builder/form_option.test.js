@@ -114,3 +114,35 @@ test("undo redo add form field", async () => {
     undo(editor);
     expect(":iframe span.s_website_form_label_content").toHaveCount(0);
 });
+
+test("empty placeholder selection input for selection field", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section class="s_website_form"><form data-model_name="mail.mail">
+            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
+                <div class="row s_col_no_resize s_col_no_bgcolor">
+                    <label class="col-form-label col-sm-auto s_website_form_label" for="ozp7022vqhe">
+                        <span class="s_website_form_label_content">Selection Field</span>
+                    </label>
+                    <div class="col-sm">
+                        <select class="form-select s_website_form_input" name="Phone Number" id="ozp7022vqhe">
+                            <option id="ozp7022vqhe0" value="Option 1">Option 1</option>
+                            <option id="ozp7022vqhe1" value="Option 2">Option 2</option>
+                            <option id="ozp7022vqhe2" value="Option 3">Option 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="s_website_form_submit">
+                <div class="s_website_form_label"/>
+                <a>Submit</a>
+            </div>
+        </form></section>`
+    );
+    getEditor();
+    expect(":iframe select option").toHaveCount(3);
+    await contains(":iframe .s_website_form_field[data-type='many2one'").click();
+    await contains(".o_we_table_wrapper input[type='checkbox']").click();
+    expect(":iframe select option").toHaveCount(4);
+    expect(":iframe select option:eq(0)").toHaveText("");
+});
