@@ -731,7 +731,7 @@ export class ListRenderer extends Component {
             digits: attrs.digits ? JSON.parse(attrs.digits) : field.digits,
             escape: true,
         };
-        if (field.type === "monetary" || widget === "monetary") {
+        if (field.type === "monetary") {
             formatOptions.currencyId = group.aggregates[field.currency_field][0];
         }
         return {
