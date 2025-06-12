@@ -3,9 +3,13 @@ import { DomainListRepr } from "@web/core/domain";
 
 declare module "@spreadsheet" {
     export type DateDefaultValue =
+        | "today"
+        | "yesterday"
         | "last_7_days"
         | "last_30_days"
         | "last_90_days"
+        | "month_to_date"
+        | "last_month"
         | "this_month"
         | "this_quarter"
         | "last_12_months"
@@ -31,7 +35,16 @@ declare module "@spreadsheet" {
 
     export interface RelativeDateValue {
         type: "relative";
-        period: "last_7_days" | "last_30_days" | "last_90_days" | "last_12_months" | "year_to_date";
+        period:
+            | "today"
+            | "yesterday"
+            | "last_7_days"
+            | "last_30_days"
+            | "last_90_days"
+            | "month_to_date"
+            | "last_month"
+            | "last_12_months"
+            | "year_to_date";
     }
 
     export interface DateRangeValue {
