@@ -54,6 +54,16 @@ export class ImageCrop extends Component {
         useExternalListener(this.document, "keydown", this.onDocumentKeydown, {
             capture: true,
         });
+        useExternalListener(
+            this.document,
+            "selectionchange",
+            () => {
+                if (!this.props.media.isConnected) {
+                    this.closeCropper();
+                }
+            },
+            { capture: true }
+        );
 
         onMounted(() => {
             this.hasModifiedImageClass = this.media.classList.contains("o_modified_image_to_save");
