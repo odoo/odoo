@@ -128,8 +128,8 @@ class FleetVehicle(models.Model):
     car_value = fields.Float(string="Catalog Value (VAT Incl.)", tracking=True)
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
-    plan_to_change_car = fields.Boolean()
-    plan_to_change_bike = fields.Boolean()
+    plan_to_change_car = fields.Boolean(tracking=True)
+    plan_to_change_bike = fields.Boolean(tracking=True)
     vehicle_type = fields.Selection(related='model_id.vehicle_type')
     frame_type = fields.Selection([('diamant', 'Diamant'), ('trapez', 'Trapez'), ('wave', 'Wave')], string="Bike Frame Type")
     electric_assistance = fields.Boolean(compute='_compute_electric_assistance', store=True, readonly=False)
@@ -366,32 +366,16 @@ class FleetVehicle(models.Model):
                 ]),
         ]
 
-    def _clean_vals_internal_user(self, vals):
-        # Fleet administrator may not have rights to write on partner
-        # related fields when the driver_id is a res.user.
-        # This trick is used to prevent access right error.
-        su_vals = {}
-        if self.env.su:
-            return su_vals
-        if 'plan_to_change_car' in vals:
-            su_vals['plan_to_change_car'] = vals.pop('plan_to_change_car')
-        if 'plan_to_change_bike' in vals:
-            su_vals['plan_to_change_bike'] = vals.pop('plan_to_change_bike')
-        return su_vals
-
     @api.model_create_multi
     def create(self, vals_list):
-        ptc_values = [self._clean_vals_internal_user(vals) for vals in vals_list]
         vehicles = super().create(vals_list)
         to_update_drivers_cars = set()
         to_update_drivers_bikes = set()
         state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
-        for vehicle, vals, ptc_value in zip(vehicles, vals_list, ptc_values):
-            if ptc_value:
-                vehicle.sudo().write(ptc_value)
-            if 'driver_id' in vals and vals['driver_id']:
+        for vehicle, vals in zip(vehicles, vals_list):
+            if vals.get('driver_id'):
                 vehicle.create_driver_history(vals)
-            if 'future_driver_id' in vals and vals['future_driver_id']:
+            if vals.get('future_driver_id'):
                 state_id = vehicle.state_id.id
                 if not state_waiting_list or state_waiting_list.id != state_id:
                     future_driver = vals['future_driver_id']
@@ -399,21 +383,16 @@ class FleetVehicle(models.Model):
                         to_update_drivers_bikes.add(future_driver)
                     elif vehicle.vehicle_type == 'car':
                         to_update_drivers_cars.add(future_driver)
-        car_domain, bike_domain = Domain.TRUE, Domain.TRUE
         if to_update_drivers_cars:
-            car_domain = Domain('driver_id', 'in', to_update_drivers_cars) & Domain('vehicle_type', '=', 'car')
+            self.search([
+                ('driver_id', 'in', to_update_drivers_cars),
+                ('vehicle_type', '=', 'car'),
+            ]).plan_to_change_car = True
         if to_update_drivers_bikes:
-            bike_domain = Domain('driver_id', 'in', to_update_drivers_bikes) & Domain('vehicle_type', '=', 'bike')
-        if car_domain or bike_domain:
-            vehicle_read_group = dict(self.env['fleet.vehicle']._read_group(
-                domain=car_domain | bike_domain,
-                groupby=['vehicle_type'],
-                aggregates=['id:recordset']
-            ))
-            if 'bike' in vehicle_read_group:
-                vehicle_read_group['bike'].write({'plan_to_change_bike': True})
-            if 'car' in vehicle_read_group:
-                vehicle_read_group['car'].write({'plan_to_change_car': True})
+            self.search([
+                ('driver_id', 'in', to_update_drivers_bikes),
+                ('vehicle_type', '=', 'bike'),
+            ]).plan_to_change_bike = True
         return vehicles
 
     def write(self, vals):
@@ -450,9 +429,6 @@ class FleetVehicle(models.Model):
             self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
             self.env['fleet.vehicle.log.services'].search([('vehicle_id', 'in', self.ids)]).active = False
 
-        su_vals = self._clean_vals_internal_user(vals)
-        if su_vals:
-            self.sudo().write(su_vals)
         res = super(FleetVehicle, self).write(vals)
         return res
 
