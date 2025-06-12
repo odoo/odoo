@@ -59,8 +59,10 @@ patch(PosOrderline.prototype, {
     },
     ignoreLoyaltyPoints({ program }) {
         return (
-            ["gift_card", "ewallet"].includes(program.program_type) &&
-            this._e_wallet_program_id?.id !== program.id
+            (["gift_card", "ewallet"].includes(program.program_type) &&
+                this._e_wallet_program_id?.id !== program.id) ||
+            this.settled_invoice_id ||
+            this.settled_order_id
         );
     },
     isGiftCardOrEWalletReward() {

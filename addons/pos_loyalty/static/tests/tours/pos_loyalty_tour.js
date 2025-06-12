@@ -2,6 +2,7 @@ import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util"
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as SelectionPopup from "@point_of_sale/../tests/generic_helpers/selection_popup_util";
+import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
@@ -590,5 +591,18 @@ registry.category("web_tour.tours").add("test_two_variant_same_discount", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("Sofa"),
             Chrome.clickBtn("Add"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartnerOptions("AAA Partner"),
+            PartnerList.clickDropDownItemText("Settle invoices"),
+            PartnerList.clickSettleOrderName("TSJ/"),
+            ProductScreen.totalAmountIs("10.00"),
         ].flat(),
 });

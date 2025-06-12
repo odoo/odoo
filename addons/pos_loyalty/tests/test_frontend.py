@@ -2819,3 +2819,62 @@ class TestUi(TestPointOfSaleHttpCommon):
             "test_buy_x_get_y_reward_qty",
             login="pos_user"
         )
+
+    def test_settle_dont_give_points_again(self):
+        """
+        Tests that when settling an order that has been partially paid, it does not give the loyalty
+        points again. All of them should be given during the first transaction.
+        """
+        if self.main_pos_config.current_session_id:
+            self.main_pos_config.current_session_id.action_pos_session_closing_control()
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'promotion',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'money',
+                'reward_point_amount': 1,
+                'minimum_qty': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'discount': 1,
+                'discount_mode': 'per_point',
+            })],
+        })
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.customer_account_payment_method = self.env['pos.payment.method'].create({
+            'name': 'Customer Account',
+            'split_transactions': True,
+        })
+        self.main_pos_config.write({
+            'payment_method_ids': [(4, self.customer_account_payment_method.id, 0)],
+        })
+        self.main_pos_config.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'partner_id': partner_aaa.id,
+            'lines': [Command.create({
+                'product_id': self.wall_shelf.product_variant_id.id,
+                'price_unit': 10,
+                'discount': 0,
+                'qty': 1,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_paid': 10.0,
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': True,
+        })
+        payment_context = {"active_id": order.id, "active_ids": order.ids}
+        self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': 10.0,
+            'payment_method_id': self.customer_account_payment_method.id,
+        }).check()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_settle_dont_give_points_again', login="accountman")
