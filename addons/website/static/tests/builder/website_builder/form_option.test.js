@@ -1,5 +1,6 @@
+import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { contains, defineModels, models } from "@web/../tests/web_test_helpers";
+import { contains, defineModels, models, onRpc } from "@web/../tests/web_test_helpers";
 import { defineWebsiteModels, setupWebsiteBuilder } from "../website_helpers";
 import { patch } from "@web/core/utils/patch";
 import { IrModel } from "@web/../tests/_framework/mock_server/mock_models/ir_model";
@@ -82,4 +83,34 @@ test("change action of form changes available options", async () => {
 
     expect("span:contains('Applied Job')").toHaveCount(0);
     expect("div:has(>span:contains('URL')) + div input").toHaveValue("/contactus-thank-you");
+});
+
+test("undo redo add form field", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section class="s_website_form"><form data-model_name="mail.mail">
+            <div class="s_website_form_field"><label class="s_website_form_label" for="contact1">Name</label><input id="contact1" class="s_website_form_input"/></div>
+            <div class="s_website_form_submit">
+                <div class="s_website_form_label"/>
+                <a>Submit</a>
+            </div>
+        </form></section>`
+    );
+    const editor = getEditor();
+
+    await contains(":iframe section").click();
+    await contains("button[title='Add a new field at the end']").click();
+
+    expect(":iframe span.s_website_form_label_content").toHaveCount(1);
+    undo(editor);
+    redo(editor);
+    expect(":iframe span.s_website_form_label_content").toHaveCount(1);
+
+    await contains(":iframe span.s_website_form_label_content").click();
+    await contains("button[title='Add a new field after this one']").click();
+
+    expect(":iframe span.s_website_form_label_content").toHaveCount(2);
+    undo(editor);
+    undo(editor);
+    expect(":iframe span.s_website_form_label_content").toHaveCount(0);
 });
