@@ -942,7 +942,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         customer_ref = sale.client_order_ref or "NA"
         country = partner.country_id.name or "Australia"
         country_code = partner.country_id.code or "AU"
-        carrier = sale.carrier or 'AUSPOST'
+        carrier = sale.carrier
 
         to_address = {
             "google_formated_address": None,
@@ -1382,7 +1382,7 @@ class PackDeliveryReceiptWizard(models.TransientModel):
         order_number = sale.name or picking.name
         customer_ref = sale.client_order_ref or "NA"
         country_code = partner.country_id.code or "AU"
-        carrier = sale.carrier or "AUSPOST"
+        carrier = sale.carrier
 
         to_address = {
             "google_formated_address": None,
