@@ -121,6 +121,7 @@ export class ListPlugin extends Plugin {
         shift_tab_overrides: this.handleShiftTab.bind(this),
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         node_to_insert_processors: this.processNodeToInsert.bind(this),
+        before_handle_insert_within_pre_processors: this.insertListWithinPre.bind(this),
     };
 
     setup() {
@@ -835,6 +836,30 @@ export class ListPlugin extends Plugin {
         }
 
         return true;
+    }
+
+    insertListWithinPre(node) {
+        const listItems = node.querySelectorAll("li:not(.oe-nested)");
+        const getListNestingLvl = (node) => ancestors(node).filter(isListElement).length - 1;
+        for (const li of listItems) {
+            const lvl = getListNestingLvl(li);
+            const list = closestElement(li, "ul, ol");
+            const listMode = this.getListMode(list);
+            let char;
+            if (listMode === "CL") {
+                char = "[] ";
+            } else if (listMode === "OL") {
+                const childs = childNodes(li.parentElement).filter(
+                    (n) => !n.classList.contains("oe-nested")
+                );
+                char = `${childs.indexOf(li) + 1}. `;
+            } else {
+                char = "* ";
+            }
+            const prefix = " ".repeat(lvl * 4) + char;
+            li.prepend(this.document.createTextNode(prefix));
+        }
+        return node;
     }
 
     // --------------------------------------------------------------------------
