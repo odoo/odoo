@@ -1600,8 +1600,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "id": self.env.user.partner_id.id,
                                     "isInternalUser": True,
                                     "is_company": False,
+                                    "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
-                                    "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),
@@ -1713,8 +1713,8 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "id": self.env.user.partner_id.id,
                                     "isInternalUser": True,
                                     "is_company": False,
+                                    "main_user_id": self.env.user.id,
                                     "name": "OdooBot",
-                                    "userId": self.env.user.id,
                                     "write_date": fields.Datetime.to_string(
                                         self.env.user.partner_id.write_date
                                     ),

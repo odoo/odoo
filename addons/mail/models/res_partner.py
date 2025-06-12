@@ -274,7 +274,7 @@ class ResPartner(models.Model):
                 data["displayName"] = partner.display_name
             if "user" in fields:
                 main_user = (main_user_by_partner and main_user_by_partner.get(partner)) or partner.main_user_id
-                data["userId"] = main_user.id
+                data["main_user_id"] = main_user.id
                 data["isInternalUser"] = not main_user.share if main_user else False
                 if "isAdmin" in fields:
                     data["isAdmin"] = main_user._is_admin()

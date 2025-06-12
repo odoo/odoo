@@ -89,7 +89,7 @@ export class Activity extends Component {
         const target = ev.currentTarget;
         if (!this.avatarCard.isOpen) {
             this.avatarCard.open(target, {
-                id: this.props.activity.persona.userId,
+                id: this.props.activity.persona.main_user_id?.id,
             });
         }
     }

@@ -217,8 +217,8 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                         "id": self.users[1].partner_id.id,
                         "is_company": False,
                         "isInternalUser": True,
+                        "main_user_id": self.users[1].id,
                         "user_livechat_username": "chuck",
-                        "userId": self.users[1].id,
                         "write_date": fields.Datetime.to_string(self.users[1].write_date),
                     },
                 ),
@@ -328,8 +328,8 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                                         "id": self.env.user.partner_id.id,
                                         "isInternalUser": False,
                                         "is_company": False,
+                                        "main_user_id": self.env.user.id,
                                         "name": "Chell Gladys",
-                                        "userId": self.env.user.id,
                                         "user_livechat_username": False,
                                         "write_date": fields.Datetime.to_string(
                                             self.env.user.write_date

@@ -49,7 +49,7 @@ patch(Message.prototype, {
         };
     },
     hasAuthorClickable() {
-        return this.message.author?.userId;
+        return this.message.author?.main_user_id;
     },
     onClickAuthor(ev) {
         if (this.hasAuthorClickable()) {
@@ -57,7 +57,7 @@ patch(Message.prototype, {
             const target = ev.currentTarget;
             if (!this.avatarCard.isOpen) {
                 this.avatarCard.open(target, {
-                    id: this.message.author.userId,
+                    id: this.message.author.main_user_id.id,
                 });
             }
         }
