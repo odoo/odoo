@@ -12,25 +12,9 @@
     <template id="user_profile_content" inherit_id="website_profile.user_profile_content">
         <xpath expr="//div[@id='profile_about_badge']" position="before">
             <t t-if="channel">
-                <div class="mb32">
-                    <h5 class="border-bottom pb-1">Completed Courses</h5>
-                    <t t-if="courses_completed" t-call="website_slides.display_course">
-                        <t t-set="courses" t-value="courses_completed"></t>
-                    </t>
-                    <div t-elif="request.env.user == user" class="text-muted d-inline-block">
-                        Go through all its content to see a Course in this section. <br />
-                        <a href="/slides/" class="btn-link">
-                            <i class="fa fa-arrow-right"></i> Start Learning
-                        </a>
-                    </div>
-                    <div t-else="" class="text-muted d-inline-block">No completed courses yet!</div>
-                    <div t-if="request.env.user != user" class="text-end d-inline-block pull-right">
-                        <a href="/slides/all" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Courses</a>
-                    </div>
-                </div>
-                <div class="mb32">
-                    <h5 class="border-bottom pb-1">Ongoing Courses</h5>
-                    <t t-if="courses_ongoing" t-call="website_slides.display_course">
+                <div class="mb-5">
+                    <h5 class="mb-3">Ongoing Courses</h5>
+                    <t t-if="courses_ongoing" t-call="website_slides.display_ongoing_course">
                         <t t-set="courses" t-value="courses_ongoing"></t>
                     </t>
                      <p t-elif="request.env.user == user" class="text-muted">
@@ -41,36 +25,58 @@
                     </p>
                     <p t-else="" class="text-muted">No ongoing courses yet!</p>
                 </div>
+                <div class="mb-5">
+                    <h5 class="mb-3">Completed Courses</h5>
+                    <t t-if="courses_completed" t-call="website_slides.display_completed_course">
+                        <t t-set="courses" t-value="courses_completed"></t>
+                    </t>
+                    <t t-elif="request.env.user == user">
+                        <div class="alert alert-light">
+                            <a href="/slides/" class="alert-link text-decoration-underline fw-normal">Continue learning</a>
+                            to see a course in this section.
+                        </div>
+                    </t>
+                </div>
             </t>
         </xpath>
     </template>
 
-    <template id="display_course">
-        <div class="row">
-            <div class="col-12 col-lg-6" t-foreach="courses" t-as="course">
-                <div class="card mb-2">
-                    <div class="card-body o_wprofile_slides_course_card_body p-0 d-flex"
-                        t-attf-onclick="location.href='/slides/#{slug(course.channel_id)}';">
-                        <div t-field="course.channel_id.image_1920" t-options="{'widget': 'image', 'class':'o_wslides_course_card_image', 'preview_image': 'image_512'}" class="rounded-start"/>
-                        <div class="p-2 w-100">
-                            <h5 class="mt-0 mb-1" t-field="course.channel_id.name"/>
+    <template id="display_ongoing_course">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex flex-sm-row flex-column gap-0 gap-sm-3 px-0 py-3" t-foreach="courses" t-as="course">
+                <a t-attf-href="/slides/#{slug(course.channel_id)}" t-field="course.channel_id.name" class="flex-grow-1 text-truncate"/>
+                <div t-attf-class="d-flex align-items-center flex-basis-25 flex-shrink-0 #{'justify-content-md-end' if course.completion == 0 else ''}">
+                    <t t-if="course.completion > 0">
+                        <div class="progress flex-grow-1" role="progressbar" aria-label="Course progression" t-att-aria-valuenow="str(course.completion)+'%'" aria-valuemin="0" aria-valuemax="100" style="height:.5rem;">
+                            <div class="progress-bar" t-att-style="'width: '+ str(course.completion)+'%'"/>
+                        </div>
+                        <small class="ms-2"><t t-esc="course.completion"/> %</small>
+                    </t>
+                    <t t-else="">
+                        Not started yet.
+                    </t>
+                </div>
+            </li>
+        </ul>
+    </template>
 
-                            <div class="overflow-hidden mb-1" style="height:24px">
-                                <t t-foreach="course.channel_id.tag_ids.filtered(lambda tag: tag.color)" t-as="tag">
-                                    <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
-                                </t>
-                            </div>
 
-                            <div class="d-flex align-items-center">
-                                <div class="progress flex-grow-1" style="height:0.5em">
-                                    <div class="progress-bar bg-primary" t-att-style="'width: '+ str(course.completion)+'%'"/>
-                                </div>
-                                <small class="fw-bold ps-2"><span t-esc="course.completion"/> %</small>
-                            </div>
+    <template id="display_completed_course">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item px-0 py-3" t-foreach="courses" t-as="course">
+                <div class="o_wprofile_slides_course_card_body p-0 d-flex align-items-center"
+                    t-attf-href="/slides/#{slug(course.channel_id)}">
+                    <div t-field="course.channel_id.image_1920" class="o_wslides_course_card_image ratio ratio-16x9" t-options="{'widget': 'image', 'class':'o_object_fit_cover rounded', 'preview_image': 'image_512'}"/>
+                    <div class="ms-3 flex-grow-1">
+                        <h5 t-field="course.channel_id.name"/>
+                        <div class="d-flex flex-wrap gap-1">
+                            <t t-foreach="course.channel_id.tag_ids.filtered(lambda tag: tag.color)" t-as="tag">
+                                <a t-att-href="'/slides/all/tag/%s' % slug(tag)" onclick="event.stopPropagation()" t-attf-class="badge o_wslides_channel_tag post_link #{'o_color_'+str(tag.color)}" t-esc="tag.name"/>
+                            </t>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </li>
+        </ul>
     </template>
 </data></odoo>

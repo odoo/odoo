@@ -47,7 +47,7 @@ registry.category("web_tour.tours").add('course_member_youtube', {
     trigger: 'a:contains("Choose your wood")',
     run: "click",
 }, {
-    trigger: 'a:contains("Join this Course")',
+    trigger: 'a:contains("Enroll now")',
     run: "click",
 }, {
     // check membership

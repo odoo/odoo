@@ -330,3 +330,14 @@ $-color-for-gray-200-bg: adjust-color-to-background($body-color, $gray-200);
 .form-range:disabled::-webkit-slider-thumb {
     border-color: $input-disabled-border-color;
 }
+
+.nav-underline {
+    --nav-link-color: #{$text-muted};
+
+    border-bottom: $border-width solid $border-color;
+
+    .nav-link.active, .nav-link:hover, .nav-link:focus, .show > .nav-link {
+        font-weight: $font-weight-normal;
+        border-bottom-color: $primary;
+    }
+}

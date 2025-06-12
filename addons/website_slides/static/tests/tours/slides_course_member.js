@@ -32,7 +32,7 @@ registry.category("web_tour.tours").add("course_member", {
             run: "click",
         },
         {
-            trigger: 'a:contains("Join this Course")',
+            trigger: 'a:contains("Enroll now")',
             run: "click",
         },
         {

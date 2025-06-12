@@ -295,12 +295,9 @@ class SlideChannel(models.Model):
         res = super()._default_cover_properties()
         res.update({
             "background_color_class": "o_cc3",
-            'background_color_style': (
-                'background-color: rgba(0, 0, 0, 0); '
-                'background-image: linear-gradient(120deg, #875A7B, #78516F);'
-            ),
-            'opacity': '0',
-            'resize_class': 'cover_auto'
+            "background-image": "url('/website_slides/static/src/img/channel-default.jpg')",
+            "opacity": "0.4",
+            "resize_class": "o_half_screen_height",
         })
         return res
 
@@ -666,10 +663,9 @@ class SlideChannel(models.Model):
             new_slides = new_published_slides.filtered(lambda slide: slide.channel_id == channel)
             channel.partner_has_new_content = any(slide not in slide_partner_completed for slide in new_slides)
 
-    @api.depends('channel_type')
     def _compute_website_default_background_image_url(self):
         for channel in self:
-            channel.website_default_background_image_url = f'website_slides/static/src/img/channel-{channel.channel_type}-default.jpg'
+            channel.website_default_background_image_url = f'website_slides/static/src/img/channel-default.jpg'
 
     @api.depends('name')
     def _compute_website_url(self):
