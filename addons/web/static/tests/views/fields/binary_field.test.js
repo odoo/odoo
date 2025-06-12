@@ -466,3 +466,22 @@ test("should accept file with allowed MIME type and reject others", async () => 
     );
     expect(".o_notification_bar").toHaveClass("bg-danger");
 });
+
+test("doesn't crash if value is not a string", async () => {
+    class Dummy extends models.Model {
+        document = fields.Binary()
+        _applyComputesAndValidate() {}
+    }
+    defineModels([Dummy])
+    Dummy._records.push({ id: 1, document: {} });
+    await mountView({
+        type: "form",
+        resModel: "dummy",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="document"/>
+            </form>`,
+    });
+    expect(".o_field_binary input").toHaveValue("");
+});
