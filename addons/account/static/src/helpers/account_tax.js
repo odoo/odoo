@@ -586,11 +586,9 @@ export const accountTaxHelpers = {
             discount: load("discount", 0.0),
             currency_id: currency,
             sign: load("sign", 1.0),
-            special_mode: kwargs.special_mode || null,
-            special_type: kwargs.special_type || null,
+            special_mode: load('special_mode', null),
+            special_type: load('special_type', null),
             rate: load("rate", 1.0),
-            computation_key: kwargs.computation_key || null,
-            manual_tax_amounts: kwargs.manual_tax_amounts || null,
         };
 
         const extra_tax_data = this.import_base_line_extra_tax_data(
@@ -598,14 +596,8 @@ export const accountTaxHelpers = {
             load("extra_tax_data", {}) || {}
         );
         Object.assign(base_line, {
-            computation_key:
-                "computation_key" in kwargs
-                    ? kwargs.computation_key
-                    : extra_tax_data.computation_key,
-            manual_tax_amounts:
-                "manual_tax_amounts" in kwargs
-                    ? kwargs.manual_tax_amounts
-                    : extra_tax_data.manual_tax_amounts,
+            computation_key: load("computation_key", extra_tax_data.computation_key || null),
+            manual_tax_amounts: load("manual_tax_amounts", extra_tax_data.manual_tax_amounts || null),
         });
 
         return base_line;
